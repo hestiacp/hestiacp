@@ -1,5 +1,4 @@
 <?php
-error_reporting(NULL);
 ob_start();
 $TAB = 'FIREWALL';
 
@@ -7,7 +6,7 @@ $TAB = 'FIREWALL';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['userContext'] != 'admin')  {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
@@ -16,23 +15,24 @@ if ($_SESSION['userContext'] != 'admin')  {
 if (!empty($_POST['ok'])) {
 
     // Check token
-    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_POST);
 
     // Check empty fields
-    if (empty($_POST['v_chain'])) $errors[] = _('banlist');
-    if (empty($_POST['v_ip'])) $errors[] = _('ip address');
+    if (empty($_POST['v_chain'])) {
+        $errors[] = _('banlist');
+    }
+    if (empty($_POST['v_ip'])) {
+        $errors[] = _('ip address');
+    }
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
-            if ( $i == 0 ) {
+            if ($i == 0) {
                 $error_msg = $error;
             } else {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'),$error_msg);
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
     }
 
     // Protect input
@@ -41,8 +41,8 @@ if (!empty($_POST['ok'])) {
 
     // Add firewall rule
     if (empty($_SESSION['error_msg'])) {
-        exec (HESTIA_CMD."v-add-firewall-ban ".$v_ip." ".$v_chain, $output, $return_var);
-        check_return_code($return_var,$output);
+        exec(HESTIA_CMD."v-add-firewall-ban ".$v_ip." ".$v_chain, $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
     }
 

@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: restore single mail domain
 # options: USER BACKUP DOMAIN [NOTIFY]
-# labels: panel
 #
-# example: v-restore-web-domain USER BACKUP DOMAIN [NOTIFY]
+# example: v-restore-mail-domain USER BACKUP DOMAIN [NOTIFY]
 # 
-# The function allows the user to restore a single mail domain
+# This function allows the user to restore a single mail domain
 # from a backup archive.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,13 +18,12 @@ domain=$3
 notify=$4
 
 # Includes
-# shellcheck /usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck /usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -35,11 +33,14 @@ args_usage='USER BACKUP DOMAIN [NOTIFY]'
 check_args '3' "$#" "$args_usage"
 is_format_valid 'user' 'backup'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-$BIN/v-restore-user $user $backup 'no' 'no' $domain 'no' 'no' 'no' $notify
+$BIN/v-restore-user "$user" "$backup" 'no' 'no' "$domain" 'no' 'no' 'no' "$notify"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

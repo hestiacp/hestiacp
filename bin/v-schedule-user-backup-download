@@ -1,33 +1,30 @@
 #!/bin/bash
 # info: Schedule a backup
 # options: USER BACKUP
-# labels: hestia
 #
 # example: v-schedule-user-backup-download admin 2019-04-22_01-00-00.tar
 #
-# The function for scheduling user backup creation.
-
+# This function for scheduling user backup creation.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 user=$1
 backup=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #

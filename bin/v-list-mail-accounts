@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mail domain accounts
 # options: USER DOMAIN [FORMAT]
-# labels: mail
 #
 # example: v-list-mail-accounts admin acme.com
 #
-# The function of obtaining the list of all user domains.
-
+# This function of obtaining the list of all user domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,8 +16,12 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -98,7 +100,6 @@ csv_list() {
     done < <(cat $USER_DATA/mail/$domain.conf)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -107,7 +108,6 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -120,7 +120,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

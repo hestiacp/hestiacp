@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: remove ssl force from domain
-# options: USER DOMAIN [RESTART]
-# labels: hestia
+# options: USER DOMAIN [RESTART] [QUIET]
 #
 # example: v-delete-web-domain-ssl-hsts user domain.tld
 #
-# The function removes force SSL configurations.
-
+# This function removes force SSL configurations.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,10 +17,14 @@ restart=$3
 quiet=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,7 +38,6 @@ is_object_valid 'web' 'DOMAIN' "$domain" "$SSL_FORCE"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -63,10 +64,10 @@ rm -f $hstsconf
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_HSTS' 'no'
 
 # Restart services if requested
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

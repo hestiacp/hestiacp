@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add wp-cli for a user
 # options: USER
-# labels: hestia
 #
 # example: v-add-user-wp-cli user
 #
-# The function adds support for wp-cli to the user account
-
+# This function adds support for wp-cli to the user account
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,11 +17,12 @@ if [ -z "$HESTIA" ]; then
     HESTIA="/usr/local/hestia"
 fi
 
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -34,11 +33,8 @@ is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
-[ -z "$HOMEDIR" ] && check_result $E_NOTEXIST "Hestia environment vars not present"
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -46,22 +42,20 @@ check_hestia_demo_mode
 
 WPCLI_DIR="/home/$user/.wp"
 WPCLI_BIN="$WPCLI_DIR/wp"
-WPCLICACHE_DIR="/home/$user/.wp-cli"
 
 if [ -f "$WPCLI_DIR" ]; then
     echo "WP-CLI already available"
     exit
 fi
 
-[ -z "$(readlink -m "$WPCLI_DIR" | egrep "^$HOMEDIR/$user/")" ] && check_result $E_FORBIDEN "Path outside of user homedir (WP Cli dir)"
-[ -z "$(readlink -m "$WPCLI_BIN" | egrep "^$HOMEDIR/$user/")" ] && check_result $E_FORBIDEN "Path outside of user homedir (WP Cli bin)"
+[ -z "$(readlink -m "$WPCLI_DIR" | egrep "^$HOMEDIR/$user/")" ] && check_result "$E_FORBIDEN" "Path outside of user homedir (WP Cli dir)"
+[ -z "$(readlink -m "$WPCLI_BIN" | egrep "^$HOMEDIR/$user/")" ] && check_result "$E_FORBIDEN" "Path outside of user homedir (WP Cli bin)"
 
 mkdir -p "$WPCLI_DIR"
 chown $user:$user "$WPCLI_DIR"
 
-user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $WPCLI_BIN https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar 
-user_exec chmod +x $WPCLI_BIN
-
+user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$WPCLI_BIN" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar 
+user_exec chmod +x "$WPCLI_BIN"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

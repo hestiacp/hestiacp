@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change remote dns domain SOA
 # options: USER DOMAIN
-# labels: dns
 #
 # example: v-change-remote-dns-domain-soa admin example.org.uk
 #
-# The function synchronize dns domain with the remote server.
-
+# This function synchronize dns domain with the remote server.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,13 +15,14 @@ user=$1
 domain=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/remote.sh
 source $HESTIA/func/remote.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -52,15 +51,14 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
     # Syncing SOA
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'domain' 'no'
-    check_result $? "$HOST connection failed (sync)" $E_CONNECT
+    cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" 'domain' 'no'
+    check_result $? "$HOST connection failed (sync)" "$E_CONNECT"
 
     # Rebuilding dns zone
-    cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
-    check_result $? "$HOST connection failed (rebuild)" $E_CONNECT
+    cluster_cmd v-rebuild-dns-domain "$DNS_USER" "$domain" 'yes' 'no'
+    check_result $? "$HOST connection failed (rebuild)" "$E_CONNECT"
 
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -69,7 +67,7 @@ done
 # Updating pipe
 pipe="$HESTIA/data/queue/dns-cluster.pipe"
 str=$(grep -n "$SCRIPT $1 $2 $3$" $pipe | cut -f1 -d: | head -n1)
-if [ ! -z "$str" ]; then
+if [ -n "$str" ]; then
     sed -i "$str d"  $pipe
 fi
 

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list system ip
 # options: IP [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-ip 116.203.78.202
 #
-# The function for getting the list of system ip parameters.
-
+# This function for getting the list of system ip parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,10 +15,14 @@ ip=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -34,7 +36,6 @@ json_list() {
         "INTERFACE": "'$INTERFACE'",
         "NETMASK": "'$NETMASK'",
         "NAT": "'$NAT'",
-        "HELO": "'$HELO'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
         }'
@@ -52,7 +53,6 @@ shell_list() {
     echo "NAME:           $NAME"
     echo "USERS:          $U_SYS_USERS"
     echo "DOMAINS:        $U_WEB_DOMAINS"
-    echo "HELO:           $HELO"
     echo "TIME:           $TIME"
     echo "DATE:           $DATE"
 }
@@ -60,17 +60,16 @@ shell_list() {
 # PLAIN list function
 plain_list() {
     echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
-    echo -e "$INTERFACE\t$NETMASK\t$NAT\t$HELO\t$TIME\t$DATE"
+    echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
     echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
-    echo "NETMASK,NAT,HELO,TIME,DATE"
+    echo "NETMASK,NAT,TIME,DATE"
     echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
-    echo "$INTERFACE, $NETMASK,$NAT,$HELO,$TIME,$DATE"
+    echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -82,13 +81,12 @@ if [ ! -e "$HESTIA/data/ips/$ip" ]; then
     check_result $E_NOTEXIST "ip $ip doesn't exist"
 fi
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Parsing ip
-source $HESTIA/data/ips/$ip
+source_conf "$HESTIA/data/ips/$ip"
 
 # Listing data
 case $format in
@@ -97,7 +95,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

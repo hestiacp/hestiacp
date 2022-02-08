@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete webdomain ftp account
 # options: USER DOMAIN FTP_USER
-# labels: web
 #
 # example: v-delete-web-domain-ftp admin wonderland.com bob_ftp
 #
-# The function deletes additional ftp account.
-
+# This function deletes additional ftp account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,18 +17,19 @@ domain_idn=$2
 ftp_user=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -45,18 +44,17 @@ get_domain_values 'web'
 if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
     echo "Error: account $ftp_user doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 # Deleting sftp jail
-$BIN/v-delete-user-sftp-jail $ftp_user
+$BIN/v-delete-user-sftp-jail "$ftp_user"
 
 # Deleting ftp user
 /usr/sbin/userdel $ftp_user >> /dev/null 2>&1

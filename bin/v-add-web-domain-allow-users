@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Allow other users create subdomains
 # options: USER DOMAIN
-# labels: web hestia
 #
 # example: v-add-web-domain-allow-users admin admin.com
 #
@@ -10,9 +9,8 @@
 # eg: admin adds admin.com
 # user can create user.admin.com
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -21,18 +19,19 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

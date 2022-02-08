@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list web domain access log
 # options: USER DOMAIN [LINES] [FORMAT]
-# labels: web
 #
 # example: v-list-web-domain-accesslog admin example.com
 #
-# The function of obtaining raw access web domain logs.
-
+# This function of obtaining raw access web domain logs.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,10 +17,12 @@ ttl=${3-70}
 format=${4-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -57,7 +57,6 @@ csv_list() {
     echo "$lines"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -66,7 +65,6 @@ check_args '2' "$#" 'USER DOMAIN [LINES] [FORMAT]'
 is_format_valid 'user' 'domain' 'ttl'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -89,7 +87,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

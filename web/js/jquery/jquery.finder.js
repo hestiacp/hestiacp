@@ -214,7 +214,7 @@
                   shortcut.add("Ctrl+a", function(evt){
                     if(jQuery('.ch-toggle:checked').length > 0) {
                       f.t.unHAll(p, o);
-                      jQuery('.ch-toggle:checked').attr('checked', false);
+                      jQuery('.ch-toggle:checked').prop('checked', false);
                     } else {
                       f.t.hAll(p,o);
                     }
@@ -231,7 +231,7 @@
                         //if(f.detect.alt(e)) {
                         if(jQuery('.ch-toggle:checked').length > 0) {
                             f.t.unHAll(p, o);
-                            jQuery('.ch-toggle:checked').attr('checked', false);
+                            jQuery('.ch-toggle:checked').prop('checked', false);
                         } else {
                             f.t.hAll(p,o);
                         }

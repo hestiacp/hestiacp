@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: get user salt
 # options: USER [IP] [FORMAT]
-# labels: panel
 #
 # example: v-get-user-salt admin
 #
-# The function provides users salt
-
+# This function provides users salt
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,10 +16,14 @@ ip=${2-127.0.0.1}
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
@@ -56,7 +58,6 @@ csv_list() {
     echo "$method, $salt"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -71,7 +72,6 @@ if [ ! -d "$HESTIA/data/users/$user" ]; then
     echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -93,6 +93,10 @@ then
         echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
         exit 9
     fi
+elif [[ "$shadow" =~ ! ]]; then 
+    echo "Error: Account has been suspended"
+    echo "$date $time $user $ip has been suspended" >> $HESTIA/log/auth.log
+    exit 5
 else
     salt=${shadow:0:2}
     method='des'
@@ -104,7 +108,6 @@ if [ -z "$salt" ]; then
     exit 9
 fi
 
-
 # Listing data
 case $format in
     json)   json_list ;;
@@ -113,11 +116,8 @@ case $format in
     shell)  shell_list ;;
 esac
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Logging
 
 exit

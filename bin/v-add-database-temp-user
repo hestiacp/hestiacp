@@ -1,16 +1,15 @@
 #!/bin/bash
 # info: add temp database user
 # options: USER DATABASE [TYPE] [HOST] [TTL]
-# labels: hestia database
 #
 # example: v-add-database-temp-user wordress wordpress_db mysql
 #
-# The function creates an temporary database user mysql_sso_db_XXXXXXXX and a random password 
+# This function creates an temporary database user mysql_sso_db_XXXXXXXX and a random password 
 # The user has an limited validity and only granted access to the specific database 
 # Returns json to be read SSO Script
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,19 +24,22 @@ if [ "$ttl" == '' ]; then
 fi
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DATABASE [TYPE] [HOST]'
-is_format_valid 'user' 'database'
+check_args '2' "$#" 'USER DATABASE [TYPE] [HOST] [TTL]'
+is_format_valid 'user' 'database' 'ttl'
+is_type_valid "$DB_SYSTEM" "$type"
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

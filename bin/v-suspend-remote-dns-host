@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: suspend remote dns server
 # options: HOST
-# labels: dns
 #
 # example: v-suspend-remote-dns-host hostname.tld
 #
-# The function for suspending remote dns server.
-
+# This function for suspending remote dns server.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 host=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -35,14 +34,12 @@ is_object_unsuspended "../../conf/dns-cluster" 'HOST' "$host"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Unsuspend remote dns server
 update_object_value "../../conf/dns-cluster" 'HOST' "$host" '$SUSPENDED' 'yes'
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

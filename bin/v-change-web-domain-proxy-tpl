@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change web domain proxy template
 # options: USER DOMAIN TEMPLATE [EXTENTIONS] [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-proxy-tpl admin domain.tld hosting
 #
-# The function changes proxy template
-
+# This function changes proxy template
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,19 +21,21 @@ extentions=${4-$default_extentions}
 restart="$5"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -54,14 +54,14 @@ is_proxy_template_valid $template
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Parsing domain values
 get_domain_values 'web'
-local_ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip "$IP")
+
 
 # Delete old vhost
 del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
@@ -72,12 +72,12 @@ fi
 # Add new vhost
 PROXY="$template"
 PROXY_EXT="$extentions"
+
 prepare_web_domain_values
 add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
 if [ "$SSL" = 'yes' ]; then
     add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -88,7 +88,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY' "$PROXY"
 update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 
 # Restarting proxy
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

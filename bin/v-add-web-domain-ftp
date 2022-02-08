@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add ftp account for web domain.
 # options: USER DOMAIN FTP_USER FTP_PASSWORD [FTP_PATH]
-# labels: web
 #
 # example: v-add-web-domain-ftp alice wonderland.com alice_ftp p4$$vvOrD
 #
-# The function creates additional ftp account for web domain.
-
+# This function creates additional ftp account for web domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -21,18 +19,19 @@ password=$4; HIDE=4
 ftp_path=$5
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -46,16 +45,15 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 check_ftp_user=$(grep "^$ftp_user:" /etc/passwd)
-if [ ! -z "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
+if [ -n "$check_ftp_user" ] && [ "$FTP_USER" != "$ftp_user" ]; then
     echo "Error: ftp user $ftp_user already exists"
     log_event "$E_EXISTS" "$ARGUMENTS"
-    exit $E_EXISTS
+    exit "$E_EXISTS"
 fi
 is_password_valid
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -66,7 +64,7 @@ get_domain_values 'web'
 
 # Defining ftp user shell
 shell=$(which nologin)
-if [ ! -z "$FTP_SHELL" ]; then
+if [ -n "$FTP_SHELL" ]; then
     shell=$FTP_SHELL
 fi
 
@@ -79,7 +77,7 @@ else
     if [ -z "$(echo $ftp_path_a |grep $HOMEDIR/$user/web/$domain)" ]; then
         echo "Error: absolute path $ftp_path_a is invalid"
         log_event "$E_INVALID" "$ARGUMENTS"
-        exit $E_INVALID
+        exit "$E_INVALID"
     fi
     # Creating ftp user home directory
     if [ ! -e "$ftp_path_a" ]; then
@@ -110,8 +108,7 @@ fi
 ftp_md5=$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)
 
 # Adding jailed sftp env
-$BIN/v-add-user-sftp-jail $ftp_user
-
+$BIN/v-add-user-sftp-jail "$ftp_user"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

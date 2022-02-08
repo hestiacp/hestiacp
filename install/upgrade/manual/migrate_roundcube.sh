@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Disconnect Roundcube from APT and solving issues with Roundcube accidental updates from ATP
 
-
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
@@ -12,19 +11,21 @@ source $HESTIA/func/main.sh
 source $HESTIA/install/upgrade/upgrade.conf
 source $HESTIA/conf/hestia.conf
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 if [ ! -d "/usr/share/roundcube/" ]; then
-    echo "Install Roundcube not done via APT"
+    echo "ERROR: Roundcube is not managed by apt."
     exit 2;
 fi
 
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
 
-echo "For deleting Roundcube you will need confirm the removal with root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
-read -p "Please enter Y to continue" -n 1 -r
+echo "To remove Roundcube you will need use the root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
+read -p 'Would you like to continue? [y/n]' -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then

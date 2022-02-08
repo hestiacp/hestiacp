@@ -1,12 +1,17 @@
 #!/bin/bash
 # info: open config
 # options: CONFIG
-# labels: 
 #
 # example: v-open-fs-config /etc/mysql/my.cnf
 #
-# The function opens/reads config files on the file system
+# This function opens/reads config files on the file system
 
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 src_file=$1
 
 # Checking arguments
@@ -28,7 +33,7 @@ if [ ! -e "$src_file" ]; then
 fi
 
 # Checking path
-if [ ! -z "$src_file" ]; then
+if [ -n "$src_file" ]; then
     rpath=$(readlink -f "$src_file")
     services="nginx|apache|httpd|php|ftp|bind|named|exim|dovecot|spamassassin"
     services="$services|clam|mysql|postgresql|pgsql|cron|ssh|fail2ban|iptables"

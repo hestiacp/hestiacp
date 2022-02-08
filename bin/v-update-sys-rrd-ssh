@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: update ssh rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-ssh
 #
-# The function is for updating ssh rrd database and graphic.
-
+# This function is for updating ssh rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 period=${1-daily}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -32,7 +31,7 @@ case $period in
     weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
     monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
     yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit $E_RRD ;;
+    *) exit "$E_RRD" ;;
 esac
 
 # Checking directory
@@ -43,7 +42,7 @@ fi
 # Checking database
 if [ ! -e "$RRD/ssh/ssh.rrd" ]; then
     # Adding database
-    rrdtool create $RRD/ssh/ssh.rrd --step $RRD_STEP \
+    rrdtool create $RRD/ssh/ssh.rrd --step "$RRD_STEP" \
         DS:A:GAUGE:600:U:U \
         RRA:AVERAGE:0.5:1:600 \
         RRA:AVERAGE:0.5:6:700 \
@@ -61,7 +60,7 @@ if [ "$period" = 'daily' ]; then
     a=$(ps auxf|grep sshd |grep -v grep |grep -v '/usr/sbin/'| wc -l)
 
     # Updating rrd database
-    rrdtool update $RRD/ssh/ssh.rrd N:$a
+    rrdtool update "$RRD/ssh/ssh.rrd" "N:$a"
 fi
 
 # Updating daily graph
@@ -89,13 +88,12 @@ rrdtool graph $RRD/ssh/$period-ssh.png \
     GPRINT:a:'MIN:Min\:''%8.0lf' \
     GPRINT:a:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 if [ "$result" -ne 0 ]; then
-    exit $E_RRD
+    exit "$E_RRD"
 fi
 
 exit

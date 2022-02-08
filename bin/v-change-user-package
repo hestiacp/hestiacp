@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user package
 # options: USER PACKAGE [FORCE]
-# labels: panel
 #
 # example: v-change-user-package admin yourpackage
 #
-# The function changes user's hosting package.
-
+# This function changes user's hosting package.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,18 +16,16 @@ package=$2
 force=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 is_package_avalable() {
-
-    usr_data=$(cat $USER_DATA/user.conf)
-    IFS=$'\n'
-    for key in $usr_data; do
-        eval ${key%%=*}=${key#*=}
-    done
+    
+    source_conf "$USER_DATA/user.conf"
 
     WEB_DOMAINS='0'
     DATABASES='0'
@@ -38,51 +34,52 @@ is_package_avalable() {
     DISK_QUOTA='0'
     BANDWIDTH='0'
 
-    pkg_data=$(cat $HESTIA/data/packages/$package.pkg |grep -v TIME |\
-        grep -v DATE)
-    eval $pkg_data
+    source_conf "$HESTIA/data/packages/$package.pkg"
 
     # Checking usage agains package limits
     if [ "$WEB_DOMAINS" != 'unlimited' ]; then
         if [ "$WEB_DOMAINS" -lt "$U_WEB_DOMAINS" ]; then
-            check_result $E_LIMIT "Package doesn't cover WEB_DOMAIN usage"
+            check_result "$E_LIMIT" "Package doesn't cover WEB_DOMAIN usage"
         fi
     fi
     if [ "$DNS_DOMAINS" != 'unlimited' ]; then
         if [ "$DNS_DOMAINS" -lt "$U_DNS_DOMAINS" ]; then
-            check_result $E_LIMIT "Package doesn't cover DNS_DOMAIN usage"
+            check_result "$E_LIMIT" "Package doesn't cover DNS_DOMAIN usage"
         fi
     fi
     if [ "$MAIL_DOMAINS" != 'unlimited' ]; then
         if [ "$MAIL_DOMAINS" -lt "$U_MAIL_DOMAINS" ]; then
-            check_result $E_LIMIT "Package doesn't cover MAIL_DOMAIN usage"
+            check_result "$E_LIMI"T "Package doesn't cover MAIL_DOMAIN usage"
         fi
     fi
     if [ "$DATABASES" != 'unlimited' ]; then
         if [ "$DATABASES" -lt "$U_DATABASES" ]; then
-            check_result $E_LIMIT "Package doesn't cover DATABASE usage"
+            check_result "$E_LIMIT" "Package doesn't cover DATABASE usage"
         fi
     fi
     if [ "$CRON_JOBS" != 'unlimited' ]; then
         if [ "$CRON_JOBS" -lt "$U_CRON_JOBS" ]; then
-            check_result $E_LIMIT "Package doesn't cover CRON usage"
+            check_result "$E_LIMIT" "Package doesn't cover CRON usage"
         fi
     fi
     if [ "$DISK_QUOTA" != 'unlimited' ]; then
         if [ "$DISK_QUOTA" -lt "$U_DISK" ]; then
-            check_result $E_LIMIT "Package doesn't cover DISK usage"
+            check_result "$E_LIMIT" "Package doesn't cover DISK usage"
         fi
     fi
     if [ "$BANDWIDTH" != 'unlimited' ]; then
         if [ "$BANDWIDTH" -lt "$U_BANDWIDTH" ]; then
-            check_result $E_LIMIT "Package doesn't cover BANDWIDTH usage"
+            check_result "$E_LIMIT" "Package doesn't cover BANDWIDTH usage"
         fi
     fi
 }
 
 change_user_package() {
-    eval $(cat $USER_DATA/user.conf)
-    eval $(cat $HESTIA/data/packages/$package.pkg |egrep -v "TIME|DATE")
+    source_conf "$USER_DATA/user.conf"
+    # Keep user creation date and time saved
+    time="$TIME"
+    date="$DATE"
+    source_conf "$HESTIA/data/packages/$package.pkg"
     echo "NAME='$NAME'
 PACKAGE='$package'
 WEB_TEMPLATE='$WEB_TEMPLATE'
@@ -144,8 +141,8 @@ PREF_UI_SORT='$PREF_UI_SORT'
 LOGIN_DISABLED='$LOGIN_DISABLED'
 LOGIN_USE_IPLIST='$LOGIN_USE_IPLIST'
 LOGIN_ALLOW_IPS='$LOGIN_ALLOW_IPS'
-TIME='$TIME'
-DATE='$DATE'" > $USER_DATA/user.conf
+TIME='$time'
+DATE='$date'" > $USER_DATA/user.conf
 }
 
 
@@ -164,7 +161,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -173,8 +169,8 @@ check_hestia_demo_mode
 change_user_package
 
 # Update user shell
-shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
-$BIN/v-change-user-shell $user $shell_conf
+shell_conf=$(cat "$HESTIA/data/packages/$package.pkg" | grep 'SHELL' | cut -f 2 -d \')
+$BIN/v-change-user-shell "$user" "$shell_conf"
 
 # Run template trigger
 if [ -x "$HESTIA/data/packages/$package.sh" ]; then
@@ -184,9 +180,8 @@ fi
 # Update disk quota
 source $HESTIA/conf/hestia.conf
 if [ "$DISK_QUOTA" = 'yes' ]; then
-    $BIN/v-update-user-quota $user
+    $BIN/v-update-user-quota "$user"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

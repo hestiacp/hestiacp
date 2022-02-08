@@ -1,25 +1,25 @@
 #!/bin/bash
 # info: list db status
 # options: [FORMAT]
-# labels: 
 #
 # v-list-sys-db-status
 #
-# The function lists db server status
-
+# This function lists db server status
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 #format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -79,7 +79,6 @@ for db in $(echo $DB_SYSTEM| tr ',' '\n'); do
     fi
     IFS="$OLD_IFS"
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,7 +1,6 @@
 #!/bin/bash
-# info: Delete log file for user
+# info: Install update from Git repository
 # options: REPOSITORY BRANCH INSTALL [PACKAGES]
-# labels: hestia
 #
 # example: v-update-sys-hestia-git hestiacp staging/beta install all
 #          # Will download from the hestiacp repository
@@ -13,9 +12,16 @@
 #
 # Downloads and compiles/installs packages from GitHub repositories
 
-# Includes
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -29,7 +35,7 @@ download_file() {
     # Default destination is the curent working directory
     local dstopt=""
 
-    if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+    if [ -n "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
         # When an archive file is downloaded it will be first saved localy
         dstopt="--directory-prefix=$ARCHIVE_DIR"
         local is_archive="true"
@@ -38,10 +44,10 @@ download_file() {
             >&2 echo "[!] No filename was found in url, exiting ($url)"
             exit 1
         fi
-            if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
+            if [ -n "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
             rm -f $ARCHIVE_DIR/$filename
         fi
-        elif [ ! -z "$destination" ]; then
+        elif [ -n "$destination" ]; then
             # Plain files will be written to specified location
             dstopt="-O $destination"
         fi
@@ -58,7 +64,7 @@ download_file() {
         wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
     fi
 
-    if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
+    if [ -n "$destination" ] && [ "$is_archive" = "true" ]; then
         if [ "$destination" = "-" ]; then
             cat "$ARCHIVE_DIR/$filename"
         elif [ -d "$(dirname $destination)" ]; then
@@ -107,10 +113,32 @@ timestamp() {
     date +%s
 }
 
+# Warning prompt to be used if auto-install flag is not specified
+warning_message() {
+    echo ""
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo "WARNING - Development builds should not be installed on"
+    echo "systems with live production data without understanding"
+    echo "the potential risks that are involved!"
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo ""
+}
+
+# Build installation
+install_build() {
+    echo "Installing packages..."
+    for i in $DEB_DIR/*.deb; do
+        # Install all available packages
+        dpkg -i $i
+    done
+    # Remove temporary files
+    rm -rf $BUILD_DIR
+}
+
 # Set install flags
-if [ ! -z "$1" ]; then
+if [ -n "$1" ]; then
     fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/main/src/deb/hestia/control -o /dev/null)
-    if [ $fork_check -ne "200" ]; then
+    if [ "$fork_check" -ne "200" ]; then
         echo "ERROR: invalid repository name specified."
         exit 1
     else
@@ -121,7 +149,7 @@ else
     fork="hestiacp"
 fi
 
-if [ ! -z "$2" ]; then
+if [ -n "$2" ]; then
     branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
     if [ $branch_check -ne "200" ]; then
         echo "ERROR: invalid branch name specified."
@@ -134,7 +162,7 @@ else
     source /usr/local/hestia/conf/hestia.conf
     branch=$RELEASE_BRANCH
     branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
-    if [ $branch_check -ne "200" ]; then
+    if [ "$branch_check" -ne "200" ]; then
         echo "ERROR: invalid branch name specified."
         exit 1
     fi
@@ -145,6 +173,9 @@ if [ -z "$branch" ]; then
     exit
 fi
 
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
 
 # Install needed software
 echo "[*] Updating APT package cache..."
@@ -153,11 +184,9 @@ echo "[*] Checking for missing dependencies and installing required libraries...
 apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
 # Fix for Debian PHP Envroiment
-if [ ! -e /usr/local/include/curl ]; then
-    if [ $BUILD_ARCH == "amd64" ]; then
+if [ $BUILD_ARCH == "amd64" ]; then
+    if [ ! -L /usr/local/include/curl ]; then
         ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
-    else
-        echo "No x86_64 working"
     fi
 fi
 
@@ -165,7 +194,7 @@ fi
 NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
 
 # Check for existence of flags argument and set packages to build
-if [ ! -z "$flags" ]; then
+if [ -n "$flags" ]; then
     if [ "$flags" = "all" ]; then
         HESTIA_B='true'
         NGINX_B='true'
@@ -189,12 +218,7 @@ PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch=$(echo "$branch" |sed 's/\//-/g');
 
-#################################################################################
-#
 # Building hestia-nginx
-#
-#################################################################################
-
 if [ "$NGINX_B" = true ] ; then
 
     echo "[*] Building Package: hestia-nginx (backend web server)..."
@@ -287,13 +311,7 @@ if [ "$NGINX_B" = true ] ; then
     rm -r hestia-nginx_$NGINX_V
 fi
 
-
-#################################################################################
-#
 # Building hestia-php
-#
-#################################################################################
-
 if [ "$PHP_B" = true ] ; then
     echo "[*] Building Package: hestia-php (backend engine)..."
     # Change to build directory
@@ -383,13 +401,7 @@ if [ "$PHP_B" = true ] ; then
     rm -r hestia-php_$PHP_V
 fi
 
-
-#################################################################################
-#
 # Building hestia
-#
-#################################################################################
-
 if [ "$HESTIA_B" = true ] ; then
     echo "[*] Building Package: hestia (Control Panel)..."
     # Change to build directory
@@ -442,36 +454,7 @@ if [ "$HESTIA_B" = true ] ; then
     rm -r hestiacp-$branch
 fi
 
-
-#################################################################################
-#
-# Install Packages
-#
-#################################################################################
-
-# Define package installation functions
-warning_message() {
-    echo ""
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    echo "WARNING - Development builds should not be installed on"
-    echo "systems with live production data without understanding"
-    echo "the potential risks that are involved!"
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    echo ""
-}
-
-install_build() {
-    echo "Installing packages..."
-    for i in $DEB_DIR/*.deb; do
-        # Install all available packages
-        dpkg -i $i
-    done
-    # Remove temporary files
-    rm -rf $BUILD_DIR
-}
-
-# Define installation routine
-
+# Installation steps
 if [ "$install" = "install" ] || [ "$install" = "yes" ] || [ "$install" = "install-auto" ]; then 
     install_build
     if [ "$install" = "install-auto" ]; then
@@ -487,7 +470,7 @@ else
         echo "Installation of development build aborted."
         echo "Removing temporary files..."
         rm -rf $BUILD_DIR
-        unset $answer
+        unset "$answer"
         echo ""
     fi
 fi

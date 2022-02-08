@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete dns record
 # options: USER DOMAIN ID [RESTART]
-# labels: dns
 #
 # example: v-delete-dns-record bob acme.com 42 yes
 #
-# The function for deleting a certain record of DNS zone.
-
+# This function for deleting a certain record of DNS zone.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -21,18 +19,19 @@ restart=$4
 quiet=$5
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -48,7 +47,6 @@ is_dns_record_critical
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -63,7 +61,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 fi
 
 # Updating dns-cluster queue
-if [ ! -z "$DNS_CLUSTER" ]; then
+if [ -n "$DNS_CLUSTER" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
     if [ -z "$dlock" ]; then
@@ -71,7 +69,6 @@ if [ ! -z "$DNS_CLUSTER" ]; then
         echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -83,7 +80,7 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
 decrease_user_value "$user" '$U_DNS_RECORDS'
 
 # Restarting named
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "Bind restart failed" >/dev/null
 
 # Logging

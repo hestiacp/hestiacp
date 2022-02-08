@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+#=========================================================================#
 
 server {
     listen      %ip%:%web_port%;
@@ -18,7 +19,7 @@ server {
         index doku.php;
         try_files $uri $uri/ @dokuwiki;
 
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             expires     max;
             fastcgi_hide_header "Set-Cookie";
         }
@@ -37,7 +38,7 @@ server {
         }
     }
 
-    location ~ ^/lib.*\.(gif|png|ico|jpg)$ {
+    location ~ ^/lib.*\.(gif|png|webp|ico|jpg)$ {
         expires 30d;
     }
 

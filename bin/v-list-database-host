@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list database host
 # options: TYPE HOST [FORMAT]
-# labels: panel
 #
 # example: v-list-database-host mysql localhost
 #
-# The function for obtaining database host parameters.
-
+# This function for obtaining database host parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,10 +16,14 @@ host=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -75,10 +77,9 @@ csv_list() {
 is_type_format_valid() {
     exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
     if [[ "$1" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid type extention format :: $1"
+        check_result "$E_INVALID" "invalid type extention format :: $1"
     fi
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -106,7 +107,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

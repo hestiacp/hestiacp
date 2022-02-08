@@ -1,34 +1,34 @@
 #!/bin/bash
 # info: get user value
 # options: USER KEY
-# labels: panel
 #
 # example: v-get-user-value admin FNAME
 #
-# The function for obtaining certain user's parameters.
-
+# This function for obtaining certain user's parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
-key=$(echo "$2"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
+key=$(echo "$2"| tr '[:lower:]' '[:upper:]')
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER KEY'
-is_format_valid 'user'
+is_format_valid 'user' 'key'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -39,7 +39,6 @@ value=$(get_user_value "$key")
 
 # Printing value
 echo "$value"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

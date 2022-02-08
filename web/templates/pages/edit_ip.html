@@ -82,7 +82,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_netmask" value="<?=htmlentities(trim($v_interace, "'"))?>" disabled>
+								<input type="text" size="20" class="vst-input" name="v_netmask" value="<?=htmlentities(trim($v_interface, "'"))?>" disabled>
 							</td>
 						</tr>
 						<tr>
@@ -132,16 +132,6 @@
 						<tr>
 							<td>
 								<input type="text" size="20" class="vst-input" name="v_nat" value="<?=htmlentities(trim($v_nat, "'"))?>">
-							</td>
-						</tr>
-						<tr style="<?php if ($_SESSION['MAIL_SYSTEM'] != 'exim4') { echo 'display: none;';}?>">
-							<td class="vst-text input-label">
-								<?=_('HELO/SMTP Banner');?> <span class="optional">(<?=_('optional');?>)</span>
-							</td>
-						</tr>
-						<tr style="<?php if ($_SESSION['MAIL_SYSTEM'] != 'exim4') { echo 'display: none;';}?>">
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_helo" value="<?=htmlentities(trim($v_helo, "'"))?>">
 							</td>
 						</tr>
 					</table>

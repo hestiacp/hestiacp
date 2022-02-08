@@ -1,19 +1,15 @@
 #!/bin/bash
 # info: Download backup
 # options: USER BACKUP
-# labels: hestia
 #
 # example: v-download-backup admin admin.2020-11-05_05-10-21.tar
 #
-# The function download back-up from remote server
+# This function download back-up from remote server
 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Import Hestia variable for cron launch
-source /etc/profile
 
 # Argument definition
 user=$1
@@ -25,6 +21,8 @@ if [ -z "$BACKUP" ]; then
 fi
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
@@ -37,8 +35,8 @@ source $HESTIA/func/db.sh
 source $HESTIA/func/rebuild.sh
 # shellcheck source=/usr/local/hestia/func/backup.sh
 source $HESTIA/func/backup.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -54,7 +52,6 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-
 # Checking available disk space
 disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
 if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
@@ -66,22 +63,22 @@ fi
 # Checking local backup
 if [ ! -e "$BACKUP/$backup" ]; then
     if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
-        google_download $backup
+        google_download "$backup"
         downloaded='yes'
     fi
     if [[ "$BACKUP_SYSTEM" =~ "sftp" ]] && [ -z "$downloaded" ]; then
-        sftp_download $backup
+        sftp_download "$backup"
         downloaded='yes'
     fi
     if [[ "$BACKUP_SYSTEM" =~ "ftp" ]] && [ -z "$downloaded" ]; then
-        ftp_download $backup
+        ftp_download "$backup"
         downloaded='yes'
     fi
     if [ -z "$downloaded" ]; then
         subj="Download of $backup failed for $user"
         $BIN/v-add-user-notification $user "$subj" "<b>Unable to retrieve backup file from remote server.</b><br><b>Error:</b> $backup file doesn't exist in '${BACKUP}' directory."
         sed -i "/v-download-backup $user /d" $HESTIA/data/queue/backup.pipe
-        check_result $E_NOTEXIST "backup file $backup doesn't exist in '${BACKUP}' folder"
+        check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
     else
         if [ -e "$BACKUP/$backup" ]; then
         chmod 0640 $BACKUP/$backup
@@ -100,8 +97,8 @@ if [ -e "$BACKUP/$backup" ]; then
     cd $BACKUP
     subj="Download of $backup completed for $user"
     email=$(get_user_value '$CONTACT')
-    echo "Backup file $backup was retrieved from the remote server and will be available to download for 12 hours." | $SENDMAIL -s "$subj" $email $notify
-    $BIN/v-add-user-notification $user "$subj" "Backup file <b>$backup</b> was retrieved from the remote server and will be available to download for <b>12 hours</b>."
+    echo "Backup file $backup was retrieved from the remote server and will be available to download for 12 hours." | $SENDMAIL -s "$subj" "$email" "$notify"
+    $BIN/v-add-user-notification "$user" "$subj" "Backup file <b>$backup</b> was retrieved from the remote server and will be available to download for <b>12 hours</b>."
 fi
 
 # Cleaning restore queue

@@ -1,27 +1,27 @@
 #!/bin/bash
 # info: update web templates
 # options: [RESTART]
-# labels: hestia
 #
-# The function for changing the release branch for the
+# This function for changing the release branch for the
 # Hestia Control Panel. This allows the user to switch between
 # stable and pre-release builds which will automaticlly update
 # based on the appropriate release schedule if auto-update is
 # turned on.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 branch=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -29,7 +29,6 @@ source $HESTIA/conf/hestia.conf
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -41,11 +40,7 @@ if [ -z "$branch" ]; then
     echo "Release branches:"
     echo "- release:            the latest stable release"
     echo "- beta:               beta and release candidate test releases"
-    echo "- develop:            unstable development builds"
-    echo ""
-    echo "Integration branches (not tied to a specific release/version):"
-    echo "- staging/fixes:      contains new fixes since the last release."
-    echo "- staging/features:   contains new features since the last release."
+    echo "- main:               work-in-progress code for the next release"
     echo ""
     echo "You can also specify another branch name from the"
     echo "GitHub repository to install the code from that branch."
@@ -54,8 +49,8 @@ if [ -z "$branch" ]; then
 else
     # Check that requested branch exists
     echo "Checking for existence of $branch branch..."
-    branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
-    if [ $branch_check -ne "200" ]; then
+    branch_check=$(curl -s --head -w %{http_code} "https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control" -o /dev/null)
+    if [ "$branch_check" -ne "200" ]; then
         echo "Error: invalid branch name specified."
         exit 1
     fi
@@ -71,5 +66,6 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
 $BIN/v-log-action "system" "Info" "System" "Update branch changed (Value: $branch)."
 exit

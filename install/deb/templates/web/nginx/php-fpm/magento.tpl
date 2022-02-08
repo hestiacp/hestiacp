@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+#=========================================================================#
 
 server {
     listen      %ip%:%web_port%;
@@ -87,7 +88,7 @@ server {
             rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
         }
 
-        location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+        location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
             add_header Cache-Control "public";
             add_header X-Frame-Options "SAMEORIGIN";
             expires +1y;
@@ -121,7 +122,7 @@ server {
             deny all;
         }
 
-        location ~* \.(ico|jpg|jpeg|png|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+        location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
             add_header Cache-Control "public";
             add_header X-Frame-Options "SAMEORIGIN";
             expires +1y;

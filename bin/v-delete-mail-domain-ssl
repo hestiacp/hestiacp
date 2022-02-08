@@ -1,27 +1,29 @@
 #!/bin/bash
 # info: delete mail domain ssl support
 # options: USER DOMAIN
-# labels: hestia
 #
 # example: v-delete-mail-domain-ssl user demo.com
 #
-# The function delete ssl certificates.
+# This function delete ssl certificates.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 domain=$2
+restart=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -41,7 +43,6 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$SSL'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -52,7 +53,7 @@ del_mail_ssl_certificates
 del_webmail_ssl_config
 
 #----------------------------------------------------------#
-#                       Hestia                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating config
@@ -61,7 +62,7 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 decrease_user_value "$user" '$U_MAIL_SSL'
 
 # Restarting mail server
-$BIN/v-restart-mail $restart
+$BIN/v-restart-mail "$restart"
 check_result $? "Mail restart failed" >/dev/null
 
 # Logging

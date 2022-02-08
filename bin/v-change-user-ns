@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user nameservers
 # options: USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]
-# labels: panel
 #
 # example: v-change-user-ns ns1.domain.tld ns2.domain.tld
 #
-# The function for changing default nameservers for specific user.
-
+# This function for changing default nameservers for specific user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,11 +22,12 @@ ns7=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
 ns8=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -39,28 +38,28 @@ check_args '3' "$#" 'USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]'
 
 # Checking argument format
 is_format_valid 'user' 'ns1' 'ns2'
-if [ ! -z "$ns3" ]; then
-    ns3=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+if [ -n "$ns3" ]; then
+    ns3=$(echo "$4" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns3'
 fi
-if [ ! -z "$ns4" ]; then
-    ns4=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+if [ -n "$ns4" ]; then
+    ns4=$(echo "$5" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns4'
 fi
-if [ ! -z "$ns5" ]; then
-    ns5=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+if [ -n "$ns5" ]; then
+    ns5=$(echo "$6" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns5'
 fi
-if [ ! -z "$ns6" ]; then
-    ns6=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+if [ -n "$ns6" ]; then
+    ns6=$(echo "$7" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns6'
 fi
-if [ ! -z "$ns7" ]; then
-    ns7=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+if [ -n "$ns7" ]; then
+    ns7=$(echo "$8" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns7'
 fi
-if [ ! -z "$ns8" ]; then
-    ns8=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+if [ -n "$ns8" ]; then
+    ns8=$(echo "$9" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns8'
 fi
 is_object_valid 'user' 'USER' "$user"
@@ -68,7 +67,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -80,7 +78,6 @@ ns=$(echo "$ns" | sed -e "s/,,//g" -e "s/,$//")
 
 # Changing ns values
 update_user_value "$user" '$NS' "$ns"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

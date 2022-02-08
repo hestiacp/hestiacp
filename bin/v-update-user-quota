@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: update user disk quota
 # options: USER
-# labels: panel
 #
 # example: v-update-user-quota alice
 #
 # The functions upates disk quota for specific user
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -29,7 +28,6 @@ source $HESTIA/conf/hestia.conf
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -50,7 +48,6 @@ if [ "$quota" = 'unlimited' ]; then
 else
     setquota $user $soft $hard 0 0 $mnt 2>/dev/null
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

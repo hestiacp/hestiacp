@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: add cron job
 # options: USER MIN HOUR DAY MONTH WDAY COMMAND [JOB] [RESTART]
-# labels: 
 #
 # example: v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
 #
-# The function adds a job to cron daemon. When executing commands, any output
+# This function adds a job to cron daemon. When executing commands, any output
 # is mailed to user's email if parameter REPORTS is set to 'yes'.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,10 +23,12 @@ job=$8
 restart=$9
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 HIDE=7
 
@@ -48,7 +48,6 @@ is_object_new 'cron' 'JOB' "$job"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -75,7 +74,6 @@ sort_cron_jobs
 # Sync cronjobs with system crond
 sync_cron_jobs
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -83,8 +81,8 @@ sync_cron_jobs
 # Increasing cron value
 increase_user_value $user '$U_CRON_JOBS'
 
-# Restarting crond
-$BIN/v-restart-cron $restart
+# Restarting cron
+$BIN/v-restart-cron "$restart"
 check_result $? "Cron restart failed" >/dev/null
 
 # Logging

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete user backup
 # options: USER BACKUP
-# labels: panel
 #
 # example: v-delete-user-backup admin admin.2012-12-21_00-10-00.tar
 #
-# The function deletes user backup.
-
+# This function deletes user backup.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,13 +15,14 @@ user=$1
 backup=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/backup.sh
 source $HESTIA/func/backup.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -42,7 +41,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-backup_folder=$BACKUP
+backup_folder="$BACKUP"
 
 line=$(grep "BACKUP='$backup'" $USER_DATA/backup.conf)
 parse_object_kv_list "$line"
@@ -55,12 +54,16 @@ fi
 if [[ "$TYPE" =~ "ftp" ]] && [ "$deleted" == "0" ]; then
     ftp_delete "$backup"
 fi
+if [[ "$TYPE" =~ "b2" ]]; then
+    b2_delete "$user" "$backup"
+fi
 if [[ "$TYPE" =~ "local" ]]; then
-    rm -f $backup_folder/$2
+    rm -f "$backup_folder/$2"
 fi
 
+
 # Deleting backup
-sed -i "/BACKUP='$2' /d" $USER_DATA/backup.conf
+sed -i "/BACKUP='$2' /d" "$USER_DATA/backup.conf"
 
 
 #----------------------------------------------------------#

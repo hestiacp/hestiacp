@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list dns template
 # options: TEMPLATE [FORMAT]
-# labels: dns
 #
 # example: v-list-dns-template zoho
 #
-# The function for obtaining the DNS template parameters.
-
+# This function for obtaining the DNS template parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,10 +15,14 @@ template=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -80,7 +82,6 @@ csv_list() {
     done < <(cat $DNSTPL/$template.tpl)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -88,7 +89,6 @@ csv_list() {
 check_args '1' "$#" 'TEMPLATE [FORMAT]'
 is_format_valid 'template'
 is_dns_template_valid "$template"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -101,7 +101,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t -s '^';;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -76,7 +76,7 @@ VE.callbacks.click.do_suspend = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="suspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
-     VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 /*
@@ -86,7 +86,7 @@ VE.callbacks.click.do_unsuspend = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="unsuspend_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-suspention');
-     VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 /*
@@ -96,21 +96,21 @@ VE.callbacks.click.do_delete = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="delete_url"]', ref).val();
      var dialog_elm = ref.find('.confirmation-text-delete');
-     VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+     VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 VE.callbacks.click.do_servicerestart = function(evt, elm) {
     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
     var url = $('input[name="servicerestart_url"]', ref).val();
     var dialog_elm = ref.find('.confirmation-text-servicerestart');
-    VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+    VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 VE.callbacks.click.do_servicestop = function(evt, elm) {
     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
     var url = $('input[name="servicestop_url"]', ref).val();
     var dialog_elm = ref.find('.confirmation-text-servicestop');
-    VE.helpers.createConfirmationDialog(dialog_elm, '', url);
+    VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 /*
@@ -210,54 +210,37 @@ VE.helpers.toggleHiddenPasswordText = function(ref, triggering_elm) {
     }
 }
 
-VE.helpers.refresh_timer = {
-    speed: 50,
-    degr: 180,
-    right: 0,
-    left: 0,
-    periodical: 0,
-    first: 1,
+var reloadTimer = 150;
+var reloadFunction = '';
 
-    start: function(){
-        this.periodical = setInterval(function(){VE.helpers.refresh_timer.turn()}, this.speed);
-    },
+$(document).ready(startTime);
+function startTime(){
+    if ($(".spinner")[0]){
+    reloadFunction = setInterval(updateInterval, 100);
+  }
+}
 
-    stop: function(){
-        clearTimeout(this.periodical);
-    },
+function updateInterval(){
+  reloadTimer = reloadTimer -1;
+  if(reloadTimer == 0){
+    location.reload();
+  }
+}
 
-    turn: function(){
-        this.degr += 1;
-
-        if (this.first && this.degr >= 361){
-            this.first = 0;
-            this.degr = 180;
-            this.left.css({'-webkit-transform': 'rotate(180deg)'});
-            this.left.css({'transform': 'rotate(180deg)'});
-            this.left.children('.loader-half').addClass('dark');
-        }
-        if (!this.first && this.degr >= 360){
-            this.first = 1;
-            this.degr = 180;
-            this.left.css({'-webkit-transform': 'rotate(0deg)'});
-            this.right.css({'-webkit-transform': 'rotate(180deg)'});
-            this.left.css({'transform': 'rotate(0deg)'});
-            this.right.css({'transform': 'rotate(180deg)'});
-            this.left.children('.loader-half').removeClass('dark');
-
-            this.stop();
-            location.reload();
-        }
-
-        if (this.first){
-            this.right.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
-            this.right.css({'transform': 'rotate('+this.degr+'deg)'});
-        }
-        else{
-            this.left.css({'-webkit-transform': 'rotate('+this.degr+'deg)'});
-            this.left.css({'transform': 'rotate('+this.degr+'deg)'});
-        }
-    }
+function stopTimer(){
+  console.log(reloadFunction);
+  if(reloadFunction){
+    clearInterval(reloadFunction);
+    reloadFunction = false;
+    $('.spinner').addClass('paused');
+    $('.pause-stop i').removeClass('fa-pause');
+    $('.pause-stop i').addClass('fa-play'); 
+  }else{
+    reloadFunction = setInterval(updateInterval, 100);
+    $('.spinner').removeClass('paused');
+    $('.pause-stop i').removeClass('fa-play');
+    $('.pause-stop i').addClass('fa-pause'); 
+  }
 }
 
 VE.navigation.enter_focused = function() {

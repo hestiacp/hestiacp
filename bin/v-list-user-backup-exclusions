@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: list backup exclusions
 # options: USER [FORMAT]
-# labels: 
 #
 # example: v-list-user-backup-exclusions admin
 #
-# The function for obtaining the backup exclusion list
+# This function for obtaining the backup exclusion list
 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,8 +16,12 @@ user=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -147,7 +150,6 @@ csv_list() {
     echo "\"$WEB\",\"$MAIL\",\"$DB\",\"$USER\""
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -155,7 +157,6 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -169,7 +170,7 @@ USER=''
 
 # Parsing backup exclusion list
 if [ -e "$USER_DATA/backup-excludes.conf" ]; then
-    source $USER_DATA/backup-excludes.conf
+    source_conf "$USER_DATA/backup-excludes.conf"
 fi
 
 # Listing data
@@ -179,7 +180,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

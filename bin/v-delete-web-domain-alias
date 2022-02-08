@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete web domain alias
 # options: USER DOMAIN ALIAS [RESTART]
-# labels: web
 #
 # example: v-delete-web-domain-alias admin example.com www.example.com
 #
-# The function of deleting the alias domain (parked domain). By this call
+# This function of deleting the alias domain (parked domain). By this call
 # default www aliase can be removed as well.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,14 +18,16 @@ dom_alias=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,12 +40,11 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 if [ -z "$(echo $ALIAS |tr ',' '\n' |grep ^$dom_alias$)" ]; then
-    check_result $E_NOTEXIST "alias $dom_alias doesn't exist"
+    check_result "$E_NOTEXIST" "alias $dom_alias doesn't exist"
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -69,7 +68,7 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 # Rebuilding proxy configuration
-if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
     del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     if [ "$SSL" = 'yes' ]; then
@@ -88,10 +87,10 @@ update_object_value 'web' 'DOMAIN' "$domain" '$ALIAS' "$ALIAS"
 decrease_user_value "$user" '$U_WEB_ALIASES'
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

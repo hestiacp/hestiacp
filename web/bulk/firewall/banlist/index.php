@@ -1,20 +1,15 @@
 <?php
-// Init
-error_reporting(NULL);
+
 ob_start();
-session_start();
 
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_POST);
 
 // Check user
-if ($_SESSION['userContext'] != 'admin')  {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
@@ -29,10 +24,10 @@ switch ($action) {
 }
 
 foreach ($ipchain as $value) {
-    list($ip,$chain) = explode(":",$value);
+    list($ip, $chain) = explode(":", $value);
     $v_ip    = escapeshellarg($ip);
     $v_chain = escapeshellarg($chain);
-    exec (HESTIA_CMD.$cmd." ".$v_ip." ".$v_chain, $output, $return_var);
+    exec(HESTIA_CMD.$cmd." ".$v_ip." ".$v_chain, $output, $return_var);
 }
 
 header("Location: /list/firewall/banlist");

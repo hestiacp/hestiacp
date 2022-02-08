@@ -1,6 +1,4 @@
 <?php
-// Init
-error_reporting(NULL);
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 

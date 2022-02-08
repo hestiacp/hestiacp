@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: add user sftp key
 # options: USER [TTL]
-# labels: hestia
 #
-# The script creates and updates ssh key for filemanager usage
-
+# This function creates and updates SSH keys for used with the File Manager.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -15,11 +13,12 @@ user=$1
 ttl=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,20 +39,17 @@ PRVKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key"
 PUBKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key.pub"
 AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
 
-[ -z "$(readlink -f "$PRVKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid private key file path"
-[ -z "$(readlink -f "$PUBKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid public key file path"
-[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result $E_FORBIDEN "Invalid authorized keys path"
+[ -z "$(readlink -f "$PRVKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid private key file path"
+[ -z "$(readlink -f "$PUBKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid public key file path"
+[ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid authorized keys path"
 
 if [ ! -f "${PRVKEY_FILE}" ]; then
-
     ssh-keygen -q -b 1024 -t rsa -f "${PRVKEY_FILE}" -N ""
     rm "${PUBKEY_FILE}"
     new_privkey=true
-
 fi
 
 if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_privkey" = true ]; then
-
     pubkey_str="$(ssh-keygen -y -f ${PRVKEY_FILE})"
     pubkey_desc="filemanager.ssh.key"
 
@@ -70,13 +66,11 @@ if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_privkey" = true ]; then
         echo "rm ${PRVKEY_FILE}" | at "now +${ttl} minute" > /dev/null 2>&1
     fi
     echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${expire} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
-
 fi
 
 # 
 chown ${user}: "${AUTHKEY_FILE}"
 chown admin: "${PRVKEY_FILE}"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: update httpd rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-httpd
 #
-# The function is for updating apache rrd database and graphic.
-
+# This function is for updating apache rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 period=${1-daily}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -32,7 +31,7 @@ case $period in
     weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
     monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
     yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit $E_RRD ;;
+    *) exit "$E_RRD" ;;
 esac
 
 
@@ -96,13 +95,12 @@ rrdtool graph $RRD/web/$period-httpd.png \
     GPRINT:a:'MIN:Min\:''%8.0lf' \
     GPRINT:a:'MAX:Max\:''%8.0lf\j'  &>/dev/null; result=$?
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 if [ "$result" -ne 0 ]; then
-    exit $E_RRD
+    exit "$E_RRD"
 fi
 
 exit

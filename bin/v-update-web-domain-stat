@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update domain statistics
 # options: USER DOMAIN
-# labels: web
 #
 # example: v-update-web-domain-stat alice acme.com
 #
-# The function runs log analyzer for specific webdomain.
-
+# This function runs log analyzer for specific webdomain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,17 +16,18 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -42,7 +41,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -141,14 +139,11 @@ case $STATS in
 esac
 
 # Chown
-chown -R $user:$(groups $user| cut -f 3 -d ' ') $dir
-
+groups=$(groups "$user"| cut -f 3 -d ' ')
+chown -R $user:$groups "$dir"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# No Logging
-#log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list cron job
 # options: USER JOB [FORMAT]
-# labels: panel
 #
 # example: v-list-cron-job admin 7
 #
-# The function of obtaining cron job parameters.
-
+# This function of obtaining cron job parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,8 +16,12 @@ job=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -63,7 +65,6 @@ csv_list() {
     echo  "$MIN,$HOUR,$DAY,$WDAY,\"$CMD\",$SUSPENDED,$TIME,$DATE'"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -72,7 +73,6 @@ check_args '2' "$#" 'USER JOB [FORMAT]'
 is_format_valid 'user'
 is_number_format_valid  "$job" "job_id"
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -84,7 +84,7 @@ conf=$USER_DATA/cron.conf
 # Checking job id
 cron_line=$(grep "JOB='$job'" $conf)
 if [ -z "$cron_line" ]; then
-    check_result $E_NOTEXIST "cron job $job doesn't exist"
+    check_result "$E_NOTEXIST" "cron job $job doesn't exist"
 fi
 
 # Parsing cron job
@@ -100,7 +100,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

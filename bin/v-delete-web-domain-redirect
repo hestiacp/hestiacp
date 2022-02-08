@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: Delete force redirect to domain
 # options: USER DOMAIN [RESTART]
-# labels: hestia web
 #
 # example: v-add-web-domain-redirect user domain.tld
 #
 # Function delete a forced redirect to a domain 
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,13 +15,15 @@ user=$1
 domain=$2
 restart=${3-no}
 
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -39,7 +39,6 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -48,8 +47,8 @@ check_hestia_demo_mode
 
 # Check if proxy is active
 if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    rm $HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect
-    rm $HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect
+    rm "$HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect"
+    rm "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
 else
      echo "Non supported please use .htaccess instead" 
      exit 2;
@@ -62,14 +61,11 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' ""
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' ""
 
-if [ "$restart" = "yes" ]; then
-    # Restarting web server
-    $BIN/v-restart-web $restart
-    check_result $? "Web restart failed" >/dev/null
+$BIN/v-restart-web "$restart"
+check_result $? "Web restart failed" >/dev/null
     
-    $BIN/v-restart-proxy $restart
-    check_result $? "Proxy restart failed" >/dev/null
-fi
+$BIN/v-restart-proxy "$restart"
+check_result $? "Proxy restart failed" >/dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Domain redirection disabled (Domain: $domain)."

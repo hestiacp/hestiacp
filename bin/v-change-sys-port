@@ -1,44 +1,43 @@
 #!/bin/bash
 # info: change system backend port
 # options: PORT
-# labels: hestia panel
 #
 # example: v-change-sys-port 5678
 #
-# The function for changing the system backend port in NGINX configuration.
-
+# This function for changing the system backend port in NGINX configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 PORT=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Functions
 is_port_valid() {
     # Check if PORT is numeric
-    if [[ ! $PORT =~ ^[0-9]+$ ]]; then
+    if [[ ! "$PORT" =~ ^[0-9]+$ ]]; then
         echo "Port should contains a numeric value only!"
-        log_event $E_INVALID "$ARGUMENTS"
-        exit $E_INVALID
+        log_event "$E_INVALID" "$ARGUMENTS"
+        exit "$E_INVALID"
     fi
 
     # Check if PORT is already used
-    BUSY_PORT=$(lsof -i:$PORT)
-    if [ ! -z "$BUSY_PORT" ] && [ "$PORT" != "$BACKEND_PORT" ]; then
+    BUSY_PORT=$(lsof -i:"$PORT")
+    if [ -n  "$BUSY_PORT" ] && [ "$PORT" != "$BACKEND_PORT" ]; then
         echo "Port is already used by Hestia, please set anotherone!"
-        log_event $E_INUSE "$ARGUMENTS"
-        exit $E_INUSE
+        log_event "$E_INUSE" "$ARGUMENTS"
+        exit "$E_INUSE"
     fi
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -50,7 +49,6 @@ is_port_valid
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -58,14 +56,13 @@ check_hestia_demo_mode
 # Get original port
 ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
 
-# Set new port in config via v-change-sys-config-value
-$HESTIA/bin/v-change-sys-config-value "BACKEND_PORT" $PORT
-
 # Check if port is different to nginx.conf
 if [ "$ORIGINAL_PORT" = "$PORT" ]; then
     # Nothing to do, exit
     exit
 else
+    # Set new port in config via v-change-sys-config-value
+    $HESTIA/bin/v-change-sys-config-value "BACKEND_PORT" "$PORT"
     # Replace port in config files.
     sed -i "/listen/c\        listen          $PORT ssl;" $HESTIA/nginx/conf/nginx.conf
     if [ -d /etc/roundcube/ ]; then
@@ -77,10 +74,12 @@ else
     sed -i "/COMMENT='HESTIA'/c\RULE='2' ACTION='ACCEPT' PROTOCOL='TCP' PORT='$PORT' IP='0.0.0.0/0' COMMENT='HESTIA' SUSPENDED='no' TIME='07:40:16' DATE='2014-05-25'" $HESTIA/data/firewall/rules.conf
     
     # Restart services
-    $HESTIA/bin/v-restart-service iptables
+    if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
+        $HESTIA/bin/v-restart-service iptables
+    fi
 
     # Check if Hestia is running
-    if [[ $(ps -eaf | grep -i hestia |sed '/^$/d' | wc -l) > 1 ]]; then
+    if [[ $(ps -eaf | grep -i hestia |sed '/^$/d' | wc -l) -gt 1 ]]; then
         $HESTIA/bin/v-restart-service hestia
     fi  
 fi

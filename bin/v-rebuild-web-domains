@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: rebuild web domains
 # options: USER [RESTART]
-# labels: 
 #
 # example: v-rebuild-web-domains
 #
-# The function rebuilds web configuration files.
-
+# This function rebuilds web configuration files.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,19 +15,20 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,12 +39,13 @@ is_format_valid 'user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 check_user=$(is_object_unsuspended 'user' 'USER' "$user")
-if [ ! -z "$check_user" ]; then
+if [ -n "$check_user" ]; then
     exit
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -65,7 +65,7 @@ if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf" ]; then
 fi
 
 # Deleting old proxy configs
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     if [ -e "/etc/$PROXY_SYSTEM/conf.d/hestia.conf" ]; then
         sed -i "/.*\/$user\/conf\/web\//d" /etc/$PROXY_SYSTEM/conf.d/hestia.conf
     fi
@@ -93,7 +93,7 @@ for php_folder in /etc/php/*; do
 done
 
 # Deleting backend configs
-if [ ! -z "$WEB_BACKEND" ]; then
+if [ -n "$WEB_BACKEND" ]; then
     if [ "$WEB_BACKEND_POOL" = 'user' ]; then
         prepare_web_backend
         delete_web_backend
@@ -108,31 +108,30 @@ fi
 
 # Starting rebuild loop for each web domain
 for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
-    if [ ! -z "$WEB_BACKEND" ]; then
+    if [ -n "$WEB_BACKEND" ]; then
         template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND');
         if [ -z "$template" ]; then 
             template="default"
             update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' 'default'  
         fi
-        $BIN/v-add-web-domain-backend $user $domain $template $restart
+        $BIN/v-add-web-domain-backend "$user" "$domain" "$template" "$restart"
     fi
     rebuild_web_domain_conf
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating user counters
-$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters "$user"
 
 if [ "$restart" = "yes" ]; then
     # Restarting web server
-    $BIN/v-restart-web $restart
+    $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" >/dev/null
 
-    $BIN/v-restart-proxy $restart
+    $BIN/v-restart-proxy "$restart"
     check_result $? "Proxy restart failed" >/dev/null
 fi
 

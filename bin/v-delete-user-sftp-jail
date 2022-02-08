@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: delete user sftp jail
 # options: USER
-# labels: panel
 #
 # example: v-delete-user-sftp-jail whistler
 #
-# The script disables sftp jailed environment for USER
-
+# This function disables sftp jailed environment for USER
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -37,13 +36,15 @@ fi
 ssh_users=$(grep -A1 "^# Hestia SFTP Chroot" /etc/ssh/sshd_config | sed -n 2p | sed 's/Match User //')
 IFS=',' read -r -a users <<< "$ssh_users"
 
+match_string="$ssh_users,"
 # Check if jail exist
-if [[ ! " ${users[@]} " =~ " ${user} " ]]; then
-    exit
+if [[ ! "$match_string" =~ ,$user, ]]; then
+    exit 2
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

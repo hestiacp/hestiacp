@@ -1,34 +1,33 @@
 #!/bin/bash
 # info: change system timezone
 # options: TIMEZONE
-# labels: panel
 #
 # example: v-change-sys-timezone Europe/Berlin
 #
-# The function for changing system timezone.
-
+# This function for changing system timezone.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 timezone=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 is_timezone_valid() {
     if [ ! -e "/usr/share/zoneinfo/$timezone" ]; then
         echo "Error: tz file $timezone doesn't exist"
-        log_event $E_NOTEXIST "$ARGUMENTS"
-        exit $E_NOTEXIST
+        log_event "$E_NOTEXIST" "$ARGUMENTS"
+        exit "$E_NOTEXIST"
     fi
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,7 +39,6 @@ is_timezone_valid
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -48,7 +46,7 @@ check_hestia_demo_mode
 # Changing system timezone
 which timedatectls >/dev/null 2>&1
 if [ "$?" -eq 0 ]; then
-    timedatectl set-timezone $timezone
+    timedatectl set-timezone "$timezone"
 else
     if [ -e "/etc/sysconfig/clock" ]; then
         sed -i "s/ZONE.*//" /etc/sysconfig/clock
@@ -62,13 +60,12 @@ else
 fi
 
 # Chaning php timezone
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
     for conf in $(find /etc/php* -name php.ini); do
         sed -i "s|;date.timezone =|date.timezone =|" $conf
         sed -i "s|date.timezone =.*|date.timezone = $timezone|" $conf
     done
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: changes user configuration value
 # options: USER KEY VALUE
-# labels: hestia
 #
 # example: v-change-user-config-value admin ROLE admin
 #
 # Changes key/value for specified user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,19 +16,19 @@ key="$2"
 value="$3"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-# Reading user values
-source $USER_DATA/user.conf
-
-is_format_valid 'user' 'theme'
+is_format_valid 'user' 'key' 
+is_common_format_valid "$value" "$key"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -44,7 +43,7 @@ check_hestia_demo_mode
 check_ckey=$(grep "^${key^^}" $USER_DATA/user.conf)
 if [ -z "$check_ckey" ]; then
     # Rebuild user configuration to repair missing value
-    $BIN/v-rebuild-user $user
+    $BIN/v-rebuild-user "$user"
 fi
 update_user_value "$user" "${key^^}" "$value"
 

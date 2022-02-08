@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: enable GeoIP Awstats 
 #
-# The function enables resolving IP addresses  with the use of GeoIP database
-
+# This function enables GeoIP location lookup for
+# IP addresses that are listed in awstats.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -13,7 +13,6 @@
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -39,7 +38,6 @@ if [ -d /etc/awstats ]; then
         $BIN/v-rebuild-web-domains $user no
     done
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

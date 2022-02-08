@@ -1,8 +1,6 @@
 <?php
-// Init
-error_reporting(NULL);
+
 ob_start();
-session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
@@ -10,10 +8,7 @@ $backup = $_POST['backup'];
 $action = $_POST['action'];
 
 // Check token
-if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-    header('location: /login/');
-    exit();
-}
+verify_csrf($_POST);
 
 switch ($action) {
     case 'delete': $cmd='v-delete-user-backup';
@@ -23,7 +18,7 @@ switch ($action) {
 
 foreach ($backup as $value) {
     $value = escapeshellarg($value);
-    exec (HESTIA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
+    exec(HESTIA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
 }
 
 header("Location: /list/backup/");

@@ -1,8 +1,6 @@
 <?php
-// Init
-error_reporting(NULL);
+
 ob_start();
-session_start();
 $TAB = 'CRON';
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
@@ -20,8 +18,8 @@ if (empty($_GET['job'])) {
 
 // List cron job
 $v_job = escapeshellarg($_GET['job']);
-exec (HESTIA_CMD."v-list-cron-job ".$user." ".$v_job." 'json'", $output, $return_var);
-check_return_code($return_var,$output);
+exec(HESTIA_CMD."v-list-cron-job ".$user." ".$v_job." 'json'", $output, $return_var);
+check_return_code($return_var, $output);
 
 $data = json_decode(implode('', $output), true);
 unset($output);
@@ -38,7 +36,7 @@ $v_cmd = $data[$v_job]['CMD'];
 $v_date = $data[$v_job]['DATE'];
 $v_time = $data[$v_job]['TIME'];
 $v_suspended = $data[$v_job]['SUSPENDED'];
-if ( $v_suspended == 'yes' ) {
+if ($v_suspended == 'yes') {
     $v_status =  'suspended';
 } else {
     $v_status =  'active';
@@ -48,10 +46,7 @@ if ( $v_suspended == 'yes' ) {
 if (!empty($_POST['save'])) {
 
     // Check token
-    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_POST);
 
     $v_username = $user;
     $v_job = escapeshellarg($_GET['job']);
@@ -63,8 +58,8 @@ if (!empty($_POST['save'])) {
     $v_cmd = escapeshellarg($_POST['v_cmd']);
 
     // Save changes
-    exec (HESTIA_CMD."v-change-cron-job ".$v_username." ".$v_job." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
-    check_return_code($return_var,$output);
+    exec(HESTIA_CMD."v-change-cron-job ".$v_username." ".$v_job." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
+    check_return_code($return_var, $output);
     unset($output);
 
     $v_cmd = $_POST['v_cmd'];

@@ -1,24 +1,24 @@
 #!/bin/bash
-# info: add ip adresss to allowed ip list api
+# info: add IP address to API allow list
 # options: IP 
-# labels: hestia
 #
 # example: v-add-sys-api-ip 1.1.1.1
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 ip46=${1// /}
 
 # Includes
-
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -30,7 +30,6 @@ is_format_valid 'ip46'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -40,6 +39,10 @@ if [ "$API_ALLOWED_IP" != "" ]; then
 else
     $BIN/v-change-sys-config-value 'API_ALLOWED_IP' "$ip46"
 fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
 
 # Logging
 $BIN/v-log-action "system" "Warning" "System" "Added new IP address added to Allowed IP API (IP: $ip46)"

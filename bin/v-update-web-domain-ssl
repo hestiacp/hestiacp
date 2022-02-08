@@ -1,18 +1,16 @@
 #!/bin/bash
 # info: updating ssl certificate for domain
 # options: USER DOMAIN SSL_DIR [RESTART]
-# labels: web
 #
 # example: v-update-web-domain-ssl admin domain.com /home/admin/tmp
 #
-# The function updates the SSL certificate for a domain. Parameter ssl_dir is a path
+# This function updates the SSL certificate for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file 
 # domain.tld.crt and its key domain.tld.key are mandatory. Certificate
 # authority domain.tld.ca file is optional.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,19 +21,21 @@ ssl_dir=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -52,10 +52,13 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_exist 'web' 'DOMAIN' "$domain" '$SSL'
 is_web_domain_cert_valid
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Deleting old certificate
+rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
+rm -f $USER_DATA/ssl/$domain.*
 
 # Adding certificate to user data directory
 cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
@@ -68,8 +71,6 @@ if [ -e "$ssl_dir/$domain.ca" ]; then
 fi
 chmod 660 $USER_DATA/ssl/$domain.*
 
-
-
 # Adding certificate to user dir
 cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
 cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
@@ -78,17 +79,15 @@ if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
     cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
 fi
 
-
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

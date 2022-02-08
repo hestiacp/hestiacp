@@ -1,30 +1,27 @@
 #!/bin/bash
 # info: list mail status
 # options: [FORMAT]
-# labels: mail
 #
 # example: v-list-sys-mail-status json
 #
-# The function lists mail server status
-
+# This function lists mail server status
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 #format=${1-shell}
 
-# Importing system environment  as we run this script
-# mostly by cron wich do not read it by itself
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -52,7 +49,6 @@ if [ $? -ne 0 ]; then
     echo "[Exim4] No valid log lines read"
     exit 0;
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

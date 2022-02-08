@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: search for available commands
 # options: ARG1 [ARG...]
-# labels: hestia
 #
 # example: v-search-command web
 #
@@ -10,14 +9,17 @@
 # Originally developed for VestaCP by Federico Krum
 # https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #

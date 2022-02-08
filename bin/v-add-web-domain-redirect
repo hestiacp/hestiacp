@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Adding force redirect to domain
 # options: USER DOMAIN REDIRECT HTTPCODE [RESTART]
-# labels: hestia web
 #
 # example: v-add-web-domain-redirect user domain.tld domain.tld 
 # example: v-add-web-domain-redirect user domain.tld www.domain.tld 
@@ -12,9 +11,8 @@
 #
 # Function creates a forced redirect to a domain 
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,10 +23,12 @@ code=${4-301}
 restart=${5-no}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -41,7 +41,6 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-
 
 scheme=0
 if [[ "$3" =~ http://|https:// ]]; then
@@ -62,7 +61,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -73,7 +71,7 @@ if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
     sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
 fi
 # Insert redirect commands
-if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
+if [ -n "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
     if [ "$scheme" = 1 ]; then
         echo "   return $code $redirect\$request_uri;" > $conf        
         if [ ! -e "$sconf" ]; then
@@ -97,20 +95,22 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Update object keys
 if [ -z "$REDIRECT" ]; then
     add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT' 'U_DISK'
     add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT_CODE' 'U_DISK'
 fi
 
+# Update values for domain
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' "$redirect"
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' "$code"
 
 if [ "$restart" = "yes" ]; then
     # Restarting web server
-    $BIN/v-restart-web $restart
+    $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" >/dev/null
     
-    $BIN/v-restart-proxy $restart
+    $BIN/v-restart-proxy "$restart"
     check_result $? "Proxy restart failed" >/dev/null
 fi
 

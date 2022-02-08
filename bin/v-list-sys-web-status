@@ -1,29 +1,25 @@
 #!/bin/bash
 # info: list web status
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-web-status
 #
-# The function lists web server status
-
+# This function lists web server status
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 #format=${1-shell}
 
-# Importing system environment  as we run this script
-# mostly by cron wich do not read it by itself
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -49,7 +45,6 @@ if [ "$WEB_SYSTEM" != 'nginx' ]; then
 else
     wget -qO-  http://localhost:8084/
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

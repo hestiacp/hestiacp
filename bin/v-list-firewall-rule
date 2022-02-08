@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list firewall rule
 # options: RULE [FORMAT]
-# labels: panel
 #
 # example: v-list-firewall-rule 2
 #
-# The function of obtaining firewall rule parameters.
-
+# This function of obtaining firewall rule parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,8 +15,12 @@ rule=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 json_list() {
     echo '{'
@@ -59,7 +61,6 @@ csv_list() {
     echo "$RULE,$ACTION,$PROTOCOL,$PORT,$IP,$COMMENT,$SUSPENDED,$TIME,$DATE"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -67,7 +68,6 @@ csv_list() {
 check_args '1' "$#" 'RULE [FORMAT]'
 is_number_format_valid "$rule" "rule id"
 is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -83,7 +83,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

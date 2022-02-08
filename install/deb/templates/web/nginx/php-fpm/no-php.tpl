@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+#=========================================================================#
 
 server {
     listen      %ip%:%web_port%;
@@ -14,15 +15,15 @@ server {
         
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
-    types {
-            text/html   html htm shtml php php5;
-    }
-
     location / {
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             expires     max;
             fastcgi_hide_header "Set-Cookie";
         }
+    }
+    
+    location ~ [^/]\.php(/|$) {
+        types { } default_type "text/html";
     }
 
     location /error/ {

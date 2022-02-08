@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: update system queue
 # options: PIPE
-# labels: panel
 #
 # example: v-update-sys-queue
 #
@@ -11,33 +10,25 @@
 # In a nutshell Apache will be restarted only once even if 10 domains are
 # added or deleted.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 # Argument definition
 queue=$1
 
-# Importing system environment  as we run this script
-# mostly by cron wich not read it by itself
-source /etc/profile
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
-# Export PATH for cron
-PATH=$PATH:$BIN
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'QUEUE'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -64,12 +55,8 @@ case $queue in
     *)              check_args '1' '0' 'QUEUE' ;;
 esac
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# No Logging
-#log_event "$OK" "$ARGUMENTS"
 
 exit

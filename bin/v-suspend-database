@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: suspend database
 # options: USER DATABASE
-# labels: panel
 #
 # example: v-suspend-database admin admin_wordpress_db
 #
-# The function for suspending a certain user database.
-
+# This function for suspending a certain user database.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,13 +15,14 @@ user=$1
 database=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,7 +39,6 @@ is_object_unsuspended 'db' 'DB' "$database"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -53,7 +51,6 @@ case $TYPE in
     mysql) suspend_mysql_database ;;
     pgsql) suspend_pgsql_database ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

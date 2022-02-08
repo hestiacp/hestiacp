@@ -28,13 +28,12 @@ location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRA
 
 location / {
     try_files $uri $uri/ =404;
-    location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+    location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
         expires 7d;
         fastcgi_hide_header "Set-Cookie";
     }
 
     location ~ ^/(.*\.php)$ {
-        alias /var/lib/rainloop/$1;
         fastcgi_pass 127.0.0.1:9000;
         fastcgi_index index.php;
         include fastcgi_params;
@@ -46,5 +45,7 @@ location /error/ {
     alias /var/www/document_errors/;
 }
 
-include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;
+proxy_hide_header Upgrade;
+
+include %home%/%user%/conf/mail/%root_domain%/%web_system%.ssl.conf_*;
 }

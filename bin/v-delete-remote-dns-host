@@ -1,28 +1,27 @@
 #!/bin/bash
 # info: delete remote dns host
 # options: HOST
-# labels: dns
 #
 # example: v-delete-remote-dns-host example.org
 #
-# The function for deleting the remote dns host from hestia configuration.
-
+# This function for deleting the remote dns host from hestia configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 host=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/remote.sh
 source $HESTIA/func/remote.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -35,31 +34,31 @@ is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Deleting remote domains
-$BIN/v-delete-remote-dns-domains $host >>/dev/null 2>&1
+$BIN/v-delete-remote-dns-domains "$host" >>/dev/null 2>&1
 
 # Deleting server
-sed -i "/HOST='$host' /d" $HESTIA/conf/dns-cluster.conf
+sed -i "/HOST='$host' /d" "$HESTIA/conf/dns-cluster.conf"
 
 # Deleting DNS_CLUSTER key
 check_cluster=$(grep HOST $HESTIA/conf/dns-cluster.conf |wc -l)
 if [ "$check_cluster" -eq '0' ]; then
-    rm -f $HESTIA/conf/dns-cluster.conf
-    sed -i "/DNS_CLUSTER=/d" $HESTIA/conf/hestia.conf
+    rm -f "$HESTIA/conf/dns-cluster.conf"
+    sed -i "/DNS_CLUSTER=/d" "$HESTIA/conf/hestia.conf"
 
     # Delete cron job
     cmd="sudo $HESTIA/bin/v-update-sys-queue dns-cluster"
     check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
-    if [ ! -z "$check_cron" ]; then
+    if [ -n "$check_cron" ]; then
         parse_object_kv_list "$check_cron"
         $BIN/v-delete-cron-job admin "$JOB"
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,11 +1,10 @@
 #!/bin/bash
 # info: add database
 # options: USER DATABASE DBUSER DBPASS [TYPE] [HOST] [CHARSET]
-# labels: 
 #
 # example: v-add-database admin wordpress_db matt qwerty123
 #
-# The function creates the database concatenating username and user_db.
+# This function creates the database concatenating username and user_db.
 # Supported types of databases you can get using v-list-sys-config script.
 # If the host isn't stated and there are few hosts configured on the server,
 # then the host will be defined by one of three algorithms. "First" will choose
@@ -13,9 +12,8 @@
 # "Weight" will distribute new database through hosts evenly. Algorithm and
 # types of supported databases is designated in the main configuration file.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -29,12 +27,14 @@ charset=${7-UTF8}
 charset=$(echo "$charset" |tr '[:lower:]' '[:upper:]')
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 if [ "$type" = "pgsql" ]; then
    database=$(echo "$user"_"$2" | tr '[:upper:]' '[:lower:]');
@@ -58,11 +58,21 @@ is_object_unsuspended "../../../conf/$type" 'DBHOST' "$host"
 #is_charset_valid
 is_package_full 'DATABASES'
 is_password_valid
+
+if [ "$type" = "pgsql" ]; then 
+   exclude="-"
+    if [[ "$dbuser" =~ $exclude ]]; then
+        check_result "$E_INVALID" "invalid database user format"
+    fi
+    if [[ "$database" =~ $exclude ]]; then
+      check_result "$E_INVALID" "invalid database format"
+    fi
+fi
+
 dbpass="$password"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -73,7 +83,6 @@ case $type in
     mysql) add_mysql_database ;;
     pgsql) add_pgsql_database ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update backup exclusion list
 # options: USER FILE
-# labels: panel
 #
-# example: v-update-user-backup-exclusions admin .bash_history
+# example: v-update-user-backup-exclusions admin /tmp/backup_exclusions
 #
-# The function for updating backup exclusion list
-
+# This function for updating backup exclusion list
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,24 +15,25 @@ user=$1
 vfile=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 is_file_available() {
     if [ ! -e "$vfile" ]; then
-        check_result $E_NOTEXIST "file $vfile doesn't exist"
+        check_result "$E_NOTEXIST" "file $vfile doesn't exist"
     fi
 }
 
 is_file_valid() {
     exclude="[!|#|$|^|&|(|)|{|}|<|>|?|\|\"|;|%|\`]"
     if [[ "$(cat $vfile)" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid characters in the exlusion list"
+        check_result "$E_INVALID" "invalid characters in the exlusion list"
     fi
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -62,7 +61,7 @@ CRON=''
 USER=''
 
 # Source exclusion list
-source $vfile
+source_conf "$vfile"
 
 # Updating exlusion list
 echo "WEB='$WEB'" > $USER_DATA/backup-excludes.conf
@@ -72,7 +71,6 @@ echo "DB='$DB'" >> $USER_DATA/backup-excludes.conf
 echo "CRON='$CRON'" >> $USER_DATA/backup-excludes.conf
 echo "USER='$USER'" >> $USER_DATA/backup-excludes.conf
 chmod 660 $USER_DATA/backup-excludes.conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

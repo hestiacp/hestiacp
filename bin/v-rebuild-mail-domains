@@ -1,39 +1,39 @@
 #!/bin/bash
 # info: rebuild mail domains
 # options: USER
-# labels: mail
 #
 # example: v-rebuild-mail-domains admin
 #
-# The function rebuilds EXIM configuration files for all mail domains.
-
+# This function rebuilds EXIM configuration files for all mail domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-    MAIL_USER=Debian-exim
+   export MAIL_USER="Debian-exim"
 else
-    MAIL_USER=exim
+   export MAIL_USER="exim"
 fi
 
 #----------------------------------------------------------#
@@ -45,7 +45,7 @@ is_format_valid 'user'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 check_user=$(is_object_unsuspended 'user' 'USER' "$user")
-if [ ! -z "$check_user" ]; then
+if [ -n "$check_user" ]; then
     exit
 fi
 if [ "$MAIL_SYSTEM" = 'remote' ]; then
@@ -54,13 +54,14 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Starting loop
 for domain in $(search_objects 'mail' 'SUSPENDED' "*" 'DOMAIN'); do
-    $BIN/v-rebuild-mail-domain $user $domain "no"
+    $BIN/v-rebuild-mail-domain "$user" "$domain" "no"
 done
 
 

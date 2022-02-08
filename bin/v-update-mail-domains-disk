@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: calculate disk usage for all mail domains
 # options: USER
-# labels: mail
 #
 # example: v-update-mail-domains-disk admin
 #
-# The function calculates disk usage for all mail domains.
-
+# This function calculates disk usage for all mail domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -34,16 +33,14 @@ if [ -z "$MAIL_SYSTEM" ] || [ "$MAIL_SYSTEM" = 'remote' ]; then
     exit
 fi
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Starting loop
-for domain in $(search_objects 'mail' 'SUSPENDED' "no" 'DOMAIN'); do
+for domain in $($BIN/v-list-mail-domains $user plain | cut -f 1); do
     dom_disk=0
-    accounts=$(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT')
-    for account in $accounts; do
+    for account in $($BIN/v-list-mail-accounts $user $domain plain | cut -f 1); do
         home_dir=$HOMEDIR/$user/mail/$domain/$account
         if [ -e "$home_dir" ]; then
             udisk=$(nice -n 19 du -shm $home_dir | cut -f 1 )
@@ -56,13 +53,11 @@ for domain in $(search_objects 'mail' 'SUSPENDED' "no" 'DOMAIN'); do
     update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_disk"
 done
 
+recalc_user_disk_usage
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-
-recalc_user_disk_usage
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

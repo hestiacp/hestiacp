@@ -1,34 +1,28 @@
 #!/bin/bash
 # info: delete firewall chain
 # options: CHAIN
-# labels: panel
 #
 # example: v-delete-firewall-chain WEB
 #
-# The function adds new rule to system firewall
-
+# This function adds new rule to system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 
-# Defining absolute path to iptables
-iptables="/sbin/iptables"
-
+iptables='/sbin/iptables'
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/firewall.sh
 source $HESTIA/func/firewall.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -41,7 +35,6 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -53,7 +46,7 @@ heal_iptables_links
 chains=$HESTIA/data/firewall/chains.conf
 banlist=$HESTIA/data/firewall/banlist.conf
 chain_param=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
-if [ ! -z "$chain_param" ]; then
+if [ -n "$chain_param" ]; then
     parse_object_kv_list "$chain_param"
     sed -i "/CHAIN='$chain'/d" $chains
     sed -i "/CHAIN='$chain'/d" $banlist
@@ -67,7 +60,6 @@ $iptables -X fail2ban-$CHAIN 2>/dev/null
 
 # Changing permissions
 chmod 660 $chains
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

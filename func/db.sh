@@ -1,3 +1,11 @@
+#!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Domain Function Library                            #
+#                                                                           #
+#===========================================================================#
+
 # Global
 database_set_default_ports() {
 
@@ -73,7 +81,7 @@ mysql_connect() {
     mysql_ver=$(cat $mysql_out |tail -n1 |cut -f 1 -d -)
     mysql_fork="mysql"
     check_mysql_fork=$(grep "MariaDB" $mysql_out)
-    if [ ! -z "$check_mysql_fork" ]; then
+    if [  "$check_mysql_fork" ]; then
         mysql_fork="mariadb"
     fi
     rm -f $mysql_out
@@ -90,6 +98,8 @@ mysql_dump() {
     err="/tmp/e.mysql"
     mysqldump --defaults-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
     if [ '0' -ne "$?" ]; then
+      mysqldump --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+      if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
             email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
@@ -99,7 +109,8 @@ mysql_dump() {
         fi
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
-        exit $E_DB
+        exit "$E_DB"
+        fi
     fi
 }
 
@@ -126,7 +137,7 @@ psql_connect() {
         fi
         echo "Error: Connection to $HOST failed"
         log_event  "$E_CONNECT" "$ARGUMENTS"
-        exit $E_CONNECT
+        exit "$E_CONNECT"
     fi
 }
 
@@ -149,7 +160,7 @@ psql_dump() {
         fi
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
-        exit $E_DB
+        exit "$E_DB"
     fi
 }
 
@@ -242,22 +253,60 @@ decrease_dbhost_values() {
 # Create MySQL database
 add_mysql_database() {
     mysql_connect $host
+    
+    mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+    mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
 
     query="CREATE DATABASE \`$database\` CHARACTER SET $charset"
     mysql_query "$query" > /dev/null
 
-    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
-        IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
-
-    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
-        IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
-
-    if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
-        md5=$(mysql_query "SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
-        md5=$(echo "$md5" |grep password |cut -f8 -d \')
+    if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ] ; then
+        query="CREATE USER \`$dbuser\`@\`%\`
+            IDENTIFIED BY '$dbpass'"
+        mysql_query "$query" > /dev/null
+    
+        query="CREATE USER \`$dbuser\`@localhost
+            IDENTIFIED BY '$dbpass'"
+        mysql_query "$query" > /dev/null
+    
+        query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
+        mysql_query "$query" > /dev/null
+    
+        query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+        mysql_query "$query" > /dev/null
     else
+        query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
+            IDENTIFIED BY '$dbpass'"
+        mysql_query "$query" > /dev/null
+    
+        query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+            IDENTIFIED BY '$dbpass'"
+        mysql_query "$query" > /dev/null
+    fi
+    
+    
+      
+    if [ "$mysql_fork" = "mysql" ]; then
+        # mysql
+        if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
+            if [ "$mysql_ver_sub" -ge 8 ]; then
+                # mysql >= 8
+                md5=$(mysql_query "SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
+                # echo $md5
+                md5=$(echo "$md5" |grep password |cut -f4 -d \')
+                # echo $md5
+            else
+                # mysql < 8
+                md5=$(mysql_query "SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
+                md5=$(echo "$md5" |grep password |cut -f8 -d \')
+            fi
+        else
+            # mysql < 5.7
+            md5=$(mysql_query "SHOW GRANTS FOR \`$dbuser\`" 2>/dev/null)
+            md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+        fi
+    else
+        # mariadb
         md5=$(mysql_query "SHOW GRANTS FOR \`$dbuser\`" 2>/dev/null)
         md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
     fi
@@ -284,7 +333,7 @@ add_pgsql_database() {
     query="GRANT CONNECT ON DATABASE template1 to $dbuser"
     psql_query "$query" > /dev/null
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$dbuser'"
     md5=$(psql_query "$query" | grep md5 | cut -f 2 -d \ )
 }
 
@@ -296,9 +345,6 @@ add_mysql_database_temp_user() {
   }
 
 delete_mysql_database_temp_user(){
-    echo $database;
-    echo $dbuser;
-    echo $host;
     mysql_connect $host;
     query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
     mysql_query "$query" > /dev/null
@@ -310,7 +356,7 @@ delete_mysql_database_temp_user(){
 is_dbhost_new() {
     if [ -e "$HESTIA/conf/$type.conf" ]; then
         check_host=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
-        if [ ! -z "$check_host" ]; then
+        if [  "$check_host" ]; then
             echo "Error: db host exist"
             log_event "$E_EXISTS" "$ARGUMENTS"
             exit $E_EXISTS
@@ -325,23 +371,64 @@ get_database_values() {
 
 # Change MySQL database password
 change_mysql_password() {
-    mysql_connect $HOST
-    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
-        IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
-
-    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
-        IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
-    
-if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
- 
-    md5=$(mysql_query "SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
-    md5=$(echo "$md5" |grep password |cut -f8 -d \')
-else
-    md5=$(mysql_query "SHOW GRANTS FOR \`$DBUSER\`" 2>/dev/null)
-    md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
-fi
+  mysql_connect $HOST
+      
+      mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+      mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
+  
+      if [ "$mysql_fork" = "mysql" ]; then
+          # mysql
+          if [ "$mysql_ver_sub" -ge 8 ]; then
+              # mysql >= 8
+              query="SET PASSWORD FOR \`$DBUSER\`@\`%\` = '$dbpass'"
+              mysql_query "$query" > /dev/null
+              query="SET PASSWORD FOR \`$DBUSER\`@localhost = '$dbpass'"
+              mysql_query "$query" > /dev/null
+          else
+              # mysql < 8
+              query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
+                  IDENTIFIED BY '$dbpass'"
+              mysql_query "$query" > /dev/null
+  
+              query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
+                  IDENTIFIED BY '$dbpass'"
+              mysql_query "$query" > /dev/null
+          fi
+      else
+          # mariadb
+          query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
+              IDENTIFIED BY '$dbpass'"
+          mysql_query "$query" > /dev/null
+  
+          query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
+              IDENTIFIED BY '$dbpass'"
+          mysql_query "$query" > /dev/null
+      fi
+  
+      if [ "$mysql_fork" = "mysql" ]; then
+          # mysql
+          if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
+              if [ "$mysql_ver_sub" -ge 8 ]; then
+                  # mysql >= 8
+                  md5=$(mysql_query "SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
+                  # echo $md5
+                  md5=$(echo "$md5" |grep password |cut -f4 -d \')
+                  # echo $md5
+              else
+                  # mysql < 8
+                  md5=$(mysql_query "SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
+                  md5=$(echo "$md5" |grep password |cut -f8 -d \')
+              fi
+          else
+              # mysql < 5.7
+              md5=$(mysql_query "SHOW GRANTS FOR \`$DBUSER\`" 2>/dev/null)
+              md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+          fi
+      else
+          # mariadb
+          md5=$(mysql_query "SHOW GRANTS FOR \`$DBUSER\`" 2>/dev/null)
+          md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+      fi
 }
 
 # Change PostgreSQL database password
@@ -350,7 +437,7 @@ change_pgsql_password() {
     query="ALTER ROLE $DBUSER WITH LOGIN PASSWORD '$dbpass'"
     psql_query "$query" > /dev/null
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
     md5=$(psql_query "$query" | grep md5 |cut -f 2 -d \ )
 }
 
@@ -387,9 +474,9 @@ delete_pgsql_database() {
     psql_query "$query" > /dev/null
 
     if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
-        query="REVOKE CONNECT ON DATABASE template1 FROM $db_user"
+        query="REVOKE CONNECT ON DATABASE template1 FROM $DBUSER"
         psql_query "$query" > /dev/null
-        query="DROP ROLE $db_user"
+        query="DROP ROLE $DBUSER"
         psql_query "$query" > /dev/null
     fi
 }
@@ -413,9 +500,9 @@ dump_pgsql_database() {
 
     psql_dump $dump $database
 
-    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER';"
+    query="SELECT rolpassword FROM pg_authid WHERE rolname='$DBUSER'"
     md5=$(psql_query "$query" | head -n1 | cut -f 2 -d \ )
-    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER';"
+    pw_str="UPDATE pg_authid SET rolpassword='$md5' WHERE rolname='$DBUSER'"
     gr_str="GRANT ALL PRIVILEGES ON DATABASE $database to '$DBUSER'"
     echo -e "$pw_str\n$gr_str" >> $grants
 }

@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: add 2fa to existing user
 # options: USER
-# labels: hestia panel
 #
 # example: v-add-user-2fa admin
 #
-# The function creates a new 2fa token for user.
-
+# This function creates a new 2fa token for user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -33,7 +32,6 @@ is_object_valid 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -42,9 +40,9 @@ check_hestia_demo_mode
 source $USER_DATA/user.conf
 
 # Check if 2FA is already enabled
-if [ ! -z "$TWOFA" ]; then
+if [ -n "$TWOFA" ]; then
     echo "Error: 2FA already enabled"
-    exit $E_EXIST
+    exit "$E_EXIST"
 fi
 
 # Get secret and qr code from 2fa libary

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: suspend dns domain
 # options: USER DOMAIN [RESTART]
-# labels: dns
 #
 # example: v-suspend-dns-domain alice acme.com
 #
-# The function suspends a certain user's domain.
-
+# This function suspends a certain user's domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,16 +17,17 @@ domain_idn=$2
 restart="$3"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -43,7 +42,6 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -66,7 +64,7 @@ fi
 
 # Adding suspend in config
 update_object_value 'dns' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
-sed -i "s/SUSPENDED='no'/SUSPENDED='yes'/g" $USER_DATA/dns/$domain.conf
+sed -i "s/SUSPENDED='no'/SUSPENDED='yes'/g" "$USER_DATA/dns/$domain.conf"
 increase_user_value "$user" '$SUSPENDED_DNS'
 
 # Logging

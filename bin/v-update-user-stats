@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update user statistics
 # options: USER
-# labels: panel
 #
 # example: v-update-user-stats admin
 #
 # Function logs user parameters into statistics database.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,13 +18,14 @@ user=$1
 source /etc/profile
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -37,7 +36,6 @@ if [ ! -z "$user" ]; then
     is_format_valid 'user'
     is_object_valid 'user' 'USER' "$user"
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -163,7 +161,6 @@ if [ "$update_overall_stats" = 'yes' ]; then
     fi
     chmod 660 $stats
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

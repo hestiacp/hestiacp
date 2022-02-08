@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+#=========================================================================#
 
 server {
     listen      %ip%:%web_port%;
@@ -30,17 +31,7 @@ server {
         return 404;
     }
 
-    location ~ \..*/.*\.php$ {
-        deny all;
-        return 404;
-    }
-
     location ~ ^/sites/.*/private/ {
-        deny all;
-        return 404;
-    }
-
-    location ~ ^/sites/[^/]+/files/.*\.php$ {
         deny all;
         return 404;
     }
@@ -58,10 +49,20 @@ server {
     location / {
         try_files $uri $uri/ /index.php?$query_string;
 
-        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             try_files $uri @rewrite;
             expires 30d;
             fastcgi_hide_header "Set-Cookie";
+        }
+        
+        location ~ \..*/.*\.php$ {
+            deny all;
+            return 404;
+        }
+        
+        location ~ ^/sites/[^/]+/files/.*\.php$ {
+            deny all;
+            return 404;
         }
 
         location ~ [^/]\.php(/|$)|^/update.php {

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: unsuspend database server
 # options: TYPE HOST
-# labels: panel
 #
 # example: v-unsuspend-database-host mysql localhost
 #
-# The function for unsuspending a database server.
-
+# This function for unsuspending a database server.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,11 +15,12 @@ type=$1
 host=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -42,7 +41,6 @@ check_hestia_demo_mode
 
 # Unsuspend database creation on a server
 update_object_value "../../conf/$type" 'HOST' "$host" '$SUSPENDED' 'no'
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

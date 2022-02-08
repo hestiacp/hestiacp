@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+#=========================================================================#
 
 server {
     listen      %ip%:%proxy_ssl_port% ssl http2;
@@ -33,11 +34,10 @@ server {
         proxy_pass      https://%ip%:%web_ssl_port%;
     }
 
-    location ~ /\.ht    {return 404;}
-    location ~ /\.svn/  {return 404;}
-    location ~ /\.git/  {return 404;}
-    location ~ /\.hg/   {return 404;}
-    location ~ /\.bzr/  {return 404;}
+    location ~ /\.(?!well-known\/|file) {
+       deny all; 
+       return 404;
+    }
 
     proxy_hide_header Upgrade;
 

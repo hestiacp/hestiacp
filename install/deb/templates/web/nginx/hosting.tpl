@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+#=========================================================================#
 
 server {
     listen      %ip%:%proxy_port%;
@@ -28,11 +29,10 @@ server {
         proxy_pass      http://%ip%:%web_port%;
     }
 
-    location ~ /\.ht    {return 404;}
-    location ~ /\.svn/  {return 404;}
-    location ~ /\.git/  {return 404;}
-    location ~ /\.hg/   {return 404;}
-    location ~ /\.bzr/  {return 404;}
+    location ~ /\.(?!well-known\/|file) {
+       deny all; 
+       return 404;
+    }
 
     disable_symlinks if_not_owner from=%docroot%;
 

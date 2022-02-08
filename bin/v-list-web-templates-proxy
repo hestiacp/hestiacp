@@ -1,25 +1,25 @@
 #!/bin/bash
 # info: listing proxy templates
 # options: [FORMAT]
-# labels: web
 #
 # example: v-list-web-templates-proxy
 #
-# The function for obtaining the list of proxy templates available to a user.
-
+# This function for obtaining the list of proxy templates available to a user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -61,13 +61,12 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Parsing proxy templates
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     templates=$(ls -t $WEBTPL/$PROXY_SYSTEM |\
         grep ".tpl$" |\
         cut -f1 -d . |\
@@ -82,7 +81,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

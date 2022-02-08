@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: synchronize dns domains
 # options: HOST
-# labels: dns
 #
-# The function synchronize all dns domains.
-
+# This function synchronize all dns domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 host=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/remote.sh
 source $HESTIA/func/remote.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -63,25 +62,24 @@ for cluster in $hosts; do
 
             # Syncing domain index
             parse_object_kv_list "$str"
-            cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME ' ' no
-            check_result $? "$HOST connection failed" $E_CONNECT
+            cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" ' ' "no"
+            check_result $? "$HOST connection failed" "$E_CONNECT"
 
             # Syncing domain records
             tmp_file="/tmp/vst-sync.$DOMAIN"
-            cluster_file $USER_DATA/$user/dns/$DOMAIN.conf $tmp_file
-            check_result $? "$HOST connection failed" $E_CONNECT
+            cluster_file "$USER_DATA/$user/dns/$DOMAIN.conf" "$tmp_file"
+            check_result $? "$HOST connection failed" "$E_CONNECT"
 
-            cluster_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp_file 'no'
-            check_result $? "$HOST connection failed" $E_CONNECT
+            cluster_cmd v-insert-dns-records "$DNS_USER" "$DOMAIN" "$tmp_file" 'no'
+            check_result $? "$HOST connection failed" "$E_CONNECT"
         done
     done
 
     # Rebuilding dns zones
-    cluster_cmd v-rebuild-dns-domains $DNS_USER
-    check_result $? "$TYPE connection to $HOST failed" $E_CONNECT
+    cluster_cmd v-rebuild-dns-domains "$DNS_USER"
+    check_result $? "$TYPE connection to $HOST failed" "$E_CONNECT"
 
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,22 +1,27 @@
 #!/bin/bash
 # info: search file or directory
 # options: USER OBJECT [PATH]
-# labels: 
 #
 # example: v-search-fs-object admin hello.txt
 #
-# The function search files and directories on the file system
+# This function search files and directories on the file system
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 user=$1
 object=$2
 path=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -24,6 +29,10 @@ check_hestia_demo_mode
 check_args '2' "$#" 'USER OBJECT [PATH]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
+
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
@@ -33,10 +42,10 @@ if [ -z $homedir ]; then
 fi
 
 # Checking path
-if [ ! -z "$path" ]; then
+if [ -n "$path" ]; then
     rpath=$(readlink -f "$path")
     if [ -z "$(echo $rpath |grep $homedir)" ]; then
-    echo "Error: invalid path $dst_dir"
+    echo "Error: invalid path $path"
         exit 2
     fi
 else

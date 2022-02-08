@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: unsuspend remote dns server
 # options: HOST
-# labels: dns
 #
 # example: v-unsuspend-remote-dns-host hosname.com
 #
-# The function for unsuspending remote dns server.
-
+# This function for unsuspending remote dns server.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 host=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -41,7 +40,6 @@ check_hestia_demo_mode
 
 # Unsuspend remote dns server
 update_object_value "../../conf/dns-cluster" 'HOST' "$host" '$SUSPENDED' 'no'
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

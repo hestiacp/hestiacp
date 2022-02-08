@@ -1,24 +1,25 @@
 #!/bin/bash
 # info: stop service
 # options: SERVICE
-# labels: panel
 #
 # example: v-stop-service apache2
 #
-# The function stops system service.
-
+# This function stops system service.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 service=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -29,7 +30,6 @@ is_format_valid 'service'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -47,7 +47,7 @@ for service in $service_list; do
     if [ "$service" = "iptables" ]; then
         $BIN/v-stop-firewall
     else
-        systemctl stop $service
+        systemctl stop "$service"
         result=$?
         if [ "$result" -ne 0 ]; then
             $BIN/v-log-action "system" "Error" "System" "Service failed to stop (Name: $service)."
@@ -55,10 +55,9 @@ for service in $service_list; do
             $BIN/v-log-action "system" "Info" "System" "Service stopped (Name: $service)."
         fi
     fi
-    check_result $? "ERROR: $service stop failed" $E_RESTART
+    check_result $? "ERROR: $service stop failed" "$E_RESTART"
 
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

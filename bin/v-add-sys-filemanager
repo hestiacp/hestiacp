@@ -1,22 +1,23 @@
 #!/bin/bash
 # info: add file manager functionality to Hestia Control Panel
 # options: [MODE]
-# labels: hestia
 #
-# The function installs the File Manager on the server
+# This function installs the File Manager on the server
 # for access through the Web interface.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-# shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
-source $HESTIA/install/upgrade/upgrade.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+# load config file
+source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
 MODE=$1
 user="admin"
@@ -25,7 +26,6 @@ FM_INSTALL_DIR="$HESTIA/web/fm"
 FM_FILE="filegator_v${fm_v}.zip"
 FM_URL="https://github.com/filegator/filegator/releases/download/v${fm_v}/${FM_FILE}"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -63,6 +63,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl);
+
 rm --recursive --force "$FM_INSTALL_DIR"
 mkdir -p "$FM_INSTALL_DIR"
 cd "$FM_INSTALL_DIR"
@@ -78,7 +80,11 @@ cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTA
 
 chown $user: -R "${FM_INSTALL_DIR}"
 
-COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+if [ -z "$openssl_installed"  ]; then 
+    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+else
+    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
+fi
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up
 if [ $? -ne 0 ]; then
@@ -96,7 +102,7 @@ fi
 # Add configuration file
 cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
 
-
+echo "$fm_v" > "${FM_INSTALL_DIR}/version"
 # Set permissions
 chown root: -R "${FM_INSTALL_DIR}"
 chown $user: "${FM_INSTALL_DIR}/private"

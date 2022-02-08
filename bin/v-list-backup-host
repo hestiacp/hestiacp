@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list backup host
 # options: TYPE [FORMAT]
-# labels: panel
 #
 # example: v-list-backup-host local
 #
-# The function for obtaining the list of backup host parameters.
-
+# This function for obtaining the list of backup host parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,8 +15,12 @@ type=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -102,10 +104,9 @@ csv_list() {
 is_type_format_valid() {
     exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
     if [[ "$1" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid type extention format :: $1"
+        check_result "$E_INVALID" "invalid type extention format :: $1"
     fi
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -113,7 +114,6 @@ is_type_format_valid() {
 
 check_args '1' "$#" 'TYPE [FORMAT]'
 is_type_format_valid "$type"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -125,7 +125,7 @@ if [ ! -e "$HESTIA/conf/$type.backup.conf" ]; then
 fi
 
 # Parsing backup config
-source "$HESTIA/conf/$type.backup.conf"
+source_conf  "$HESTIA/conf/$type.backup.conf"
 
 # Listing data
 case $format in
@@ -134,7 +134,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

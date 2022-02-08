@@ -1,25 +1,22 @@
 #!/bin/bash
 # info: update all hestia packages
 # options: NONE
-# labels: panel
 #
 # example: v-update-sys-hestia-all
 #
-# The function of updating all hestia packages
-
+# This function of updating all hestia packages
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

@@ -1,18 +1,21 @@
 #!/bin/bash
 # info: get file type
 # options: USER FILE
-# labels: 
 #
 # example: v-get-fs-file-type admin index.html
 #
-# The function shows file type
+# This function shows file type
 
 user=$1
 path=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -24,7 +27,7 @@ is_object_valid 'user' 'USER' "$user"
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
-if [ -z $homedir ]; then
+if [ -z "$homedir" ]; then
     echo "Error: user home directory doesn't exist"
     exit 12
 fi

@@ -2,18 +2,18 @@
 
 namespace Hestia\WebApp\Installers\Opencart;
 
-use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
-class OpencartSetup extends BaseSetup {
-
-    protected $appInfo = [ 
+class OpencartSetup extends BaseSetup
+{
+    protected $appInfo = [
         'name' => 'Opencart',
         'group' => 'ecommerce',
         'enabled' => true,
-        'version' => '3.0.3.3',
+        'version' => '3.0.3.8',
         'thumbnail' => 'opencart-thumb.png'
     ];
-    
+
     protected $appname = 'opencart';
     protected $extractsubdir="/tmp-opencart";
 
@@ -25,21 +25,26 @@ class OpencartSetup extends BaseSetup {
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/3.0.3.3/opencart-3.0.3.3.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/3.0.3.8/opencart-3.0.3.8.zip' ],
+        ],
+        'server' => [
+            'nginx' => [
+                'template' => 'opencart',
+            ],
         ],
     ];
-    
-    public function install(array $options = null) : bool
+
+    public function install(array $options = null): bool
     {
         parent::install($options);
 
-        $this->appcontext->runUser('v-copy-fs-directory',[
+        $this->appcontext->runUser('v-copy-fs-directory', [
             $this->getDocRoot($this->extractsubdir . "/upload/."),
             $this->getDocRoot()], $result);
 
-        $this->appcontext->runUser('v-copy-fs-file',[$this->getDocRoot("config-dist.php"), $this->getDocRoot("config.php")]);
-        $this->appcontext->runUser('v-copy-fs-file',[$this->getDocRoot("admin/config-dist.php"), $this->getDocRoot("admin/config.php")]);
-        $this->appcontext->runUser('v-copy-fs-file',[$this->getDocRoot(".htaccess.txt"), $this->getDocRoot(".htaccess")]);
+        $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot("config-dist.php"), $this->getDocRoot("config.php")]);
+        $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot("admin/config-dist.php"), $this->getDocRoot("admin/config.php")]);
+        $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot(".htaccess.txt"), $this->getDocRoot(".htaccess")]);
         $this->appcontext->runUser('v-run-cli-cmd', [
             "/usr/bin/php",
             $this->getDocRoot("/install/cli_install.php"),
@@ -59,8 +64,8 @@ class OpencartSetup extends BaseSetup {
         $this->appcontext->runUser('v-run-cli-cmd', [ "sed", "-i", "s/'storage\//'..\/storage\// ", $this->getDocRoot("admin/config.php") ], $status);
         $this->appcontext->runUser('v-run-cli-cmd', [ "sed", "-i", "s/\^system\/storage\//^\/storage\// ", $this->getDocRoot(".htaccess") ], $status);
 
-        $this->appcontext->runUser('v-change-fs-file-permission',[$this->getDocRoot("config.php"), '640']);
-        $this->appcontext->runUser('v-change-fs-file-permission',[$this->getDocRoot("admin/config.php"), '640']);
+        $this->appcontext->runUser('v-change-fs-file-permission', [$this->getDocRoot("config.php"), '640']);
+        $this->appcontext->runUser('v-change-fs-file-permission', [$this->getDocRoot("admin/config.php"), '640']);
 
         // remove install folder
         $this->appcontext->runUser('v-delete-fs-directory', [$this->getDocRoot("/install")]);

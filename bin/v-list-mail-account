@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mail domain account
 # options: USER DOMAIN ACCOUNT [FORMAT]
-# labels: mail
 #
 # example: v-list-mail-account admin domain.tld tester
 #
-# The function of obtaining the list of account parameters.
-
+# This function of obtaining the list of account parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,10 +17,12 @@ account=$3
 format=${4-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -71,7 +71,6 @@ csv_list() {
     echo "$U_DISK,$SUSPENDED,$TIME,$DATE\t$WEBMAIL_ALIAS.$domain"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -81,7 +80,6 @@ is_format_valid 'user' 'domain' 'account'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
-
 
 
 #----------------------------------------------------------#
@@ -98,7 +96,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

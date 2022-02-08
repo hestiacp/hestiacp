@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: suspend web/dns/mail domain
 # options: USER DOMAIN
-# labels: panel
 #
 # example: v-suspend-domain admin example.com
 #
-# The function suspends web/dns/mail domain.
-
+# This function suspends web/dns/mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,11 +16,12 @@ domain=$2
 restart="${3-yes}"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,37 +35,36 @@ is_object_unsuspended 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Working on Web domain
-if [ ! -z "$WEB_SYSTEM" ]; then
-    str=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf |grep "SUSPENDED='no")
-    if [  ! -z "$str" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" "$USER_DATA/web.conf" |grep "SUSPENDED='no")
+    if [  -n "$str" ]; then
         domain_found='yes'
-        $BIN/v-suspend-web-domain $user $domain 'no'
+        $BIN/v-suspend-web-domain "$user" "$domain" "no"
         check_result $? "can't suspend web" > /dev/null
     fi
 fi
 
 # Working on DNS domain
-if [ ! -z "$DNS_SYSTEM" ]; then
-    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='no")
-    if [  ! -z "$str" ]; then
+if [ -n "$DNS_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" "$USER_DATA/dns.conf" |grep "SUSPENDED='no")
+    if [  -n "$str" ]; then
         domain_found='yes'
-        $BIN/v-suspend-dns-domain $user $domain 'no'
+        $BIN/v-suspend-dns-domain "$user" "$domain" "no"
         check_result $? "can't suspend dns" > /dev/null
     fi
 fi
 
 # Working on Mail domain
-if [ ! -z "$MAIL_SYSTEM" ]; then
-    str=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf |grep "SUSPENDED='no")
-    if [  ! -z "$str" ]; then
+if [ -n "$MAIL_SYSTEM" ]; then
+    str=$(grep "DOMAIN='$domain'" "$USER_DATA/mail.conf" |grep "SUSPENDED='no")
+    if [  -n "$str" ]; then
         domain_found='yes'
-        $BIN/v-suspend-mail-domain $user $domain
+        $BIN/v-suspend-mail-domain "$user" "$domain" "no"
         check_result $? "can't suspend mail" > /dev/null
     fi
 fi
@@ -75,17 +73,17 @@ fi
 if [ -z "$domain_found" ]; then
     echo "Error: domain $domain doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Restarting services
-$BIN/v-restart-web $restat
+$BIN/v-restart-web "$restart"
 check_result $? "can't restart web" > /dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "can't restart proxy" > /dev/null
 
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "can't restart dns" > /dev/null
 
 

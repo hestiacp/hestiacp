@@ -11,39 +11,50 @@ $dist_config['frontend_config']['guest_redirection'] = '/login/' ;
 $dist_config['frontend_config']['upload_max_size'] = 1024 * 1024 * 1024;
 
 $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['adapter'] = function () {
+    if (isset($_SESSION['user'])) {
+        $v_user = $_SESSION['user'];
+    }
+    if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
+        $v_user = $_SESSION['look'];
+    }
+    if ((isset($_SESSION['look']) && ($_SESSION['look'] == 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {
+        header('Location: /');
+    }
+    # Create filemanager sftp key if missing and trash it after 30 min
+    if (! file_exists('/home/'.basename($v_user).'/.ssh/hst-filemanager-key')) {
+        exec("sudo /usr/local/hestia/bin/v-add-user-sftp-key " . escapeshellarg(basename($v_user)) . " 30", $output, $return_var);
+    }
 
-        if (isset($_SESSION['user'])) {
-            $v_user = $_SESSION['user'];
+    if (!isset($_SESSION['SFTP_PORT'])) {
+        exec("sudo /usr/local/hestia/bin/v-list-sys-sshd-port json", $output, $result);
+        $port=json_decode(implode('', $output));
+        if ( is_numeric($port[0]) && $port[0] > 0 ){
+            $_SESSION['SFTP_PORT'] = $port[0];
+        } else if ( preg_match('/^\s*Port\s+(\d+)$/im', file_get_contents('/etc/ssh/sshd_config'), $matches) ) {
+            $_SESSION['SFTP_PORT'] = $matches[1] ?? 22;
+        } else {
+            $_SESSION['SFTP_PORT'] = 22;
         }
-        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
-            $v_user = $_SESSION['look'];
-        }
-        if ((isset($_SESSION['look']) && ($_SESSION['look'] == 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes') )) {
-            header('Location: /');
-        }
-        # Create filemanager sftp key if missing and trash it after 30 min
-        if (! file_exists('/home/'.basename($v_user).'/.ssh/hst-filemanager-key')) {
-            exec ("sudo /usr/local/hestia/bin/v-add-user-sftp-key " . escapeshellarg(basename($v_user)) . " 30", $output, $return_var);
-        }
+    }
 
-        if ( !isset($_SESSION['SFTP_PORT']) ) {
-            if( preg_match('/^\s*Port\s+(\d+)$/im', file_get_contents('/etc/ssh/sshd_config'), $matches) ) {
-                $_SESSION['SFTP_PORT'] = $matches[1] ?? 22;
-            } else {
-                $_SESSION['SFTP_PORT'] = 22;
-            }
-        }
+    preg_match('/(Hestia SFTP Chroot\nMatch User)(.*)/i', file_get_contents('/etc/ssh/sshd_config'), $matches);
+    $user_list = explode(',', $matches[2]);
+    if (in_array($v_user, $user_list)) {
+        $root = '/';
+    } else {
+        $root = '/home/'.$v_user;
+    }
 
-        return new \League\Flysystem\Sftp\SftpAdapter([
+    return new \League\Flysystem\Sftp\SftpAdapter([
             'host' => '127.0.0.1',
             'port' => intval($_SESSION['SFTP_PORT']),
             'username' => basename($v_user),
             'privateKey' => '/home/'.basename($v_user).'/.ssh/hst-filemanager-key',
-            'root' => '/',
+            'root' => $root,
             'timeout' => 10,
             'directoryPerm' => 0755,
         ]);
-    };
+};
 
 $dist_config['services']['Filegator\Services\Archiver\ArchiverInterface'] = [
     'handler' => '\Filegator\Services\Archiver\Adapters\HestiaZipArchiver',

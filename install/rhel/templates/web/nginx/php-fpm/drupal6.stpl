@@ -55,7 +55,7 @@ server {
         return 404;
     }    
 
-    location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+    location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
         try_files $uri @rewrite;
         expires max;
         log_not_found off;

@@ -1,6 +1,4 @@
 <?php
-error_reporting(NULL);
-
 include($_SERVER['DOCUMENT_ROOT'] . "/inc/main.php");
 
 // Check login_as feature

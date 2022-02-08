@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update host certificate for hestia
 # options: USER HOSTNAME
-# labels: panel
 #
 # example: v-update-host-certificate admin example.com
 #
-# Function updates certificates for hestia
-
+# This function updates the SSL certificate used for Hestia Control Panel.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 whoami=$(whoami)
@@ -18,19 +16,19 @@ if [ "$whoami" != "root" ] && [ "$whoami" != "admin" ] ; then
     exit 1;
 fi
 
-
 # Argument definition
 user=$1
 hostname=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -57,9 +55,6 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Get current datetime for backup of old files
-backup_datetime=`date '+%Y-%m-%d_%H-%M-%S'`
-
 # Copy hostnames certificates from user dir
 cp /home/$user/conf/web/$hostname/ssl/$hostname.pem $HESTIA/ssl/certificate.crt
 cp /home/$user/conf/web/$hostname/ssl/$hostname.key $HESTIA/ssl/certificate.key
@@ -80,20 +75,15 @@ fi
 
 # Add UPDATE_HOSTNAME_SSL if not exist
 if [ -z "$UPDATE_HOSTNAME_SSL" ]; then
-    echo "UPDATE_HOSTNAME_SSL='yes'" >> $HESTIA/conf/hestia.conf
+    echo "UPDATE_HOSTNAME_SSL='yes'" >> "$HESTIA/conf/hestia.conf"
 fi
 
 # Restart services
-$BIN/v-restart-web
-$BIN/v-restart-proxy
-if [ ! -z "$MAIL_SYSTEM" ]; then
-    # Restart exim (and dovecot if applicable)
-    $BIN/v-restart-mail
-fi
-if [ "$FTP_SYSTEM" = "vsftpd" ]; then
-    $BIN/v-restart-ftp
-fi
-$BIN/v-restart-service hestia
+$BIN/v-restart-web "updatessl"
+$BIN/v-restart-proxy "updatessl"
+$BIN/v-restart-mail
+$BIN/v-restart-ftp
+$BIN/v-restart-service "hestia"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

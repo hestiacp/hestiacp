@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail domain dkim support
 # options: USER DOMAIN
-# labels: mail
 #
 # example: v-delete-mail-domain-dkim admin mydomain.tld
 #
-# The function delete DKIM domain pem.
-
+# This function delete DKIM domain pem.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,13 +16,14 @@ domain=$2
 domain=$(echo $domain | tr '[:upper:]' '[:lower:]')
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -40,7 +39,6 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$DKIM'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -53,14 +51,13 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 fi
 
 # Deleting dns record
-if [ ! -z "$DNS_SYSTEM" ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
-    records=$($BIN/v-list-dns-records $user $domain plain)
+if [ -n "$DNS_SYSTEM" ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
+    records=$($BIN/v-list-dns-records "$user" "$domain" plain)
     dkim_records=$(echo "$records" |grep -w '_domainkey' | cut -f 1 -d ' ')
     for id in $dkim_records; do
-        $BIN/v-delete-dns-record $user $domain $id 'yes'
+        $BIN/v-delete-dns-record "$user" "$domain" "$id" 'yes'
     done
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

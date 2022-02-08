@@ -1,5 +1,5 @@
 <?php
-error_reporting(NULL);
+
 ob_start();
 $TAB = 'PACKAGE';
 
@@ -8,7 +8,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 
 // Check user
-if ($_SESSION['userContext'] != 'admin')  {
+if ($_SESSION['userContext'] != 'admin') {
     header("Location: /list/user");
     exit;
 }
@@ -19,15 +19,15 @@ if (empty($_GET['package'])) {
     exit;
 }
 
-// Prevent editing of default package
-if ($_GET['package'] === 'default') {
+// Prevent editing of system package
+if ($_GET['package'] === 'system') {
     header("Location: /list/package/");
     exit;
 }
 
 // List package
 $v_package = escapeshellarg($_GET['package']);
-exec (HESTIA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);
+exec(HESTIA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 unset($output);
 
@@ -65,32 +65,32 @@ $v_time = $data[$v_package]['TIME'];
 $v_status =  'active';
 
 // List web templates
-exec (HESTIA_CMD."v-list-web-templates json", $output, $return_var);
+exec(HESTIA_CMD."v-list-web-templates json", $output, $return_var);
 $web_templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List backend templates
 if (!empty($_SESSION['WEB_BACKEND'])) {
-    exec (HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
+    exec(HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
     $backend_templates = json_decode(implode('', $output), true);
     unset($output);
 }
 
 // List proxy templates
 if (!empty($_SESSION['PROXY_SYSTEM'])) {
-    exec (HESTIA_CMD."v-list-web-templates-proxy json", $output, $return_var);
+    exec(HESTIA_CMD."v-list-web-templates-proxy json", $output, $return_var);
     $proxy_templates = json_decode(implode('', $output), true);
     unset($output);
 }
 
 
 // List dns templates
-exec (HESTIA_CMD."v-list-dns-templates json", $output, $return_var);
+exec(HESTIA_CMD."v-list-dns-templates json", $output, $return_var);
 $dns_templates = json_decode(implode('', $output), true);
 unset($output);
 
 // List shels
-exec (HESTIA_CMD."v-list-sys-shells json", $output, $return_var);
+exec(HESTIA_CMD."v-list-sys-shells json", $output, $return_var);
 $shells = json_decode(implode('', $output), true);
 unset($output);
 
@@ -98,49 +98,84 @@ unset($output);
 if (!empty($_POST['save'])) {
 
     // Check token
-    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_POST);
 
     // Check empty fields
-    if (empty($_POST['v_package'])) $errors[] = _('package');
-    if (empty($_POST['v_web_template'])) $errors[] = _('web template');
+    if (empty($_POST['v_package'])) {
+        $errors[] = _('package');
+    }
+    if (empty($_POST['v_web_template'])) {
+        $errors[] = _('web template');
+    }
     if (!empty($_SESSION['WEB_BACKEND'])) {
-        if (empty($_POST['v_backend_template'])) $errors[] = _('backend template');
+        if (empty($_POST['v_backend_template'])) {
+            $errors[] = _('backend template');
+        }
     }
     if (!empty($_SESSION['PROXY_SYSTEM'])) {
-        if (empty($_POST['v_proxy_template'])) $errors[] = _('proxy template');
+        if (empty($_POST['v_proxy_template'])) {
+            $errors[] = _('proxy template');
+        }
     }
-    if (empty($_POST['v_dns_template'])) $errors[] = _('dns template');
-    if (empty($_POST['v_shell'])) $errrors[] = _('shell');
-    if (!isset($_POST['v_web_domains'])) $errors[] = _('web domains');
-    if (!isset($_POST['v_web_aliases'])) $errors[] = _('web aliases');
-    if (!isset($_POST['v_dns_domains'])) $errors[] = _('dns domains');
-    if (!isset($_POST['v_dns_records'])) $errors[] = _('dns records');
-    if (!isset($_POST['v_mail_domains'])) $errors[] = _('mail domains');
-    if (!isset($_POST['v_mail_accounts'])) $errors[] = _('mail accounts');
-    if (!isset($_POST['v_databases'])) $errors[] = _('databases');
-    if (!isset($_POST['v_cron_jobs'])) $errors[] = _('cron jobs');
-    if (!isset($_POST['v_backups'])) $errors[] = _('backups');
-    if (!isset($_POST['v_disk_quota'])) $errors[] = _('quota');
-    if (!isset($_POST['v_bandwidth'])) $errors[] = _('bandwidth');
+    if (empty($_POST['v_dns_template'])) {
+        $errors[] = _('dns template');
+    }
+    if (empty($_POST['v_shell'])) {
+        $errrors[] = _('shell');
+    }
+    if (!isset($_POST['v_web_domains'])) {
+        $errors[] = _('web domains');
+    }
+    if (!isset($_POST['v_web_aliases'])) {
+        $errors[] = _('web aliases');
+    }
+    if (!isset($_POST['v_dns_domains'])) {
+        $errors[] = _('dns domains');
+    }
+    if (!isset($_POST['v_dns_records'])) {
+        $errors[] = _('dns records');
+    }
+    if (!isset($_POST['v_mail_domains'])) {
+        $errors[] = _('mail domains');
+    }
+    if (!isset($_POST['v_mail_accounts'])) {
+        $errors[] = _('mail accounts');
+    }
+    if (!isset($_POST['v_databases'])) {
+        $errors[] = _('databases');
+    }
+    if (!isset($_POST['v_cron_jobs'])) {
+        $errors[] = _('cron jobs');
+    }
+    if (!isset($_POST['v_backups'])) {
+        $errors[] = _('backups');
+    }
+    if (!isset($_POST['v_disk_quota'])) {
+        $errors[] = _('quota');
+    }
+    if (!isset($_POST['v_bandwidth'])) {
+        $errors[] = _('bandwidth');
+    }
 
     // Check if name server entries are blank if DNS server is installed
     if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {
-        if (empty($_POST['v_ns1'])) $errors[] = _('ns1');
-        if (empty($_POST['v_ns2'])) $errors[] = _('ns2');
+        if (empty($_POST['v_ns1'])) {
+            $errors[] = _('ns1');
+        }
+        if (empty($_POST['v_ns2'])) {
+            $errors[] = _('ns2');
+        }
     }
 
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
-            if ( $i == 0 ) {
+            if ($i == 0) {
                 $error_msg = $error;
             } else {
                 $error_msg = $error_msg.", ".$error;
             }
         }
-        $_SESSION['error_msg'] = _('Field "%s" can not be blank.',$error_msg);
+        $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
     }
 
     // Protect input
@@ -175,20 +210,27 @@ if (!empty($_POST['save'])) {
     $v_ns7 = trim($_POST['v_ns7'], '.');
     $v_ns8 = trim($_POST['v_ns8'], '.');
     $v_ns = $v_ns1.",".$v_ns2;
-    if (!empty($v_ns3)) $v_ns .= ",".$v_ns3;
-    if (!empty($v_ns4)) $v_ns .= ",".$v_ns4;
-    if (!empty($v_ns5)) $v_ns .= ",".$v_ns5;
-    if (!empty($v_ns6)) $v_ns .= ",".$v_ns6;
-    if (!empty($v_ns7)) $v_ns .= ",".$v_ns7;
-    if (!empty($v_ns8)) $v_ns .= ",".$v_ns8;
+    if (!empty($v_ns3)) {
+        $v_ns .= ",".$v_ns3;
+    }
+    if (!empty($v_ns4)) {
+        $v_ns .= ",".$v_ns4;
+    }
+    if (!empty($v_ns5)) {
+        $v_ns .= ",".$v_ns5;
+    }
+    if (!empty($v_ns6)) {
+        $v_ns .= ",".$v_ns6;
+    }
+    if (!empty($v_ns7)) {
+        $v_ns .= ",".$v_ns7;
+    }
+    if (!empty($v_ns8)) {
+        $v_ns .= ",".$v_ns8;
+    }
     $v_ns = escapeshellarg($v_ns);
     $v_time = escapeshellarg(date('H:i:s'));
     $v_date = escapeshellarg(date('Y-m-d'));
-
-    // Create temprorary directory
-    exec ('mktemp -d', $output, $return_var);
-    $tmpdir = $output[0];
-    unset($output);
 
     // Save package file on a fs
     $pkg = "WEB_TEMPLATE=".$v_web_template."\n";
@@ -210,27 +252,25 @@ if (!empty($_POST['save'])) {
     $pkg .= "BACKUPS=".$v_backups."\n";
     $pkg .= "TIME=".$v_time."\n";
     $pkg .= "DATE=".$v_date."\n";
-    $fp = fopen($tmpdir."/".$_POST['v_package'].".pkg", 'w');
+
+    $tmpfile = tempnam('/tmp/', 'hst_');
+    $fp = fopen($tmpfile, 'w');
     fwrite($fp, $pkg);
+    exec(HESTIA_CMD."v-add-user-package ".$tmpfile." ".$v_package." yes", $output, $return_var);
+    check_return_code($return_var, $output);
+    unset($output);
+
     fclose($fp);
-
-    // Save changes
-    exec (HESTIA_CMD."v-add-user-package ".$tmpdir." ".$v_package." 'yes'", $output, $return_var);
-    check_return_code($return_var,$output);
-    unset($output);
-
-    // Remove temporary dir
-    exec ('rm -rf '.$tmpdir, $output, $return_var);
-    unset($output);
+    unlink($tmpfile);
 
     // Propogate new package
-    exec (HESTIA_CMD."v-update-user-package ".$v_package." 'json'", $output, $return_var);
-    check_return_code($return_var,$output);
+    exec(HESTIA_CMD."v-update-user-package ".$v_package." 'json'", $output, $return_var);
+    check_return_code($return_var, $output);
     unset($output);
-    
-    if($v_package_new != $v_package){
-        exec (HESTIA_CMD."v-rename-user-package " . $v_package . " " . $v_package_new, $output, $return_var);
-        check_return_code($return_var,$output);
+
+    if ($v_package_new != $v_package) {
+        exec(HESTIA_CMD."v-rename-user-package " . $v_package . " " . $v_package_new, $output, $return_var);
+        check_return_code($return_var, $output);
         unset($output);
     }
     // Set success message

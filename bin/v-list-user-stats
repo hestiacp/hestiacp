@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: list user stats
 # options: USER [FORMAT]
-# labels: panel
 #
 # example: v-list-user-stats admin
 #
-# The function for listing user statistics
+# This function for listing user statistics
 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,8 +16,13 @@ user=$1
 format=${2-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 
 # JSON list function
 json_list() {
@@ -132,7 +136,7 @@ $BIN/v-update-user-stats $user
 
 
 # Defining config
-conf=$USER_DATA/stats.log
+conf="$USER_DATA/stats.log"
 if [ ! -e "$conf" ]; then
     touch $conf
 fi

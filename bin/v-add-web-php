@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: add php fpm version
 # options: VERSION
-# labels: hestia
 #
 # example: v-add-web-php 8.0
 #
-# The function checks and delete a fpm php version if not used by any domain.
-
+# This function checks and delete a fpm php version if not used by any domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 version=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -34,35 +33,33 @@ php_fpm="/etc/init.d/php$version-fpm"
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
     echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
-    echo "Example:  7.0, 7.4, 8.0"
-    exit
+    echo "Example: 7.0, 7.4, 8.0"
+    exit "$E_INVALID";
 fi
 
 # Check if php version already exists
 if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
     echo "ERROR: Specified PHP version is already installed."
-    exit
+    exit "$E_INVALID";
 fi
 
 # Check if php version is supported
 if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; then
     echo "ERROR: Specified PHP version is not supported or does not exist."
-    exit
+    exit "$E_INVALID";
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-mph="php$version-mbstring php$version-bcmath php$version-cli php$version-curl
+mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli php$version-curl
      php$version-fpm php$version-gd php$version-intl php$version-mysql
-     php$version-soap php$version-xml php$version-zip php$version-mbstring
-     php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql
-     php$version-imap php$version-ldap"
+     php$version-soap php$version-xml php$version-zip php$version-json php$version-bz2
+     php$version-pspell php$version-imagick php$version-pgsql php$version-imap php$version-ldap"
 
 # Check is version is 7.1 or below to add mcrypt
 if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
@@ -99,7 +96,7 @@ done
 # Do a blank echo to get the \n back
 echo
 
-# Check if installation was sucessfully
+# Check if installation was successful
 if [ ! -f "$php_fpm" ]; then
     echo "ERROR: Installation failed, please run the following command manually for debugging:"
     echo "apt-get install $mph"
@@ -113,7 +110,7 @@ if [ "$WEB_SYSTEM" = "apache2" ]; then
     if ! a2query -q -m setenvif; then
         a2enmod -q setenvif
     fi
-    $BIN/v-restart-web
+    $BIN/v-restart-web "yes"
 fi
 
 # Configure fpm
@@ -122,6 +119,8 @@ v_tpl=${version//.}
 rm -f /etc/php/$version/fpm/pool.d/*
 cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
 sed -i "s/9999/99$v_tpl/g" /etc/php/$version/fpm/pool.d/dummy.conf
+cp -f $HESTIA_INSTALL_DIR/php-fpm/php-fpm.conf /etc/php/$version/fpm/
+sed -i "s/fpm_v/$version/g" /etc/php/$version/fpm/php-fpm.conf
 
 # Install backend template
 cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \

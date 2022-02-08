@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change web domain ip
 # options: USER DOMAIN DOMAIN [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-ip admin example.com 167.86.105.230 yes
 #
-# The call is used for changing domain ip
-
+# This function is used for changing domain ip
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,19 +18,21 @@ ip=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -50,15 +50,14 @@ is_ip_valid "$ip" "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Preparing variables for vhost replace
 get_domain_values 'web'
-old=$(get_real_ip $IP)
-new=$(get_real_ip $ip)
+old=$(get_real_ip "$IP")
+new=$(get_real_ip "$ip")
 
 # Replacing vhost
 replace_web_config "$WEB_SYSTEM" "$TPL.tpl"
@@ -67,13 +66,17 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 # Replacing proxy vhost
-if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
     replace_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     if [ "$SSL" = 'yes' ]; then
         replace_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
     fi
 fi
 
+# Check for webmail
+if [ -n "$IMAP_SYSTEM" ]; then
+    $BIN/v-rebuild-mail-domain "$user" "$domain"
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -87,10 +90,10 @@ increase_ip_value "$new"
 decrease_ip_value "$old"
 
 # Restart web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "WEB restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

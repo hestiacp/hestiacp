@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list dns domain records
 # options: USER DOMAIN [FORMAT]
-# labels: dns
 #
 # example: v-list-dns-records admin example.com
 #
-# The function for getting all DNS domain records.
-
+# This function for getting all DNS domain records.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,8 +16,12 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -31,7 +33,7 @@ json_list() {
         unset TTL
         parse_object_kv_list "$str"
         [ -z "$TTL" ] && TTL="$zone_ttl"
-        VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+        VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g" -e 's/     /\\u0009/g')
         echo -n '    "'$ID'": {
         "RECORD": "'$RECORD'",
         "TYPE": "'$TYPE'",
@@ -93,7 +95,6 @@ csv_list() {
     done < <(cat $USER_DATA/dns/$domain.conf)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -102,7 +103,6 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #

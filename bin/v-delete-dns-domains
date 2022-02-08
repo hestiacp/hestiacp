@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete dns domains
 # options: USER [RESTART]
-# labels: dns
 #
 # example: v-delete-dns-domains bob
 #
-# The function for deleting all users DNS domains.
-
+# This function for deleting all users DNS domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,11 +15,12 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -35,7 +34,6 @@ is_object_valid 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -45,13 +43,12 @@ for domain in $(search_objects 'dns' 'SUSPENDED' "no" 'DOMAIN'); do
     $BIN/v-delete-dns-domain "$user" "$domain" 'no'
 done
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Restarting named
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "Bind restart failed" >/dev/null
 
 # Logging

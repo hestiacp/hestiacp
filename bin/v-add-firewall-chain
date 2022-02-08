@@ -1,19 +1,14 @@
 #!/bin/bash
 # info: add firewall chain
 # options: CHAIN [PORT] [PROTOCOL] [PROTOCOL]
-# labels: 
 #
 # example: v-add-firewall-chain CRM 5678 TCP
 #
-# The function adds new rule to system firewall
-
+# This function adds new rule to system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
@@ -31,13 +26,14 @@ if [ -z "$hestiaport" ]; then
 fi
 
 # Includes
-# shellcheck /usr/local/hestia/func/main.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck /usr/local/hestia/func/firewall.sh
+# shellcheck source=/usr/local/hestia/func/firewall.sh
 source $HESTIA/func/firewall.sh
-# shellcheck /usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -99,7 +95,6 @@ fi
 
 # Changing permissions
 chmod 660 $chains
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

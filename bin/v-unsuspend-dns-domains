@@ -1,27 +1,26 @@
 #!/bin/bash
 # info: unsuspend dns domains
 # options: USER [RESTART]
-# labels: dns
 #
 # example: v-unsuspend-dns-domains alice
 #
-# The function unsuspends all user's DNS domains.
-
+# This function unsuspends all user's DNS domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
-restart=$2
+restart=${3-no}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -41,9 +40,8 @@ check_hestia_demo_mode
 
 # Starting unsuspend loop
 for domain in $(search_objects 'dns' 'SUSPENDED' "yes" 'DOMAIN'); do
-    $BIN/v-unsuspend-dns-domain "$user" "$domain" 'no'
+    $BIN/v-unsuspend-dns-domain "$user" "$domain" "$restart"
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

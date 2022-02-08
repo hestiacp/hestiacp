@@ -1,29 +1,27 @@
 #!/bin/bash
 # info: add php  version alias to .bash_aliases
 # options: USER VERSION
-# labels: hestia
 #
 # example: v-change-user-php-cli user 7.4
 #
 # add line to .bash_aliases to set default php command line
 # version when multi-php is enabled.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 version=$2
 
-
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,19 +34,23 @@ is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
 # Reading user values
 source $USER_DATA/user.conf
 
-# Verify php version format
-if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
-    echo "The php version format is invalid, it should look like [0-9].[0-9]..."
-    exit
-fi
+versions=$($BIN/v-list-sys-php plain);
+support=0;
+for v in $versions; do 
+  if [ "$v" == "$version" ]; then
+    support=1;
+  fi
+done
 
-# Check if php version is supported
-if [ ! -f "$HESTIA_INSTALL_DIR/multiphp/$WEB_SYSTEM/PHP-${version//.}.sh" ]; then
-    echo "Version is currently not supported or does not exist..."
-    exit
+if [ "$support" = 0 ]; then
+  echo "Version is currently not supported or does not exist..."
+  exit 2;
 fi
 
 # Create .bash_aliases is not exsists
@@ -62,19 +64,13 @@ if grep -q "alias php='env php$version'" "$FILE"; then
   exit;
 fi
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-sed -i "/alias php='env/d" "$FILE"
-
+sed -i "/alias php='env/d" $FILE
 echo "alias php='env php$version'" >> $FILE
-
 update_user_value "$user" '$PHPCLI' "$version"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

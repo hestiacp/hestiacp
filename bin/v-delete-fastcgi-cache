@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: Disable FastCGI cache for nginx
 # options: USER DOMAIN [RESTART]
-# labels: hestia web
 #
 # example: v-delete-fastcgi-cache user domain.tld
 #
-# The function disables FastCGI cache for nginx
-
+# This function disables FastCGI cache for nginx
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,10 +16,13 @@ domain=$2
 restart=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,7 +37,6 @@ is_object_valid 'web' 'DOMAIN' "$domain" "$FASTCGI_CACHE"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -45,7 +45,7 @@ check_hestia_demo_mode
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Remove FastCGI cache configuration
-if [ -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf ]; then
+if [ -f "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf" ]; then
     rm -rf $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
 fi
 
@@ -58,10 +58,9 @@ if [ -f "$conf" ]; then
 fi
 
 # Delete FastCGI cache folder
-if [ -d /var/cache/nginx/micro/$domain ]; then
+if [ -d "/var/cache/nginx/micro/$domain" ]; then
     rm -rf /var/cache/nginx/micro/$domain
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -79,8 +78,8 @@ update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_CACHE' 'no'
 update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_DURATION' '0s'
 
 # Restart web server
-if [ ! -z "$restart" ]; then
-    $BIN/v-restart-web
+if [ -n "$restart" ]; then
+    $BIN/v-restart-web "$restart"
     check_result $? "Web server restart failed" > /dev/null
 fi
 

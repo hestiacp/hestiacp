@@ -2,6 +2,10 @@
 
 # This script migrates your apache2 installation form mod_prefork to mpm_event.
 
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
 # Includes
 source $HESTIA/conf/hestia.conf
 
@@ -26,6 +30,10 @@ fi
 
 a2modules="php5.6 php7.0 php7.1 php7.2 php7.3 php7.4 ruid2 mpm_itk mpm_prefork"
 changed_a2modules=""
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
 
 for module in $a2modules; do
     a2query -q -m "$module" || continue
@@ -67,5 +75,9 @@ if lsof -Pi :9000 -sTCP:LISTEN -t >/dev/null; then
 else
     echo "There went something wrong with your php-fpm configuration - port 9000 isnt active. Please check if webmail and phpmyadmin (if installed) are working properly."
 fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
 
 systemctl restart apache2

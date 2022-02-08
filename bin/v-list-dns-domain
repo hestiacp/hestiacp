@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list dns domain
 # options: USER DOMAIN [FORMAT]
-# labels: dns
 #
 # example: v-list-dns-domain alice wonderland.com
 #
-# The function of obtaining the list of dns domain parameters.
-
+# This function of obtaining the list of dns domain parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,8 +16,12 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -69,7 +71,6 @@ csv_list() {
     echo "$TIME,$DATE"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -78,7 +79,6 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -94,7 +94,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

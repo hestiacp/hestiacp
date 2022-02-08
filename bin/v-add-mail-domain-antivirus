@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail domain antivirus support
 # options: USER DOMAIN
-# labels: mail
 #
 # example: v-add-mail-domain-antivirus admin mydomain.tld
 #
-# The function enables clamav scan for incoming emails.
-
+# This function enables clamav scan for incoming emails.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,18 +16,19 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -47,7 +46,6 @@ is_object_value_empty 'mail' 'DOMAIN' "$domain" '$ANTIVIRUS'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -56,7 +54,6 @@ check_hestia_demo_mode
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     touch $HOMEDIR/$user/conf/mail/$domain/antivirus
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

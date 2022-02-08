@@ -1,33 +1,33 @@
 #!/bin/bash
 # info: delete user package
 # options: PACKAGE
-# labels: panel
 #
 # example: v-delete-user-package admin palegreen
 #
-# The function for deleting user package.
+# This function for deleting user package.
 #
 # If the package is in use, users will be updated to
 # use the default package.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 package=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Functions
 is_package_in_use() {
     check_package=$(grep "PACKAGE='$package" $HESTIA/data/users/*/user.conf | cut -d'/' -f7)
-    if [ ! -z "$check_package" ]; then
+    if [ -n "$check_package" ]; then
         for user in $check_package; do
             $BIN/v-change-user-package "$user" 'default'
         done
@@ -46,13 +46,12 @@ is_package_in_use
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Deleting user package
-rm -f $HESTIA/data/packages/$package.pkg
+rm -f "$HESTIA/data/packages/$package.pkg"
 
 
 #----------------------------------------------------------#

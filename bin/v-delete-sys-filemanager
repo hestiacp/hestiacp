@@ -1,27 +1,27 @@
 #!/bin/bash
 # info: remove file manager functionality from Hestia Control Panel
 # options: [FULL]
-# labels: hestia
 #
 # example: v-delete-sys-filemanager
 #
-# The function removes the File Manager and its entry points
+# This function removes the File Manager and its entry points
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 MODE=$1
+FORCE=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
-user='admin'
 FM_INSTALL_DIR="$HESTIA/web/fm"
-COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -47,12 +47,12 @@ fi
 check_hestia_demo_mode
 
 # Check if File Manager components are installed
-if [ "$MODE" != "force" ] && [ ! -e "$FM_INSTALL_DIR" ]; then
+if [ "$FORCE" != "yes" ] && [ ! -e "$FM_INSTALL_DIR" ]; then
     echo "ERROR: File Manager components are not installed."
     exit 1
 fi
 
-if [ "$MODE" != "force" ] && [ "$FILE_MANGER" = "false" ]; then
+if [ "$FORCE" != "yes" ] && [ "$FILE_MANGER" = "false" ]; then
     echo "ERROR: File Manager is not enabled."
     exit 1
 fi

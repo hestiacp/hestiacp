@@ -1,17 +1,15 @@
 #!/bin/bash
 # info: suspend web domain
 # options: USER DOMAIN [RESTART]
-# labels: web
 #
 # example: v-suspend-web-domain admin example.com yes
 #
-# The function for suspending the site's operation. After blocking it all
+# This function for suspending the site's operation. After blocking it all
 # visitors will be redirected to a web page explaining the reason of suspend.
 # By blocking the site the content of all its directories remains untouched.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -21,19 +19,21 @@ domain_idn=$2
 restart=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -48,7 +48,6 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -71,7 +70,7 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 # Rebuilding proxy configuration
-if [ ! -z "$PROXY_SYSTEM" ] && [ ! -z "$PROXY" ]; then
+if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
     del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
     if [ "$SSL" = 'yes' ]; then
@@ -89,13 +88,13 @@ update_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED' 'yes'
 increase_user_value "$user" '$SUSPENDED_WEB'
 
 # Update global configuration files
-$BIN/v-rebuild-web-domain $user $domain 'no'
+$BIN/v-rebuild-web-domain "$user" "$domain" 'no'
 
 # Restarting web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" >/dev/null
 
 # Logging

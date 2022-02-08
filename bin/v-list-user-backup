@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: list user backup
 # options: USER BACKUP [FORMAT]
-# labels: 
 #
 # example: v-list-user-backups admin admin.2019-05-19_03-31-30.tar
 #
-# The function of obtaining the list of backup parameters. This call, just as
+# This function of obtaining the list of backup parameters. This call, just as
 # all v_list_* calls, supports 3 formats - json, shell and plain.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,8 +17,12 @@ backup=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 fields="\$BACKUP \$TYPE \$SIZE \$WEB \$DNS \$DB \$MAIL \$CRON \$UDIR"
 fields="$fields \$RUNTIME \$TIME \$DATE"
@@ -73,7 +75,6 @@ csv_list() {
     echo "\"$CRON\",\"$UDIR\",$RUNTIME,$TIME,$DATE"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -82,7 +83,6 @@ check_args '2' "$#" 'USER BACKUP [FORMAT]'
 is_format_valid 'user' 'backup'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'backup' 'BACKUP' "$backup"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -98,7 +98,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

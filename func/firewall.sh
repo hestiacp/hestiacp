@@ -1,3 +1,10 @@
+#!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Firewall Function Library                          #
+#                                                                           #
+#===========================================================================#
 
 heal_iptables_links() {
     packages="iptables iptables-save iptables-restore"

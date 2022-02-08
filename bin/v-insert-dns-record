@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: insert dns record
 # options: USER DOMAIN DATA [RESTART]
-# labels: 
 #
-# The function inserts raw dns record to the domain conf
-
+# This function inserts raw dns record to the domain conf
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,11 +15,12 @@ data=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -45,13 +44,12 @@ check_hestia_demo_mode
 # Insert values
 echo "$data" >> $USER_DATA/dns/$domain.conf
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Restarting named
-$BIN/v-restart-dns $restart
+$BIN/v-restart-dns "$restart"
 check_result $? "Bind restart failed" >/dev/null
 
 # Logging

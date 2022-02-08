@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete cron job
 # options: USER JOB
-# labels: 
 #
 # example: v-delete-cron-job admin 9
 #
-# The function deletes cron job.
-
+# This function deletes cron job.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,11 +16,12 @@ job=$2
 restart=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,7 +35,6 @@ is_object_valid 'cron' 'JOB' "$job"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -52,7 +50,6 @@ sort_cron_jobs
 # Sync system cron with user
 sync_cron_jobs
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -61,12 +58,12 @@ sync_cron_jobs
 decrease_user_value "$user" '$U_CRON_JOBS'
 
 # Check if is suspended to decrease the suspended value
-if [ ! -z "$suspended" ]; then
+if [ -n "$suspended" ]; then
     decrease_user_value "$user" '$SUSPENDED_CRON'
 fi
 
-# Restarting crond
-$BIN/v-restart-cron $restart
+# Restarting cron
+$BIN/v-restart-cron "$restart"
 check_result $? "Restart restart failed" >/dev/null
 
 # Logging

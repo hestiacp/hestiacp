@@ -1,23 +1,10 @@
 #!/bin/bash
 # info: list system cpu info
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-cpu-status
 #
-# The function lists cpu information
-
-
-#----------------------------------------------------------#
-#                    Variable&Function                     #
-#----------------------------------------------------------#
-
-# Argument definition
-#format=${1-shell}
-
-# Includes
-#source $HESTIA/func/main.sh
-
+# This function lists cpu information
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail domain account
 # options: USER DOMAIN ACCOUNT PASSWORD [QUOTA]
-# labels: mail
 #
 # example: v-add-mail-account user example.com john P4$$vvOrD
 #
-# The function add new email account.
-
+# This function add new email account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,18 +18,19 @@ password=$4; HIDE=4
 quota=${5-unlimited}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 if [[ "$account" =~ [[:upper:]] ]]; then
     account=$(echo "$account" |tr '[:upper:]' '[:lower:]')
 fi
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -54,7 +53,6 @@ is_password_valid
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -70,8 +68,14 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     fi
     str="$account:$md5:$user:mail::$HOMEDIR/$user:${quota}:userdb_quota_rule=*:storage=${quota}M"
     echo $str >> $HOMEDIR/$user/conf/mail/$domain/passwd
+    userstr="$account:$account:$user:mail:$HOMEDIR/$user"
+    echo $userstr >> $HOMEDIR/$user/conf/mail/$domain/accounts
 fi
 
+# Create mail account folder (mailbox)
+ mkdir $HOMEDIR/$user/mail/$domain/$account
+ chown $user:mail $HOMEDIR/$user/mail/$domain/$account
+ chmod 700 $HOMEDIR/$user/mail/$domain/$account
 
 #----------------------------------------------------------#
 #                       Hestia                             #

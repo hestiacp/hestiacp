@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change hestia ssl certificate
 # options: SSL_DIR [RESTART]
-# labels: panel
 #
 # example: v-change-sys-hestia-ssl /home/new/dir/path yes
 #
-# The function changes hestia SSL certificate and the key.
-
+# This function changes hestia SSL certificate and the key.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,13 +16,14 @@ ssl_dir=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -35,7 +34,6 @@ is_format_valid 'ssl_dir'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -62,7 +60,6 @@ fi
 cp -f $ssl_dir/certificate.crt $HESTIA/ssl/certificate.crt
 cp -f $ssl_dir/certificate.key $HESTIA/ssl/certificate.key
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -70,7 +67,7 @@ cp -f $ssl_dir/certificate.key $HESTIA/ssl/certificate.key
 # Restarting web server
 if [ "$restart" != 'no' ]; then
     kill -HUP $(cat /var/run/hestia-nginx.pid)
-    $BIN/v-restart-mail $restart
+    $BIN/v-restart-mail "$restart"
 fi
 
 # Logging

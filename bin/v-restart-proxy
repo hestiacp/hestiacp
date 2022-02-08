@@ -1,23 +1,22 @@
 #!/bin/bash
 # info: restart proxy server
 # options: NONE
-# labels: panel
 #
 # example: v-restart-proxy
 #
-# The function reloads proxy server configuration.
-
+# This function reloads proxy server configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 send_email_report() {
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
@@ -25,29 +24,34 @@ send_email_report() {
     tmpfile=$(mktemp)
     subj="$(hostname): $PROXY_SYSTEM restart failed"
     nginx -t >> $tmpfile 2>&1
-    service $PROXY_SYSTEM restart >> $tmpfile 2>&1
-    cat $tmpfile |$SENDMAIL -s "$subj" $email
+    service "$PROXY_SYSTEM" restart >> $tmpfile 2>&1
+    cat "$tmpfile" |$SENDMAIL -s "$subj" "$email"
     rm -f $tmpfile
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Exit
+if [ -z "$PROXY_SYSTEM" ] || [ "$PROXY_SYSTEM" = 'remote' ]; then
+    exit
+fi
+
 if [ "$1" = "no" ]; then
     exit
 fi
 
 # Schedule restart
-if [ "$1" = 'scheduled' ] || [ -z "$1" -a "$SCHEDULED_RESTART" = 'yes' ]; then
+if [ "$1" = 'scheduled' ] || [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
     sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
     echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
     exit
 fi
 
-if [ -z "$PROXY_SYSTEM" ] || [ "$PROXY_SYSTEM" = 'remote' ]; then
+if [ "$1" = "updatessl" ]; then
+    sed -i "/\/$SCRIPT ssl/d" $HESTIA/data/queue/restart.pipe
+    echo "$BIN/$SCRIPT ssl" >> $HESTIA/data/queue/restart.pipe
     exit
 fi
 
@@ -72,18 +76,22 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
     # Default behaviour
     
     # Preform an check if Nginx is valid as reload doesn't throw an error / exit
-    service $PROXY_SYSTEM configtest  >> /dev/null 2>&1
+    service $PROXY_SYSTEM configtest > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         send_email_report
-        check_result $E_RESTART "$PROXY_SYSTEM restart failed"
+        check_result "$E_RESTART" "$PROXY_SYSTEM restart failed"
     fi
-    
+
     # Restart system
-    $BIN/v-restart-service $PROXY_SYSTEM > /dev/null 2>&1
+    if [ "$1" = "ssl" ]; then
+        restart="ssl"
+    fi
+    $BIN/v-restart-service "$PROXY_SYSTEM" "$restart" > /dev/null 2>&1
 
     # Update restart queue
     if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
         sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+        sed -i "/\/$SCRIPT ssl/d" $HESTIA/data/queue/restart.pipe
     fi
 fi
 

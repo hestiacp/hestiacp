@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update web templates
 # options: [RESTART] [SKIP]
-# labels: web
 #
 # example: v-update-web-templates
 #
-# The function for obtaining updated web (Nginx/Apache2/PHP) templates from Hestia package.
-
+# This function for obtaining updated web (Nginx/Apache2/PHP) templates from the Hestia package.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,10 +15,12 @@ restart=$1
 skip=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -46,12 +46,13 @@ for webtpl_folder in $(ls $HESTIA_INSTALL_DIR/templates/web/* -d 2>/dev/null | e
     cp -rf "${webtpl_folder}" "${WEBTPL}/"
 done
 
-for php_ver in $(ls /etc/php/); do
+versions_list=$(ls -d /etc/php/*)
+for php_ver in $versions_list; do
     [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
-    cp -f "$HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl"  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
+    cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
 done
 
-if [ ! -z "$awstats_patch" ]; then 
+if [ -n "$awstats_patch" ]; then 
     # restore LoadPlugin variable
     echo "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"" >> $HESTIA/data/templates/web/awstats/awstats.tpl
 fi
@@ -59,7 +60,7 @@ fi
 # Rebuilding web domains
 if [  -z "$skip" ]; then
     for user in $($BIN/v-list-sys-users plain); do
-        $BIN/v-rebuild-web-domains $user no
+        $BIN/v-rebuild-web-domains "$user" "no"
     done
 fi
 
@@ -67,14 +68,12 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-if [ ! -z "$restart" ] || [ "$restart" == "yes" ]; then
-    # Restarting web server
-    $BIN/v-restart-web $restart
-    check_result $? "restart" >/dev/null 2>&1
+# Restarting web server
+$BIN/v-restart-web "$restart"
+check_result $? "restart" >/dev/null 2>&1
     
-    $BIN/v-restart-proxy $restart
-    check_result $? "restart" >/dev/null 2>&1
-fi 
+$BIN/v-restart-proxy "$restart"
+check_result $? "restart" >/dev/null 2>&1
 
 $BIN/v-log-action "system" "Info" "Updates" "Default web domain templates updated."
 

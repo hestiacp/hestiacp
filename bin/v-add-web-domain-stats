@@ -1,18 +1,16 @@
 #!/bin/bash
 # info: add log analyzer to generate domain statistics
 # options: USER DOMAIN TYPE
-# labels: web
 #
 # example: v-add-web-domain-stats admin example.com awstats
 #
-# The call is used for enabling log analyzer system to a domain. For viewing
+# This function is used for enabling log analyzer system to a domain. For viewing
 # the domain statistics use http://domain.tld/vstats/ link. Access this page
 # is not protected by default. If you want to secure it with passwords you
 # should use v-add-web-domain_stat_auth script.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,17 +20,18 @@ domain_idn=$2
 type=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -50,7 +49,6 @@ is_object_value_empty 'web' 'DOMAIN' "$domain" '$STATS'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -91,7 +89,6 @@ if [ "$type" == 'awstats' ]; then
         /etc/awstats/$type.$domain_idn.conf
 fi
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -108,6 +105,6 @@ $BIN/v-log-action "$user" "Info" "Web" "Web traffic analyzer enabled (Domain: $d
 log_event "$OK" "$ARGUMENTS"
 
 # Build stats
-exec $BIN/v-update-web-domain-stat $user $domain
+exec $BIN/v-update-web-domain-stat "$user" "$domain"
 
 exit

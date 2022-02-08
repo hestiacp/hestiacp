@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: update user package
 # options: PACKAGE
-# labels: panel
 #
 # example: v-update-user-package default
 #
-# The function propagates package to connected users.
-
+# This function propagates package to connected users.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 package=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -30,15 +29,14 @@ check_args '1' "$#" 'PACKAGE'
 is_format_valid 'package'
 is_package_valid
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 for user in $($HESTIA/bin/v-list-sys-users plain); do
     check_package=$(grep "PACKAGE='$package'" $USER_DATA/$user/user.conf)
-    if [ ! -z "$check_package" ]; then
-        $BIN/v-change-user-package $user $package 'yes'
+    if [ -n "$check_package" ]; then
+        $BIN/v-change-user-package "$user" "$package" 'yes'
     fi
 done
 

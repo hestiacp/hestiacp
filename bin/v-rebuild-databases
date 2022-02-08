@@ -1,32 +1,31 @@
 #!/bin/bash
 # info: rebuild databases
 # options: USER
-# labels: panel
 #
 # example: v-rebuild-databases admin
 #
-# The function for rebuilding of all databases of a single user.
-
+# This function for rebuilding of all databases of a single user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/db.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -39,6 +38,7 @@ is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -70,7 +70,6 @@ done
 update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
 update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
 update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

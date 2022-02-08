@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail account alias aka nickname
 # options: USER DOMAIN ACCOUNT ALIAS
-# labels: mail
 #
 # example: v-delete-mail-account-alias admin example.com alice alicia
 #
-# The function deletes email account alias.
-
+# This function deletes email account alias.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,17 +18,18 @@ account=$3
 malias=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -46,12 +45,11 @@ aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
 if [ -z "$(echo $aliases | grep -w $malias)" ]; then
     echo "Error: alias $malias doesn't exist"
     log_event "$E_NOTEXIST $ARGUMENTS"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -67,7 +65,6 @@ aliases=$(echo "$aliases" |\
     sed "s/^$malias$//g"|\
     sed "/^$/d"|\
     sed ':a;N;$!ba;s/\n/,/g')
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

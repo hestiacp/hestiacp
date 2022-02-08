@@ -1,29 +1,27 @@
 #!/bin/bash
 # info: change sysconfig value
 # options: KEY VALUE
-# labels: panel
 #
 # example: v-change-sys-config-value VERSION 1.0
 #
-# The function is for changing main config settings such as COMPANY_NAME or
+# This function is for changing main config settings such as COMPANY_NAME or
 # COMPANY_EMAIL and so on.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-key=$(echo "$1" | tr '[:lower:]' '[:upper:]' )
+key=$(echo "$1"| tr '[:lower:]' '[:upper:]')
 value=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
-PATH="$PATH:/usr/local/sbin:/sbin:/usr/sbin:/root/bin"
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -33,20 +31,13 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'KEY VALUE'
-is_format_valid 'key'
-
-
+is_common_format_valid "$key" 'key'
+format_no_quotes "$value" 'value'
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Updating conf
-check_ckey=$(grep "^$key='" $HESTIA/conf/hestia.conf)
-if [ -z "$check_ckey" ]; then
-    echo "$key='$value'" >> $HESTIA/conf/hestia.conf
-else
-    sed -i "s|^$key=.*|$key='$value'|g" $HESTIA/conf/hestia.conf
-fi
+change_sys_value "$key" "$value"
 
 # Sort configuration file in alphabetical order on change
 sort $HESTIA/conf/hestia.conf -o /tmp/updconf

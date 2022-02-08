@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete user
 # options: USER [RESTART]
-# labels: panel
 #
 # example: v-delete-user whistler
 #
 # This function deletes a certain user and all his resources such as domains,
 # databases, cron jobs, etc.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,6 +16,8 @@ user=$1
 restart=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
@@ -26,9 +26,8 @@ source $HESTIA/func/domain.sh
 source $HESTIA/func/db.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -44,36 +43,35 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Deleting web domains
-if [ ! -z "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-web-domains $user $restart
-    $BIN/v-delete-web-domains $user $restart
+if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-web-domains "$user" "$restart"
+    $BIN/v-delete-web-domains "$user" "$restart"
     check_result "$?" "web domain deletion failed"
 fi
 
 # Deleting dns domains
-if [ ! -z "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-dns-domains $user $restart
-    $BIN/v-delete-dns-domains $user $restart
+if [ -n "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-dns-domains "$user" "$restart"
+    $BIN/v-delete-dns-domains "$user" "$restart"
     check_result "$?" "dns domain deletion failed"
 fi
 
 # Deleting mail domains
-if [ ! -z "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-mail-domains $user
-    $BIN/v-delete-mail-domains $user
+if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-mail-domains "$user"
+    $BIN/v-delete-mail-domains "$user"
     check_result "$?" "mail domain deletion failed"
 fi
 
 # Deleting databases
-if [ ! -z "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-databases $user
-    $BIN/v-delete-databases $user
+if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+    $BIN/v-unsuspend-databases "$user"
+    $BIN/v-delete-databases "$user"
     check_result "$?" "database deletion failed"
 fi
 
@@ -82,20 +80,20 @@ $BIN/v-delete-user-ips "$user"
 check_result "$?" "user ip release failed"
 
 # Deleteing user pipes
-sed -i "/ $user$/d" $HESTIA/data/queue/disk.pipe
-sed -i "/ $user$/d" $HESTIA/data/queue/traffic.pipe
+sed -i "/ $user$/d" "$HESTIA/data/queue/disk.pipe"
+sed -i "/ $user$/d" "$HESTIA/data/queue/traffic.pipe"
 
 # Deleting sftp jail
-$BIN/v-delete-user-sftp-jail $user
+$BIN/v-delete-user-sftp-jail "$user"
 
 # Deleting system user
-/usr/sbin/userdel -f $user >> /dev/null 2>&1
+/usr/sbin/userdel -f "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then
     sed -i "/^$user:/d" /etc/passwd
     sed -i "/^$user:/d" /etc/shadow
 fi
 
-/usr/sbin/groupdel $user >> /dev/null 2>&1
+/usr/sbin/groupdel "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then
     sed -i "/^$user:/d" /etc/group
 fi
@@ -112,7 +110,6 @@ rm -rf $USER_DATA
 if [ "$user" != 'admin' ]; then
     decrease_user_value 'admin' '$U_USERS'
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

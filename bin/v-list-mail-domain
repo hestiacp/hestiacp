@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mail domain
 # options: USER DOMAIN [FORMAT]
-# labels: mail
 #
 # example: v-list-mail-domain user01 mydomain.com
 #
-# The function of obtaining the list of domain parameters.
-
+# This function of obtaining the list of domain parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,10 +16,12 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -88,7 +88,6 @@ csv_list() {
     echo "$U_SMTP_RELAY,$U_SMTP_RELAY_HOST,$U_SMTP_RELAY_PORT,$U_SMTP_RELAY_USERNAME"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -97,7 +96,6 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -113,7 +111,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

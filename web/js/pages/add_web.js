@@ -121,7 +121,7 @@ App.Listeners.WEB.keypress_ftp_path = function() {
 //
 //
 App.Actions.WEB.add_ftp_user_form = function() {
-    var ref = $('#templates').find('.ftptable').clone(true);
+    var ref = $('#templates').find('.ftptable-nrm').clone(true);
     var index = $('.data-col2 .ftptable').length + 1;
     
     ref.find('input').each(function(i, elm) {
@@ -131,7 +131,7 @@ App.Actions.WEB.add_ftp_user_form = function() {
     
     ref.find('.ftp-user-number').text(index);
     
-    $('.data-col2 .ftptable:last').after(ref);
+    $('#ftp_users').append(ref);
     
     var index = 1;
     $('.data-col2 .ftp-user-number:visible').each(function(i, o) {
@@ -158,7 +158,7 @@ App.Actions.WEB.remove_ftp_user = function(elm) {
 
 
 App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
-    if ($(elm).attr('checked')) {
+    if ($(elm).prop('checked')) {
         $('.ftptable-nrm, .v-add-new-user, .add-new-ftp-user-button').show();
         $('.ftptable-nrm').each(function(i, elm) {
             var login = $(elm).find('.v-ftp-user');
@@ -193,7 +193,7 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
 }
 
 App.Actions.WEB.toggle_letsencrypt = function(elm) {
-    if ($(elm).attr('checked')) {
+    if ($(elm).prop('checked')) {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
         $('#generate-csr').hide();
 	$('.lets-encrypt-note').show();

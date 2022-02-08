@@ -1,16 +1,15 @@
 #!/bin/bash
 # info: add webmail support for a domain
 # options: USER DOMAIN [WEBMAIL] [RESTART] [QUIET]
-# labels: hestia
 #
 # example: v-add-sys-webmail user domain.com
 # example: v-add-sys-webmail user domain.com rainloop
 # example: v-add-sys-webmail user domain.com roundcube
 #
-# this function enables webmail client for a mail domain.
+# This function enables webmail client for a mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,6 +18,10 @@ domain=$2
 webmail=$3
 restart="$4"
 quiet=$5
+
+if [ -z "$restart" ]; then 
+    restart="yes"
+fi
 
 # Additional argument formatting
 if [[ "$domain" =~ [[:upper:]] ]]; then
@@ -32,19 +35,20 @@ if [[ "$domain" =~ .*\.$ ]]; then
 fi
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -60,7 +64,7 @@ check_args '2' "$#" 'USER DOMAIN [WEBMAIL] [RESTART]'
 is_format_valid 'user' 'domain'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
-is_type_valid "$WEBMAIL_SYSTEM" "$webmail"
+is_type_valid "$WEBMAIL_SYSTEM disabled" "$webmail"
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
@@ -75,13 +79,13 @@ check_hestia_demo_mode
 
 # Inherit web domain local ip address
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
-if [ ! -z "$domain_ip" ]; then
+if [ -n "$domain_ip" ]; then
     local_ip=$(get_real_ip "$domain_ip")
     is_ip_valid "$local_ip" "$user"
 
     ip=$local_ip
     nat_ip=$(get_ip_value '$NAT')
-    if [ ! -z "$nat_ip" ]; then
+    if [ -n "$nat_ip" ]; then
         ip=$nat_ip
     fi
 else
@@ -93,24 +97,24 @@ if [ -z "$WEBMAIL_ALIAS" ]; then
     $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' "webmail"
 else
     # Ensure DNS record exists if Hestia is hosting DNS zones
-    if [ ! -z "$DNS_SYSTEM" ]; then
+    if [ -n "$DNS_SYSTEM" ]; then
         dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
         webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i $WEBMAIL_ALIAS | cut -d' ' -f1)
 
         if [ "$dns_domain" = "$domain" ]; then
             if [ -z "$webmail_record" ]; then
                 if [ "$quiet" = "yes" ]; then
-                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
+                    $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
                 else
-                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
+                    $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
                 fi
             else
                 if [ "$quiet" = "yes" ]; then
-                    $BIN/v-delete-dns-record $user $domain $webmail_record $restart 'yes'
-                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
+                    $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
+                    $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
                 else
-                    $BIN/v-delete-dns-record $user $domain $webmail_record $restart 'yes'
-                    $BIN/v-add-dns-record $user $domain $WEBMAIL_ALIAS A $ip '' '' $restart '' 'yes'
+                    $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
+                    $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
                 fi
             fi
         fi
@@ -118,7 +122,7 @@ else
     
     if [ "$webmail" == "roundcube" ]; then
         WEBMAIL_TEMPLATE="default"
-        if [ ! -z "$PROXY_SYSTEM" ]; then
+        if [ -n "$PROXY_SYSTEM" ]; then
             PROXY_TEMPLATE="default"
         fi
         # Add webmail configuration to mail domain
@@ -126,16 +130,21 @@ else
         if [ "$WEB_SYSTEM" = "nginx" ]; then
             WEBMAIL_TEMPLATE="web_system"
         fi
-    else
+    elif [ "$webmail" == "rainloop" ]; then
         WEBMAIL_TEMPLATE="rainloop"
-        if [ ! -z "$PROXY_SYSTEM" ]; then
+        if [ -n "$PROXY_SYSTEM" ]; then
             PROXY_TEMPLATE="default_rainloop"
+        fi
+    else
+        WEBMAIL_TEMPLATE="disabled"
+        if [ -n "$PROXY_SYSTEM" ]; then
+            PROXY_TEMPLATE="default_disabled"
         fi
     fi
     
     add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.tpl"
 
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         add_webmail_config "$PROXY_SYSTEM" "${PROXY_TEMPLATE}.tpl"
     fi
 
@@ -143,7 +152,7 @@ else
     if [ -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt ] || [ "$SSL" = 'yes' ]; then
         add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.stpl"
 
-        if [ ! -z "$PROXY_SYSTEM" ]; then
+        if [ -n "$PROXY_SYSTEM" ]; then
             add_webmail_config "$PROXY_SYSTEM" "${PROXY_TEMPLATE}.stpl"
         fi
     fi
@@ -156,16 +165,17 @@ fi
 
 # Set SSL as enabled in configuration
 update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' "$webmail"
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 if [ "$restart" = 'yes' ]; then 
     # Restarting web server
-    $BIN/v-restart-web $restart
+    $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" >/dev/null
 
-    $BIN/v-restart-proxy $restart
+    $BIN/v-restart-proxy "$restart"
     check_result $? "Proxy restart failed" >/dev/null
 fi
 

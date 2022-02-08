@@ -1,23 +1,22 @@
 #!/bin/bash
 # info: delete system quota
 # options: NONE
-# labels: panel
 #
 # example: v-delete-sys-quota
 #
-# The script disables filesystem quota on /home partition
-
+# This function disables filesystem quota on /home partition
 
 #----------------------------------------------------------#
-#                  Variable & Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -25,6 +24,7 @@ source $HESTIA/conf/hestia.conf
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -34,23 +34,23 @@ mnt=$(df -P /home | awk '{print $6}' | tail -n1)
 lnr=$(cat -n /etc/fstab | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
 opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
 fnd='usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt='
-if [ ! -z "$(echo $opt | grep $fnd)" ]; then
+if [ -n "$(echo $opt | grep $fnd)" ]; then
     rep=$(echo $(echo $opt | tr ',' '\n' | grep -v $fnd) | tr ' ' ',')
     sed -i "$lnr s/$opt/$rep/" /etc/fstab
-    mount -o remount $mnt
+    mount -o remount "$mnt"
 fi
 
 # Disabling group and user quota
 quotaoff=$(which --skip-alias --skip-functions quotaoff 2>/dev/null)
 if [ $? -eq 0 ]; then
-    if [ ! -z "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is on')" ]; then
+    if [ -n "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is on')" ]; then
         $quotaoff $mnt
     fi
 fi
 
 # Deleting v1 + v2 group and user quota index
 for idx in $(echo 'quota.user quota.group aquota.user aquota.group'); do
-    [ -e "$mnt/$idx" ] && rm -f $mnt/$idx
+    [ -e "$mnt/$idx" ] && rm -f "$mnt/$idx"
 done
 
 # Deleting cron job
@@ -62,7 +62,6 @@ if [ -z "$(grep DISK_QUOTA $HESTIA/conf/hestia.conf)" ]; then
 else
     sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='no'/g" $HESTIA/conf/hestia.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

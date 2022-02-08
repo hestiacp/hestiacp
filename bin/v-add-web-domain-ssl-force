@@ -1,28 +1,29 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
-# options: USER DOMAIN
-# labels: hestia web
+# options: USER DOMAIN [RESTART] [QUIET]
 #
 # example: v-add-web-domain-ssl-force admin acme.com
 #
-# The function forces SSL for the requested domain.
-
+# This function forces SSL for the requested domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 domain=$2
-quiet=$3
+restart="$3"
+quiet="$4"
+
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -38,7 +39,6 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -49,24 +49,18 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 # Check if SSL is enabled
 if [ "$SSL" != 'yes' ]; then
     echo "Error: SSL is not enabled"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 
 # Check if proxy is active
-if [ ! -z "$PROXY_SYSTEM" ]; then
-    if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
-        $BIN/v-update-web-templates
-    fi
+if [ -n  "$PROXY_SYSTEM" ]; then
     forcessl="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf"
 else
-    if ! grep --quiet "forcessl" $HESTIA/data/templates/web/nginx/default.tpl; then
-        $BIN/v-update-web-templates
-    fi
     forcessl="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf"
 fi
 
 # Insert redirect commands
-if [ ! -z "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
+if [ -n "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
     echo 'return 301 https://$host$request_uri;' > $forcessl
 else
     echo 'RewriteEngine On' > $forcessl
@@ -88,11 +82,11 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'yes'
 
 # Restart web server
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null
 
 # Restart proxy
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging

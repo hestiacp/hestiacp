@@ -1,22 +1,32 @@
 #!/bin/bash
 # info: revokes api key
 # options: [HASH]
-# labels: panel
 #
 # example: v-revoke-api-key mykey
 #
-# The function removes a key from in $HESTIA/data/keys/
-
-# Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+# This function removes a key from in $HESTIA/data/keys/
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 hash=$1
-KEYS="$HESTIA/data/keys/"
+
+args_usage='HASH'
+check_args '1' "$#" "$args_usage"
+is_format_valid 'hash'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -25,12 +35,14 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ ! -d ${KEYS} ]; then
-  mkdir -p ${KEYS}
+if [ ! -d "$HESTIA/data/keys/" ]; then
+  exit "$E_NOTEXIST"
 fi
 
-if [[ -e ${KEYS}${hash} ]] ; then
-   rm ${KEYS}${hash}
+if [[ -e "$HESTIA/data/keys/$hash" ]] ; then
+   rm $HESTIA/data/keys/$hash
+else
+  exit "$E_NOTEXIST"
 fi
 
 #----------------------------------------------------------#

@@ -1,21 +1,20 @@
 #!/bin/bash
 # info: add cron reports
 # options: NONE
-# labels: 
 #
-# The script for enabling restart cron tasks
-
+# This function for enabling restart cron tasks
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -33,10 +32,9 @@ check_hestia_demo_mode
 # Add cron job
 cmd="sudo $HESTIA/bin/v-update-sys-queue restart"
 check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
-if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
+if [ -z "$check_cron" ] && [ -n "$CRON_SYSTEM" ]; then
     $BIN/v-add-cron-job admin '*' '*' '*' '*' '*' "$cmd"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

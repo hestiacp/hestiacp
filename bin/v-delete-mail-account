@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail account
 # options: USER DOMAIN ACCOUNT
-# labels: mail
 #
 # example: v-delete-mail-account admin acme.com alice
 #
-# The function deletes email account.
-
+# This function deletes email account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,17 +17,18 @@ domain_idn=$2
 account=$3
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -45,7 +44,6 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -59,10 +57,10 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
 
     sed -i "/^$account@$domain_idn:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
     sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
+    sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/accounts
     sed -i "/^$account$/d" $HOMEDIR/$user/conf/mail/$domain/fwd_only
     rm -rf $HOMEDIR/$user/mail/$domain/$account
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

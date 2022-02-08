@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: change web domain template
 # options: USER DOMAIN TEMPLATE [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-tpl admin acme.com opencart
 #
-# The function changes template of the web configuration file. The content
+# This function changes template of the web configuration file. The content
 # of webdomain directories remains untouched.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -21,19 +19,21 @@ template=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -51,14 +51,14 @@ is_web_template_valid "$template"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Parsing domain values
 get_domain_values 'web'
-local_ip=$(get_real_ip $IP)
+local_ip=$(get_real_ip "$IP")
+export local_ip
 
 # Deleting domain
 del_web_config "$WEB_SYSTEM" "$TPL.tpl"
@@ -73,7 +73,6 @@ if [ "$SSL" = 'yes' ]; then
     add_web_config "$WEB_SYSTEM" "$template.stpl"
 fi
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -82,7 +81,7 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$TPL' "$template"
 
 # Restarting web
-$BIN/v-restart-web $restart
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
 # Logging

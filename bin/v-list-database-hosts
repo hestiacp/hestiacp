@@ -1,27 +1,27 @@
 #!/bin/bash
 # info: list database hosts
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-database-hosts json
 #
-# The function for obtaining the list of all configured database hosts.
-
+# This function for obtaining the list of all configured database hosts.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -126,11 +126,6 @@ is_type_format_valid() {
     fi
 }
 
-
-#----------------------------------------------------------#
-#                    Verifications                         #
-#----------------------------------------------------------#
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -142,7 +137,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

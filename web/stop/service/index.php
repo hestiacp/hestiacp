@@ -1,23 +1,19 @@
 <?php
+
 // Init
-error_reporting(NULL);
 ob_start();
-session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
-if ((!isset($_GET['token'])) || ($_SESSION['token'] != $_GET['token'])) {
-    header('Location: /login/');
-    exit();
-}
+verify_csrf($_GET);
 
 if ($_SESSION['userContext'] === 'admin') {
     if (!empty($_GET['srv'])) {
         if ($_GET['srv'] == 'iptables') {
-            exec (HESTIA_CMD."v-stop-firewall", $output, $return_var);
+            exec(HESTIA_CMD."v-stop-firewall", $output, $return_var);
         } else {
             $v_service = escapeshellarg($_GET['srv']);
-            exec (HESTIA_CMD."v-stop-service ".$v_service, $output, $return_var);
+            exec(HESTIA_CMD."v-stop-service ".$v_service, $output, $return_var);
         }
     }
 

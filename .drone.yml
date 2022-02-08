@@ -1,0 +1,172 @@
+---
+kind: pipeline
+type: ssh
+name: Ubuntu | Nginx + Apache2  
+
+concurrency:
+  limit: 1
+
+server:
+  host:
+    from_secret: server_address
+  user: 
+    from_secret: username
+  ssh_key: 
+    from_secret: ssh_key
+
+platform:
+  os: linux
+  arch: amd64
+   
+steps:
+- name: Download submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive
+- name: Build Hestia package and install
+  commands:
+  - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+- name: Run system / user tests
+  commands:
+  - bats ./test/test.bats
+- name: Run restore tests
+  commands:
+  - bats ./test/restore.bats
+- name: Run config tests 
+  commands:
+  - bats ./test/config-tests.bats
+- name: Run Check PHP
+  commands: 
+  - ./test/check_php.sh
+
+trigger:
+  event: [ pull_request, push ]
+  ref:
+  - refs/heads/staging/*
+  - refs/heads/beta
+  - refs/heads/release
+  - refs/heads/main
+  - refs/pull/*/head
+
+---
+kind: pipeline
+type: ssh
+name: Debian | Nginx  
+
+concurrency:
+  limit: 1
+
+server:
+  host:
+    from_secret: server_address2
+  user: 
+    from_secret: username
+  ssh_key: 
+    from_secret: ssh_key
+
+platform:
+  os: linux
+  arch: amd64
+   
+steps:
+- name: Download submodules
+  image: alpine/git
+  commands:
+  - git submodule update --init --recursive
+- name: Build Hestia package install
+  commands:
+  - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+- name: Run system / user tests
+  commands:
+  - bats ./test/test.bats
+- name: Run restore tests
+  commands:
+  - bats ./test/restore.bats
+- name: Run Letsencrypt test against Staging
+  commands:
+  - cp /root/le-env.sh /tmp/hestia-le-env.sh
+  - bats ./test/letsencrypt.bats
+- name: Run config tests 
+  commands:
+  - bats ./test/config-tests.bats
+- name: Run Check PHP
+  commands: 
+  - ./test/check_php.sh
+
+trigger:
+  event: [ pull_request, push ]
+  ref:
+  - refs/heads/staging/*
+  - refs/heads/beta
+  - refs/heads/release
+  - refs/heads/main
+  - refs/pull/*/head
+
+---
+kind: pipeline
+type: docker
+name: Linting
+
+concurrency:
+  limit: 1
+
+steps:
+  - name: shellcheck
+    image: koalaman/shellcheck-alpine
+    commands:
+    - ./test/shellcheck.sh
+
+trigger:
+   event: [ pull_request, push ] 
+
+---
+kind: pipeline
+type: docker
+name: Push to beta atp server
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: Build
+    image: debian:bullseye
+    commands:
+    - ln -snf /etc/localtime && echo CET > /etc/timezone
+    - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild --debug '~localsrc'
+    - mkdir -p ./hestia/
+    - mv /tmp/hestiacp-src/deb/*.deb ./hestia/
+  - name: Upload
+    image: appleboy/drone-scp
+    settings:
+      host:
+        from_secret: apt_server
+      user: root
+      key:
+        from_secret: ssh_key
+      port: 22
+      command_timeout: 2m
+      target: /root/
+      source:
+        - ./hestia/*
+  - name: Publish
+    image: appleboy/drone-ssh
+    settings:
+        host:
+          from_secret: apt_server
+        user: root
+        key:
+          from_secret: ssh_key
+        port: 22
+        command_timeout: 2m
+        script:
+            - freight-add ./hestia/*.deb apt/bionic apt/focal apt/strech apt/buster apt/bullseye
+            - freight-cache
+            - rm -fr ./hestia/
+  
+trigger:
+    event: [ promote] 
+
+---
+kind: signature
+hmac: 31806a1e5357c43d17d24ef797995fb9952a1d883ad282fd152d7d0378112213

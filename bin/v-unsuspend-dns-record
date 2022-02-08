@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: unsuspend dns domain record
 # options: USER DOMAIN ID [RESTART]
-# labels: dns
 #
 # example: v-unsuspend-dns-record admin example.com 33
 #
-# The function unsuspends a certain domain record.
-
+# This function unsuspends a certain domain record.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,12 +18,14 @@ id=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -47,7 +47,6 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 is_object_valid "dns/$domain" 'ID' "$id"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -59,7 +58,6 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
     update_domain_serial
     update_domain_zone
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

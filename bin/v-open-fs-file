@@ -1,16 +1,17 @@
 #!/bin/bash
 # info: open file
 # options: USER FILE
-# labels: 
 #
 # example: v-open-fs-file admin README.md
 #
-# The function opens/reads files on the file system
+# This function opens/reads files on the file system
 
 user=$1
 src_file=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 
@@ -24,13 +25,13 @@ is_object_valid 'user' 'USER' "$user"
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
-if [ -z $homedir ]; then
+if [ -z "$homedir" ]; then
     echo "Error: user home directory doesn't exist"
     exit 12
 fi
 
 # Checking path
-if [ ! -z "$src_file" ]; then
+if [ -n "$src_file" ]; then
     rpath=$(readlink -f "$src_file")
     if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
         echo "Error: invalid source path $src_file"

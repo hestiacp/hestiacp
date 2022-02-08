@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change path for ftp user.
 # options: USER DOMAIN FTP_USER FTP_PATH
-# labels: web
 #
 # example: v-change-web-domain-ftp-path admin example.com /home/admin/example.com
 #
-# The function changes ftp user path.
-
+# This function changes ftp user path.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,18 +18,19 @@ ftp_user=$3
 ftp_path=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -48,18 +47,17 @@ get_domain_values 'web'
 if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
     echo "Error: account $ftp_user doesn't exist"
     log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit $E_NOTEXIST
+    exit "$E_NOTEXIST"
 fi
 ftp_path_a=$(readlink -f "$HOMEDIR/$user/web/$domain/$ftp_path")
 if [ -z "$(echo $ftp_path_a |grep $HOMEDIR/$user/web/$domain)" ]; then
     echo "Error: absolute path $ftp_path_a is invalid"
     log_event "$E_INVALID" "$ARGUMENTS"
-    exit $E_INVALID
+    exit "$E_INVALID"
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -77,7 +75,6 @@ pw_str=$(grep -n "^$ftp_user:" /etc/passwd)
 str=$(echo "$pw_str" | cut -f 1 -d :)
 old_path=$(echo "$pw_str" | cut -f 7 -d :)
 sed -i "$str s%$old_path%$ftp_path_a%g" /etc/passwd
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

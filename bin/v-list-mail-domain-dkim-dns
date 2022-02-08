@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mail domain dkim dns records
 # options: USER DOMAIN [FORMAT]
-# labels: mail
 #
 # example: v-list-mail-domain-dkim-dns admin example.com
 #
-# The function of obtaining domain dkim dns records for proper setup.
-
+# This function of obtaining domain dkim dns records for proper setup.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,8 +16,12 @@ domain=$2
 format=${3-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -30,7 +32,7 @@ json_list() {
     echo -e "\t},"
     echo -e "\n\t\"mail._domainkey\": {"
     echo "            \"TTL\": \"3600\","
-    echo "            \"TXT\": \"\\\"$pub\\\"\""
+    echo "            \"TXT\": \"'v=DKIM1; k=rsa; p=$pub'\""
     echo -e "\t}\n}"
 }
 
@@ -39,22 +41,21 @@ shell_list() {
     echo "RECORD            TTL         TYPE      VALUE"
     echo "------            ---         ----      -----"
     echo "_domainkey        3600   IN   TXT      \"t=y; o=~;\""
-    echo "mail._domainkey   3600   IN   TXT      \"k=rsa; p=$pub\""
+    echo "mail._domainkey   3600   IN   TXT      \"v=DKIM1; k=rsa; p=$pub\""
 }
 
 # PLAIN list function
 plain_list() {
     echo -e "_domainkey\t3600\tIN\tTXT\t\"t=y; o=~;\""
-    echo -e "mail._domainkey\t3600\tIN\tTXT\t\"k=rsa; p=$pub\""
+    echo -e "mail._domainkey\t3600\tIN\tTXT\t\"v=DKIM1; k=rsa; p=$pub\""
 }
 
 # CSV list function
 csv_list() {
     echo "RECORD,TTL,IN,TYPE,VALUE"
     echo "_domainkey,3600,IN,TXT,\"\"t=y; o=~;\"\""
-    echo "mail._domainkey,3600,IN,TXT,\"\"k=rsa; p=$pub\"\""
+    echo "mail._domainkey,3600,IN,TXT,\"\"v=DKIM1; k=rsa; p=$pub\"\""
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -64,7 +65,6 @@ check_args '2' "$#" 'USER DOMAIN [FORMAT]'
 is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -85,7 +85,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t -s '^';;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

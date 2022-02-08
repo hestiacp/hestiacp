@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: rebuild databases
 # options: USER DATABASE
-# labels: hestia
 #
 # example: v-rebuild-database user user_wordpress
 #
-# The function for rebuilding a single database for a user
-
+# This function for rebuilding a single database for a user
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,17 +15,18 @@ user=$1
 database=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-# shellcheck source=/usr/local/hestia/func/db.sh
-# shellcheck source=/usr/local/hestia/func/rebuild.sh
-# shellcheck source=/usr/local/hestia/func/syshealth.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -41,6 +40,7 @@ is_object_valid 'db' 'DB' "$database"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -63,7 +63,6 @@ fi
 update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
 update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
 update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

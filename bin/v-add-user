@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add system user
 # options: USER PASSWORD EMAIL [PACKAGE] [NAME] [LASTNAME]
-# labels: 
 #
 # example: v-add-user admin2 P4$$w@rD bgates@aol.com
 #
-# The function creates new user account.
-
+# This function creates new user account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -19,19 +17,22 @@ email=$3
 package=${4-default}
 name=$5
 # Last name has been added for backward compatibility with WHMCS / Blesta VestaCP Plugins
-if [ ! -z "$6" ]; then 
+if [ -n "$6" ]; then 
     name="$name $6";
 fi
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 
 is_user_free() {
     check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$user$" )
-    if [ ! -z "$check_sysuser" ] || [ -e "$USER_DATA" ]; then
-        check_result $E_EXISTS "user $user exists"
+    if [ -n "$check_sysuser" ] || [ -e "$USER_DATA" ]; then
+        check_result "$E_EXISTS" "user $user exists"
     fi
 }
 
@@ -41,7 +42,7 @@ is_user_free() {
 
 check_args '3' "$#" 'USER PASSWORD EMAIL [PACKAGE] [NAME] '
 is_format_valid 'user' 'email' 'package'
-if [ ! -z "$name" ]; then
+if [ -n "$name" ]; then
     is_format_valid 'name' 
 fi
 
@@ -64,8 +65,8 @@ shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
 shell=$(grep -w "$shell_conf" /etc/shells |head -n1)
 
 # Adding user
-/usr/sbin/useradd "$user" -s "$shell" -c "$email" -m -d "$HOMEDIR/$user"
-check_result $? "user creation failed" $E_INVALID
+/usr/sbin/useradd "$user" -s "$shell" -c "$email" -m -d "$HOMEDIR/$user" -U
+check_result $? "user creation failed" "$E_INVALID"
 
 # Adding password
 echo "$user:$password" | /usr/sbin/chpasswd
@@ -94,20 +95,20 @@ setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
 # Building directory tree
 mkdir $HOMEDIR/$user/conf
 
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
     mkdir $HOMEDIR/$user/conf/web $HOMEDIR/$user/web $HOMEDIR/$user/tmp
     chmod 751 $HOMEDIR/$user/conf/web 
     chmod 700 $HOMEDIR/$user/tmp
     chown $user:$user $HOMEDIR/$user/web $HOMEDIR/$user/tmp
 fi
 
-if [ ! -z "$MAIL_SYSTEM" ]; then
+if [ -n "$MAIL_SYSTEM" ]; then
     mkdir $HOMEDIR/$user/conf/mail $HOMEDIR/$user/mail
     chmod 751 $HOMEDIR/$user/mail 
     chmod 755 $HOMEDIR/$user/conf/mail
 fi
 
-if [ ! -z "$DNS_SYSTEM" ]; then
+if [ -n "$DNS_SYSTEM" ]; then
     mkdir $HOMEDIR/$user/conf/dns
     chmod 751 $HOMEDIR/$user/conf/dns
 fi 
@@ -133,11 +134,6 @@ chown $user:$user \
 # Set permissions
 chmod a+x $HOMEDIR/$user
 chattr +i $HOMEDIR/$user/conf > /dev/null 2>&1
-
-
-#----------------------------------------------------------#
-#                       Hestia                             #
-#----------------------------------------------------------#
 
 # Adding user dir
 mkdir -p  $USER_DATA/ssl $USER_DATA/dns $USER_DATA/mail
@@ -168,16 +164,16 @@ chmod 660 $USER_DATA/backup.conf \
 
 # Updating queue pipes
 echo "$BIN/v-update-user-disk $user" >> $HESTIA/data/queue/disk.pipe
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
     echo "$BIN/v-update-web-domains-traff $user" \
         >> $HESTIA/data/queue/traffic.pipe
     echo "$BIN/v-update-web-domains-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
-if [ ! -z "$MAIL_SYSTEM" ]; then
+if [ -n "$MAIL_SYSTEM" ]; then
     echo "$BIN/v-update-mail-domains-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
 
-if [ ! -z "$DB_SYSTEM" ]; then
+if [ -n "$DB_SYSTEM" ]; then
     echo "$BIN/v-update-databases-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
 
@@ -262,6 +258,10 @@ fi
 
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail $user
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
 
 # Logging
 $BIN/v-log-action "system" "Info" "Users" "User account added (Name: $user)."

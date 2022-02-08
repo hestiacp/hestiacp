@@ -1,23 +1,25 @@
 #!/bin/bash
 # info: list dns templates
 # options: [FORMAT]
-# labels: dns
 #
 # example: v-list-dns-templates json
 #
-# The function for obtaining the list of all DNS templates available.
-
+# This function for obtaining the list of all DNS templates available.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -59,7 +61,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -74,7 +75,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

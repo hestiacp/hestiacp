@@ -6,7 +6,6 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-
 # Check if keys folder exists and adjust permissions
 if [ -d "$HESTIA/data/keys" ]; then
     echo '[ * ] Update permissions'

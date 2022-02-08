@@ -7,14 +7,15 @@
 			<?php } else if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) === 'system')) { ?>
 				<a href="/list/server/" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 			<?php } else { ?>
-				<?php if (($_SESSION['userContext'] === 'admin') && (isset(htmlentities($_GET['user']))) && (htmlentities($_GET['user']) !== 'admin')) { ?>
+				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
 					<a href="/edit/user/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 				<?php } else { ?>
 					<a href="/edit/user/?user=<?=$user;?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 				<?php } ?>
 			<?php } ?>
-			<?php if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
-				<?php if (($_SESSION['userContext'] === 'admin') && (isset(htmlentities($_GET['user']))) && (htmlentities($_GET['user']) !== 'admin')) { ?>
+			<?php if ($_SESSION['DEMO_MODE'] != "yes"){
+			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
+				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && (htmlentities($_GET['user']) !== 'admin')) { ?>
 					<?php if (htmlentities($_GET['user']) !== 'system') {?>
 						<a href="/list/log/auth/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history');?></a>
 					<?php } ?>
@@ -24,7 +25,8 @@
 			<?php } ?>
 			<?php if ($_SESSION['userContext'] === 'user') {?>
 				<a href="/list/log/auth/" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history');?></a>
-			<?php } ?>
+			<?php } 
+			} ?>
 		</div>
 		<div class="l-unit-toolbar__buttonstrip float-right">
 			<a href="javascript:location.reload();" class="ui-button cancel" dir="ltr"><i class="fas fa-redo status-icon green"></i><?=_('Refresh');?></a>
@@ -35,7 +37,7 @@
 					<div class="actions-panel display-inline-block" key-action="js">
 						<a class="data-controls do_delete ui-button danger cancel">
 							<i class="do_delete fas fa-times-circle status-icon red"></i><?=_('Delete');?>
-							<?php if (($_SESSION['userContext'] === 'admin') && (isset(htmlentities($_GET['user'])))) {?>
+							<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user']))) {?>
 								<input type="hidden" name="delete_url" value="/delete/log/?user=<?=htmlentities($_GET['user']);?>&token=<?=$_SESSION['token']?>" />
 							<?php } else { ?>
 								<input type="hidden" name="delete_url" value="/delete/log/?token=<?=$_SESSION['token']?>" />

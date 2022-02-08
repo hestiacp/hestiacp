@@ -1,33 +1,34 @@
 #!/bin/bash
 # info: change webmail alias url
 # options: WEBMAIL
-# labels: hestia panel
 #
 # example: v-change-sys-webmail YourtrickyURLhere
 #
 # This function changes the webmail url in apache2 or nginx configuration.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Get existing system webmail alias
-export $WEBMAIL_ALIAS
+export WEBMAIL_ALIAS="$WEBMAIL_ALIAS"
 
 # Define aliases
 OLD_ALIAS=$WEBMAIL_ALIAS
 NEW_ALIAS=$1
 
+restart=${2-yes}
+
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -35,8 +36,8 @@ check_hestia_demo_mode
 
 # Delete old webmail configuration
 for user in $($HESTIA/bin/v-list-sys-users plain); do
-    for domain in $($BIN/v-list-mail-domains $user plain |cut -f 1); do
-        $BIN/v-delete-mail-domain-webmail $user $domain
+    for domain in $($BIN/v-list-mail-domains "$user" plain |cut -f 1); do
+        $BIN/v-delete-mail-domain-webmail "$user" "$domain"
     done
 done
 
@@ -45,8 +46,8 @@ $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' $NEW_ALIAS
 
 # Add new webmail configuration
 for user in $($HESTIA/bin/v-list-sys-users plain); do
-    for domain in $($BIN/v-list-mail-domains $user plain |cut -f 1); do
-        $BIN/v-add-mail-domain-webmail $user $domain
+    for domain in $($BIN/v-list-mail-domains "$user" plain |cut -f 1); do
+        $BIN/v-add-mail-domain-webmail "$user" "$domain"
     done
 done
 
@@ -55,8 +56,8 @@ done
 #----------------------------------------------------------#
 
 # Restart services
-$BIN/v-restart-web $restart
-$BIN/v-restart-proxy $restart
+$BIN/v-restart-web "$restart"
+$BIN/v-restart-proxy "$restart"
 
 # Logging
 $BIN/v-log-action "system" "Info" "System" "Webmail access alias changed (Value: $NEW_ALIAS, Previous: $OLD_ALIAS)."

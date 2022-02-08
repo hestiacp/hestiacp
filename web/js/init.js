@@ -35,7 +35,7 @@ $(document).ready(function(){
             $(window).scroll(function(){hover_menu()});
 
             $('.l-sort-toolbar .sort-by').click(function(){
-              $('.context-menu.sort-order').toggle().css({left: $(this).position().left - 0});
+              $('.context-menu.sort-order').toggle().css({left: $(this).parent().parent().parent().position().left - 0});
             });
 
 
@@ -198,7 +198,7 @@ $(document).ready(function(){
                           }
                       }
                       else {
-                          if ($('.l-unit .ch-toggle:eq(0)').attr('checked')) {
+                          if ($('.l-unit .ch-toggle:eq(0)').prop('checked')) {
                                 $('.l-unit').removeClass('selected');
                                 $('.l-unit .ch-toggle').prop('checked', false);
                           }

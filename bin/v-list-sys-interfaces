@@ -1,23 +1,25 @@
 #!/bin/bash
 # info: list system interfaces
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-interfaces
 #
-# The function for obtaining the list of network interfaces.
-
+# This function for obtaining the list of network interfaces.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -60,7 +62,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -75,7 +76,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

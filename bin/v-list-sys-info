@@ -1,23 +1,26 @@
 #!/bin/bash
 # info: list system os
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-info
 #
-# The function checks available updates for hestia packages.
-
+# This function checks available updates for hestia packages.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 
 # Retrieve Hestia Control Panel version number
 HESTIA_VERSION=$(grep VERSION $HESTIA/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
@@ -56,7 +59,6 @@ csv_list() {
     echo "HOSTNAME,OS,VERSION,ARCH,HESTIA,RELEASE,UPTIME,LOADAVERAGE"
     echo "$HOSTNAME,$OS,$VERSION,$ARCH,$HESTIA_VERSION,$HESTIA_RELEASE,$UPTIME,$LOADAVERAGE"
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,6 +1,5 @@
 <?php
-// Init
-error_reporting(NULL);
+
 ob_start();
 $TAB = 'BACKUP';
 
@@ -12,15 +11,15 @@ if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
 }
 
 // List backup exclustions
-exec (HESTIA_CMD."v-list-user-backup-exclusions ".$user." 'json'", $output, $return_var);
-check_return_code($return_var,$output);
+exec(HESTIA_CMD."v-list-user-backup-exclusions ".$user." 'json'", $output, $return_var);
+check_return_code($return_var, $output);
 $data = json_decode(implode('', $output), true);
 unset($output);
 
 // Parse web
 $v_username = $user;
 foreach ($data['WEB'] as $key => $value) {
-    if (!empty($value)){
+    if (!empty($value)) {
         $v_web .= $key . ":" . str_replace(",", ":", $value) . "\n";
     } else {
         $v_web .= $key . "\n";
@@ -29,7 +28,7 @@ foreach ($data['WEB'] as $key => $value) {
 
 // Parse dns
 foreach ($data['DNS'] as $key => $value) {
-    if (!empty($value)){
+    if (!empty($value)) {
         $v_dns .= $key . ":" . $value. "\n";
     } else {
         $v_dns .= $key . "\n";
@@ -38,7 +37,7 @@ foreach ($data['DNS'] as $key => $value) {
 
 // Parse mail
 foreach ($data['MAIL'] as $key => $value) {
-    if (!empty($value)){
+    if (!empty($value)) {
         $v_mail .= $key . ":" . $value. "\n";
     } else {
         $v_mail .= $key . "\n";
@@ -47,7 +46,7 @@ foreach ($data['MAIL'] as $key => $value) {
 
 // Parse databases
 foreach ($data['DB'] as $key => $value) {
-    if (!empty($value)){
+    if (!empty($value)) {
         $v_db .= $key . ":" . $value. "\n";
     } else {
         $v_db .= $key . "\n";
@@ -56,7 +55,7 @@ foreach ($data['DB'] as $key => $value) {
 
 // Parse user directories
 foreach ($data['USER'] as $key => $value) {
-    if (!empty($value)){
+    if (!empty($value)) {
         $v_userdir .= $key . ":" . $value. "\n";
     } else {
         $v_userdir .= $key . "\n";
@@ -65,12 +64,8 @@ foreach ($data['USER'] as $key => $value) {
 
 // Check POST request
 if (!empty($_POST['save'])) {
-
     // Check token
-    if ((!isset($_POST['token'])) || ($_SESSION['token'] != $_POST['token'])) {
-        header('location: /login/');
-        exit();
-    }
+    verify_csrf($_POST);
 
     $v_web = $_POST['v_web'];
     $v_web_tmp = str_replace("\r\n", ",", $_POST['v_web']);
@@ -103,7 +98,7 @@ if (!empty($_POST['save'])) {
     $v_userdir_tmp = "USER=" . escapeshellarg($v_userdir_tmp);
 
     // Create temporary exeption list on a filesystem
-    exec ('mktemp', $mktemp_output, $return_var);
+    exec('mktemp', $mktemp_output, $return_var);
     $tmp = $mktemp_output[0];
     $fp = fopen($tmp, 'w');
     fwrite($fp, $v_web_tmp . "\n" . $v_dns_tmp . "\n" . $v_mail_tmp . "\n" .  $v_db_tmp . "\n" . $v_userdir_tmp . "\n");
@@ -111,8 +106,8 @@ if (!empty($_POST['save'])) {
     unset($mktemp_output);
 
     // Save changes
-    exec (HESTIA_CMD."v-update-user-backup-exclusions ".$user." ".$tmp, $output, $return_var);
-    check_return_code($return_var,$output);
+    exec(HESTIA_CMD."v-update-user-backup-exclusions ".$user." ".$tmp, $output, $return_var);
+    check_return_code($return_var, $output);
     unset($output);
 
     // Set success message

@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: add firewall ipset
 # options: NAME [SOURCE] [IPVERSION] [AUTOUPDATE] [FORCE]
-# labels: hestia
 #
 # example: v-add-firewall-ipset country-nl 'http://ipverse.net/ipblocks/data/countries/nl.zone'
 #
-# The function adds new ipset to system firewall
+# This function adds new ipset to system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 ip_name=${1}
@@ -18,11 +17,12 @@ autoupdate=${4:-yes}
 force=${5:-no}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -34,10 +34,28 @@ is_boolean_format_valid "$autoupdate" 'bool (yes/no)'
 is_boolean_format_valid "$force" 'bool (yes/no)'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
-ipset_hstobject='../../data/firewall/ipset'
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
+# Define variables for ipset configuration
+ipset_hstobject='../../data/firewall/ipset'
 IPSET_BIN="$(which ipset)"
 IPSET_PATH="$HESTIA/data/firewall/ipset"
+
+# Ensure ipset is installed
+if [ -z "$IPSET_BIN" ]; then
+    apt-get --quiet --yes install ipset > /dev/null
+    check_result $? "Installing ipset package"
+
+    IPSET_BIN="$(which ipset)"
+    check_result $? "ipset binary not found"
+fi
+
+# Ensure ipset configuration path and master file exist before attempting to parse
+mkdir -p "$IPSET_PATH"
+if [ ! -f "$HESTIA/data/firewall/ipset.conf" ]; then 
+    touch $HESTIA/data/firewall/ipset.conf
+fi
 
 if [ -z "$data_source" ]; then
     if [ ! -f "${IPSET_PATH}.conf" ] || [[ ! $(grep "LISTNAME='$ip_name'" "${IPSET_PATH}.conf") ]]; then
@@ -51,35 +69,19 @@ else
 fi
 
 if [ "$ip_version" != "v4" ] && [ "$ip_version" != "v6" ]; then
-    check_result $E_INVALID "invalid ip version, valid: (v4|v6)"
+    check_result "$E_INVALID" "invalid ip version, valid: (v4|v6)"
 fi
 
 if ! echo "$data_source" | egrep -q '^(https?|script|file):'; then
-    check_result $E_INVALID "invalid ipset source, valid: (http[s]://|script:|file:)"
+    check_result "$E_INVALID" "invalid ipset source, valid: (http[s]://|script:|file:)"
 fi
-
 
 IPSET_FILE="${ip_name}.${ip_version}"
 IPSET_MIN_SIZE=10
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
-
-# Install ipset package if missing
-if [ -z "$IPSET_BIN" ]; then
-    apt-get --quiet --yes install ipset > /dev/null
-    check_result $? "Installing ipset package"
-
-    IPSET_BIN="$(which ipset)"
-    check_result $? "ipset binary not found"
-fi
-
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-mkdir -p "$IPSET_PATH"
 
 # Generate ip lists file if missing or when forced
 if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
@@ -130,7 +132,7 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
 
     # Validate iplist file size
     iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
-    [[ "$iplist_size" -le $IPSET_MIN_SIZE ]] && check_result $E_INVALID "iplist file too small (<${IPSET_MIN_SIZE}), ignoring"
+    [[ "$iplist_size" -le "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "iplist file too small (<${IPSET_MIN_SIZE}), ignoring"
     mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
 
 fi
@@ -181,7 +183,6 @@ if ! grep --silent --no-messages "v-update-firewall-ipset" $HESTIA/data/queue/da
     cmd="$BIN/v-update-firewall-ipset yes"
     echo "$cmd" >> $HESTIA/data/queue/daily.pipe
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

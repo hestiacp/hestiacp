@@ -1,19 +1,14 @@
 #!/bin/bash
 # info: add firewall blocking rule
 # options: IP CHAIN
-# labels: 
 #
 # example: v-add-firewall-ban 37.120.129.20 MAIL
 #
-# The function adds new blocking rule to system firewall
-
+# This function adds new blocking rule to system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Argument definition
 ip=$1
@@ -23,13 +18,14 @@ chain=$(echo $2|tr '[:lower:]' '[:upper:]')
 iptables="/sbin/iptables"
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/firewall.sh
 source $HESTIA/func/firewall.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -58,14 +54,14 @@ fi
 # Checking ip exclusions
 excludes="$HESTIA/data/firewall/excludes.conf"
 check_excludes=$(grep "^$ip$" $excludes 2>/dev/null)
-if  [ ! -z "$check_excludes" ]; then
+if  [ -n "$check_excludes" ]; then
     exit
 fi
 
 # Checking ip in banlist
 conf="$HESTIA/data/firewall/banlist.conf"
 check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
-if [ ! -z "$check_ip" ]; then
+if [ -n "$check_ip" ]; then
     exit
 fi
 
@@ -84,7 +80,6 @@ $iptables -I fail2ban-$chain 1 -s $ip \
 
 # Changing permissions
 chmod 660 $conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

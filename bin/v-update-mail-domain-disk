@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update mail domain disk usage
 # options: USER DOMAIN
-# labels: mail
 #
 # example: v-update-mail-domain-disk admin example.com
 #
-# The function updates domain disk usage.
-
+# This function updates domain disk usage.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -18,16 +16,17 @@ domain=$2
 domain_idn=$2
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -37,13 +36,10 @@ check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 if [ -z "$MAIL_SYSTEM" ] || [ "$MAIL_SYSTEM" = 'remote' ]; then
     exit
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -51,7 +47,7 @@ fi
 
 # Starting loop
 dom_disk=0
-for account in $(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT'); do
+for account in $($BIN/v-list-mail-accounts $user $domain plain | cut -f 1); do
     home_dir=$HOMEDIR/$user/mail/$domain/$account
     if [ -e "$home_dir" ]; then
         udisk=$(nice -n 19 du -shm $home_dir | cut -f 1 )
@@ -61,7 +57,6 @@ for account in $(search_objects "mail/$domain" 'SUSPENDED' "no" 'ACCOUNT'); do
     update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$U_DISK' "$udisk"
     dom_disk=$((dom_disk + udisk))
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

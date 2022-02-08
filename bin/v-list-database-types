@@ -1,25 +1,25 @@
 #!/bin/bash
 # info: list supported database types
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-database-types json
 #
-# The function for obtaining the list of database types.
-
+# This function for obtaining the list of database types.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
@@ -59,7 +59,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -71,7 +70,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

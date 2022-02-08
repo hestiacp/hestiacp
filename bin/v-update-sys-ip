@@ -1,31 +1,27 @@
 #!/bin/bash
 # info: update system ip
 # options: NONE
-# labels: panel
 #
 # example: v-update-sys-ip
 #          # Intended for internal usage
 #
-# The function scans configured ip in the system and register them with hestia
+# This function scans configured ip in the system and register them with hestia
 # internal database. This call is intended for use on vps servers, where ip is
 # set by hypervizor.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Importing system variables
-source /etc/profile
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -57,7 +53,7 @@ if [ ! -z "$new" ]; then
     mv $HESTIA/data/ips/$old $HESTIA/data/ips/$new
 
     # Updating PROXY
-    if [ ! -z "$PROXY_SYSTEM" ]; then
+    if [ -n "$PROXY_SYSTEM" ]; then
         cd /etc/$PROXY_SYSTEM/conf.d
         if [ -e "$old.conf" ]; then
             mv $old.conf $new.conf
@@ -66,7 +62,7 @@ if [ ! -z "$new" ]; then
     fi
 
     # Updating WEB
-    if [ ! -z "$WEB_SYSTEM" ]; then
+    if [ -n "$WEB_SYSTEM" ]; then
         cd /etc/$WEB_SYSTEM/conf.d
         if [ -e "$old.conf" ]; then
             mv $old.conf $new.conf
@@ -74,10 +70,16 @@ if [ ! -z "$new" ]; then
         fi
         for user in $($HESTIA/bin/v-list-sys-users plain); do
             sed -i "s/$old/$new/g" $HESTIA/data/users/$user/web.conf
-            $BIN/v-rebuild-web-domains $user no
+            $BIN/v-rebuild-web-domains "$user" no
         done
         $BIN/v-restart-proxy
         $BIN/v-restart-web
+    fi
+    
+    if [ -n "$IMAP_SYSTEM" ]; then
+        for user in $($HESTIA/bin/v-list-sys-users plain); do
+            $BIN/v-rebuild-mail-domains "$user" no
+        done
     fi
 
     # Updating DNS
@@ -85,12 +87,11 @@ if [ ! -z "$new" ]; then
         for user in $($HESTIA/bin/v-list-sys-users plain); do
             sed -i "s/$old/$new/g" $HESTIA/data/users/$user/dns.conf
             sed -i "s/$old/$new/g" $HESTIA/data/users/$user/dns/*.conf
-            $BIN/v-rebuild-dns-domains $user no
+            $BIN/v-rebuild-dns-domains "$user" no
         done
         $BIN/v-restart-dns
     fi
     
-
     # Updating FTP
     if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" = 'vsftpd' ]; then
         conf=$(find /etc/ -maxdepth 2 -name $FTP_SYSTEM.conf)
@@ -110,12 +111,12 @@ fi
 # Adding system IP
 for ip in $ips; do
     check_ip=$(/sbin/ip addr list |grep "$ip")
-    if [ ! -e "$HESTIA/data/ips/$ip" ] && [ ! -z "$check_ip" ]; then
+    if [ ! -e "$HESTIA/data/ips/$ip" ] && [ -n "$check_ip" ]; then
         interface=$(/sbin/ip addr |grep $ip |awk '{print $NF}' |uniq)
         interface=$(echo "$interface" |cut -f 1 -d : |head -n 1)
         netmask=$(/sbin/ip addr |grep $ip |cut -f 2 -d / |cut -f 1 -d \ )
         netmask=$(convert_cidr $netmask)
-        $BIN/v-add-sys-ip $ip $netmask $interface
+        $BIN/v-add-sys-ip "$ip" "$netmask" "$interface"
     fi
 done
 
@@ -124,16 +125,7 @@ pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ ! -e "$HESTIA/data/ips/$pub_ip" ]; then
     if [ -z "$(grep -R "$pub_ip" $HESTIA/data/ips/)" ]; then
         ip=$(ls -t $HESTIA/data/ips/ |head -n1)
-        $BIN/v-change-sys-ip-nat $ip $pub_ip
-    fi
-fi
-
-# Update ip helo for exim
-if [ ! -z "$MAIL_SYSTEM" ]; then
-    helo=$(is_ip_rdns_valid $pub_ip)
-
-    if [ ! -z "$helo" ]; then
-        $BIN/v-change-sys-ip-helo $ip $helo
+        $BIN/v-change-sys-ip-nat "$ip" "$pub_ip"
     fi
 fi
 

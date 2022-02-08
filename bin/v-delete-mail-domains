@@ -1,26 +1,25 @@
 #!/bin/bash
 # info: delete mail domains
 # options: USER
-# labels: mail
 #
 # example: v-delete-mail-domains admin
 #
-# The function for deleting all users mail domains.
-
+# This function for deleting all users mail domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -34,7 +33,6 @@ is_object_valid 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -43,7 +41,6 @@ check_hestia_demo_mode
 for domain in $(search_objects 'mail' 'SUSPENDED' "no" 'DOMAIN'); do
     $BIN/v-delete-mail-domain "$user" "$domain"
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

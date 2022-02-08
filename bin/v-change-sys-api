@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Enable / Disable API access 
 # options: STATUS 
-# labels: hestia
 #
 # example: v-change-sys-api enable
 #          # Enable API
@@ -11,17 +10,18 @@
 #
 # Enabled / Disable API
 
-
 status=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 check_args '1' "$#" "STATUS"
@@ -37,13 +37,15 @@ check_hestia_demo_mode
 if [ "$status" = "enable" ]; then
     if [ ! -f "$HESTIA/web/api/index.php" ]; then
         wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/$RELEASE_BRANCH/web/api/index.php -O $HESTIA/web/api/index.php
-        check_api_download=$(cat $HESTIA/web/api/index.php)
-        if [ -z "$HESTIA/web/api/index.php" ]; then
-            # Throw error message to user
-            echo "ERROR: API installation failed."
-            # Remove empty file created by wget output
-            rm -f "$HESTIA/web/api/index.php"
-            exit 1
+        if [ ! -s "$HESTIA/web/api/index.php" ]; then
+            wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/api/index.php -O $HESTIA/web/api/index.php    
+            if [ ! -s "$HESTIA/web/api/index.php" ]; then
+                # Throw error message to user
+                echo "ERROR: API installation failed."
+                # Remove empty file created by wget output
+                rm -f "$HESTIA/web/api/index.php"
+                exit 1
+            fi
         fi
     else
         sed -i 's|die("Error: Disabled");|//die("Error: Disabled");|g' $HESTIA/web/api/index.php
@@ -68,9 +70,10 @@ if [ "$status" = "remove" ]; then
 fi
 
 #----------------------------------------------------------#
-#                       Logging                            #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
+# Logging
 if [ "$status" = "enable" ]; then
     $BIN/v-log-action "system" "Warning" "System" "System API access enabled."
 else

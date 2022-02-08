@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail account forward address
 # options: USER DOMAIN ACCOUNT FORWARD
-# labels: mail
 #
 # example: v-add-mail-account-forward admin acme.com alice bob
 #
-# The function add new email account.
-
+# This function add new email account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,17 +18,18 @@ account=$3
 email_forward=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/conf/hestia.conf
-source $HESTIA/conf/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -49,15 +48,14 @@ is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
-if [ ! -z "$(echo $fwd | grep -w "$email_forward")" ]; then
+if [ -n "$(echo $fwd | grep -w "$email_forward")" ]; then
     echo "Error: forward $email_forward exists"
-    log_event "$E_EXISTS $ARGUMENTS"
+    log_event "$E_EXISTS" "$ARGUMENTS"
     exit $E_EXISTS
 fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -75,7 +73,6 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
     echo "$account@$domain_idn:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

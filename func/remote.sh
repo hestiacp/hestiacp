@@ -1,15 +1,23 @@
+#!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - API Function Library                               #
+#                                                                           #
+#===========================================================================#
+
 # Check if script already running or not
 is_procces_running() {
     SCRIPT=$(basename $0)
     for pid in $(pidof -x $SCRIPT); do
         if [ $pid != $$ ]; then
-            check_result $E_INUSE "$SCRIPT is already running"
+            check_result "$E_INUSE" "$SCRIPT is already running"
         fi
     done
 }
 
 send_api_cmd() {
-    if [ ! -z "$PASSWORD" ]; then
+    if [ -n "$PASSWORD" ]; then
         answer=$(curl -s -k \
             --data-urlencode "user=$USER" \
             --data-urlencode "password=$PASSWORD" \
@@ -43,7 +51,7 @@ send_api_cmd() {
 }
 
 send_api_file() {
-    if [ ! -z "$PASSWORD" ]; then
+    if [ -n "$PASSWORD" ]; then
         answer=$(curl -s -k \
                 --data-urlencode "user=$USER" \
                 --data-urlencode "password=$PASSWORD" \
@@ -100,7 +108,7 @@ send_scp_file() {
 is_dnshost_new() {
     if [ -e "$HESTIA/conf/dns-cluster.conf" ]; then
         check_host=$(grep "HOST='$host'" $HESTIA/conf/dns-cluster.conf)
-        if [ ! -z "$check_host" ]; then
+        if [ -n "$check_host" ]; then
             check_result $E_EXISTS "remote dns host $host exists"
         fi
     fi
@@ -108,10 +116,10 @@ is_dnshost_new() {
 
 is_dnshost_alive() {
     cluster_cmd v-list-sys-config
-    check_result $? "$type connection to $HOST failed" $E_CONNECT
+    check_result $? "$type connection to $HOST failed" "$E_CONNECT"
 
-    cluster_cmd v-list-user $DNS_USER
-    check_result $? "$DNS_USER doesn't exist" $E_CONNECT
+    cluster_cmd v-list-user "$DNS_USER"
+    check_result $? "$DNS_USER doesn't exist" "$E_CONNECT"
 }
 
 remote_dns_health_check() {
@@ -123,7 +131,7 @@ remote_dns_health_check() {
         parse_object_kv_list "$str"
 
         # Checking host connection
-        cluster_cmd v-list-user $DNS_USER
+        cluster_cmd v-list-user "$DNS_USER"
         if [ $? -ne 0 ]; then
 
             # Creating error report

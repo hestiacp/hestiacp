@@ -1,33 +1,33 @@
 #!/bin/bash
 # info: List firewall ipset
 # options: [FORMAT]
-# labels: hestia
 #
 # example: v-list-firewall-ipset json
 #
-# The function prints defined ipset lists
-
+# This function prints defined ipset lists
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 format=${1-shell}
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -100,7 +100,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t -s '^' ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

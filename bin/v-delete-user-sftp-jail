@@ -60,7 +60,10 @@ done
 users=$(IFS=',';echo "${new_users[*]// /|}";IFS=$' \t\n')
 sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
 
-
+# chown permissions back to user:user
+if [ -d "/home/$user" ]; then
+    chown $user:$user /home/$user
+fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -70,6 +73,6 @@ service ssh restart > /dev/null 2>&1
 service sshd restart > /dev/null 2>&1
 
 # Logging
-#log_event "$OK" "$ARGUMENTS"
+log_event "$OK" "$ARGUMENTS"
 
 exit

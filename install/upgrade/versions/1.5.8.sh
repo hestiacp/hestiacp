@@ -22,7 +22,7 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 echo "[ * ] Create .gnupg directory..."
-chmod 700 /root/.gnupg
+mkdir -p /root/.gnupg/ && chmod 700 /root/.gnupg/
 
 echo "[ * ] Ensure jail is enabled for sftp or ftp users..."
 shells="rssh|nologin"

@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with inconsistent behaviour in mail account settings information dialog #2392
 - Fixed an issue where .gnupg folder in /root/ had the wrong permissions set.
 - Fixed an issue where users were being redirected to login page when visiting /reset/ endpoint #2401
+- Fixed an issue where deleting sftp jail did not revert back permissions of said user. #2143
+- Fixed an issue where "REDIRECT" variable wasn't cleared correctly causing other sites to redirect to the domain after v-update-letsencrypt-ssl
 
 ### Dependencies
 

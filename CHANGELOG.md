@@ -17,10 +17,11 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where users were being redirected to login page when visiting /reset/ endpoint #2401
 - Fixed an issue where deleting sftp jail did not revert back permissions of said user. #2143
 - Fixed an issue where "REDIRECT" variable wasn't cleared correctly causing other sites to redirect to the domain after v-update-letsencrypt-ssl
+- Changed repository url MariaDB for new installs to https://dlm.mariadb.com/repo/mariadb-server
 
 ### Dependencies
 
-- No Dependencies have been updated
+- Update phpMyAdmin to 5.1.3 (https://github.com/phpmyadmin/phpmyadmin/releases/tag/RELEASE_5_1_3)
 
 ## [1.5.7] - Service release
 

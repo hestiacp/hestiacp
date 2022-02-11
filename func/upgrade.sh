@@ -552,7 +552,7 @@ upgrade_b2_tool(){
     b2cli="/usr/local/bin/b2"
     b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/download/v$b2_v/b2-linux"
     if [ -f "$b2cli" ]; then
-        b2_version=$(b2 version | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
+        b2_version=$($b2cli version | grep -o -E '[0-9].[0-9].[0-9]+' | head -1);
         if version_ge "$b2_version" "$b2_v"; then
             echo "[ * ] Backblaze CLI tool is up to date ($b2_v)..."
         else

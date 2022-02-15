@@ -31,9 +31,9 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.8~alpha'
+HESTIA_INSTALL_VER='1.5.8'
 # Dependencies
-pma_v='5.1.2'
+pma_v='5.1.3'
 rc_v="1.5.2"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
@@ -1819,13 +1819,14 @@ fi
 #----------------------------------------------------------#
 #                       Install Roundcube                  #
 #----------------------------------------------------------#
-
-echo "[ * ] Install Roundcube..."
 # Min requirements Dovecot + Exim + Mysql
-
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
+    echo "[ * ] Install Roundcube..."
     $HESTIA/bin/v-add-sys-roundcube
     write_config_value "WEBMAIL_ALIAS" "webmail"
+else
+    write_config_value "WEBMAIL_ALIAS" ""
+    write_config_value "WEBMAIL_SYSTEM" ""
 fi
 
 

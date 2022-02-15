@@ -31,9 +31,9 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.7'
+HESTIA_INSTALL_VER='1.5.8'
 # Dependencies
-pma_v='5.1.2'
+pma_v='5.1.3'
 rc_v="1.5.2"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
@@ -689,7 +689,7 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
+   echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
     curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
 fi
 
@@ -1819,13 +1819,14 @@ fi
 #----------------------------------------------------------#
 #                       Install Roundcube                  #
 #----------------------------------------------------------#
-
-echo "[ * ] Install Roundcube..."
 # Min requirements Dovecot + Exim + Mysql
-
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
+    echo "[ * ] Install Roundcube..."
     $HESTIA/bin/v-add-sys-roundcube
     write_config_value "WEBMAIL_ALIAS" "webmail"
+else
+    write_config_value "WEBMAIL_ALIAS" ""
+    write_config_value "WEBMAIL_SYSTEM" ""
 fi
 
 
@@ -2139,8 +2140,7 @@ sort_config_file
 
 if [ "$interactive" = 'yes' ]; then
     echo "[ ! ] IMPORTANT: The system will now reboot to complete the installation process."
-    echo -n "                 Press any key to continue!"
-    read reboot
+    read -n 1 -s -r -p "Press any key to continue"
     reboot
 else
     echo "[ ! ] IMPORTANT: You must restart the system before continuing!"

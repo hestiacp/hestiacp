@@ -72,9 +72,8 @@ fi
 # Checking users
 shells="rssh|nologin"
 for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
-    if [ -d "$HESTIA/data/users/$user" ]; then
+    # Include all users v-add-user-sftp-jail will handle it
     $BIN/v-add-user-sftp-jail "$user" "no"
-    fi
 done
 
 # Restart ssh service

@@ -9,6 +9,10 @@
 # Read known configuration keys from $HESTIA/conf/defaults/$system.conf
 function read_kv_config_file() {
     local system=$1
+    
+    if [ ! -f "$HESTIA/conf/defaults/$system.conf" ]; then
+        write_kv_config_file $system
+    fi
     while read -r str; do
         echo "$str"
     done < <(cat $HESTIA/conf/defaults/$system.conf)
@@ -49,7 +53,7 @@ function syshealth_update_web_config_format() {
     # WEB DOMAINS
     # Create array of known keys in configuration file
     system="web"
-    known_keys=(DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT AUTH_USER AUTH_HASH SUSPENDED TIME DATE)
+    known_keys="DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT REDIRECT REDIRECT_CODE AUTH_USER AUTH_HASH SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -61,14 +65,14 @@ function syshealth_update_dns_config_format() {
     # DNS DOMAINS
     # Create array of known keys in configuration file
     system="dns"
-    known_keys=(DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS SUSPENDED TIME DATE)
+    known_keys="DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
 
     # DNS RECORDS
     system="dns_records"
-    known_keys=(ID RECORD TYPE PRIORITY VALUE SUSPENDED TIME DATE TTL)
+    known_keys="ID RECORD TYPE PRIORITY VALUE SUSPENDED TIME DATE TTL"
     write_kv_config_file
     unset system
     unset known_keys
@@ -80,14 +84,14 @@ function syshealth_update_mail_config_format() {
     # MAIL DOMAINS
     # Create array of known keys in configuration file
     system="mail"
-    known_keys=(DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS U_DISK SUSPENDED TIME DATE)
+    known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS U_DISK SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
 
     # MAIL ACCOUNTS
     system="mail_accounts"
-    known_keys=(ACCOUNT ALIAS AUTOREPLY FWD FWD_ONLY MD5 QUOTA U_DISK SUSPENDED TIME DATE)
+    known_keys="ACCOUNT ALIAS AUTOREPLY FWD FWD_ONLY MD5 QUOTA U_DISK SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -99,7 +103,7 @@ function syshealth_update_user_config_format() {
     # USER CONFIGURATION
     # Create array of known keys in configuration file
     system="user"
-    known_keys=(NAME PACKAGE CONTACT CRON_REPORTS MD5 RKEY TWOFA QRCODE PHPCLI ROLE SUSPENDED SUSPENDED_USERS SUSPENDED_WEB SUSPENDED_DNS SUSPENDED_MAIL SUSPENDED_DB SUSPENDED_CRON IP_AVAIL IP_OWNED U_USERS U_DISK U_DISK_DIRS U_DISK_WEB U_DISK_MAIL U_DISK_DB U_BANDWIDTH U_WEB_DOMAINS U_WEB_SSL U_WEB_ALIASES U_DNS_DOMAINS U_DNS_RECORDS U_MAIL_DKIM U_MAIL_DKIM U_MAIL_ACCOUNTS U_MAIL_DOMAINS U_MAIL_SSL U_DATABASES U_CRON_JOBS U_BACKUPS LANGUAGE THEME NOTIFICATIONS PREF_UI_SORT TIME DATE)
+    known_keys="NAME PACKAGE CONTACT CRON_REPORTS MD5 RKEY TWOFA QRCODE PHPCLI ROLE SUSPENDED SUSPENDED_USERS SUSPENDED_WEB SUSPENDED_DNS SUSPENDED_MAIL SUSPENDED_DB SUSPENDED_CRON IP_AVAIL IP_OWNED U_USERS U_DISK U_DISK_DIRS U_DISK_WEB U_DISK_MAIL U_DISK_DB U_BANDWIDTH U_WEB_DOMAINS U_WEB_SSL U_WEB_ALIASES U_DNS_DOMAINS U_DNS_RECORDS U_MAIL_DKIM U_MAIL_DKIM U_MAIL_ACCOUNTS U_MAIL_DOMAINS U_MAIL_SSL U_DATABASES U_CRON_JOBS U_BACKUPS LANGUAGE THEME NOTIFICATIONS PREF_UI_SORT TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -107,7 +111,7 @@ function syshealth_update_user_config_format() {
     # CRON JOB CONFIGURATION
     # Create array of known keys in configuration file
     system="cron"
-    known_keys=(JOB MIN HOUR DAY MONTH WDAY CMD SUSPENDED TIME DATE)
+    known_keys="JOB MIN HOUR DAY MONTH WDAY CMD SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -119,7 +123,7 @@ function syshealth_update_db_config_format() {
     # DATABASE CONFIGURATION
     # Create array of known keys in configuration file
     system="db"
-    known_keys=(DB DBUSER MD5 HOST TYPE CHARSET U_DISK SUSPENDED TIME DATE)
+    known_keys="DB DBUSER MD5 HOST TYPE CHARSET U_DISK SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -131,7 +135,7 @@ function syshealth_update_ip_config_format() {
     # IP ADDRESS
     # Create array of known keys in configuration file
     system="ip"
-    known_keys=(OWNER STATUS NAME U_SYS_USERS U_WEB_DOMAINS INTERFACE NETMASK NAT TIME DATE)
+    known_keys="OWNER STATUS NAME U_SYS_USERS U_WEB_DOMAINS INTERFACE NETMASK NAT TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -144,7 +148,7 @@ function syshealth_repair_web_config() {
     get_domain_values 'web'
     prev="DOMAIN"
     for key in $known_keys; do
-        if [ -z "${!key}" ]; then 
+        if [ -z "${!key}" ]; then
             add_object_key 'web' 'DOMAIN' "$domain" "$key" "$prev"   
         fi
         prev=$key
@@ -155,7 +159,7 @@ function syshealth_update_system_config_format() {
     # SYSTEM CONFIGURATION
     # Create array of known keys in configuration file
     system="system"
-    known_keys=(ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION)
+    known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION"
     write_kv_config_file
     unset system
     unset known_keys

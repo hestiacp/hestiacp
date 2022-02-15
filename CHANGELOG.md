@@ -1,6 +1,28 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.8] - Service release
+
+### Features
+
+ - No new features has been introduced
+
+### Bugfixes
+
+- Fixed an issue where SFTP jail was not enabled correctly for additional FTP accounts #2403 
+- Fixed an issue in the installer where the "Press any key to continue" prompt only responded to the Enter key #2398 
+- Fixed an issue where list sort order preference variable wasn't saved properly #2391
+- Fixed an issue with inconsistent behaviour in mail account settings information dialog #2392
+- Fixed an issue where .gnupg folder in /root/ had the wrong permissions set.
+- Fixed an issue where users were being redirected to login page when visiting /reset/ endpoint #2401
+- Fixed an issue where deleting sftp jail did not revert back permissions of said user. #2143
+- Fixed an issue where "REDIRECT" variable wasn't cleared correctly causing other sites to redirect to the domain after v-update-letsencrypt-ssl
+- Changed repository url MariaDB for new installs to https://wdlm.mariadb.com/repo/mariadb-server
+
+### Dependencies
+
+- Update phpMyAdmin to 5.1.3 (https://github.com/phpmyadmin/phpmyadmin/releases/tag/RELEASE_5_1_3)
+
 ## [1.5.7] - Service release
 
 ### Bugfixes

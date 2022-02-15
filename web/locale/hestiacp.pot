@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-26 12:53+0100\n"
+"POT-Creation-Date: 2022-02-06 11:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3813,12 +3813,16 @@ msgstr ""
 msgid "Account has been suspended"
 msgstr ""
 
-#: ../../web/login/index.php:111 ../../web/login/index.php:144
-#: ../../web/login/index.php:156 ../../web/login/index.php:167
+#: ../../web/login/index.php:111
+msgid "Unsuported hash method"
+msgstr ""
+
+#: ../../web/login/index.php:113 ../../web/login/index.php:146
+#: ../../web/login/index.php:158 ../../web/login/index.php:169
 msgid "Invalid username or password"
 msgstr ""
 
-#: ../../web/login/index.php:176 ../../web/login/index.php:187
+#: ../../web/login/index.php:178 ../../web/login/index.php:189
 msgid "Invalid or missing 2FA token"
 msgstr ""
 

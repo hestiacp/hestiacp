@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.6
+# Hestia Control Panel upgrade script for target version 1.5.8
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -18,10 +18,16 @@
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-echo "[ * ] Refresh Hostname SSL..."
-hostname=$(hostname);
-user=$($HESTIA/bin/v-search-domain-owner "$hostname");
-$HESTIA/bin/v-update-host-certificate "$user" "$hostname"
+echo "[ * ] Create .gnupg directory..."
+mkdir -p /root/.gnupg/ && chmod 700 /root/.gnupg/
+
+echo "[ * ] Ensure jail is enabled for sftp or ftp users..."
+shells="rssh|nologin"
+for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
+    if [ -d "$HESTIA/data/users/$user" ]; then
+        $BIN/v-add-user-sftp-jail "$user" "no" > /dev/null 2>&1
+    fi
+done

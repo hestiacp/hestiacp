@@ -1819,13 +1819,14 @@ fi
 #----------------------------------------------------------#
 #                       Install Roundcube                  #
 #----------------------------------------------------------#
-
-echo "[ * ] Install Roundcube..."
 # Min requirements Dovecot + Exim + Mysql
-
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
+    echo "[ * ] Install Roundcube..."
     $HESTIA/bin/v-add-sys-roundcube
     write_config_value "WEBMAIL_ALIAS" "webmail"
+else
+    write_config_value "WEBMAIL_ALIAS" ""
+    write_config_value "WEBMAIL_SYSTEM" ""
 fi
 
 

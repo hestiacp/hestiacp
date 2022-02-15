@@ -1826,6 +1826,9 @@ echo "[ * ] Install Roundcube..."
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
     $HESTIA/bin/v-add-sys-roundcube
     write_config_value "WEBMAIL_ALIAS" "webmail"
+else
+    write_config_value "WEBMAIL_ALIAS" ""
+    write_config_value "WEBMAIL_SYSTEM" ""
 fi
 
 

@@ -1819,8 +1819,11 @@ echo "[ * ] Install Roundcube..."
 # Min requirements Dovecot + Exim + Mysql
 
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
-    $HESTIA/bin/v-add-sys-roundcube 
+    $HESTIA/bin/v-add-sys-roundcube
     write_config_value "WEBMAIL_ALIAS" "webmail"
+else
+    write_config_value "WEBMAIL_ALIAS" ""
+    write_config_value "WEBMAIL_SYSTEM" ""
 fi
 
 #----------------------------------------------------------#
@@ -1950,6 +1953,8 @@ fi
 if [ "$postgresql" = 'yes' ]; then
     $HESTIA/bin/v-add-database-host pgsql localhost postgres $ppass
 fi
+
+
 
 # Adding default domain
 $HESTIA/bin/v-add-web-domain admin $servername

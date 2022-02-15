@@ -10,7 +10,7 @@
 function read_kv_config_file() {
     local system=$1
     
-    if [ -f "$HESTIA/conf/defaults/$system.conf" ]; then
+    if [ ! -f "$HESTIA/conf/defaults/$system.conf" ]; then
         write_kv_config_file $system
     fi
     while read -r str; do

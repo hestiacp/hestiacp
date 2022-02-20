@@ -20,8 +20,8 @@
 						<td class="sort-by" title="<?=_('Sort items');?>">
 							<?=_('sort by');?>: <span>
 								<b>
-									<?php if ($_SESSION['userSortOrder'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
-									<?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+									<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+									<?=$label;?> <i class="fas fa-sort-alpha-down"></i>
 								</b>
 							</span>
 						</td>

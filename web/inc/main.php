@@ -140,6 +140,19 @@ function check_return_code($return_var, $output)
         $_SESSION['error_msg'] = $error;
     }
 }
+function check_return_code_redirect($return_var, $output, $location){
+    if ($return_var != 0) {
+        $error = implode('<br>', $output);
+        if (empty($error)) {
+            $error = sprintf(_('Error code:'), $return_var);
+        }
+        $_SESSION['error_msg'] = $error;
+        header("Location:".$location);
+    }
+
+}
+
+
 
 function render_page($user, $TAB, $page)
 {

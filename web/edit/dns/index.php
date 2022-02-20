@@ -26,7 +26,7 @@ unset($output);
 if ((!empty($_GET['domain'])) && (empty($_GET['record_id']))) {
     $v_domain = escapeshellarg($_GET['domain']);
     exec(HESTIA_CMD."v-list-dns-domain ".$user." ".$v_domain." json", $output, $return_var);
-    check_return_code($return_var, $output);
+    check_return_code_redirect($return_var, $output,'/list/dns/');
     $data = json_decode(implode('', $output), true);
     unset($output);
 
@@ -58,10 +58,8 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id']))) {
     $v_domain = escapeshellarg($_GET['domain']);
     $v_record_id = escapeshellarg($_GET['record_id']);
     exec(HESTIA_CMD."v-list-dns-records ".$user." ".$v_domain." 'json'", $output, $return_var);
-    check_return_code($return_var, $output);
+    check_return_code_redirect($return_var, $output,'/list/dns/');
     $data = json_decode(implode('', $output), true);
-    unset($output);
-
     // Parse dns record
     $v_username = $user;
     $v_domain = $_GET['domain'];
@@ -206,6 +204,10 @@ if (empty($_GET['record_id'])) {
     // Display body for dns domain
     render_page($user, $TAB, 'edit_dns');
 } else {
+    if(empty($data[$_GET['record_id']])){
+        header("Location: /list/dns/");
+        $_SESSION['error_msg'] = _("Unknown record ID");
+    }
     // Display body for dns record
     render_page($user, $TAB, 'edit_dns_rec');
 }

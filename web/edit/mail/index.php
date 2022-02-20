@@ -32,15 +32,10 @@ unset($output);
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_domain = $_GET['domain'];
-    if ($_SESSION['userContext'] !== 'admin') {
-        if (!in_array($v_domain, $user_domains)) {
-            header("Location: /list/mail/");
-            exit;
-        }
-    }
 
     exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
+    check_return_code_redirect($return_var, $output, '/list/mail/');
     unset($output);
 
     // Parse domain
@@ -89,16 +84,11 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 // List mail account
 if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     $v_domain = $_GET['domain'];
-    if ($_SESSION['userContext'] !== 'admin') {
-        if (!in_array($v_domain, $user_domains)) {
-            header("Location: /list/mail/");
-            exit;
-        }
-    }
 
     $v_account = $_GET['account'];
     exec(HESTIA_CMD."v-list-mail-account ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." 'json'", $output, $return_var);
     $data = json_decode(implode('', $output), true);
+    check_return_code_redirect($return_var, $output, '/list/mail/');
     unset($output);
 
     // Parse mail account

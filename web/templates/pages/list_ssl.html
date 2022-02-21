@@ -32,25 +32,12 @@
 							</td>
 						<tr>
 							<td>
-								<?php
-									if (!empty($_SESSION['error_msg'])) {
-										$msg_icon = 'fa-exclamation-circle status-icon red';
-										$msg_text = htmlentities($_SESSION['error_msg']);
-										$msg_id = 'vst-error';
-									} else {
-										if (!empty($_SESSION['ok_msg'])) {
-											$msg_icon = 'fa-check-circle status-icon green';
-											$msg_text = $_SESSION['ok_msg'];
-											$msg_id = 'vst-ok';
-										}
-									}
-								?>
-								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
 						</tr>
 						<tr>
-							<td class="vst-text" style="padding: 12px 0 0 0;"><?=_('SSL Certificate');?> <a href="javascript:saveTextToBlob('<?php echo $v_domain;?>.crt', 'v_crt');"><i class="fas fa-download"></i></a>
+							<td class="vst-text" style="padding: 12px 0 0 0;"><?=_('SSL Certificate');?> <a href="javascript:saveTextToBlob('<?php echo htmlentities($v_domain);?>.crt', 'v_crt');"><i class="fas fa-download"></i></a>
 							</td>
 						</tr>
 						<tr>
@@ -60,7 +47,7 @@
 						</tr>
 						<tr>
 							<td class="vst-text" style="padding: 12px 0 0 0;">
-								<?=_('SSL Key');?> <a href="javascript:saveTextToBlob('<?php echo $v_domain;?>.key', 'v_key');"><i class="fas fa-download"></i></a>
+								<?=_('SSL Key');?> <a href="javascript:saveTextToBlob('<?php echo htmlentities($v_domain);?>.key', 'v_key');"><i class="fas fa-download"></i></a>
 							</td>
 						</tr>
 						<tr>
@@ -70,7 +57,7 @@
 						</tr>
 						<tr>
 							<td class="vst-text" style="padding: 24px 0 0 0;">
-								<?=_('SSL CSR');?> <a href="javascript:saveTextToBlob('<?php echo $v_domain;?>.csr', 'v_crt');"><i class="fas fa-download"></i></a>
+								<?=_('SSL CSR');?> <a href="javascript:saveTextToBlob('<?php echo htmlentities($v_domain);?>.csr', 'v_crt');"><i class="fas fa-download"></i></a>
 							</td>
 						</tr>
 						<tr>

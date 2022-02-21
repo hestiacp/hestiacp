@@ -19,7 +19,7 @@ if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
 }
 
 // Get all user domains
-exec(HESTIA_CMD."v-list-web-domains ".escapeshellarg($user)." json", $output, $return_var);
+exec(HESTIA_CMD."v-list-web-domains ".$user." json", $output, $return_var);
 $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);

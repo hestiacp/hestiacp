@@ -113,11 +113,11 @@ if (!defined('NO_AUTH_REQUIRED')) {
 }
 
 if (isset($_SESSION['user'])) {
-    $user = $_SESSION['user'];
+    $user = escapeshellarg($_SESSION['user']);
 }
 
 if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
-    $user = $_SESSION['look'];
+    $user = escapeshellarg($_SESSION['look']);
 }
 
 require_once(dirname(__FILE__) . '/i18n.php');
@@ -151,8 +151,6 @@ function check_return_code_redirect($return_var, $output, $location){
     }
 
 }
-
-
 
 function render_page($user, $TAB, $page)
 {

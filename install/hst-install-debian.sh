@@ -1518,6 +1518,7 @@ if [ "$mysql" = 'yes' ]; then
     systemctl start mysql >> $LOG
     check_result $? "mariadb start failed"
 
+    mpass=$(gen_pass)
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
     

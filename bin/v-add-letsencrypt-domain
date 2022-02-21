@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: check letsencrypt domain
 # options: USER DOMAIN [ALIASES] [MAIL]
-# labels: web
 #
 # example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com
 #
-# The function check and validates domain with Let's Encrypt
-
+# This function check and validates domain with Let's Encrypt
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -64,7 +62,6 @@ query_le_v2() {
     debug_log "API call" "exit status: $?"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -113,7 +110,6 @@ debug_log() {
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

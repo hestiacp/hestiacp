@@ -1,15 +1,17 @@
 #!/bin/bash
 # info: open config
 # options: CONFIG
-# labels: 
 #
 # example: v-open-fs-config /etc/mysql/my.cnf
 #
-# The function opens/reads config files on the file system
+# This function opens/reads config files on the file system
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
-
 src_file=$1
 
 # Checking arguments

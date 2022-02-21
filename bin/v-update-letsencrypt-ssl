@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update letsencrypt ssl certificates
 # options: NONE
-# labels: panel
 #
 # example: v-update-letsencrypt-ssl
 #
-# The function for renew letsencrypt expired ssl certificate for all users
-
+# This function for renew letsencrypt expired ssl certificate for all users
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -17,6 +15,8 @@
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -30,13 +30,19 @@ check_hestia_demo_mode
 # Set LE counter
 lecounter=0
 max_LE_failures=30
+days_valid_setting=31
+if [ "$LE_STAGING" = "yes" ]; then 
+    # Overwrite setting to allow testing for renewal to be done easier
+    days_valid_setting=181
+fi
 
 # Checking user certificates
 for user in $($HESTIA/bin/v-list-sys-users plain); do
     USER_DATA=$HESTIA/data/users/$user
 
     for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
-
+        # Clear any keys related to web domains
+        sanitize_config_file "web"
         domain_suspended="$(get_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED')"
         if [ "$domain_suspended" = "yes" ]; then
             continue
@@ -53,7 +59,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
         now=$(date +%s)
         seconds_valid=$((expiration - now))
         days_valid=$((seconds_valid / 86400))
-        if [[ "$days_valid" -lt 31 ]]; then
+        if [[ "$days_valid" -lt "$days_valid_setting" ]]; then
             if [ $lecounter -gt 0 ]; then
                 sleep 10
             fi
@@ -64,8 +70,8 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             aliases=$(echo "$aliases" |egrep -v "^$domain,?$")
             aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')
 
-            # Source domain.conf
-            source <(cat $HESTIA/data/users/$user/web.conf | grep "DOMAIN='$domain'")
+            # Parsing domain
+            parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
             # Split aliases into array
             IFS=',' read -r -a ALIASES <<< "$ALIAS"
@@ -85,7 +91,18 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             if [[ ${f_aliases: -1} = ',' ]] ; then f_aliases=${f_aliases::-1}; fi
 
             # Write the filtered alias list to the default var
-            aliases=$f_aliases
+            aliases=$f_aliases    
+
+            domain_redirect="$REDIRECT"
+            if [[ -n "$domain_redirect"  ]] ; then
+            	domain_redirect_code="$REDIRECT_CODE"
+                $BIN/v-delete-web-domain-redirect $user $domain
+            fi
+
+            domain_forcessl="$SSL_FORCE"
+            if [[ "$domain_forcessl" == 'yes' ]] ; then
+                $BIN/v-delete-web-domain-ssl-force $user $domain
+            fi
 
             msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "$aliases")
             if [ $? -ne 0 ]; then
@@ -100,6 +117,20 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             else
                 $BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
             fi
+            if [[ "$domain_forcessl" == 'yes' ]] ; then
+                $BIN/v-add-web-domain-ssl-force $user $domain
+            fi
+            if [[ -n "$domain_redirect" ]] ; then
+                $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
+            fi
+            
+            if [ -n "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then
+                hostname=$(hostname -f)
+                if [ "$hostname" = "$domain" ]; then
+                    $BIN/v-update-host-certificate "$user" "$domain"
+                fi
+            fi
+
         fi
     done
 
@@ -143,6 +174,12 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
     done
 
 done
+
+$HESTIA/bin/v-restart-web yes
+if [ -n "$PROXY_SYSTEM" ]; then
+    $HESTIA/bin/v-restart-proxy yes
+fi
+
 
 #----------------------------------------------------------#
 #                        Hestia                            #

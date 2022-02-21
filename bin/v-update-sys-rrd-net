@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update network rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-net
 #
-# The function is for updating network usage rrd database and graphic.
-
+# This function is for updating network usage rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -118,7 +115,6 @@ for iface in $ifaces; do
     fi
 
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: add ssh key
 # options: USER KEY
-# labels: hestia
 #
 # example: v-delete-user-ssh-key user unique_id
 #
 # Delete user ssh key from authorized_keys
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

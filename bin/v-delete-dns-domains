@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete dns domains
 # options: USER [RESTART]
-# labels: dns
 #
 # example: v-delete-dns-domains bob
 #
-# The function for deleting all users DNS domains.
-
+# This function for deleting all users DNS domains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -36,7 +34,6 @@ is_object_valid 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -45,7 +42,6 @@ check_hestia_demo_mode
 for domain in $(search_objects 'dns' 'SUSPENDED' "no" 'DOMAIN'); do
     $BIN/v-delete-dns-domain "$user" "$domain" 'no'
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Remove SMTP Account for logging, notification and internal mail
 # options: NONE
-# labels:
 #
 # example: v-delete-sys-smtp
 #
@@ -9,7 +8,7 @@
 # for logging, notification and warn emails etc.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes

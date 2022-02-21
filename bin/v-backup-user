@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: backup system user with all its objects
 # options: USER NOTIFY
-# labels: 
 #
 # example: v-backup-user admin yes
 #
-# The call is used for backing up user with all its domains and databases.
-
+# This function is used for backing up user with all its domains and databases.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -183,7 +181,7 @@ let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 if [ "$u_disk" -gt "$v_disk" ]; then
     # Always notify on failure
     echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" "$email" "yes"
-    check_result "$E_LIMIT ""not enough diskspace available to perform the backup."
+    check_result "$E_LIMIT" "not enough diskspace available to perform the backup."
 fi
 
 if [ -z "$BACKUP_TEMP" ]; then
@@ -745,7 +743,6 @@ fi
 echo "$(date "+%F %T") Size: $size MB" |tee -a $BACKUP/$user.log
 echo "$(date "+%F %T") Runtime: $run_time $min" |tee -a $BACKUP/$user.log
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -786,8 +783,6 @@ if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
     cat $BACKUP/$user.log |$SENDMAIL -s "$subj" "$email" "$notify"
     $BIN/v-add-user-notification "$user" "Backup created successfully" "<b>Archive:</b> $user.$backup_new_date.tar"
 fi
-
-
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Backup" "Backup created (Archive: $backup_new_date.tar)."

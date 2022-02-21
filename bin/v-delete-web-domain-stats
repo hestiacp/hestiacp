@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete web domain statistics
 # options: USER DOMAIN
-# labels: web
 #
 # example: v-delete-web-domain-stats user02 h1.example.com
 #
-# The function of deleting site's system of statistics. Its type is
+# This function of deleting site's system of statistics. Its type is
 # automatically chooses from client's configuration file.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -47,7 +45,6 @@ is_object_value_exist 'web' 'DOMAIN' "$domain" '$STATS'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -61,7 +58,6 @@ rm -rf "$HOMEDIR/$user/web/$domain/stats"
 # Deleting config
 rm -f "/etc/awstats/$STATS.$domain_idn.conf"
 rm -f "$HOMEDIR/$user/conf/web/$domain/$STATS.conf"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

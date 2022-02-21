@@ -5,11 +5,10 @@
 #
 # example: v-list-web-stats 
 #
-# The function for obtaining the list of web statistics analyzer.
-
+# This function for obtaining the list of web statistics analyzer.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -63,7 +62,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -78,7 +76,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

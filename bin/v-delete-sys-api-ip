@@ -1,12 +1,11 @@
 #!/bin/bash
 # info: delete ip adresss from allowed ip list api
 # options: IP 
-# labels: hestia
 #
 # example: v-delete-sys-api-ip 1.1.1.1
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 ip46=${1// /}
@@ -30,7 +29,6 @@ is_format_valid 'ip46'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

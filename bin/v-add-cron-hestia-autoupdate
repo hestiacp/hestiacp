@@ -1,13 +1,12 @@
 #!/bin/bash
-# info: add cron job for hestia autoupdates
+# info: add cron job for hestia automatic updates
 # options: MODE
-# labels: 
 #
-# The function adds cronjob for hestia autoupdate from apt or git.
-
+# This function adds a cronjob for hestia automatic updates
+# that can be downloaded from apt or git.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -21,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -38,7 +36,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -75,13 +72,13 @@ str="$str CMD='$command' SUSPENDED='no' TIME='$time' DATE='$date'"
 # Adding to crontab
 echo "$str" >> $HESTIA/data/users/$user/cron.conf
 
-# Chaning permissions
+# Changing permissions
 chmod 660 $HESTIA/data/users/$user/cron.conf
 
 # Sort jobs by id number
 sort_cron_jobs
 
-# Sync cronjobs with system crond
+# Sync cronjobs with system cron
 sync_cron_jobs
 
 #----------------------------------------------------------#
@@ -91,7 +88,7 @@ sync_cron_jobs
 # Increasing cron value
 increase_user_value "$user" '$U_CRON_JOBS'
 
-# Restarting crond
+# Restarting cron
 $BIN/v-restart-cron
 check_result $? "Cron restart failed" >/dev/null
 

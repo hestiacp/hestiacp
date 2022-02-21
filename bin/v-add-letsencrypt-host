@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: add letsencrypt for host and backend
 # options: NONE
-# labels: hestia
 #
 # example: v-add-letsencrypt-host
 #
-# The function check and validates the backend certificate and generate
+# This function check and validates the backend certificate and generate
 # a new let's encrypt certificate.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,6 +31,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,7 +40,6 @@ is_format_valid 'user' 'domain' 'aliases'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -90,7 +88,6 @@ $BIN/v-update-host-certificate "$user" "$domain"
 # Enable automatic ssl forward and hsts
 $BIN/v-add-web-domain-ssl-force "$user" "$domain" > /dev/null 2>&1
 $BIN/v-add-web-domain-ssl-hsts "$user" "$domain" > /dev/null 2>&1
-
 
 #----------------------------------------------------------#
 #                        Hestia                            #

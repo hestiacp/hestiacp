@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: backup all users
 # options: NONE
-# labels: 
 #
 # example: v-backup-users
 #
-# The function backups all system users.
-
+# This function backups all system users.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -22,6 +20,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -53,8 +52,5 @@ done
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# No Logging
-#log_event "$OK" "$ARGUMENTS"
 
 exit

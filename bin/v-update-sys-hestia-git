@@ -1,7 +1,6 @@
 #!/bin/bash
-# info: Delete log file for user
+# info: Install update from Git repository
 # options: REPOSITORY BRANCH INSTALL [PACKAGES]
-# labels: hestia
 #
 # example: v-update-sys-hestia-git hestiacp staging/beta install all
 #          # Will download from the hestiacp repository
@@ -13,7 +12,9 @@
 #
 # Downloads and compiles/installs packages from GitHub repositories
 
-# Includes
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -112,6 +113,28 @@ timestamp() {
     date +%s
 }
 
+# Warning prompt to be used if auto-install flag is not specified
+warning_message() {
+    echo ""
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo "WARNING - Development builds should not be installed on"
+    echo "systems with live production data without understanding"
+    echo "the potential risks that are involved!"
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo ""
+}
+
+# Build installation
+install_build() {
+    echo "Installing packages..."
+    for i in $DEB_DIR/*.deb; do
+        # Install all available packages
+        dpkg -i $i
+    done
+    # Remove temporary files
+    rm -rf $BUILD_DIR
+}
+
 # Set install flags
 if [ -n "$1" ]; then
     fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/main/src/deb/hestia/control -o /dev/null)
@@ -150,6 +173,9 @@ if [ -z "$branch" ]; then
     exit
 fi
 
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
 
 # Install needed software
 echo "[*] Updating APT package cache..."
@@ -158,11 +184,9 @@ echo "[*] Checking for missing dependencies and installing required libraries...
 apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
 # Fix for Debian PHP Envroiment
-if [ ! -e /usr/local/include/curl ]; then
-    if [ $BUILD_ARCH == "amd64" ]; then
+if [ $BUILD_ARCH == "amd64" ]; then
+    if [ ! -L /usr/local/include/curl ]; then
         ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
-    else
-        echo "No x86_64 working"
     fi
 fi
 
@@ -194,12 +218,7 @@ PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch=$(echo "$branch" |sed 's/\//-/g');
 
-#################################################################################
-#
 # Building hestia-nginx
-#
-#################################################################################
-
 if [ "$NGINX_B" = true ] ; then
 
     echo "[*] Building Package: hestia-nginx (backend web server)..."
@@ -292,13 +311,7 @@ if [ "$NGINX_B" = true ] ; then
     rm -r hestia-nginx_$NGINX_V
 fi
 
-
-#################################################################################
-#
 # Building hestia-php
-#
-#################################################################################
-
 if [ "$PHP_B" = true ] ; then
     echo "[*] Building Package: hestia-php (backend engine)..."
     # Change to build directory
@@ -388,13 +401,7 @@ if [ "$PHP_B" = true ] ; then
     rm -r hestia-php_$PHP_V
 fi
 
-
-#################################################################################
-#
 # Building hestia
-#
-#################################################################################
-
 if [ "$HESTIA_B" = true ] ; then
     echo "[*] Building Package: hestia (Control Panel)..."
     # Change to build directory
@@ -447,36 +454,7 @@ if [ "$HESTIA_B" = true ] ; then
     rm -r hestiacp-$branch
 fi
 
-
-#################################################################################
-#
-# Install Packages
-#
-#################################################################################
-
-# Define package installation functions
-warning_message() {
-    echo ""
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    echo "WARNING - Development builds should not be installed on"
-    echo "systems with live production data without understanding"
-    echo "the potential risks that are involved!"
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    echo ""
-}
-
-install_build() {
-    echo "Installing packages..."
-    for i in $DEB_DIR/*.deb; do
-        # Install all available packages
-        dpkg -i $i
-    done
-    # Remove temporary files
-    rm -rf $BUILD_DIR
-}
-
-# Define installation routine
-
+# Installation steps
 if [ "$install" = "install" ] || [ "$install" = "yes" ] || [ "$install" = "install-auto" ]; then 
     install_build
     if [ "$install" = "install-auto" ]; then

@@ -5,17 +5,15 @@
 #######################################################################################
 #######                      Place additional commands below.                   #######
 #######################################################################################
-####### Pass trough information to the end user incase of a issue or problem    #######
+####### Pass through information to the end user in case of a issue or problem  #######
 #######                                                                         #######
 ####### Use add_upgrade_message "My message here" to include a message          #######
-####### to the upgrade email. Please add it using:                              #######
+####### in the upgrade notification email. Example:                             #######
 #######                                                                         #######
 ####### add_upgrade_message "My message here"                                   #######
 #######                                                                         #######
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
-
-echo "[ * ] Apply changes for 1.5.0"
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'true'
@@ -41,7 +39,7 @@ if [ -n "$DB_PGA_ALIAS" ]; then
 fi
 
 if [ -n "$MAIL_SYSTEM" ]; then
-   echo "[ ! ] Update Exim config"
+   echo "[ ! ] Updating Exim configuration..."
     if [ -f "/etc/exim4/exim4.conf.template" ]; then
         sed -i 's/^smtp_active_hostname = \${if exists {\/etc\/exim4\/mailhelo\.conf}{\${lookup{\$interface_address}lsearch{\/etc\/exim4\/mailhelo\.conf}{\$value}{\$primary_hostname}}}{\$primary_hostname}}$/smtp_active_hostname = \${lookup dnsdb{>: ptr=\$interface_address}{\${listextract{1}{\$value}}}{\$primary_hostname}}/' /etc/exim4/exim4.conf.template
                 
@@ -63,7 +61,7 @@ if [ -n "$MAIL_SYSTEM" ]; then
 fi
 
 if [ -L "/var/log/hestia" ]; then
-    echo "[ ! ] Move /usr/local/hestia/log/* to /var/log/hestia/"
+    echo "[ ! ] Updating log file location: /usr/local/hestia/log/* to /var/log/hestia/..."
     rm /var/log/hestia
     mkdir -p /var/log/hestia
     cp /usr/local/hestia/log/* /var/log/hestia/

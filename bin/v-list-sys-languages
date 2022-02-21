@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: list system languages
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-languages json
 #
-# The function for obtaining the available languages for HestiaCP
+# This function for obtaining the available languages for HestiaCP
 # Output is always in the ISO language code
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -64,7 +62,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -79,7 +76,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

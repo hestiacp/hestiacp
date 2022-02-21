@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: delete webmail support for a domain
 # options: USER DOMAIN [RESTART] [QUIET]
-# labels: hestia
 #
 # example: v-delete-mail-domain-webmail user demo.com
 #
-# this function removes support for webmail from
+# This function removes support for webmail from
 # a specified mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -77,6 +76,7 @@ fi
 
 # Set SSL as enabled in configuration
 update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' ""
+
 #----------------------------------------------------------#
 #                       Hestia                              #
 #----------------------------------------------------------#

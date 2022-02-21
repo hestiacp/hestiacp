@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Domain Function Library                            #
+#                                                                           #
+#===========================================================================#
+
 # Global
 database_set_default_ports() {
 
@@ -91,6 +98,8 @@ mysql_dump() {
     err="/tmp/e.mysql"
     mysqldump --defaults-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
     if [ '0' -ne "$?" ]; then
+      mysqldump --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+      if [ '0' -ne "$?" ]; then
         rm -rf $tmpdir
         if [ "$notify" != 'no' ]; then
             email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
@@ -101,6 +110,7 @@ mysql_dump() {
         echo "Error: dump $database failed"
         log_event  "$E_DB" "$ARGUMENTS"
         exit "$E_DB"
+        fi
     fi
 }
 
@@ -243,22 +253,60 @@ decrease_dbhost_values() {
 # Create MySQL database
 add_mysql_database() {
     mysql_connect $host
+    
+    mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+    mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
 
     query="CREATE DATABASE \`$database\` CHARACTER SET $charset"
     mysql_query "$query" > /dev/null
 
-    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
-        IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
-
-    query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
-        IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
-
-    if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
-        md5=$(mysql_query "SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
-        md5=$(echo "$md5" |grep password |cut -f8 -d \')
+    if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ] ; then
+        query="CREATE USER \`$dbuser\`@\`%\`
+            IDENTIFIED BY '$dbpass'"
+        mysql_query "$query" > /dev/null
+    
+        query="CREATE USER \`$dbuser\`@localhost
+            IDENTIFIED BY '$dbpass'"
+        mysql_query "$query" > /dev/null
+    
+        query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
+        mysql_query "$query" > /dev/null
+    
+        query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+        mysql_query "$query" > /dev/null
     else
+        query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
+            IDENTIFIED BY '$dbpass'"
+        mysql_query "$query" > /dev/null
+    
+        query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+            IDENTIFIED BY '$dbpass'"
+        mysql_query "$query" > /dev/null
+    fi
+    
+    
+      
+    if [ "$mysql_fork" = "mysql" ]; then
+        # mysql
+        if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
+            if [ "$mysql_ver_sub" -ge 8 ]; then
+                # mysql >= 8
+                md5=$(mysql_query "SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
+                # echo $md5
+                md5=$(echo "$md5" |grep password |cut -f4 -d \')
+                # echo $md5
+            else
+                # mysql < 8
+                md5=$(mysql_query "SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
+                md5=$(echo "$md5" |grep password |cut -f8 -d \')
+            fi
+        else
+            # mysql < 5.7
+            md5=$(mysql_query "SHOW GRANTS FOR \`$dbuser\`" 2>/dev/null)
+            md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+        fi
+    else
+        # mariadb
         md5=$(mysql_query "SHOW GRANTS FOR \`$dbuser\`" 2>/dev/null)
         md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
     fi
@@ -297,9 +345,6 @@ add_mysql_database_temp_user() {
   }
 
 delete_mysql_database_temp_user(){
-    echo $database;
-    echo $dbuser;
-    echo $host;
     mysql_connect $host;
     query="REVOKE ALL ON \`$database\`.* FROM \`$dbuser\`@localhost"
     mysql_query "$query" > /dev/null
@@ -326,23 +371,64 @@ get_database_values() {
 
 # Change MySQL database password
 change_mysql_password() {
-    mysql_connect $HOST
-    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
-        IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
-
-    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
-        IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
-    
-if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
- 
-    md5=$(mysql_query "SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
-    md5=$(echo "$md5" |grep password |cut -f8 -d \')
-else
-    md5=$(mysql_query "SHOW GRANTS FOR \`$DBUSER\`" 2>/dev/null)
-    md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
-fi
+  mysql_connect $HOST
+      
+      mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+      mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
+  
+      if [ "$mysql_fork" = "mysql" ]; then
+          # mysql
+          if [ "$mysql_ver_sub" -ge 8 ]; then
+              # mysql >= 8
+              query="SET PASSWORD FOR \`$DBUSER\`@\`%\` = '$dbpass'"
+              mysql_query "$query" > /dev/null
+              query="SET PASSWORD FOR \`$DBUSER\`@localhost = '$dbpass'"
+              mysql_query "$query" > /dev/null
+          else
+              # mysql < 8
+              query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
+                  IDENTIFIED BY '$dbpass'"
+              mysql_query "$query" > /dev/null
+  
+              query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
+                  IDENTIFIED BY '$dbpass'"
+              mysql_query "$query" > /dev/null
+          fi
+      else
+          # mariadb
+          query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
+              IDENTIFIED BY '$dbpass'"
+          mysql_query "$query" > /dev/null
+  
+          query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
+              IDENTIFIED BY '$dbpass'"
+          mysql_query "$query" > /dev/null
+      fi
+  
+      if [ "$mysql_fork" = "mysql" ]; then
+          # mysql
+          if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
+              if [ "$mysql_ver_sub" -ge 8 ]; then
+                  # mysql >= 8
+                  md5=$(mysql_query "SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
+                  # echo $md5
+                  md5=$(echo "$md5" |grep password |cut -f4 -d \')
+                  # echo $md5
+              else
+                  # mysql < 8
+                  md5=$(mysql_query "SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
+                  md5=$(echo "$md5" |grep password |cut -f8 -d \')
+              fi
+          else
+              # mysql < 5.7
+              md5=$(mysql_query "SHOW GRANTS FOR \`$DBUSER\`" 2>/dev/null)
+              md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+          fi
+      else
+          # mariadb
+          md5=$(mysql_query "SHOW GRANTS FOR \`$DBUSER\`" 2>/dev/null)
+          md5=$(echo "$md5" |grep PASSW|tr ' ' '\n' |tail -n1 |cut -f 2 -d \')
+      fi
 }
 
 # Change PostgreSQL database password

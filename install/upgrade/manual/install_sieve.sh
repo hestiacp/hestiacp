@@ -1,7 +1,7 @@
 #!/bin/bash
 # info: Install / remove  sieve / manage-sieve for Dovecot 
 #
-# The function enables resolving IP addresses  with the use of GeoIP database
+# Thos function installs manage-sieve functionality for dovecot.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -35,7 +35,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
     #  10-master.conf
     sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
     #  15-lda.conf
-    sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
+    sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
     #  20-imap.conf
     sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
     
@@ -71,9 +71,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
     #restart dovecot and exim4
     systemctl restart dovecot > /dev/null 2>&1
     systemctl restart exim4 > /dev/null 2>&1
-    
 else
-
     # Uninstall sieve if it exist
     if [ -f "/etc/dovecot/conf.d/90-sieve.conf" ]; then
         
@@ -111,7 +109,5 @@ else
         #restart dovecot and exim4
         systemctl restart dovecot > /dev/null 2>&1
         systemctl restart exim4 > /dev/null 2>&1
-    
     fi
-    
 fi

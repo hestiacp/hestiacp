@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change domain owner
 # options: DOMAIN USER
-# labels: 
 #
 # example: v-change-domain-owner www.example.com bob
 #
-# The function of changing domain ownership.
-
+# This function of changing domain ownership.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -46,7 +43,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

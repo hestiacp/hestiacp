@@ -1,11 +1,10 @@
 #!/bin/bash
 # info: get file type
 # options: USER FILE
-# labels: 
 #
 # example: v-get-fs-file-type admin index.html
 #
-# The function shows file type
+# This function shows file type
 
 user=$1
 path=$2

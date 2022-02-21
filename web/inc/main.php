@@ -1,13 +1,17 @@
 <?php
 
+session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+if(!file_exists(dirname(__FILE__).'/vendor/autoload.php')){
+    trigger_error('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
+    echo 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line';
+    exit(1);
+}
+
 require 'vendor/autoload.php';
-
-session_start();
-
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
@@ -21,12 +25,12 @@ define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,
 load_hestia_config();
 require_once(dirname(__FILE__) . '/prevent_csrf.php');
 
-
 function destroy_sessions()
 {
     unset($_SESSION);
     session_unset();
     session_destroy();
+    session_start();
 }
 
 $i = 0;
@@ -201,9 +205,11 @@ function top_panel($user, $TAB)
 
     // Log out active sessions for suspended users
     if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
+        if(empty($_SESSION['look'])){
         $_SESSION['error_msg'] = 'You have been logged out. Please log in again.';
         destroy_sessions();
         header('Location: /login/');
+        }
     }
 
     // Reset user permissions if changed while logged in

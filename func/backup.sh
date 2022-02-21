@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Backup Function Library                            #
+#                                                                           #
+#===========================================================================#
+
 # Local storage
 # Defining local storage function
 local_backup(){

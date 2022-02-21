@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: get user value
 # options: USER KEY
-# labels: panel
 #
 # example: v-get-user-value admin FNAME
 #
-# The function for obtaining certain user's parameters.
-
+# This function for obtaining certain user's parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ check_args '2' "$#" 'USER KEY'
 is_format_valid 'user' 'key'
 is_object_valid 'user' 'USER' "$user"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -42,7 +39,6 @@ value=$(get_user_value "$key")
 
 # Printing value
 echo "$value"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

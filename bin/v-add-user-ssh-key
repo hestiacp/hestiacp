@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: add ssh key
 # options: USER KEY
-# labels: hestia
 #
 # example: v-add-user-ssh-key user 'valid ssh key'
 #
@@ -9,9 +8,8 @@
 # After that it append the new key(s)
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
 
 # Argument definition
 user=$1
@@ -24,7 +22,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-# Additional argument formatting
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -48,7 +45,7 @@ source $USER_DATA/user.conf
 AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
 [ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid authorized keys path"
 
-#check if file exits
+# Check if file exits
 if [ ! -f "$AUTHKEY_FILE" ]; then
     v-add-fs-file "$user" "${AUTHKEY_FILE}"
 fi
@@ -59,10 +56,10 @@ if ! echo "$key" | ssh-keygen -l -f - > /dev/null 2>&1; then
     check_result "$E_PARSING" "Validating user private key"
 fi
 
-# make sure authorized_keys is ending with EOL
+# Make sure authorized_keys ends with EOL
 [ -f "${AUTHKEY_FILE}" ] && sed -i '$a\' "${AUTHKEY_FILE}"
 
-#append key to file
+# Append key data to file
 echo "$key" >> "$AUTHKEY_FILE"
 
 #----------------------------------------------------------#

@@ -1,12 +1,11 @@
 #!/bin/bash
-# info: Install RoundCube for Nginx/Apache2 
+# info: Install Roundcube webmail client
 # options: [MODE]
-# labels: hestia
 #
-# The function installs Round Cube
+# This function installs the Roundcube webmail client.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -147,14 +146,15 @@ if [ "$UPDATE" == "no" ]; then
         sed -i "s/%password%/$r/g" $RC_CONFIG_DIR/config.inc.php
         mysql roundcube < /var/lib/roundcube/SQL/mysql.initial.sql
     fi
-    # To do in future add support for Postgresql only setup
+
+    # TODO: Add support for PostgreSQL
     
     rcDesKey="$(openssl rand -base64 30 | tr -d "/" | cut -c1-24)"
     sed -i "s/%des_key%/$rcDesKey/g" $RC_CONFIG_DIR/config.inc.php
-    # Change hostname for password change
+    # Update server hostname in password change plugin
     sed -i "s/localhost/$(hostname)/g" $RC_CONFIG_DIR/plugins/password/config.inc.php
     
-    #Clean up
+    # Clean up
     rm -f -r $RC_INSTALL_DIR/installer;
     rm -f -r $RC_INSTALL_DIR/$RC_FILE;
     rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT;
@@ -182,6 +182,7 @@ else
     # Run Roundcube upgrade script
     $RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh -y $RC_INSTALL_DIR > /dev/null 2>&1
     $RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
+    $RC_INSTALL_DIR/bin/indexcontacts.sh > /dev/null 2>&1
     chown -R root:www-data $RC_INSTALL_DIR
     
     #clean up the mess
@@ -191,8 +192,9 @@ else
     rm -f -r $RC_INSTALL_DIR/$RC_FILE
     rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT
 fi
+
 #----------------------------------------------------------#
-#                       Logging                            #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 if [ "$UPDATE" = "yes" ]; then

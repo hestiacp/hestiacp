@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: restart operating system
 # options: RESTART [DELAY]
-# labels: panel
 #
 # example: v-restart-system yes
 #
-# The function restarts operating system.
-
+# This function restarts operating system.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -46,7 +44,6 @@ if [  "$restart" = 'yes' ]; then
     fi
     /sbin/reboot
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

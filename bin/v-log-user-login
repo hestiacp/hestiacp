@@ -2,6 +2,10 @@
 # info: add user login
 # options: USER IP STATUS [FINGERPRINT]
 
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
 # Argument definition
 user=$1
 ip=$2

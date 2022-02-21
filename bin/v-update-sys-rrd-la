@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update load average rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-la
 #
-# The function is for updating load average rrd database and graphic.
-
+# This function is for updating load average rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -97,7 +94,6 @@ rrdtool graph $RRD/la/$period-la.png \
     GPRINT:pr:'LAST:Current\:''%8.0lf' \
     GPRINT:pr:'MIN:Min\:''%8.0lf' \
     GPRINT:pr:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

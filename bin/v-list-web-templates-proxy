@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: listing proxy templates
 # options: [FORMAT]
-# labels: web
 #
 # example: v-list-web-templates-proxy
 #
-# The function for obtaining the list of proxy templates available to a user.
-
+# This function for obtaining the list of proxy templates available to a user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -63,7 +61,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -84,7 +81,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

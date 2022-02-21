@@ -216,7 +216,7 @@ echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 OPENSSL_V='1.1.1l'
-PCRE_V='8.45'
+PCRE_V='10.39'
 ZLIB_V='1.2.11'
 
 # Create build directories
@@ -257,11 +257,9 @@ if [ "$dontinstalldeps" != 'true' ]; then
         apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
         # Fix for Debian PHP Envroiment
-        if [ ! -e /usr/local/include/curl ]; then
-            if [ $BUILD_ARCH == "amd64" ]; then
+        if [ $BUILD_ARCH == "amd64" ]; then
+            if [ ! -L /usr/local/include/curl ]; then
                 ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
-            else
-                echo "No x86_64 working"
             fi
         fi
     fi
@@ -290,11 +288,19 @@ fi
 
 # Generate Links for sourcecode
 HESTIA_ARCHIVE_LINK='https://github.com/hestiacp/hestiacp/archive/'$branch'.tar.gz'
-NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz'
+if [[ $NGINX_V =~ - ]]; then
+  NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"-" -f1)'.tar.gz'
+else
+  NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz'
+fi
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
-PCRE='https://sourceforge.net/projects/pcre/files/pcre/'$PCRE_V'/pcre-'$PCRE_V'.tar.gz/download'
+PCRE='https://github.com/PhilipHazel/pcre2/releases/download/pcre2-'$PCRE_V'/pcre2-'$PCRE_V'.tar.gz'
 ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
+if [[ $PHP_V =~ - ]]; then
+ PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"-" -f1)'.tar.gz'
+else
+  PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"~" -f1)'.tar.gz'
+fi
 
 # Forward slashes in branchname are replaced with dashes to match foldername in github archive.
 branch_dash=$(echo "$branch" |sed 's/\//-/g');
@@ -315,8 +321,12 @@ if [ "$NGINX_B" = true ] ; then
     cd $BUILD_DIR
 
     BUILD_DIR_HESTIANGINX=$BUILD_DIR/hestia-nginx_$NGINX_V
-    BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"~" -f1)
-
+    if [[ $NGINX_V =~ - ]]; then
+      BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"-" -f1)
+    else 
+      BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"~" -f1)
+    fi
+    
     if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ]; then
         # Check if target directory exist
         if [ -d "$BUILD_DIR_HESTIANGINX" ]; then
@@ -344,7 +354,7 @@ if [ "$NGINX_B" = true ] ; then
                       --with-openssl-opt=no-nextprotoneg \
                       --with-openssl-opt=no-weak-ssl-ciphers \
                       --with-openssl-opt=no-ssl3 \
-                      --with-pcre=../pcre-$PCRE_V \
+                      --with-pcre=../pcre2-$PCRE_V \
                       --with-pcre-jit \
                       --with-zlib=../zlib-$ZLIB_V
     fi
@@ -458,8 +468,15 @@ if [ "$PHP_B" = true ] ; then
     echo "Building hestia-php package..."
 
     BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
+    
     BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
-
+    
+    if [[ $PHP_V =~ - ]]; then
+      BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"-" -f1)
+    else
+      BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
+    fi
+    
     if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ]; then
         # Check if target directory exist
         if [ -d $BUILD_DIR_HESTIAPHP ]; then

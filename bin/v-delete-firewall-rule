@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete firewall rule
 # options: RULE
-# labels: panel
 #
 # example: v-delete-firewall-rule SSH_BLOCK
 #
-# The function deletes firewall rule.
-
+# This function deletes firewall rule.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +33,6 @@ is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -45,7 +42,6 @@ sed -i "/RULE='$rule' /d" $HESTIA/data/firewall/rules.conf
 
 # Updating system firewall
 $BIN/v-update-firewall
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -7,21 +7,26 @@ use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 class LaravelSetup extends BaseSetup {
 
     protected $appname = 'laravel';
-    
-    protected $appInfo = [ 
+
+    protected $appInfo = [
         'name' => 'Laravel',
         'group' => 'framework',
         'enabled' => true,
-        'version' => '8.x',
+        'version' => '9.x',
         'thumbnail' => 'laravel-thumb.png'
     ];
-    
+
     protected $config = [
         'form' => [
         ],
         'database' => true,
         'resources' => [
             'composer' => [ 'src' => 'laravel/laravel', 'dst' => '/'],
+        ],
+        'server' => [
+            'nginx' => [
+                'template' => 'laravel',
+            ],
         ],
     ];
 

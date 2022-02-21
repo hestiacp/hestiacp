@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user shell
 # options: USER SHELL
-# labels: panel
 #
 # example: v-change-user-shell admin nologin
 #
-# The function changes system shell of a user. Shell gives ability to use ssh.
-
+# This function changes system shell of a user. Shell gives ability to use ssh.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -36,7 +33,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -55,7 +51,6 @@ if [[ "$shell" =~ nologin ]] || [[ "$shell" =~ rssh ]]; then
 else
     $BIN/v-delete-user-sftp-jail "$user" >/dev/null 2>&1
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

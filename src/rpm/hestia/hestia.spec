@@ -86,8 +86,32 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Execute version-specific upgrade scripts
     upgrade_start_routine
 
+    # Update Web domain templates
+    upgrade_rebuild_web_templates | tee -a $LOG
+    
+    # Update Mail domain templates
+    upgrade_rebuild_mail_templates | tee -a $LOG
+    
+    # Update DNS zone templates
+    upgrade_rebuild_dns_templates | tee -a $LOG
+    
+    # Upgrade File Manager and update configuration
+    upgrade_filemanager | tee -a $LOG
+    
+    # Upgrade Rainloop if applicable
+    upgrade_rainloop | tee -a $LOG
+    
+    # Upgrade Roundcube if applicable
+    upgrade_roundcube | tee -a $LOG
+    
+    # Upgrade PHPMailer if applicable
+    upgrade_phpmailer | tee -a $LOG
+    
     # Upgrade phpMyAdmin if applicable
-    upgrade_phpmyadmin
+    upgrade_phpmyadmin | tee -a $LOG
+    
+    # Upgrade blackblaze-cli-took if applicable
+    upgrade_b2_tool | tee -a $LOG
 
     # Set new version number in hestia.conf
     upgrade_set_version

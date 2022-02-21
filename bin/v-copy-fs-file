@@ -1,11 +1,14 @@
 #!/bin/bash
 # info: copy file
 # options: USER SRC_FILE DST_FILE
-# labels: 
 #
 # example: v-copy-fs-file admin readme.txt readme_new.txt
 #
-# The function copies file on the file system
+# This function copies file on the file system
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 user=$1
 src_file=$2

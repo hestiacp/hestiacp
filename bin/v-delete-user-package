@@ -1,18 +1,16 @@
 #!/bin/bash
 # info: delete user package
 # options: PACKAGE
-# labels: panel
 #
 # example: v-delete-user-package admin palegreen
 #
-# The function for deleting user package.
+# This function for deleting user package.
 #
 # If the package is in use, users will be updated to
 # use the default package.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -47,7 +45,6 @@ is_package_in_use
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

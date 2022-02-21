@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: get system timezone
 # options: [FORMAT]
-# labels: panel
 #
-# The function to get system timezone
-
+# This function to get system timezone
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -20,7 +18,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -46,7 +43,6 @@ else
 fi
 
 echo $ZONE
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

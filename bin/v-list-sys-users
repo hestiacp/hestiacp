@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: list system users
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-users 
 #
-# The function for obtaining the list of system users without
+# This function for obtaining the list of system users without
 # detailed information.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -64,7 +62,6 @@ csv_list() {
     done < <(grep @ /etc/passwd |cut -f 1 -d :)
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -76,7 +73,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

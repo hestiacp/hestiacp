@@ -1,17 +1,15 @@
 #!/bin/bash
 # info: change dns domain template
 # options: USER DOMAIN TEMPLATE [RESTART]
-# labels: dns
 #
 # example: v-change-dns-domain-tpl admin example.com child-ns yes
 #
-# The function for changing the template of records. By updating old records
+# This function for changing the template of records. By updating old records
 # will be removed and new records will be generated in accordance with
 # parameters of new template.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +33,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -51,7 +48,6 @@ is_dns_template_valid "$template"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -148,7 +144,6 @@ if [ ! -z "$DNS_CLUSTER" ]; then
         echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

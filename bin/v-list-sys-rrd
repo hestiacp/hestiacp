@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list system rrd charts
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-rrd
 #
 # List available rrd graphics, its titles and paths.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 format=${1-shell}
@@ -120,7 +118,6 @@ csv_list() {
     done
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -158,7 +155,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

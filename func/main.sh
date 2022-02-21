@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Core Function Library                              #
+#                                                                           #
+#===========================================================================#
+
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
@@ -925,7 +932,9 @@ is_dns_record_format_valid() {
 # Email format validator
 is_email_format_valid() {
     if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+      if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.(xn--)[[:alnum:]]{2,63}$ ]] ; then
         check_result "$E_INVALID" "invalid email format :: $1"
+      fi
     fi
 }
 
@@ -1299,7 +1308,7 @@ multiphp_versions() {
 
 multiphp_default_version() {
     # Get system wide default php version (set by update-alternatives)
-    local sys_phpversion=$(php -r "echo (float)phpversion();")
+    local sys_phpversion=$(php -r "echo substr(phpversion(),0,3);")
 
     # Check if the system php also has php-fpm enabled, otherwise return
     # the most recent php version which does have it installed.

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update domains statistics
 # options: USER
-# labels: web
 #
 # example: v-update-web-domains-stat admin
 #
-# The function runs log analyzer usage for all user webdomains.
-
+# This function runs log analyzer usage for all user webdomains.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -35,7 +32,6 @@ is_format_valid 'user'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -48,7 +44,6 @@ for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
         $BIN/v-update-web-domain-stat "$user" "$domain"
     fi
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

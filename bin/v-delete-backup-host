@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete backup ftp server
 # options: TYPE [HOST]
-# labels: 
 #
 # example: v-delete-backup-host sftp
 #
-# The function deletes ftp backup host
-
+# This function deletes ftp backup host
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -38,13 +35,13 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Deleting host config
 rm -f $HESTIA/conf/$type.backup.conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

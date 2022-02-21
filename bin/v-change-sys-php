@@ -1,0 +1,59 @@
+#!/bin/bash
+# info: Change default php version server wide
+# options: VERSION
+
+# example: v-change-sys-php 8.0
+
+version=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'VERSION'
+
+# Verify php version format
+if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
+    echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
+    echo "Example: 7.0, 7.4, 8.0"
+    exit "$E_INVALID";
+fi
+
+# Check if php version exists
+version_check=$($HESTIA/bin/v-list-sys-php plain | grep "$version");
+if [ -z "$version_check" ] ; then
+    echo "ERROR: Specified PHP version is not installed."
+    exit "$E_INVALID";
+fi
+
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Set file locations
+php_fpm="/etc/init.d/php$version-fpm"
+
+
+rm -f /etc/php/*/fpm/pool.d/www.conf
+cp -f $HESTIA/install/deb/php-fpm/www.conf /etc/php/$version/fpm/pool.d/www.conf
+$HESTIA/bin/v-restart-web-backend
+
+update-alternatives --set php /usr/bin/php$version
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+log_event "$OK" "$ARGUMENTS"

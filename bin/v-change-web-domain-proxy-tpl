@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change web domain proxy template
 # options: USER DOMAIN TEMPLATE [EXTENTIONS] [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-proxy-tpl admin domain.tld hosting
 #
-# The function changes proxy template
-
+# This function changes proxy template
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -39,7 +37,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -56,7 +53,6 @@ is_proxy_template_valid $template
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -82,7 +78,6 @@ add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
 if [ "$SSL" = 'yes' ]; then
     add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

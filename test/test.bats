@@ -348,6 +348,9 @@ function check_ip_not_banned(){
     run v-change-user-shell $user bash
     assert_success
     refute_output
+    
+    run stat -c '%U' /home/$user
+    assert_output --partial "$user"
 }
 
 @test "Change user invalid shell" {
@@ -355,6 +358,16 @@ function check_ip_not_banned(){
     assert_failure $E_INVALID
     assert_output --partial 'shell bashinvalid is not valid'
 }
+
+@test "Change user nologin" {
+    run v-change-user-shell $user nologin
+    assert_success
+    refute_output
+    
+    run stat -c '%U' /home/$user
+    assert_output --partial 'root'
+}
+
 
 @test "Change user default ns" {
     run v-change-user-ns $user ns0.com ns1.com ns2.com ns3.com
@@ -748,26 +761,37 @@ function check_ip_not_banned(){
 }
 
 @test "WEB: Add IDN domain ASCII idn-tést.eu" {
- # Expected to fail due to utf exists
- run v-add-web-domain $user $( idn -a idn-tést.eu) 198.18.0.125
- assert_failure $E_EXISTS
-
+   # Expected to fail due to utf exists
+   run v-add-web-domain $user $( idn -a idn-tést.eu) 198.18.0.125
+   assert_failure $E_EXISTS
 }
+
+
+@test "WEB: Generate Self signed certificate ASCII idn-tést.eu" {
+    run v-generate-ssl-cert "xn--idn-tst-fya.eu" "info@xn--idn-tst-fya.eu" US CA "Orange County" HestiaCP IT "mail.xn--idn-tst-fya.eu"
+    assert_success
+}
+
 
 @test "WEB: Delete IDN domain idn-tést.eu" {
- run v-delete-web-domain $user idn-tést.eu
- assert_success
- refute_output
+   run v-delete-web-domain $user idn-tést.eu
+   assert_success
+   refute_output
 }
  
-@test "WEB: Add IDN domain UTF bløst.com" {
- run v-add-web-domain $user bløst.com 198.18.0.125
- assert_success
- refute_output
+@test "WEB: Add IDN domain UTF bløst.рф" {
+   run v-add-web-domain $user bløst.рф 198.18.0.125
+   assert_success
+   refute_output
 }
 
-@test "WEB: Delete IDN domain bløst.com" {
- run v-delete-web-domain $user bløst.com
+@test "WEB: Generate Self signed certificate ASCII bløst.рф" {
+    run v-generate-ssl-cert "xn--blst-hra.xn--p1ai" "info@xn--blst-hra.xn--p1ai" US CA "Orange County" HestiaCP IT "mail.xn--blst-hra.xn--p1ai"
+    assert_success
+}
+
+@test "WEB: Delete IDN domain bløst.рф" {
+ run v-delete-web-domain $user bløst.рф
  assert_success
  refute_output
 }

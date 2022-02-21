@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Rebuild Function Library                           #
+#                                                                           #
+#===========================================================================#
+
 # User account rebuild
 rebuild_user_conf() {
 
@@ -712,7 +719,9 @@ rebuild_mysql_database() {
     mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" >/dev/null
     if [ "$mysql_fork" = "mysql" ]; then
         # mysql
-        if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
+        mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+        mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
+        if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
             # mysql >= 5.7
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" > /dev/null
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" > /dev/null
@@ -735,10 +744,13 @@ rebuild_mysql_database() {
             # mariadb = 10
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\` IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
-            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
             if [ "$mysql_ver_sub_sub" -ge 4 ]; then
+                #mariadb >= 10.4
                 query="SET PASSWORD FOR '$DBUSER'@'%' = '$MD5';"
                 query2="SET PASSWORD FOR '$DBUSER'@'localhost' = '$MD5';"
+            else
+                #mariadb < 10.4
+                query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
             fi
         fi
     fi

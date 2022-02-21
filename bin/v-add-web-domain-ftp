@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add ftp account for web domain.
 # options: USER DOMAIN FTP_USER FTP_PASSWORD [FTP_PATH]
-# labels: web
 #
 # example: v-add-web-domain-ftp alice wonderland.com alice_ftp p4$$vvOrD
 #
-# The function creates additional ftp account for web domain.
-
+# This function creates additional ftp account for web domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,7 +33,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -57,7 +54,6 @@ is_password_valid
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -113,7 +109,6 @@ ftp_md5=$(awk -v user=$ftp_user -F : 'user == $1 {print $2}' /etc/shadow)
 
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail "$ftp_user"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -149,6 +149,10 @@ class HestiaApp {
         unlink($v_password);
         return $status;
     }
+    
+    public function changeWebTemplate(string $domain, string $template){
+        $status = $this->runUser('v-change-web-domain-tpl', [$domain, $template]);
+    } 
 
     public function getWebDomainIp(string $domain)
     {

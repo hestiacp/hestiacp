@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list database host
 # options: TYPE HOST [FORMAT]
-# labels: panel
 #
 # example: v-list-database-host mysql localhost
 #
-# The function for obtaining database host parameters.
-
+# This function for obtaining database host parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -83,7 +81,6 @@ is_type_format_valid() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -110,7 +107,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1540,7 +1540,6 @@ if [ "$mysql" = 'yes' ]; then
 
     # Securing MariaDB installation
     mpass=$(gen_pass)
-    mysqladmin -u root password $mpass >> $LOG
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
     

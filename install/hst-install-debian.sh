@@ -1518,6 +1518,9 @@ if [ "$mysql" = 'yes' ]; then
     systemctl start mysql >> $LOG
     check_result $? "mariadb start failed"
 
+    echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
+    chmod 600 /root/.my.cnf
+    
     # Ater root password
     mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
     # Remove root login from remote servers 

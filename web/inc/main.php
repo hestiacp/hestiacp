@@ -223,8 +223,8 @@ function top_panel($user, $TAB)
     $command = HESTIA_CMD . 'v-list-user ' . escapeshellarg($user) . " 'json'";
     exec($command, $output, $return_var);
     if ($return_var > 0) {
-        echo '<span style="font-size: 18px;"><b>ERROR: Unable to retrieve account details.</b><br>Please <b><a href="/login/">log in</a></b> again.</span>';
         destroy_sessions();
+        $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
         header('Location: /login/');
         exit;
     }
@@ -234,8 +234,8 @@ function top_panel($user, $TAB)
     // Log out active sessions for suspended users
     if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
         if(empty($_SESSION['look'])){
-        $_SESSION['error_msg'] = 'You have been logged out. Please log in again.';
         destroy_sessions();
+        $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
         header('Location: /login/');
         }
     }

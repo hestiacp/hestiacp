@@ -60,6 +60,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id']))) {
     exec(HESTIA_CMD."v-list-dns-records ".$user." ".$v_domain." 'json'", $output, $return_var);
     check_return_code_redirect($return_var, $output,'/list/dns/');
     $data = json_decode(implode('', $output), true);
+    unset($output);
     // Parse dns record
     $v_username = $user;
     $v_domain = $_GET['domain'];

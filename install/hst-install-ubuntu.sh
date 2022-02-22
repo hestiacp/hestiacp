@@ -1551,7 +1551,7 @@ if [ "$mysql" = 'yes' ]; then
     mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
     # Drop test database
     mysql -e "DROP DATABASE IF EXISTS test"
-    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%"
+    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
     
     mysql -e "FLUSH PRIVILEGES;"
 fi

@@ -203,7 +203,7 @@ function verify_csrf($method, $return = false)
 function show_error_panel($data){
     if (!empty($data['error_msg'])) {
         $msg_icon = 'fa-exclamation-circle status-icon red';
-        $msg_text = $data['error_msg'];
+        $msg_text = htmlentities($data['error_msg']);
         $msg_id = 'vst-error';
     } else {
         if (!empty($data['ok_msg'])) {
@@ -213,7 +213,7 @@ function show_error_panel($data){
     }
     }
     ?>
-        <span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=htmlentities($msg_text);?></span>
+        <span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
     <?php
 }
 

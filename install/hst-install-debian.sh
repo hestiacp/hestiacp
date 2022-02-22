@@ -1508,6 +1508,7 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
+    # Run mysql_install_db 
     mysql_install_db >> $LOG
     # Remove symbolic link
     rm -f /etc/mysql/my.cnf
@@ -1518,6 +1519,7 @@ if [ "$mysql" = 'yes' ]; then
     systemctl start mysql >> $LOG
     check_result $? "mariadb start failed"
 
+    # Securing MariaDB installation
     mpass=$(gen_pass)
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf

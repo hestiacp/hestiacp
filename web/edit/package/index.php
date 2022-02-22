@@ -28,7 +28,7 @@ if ($_GET['package'] === 'system') {
 // List package
 $v_package = escapeshellarg($_GET['package']);
 exec(HESTIA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);
-check_return_code_redirect($return_var, $output, '/list/package/')
+check_return_code_redirect($return_var, $output, '/list/package/');
 $data = json_decode(implode('', $output), true);
 unset($output);
 

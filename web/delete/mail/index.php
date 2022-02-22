@@ -37,7 +37,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     exec(HESTIA_CMD."v-delete-mail-account ".$user." ".$v_domain." ".$v_account, $output, $return_var);
     check_return_code($return_var, $output);
     unset($output);
-    f($return_var > 0){
+    if($return_var > 0){
        header("Location: /list/mail/"); 
     }else{
     $back = $_SESSION['back'];

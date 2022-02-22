@@ -24,7 +24,7 @@ $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
-$v_domain=$_GET['domain'];
+$v_domain = $_GET['domain'];
 exec(HESTIA_CMD."v-list-web-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
 # Check if domain exists if not return /list/web/
 check_return_code_redirect($return_var, $output, '/list/web/');

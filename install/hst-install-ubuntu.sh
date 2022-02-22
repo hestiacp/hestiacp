@@ -1554,7 +1554,6 @@ if [ "$mysql" = 'yes' ]; then
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%"
     
     mysql -e "FLUSH PRIVILEGES;"
-
 fi
 
 

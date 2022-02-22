@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Function Description
+# Manual upgrade script from Nginx + Apache2 + PHP-FPM to Nginx + PHP-FPM
+
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#

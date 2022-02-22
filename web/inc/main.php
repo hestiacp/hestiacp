@@ -113,11 +113,11 @@ if (!defined('NO_AUTH_REQUIRED')) {
 }
 
 if (isset($_SESSION['user'])) {
-    $user = $_SESSION['user'];
+    $user = escapeshellarg($_SESSION['user']);
 }
 
 if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
-    $user = $_SESSION['look'];
+    $user = escapeshellarg($_SESSION['look']);
 }
 
 require_once(dirname(__FILE__) . '/i18n.php');
@@ -139,6 +139,17 @@ function check_return_code($return_var, $output)
         }
         $_SESSION['error_msg'] = $error;
     }
+}
+function check_return_code_redirect($return_var, $output, $location){
+    if ($return_var != 0) {
+        $error = implode('<br>', $output);
+        if (empty($error)) {
+            $error = sprintf(_('Error code:'), $return_var);
+        }
+        $_SESSION['error_msg'] = $error;
+        header("Location:".$location);
+    }
+
 }
 
 function render_page($user, $TAB, $page)
@@ -189,14 +200,31 @@ function verify_csrf($method, $return = false)
     }
 }
 
+function show_error_panel($data){
+    if (!empty($data['error_msg'])) {
+        $msg_icon = 'fa-exclamation-circle status-icon red';
+        $msg_text = $data['error_msg'];
+        $msg_id = 'vst-error';
+    } else {
+        if (!empty($data['ok_msg'])) {
+        $msg_icon = 'fa-check-circle status-icon green';
+        $msg_text = $data['ok_msg'];
+        $msg_id = 'vst-ok';
+    }
+    }
+    ?>
+        <span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=htmlentities($msg_text);?></span>
+    <?php
+}
+
 function top_panel($user, $TAB)
 {
     global $panel;
     $command = HESTIA_CMD . 'v-list-user ' . escapeshellarg($user) . " 'json'";
     exec($command, $output, $return_var);
     if ($return_var > 0) {
-        echo '<span style="font-size: 18px;"><b>ERROR: Unable to retrieve account details.</b><br>Please <b><a href="/login/">log in</a></b> again.</span>';
         destroy_sessions();
+        $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
         header('Location: /login/');
         exit;
     }
@@ -206,8 +234,8 @@ function top_panel($user, $TAB)
     // Log out active sessions for suspended users
     if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
         if(empty($_SESSION['look'])){
-        $_SESSION['error_msg'] = 'You have been logged out. Please log in again.';
         destroy_sessions();
+        $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
         header('Location: /login/');
         }
     }

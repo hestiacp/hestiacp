@@ -5,8 +5,8 @@
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 			<?php 
 				if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look'])) && ($_SESSION['user'] !== $v_username)) {
-					$ssh_key_url = "/list/key/?user=".$user."&token=".$_SESSION['token']."";
-					$log_url = "/list/log/?user=".$user."&token=".$_SESSION['token']."";
+					$ssh_key_url = "/list/key/?user=".htmlentities($user)."&token=".$_SESSION['token']."";
+					$log_url = "/list/log/?user=".htmlentities($user)."&token=".$_SESSION['token']."";
 				} else {
 					$ssh_key_url = "/list/key/";
 					$log_url = "/list/log/";
@@ -22,14 +22,14 @@
 			<?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
 				<!-- Do not show delete button for currently logged in user-->
 			<?} else {?>
-				<a href="/login/?loginas=<?=$v_username?>&token=<?=$_SESSION['token']?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('login as');?>"><i class="fas fa-sign-in-alt status-icon maroon"></i><?=_('login as');?></a>
+				<a href="/login/?loginas=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('login as');?>"><i class="fas fa-sign-in-alt status-icon maroon"></i><?=_('login as');?></a>
 				<div class="display-inline-block" key-action="js">
 					<a class="data-controls do_delete ui-button danger cancel">
 						<i class="do_delete fas fa-times-circle status-icon red"></i>
 						<?=_('Delete');?>
-						<input type="hidden" name="delete_url" value="/delete/user/?user=<?=$v_username?>&token=<?=$_SESSION['token']?>" />
+						<input type="hidden" name="delete_url" value="/delete/user/?user=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" />
 						<div class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
-							<p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),$v_username)?></p>
+							<p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
 						</div>
 					</a>
 				</div>
@@ -68,20 +68,7 @@
 						</tr>
 						<tr>
 							<td>
-								<?php
-									if (!empty($_SESSION['error_msg'])) {
-										$msg_icon = 'fa-exclamation-circle status-icon red';
-										$msg_text = htmlentities($_SESSION['error_msg']);
-										$msg_id = 'vst-error';
-									} else {
-										if (!empty($_SESSION['ok_msg'])) {
-											$msg_icon = 'fa-check-circle status-icon green';
-											$msg_text = $_SESSION['ok_msg'];
-											$msg_id = 'vst-ok';
-										}
-									}
-								?>
-								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
 						<tr>
@@ -158,7 +145,7 @@
 											<?php if (!empty($v_twofa)) { ?>
 											<p><?=_('2FA Reset Code:').' '.$v_twofa; ?></br></p>
 											<p><?=_('Please scan the code below in your 2FA application:'); ?></p>
-											<div><img class="qr-code" src="<?=$v_qrcode; ?>"></div>
+											<div><img class="qr-code" src="<?=htmlentities($v_qrcode); ?>"></div>
 											<?php } ?>
 										</td>
 									</tr>

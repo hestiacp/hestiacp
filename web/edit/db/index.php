@@ -20,7 +20,7 @@ if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
 // List datbase
 $v_database = $_GET['database'];
 exec(HESTIA_CMD."v-list-database ".$user." ".escapeshellarg($v_database)." 'json'", $output, $return_var);
-check_return_code($return_var, $output);
+check_return_code_redirect($return_var, $output, '/list/db/');
 $data = json_decode(implode('', $output), true);
 unset($output);
 

@@ -36,6 +36,9 @@ if (isset($_SESSION['user'])) {
                 unset($_SESSION['_sf2_attributes']);
                 unset($_SESSION['_sf2_meta']);
                 header('Location: /login/');
+            }else{
+                # User doesn't exists
+                header('Location: /');
             }
         }
         exit;

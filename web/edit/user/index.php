@@ -33,7 +33,8 @@ verify_csrf($_GET);
 
 // List user
 exec(HESTIA_CMD."v-list-user ".escapeshellarg($v_username)." json", $output, $return_var);
-check_return_code($return_var, $output);
+check_return_code_redirect($return_var, $output, '/list/user/');
+
 $data = json_decode(implode('', $output), true);
 unset($output);
 

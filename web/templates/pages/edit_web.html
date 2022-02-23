@@ -544,7 +544,7 @@
 													<tr>
 														<td class="vst-text step-left input-label">
 															<?=_('Username');?><br>
-															<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
+															<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 														</td>
 													</tr>
 													<tr>
@@ -624,7 +624,7 @@
 			<tr>
 				<td class="vst-text step-left input-label">
 					<?=_('Username');?><br>
-					<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
+					<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 				</td>
 			</tr>
 			<tr>
@@ -670,5 +670,5 @@
 	</div>
 </div>
 <script>
-	GLOBAL.FTP_USER_PREFIX = "<?php echo htmlentities($user.'_') ?>";
+	GLOBAL.FTP_USER_PREFIX =  "<?=$user_plain.'_';?>";
 </script>

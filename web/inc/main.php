@@ -114,10 +114,12 @@ if (!defined('NO_AUTH_REQUIRED')) {
 
 if (isset($_SESSION['user'])) {
     $user = escapeshellarg($_SESSION['user']);
+    $user_plain = htmlentities($_SESSION['user']);
 }
 
 if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
     $user = escapeshellarg($_SESSION['look']);
+    $user_plain = htmlentities($_SESSION['look']);
 }
 
 require_once(dirname(__FILE__) . '/i18n.php');

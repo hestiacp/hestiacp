@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.9] - Service release
+
+### Bugfixes
+
+- Fixed an issues with mariadb.sys user didn't work properly on MariaDB 10.6.x installs #2427
+- Change ipverse.net urls to new format hosted on Github #2429 and forum
+- Allow PRT to be used on domain.com 
+
+### Dependencies
+
+- Update PHPMailer to 6.5.4 (https://github.com/PHPMailer/PHPMailer/releases/tag/v6.5.4)
+- Update Filegator to 7.7.2 (https://github.com/filegator/filegator/releases/tag/v7.7.2)
+
 ## [1.5.8] - Service release
 
 ### Features

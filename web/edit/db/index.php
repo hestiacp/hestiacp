@@ -53,7 +53,7 @@ if (!empty($_POST['save'])) {
         exec(HESTIA_CMD."v-change-database-user ".$user." ".escapeshellarg($v_database)." ".$v_dbuser, $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
-        $v_dbuser = $_POST['v_dbuser']);
+        $v_dbuser = $_POST['v_dbuser'];
     }
 
     // Change database password

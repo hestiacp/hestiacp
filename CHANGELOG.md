@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issues with mariadb.sys user didn't work properly on MariaDB 10.6.x installs #2427
 - Change ipverse.net urls to new format hosted on Github #2429 and forum
-- Allow PRT to be used on domain.com 
+- Allow PTR to be used on domain.com 
 
 ### Dependencies
 

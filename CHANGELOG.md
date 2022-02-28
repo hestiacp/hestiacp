@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
+- Fixed multiple XSS vulnerabilities in the web user interface. [https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0752](CVE-2022-0752) / [https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0753](CVE-2022-0753)
 - Fixed an issues with mariadb.sys user didn't work properly on MariaDB 10.6.x installs #2427
 - Change ipverse.net urls to new format hosted on Github #2429 and forum
 - Allow PTR to be used on domain.com 
 
 ### Dependencies
 
-- Update PHPMailer to 6.5.4 (https://github.com/PHPMailer/PHPMailer/releases/tag/v6.5.4)
+- Update PHPMailer to 6.6.0 (https://github.com/PHPMailer/PHPMailer/releases/tag/v6.6.0)
 - Update Filegator to 7.7.2 (https://github.com/filegator/filegator/releases/tag/v7.7.2)
 
 ## [1.5.8] - Service release

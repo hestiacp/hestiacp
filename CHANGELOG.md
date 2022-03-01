@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fixed multiple XSS vulnerabilities in the web user interface. [CVE-2022-0752]([https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0752]) / [CVE-2022-0753]([https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0753])
+- Fixed multiple XSS vulnerabilities in the web user interface. [CVE-2022-0752](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0752) / [CVE-2022-0753](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0753)
 - Fixed an issues with mariadb.sys user didn't work properly on MariaDB 10.6.x installs #2427
 - Change ipverse.net urls to new format hosted on Github #2429 and forum
 - Allow PTR to be used on domain.com 

@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.8'
+HESTIA_INSTALL_VER='1.5.9'
 # Dependencies
 pma_v='5.1.3'
 rc_v="1.5.2"
@@ -1508,6 +1508,7 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
+    # Run mysql_install_db 
     mysql_install_db >> $LOG
     # Remove symbolic link
     rm -f /etc/mysql/my.cnf
@@ -1520,16 +1521,20 @@ if [ "$mysql" = 'yes' ]; then
 
     # Securing MariaDB installation
     mpass=$(gen_pass)
-    mysqladmin -u root password $mpass >> $LOG
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
-
-    # Clear MariaDB Test Users and Databases
-    mysql -e "DELETE FROM mysql.user WHERE User=''"
-    mysql -e "DROP DATABASE test" > /dev/null 2>&1
+    
+    # Ater root password
+    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
+    # Remove root login from remote servers 
+    mysql -e "DELETE FROM mysql.global_priv WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+    # Disable anonymous users
+    mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
+    # Drop test database
+    mysql -e "DROP DATABASE IF EXISTS test"
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-    mysql -e "DELETE FROM mysql.user WHERE user='';"
-    mysql -e "DELETE FROM mysql.user WHERE password='' AND authentication_string='';"
+    
+    mysql -e "FLUSH PRIVILEGES;"
 fi
 
 

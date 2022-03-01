@@ -16,10 +16,8 @@ if (!empty($_POST['ok'])) {
     }
 
     if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-        $user = $_GET['user'];
+        $user = escapeshellarg($_GET['user']);
     }
-
-    $user = escapeshellarg($user);
 
     if (!$_SESSION['error_msg']) {
         if ($_POST) {

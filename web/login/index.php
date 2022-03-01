@@ -36,6 +36,9 @@ if (isset($_SESSION['user'])) {
                 unset($_SESSION['_sf2_attributes']);
                 unset($_SESSION['_sf2_meta']);
                 header('Location: /login/');
+            }else{
+                # User doesn't exists
+                header('Location: /');
             }
         }
         exit;
@@ -108,7 +111,7 @@ function authenticate_user($user, $password, $twofa = '')
             if($return_var == 5){
                 $error = '<a class="error">' . _('Account has been suspended') . '</a>';   
             }elseif($return_var == 1){
-                $error = '<a class="error">' . _('Unsuported hash method') . '</a>';     
+                $error = '<a class="error">' . _('Unsupported hash method') . '</a>';     
             }else{
                 $error = '<a class="error">' . _('Invalid username or password') . '</a>';    
             }

@@ -39,20 +39,7 @@
 						</tr>
 						<tr>
 							<td>
-								<?php
-									if (!empty($_SESSION['error_msg'])) {
-										$msg_icon = 'fa-exclamation-circle status-icon red';
-										$msg_text = htmlentities($_SESSION['error_msg']);
-										$msg_id = 'vst-error';
-									} else {
-										if (!empty($_SESSION['ok_msg'])) {
-											$msg_icon = 'fa-check-circle status-icon green';
-											$msg_text = $_SESSION['ok_msg'];
-											$msg_id = 'vst-ok';
-										}
-									}
-								?>
-								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
 						<?php if (($user == 'admin') && (($_GET['accept'] !== "true")))  {?>
@@ -311,7 +298,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="hidden" name="v-custom-doc-root_prepath" value="<?=$v_custom_doc_root_prepath;?>">
+											<input type="hidden" name="v-custom-doc-root_prepath" value="<?=htmlentities($v_custom_doc_root_prepath);?>">
 											<select class="vst-list" name="v-custom-doc-domain">
 												<option value="<?=htmlentities(trim($v_domain, "'"))?>" id="v-custom-doc-domain-main"><?=htmlentities(trim($v_domain, "'"))?></option>
 												<?php
@@ -319,9 +306,9 @@
 														if($domain != $v_domain ){
 														if($v_custom_doc_domain == $domain){
 													?>
-													<option value="<?=$domain;?>" selected="selected"><?=$domain;?></option>
+													<option value="<?=htmlentities($domain);?>" selected="selected"><?=htmlentities($domain);?></option>
 												<?php } else{ ?>
-													<option value="<?=$domain;?>"><?=$domain;?></option>
+													<option value="<?=htmlentities($domain);?>"><?=htmlentities($domain);?></option>
 												<?php } } } ?>
 											</select>
 										</td>
@@ -502,7 +489,7 @@
 				<tr>
 					<td class="vst-text step-left input-label">
 						<?=_('Username');?><br>
-						<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
+						<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 					</td>
 				</tr>
 				<tr>
@@ -549,6 +536,6 @@
 	  </div>
 
 	<script>
-		GLOBAL.FTP_USER_PREFIX = "<?=htmlentities($user.'_');?>";
+		GLOBAL.FTP_USER_PREFIX =  "<?=$user_plain.'_';?>";
 		GLOBAL.FTP_USER_PREPATH = "<?=htmlentities($v_ftp_user_prepath);?>";
 	</script>

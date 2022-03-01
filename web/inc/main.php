@@ -114,10 +114,12 @@ if (!defined('NO_AUTH_REQUIRED')) {
 
 if (isset($_SESSION['user'])) {
     $user = escapeshellarg($_SESSION['user']);
+    $user_plain = htmlentities($_SESSION['user']);
 }
 
 if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
     $user = escapeshellarg($_SESSION['look']);
+    $user_plain = htmlentities($_SESSION['look']);
 }
 
 require_once(dirname(__FILE__) . '/i18n.php');
@@ -203,7 +205,7 @@ function verify_csrf($method, $return = false)
 function show_error_panel($data){
     if (!empty($data['error_msg'])) {
         $msg_icon = 'fa-exclamation-circle status-icon red';
-        $msg_text = $data['error_msg'];
+        $msg_text = htmlentities($data['error_msg']);
         $msg_id = 'vst-error';
     } else {
         if (!empty($data['ok_msg'])) {
@@ -213,7 +215,7 @@ function show_error_panel($data){
     }
     }
     ?>
-        <span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=htmlentities($msg_text);?></span>
+        <span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
     <?php
 }
 

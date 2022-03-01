@@ -5,24 +5,17 @@ $TAB = 'MAIL';
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-// Get all user domains
-exec(HESTIA_CMD."v-list-mail-domains ".escapeshellarg($user)." json", $output, $return_var);
-$user_domains = json_decode(implode('', $output), true);
-$user_domains = array_keys($user_domains);
-unset($output);
-
 exec(HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
 $webmail_clients = json_decode(implode('', $output), true);
 unset($output);
 
 $v_domain = $_GET['domain'];
 if (!empty($v_domain)) {
-    if (!in_array($v_domain, $user_domains)) {
-        header("Location: /list/mail/");
-        exit;
-    }
     // Set webmail alias
-    exec(HESTIA_CMD."v-list-mail-domain ".escapeshellarg($user)." ".escapeshellarg($v_domain)." json", $output, $return_var);
+    exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+    if($return_var > 0){
+        check_return_code_redirect($return_var, $output, '/list/mail/');
+    }
     $data = json_decode(implode('', $output), true);
     unset($output);
     $v_webmail_alias = $data[$v_domain]['WEBMAIL_ALIAS'];

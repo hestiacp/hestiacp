@@ -489,7 +489,7 @@
 				<tr>
 					<td class="vst-text step-left input-label">
 						<?=_('Username');?><br>
-						<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
+						<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 					</td>
 				</tr>
 				<tr>
@@ -536,6 +536,6 @@
 	  </div>
 
 	<script>
-		GLOBAL.FTP_USER_PREFIX = "<?=htmlentities($user.'_');?>";
+		GLOBAL.FTP_USER_PREFIX =  "<?=$user_plain.'_';?>";
 		GLOBAL.FTP_USER_PREPATH = "<?=htmlentities($v_ftp_user_prepath);?>";
 	</script>

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.9
+# Hestia Control Panel upgrade script for target version 1.6.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -18,5 +18,11 @@
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
+# Upgrade config exim for custom limits
+config='/etc/exim4/exim4.conf.template'
+
+sed -i '115,250 s/ratelimit             = 200 \/ 1h \/ $authenticated_id/ set acl_c_msg_limit = ${if exists{\/etc\/exim4\/domains\/$sender_address_domain\/limits\/$sender_address} {${readfile{\/etc\/exim4\/domains\/$sender_address_domain\/limits\/$sender_address}}} {${readfile{\/etc\/exim4\/limit.conf}}} } \n ratelimit     = $acl_c_msg_limit \/ 1h \/ strict\/ $authenticated_id/g' $config
+sed -i '115,250 s/warn    ratelimit     = 100 \/ 1h \/ strict \/ $authenticated_id/warn    ratelimit     = ${eval:$acl_c_msg_limit \/ 2} \/ 1h \/ strict \/ $authenticated_id/g' $config

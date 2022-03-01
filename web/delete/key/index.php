@@ -7,13 +7,12 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 verify_csrf($_GET);
 
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user = $_GET['user'];
+    $user=escapeshellarg($_GET['user']);
 }
 
 if (!empty($_GET['key'])) {
     $v_key = escapeshellarg(trim($_GET['key']));
-    $v_user = escapeshellarg(trim($user));
-    exec(HESTIA_CMD."v-delete-user-ssh-key ".$v_user." ".$v_key);
+    exec(HESTIA_CMD."v-delete-user-ssh-key ".$user." ".$v_key);
     check_return_code($return_var, $output);
 }
 

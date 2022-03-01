@@ -5,7 +5,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Delete as someone else?
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user=$_GET['user'];
+    $user=escapeshellarg($_GET['user']);
 }
 
 // Check token
@@ -13,9 +13,8 @@ verify_csrf($_GET);
 
 // DNS domain
 if ((!empty($_GET['domain'])) && (empty($_GET['record_id']))) {
-    $v_username = escapeshellarg($user);
     $v_domain = escapeshellarg($_GET['domain']);
-    exec(HESTIA_CMD."v-delete-dns-domain ".$v_username." ".$v_domain, $output, $return_var);
+    exec(HESTIA_CMD."v-delete-dns-domain ".$user." ".$v_domain, $output, $return_var);
     check_return_code($return_var, $output);
     unset($output);
 
@@ -41,8 +40,14 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id']))) {
         header("Location: ".$back);
         exit;
     }
-    header("Location: /list/dns/?domain=".$_GET['domain']);
-    exit;
+    if($return_var > 0){
+        header("Location: /list/dns/");
+        exit;
+    }else{
+        header("Location: /list/dns/?domain=".$_GET['domain']);
+        exit;
+    }
+    
 }
 
 $back = $_SESSION['back'];

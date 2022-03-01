@@ -19,28 +19,13 @@ if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
 
 $v_username = $user;
 
-// Get all user domains
-exec(HESTIA_CMD."v-list-mail-domains ".escapeshellarg($user)." json", $output, $return_var);
-$user_domains = json_decode(implode('', $output), true);
-$user_domains = array_keys($user_domains);
-unset($output);
-
-exec(HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
-$webmail_clients = json_decode(implode('', $output), true);
-unset($output);
-
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_domain = $_GET['domain'];
-    if ($_SESSION['userContext'] !== 'admin') {
-        if (!in_array($v_domain, $user_domains)) {
-            header("Location: /list/mail/");
-            exit;
-        }
-    }
 
     exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
+    check_return_code_redirect($return_var, $output, '/list/mail/');
     unset($output);
 
     // Parse domain
@@ -89,16 +74,11 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 // List mail account
 if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     $v_domain = $_GET['domain'];
-    if ($_SESSION['userContext'] !== 'admin') {
-        if (!in_array($v_domain, $user_domains)) {
-            header("Location: /list/mail/");
-            exit;
-        }
-    }
 
     $v_account = $_GET['account'];
     exec(HESTIA_CMD."v-list-mail-account ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." 'json'", $output, $return_var);
     $data = json_decode(implode('', $output), true);
+    check_return_code_redirect($return_var, $output, '/list/mail/');
     unset($output);
 
     // Parse mail account
@@ -140,14 +120,15 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
 
 // Check POST request for mail domain
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['account']))) {
-    $v_domain = $_POST['v_domain'];
-    if (!in_array($v_domain, $user_domains)) {
-        check_return_code(3, ["Unknown domain"]);
-    }
-
     // Check token
     verify_csrf($_POST);
-
+    
+    
+    exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    check_return_code_redirect($return_var, $output, '/list/mail/');
+    unset($output);
+    
     // Delete antispam
     if (($v_antispam == 'yes') && (empty($_POST['v_antispam'])) && (empty($_SESSION['error_msg']))) {
         exec(HESTIA_CMD."v-delete-mail-domain-antispam ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
@@ -473,14 +454,14 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
         }
     }
 
-    $v_domain = $_POST['v_domain'];
-    if (!in_array($v_domain, $user_domains)) {
-        check_return_code(3, ["Unknown domain"]);
-    }
-
     $v_account = $_POST['v_account'];
     $v_send_email = $_POST['v_send_email'];
     $v_credentials = $_POST['v_credentials'];
+
+    exec(HESTIA_CMD."v-list-mail-account ".$user." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." json", $output, $return_var);
+    $data = json_decode(implode('', $output), true);
+    check_return_code_redirect($return_var, $output, '/list/mail/');
+    unset($output);
 
     // Change password
     if ((!empty($_POST['v_password'])) && (empty($_SESSION['error_msg']))) {

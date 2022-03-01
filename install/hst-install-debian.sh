@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.9~alpha'
+HESTIA_INSTALL_VER='1.6.0~alpha'
 # Dependencies
 pma_v='5.1.3'
 rc_v="1.5.2"
@@ -1532,7 +1532,7 @@ if [ "$mysql" = 'yes' ]; then
     mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
     # Drop test database
     mysql -e "DROP DATABASE IF EXISTS test"
-    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%"
+    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
     
     mysql -e "FLUSH PRIVILEGES;"
 fi

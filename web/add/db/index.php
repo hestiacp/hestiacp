@@ -115,7 +115,7 @@ if (!empty($_POST['ok'])) {
         $hostname = exec('hostname');
         $from = "noreply@".$hostname;
         $from_name = _('Hestia Control Panel');
-        $mailtext = sprintf(_('DATABASE_READY'), $user."_".$_POST['v_database'], $user."_".$_POST['v_dbuser'], $_POST['v_password'], $db_admin_link);
+        $mailtext = sprintf(_('DATABASE_READY'), $user_plain."_".$_POST['v_database'], $user_plain."_".$_POST['v_dbuser'], $_POST['v_password'], $db_admin_link);
         send_email($to, $subject, $mailtext, $from, $from_name);
     }
 

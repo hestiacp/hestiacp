@@ -160,7 +160,7 @@ steps:
         port: 22
         command_timeout: 2m
         script:
-            - freight-add ./hestia/*.deb apt/bionic apt/focal apt/strech apt/buster apt/bullseye
+            - freight-add ./hestia/*.deb apt/bionic apt/focal apt/stretch apt/buster apt/bullseye
             - freight-cache
             - rm -fr ./hestia/
   
@@ -169,4 +169,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 31806a1e5357c43d17d24ef797995fb9952a1d883ad282fd152d7d0378112213
+hmac: 07f845f902f859c97c78a346d340f7fb8d4b1242581a242e592b149c13428f50

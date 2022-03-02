@@ -22,7 +22,11 @@ $v_username = $user;
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_domain = $_GET['domain'];
-
+    
+    exec(HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
+    $webmail_clients = json_decode(implode('', $output), true);
+    unset($output);
+    
     exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     check_return_code_redirect($return_var, $output, '/list/mail/');

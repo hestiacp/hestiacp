@@ -4,7 +4,7 @@
 App.Actions.DB.update_dns_record_hint = function(elm, hint) {
     // clean hint
     if (hint.trim() == '') {
-        $(elm).parent().find('.hint').html('');
+        $(elm).parent().find('.hint').text('');
     }
 
     // set domain name without rec in case of @ entries

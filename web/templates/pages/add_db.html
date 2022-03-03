@@ -61,7 +61,7 @@
 						<?php if (($user == 'admin') && (($_GET['accept'] === "true")) || ($user !== "admin"))  {?>
 							<tr>
 								<td class="hint">
-									<?=sprintf(_('Prefix %s will be automatically added to database name and database user'),'<b>'.$user.'_</b>'); ?>
+									<?=sprintf(_('Prefix %s will be automatically added to database name and database user'),'<b>'.$user_plain.'_</b>'); ?>
 								</td>
 								</td>
 							</tr>
@@ -227,6 +227,6 @@
 </div>
 
 <script>
-GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>";
-GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>";
+GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
+GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
 </script>

@@ -242,47 +242,48 @@ if (!empty($_POST['save'])) {
         unset($output);
         $v_hostname = $_POST['v_hostname'];
     }
-
-    // Install/remove php versions
-    if (empty($_SESSION['error_msg'])) {
-        if (!empty($v_php_versions)) {
-            $post_php = $_POST['v_php_versions'];
-            if(empty($post_php)){
-                $post_php = array();
-            }
-
-            array_map(function ($php_version) use ($post_php) {
-                if (array_key_exists($php_version->tpl, $post_php)) {
-                    if (!$php_version->installed) {
-                        exec(HESTIA_CMD . "v-add-web-php " . escapeshellarg($php_version->version), $output, $return_var);
-                        check_return_code($return_var, $output);
-                        unset($output);
-                        if (empty($_SESSION['error_msg'])) {
-                            $php_version->installed = true;
-                        }
-                    }
-                } else {
-                    if ($php_version->installed && !$php_version->protected) {
-                        exec(HESTIA_CMD . "v-delete-web-php " . escapeshellarg($php_version->version), $output, $return_var);
-                        check_return_code($return_var, $output);
-                        unset($output);
-                        if (empty($_SESSION['error_msg'])) {
-                            $php_version->installed = false;
-                        }
-                    }
-                }
-
-                return $php_version;
-            }, $v_php_versions);
-        }
-    }
     
-    if (empty($_SESSION['error_msg'])) {
-        if($_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
-            exec(HESTIA_CMD . "v-change-sys-php " . escapeshellarg($_POST['v_php_default_version']), $output, $return_var);
-            check_return_code($return_var, $output);
-            unset($output);
-        }   
+    if($_SESSION['WEB_BACKEND'] == "php-fpm"){
+        // Install/remove php versions
+        if (empty($_SESSION['error_msg'])) {
+            if (!empty($v_php_versions)) {
+                $post_php = $_POST['v_php_versions'];
+                if(empty($post_php)){
+                    $post_php = array();
+                }
+                array_map(function ($php_version) use ($post_php) {
+                    if (array_key_exists($php_version->tpl, $post_php)) {
+                        if (!$php_version->installed) {
+                            exec(HESTIA_CMD . "v-add-web-php " . escapeshellarg($php_version->version), $output, $return_var);
+                            check_return_code($return_var, $output);
+                            unset($output);
+                            if (empty($_SESSION['error_msg'])) {
+                                $php_version->installed = true;
+                            }
+                        }
+                    } else {
+                        if ($php_version->installed && !$php_version->protected) {
+                            exec(HESTIA_CMD . "v-delete-web-php " . escapeshellarg($php_version->version), $output, $return_var);
+                            check_return_code($return_var, $output);
+                            unset($output);
+                            if (empty($_SESSION['error_msg'])) {
+                                $php_version->installed = false;
+                            }
+                        }
+                    }
+    
+                    return $php_version;
+                }, $v_php_versions);
+            }
+        }
+        
+        if (empty($_SESSION['error_msg'])) {
+            if($_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
+                exec(HESTIA_CMD . "v-change-sys-php " . escapeshellarg($_POST['v_php_default_version']), $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
+            }   
+        }
     }
     
     // Change timezone

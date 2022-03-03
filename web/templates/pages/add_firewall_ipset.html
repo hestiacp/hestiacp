@@ -102,14 +102,14 @@
 		<?php 
 			$country = array('ca' => 'Canada', 'cn' => 'China', 'fr' => 'French', 'de' => 'Germany', 'in' => 'India', 'nl' => 'Netherlands', 'ro' => 'Romania', 'ru' => 'Russia', 'es' => 'Spain', 'ch' => 'Switzerland', 'tr' => 'Turkey', 'ua' => 'Ukraine',  'uk' => 'United Kingdom', 'us' => 'United States');
 			foreach($country as $iso =>$name){
-				echo '{name: "[IPV] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv4-aggregated.txt"},'."\n";
+				echo '{name: "[IPv4] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv4-aggregated.txt"},'."\n";
 			}
 		?>
 		// Define IPv6 country lists
 		/*
 		<?php
 			foreach($country as $iso =>$name){
-				echo '{name: "[IPV] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv4-aggregated.txt"},'."\n";
+				echo '{name: "[IPv6] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv6-aggregated.txt"},'."\n";
 			}
 		?>
 		*/

@@ -33,7 +33,7 @@ if [ -n "$(echo $DB_SYSTEM | grep -w mysql)" ]; then
     if [ "$mysql_version2" = "10.6" ]; then 
         test=$(mysql -e "select * from mysql.global_priv;" | grep root | grep unix_socket);
         if [ -z "$test" ]; then 
-            echo "[ * ] Fixed an issue with MariaDB stating up"
+            echo "[ ! ] Updating MariaDB permissions to fix startup issue "
             mysql --defaults-file=/usr/local/hestia/conf/.mysql.localhost -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
         fi
     fi

@@ -121,7 +121,7 @@ if (!empty($_POST['ok'])) {
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = sprintf(_('DATABASE_CREATED_OK'), htmlentities($user)."_".htmlentities($_POST['v_database']), htmlentities($user)."_".htmlentities($_POST['v_database']));
+        $_SESSION['ok_msg'] = sprintf(_('DATABASE_CREATED_OK'), htmlentities($user_plain)."_".htmlentities($_POST['v_database']), htmlentities($user)."_".htmlentities($_POST['v_database']));
         $_SESSION['ok_msg'] .= " / <a href=".$db_admin_link." target='_blank'>" . sprintf(_('open %s'), $db_admin) . "</a>";
         unset($v_database);
         unset($v_dbuser);

@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.10] - Service release
+
+### Bugfixes
+- Fixed an issue where webmail client options were not displayed in the Web UI (#2445)
+- Fixed an issue where MariaDB would fail to start (#2446)
+- Fixed an issue where saving server settings could fail due to an incorrect PHP version check on mod-php servers (#2451)
+- Fixed an issue where MariaDB installations were broken when performing a clean install of HestiaCP v1.5.9 (#2452)
+- Fixed recently discovered XSS vulnerabilities (#2453)
+
 ## [1.5.9] - Service release
 
 ### Bugfixes

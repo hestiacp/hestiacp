@@ -126,6 +126,6 @@
 </div>
 <?php if ($v_type == 'pgsql'){ $user=strtolower($user); } ?>
 <script>
-    GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>";
-    GLOBAL.DB_DBNAME_PREFIX =  "<?=$user_plain;?>";
+    GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
+    GLOBAL.DB_DBNAME_PREFIX =  "<?=$user_plain;?>_";
 </script>

@@ -3,7 +3,7 @@
     var domain = $('select[name="v-custom-doc-domain"]').val();
     var folder = $('input[name="v-custom-doc-folder"]').val();
     console.log(domain, folder);
-    $('.custom_docroot_hint').html(prepath+domain+'/public_html/'+folder);
+    $('.custom_docroot_hint').text(prepath+domain+'/public_html/'+folder);
 }
 App.Listeners.DB.keypress_custom_folder = function() {
     var ref = $('input[name="v-custom-doc-folder"]');
@@ -40,7 +40,7 @@ App.Listeners.DB.change_custom_doc();
 
 App.Actions.WEB.update_ftp_username_hint = function(elm, hint) {
     if (hint.trim() == '') {
-        $(elm).parent().find('.hint').html('');
+        $(elm).parent().find('.hint').text('');
     }
     
     hint = hint.replace(/[^\w\d]/gi, '');
@@ -88,7 +88,7 @@ App.Listeners.WEB.keypress_domain_name = function() {
 
 App.Actions.WEB.update_ftp_path_hint = function(elm, hint) {
     if (hint.trim() == '') {
-        $(elm).parent().find('.v-ftp-path-hint').html('');
+        $(elm).parent().find('.v-ftp-path-hint').text('');
     }
 
     if (hint[0] != '/') {

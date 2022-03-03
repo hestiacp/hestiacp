@@ -24,16 +24,17 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 # shellcheck source=/usr/local/hestia/func/db.sh
 source $HESTIA/func/db.sh
 
-mysql_connect 'localhost'
-
-version=$(mysql --defaults-file=/usr/local/hestia/conf/.mysql.localhost -e 'SELECT VERSION()')
-mysql_version=$(echo $version | grep -o -E '[0-9]*.[0-9].[0-9]+' | head -n1);
-mysql_version2=$(echo $mysql_version | grep -o -E '[0-9]*.[0-9]' | head -n1 );
-
-if [ "$mysql_version2" = "10.6" ]; then 
-    test=$(mysql -e "select * from mysql.global_priv;" | grep root | grep unix_socket);
-    if [ -z "$test" ]; then 
-        echo "[ * ] Fixed an issue with MariaDB stating up"
-        mysql --defaults-file=/usr/local/hestia/conf/.mysql.localhost -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+if [ -n "$(echo $DB_SYSTEM | grep -w mysql)" ]; then
+    mysql_connect 'localhost'
+    version=$(mysql --defaults-file=/usr/local/hestia/conf/.mysql.localhost -e 'SELECT VERSION()')
+    mysql_version=$(echo $version | grep -o -E '[0-9]*.[0-9].[0-9]+' | head -n1);
+    mysql_version2=$(echo $mysql_version | grep -o -E '[0-9]*.[0-9]' | head -n1 );
+    
+    if [ "$mysql_version2" = "10.6" ]; then 
+        test=$(mysql -e "select * from mysql.global_priv;" | grep root | grep unix_socket);
+        if [ -z "$test" ]; then 
+            echo "[ * ] Fixed an issue with MariaDB stating up"
+            mysql --defaults-file=/usr/local/hestia/conf/.mysql.localhost -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+        fi
     fi
-fi 
+fi

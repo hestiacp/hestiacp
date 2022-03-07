@@ -10,7 +10,7 @@
 				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
 					<a href="/edit/user/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 				<?php } else { ?>
-					<a href="/edit/user/?user=<?=$user;?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+					<a href="/edit/user/?token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 				<?php } ?>
 			<?php } ?>
 			<?php if ($_SESSION['DEMO_MODE'] != "yes"){

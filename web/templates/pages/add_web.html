@@ -5,7 +5,7 @@
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 		</div>
 		<div class="l-unit-toolbar__buttonstrip float-right">
-			<?php if (($user == 'admin') && (($_GET['accept'] === "true")) || ($user !== "admin"))  {?>
+			<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin"))  {?>
 				<a href="#" class="ui-button" title="<?=_('Save');?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
 			<?php } ?>
 		</div>
@@ -42,7 +42,7 @@
 								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
-						<?php if (($user == 'admin') && (($_GET['accept'] !== "true")))  {?>
+						<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
 							<tr>
 								<td class="step-top">
 									<span class="alert alert-danger alert-with-icon">
@@ -52,7 +52,7 @@
 								</td>
 							</tr>
 						<?php } ?>
-						<?php if (($user == 'admin') && (empty($_GET['accept']))) {?>
+						<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
 							<tr>
 								<td class="step-top">
 									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
@@ -60,7 +60,7 @@
 								</td>
 							</tr>
 						<?php } ?>
-						<?php if (($user == 'admin') && (($_GET['accept'] === "true")) || ($user !== "admin")) {?>
+						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
 							<tr>
 								<td class="vst-text step-top">
 									<?=_('Domain');?>

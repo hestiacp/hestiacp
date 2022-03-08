@@ -32,6 +32,8 @@ if [ "$PORT" != "8083" ]; then
     
     # Restart services
     if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
-        $HESTIA/bin/v-restart-service iptables
+        $HESTIA/bin/v-stop-firewall
+        $HESTIA/bin/v-update-firewall
+                
     fi
 fi

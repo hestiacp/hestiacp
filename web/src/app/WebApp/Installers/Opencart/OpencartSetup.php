@@ -45,6 +45,17 @@ class OpencartSetup extends BaseSetup
         $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot("config-dist.php"), $this->getDocRoot("config.php")]);
         $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot("admin/config-dist.php"), $this->getDocRoot("admin/config.php")]);
         $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot(".htaccess.txt"), $this->getDocRoot(".htaccess")]);
+        #Check if SSL is enabled 
+        $this->appcontext->run('v-list-web-domain', [$this -> appcontext->user(),$this -> domain,'json'], $status);
+        if ($status->code !== 0) {
+            throw new \Exception("Cannot list domain");
+        }
+        if ($status -> json[$this -> domain]['SSL'] == 'no') {
+            $protocol = 'http://';
+        } else {
+            $protocol = 'https://';
+        }
+        
         $this->appcontext->runUser('v-run-cli-cmd', [
             "/usr/bin/php",
             $this->getDocRoot("/install/cli_install.php"),
@@ -55,7 +66,7 @@ class OpencartSetup extends BaseSetup
             "--username "    . $options['opencart_account_username'],
             "--password "    . $options['opencart_account_password'],
             "--email "       . $options['opencart_account_email'],
-            "--http_server " . "http://" . $this->domain . "/"], $status);
+            "--http_server " . $protocol . $this->domain . "/"], $status);
 
         // After install, 'storage' folder must be moved to a location where the web server is not allowed to serve file
         // - Opencart Nginx template and Apache ".htaccess" forbids acces to /storage folder

@@ -1,14 +1,19 @@
 #!/bin/bash
 # info: generate api key
-# options: NONE
+# options: [USER] [SCRIPTS]
 #
-# example: v-generate-api-key 
+# example: v-generate-api-key admin v-purge-nginx-cache,v-list-mail-accounts
 #
 # This function creates a key file in $HESTIA/data/keys/
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
+
+# Argument definition
+#user=$1
+user=${1:-admin}
+scripts=$2 # TODO Add wildcards
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -26,6 +31,22 @@ HASH=$(keygen)
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+# Remove whitespace and bin path from scripts
+scripts="$(cleanup_api_scripts "$scripts")"
+
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+#check_args '1' "$#" 'USER [SCRIPTS] [FORMAT]'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_api_script_format_valid "$scripts" "$user"
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -36,14 +57,20 @@ if [ ! -d "$HESTIA/data/keys/" ]; then
     chmod 750 $HESTIA/data/keys/
 fi
 
-if [[ -e "$HESTIA/data/keys/$HASH" ]] ; then
-    while [[ -e "$HESTIA/data/keys/$HASH" ]] ; do
+if [[ -e "$HESTIA/data/keys/$HASH" ]]; then
+    while [[ -e "$HESTIA/data/keys/$HASH" ]]; do
         HASH=$(keygen)
     done
 fi
 
-touch $HESTIA/data/keys/$HASH
-echo "$HASH"
+echo "USER='$user'" >$HESTIA/data/keys/$HASH
+echo "SCRIPTS='$scripts'" >>$HESTIA/data/keys/$HASH
+echo "TIME='$time'" >>$HESTIA/data/keys/$HASH
+echo "DATE='$date'" >>$HESTIA/data/keys/$HASH
+
+echo "USER:    $user"
+echo "SCRIPTS: ${scripts:-all}"
+echo "KEY:     $HASH"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

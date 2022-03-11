@@ -1,0 +1,85 @@
+#!/bin/bash
+# info: display data of an api key
+# options: KEY [FORMAT]
+#
+# example: v-list-api-key key json
+#
+# This function checks a key file in $HESTIA/data/keys/
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+key="$(basename "$1")"
+format=${2-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# JSON list function
+json_list() {
+    echo '{'
+    echo '    "'$key'": {
+        "USER": "'$USER'",
+        "SCRIPTS": "'$SCRIPTS'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+    }'
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "USER:       $USER"
+    echo "SCRIPTS:    $SCRIPTS"
+    echo "TIME:       $TIME"
+    echo "DATE:       $DATE"
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'KEY [FORMAT]'
+is_format_valid 'key'
+
+if [ ! -d "$HESTIA/data/keys/" ]; then
+    echo "Error: key not found"
+    exit "$E_NOTEXIST"
+elif [[ ! -e "$HESTIA/data/keys/$key" ]] ; then
+    echo "Error: key not found"
+    exit "$E_NOTEXIST"
+fi
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Avoid "USER" receive "root" in old keys
+USER="admin"
+SCRIPTS=""
+DATE=""
+TIME=""
+
+parse_object_kv_list_non_eval "$(cat "${HESTIA}/data/keys/${key}")"
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    shell)  shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -50,6 +50,42 @@ E_RRD=18
 E_UPDATE=19
 E_RESTART=20
 
+# Scripts available for use in API with non-admin users
+#
+# * 0:   It doesn't have an "user" argument but can be run by any user;
+# * 1-9: The position of "user" argument in the script.
+# TODO Increment list with another relevant scripts
+declare -A WEB_API_USER_SCRIPTS
+WEB_API_USER_SCRIPTS["v-purge-nginx-cache"]=1
+WEB_API_USER_SCRIPTS["v-list-web-domains"]=1
+WEB_API_USER_SCRIPTS["v-list-web-domain"]=1
+WEB_API_USER_SCRIPTS["v-list-databases"]=1
+WEB_API_USER_SCRIPTS["v-list-database"]=1
+WEB_API_USER_SCRIPTS["v-list-dns-domains"]=1
+WEB_API_USER_SCRIPTS["v-list-dns-domain"]=1
+WEB_API_USER_SCRIPTS["v-list-dns-records"]=1
+WEB_API_USER_SCRIPTS["v-list-mail-domains"]=1
+WEB_API_USER_SCRIPTS["v-list-mail-domain"]=1
+WEB_API_USER_SCRIPTS["v-list-mail-account"]=1
+WEB_API_USER_SCRIPTS["v-list-mail-accounts"]=1
+WEB_API_USER_SCRIPTS["v-list-mail-account-autoreply"]=1
+WEB_API_USER_SCRIPTS["v-delete-mail-account"]=1
+WEB_API_USER_SCRIPTS["v-delete-mail-account-alias"]=1
+WEB_API_USER_SCRIPTS["v-delete-mail-account-autoreply"]=1
+WEB_API_USER_SCRIPTS["v-delete-mail-account-forward"]=1
+WEB_API_USER_SCRIPTS["v-delete-mail-account-fwd-only"]=1
+WEB_API_USER_SCRIPTS["v-add-mail-account"]=1
+WEB_API_USER_SCRIPTS["v-add-mail-account-alias"]=1
+WEB_API_USER_SCRIPTS["v-add-mail-account-autoreply"]=1
+WEB_API_USER_SCRIPTS["v-add-mail-account-forward"]=1
+WEB_API_USER_SCRIPTS["v-add-mail-account-fwd-only"]=1
+WEB_API_USER_SCRIPTS["v-change-mail-account-password"]=1
+WEB_API_USER_SCRIPTS["v-change-mail-account-quota"]=1
+WEB_API_USER_SCRIPTS["v-suspend-mail-account"]=1
+WEB_API_USER_SCRIPTS["v-suspend-mail-accounts"]=1
+WEB_API_USER_SCRIPTS["v-unsuspend-mail-account"]=1
+WEB_API_USER_SCRIPTS["v-unsuspend-mail-accounts"]=1
+
 # Detect operating system
 detect_os() {
     if [ -e "/etc/os-release" ]; then
@@ -57,7 +93,7 @@ detect_os() {
         if [ "$get_os_type" = "ubuntu" ]; then
             if [ -e '/usr/bin/lsb_release' ]; then
                 OS_VERSION="$(lsb_release -s -r)"
-                OS_TYPE='Ubuntu'            
+                OS_TYPE='Ubuntu'
             fi
         elif [ "$get_os_type" = "debian" ]; then
             OS_TYPE='Debian'
@@ -116,7 +152,7 @@ log_history() {
     # Log system events to system log file
     if [ "$log_user" = "system" ]; then
         log=$HESTIA/data/users/admin/system.log
-    else 
+    else
         if ! $BIN/v-list-user "$log_user" >/dev/null; then
             return $E_NOTEXIST
         fi
@@ -225,10 +261,10 @@ generate_password() {
 
 # Package existence check
 is_package_valid() {
-    if [ -z $1 ]; then 
+    if [ -z $1 ]; then
       if [ ! -e "$HESTIA/data/packages/$package.pkg" ]; then
       check_result "$E_NOTEXIST" "package $package doesn't exist"
-      fi    
+      fi
     else
       if [ ! -e "$HESTIA/data/packages/$1.pkg" ]; then
           check_result "$E_NOTEXIST" "package $1 doesn't exist"
@@ -557,7 +593,7 @@ recalc_user_disk_usage() {
         usage=0
         dusage=$(grep 'U_DISK=' $USER_DATA/web.conf |\
             awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
-        for disk_usage in $dusage; do 
+        for disk_usage in $dusage; do
                 usage=$((usage + disk_usage))
         done
         d=$(grep "U_DISK_WEB='" $USER_DATA/user.conf | cut -f 2 -d \')
@@ -569,7 +605,7 @@ recalc_user_disk_usage() {
         usage=0
         dusage=$(grep 'U_DISK=' $USER_DATA/mail.conf |\
             awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
-        for disk_usage in $dusage; do 
+        for disk_usage in $dusage; do
                 usage=$((usage + disk_usage))
         done
         d=$(grep "U_DISK_MAIL='" $USER_DATA/user.conf | cut -f 2 -d \')
@@ -581,7 +617,7 @@ recalc_user_disk_usage() {
         usage=0
         dusage=$(grep 'U_DISK=' $USER_DATA/db.conf |\
             awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
-        for disk_usage in $dusage; do 
+        for disk_usage in $dusage; do
                 usage=$((usage + disk_usage))
         done
         d=$(grep "U_DISK_DB='" $USER_DATA/user.conf | cut -f 2 -d \')
@@ -599,7 +635,7 @@ recalc_user_bandwidth_usage() {
     usage=0
     bandwidth_usage=$(grep 'U_BANDWIDTH=' $USER_DATA/web.conf |\
         awk -F "U_BANDWIDTH='" '{print $2}'|cut -f 1 -d \')
-    for bandwidth in $bandwidth_usage; do 
+    for bandwidth in $bandwidth_usage; do
         usage=$((usage + bandwidth))
     done
     old=$(grep "U_BANDWIDTH='" $USER_DATA/user.conf | cut -f 2 -d \')
@@ -629,7 +665,7 @@ sync_cron_jobs() {
     else
         crontab="/var/spool/cron/$user"
     fi
-    
+
     # remove file if exists
     if [ -e "$crontab" ]; then
         rm -f $crontab
@@ -637,14 +673,14 @@ sync_cron_jobs() {
 
     # touch new crontab file
     touch $crontab
-        
+
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > $crontab
         echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
     else
         echo 'MAILTO=""' > $crontab
     fi
-    
+
     while read line; do
         parse_object_kv_list "$line"
         if [ "$SUSPENDED" = 'no' ]; then
@@ -718,11 +754,11 @@ is_ipv6_format_valid() {
     t_ip=$(echo $1 |awk -F / '{print $1}')
     t_cidr=$(echo $1 |awk -F / '{print $2}')
     valid_cidr=1
-    
+
     WORD="[0-9A-Fa-f]\{1,4\}"
     # flat address, no compressed words
     FLAT="^${WORD}\(:${WORD}\)\{7\}$"
-    
+
     COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
     COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
     COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
@@ -733,12 +769,12 @@ is_ipv6_format_valid() {
     EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
     # leading :: edge case
     EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
-   
+
     echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
     if [ $? -ne 0 ]; then
         check_result "$E_INVALID" "invalid $object_name format :: $1"
     fi
-    
+
     if [ -n "$(echo $1|grep '/')" ]; then
         if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
             valid_cidr=0
@@ -802,7 +838,7 @@ is_ip46_format_valid() {
                 valid_cidr=0
             fi
         fi
-        
+
         if [ -n "$ipv6_valid" ] || [ "$valid_cidr" -eq 0 ]; then
             check_result "$E_INVALID" "invalid IP format :: $1"
         fi
@@ -968,7 +1004,7 @@ is_fw_port_format_valid() {
 
 # Integer validator
 is_int_format_valid() {
-    if ! [[ "$1" =~ ^[0-9]+$ ]] ; then 
+    if ! [[ "$1" =~ ^[0-9]+$ ]] ; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
@@ -995,7 +1031,7 @@ is_cron_format_valid() {
     if [ "$2" = 'hour' ]; then
         limit=23
     fi
-    
+
     if [ "$2" = 'day' ]; then
         limit=31
     fi
@@ -1050,7 +1086,7 @@ is_object_format_valid() {
     fi
 }
 
-# Role validator 
+# Role validator
 is_role_valid (){
     if ! [[ "$1" =~ ^admin|user$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
@@ -1063,15 +1099,15 @@ is_password_format_valid() {
         check_result "$E_INVALID" "invalid password format :: $1"
     fi
 }
-# Missing function - 
-# Before: validate_format_shell 
+# Missing function -
+# Before: validate_format_shell
 # After: is_format_valid_shell
-is_format_valid_shell() {	
-    if [ -z "$(grep -w $1 /etc/shells)" ]; then	
-        echo "Error: shell $1 is not valid"	
-        log_event "$E_INVALID" "$EVENT"	
-        exit $E_INVALID	
-    fi	
+is_format_valid_shell() {
+    if [ -z "$(grep -w $1 /etc/shells)" ]; then
+        echo "Error: shell $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
 }
 
 # Service name validator
@@ -1084,7 +1120,7 @@ is_service_format_valid() {
 is_hash_format_valid() {
   if ! [[ "$1" =~ ^[-_A-Za-z0-9]{1,32}$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
-    fi    
+    fi
 }
 
 # Format validation controller
@@ -1160,7 +1196,7 @@ is_format_valid() {
                 rtype)          is_dns_type_format_valid "$arg" ;;
                 rule)           is_int_format_valid "$arg" "rule id" ;;
                 service)        is_service_format_valid "$arg" "$arg_name" ;;
-                soa)            is_domain_format_valid "$arg" 'SOA' ;;	
+                soa)            is_domain_format_valid "$arg" 'SOA' ;;
                 #missing command: is_format_valid_shell
                 shell)          is_format_valid_shell "$arg" ;;
                 stats_pass)     is_password_format_valid "$arg" ;;
@@ -1358,8 +1394,8 @@ source_conf(){
       if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
           rhs="${rhs%%^\#*}"   # Del in line right comments
           rhs="${rhs%%*( )}"   # Del trailing spaces
-          rhs="${rhs%\'*}"     # Del opening string quotes 
-          rhs="${rhs#\'*}"     # Del closing string quotes 
+          rhs="${rhs%\'*}"     # Del opening string quotes
+          rhs="${rhs#\'*}"     # Del closing string quotes
           declare -g $lhs="$rhs"
       fi
   done < $1
@@ -1385,4 +1421,39 @@ change_sys_value(){
   else
       sed -i "s|^$1=.*|$1='$2'|g" "$HESTIA/conf/hestia.conf"
   fi
+}
+
+# Check if scripts can ben executed in the web API with non-admin user.
+is_api_script_format_valid() {
+    local scripts_to_check="$1"
+    local user="$2"
+
+    while IFS=',' read -ra scripts_arr; do
+        for script_name in "${scripts_arr[@]}"; do
+            script_name="$(basename "$script_name" | sed -E "s/^\s*|\s*$//g")"
+            if [[ ! -e "$BIN/$script_name" ]]; then
+                check_result "$E_NOTEXIST" "script $script_name doesn't exist"
+            elif [[ -z "${WEB_API_USER_SCRIPTS[$script_name]}" && "$user" != "admin" ]];then
+                check_result "$E_FORBIDEN" "only the admin user can use the script $script_name"
+            fi
+        done
+    done <<<"$scripts_to_check"
+}
+
+# Remove whitespace and bin path from scripts
+cleanup_api_scripts() {
+    local scripts="$1"
+
+    cleanup_scripts=""
+    while IFS=',' read -ra scripts_arr; do
+        for script_name in "${scripts_arr[@]}"; do
+            if [[ ! -z "$cleanup_scripts" ]]; then
+                cleanup_scripts+=","
+            fi
+
+            cleanup_scripts+="$(basename "$script_name" | sed -E "s/^\s*|\s*$//g")"
+        done
+    done <<<"$scripts"
+
+    echo "$cleanup_scripts"
 }

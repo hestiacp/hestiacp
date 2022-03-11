@@ -1,0 +1,61 @@
+#!/bin/bash
+# info: list script available to use in web API
+# options: [FORMAT]
+#
+# example: v-list-api-scripts json
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format="${1:-shell}"
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+    echo '{'
+    local quote=''
+    for key in "${!WEB_API_USER_SCRIPTS[@]}"; do
+        echo -en "$quote"
+        echo -n '    "'$key'": "'${WEB_API_USER_SCRIPTS[$key]}'"'
+        quote=",\n"
+    done
+    echo -e '\n}'
+}
+
+# SHELL list function
+shell_list() {
+    list="Script\tUser Argument\n"
+    list+="------\t-------------\n"
+
+    for key in "${!WEB_API_USER_SCRIPTS[@]}"; do
+        list+="${key}\t${WEB_API_USER_SCRIPTS[$key]}\n"
+    done
+    echo -e "$list" | column -t -s "	"
+}
+
+# PLAIN list function
+plain_list() {
+    echo "${!WEB_API_USER_SCRIPTS[*]}" | sed -E "s/\ +/,/g"
+}
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    shell)  shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

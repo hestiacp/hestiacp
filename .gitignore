@@ -16,3 +16,4 @@ npm-debug.log
 .phpunit.result.cache
 .vs
 .nova
+/.idea/

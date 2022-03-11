@@ -46,6 +46,8 @@ case $type in
         update_user_value "$user" '$WEB_TEMPLATE' "$template";;
     PROXY) is_proxy_template_valid "$template";
         update_user_value "$user" '$PROXY_TEMPLATE' "$template";;
+    BACKEND) is_backend_template_valid "$template";
+        update_user_value "$user" '$BACKEND_TEMPLATE' "$template";;
     DNS) is_dns_template_valid "$template";
         update_user_value "$user" '$DNS_TEMPLATE' "$template";;
     *) check_args '1' '0' 'USER TYPE TEMPLATE'

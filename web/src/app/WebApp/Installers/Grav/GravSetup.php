@@ -32,12 +32,17 @@ class GravSetup extends BaseSetup {
 			'nginx' => [
 				'template' => 'grav',
 			],
+			'php' => [ 
+				'supported' => [ '7.4', '8.0','8.1' ],
+			]
 		],
 	];
 	
 	public function install(array $options = null)
 	{
 		parent::install($options);
+		parent::setup($options);
+			
 		if ( $options['admin'] == true ){
 			chdir($this->getDocRoot());
 			$this -> appcontext -> runUser('v-run-cli-cmd', ['php', 
@@ -54,6 +59,6 @@ class GravSetup extends BaseSetup {
 				'-N '.$options['username']
 			 ], $status);
 		}
-		return (1);
+		return ($status -> code === 1);
 	}
 }

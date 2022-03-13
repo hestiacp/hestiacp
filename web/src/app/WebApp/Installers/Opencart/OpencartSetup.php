@@ -29,14 +29,19 @@ class OpencartSetup extends BaseSetup
         ],
         'server' => [
             'nginx' => [
-                'template' => 'opencart',
+                'template' => 'opencart'
             ],
-        ],
+            'php' => [ 
+                'supported' => [ '7.3','7.4' ],
+            ]
+        ], 
     ];
 
     public function install(array $options = null): bool
     {
+        
         parent::install($options);
+        parent::setup($options);
 
         $this->appcontext->runUser('v-copy-fs-directory', [
             $this->getDocRoot($this->extractsubdir . "/upload/."),

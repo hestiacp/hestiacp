@@ -85,7 +85,31 @@ abstract class BaseSetup implements InstallerInterface {
             }else{
                 $this -> appcontext -> changeWebTemplate($this -> domain, 'default');
             }
-        }        
+        }
+        if ( $_SESSION['WEB_BACKEND'] == 'php-fpm' )
+        {
+            if ( isset($this -> config['server']['php']['supported']) ){
+
+                $versions = $this -> appcontext -> listSuportedPHP();
+                $supported = false;
+                $supported_versions = array();
+                
+                foreach($versions as $version){
+                    if( in_array($version, $this -> config['server']['php']['supported']) )
+                    {
+                        $supported = true; 
+                        $supported_versions[] = $version;
+                    }else{
+                        
+                    }
+                }
+                if (!$supported){
+                    throw new \Exception('PHP version not supported');
+                }
+                //convert from x.x to PHP-x_x  to accepted.. 
+                $this -> appcontext -> changeBackendTemplate($this -> domain, 'PHP-'.str_replace('.','_',$supported_versions[count($supported_versions)-1]));
+            }
+        }      
     }
     
     public function install(array $options=null)

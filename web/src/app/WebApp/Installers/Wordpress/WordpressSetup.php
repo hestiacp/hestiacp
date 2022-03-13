@@ -35,6 +35,9 @@ class WordpressSetup extends BaseSetup {
             'nginx' => [
                 'template' => 'wordpress',
             ],
+            'php' => [ 
+                'supported' => [ '7.4','8.0','8.1' ],
+            ]
         ],
         
     ];
@@ -43,7 +46,11 @@ class WordpressSetup extends BaseSetup {
     {
         parent::install($options);
         parent::setup($options);
-        $this->appcontext->runUser('v-open-fs-file',[$this->getDocRoot("wp-config-sample.php")], $result);
+        $this->appcontext->runUser('v-open-fs-file',[$this->getDocRoot("wp-config-sample.php")], $status);
+        $this->appcontext->run('v-list-web-domain', [$this->appcontext->user(), $this->domain, 'json'], $status);        
+        $sslEnabled = ($status->json[$this->domain]['SSL'] == 'no' ? 0 : 1);
+        $webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
+        $webPort= ($sslEnabled ? "443" : "80")
 
         $distconfig = preg_replace( [
                 '/database_name_here/', '/username_here/', '/password_here/'
@@ -64,8 +71,8 @@ class WordpressSetup extends BaseSetup {
             throw new \Exception("Error installing config file in: " . $tmp_configpath . " to:" . $this->getDocRoot("wp-config.php") . $result->text );
         }
 
-        exec("/usr/bin/curl --location --post301 --insecure --resolve ".$this->domain.":80:".$this->appcontext->getWebDomainIp($this->domain)." "
-            . escapeshellarg("http://".$this->domain."/wp-admin/install.php?step=2")
+        exec("/usr/bin/curl --location --post301 --insecure --resolve ".$this->domain.":$webPort:".$this->appcontext->getWebDomainIp($this->domain)." "
+            . escapeshellarg($webDomain."/wp-admin/install.php?step=2")
             . " -d " . escapeshellarg(
                 "weblog_title=" . rawurlencode($options['site_name'])
             . "&user_name="      . rawurlencode($options['wordpress_account_username'])
@@ -73,7 +80,9 @@ class WordpressSetup extends BaseSetup {
             . "&admin_password2=". rawurlencode($options['wordpress_account_password'])
             . "&admin_email="    . rawurlencode($options['wordpress_account_email'])), $output, $return_var);
         
-    
+        if($return_var > 0){
+            throw new \Exception(implode( PHP_EOL, $output));
+        }
         return ($return_var === 0);
     }
 }

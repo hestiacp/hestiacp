@@ -11,7 +11,7 @@ class MediaWikiSetup extends BaseSetup
         'name' => 'MediaWiki',
         'group' => 'cms',
         'enabled' => true,
-        'version' => '1.36.2',
+        'version' => '1.37.2',
         'thumbnail' => 'MediaWiki-2020-logo.svg' //Max size is 300px by 300px
     ];
 
@@ -27,13 +27,22 @@ class MediaWikiSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://releases.wikimedia.org/mediawiki/1.36/mediawiki-1.36.2.zip' ],
+            'archive'  => [ 'src' => 'https://releases.wikimedia.org/mediawiki/1.37/mediawiki-1.37.1.zip' ],
         ],
+        'server' => [
+            'nginx' => [
+                'template' => 'default'
+            ],
+            'php' => [ 
+                'supported' => [ '7.3','7.4' ],
+            ]
+        ], 
     ];
 
     public function install(array $options = null)
     {
         parent::install($options);
+        parent::setup($options);
 
         //check if ssl is enabled
         $this->appcontext->run('v-list-web-domain', [$this->appcontext->user(), $this->domain, 'json'], $status);

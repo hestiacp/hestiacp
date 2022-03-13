@@ -30,13 +30,18 @@ class DrupalSetup extends BaseSetup {
             'nginx' => [
                 'template' => 'drupal-composer'
             ],
+            'php' => [ 
+                'supported' => [ '8.0','8.1' ],
+            ]
         ],
     ];
 
     public function install(array $options=null) : bool
     {
         parent::install($options);
-        $this->appcontext->runComposer(["require", "-d " . $this->getDocRoot(), "drush/drush:^10"], $result);
+        parent::setup($options);
+        
+        $this->appcontext->runComposer(["require", "-d " . $this->getDocRoot(), "drush/drush:^10"]);
         
         $this -> appcontext -> runUser('v-run-cli-cmd', [
             'php',

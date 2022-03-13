@@ -33,7 +33,12 @@ class HestiaApp {
         $result['text'] = implode( PHP_EOL, $output);
         $result['json'] = json_decode($result['text'], true);
         $cmd_result = (object)$result;
-
+        if($exit_code > 0){
+            //log error message in nginx-error.log
+            trigger_error($result['text']);
+            //throw exception if command fails 
+            throw new \Exception($result['text']);
+        }
         return ($exit_code === 0);
     }
 
@@ -153,6 +158,14 @@ class HestiaApp {
     public function changeWebTemplate(string $domain, string $template){
         $status = $this->runUser('v-change-web-domain-tpl', [$domain, $template]);
     } 
+    public function changeBackendTemplate(string $domain, string $template){
+        $status = $this->runUser('v-change-web-domain-backend-tpl', [$domain, $template]);
+    } 
+    
+    public function listSuportedPHP(){
+        $status = $this -> run('v-list-sys-php', 'json', $result);
+        return $result -> json;
+    }
 
     public function getWebDomainIp(string $domain)
     {

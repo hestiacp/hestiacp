@@ -10,7 +10,7 @@ class PrestashopSetup extends BaseSetup
         'name' => 'Prestashop',
         'group' => 'ecommerce',
         'enabled' => true,
-        'version' => '1.7.7.8',
+        'version' => '1.7.8.4',
         'thumbnail' => 'prestashop-thumb.png'
     ];
 
@@ -26,12 +26,15 @@ class PrestashopSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.7.8/prestashop_1.7.7.8.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.8.4/prestashop_1.7.8.4.zip' ],
         ],
         'server' => [
             'nginx' => [
                 'template' => 'prestashop',
             ],
+            'php' => [ 
+                'supported' => [ '7.3','7.4' ],
+            ]
         ],
 
     ];
@@ -39,6 +42,8 @@ class PrestashopSetup extends BaseSetup
     public function install(array $options=null): bool
     {
         parent::install($options);
+        parent::setup($options);
+        
         $this->appcontext->archiveExtract($this->getDocRoot($this->extractsubdir . '/prestashop.zip'), $this->getDocRoot());
         //check if ssl is enabled
         $this->appcontext->run('v-list-web-domain', [$this -> appcontext->user(),$this -> domain,'json'], $status);

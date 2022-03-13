@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.9
+# Hestia Control Panel upgrade script for target version 1.5.10
 
 #######################################################################################
 #######                      Place additional commands below.                   #######

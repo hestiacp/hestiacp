@@ -15,8 +15,30 @@
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 
-# Fix Roundcube logdir permission
+upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
+PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
+
+if [ "$PORT" != "8083" ]; then 
+    # Update F2B chains config
+    if [ -f "$HESTIA/data/firewall/chains.conf" ]; then
+        # Update value in chains.conf
+        sed -i "s/PORT='8083'/PORT='$PORT'/g" $HESTIA/data/firewall/chains.conf
+    fi
+    
+    # Restart services
+    if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
+        $HESTIA/bin/v-stop-firewall
+        $HESTIA/bin/v-update-firewall
+                
+    fi
+fi
+
+# Fix Roundcube logdir permission
 if [ -d "/var/log/roundcube" ]; then
     chown www-data:www-data /var/log/roundcube
 fi

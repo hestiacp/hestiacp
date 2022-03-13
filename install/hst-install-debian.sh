@@ -1898,14 +1898,6 @@ fi
 #                   Configure IP                           #
 #----------------------------------------------------------#
 
-# Roundcube permissions fix
-if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
-    if [ ! -d "/var/log/roundcube" ]; then
-        mkdir /var/log/roundcube
-    fi
-    chown admin:admin /var/log/roundcube
-fi
-
 # Configuring system IPs
 echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1

@@ -179,7 +179,7 @@ unset($output);
 exec(HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
 $user_config = json_decode(implode('', $output), true);
 unset($output);
-$v_template = $user_config[$user]['DNS_TEMPLATE'];
+$v_template = $user_config[$user_plain]['DNS_TEMPLATE'];
 
 if (empty($_GET['domain'])) {
     // Display body for dns domain

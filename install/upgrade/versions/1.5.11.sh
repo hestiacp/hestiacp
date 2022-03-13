@@ -37,3 +37,8 @@ if [ "$PORT" != "8083" ]; then
                 
     fi
 fi
+
+# Fix Roundcube logdir permission
+if [ -d "/var/log/roundcube" ]; then
+    chown www-data:www-data /var/log/roundcube
+fi

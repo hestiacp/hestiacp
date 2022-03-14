@@ -43,6 +43,15 @@ class DrupalSetup extends BaseSetup {
         
         $this->appcontext->runComposer(["require", "-d " . $this->getDocRoot(), "drush/drush:^10"]);
         
+        $htaccess_rewrite = '
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ web/$1 [L]
+</IfModule>';
+        
+        $tmp_configpath = $this->saveTempFile($htaccess_rewrite);
+        $this->appcontext->runUser('v-move-fs-file',[$tmp_configpath, $this->getDocRoot(".htaccess")], $result);
+        
         $this -> appcontext -> runUser('v-run-cli-cmd', [
             'php',
             $this -> getDocRoot('/vendor/drush/drush/drush'), 

@@ -61,8 +61,10 @@ class OpencartSetup extends BaseSetup
             $protocol = 'https://';
         }
         
+        $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
+        
         $this->appcontext->runUser('v-run-cli-cmd', [
-            "/usr/bin/php",
+            "/usr/bin/php$php_version",
             $this->getDocRoot("/install/cli_install.php"),
             "install",
             "--db_username " . $this->appcontext->user() . '_' .$options['database_user'],

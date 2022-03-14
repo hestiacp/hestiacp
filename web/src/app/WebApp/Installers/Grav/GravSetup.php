@@ -45,11 +45,12 @@ class GravSetup extends BaseSetup {
 			
 		if ( $options['admin'] == true ){
 			chdir($this->getDocRoot());
-			$this -> appcontext -> runUser('v-run-cli-cmd', ['php', 
+			$php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
+			$this -> appcontext -> runUser('v-run-cli-cmd', ["/usr/bin/php$php_version", 
 			$this->getDocRoot('/bin/gpm'),
 				'install admin'
 		    ], $status);
-			$this -> appcontext -> runUser('v-run-cli-cmd', ['php', 
+			$this -> appcontext -> runUser('v-run-cli-cmd', ["/usr/bin/php$php_version", 
 				$this->getDocRoot('/bin/plugin'),
 				'login new-user',
 				'-u '.$options['username'],

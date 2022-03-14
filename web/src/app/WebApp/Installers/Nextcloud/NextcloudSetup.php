@@ -41,7 +41,8 @@ class NextcloudSetup extends BaseSetup
         parent::setup($options);
         
         // install nextcloud
-        $this->appcontext->runUser('v-run-cli-cmd', ['/usr/bin/php',
+        $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
+        $this->appcontext->runUser('v-run-cli-cmd', ["/usr/bin/php$php_version",
             $this->getDocRoot('occ'),
             'maintenance:install',
             '--database mysql',

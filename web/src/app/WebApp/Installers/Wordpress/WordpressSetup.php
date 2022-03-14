@@ -50,7 +50,7 @@ class WordpressSetup extends BaseSetup {
         $this->appcontext->run('v-list-web-domain', [$this->appcontext->user(), $this->domain, 'json'], $status);        
         $sslEnabled = ($status->json[$this->domain]['SSL'] == 'no' ? 0 : 1);
         $webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
-        $webPort= ($sslEnabled ? "443" : "80")
+        $webPort= ($sslEnabled ? "443" : "80");
 
         $distconfig = preg_replace( [
                 '/database_name_here/', '/username_here/', '/password_here/'

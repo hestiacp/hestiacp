@@ -42,3 +42,9 @@ fi
 if [ -d "/var/log/roundcube" ]; then
     chown www-data:www-data /var/log/roundcube
 fi
+
+# Fix bug in nginx.conf for proxy cache
+if [ -d "/etc/nginx/nginx.conf" ]; then
+    echo "[ ! ] Fixed an issue with proxy cache and redirects"
+    sed -i 's/proxy_cache_key "$host$request_uri $cookie_user";/proxy_cache_key "$scheme$request_method$host$request_uri";/g' /etc/nginx/nginx.conf
+fi

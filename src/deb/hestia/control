@@ -1,7 +1,7 @@
 Source: hestia
 Package: hestia
 Priority: optional
-Version: 1.5.11~rc
+Version: 1.5.11
 Section: admin
 Maintainer: HestiaCP <info@hestiacp.com>
 Homepage: https://www.hestiacp.com

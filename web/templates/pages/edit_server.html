@@ -857,7 +857,7 @@
 									<tr>
 										<td class="vst-text step-top">
 											<?=_('SSL Certificate');?>
-											<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_hostname?>"><?=_('Generate CSR');?></a></span>
+											<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities(trim($v_hostname,'"'));?>"><?=_('Generate CSR');?></a></span>
 										</td>
 									</tr>
 									<tr>

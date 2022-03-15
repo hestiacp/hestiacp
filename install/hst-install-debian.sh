@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.10'
+HESTIA_INSTALL_VER='1.5.11'
 # Dependencies
 pma_v='5.1.3'
 rc_v="1.5.2"
@@ -1897,14 +1897,6 @@ fi
 #----------------------------------------------------------#
 #                   Configure IP                           #
 #----------------------------------------------------------#
-
-# Roundcube permissions fix
-if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
-    if [ ! -d "/var/log/roundcube" ]; then
-        mkdir /var/log/roundcube
-    fi
-    chown admin:admin /var/log/roundcube
-fi
 
 # Configuring system IPs
 echo "[ * ] Configuring System IP..."

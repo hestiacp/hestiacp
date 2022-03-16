@@ -40,7 +40,7 @@
 								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
-						<?php if (($user == 'admin') && (($_GET['accept'] !== "true")))  {?>
+						<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
 							<tr>
 								<td class="step-top">
 									<span class="alert alert-danger alert-with-icon">
@@ -50,7 +50,7 @@
 								</td>
 							</tr>
 						<?php } ?>
-						<?php if (($user == 'admin') && (empty($_GET['accept']))) {?>
+						<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
 							<tr>
 								<td class="step-top">
 									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
@@ -58,10 +58,10 @@
 								</td>
 							</tr>
 						<?php } ?>
-						<?php if (($user == 'admin') && (($_GET['accept'] === "true")) || ($user !== "admin"))  {?>
+						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin"))  {?>
 							<tr>
 								<td class="hint">
-									<?=sprintf(_('Prefix %s will be automatically added to database name and database user'),'<b>'.$user.'_</b>'); ?>
+									<?=sprintf(_('Prefix %s will be automatically added to database name and database user'),'<b>'.$user_plain.'_</b>'); ?>
 								</td>
 								</td>
 							</tr>
@@ -227,6 +227,6 @@
 </div>
 
 <script>
-GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>";
-GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>";
+GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
+GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
 </script>

@@ -107,7 +107,7 @@
 					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="user[]" value="<?=$key?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 userlist-username">
-					<?php if ($key == $user) { ?>
+					<?php if ($key == $user_plain) { ?>
 						<b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User');?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></b></a>
 					<?php } else { ?>
 						<b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></b></a>
@@ -119,7 +119,7 @@
 				<div class="clearfix l-unit__stat-col--left text-right compact-3">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
 						<div class="actions-panel clearfix">
-							<?php if ($key == $user) { ?>
+							<?php if ($key == $user_plain) { ?>
 								<i class="fas fa-user-check status-icon status-icon dim icon-large" title="<?=$key?> (<?=$data[$key]['NAME']?>)"></i>
 							<?php } else { ?>
 								<a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$key?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
@@ -133,7 +133,7 @@
 							<?php if ($key == 'admin') { ?>
 								<!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->
 							<?php } else { ?>
-								<?php if ($key == $user) { ?>
+								<?php if ($key == $user_plain) { ?>
 									<!-- Hide suspend and delete buttons in the user list for current user -->
 								<?php } else { ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">

@@ -15,6 +15,7 @@ if (empty($_GET['domain'])) {
 // Edit as someone else?
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);
+    $user_plain=htmlentities($_GET['user']);
 }
 
 $v_username = $user;
@@ -22,7 +23,11 @@ $v_username = $user;
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_domain = $_GET['domain'];
-
+    
+    exec(HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
+    $webmail_clients = json_decode(implode('', $output), true);
+    unset($output);
+    
     exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     check_return_code_redirect($return_var, $output, '/list/mail/');

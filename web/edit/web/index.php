@@ -16,6 +16,7 @@ if (empty($_GET['domain'])) {
 // Edit as someone else?
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);
+    $user_plain=htmlentities($_GET['user']);
 }
 
 // Get all user domains

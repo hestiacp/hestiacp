@@ -30,5 +30,5 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
     sed -i '115,250 s/warn    ratelimit     = 100 \/ 1h \/ strict \/ $authenticated_id/warn    ratelimit     = ${eval:$acl_c_msg_limit \/ 2} \/ 1h \/ strict \/ $authenticated_id/g' $config
     
     # Add missing send-limits.conf file
-    cp $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim/limit.conf
+    cp $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/limit.conf
 fi

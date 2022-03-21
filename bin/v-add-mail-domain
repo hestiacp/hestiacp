@@ -97,6 +97,8 @@ s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf
 
+syshealth_repair_web_config
+
 # Generating DKIM keys
 if [ "$dkim" = 'yes' ]; then
     openssl genrsa -out $USER_DATA/mail/$domain.pem $dkim_size &>/dev/null

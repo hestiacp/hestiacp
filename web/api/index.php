@@ -134,12 +134,12 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
         // Get all scripts available for non-admin user
         if (!empty($key_scripts)) {
             exec(HESTIA_CMD."v-describe-api-scripts ".escapeshellarg($key_scripts)." json", $output, $return_var);
-            $raw_scripts = json_decode(implode('', $output), true);
-            unset($output);
             if ($return_var > 0) {
                 echo 'Error: internal error';
                 exit;
             }
+            $raw_scripts = json_decode(implode('', $output), true);
+            unset($output);
         } else if ($key_user != 'admin') {
             echo 'Error: user don\'t have permission to run the script';
             exit;

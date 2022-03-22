@@ -14,6 +14,14 @@ abstract class BaseSetup implements InstallerInterface {
 
     protected $domain;
     protected $extractsubdir;
+    protected $AppDirInstall;
+    
+    public function setAppDirInstall(string $appDir) {
+        $this->AppDirInstall = $appDir;
+    }
+    public function getAppDirInstall() {
+        return $this->AppDirInstall;
+    }
     
     public function info(){
         return $this -> appInfo;
@@ -49,7 +57,18 @@ abstract class BaseSetup implements InstallerInterface {
         if(empty($domain_path) || ! is_dir($domain_path)) {
             throw new \Exception("Error finding domain folder ($domain_path)");
         }
-        return Util::join_paths($domain_path, "public_html", $append_relative_path);
+        $subDir = $this->getAppDirInstall()?$this->getAppDirInstall()!='/'?$this->getAppDirInstall():'':'';
+        if ($subDir==''){
+                return Util::join_paths($domain_path, "public_html", $append_relative_path);
+        }
+
+        $directory = Util::join_paths($domain_path, "public_html", $subDir);
+
+        if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+        }
+
+        return Util::join_paths($directory, $append_relative_path);
     }
 
     public function retrieveResources($options)

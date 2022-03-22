@@ -139,13 +139,13 @@ class HestiaApp {
         return $this->runUser('v-list-web-domain', [$domain, 'json']);
     }
 
-    public function databaseAdd(string $dbname, string $dbuser, string $dbpass)
+    public function databaseAdd(string $dbname, string $dbuser, string $dbpass, string $charset = 'utf8mb4')
     {
         $v_password = tempnam("/tmp","hst");
         $fp = fopen($v_password, "w");
         fwrite($fp, $dbpass."\n");
         fclose($fp);
-        $status = $this->runUser('v-add-database', [$dbname, $dbuser, $v_password]);
+        $status = $this->runUser('v-add-database', [$dbname, $dbuser, $v_password], 'mysql','localhost', $charset);
         unlink($v_password);
         return $status;
     }

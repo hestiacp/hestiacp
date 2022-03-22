@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: list script available to use in web API
+# info: list script groups available to use in web API
 # options: [FORMAT]
 #
-# example: v-list-api-scripts json
+# example: v-list-api-groups json
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -23,9 +23,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 json_list() {
     echo '{'
     local quote=''
-    for key in "${!WEB_API_USER_SCRIPTS[@]}"; do
+    for group in "${!WEB_API_SCRIPT_GROUPS[@]}"; do
         echo -en "$quote"
-        echo -n '    "'$key'": "'${WEB_API_USER_SCRIPTS[$key]}'"'
+        echo -n '    "'$group'": "'${WEB_API_SCRIPT_GROUPS[$group]}'"'
         quote=",\n"
     done
     echo -e '\n}'
@@ -33,24 +33,18 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    list="Script\tUser Argument\n"
-    list+="------\t-------------\n"
+    list="Group\tScripts\n"
+    list+="-----\t-------\n"
 
-    for key in "${!WEB_API_USER_SCRIPTS[@]}"; do
-        list+="${key}\t${WEB_API_USER_SCRIPTS[$key]}\n"
+    for group in "${!WEB_API_SCRIPT_GROUPS[@]}"; do
+        list+="${group}\t${WEB_API_SCRIPT_GROUPS[$group]}\n"
     done
     echo -e "$list" | column -t -s "	"
-}
-
-# PLAIN list function
-plain_list() {
-    echo "${!WEB_API_USER_SCRIPTS[*]}" | sed -E "s/\ +/,/g"
 }
 
 # Listing data
 case $format in
     json)   json_list ;;
-    plain)  plain_list ;;
     shell)  shell_list ;;
 esac
 

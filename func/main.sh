@@ -50,41 +50,10 @@ E_RRD=18
 E_UPDATE=19
 E_RESTART=20
 
-# Scripts available for use in API with non-admin users
-#
-# * 0:   It doesn't have an "user" argument but can be run by any user;
-# * 1-9: The position of "user" argument in the script.
-# TODO Increment list with another relevant scripts
-declare -A WEB_API_USER_SCRIPTS
-WEB_API_USER_SCRIPTS["v-purge-nginx-cache"]=1
-WEB_API_USER_SCRIPTS["v-list-web-domains"]=1
-WEB_API_USER_SCRIPTS["v-list-web-domain"]=1
-WEB_API_USER_SCRIPTS["v-list-databases"]=1
-WEB_API_USER_SCRIPTS["v-list-database"]=1
-WEB_API_USER_SCRIPTS["v-list-dns-domains"]=1
-WEB_API_USER_SCRIPTS["v-list-dns-domain"]=1
-WEB_API_USER_SCRIPTS["v-list-dns-records"]=1
-WEB_API_USER_SCRIPTS["v-list-mail-domains"]=1
-WEB_API_USER_SCRIPTS["v-list-mail-domain"]=1
-WEB_API_USER_SCRIPTS["v-list-mail-account"]=1
-WEB_API_USER_SCRIPTS["v-list-mail-accounts"]=1
-WEB_API_USER_SCRIPTS["v-list-mail-account-autoreply"]=1
-WEB_API_USER_SCRIPTS["v-delete-mail-account"]=1
-WEB_API_USER_SCRIPTS["v-delete-mail-account-alias"]=1
-WEB_API_USER_SCRIPTS["v-delete-mail-account-autoreply"]=1
-WEB_API_USER_SCRIPTS["v-delete-mail-account-forward"]=1
-WEB_API_USER_SCRIPTS["v-delete-mail-account-fwd-only"]=1
-WEB_API_USER_SCRIPTS["v-add-mail-account"]=1
-WEB_API_USER_SCRIPTS["v-add-mail-account-alias"]=1
-WEB_API_USER_SCRIPTS["v-add-mail-account-autoreply"]=1
-WEB_API_USER_SCRIPTS["v-add-mail-account-forward"]=1
-WEB_API_USER_SCRIPTS["v-add-mail-account-fwd-only"]=1
-WEB_API_USER_SCRIPTS["v-change-mail-account-password"]=1
-WEB_API_USER_SCRIPTS["v-change-mail-account-quota"]=1
-WEB_API_USER_SCRIPTS["v-suspend-mail-account"]=1
-WEB_API_USER_SCRIPTS["v-suspend-mail-accounts"]=1
-WEB_API_USER_SCRIPTS["v-unsuspend-mail-account"]=1
-WEB_API_USER_SCRIPTS["v-unsuspend-mail-accounts"]=1
+# Script Groups available for use in WEB API
+declare -A WEB_API_SCRIPT_GROUPS
+WEB_API_SCRIPT_GROUPS["purge-nginx-cache"]="v-purge-nginx-cache,v-list-web-domains,v-list-web-domain"
+WEB_API_SCRIPT_GROUPS["mail-accounts"]="v-list-mail-domains,v-list-mail-domain,v-list-mail-account,v-list-mail-accounts,v-list-mail-account-autoreply,v-delete-mail-account,v-delete-mail-account-alias,v-delete-mail-account-autoreply,v-delete-mail-account-forward,v-delete-mail-account-fwd-only,v-add-mail-account,v-add-mail-account-alias,v-add-mail-account-autoreply,v-add-mail-account-forward,v-add-mail-account-fwd-only,v-change-mail-account-password,v-change-mail-account-quota,v-suspend-mail-account,v-suspend-mail-accounts,v-unsuspend-mail-account,v-unsuspend-mail-accounts"
 
 # Detect operating system
 detect_os() {
@@ -1428,13 +1397,20 @@ is_api_script_format_valid() {
     local scripts_to_check="$1"
     local user="$2"
 
+    if [[ "$user" != "admin" && -z "$scripts_to_check" ]]; then
+        check_result "$E_INVALID" "only the admin can be informed without a script list or group"
+    fi
+
     while IFS=',' read -ra scripts_arr; do
         for script_name in "${scripts_arr[@]}"; do
             script_name="$(basename "$script_name" | sed -E "s/^\s*|\s*$//g")"
-            if [[ ! -e "$BIN/$script_name" ]]; then
+
+            if [[ -z "$(echo "$script_name" | grep -E "^v-")" ]]; then
+                if [[ -z "${WEB_API_SCRIPT_GROUPS[$script_name]}" ]]; then
+                    check_result "$E_NOTEXIST" "script group $script_name doesn't exist"
+                fi
+            elif [[ ! -e "$BIN/$script_name" ]]; then
                 check_result "$E_NOTEXIST" "script $script_name doesn't exist"
-            elif [[ -z "${WEB_API_USER_SCRIPTS[$script_name]}" && "$user" != "admin" ]];then
-                check_result "$E_FORBIDEN" "only the admin user can use the script $script_name"
             fi
         done
     done <<<"$scripts_to_check"
@@ -1447,13 +1423,80 @@ cleanup_api_scripts() {
     cleanup_scripts=""
     while IFS=',' read -ra scripts_arr; do
         for script_name in "${scripts_arr[@]}"; do
-            if [[ ! -z "$cleanup_scripts" ]]; then
-                cleanup_scripts+=","
-            fi
+            script_name="$(basename "$script_name" | sed -E "s/^\s*|\s*$//g")"
 
-            cleanup_scripts+="$(basename "$script_name" | sed -E "s/^\s*|\s*$//g")"
+            # Avoid duplicate items
+            if [[ -z "$(echo ",${cleanup_scripts}," | grep ",${script_name},")" ]]; then
+                if [[ ! -z "$cleanup_scripts" ]]; then
+                    cleanup_scripts+=","
+                fi
+
+                cleanup_scripts+="$script_name"
+            fi
         done
     done <<<"$scripts"
 
     echo "$cleanup_scripts"
+}
+
+# Get the scripts coming from groups and merges with what was passed directly and removing the scripts that were duplicates
+get_raw_scripts() {
+    local scripts="$1"
+
+    cleanup_scripts=""
+    while IFS=',' read -ra scripts_arr; do
+        for script_name in "${scripts_arr[@]}"; do
+            script_name="$(basename "$script_name" | sed -E "s/^\s*|\s*$//g")"
+
+            scripts_to_add=""
+            if [[ ! -z "$(echo "$script_name" | grep -E "^v-")" ]]; then
+                scripts_to_add="$script_name"
+            elif [[ ! -z "${WEB_API_SCRIPT_GROUPS[$script_name]}" ]]; then
+                scripts_to_add="${WEB_API_SCRIPT_GROUPS[$script_name]}"
+            fi
+
+            if [[ ! -z "$scripts_to_add" ]]; then
+                if [[ ! -z "$cleanup_scripts" ]]; then
+                    cleanup_scripts+=","
+                fi
+
+                cleanup_scripts+="$scripts_to_add"
+            fi
+        done
+    done <<<"$scripts"
+
+    cleanup_api_scripts "$cleanup_scripts"
+}
+
+# Get position from "user" param in the script options.
+#
+# * 0:   It doesn't have an "USER" argument;
+# * 1-9: The position of "USER" argument in the script.
+get_user_param_position() {
+    local script_name="$(basename "$1")"
+    if [[ -z "$script_name" ]]; then
+        check_result "$E_INVALID" "Script name not provided"
+    fi
+
+    local script_path="$BIN/$script_name"
+    if [[ ! -e "$script_path" ]]; then
+        check_result "$E_NOTEXIST" "script $script_name doesn't exist"
+    fi
+
+    position=0
+
+    count=0
+    script_options="$(sed -En 's/^# options: (.+)/\1/p' "$script_path")"
+    while IFS=' ' read -ra options_arr; do
+        for option in "${options_arr[@]}"; do
+            count=$((count+1))
+
+            option_name="$(echo "  $option   " | sed -E 's/^(\s|\[)*|(\s|\])*$//g')"
+            if [[ "${option_name^^}" == "USER" ]]; then
+                position=$count
+            fi
+        done
+    done <<<"$script_options"
+
+    echo "$position"
 }

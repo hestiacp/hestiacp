@@ -1,18 +1,16 @@
 #!/bin/bash
-# info: display data of an api key
-# options: KEY [FORMAT]
+# info: Displays all scripts in a group or list with the argument position "USER"
+# options: SCRIPTS [FORMAT]
 #
-# example: v-list-api-key key json
-#
-# This function checks a key file in $HESTIA/data/keys/
+# example: v-describe-api-scripts mail-accounts,purge-nginx-cache json
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-key="$(basename "$1")"
-format=${2-shell}
+scripts=$1
+format="${2:-shell}"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -22,55 +20,40 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-# Perform verification if read-only mode is enabled
-check_hestia_demo_mode
-
 # JSON list function
 json_list() {
     echo '{'
-    echo '    "'$key'": {
-        "USER": "'$USER'",
-        "SCRIPTS": "'$SCRIPTS'",
-        "TIME": "'$TIME'",
-        "DATE": "'$DATE'"
-    }'
-    echo '}'
+    local quote=''
+    for script_name in "${raw_scripts[@]}"; do
+        echo -en "$quote"
+        echo -n '    "'$script_name'": "'$(get_user_param_position "$script_name")'"'
+        quote=",\n"
+    done
+    echo -e '\n}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "USER:       $USER"
-    echo "SCRIPTS:    $SCRIPTS"
-    echo "TIME:       $TIME"
-    echo "DATE:       $DATE"
+    list="Script\tUser Argument\n"
+    list+="------\t-------------\n"
+
+    for script_name in "${raw_scripts[@]}"; do
+        list+="${script_name}\t$(get_user_param_position "$script_name")\n"
+    done
+    echo -e "$list" | column -t -s "	"
 }
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'KEY [FORMAT]'
-is_format_valid 'key'
-
-if [ ! -d "$HESTIA/data/keys/" ]; then
-    echo "Error: key not found"
-    exit "$E_NOTEXIST"
-elif [[ ! -e "$HESTIA/data/keys/$key" ]] ; then
-    echo "Error: key not found"
-    exit "$E_NOTEXIST"
-fi
+check_args '1' "$#" 'SCRIPTS [FORMAT]'
 
 #----------------------------------------------------------#
-#                    Verifications                         #
+#                       Action                             #
 #----------------------------------------------------------#
 
-# Avoid "USER" receive "root" in old keys
-USER="admin"
-SCRIPTS=""
-DATE=""
-TIME=""
-
-parse_object_kv_list_non_eval "$(cat "${HESTIA}/data/keys/${key}")"
+read -a raw_scripts <<< "$(get_raw_scripts "$scripts" | sed -E "s/,+/\ /g")"
 
 # Listing data
 case $format in

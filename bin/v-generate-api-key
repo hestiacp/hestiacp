@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: generate api key
-# options: [USER] [SCRIPTS]
+# options: [USER] [SCRIPTS] [FORMAT]
 #
-# example: v-generate-api-key admin v-purge-nginx-cache,v-list-mail-accounts
+# example: v-generate-api-key admin v-purge-nginx-cache,v-list-mail-accounts json
 #
 # This function creates a key file in $HESTIA/data/keys/
 
@@ -13,7 +13,8 @@
 # Argument definition
 #user=$1
 user=${1:-admin}
-scripts=$2 # TODO Add wildcards
+scripts=$2
+format=${3-shell}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -68,9 +69,7 @@ echo "SCRIPTS='$scripts'" >>$HESTIA/data/keys/$HASH
 echo "TIME='$time'" >>$HESTIA/data/keys/$HASH
 echo "DATE='$date'" >>$HESTIA/data/keys/$HASH
 
-echo "USER:    $user"
-echo "SCRIPTS: ${scripts:-all}"
-echo "KEY:     $HASH"
+$BIN/v-check-api-key "$HASH" "127.0.0.1" "$format"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

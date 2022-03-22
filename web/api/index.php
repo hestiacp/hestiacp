@@ -118,58 +118,48 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
     } else {
         $key = '/usr/local/hestia/data/keys/'.basename($hst_hash);
         $v_ip = escapeshellarg(get_real_user_ip());
-        exec(HESTIA_CMD."v-check-api-key ".escapeshellarg($key)." ".$v_ip, $output, $return_var);
-        unset($output);
+        exec(HESTIA_CMD."v-check-api-key ".escapeshellarg($key)." ".$v_ip." json", $output, $return_var);
         // Check API answer
         if ($return_var > 0) {
             echo 'Error: authentication failed';
             exit;
         }
-
-        // Get all scripts available for non-admin user
-        exec(HESTIA_CMD."v-list-api-scripts json", $output, $return_var);
-        $api_scripts = json_decode(implode('', $output), true);
-        unset($output);
-
-        // Get key data
-        exec(HESTIA_CMD."v-list-api-key ".escapeshellarg($key)." json", $output, $return_var);
-        // Check API answer
-        if ($return_var > 0) {
-            echo 'Error: authentication failed';
-            exit;
-        }
-        $key_data = json_decode(implode('', $output), true);
-        $key_data = $key_data[basename($hst_hash)] ?? [];
+        $key_data = json_decode(implode('', $output), true) ?? [];
         unset($output);
 
         # Use admin as default to avoid broken old keys
         $key_user = !empty($key_data['USER']) ? $key_data['USER'] : 'admin';
         $key_scripts = !empty($key_data['SCRIPTS']) ? $key_data['SCRIPTS'] : '';
-        $key_scripts = array_map('trim', explode(",", $key_scripts));
-        $key_scripts = array_filter($key_scripts, function ($item) {
-            return !empty($item);
-        });
+
+        // Get all scripts available for non-admin user
+        if (!empty($key_scripts)) {
+            exec(HESTIA_CMD."v-describe-api-scripts ".escapeshellarg($key_scripts)." json", $output, $return_var);
+            $raw_scripts = json_decode(implode('', $output), true);
+            unset($output);
+            if ($return_var > 0) {
+                echo 'Error: internal error';
+                exit;
+            }
+        } else if ($key_user != 'admin') {
+            echo 'Error: user don\'t have permission to run the script';
+            exit;
+        }
 
         if ($key_user == 'admin') {
-            if (!empty($key_scripts) && !in_array($hst_cmd, $key_scripts)) {
+            if (!empty($raw_scripts) && !isset($raw_scripts[$hst_cmd])) {
                 echo 'Error: the access key don\'t have permission to run the script';
                 exit;
             }
         } else {
-            // If scripts have not been entered in the key, all user's scripts will be enabled
-            $key_scripts = empty($key_scripts) ? array_keys($api_scripts) : $key_scripts;
-
-            // Checks if the script is enabled for the key and for non-admin users
-            //if (!in_array($hst_cmd, $key_scripts) || !isset($api_scripts[$hst_cmd])) {
-            if (!in_array($hst_cmd, $key_scripts)) {
+            // Checks if the script is enabled for the key
+            if (empty($raw_scripts) || !isset($raw_scripts[$hst_cmd])) {
                 echo 'Error: user don\'t have permission to run the script';
                 exit;
             }
 
             // Checks if the value entered in the "user" argument matches the user of the key
-            $user_arg_position = $api_scripts[$hst_cmd] ?? 0;
-            if ($user_arg_position > 0 && $user_arg_position <= 9) {
-                if (${"hst_arg{$user_arg_position}"} != $key_user) {
+            if ($raw_scripts[$hst_cmd] > 0 && $raw_scripts[$hst_cmd] <= 9) {
+                if (${"hst_arg{$raw_scripts[$hst_cmd]}"} != $key_user) {
                     echo 'Error: the "user" argument doesn\'t match the key\'s user';
                     exit;
                 }

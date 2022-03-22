@@ -1,14 +1,18 @@
 #!/bin/bash
 # info: check api key
-# options: KEY [IP]
+# options: KEY [IP] [FORMAT]
 #
-# example: v-check-api-key random_key 127.0.0.1
+# example: v-check-api-key random_key 127.0.0.1 json
 #
 # This function checks a key file in $HESTIA/data/keys/
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
+
+key="$(basename "$1")"
+ip=${2-127.0.0.1}
+format=${3-shell}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -26,7 +30,26 @@ abort_missmatch() {
     exit "$E_PASSWORD"
 }
 
-ip=${2-127.0.0.1}
+# JSON list function
+json_list() {
+    echo '{
+    "HASH": "'$key'",
+    "USER": "'$USER'",
+    "SCRIPTS": "'$SCRIPTS'",
+    "TIME": "'$TIME'",
+    "DATE": "'$DATE'"
+}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "HASH:         $key"
+    echo "USER:         $USER"
+    echo "SCRIPTS:      $SCRIPTS"
+    echo "TIME:         $TIME"
+    echo "DATE:         $DATE"
+}
+
 time_n_date=$(date +'%T %F')
 time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
@@ -37,8 +60,6 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
-key="$(basename "$1")"
 
 # Exit if Key is unset or to short
 [[ -z $key || ${#key} -lt 16 ]] && abort_missmatch
@@ -53,6 +74,19 @@ maybe_key_path="$(readlink -e "${HESTIA}/data/keys/${key}")"
 # Key file must be in the key store
 [[ $maybe_key_path == "${HESTIA}/data/keys/"* ]] || abort_missmatch
 
+# Avoid "USER" receive "root" in old keys
+USER="admin"
+SCRIPTS=""
+DATE=""
+TIME=""
+
+parse_object_kv_list_non_eval "$(cat "${HESTIA}/data/keys/${key}")"
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    shell)  shell_list ;;
+esac
 
 #----------------------------------------------------------#
 #                       Hestia                             #

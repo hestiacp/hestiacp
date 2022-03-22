@@ -145,7 +145,7 @@ class HestiaApp {
         $fp = fopen($v_password, "w");
         fwrite($fp, $dbpass."\n");
         fclose($fp);
-        $status = $this->runUser('v-add-database', [$dbname, $dbuser, $v_password], 'mysql','localhost', $charset);
+        $status = $this->runUser('v-add-database', [$dbname, $dbuser, $v_password, 'mysql', 'localhost', $charset]);
         unlink($v_password);
         return $status;
     }

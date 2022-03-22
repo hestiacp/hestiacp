@@ -48,7 +48,7 @@ class WordpressSetup extends BaseSetup {
         $this->appcontext->runUser('v-open-fs-file',[$this->getDocRoot("wp-config-sample.php")], $result);
 
         $distconfig = preg_replace( [
-                '/database_name_here/', '/username_here/', '/password_here/',,'/utf8/','/wp_/'
+                '/database_name_here/', '/username_here/', '/password_here/','/utf8/','/wp_/'
             ], [
                 $this->appcontext->user() . '_' . $options['database_name'],
                 $this->appcontext->user() . '_' . $options['database_user'],

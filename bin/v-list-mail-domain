@@ -33,6 +33,7 @@ json_list() {
         "DKIM": "'$DKIM'",
         "CATCHALL": "'$CATCHALL'",
         "ACCOUNTS": "'$ACCOUNTS'",
+        "RATE_LIMIT": "'$RATE_LIMIT'",
         "U_DISK": "'$U_DISK'",
         "SSL": "'$SSL'",
         "LETSENCRYPT": "'$LETSENCRYPT'",

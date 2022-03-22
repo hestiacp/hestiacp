@@ -32,7 +32,6 @@ function write_kv_config_file() {
     fi
 
     touch $HESTIA/conf/defaults/$system.conf
-
     for key in $known_keys; do
         echo $key >> $HESTIA/conf/defaults/$system.conf
     done
@@ -165,6 +164,18 @@ function syshealth_repair_mail_config() {
     for key in $known_keys; do
         if [ -z "${!key}" ]; then
             add_object_key 'mail' 'DOMAIN' "$domain" "$key" "$prev"   
+        fi
+        prev=$key
+    done
+}
+
+function syshealth_repair_mail_account_config() {
+    system="mail_accounts"
+    sanitize_config_file "$system"
+    get_object_values "mail/$domain" 'ACCOUNT' "$account"
+    for key in $known_keys; do
+        if [ -z "${!key}" ]; then
+            add_object_key "mail/$domain" 'ACCOUNT' "$account" "$key" "$prev"    
         fi
         prev=$key
     done

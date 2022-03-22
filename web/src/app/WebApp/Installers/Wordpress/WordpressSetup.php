@@ -22,6 +22,7 @@ class WordpressSetup extends BaseSetup {
             //    'type' => 'select',
             //    'options' => ['http','https'],
             //],
+            'install_directory' => ['type'=>'text', 'value'=>'', 'placeholder'=>'/'],
             'site_name' => ['type'=>'text', 'value'=>'WordPress Blog'],
             'wordpress_account_username' => ['value'=>'wpadmin'],
             'wordpress_account_email' => 'text',
@@ -29,7 +30,7 @@ class WordpressSetup extends BaseSetup {
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://wordpress.org/latest.tar.gz' ],
+            'archive'  => [ 'src' => 'https://es.wordpress.org/latest-es_ES.tar.gz' ],
         ],
         'server' => [
             'nginx' => [
@@ -41,16 +42,19 @@ class WordpressSetup extends BaseSetup {
     
     public function install(array $options = null)
     {
+        $this->setAppDirInstall($options['install_directory']);
         parent::install($options);
         parent::setup($options);
         $this->appcontext->runUser('v-open-fs-file',[$this->getDocRoot("wp-config-sample.php")], $result);
 
         $distconfig = preg_replace( [
-                '/database_name_here/', '/username_here/', '/password_here/'
+                '/database_name_here/', '/username_here/', '/password_here/',,'/utf8/','/wp_/'
             ], [
                 $this->appcontext->user() . '_' . $options['database_name'],
                 $this->appcontext->user() . '_' . $options['database_user'],
-                $options['database_password']
+                $options['database_password'],
+                'utf8mb4',
+                 Util::generate_string(3,'no').'_'
             ],
             $result->text);
 
@@ -65,7 +69,7 @@ class WordpressSetup extends BaseSetup {
         }
 
         exec("/usr/bin/curl --location --post301 --insecure --resolve ".$this->domain.":80:".$this->appcontext->getWebDomainIp($this->domain)." "
-            . escapeshellarg("http://".$this->domain."/wp-admin/install.php?step=2")
+            . escapeshellarg("http://".$this->domain."/".$options['install_directory']."/wp-admin/install.php?step=2")
             . " -d " . escapeshellarg(
                 "weblog_title=" . rawurlencode($options['site_name'])
             . "&user_name="      . rawurlencode($options['wordpress_account_username'])

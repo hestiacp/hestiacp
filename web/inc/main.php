@@ -1,11 +1,13 @@
 <?php
-
 session_start();
+
+
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-if(!file_exists(dirname(__FILE__).'/vendor/autoload.php')){
+if (!file_exists(dirname(__FILE__).'/vendor/autoload.php')) {
     trigger_error('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
     echo 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line';
     exit(1);
@@ -14,11 +16,6 @@ if(!file_exists(dirname(__FILE__).'/vendor/autoload.php')){
 require 'vendor/autoload.php';
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
-if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
-    define('JS_LATEST_UPDATE', 'v=' . $_SESSION['VERSION']);
-} else {
-    define('JS_LATEST_UPDATE', 'r=' . time());
-}
 define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,3);"'));
 
 // Load Hestia Config directly
@@ -36,8 +33,10 @@ function destroy_sessions()
 $i = 0;
 
 // Saving user IPs to the session for preventing session hijacking
-$user_combined_ip = $_SERVER['REMOTE_ADDR'];
-
+$user_combined_ip = '';
+if (isset($_SERVER['REMOTE_ADDR'])) {
+    $user_combined_ip = $_SERVER['REMOTE_ADDR'];
+}
 if (isset($_SERVER['HTTP_CLIENT_IP'])) {
     $user_combined_ip .= '|' . $_SERVER['HTTP_CLIENT_IP'];
 }
@@ -96,6 +95,12 @@ if (isset($_SESSION['user'])) {
     }
 }
 
+if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
+    define('JS_LATEST_UPDATE', 'v=' . $_SESSION['VERSION']);
+} else {
+    define('JS_LATEST_UPDATE', 'r=' . time());
+}
+
 if (!defined('NO_AUTH_REQUIRED')) {
     if (empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])) {
         destroy_sessions();
@@ -142,7 +147,8 @@ function check_return_code($return_var, $output)
         $_SESSION['error_msg'] = $error;
     }
 }
-function check_return_code_redirect($return_var, $output, $location){
+function check_return_code_redirect($return_var, $output, $location)
+{
     if ($return_var != 0) {
         $error = implode('<br>', $output);
         if (empty($error)) {
@@ -151,7 +157,6 @@ function check_return_code_redirect($return_var, $output, $location){
         $_SESSION['error_msg'] = $error;
         header("Location:".$location);
     }
-
 }
 
 function render_page($user, $TAB, $page)
@@ -202,21 +207,21 @@ function verify_csrf($method, $return = false)
     }
 }
 
-function show_error_panel($data){
+function show_error_panel($data)
+{
     if (!empty($data['error_msg'])) {
         $msg_icon = 'fa-exclamation-circle status-icon red';
         $msg_text = htmlentities($data['error_msg']);
         $msg_id = 'vst-error';
     } else {
         if (!empty($data['ok_msg'])) {
-        $msg_icon = 'fa-check-circle status-icon green';
-        $msg_text = $data['ok_msg'];
-        $msg_id = 'vst-ok';
-    }
-    }
-    ?>
-        <span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
-    <?php
+            $msg_icon = 'fa-check-circle status-icon green';
+            $msg_text = $data['ok_msg'];
+            $msg_id = 'vst-ok';
+        }
+    } ?>
+<span class="<?=$msg_id; ?>"> <i class="fas <?=$msg_icon; ?>"></i> <?=$msg_text; ?></span>
+<?php
 }
 
 function top_panel($user, $TAB)
@@ -235,10 +240,10 @@ function top_panel($user, $TAB)
 
     // Log out active sessions for suspended users
     if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
-        if(empty($_SESSION['look'])){
-        destroy_sessions();
-        $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
-        header('Location: /login/');
+        if (empty($_SESSION['look'])) {
+            destroy_sessions();
+            $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
+            header('Location: /login/');
         }
     }
 

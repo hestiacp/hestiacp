@@ -27,19 +27,22 @@
             die();
         }
     }
+
     function prevent_post_csrf()
     {
-        if ($_SERVER['REQUEST_METHOD']==='POST') {
-            $hostname = explode(':', $_SERVER['HTTP_HOST']);
-            $port=$hostname[1];
-            $hostname=$hostname[0];
-            if (strpos($_SERVER['HTTP_ORIGIN'], gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
-                return checkStrictness(2);
-            } else {
-                if (strpos($_SERVER['HTTP_ORIGIN'], $hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
-                    return checkStrictness(1);
+        if (!empty($_SERVER['REQUEST_METHOD'])) {
+            if ($_SERVER['REQUEST_METHOD']==='POST') {
+                $hostname = explode(':', $_SERVER['HTTP_HOST']);
+                $port=$hostname[1];
+                $hostname=$hostname[0];
+                if (strpos($_SERVER['HTTP_ORIGIN'], gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
+                    return checkStrictness(2);
                 } else {
-                    return checkStrictness(0);
+                    if (strpos($_SERVER['HTTP_ORIGIN'], $hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
+                        return checkStrictness(1);
+                    } else {
+                        return checkStrictness(0);
+                    }
                 }
             }
         }
@@ -47,21 +50,23 @@
 
     function prevent_get_csrf()
     {
-        if ($_SERVER['REQUEST_METHOD']==='GET') {
-            $hostname = explode(':', $_SERVER['HTTP_HOST']);
-            $port=$hostname[1];
-            $hostname=$hostname[0];
-            //list of possible entries route and these should never be blocked
-            if (in_array($_SERVER['DOCUMENT_URI'], array('/list/user/index.php', '/login/index.php','/list/web/index.php','/list/dns/index.php','/list/mail/index.php','/list/db/index.php','/list/cron/index.php','/list/backup/index.php','/reset/index.php'))) {
-                return true;
-            }
-            if (strpos($_SERVER['HTTP_REFERER'], gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
-                return checkStrictness(2);
-            } else {
-                if (strpos($_SERVER['HTTP_REFERER'], $hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
-                    return checkStrictness(1);
+        if (!empty($_SERVER['REQUEST_METHOD'])) {
+            if ($_SERVER['REQUEST_METHOD']==='GET') {
+                $hostname = explode(':', $_SERVER['HTTP_HOST']);
+                $port=$hostname[1];
+                $hostname=$hostname[0];
+                //list of possible entries route and these should never be blocked
+                if (in_array($_SERVER['DOCUMENT_URI'], array('/list/user/index.php', '/login/index.php','/list/web/index.php','/list/dns/index.php','/list/mail/index.php','/list/db/index.php','/list/cron/index.php','/list/backup/index.php','/reset/index.php'))) {
+                    return true;
+                }
+                if (strpos($_SERVER['HTTP_REFERER'], gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
+                    return checkStrictness(2);
                 } else {
-                    return checkStrictness(0);
+                    if (strpos($_SERVER['HTTP_REFERER'], $hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
+                        return checkStrictness(1);
+                    } else {
+                        return checkStrictness(0);
+                    }
                 }
             }
         }

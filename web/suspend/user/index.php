@@ -16,7 +16,8 @@ if ($_SESSION['userContext'] != 'admin') {
 }
 
 if (!empty($_GET['user'])) {
-    exec(HESTIA_CMD."v-suspend-user ".$user, $output, $return_var);
+    $v_username = escapeshellarg($_GET['user']);
+    exec(HESTIA_CMD."v-suspend-user ".$v_username, $output, $return_var);
 }
 check_return_code($return_var, $output);
 unset($output);

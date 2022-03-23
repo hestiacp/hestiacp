@@ -3,7 +3,7 @@
 // Updates database username dynamically, showing its prefix
 App.Actions.DB.update_db_username_hint = function(elm, hint) {
     if (hint.trim() == '') {
-        $(elm).parent().find('.hint').html('');
+        $(elm).parent().find('.hint').text('');
     } 
     $(elm).parent().find('.hint').text(GLOBAL.DB_USER_PREFIX + hint);
 }
@@ -13,7 +13,7 @@ App.Actions.DB.update_db_username_hint = function(elm, hint) {
 // Updates database name dynamically, showing its prefix
 App.Actions.DB.update_db_databasename_hint = function(elm, hint) {
     if (hint.trim() == '') {
-        $(elm).parent().find('.hint').html('');
+        $(elm).parent().find('.hint').text('');
     } 
     $(elm).parent().find('.hint').text(GLOBAL.DB_DBNAME_PREFIX + hint);
 }

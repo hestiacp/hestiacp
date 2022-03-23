@@ -75,9 +75,7 @@ if (!empty($_POST['ok'])) {
     $aliases_arr = array_filter($aliases_arr);
     $aliases = implode(",", $aliases_arr);
     $aliases = escapeshellarg($aliases);
-    if (empty($_POST['v_aliases'])) {
-        $aliases = 'none';
-    }
+
 
     // Define proxy extensions
     $v_proxy_ext = $_POST['v_proxy_ext'];
@@ -104,7 +102,7 @@ if (!empty($_POST['ok'])) {
     $v_stats_password = $data[$v_domain]['STATS_PASSWORD'];
     $v_custom_doc_domain = $_POST['v-custom-doc-domain'];
     $v_custom_doc_folder = $_POST['v-custom-doc-folder'];
-    $v_custom_doc_root_prepath = '/home/'.$user.'/web/';
+    $v_custom_doc_root_prepath = '/home/'.$user_plain.'/web/';
 
     $v_ftp = $_POST['v_ftp'];
     $v_ftp_user = $_POST['v_ftp_user'];
@@ -118,9 +116,9 @@ if (!empty($_POST['ok'])) {
     $user_config = json_decode(implode('', $output), true);
     unset($output);
 
-    $v_template = $user_config[$user]['TEMPLATE'];
-    $v_backend_template = $user_config[$user]['BACKEND_TEMPLATE'];
-    $v_proxy_template = $user_config[$user]['PROXY_TEMPLATE'];
+    $v_template = $user_config[$user_plain]['TEMPLATE'];
+    $v_backend_template = $user_config[$user_plain]['BACKEND_TEMPLATE'];
+    $v_proxy_template = $user_config[$user_plain]['PROXY_TEMPLATE'];
 
     // Set advanced option checkmark
     if (!empty($_POST['v_proxy'])) {
@@ -414,7 +412,7 @@ if (!empty($_POST['ok'])) {
                     }
                 }
 
-                $v_ftp_user_data['v_ftp_user'] = preg_replace("/^".$user."_/i", "", $v_ftp_user_data['v_ftp_user']);
+                $v_ftp_user_data['v_ftp_user'] = preg_replace("/^".$user_plain."_/i", "", $v_ftp_user_data['v_ftp_user']);
                 $v_ftp_username      = $v_ftp_user_data['v_ftp_user'];
                 $v_ftp_username_full = $user . '_' . $v_ftp_user_data['v_ftp_user'];
                 $v_ftp_user = escapeshellarg($v_ftp_user_data['v_ftp_user']);
@@ -433,7 +431,7 @@ if (!empty($_POST['ok'])) {
                         $subject = _("FTP login credentials");
                         $from = "noreply@".$v_domain;
                         $from_name = _('Hestia Control Panel');
-                        $mailtext = sprintf(_('FTP_ACCOUNT_READY'), $v_domain, $user, $v_ftp_user_data['v_ftp_user'], $v_ftp_user_data['v_ftp_password']);
+                        $mailtext = sprintf(_('FTP_ACCOUNT_READY'), $v_domain, $user_plain, $v_ftp_user_data['v_ftp_user'], $v_ftp_user_data['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from, $from_name);
                         unset($v_ftp_email);
                     }
@@ -486,9 +484,9 @@ if (!empty($_POST['ok'])) {
 }
 
 // Define user variables
-$v_ftp_user_prepath = $panel[$user]['HOME'] . "/web";
-$v_ftp_email = $panel[$user]['CONTACT'];
-$v_custom_doc_root_prepath = '/home/'.$user.'/web/';
+$v_ftp_user_prepath = $panel[$user_plain]['HOME'] . "/web";
+$v_ftp_email = $panel[$user_plain]['CONTACT'];
+$v_custom_doc_root_prepath = '/home/'.$user_plain.'/web/';
 
 if ($_POST['v_ssl_forcessl'] != 'no') {
     $v_ssl_forcessl = 'yes';
@@ -503,14 +501,13 @@ unset($output);
 exec(HESTIA_CMD."v-list-web-templates json", $output, $return_var);
 $templates = json_decode(implode('', $output), true);
 unset($output);
-$v_template = (!empty($_POST['v_template'])) ? $_POST['v_template'] : $user_config[$user]['WEB_TEMPLATE'];
-
+$v_template = (!empty($_POST['v_template'])) ? $_POST['v_template'] : $user_config[$user_plain]['WEB_TEMPLATE'];
 // List backend templates
 if (!empty($_SESSION['WEB_BACKEND'])) {
     exec(HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
     $backend_templates = json_decode(implode('', $output), true);
     unset($output);
-    $v_backend_template = (!empty($_POST['v_backend_template'])) ? $_POST['v_backend_template'] : $user_config[$user]['BACKEND_TEMPLATE'];
+    $v_backend_template = (!empty($_POST['v_backend_template'])) ? $_POST['v_backend_template'] : $user_config[$user_plain]['BACKEND_TEMPLATE'];
 }
 
 // List proxy templates
@@ -518,7 +515,7 @@ if (!empty($_SESSION['PROXY_SYSTEM'])) {
     exec(HESTIA_CMD."v-list-web-templates-proxy json", $output, $return_var);
     $proxy_templates = json_decode(implode('', $output), true);
     unset($output);
-    $v_proxy_template = (!empty($_POST['v_proxy_template'])) ? $_POST['v_proxy_template'] : $user_config[$user]['PROXY_TEMPLATE'];
+    $v_proxy_template = (!empty($_POST['v_proxy_template'])) ? $_POST['v_proxy_template'] : $user_config[$user_plain]['PROXY_TEMPLATE'];
 }
 
 // List IP addresses
@@ -532,7 +529,7 @@ $stats = json_decode(implode('', $output), true);
 unset($output);
 
 // Get all user domains
-exec(HESTIA_CMD."v-list-web-domains ".escapeshellarg($user)." json", $output, $return_var);
+exec(HESTIA_CMD."v-list-web-domains ".$user." json", $output, $return_var);
 $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);

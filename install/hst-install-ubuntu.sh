@@ -1997,6 +1997,8 @@ command="sudo $HESTIA/bin/v-update-user-stats"
 $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-letsencrypt-ssl"
+$HESTIA/bin/v-add-cron-job 'admin' '30' '07' '*' '*' '*' "$command"
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate apt

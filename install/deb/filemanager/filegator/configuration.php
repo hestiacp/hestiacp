@@ -14,11 +14,13 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
     if (isset($_SESSION['user'])) {
         $v_user = $_SESSION['user'];
     }
-    if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
-        $v_user = $_SESSION['look'];
-    }
-    if ((isset($_SESSION['look']) && ($_SESSION['look'] == 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {
-        header('Location: /');
+    if (!empty($_SESSION['look'])) {
+        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
+            $v_user = $_SESSION['look'];
+        }
+        if ((isset($_SESSION['look']) && ($_SESSION['look'] == 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {
+            header('Location: /');
+        }
     }
     # Create filemanager sftp key if missing and trash it after 30 min
     if (! file_exists('/home/'.basename($v_user).'/.ssh/hst-filemanager-key')) {
@@ -28,9 +30,9 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
     if (!isset($_SESSION['SFTP_PORT'])) {
         exec("sudo /usr/local/hestia/bin/v-list-sys-sshd-port json", $output, $result);
         $port=json_decode(implode('', $output));
-        if ( is_numeric($port[0]) && $port[0] > 0 ){
+        if (is_numeric($port[0]) && $port[0] > 0) {
             $_SESSION['SFTP_PORT'] = $port[0];
-        } else if ( preg_match('/^\s*Port\s+(\d+)$/im', file_get_contents('/etc/ssh/sshd_config'), $matches) ) {
+        } elseif (preg_match('/^\s*Port\s+(\d+)$/im', file_get_contents('/etc/ssh/sshd_config'), $matches)) {
             $_SESSION['SFTP_PORT'] = $matches[1] ?? 22;
         } else {
             $_SESSION['SFTP_PORT'] = 22;

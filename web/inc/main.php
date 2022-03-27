@@ -122,7 +122,7 @@ if (isset($_SESSION['user'])) {
     $user_plain = htmlentities($_SESSION['user']);
 }
 
-if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
+if (isset($_SESSION['look']) && $_SESSION['look']  != '' && ($_SESSION['userContext'] === 'admin')) {
     $user = escapeshellarg($_SESSION['look']);
     $user_plain = htmlentities($_SESSION['look']);
 }
@@ -168,8 +168,7 @@ function render_page($user, $TAB, $page)
     include($__template_dir . 'header.html');
 
     // Panel
-    top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
-
+    $panel = top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
     // Extract global variables
     // I think those variables should be passed via arguments
     extract($GLOBALS, EXTR_SKIP);
@@ -209,6 +208,9 @@ function verify_csrf($method, $return = false)
 
 function show_error_panel($data)
 {
+    $msg_id = '';
+    $msg_icon = '';
+    $msg_text = '';
     if (!empty($data['error_msg'])) {
         $msg_icon = 'fa-exclamation-circle status-icon red';
         $msg_text = htmlentities($data['error_msg']);
@@ -226,8 +228,7 @@ function show_error_panel($data)
 
 function top_panel($user, $TAB)
 {
-    global $panel;
-    $command = HESTIA_CMD . 'v-list-user ' . escapeshellarg($user) . " 'json'";
+    $command = HESTIA_CMD . 'v-list-user ' . $user . " 'json'";
     exec($command, $output, $return_var);
     if ($return_var > 0) {
         destroy_sessions();
@@ -290,12 +291,13 @@ function top_panel($user, $TAB)
     }
 
     include(dirname(__FILE__) . '/../templates/includes/panel.html');
+    return $panel;
 }
 
 function translate_date($date)
 {
-    $date = strtotime($date);
-    return strftime('%d &nbsp;', $date) . _(strftime('%b', $date)) . strftime(' &nbsp;%Y', $date);
+    $date = new DateTime($date);
+    return $date -> format('d').' '. _($date -> format('M')).' '.$date -> format('Y');
 }
 
 function humanize_time($usage)
@@ -307,15 +309,20 @@ function humanize_time($usage)
             $usage = number_format($usage);
             return sprintf(ngettext('%d day', '%d days', $usage), $usage);
         } else {
+            $usage = round($usage);
             return sprintf(ngettext('%d hour', '%d hours', $usage), $usage);
         }
     } else {
+        $usage = round($usage);
         return sprintf(ngettext('%d minute', '%d minutes', $usage), $usage);
     }
 }
 
 function humanize_usage_size($usage)
 {
+    if ($usage == 'unlimited') {
+        return '∞';
+    }
     if ($usage > 1024) {
         $usage = $usage / 1024;
         if ($usage > 1024) {
@@ -335,6 +342,10 @@ function humanize_usage_size($usage)
 
 function humanize_usage_measure($usage)
 {
+    if ($usage == 'unlimited') {
+        return 'mb';
+    }
+
     $measure = 'kb';
     if ($usage > 1024) {
         $usage = $usage / 1024;
@@ -352,6 +363,10 @@ function humanize_usage_measure($usage)
 
 function get_percentage($used, $total)
 {
+    if ($total = "unlimited") {
+        //return 0 if unlimited
+        return 0;
+    }
     if (!isset($total)) {
         $total = 0;
     }
@@ -424,10 +439,11 @@ function list_timezones()
         $offset_prefix = $offset < 0 ? '-' : '+';
         $offset_formatted = gmdate('H:i', abs($offset));
         $pretty_offset = "UTC${offset_prefix}${offset_formatted}";
-        $t = new DateTimeZone($timezone);
-        $c = new DateTime(null, $t);
+        $c = new DateTime(gmdate('Y-M-d H:i:s'), new DateTimeZone('UTC'));
+        $c->setTimezone(new DateTimeZone($timezone));
         $current_time = $c->format('H:i:s');
         $timezone_list[$timezone] = "$timezone [ $current_time ] ${pretty_offset}";
+        #$timezone_list[$timezone] = "$timezone ${pretty_offset}";
     }
     return $timezone_list;
 }

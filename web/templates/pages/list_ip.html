@@ -64,7 +64,7 @@
 		foreach ($data as $key => $value) {
 			++$i;
 		?>
-		<div class="l-unit <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; ?> animated fadeIn" v_unit_id="<?=$key?>"
+		<div class="l-unit animated fadeIn" v_unit_id="<?=$key?>"
 			v_section="ip" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
 			sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=$data[$key]['INTERFACE']?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
 			sort-owner="<?=$data[$key]['OWNER']?>">

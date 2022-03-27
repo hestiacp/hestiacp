@@ -79,6 +79,17 @@
 	<?php
 		foreach ($data as $key => $value) {
 			++$i;
+			if ($data[$key]['SUSPENDED'] == 'yes') {
+				$status = 'suspended';
+				$spnd_action = 'unsuspend';
+				$spnd_icon = 'fa-play';
+				$spnd_confirmation = _('UNSUSPEND_DOMAIN_CONFIRMATION');
+			} else {
+				$status = 'active';
+				$spnd_action = 'suspend';
+				$spnd_icon = 'fa-pause';
+				$spnd_confirmation = _('SUSPEND_DOMAIN_CONFIRMATION');
+			}
 		?>
 		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animated fadeIn"
 			v_unit_id="<?=htmlentities($key);?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-record="<?=$data[$key]['RECORD']?>" sort-type="<?=$data[$key]['TYPE']?>" sort-ttl="<?=$data[$key]['TTL']?>" sort-value="<?=$data[$key]['VALUE']?>">

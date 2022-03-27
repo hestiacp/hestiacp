@@ -20,7 +20,6 @@ use Filegator\Services\Service;
  */
 class HestiaAuth implements Service, AuthInterface
 {
-
     protected $permissions = [];
 
     protected $private_repos = false;
@@ -32,13 +31,15 @@ class HestiaAuth implements Service, AuthInterface
         if (isset($_SESSION['user'])) {
             $v_user = $_SESSION['user'];
         }
-        if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')){
-            $v_user = $_SESSION['look'];
-        }
-        if ( $_SESSION['look'] == 'admin' && $_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes' ){
-            // Go away do not login 
-            header('Location: /');
-            exit;
+        if (!empty($_SESSION['look'])) {
+            if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
+                $v_user = $_SESSION['look'];
+            }
+            if ($_SESSION['look'] == 'admin' && $_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes') {
+                // Go away do not login
+                header('Location: /');
+                exit;
+            }
         }
         $this->hestia_user = $v_user;
         $this->permissions = isset($config['permissions']) ? (array)$config['permissions'] : [];
@@ -47,16 +48,15 @@ class HestiaAuth implements Service, AuthInterface
 
     public function user(): ?User
     {
-
         $cmd="/usr/bin/sudo /usr/local/hestia/bin/v-list-user";
-        exec ($cmd." ".escapeshellarg($this->hestia_user )." json", $output, $return_var);
+        exec($cmd." ".escapeshellarg($this->hestia_user)." json", $output, $return_var);
 
         if ($return_var == 0) {
             $data = json_decode(implode('', $output), true);
             $hestia_user_info = $data[$this->hestia_user];
             return $this->transformUser($hestia_user_info);
         }
-        
+
         return $this->getGuest();
     }
 
@@ -126,5 +126,4 @@ class HestiaAuth implements Service, AuthInterface
 
         return $guest;
     }
-
 }

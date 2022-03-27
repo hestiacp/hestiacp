@@ -47,9 +47,9 @@
 	<?php
 		foreach ($data as $key => $value) {
 			++$i;
-			list($ip,$chain) = explode(":",$key);
+			$ip = $key;
 		?>
-		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animated fadeIn">
+		<div class="l-unit animated fadeIn">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="ipchain[]" value="<?=$ip . ':' . $value['CHAIN'] ?>">

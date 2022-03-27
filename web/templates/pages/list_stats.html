@@ -63,7 +63,7 @@
 		++$i;
 		?>
 		<div class="header animated fadeIn">
-			<div class="l-unit <?php if ($_COOKIE['stats-'.sha1($key)] == 1) echo ' l-unit--starred';?>" uniq-id="stats-<?=sha1($key)?>">
+			<div class="l-unit">
 				<div class="l-unit-toolbar clearfix">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--left">
 					</div>
@@ -77,7 +77,8 @@
 				</div>
 				<div class="l-unit__col l-unit__col--right">
 					<div class="l-unit__name separate">
-						<?=_(strftime("%b", strtotime($key))).strftime(" %Y", strtotime($key))?>
+						<?php $date = new DateTime($key);
+						echo _($date -> format('M')) .' '.$date -> format('Y');?>
 					</div>
 					<div class="l-unit__stats">
 						<table>

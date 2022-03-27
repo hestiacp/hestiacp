@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'IP';
 
@@ -87,6 +88,27 @@ exec(HESTIA_CMD."v-list-sys-users 'json'", $output, $return_var);
 $users = json_decode(implode('', $output), true);
 unset($output);
 
+if (empty($v_ip)) {
+    $v_ip = '';
+}
+if (empty($v_netmask)) {
+    $v_netmask = '';
+}
+if (empty($v_name)) {
+    $v_name = '';
+}
+if (empty($v_nat)) {
+    $v_nat = '';
+}
+if (empty($v_interface)) {
+    $v_interface = '';
+}
+if (empty($ip_status)) {
+    $ip_status = '';
+}
+if (empty($v_owner)) {
+    $v_owner = '';
+}
 // Render
 render_page($user, $TAB, 'add_ip');
 

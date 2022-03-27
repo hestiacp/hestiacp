@@ -93,7 +93,7 @@
 						</tr>
 						<tr>
 							<td>
-								<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('send-welcome');" name="v_login_disabled" <?php if ($data[$user_plain]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?=_('Do not allow user to log in to Control Panel');?></label>
+								<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('send-welcome');" name="v_login_disabled" <?php if ($v_login_disabled == "yes") echo "checked=yes" ?>><?=_('Do not allow user to log in to Control Panel');?></label>
 							</td>
 						</tr>
 						<tr id="send-welcome">

@@ -2,7 +2,8 @@
 # info: check letsencrypt domain
 # options: USER DOMAIN [ALIASES] [MAIL]
 #
-# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com
+# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
+# example: v-add-letsencrypt-domain admin wonderland.com '' yes
 #
 # This function check and validates domain with Let's Encrypt
 

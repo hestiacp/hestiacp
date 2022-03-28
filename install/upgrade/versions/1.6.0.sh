@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.5.9
+# Hestia Control Panel upgrade script for target version 1.6.0
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -20,3 +20,15 @@ upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
+# Includes
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+
+# Adding LE autorenew cronjob if there are none
+if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
+	min=$(generate_password '012345' '2')
+	hour=$(generate_password '1234567' '1')
+	command="sudo $BIN/v-update-letsencrypt-ssl"
+	$BIN/v-add-cron-job 'admin' "$min" "$hour" '*' '*' '*' "$command"
+fi

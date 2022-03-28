@@ -203,7 +203,6 @@ new_uid=$(grep "^$user:" /etc/passwd |cut -f 3 -d :)
 # Restoring web domains
 if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
     echo -e  "\n-- WEB --" |tee -a $tmpdir/restore.log
-    ADD_LETSENCRYPT_CRON_JOB=false
 
     # Creating web domain restore list
     backup_domains=$(tar -tf $BACKUP/$backup |grep "^./web")
@@ -316,10 +315,6 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
                 fi
             fi
 
-            if [ "$LETSENCRYPT" = "yes" ]; then
-                ADD_LETSENCRYPT_CRON_JOB=true
-            fi
-
             # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT'"
@@ -380,17 +375,6 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
         # Rebuilding web config for the second time to make sure ftp users keep working 
         rebuild_web_domain_conf
     done
-
-    # if there is at least one domain with LE
-    if $ADD_LETSENCRYPT_CRON_JOB ; then
-        # Adding LE autorenew cronjob
-        if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
-            min=$(generate_password '012345' '2')
-            hour=$(generate_password '1234567' '1')
-            cmd="sudo $BIN/v-update-letsencrypt-ssl"
-            $BIN/v-add-cron-job admin "$min" "$hour" '*' '*' '*' "$cmd" > /dev/null
-        fi
-    fi
 
     # Adding user to traffic queue
     sed -i "/ $user /d" $HESTIA/data/queue/traffic.pipe

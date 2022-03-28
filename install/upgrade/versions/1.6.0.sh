@@ -21,10 +21,6 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-# Includes
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
-
 # Adding LE autorenew cronjob if there are none
 if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
 	min=$(generate_password '012345' '2')

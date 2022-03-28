@@ -1,4 +1,5 @@
 <?php
+
 define('NO_AUTH_REQUIRED', true);
 // Main include
 
@@ -36,7 +37,7 @@ if (isset($_SESSION['user'])) {
                 unset($_SESSION['_sf2_attributes']);
                 unset($_SESSION['_sf2_meta']);
                 header('Location: /login/');
-            }else{
+            } else {
                 # User doesn't exists
                 header('Location: /');
             }
@@ -106,14 +107,15 @@ function authenticate_user($user, $password, $twofa = '')
         $output = '';
         exec(HESTIA_CMD . 'v-get-user-salt ' . $v_user . ' ' . $v_ip . ' json', $output, $return_var);
         $pam = json_decode(implode('', $output), true);
+        unset($output);
         if ($return_var > 0) {
             sleep(2);
-            if($return_var == 5){
-                $error = '<a class="error">' . _('Account has been suspended') . '</a>';   
-            }elseif($return_var == 1){
-                $error = '<a class="error">' . _('Unsupported hash method') . '</a>';     
-            }else{
-                $error = '<a class="error">' . _('Invalid username or password') . '</a>';    
+            if ($return_var == 5) {
+                $error = '<a class="error">' . _('Account has been suspended') . '</a>';
+            } elseif ($return_var == 1) {
+                $error = '<a class="error">' . _('Unsupported hash method') . '</a>';
+            } else {
+                $error = '<a class="error">' . _('Invalid username or password') . '</a>';
             }
             return $error;
         } else {
@@ -126,6 +128,15 @@ function authenticate_user($user, $password, $twofa = '')
             if ($method == 'sha-512') {
                 $hash = crypt($password, '$6$rounds=5000$' . $salt . '$');
                 $hash = str_replace('$rounds=5000', '', $hash);
+            }
+            if ($method == 'yescrypt') {
+                $v_password = tempnam("/tmp", "vst");
+                $fp = fopen($v_password, "w");
+                fwrite($fp, $_POST['password']."\n");
+                fclose($fp);
+                exec(HESTIA_CMD . 'v-check-user-password '. $v_user.' '. $v_password, $output, $return_var);
+                $hash = $output[0];
+                unset($output);
             }
             if ($method == 'des') {
                 $hash = crypt($password, $salt);

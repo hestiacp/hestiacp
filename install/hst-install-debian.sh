@@ -117,7 +117,15 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
+    matrix=$1 
+    length=$2 
+    if [ -z "$matrix" ]; then 
+        matrix="A-Za-z0-9" 
+    fi 
+    if [ -z "$length" ]; then 
+        length=16 
+    fi 
+    head /dev/urandom | tr -dc $matrix | head -c$length
 }
 
 # Defining return code check function
@@ -1978,7 +1986,9 @@ $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-letsencrypt-ssl"
-$HESTIA/bin/v-add-cron-job 'admin' '30' '07' '*' '*' '*' "$command"
+min=$(gen_pass '012345' '2')
+hour=$(gen_pass '1234567' '1')
+$HESTIA/bin/v-add-cron-job 'admin' "$min" "$hour" '*' '*' '*' "$command"
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate apt

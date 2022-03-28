@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.11] - Service release
+
+### Bugfixes
+- Fixed an issue where Hestia port change did not update chain for fail2ban (#2465)
+- Fixed permission issues with /var/log/roundcube (#2466)
+- Fixed multiple issues in UI (#2464)
+- Allow v-change-user-template update backend templates (#2475)
+- Update composer dependencies (#2458 #2459)
+- Fixed an XSS vulnerability in "Edit" server page. (#2471) [CVE-2022-0986](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0986)
+- Fixed an issue with caching templates and internal redirects (#2482)
+
 ## [1.5.10] - Service release
 
 ### Bugfixes

@@ -38,7 +38,7 @@ if (!empty($_GET['app'])) {
             $app_installer = new $app_installer_class($v_domain, $hestia);
             $info = $app_installer -> info();
             if ($info['enabled'] != true) {
-                $_SESSION['error_msg'] = sprintf(_('%s installer missing'), $app);
+                $_SESSION['error_msg'] = sprintf(_('%s is not supported'), $app);
             } else {
                 $installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
                 $GLOBALS['WebappInstaller'] = $installer;

@@ -13,8 +13,12 @@
 						echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
 					}
 				}
+				if(!empty($msg_id)){
 			?>
 			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Install');?></a>
+			<?php 
+			}
+			?>
 		</div>
 	</div>
 </div>

@@ -34,7 +34,7 @@ VERBOSE='no'
 HESTIA_INSTALL_VER='1.5.12~alpha'
 # Dependencies
 pma_v='5.1.3'
-rc_v="1.5.2"
+rc_v="1.6.0"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
@@ -117,7 +117,15 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
+    matrix=$1 
+    length=$2 
+    if [ -z "$matrix" ]; then 
+        matrix="A-Za-z0-9" 
+    fi 
+    if [ -z "$length" ]; then 
+        length=16 
+    fi 
+    head /dev/urandom | tr -dc $matrix | head -c$length
 }
 
 # Defining return code check function
@@ -1977,6 +1985,10 @@ command="sudo $HESTIA/bin/v-update-user-stats"
 $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-letsencrypt-ssl"
+min=$(gen_pass '012345' '2')
+hour=$(gen_pass '1234567' '1')
+$HESTIA/bin/v-add-cron-job 'admin' "$min" "$hour" '*' '*' '*' "$command"
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate apt

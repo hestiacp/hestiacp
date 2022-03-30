@@ -30,11 +30,12 @@ class WordpressSetup extends BaseSetup
             'install_directory' => ['type'=>'text', 'value'=>'', 'placeholder'=>'/'],
             'language' => [
                 'type' => 'select',
+                'value' => 'en_US',
                 'options' => [
-                        'en_US' => 'Englsh',
                         'cs_CZ' => 'Czech',
                         'de_DE' => 'German',
                         'es_ES' => 'Spanish',
+                        'en_US' => 'English',
                         'fr_FR' => 'French',
                         'hu_HU' => 'Hungarian',
                         'it_IT' => 'Italian',

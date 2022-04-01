@@ -438,6 +438,10 @@ get_object_value() {
     eval echo $4
 }
 
+get_object_values() {
+    parse_object_kv_list $(grep "$2='$3'" $USER_DATA/$1.conf)   
+}
+
 # Update object value
 update_object_value() {
     row=$(grep -nF "$2='$3'" $USER_DATA/$1.conf)
@@ -1159,6 +1163,8 @@ is_format_valid() {
                 protocol)       is_fw_protocol_format_valid "$arg" ;;
                 proxy_ext)      is_extention_format_valid "$arg" ;;
                 quota)          is_int_format_valid "$arg" 'quota' ;;
+                rate)           is_int_format_valid "$arg" 'rate' ;;
+                                
                 record)         is_common_format_valid "$arg" 'record';;
                 restart)        is_restart_format_valid "$arg" 'restart' ;;
                 role)           is_role_valid "$arg" 'role' ;;

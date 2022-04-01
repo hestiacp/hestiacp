@@ -23,11 +23,11 @@ $v_username = $user;
 // List mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_domain = $_GET['domain'];
-    
+
     exec(HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
     $webmail_clients = json_decode(implode('', $output), true);
     unset($output);
-    
+
     exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     check_return_code_redirect($return_var, $output, '/list/mail/');
@@ -38,6 +38,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     $v_antivirus = $data[$v_domain]['ANTIVIRUS'];
     $v_dkim = $data[$v_domain]['DKIM'];
     $v_catchall = $data[$v_domain]['CATCHALL'];
+    $v_rate = $data[$v_domain]['RATE_LIMIT'];
     $v_date = $data[$v_domain]['DATE'];
     $v_time = $data[$v_domain]['TIME'];
     $v_suspended = $data[$v_domain]['SUSPENDED'];
@@ -100,10 +101,14 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     }
     $vfwd = explode(",", $data[$v_account]['FWD']);
     $v_fwd_only = $data[$v_account]['FWD_ONLY'];
+    $v_rate = $data[$v_account]['RATE_LIMIT'];
     $v_quota = $data[$v_account]['QUOTA'];
     $v_autoreply = $data[$v_account]['AUTOREPLY'];
     $v_suspended = $data[$v_account]['SUSPENDED'];
     $v_webmail_alias = $data[$v_account]['WEBMAIL_ALIAS'];
+    if (empty($v_send_email)) {
+        $v_send_email = '';
+    }
     if ($v_suspended == 'yes') {
         $v_status =  'suspended';
     } else {
@@ -119,6 +124,8 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
         unset($output);
         $v_autoreply_message = $autoreply_str[$v_account]['MSG'];
         $v_autoreply_message=str_replace("\\n", "\n", $v_autoreply_message);
+    } else {
+        $v_autoreply_message = '';
     }
 }
 
@@ -127,13 +134,13 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
 if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['account']))) {
     // Check token
     verify_csrf($_POST);
-    
-    
+
+
     exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     check_return_code_redirect($return_var, $output, '/list/mail/');
     unset($output);
-    
+
     // Delete antispam
     if (($v_antispam == 'yes') && (empty($_POST['v_antispam'])) && (empty($_SESSION['error_msg']))) {
         exec(HESTIA_CMD."v-delete-mail-domain-antispam ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
@@ -187,6 +194,21 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         exec(HESTIA_CMD."v-delete-mail-domain-catchall ".$v_username." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var, $output);
         $v_catchall = '';
+        unset($output);
+    }
+    
+    // Change rate limit 
+    if (($v_rate != $_POST['v_rate']) && (empty($_SESSION['error_msg'])) && $_SESSION['userContext'] == 'admin') {
+        if (empty($_POST['v_rate'])) {
+            $v_rate = 'system';
+        } else {
+            $v_rate = escapeshellarg($_POST['v_rate']);
+        }
+        exec(HESTIA_CMD."v-change-mail-domain-rate-limit ".$v_username." ".escapeshellarg($v_domain)." ".$v_rate, $output, $return_var);
+        check_return_code($return_var, $output);
+        if ($v_rate == 'system') {
+            $v_rate = '';
+        }
         unset($output);
     }
 
@@ -494,6 +516,20 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
         }
         exec(HESTIA_CMD."v-change-mail-account-quota ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".$v_quota, $output, $return_var);
         check_return_code($return_var, $output);
+        unset($output);
+    }
+    // Change rate limit 
+    if (($v_rate != $_POST['v_rate']) && (empty($_SESSION['error_msg'])) && $_SESSION['userContext'] == 'admin') {
+        if (empty($_POST['v_rate'])) {
+            $v_rate = 'system';
+        } else {
+            $v_rate = escapeshellarg($_POST['v_rate']);
+        }
+        exec(HESTIA_CMD."v-change-mail-account-rate-limit ".$v_username." ".escapeshellarg($v_domain)." ".escapeshellarg($v_account)." ".$v_rate, $output, $return_var);
+        check_return_code($return_var, $output);
+        if ($v_rate == 'system') {
+            $v_rate = '';
+        }
         unset($output);
     }
 

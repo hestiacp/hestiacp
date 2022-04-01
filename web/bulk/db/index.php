@@ -26,6 +26,10 @@ if ($_SESSION['userContext'] === 'admin') {
     switch ($action) {
         case 'delete': $cmd='v-delete-database';
             break;
+        case 'suspend': $cmd='v-suspend-database';
+            break;
+        case 'unsuspend': $cmd='v-unsuspend-database';
+            break;
         default: header("Location: /list/db/"); exit;
     }
 }

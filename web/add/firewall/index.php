@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'FIREWALL';
 
@@ -82,6 +83,22 @@ if (!empty($_POST['ok'])) {    // Check token
         unset($v_ip);
         unset($v_comment);
     }
+}
+
+if (empty($v_action)) {
+    $v_action = '';
+}
+if (empty($v_protocol)) {
+    $v_protocol = '';
+}
+if (empty($v_port)) {
+    $v_port = '';
+}
+if (empty($v_ip)) {
+    $v_ip = '';
+}
+if (empty($v_comment)) {
+    $v_comment = '';
 }
 
 // Render

@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.12~alpha'
+HESTIA_INSTALL_VER='1.6.0~alpha'
 # Dependencies
 pma_v='5.1.3'
 rc_v="1.6.0"
@@ -1680,6 +1680,7 @@ if [ "$exim" = 'yes' ]; then
     fi
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
+	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
     touch /etc/exim4/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then

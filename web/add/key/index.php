@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 session_start();
 $TAB = 'USER';
@@ -60,7 +61,9 @@ if (!empty($_POST['ok'])) {
         $_SESSION['ok_msg'] = _('SSH KEY created');
     }
 }
-
+if (empty($v_key)) {
+    $v_key = '';
+}
 render_page($user, $TAB, 'add_key');
 
 // Flush session messages

@@ -259,6 +259,14 @@ if (!empty($_POST['ok_acc'])) {
         check_return_code($return_var, $output);
         unset($output);
     }
+    
+    // Add fwd_only flag
+    if ((!empty($_POST['v_rate'])) && (empty($_SESSION['error_msg']))  && $_SESSION['userContext'] == 'admin') {
+        $v_rate = escapeshellarg($_POST['v_rate']);
+        exec(HESTIA_CMD."v-change-mail-account-rate-limit ".$user." ".$v_domain." ".$v_account." ".$v_rate, $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+    }
 
     // Get webmail url
     if (empty($_SESSION['error_msg'])) {

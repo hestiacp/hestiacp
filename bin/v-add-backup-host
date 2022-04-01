@@ -192,10 +192,8 @@ if [ "$type" = 'b2' ]; then
     # Download b2 binary
     if [ ! -f "$b2cli" ]; then
         if [ "$arch" = 'aarch64' ] || [ "$arch" = 'arm64' ]; then
-            if ! [ -x "$(command -v pip3)" ]; then
-                apt install python3-pip
-            fi
-            pip3 install b2 > /dev/null 2>&1
+            echo "Error: B2 binary for arm64 must be downloaded manually."
+            exit 3
         else
             wget -O $b2cli $b2lnk > /dev/null 2>&1
             chmod +x $b2cli > /dev/null 2>&1

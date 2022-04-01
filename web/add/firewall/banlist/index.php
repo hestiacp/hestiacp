@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'FIREWALL';
 
@@ -54,6 +55,12 @@ if (!empty($_POST['ok'])) {
     }
 }
 
+if (empty($v_ip)) {
+    $v_ip = '';
+}
+if (empty($v_chain)) {
+    $v_chain = '';
+}
 // Render
 render_page($user, $TAB, 'add_firewall_banlist');
 

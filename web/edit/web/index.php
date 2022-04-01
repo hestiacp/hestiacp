@@ -38,9 +38,6 @@ $v_template = $data[$v_domain]['TPL'];
 $v_aliases = str_replace(',', "\n", $data[$v_domain]['ALIAS']);
 $valiases = explode(",", $data[$v_domain]['ALIAS']);
 
-$v_tpl = $data[$v_domain]['IP'];
-$v_cgi = $data[$v_domain]['CGI'];
-$v_elog = $data[$v_domain]['ELOG'];
 $v_ssl = $data[$v_domain]['SSL'];
 if (!empty($v_ssl)) {
     exec(HESTIA_CMD."v-list-web-domain-ssl ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
@@ -79,10 +76,13 @@ $v_proxy_template = $data[$v_domain]['PROXY'];
 $v_proxy_ext = str_replace(',', ', ', $data[$v_domain]['PROXY_EXT']);
 $v_stats = $data[$v_domain]['STATS'];
 $v_stats_user = $data[$v_domain]['STATS_USER'];
-if (!empty($v_stats_user)) {
-    $v_stats_password = "";
-}
+$v_stats_password = "";
+
 $v_custom_doc_root_prepath = '/home/'.$user_plain.'/web/';
+
+$v_custom_doc_root = '';
+$v_custom_doc_domain = '';
+$v_custom_doc_folder = '';
 
 if (!empty($data[$v_domain]['CUSTOM_DOCROOT'])) {
     $v_custom_doc_root = realpath($data[$v_domain]['CUSTOM_DOCROOT']) . DIRECTORY_SEPARATOR;
@@ -119,14 +119,15 @@ if (!empty($v_ftp_user)) {
     $v_ftp_password = "";
 }
 
-if ($v_custom_doc_domain != '') {
+
+if (isset($v_custom_doc_domain)) {
     $v_ftp_user_prepath = '/home/'.$user_plain.'/web/'.$v_custom_doc_domain;
 } else {
     $v_ftp_user_prepath = '/home/'.$user_plain.'/web/'.$v_domain;
 }
 
-
-$v_ftp_email = $panel[$user]['CONTACT'];
+//$v_ftp_email = $panel[$user]['CONTACT'];
+$v_ftp_email = '';
 $v_suspended = $data[$v_domain]['SUSPENDED'];
 if ($v_suspended == 'yes') {
     $v_status =  'suspended';
@@ -250,6 +251,9 @@ if (!empty($_POST['save'])) {
         }
 
         // Enable/Disable nginx cache
+        if (empty($_POST['v_nginx_cache_check'])) {
+            $_POST['v_nginx_cache_check'] = '';
+        }
         if (($_SESSION['WEB_SYSTEM'] == 'nginx') && ($v_nginx_cache_check != $_POST['v_nginx_cache_check']) || ($v_nginx_cache_duration != $_POST['v_nginx_cache_duration'] && $_POST['v_nginx_cache'] = "yes") && (empty($_SESSION['error_msg']))) {
             if ($_POST['v_nginx_cache_check'] == 'on') {
                 if (empty($_POST['v_nginx_cache_duration'])) {
@@ -847,8 +851,9 @@ if (!empty($_POST['save'])) {
                 $v_ftp_path = escapeshellarg(trim($v_ftp_user_data['v_ftp_path']));
                 if (escapeshellarg(trim($v_ftp_user_data['v_ftp_path_prev'])) != $v_ftp_path) {
                     exec(HESTIA_CMD."v-change-web-domain-ftp-path ".$user." ".escapeshellarg($v_domain)." ".$v_ftp_username." ".$v_ftp_path, $output, $return_var);
+                    check_return_code($return_var, $output);
+                    unset($output);
                 }
-
                 // Change FTP account password
                 if (!empty($v_ftp_user_data['v_ftp_password'])) {
                     $v_ftp_password = tempnam("/tmp", "vst");
@@ -867,9 +872,9 @@ if (!empty($_POST['save'])) {
                     send_email($to, $subject, $mailtext, $from, $from_name);
                     unset($v_ftp_email);
                 }
-                check_return_code($return_var, $output);
-                unset($output);
-
+                if (empty($v_ftp_user_data['v_ftp_email'])) {
+                    $v_ftp_user_data['v_ftp_email'] = '';
+                }
                 $v_ftp_users_updated[] = array(
                     'is_new'            => 0,
                     'v_ftp_user'        => $v_ftp_username,

@@ -56,14 +56,48 @@ $v_login_use_iplist = $data[$v_username]['LOGIN_USE_IPLIST'];
 $v_login_allowed_ips = $data[$v_username]['LOGIN_ALLOW_IPS'];
 $v_ns = $data[$v_username]['NS'];
 $nameservers = explode(",", $v_ns);
-$v_ns1 = $nameservers[0];
-$v_ns2 = $nameservers[1];
-$v_ns3 = $nameservers[2];
-$v_ns4 = $nameservers[3];
-$v_ns5 = $nameservers[4];
-$v_ns6 = $nameservers[5];
-$v_ns7 = $nameservers[6];
-$v_ns8 = $nameservers[7];
+if (empty($nameservers[0])) {
+    $v_ns1 = '';
+} else {
+    $v_ns1 = $nameservers[0];
+}
+if (empty($nameservers[1])) {
+    $v_ns2 = '';
+} else {
+    $v_ns2 = $nameservers[1];
+}
+if (empty($nameservers[2])) {
+    $v_ns3 = '';
+} else {
+    $v_ns3 = $nameservers[2];
+}
+if (empty($nameservers[3])) {
+    $v_ns4 = '';
+} else {
+    $v_ns4 = $nameservers[3];
+}
+if (empty($nameservers[4])) {
+    $v_ns5 = '';
+} else {
+    $v_ns5 = $nameservers[4];
+}
+if (empty($nameservers[5])) {
+    $v_ns6 = '';
+} else {
+    $v_ns6 = $nameservers[5];
+}
+if (empty($nameservers[6])) {
+    $v_ns7 = '';
+} else {
+    $v_ns7 = $nameservers[6];
+}
+if (empty($nameservers[7])) {
+    $v_ns8 = '';
+} else {
+    $v_ns8 = $nameservers[7];
+}
+
+
 
 $v_suspended = $data[$v_username]['SUSPENDED'];
 if ($v_suspended == 'yes') {
@@ -172,7 +206,10 @@ if (!empty($_POST['save'])) {
 
     // Update Control Panel login disabled status (admin only)
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_login_disabled'] != $data[$user]['LOGIN_DISABLED']) {
+        if (empty($_POST['v_login_disabled'])) {
+            $_POST['v_login_disabled'] = '';
+        }
+        if ($_POST['v_login_disabled'] != $v_login_disabled) {
             if ($_POST['v_login_disabled'] == 'on') {
                 $_POST['v_login_disabled'] = 'yes';
             } else {
@@ -187,7 +224,10 @@ if (!empty($_POST['save'])) {
 
     // Update IP whitelist option
     if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_login_use_iplist'] != $data[$user]['LOGIN_USE_IPLIST']) {
+        if (empty($_POST['v_login_use_iplist'])) {
+            $_POST['v_login_use_iplist'] = '';
+        }
+        if ($_POST['v_login_use_iplist'] != $v_login_use_iplist) {
             if ($_POST['v_login_use_iplist'] == 'on') {
                 $_POST['v_login_use_iplist'] = 'yes';
             } else {
@@ -208,29 +248,37 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Change package (admin only)
-    if (($v_package != $_POST['v_package']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
-        $v_package = escapeshellarg($_POST['v_package']);
-        exec(HESTIA_CMD."v-change-user-package ".escapeshellarg($v_username)." ".$v_package, $output, $return_var);
-        check_return_code($return_var, $output);
-        unset($output);
-    }
-
-    // Change phpcli (admin only)
-    if (($v_phpcli != $_POST['v_phpcli']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
-        $v_phpcli = escapeshellarg($_POST['v_phpcli']);
-        exec(HESTIA_CMD."v-change-user-php-cli ".escapeshellarg($v_username)." ".$v_phpcli, $output, $return_var);
-        check_return_code($return_var, $output);
-        unset($output);
-    }
-    // Change Role (admin only)
-    if (($v_role != $_POST['v_role']) && ($_SESSION['userContext'] === 'admin') && $v_username != "admin" && (empty($_SESSION['error_msg']))) {
-        if (!empty($_POST['v_role'])) {
-            $v_role = escapeshellarg($_POST['v_role']);
-            exec(HESTIA_CMD."v-change-user-role ".escapeshellarg($v_username)." ".$v_role, $output, $return_var);
+    if ($_SESSION['userContext'] === 'admin') {
+        // Change package (admin only)
+        if (($v_package != $_POST['v_package']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
+            $v_package = escapeshellarg($_POST['v_package']);
+            exec(HESTIA_CMD."v-change-user-package ".escapeshellarg($v_username)." ".$v_package, $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
-            $v_role = $_POST['v_role'];
+        }
+
+        // Change phpcli (admin only)
+        if (($v_phpcli != $_POST['v_phpcli']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
+            $v_phpcli = escapeshellarg($_POST['v_phpcli']);
+            exec(HESTIA_CMD."v-change-user-php-cli ".escapeshellarg($v_username)." ".$v_phpcli, $output, $return_var);
+            check_return_code($return_var, $output);
+            unset($output);
+        }
+        if (($v_role != $_POST['v_role']) && ($_SESSION['userContext'] === 'admin') && $v_username != "admin" && (empty($_SESSION['error_msg']))) {
+            if (!empty($_POST['v_role'])) {
+                $v_role = escapeshellarg($_POST['v_role']);
+                exec(HESTIA_CMD."v-change-user-role ".escapeshellarg($v_username)." ".$v_role, $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
+                $v_role = $_POST['v_role'];
+            }
+        }
+        // Change shell (admin only)
+        if (($v_shell != $_POST['v_shell']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
+            $v_shell = escapeshellarg($_POST['v_shell']);
+            exec(HESTIA_CMD."v-change-user-shell ".escapeshellarg($v_username)." ".$v_shell, $output, $return_var);
+            check_return_code($return_var, $output);
+            unset($output);
         }
     }
     // Change language
@@ -249,13 +297,7 @@ if (!empty($_POST['save'])) {
         unset($output);
     }
 
-    // Change shell (admin only)
-    if (($v_shell != $_POST['v_shell']) && ($_SESSION['userContext'] === 'admin') && (empty($_SESSION['error_msg']))) {
-        $v_shell = escapeshellarg($_POST['v_shell']);
-        exec(HESTIA_CMD."v-change-user-shell ".escapeshellarg($v_username)." ".$v_shell, $output, $return_var);
-        check_return_code($return_var, $output);
-        unset($output);
-    }
+
 
     // Change contact email
     if (($v_email != $_POST['v_email']) && (empty($_SESSION['error_msg']))) {
@@ -297,6 +339,31 @@ if (!empty($_POST['save'])) {
     }
 
     // Change NameServers
+    if (empty($_POST['v_ns1'])) {
+        $_POST['v_ns1'] = '';
+    }
+    if (empty($_POST['v_ns2'])) {
+        $_POST['v_ns2'] = '';
+    }
+    if (empty($_POST['v_ns3'])) {
+        $_POST['v_ns3'] = '';
+    }
+    if (empty($_POST['v_ns4'])) {
+        $_POST['v_ns4'] = '';
+    }
+    if (empty($_POST['v_ns5'])) {
+        $_POST['v_ns5'] = '';
+    }
+    if (empty($_POST['v_ns6'])) {
+        $_POST['v_ns6'] = '';
+    }
+    if (empty($_POST['v_ns7'])) {
+        $_POST['v_ns7'] = '';
+    }
+    if (empty($_POST['v_ns8'])) {
+        $_POST['v_ns8'] = '';
+    }
+
     if (($v_ns1 != $_POST['v_ns1']) || ($v_ns2 != $_POST['v_ns2']) || ($v_ns3 != $_POST['v_ns3']) || ($v_ns4 != $_POST['v_ns4']) || ($v_ns5 != $_POST['v_ns5'])
  || ($v_ns6 != $_POST['v_ns6']) || ($v_ns7 != $_POST['v_ns7']) || ($v_ns8 != $_POST['v_ns8']) && (empty($_SESSION['error_msg']))) {
         $v_ns1 = escapeshellarg($_POST['v_ns1']);

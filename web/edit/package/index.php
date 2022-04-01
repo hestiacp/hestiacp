@@ -52,14 +52,46 @@ $v_bandwidth = $data[$v_package]['BANDWIDTH'];
 $v_shell = $data[$v_package]['SHELL'];
 $v_ns = $data[$v_package]['NS'];
 $nameservers = explode(",", $v_ns);
-$v_ns1 = $nameservers[0];
-$v_ns2 = $nameservers[1];
-$v_ns3 = $nameservers[2];
-$v_ns4 = $nameservers[3];
-$v_ns5 = $nameservers[4];
-$v_ns6 = $nameservers[5];
-$v_ns7 = $nameservers[6];
-$v_ns8 = $nameservers[7];
+if (empty($nameservers[0])) {
+    $v_ns1 = '';
+} else {
+    $v_ns1 = $nameservers[0];
+}
+if (empty($nameservers[1])) {
+    $v_ns2 = '';
+} else {
+    $v_ns2 = $nameservers[1];
+}
+if (empty($nameservers[2])) {
+    $v_ns3 = '';
+} else {
+    $v_ns3 = $nameservers[2];
+}
+if (empty($nameservers[3])) {
+    $v_ns4 = '';
+} else {
+    $v_ns4 = $nameservers[3];
+}
+if (empty($nameservers[4])) {
+    $v_ns5 = '';
+} else {
+    $v_ns5 = $nameservers[4];
+}
+if (empty($nameservers[5])) {
+    $v_ns6 = '';
+} else {
+    $v_ns6 = $nameservers[5];
+}
+if (empty($nameservers[6])) {
+    $v_ns7 = '';
+} else {
+    $v_ns7 = $nameservers[6];
+}
+if (empty($nameservers[7])) {
+    $v_ns8 = '';
+} else {
+    $v_ns8 = $nameservers[7];
+}
 $v_backups = $data[$v_package]['BACKUPS'];
 $v_date = $data[$v_package]['DATE'];
 $v_time = $data[$v_package]['TIME'];

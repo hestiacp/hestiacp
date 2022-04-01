@@ -58,9 +58,14 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Generating hashed password
-salt=$(generate_password "$PW_MATRIX" "8")
-md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<<$password)"
-
+if [ -n "$(doveadm pw -l | grep ARGON2ID)" ]; then
+    set +H # disable ! style history substitution
+    md5="$(doveadm pw -s ARGON2ID -p $password)"
+else
+    # Fall back on MD5
+    salt=$(generate_password "$PW_MATRIX" "8")
+    md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<<$password)"
+fi
 # Adding account info into password file
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ "$quota" = 'unlimited' ]; then

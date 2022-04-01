@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: delete mail account
-# options: USER DOMAIN ACCOUNT
+# info: change mail account rate limit
+# options: USER DOMAIN ACCOUNT RATE
 #
-# example: v-delete-mail-account admin acme.com alice
+# example: v-change-mail-account-quota admin mydomain.tld user01 100
 #
-# This function deletes email account.
+# This function changes email account rate limit for the domain. account specific setting will overwrite domain setting!
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -14,7 +14,7 @@
 user=$1
 domain=$2
 domain_idn=$2
-account=$3
+rate=$3
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -29,17 +29,22 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Additional argument formatting
 format_domain
 format_domain_idn
+# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN ACCOUNT'
-is_format_valid 'user' 'domain' 'account'
+check_args '3' "$#" 'USER DOMAIN  RATE'
+is_format_valid 'user' 'domain'
+if [ "$rate" != 'system' ]; then
+    is_format_valid 'rate'
+fi
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_valid "mail/$domain" 'ACCOUNT' "$account"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -48,35 +53,21 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
-    for al in ${aliases//,/ }; do
-        sed -i "/^$al@$domain_idn:$account/d" \
-            $HOMEDIR/$user/conf/mail/$domain/aliases
-    done
-
-    sed -i "/^$account@$domain_idn:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
-    sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/passwd
-    sed -i "/^$account:/d" $HOMEDIR/$user/conf/mail/$domain/accounts
-    sed -i "/^$account$/d" $HOMEDIR/$user/conf/mail/$domain/fwd_only
-    rm -rf $HOMEDIR/$user/mail/$domain/$account
-    rm -f $HOMEDIR/$user/conf/mail/$domain/limits/$account
-fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Update config
-sed -i "/ACCOUNT='$account'/d" $USER_DATA/mail/$domain.conf
+if [[ "$rate" = "system" ]]; then
+    rate=''
+fi
 
-# Decrease mail accounts counter
-accounts=$(wc -l $USER_DATA/mail/$domain.conf | cut -f 1 -d ' ')
-decrease_user_value "$user" '$U_MAIL_ACCOUNTS'
-update_object_value 'mail' 'DOMAIN' "$domain" '$ACCOUNTS' "$accounts"
+$HESTIA/bin/v-rebuild-mail-domain "$user" "$domain"
+# Update quota
+update_object_value "mail" 'DOMAIN' "$domain" '$RATE_LIMIT' "$rate"
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Mail" "Mail account removed (User: $account@$domain)."
+$BIN/v-log-action "$user" "Info" "Mail" "Mail domain rate limit has changed ($rate)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

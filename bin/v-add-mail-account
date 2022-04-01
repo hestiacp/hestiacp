@@ -24,6 +24,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -100,6 +102,13 @@ str="$str MD5='$md5' QUOTA='$quota' U_DISK='0' SUSPENDED='no'"
 str="$str TIME='$time' DATE='$date'"
 echo "$str" >> $USER_DATA/mail/$domain.conf
 chmod 660 $USER_DATA/mail/$domain.conf
+
+syshealth_repair_mail_account_config
+
+user_rate_limit=$(get_object_value 'mail' 'DOMAIN' "$domain" '$RATE_LIMIT');
+if [ -n "$user_rate_limit" ]; then
+    echo "$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits/$account
+fi
 
 # Increase mail accounts counter
 accounts=$(wc -l $USER_DATA/mail/$domain.conf | cut -f 1 -d ' ')

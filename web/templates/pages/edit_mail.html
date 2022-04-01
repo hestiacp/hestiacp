@@ -81,7 +81,17 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>"> <?php /*'*/ ?>
+								<input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour / account');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>">
 							</td>
 						</tr>
 						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>

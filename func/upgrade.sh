@@ -764,6 +764,7 @@ upgrade_rebuild_users() {
 upgrade_replace_default_config() {
     syshealth_update_web_config_format
     syshealth_update_mail_config_format
+    syshealth_update_mail_account_config_format
     syshealth_update_dns_config_format
     syshealth_update_db_config_format
     syshealth_update_user_config_format

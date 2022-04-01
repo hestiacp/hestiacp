@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'WEB';
 
@@ -65,7 +66,12 @@ if (!empty($_POST['ok'])) {
     }
 
     // Define domain aliases
-    $v_aliases = $_POST['v_aliases'];
+    if (empty($_POST['v_aliases'])) {
+        $v_aliases = '';
+    } else {
+        $v_aliases = $_POST['v_aliases'];
+    }
+
     $aliases = preg_replace("/\n/", ",", $v_aliases);
     $aliases = preg_replace("/\r/", ",", $aliases);
     $aliases = preg_replace("/\t/", ",", $aliases);
@@ -78,6 +84,10 @@ if (!empty($_POST['ok'])) {
 
 
     // Define proxy extensions
+    if (empty($_POST['v_proxy_ext'])) {
+        # not set on nginx only
+        $_POST['v_proxy_ext'] = '';
+    }
     $v_proxy_ext = $_POST['v_proxy_ext'];
     $proxy_ext = preg_replace("/\n/", ",", $v_proxy_ext);
     $proxy_ext = preg_replace("/\r/", ",", $proxy_ext);
@@ -90,25 +100,48 @@ if (!empty($_POST['ok'])) {
     $proxy_ext = escapeshellarg($proxy_ext);
 
     // Define other options
-    $v_elog = $_POST['v_elog'];
+    if (empty($_POST['v_ssl'])) {
+        $_POST['v_ssl'] = '';
+    }
     $v_ssl = $_POST['v_ssl'];
     $v_ssl_crt = $_POST['v_ssl_crt'];
     $v_ssl_key = $_POST['v_ssl_key'];
     $v_ssl_ca = $_POST['v_ssl_ca'];
-    $v_ssl_home = $data[$v_domain]['SSL_HOME'];
+    if (empty($_POST['v_letsencrypt'])) {
+        $_POST['v_letsencrypt'] = '';
+    }
     $v_letsencrypt = $_POST['v_letsencrypt'];
+    if (empty($_POST['v_stats'])) {
+        $_POST['v_stats'] = '';
+    }
     $v_stats = escapeshellarg($_POST['v_stats']);
-    $v_stats_user = $data[$v_domain]['STATS_USER'];
-    $v_stats_password = $data[$v_domain]['STATS_PASSWORD'];
+    $v_stats_user = $_POST['v_stats_user'];
+    $v_stats_password = $_POST['v_stats_user'];
     $v_custom_doc_domain = $_POST['v-custom-doc-domain'];
     $v_custom_doc_folder = $_POST['v-custom-doc-folder'];
     $v_custom_doc_root_prepath = '/home/'.$user_plain.'/web/';
 
+    if (empty($_POST['v_ftp'])) {
+        $_POST['v_ftp'] = '';
+    }
     $v_ftp = $_POST['v_ftp'];
+    if (empty($_POST['v_ftp_user'])) {
+        $_POST['v_ftp_user'] = '';
+    }
     $v_ftp_user = $_POST['v_ftp_user'];
+    if (empty($_POST['v_ftp_password'])) {
+        $_POST['v_ftp_password'] = '';
+    }
     $v_ftp_password = $_POST['v_ftp_password'];
+    if (empty($_POST['v_ftp_email'])) {
+        $_POST['v_ftp_email'] = '';
+    }
     $v_ftp_email = $_POST['v_ftp_email'];
+
     if (!empty($v_domain)) {
+        if (empty($v_ftp_user_prepath)) {
+            $v_ftp_user_prepath = '/home/'. $user_plain . "/web";
+        }
         $v_ftp_user_prepath .= $v_domain;
     }
 
@@ -116,7 +149,7 @@ if (!empty($_POST['ok'])) {
     $user_config = json_decode(implode('', $output), true);
     unset($output);
 
-    $v_template = $user_config[$user_plain]['TEMPLATE'];
+    $v_template = $user_config[$user_plain]['WEB_TEMPLATE'];
     $v_backend_template = $user_config[$user_plain]['BACKEND_TEMPLATE'];
     $v_proxy_template = $user_config[$user_plain]['PROXY_TEMPLATE'];
 
@@ -131,10 +164,11 @@ if (!empty($_POST['ok'])) {
     if ($_POST['v_proxy_ext'] != $v_proxy_ext) {
         $v_adv = 'yes';
     }
+
     if ((!empty($_POST['v_aliases'])) && ($_POST['v_aliases'] != 'www.'.$_POST['v_domain'])) {
         $v_adv = 'yes';
     }
-    if ((!empty($_POST['v_ssl'])) || (!empty($_POST['v_elog']))) {
+    if (!empty($_POST['v_ssl'])) {
         $v_adv = 'yes';
     }
     if ((!empty($_POST['v_ssl_crt'])) || (!empty($_POST['v_ssl_key']))) {
@@ -154,9 +188,11 @@ if (!empty($_POST['ok'])) {
     // Check advanced features
     if (empty($_POST['v_dns'])) {
         $v_dns = 'off';
+        $_POST['v_dns'] = '';
     }
     if (empty($_POST['v_mail'])) {
         $v_mail = 'off';
+        $_POST['v_mail'] = '';
     }
     if (empty($_POST['v_proxy'])) {
         $v_proxy = 'off';
@@ -194,15 +230,6 @@ if (!empty($_POST['ok'])) {
         exec(HESTIA_CMD."v-add-mail-domain ".$user." ".escapeshellarg($v_domain), $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
-    }
-
-    // Delete proxy support
-    if ((!empty($_SESSION['PROXY_SYSTEM'])) && ($_POST['v_proxy'] == 'off')  && (empty($_SESSION['error_msg']))) {
-        $ext = escapeshellarg($ext);
-        exec(HESTIA_CMD."v-delete-web-domain-proxy ".$user." ".escapeshellarg($v_domain)." 'no'", $output, $return_var);
-        check_return_code($return_var, $output);
-        unset($output);
-        $restart_web = 'yes';
     }
 
     // Change template
@@ -482,17 +509,33 @@ if (!empty($_POST['ok'])) {
         unset($v_ftp);
     }
 }
-
 // Define user variables
-$v_ftp_user_prepath = $panel[$user_plain]['HOME'] . "/web";
-$v_ftp_email = $panel[$user_plain]['CONTACT'];
+$v_aliases = '';
+$v_stats_user = '';
+$v_stats_password = '';
+$v_domain = '';
+$v_custom_doc_domain = '';
+$v_custom_doc_folder = '';
+$v_ssl = '';
+$v_ssl_crt = '';
+$v_ssl_key = '';
+$v_ssl_ca = '';
+$v_ftp_users = array();
+$v_letsencrypt = '';
+$v_ftp_pre_path_new_user = '';
+
+$v_ftp_user_prepath = '/home/'. $user_plain . "/web";
+$v_ftp_email = '';
 $v_custom_doc_root_prepath = '/home/'.$user_plain.'/web/';
 
-if ($_POST['v_ssl_forcessl'] != 'no') {
-    $v_ssl_forcessl = 'yes';
-} else {
+if (empty($_POST['v_ssl_forcessl'])) {
     $v_ssl_forcessl = 'no';
+} elseif ($_POST['v_ssl_forcessl'] == 'no') {
+    $v_ssl_forcessl = 'no';
+} else {
+    $v_ssl_forcessl = 'yes';
 }
+
 // List user package
 exec(HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
 $user_config = json_decode(implode('', $output), true);
@@ -533,6 +576,10 @@ exec(HESTIA_CMD."v-list-web-domains ".$user." json", $output, $return_var);
 $user_domains = json_decode(implode('', $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
+
+if (empty($_GET['accept'])) {
+    $_GET['accept'] = false;
+}
 
 // Render page
 render_page($user, $TAB, 'add_web');

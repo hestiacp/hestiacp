@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'MAIL';
 
@@ -9,11 +10,13 @@ exec(HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
 $webmail_clients = json_decode(implode('', $output), true);
 unset($output);
 
-$v_domain = $_GET['domain'];
+if (!empty($_GET['domain'])) {
+    $v_domain = $_GET['domain'];
+}
 if (!empty($v_domain)) {
     // Set webmail alias
     exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
-    if($return_var > 0){
+    if ($return_var > 0) {
         check_return_code_redirect($return_var, $output, '/list/mail/');
     }
     $data = json_decode(implode('', $output), true);
@@ -270,7 +273,7 @@ if (!empty($_POST['ok_acc'])) {
 
     // Get webmail url
     if (empty($_SESSION['error_msg'])) {
-        list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+        list($hostname, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         $webmail = "http://".$hostname."/".$v_webmail_alias."/";
         if (!empty($_SESSION['WEBMAIL_ALIAS'])) {
             $webmail = $_SESSION['WEBMAIL_ALIAS'];
@@ -308,10 +311,57 @@ if (empty($_GET['domain'])) {
         //default is always roundcube unless it hasn't been installed. Then picks the first one in order
         $v_webmail  = 'roundcube';
     }
+
+    if (empty($_GET['accept'])) {
+        $_GET['accept'] = false;
+    }
+    if (empty($v_domain)) {
+        $v_domain = '';
+    }
+    if (empty($v_smtp_relay)) {
+        $v_smtp_relay = '';
+    }
+    if (empty($v_smtp_relay_user)) {
+        $v_smtp_relay_user = '';
+    }
+    if (empty($v_smtp_relay_password)) {
+        $v_smtp_relay_password = '';
+    }
+    if (empty($v_smtp_relay_host)) {
+        $v_smtp_relay_host = '';
+    }
+    if (empty($v_smtp_relay_port)) {
+        $v_smtp_relay_port = '';
+    }
+
+
     render_page($user, $TAB, 'add_mail');
 } else {
     // Display body for mail account
-
+    if (empty($v_account)) {
+        $v_account = '';
+    }
+    if (empty($v_quota)) {
+        $v_quota = '';
+    }
+    if (empty($v_rate)) {
+        $v_rate = '';
+    }
+    if (empty($v_blackhole)) {
+        $v_blackhole = '';
+    }
+    if (empty($v_fwd_only)) {
+        $v_fwd_only = '';
+    }
+    if (empty($v_aliases)) {
+        $v_aliases = '';
+    }
+    if (empty($v_send_email)) {
+        $v_send_email = '';
+    }
+    if (empty($v_fwd)) {
+        $v_fwd = '';
+    }
     $v_domain = $_GET['domain'];
     render_page($user, $TAB, 'add_mail_acc');
 }

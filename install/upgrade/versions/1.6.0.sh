@@ -38,3 +38,11 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
     # Add missing limit.conf file
     cp $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/limit.conf
 fi
+
+# Adding LE autorenew cronjob if there are none
+if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
+	min=$(generate_password '012345' '2')
+	hour=$(generate_password '1234567' '1')
+	command="sudo $BIN/v-update-letsencrypt-ssl"
+	$BIN/v-add-cron-job 'admin' "$min" "$hour" '*' '*' '*' "$command"
+fi

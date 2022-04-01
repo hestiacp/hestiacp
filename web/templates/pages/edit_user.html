@@ -135,12 +135,12 @@
 									<?php if ($_SESSION['userContext'] === 'admin') {?>
 										<tr>
 											<td>
-												<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" name="v_login_disabled" <?php if ($data[$user_plain]['LOGIN_DISABLED'] == "yes") echo "checked=yes" ?>><?=_('Do not allow user to log in to Control Panel');?></label>
+												<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" name="v_login_disabled" <?php if ($v_login_disabled === "yes") echo "checked=yes" ?>><?=_('Do not allow user to log in to Control Panel');?></label>
 											</td>
 										</tr>
 									<?php } ?>
 									<tr>
-										<td id="password-options" style="<?php if ($data[$user_plain]['LOGIN_DISABLED'] == "yes") { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
+										<td id="password-options" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
 											<label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>><?=_('Enable 2FA');?></label>
 											<?php if (!empty($v_twofa)) { ?>
 											<p><?=_('2FA Reset Code:').' '.$v_twofa; ?></br></p>
@@ -150,13 +150,13 @@
 										</td>
 									</tr>
 									<tr>
-										<td id="password-options-ip" style="<?php if ($data[$user_plain]['LOGIN_DISABLED'] == "yes") { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
+										<td id="password-options-ip" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
 											<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('ip-allowlist')" name="v_login_use_iplist" <?php if ($data[$user]['LOGIN_USE_IPLIST'] === "yes") echo "checked=yes" ?>><?=_('Use IP address allow list for login attempts');?></label>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<table id="ip-allowlist" style="<?php if ($data[$user_plain]['LOGIN_USE_IPLIST'] === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
+											<table id="ip-allowlist" style="<?php if ($v_login_use_iplist === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
 												<tr>
 													<td>
 														<input type="text" size="20" class="vst-input" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
@@ -229,9 +229,6 @@
 											if ((empty($v_user_theme) && (!empty($_SESSION['THEME']))) && ( $value == $_SESSION['THEME'] )) {
 												echo ' selected' ;
 											}
-											if ((!empty($_SESSION['userTheme'])) && ( $value == $_POST['v_user_theme'])){
-												echo ' selected' ;
-											}
 											echo ">".$value."</option>\n";
 										}
 									?>
@@ -239,7 +236,6 @@
 							</td>
 						</tr>
 						<?php } ?>
-						<?php if ($_GET['user'] === $_SESSION['user']) { ?>
 							<tr>
 								<td class="vst-text input-label">
 									<?=_('Default list sort order');?>
@@ -248,12 +244,11 @@
 							<tr>
 								<td>
 									<select class="vst-list" name="v_sort_order">
-										<option value='date' <?php if($_SESSION['userSortOrder'] === 'date') echo 'selected' ?>><?=_('Date'); ?></option>
-										<option value='name' <?php if($_SESSION['userSortOrder'] === 'name') echo 'selected' ?>><?=_('Name'); ?></option>
+										<option value='date' <?php if($v_sort_order === 'date') echo 'selected' ?>><?=_('Date'); ?></option>
+										<option value='name' <?php if($v_sort_order === 'name') echo 'selected' ?>><?=_('Name'); ?></option>
 									</select>
 								</td>
 								</tr>
-						<?php } ?>
 						<?php if ($_SESSION['userContext'] === 'admin') {?>
 							<tr>
 								<td class="vst-text input-label">

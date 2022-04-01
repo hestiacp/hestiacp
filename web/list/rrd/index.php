@@ -6,19 +6,22 @@ $TAB = 'RRD';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check user
-if ($_SESSION['userContext'] != 'admin')  {
+if ($_SESSION['userContext'] != 'admin') {
     header('Location: /list/user');
     exit;
 }
 
 // Data
-exec (HESTIA_CMD."v-list-sys-rrd json", $output, $return_var);
+exec(HESTIA_CMD."v-list-sys-rrd json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 unset($output);
 
-$period=$_GET['period'];
-if (!in_array($period, array('daily', 'weekly', 'monthly', 'yearly'))) {
+if (empty($_GET['period'])) {
     $period = 'daily';
+} elseif (!in_array($_GET['period'], array('daily', 'weekly', 'monthly', 'yearly'))) {
+    $period = 'daily';
+} else {
+    $period = $_GET['period'];
 }
 
 // Render page

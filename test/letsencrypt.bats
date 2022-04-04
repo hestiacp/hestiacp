@@ -20,55 +20,80 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
-@test "Create new user" {
+@test "[ User ] Create new user" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
 }
 
-@test "Create DNS domain" {
+@test "[ DNS ]Create DNS domain" {
     run v-add-dns-domain $user $domain $ip
     assert_success
     refute_output
 }
 
-@test "Create web domain" {
+@test "[ Web ] Create web domain" {
     run v-add-web-domain $user $domain $ip yes "www.$domain,renewal.$domain"
     assert_success
     refute_output
 }
 
-@test "Request new certificate for web domain" {
+@test "[ Web ] Request new certificate for web domain" {
     run v-add-letsencrypt-domain $user $domain "www.$domain,renewal.$domain"
     assert_success
     refute_output
 }
 
-@test "Create mail domain" {
+@test "[ Mail ] Create mail domain" {
     run v-add-mail-domain $user $domain
     assert_success
     refute_output
 }
 
-@test "Request new Certificate for Mail Domain" {
+@test "[ Mail ] Request new Certificate for Mail Domain" {
     run v-add-letsencrypt-domain $user $domain "" "yes"
     assert_success
     refute_output
 }
 
-@test "Run renewal script for LE" {
+@test "[ All ] Run renewal script for LE" {
     run v-update-letsencrypt-ssl
     assert_success
     refute_output
 }
 
-@test Delete mail ssl" {
+@test [ Web ] Delete web ssl" {
+    run v-delete-letsencrypt-domain $user $domain "yes"
+    assert_success
+    refute_output
+}
+
+@test [ Mail ] Delete mail ssl" {
     run v-delete-letsencrypt-domain $user $domain "yes" "yes"
     assert_success
     refute_output
 }
 
-@test Delete web ssl" {
+@test "[ Redirect ] Add Domain redirect to other website" {
+    run v-add-web-domain-redirect $user $domain "https://hestiacp.com"
+    assert_success
+    refute_output
+}
+
+@test "[ Redirect ] Request new certificate for web" {
+    run v-add-letsencrypt-domain $user $domain "www.$domain,renewal.$domain"
+    assert_success
+    refute_output
+}
+
+@test "[ Redirect ] Run renewal script for LE Redirected domain" {
+    run v-update-letsencrypt-ssl
+    assert_success
+    refute_output
+}
+
+
+@test "[ Redirect ] Delete web ssl Redirected domain" {
     run v-delete-letsencrypt-domain $user $domain "yes"
     assert_success
     refute_output

@@ -112,7 +112,7 @@ steps:
   - name: PHP
     image: php:8.1-cli-bullseye
     commands:
-      - ./test/check_php.sh
+      - ./test/check_php.sh ./web/
 
 trigger:
    event: [ pull_request, push ] 
@@ -167,4 +167,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 18d8e5c593e8b7bdef33243b82bbd40e33e41947c088e910a1aff22d06b8169b
+hmac: 36eebc65b9543f76748d66ce9847068554b5c9240466adf5ada20aea9b67680e

@@ -62,7 +62,7 @@ function setup() {
     refute_output
 }
 
-@test "Run renewal script for LE" {
+@test "Change redirect" {
     run v-add-web-domain-redirect $user $domain "https://hestiacp.com"
     assert_success
     refute_output

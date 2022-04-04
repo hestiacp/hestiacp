@@ -68,8 +68,8 @@ function setup() {
     refute_output
 }
 
-@test "Run renewal script for LE 2" {
-    run v-update-letsencrypt-ssl
+@test Delete web ssl" {
+    run v-delete-letsencrypt-domain $user $domain "yes"
     assert_success
     refute_output
 }
@@ -80,7 +80,20 @@ function setup() {
     refute_output
 }
 
-@test Delete web ssl" {
+@test "Request new certificate for web  Redirected domain" {
+    run v-update-letsencrypt-ssl
+    assert_success
+    refute_output
+}
+
+@test "Run renewal script for LE Redirected domain" {
+    run v-update-letsencrypt-ssl
+    assert_success
+    refute_output
+}
+
+
+@test Delete web ssl Redirected domain" {
     run v-delete-letsencrypt-domain $user $domain "yes"
     assert_success
     refute_output

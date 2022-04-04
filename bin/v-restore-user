@@ -314,7 +314,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
                     done
                 fi
             fi
-            
+
             # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT'"

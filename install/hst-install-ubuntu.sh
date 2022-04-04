@@ -52,7 +52,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-mbstring
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
     postgresql postgresql-contrib proftpd-basic quota rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
-    hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv
+    hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv rsyslog
     ipset libonig5 libzip5 openssh-server lsb-release zstd"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
@@ -98,7 +98,15 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
+    matrix=$1 
+    length=$2 
+    if [ -z "$matrix" ]; then 
+        matrix="A-Za-z0-9" 
+    fi 
+    if [ -z "$length" ]; then 
+        length=16 
+    fi 
+    head /dev/urandom | tr -dc $matrix | head -c$length
 }
 
 # Defining return code check function
@@ -1690,6 +1698,7 @@ if [ "$exim" = 'yes' ]; then
     cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
+	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
     touch /etc/exim4/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then
@@ -1997,6 +2006,10 @@ command="sudo $HESTIA/bin/v-update-user-stats"
 $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-letsencrypt-ssl"
+min=$(gen_pass '012345' '2')
+hour=$(gen_pass '1234567' '1')
+$HESTIA/bin/v-add-cron-job 'admin' "$min" "$hour" '*' '*' '*' "$command"
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate apt

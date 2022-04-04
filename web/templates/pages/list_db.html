@@ -61,9 +61,9 @@
 										<option value=""><?=_('apply to selected');?></option>
 										<?php if ($_SESSION['userContext'] === 'admin') {?>
 											<option value="rebuild"><?=_('rebuild');?></option>
+											<option value="suspend"><?=_('suspend');?></option>
+											<option value="unsuspend"><?=_('unsuspend');?></option>
 										<?php } ?>
-										<option value="suspend"><?=_('suspend');?></option>
-										<option value="unsuspend"><?=_('unsuspend');?></option>
 										<option value="delete"><?=_('delete');?></option>
 									</select>
 								</div>
@@ -120,9 +120,9 @@
 			if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "https://".$http_host."/phppgadmin/";
 			if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = $_SESSION['DB_PGA_ALIAS'];
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['DB'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="db"
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="db"
 			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
-			sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-charset="<?=$data[$key]['CHARSET']?>" sort-star="<?php if($_SESSION['favourites']['DB'][$key] == 1) echo '1'; else echo '0'; ?>">
+			sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-charset="<?=$data[$key]['CHARSET']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">

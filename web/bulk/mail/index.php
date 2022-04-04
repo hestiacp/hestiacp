@@ -40,11 +40,19 @@ if ($_SESSION['userContext'] === 'admin') {
         switch ($action) {
             case 'delete': $cmd='v-delete-mail-domain';
                 break;
+            case 'suspend': $cmd='v-suspend-mail-domain';
+                break;
+            case 'unsuspend': $cmd='v-unsuspend-mail-domain';
+                break;
             default: header("Location: /list/mail/"); exit;
         }
     } else {
         switch ($action) {
             case 'delete': $cmd='v-delete-mail-account';
+                break;
+            case 'suspend': $cmd='v-suspend-mail-account';
+                break;
+            case 'unsuspend': $cmd='v-unsuspend-mail-account';
                 break;
             default: header("Location: /list/mail/?domain=".$domain); exit;
         }

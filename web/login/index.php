@@ -1,4 +1,5 @@
 <?php
+
 define('NO_AUTH_REQUIRED', true);
 // Main include
 
@@ -36,7 +37,7 @@ if (isset($_SESSION['user'])) {
                 unset($_SESSION['_sf2_attributes']);
                 unset($_SESSION['_sf2_meta']);
                 header('Location: /login/');
-            }else{
+            } else {
                 # User doesn't exists
                 header('Location: /');
             }
@@ -60,17 +61,17 @@ if (isset($_SESSION['user'])) {
         unset($output);
 
         // Determine package features and land user at the first available page
-        if ($data[$user]['WEB_DOMAINS'] !== '0') {
+        if ($data[$user_plain]['WEB_DOMAINS'] !== '0') {
             header('Location: /list/web/');
-        } elseif ($data[$user]['DNS_DOMAINS'] !== '0') {
+        } elseif ($data[$user_plain]['DNS_DOMAINS'] !== '0') {
             header('Location: /list/dns/');
-        } elseif ($data[$user]['MAIL_DOMAINS'] !== '0') {
+        } elseif ($data[$user_plain]['MAIL_DOMAINS'] !== '0') {
             header('Location: /list/mail/');
-        } elseif ($data[$user]['DATABASES'] !== '0') {
+        } elseif ($data[$user_plain]['DATABASES'] !== '0') {
             header('Location: /list/db/');
-        } elseif ($data[$user]['CRON_JOBS'] !== '0') {
+        } elseif ($data[$user_plain]['CRON_JOBS'] !== '0') {
             header('Location: /list/cron/');
-        } elseif ($data[$user]['BACKUPS'] !== '0') {
+        } elseif ($data[$user_plain]['BACKUPS'] !== '0') {
             header('Location: /list/backup/');
         } else {
             header('Location: /error/');
@@ -108,12 +109,12 @@ function authenticate_user($user, $password, $twofa = '')
         $pam = json_decode(implode('', $output), true);
         if ($return_var > 0) {
             sleep(2);
-            if($return_var == 5){
-                $error = '<a class="error">' . _('Account has been suspended') . '</a>';   
-            }elseif($return_var == 1){
-                $error = '<a class="error">' . _('Unsupported hash method') . '</a>';     
-            }else{
-                $error = '<a class="error">' . _('Invalid username or password') . '</a>';    
+            if ($return_var == 5) {
+                $error = '<a class="error">' . _('Account has been suspended') . '</a>';
+            } elseif ($return_var == 1) {
+                $error = '<a class="error">' . _('Unsupported hash method') . '</a>';
+            } else {
+                $error = '<a class="error">' . _('Invalid username or password') . '</a>';
             }
             return $error;
         } else {
@@ -279,10 +280,14 @@ function authenticate_user($user, $password, $twofa = '')
         return false;
     }
 }
-if (preg_match('/^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$/', $_POST['user'])) {
-    $_SESSION['login']['username'] = $_POST['user'];
-} else {
+if (empty($_POST['user'])) {
     $user = '';
+} else {
+    if (preg_match('/^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$/', $_POST['user'])) {
+        $_SESSION['login']['username'] = $_POST['user'];
+    } else {
+        $user = '';
+    }
 }
 if (!empty($_SESSION['login']['username']) && !empty($_SESSION['login']['password']) && !empty($_POST['twofa'])) {
     $error = authenticate_user($_SESSION['login']['username'], $_SESSION['login']['password'], $_POST['twofa']);

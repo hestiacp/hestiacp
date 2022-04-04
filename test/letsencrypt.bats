@@ -81,7 +81,7 @@ function setup() {
 }
 
 @test "[ Redirect ] Request new certificate for web" {
-    run v-add-letsencrypt-domain $user $domain "" "yes"
+    run v-add-letsencrypt-domain $user $domain "www.$domain,renewal.$domain"
     assert_success
     refute_output
 }

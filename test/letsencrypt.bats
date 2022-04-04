@@ -62,6 +62,18 @@ function setup() {
     refute_output
 }
 
+@test "Run renewal script for LE" {
+    run v-add-web-domain-redirect $user $domain "https://hestiacp.com"
+    assert_success
+    refute_output
+}
+
+@test "Run renewal script for LE 2" {
+    run v-update-letsencrypt-ssl
+    assert_success
+    refute_output
+}
+
 @test Delete mail ssl" {
     run v-delete-letsencrypt-domain $user $domain "yes" "yes"
     assert_success

@@ -175,8 +175,8 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 
 done
 
+# Restart related services
 $HESTIA/bin/v-restart-web yes
-
 $HESTIA/bin/v-restart-mail yes
 
 if [ -n "$PROXY_SYSTEM" ]; then

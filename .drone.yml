@@ -110,7 +110,7 @@ steps:
     commands:
     - ./test/shellcheck.sh
   - name: PHP
-    image: php/8.1-alpine
+    image: php:8.1-cli-bullseye
     commands:
       - ./test/check_php.sh
 
@@ -167,4 +167,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 421d0ad1888dadd43fd02637146a7acbfb486f9847ba22f941285d9103b907f4
+hmac: 18d8e5c593e8b7bdef33243b82bbd40e33e41947c088e910a1aff22d06b8169b

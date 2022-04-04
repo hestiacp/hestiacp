@@ -35,9 +35,6 @@ steps:
 - name: Run config tests 
   commands:
   - bats ./test/config-tests.bats
-- name: Run Check PHP
-  commands: 
-  - ./test/check_php.sh
 
 trigger:
   event: [ pull_request, push ]
@@ -89,10 +86,7 @@ steps:
 - name: Run config tests 
   commands:
   - bats ./test/config-tests.bats
-- name: Run Check PHP
-  commands: 
-  - ./test/check_php.sh
-
+  
 trigger:
   event: [ pull_request, push ]
   ref:
@@ -111,10 +105,14 @@ concurrency:
   limit: 1
 
 steps:
-  - name: shellcheck
+  - name: Shellcheck
     image: koalaman/shellcheck-alpine
     commands:
     - ./test/shellcheck.sh
+  - name: PHP
+    image: php/8.1-alpine
+    commands:
+      - ./test/check_php.sh
 
 trigger:
    event: [ pull_request, push ] 
@@ -169,4 +167,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 07f845f902f859c97c78a346d340f7fb8d4b1242581a242e592b149c13428f50
+hmac: 421d0ad1888dadd43fd02637146a7acbfb486f9847ba22f941285d9103b907f4

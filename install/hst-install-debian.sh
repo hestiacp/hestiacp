@@ -1292,12 +1292,6 @@ echo "[ * ] Enable SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
-# Switch to sha512 for deb11.
-if [ "$release" -eq 11 ]; then
-    # Switching to sha512
-    sed -i "s/ yescrypt/ sha512/g" /etc/pam.d/common-password
-fi
-
 # Adding Hestia admin account
 $HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"

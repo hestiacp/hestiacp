@@ -7,7 +7,7 @@ namespace Hestia\System;
 class HestiaApp
 {
     protected const TMPDIR_DOWNLOADS="/tmp/hestia-webapp";
-    private $phpsupport =  false;
+    protected $phpsupport =  false;
 
     public function __construct()
     {

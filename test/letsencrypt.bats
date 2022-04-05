@@ -111,4 +111,3 @@ function setup() {
     assert_success
     refute_output
 }
-roo

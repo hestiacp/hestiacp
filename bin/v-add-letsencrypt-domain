@@ -116,19 +116,6 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
-
-domain_redirect="$REDIRECT"
-if [[ -n "$domain_redirect"  ]] ; then
-    domain_redirect_code="$REDIRECT_CODE"
-    $BIN/v-delete-web-domain-redirect $user $domain
-fi
-
-domain_forcessl="$SSL_FORCE"
-if [[ "$domain_forcessl" == 'yes' ]] ; then
-    $BIN/v-delete-web-domain-ssl-force $user $domain
-fi
-
 # Generate correct variables for mail domain SSL certificates
 if [ -n "$mail" ]; then
     root_domain=$domain
@@ -136,6 +123,19 @@ if [ -n "$mail" ]; then
     webmail=$(get_object_value "mail" "DOMAIN" "$root_domain" '$WEBMAIL');
     if [ -n "$webmail" ]; then
         aliases="$WEBMAIL_ALIAS.$root_domain"
+    fi
+else
+    parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+    
+    domain_redirect="$REDIRECT"
+    if [[ -n "$domain_redirect"  ]] ; then
+        domain_redirect_code="$REDIRECT_CODE"
+        $BIN/v-delete-web-domain-redirect $user $domain
+    fi
+    
+    domain_forcessl="$SSL_FORCE"
+    if [[ "$domain_forcessl" == 'yes' ]] ; then
+        $BIN/v-delete-web-domain-ssl-force $user $domain
     fi
 fi
 
@@ -554,6 +554,14 @@ if [ -z "$mail" ]; then
     fi
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+    
+    if [[ "$domain_forcessl" == 'yes' ]] ; then
+        $BIN/v-add-web-domain-ssl-force $user $domain
+    fi
+    if [[ -n "$domain_redirect" ]] ; then
+        $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
+    fi
+
 else
     if [ -z "$LETSENCRYPT" ]; then
         add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT'
@@ -561,13 +569,6 @@ else
     fi
     update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
     update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
-fi
-
-if [[ "$domain_forcessl" == 'yes' ]] ; then
-    $BIN/v-add-web-domain-ssl-force $user $domain
-fi
-if [[ -n "$domain_redirect" ]] ; then
-    $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
 fi
 
 # Remove challenge folder if exist

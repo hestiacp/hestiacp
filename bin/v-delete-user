@@ -75,6 +75,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
     check_result "$?" "database deletion failed"
 fi
 
+$BIN/v-unsuspend-user "$user"
 # Releasing user ips
 $BIN/v-delete-user-ips "$user"
 check_result "$?" "user ip release failed"

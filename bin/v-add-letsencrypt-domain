@@ -75,6 +75,17 @@ if [ -n "$mail" ]; then
     is_boolean_format_valid "$mail" 'mail'
 fi
 
+domain_redirect="$REDIRECT"
+if [[ -n "$domain_redirect"  ]] ; then
+    domain_redirect_code="$REDIRECT_CODE"
+    $BIN/v-delete-web-domain-redirect $user $domain
+fi
+
+domain_forcessl="$SSL_FORCE"
+if [[ "$domain_forcessl" == 'yes' ]] ; then
+    $BIN/v-delete-web-domain-ssl-force $user $domain
+fi
+
 # Set DNS CAA record retrieval commands
 if [ -n "$DNS_SYSTEM" ]; then
     dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
@@ -548,6 +559,13 @@ else
     fi
     update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
     update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+fi
+
+if [[ "$domain_forcessl" == 'yes' ]] ; then
+    $BIN/v-add-web-domain-ssl-force $user $domain
+fi
+if [[ -n "$domain_redirect" ]] ; then
+    $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
 fi
 
 # Remove challenge folder if exist

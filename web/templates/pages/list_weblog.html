@@ -37,5 +37,5 @@
 		</div>
 	</div>
 
-	<div style="margin-left: auto; margin-right: auto; padding-top: 80px; width: 1020px;"><?=_('Last 70 lines of %s.%s.log',htmlentities($_GET['domain']),htmlentities($_GET['type'])) ;?></div>
+	<div style="margin-left: auto; margin-right: auto; padding-top: 80px; width: 1020px;"><?=sprintf(_('Last 70 lines of %s.%s.log'),htmlentities($_GET['domain']),htmlentities($type)) ;?></div>
 	<pre style="width: 1020px; margin-left: auto; margin-right: auto;" class="console-output">

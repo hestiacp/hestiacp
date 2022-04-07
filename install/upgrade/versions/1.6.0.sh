@@ -35,8 +35,17 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
         sed -i '115,250 s/ratelimit             = 200 \/ 1h \/ $authenticated_id/ set acl_c_msg_limit = ${if exists{\/etc\/exim4\/domains\/$sender_address_domain\/limits\/$sender_address} {${readfile{\/etc\/exim4\/domains\/$sender_address_domain\/limits\/$sender_address_local_part}}} {${readfile{\/etc\/exim4\/limit.conf}}} } \n ratelimit     = $acl_c_msg_limit \/ 1h \/ strict\/ $authenticated_id/g' /etc/exim4/exim4.conf.template
         sed -i '115,250 s/warn    ratelimit     = 100 \/ 1h \/ strict \/ $authenticated_id/warn    ratelimit     = ${eval:$acl_c_msg_limit \/ 2} \/ 1h \/ strict \/ $authenticated_id/g' /etc/exim4/exim4.conf.template
     fi
+    
+    sed -i 's/ warn    set acl_m1    = no/ warn    set acl_m1    = no \n          set acl_m3    = no/g' /etc/exim4/exim4.conf.template
+    
+    sed -i 's|                          set acl_m1    = yes|              set acl_m1    = yes \n  warn    condition     = \${if exists {/etc/exim4/domains/\$domain/reject_spam}{yes}{no}} \n         set acl_m3    = yes|g' /etc/exim4/exim4.conf.template
+    
+    sed -i 's|         message        = SpamAssassin detected spam (from \$sender_address to \$recipients).|        message        = SpamAssassin detected spam (from $sender_address to $recipients).\n\n  # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled\n  deny   message        = This message scored \$spam_score spam points\n          spam           = debian-spamd:true \n          condition      = \${if eq{\$acl_m3}{yes}{yes}{no}} \n          condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}	|g' /etc/exim4/exim4.conf.template
+    
     # Add missing limit.conf file
     cp $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/limit.conf
+    cp $HESTIA_INSTALL_DIR/exim/system.filter /etc/exim4/system.filter
+    
 fi
 
 # Adding LE autorenew cronjob if there are none

@@ -97,6 +97,11 @@
 										<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>><?=_('AntiSpam Support');?></label>
 									</td>
 								</tr>
+								<tr>
+									<td class="vst-text input-label">
+										<label><input type="checkbox" size="20" class="vst-checkbox" name="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo "checked=yes"; ?>><?=_('Reject spam');?></label>
+									</td>
+								</tr>
 							<?php } ?>
 							<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
 								<tr>

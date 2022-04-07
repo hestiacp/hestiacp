@@ -78,6 +78,12 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
+    if (!empty($_POST['v_reject']) && $v_antispam == "yes") {
+        exec(HESTIA_CMD."v-add-mail-domain-reject ".$user." ".$v_domain." yes", $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+    }
+
     if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])) {
         if (empty($_SESSION['error_msg'])) {
             if (!empty($_POST['v_webmail'])) {
@@ -262,7 +268,7 @@ if (!empty($_POST['ok_acc'])) {
         check_return_code($return_var, $output);
         unset($output);
     }
-    
+
     // Add fwd_only flag
     if ((!empty($_POST['v_rate'])) && (empty($_SESSION['error_msg']))  && $_SESSION['userContext'] == 'admin') {
         $v_rate = escapeshellarg($_POST['v_rate']);

@@ -35,6 +35,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 
     // Parse domain
     $v_antispam = $data[$v_domain]['ANTISPAM'];
+    $v_reject = $data[$v_domain]['REJECT'];
     $v_antivirus = $data[$v_domain]['ANTIVIRUS'];
     $v_dkim = $data[$v_domain]['DKIM'];
     $v_catchall = $data[$v_domain]['CATCHALL'];
@@ -196,8 +197,8 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         $v_catchall = '';
         unset($output);
     }
-    
-    // Change rate limit 
+
+    // Change rate limit
     if (($v_rate != $_POST['v_rate']) && (empty($_SESSION['error_msg'])) && $_SESSION['userContext'] == 'admin') {
         if (empty($_POST['v_rate'])) {
             $v_rate = 'system';
@@ -518,7 +519,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
         check_return_code($return_var, $output);
         unset($output);
     }
-    // Change rate limit 
+    // Change rate limit
     if (($v_rate != $_POST['v_rate']) && (empty($_SESSION['error_msg'])) && $_SESSION['userContext'] == 'admin') {
         if (empty($_POST['v_rate'])) {
             $v_rate = 'system';

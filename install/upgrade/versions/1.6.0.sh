@@ -36,7 +36,8 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
         sed -i '115,250 s/warn    ratelimit     = 100 \/ 1h \/ strict \/ $authenticated_id/warn    ratelimit     = ${eval:$acl_c_msg_limit \/ 2} \/ 1h \/ strict \/ $authenticated_id/g' /etc/exim4/exim4.conf.template
     fi
     
-    if [ -z $(cat /etc/exim4/exim4.conf.template | grep "set acl_m3") ]; then
+    acl=$(cat /etc/exim4/exim4.conf.template | grep "set acl_m3")
+    if [ -z "$acl" ]; then
         echo "[ * ] Add support for optional rejecting spam"
         sed -i 's/ warn    set acl_m1    = no/ warn    set acl_m1    = no \n          set acl_m3    = no/g' /etc/exim4/exim4.conf.template
         

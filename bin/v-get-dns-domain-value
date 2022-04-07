@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: get dns domain value
 # options: USER DOMAIN KEY
-# labels: dns
 #
 # example: v-get-dns-domain-value admin example.com SOA
 #
-# The function for getting a certain DNS domain parameter.
-
+# This function for getting a certain DNS domain parameter.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -31,7 +29,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -49,7 +46,6 @@ key=$(echo "$key"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Print
 get_object_value 'dns' 'DOMAIN' "$domain" "$key"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

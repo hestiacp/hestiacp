@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list system ips
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-ips
 #
-# The function for obtaining the list of system ip adresses.
-
+# This function for obtaining the list of system ip adresses.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -87,7 +85,6 @@ csv_list() {
     done < <(ls $HESTIA/data/ips/)
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -99,7 +96,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

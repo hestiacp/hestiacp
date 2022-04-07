@@ -113,7 +113,7 @@ class Hestia_API
                 $user_combined_ip[] = $_SERVER['HTTP_CF_CONNECTING_IP'];
             }
         }
-        return implode($user_combined_ip, '|');
+        return implode('|',$user_combined_ip);
     }
 }
 
@@ -147,7 +147,11 @@ function session_invalid()
                 $user = $_GET['user'];
                 $host = 'localhost';
                 $token = $_GET['hestia_token'];
-                $time = $_GET['exp'];
+                if(is_numeric($_GET['exp'])){
+                    $time = $_GET['exp'];
+                }else{
+                    $time = 0; 
+                }
 
                 if ($time + 60 > time()) {
                     //note: Possible issues with cloudflare due to ip obfuscation

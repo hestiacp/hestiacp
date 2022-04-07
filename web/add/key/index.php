@@ -1,6 +1,7 @@
 <?php
 
-error_reporting(E_ALL);
+ob_start();
+session_start();
 $TAB = 'USER';
 
 // Main include
@@ -16,10 +17,8 @@ if (!empty($_POST['ok'])) {
     }
 
     if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-        $user = $_GET['user'];
+        $user = escapeshellarg($_GET['user']);
     }
-
-    $user = escapeshellarg($user);
 
     if (!$_SESSION['error_msg']) {
         if ($_POST) {
@@ -62,7 +61,9 @@ if (!empty($_POST['ok'])) {
         $_SESSION['ok_msg'] = _('SSH KEY created');
     }
 }
-
+if (empty($v_key)) {
+    $v_key = '';
+}
 render_page($user, $TAB, 'add_key');
 
 // Flush session messages

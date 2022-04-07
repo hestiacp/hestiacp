@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update system firewall rules
 # options: NONE
-# labels: panel
 #
 # example: v-update-firewall
 #
-# The function updates iptables rules
-
+# This function updates iptables rules
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Defining absolute path for iptables and modprobe
@@ -27,7 +25,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/firewall.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -213,7 +210,6 @@ else
     fi
     systemctl is-enabled hestia-iptables >/dev/null 2>&1 || systemctl enable hestia-iptables >/dev/null 2>&1
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Rebuild Function Library                           #
+#                                                                           #
+#===========================================================================#
+
 # User account rebuild
 rebuild_user_conf() {
 
@@ -301,12 +308,12 @@ rebuild_web_domain_conf() {
     # Refresh HTTPS redirection if previously enabled
     if [ "$SSL_FORCE" = 'yes' ]; then
         $BIN/v-delete-web-domain-ssl-force $user $domain no yes
-        $BIN/v-add-web-domain-ssl-force $user $domain yes yes
+        $BIN/v-add-web-domain-ssl-force $user $domain no yes
     fi
 
     if [ "$SSL_HSTS" = 'yes' ]; then
         $BIN/v-delete-web-domain-ssl-hsts $user $domain no yes
-        $BIN/v-add-web-domain-ssl-hsts $user $domain yes yes
+        $BIN/v-add-web-domain-ssl-hsts $user $domain no yes
     fi
     if [ "$FASTCGI_CACHE" = 'yes' ]; then
         $BIN/v-delete-fastcgi-cache $user $domain
@@ -383,15 +390,17 @@ rebuild_web_domain_conf() {
                 grep "^$position:" |cut -f 2 -d :)
             ftp_md5=$(echo $FTP_MD5 | tr ':' '\n' |grep -n '' |\
                 grep "^$position:" |cut -f 2 -d :)
-
             # rebuild S/FTP users
             $BIN/v-delete-web-domain-ftp "$user" "$domain" "$ftp_user"
-            $BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user#*_}" "!xplaceholder$FTP_MD5" "$ftp_path"
-
+            # Generate temporary password to add user but update afterwards
+            temp_password=$(generate_password);
+            $BIN/v-add-web-domain-ftp "$user" "$domain" "${ftp_user#*_}" "$temp_password" "$ftp_path"
             # Updating ftp user password
             chmod u+w /etc/shadow
             sed -i "s|^$ftp_user:[^:]*:|$ftp_user:$ftp_md5:|" /etc/shadow
             chmod u-w /etc/shadow
+            #Update web.conf for next rebuild or move
+            update_object_value 'web' 'DOMAIN' "$domain" '$FTP_MD5' "$ftp_md5"
         fi
     done
 
@@ -411,21 +420,32 @@ rebuild_web_domain_conf() {
         sed -i "/^$auth_user:/d" $htpasswd
         echo "$auth_user:$auth_hash" >> $htpasswd
 
-        # Checking web server include
-        if [ ! -e "$htaccess" ]; then
-            if [ "$WEB_SYSTEM" != 'nginx' ]; then
+        # Adding htaccess password protection
+        if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+            htaccess="$HOMEDIR/$user/conf/web/$domain/nginx.conf_htaccess"
+            shtaccess="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_htaccess"
+            if [ ! -f "$htaccess" ]; then
+                echo "auth_basic  \"$domain password access\";" > $htaccess
+                echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+                ln -s $htaccess $shtaccess
+                restart_required='yes'
+            fi
+        else
+            htaccess="$HOMEDIR/$user/conf/web/$domain/apache2.conf_htaccess"
+            shtaccess="$HOMEDIR/$user/conf/web/$domain/apache2.ssl.conf_htaccess"
+            if [ ! -f "$htaccess" ]; then
                 echo "<Directory $docroot>" > $htaccess
                 echo "    AuthUserFile $htpasswd" >> $htaccess
                 echo "    AuthName \"$domain access\"" >> $htaccess
                 echo "    AuthType Basic" >> $htaccess
                 echo "    Require valid-user" >> $htaccess
                 echo "</Directory>" >> $htaccess
-            else
-                echo "auth_basic  \"$domain password access\";" > $htaccess
-                echo "auth_basic_user_file    $htpasswd;" >> $htaccess
+                ln -s $htaccess $shtaccess
+                restart_required='yes'
             fi
-            chmod 640 $htpasswd $htaccess >/dev/null 2>&1
         fi
+        chmod 644 $htpasswd $htaccess
+        chgrp $user $htpasswd $htaccess
     done
 
     # Set folder permissions
@@ -509,8 +529,9 @@ rebuild_dns_domain_conf() {
 
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
+    syshealth_repair_mail_config
+    
     get_domain_values 'mail'
-
     if [[ "$domain" = *[![:ascii:]]* ]]; then
         domain_idn=$(idn -t --quiet -a $domain)
     else
@@ -550,11 +571,13 @@ rebuild_mail_domain_conf() {
         rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
         rm -f $HOMEDIR/$user/conf/mail/$domain/fwd_only
         rm -f $HOMEDIR/$user/conf/mail/$domain/ip
+        rm -fr $HOMEDIR/$user/conf/mail/$domain/limits/
         touch $HOMEDIR/$user/conf/mail/$domain/accounts
         touch $HOMEDIR/$user/conf/mail/$domain/aliases
         touch $HOMEDIR/$user/conf/mail/$domain/passwd
         touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
-
+        mkdir $HOMEDIR/$user/conf/mail/$domain/limits/
+        
         # Setting outgoing ip address
         if [ -n "$local_ip" ]; then
             echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
@@ -638,6 +661,14 @@ rebuild_mail_domain_conf() {
             if [ "$FWD_ONLY" = 'yes' ]; then
                 echo "$account" >> $HOMEDIR/$user/conf/mail/$domain/fwd_only
             fi
+            user_rate_limit=$(get_object_value 'mail' 'DOMAIN' "$domain" '$RATE_LIMIT');
+            if [ -n "$RATE_LIMIT" ]; then
+                #user value
+                echo "$RATE_LIMIT" >> $HOMEDIR/$user/conf/mail/$domain/limits/$account
+            elif [ -n "$user_rate_limit" ]; then
+                #revert to user value
+                echo "$user_rate_limit" >> $HOMEDIR/$user/conf/mail/$domain/limits/$account
+            fi
         fi
     done
 
@@ -699,7 +730,9 @@ rebuild_mysql_database() {
     mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" >/dev/null
     if [ "$mysql_fork" = "mysql" ]; then
         # mysql
-        if [ "$(echo $mysql_ver |cut -d '.' -f2)" -ge 7 ]; then
+        mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+        mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
+        if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
             # mysql >= 5.7
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" > /dev/null
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" > /dev/null
@@ -711,21 +744,33 @@ rebuild_mysql_database() {
         fi
     else
         # mariadb
-        if [ "$(echo $mysql_ver |cut -d '.' -f1)" -eq 5 ]; then
+        mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
+        mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
+        if [ "$mysql_ver_sub" -eq 5 ]; then
             # mariadb = 5
             mysql_query "CREATE USER \`$DBUSER\`" > /dev/null
             mysql_query "CREATE USER \`$DBUSER\`@localhost" > /dev/null
+            query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
         else
             # mariadb = 10
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\` IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost IDENTIFIED BY PASSWORD '$MD5'" > /dev/null
+            if [ "$mysql_ver_sub_sub" -ge 4 ]; then
+                #mariadb >= 10.4
+                query="SET PASSWORD FOR '$DBUSER'@'%' = '$MD5';"
+                query2="SET PASSWORD FOR '$DBUSER'@'localhost' = '$MD5';"
+            else
+                #mariadb < 10.4
+                query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
+            fi
         fi
-        # mariadb any version
-        query="UPDATE mysql.user SET Password='$MD5' WHERE User='$DBUSER'"
     fi
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@\`%\`" >/dev/null
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@localhost" >/dev/null
     mysql_query "$query" >/dev/null
+    if [ ! -z "$query2" ]; then
+        mysql_query "$query2" >/dev/null
+    fi
     mysql_query "FLUSH PRIVILEGES" >/dev/null
 }
 

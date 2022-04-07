@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 $TAB = 'DNS';
 
@@ -41,6 +40,31 @@ if (!empty($_POST['ok'])) {
     $v_domain = escapeshellarg($v_domain);
     $v_domain = strtolower($v_domain);
     $v_ip = $_POST['v_ip'];
+    // Change NameServers
+    if (empty($_POST['v_ns1'])) {
+        $_POST['v_ns1'] = '';
+    }
+    if (empty($_POST['v_ns2'])) {
+        $_POST['v_ns2'] = '';
+    }
+    if (empty($_POST['v_ns3'])) {
+        $_POST['v_ns3'] = '';
+    }
+    if (empty($_POST['v_ns4'])) {
+        $_POST['v_ns4'] = '';
+    }
+    if (empty($_POST['v_ns5'])) {
+        $_POST['v_ns5'] = '';
+    }
+    if (empty($_POST['v_ns6'])) {
+        $_POST['v_ns6'] = '';
+    }
+    if (empty($_POST['v_ns7'])) {
+        $_POST['v_ns7'] = '';
+    }
+    if (empty($_POST['v_ns8'])) {
+        $_POST['v_ns8'] = '';
+    }
     $v_ns1 = escapeshellarg($_POST['v_ns1']);
     $v_ns2 = escapeshellarg($_POST['v_ns2']);
     $v_ns3 = escapeshellarg($_POST['v_ns3']);
@@ -56,8 +80,11 @@ if (!empty($_POST['ok'])) {
         check_return_code($return_var, $output);
         unset($output);
     }
+    exec(HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
+    $user_config = json_decode(implode('', $output), true);
+    unset($output);
+    $v_template = $user_config[$user_plain]['DNS_TEMPLATE'];
 
-    // Change domain template
     if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
         $v_template = escapeshellarg($_POST['v_template']);
         exec(HESTIA_CMD."v-change-dns-domain-tpl ".$user." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
@@ -158,6 +185,30 @@ if (!empty($_POST['ok_rec'])) {
     }
 }
 
+if (empty($v_ns1)) {
+    $v_ns1 = '';
+}
+if (empty($v_ns2)) {
+    $v_ns2 = '';
+}
+if (empty($v_ns3)) {
+    $v_ns3 = '';
+}
+if (empty($v_ns4)) {
+    $v_ns4 = '';
+}
+if (empty($v_ns5)) {
+    $v_ns5 = '';
+}
+if (empty($v_ns6)) {
+    $v_ns6 = '';
+}
+if (empty($v_ns7)) {
+    $v_ns7 = '';
+}
+if (empty($v_ns8)) {
+    $v_ns8 = '';
+}
 
 $v_ns1 = str_replace("'", "", $v_ns1);
 $v_ns2 = str_replace("'", "", $v_ns2);
@@ -181,7 +232,7 @@ unset($output);
 exec(HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
 $user_config = json_decode(implode('', $output), true);
 unset($output);
-$v_template = $user_config[$user]['DNS_TEMPLATE'];
+$v_template = $user_config[$user_plain]['DNS_TEMPLATE'];
 
 if (empty($_GET['domain'])) {
     // Display body for dns domain
@@ -195,6 +246,11 @@ if (empty($_GET['domain'])) {
     if (empty($v_ns1)) {
         exec(HESTIA_CMD."v-list-user-ns ".$user." json", $output, $return_var);
         $nameservers = json_decode(implode('', $output), true);
+        for ($i = 0; $i < 8; $i++) {
+            if (empty($nameservers[$i])) {
+                $nameservers[$i] = '';
+            }
+        }
         $v_ns1 = str_replace("'", "", $nameservers[0]);
         $v_ns2 = str_replace("'", "", $nameservers[1]);
         $v_ns3 = str_replace("'", "", $nameservers[2]);
@@ -212,6 +268,18 @@ if (empty($_GET['domain'])) {
     $v_domain = $_GET['domain'];
     if (empty($v_rec)) {
         $v_rec = '@';
+    }
+    if (empty($v_type)) {
+        $v_type = '';
+    }
+    if (empty($v_val)) {
+        $v_val = '';
+    }
+    if (empty($v_priority)) {
+        $v_priority = '';
+    }
+    if (empty($v_ttl)) {
+        $v_ttl = '';
     }
     render_page($user, $TAB, 'add_dns_rec');
 }

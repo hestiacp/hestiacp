@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change sys language
 # options: LANGUAGE [UPDATE_USERS]
-# labels: panel
 #
 # example: v-change-sys-language ru
 #
-# The function for changing system language.
-
+# This function for changing system language.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,7 +31,6 @@ is_language_valid() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -44,7 +41,6 @@ is_language_valid "$language"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

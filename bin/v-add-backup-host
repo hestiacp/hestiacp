@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
-# labels: 
 #
 # example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
 #          v-add-backup-host b2 bucketName keyID applicationKey
@@ -9,7 +8,7 @@
 # Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -21,18 +20,20 @@ password=$(perl -e 'print quotemeta shift(@ARGV)' "${raw_password}")
 path=${5-/backup}
 port=$6
 
+# CPU Architecture
+arch=$(uname -m)
+
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+# Fetch current verison B2 CLI tool
+source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
 # Paths
 b2cli="/usr/local/bin/b2"
-b2lnk="https://f000.backblazeb2.com/file/backblazefiles/b2/cli/linux/b2"
+b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/download/v$b2_v/b2-linux"
 
 # Defining ftp command function
 ftpc() {
@@ -98,7 +99,6 @@ sftpc() {
         exit \$rc
 EOF
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -191,8 +191,13 @@ fi
 if [ "$type" = 'b2' ]; then
     # Download b2 binary
     if [ ! -f "$b2cli" ]; then
-        wget -O $b2cli $b2lnk > /dev/null 2>&1
-        chmod +x $b2cli > /dev/null 2>&1
+        if [ "$arch" = 'aarch64' ] || [ "$arch" = 'arm64' ]; then
+            echo "Error: B2 binary for arm64 must be downloaded manually."
+            exit 3
+        else
+            wget -O $b2cli $b2lnk > /dev/null 2>&1
+            chmod +x $b2cli > /dev/null 2>&1
+        fi
         if [ ! -f "$b2cli" ]; then
             echo "Error: Binary download failed, b2 doesnt work as expected."
             exit 3
@@ -229,7 +234,6 @@ elif [ $type == 'b2' ]; then
     echo -e "$str" > $HESTIA/conf/$type.backup.conf
     chmod 660 $HESTIA/conf/$type.backup.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

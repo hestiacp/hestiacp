@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 $TAB = 'PACKAGE';
 
@@ -220,6 +219,9 @@ $shells = json_decode(implode('', $output), true);
 unset($output);
 
 // Set default values
+if (empty($v_package)) {
+    $v_package = '';
+}
 if (empty($v_web_template)) {
     $v_web_template = 'default';
 }
@@ -239,19 +241,19 @@ if (empty($v_web_domains)) {
     $v_web_domains = "'1'";
 }
 if (empty($v_web_aliases)) {
-    $v_web_aliases = "'1'";
+    $v_web_aliases = "'5'";
 }
 if (empty($v_dns_domains)) {
     $v_dns_domains = "'1'";
 }
 if (empty($v_dns_records)) {
-    $v_dns_records = "'1'";
+    $v_dns_records = "'unlimited'";
 }
 if (empty($v_mail_domains)) {
     $v_mail_domains = "'1'";
 }
 if (empty($v_mail_accounts)) {
-    $v_mail_accounts = "'1'";
+    $v_mail_accounts = "'5'";
 }
 if (empty($v_databases)) {
     $v_databases = "'1'";
@@ -274,7 +276,24 @@ if (empty($v_ns1)) {
 if (empty($v_ns2)) {
     $v_ns2 = 'ns2.example.ltd';
 }
-
+if (empty($v_ns3)) {
+    $v_ns3 = '';
+}
+if (empty($v_ns4)) {
+    $v_ns4 = '';
+}
+if (empty($v_ns5)) {
+    $v_ns5 = '';
+}
+if (empty($v_ns6)) {
+    $v_ns6 = '';
+}
+if (empty($v_ns7)) {
+    $v_ns7 = '';
+}
+if (empty($v_ns8)) {
+    $v_ns8 = '';
+}
 // Render page
 render_page($user, $TAB, 'add_package');
 

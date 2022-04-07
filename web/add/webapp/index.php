@@ -18,18 +18,14 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
     $user=escapeshellarg($_GET['user']);
 }
 
-// Get all user domains
-exec(HESTIA_CMD."v-list-web-domains ".escapeshellarg($user)." json", $output, $return_var);
-$user_domains = json_decode(implode('', $output), true);
-$user_domains = array_keys($user_domains);
-unset($output);
-
-// List domain
+// Check if domain belongs to the user
 $v_domain = $_GET['domain'];
-if (!in_array($v_domain, $user_domains)) {
-    header("Location: /list/web/");
-    exit;
+exec(HESTIA_CMD."v-list-web-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+if ($return_var > 0){
+    check_return_code_redirect($return_var, $output, '/list/web/');
 }
+
+unset($output);
 
 // Check GET request
 if (!empty($_GET['app'])) {

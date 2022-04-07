@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: delete webmail support for a domain
 # options: USER DOMAIN [RESTART] [QUIET]
-# labels: hestia
 #
 # example: v-delete-mail-domain-webmail user demo.com
 #
-# this function removes support for webmail from
+# This function removes support for webmail from
 # a specified mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -59,14 +58,16 @@ if [ -n "$WEBMAIL_ALIAS" ]; then
     # Ensure that corresponding DNS records are removed
     if [ -n "$DNS_SYSTEM" ]; then
         dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-        webmail_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "$WEBMAIL_ALIAS" | cut -d' ' -f1)
-
-        if [ "$dns_domain" = "$domain" ]; then
-            if [ -n "$webmail_record" ]; then
-                if [ "$quiet" = "yes" ]; then
-                    $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
-                else
-                    $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart"
+        if [ "WEBMAIL_ALIAS" != "mail" ];then
+            #Prevent mail.domain.com being removed
+            webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i " $WEBMAIL_ALIAS " | cut -d' ' -f1)
+            if [ "$dns_domain" = "$domain" ]; then
+                if [ -n "$webmail_record" ]; then
+                    if [ "$quiet" = "yes" ]; then
+                        $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
+                    else
+                        $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart"
+                    fi
                 fi
             fi
         fi
@@ -77,6 +78,7 @@ fi
 
 # Set SSL as enabled in configuration
 update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' ""
+
 #----------------------------------------------------------#
 #                       Hestia                              #
 #----------------------------------------------------------#

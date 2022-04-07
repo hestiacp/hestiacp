@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete system quota
 # options: NONE
-# labels: panel
 #
 # example: v-delete-sys-quota
 #
-# The script disables filesystem quota on /home partition
-
+# This function disables filesystem quota on /home partition
 
 #----------------------------------------------------------#
-#                  Variable & Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -20,13 +18,13 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -64,7 +62,6 @@ if [ -z "$(grep DISK_QUOTA $HESTIA/conf/hestia.conf)" ]; then
 else
     sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='no'/g" $HESTIA/conf/hestia.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

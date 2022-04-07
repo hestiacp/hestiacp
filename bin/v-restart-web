@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: restart web server
 # options: NONE
-# labels: web
 #
 # example: v-restart-web
 #
-# The function reloads web server configuration.
-
+# This function reloads web server configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -34,7 +32,6 @@ send_email_report() {
     cat "$tmpfile" |$SENDMAIL -s "$subj"  "$email"
     rm -f $tmpfile
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,39 +1,42 @@
 <?php
+session_start();
+
+
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
+if (!file_exists(dirname(__FILE__).'/vendor/autoload.php')) {
+    trigger_error('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
+    echo 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line';
+    exit(1);
+}
+
 require 'vendor/autoload.php';
 
-session_start();
-
-
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
-if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
-    define('JS_LATEST_UPDATE', 'v=' . $_SESSION['VERSION']);
-} else {
-    define('JS_LATEST_UPDATE', 'r=' . time());
-}
-define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo (float)phpversion();"'));
+define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,3);"'));
 
 // Load Hestia Config directly
 load_hestia_config();
 require_once(dirname(__FILE__) . '/prevent_csrf.php');
-
 
 function destroy_sessions()
 {
     unset($_SESSION);
     session_unset();
     session_destroy();
+    session_start();
 }
 
 $i = 0;
 
 // Saving user IPs to the session for preventing session hijacking
-$user_combined_ip = $_SERVER['REMOTE_ADDR'];
-
+$user_combined_ip = '';
+if (isset($_SERVER['REMOTE_ADDR'])) {
+    $user_combined_ip = $_SERVER['REMOTE_ADDR'];
+}
 if (isset($_SERVER['HTTP_CLIENT_IP'])) {
     $user_combined_ip .= '|' . $_SERVER['HTTP_CLIENT_IP'];
 }
@@ -92,6 +95,12 @@ if (isset($_SESSION['user'])) {
     }
 }
 
+if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
+    define('JS_LATEST_UPDATE', 'v=' . $_SESSION['VERSION']);
+} else {
+    define('JS_LATEST_UPDATE', 'r=' . time());
+}
+
 if (!defined('NO_AUTH_REQUIRED')) {
     if (empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])) {
         destroy_sessions();
@@ -109,11 +118,13 @@ if (!defined('NO_AUTH_REQUIRED')) {
 }
 
 if (isset($_SESSION['user'])) {
-    $user = $_SESSION['user'];
+    $user = escapeshellarg($_SESSION['user']);
+    $user_plain = htmlentities($_SESSION['user']);
 }
 
-if (isset($_SESSION['look']) && ($_SESSION['userContext'] === 'admin')) {
-    $user = $_SESSION['look'];
+if (isset($_SESSION['look']) && $_SESSION['look']  != '' && ($_SESSION['userContext'] === 'admin')) {
+    $user = escapeshellarg($_SESSION['look']);
+    $user_plain = htmlentities($_SESSION['look']);
 }
 
 require_once(dirname(__FILE__) . '/i18n.php');
@@ -136,6 +147,17 @@ function check_return_code($return_var, $output)
         $_SESSION['error_msg'] = $error;
     }
 }
+function check_return_code_redirect($return_var, $output, $location)
+{
+    if ($return_var != 0) {
+        $error = implode('<br>', $output);
+        if (empty($error)) {
+            $error = sprintf(_('Error code:'), $return_var);
+        }
+        $_SESSION['error_msg'] = $error;
+        header("Location:".$location);
+    }
+}
 
 function render_page($user, $TAB, $page)
 {
@@ -146,8 +168,7 @@ function render_page($user, $TAB, $page)
     include($__template_dir . 'header.html');
 
     // Panel
-    top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
-
+    $panel = top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
     // Extract global variables
     // I think those variables should be passed via arguments
     extract($GLOBALS, EXTR_SKIP);
@@ -185,14 +206,33 @@ function verify_csrf($method, $return = false)
     }
 }
 
+function show_error_panel($data)
+{
+    $msg_id = '';
+    $msg_icon = '';
+    $msg_text = '';
+    if (!empty($data['error_msg'])) {
+        $msg_icon = 'fa-exclamation-circle status-icon red';
+        $msg_text = htmlentities($data['error_msg']);
+        $msg_id = 'vst-error';
+    } else {
+        if (!empty($data['ok_msg'])) {
+            $msg_icon = 'fa-check-circle status-icon green';
+            $msg_text = $data['ok_msg'];
+            $msg_id = 'vst-ok';
+        }
+    } ?>
+<span class="<?=$msg_id; ?>"> <i class="fas <?=$msg_icon; ?>"></i> <?=$msg_text; ?></span>
+<?php
+}
+
 function top_panel($user, $TAB)
 {
-    global $panel;
-    $command = HESTIA_CMD . 'v-list-user ' . escapeshellarg($user) . " 'json'";
+    $command = HESTIA_CMD . 'v-list-user ' . $user . " 'json'";
     exec($command, $output, $return_var);
     if ($return_var > 0) {
-        echo '<span style="font-size: 18px;"><b>ERROR: Unable to retrieve account details.</b><br>Please <b><a href="/login/">log in</a></b> again.</span>';
         destroy_sessions();
+        $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
         header('Location: /login/');
         exit;
     }
@@ -201,9 +241,11 @@ function top_panel($user, $TAB)
 
     // Log out active sessions for suspended users
     if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
-        $_SESSION['error_msg'] = 'You have been logged out. Please log in again.';
-        destroy_sessions();
-        header('Location: /login/');
+        if (empty($_SESSION['look'])) {
+            destroy_sessions();
+            $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
+            header('Location: /login/');
+        }
     }
 
     // Reset user permissions if changed while logged in
@@ -249,12 +291,13 @@ function top_panel($user, $TAB)
     }
 
     include(dirname(__FILE__) . '/../templates/includes/panel.html');
+    return $panel;
 }
 
 function translate_date($date)
 {
-    $date = strtotime($date);
-    return strftime('%d &nbsp;', $date) . _(strftime('%b', $date)) . strftime(' &nbsp;%Y', $date);
+    $date = new DateTime($date);
+    return $date -> format('d').' '. _($date -> format('M')).' '.$date -> format('Y');
 }
 
 function humanize_time($usage)
@@ -266,15 +309,20 @@ function humanize_time($usage)
             $usage = number_format($usage);
             return sprintf(ngettext('%d day', '%d days', $usage), $usage);
         } else {
+            $usage = round($usage);
             return sprintf(ngettext('%d hour', '%d hours', $usage), $usage);
         }
     } else {
+        $usage = round($usage);
         return sprintf(ngettext('%d minute', '%d minutes', $usage), $usage);
     }
 }
 
 function humanize_usage_size($usage)
 {
+    if ($usage == 'unlimited') {
+        return '∞';
+    }
     if ($usage > 1024) {
         $usage = $usage / 1024;
         if ($usage > 1024) {
@@ -294,6 +342,10 @@ function humanize_usage_size($usage)
 
 function humanize_usage_measure($usage)
 {
+    if ($usage == 'unlimited') {
+        return 'mb';
+    }
+
     $measure = 'kb';
     if ($usage > 1024) {
         $usage = $usage / 1024;
@@ -311,6 +363,10 @@ function humanize_usage_measure($usage)
 
 function get_percentage($used, $total)
 {
+    if ($total = "unlimited") {
+        //return 0 if unlimited
+        return 0;
+    }
     if (!isset($total)) {
         $total = 0;
     }
@@ -383,10 +439,11 @@ function list_timezones()
         $offset_prefix = $offset < 0 ? '-' : '+';
         $offset_formatted = gmdate('H:i', abs($offset));
         $pretty_offset = "UTC${offset_prefix}${offset_formatted}";
-        $t = new DateTimeZone($timezone);
-        $c = new DateTime(null, $t);
+        $c = new DateTime(gmdate('Y-M-d H:i:s'), new DateTimeZone('UTC'));
+        $c->setTimezone(new DateTimeZone($timezone));
         $current_time = $c->format('H:i:s');
         $timezone_list[$timezone] = "$timezone [ $current_time ] ${pretty_offset}";
+        #$timezone_list[$timezone] = "$timezone ${pretty_offset}";
     }
     return $timezone_list;
 }
@@ -444,7 +501,6 @@ function backendtpl_with_webdomains()
         exec(HESTIA_CMD . 'v-list-web-domains '. escapeshellarg($user) . ' json', $output, $return_var);
         $domains = json_decode(implode('', $output), true);
         unset($output);
-
         foreach ($domains as $domain => $domain_details) {
             if (!empty($domain_details['BACKEND'])) {
                 $backend = $domain_details['BACKEND'];

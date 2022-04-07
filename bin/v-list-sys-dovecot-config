@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list dovecot config parameters
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-dovecot-config
 #
-# The function for obtaining the list of dovecot config parameters.
-
+# This function for obtaining the list of dovecot config parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -75,7 +73,6 @@ csv_list() {
     echo "$config_path8"
 }
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -102,7 +99,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

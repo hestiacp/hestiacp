@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user package
 # options: USER PACKAGE [FORCE]
-# labels: panel
 #
 # example: v-change-user-package admin yourpackage
 #
-# The function changes user's hosting package.
-
+# This function changes user's hosting package.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -163,7 +161,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -185,7 +182,6 @@ source $HESTIA/conf/hestia.conf
 if [ "$DISK_QUOTA" = 'yes' ]; then
     $BIN/v-update-user-quota "$user"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

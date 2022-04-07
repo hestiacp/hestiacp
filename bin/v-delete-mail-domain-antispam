@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete mail domain antispam support
 # options: USER DOMAIN
-# labels: mail
 #
 # example: v-delete-mail-domain-antispam admin mydomain.tld
 #
-# The function disable spamassasin for incoming emails.
-
+# This function disable spamassasin for incoming emails.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -31,7 +29,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -48,7 +45,6 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$ANTISPAM'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -57,7 +53,6 @@ check_hestia_demo_mode
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,11 +1,10 @@
 #!/bin/bash
 # info: add database
 # options: USER DATABASE DBUSER DBPASS [TYPE] [HOST] [CHARSET]
-# labels: 
 #
 # example: v-add-database admin wordpress_db matt qwerty123
 #
-# The function creates the database concatenating username and user_db.
+# This function creates the database concatenating username and user_db.
 # Supported types of databases you can get using v-list-sys-config script.
 # If the host isn't stated and there are few hosts configured on the server,
 # then the host will be defined by one of three algorithms. "First" will choose
@@ -13,9 +12,8 @@
 # "Weight" will distribute new database through hosts evenly. Algorithm and
 # types of supported databases is designated in the main configuration file.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -76,7 +74,6 @@ dbpass="$password"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -86,7 +83,6 @@ case $type in
     mysql) add_mysql_database ;;
     pgsql) add_pgsql_database ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

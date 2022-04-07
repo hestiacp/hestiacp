@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list user parameters
 # options: USER [FORMAT]
-# labels: 
 #
 # example: v-list-user admin
 #
-# The function to obtain user parameters.
-
+# This function to obtain user parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -165,7 +163,6 @@ csv_list() {
     echo "$U_BACKUPS,$LANGUAGE,$THEME,$NOTIFICATIONS,$TIME,$DATE"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -173,7 +170,6 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -193,7 +189,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -13,7 +13,7 @@ class AppWizard {
     private $errors;
 
     private $database_config = [
-        'database_create' => ['type'=>'boolean', 'value'=>false],
+        'database_create' => ['type'=>'boolean', 'value'=>true],
         'database_name' => ['type'=>'text', 'placeholder' => 'auto'],
         'database_user' => ['type'=>'text', 'placeholder' => 'auto'],
         'database_password' => ['type'=>'password', 'placeholder' => 'auto'],

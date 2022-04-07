@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: Remove mail domain smtp relay support
 # options: USER DOMAIN
-# labels: hestia
 #
 # example: v-delete-mail-domain-smtp-relay user domain.tld
 #
 # This function removes mail domain smtp relay support.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

@@ -16,7 +16,7 @@ server {
 
     location / {
 
-        location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
             expires     max;
             fastcgi_hide_header "Set-Cookie";
         }
@@ -27,7 +27,7 @@ server {
                 return  404;
             }
 
-            fastcgi_pass    unix:/run/php/php7.4-fpm-%domain%.sock;
+            fastcgi_pass    unix:/run/php/php8.0-fpm-%domain%.sock;
             fastcgi_index   index.php;
             include         /etc/nginx/fastcgi_params;
         }

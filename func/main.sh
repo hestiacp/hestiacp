@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Core Function Library                              #
+#                                                                           #
+#===========================================================================#
+
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
@@ -424,6 +431,10 @@ get_object_value() {
     object=$(grep "$2='$3'" $USER_DATA/$1.conf)
     parse_object_kv_list "$object"
     eval echo $4
+}
+
+get_object_values() {
+    parse_object_kv_list $(grep "$2='$3'" $USER_DATA/$1.conf)   
 }
 
 # Update object value
@@ -925,7 +936,9 @@ is_dns_record_format_valid() {
 # Email format validator
 is_email_format_valid() {
     if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+      if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.(xn--)[[:alnum:]]{2,63}$ ]] ; then
         check_result "$E_INVALID" "invalid email format :: $1"
+      fi
     fi
 }
 
@@ -1145,6 +1158,8 @@ is_format_valid() {
                 protocol)       is_fw_protocol_format_valid "$arg" ;;
                 proxy_ext)      is_extention_format_valid "$arg" ;;
                 quota)          is_int_format_valid "$arg" 'quota' ;;
+                rate)           is_int_format_valid "$arg" 'rate' ;;
+                                
                 record)         is_common_format_valid "$arg" 'record';;
                 restart)        is_restart_format_valid "$arg" 'restart' ;;
                 role)           is_role_valid "$arg" 'role' ;;
@@ -1299,7 +1314,7 @@ multiphp_versions() {
 
 multiphp_default_version() {
     # Get system wide default php version (set by update-alternatives)
-    local sys_phpversion=$(php -r "echo (float)phpversion();")
+    local sys_phpversion=$(php -r "echo substr(phpversion(),0,3);")
 
     # Check if the system php also has php-fpm enabled, otherwise return
     # the most recent php version which does have it installed.
@@ -1347,7 +1362,7 @@ source_conf(){
   while IFS='= ' read -r lhs rhs
   do
       if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-          rhs="${rhs%%\#*}"    # Del in line right comments
+          rhs="${rhs%%^\#*}"   # Del in line right comments
           rhs="${rhs%%*( )}"   # Del trailing spaces
           rhs="${rhs%\'*}"     # Del opening string quotes 
           rhs="${rhs#\'*}"     # Del closing string quotes 

@@ -10,10 +10,11 @@
 				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
 					<a href="/edit/user/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 				<?php } else { ?>
-					<a href="/edit/user/?user=<?=$user;?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+					<a href="/edit/user/?token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 				<?php } ?>
 			<?php } ?>
-			<?php if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
+			<?php if ($_SESSION['DEMO_MODE'] != "yes"){
+			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && (htmlentities($_GET['user']) !== 'admin')) { ?>
 					<?php if (htmlentities($_GET['user']) !== 'system') {?>
 						<a href="/list/log/auth/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history');?></a>
@@ -24,7 +25,8 @@
 			<?php } ?>
 			<?php if ($_SESSION['userContext'] === 'user') {?>
 				<a href="/list/log/auth/" id="btn-back" class="ui-button cancel" dir="ltr" title="<?=_('Login history');?>"><i class="fas fa-binoculars status-icon green"></i><?=_('Login history');?></a>
-			<?php } ?>
+			<?php } 
+			} ?>
 		</div>
 		<div class="l-unit-toolbar__buttonstrip float-right">
 			<a href="javascript:location.reload();" class="ui-button cancel" dir="ltr"><i class="fas fa-redo status-icon green"></i><?=_('Refresh');?></a>

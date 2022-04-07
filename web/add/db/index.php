@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 $TAB = 'DB';
 
@@ -117,13 +116,13 @@ if (!empty($_POST['ok'])) {
         $hostname = exec('hostname');
         $from = "noreply@".$hostname;
         $from_name = _('Hestia Control Panel');
-        $mailtext = sprintf(_('DATABASE_READY'), $user."_".$_POST['v_database'], $user."_".$_POST['v_dbuser'], $_POST['v_password'], $db_admin_link);
+        $mailtext = sprintf(_('DATABASE_READY'), $user_plain."_".$_POST['v_database'], $user_plain."_".$_POST['v_dbuser'], $_POST['v_password'], $db_admin_link);
         send_email($to, $subject, $mailtext, $from, $from_name);
     }
 
     // Flush field values on success
     if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = sprintf(_('DATABASE_CREATED_OK'), htmlentities($user)."_".htmlentities($_POST['v_database']), htmlentities($user)."_".htmlentities($_POST['v_database']));
+        $_SESSION['ok_msg'] = sprintf(_('DATABASE_CREATED_OK'), htmlentities($user_plain)."_".htmlentities($_POST['v_database']), htmlentities($user_plain)."_".htmlentities($_POST['v_database']));
         $_SESSION['ok_msg'] .= " / <a href=".$db_admin_link." target='_blank'>" . sprintf(_('open %s'), $db_admin) . "</a>";
         unset($v_database);
         unset($v_dbuser);
@@ -134,7 +133,13 @@ if (!empty($_POST['ok'])) {
 }
 
 // Get user email
-$v_db_email = $panel[$user]['CONTACT'];
+$v_db_email = '';
+if (empty($v_database)) {
+    $v_database = '';
+}
+if (empty($v_dbuser)) {
+    $v_dbuser = '';
+}
 
 // List avaiable database types
 $db_types = explode(',', $_SESSION['DB_SYSTEM']);

@@ -2,15 +2,18 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.4.17 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
+**Latest stable release:** Version 1.5.11 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
 **Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br>
 **Discord:** [Join the discussion](https://discord.gg/nXRUZch)<br />
-<br><br>
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)
 <br>
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)<br /><br />
+Bitcoin : bc1q48jt5wg5jaj8g9zy7c3j03cv57j2m2u5anlutu<br>
+Ethereum : 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
+Binance: bnb1l4ywvw5ejfmsgjdcx8jn5lxj7zsun8ktfu7rh8<br>
+Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 
 **Welcome!**
 ---------------------------- 
@@ -19,22 +22,32 @@ Hestia Control Panel is designed to provide administrators an easy to use web an
 Features and Services
 ----------------------------
 * Apache2 and NGINX with PHP-FPM
-* Multiple PHP versions (5.6 - 8.0, 7.4 as default)
+* Multiple PHP versions (5.6 - 8.1, 8.0 as default)
 * DNS Server (Bind) with clustering capabilities
-* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Roundcube, Rainloop)
+* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Sieve, Roundcube, Rainloop)
 * MariaDB and/or PostgreSQL databases
 * Let's Encrypt SSL support with wildcard certificates
 * Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 
 Supported platforms and operating systems
+========================================================
+
+AMD (x86_64 Intel/AMD)
 ----------------------------
-* **CPU Architecture:** AMD64 (x86_64 Intel/AMD)
 * **Debian:** 11, 10 or 9
 * **Ubuntu:** 20.04 LTS or 18.04 LTS
-* **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
+
+ARM64 (arm64)
+----------------------------
+* **Debian:** 11, 10, 9
+* **Ubuntu:** 20.04 LTS or 18.04 LTS
+* **NOTE:** ARM 64 bit processors only! ARM 32bit (armhf) is currently not supported!
 
 Installing Hestia Control Panel
 ============================
+
+* **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
+
 While we have taken every effort to make the installation process and the control panel interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server before continuing.
 
 ## Step 1: Log in

@@ -1,13 +1,11 @@
 #!/bin/bash
-# info: add letsencrypt cronjob
+# info: add cron job for Let's Encrypt certificates
 # options: NONE
-# labels: 
 #
-# The script for enabling letsencrypt cronjob
-
+# This function adds a new cron job for Let's Encrypt.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -17,7 +15,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -38,7 +35,6 @@ check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
 if [ -z "$check_cron" ] && [ -n "$CRON_SYSTEM" ]; then
     $BIN/v-add-cron-job admin '*/5' '*' '*' '*' '*' "$cmd"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

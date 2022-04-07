@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: search objects
 # options: USER OBJECT [FORMAT]
-# labels: panel
 #
 # example: v-search-user-object admin example.com json
 #
-# The function that allows to find user objects.
-
+# This function that allows to find user objects.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

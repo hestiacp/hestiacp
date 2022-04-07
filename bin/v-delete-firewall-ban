@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete firewall blocking rule
 # options: IP CHAIN
-# labels: panel
 #
 # example: v-delete-firewall-ban 198.11.130.250 MAIL
 #
-# The function deletes blocking rule from system firewall
-
+# This function deletes blocking rule from system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -29,7 +27,6 @@ source $HESTIA/func/firewall.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -40,7 +37,6 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -80,7 +76,6 @@ fi
 
 # Changing permissions
 chmod 660 $conf
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

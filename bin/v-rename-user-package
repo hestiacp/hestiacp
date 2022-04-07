@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change package name
 # options: OLD_NAME NEW_NAME [mode]
-# labels: hestia
 #
 # example: v-rename-package package package2
 #
-# The function changes the name of an existing package.
-
+# This function changes the name of an existing package.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,11 +25,9 @@ source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-
 
 # Ensure that package names have been passed to the script.
 if [ -z "$old_name" ]; then
@@ -52,7 +48,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -82,7 +77,6 @@ else
     echo "ERROR: Specified package not found."
     exit "$E_NOTEXIST"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

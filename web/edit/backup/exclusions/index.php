@@ -1,7 +1,5 @@
 <?php
 
-// Init
-error_reporting(null);
 ob_start();
 $TAB = 'BACKUP';
 

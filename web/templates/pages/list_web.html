@@ -19,8 +19,8 @@
 					<td class="sort-by" title="<?=_('Sort items');?>">
 						<?=_('sort by');?>: <span>
 							<b>
-								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
-								<?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = ('Name'); } else { $label = _('Date'); } ?>
+								<?=$label?> <i class="fas fa-sort-alpha-down"></i>
 							</b>
 						</span>
 					</td>
@@ -165,10 +165,10 @@
 					}
 				}
 			?>
-			<div class="l-unit <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; if($_SESSION['favourites']['WEB'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_section="web" v_unit_id="<?=$key?>"
+			<div class="l-unit <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended';?> animated fadeIn" v_section="web" v_unit_id="<?=$key?>"
 				id="web-unit-<?=$i?>" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
 				sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				sort-name="<?=$key?>" sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<?php if ($_SESSION['WEB'][$key] == 1) echo '1'; else echo '0';?>">
+				sort-name="<?=$key?>" sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
@@ -177,8 +177,16 @@
 						<b>
 							<?php if ($read_only === 'true') {?>
 								<?=$key?>
-							<?php } else { ?>
-								<a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain');?>: <?=$key?>"><?=$key?></a>
+							<?php } else {
+								$aliases = explode(',', $data[$key]['ALIAS']);
+								$alias_new = array();
+								foreach($aliases as $alias){
+									if($alias != 'www.'.$key){
+										$alias_new[] = trim($alias);
+									}
+								}
+								?>
+								<a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Domain');?>: <?=$key?>"><?=$key?><?php if( !empty($alias_new) && !empty($data[$key]['ALIAS']) ){ echo " <span class=\"hint\">(".implode(',',$alias_new).")"; } ?></a>
 							<?php } ?>
 						</b>
 					</div>

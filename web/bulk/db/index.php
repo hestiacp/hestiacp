@@ -1,9 +1,6 @@
 <?php
 
-// Init
-error_reporting(null);
 ob_start();
-session_start();
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
@@ -28,6 +25,10 @@ if ($_SESSION['userContext'] === 'admin') {
 } else {
     switch ($action) {
         case 'delete': $cmd='v-delete-database';
+            break;
+        case 'suspend': $cmd='v-suspend-database';
+            break;
+        case 'unsuspend': $cmd='v-unsuspend-database';
             break;
         default: header("Location: /list/db/"); exit;
     }

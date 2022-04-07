@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+#=========================================================================#
 
 <VirtualHost %ip%:%web_port%>
 
@@ -41,6 +42,6 @@
     </IfModule>
 
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*
-
+    IncludeOptional /etc/apache2/conf.d/*.inc
 </VirtualHost>
 

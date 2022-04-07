@@ -1,14 +1,28 @@
 #!/bin/bash
 
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+phpnewversion=7.4
+phpoldversion=7.3
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
 if [ ! -x "$(command -v php)" ]; then
     echo "PHP is not installed. Aborting."
     exit 1
 fi
 
-phpnewversion=7.4
-phpoldversion=7.3
-echo "PHP current: $phpoldversion"
-echo "PHP target : $phpnewversion"
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+echo "PHP current version : $phpoldversion"
+echo "PHP target version  : $phpnewversion"
+
 echo "Do you want to upgrade PHP now? [Y|N]"
     read upgradeconfirmation
 if [ "$upgradeconfirmation" = "Y" ] || [ "$upgradeconfirmation" = "y" ]; then

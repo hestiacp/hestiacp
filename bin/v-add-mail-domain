@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail domain
 # options: USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE]
-# labels: mail
 #
 # example: v-add-mail-domain admin mydomain.tld
 #
-# The function adds MAIL domain.
-
+# This function adds MAIL domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -30,6 +28,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -76,7 +76,6 @@ is_base_domain_owner "$domain"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -99,6 +98,8 @@ s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='n
 s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf
+
+syshealth_repair_mail_config
 
 # Generating DKIM keys
 if [ "$dkim" = 'yes' ]; then

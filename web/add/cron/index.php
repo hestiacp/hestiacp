@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 $TAB = 'CRON';
 
@@ -71,6 +70,24 @@ if (!empty($_POST['ok'])) {
     }
 }
 
+if (empty($v_cmd)) {
+    $v_cmd = '';
+}
+if (empty($v_month)) {
+    $v_month = '';
+}
+if (empty($v_day)) {
+    $v_day = '';
+}
+if (empty($v_wday)) {
+    $v_wday = '';
+}
+if (empty($v_hour)) {
+    $v_hour = '';
+}
+if (empty($v_min)) {
+    $v_min = '';
+}
 // Render
 render_page($user, $TAB, 'add_cron');
 

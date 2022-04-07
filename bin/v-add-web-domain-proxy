@@ -1,23 +1,21 @@
 #!/bin/bash
 # info: add webdomain proxy support
 # options: USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]
-# labels: web
 #
 # example: v-add-web-domain-proxy admin example.com
 #
-# The function enables proxy support for a domain. This can significantly
+# This function enables proxy support for a domain. This can significantly
 # improve website speed.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 domain=$2
 template=$3
-default_extentions="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,\
+default_extentions="jpg,jpeg,gif,png,webp,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls,\
 exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp,rtf,js,mp3,avi,mpeg,flv,html,htm"
 extentions=${4-$default_extentions}
 restart="$5"
@@ -33,7 +31,6 @@ source $HESTIA/func/domain.sh
 source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -55,7 +52,6 @@ is_proxy_template_valid $template
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -73,7 +69,6 @@ add_web_config "$PROXY_SYSTEM" "$template.tpl"
 if [ "$SSL" = 'yes' ]; then
     add_web_config "$PROXY_SYSTEM" "$template.stpl"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

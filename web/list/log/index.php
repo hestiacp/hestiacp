@@ -1,6 +1,8 @@
 <?php
 
-error_reporting(null);
+if (empty($_GET['user'])) {
+    $_GET['user'] = '';
+}
 if ($_GET['user'] === 'system') {
     $TAB = 'SERVER';
 } else {
@@ -28,6 +30,9 @@ check_error($return_var);
 $data = json_decode(implode('', $output), true);
 $data = array_reverse($data);
 unset($output);
+if (empty($_SESSION['look'])) {
+    $_SESSION['look'] = '';
+}
 
 // Render page
 render_page($user, $TAB, 'list_log');

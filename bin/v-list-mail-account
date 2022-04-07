@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mail domain account
 # options: USER DOMAIN ACCOUNT [FORMAT]
-# labels: mail
 #
 # example: v-list-mail-account admin domain.tld tester
 #
-# The function of obtaining the list of account parameters.
-
+# This function of obtaining the list of account parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -35,6 +33,7 @@ json_list() {
         "FWD_ONLY": "'$FWD_ONLY'",
         "AUTOREPLY": "'$AUTOREPLY'",
         "QUOTA": "'$QUOTA'",
+        "RATE_LIMIT": "'$RATE_LIMIT'",
         "U_DISK": "'$U_DISK'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",
@@ -73,7 +72,6 @@ csv_list() {
     echo "$U_DISK,$SUSPENDED,$TIME,$DATE\t$WEBMAIL_ALIAS.$domain"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -83,7 +81,6 @@ is_format_valid 'user' 'domain' 'account'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
-
 
 
 #----------------------------------------------------------#
@@ -100,7 +97,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

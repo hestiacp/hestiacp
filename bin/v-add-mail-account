@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail domain account
 # options: USER DOMAIN ACCOUNT PASSWORD [QUOTA]
-# labels: mail
 #
 # example: v-add-mail-account user example.com john P4$$vvOrD
 #
-# The function add new email account.
-
+# This function add new email account.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -26,6 +24,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -33,7 +33,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 if [[ "$account" =~ [[:upper:]] ]]; then
     account=$(echo "$account" |tr '[:upper:]' '[:lower:]')
 fi
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -56,15 +55,19 @@ is_password_valid
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Generating hashed password
-salt=$(generate_password "$PW_MATRIX" "8")
-md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<<$password)"
-
+if [ -n "$(doveadm pw -l | grep ARGON2ID)" ]; then
+    set +H # disable ! style history substitution
+    md5="$(doveadm pw -s ARGON2ID -p $password)"
+else
+    # Fall back on MD5
+    salt=$(generate_password "$PW_MATRIX" "8")
+    md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<<$password)"
+fi
 # Adding account info into password file
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ "$quota" = 'unlimited' ]; then
@@ -99,6 +102,13 @@ str="$str MD5='$md5' QUOTA='$quota' U_DISK='0' SUSPENDED='no'"
 str="$str TIME='$time' DATE='$date'"
 echo "$str" >> $USER_DATA/mail/$domain.conf
 chmod 660 $USER_DATA/mail/$domain.conf
+
+syshealth_repair_mail_account_config
+
+user_rate_limit=$(get_object_value 'mail' 'DOMAIN' "$domain" '$RATE_LIMIT');
+if [ -n "$user_rate_limit" ]; then
+    echo "$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits/$account
+fi
 
 # Increase mail accounts counter
 accounts=$(wc -l $USER_DATA/mail/$domain.conf | cut -f 1 -d ' ')

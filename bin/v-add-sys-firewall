@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add system firewall
 # options: NONE
-# labels: panel
 #
 # example: v-add-sys-firewall
 #
-# The script enables firewall
-
+# This function enables the system firewall.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -19,7 +17,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -31,7 +28,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -47,7 +43,6 @@ $BIN/v-change-sys-config-value "FIREWALL_SYSTEM" "iptables"
 
 # Updating firewall rules
 $BIN/v-update-firewall
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

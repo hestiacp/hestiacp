@@ -5,11 +5,11 @@
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 		</div>
 		<div class="l-unit-toolbar__buttonstrip float-right">
-			<a href="/delete/web/cache/?domain=<?=$v_domain;?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || ($v_proxy_template == 'caching' && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "hidden"; }?>" id="v-clear-cache">
+			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || ($v_proxy_template == 'caching' && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "hidden"; }?>" id="v-clear-cache">
 				<i class="fas fa-trash status-icon red"></i><?=_('Purge Nginx Cache');?>
 			</a>
 			<?php if ($_SESSION['PLUGIN_APP_INSTALLER'] !== 'false') {?>
-				<a href="/add/webapp/?domain=<?=$v_domain?>" class="ui-button cancel" dir="ltr">
+				<a href="/add/webapp/?domain=<?=htmlentities($v_domain);?>" class="ui-button cancel" dir="ltr">
 					<i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App');?>
 				</a>
 			<?php } ?>
@@ -46,20 +46,7 @@
 						</tr>
 						<tr>
 							<td>
-								<?php
-									if (!empty($_SESSION['error_msg'])) {
-										$msg_icon = 'fa-exclamation-circle status-icon red';
-										$msg_text = htmlentities($_SESSION['error_msg']);
-										$msg_id = 'vst-error';
-									} else {
-										if (!empty($_SESSION['ok_msg'])) {
-											$msg_icon = 'fa-check-circle status-icon green';
-											$msg_text = $_SESSION['ok_msg'];
-											$msg_id = 'vst-ok';
-										}
-									}
-								?>
-								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
 						<tr>
@@ -173,8 +160,8 @@
 								<table style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;" id="v_redirect">
 									<tr>
 										<td>
-											<label><input type="radio" name="v-redirect" value="<?='www.'.$v_domain;?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?> class="v-redirect-custom-value"><?=sprintf(_('Redirect visitors to %s'),"www.".$v_domain);?></label></input><br />
-											<label><input type="radio" name="v-redirect" value="<?=$v_domain;?>" <?php if( $v_redirect == $v_domain) echo "checked";?> class="v-redirect-custom-value"><?=sprintf(_('Redirect visitors to %s'),$v_domain);?></label></input><br />
+											<label><input type="radio" name="v-redirect" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?> class="v-redirect-custom-value"><?=sprintf(_('Redirect visitors to %s'),"www.".htmlentities($v_domain));?></label></input><br />
+											<label><input type="radio" name="v-redirect" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo "checked";?> class="v-redirect-custom-value"><?=sprintf(_('Redirect visitors to %s'),htmlentities($v_domain));?></label></input><br />
 											<label><input type="radio" name="v-redirect" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?> class="v-redirect-custom-value"><?=_("Redirect visitors to a custom domain or web address");?></label></input>
 										</td>
 									</tr>
@@ -224,7 +211,7 @@
 								<table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
 									<tr>
 										<td class="input-label vst-text">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)"><?=_('Lets Encrypt Support');?></label>
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)"><?=_('Lets Encrypt Support');?></label>
 										</td>
 									</tr>
 									<tr>
@@ -257,7 +244,7 @@
 												<tr>
 													<td class="vst-text input-label step-top">
 														<?=_('SSL Certificate');?>
-														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR');?></a></span>
+														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
 													</td>
 												</tr>
 												<tr>
@@ -503,9 +490,9 @@
 														<input type="hidden" name="v-custom-doc-root_prepath" value="<?=$v_custom_doc_root_prepath;?>">
 														<select class="vst-list" name="v-custom-doc-domain">
 															<?php foreach ($user_domains as $domain): ?>
-															<option value="<?=$domain;?>"
+															<option value="<?=htmlentities($domain);?>"
 																<?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>
-																<?=$domain;?>
+																<?=htmlentities($domain);?>
 															</option>
 															<?php endforeach; ?>
 														</select>
@@ -557,7 +544,7 @@
 													<tr>
 														<td class="vst-text step-left input-label">
 															<?=_('Username');?><br>
-															<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
+															<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 														</td>
 													</tr>
 													<tr>
@@ -637,7 +624,7 @@
 			<tr>
 				<td class="vst-text step-left input-label">
 					<?=_('Username');?><br>
-					<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user."_");?></span>
+					<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 				</td>
 			</tr>
 			<tr>
@@ -683,5 +670,5 @@
 	</div>
 </div>
 <script>
-	GLOBAL.FTP_USER_PREFIX = "<?php echo htmlentities($user.'_') ?>";
+	GLOBAL.FTP_USER_PREFIX =  "<?=$user_plain.'_';?>";
 </script>

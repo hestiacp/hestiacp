@@ -70,7 +70,24 @@ abstract class BaseSetup implements InstallerInterface {
         }
         return true;
     }
-
+    public function setup( array $options=null)
+    {
+        if ( $_SESSION['WEB_SYSTEM'] == "nginx" )
+        {
+            if( isset($this -> config['server']['nginx']['template']) ){
+                $this -> appcontext -> changeWebTemplate($this -> domain, $this -> config['server']['nginx']['template']);
+            }else{
+                $this -> appcontext -> changeWebTemplate($this -> domain, 'default');
+            }
+        }else{
+            if( isset($this -> config['server']['apache2']['template']) ){
+                $this -> appcontext -> changeWebTemplate($this -> domain, $this -> config['server']['apache2']['template']);
+            }else{
+                $this -> appcontext -> changeWebTemplate($this -> domain, 'default');
+            }
+        }        
+    }
+    
     public function install(array $options=null)
     {
         $this->appcontext->runUser('v-delete-fs-file', [$this->getDocRoot('robots.txt')]);

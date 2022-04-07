@@ -38,20 +38,7 @@
 						</tr>
 						<tr>
 							<td>
-								<?php
-									if (!empty($_SESSION['error_msg'])) {
-										$msg_icon = 'fa-exclamation-circle status-icon red';
-										$msg_text = htmlentities($_SESSION['error_msg']);
-										$msg_id = 'vst-error';
-									} else {
-										if (!empty($_SESSION['ok_msg'])) {
-											$msg_icon = 'fa-check-circle status-icon green';
-											$msg_text = $_SESSION['ok_msg'];
-											$msg_id = 'vst-ok';
-										}
-									}
-								?>
-								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
 						<tr>
@@ -166,6 +153,16 @@
 								</table>
 							</td>
 						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+							</td>
+						</tr>
 					</table>
 					<table class="data-col2">
 					</table>
@@ -177,10 +174,10 @@
 							<tr>
 								<td colspan="2">
 									<select id="mail_configuration" class="vst-list flat">
-										<option v_type="hostname" domain="<?=$v_domain?>"><?=_('Use domain hostname');?></option>
+										<option v_type="hostname" domain="<?='mail.'.$v_domain?>"><?=_('Use domain hostname');?></option>
 										<option v_type="starttls"><?=_('Use STARTTLS');?></option>
 										<option v_type="ssl"><?=_('Use SSL / TLS');?></option>
-										<option v_type="no_encryption" domain="<?=htmlentities(trim($v_domain, "'"))?>" no_encryption="<?=_('No encryption');?>"><?=_('No encryption');?></option>
+										<option v_type="no_encryption" domain="<?=htmlentities(trim('mail.'.$v_domain, "'"))?>" no_encryption="<?=_('No encryption');?>"><?=_('No encryption');?></option>
 									</select>
 								</td>
 							</tr>
@@ -199,7 +196,7 @@
 							<tr>
 								<td><?=_('IMAP hostname');?>:</td>
 								<td>
-									<div id="td_imap_hostname">mail.<?=$v_domain?></div>
+									<div id="td_imap_hostname">mail.<?=htmlentities($v_domain)?></div>
 								</td>
 							</tr>
 							<tr>
@@ -223,7 +220,7 @@
 							<tr>
 								<td><?=_('SMTP hostname');?>:</td>
 								<td>
-									<div id="td_smtp_hostname">mail.<?=$v_domain?></div>
+									<div id="td_smtp_hostname">mail.<?=htmlentities($v_domain)?></div>
 								</td>
 							</tr>
 							<tr>
@@ -248,7 +245,7 @@
 								<tr>
 									<td><?=_('Webmail URL');?>:</td>
 									<td>
-										<div><a class="vst" href="http://<?=$v_webmail_alias?>" target="_blank">http://<?=$v_webmail_alias?> <i></i></a></div>
+										<div><a class="vst" href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?> <i></i></a></div>
 									</td>
 								</tr>
 							<?php } ?>

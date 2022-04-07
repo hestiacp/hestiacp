@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+#=========================================================================#
 
 server {
     listen      %ip%:%web_ssl_port% ssl http2;
@@ -42,7 +43,7 @@ server {
         deny all;
     }
     
-    location ~ /\.(?!well-known\/) { 
+    location ~ /\.(?!well-known\/|file) {
        deny all; 
        return 404;
     }
@@ -68,7 +69,7 @@ server {
         }
     }
 
-    location ~* ^.+\.(jpeg|jpg|png|gif|bmp|ico|svg|css|js)$ {
+    location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
         expires     max;
         fastcgi_hide_header "Set-Cookie";
         # Some basic cache-control for static files to be sent to the browser
@@ -84,6 +85,8 @@ server {
         alias   %home%/%user%/web/%domain%/stats/;
         include %home%/%user%/web/%domain%/stats/auth.conf*;
     }
+
+    proxy_hide_header Upgrade;
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;

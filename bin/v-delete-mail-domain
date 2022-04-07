@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete mail domain
 # options: USER DOMAIN
-# labels: mail
 #
 # example: v-delete-mail-domain admin mydomain.tld
 #
-# The function for deleting MAIL domain. By deleting it all accounts will
+# This function for deleting MAIL domain. By deleting it all accounts will
 # also be deleted.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -45,7 +42,6 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

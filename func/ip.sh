@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - IP/Network Function Library                        #
+#                                                                           #
+#===========================================================================#
+
 # Check ip ownership
 is_ip_owner() {
     owner=$(grep 'OWNER=' $HESTIA/data/ips/$ip |cut -f 2 -d \')

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add firewall chain
 # options: CHAIN [PORT] [PROTOCOL] [PROTOCOL]
-# labels: 
 #
 # example: v-add-firewall-chain CRM 5678 TCP
 #
-# The function adds new rule to system firewall
-
+# This function adds new rule to system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -97,7 +95,6 @@ fi
 
 # Changing permissions
 chmod 660 $chains
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

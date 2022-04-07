@@ -25,6 +25,11 @@ class NextcloudSetup extends BaseSetup
         'resources' => [
             'archive'  => [ 'src' => 'https://download.nextcloud.com/server/releases/nextcloud-22.2.0.tar.bz2' ]
         ],
+        'server' => [
+            'nginx' => [
+                'template' => 'owncloud',
+            ],
+        ],
     ];
 
     public function install(array $options = null): bool

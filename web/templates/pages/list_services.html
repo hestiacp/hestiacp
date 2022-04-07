@@ -5,6 +5,9 @@
 			<a href="/edit/server/" class="ui-button cancel" dir="ltr"><i class="fas fa-cog status-icon maroon"></i><?=_('Configure');?></a>
 			<a href="/list/rrd/" class="ui-button cancel" dir="ltr"><i class="fas fa-chart-area status-icon blue"></i><?=_('Graphs');?></a>
             <a href="/list/updates/" class="ui-button cancel" dir="ltr"><i class="fas fa-sync status-icon green"></i><?=_('Updates');?></a>
+			<?php if (!empty($_SESSION['FIREWALL_SYSTEM']) && $_SESSION['FIREWALL_SYSTEM'] == "iptables" ) {?>
+			<a href="/list/firewall/" class="ui-button cancel" dir="ltr"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall');?></a>
+			<?php }?>
 			<a href="/list/log/?user=system&token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-binoculars status-icon orange"></i><?=_('Logs');?></a>
 			<div class="actions-panel display-inline-block" key-action="js">
 				<a class="data-controls do_servicerestart ui-button danger cancel">
@@ -118,8 +121,7 @@
 				$spnd_icon = 'fa-play';
 				$state_icon = 'fa-minus-circle status-icon red';
 			}
-
-			if (($key == "php5.6-fpm") || ($key == "php7.0-fpm") || ($key == "php7.1-fpm") || ($key == "php7.2-fpm") || ($key == "php7.3-fpm") || ($key == "php7.4-fpm") || ($key == "php8.0-fpm")) {
+			if(in_array($key, $phpfpm)){
 				$edit_url="php";
 			} else {
 				$edit_url=$key;
@@ -145,10 +147,10 @@
 							<a href="/edit/server/<? echo $edit_url ?>/" title="<?=_('edit');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim icon-large"></i></a>
 						</div>
 						<div class="actions-panel__col actions-panel__stop shortcut-s" key-action="js">
-							<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_servicerestart" title="<?=_('restart');?>">
+							<a id="restart_link_<?=$i?>" class="data-controls do_servicerestart" title="<?=_('restart');?>">
 								<i class="do_servicerestart data-controls fas fa-undo status-icon highlight status-icon dim icon-large"></i>
 								<input type="hidden" name="servicerestart_url" value="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>" />
-								<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-servicerestart hidden" title="<?=_('Confirmation');?>">
+								<div id="restart_link_dialog_<?=$i?>" class="confirmation-text-servicerestart hidden" title="<?=_('Confirmation');?>">
 									<p class="confirmation"><?=sprintf(_('RESTART_CONFIRMATION'),$key); ?></p>
 								</div>
 							</a>

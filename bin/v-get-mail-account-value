@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: get mail account value
 # options: USER DOMAIN ACCOUNT KEY
-# labels: mail
 #
 # example: v-get-mail-account-value admin example.tld tester QUOTA
 #
-# The function for getting a certain mail account parameter.
-
+# This function for getting a certain mail account parameter.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -33,7 +31,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -52,7 +49,6 @@ key=$(echo "$key"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Print
 get_object_value "mail/$domain" 'ACCOUNT' "$account" "$key"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

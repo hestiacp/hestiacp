@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
@@ -31,8 +35,12 @@ source $HESTIA/conf/hestia.conf
 
 DEFAULT_BTPL="PHP-7_3"
 num_php_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
-echo "Found $num_php_versions php versions"
 
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+echo "Found $num_php_versions php versions"
 if [ "$num_php_versions" -gt 1 ] && [ -z "$WEB_BACKEND" ]; then
     # Legacy multiphp
 

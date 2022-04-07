@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change web domain ip
 # options: USER DOMAIN DOMAIN [RESTART]
-# labels: web
 #
 # example: v-change-web-domain-ip admin example.com 167.86.105.230 yes
 #
-# The call is used for changing domain ip
-
+# This function is used for changing domain ip
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -36,7 +34,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -52,7 +49,6 @@ is_ip_valid "$ip" "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -77,6 +73,10 @@ if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
     fi
 fi
 
+# Check for webmail
+if [ -n "$IMAP_SYSTEM" ]; then
+    $BIN/v-rebuild-mail-domain "$user" "$domain"
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

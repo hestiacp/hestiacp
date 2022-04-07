@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update ftp rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-ftp
 #
-# The function is for updating ftpd rrd database and graphic.
-
+# This function is for updating ftpd rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -91,7 +88,6 @@ rrdtool graph $RRD/ftp/$period-ftp.png \
     GPRINT:a:'LAST:Current\:''%8.0lf' \
     GPRINT:a:'MIN:Min\:''%8.0lf' \
     GPRINT:a:'MAX:Max\:''%8.0lf\j' &>/dev/null;  result=$?
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

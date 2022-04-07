@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change dns domain ip address
 # options: USER DOMAIN IP [RESTART]
-# labels: dns
 #
 # example: v-change-dns-domain-ip admin domain.com 123.212.111.222
 #
-# The function for changing the main ip of DNS zone.
-
+# This function for changing the main ip of DNS zone.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -34,7 +32,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -49,7 +46,6 @@ is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -80,7 +76,6 @@ if [ -n "$DNS_CLUSTER" ]; then
         echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

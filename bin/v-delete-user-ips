@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete user ips
 # options: USER
-# labels: panel
 #
 # example: v-delete-user-ips admin
 #
-# The function deletes all user's ip addresses.
-
+# This function deletes all user's ip addresses.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -39,7 +36,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

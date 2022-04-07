@@ -3,8 +3,6 @@
 define('NO_AUTH_REQUIRED',true);
 define('NO_AUTH_REQUIRED2',true);
 
-error_reporting(NULL);
-
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Checking IP of incoming connection, checking is it NAT address
@@ -145,9 +143,18 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
     // Compare hashes
     if (!empty($v_hash)) {
         $salt = explode('$', $v_hash);
+        if($salt[0] == "{MD5}"){
         $n_hash = md5crypt($v_password, $salt[2]);
         $n_hash = '{MD5}'.$n_hash;
-
+        }else{
+            $v_password = escapeshellarg($v_password);
+            exec("doveadm pw -s ARGON2ID -p $v_password -t '$v_hash'", $output, $return_var);
+            if ($return_var == 0) {
+                if (strpos($output, "(verified)") !== 0){
+                    $n_hash = $v_hash;
+                }
+            }
+        }
         // Change password
         if ( $v_hash == $n_hash ) {
             $v_new_password = tempnam("/tmp","vst");

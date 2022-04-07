@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: delete exim mail queue
 # options: none
-# labels: hestia
 #
 # example: v-delete-sys-mail-queue
 #
@@ -9,7 +8,7 @@
 # and prompts the user to clear the queue if desired.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -20,11 +19,11 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
 message_count=$(exim -bpc)
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -39,6 +38,7 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
 $BIN/v-log-action "system" "Info" "System" "Mail queue ($message_count) has been deleted"
 log_event "$OK" "$ARGUMENTS"
 

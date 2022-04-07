@@ -1,22 +1,19 @@
 #!/bin/bash
 # info: add web domain
 # options: USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]
-# labels: web
 #
 # example: v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 #
-# The function adds virtual host to a server. In cases when ip is
+# This function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
 # www.domain.tld type will be automatically assigned to the domain unless
 # "none" is transmited as argument. If ip have associated dns name, this
 # domain will also get the alias domain-tpl.$ipname. An alias with the ip
 # name is useful during the site testing while dns isn't moved to server yet.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
-
 
 # Argument definition
 user=$1
@@ -36,6 +33,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -87,7 +86,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -195,7 +193,6 @@ if [ -n "$PROXY_SYSTEM" ]; then
     add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl" 
 fi
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -216,6 +213,8 @@ echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WE
  BACKEND='$BACKEND_TEMPLATE' PROXY='$PROXY_TEMPLATE' PROXY_EXT='$PROXY_EXT'\
  STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'\
  SUSPENDED='no' TIME='$time' DATE='$date'" >> $USER_DATA/web.conf
+
+syshealth_repair_web_config
 
 # Restarting web server
 $BIN/v-restart-web "$restart"

@@ -2,6 +2,10 @@
 # info: Log User logout event
 # options: USER FINGERPRINT
 
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
 # Argument definition
 user=$1
 session_id=$2

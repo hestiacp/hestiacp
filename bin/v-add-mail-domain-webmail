@@ -1,16 +1,15 @@
 #!/bin/bash
 # info: add webmail support for a domain
 # options: USER DOMAIN [WEBMAIL] [RESTART] [QUIET]
-# labels: hestia
 #
 # example: v-add-sys-webmail user domain.com
 # example: v-add-sys-webmail user domain.com rainloop
 # example: v-add-sys-webmail user domain.com roundcube
 #
-# this function enables webmail client for a mail domain.
+# This function enables webmail client for a mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -50,7 +49,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Additional argument formatting
 format_domain
 format_domain_idn
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -101,22 +99,24 @@ else
     # Ensure DNS record exists if Hestia is hosting DNS zones
     if [ -n "$DNS_SYSTEM" ]; then
         dns_domain=$($BIN/v-list-dns-domains $user | grep $domain | cut -d' ' -f1)
-        webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i $WEBMAIL_ALIAS | cut -d' ' -f1)
-
+        webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i " $WEBMAIL_ALIAS " | cut -d' ' -f1)
         if [ "$dns_domain" = "$domain" ]; then
-            if [ -z "$webmail_record" ]; then
-                if [ "$quiet" = "yes" ]; then
-                    $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+            if [ "$WEBMAIL_ALIAS" != "mail" ]; then
+                #Prevent mail.domain.com to be cycled
+                if [ -z "$webmail_record" ]; then
+                    if [ "$quiet" = "yes" ]; then
+                        $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+                    else
+                        $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+                    fi
                 else
-                    $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
-                fi
-            else
-                if [ "$quiet" = "yes" ]; then
-                    $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
-                    $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
-                else
-                    $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
-                    $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+                    if [ "$quiet" = "yes" ]; then
+                        $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
+                        $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+                    else
+                        $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
+                        $BIN/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+                    fi
                 fi
             fi
         fi
@@ -167,6 +167,7 @@ fi
 
 # Set SSL as enabled in configuration
 update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' "$webmail"
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

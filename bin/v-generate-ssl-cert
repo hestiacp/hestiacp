@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: generate self signed certificate and CSR request
 # options: DOMAIN EMAIL COUNTRY STATE CITY ORG UNIT [ALIASES] [FORMAT]
-# labels: panel
 #
 # example: v-generate-ssl-cert example.com mail@yahoo.com USA California Monterey ACME.COM IT
 #
-# The function generates self signed SSL certificate and CSR request
-
+# This function generates self signed SSL certificate and CSR request
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -67,7 +65,6 @@ if [[ "$email" = *[![:ascii:]]* ]]; then
     email=$(idn -t --quiet -a $email)
 fi
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -79,7 +76,7 @@ is_format_valid 'domain' 'aliases' 'format' 'email'
 release="$(lsb_release -s -r)"
 
 if [ -z "$email" ] && [ "$release" = "18.04" ]; then 
-    echo "Email adress is required";
+    echo "Email address is required";
     exit 2;
 fi
 if [ ! -f /root/.rnd ]; then

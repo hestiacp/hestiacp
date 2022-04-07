@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 $TAB = 'FIREWALL';
 
@@ -60,6 +59,15 @@ if (!empty($_POST['ok'])) {
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = _('IPSET_CREATED_OK');
     }
+}
+if (empty($v_ipname)) {
+    $v_ipname = '';
+}
+if (empty($v_datasource)) {
+    $v_datasource = '';
+}
+if (empty($v_ipver)) {
+    $v_ipver = '';
 }
 
 // Render

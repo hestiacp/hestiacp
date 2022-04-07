@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user contact email
 # options: USER EMAIL
-# labels: panel
 #
 # example: v-change-user-contact admin admin@yahoo.com
 #
-# The function for changing of e-mail associated with a certain user.
-
+# This function for changing of e-mail associated with a certain user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -36,7 +33,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -51,7 +47,6 @@ sed -i "$str s/$old_email/$email/g" /etc/passwd
 
 # Update crontab email
 $BIN/v-rebuild-cron-jobs "$user" > /dev/null 2>&1
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

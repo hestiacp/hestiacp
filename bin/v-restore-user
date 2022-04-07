@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: restore user
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]
-# labels: panel
 #
 # example: v-restore-user admin 2019-04-22_01-00-00.tar
 #
-# The function for restoring user from backup. To be able to restore the backup,
+# This function for restoring user from backup. To be able to restore the backup,
 # the archive needs to be placed in /backup.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -49,7 +47,6 @@ source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -57,7 +54,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 args_usage='USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]'
 check_args '2' "$#" "$args_usage"
 is_format_valid 'user' 'backup'
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -318,7 +314,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
                     done
                 fi
             fi
-            
+
             # Merging web.conf keys
             str="DOMAIN='$domain' IP='$IP' IP6='$IP6' ALIAS='$ALIAS'"
             str="$str CUSTOM_DOCROOT='$CUSTOM_DOCROOT' CUSTOM_PHPROOT='$CUSTOM_PHPROOT'"

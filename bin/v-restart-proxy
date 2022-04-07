@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: restart proxy server
 # options: NONE
-# labels: panel
 #
 # example: v-restart-proxy
 #
-# The function reloads proxy server configuration.
-
+# This function reloads proxy server configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -30,7 +28,6 @@ send_email_report() {
     cat "$tmpfile" |$SENDMAIL -s "$subj" "$email"
     rm -f $tmpfile
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #

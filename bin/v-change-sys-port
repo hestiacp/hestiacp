@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change system backend port
 # options: PORT
-# labels: hestia panel
 #
 # example: v-change-sys-port 5678
 #
-# The function for changing the system backend port in NGINX configuration.
-
+# This function for changing the system backend port in NGINX configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -41,7 +39,6 @@ is_port_valid() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -51,7 +48,6 @@ is_port_valid
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -76,6 +72,11 @@ else
         sed -i "/hestia_port/c\hestia_port = $PORT" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini
     fi
     sed -i "/COMMENT='HESTIA'/c\RULE='2' ACTION='ACCEPT' PROTOCOL='TCP' PORT='$PORT' IP='0.0.0.0/0' COMMENT='HESTIA' SUSPENDED='no' TIME='07:40:16' DATE='2014-05-25'" $HESTIA/data/firewall/rules.conf
+    
+    # Update F2B chains config
+    if [ -f "$HESTIA/data/firewall/chains.conf" ]; then
+        sed -i "s/PORT='$ORIGINAL_PORT'/PORT='$PORT'/g" $HESTIA/data/firewall/chains.conf
+    fi
     
     # Restart services
     if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then

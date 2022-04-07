@@ -2,36 +2,49 @@
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 //die("Error: Disabled");
 
+function check_local_ip($addr){
+    if(in_array($addr, array($_SERVER['SERVER_ADDR'], '127.0.0.1'))){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 function get_real_user_ip(){
     $ip = $_SERVER['REMOTE_ADDR'];
-    if(isset($_SERVER['HTTP_CLIENT_IP'])){
+    if(isset($_SERVER['HTTP_CLIENT_IP']) && !check_local_ip($_SERVER['HTTP_CLIENT_IP'])) {
+        if (filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP)){
         $ip = $_SERVER['HTTP_CLIENT_IP'];
+        }
     }
-    if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+    
+    if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !check_local_ip($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         if (filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)){
             $ip =  $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
     }
-    if(isset($_SERVER['HTTP_FORWARDED_FOR'])){
+    
+    if(isset($_SERVER['HTTP_FORWARDED_FOR']) && !check_local_ip($_SERVER['HTTP_FORWARDED_FOR'])) {
         if (filter_var($_SERVER['HTTP_FORWARDED_FOR'], FILTER_VALIDATE_IP)){
             $ip =  $_SERVER['HTTP_FORWARDED_FOR'];
         }
     }
-    if(isset($_SERVER['HTTP_X_FORWARDED'])){
+    
+    if(isset($_SERVER['HTTP_X_FORWARDED']) && !check_local_ip($_SERVER['HTTP_X_FORWARDED'])) {
         if (filter_var($_SERVER['HTTP_X_FORWARDED'], FILTER_VALIDATE_IP)){
             $ip =  $_SERVER['HTTP_X_FORWARDED'];
         }
     }
-    if(isset($_SERVER['HTTP_FORWARDED'])){
+    
+    if(isset($_SERVER['HTTP_FORWARDED']) && !check_local_ip($_SERVER['HTTP_FORWARDED'])) {
         if (filter_var($_SERVER['HTTP_FORWARDED'], FILTER_VALIDATE_IP)){
             $ip =  $_SERVER['HTTP_FORWARDED'];
         }
     }
-    if(isset($_SERVER['HTTP_CF_CONNECTING_IP'])){
-        if(!empty($_SERVER['HTTP_CF_CONNECTING_IP'])){
-            if (filter_var($_SERVER['HTTP_FORWARDED'], FILTER_VALIDATE_IP)){
-                $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-            }
+    
+    if(isset($_SERVER['HTTP_CF_CONNECTING_IP']) && !check_local_ip($_SERVER['HTTP_CF_CONNECTING_IP'])) {
+        if (filter_var($_SERVER['HTTP_CF_CONNECTING_IP'], FILTER_VALIDATE_IP)){
+            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
         }
     }
     return $ip;
@@ -42,14 +55,14 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
     $settings = json_decode(implode('', $output), true);
     unset($output);
     if( $settings['config']['API'] != 'yes' ){
-        echo 'Error: authentication failed';
+        echo 'Error: API has been disabled';
         exit;
     }
     if ( $settings['config']['API_ALLOWED_IP'] != 'allow-all' ){
         $ip_list = explode(',',$settings['config']['API_ALLOWED_IP']);
-        $ip_list[] = '127.0.0.1';
+        $ip_list[] = '';
         if ( !in_array(get_real_user_ip(), $ip_list)){
-           echo 'Error: authentication failed';
+           echo 'Error: IP is not allowed to connect with API';
            exit; 
         }
     }

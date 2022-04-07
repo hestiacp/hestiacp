@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add user sftp jail
 # options: USER [RESTART]
-# labels: 
 #
 # example: v-add-user-sftp-jail admin
 #
-# The script enables sftp jailed environment
-
+# This function enables sftp jailed environment
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -30,13 +28,15 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
+check=$(is_object_valid 'user' 'USER' "$user")
+if [ $? -ne 0 ]; then 
+    user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
+    #try to detect "owner" of the ftp_user if not found dont set it up
+    user_owner=$(echo $user_str | cut -f6 -d : | cut -f3 -d / ) 
+    is_object_valid 'user' 'USER' "$user_owner"
+fi 
 user_str=$(grep "^$user:" /etc/passwd |egrep "rssh|nologin")
 if [ -z "$user_str" ]; then
-    exit
-fi
-
-# Do not create chroot for syslog user
-if [ $user = "syslog" ]; then
     exit
 fi
 
@@ -44,9 +44,9 @@ fi
 ssh_users=$(grep -A1 "^# Hestia SFTP Chroot" /etc/ssh/sshd_config | sed -n 2p | sed 's/Match User //')
 IFS=',' read -r -a users <<< "$ssh_users"
 
-match_string="$ssh_users,"
 # Check if jail exist
-if [[ ! "$match_string" =~ ,$user, ]]; then
+match_string="$ssh_users," 
+if [[ "$match_string" =~ ,$user, ]]; then
     if [[ -d /home/$user && -z "$(find /home/$user -user root -print -prune -o -prune)" ]]; then
        chown root:root /home/$user
     fi

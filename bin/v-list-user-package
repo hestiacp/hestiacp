@@ -1,13 +1,11 @@
 #!/bin/bash
 # info: list user package
 # options: PACKAGE [FORMAT]
-# labels: 
 #
-# The function for getting the list of system ip parameters.
-
+# This function for getting the list of system ip parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

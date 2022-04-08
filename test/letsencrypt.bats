@@ -74,14 +74,26 @@ function setup() {
     refute_output
 }
 
-@test "[ Redirect ] Add Domain redirect to other website" {
-    run v-add-web-domain-redirect $user $domain "https://hestiacp.com"
+@test "[ Web ] Delete web  domain" {
+    run v-delete-web-domain $user $domain "yes"
     assert_success
     refute_output
 }
 
-@test "[ Redirect ] Request new certificate for web" {
-    run v-add-letsencrypt-domain $user $domain "www.$domain,renewal.$domain"
+@test "[ Redirect ] Create web domain" {
+    run v-add-web-domain $user "redirect.$domain" $ip yes 
+    assert_success
+    refute_output
+}
+
+@test "[ Redirect ] Add Domain redirect to other website" {
+    run v-add-web-domain-redirect $user "redirect.$domain" "https://hestiacp.com" 301 "yes"
+    assert_success
+    refute_output
+}
+
+@test "[ Redirect ] Request new certificate for web {
+    run v-add-letsencrypt-domain $user "redirect.$domain" ""
     assert_success
     refute_output
 }
@@ -93,11 +105,6 @@ function setup() {
 }
 
 
-@test "[ Redirect ] Delete web ssl Redirected domain" {
-    run v-delete-letsencrypt-domain $user $domain "yes"
-    assert_success
-    refute_output
-}
 
 @test "Delete user" {
     run v-delete-user $user

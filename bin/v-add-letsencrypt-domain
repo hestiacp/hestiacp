@@ -124,6 +124,19 @@ if [ -n "$mail" ]; then
     if [ -n "$webmail" ]; then
         aliases="$WEBMAIL_ALIAS.$root_domain"
     fi
+else
+    parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+    
+    domain_redirect="$REDIRECT"
+    if [[ -n "$domain_redirect"  ]] ; then
+        domain_redirect_code="$REDIRECT_CODE"
+        $BIN/v-delete-web-domain-redirect $user $domain
+    fi
+    
+    domain_forcessl="$SSL_FORCE"
+    if [[ "$domain_forcessl" == 'yes' ]] ; then
+        $BIN/v-delete-web-domain-ssl-force $user $domain
+    fi
 fi
 
 log_file="/var/log/hestia/LE-${user}-${domain}.log"
@@ -541,6 +554,14 @@ if [ -z "$mail" ]; then
     fi
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+    
+    if [[ "$domain_forcessl" == 'yes' ]] ; then
+        $BIN/v-add-web-domain-ssl-force $user $domain
+    fi
+    if [[ -n "$domain_redirect" ]] ; then
+        $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
+    fi
+
 else
     if [ -z "$LETSENCRYPT" ]; then
         add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT'

@@ -93,17 +93,6 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             # Write the filtered alias list to the default var
             aliases=$f_aliases    
 
-            domain_redirect="$REDIRECT"
-            if [[ -n "$domain_redirect"  ]] ; then
-            	domain_redirect_code="$REDIRECT_CODE"
-                $BIN/v-delete-web-domain-redirect $user $domain
-            fi
-
-            domain_forcessl="$SSL_FORCE"
-            if [[ "$domain_forcessl" == 'yes' ]] ; then
-                $BIN/v-delete-web-domain-ssl-force $user $domain
-            fi
-
             msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "$aliases")
             if [ $? -ne 0 ]; then
                 echo "$msg"
@@ -116,12 +105,6 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
                 update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
             else
                 $BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
-            fi
-            if [[ "$domain_forcessl" == 'yes' ]] ; then
-                $BIN/v-add-web-domain-ssl-force $user $domain
-            fi
-            if [[ -n "$domain_redirect" ]] ; then
-                $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
             fi
             
             if [ -n "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then

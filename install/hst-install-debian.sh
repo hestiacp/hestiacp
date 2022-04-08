@@ -63,7 +63,7 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
-        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
+        vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
         clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
         net-tools mariadb-client mariadb-common mariadb-server postgresql
         postgresql-contrib phppgadmin mc flex whois git idn unzip zip sudo bc ftp lsof

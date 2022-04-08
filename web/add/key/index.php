@@ -27,6 +27,7 @@ if (!empty($_POST['ok'])) {
             $data = json_decode(implode('', $output), true);
             unset($output);
             $keylist = array();
+            $idlist = array();
             foreach ($data as $key => $value) {
                 $idlist[] = trim($data[$key]['ID']);
                 $keylist[] = trim($data[$key]['KEY']);

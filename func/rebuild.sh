@@ -665,16 +665,16 @@ rebuild_mail_domain_conf() {
             if [ -n "$RATE_LIMIT" ]; then
                 #user value
                 sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
-                echo "$account@$domain_id:$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits
             elif [ -n "$user_rate_limit" ]; then
                 #revert to account value
                 sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
-                echo "$account@$domain_id:$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits
             else
                 #revert to system value
                 system=$(cat /etc/exim4/limits.conf)
                 sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
-                echo "$account@$domain_id:$system" > $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$system" > $HOMEDIR/$user/conf/mail/$domain/limits
             fi
         fi
     done

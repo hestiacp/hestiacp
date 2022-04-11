@@ -62,15 +62,15 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         user_rate_limit=$(get_object_value 'mail' 'DOMAIN' "$domain" '$RATE_LIMIT');
         if [ -n "$user_rate_limit" ]; then
             sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
-            echo "$account@$domain_id:$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits
+            echo "$account@$domain_idn:$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits
         else
             system=$(cat /etc/exim4/limit.conf)
             sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
-            echo "$account@$domain_id:$system" > $HOMEDIR/$user/conf/mail/$domain/limits
+            echo "$account@$domain_idn:$system" > $HOMEDIR/$user/conf/mail/$domain/limits
         fi
     else
         sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
-        echo "$account@$domain_id:$rate" > $HOMEDIR/$user/conf/mail/$domain/limits
+        echo "$account@$domain_idn:$rate" > $HOMEDIR/$user/conf/mail/$domain/limits
     fi
 fi
 

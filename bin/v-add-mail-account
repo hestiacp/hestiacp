@@ -13,9 +13,13 @@
 # Argument definition
 user=$1
 domain=$2
+domain_idn=$2
 account=$3
 password=$4; HIDE=4
 quota=${5-unlimited}
+
+format_domain
+format_domain_idn
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -108,11 +112,11 @@ syshealth_repair_mail_account_config
 user_rate_limit=$(get_object_value 'mail' 'DOMAIN' "$domain" '$RATE_LIMIT')
 if [ -n "$user_rate_limit" ]; then
     sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
-    echo "$account@$domain_idn:$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits
+    echo "$account@$domain_idn:$user_rate_limit" >> $HOMEDIR/$user/conf/mail/$domain/limits
 else
     system=$(cat /etc/exim4/limit.conf)
     sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
-    echo "$account@$domain_idn:$system" > $HOMEDIR/$user/conf/mail/$domain/limits
+    echo "$account@$domain_idn:$system" >> $HOMEDIR/$user/conf/mail/$domain/limits
 fi
 
 # Increase mail accounts counter

@@ -18,9 +18,6 @@ account=$3
 password=$4; HIDE=4
 quota=${5-unlimited}
 
-format_domain
-format_domain_idn
-
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -38,6 +35,8 @@ if [[ "$account" =~ [[:upper:]] ]]; then
     account=$(echo "$account" |tr '[:upper:]' '[:lower:]')
 fi
 
+format_domain
+format_domain_idn
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#

@@ -133,8 +133,11 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
     fi
 done
 
-# Switching chain policy to DROP
+# Switching INPUT chain policy to DROP
 echo "$iptables -P INPUT DROP" >> $tmp
+
+# Switching FORWARD chain policy to DROP
+echo "$iptables -P FORWARD DROP" >> $tmp
 
 # Adding hestia chain
 echo "$iptables -N hestia" >> $tmp

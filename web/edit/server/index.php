@@ -1045,6 +1045,19 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change API_V2
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_api_v2'] != $_SESSION['API_V2']) {
+            exec(HESTIA_CMD."v-change-sys-config-value API_V2 ".escapeshellarg($_POST['v_api_v2']), $output, $return_var);
+            check_return_code($return_var, $output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
+                $v_policy_user_edit_details = $_POST['v_api_v2'];
+            }
+            $v_security_adv = 'yes';
+        }
+    }
+
     // Change POLICY_USER_VIEW_LOGS
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_view_logs'] != $_SESSION['POLICY_USER_VIEW_LOGS']) {

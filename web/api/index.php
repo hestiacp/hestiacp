@@ -2,53 +2,7 @@
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 //die("Error: Disabled");
 
-function check_local_ip($addr){
-    if(in_array($addr, array($_SERVER['SERVER_ADDR'], '127.0.0.1'))){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-function get_real_user_ip(){
-    $ip = $_SERVER['REMOTE_ADDR'];
-    if(isset($_SERVER['HTTP_CLIENT_IP']) && !check_local_ip($_SERVER['HTTP_CLIENT_IP'])) {
-        if (filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP)){
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-        }
-    }
-    
-    if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !check_local_ip($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        if (filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)){
-            $ip =  $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-    }
-    
-    if(isset($_SERVER['HTTP_FORWARDED_FOR']) && !check_local_ip($_SERVER['HTTP_FORWARDED_FOR'])) {
-        if (filter_var($_SERVER['HTTP_FORWARDED_FOR'], FILTER_VALIDATE_IP)){
-            $ip =  $_SERVER['HTTP_FORWARDED_FOR'];
-        }
-    }
-    
-    if(isset($_SERVER['HTTP_X_FORWARDED']) && !check_local_ip($_SERVER['HTTP_X_FORWARDED'])) {
-        if (filter_var($_SERVER['HTTP_X_FORWARDED'], FILTER_VALIDATE_IP)){
-            $ip =  $_SERVER['HTTP_X_FORWARDED'];
-        }
-    }
-    
-    if(isset($_SERVER['HTTP_FORWARDED']) && !check_local_ip($_SERVER['HTTP_FORWARDED'])) {
-        if (filter_var($_SERVER['HTTP_FORWARDED'], FILTER_VALIDATE_IP)){
-            $ip =  $_SERVER['HTTP_FORWARDED'];
-        }
-    }
-    
-    if(isset($_SERVER['HTTP_CF_CONNECTING_IP']) && !check_local_ip($_SERVER['HTTP_CF_CONNECTING_IP'])) {
-        if (filter_var($_SERVER['HTTP_CF_CONNECTING_IP'], FILTER_VALIDATE_IP)){
-            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-        }
-    }
-    return $ip;
-}
+include($_SERVER['DOCUMENT_ROOT']."/inc/helpers.php");
 
 function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hst_arg1, $hst_arg2, $hst_arg3, $hst_arg4, $hst_arg5, $hst_arg6, $hst_arg7, $hst_arg8, $hst_arg9){
     exec (HESTIA_CMD."v-list-sys-config json" , $output, $return_var);
@@ -63,7 +17,7 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
         $ip_list[] = '';
         if ( !in_array(get_real_user_ip(), $ip_list)){
            echo 'Error: IP is not allowed to connect with API';
-           exit; 
+           exit;
         }
     }
     //This exists, so native JSON can be used without the repeating the code twice, so future code changes are easier and don't need to be replicated twice

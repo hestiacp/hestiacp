@@ -969,6 +969,21 @@
 														<br><br>
 													</td>
 												</tr>
+                                                <tr>
+                                                    <td class="vst-text input-label">
+                                                        <?=_('Enable API V2 access');?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <select class="vst-list" name="v_api_v2">
+                                                            <option value='0' <?php if(empty($_SESSION['API_V2']) || $_SESSION['API_V2'] == '0') echo 'selected' ?>><?=_('Disabled'); ?></option>
+                                                            <option value='1' <?php if($_SESSION['API_V2'] == '1') echo 'selected' ?>><?=_('Enabled for admin'); ?></option>
+                                                            <option value='2' <?php if($_SESSION['API_V2'] == '2') echo 'selected' ?>><?=_('Enabled for all users'); ?></option>
+                                                        </select>
+                                                        <br><br>
+                                                    </td>
+                                                </tr>
 												<tr>
 													<td>
 														<table id="security_ip" style="<?php if ($_SESSION['API'] == "no") echo 'display:none;';?>">

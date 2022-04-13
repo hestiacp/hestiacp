@@ -336,6 +336,12 @@ function syshealth_repair_system_config() {
         $BIN/v-change-sys-config-value "API" "no"
     fi
     
+    # Enable API V2
+    if [[ -z $(check_key_exists 'API_V2') ]]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: API_V2 ('0')"
+        $BIN/v-change-sys-config-value "API_V2" "0"
+    fi
+
     # API access allowed IP's
     if [ "$API" = "yes" ]; then
         check_api_key=$(grep "API_ALLOWED_IP" $HESTIA/conf/hestia.conf)

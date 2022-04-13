@@ -57,7 +57,7 @@ detect_os() {
         if [ "$get_os_type" = "ubuntu" ]; then
             if [ -e '/usr/bin/lsb_release' ]; then
                 OS_VERSION="$(lsb_release -s -r)"
-                OS_TYPE='Ubuntu'            
+                OS_TYPE='Ubuntu'
             fi
         elif [ "$get_os_type" = "debian" ]; then
             OS_TYPE='Debian'
@@ -102,21 +102,23 @@ log_event() {
 
 # Log user history
 log_history() {
-    message=$1
+    message=${1//\'/\´} # Avoid single quotes broken the log
+    evt_level=${2:-$event_level}
     log_user=${3-$user}
+    evt_category=${4:-$event_category}
 
     # Set default event level and category if not specified
-    if [ -z "$event_level" ]; then
-        event_level="Info"
+    if [ -z "$evt_level" ]; then
+        evt_level="Info"
     fi
-    if [ -z "$event_category" ]; then
-        event_category="System"
+    if [ -z "$evt_category" ]; then
+        evt_category="System"
     fi
 
     # Log system events to system log file
     if [ "$log_user" = "system" ]; then
         log=$HESTIA/data/users/admin/system.log
-    else 
+    else
         if ! $BIN/v-list-user "$log_user" >/dev/null; then
             return $E_NOTEXIST
         fi
@@ -139,20 +141,21 @@ log_history() {
     fi
     curr_str=$(grep "ID=" $log | cut -f 2 -d \' | sort -n | tail -n1)
     id="$((curr_str +1))"
-    echo "ID='$id' DATE='$date' TIME='$time' LEVEL='$event_level' CATEGORY='$event_category' MESSAGE='$message'" >> $log
+    echo "ID='$id' DATE='$date' TIME='$time' LEVEL='$evt_level' CATEGORY='$evt_category' MESSAGE='$message'" >> $log
 }
 
 # Result checker
 check_result() {
     if [ $1 -ne 0 ]; then
-        echo "Error: $2"
-        if [ -n "$3" ]; then
-            log_event "$3" "$ARGUMENTS"
-            exit $3
+        local err_code="${3:-$1}"
+        if [[ "$(type -t check_result_log_callback)" == 'function' ]]; then
+            check_result_log_callback "$err_code" "$2"
         else
-            log_event "$1" "$ARGUMENTS"
-            exit $1
+            echo "Error: $2"
+            log_event "$err_code" "$ARGUMENTS"
         fi
+
+        exit $err_code
     fi
 }
 
@@ -225,10 +228,10 @@ generate_password() {
 
 # Package existence check
 is_package_valid() {
-    if [ -z $1 ]; then 
+    if [ -z $1 ]; then
       if [ ! -e "$HESTIA/data/packages/$package.pkg" ]; then
       check_result "$E_NOTEXIST" "package $package doesn't exist"
-      fi    
+      fi
     else
       if [ ! -e "$HESTIA/data/packages/$1.pkg" ]; then
           check_result "$E_NOTEXIST" "package $1 doesn't exist"
@@ -289,6 +292,13 @@ is_object_valid() {
     if [ $2 = 'USER' ]; then
         tstpath="$(readlink -f "$HESTIA/data/users/$3")"
         if [ "$(dirname "$tstpath")" != "$(readlink -f "$HESTIA/data/users")" ] || [ ! -d "$HESTIA/data/users/$3" ]; then
+            check_result "$E_NOTEXIST" "$1 $3 doesn't exist"
+        fi
+    elif [ $2 = 'KEY' ]; then
+        local key="$(basename "$3")"
+        key="${key%.*}"
+
+        if [[ -z "$key" || ${#key} -lt 16 ]] || [[ ! -f "$HESTIA/data/access-keys/${key}" && ! -f "$HESTIA/data/access-keys/$key" ]]; then
             check_result "$E_NOTEXIST" "$1 $3 doesn't exist"
         fi
     else
@@ -434,7 +444,7 @@ get_object_value() {
 }
 
 get_object_values() {
-    parse_object_kv_list $(grep "$2='$3'" $USER_DATA/$1.conf)   
+    parse_object_kv_list $(grep "$2='$3'" $USER_DATA/$1.conf)
 }
 
 # Update object value
@@ -561,7 +571,7 @@ recalc_user_disk_usage() {
         usage=0
         dusage=$(grep 'U_DISK=' $USER_DATA/web.conf |\
             awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
-        for disk_usage in $dusage; do 
+        for disk_usage in $dusage; do
                 usage=$((usage + disk_usage))
         done
         d=$(grep "U_DISK_WEB='" $USER_DATA/user.conf | cut -f 2 -d \')
@@ -573,7 +583,7 @@ recalc_user_disk_usage() {
         usage=0
         dusage=$(grep 'U_DISK=' $USER_DATA/mail.conf |\
             awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
-        for disk_usage in $dusage; do 
+        for disk_usage in $dusage; do
                 usage=$((usage + disk_usage))
         done
         d=$(grep "U_DISK_MAIL='" $USER_DATA/user.conf | cut -f 2 -d \')
@@ -585,7 +595,7 @@ recalc_user_disk_usage() {
         usage=0
         dusage=$(grep 'U_DISK=' $USER_DATA/db.conf |\
             awk -F "U_DISK='" '{print $2}' | cut -f 1 -d \')
-        for disk_usage in $dusage; do 
+        for disk_usage in $dusage; do
                 usage=$((usage + disk_usage))
         done
         d=$(grep "U_DISK_DB='" $USER_DATA/user.conf | cut -f 2 -d \')
@@ -603,7 +613,7 @@ recalc_user_bandwidth_usage() {
     usage=0
     bandwidth_usage=$(grep 'U_BANDWIDTH=' $USER_DATA/web.conf |\
         awk -F "U_BANDWIDTH='" '{print $2}'|cut -f 1 -d \')
-    for bandwidth in $bandwidth_usage; do 
+    for bandwidth in $bandwidth_usage; do
         usage=$((usage + bandwidth))
     done
     old=$(grep "U_BANDWIDTH='" $USER_DATA/user.conf | cut -f 2 -d \')
@@ -633,7 +643,7 @@ sync_cron_jobs() {
     else
         crontab="/var/spool/cron/$user"
     fi
-    
+
     # remove file if exists
     if [ -e "$crontab" ]; then
         rm -f $crontab
@@ -641,14 +651,14 @@ sync_cron_jobs() {
 
     # touch new crontab file
     touch $crontab
-        
+
     if [ "$CRON_REPORTS" = 'yes' ]; then
         echo "MAILTO=$CONTACT" > $crontab
         echo 'CONTENT_TYPE="text/plain; charset=utf-8"' >> $crontab
     else
         echo 'MAILTO=""' > $crontab
     fi
-    
+
     while read line; do
         parse_object_kv_list "$line"
         if [ "$SUSPENDED" = 'no' ]; then
@@ -722,11 +732,11 @@ is_ipv6_format_valid() {
     t_ip=$(echo $1 |awk -F / '{print $1}')
     t_cidr=$(echo $1 |awk -F / '{print $2}')
     valid_cidr=1
-    
+
     WORD="[0-9A-Fa-f]\{1,4\}"
     # flat address, no compressed words
     FLAT="^${WORD}\(:${WORD}\)\{7\}$"
-    
+
     COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
     COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
     COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
@@ -737,12 +747,12 @@ is_ipv6_format_valid() {
     EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
     # leading :: edge case
     EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
-   
+
     echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
     if [ $? -ne 0 ]; then
         check_result "$E_INVALID" "invalid $object_name format :: $1"
     fi
-    
+
     if [ -n "$(echo $1|grep '/')" ]; then
         if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
             valid_cidr=0
@@ -806,7 +816,7 @@ is_ip46_format_valid() {
                 valid_cidr=0
             fi
         fi
-        
+
         if [ -n "$ipv6_valid" ] || [ "$valid_cidr" -eq 0 ]; then
             check_result "$E_INVALID" "invalid IP format :: $1"
         fi
@@ -972,7 +982,7 @@ is_fw_port_format_valid() {
 
 # Integer validator
 is_int_format_valid() {
-    if ! [[ "$1" =~ ^[0-9]+$ ]] ; then 
+    if ! [[ "$1" =~ ^[0-9]+$ ]] ; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
@@ -999,7 +1009,7 @@ is_cron_format_valid() {
     if [ "$2" = 'hour' ]; then
         limit=23
     fi
-    
+
     if [ "$2" = 'day' ]; then
         limit=31
     fi
@@ -1054,7 +1064,7 @@ is_object_format_valid() {
     fi
 }
 
-# Role validator 
+# Role validator
 is_role_valid (){
     if ! [[ "$1" =~ ^admin|user$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
@@ -1067,15 +1077,15 @@ is_password_format_valid() {
         check_result "$E_INVALID" "invalid password format :: $1"
     fi
 }
-# Missing function - 
-# Before: validate_format_shell 
+# Missing function -
+# Before: validate_format_shell
 # After: is_format_valid_shell
-is_format_valid_shell() {	
-    if [ -z "$(grep -w $1 /etc/shells)" ]; then	
-        echo "Error: shell $1 is not valid"	
-        log_event "$E_INVALID" "$EVENT"	
-        exit $E_INVALID	
-    fi	
+is_format_valid_shell() {
+    if [ -z "$(grep -w $1 /etc/shells)" ]; then
+        echo "Error: shell $1 is not valid"
+        log_event "$E_INVALID" "$EVENT"
+        exit $E_INVALID
+    fi
 }
 
 # Service name validator
@@ -1088,7 +1098,7 @@ is_service_format_valid() {
 is_hash_format_valid() {
   if ! [[ "$1" =~ ^[-_A-Za-z0-9]{1,32}$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
-    fi    
+    fi
 }
 
 # Format validation controller
@@ -1097,6 +1107,7 @@ is_format_valid() {
         eval arg=\$$arg_name
         if [ -n "$arg" ]; then
             case $arg_name in
+                access_key_id)  is_access_key_id_format_valid "$arg" "$arg_name";;
                 account)        is_user_format_valid "$arg" "$arg_name";;
                 action)         is_fw_action_format_valid "$arg";;
                 active)         is_boolean_format_valid "$arg" 'active' ;;
@@ -1159,14 +1170,15 @@ is_format_valid() {
                 proxy_ext)      is_extention_format_valid "$arg" ;;
                 quota)          is_int_format_valid "$arg" 'quota' ;;
                 rate)           is_int_format_valid "$arg" 'rate' ;;
-                                
+
                 record)         is_common_format_valid "$arg" 'record';;
                 restart)        is_restart_format_valid "$arg" 'restart' ;;
                 role)           is_role_valid "$arg" 'role' ;;
                 rtype)          is_dns_type_format_valid "$arg" ;;
                 rule)           is_int_format_valid "$arg" "rule id" ;;
                 service)        is_service_format_valid "$arg" "$arg_name" ;;
-                soa)            is_domain_format_valid "$arg" 'SOA' ;;	
+                secret_access_key) is_secret_access_key_format_valid "$arg" "$arg_name" ;;
+                soa)            is_domain_format_valid "$arg" 'SOA' ;;
                 #missing command: is_format_valid_shell
                 shell)          is_format_valid_shell "$arg" ;;
                 stats_pass)     is_password_format_valid "$arg" ;;
@@ -1179,6 +1191,75 @@ is_format_valid() {
             esac
         fi
     done
+}
+
+# Check access_key_id name
+# Don't work with legacy key format
+is_access_key_id_format_valid() {
+    local hash="$1"
+
+    # ACCESS_KEY_ID format validation
+    if ! [[ "$hash" =~ ^[[:alnum:]]{20}$ ]]; then
+        check_result "$E_INVALID" "invalid $2 format :: $hash"
+    fi
+}
+
+# SECRET_ACCESS_KEY format validation
+is_secret_access_key_format_valid() {
+    local hash="$1"
+
+    if ! [[ "$hash" =~ ^[[:alnum:]|_|\.|\+|/|\^|~|=|%|\-]{40}$ ]]; then
+        check_result "$E_INVALID" "invalid $2 format"
+    fi
+}
+
+# Checks if the secret belongs to the access key
+check_access_key_secret() {
+    local access_key_id="$(basename "$1")"
+    access_key_id="${access_key_id%.*}"
+    local secret_access_key=$2
+    local -n key_user=$3
+
+    if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
+        check_result "$E_PASSWORD" "Access key $access_key_id doesn't exist"
+    fi
+
+    if [[ -z "$secret_access_key" ]]; then
+        check_result "$E_PASSWORD" "Secret key not provided for key $access_key_id"
+    elif ! [[ "$secret_access_key" =~ ^[[:alnum:]|_|\.|\+|/|\^|~|=|%|\-]{40}$ ]]; then
+        check_result "$E_PASSWORD" "Invalid secret key for key $access_key_id"
+    else
+        SECRET_ACCESS_KEY=""
+        source_conf "$HESTIA/data/access-keys/${access_key_id}";
+
+        if [[ -z "$SECRET_ACCESS_KEY" || "$SECRET_ACCESS_KEY" != "$secret_access_key" ]]; then
+            check_result "$E_PASSWORD" "Invalid secret key for key $access_key_id"
+        fi
+    fi
+
+    key_user="$USER"
+}
+
+# Checks if the key belongs to the user
+check_access_key_user() {
+    local access_key_id="$(basename "$1")"
+    access_key_id="${access_key_id%.*}"
+    local user=$2
+
+    if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
+        check_result "$E_FORBIDEN" "Access key ${access_key_id:-$hash} doesn't exist"
+    fi
+
+    if [[ -z "$user" ]]; then
+        check_result "$E_FORBIDEN" "User not provided"
+    else
+        USER=""
+        source_conf "$HESTIA/data/access-keys/${access_key_id}";
+
+        if [[ -z "$USER" || "$USER" != "$user" ]]; then
+            check_result "$E_FORBIDEN" "key $access_key_id does not belong to the user $user"
+        fi
+    fi
 }
 
 # Domain argument formatting
@@ -1364,8 +1445,8 @@ source_conf(){
       if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
           rhs="${rhs%%^\#*}"   # Del in line right comments
           rhs="${rhs%%*( )}"   # Del trailing spaces
-          rhs="${rhs%\'*}"     # Del opening string quotes 
-          rhs="${rhs#\'*}"     # Del closing string quotes 
+          rhs="${rhs%\'*}"     # Del opening string quotes
+          rhs="${rhs#\'*}"     # Del closing string quotes
           declare -g $lhs="$rhs"
       fi
   done < $1
@@ -1391,4 +1472,113 @@ change_sys_value(){
   else
       sed -i "s|^$1=.*|$1='$2'|g" "$HESTIA/conf/hestia.conf"
   fi
+}
+
+# Checks the format of APIs that will be allowed for the key
+is_key_permissions_format_valid() {
+    local permissions="$1"
+    local user="$2"
+
+    if [[ "$user" != "admin" && -z "$permissions" ]]; then
+        check_result "$E_INVALID" "Non-admin users need a permission list"
+    fi
+
+    while IFS=',' read -ra permissions_arr; do
+        for permission in "${permissions_arr[@]}"; do
+            permission="$(basename "$permission" | sed -E "s/^\s*|\s*$//g")"
+
+#            if [[ -z "$(echo "$permission" | grep -E "^v-")" ]]; then
+            if [[ ! -e "$HESTIA/data/api/$permission" ]]; then
+                check_result "$E_NOTEXIST" "API $permission doesn't exist"
+            fi
+
+            source_conf "$HESTIA/data/api/$permission";
+            if [ "$ROLE" = "admin" ] && [ "$user" != "admin" ]; then
+              check_result "$E_INVALID" "Only the admin can run this API"
+            fi
+#            elif [[ ! -e "$BIN/$permission" ]]; then
+#                check_result "$E_NOTEXIST" "Command $permission doesn't exist"
+#            fi
+        done
+    done <<<"$permissions"
+}
+
+# Remove whitespaces, and bin path from commands
+cleanup_key_permissions() {
+    local permissions="$1"
+
+    local final quote
+    while IFS=',' read -ra permissions_arr; do
+        for permission in "${permissions_arr[@]}"; do
+            permission="$(basename "$permission" | sed -E "s/^\s*|\s*$//g")"
+
+            # Avoid duplicate items
+            if [[ -z "$(echo ",${final}," | grep ",${permission},")" ]]; then
+                final+="${quote}${permission}"
+                quote=','
+            fi
+        done
+    done <<<"$permissions"
+
+    echo "$final"
+}
+
+# Extract all allowed commands from a permission list
+get_apis_commands() {
+    local permissions="$1"
+
+    local allowed_commands quote commands_to_add
+    while IFS=',' read -ra permissions_arr; do
+        for permission in "${permissions_arr[@]}"; do
+            permission="$(basename "$permission" | sed -E "s/^\s*|\s*$//g")"
+
+            commands_to_add=""
+#            if [[ -n "$(echo "$permission" | grep -E "^v-")" ]]; then
+#                commands_to_add="$permission"
+#            el
+            if [[  -e "$HESTIA/data/api/$permission" ]]; then
+                source_conf "$HESTIA/data/api/$permission";
+                commands_to_add="$COMMANDS"
+            fi
+
+            if [[ -n "$commands_to_add" ]]; then
+                allowed_commands+="${quote}${commands_to_add}"
+                quote=','
+            fi
+        done
+    done <<<"$permissions"
+
+    cleanup_key_permissions "$allowed_commands"
+}
+
+# Get the position of an argument by name in a hestia command using the command's documentation comment.
+#
+# Return:
+# * 0:   It doesn't have the argument;
+# * 1-9: The position of the argument in the command.
+search_command_arg_position() {
+    local hst_command="$(basename "$1")"
+    local arg_name="$2"
+
+    local command_path="$BIN/$hst_command"
+    if [[ -z "$hst_command" || ! -e "$command_path" ]]; then
+        echo "-1"
+        return
+    fi
+
+    local position=0
+    local count=0
+    local command_options="$(sed -En 's/^# options: (.+)/\1/p' "$command_path")"
+    while IFS=' ' read -ra options_arr; do
+        for option in "${options_arr[@]}"; do
+            count=$((count+1))
+
+            option_name="$(echo "  $option   " | sed -E 's/^(\s|\[)*|(\s|\])*$//g')"
+            if [[ "${option_name^^}" == "$arg_name" ]]; then
+                position=$count
+            fi
+        done
+    done <<<"$command_options"
+
+    echo "$position"
 }

@@ -1,0 +1,85 @@
+#!/bin/bash
+# info: list all API access keys
+# options: ACCESS_KEY_ID [FORMAT]
+#
+# example: v-list-access-key 1234567890ABCDefghij json
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+access_key_id="$1"
+format="${2:-shell}"
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+    local PERMISSIONS_ARR='[]'
+    if [[ -n "$PERMISSIONS" ]]; then
+        PERMISSIONS_ARR="[\"$(echo "$PERMISSIONS" | sed -E 's|,|", "|g')\"]"
+    fi
+
+    echo '{
+    "ACCESS_KEY_ID": "'$access_key_id'",
+    "SECRET_ACCESS_KEY": "'$SECRET_ACCESS_KEY'",
+    "USER": "'$USER'",
+    "PERMISSIONS": '$PERMISSIONS_ARR',
+    "COMMENT": "'$COMMENT'",
+    "TIME": "'$TIME'",
+    "DATE": "'$DATE'"
+}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "ACCESS_KEY_ID:      $access_key_id"
+    echo "SECRET_ACCESS_KEY:  $SECRET_ACCESS_KEY"
+    echo "USER:               $USER"
+    echo "PERMISSIONS:        $PERMISSIONS"
+    echo "COMMENT:            $COMMENT"
+    echo "TIME:               $TIME"
+    echo "DATE:               $DATE"
+}
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'ACCESS_KEY_ID [FORMAT]'
+is_format_valid 'access_key_id'
+is_object_valid 'key' 'KEY' "$access_key_id"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Avoid "USER" receive "root" in old keys
+USER="admin"
+PERMISSIONS=""
+COMMENT=""
+DATE=""
+TIME=""
+
+source_conf "${HESTIA}/data/access-keys/${access_key_id}"
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    shell)  shell_list ;;
+esac
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

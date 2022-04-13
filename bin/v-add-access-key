@@ -1,0 +1,104 @@
+#!/bin/bash
+# info: generate access key
+# options: USER [PERMISSIONS] [COMMENT] [FORMAT]
+#
+# example: v-add-access-key admin v-purge-nginx-cache,v-list-mail-accounts comment json
+#
+# The "PERMISSIONS" argument is optional for the admin user only.
+# This function creates a key file in $HESTIA/data/access-keys/
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+permissions=$2
+comment=$3
+format=${4-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+keygen() {
+    local LENGTH=${1:-20}
+    local USE_SPECIAL_CHARACTERS="${2:-no}"
+
+    local MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+    if [[ "$USE_SPECIAL_CHARACTERS" == "yes" ]]; then
+        MATRIX+='_-+^~=%'
+    fi
+
+    local PASS N
+    while [ ${N:=1} -le $LENGTH ]; do
+        PASS="$PASS${MATRIX:$(($RANDOM%${#MATRIX})):1}"
+        let N+=1
+    done
+
+    echo "$PASS"
+}
+
+access_key_id="$(keygen)"
+secret_access_key="$(keygen 40 yes)"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+# Remove whitespace and bin path from permissions
+permissions="$(cleanup_key_permissions "$permissions")"
+
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER [PERMISSIONS] [COMMENT] [FORMAT]'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+is_key_permissions_format_valid "$permissions" "$user"
+if [ -n "$comment" ]; then
+    is_format_valid 'comment'
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ ! -d "$HESTIA/data/access-keys/" ]; then
+    mkdir -p $HESTIA/data/access-keys/
+    chown admin:root $HESTIA/data/access-keys/
+    chmod 750 $HESTIA/data/access-keys/
+fi
+
+if [[ -e "$HESTIA/data/access-keys/${access_key_id}" ]]; then
+    while [[ -e "$HESTIA/data/access-keys/${access_key_id}" ]]; do
+        access_key_id=$(keygen)
+    done
+fi
+
+echo "SECRET_ACCESS_KEY='$secret_access_key'" >"$HESTIA/data/access-keys/${access_key_id}"
+echo "USER='$user'" >>"$HESTIA/data/access-keys/${access_key_id}"
+echo "PERMISSIONS='$permissions'" >>"$HESTIA/data/access-keys/${access_key_id}"
+echo "COMMENT='$comment'" >>"$HESTIA/data/access-keys/${access_key_id}"
+echo "TIME='$time'" >>"$HESTIA/data/access-keys/${access_key_id}"
+echo "DATE='$date'" >>"$HESTIA/data/access-keys/${access_key_id}"
+chmod 640 "$HESTIA/data/access-keys/${access_key_id}"
+
+$BIN/v-list-access-key "$access_key_id" "$format"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Warning" "System" "New system Access key generated (Key: ${access_key_id})."
+
+exit

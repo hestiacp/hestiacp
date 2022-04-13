@@ -1,0 +1,84 @@
+<?php
+ob_start();
+$TAB = 'Access Key';
+
+// Main include
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+
+// Checks if API V2 is enabled
+$api_v2_status = (!empty($_SESSION['API_V2']) && is_numeric($_SESSION['API_V2'])) ? $_SESSION['API_V2'] : 0;
+if (($user_plain == 'admin' && $api_v2_status < 1) || ($user_plain != 'admin' && $api_v2_status < 2)) {
+    header("Location: /edit/user/");
+    exit;
+}
+
+// APIs available
+exec(HESTIA_CMD."v-list-apis json", $output, $return_var);
+$apis = json_decode(implode('', $output), true);
+$apis = array_filter($apis, function ($api) use ($user_plain) {
+    return ($user_plain == 'admin' || $api['ROLE'] == 'user');
+});
+ksort($apis);
+unset($output);
+
+// Check POST request
+if (!empty($_POST['ok'])) {
+
+    // Check token
+    verify_csrf($_POST);
+
+    // Validate apis
+    $apis_selected = (!empty($_POST['v_apis']) && is_array($_POST['v_apis'])) ? $_POST['v_apis'] : [];
+    $check_apis = array_filter($apis_selected, function ($selected) use ($apis) {
+        return !array_key_exists($selected, $apis);
+    });
+
+    if (empty($apis_selected)) {
+        $errors[] = _('apis');
+    } else if (count($check_apis) > 0) {
+        $errors[] = sprintf("%d apis not allowed", count($check_apis));
+    }
+
+    if (!empty($errors[0])) {
+        foreach ($errors as $i => $error) {
+            if ($i == 0) {
+                $error_msg = $error;
+            } else {
+                $error_msg = $error_msg.", ".$error;
+            }
+        }
+        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
+    }
+
+    // Protect input
+    $v_apis = escapeshellarg(implode(',', $apis_selected));
+    $v_comment = escapeshellarg($_POST['v_comment']);
+
+    // Add access key
+    if (empty($_SESSION['error_msg'])) {
+        exec(HESTIA_CMD."v-add-access-key ".$user." ".$v_apis." ".$v_comment." json", $output, $return_var);
+        $key_data = json_decode(implode('', $output), true);
+        check_return_code($return_var, $output);
+        unset($output);
+    }
+
+    // Flush field values on success
+    if (empty($_SESSION['error_msg'])) {
+        $_SESSION['ok_msg'] = sprintf(_('ACCESS_KEY_CREATED_OK'), htmlentities($key_data['ACCESS_KEY_ID']));
+        unset($apis_selected);
+        unset($check_apis);
+        unset($v_apis);
+        unset($v_comment);
+    }
+}
+
+// Render
+if (empty($key_data)) {
+    render_page($user, $TAB, 'add_access_key');
+} else {
+    render_page($user, $TAB, 'list_access_key');
+}
+
+// Flush session messages
+unset($_SESSION['error_msg']);
+unset($_SESSION['ok_msg']);

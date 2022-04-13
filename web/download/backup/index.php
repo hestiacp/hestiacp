@@ -30,7 +30,7 @@ if (!file_exists('/backup/'.$backup)) {
     }
 
     if ((!empty($_SESSION['user'])) && ($_SESSION['userContext'] != 'admin')) {
-        if (strpos($backup, $user.'.') === 0) {
+        if (strpos($backup, $_SESSION['user'].'.') === 0) {
             header('Content-type: application/gzip');
             header("Content-Disposition: attachment; filename=\"".$backup."\";");
             header("X-Accel-Redirect: /backup/" . $backup);

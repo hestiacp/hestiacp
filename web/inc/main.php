@@ -127,6 +127,10 @@ if (isset($_SESSION['look']) && $_SESSION['look']  != '' && ($_SESSION['userCont
     $user_plain = htmlentities($_SESSION['look']);
 }
 
+if (empty($_SESSION['look'])) {
+    $_SESSION['look'] = '';
+}
+
 require_once(dirname(__FILE__) . '/i18n.php');
 
 function check_error($return_var)

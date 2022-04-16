@@ -572,12 +572,12 @@ rebuild_mail_domain_conf() {
         rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
         rm -f $HOMEDIR/$user/conf/mail/$domain/fwd_only
         rm -f $HOMEDIR/$user/conf/mail/$domain/ip
-        rm -fr $HOMEDIR/$user/conf/mail/$domain/limits/
+        rm -fr $HOMEDIR/$user/conf/mail/$domain/limits
         touch $HOMEDIR/$user/conf/mail/$domain/accounts
         touch $HOMEDIR/$user/conf/mail/$domain/aliases
         touch $HOMEDIR/$user/conf/mail/$domain/passwd
         touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
-        mkdir $HOMEDIR/$user/conf/mail/$domain/limits/
+        touch $HOMEDIR/$user/conf/mail/$domain/limits
         
         # Setting outgoing ip address
         if [ -n "$local_ip" ]; then
@@ -670,10 +670,17 @@ rebuild_mail_domain_conf() {
             user_rate_limit=$(get_object_value 'mail' 'DOMAIN' "$domain" '$RATE_LIMIT');
             if [ -n "$RATE_LIMIT" ]; then
                 #user value
-                echo "$RATE_LIMIT" >> $HOMEDIR/$user/conf/mail/$domain/limits/$account
+                sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$RATE_LIMIT" >> $HOMEDIR/$user/conf/mail/$domain/limits
             elif [ -n "$user_rate_limit" ]; then
-                #revert to user value
-                echo "$user_rate_limit" >> $HOMEDIR/$user/conf/mail/$domain/limits/$account
+                #revert to account value
+                sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$user_rate_limit" >> $HOMEDIR/$user/conf/mail/$domain/limits
+            else
+                #revert to system value
+                system=$(cat /etc/exim4/limit.conf)
+                sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$system" >> $HOMEDIR/$user/conf/mail/$domain/limits
             fi
         fi
     done

@@ -151,7 +151,7 @@
 									</tr>
 									<tr>
 										<td id="password-options-ip" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
-											<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('ip-allowlist')" name="v_login_use_iplist" <?php if ($data[$user]['LOGIN_USE_IPLIST'] === "yes") echo "checked=yes" ?>><?=_('Use IP address allow list for login attempts');?></label>
+											<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('ip-allowlist')" name="v_login_use_iplist" <?php if ($v_login_use_iplist === "yes") echo "checked=yes" ?>><?=_('Use IP address allow list for login attempts');?></label>
 										</td>
 									</tr>
 									<tr>

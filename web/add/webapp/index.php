@@ -21,10 +21,12 @@ if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
 // Check if domain belongs to the user
 $v_domain = $_GET['domain'];
 exec(HESTIA_CMD."v-list-web-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
-if ($return_var > 0){
+if ($return_var > 0) {
     check_return_code_redirect($return_var, $output, '/list/web/');
 }
-
+unset($output);
+exec(HESTIA_CMD."v-list-sys-php json", $output, $return_var);
+$php_versions =  json_decode(implode('', $output), true);
 unset($output);
 
 // Check GET request
@@ -37,9 +39,19 @@ if (!empty($_GET['app'])) {
         try {
             $app_installer = new $app_installer_class($v_domain, $hestia);
             $info = $app_installer -> info();
-            if ($info['enabled'] != true) {
-                $_SESSION['error_msg'] = sprintf(_('%s installer missing'), $app);
+            foreach ($php_versions as $version) {
+                if (in_array($version, $info['php_support'])) {
+                    $supported = true;
+                    $supported_versions[] = $version;
+                }
+            }
+            if ($supported) {
+                $info['enabled'] = true;
             } else {
+                $info['enabled'] = false;
+                $_SESSION['error_msg'] = sprintf(_('Unable to install %s, %s is not available'), $app, 'PHP-'.end($info['php_support']));
+            }
+            if ($info['enabled'] == true) {
                 $installer = new \Hestia\WebApp\AppWizard($app_installer, $v_domain, $hestia);
                 $GLOBALS['WebappInstaller'] = $installer;
             }
@@ -90,7 +102,21 @@ if (!empty($installer)) {
             if ($matches[1] != "Resources") {
                 $app_installer_class = '\Hestia\WebApp\Installers\\'.$matches[1].'\\' . $matches[1] . 'Setup';
                 $app_installer = new $app_installer_class($v_domain, $hestia);
-                $v_web_apps[] = $app_installer -> info();
+                $appInstallerInfo = $app_installer -> info();
+                $supported = false;
+                $supported_versions = array();
+                foreach ($php_versions as $version) {
+                    if (in_array($version, $appInstallerInfo['php_support'])) {
+                        $supported = true;
+                        $supported_versions[] = $version;
+                    }
+                }
+                if ($supported) {
+                    $appInstallerInfo['enabled'] = true;
+                } else {
+                    $appInstallerInfo['enabled'] = false;
+                }
+                $v_web_apps[] = $appInstallerInfo;
             }
         }
     }

@@ -182,12 +182,23 @@ function api($hst_hash, $hst_user, $hst_password, $hst_returncode, $hst_cmd, $hs
     }
 }
 
+$array = array('user','password','hash','returncode','cmd','arg1','arg2','arg3','arg4','arg5','arg6','arg7','arg8','arg9');
+    
 if (isset($_POST['user']) || isset($_POST['hash'])) {
-
+    foreach($array as $key){
+        if(empty($_POST[$key])){
+            $_POST[$key] = '';
+        }
+    }
     api($_POST['hash'], $_POST['user'], $_POST['password'], $_POST['returncode'], $_POST['cmd'], $_POST['arg1'], $_POST['arg2'], $_POST['arg3'], $_POST['arg4'], $_POST['arg5'], $_POST['arg6'], $_POST['arg7'], $_POST['arg8'], $_POST['arg9']);
 
 } else if (json_decode(file_get_contents("php://input"), true) != NULL){ //JSON POST support
     $json_data = json_decode(file_get_contents("php://input"), true);
+    foreach($array as $key){
+        if(empty($json_data[$key])){
+            $json_data[$key] = '';
+        }
+    }
     api($json_data['hash'], $json_data['user'], $json_data['password'], $json_data['returncode'], $json_data['cmd'], $json_data['arg1'], $json_data['arg2'], $json_data['arg3'], $json_data['arg4'], $json_data['arg5'], $json_data['arg6'], $json_data['arg7'], $json_data['arg8'], $json_data['arg9']);
 
 } else {

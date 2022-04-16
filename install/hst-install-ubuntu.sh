@@ -575,43 +575,44 @@ if [ "$interactive" = 'yes' ]; then
         echo 'Goodbye'
         exit 1
     fi
+fi
 
-  # Asking for contact email
-  if [ -z "$email" ]; then
-      while validate_email; do
-      echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
-      read -p 'Please enter admin email address: ' email
-      done
-  else
+# Validate Email / Hostname even when interactive = no 
+# Asking for contact email
+if [ -z "$email" ]; then
+    while validate_email; do
+        echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
+        read -p 'Please enter admin email address: ' email
+    done
+else
     if validate_email; then
-    echo "Please use a valid emailadress (ex. info@domain.tld)."
-    exit 1
-    fi
-  fi
-  
-    # Asking to set FQDN hostname
-    if [ -z "$servername" ]; then
-        # Ask and validate FQDN hostname.
-        read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
-
-        # Set hostname if it wasn't set
-        if [ -z "$servername" ]; then
-            servername=$(hostname -f)
-        fi
-
-        # Validate Hostname, go to loop if the validation fails.
-        while validate_hostname; do
-            echo -e "\nPlease use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
-            read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
-        done
-    else
-        # Validate FQDN hostname if it is preset
-        if validate_hostname; then
-            echo "Please use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
-            exit 1
-        fi
+      echo "Please use a valid emailadress (ex. info@domain.tld)."
+      exit 1
     fi
 fi
+
+  # Asking to set FQDN hostname
+  if [ -z "$servername" ]; then
+      # Ask and validate FQDN hostname.
+      read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
+
+      # Set hostname if it wasn't set
+      if [ -z "$servername" ]; then
+          servername=$(hostname -f)
+      fi
+
+      # Validate Hostname, go to loop if the validation fails.
+      while validate_hostname; do
+          echo -e "\nPlease use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
+          read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
+      done
+  else
+      # Validate FQDN hostname if it is preset
+      if validate_hostname; then
+          echo "Please use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
+          exit 1
+      fi
+  fi
 
 # Generating admin password if it wasn't set
 if [ -z "$vpass" ]; then
@@ -1911,6 +1912,20 @@ else
     $HESTIA/bin/v-change-sys-api disable
 fi
 
+#----------------------------------------------------------#
+#                  Configure File Manager                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring File Manager..."
+$HESTIA/bin/v-add-sys-filemanager quiet
+
+#----------------------------------------------------------#
+#                  Configure PHPMailer                     #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring PHPMailer..."
+$HESTIA/bin/v-add-sys-phpmailer quiet
+
 
 #----------------------------------------------------------#
 #                   Configure IP                           #
@@ -2050,13 +2065,6 @@ chmod 755 /backup/
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
-#                  Configure File Manager                  #
-#----------------------------------------------------------#
-
-echo "[ * ] Configuring File Manager..."
-$HESTIA/bin/v-add-sys-filemanager quiet
-
-#----------------------------------------------------------#
 #              Set hestia.conf default values              #
 #----------------------------------------------------------#
 
@@ -2084,13 +2092,6 @@ write_config_value "SERVER_SMTP_USER" ""
 write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
 write_config_value "POLICY_CSRF_STRICTNESS" "1"
-
-#----------------------------------------------------------#
-#                  Configure PHPMailer                     #
-#----------------------------------------------------------#
-
-echo "[ * ] Configuring PHPMailer..."
-$HESTIA/bin/v-add-sys-phpmailer quiet
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

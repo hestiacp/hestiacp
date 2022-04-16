@@ -244,7 +244,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
                 fi
                 if [ -f /usr/bin/mysql ]; then
                     mariadb_v=`mysql -V | awk 'NR==1{print $5}' | head -c 4`
-                    if [ $mariadb_v = "10.5" ] || [ $mariadb_v = "10.6" ]; then
+                    if [ $mariadb_v = "10.5" ] || [ $mariadb_v = "10.6" ] || [ $mariadb_v = "10.7" ]; then
                         service='mariadb'
                         proc_name='mariadbd'
                     fi

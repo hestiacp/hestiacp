@@ -60,7 +60,7 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
         php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
-        php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
+        php$fpm_v-apcu php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
@@ -603,41 +603,42 @@ if [ "$interactive" = 'yes' ]; then
         echo 'Goodbye'
         exit 1
     fi
+fi
 
-    # Asking for contact email
-    if [ -z "$email" ]; then
-        while validate_email; do
+# Validate Email / Hostname even when interactive = no 
+# Asking for contact email
+if [ -z "$email" ]; then
+    while validate_email; do
         echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
         read -p 'Please enter admin email address: ' email
-        done
-    else
-      if validate_email; then
-      echo "Please use a valid emailadress (ex. info@domain.tld)."
-      exit 1
-      fi
+    done
+else
+    if validate_email; then
+        echo "Please use a valid emailadress (ex. info@domain.tld)."
+        exit 1
+    fi
+fi
+
+# Asking to set FQDN hostname
+if [ -z "$servername" ]; then
+    # Ask and validate FQDN hostname.
+    read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
+
+    # Set hostname if it wasn't set
+    if [ -z "$servername" ]; then
+        servername=$(hostname -f)
     fi
 
-    # Asking to set FQDN hostname
-    if [ -z "$servername" ]; then
-        # Ask and validate FQDN hostname.
+    # Validate Hostname, go to loop if the validation fails.
+    while validate_hostname; do
+        echo -e "\nPlease use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
         read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
-
-        # Set hostname if it wasn't set
-        if [ -z "$servername" ]; then
-            servername=$(hostname -f)
-        fi
-
-        # Validate Hostname, go to loop if the validation fails.
-        while validate_hostname; do
-            echo -e "\nPlease use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
-            read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
-        done
-    else
-        # Validate FQDN hostname if it is preset
-        if validate_hostname; then
-            echo "Please use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
-            exit 1
-        fi
+    done
+else
+    # Validate FQDN hostname if it is preset
+    if validate_hostname; then
+        echo "Please use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
+        exit 1
     fi
 fi
 
@@ -1300,12 +1301,6 @@ echo "[ * ] Enable SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
-# Switch to sha512 for deb11.
-if [ "$release" -eq 11 ]; then
-    # Switching to sha512
-    sed -i "s/ yescrypt/ sha512/g" /etc/pam.d/common-password
-fi
-
 # Adding Hestia admin account
 $HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
@@ -1894,6 +1889,20 @@ if [ "$sieve" = 'yes' ]; then
 fi
 
 #----------------------------------------------------------#
+#                  Configure File Manager                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring File Manager..."
+$HESTIA/bin/v-add-sys-filemanager quiet
+
+#----------------------------------------------------------#
+#                  Configure PHPMailer                     #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring PHPMailer..."
+$HESTIA/bin/v-add-sys-phpmailer quiet
+
+#----------------------------------------------------------#
 #                       Configure API                      #
 #----------------------------------------------------------#
 
@@ -2029,12 +2038,6 @@ chmod 755 /backup/
 # create cronjob to generate ssl 
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
-#----------------------------------------------------------#
-#                  Configure File Manager                  #
-#----------------------------------------------------------#
-
-echo "[ * ] Configuring File Manager..."
-$HESTIA/bin/v-add-sys-filemanager quiet
 
 #----------------------------------------------------------#
 #              Set hestia.conf default values              #
@@ -2065,12 +2068,6 @@ write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
 write_config_value "POLICY_CSRF_STRICTNESS" "1"
 
-#----------------------------------------------------------#
-#                  Configure PHPMailer                     #
-#----------------------------------------------------------#
-
-echo "[ * ] Configuring PHPMailer..."
-$HESTIA/bin/v-add-sys-phpmailer quiet
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

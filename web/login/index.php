@@ -107,6 +107,7 @@ function authenticate_user($user, $password, $twofa = '')
         $output = '';
         exec(HESTIA_CMD . 'v-get-user-salt ' . $v_user . ' ' . $v_ip . ' json', $output, $return_var);
         $pam = json_decode(implode('', $output), true);
+        unset($output);
         if ($return_var > 0) {
             sleep(2);
             if ($return_var == 5) {
@@ -127,6 +128,15 @@ function authenticate_user($user, $password, $twofa = '')
             if ($method == 'sha-512') {
                 $hash = crypt($password, '$6$rounds=5000$' . $salt . '$');
                 $hash = str_replace('$rounds=5000', '', $hash);
+            }
+            if ($method == 'yescrypt') {
+                $v_password = tempnam("/tmp", "vst");
+                $fp = fopen($v_password, "w");
+                fwrite($fp, $_POST['password']."\n");
+                fclose($fp);
+                exec(HESTIA_CMD . 'v-check-user-password '. $v_user.' '. $v_password. ' '.$v_ip.' yes', $output, $return_var);
+                $hash = $output[0];
+                unset($output);
             }
             if ($method == 'des') {
                 $hash = crypt($password, $salt);

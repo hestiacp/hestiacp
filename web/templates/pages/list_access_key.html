@@ -1,3 +1,14 @@
+<?php
+// Prevent resubmit form on page refresh
+if (!empty($_POST['ok'])) {
+    ?>
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+<?php } ?>
+
 <!-- Begin toolbar -->
 <div class="l-center edit">
     <div class="l-sort clearfix">

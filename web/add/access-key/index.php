@@ -5,9 +5,9 @@ $TAB = 'Access Key';
 // Main include
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
-// Checks if API V2 is enabled
-$api_v2_status = (!empty($_SESSION['API_V2']) && is_numeric($_SESSION['API_V2'])) ? $_SESSION['API_V2'] : 0;
-if (($user_plain == 'admin' && $api_v2_status < 1) || ($user_plain != 'admin' && $api_v2_status < 2)) {
+// Checks if API access is enabled
+$api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
+if (($user_plain == 'admin' && $api_status < 1) || ($user_plain != 'admin' && $api_status < 2)) {
     header("Location: /edit/user/");
     exit;
 }
@@ -29,14 +29,17 @@ if (!empty($_POST['ok'])) {
 
     // Validate apis
     $apis_selected = (!empty($_POST['v_apis']) && is_array($_POST['v_apis'])) ? $_POST['v_apis'] : [];
-    $check_apis = array_filter($apis_selected, function ($selected) use ($apis) {
+    $check_invalid_apis = array_filter($apis_selected, function ($selected) use ($apis) {
         return !array_key_exists($selected, $apis);
     });
 
     if (empty($apis_selected)) {
         $errors[] = _('apis');
-    } else if (count($check_apis) > 0) {
-        $errors[] = sprintf("%d apis not allowed", count($check_apis));
+    } else if (count($check_invalid_apis) > 0) {
+        //$errors[] = sprintf("%d apis not allowed", count($check_invalid_apis));
+        foreach ($check_invalid_apis as $api_name) {
+            $errors[] = sprintf("api %s not allowed", $api_name);
+        }
     }
 
     if (!empty($errors[0])) {
@@ -66,7 +69,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_SESSION['error_msg'])) {
         $_SESSION['ok_msg'] = sprintf(_('ACCESS_KEY_CREATED_OK'), htmlentities($key_data['ACCESS_KEY_ID']));
         unset($apis_selected);
-        unset($check_apis);
+        unset($check_invalid_apis);
         unset($v_apis);
         unset($v_comment);
     }

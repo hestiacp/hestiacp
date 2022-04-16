@@ -12,9 +12,9 @@ if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
     $user_plain = $_GET['user'];
 }
 
-// Checks if API V2 is enabled
-$api_v2_status = (!empty($_SESSION['API_V2']) && is_numeric($_SESSION['API_V2'])) ? $_SESSION['API_V2'] : 0;
-if (($user_plain == 'admin' && $api_v2_status < 1) || ($user_plain != 'admin' && $api_v2_status < 2)) {
+// Checks if API access is enabled
+$api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
+if (($user_plain == 'admin' && $api_status < 1) || ($user_plain != 'admin' && $api_status < 2)) {
     header("Location: /edit/user/");
     exit;
 }

@@ -76,7 +76,7 @@ json_list() {
         "ENFORCE_SUBDOMAIN_OWNERSHIP": "'$ENFORCE_SUBDOMAIN_OWNERSHIP'",
         "DEBUG_MODE": "'$DEBUG_MODE'",
         "API": "'$API'",
-        "API_V2": "'$API_V2'",
+        "API_SYSTEM": "'$API_SYSTEM'",
         "API_ALLOWED_IP": "'$API_ALLOWED_IP'",
         "UPDATE_AVAILABLE": "'$UPDATE_AVAILABLE'",
         "PLUGIN_APP_INSTALLER": "'$PLUGIN_APP_INSTALLER'",

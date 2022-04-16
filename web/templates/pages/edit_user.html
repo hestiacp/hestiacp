@@ -19,8 +19,8 @@
 				<a href="<?=$log_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs');?></a>
 			<?php } ?>
 			<?php
-            $api_v2_status = (!empty($_SESSION['API_V2']) && is_numeric($_SESSION['API_V2'])) ? $_SESSION['API_V2'] : 0;
-            if (($user_plain == 'admin' && $api_v2_status > 0) || ($user_plain != 'admin' && $api_v2_status > 1)) { ?>
+            $api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
+            if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
 				<a href="<?=$keys_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Access Keys');?>"><i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?></a>
 			<?php } ?>
 		</div>

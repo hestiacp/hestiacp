@@ -90,6 +90,8 @@ echo "PERMISSIONS='$permissions'" >>"$HESTIA/data/access-keys/${access_key_id}"
 echo "COMMENT='$comment'" >>"$HESTIA/data/access-keys/${access_key_id}"
 echo "TIME='$time'" >>"$HESTIA/data/access-keys/${access_key_id}"
 echo "DATE='$date'" >>"$HESTIA/data/access-keys/${access_key_id}"
+# TODO Index reserved for future implementation
+echo "EXPIRES_IN=''" >>"$HESTIA/data/access-keys/${access_key_id}"
 chmod 640 "$HESTIA/data/access-keys/${access_key_id}"
 
 $BIN/v-list-access-key "$access_key_id" "$format"
@@ -99,6 +101,7 @@ $BIN/v-list-access-key "$access_key_id" "$format"
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Warning" "System" "New system Access key generated (Key: ${access_key_id})."
+log_history "Access key $access_key_id generated" "Warning" "$user" "API"
+log_event "$OK" "$ARGUMENTS"
 
 exit

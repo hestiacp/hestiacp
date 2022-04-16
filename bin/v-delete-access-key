@@ -39,8 +39,9 @@ if [ ! -d "$HESTIA/data/access-keys/" ]; then
   exit "$E_NOTEXIST"
 fi
 
-if [[ -e "$HESTIA/data/access-keys/$access_key_id" ]]; then
-    rm "$HESTIA/data/access-keys/$access_key_id"
+if [[ -e "${HESTIA}/data/access-keys/${access_key_id}" ]]; then
+    source_conf "${HESTIA}/data/access-keys/${access_key_id}"
+    rm "${HESTIA}/data/access-keys/${access_key_id}"
 else
     exit "$E_NOTEXIST"
 fi
@@ -50,7 +51,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-#$BIN/v-log-action "system" "Info" "System" "System Access key deleted (Key: $access_key_id)."
-#log_event "$OK" "$ARGUMENTS"
+log_history "Access key $access_key_id deleted" "Info" "$USER" "API"
+log_event "$OK" "$ARGUMENTS"
 
 exit

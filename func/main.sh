@@ -26,6 +26,7 @@ HESTIA_GIT_REPO="https://raw.githubusercontent.com/hestiacp/hestiacp"
 HESTIA_THEMES="$HESTIA/web/css/themes"
 HESTIA_THEMES_CUSTOM="$HESTIA/web/css/themes/custom"
 SCRIPT="$(basename $0)"
+CHECK_RESULT_CALLBACK=""
 
 # Return codes
 OK=0
@@ -148,8 +149,8 @@ log_history() {
 check_result() {
     if [ $1 -ne 0 ]; then
         local err_code="${3:-$1}"
-        if [[ "$(type -t check_result_log_callback)" == 'function' ]]; then
-            check_result_log_callback "$err_code" "$2"
+        if [[ -n "$CHECK_RESULT_CALLBACK" && "$(type -t "$CHECK_RESULT_CALLBACK")" == 'function' ]]; then
+            $CHECK_RESULT_CALLBACK "$err_code" "$2"
         else
             echo "Error: $2"
             log_event "$err_code" "$ARGUMENTS"
@@ -296,7 +297,6 @@ is_object_valid() {
         fi
     elif [ $2 = 'KEY' ]; then
         local key="$(basename "$3")"
-        key="${key%.*}"
 
         if [[ -z "$key" || ${#key} -lt 16 ]] || [[ ! -f "$HESTIA/data/access-keys/${key}" && ! -f "$HESTIA/data/access-keys/$key" ]]; then
             check_result "$E_NOTEXIST" "$1 $3 doesn't exist"
@@ -1216,7 +1216,6 @@ is_secret_access_key_format_valid() {
 # Checks if the secret belongs to the access key
 check_access_key_secret() {
     local access_key_id="$(basename "$1")"
-    access_key_id="${access_key_id%.*}"
     local secret_access_key=$2
     local -n key_user=$3
 
@@ -1243,11 +1242,10 @@ check_access_key_secret() {
 # Checks if the key belongs to the user
 check_access_key_user() {
     local access_key_id="$(basename "$1")"
-    access_key_id="${access_key_id%.*}"
     local user=$2
 
     if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
-        check_result "$E_FORBIDEN" "Access key ${access_key_id:-$hash} doesn't exist"
+        check_result "$E_FORBIDEN" "Access key $access_key_id doesn't exist"
     fi
 
     if [[ -z "$user" ]]; then
@@ -1258,6 +1256,46 @@ check_access_key_user() {
 
         if [[ -z "$USER" || "$USER" != "$user" ]]; then
             check_result "$E_FORBIDEN" "key $access_key_id does not belong to the user $user"
+        fi
+    fi
+}
+
+# Checks if the key is allowed to run the command
+check_access_key_cmd() {
+    local access_key_id="$(basename "$1")"
+    local cmd=$2
+    local -n user_arg_position=$3
+
+    if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
+        check_result "$E_FORBIDEN" "Access key $access_key_id doesn't exist"
+    fi
+
+    if [[ -z "$cmd" ]]; then
+        check_result "$E_FORBIDEN" "Command not provided"
+    elif [[ ! -e "$BIN/$cmd" ]]; then
+        check_result "$E_FORBIDEN" "Command $cmd not found"
+    else
+        USER="" PERMISSIONS=""
+        source_conf "${HESTIA}/data/access-keys/${access_key_id}"
+
+        local allowed_commands
+        if [[ -n "$PERMISSIONS" ]]; then
+            allowed_commands="$(get_apis_commands "$PERMISSIONS")"
+            if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
+                check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+            fi
+        elif [[ -z "$PERMISSIONS" && "$USER" != "admin" ]]; then
+            check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+        fi
+
+        if [[ "$USER" == "admin" ]]; then
+            # Admin can run commands for any user
+            user_arg_position="0"
+        else
+            user_arg_position="$(search_command_arg_position "$hst_command" "USER")"
+            if ! [[ "$user_arg_position" =~ ^[0-9]+$ ]]; then
+                check_result "$E_FORBIDEN" "Command $hst_command not found"
+            fi
         fi
     fi
 }

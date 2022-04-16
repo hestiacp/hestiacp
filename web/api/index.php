@@ -326,6 +326,13 @@ if (!isset($request_data['access_key']) && isset($request_data['hash']) && subst
 if (isset($request_data['access_key']) && isset($request_data['secret_key'])) {
     api_connection($request_data);
 } else if (isset($request_data['user']) || isset($request_data['hash'])) {
+    $array = array('user', 'password', 'hash', 'returncode', 'cmd', 'arg1', 'arg2', 'arg3', 'arg4', 'arg5', 'arg6', 'arg7', 'arg8', 'arg9');
+    foreach ($array as $key) {
+        if (empty($request_data[$key])) {
+            $request_data[$key] = '';
+        }
+    }
+
     api_legacy($request_data['hash'], $request_data['user'], $request_data['password'], $request_data['returncode'], $request_data['cmd'], $request_data['arg1'], $request_data['arg2'], $request_data['arg3'], $request_data['arg4'], $request_data['arg5'], $request_data['arg6'], $request_data['arg7'], $request_data['arg8'], $request_data['arg9']);
 } else {
     api_error(405, "Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/api.html");

@@ -609,14 +609,14 @@ fi
 # Asking for contact email
 if [ -z "$email" ]; then
     while validate_email; do
-    echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
-    read -p 'Please enter admin email address: ' email
+        echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
+        read -p 'Please enter admin email address: ' email
     done
 else
-  if validate_email; then
-  echo "Please use a valid emailadress (ex. info@domain.tld)."
-  exit 1
-  fi
+    if validate_email; then
+        echo "Please use a valid emailadress (ex. info@domain.tld)."
+        exit 1
+    fi
 fi
 
 # Asking to set FQDN hostname

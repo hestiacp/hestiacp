@@ -58,18 +58,19 @@ check_hestia_demo_mode
 
 md5=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$MD5')
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    if [ ! -d "$HOMEDIR/$user/conf/mail/$domain/limits/" ]; then
-        mkdir $HOMEDIR/$user/conf/mail/$domain/limits/
-    fi
     if [ "$rate" = "system" ]; then 
         user_rate_limit=$(get_object_value 'mail' 'DOMAIN' "$domain" '$RATE_LIMIT');
         if [ -n "$user_rate_limit" ]; then
-            echo "$user_rate_limit" > $HOMEDIR/$user/conf/mail/$domain/limits/$account
+            sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+            echo "$account@$domain_idn:$user_rate_limit" >> $HOMEDIR/$user/conf/mail/$domain/limits
         else
-            rm $HOMEDIR/$user/conf/mail/$domain/limits/$account
+            system=$(cat /etc/exim4/limit.conf)
+            sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+            echo "$account@$domain_idn:$system" >> $HOMEDIR/$user/conf/mail/$domain/limits
         fi
     else
-        echo "$rate" > $HOMEDIR/$user/conf/mail/$domain/limits/$account
+        sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+        echo "$account@$domain_idn:$rate" >> $HOMEDIR/$user/conf/mail/$domain/limits
     fi
 fi
 

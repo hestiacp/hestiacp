@@ -37,6 +37,8 @@ fi
 
 format_domain
 format_domain_idn
+
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -57,6 +59,7 @@ is_password_valid
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -86,6 +89,7 @@ fi
  mkdir $HOMEDIR/$user/mail/$domain/$account
  chown $user:mail $HOMEDIR/$user/mail/$domain/$account
  chmod 700 $HOMEDIR/$user/mail/$domain/$account
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -80,9 +80,6 @@
 														if ((!empty($v_timezone)) && ( $key == $v_timezone)){
 															echo ' selected' ;
 														}
-														if ((!empty($v_timezone)) && ( $key == $_POST['v_timezone'])){
-															echo ' selected' ;
-														}
 														echo ">".$value."</option>\n";
 													}
 												?>
@@ -101,10 +98,7 @@
 												<?php
 													foreach ($theme as $key => $value) {
 														echo "\t\t\t\t<option value=\"".$value."\"";
-														if ((!empty($_SESSION['THEME'])) && ( $value == $_SESSION['THEME'])){
-															echo ' selected' ;
-														}
-														if ((!empty($_SESSION['THEME'])) && ( $value == $_POST['v_theme'])){
+														if (($value == $_SESSION['THEME'])){
 															echo ' selected' ;
 														}
 														echo ">".$value."</option>\n";
@@ -129,9 +123,6 @@
 												<?php
 													foreach ($languages as $key => $value) {
 														echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
-														if ( $key == $v_language ){
-															echo 'selected' ;
-														}
 														if (( $key == $_SESSION['LANGUAGE'] && (empty($v_language)) )) {
 															echo 'selected' ;
 														}
@@ -521,7 +512,7 @@
 												<td>
 													<select class="vst-list" name="v_phpmyadmin_key" <?php if ($_SESSION['API'] != 'yes'){ echo "disabled"; }?>>
 														<option value='no'><?=_('Disabled'); ?></option>
-														<option value='yes' <?php if($_POST['v_phpmyadmin_key'] == "yes" || $_SESSION['PHPMYADMIN_KEY'] != ''){ echo 'selected="selected"'; }; ?>><?=_('Enabled'); ?></option>
+														<option value='yes' <?php if($_SESSION['PHPMYADMIN_KEY'] != ''){ echo 'selected="selected"'; }; ?>><?=_('Enabled'); ?></option>
 													</select>
 													<br />
 													<br />
@@ -857,7 +848,7 @@
 									<tr>
 										<td class="vst-text step-top">
 											<?=_('SSL Certificate');?>
-											<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_hostname?>"><?=_('Generate CSR');?></a></span>
+											<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities(trim($v_hostname,'"'));?>"><?=_('Generate CSR');?></a></span>
 										</td>
 									</tr>
 									<tr>

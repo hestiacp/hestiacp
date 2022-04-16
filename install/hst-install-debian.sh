@@ -31,10 +31,10 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.9~alpha'
+HESTIA_INSTALL_VER='1.6.0~alpha'
 # Dependencies
 pma_v='5.1.3'
-rc_v="1.5.2"
+rc_v="1.6.0"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
@@ -60,7 +60,7 @@ elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
         apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
         php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
         php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
-        php$fpm_v-apcu awstats php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
+        php$fpm_v-apcu php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
         php$fpm_v-gd php$fpm_v-intl php$fpm_v-mbstring
         php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
         awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
@@ -117,7 +117,15 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16
+    matrix=$1 
+    length=$2 
+    if [ -z "$matrix" ]; then 
+        matrix="A-Za-z0-9" 
+    fi 
+    if [ -z "$length" ]; then 
+        length=16 
+    fi 
+    head /dev/urandom | tr -dc $matrix | head -c$length
 }
 
 # Defining return code check function
@@ -1292,12 +1300,6 @@ echo "[ * ] Enable SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
-# Switch to sha512 for deb11.
-if [ "$release" -eq 11 ]; then
-    # Switching to sha512
-    sed -i "s/ yescrypt/ sha512/g" /etc/pam.d/common-password
-fi
-
 # Adding Hestia admin account
 $HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
@@ -1526,14 +1528,14 @@ if [ "$mysql" = 'yes' ]; then
     
     # Ater root password
     mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
-    # Remove root login from remote servers 
-    mysql -e "DELETE FROM mysql.global_priv WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+    # Allow mysql access via socket for startup
+    mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
     # Disable anonymous users
     mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
     # Drop test database
     mysql -e "DROP DATABASE IF EXISTS test"
-    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%"
-    
+    mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+    # Flush privileges
     mysql -e "FLUSH PRIVILEGES;"
 fi
 
@@ -1672,6 +1674,7 @@ if [ "$exim" = 'yes' ]; then
     fi
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
+	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
     touch /etc/exim4/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then
@@ -1898,14 +1901,6 @@ fi
 #                   Configure IP                           #
 #----------------------------------------------------------#
 
-# Roundcube permissions fix
-if [ "$exim" = 'yes' ] && [ "$mysql" = 'yes' ]; then
-    if [ ! -d "/var/log/roundcube" ]; then
-        mkdir /var/log/roundcube
-    fi
-    chown admin:admin /var/log/roundcube
-fi
-
 # Configuring system IPs
 echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
@@ -1985,6 +1980,10 @@ command="sudo $HESTIA/bin/v-update-user-stats"
 $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
 command="sudo $HESTIA/bin/v-update-sys-rrd"
 $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
+command="sudo $HESTIA/bin/v-update-letsencrypt-ssl"
+min=$(gen_pass '012345' '2')
+hour=$(gen_pass '1234567' '1')
+$HESTIA/bin/v-add-cron-job 'admin' "$min" "$hour" '*' '*' '*' "$command"
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate apt

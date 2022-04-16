@@ -31,11 +31,11 @@
 			</div>
 			<div class="l-profile">
 				<div class="l-menu__item"><a href="javascript:location.reload();" title="<?=_('Refresh');?>"><i class="fas fa-redo"></i></a></div>
-				<div class="l-menu__item"><a href="/edit/user/?user=<?=htmlentities($user); ?>" title="<?=htmlentities($user)?>" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
+				<div class="l-menu__item"><a href="/edit/user/" title="<?=htmlentities($user)?>" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
 				<div class="l-menu__item"><a href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
 			</div>
 		</div>
 	</div>
 
-	<div style="margin-left: auto; margin-right: auto; padding-top: 80px; width: 1020px;"><?=_('Last 70 lines of %s.%s.log',htmlentities($_GET['domain']),htmlentities($_GET['type'])) ;?></div>
+	<div style="margin-left: auto; margin-right: auto; padding-top: 80px; width: 1020px;"><?=sprintf(_('Last 70 lines of %s.%s.log'),htmlentities($_GET['domain']),htmlentities($type)) ;?></div>
 	<pre style="width: 1020px; margin-left: auto; margin-right: auto;" class="console-output">

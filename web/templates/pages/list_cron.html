@@ -4,7 +4,7 @@
 		<div class="l-unit-toolbar__buttonstrip">
 			<?php if ($read_only !== 'true') {?>
 				<a href="/add/cron/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job');?></a>
-				<?php if($panel[$user]['CRON_REPORTS'] == 'yes') { ?>
+				<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') { ?>
 					<a class="ui-button cancel" dir="ltr" href="/delete/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off status-icon green"></i><?=_('turn off notifications');?></a>
 				<?php } else { ?>
 					<a class="ui-button cancel" dir="ltr" href="/add/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off status-icon grey"></i><?=_('turn on notifications');?></a>
@@ -40,8 +40,8 @@
 								<div class="l-select">
 									<select name="action" id="">
 										<option value=""><?=_('apply to selected');?></option>
-										<?php if($panel[$user]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'._('turn off notifications').'</option>'; ?>
-										<?php if($panel[$user]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('turn on notifications').'</option>'; ?>
+										<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'._('turn off notifications').'</option>'; ?>
+										<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('turn on notifications').'</option>'; ?>
 										<option value="suspend"><?=_('suspend');?></option>
 										<option value="unsuspend"><?=_('unsuspend');?></option>
 										<option value="delete"><?=_('delete');?></option>
@@ -92,9 +92,8 @@
 				$spnd_confirmation = _('SUSPEND_CRON_CONFIRMATION') ;
 			}
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['CRON'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="cron"
-			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"
-			sort-star="<?php if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo '0';  ?>">
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="cron"
+			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="job[]" value="<?=$key?>" <?=$display_mode;?>>

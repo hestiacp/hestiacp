@@ -32,7 +32,6 @@ function write_kv_config_file() {
     fi
 
     touch $HESTIA/conf/defaults/$system.conf
-
     for key in $known_keys; do
         echo $key >> $HESTIA/conf/defaults/$system.conf
     done
@@ -84,14 +83,16 @@ function syshealth_update_mail_config_format() {
     # MAIL DOMAINS
     # Create array of known keys in configuration file
     system="mail"
-    known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS U_DISK SUSPENDED TIME DATE"
+    known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS RATE_LIMIT U_DISK SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
+}
 
+function syshealth_update_mail_account_config_format(){
     # MAIL ACCOUNTS
     system="mail_accounts"
-    known_keys="ACCOUNT ALIAS AUTOREPLY FWD FWD_ONLY MD5 QUOTA U_DISK SUSPENDED TIME DATE"
+    known_keys="ACCOUNT ALIAS AUTOREPLY FWD FWD_ONLY MD5 QUOTA RATE_LIMIT U_DISK SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -150,6 +151,31 @@ function syshealth_repair_web_config() {
     for key in $known_keys; do
         if [ -z "${!key}" ]; then
             add_object_key 'web' 'DOMAIN' "$domain" "$key" "$prev"   
+        fi
+        prev=$key
+    done
+}
+
+function syshealth_repair_mail_config() {
+    system="mail"
+    sanitize_config_file "$system"
+    get_domain_values 'mail'
+    prev="DOMAIN"
+    for key in $known_keys; do
+        if [ -z "${!key}" ]; then
+            add_object_key 'mail' 'DOMAIN' "$domain" "$key" "$prev"   
+        fi
+        prev=$key
+    done
+}
+
+function syshealth_repair_mail_account_config() {
+    system="mail_accounts"
+    sanitize_config_file "$system"
+    get_object_values "mail/$domain" 'ACCOUNT' "$account"
+    for key in $known_keys; do
+        if [ -z "${!key}" ]; then
+            add_object_key "mail/$domain" 'ACCOUNT' "$account" "$key" "$prev"    
         fi
         prev=$key
     done

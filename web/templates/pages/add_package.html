@@ -124,10 +124,7 @@
 												<?php
 													foreach ($web_templates as $key => $value) {
 														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-														if ((!empty($v_web_template)) && ( $value == $v_web_template)){
-															echo ' selected' ;
-														}
-														if ((!empty($v_web_template)) && ( $value == $_POST['v_web_template'])){
+														if ((!empty($v_web_template)) && ( $value == trim($v_web_template, "'"))){
 															echo ' selected' ;
 														}
 														echo ">".htmlentities($value)."</option>\n";
@@ -147,11 +144,9 @@
 												<select class="vst-list" name="v_backend_template">
 													<?php
 														foreach ($backend_templates as $key => $value) {
+														echo $v_backend_template;
 															echo "\t\t\t\t<option value=\"".$value."\"";
-															if ((!empty($v_backend_template)) && ( $value == $v_backend_template)){
-																echo ' selected' ;
-															}
-															if ((!empty($v_backend_template)) && ( $value == $_POST['v_backend_template'])){
+															if ((!empty($v_backend_template)) && ( $value == trim($v_backend_template, "'"))){
 																echo ' selected' ;
 															}
 															echo ">".htmlentities($value)."</option>\n";
@@ -173,10 +168,7 @@
 													<?php
 														foreach ($proxy_templates as $key => $value) {
 															echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-															if ((!empty($v_proxy_template)) && ( $value == $v_proxy_template)){
-																echo ' selected' ;
-															}
-															if ((!empty($v_proxy_template)) && ( $value == $_POST['v_proxy_template'])){
+															if ((!empty($v_proxy_template)) && ( $value == trim($v_proxy_template, "'"))){
 																echo ' selected' ;
 															}
 															echo ">".htmlentities($value)."</option>\n";
@@ -209,10 +201,7 @@
 												<?php
 													foreach ($dns_templates as $key => $value) {
 														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-														if ((!empty($v_dns_template)) && ( $value == $v_dns_template)){
-															echo ' selected' ;
-														}
-														if ((!empty($v_dns_template)) && ( $value == $_POST['v_dns_template'])){
+														if ((!empty($v_dns_template)) && ( $value == trim($v_dns_template, "'"))){
 															echo ' selected' ;
 														}
 														echo ">".htmlentities($value)."</option>\n";
@@ -409,10 +398,7 @@
 												<?php
 													foreach ($shells as $key => $value) {
 														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-														if ((!empty($v_shell)) && ( $value == $v_shell)){
-															echo ' selected' ;
-														}
-														if ((!empty($v_shell)) && ( $value == $_POST['v_shell'])){
+														if ((!empty($v_shell)) && ( $value == trim($v_shell,"''"))){
 															echo ' selected' ;
 														}
 														echo ">".htmlentities($value)."</option>\n";

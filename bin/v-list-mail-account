@@ -33,6 +33,7 @@ json_list() {
         "FWD_ONLY": "'$FWD_ONLY'",
         "AUTOREPLY": "'$AUTOREPLY'",
         "QUOTA": "'$QUOTA'",
+        "RATE_LIMIT": "'$RATE_LIMIT'",
         "U_DISK": "'$U_DISK'",
         "SUSPENDED": "'$SUSPENDED'",
         "TIME": "'$TIME'",

@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'PACKAGE';
 
@@ -218,6 +219,9 @@ $shells = json_decode(implode('', $output), true);
 unset($output);
 
 // Set default values
+if (empty($v_package)) {
+    $v_package = '';
+}
 if (empty($v_web_template)) {
     $v_web_template = 'default';
 }
@@ -272,7 +276,24 @@ if (empty($v_ns1)) {
 if (empty($v_ns2)) {
     $v_ns2 = 'ns2.example.ltd';
 }
-
+if (empty($v_ns3)) {
+    $v_ns3 = '';
+}
+if (empty($v_ns4)) {
+    $v_ns4 = '';
+}
+if (empty($v_ns5)) {
+    $v_ns5 = '';
+}
+if (empty($v_ns6)) {
+    $v_ns6 = '';
+}
+if (empty($v_ns7)) {
+    $v_ns7 = '';
+}
+if (empty($v_ns8)) {
+    $v_ns8 = '';
+}
 // Render page
 render_page($user, $TAB, 'add_package');
 

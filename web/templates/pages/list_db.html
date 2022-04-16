@@ -61,9 +61,9 @@
 										<option value=""><?=_('apply to selected');?></option>
 										<?php if ($_SESSION['userContext'] === 'admin') {?>
 											<option value="rebuild"><?=_('rebuild');?></option>
+											<option value="suspend"><?=_('suspend');?></option>
+											<option value="unsuspend"><?=_('unsuspend');?></option>
 										<?php } ?>
-										<option value="suspend"><?=_('suspend');?></option>
-										<option value="unsuspend"><?=_('unsuspend');?></option>
 										<option value="delete"><?=_('delete');?></option>
 									</select>
 								</div>
@@ -120,9 +120,9 @@
 			if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "https://".$http_host."/phppgadmin/";
 			if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = $_SESSION['DB_PGA_ALIAS'];
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['DB'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="db"
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="db"
 			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
-			sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-charset="<?=$data[$key]['CHARSET']?>" sort-star="<?php if($_SESSION['favourites']['DB'][$key] == 1) echo '1'; else echo '0'; ?>">
+			sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-charset="<?=$data[$key]['CHARSET']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">
@@ -147,7 +147,7 @@
 										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 									<?php } ?>
 									<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '') { $time = time(); ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?=_('phpMyAdmin');?>"><i class="fas fa-sign-in-alt status-icon orange status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?=_('phpMyAdmin');?>"><i class="fas fa-sign-in-alt status-icon orange status-icon dim"></i></a></div>
 									<?php } ?>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 										<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">

@@ -259,6 +259,17 @@ dovecot_login:
 ######################################################################
 begin routers
 
+send_via_unauthenticated_smtp_relay:
+  driver = manualroute
+  address_data = SMTP_RELAY_HOST:SMTP_RELAY_PORT
+  domains = !+local_domains
+  require_files = SMTP_RELAY_FILE
+  condition = ${if eq{SMTP_RELAY_USER}{}}
+  transport = remote_smtp
+  route_list = * ${extract{1}{:}{$address_data}}::${extract{2}{:}{$address_data}}
+  no_more
+  no_verify
+
 send_via_smtp_relay:
   driver = manualroute
   address_data = SMTP_RELAY_HOST:SMTP_RELAY_PORT

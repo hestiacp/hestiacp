@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add system wide smtp relay support
-# options: HOST USERNAME PASSWORD [PORT]
+# options: HOST [USERNAME] [PASSWORD] [PORT]
 #
 # example: v-add-sys-smtp-relay srv.smtprelay.tld uname123 pass12345
 #
@@ -28,7 +28,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'HOST USERNAME PASSWORD [PORT]'
+check_args '1' "$#" 'HOST [USERNAME] [PASSWORD] [PORT]'
 is_format_valid 'port' 'host' 'password'
 is_username_format_valid "$username" 'username'
 format_no_quotes "$password" 'passowrd'

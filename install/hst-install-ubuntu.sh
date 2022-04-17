@@ -1699,7 +1699,8 @@ if [ "$exim" = 'yes' ]; then
     cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
-	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
+    cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
+    cp -f $HESTIA_INSTALL_DIR/exim/system.filter /etc/exim4/
     touch /etc/exim4/white-blocks.conf
 
     if [ "$spamd" = 'yes' ]; then

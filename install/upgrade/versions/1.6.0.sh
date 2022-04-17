@@ -28,18 +28,23 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
     sed -i '115,250 s/warn    ratelimit     = 100 \/ 1h \/ strict \/ $authenticated_id/warn    ratelimit     = ${eval:$acl_c_msg_limit \/ 2} \/ 1h \/ strict \/ $authenticated_id/g' /etc/exim4/exim4.conf.template
     # Add missing limit.conf file
     cp $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/limit.conf
+    cp $HESTIA_INSTALL_DIR/exim/system.filter /etc/exim4/system.filter
     
-    # Upgrading Mail System
-    if [ "$MAIL_SYSTEM" == "exim4" ]; then
-        if ! grep -q "send_via_unauthenticated_smtp_relay" /etc/exim4/exim4.conf.template; then
+    acl=$(cat /etc/exim4/exim4.conf.template | grep "set acl_m3")
+    if [ -z "$acl" ]; then
+        echo "[ * ] Add support for optional rejecting spam"
+        sed -i 's/ warn    set acl_m1    = no/ warn    set acl_m1    = no \n          set acl_m3    = no/g' /etc/exim4/exim4.conf.template
+        sed -i 's|                          set acl_m1    = yes|              set acl_m1    = yes \n  warn    condition     = \${if exists {/etc/exim4/domains/\$domain/reject_spam}{yes}{no}} \n         set acl_m3    = yes|g' /etc/exim4/exim4.conf.template
+        sed -i 's|         message        = SpamAssassin detected spam (from \$sender_address to \$recipients).|        message        = SpamAssassin detected spam (from $sender_address to $recipients).\n\n  # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled\n  deny   message        = This message scored \$spam_score spam points\n          spam           = debian-spamd:true \n          condition      = \${if eq{\$acl_m3}{yes}{yes}{no}} \n          condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}	|g' /etc/exim4/exim4.conf.template
+    fi
     
-            echo '[ * ] Enabling SMTP relay support...'
-            # Add smtp relay router
-            insert='send_via_unauthenticated_smtp_relay:\n  driver = manualroute\n  address_data = SMTP_RELAY_HOST:SMTP_RELAY_PORT\n  domains = !+local_domains\n  require_files = SMTP_RELAY_FILE\n  condition = ${if eq{SMTP_RELAY_USER}{}}\n  transport = remote_smtp\n  route_list = * ${extract{1}{:}{$address_data}}::${extract{2}{:}{$address_data}}\n  no_more\n  no_verify\n'
+    if ! grep -q "send_via_unauthenticated_smtp_relay" /etc/exim4/exim4.conf.template; then
+       echo '[ * ] Enabling SMTP relay support...'
+       # Add smtp relay router
+       insert='send_via_unauthenticated_smtp_relay:\n  driver = manualroute\n  address_data = SMTP_RELAY_HOST:SMTP_RELAY_PORT\n  domains = !+local_domains\n  require_files = SMTP_RELAY_FILE\n  condition = ${if eq{SMTP_RELAY_USER}{}}\n  transport = remote_smtp\n  route_list = * ${extract{1}{:}{$address_data}}::${extract{2}{:}{$address_data}}\n  no_more\n  no_verify\n'
     
-            line=$(expr $(sed -n '/begin routers/=' /etc/exim4/exim4.conf.template) + 2)
-            sed -i "${line}i $insert" /etc/exim4/exim4.conf.template
-        fi
+       line=$(expr $(sed -n '/begin routers/=' /etc/exim4/exim4.conf.template) + 2)
+       sed -i "${line}i $insert" /etc/exim4/exim4.conf.template
     fi
 fi
 

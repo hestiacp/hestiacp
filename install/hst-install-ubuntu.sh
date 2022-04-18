@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Ubuntu 18.04 LTS, 20.04 LTS
+# Ubuntu 18.04 LTS, 20.04, 22.04 LTS
 #
 # ======================================================== #
 
@@ -51,7 +51,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-mbstring
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
-    postgresql postgresql-contrib proftpd-basic quota rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
+    postgresql postgresql-contrib proftpd-basic quota rrdtool spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv rsyslog
     ipset libonig5 libzip5 openssh-server lsb-release zstd"
 
@@ -916,6 +916,10 @@ fi
 if [ "$release" = '20.04' ]; then
     software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
 fi
+if [ "$release" = '22.04' ]; then
+    software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
+    software=$(echo "$software" | sed -e "s/libzip5/libzip4/")
+ fi
 
 
 #----------------------------------------------------------#
@@ -1291,9 +1295,13 @@ else
         'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 fi
 # Parsing certificate file
-crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem |cut -f 1 -d:)
-key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
-key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
+if [ "$release" = "22.04" ]; then
+  key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem |cut -f 1 -d:)
+  key_end=$(grep -n  "END PRIVATE KEY" /tmp/hst.pem |cut -f 1 -d:)
+else
+  key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
+  key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
+fi
 
 # Adding SSL certificate
 echo "[ * ] Adding SSL certificate to Hestia Control Panel..."
@@ -1661,7 +1669,7 @@ if [ "$named" = 'yes' ]; then
             systemctl restart apparmor >> $LOG
         fi
     fi
-    if [ "$release" = '20.04' ]; then
+    if [ "$release" != '18.04' ]; then
         update-rc.d named defaults
         systemctl start named
     else
@@ -1684,7 +1692,12 @@ fi
 if [ "$exim" = 'yes' ]; then
     echo "[ * ] Configuring Exim mail server..."
     gpasswd -a Debian-exim mail > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+    if [ "$release" = "22.04" ]; then
+      # Jammyy uses Exim 4.95 instead but config works with Exim4.94
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/
+    else 
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+    fi
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
@@ -1724,9 +1737,8 @@ if [ "$dovecot" = 'yes' ]; then
     gpasswd -a dovecot mail > /dev/null 2>&1
     cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
-    if [ "$release" = '18.04' ] || [ "$release" = '20.04' ]; then
-        rm -f /etc/dovecot/conf.d/15-mailboxes.conf
-    fi
+    rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+    
     chown -R root:root /etc/dovecot*
         
     #Alter config for 2.2 

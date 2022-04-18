@@ -55,7 +55,7 @@ if (!empty($_POST['ok'])) {
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="text" size="20" class="vst-input" maxlength="255" disabled
+                                    <input type="text" size="20" class="vst-input" maxlength="255" readonly
                                            value="<?= htmlentities(trim($key_data['ACCESS_KEY_ID'], "'")) ?>">
                                 </td>
                             </tr>
@@ -73,7 +73,7 @@ if (!empty($_POST['ok'])) {
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input type="text" size="20" class="vst-input" maxlength="255" disabled
+                                        <input type="text" size="20" class="vst-input" maxlength="255" readonly
                                                value="<?= htmlentities(trim($key_data['SECRET_ACCESS_KEY'], "'")) ?>">
                                     </td>
                                 </tr>
@@ -82,36 +82,33 @@ if (!empty($_POST['ok'])) {
                         ?>
 
                         <tr>
+                            <td class="vst-text step-top">
+                                <?= _('Permissions'); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="vst-text">
+                                <ul>
+                                    <?php
+                                    foreach ($key_data['PERMISSIONS'] as $api_name) {
+                                        ?>
+                                        <li><?= _($api_name); ?></li>
+                                    <?php } ?>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        <tr>
                             <td class="vst-text input-label">
                                 <?= _('Comment'); ?>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" maxlength="255" disabled
+                                <input type="text" size="20" class="vst-input" maxlength="255" readonly
                                        value="<?= htmlentities(trim($key_data['COMMENT'], "'")) ?>">
                             </td>
                         </tr>
-
-                        <tr>
-                            <td class="vst-text step-top">
-                                <?= _('Permissions'); ?>
-                            </td>
-                        </tr>
-                        <?php
-                        foreach ($apis as $api_name => $api_data) {
-                            ?>
-                            <tr id="send-welcome">
-                                <td class="vst-text input-label">
-                                    <label>
-                                        <input type="checkbox" size="20" class="vst-checkbox" tabindex="5" disabled
-                                            <?= in_array($api_name, $key_data['PERMISSIONS']) ? 'checked' : '' ?>/>
-                                        <?= _($api_name); ?>
-                                    </label>
-                                </td>
-                            </tr>
-                            <?php
-                        } ?>
                     </table>
                     <table class="data-col2"></table>
                 </td>

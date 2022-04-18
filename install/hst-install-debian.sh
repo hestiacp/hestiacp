@@ -1225,6 +1225,9 @@ cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/documen
 # Installing firewall rules
 cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 
+# Installing apis
+cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
+
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
@@ -1869,7 +1872,8 @@ $HESTIA/bin/v-add-sys-phpmailer quiet
 #----------------------------------------------------------#
 
 if [ "$api" = "yes" ]; then
-    write_config_value "API" "yes"
+    write_config_value "API" "no"
+    write_config_value "API_SYSTEM" "1"
     write_config_value "API_ALLOWED_IP" ""
 else
     $HESTIA/bin/v-change-sys-api disable
@@ -2011,7 +2015,6 @@ write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
 write_config_value "POLICY_USER_VIEW_LOGS" "yes"
 write_config_value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
 write_config_value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
-write_config_value "API_SYSTEM" "0"
 write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
 write_config_value "POLICY_USER_DELETE_LOGS" "yes"
 write_config_value "POLICY_USER_CHANGE_THEME" "yes"

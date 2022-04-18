@@ -51,7 +51,7 @@
                         <?php
                         foreach ($apis as $api_name => $api_data) {
                             ?>
-                            <tr id="send-welcome">
+                            <tr>
                                 <td class="vst-text input-label">
                                     <label><input type="checkbox" size="20" class="vst-checkbox"
                                                   name="v_apis[]" value="<?= $api_name ?>"
@@ -68,8 +68,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" size="20" class="vst-input" name="v_comment" maxlength="255"
-                                       value="<?= htmlentities(trim($v_comment, "'")) ?>">
+                                <input type="text" size="20" class="vst-input" name="v_comment" maxlength="255" />
                             </td>
                         </tr>
                     </table>

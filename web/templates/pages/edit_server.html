@@ -976,7 +976,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <select class="vst-list" name="v_api_system">
+                                                        <select class="vst-list" name="v_api_system" id="api-system">
                                                             <option value='0' <?php if(empty($_SESSION['API_SYSTEM']) || $_SESSION['API_SYSTEM'] == '0') echo 'selected' ?>><?=_('Disabled'); ?></option>
                                                             <option value='1' <?php if($_SESSION['API_SYSTEM'] == '1') echo 'selected' ?>><?=_('Enabled for admin'); ?></option>
                                                             <option value='2' <?php if($_SESSION['API_SYSTEM'] == '2') echo 'selected' ?>><?=_('Enabled for all users'); ?></option>
@@ -986,7 +986,7 @@
                                                 </tr>
 												<tr>
 													<td>
-														<table id="security_ip" style="<?php if ($_SESSION['API'] == "no") echo 'display:none;';?>">
+														<table id="security_ip" style="<?php if ($_SESSION['API'] == "no" && $_SESSION['API_SYSTEM'] == '0') echo 'display:none;';?>">
 															<tr>
 																<td class="vst-text input-label">
 																	<?=_('Allowed IP addresses for API');?> <span class="optional" style="float:right">1 IP address per line</span>

@@ -39,40 +39,23 @@ multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
 
-if [ "$release" -eq 9 ]; then
-    software="nginx apache2 apache2-utils apache2-suexec-custom
-        libapache2-mod-fcgid libapache2-mod-php$fpm_v php$fpm_v php$fpm_v-common
-        php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl php$fpm_v-pgsql
-        php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu awstats
-        php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd php$fpm_v-intl
-        php$fpm_v-mbstring php$fpm_v-opcache php$fpm_v-pspell
-        php$fpm_v-readline php$fpm_v-xml vsftpd proftpd-basic bind9 exim4
-        exim4-daemon-heavy clamav-daemon spamassassin dovecot-imapd
-        dovecot-pop3d dovecot-sieve dovecot-managesieved 
-        net-tools mariadb-client mariadb-common mariadb-server
-        postgresql postgresql-contrib phppgadmin mc flex whois rssh git idn unzip zip
-        sudo bc ftp lsof rrdtool quota e2fslibs bsdutils e2fsprogs curl
-        imagemagick fail2ban dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
-        hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog openssh-server setpriv ipset libapache2-mod-ruid2 zstd lsb-release"
-elif [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
-    software="nginx apache2 apache2-utils apache2-suexec-custom
-        apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
-        php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
-        php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
-        php$fpm_v-apcu php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
-        php$fpm_v-gd php$fpm_v-intl php$fpm_v-mbstring
-        php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
-        awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
-        clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
-        net-tools mariadb-client mariadb-common mariadb-server postgresql
-        postgresql-contrib phppgadmin mc flex whois git idn unzip zip sudo bc ftp lsof
-        rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban 
-        dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
-        hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
-        rsyslog openssh-server util-linux ipset libapache2-mpm-itk zstd
-        lsb-release"
-fi
+software="nginx apache2 apache2-utils apache2-suexec-custom
+  apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
+  php$fpm_v php$fpm_v-common php$fpm_v-cgi php$fpm_v-mysql php$fpm_v-curl
+  php$fpm_v-pgsql php$fpm_v-imagick php$fpm_v-imap php$fpm_v-ldap
+  php$fpm_v-apcu php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli
+  php$fpm_v-gd php$fpm_v-intl php$fpm_v-mbstring
+  php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
+  awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
+  clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
+  net-tools mariadb-client mariadb-common mariadb-server postgresql
+  postgresql-contrib phppgadmin mc flex whois git idn unzip zip sudo bc ftp lsof
+  rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban 
+  dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
+  hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
+  rsyslog openssh-server util-linux ipset libapache2-mpm-itk zstd
+  lsb-release"
+
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
 
@@ -1040,17 +1023,6 @@ sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
 systemctl enable systemd-timesyncd
 systemctl start systemd-timesyncd
 
-# Setup rssh
-if [ "$release" -eq 9 ]; then
-    if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
-        echo /usr/bin/rssh >> /etc/shells
-    fi
-    sed -i 's/#allowscp/allowscp/' /etc/rssh.conf
-    sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
-    sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
-    chmod 755 /usr/bin/rssh
-fi
-
 # Restrict access to /proc fs
 # - Prevent unpriv users from seeing each other running processes
 mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1
@@ -1135,14 +1107,8 @@ if [ "$apache" = 'no' ]; then
 
 fi
 
-if [ "$release" -ge 9 ] || [ "$multiphp" = 'yes' ]; then
-    if [ "$phpfpm" = 'yes' ]; then
-        write_config_value "WEB_BACKEND" "php-fpm"
-    fi
-else
-    if [ "$phpfpm" = 'yes' ]; then
-        write_config_value "WEB_BACKEND" "php5-fpm"
-    fi
+if [ "$phpfpm" = 'yes' ]; then
+  write_config_value "WEB_BACKEND" "php-fpm"
 fi
 
 # Database stack
@@ -1374,11 +1340,7 @@ if [ "$apache" = 'yes' ]; then
         a2enmod mpm_event > /dev/null 2>&1
         cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
     else
-        if [ "$release" -eq 10 ] || [ "$release" -eq 11 ]; then
-            a2enmod mpm_itk > /dev/null 2>&1
-        else
-            a2enmod ruid2 > /dev/null 2>&1
-        fi
+        a2enmod mpm_itk > /dev/null 2>&1
     fi
 
     echo "# Powered by hestia" > /etc/apache2/sites-available/default

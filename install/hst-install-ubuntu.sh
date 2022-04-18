@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Ubuntu 18.04 LTS, 20.04 LTS
+# Ubuntu 18.04 LTS, 20.04, 22.04 LTS
 #
 # ======================================================== #
 
@@ -51,7 +51,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-mbstring
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
-    postgresql postgresql-contrib proftpd-basic quota rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
+    postgresql postgresql-contrib proftpd-basic quota rrdtool spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv rsyslog
     ipset libonig5 libzip5 openssh-server lsb-release zstd"
 
@@ -915,8 +915,11 @@ if [ "$release" = '18.04' ]; then
 fi
 if [ "$release" = '20.04' ]; then
     software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
-    software=$(echo "$software" | sed -e "s/rssh//")
 fi
+if [ "$release" = '22.04' ]; then
+    software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
+    software=$(echo "$software" | sed -e "s/libzip5/libzip4/")
+ fi
 
 
 #----------------------------------------------------------#
@@ -1036,17 +1039,6 @@ fi
 sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
 systemctl enable systemd-timesyncd
 systemctl start systemd-timesyncd
-
-# Setup rssh
-if [ "$release" != '20.04' ]; then
-    if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
-        echo /usr/bin/rssh >> /etc/shells
-    fi
-    sed -i 's/#allowscp/allowscp/' /etc/rssh.conf
-    sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
-    sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
-    chmod 755 /usr/bin/rssh
-fi
 
 # Check iptables paths and add symlinks when necessary
 if [ ! -e "/sbin/iptables" ]; then
@@ -1303,9 +1295,13 @@ else
         'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 fi
 # Parsing certificate file
-crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem |cut -f 1 -d:)
-key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
-key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
+if [ "$release" = "22.04" ]; then
+  key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem |cut -f 1 -d:)
+  key_end=$(grep -n  "END PRIVATE KEY" /tmp/hst.pem |cut -f 1 -d:)
+else
+  key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem |cut -f 1 -d:)
+  key_end=$(grep -n  "END RSA" /tmp/hst.pem |cut -f 1 -d:)
+fi
 
 # Adding SSL certificate
 echo "[ * ] Adding SSL certificate to Hestia Control Panel..."
@@ -1516,9 +1512,18 @@ if [ "$proftpd" = 'yes' ]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
     cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
+    if [ "$release" = '22.04' ]; then
+      sed -i 's|IdentLookups                  off|#IdentLookups                  off|g' /etc/proftpd/proftpd.conf
+    fi
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
+    if [ "$release" = '22.04' ]; then
+     unit_files="$(systemctl list-unit-files |grep proftpd)"
+       if [[ "$unit_files" =~ "disabled" ]]; then
+           systemctl enable proftpd
+       fi
+    fi
 fi
 
 
@@ -1673,7 +1678,7 @@ if [ "$named" = 'yes' ]; then
             systemctl restart apparmor >> $LOG
         fi
     fi
-    if [ "$release" = '20.04' ]; then
+    if [ "$release" != '18.04' ]; then
         update-rc.d named defaults
         systemctl start named
     else
@@ -1696,7 +1701,12 @@ fi
 if [ "$exim" = 'yes' ]; then
     echo "[ * ] Configuring Exim mail server..."
     gpasswd -a Debian-exim mail > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+    if [ "$release" = "22.04" ]; then
+      # Jammyy uses Exim 4.95 instead but config works with Exim4.94
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/
+    else 
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+    fi
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
     cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
@@ -1736,9 +1746,8 @@ if [ "$dovecot" = 'yes' ]; then
     gpasswd -a dovecot mail > /dev/null 2>&1
     cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
-    if [ "$release" = '18.04' ] || [ "$release" = '20.04' ]; then
-        rm -f /etc/dovecot/conf.d/15-mailboxes.conf
-    fi
+    rm -f /etc/dovecot/conf.d/15-mailboxes.conf
+    
     chown -R root:root /etc/dovecot*
         
     #Alter config for 2.2 

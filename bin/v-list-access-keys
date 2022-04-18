@@ -24,7 +24,8 @@ json_list() {
     echo -n '{'
     local quote=''
     local PERMISSIONS_ARR ACCESS_KEY_ID
-    for key_file in $(ls $HESTIA/data/access-keys/); do
+    for key_file in $HESTIA/data/access-keys/*; do
+        key_file="$(basename -- "$key_file")"
         if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
             USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
             source_conf "$HESTIA/data/access-keys/$key_file"
@@ -59,7 +60,8 @@ shell_list() {
     list="ID\tSECRET\tUSER\tPERMISSIONS\tCOMMENT\tTIME\tDATE\n"
     list+="--\t------\t----\t-----------\t-------\t----\t----\n"
 
-    for key_file in $(ls $HESTIA/data/access-keys/); do
+    for key_file in $HESTIA/data/access-keys/*; do
+        key_file="$(basename -- "$key_file")"
         if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
             USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
             source_conf "$HESTIA/data/access-keys/$key_file"

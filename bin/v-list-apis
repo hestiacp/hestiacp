@@ -23,7 +23,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 json_list() {
     echo '{'
     local quote COMMANDS_ARR
-    for api in $(ls $HESTIA/data/api/); do
+    for api in $HESTIA/data/api/*; do
+        api="$(basename -- "$api")"
         source_conf $HESTIA/data/api/$api
 
         COMMANDS_ARR='[]'
@@ -43,7 +44,8 @@ shell_list() {
     list="API\tROLE\tCOMMANDS\n"
     list+="---\t----\t--------\n"
 
-    for api in $(ls $HESTIA/data/api/); do
+    for api in $HESTIA/data/api/*; do
+        api="$(basename -- "$api")"
         source_conf $HESTIA/data/api/$api
         list+="${api}\t${ROLE}\t${COMMANDS}\n"
     done

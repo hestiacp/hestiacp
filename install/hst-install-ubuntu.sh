@@ -1518,6 +1518,12 @@ if [ "$proftpd" = 'yes' ]; then
     update-rc.d proftpd defaults > /dev/null 2>&1
     systemctl start proftpd >> $LOG
     check_result $? "proftpd start failed"
+    if [ "$release" = '22.04' ]; then
+     unit_files="$(systemctl list-unit-files |grep proftpd)"
+       if [[ "$unit_files" =~ "disabled" ]]; then
+           systemctl enable proftpd
+       fi
+    fi
 fi
 
 

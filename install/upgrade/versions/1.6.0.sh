@@ -48,6 +48,12 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
     fi
 fi
 
+if [ -f "/etc/dovecot/conf.d/10-ssl.conf" ]; then
+    sed -i 's|ssl_min_protocol = TLSv1.1|ssl_min_protocol = TLSv1.2|' /etc/dovecot/conf.d/10-ssl.conf
+    if ! grep -q "!TLSv1.1" /etc/dovecot/conf.d/10-ssl.conf; then
+    sed -i 's|ssl_protocols = !SSLv3 !TLSv1|ssl_protocols = !SSLv3 !TLSv1 !TLSv1.1|' /etc/dovecot/conf.d/10-ssl.conf
+fi
+
 # Adding LE autorenew cronjob if there are none
 if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
 	min=$(generate_password '012345' '2')

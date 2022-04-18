@@ -83,7 +83,7 @@ function syshealth_update_mail_config_format() {
     # MAIL DOMAINS
     # Create array of known keys in configuration file
     system="mail"
-    known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS RATE_LIMIT U_DISK SUSPENDED TIME DATE"
+    known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS RATE_LIMIT REJECT U_DISK SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys

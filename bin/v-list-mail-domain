@@ -34,6 +34,7 @@ json_list() {
         "CATCHALL": "'$CATCHALL'",
         "ACCOUNTS": "'$ACCOUNTS'",
         "RATE_LIMIT": "'$RATE_LIMIT'",
+        "REJECT": "'$REJECT'",
         "U_DISK": "'$U_DISK'",
         "SSL": "'$SSL'",
         "LETSENCRYPT": "'$LETSENCRYPT'",
@@ -60,6 +61,8 @@ shell_list() {
     echo "ACCOUNTS:           $ACCOUNTS"
     echo "DISK:               $U_DISK"
     echo "SSL:                $SSL"
+    echo "RATE_LIMIT:         $RATE_LIMIT"
+    echo "REJECT:             $REJECT"
     echo "LETSENCRYPT:        $LETSENCRYPT"
     echo "SUSPENDED:          $SUSPENDED"
     echo "TIME:               $TIME"

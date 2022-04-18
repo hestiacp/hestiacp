@@ -566,6 +566,7 @@ rebuild_mail_domain_conf() {
         rm -f $HOMEDIR/$user/conf/mail/$domain/accounts
         rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
         rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
+        rm -f $HOMEDIR/$user/conf/mail/$domain/reject_spam
         rm -f $HOMEDIR/$user/conf/mail/$domain/antivirus
         rm -f $HOMEDIR/$user/conf/mail/$domain/protection
         rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
@@ -591,6 +592,11 @@ rebuild_mail_domain_conf() {
         # Adding antivirus protection
         if [ "$ANTIVIRUS" = 'yes' ]; then
             touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+        fi
+        
+        # Adding reject spam protection
+        if [ "$REJECT" = 'yes' ]; then
+            touch $HOMEDIR/$user/conf/mail/$domain/reject_spam
         fi
 
         # Adding dkim

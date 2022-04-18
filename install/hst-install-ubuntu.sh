@@ -915,7 +915,6 @@ if [ "$release" = '18.04' ]; then
 fi
 if [ "$release" = '20.04' ]; then
     software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
-    software=$(echo "$software" | sed -e "s/rssh//")
 fi
 
 
@@ -1036,17 +1035,6 @@ fi
 sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
 systemctl enable systemd-timesyncd
 systemctl start systemd-timesyncd
-
-# Setup rssh
-if [ "$release" != '20.04' ]; then
-    if [ -z "$(grep /usr/bin/rssh /etc/shells)" ]; then
-        echo /usr/bin/rssh >> /etc/shells
-    fi
-    sed -i 's/#allowscp/allowscp/' /etc/rssh.conf
-    sed -i 's/#allowsftp/allowsftp/' /etc/rssh.conf
-    sed -i 's/#allowrsync/allowrsync/' /etc/rssh.conf
-    chmod 755 /usr/bin/rssh
-fi
 
 # Check iptables paths and add symlinks when necessary
 if [ ! -e "/sbin/iptables" ]; then

@@ -1918,10 +1918,14 @@ fi
 #----------------------------------------------------------#
 
 if [ "$api" = "yes" ]; then
-    write_config_value "API" "no"
+    # keep legacy api enabled until transition is complete
+    write_config_value "API" "yes"
     write_config_value "API_SYSTEM" "1"
     write_config_value "API_ALLOWED_IP" ""
 else
+    write_config_value "API" "no"
+    write_config_value "API_SYSTEM" "0"
+    write_config_value "API_ALLOWED_IP" ""
     $HESTIA/bin/v-change-sys-api disable
 fi
 

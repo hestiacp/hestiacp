@@ -49,6 +49,10 @@ shell_list() {
     echo "DATE:               $DATE"
 }
 
+plain_list(){
+    echo $access_key_id:$SECRET_ACCESS_KEY
+}
+
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -75,6 +79,7 @@ source_conf "${HESTIA}/data/access-keys/${access_key_id}"
 case $format in
     json)   json_list ;;
     shell)  shell_list ;;
+    plain)  plain_list;;
 esac
 
 

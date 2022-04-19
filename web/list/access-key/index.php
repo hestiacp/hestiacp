@@ -41,12 +41,8 @@ if (!empty($_GET['key'])) {
 
     render_page($user, $TAB, 'list_access_key');
 } else {
-    exec(HESTIA_CMD."v-list-access-keys json", $output, $return_var);
+    exec(HESTIA_CMD."v-list-access-keys $user json", $output, $return_var);
     $data = json_decode(implode('', $output), true);
-    $data = array_filter($data, function ($item) use ($user_plain) {
-        $key_user = !empty($item['USER']) ? $item['USER'] : '';
-        return ($key_user == $user_plain);
-    });
 
     uasort($data, function ($a, $b) {
         return $a['DATE'] <=> $b['DATE'] ?: $a['TIME'] <=> $b['TIME'];

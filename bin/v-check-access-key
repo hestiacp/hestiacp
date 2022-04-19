@@ -38,8 +38,8 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 json_list() {
     echo -n '{"USER": "'$user'"';
 
-    if [[ -n "$user_arg_position" ]]; then
-        echo -n ', "USER_ARG_POSITION": '$user_arg_position''
+    if [[ -n "$user_arg_pos" ]]; then
+        echo -n ', "USER_ARG_POSITION": '$user_arg_pos''
     fi
 
     echo '}'
@@ -48,8 +48,8 @@ json_list() {
 # SHELL list function
 shell_list() {
     echo "USER:               $user"
-    if [[ -n "$user_arg_position" ]]; then
-        echo "USER_ARG_POSITION:  $user_arg_position"
+    if [[ -n "$user_arg_pos" ]]; then
+        echo "USER_ARG_POSITION:  $user_arg_pos"
     fi
 }
 
@@ -77,12 +77,12 @@ abort_missmatch() {
 # Add a callback to intercept invalid "check_result" results
 CHECK_RESULT_CALLBACK="abort_missmatch"
 
-check_args '2' "$#" 'ACCESS_KEY_ID SECRET_ACCESS_KEY [FORMAT]'
+check_args '3' "$#" 'ACCESS_KEY_ID SECRET_ACCESS_KEY COMMAND [IP] [FORMAT]'
 is_format_valid 'access_key_id'
 is_object_valid 'key' 'KEY' "$access_key_id"
 is_format_valid 'secret_access_key'
 check_access_key_secret "$access_key_id" "$secret_access_key" user
-check_access_key_cmd "$access_key_id" "$hst_command" user_arg_position
+check_access_key_cmd "$access_key_id" "$hst_command" user_arg_pos
 
 # Check if key owner is active
 is_format_valid 'user'

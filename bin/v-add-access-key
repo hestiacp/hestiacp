@@ -74,7 +74,7 @@ fi
 
 if [ ! -d "$HESTIA/data/access-keys/" ]; then
     mkdir -p $HESTIA/data/access-keys/
-    chown admin:root $HESTIA/data/access-keys/
+    chown root:root $HESTIA/data/access-keys/
     chmod 750 $HESTIA/data/access-keys/
 fi
 
@@ -92,6 +92,8 @@ echo "TIME='$time'" >>"$HESTIA/data/access-keys/${access_key_id}"
 echo "DATE='$date'" >>"$HESTIA/data/access-keys/${access_key_id}"
 # TODO Index reserved for future implementation
 echo "EXPIRES_IN=''" >>"$HESTIA/data/access-keys/${access_key_id}"
+echo "IP=''" >>"$HESTIA/data/access-keys/${access_key_id}"
+
 chmod 640 "$HESTIA/data/access-keys/${access_key_id}"
 
 $BIN/v-list-access-key "$access_key_id" "$format"

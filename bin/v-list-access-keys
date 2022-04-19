@@ -9,7 +9,8 @@
 #----------------------------------------------------------#
 
 # Argument definition
-format="${1:-shell}"
+user="$1"
+format="${2:-shell}"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -29,25 +30,25 @@ json_list() {
         if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
             USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
             source_conf "$HESTIA/data/access-keys/$key_file"
-
-            PERMISSIONS_ARR='[]'
-            if [[ -n "$PERMISSIONS" ]]; then
-                PERMISSIONS_ARR="[\"$(echo "$PERMISSIONS" | sed -E 's|,|", "|g')\"]"
+            if [ "$user" = "$USER" ] || [ -z "$user" ]; then
+                PERMISSIONS_ARR='[]'
+                if [[ -n "$PERMISSIONS" ]]; then
+                    PERMISSIONS_ARR="[\"$(echo "$PERMISSIONS" | sed -E 's|,|", "|g')\"]"
+                fi
+    
+                ACCESS_KEY_ID="$(basename "$key_file")"
+    
+                echo -en "${quote:-\n}"
+                echo -n '    "'$ACCESS_KEY_ID'": {'
+                echo -n '"ACCESS_KEY_ID": "'${ACCESS_KEY_ID}'", '
+                echo -n '"USER": "'${USER}'", '
+                echo -n '"PERMISSIONS": '${PERMISSIONS_ARR}', '
+                echo -n '"COMMENT": "'${COMMENT}'", '
+                echo -n '"TIME": "'${TIME}'", '
+                echo -n '"DATE": "'${DATE}'"'
+                echo -n '}'
+                quote=",\n"
             fi
-
-            ACCESS_KEY_ID="$(basename "$key_file")"
-
-            echo -en "${quote:-\n}"
-            echo -n '    "'$ACCESS_KEY_ID'": {'
-            echo -n '"ACCESS_KEY_ID": "'${ACCESS_KEY_ID}'", '
-            echo -n '"SECRET_ACCESS_KEY": "'${SECRET_ACCESS_KEY}'", '
-            echo -n '"USER": "'${USER}'", '
-            echo -n '"PERMISSIONS": '${PERMISSIONS_ARR}', '
-            echo -n '"COMMENT": "'${COMMENT}'", '
-            echo -n '"TIME": "'${TIME}'", '
-            echo -n '"DATE": "'${DATE}'"'
-            echo -n '}'
-            quote=",\n"
         fi
     done
 
@@ -57,7 +58,7 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    list="ID\tSECRET\tUSER\tPERMISSIONS\tCOMMENT\tTIME\tDATE\n"
+    list="ID\tUSER\tPERMISSIONS\tCOMMENT\tTIME\tDATE\n"
     list+="--\t------\t----\t-----------\t-------\t----\t----\n"
 
     for key_file in $HESTIA/data/access-keys/*; do
@@ -65,9 +66,10 @@ shell_list() {
         if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
             USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
             source_conf "$HESTIA/data/access-keys/$key_file"
-
-            ACCESS_KEY_ID="$(basename "$key_file")"
-            list+="${ACCESS_KEY_ID}\t${SECRET_ACCESS_KEY}\t${USER}\t${PERMISSIONS:--}\t${COMMENT:--}\t${TIME}\t${DATE}\n"
+            if [ "$user" = "$USER" ] || [ -z "$user" ]; then
+                ACCESS_KEY_ID="$(basename "$key_file")"
+                list+="${ACCESS_KEY_ID}\t${USER}\t${PERMISSIONS:--}\t${COMMENT:--}\t${TIME}\t${DATE}\n"
+            fi
         fi
     done
 

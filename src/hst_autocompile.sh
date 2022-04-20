@@ -12,7 +12,9 @@
 clear
 
 # Define download function
+set -e 
 download_file() {
+    set +e 
     local url=$1
     local destination=$2
     local force=$3
@@ -50,6 +52,11 @@ download_file() {
     if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
         [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
         wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+        if [ $? -ne 0 ]; then
+            >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted and exit script";
+            rm -f $ARCHIVE_DIR/$filename
+            exit 1;
+        fi
     fi
 
     if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then

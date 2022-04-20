@@ -2,8 +2,10 @@
 # info: Enable / Disable API access 
 # options: STATUS 
 #
-# example: v-change-sys-api enable
-#          # Enable API
+# example: v-change-sys-api enable legacy
+#          # Enable legacy api currently default on most of api based systems
+# example: v-change-sys-api enable api
+#          # Enable api
 #
 # example: v-change-sys-api disable
 #          # Disable API
@@ -11,6 +13,7 @@
 # Enabled / Disable API
 
 status=$1
+version=$2
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -24,9 +27,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-check_args '1' "$#" "STATUS"
+check_args '1' "$#" "STATUS" "VERSION"
 is_type_valid "enable,disable,remove" "$status"
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -51,10 +53,12 @@ if [ "$status" = "enable" ]; then
         sed -i 's|die("Error: Disabled");|//die("Error: Disabled");|g' $HESTIA/web/api/index.php
         sed -i 's|////|//|g' $HESTIA/web/api/index.php
     fi
-    $HESTIA/bin/v-change-sys-config-value "API" "yes"
+    if [ "$version" = "legacy" ] || [ "$version" = "all" ]; then $HESTIA/bin/v-change-sys-config-value "API" "yes"; fi
+    if [ "$version" = "api" ] || [ "$version" = "all" ]; then $HESTIA/bin/v-change-sys-config-value "API_SYSTEM" "1"; fi
 else
     $HESTIA/bin/v-change-sys-config-value "API" "no"
     $HESTIA/bin/v-change-sys-config-value "API_ALLOWED_IP" ""
+    $HESTIA/bin/v-change-sys-config-value "API_SYSTEM" "0"
     if [ "$status" != "remove" ]; then
         sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
     fi

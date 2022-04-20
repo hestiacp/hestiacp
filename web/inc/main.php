@@ -21,6 +21,7 @@ define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,
 // Load Hestia Config directly
 load_hestia_config();
 require_once(dirname(__FILE__) . '/prevent_csrf.php');
+require_once(dirname(__FILE__) . '/helpers.php');
 
 function destroy_sessions()
 {

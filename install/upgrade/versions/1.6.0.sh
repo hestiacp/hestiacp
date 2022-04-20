@@ -62,3 +62,8 @@ if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
 	command="sudo $BIN/v-update-letsencrypt-ssl"
 	$BIN/v-add-cron-job 'admin' "$min" "$hour" '*' '*' '*' "$command"
 fi
+
+# Add apis if they don't exist
+if [[ ! -d $HESTIA/data/api ]]; then
+    cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
+fi

@@ -293,7 +293,7 @@
 												if($php_version -> installed){
 												?>
 												<option value="<?=$php_version->version; ?>" <?php if($php_version->name == DEFAULT_PHP_VERSION){ echo "selected" ;}?> ><?=$php_version->name; ?></option>
-												<?php	
+												<?php
 												}
 												}
 												?>
@@ -957,7 +957,7 @@
 												</td>
 												<tr>
 													<td class="vst-text input-label">
-														<?=_('Enable API access');?>
+														<?=_('Enable legacy API access');?>
 													</td>
 												</tr>
 												<tr>
@@ -969,9 +969,24 @@
 														<br><br>
 													</td>
 												</tr>
+                                                <tr>
+                                                    <td class="vst-text input-label">
+                                                        <?=_('Enable API access');?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <select class="vst-list" name="v_api_system" id="api-system">
+                                                            <option value='0' <?php if(empty($_SESSION['API_SYSTEM']) || $_SESSION['API_SYSTEM'] == '0') echo 'selected' ?>><?=_('Disabled'); ?></option>
+                                                            <option value='1' <?php if($_SESSION['API_SYSTEM'] == '1') echo 'selected' ?>><?=_('Enabled for admin'); ?></option>
+                                                            <option value='2' <?php if($_SESSION['API_SYSTEM'] == '2') echo 'selected' ?>><?=_('Enabled for all users'); ?></option>
+                                                        </select>
+                                                        <br><br>
+                                                    </td>
+                                                </tr>
 												<tr>
 													<td>
-														<table id="security_ip" style="<?php if ($_SESSION['API'] == "no") echo 'display:none;';?>">
+														<table id="security_ip" style="<?php if ($_SESSION['API'] == "no" && $_SESSION['API_SYSTEM'] == '0') echo 'display:none;';?>">
 															<tr>
 																<td class="vst-text input-label">
 																	<?=_('Allowed IP addresses for API');?> <span class="optional" style="float:right">1 IP address per line</span>
@@ -979,8 +994,8 @@
 															</tr>
 															<tr>
 																<td>
-																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php 
-																		foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){ 
+																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php
+																		foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
                                                                             echo trim($ip)."\n";
 																			}
 																		?></textarea>
@@ -1043,7 +1058,7 @@
 															<option value="0"  <?php if($_SESSION['POLICY_CSRF_STRICTNESS'] == '0') echo 'selected' ?>><?=_('Disabled');?></option>
 															<option value="1"  <?php if($_SESSION['POLICY_CSRF_STRICTNESS'] == '1') echo 'selected' ?>><?=_('Enabled');?></option>
 															<option value="2"  <?php if($_SESSION['POLICY_CSRF_STRICTNESS'] == '2') echo 'selected' ?>><?=_('Strict');?></option>
-															
+
 														</select>
 														<br><br>
 													</td>

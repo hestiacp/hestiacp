@@ -42,8 +42,8 @@ mariadb_v="10.6"
 # Defining software pack for all distros
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
-    cron curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved 
-    e2fslibs e2fsprogs exim4 exim4-daemon-heavy expect fail2ban flex ftp git idn 
+    cron curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved
+    e2fslibs e2fsprogs exim4 exim4-daemon-heavy expect fail2ban flex ftp git idn
     imagemagick libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
     lsof mc mariadb-client mariadb-common mariadb-server nginx
     php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
@@ -98,14 +98,14 @@ download_file() {
 
 # Defining password-gen function
 gen_pass() {
-    matrix=$1 
-    length=$2 
-    if [ -z "$matrix" ]; then 
-        matrix="A-Za-z0-9" 
-    fi 
-    if [ -z "$length" ]; then 
-        length=16 
-    fi 
+    matrix=$1
+    length=$2
+    if [ -z "$matrix" ]; then
+        matrix="A-Za-z0-9"
+    fi
+    if [ -z "$length" ]; then
+        length=16
+    fi
     head /dev/urandom | tr -dc $matrix | head -c$length
 }
 
@@ -342,9 +342,9 @@ fi
 
 # Welcome message
 echo "Welcome to the Hestia Control Panel installer!"
-echo 
+echo
 echo "Please wait, the installer is now checking for missing dependencies..."
-echo 
+echo
 
 # Update apt repository
 apt-get -qq update
@@ -444,7 +444,7 @@ if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
     fi
 fi
 
-case $architecture in 
+case $architecture in
     x86_64)
         ARCH="amd64"
         ;;
@@ -540,7 +540,7 @@ if [ "$exim" = 'yes' ]; then
     fi
 fi
 
-echo 
+echo
 # Database stack
 if [ "$mysql" = 'yes' ]; then
     echo '   - MariaDB Database Server'
@@ -577,7 +577,7 @@ if [ "$interactive" = 'yes' ]; then
     fi
 fi
 
-# Validate Email / Hostname even when interactive = no 
+# Validate Email / Hostname even when interactive = no
 # Asking for contact email
 if [ -z "$email" ]; then
     while validate_email; do
@@ -1282,6 +1282,9 @@ cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/documen
 # Installing firewall rules
 cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 
+# Installing apis
+cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
+
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
@@ -1451,7 +1454,7 @@ if [ "$phpfpm" = "yes" ]; then
         echo "[ * ] Install  PHP $fpm_v..."
         $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
   fi
-  
+
   echo "[ * ] Configuring PHP-FPM $fpm_v..."
   # Create www.conf for webmail and php(*)admin
   cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
@@ -1540,8 +1543,8 @@ if [ "$mysql" = 'yes' ]; then
     if [ $memory -gt 3900000 ]; then
         mycnf="my-large.cnf"
     fi
-    
-    # Run mysql_install_db 
+
+    # Run mysql_install_db
     mysql_install_db >> $LOG
     # Remove symbolic link
     rm -f /etc/mysql/my.cnf
@@ -1556,7 +1559,7 @@ if [ "$mysql" = 'yes' ]; then
     mpass=$(gen_pass)
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
-    
+
     # Ater root password
     mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
     # Allow mysql access via socket for startup
@@ -1604,7 +1607,7 @@ if [ "$mysql" = 'yes' ]; then
     mkdir -p /var/lib/phpmyadmin/tmp
     chmod 770 /var/lib/phpmyadmin/tmp
     chown root:www-data /usr/share/phpmyadmin/tmp
-    
+
     # Set config and log directory
     sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
     sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
@@ -1627,8 +1630,8 @@ if [ "$mysql" = 'yes' ]; then
     # https://github.com/skurudo/phpmyadmin-fixer
     # shellcheck source=/usr/local/hestia/install/deb/phpmyadmin/pma.sh
     source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
-    
-    # limit access to /etc/phpmyadmin/ 
+
+    # limit access to /etc/phpmyadmin/
     chown -R root:www-data /etc/phpmyadmin/
     chmod -R 640  /etc/phpmyadmin/*
     chmod 750 /etc/phpmyadmin/conf.d/
@@ -1704,7 +1707,7 @@ if [ "$exim" = 'yes' ]; then
     if [ "$release" = "22.04" ]; then
       # Jammyy uses Exim 4.95 instead but config works with Exim4.94
       cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/
-    else 
+    else
       cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
     fi
     cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
@@ -1747,18 +1750,18 @@ if [ "$dovecot" = 'yes' ]; then
     cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
-    
+
     chown -R root:root /etc/dovecot*
-        
-    #Alter config for 2.2 
+
+    #Alter config for 2.2
     version=$(dovecot --version |  cut -f -2 -d .);
-    if [ "$version" = "2.2" ]; then 
-      echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"	
+    if [ "$version" = "2.2" ]; then
+      echo "[ * ] Downgrade dovecot config to sync with 2.2 settings"
       sed -i 's|#ssl_dh_parameters_length = 4096|ssl_dh_parameters_length = 4096|g' /etc/dovecot/conf.d/10-ssl.conf
       sed -i 's|ssl_dh = </etc/ssl/dhparam.pem|#ssl_dh = </etc/ssl/dhparam.pem|g' /etc/dovecot/conf.d/10-ssl.conf
       sed -i 's|ssl_min_protocol = TLSv1.2|ssl_protocols = !SSLv3 !TLSv1 !TLSv1.1|g' /etc/dovecot/conf.d/10-ssl.conf
     fi
-    
+
     update-rc.d dovecot defaults
     systemctl start dovecot >> $LOG
     check_result $? "dovecot start failed"
@@ -1863,12 +1866,12 @@ if [ "$sieve" = 'yes' ]; then
     # Folder paths
     RC_INSTALL_DIR="/var/lib/roundcube"
     RC_CONFIG_DIR="/etc/roundcube"
-    
+
     echo "[ * ] Install Sieve..."
 
     # dovecot.conf install
     sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
-    
+
     # dovecot conf files
     #  10-master.conf
     sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
@@ -1876,24 +1879,24 @@ if [ "$sieve" = 'yes' ]; then
     sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
     #  20-imap.conf
     sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
-    
+
     # replace dovecot-sieve config files
     cp -f $HESTIA_INSTALL_DIR/dovecot/sieve/* /etc/dovecot/conf.d
-    
+
     # Dovecot default file install
     echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
-    
+
     # exim4 install
     sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim4/exim4.conf.template
-    
+
     sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
-    
+
     # Modify Roundcube install
     mkdir -p $RC_CONFIG_DIR/plugins/managesieve
-    
+
     cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
         ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
-    
+
     # Permission changes
     chown -R dovecot:mail /var/log/dovecot.log
     chmod 660 /var/log/dovecot.log
@@ -1901,9 +1904,9 @@ if [ "$sieve" = 'yes' ]; then
     chmod 751 -R $RC_CONFIG_DIR
     chmod 644 $RC_CONFIG_DIR/*.php
     chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
-        
+
     sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
-    
+
     # Restart Dovecot and exim4
     systemctl restart dovecot > /dev/null 2>&1
     systemctl restart exim4 > /dev/null 2>&1
@@ -1915,9 +1918,14 @@ fi
 #----------------------------------------------------------#
 
 if [ "$api" = "yes" ]; then
+    # keep legacy api enabled until transition is complete
     write_config_value "API" "yes"
+    write_config_value "API_SYSTEM" "1"
     write_config_value "API_ALLOWED_IP" ""
 else
+    write_config_value "API" "no"
+    write_config_value "API_SYSTEM" "0"
+    write_config_value "API_ALLOWED_IP" ""
     $HESTIA/bin/v-change-sys-api disable
 fi
 
@@ -2070,7 +2078,7 @@ chown admin:admin $HESTIA/data/sessions
 mkdir -p /backup/
 chmod 755 /backup/
 
-# create cronjob to generate ssl 
+# create cronjob to generate ssl
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#

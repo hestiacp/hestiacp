@@ -1,0 +1,2 @@
+ROLE='user'
+COMMANDS='v-purge-nginx-cache,v-list-web-domains,v-list-web-domain'

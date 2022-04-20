@@ -1,6 +1,56 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - Major Release (Feature / Quality Update)
+
+### Breaking changes
+- Dropped support for Debian 9 for new installs (#2537)
+- Dropped support for RSSH for Debian 9 and Ubuntu 18.04 on install (#2537)
+- Dropped support for TLS1.1 and older for Dovecot (#2012 and #2538)
+- Added support for Yescrypt  (#2235 / #2499) Breaking possible restores from Debian 11 / Ubuntu 22.04 to older Operating version (Change user password to solve the issue)
+- Added support for ARGON2ID for mail accounts (#2421)  Breaking possible restores form Debian 10 and 11, Ubuntu 20.04 and 22.04 to Ubuntu 18.04 / Debian 9
+
+### Features
+
+- Added support for Ubuntu 22.04 Jammy (#2537 #2489)
+- Added support Exim rate limits for email accounts via UI (#2225 and #2523 @madito)
+- Added support to delete spam when reaching certain threshold (#2206 and #2200 @madito)
+- Added support to send mail to an unauthenticated SMTP relay (#2441 @clarkchentw)
+- Replace default MD5 encoding with ARGON2ID for Debian 10 and Ubuntu 20.04 and higher (#2421 @stsimb)
+- Added support for Yescrypt  (#2235 / #2499) 
+- Upgrade backend to PHP8.1 due to compatibility issues Jammy (#2515)
+- Introduce new api allowing users to use certain commands over API (#2535 and #1333)
+- Allow "Purge" cache button visible on templates with the name cacheing-your-template-name (#2526 #2530)
+- Add hooks to hestia-nginx and hestia-php (#2440)
+
+
+
+### Bugfixes
+
+- Fixed an issue where --hostname and --email did not validated when using --interactive no (#2532 #2531)
+- Fixed an issue with the detection if MariaDB 10.7 was running (#2536 @gOOvER)
+- Fixed an issue with downloading a backup as a standard user (#2524 #2525)
+- Remove duplicated package installer (#2520 @rfzh1996)
+- Fixed an issue with "Do not allow user to login" checkbox sync up with real settings (#2507 #2513)
+- Fixed an issue where deleting a suspended users did not decrease the suspended user counter (#2504 #2531)
+- Fixed an issue where domain with redirect enabled was not able to "request" Lets encrypt ssl (#2514 #2176)
+- Add an notice when using Blackblaze on a ARM64 based server (#2394 @zedpr0)
+- Add rsyslog as a dependency (#2505)
+- Fixed an issue when a user import a backup a let's encrypt cronjob was not created on default. (#2498 @NickCoolii)
+- Add missing translation conversions in backup list (#2501)
+- Update example in v-add-web-domain-backend (#2500 gingerbeardman)
+- Update example in v-add-letsencrypt-domain (#2442)
+- Fixed an issue in configure-server-smtp.sh by loading /etc/hestiacp/hestia.conf (#2488)
+
+
+### Dependencies
+- Update hestia-nginx to 1.21.6
+    - Update openssl to 3.0.2
+    - Update zlib to 1.2.12
+- Update hestia-php to 8.1.5
+
+### Bugfixes
+
 ## [1.5.11] - Service release
 
 ### Bugfixes

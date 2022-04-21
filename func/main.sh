@@ -1112,6 +1112,7 @@ is_format_valid() {
                 action)         is_fw_action_format_valid "$arg";;
                 active)         is_boolean_format_valid "$arg" 'active' ;;
                 aliases)        is_alias_format_valid "$arg" ;;
+                alias)          is_alias_format_valid "$arg" ;;        
                 antispam)       is_boolean_format_valid "$arg" 'antispam' ;;
                 antivirus)      is_boolean_format_valid "$arg" 'antivirus' ;;
                 autoreply)      is_autoreply_format_valid "$arg" ;;

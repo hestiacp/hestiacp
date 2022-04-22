@@ -424,7 +424,7 @@ if [ "$NGINX_B" = true ] ; then
 
         # Build the package
         echo Building Nginx DEB
-        dpkg-deb --compression=xz --build $BUILD_DIR_HESTIANGINX $DEB_DIR
+        dpkg-deb -Zxz --build $BUILD_DIR_HESTIANGINX $DEB_DIR
     fi
 
     if [ "$BUILD_RPM" = true ]; then
@@ -575,7 +575,7 @@ if [ "$PHP_B" = true ] ; then
         # Build the package
         echo Building PHP DEB
         [ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb --build $BUILD_DIR_HESTIAPHP $DEB_DIR
-        dpkg-deb  --compression=xz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
+        dpkg-deb  -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
     fi
 
     if [ "$BUILD_RPM" = true ]; then
@@ -681,7 +681,7 @@ if [ "$HESTIA_B" = true ]; then
           chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
   
           echo Building Hestia DEB
-          dpkg-deb --compression=xz --build $BUILD_DIR_HESTIA $DEB_DIR
+          dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
       fi
   
       if [ "$BUILD_RPM" = true ]; then

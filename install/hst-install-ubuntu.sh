@@ -1298,6 +1298,7 @@ else
         'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 fi
 # Parsing certificate file
+crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem |cut -f 1 -d:)
 if [ "$release" = "22.04" ]; then
   key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem |cut -f 1 -d:)
   key_end=$(grep -n  "END PRIVATE KEY" /tmp/hst.pem |cut -f 1 -d:)

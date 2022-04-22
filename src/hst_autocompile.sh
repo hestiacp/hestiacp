@@ -12,9 +12,7 @@
 clear
 
 # Define download function
-set -e 
 download_file() {
-    set +e 
     local url=$1
     local destination=$2
     local force=$3

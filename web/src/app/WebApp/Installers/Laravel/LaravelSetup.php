@@ -7,15 +7,15 @@ use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 class LaravelSetup extends BaseSetup {
 
     protected $appname = 'laravel';
-    
-    protected $appInfo = [ 
+
+    protected $appInfo = [
         'name' => 'Laravel',
         'group' => 'framework',
         'enabled' => true,
-        'version' => '8.x',
+        'version' => '9.x',
         'thumbnail' => 'laravel-thumb.png'
     ];
-    
+
     protected $config = [
         'form' => [
         ],
@@ -27,12 +27,17 @@ class LaravelSetup extends BaseSetup {
             'nginx' => [
                 'template' => 'laravel',
             ],
+            'php' => [ 
+                'supported' => [ '8.0','8.1' ],
+            ]
         ],
     ];
 
     public function install(array $options=null) : bool
     {
         parent::install($options);
+        parent::setup($options);
+            
         $result = null;
 
         $htaccess_rewrite = '

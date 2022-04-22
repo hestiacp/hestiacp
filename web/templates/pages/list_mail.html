@@ -18,8 +18,8 @@
 					<td class="sort-by" title="<?=_('Sort items');?>">
 						<?=_('sort by');?>: <span>
 							<b>
-								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
-								<?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+								<?=$label;?> <i class="fas fa-sort-alpha-down"></i>
 							</b>
 						</span>
 					</td>
@@ -137,9 +137,9 @@
 				$data[$key]['CATCHALL'] = '/dev/null';
 			}
 		?>
-		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['MAIL'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="mail"
+		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="mail"
 			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
-			sort-accounts="<?=$data[$key]['ACCOUNTS']?>" sort-star="<?php if ($_SESSION['favourites']['MAIL'][$key] == 1) echo " 1"; else echo "0" ; ?>">
+			sort-accounts="<?=$data[$key]['ACCOUNTS']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">

@@ -6,6 +6,7 @@
 
 #SPAMASSASSIN = yes
 #SPAM_SCORE = 50
+#SPAM_REJECT_SCORE = 100
 #CLAMD = yes
 
 smtp_banner = $smtp_active_hostname
@@ -81,6 +82,10 @@ SMTP_RELAY_PORT = ${lookup{port}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_USER = ${lookup{user}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_PASS = ${lookup{pass}lsearch{SMTP_RELAY_FILE}}
 
+# Custom Filter
+system_filter = /etc/exim4/system.filter
+system_filter_user = Debian-exim
+
 ######################################################################
 #                       ACL CONFIGURATION                            #
 #         Specifies access control lists for incoming SMTP mail      #
@@ -133,10 +138,11 @@ acl_check_rcpt:
 
 # Limit per email account for SMTP auhenticated users
   deny    message       = Email account $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
-  ratelimit             = 200 / 1h / $authenticated_id
+          set acl_c_msg_limit = ${if exists{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains/}}/limits} {${extract{1}{:}{${lookup{$sender_address_local_part@$sender_address_domain}lsearch{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains/}}/limits}}}}} {${readfile{/etc/exim4/limit.conf}}} }
+          ratelimit     = $acl_c_msg_limit / 1h / strict/ $authenticated_id
 
-  warn    ratelimit     = 100 / 1h / strict / $authenticated_id
-  log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
+  warn    ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
+          log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
 
   deny    message       = Restricted characters in address
           domains       = +local_domains
@@ -176,10 +182,13 @@ acl_check_rcpt:
 
 .ifdef SPAMASSASSIN
   warn    set acl_m1    = no
-
+          set acl_m3    = no
   warn    condition     = ${if exists {/etc/exim4/domains/$domain/antispam}{yes}{no}}
           set acl_m1    = yes
+  warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}
+          set acl_m3    = yes
 .endif
+
 
   accept
 
@@ -206,7 +215,14 @@ acl_check_data:
          condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
          add_header     = X-Spam-Status: Yes
          message        = SpamAssassin detected spam (from $sender_address to $recipients).
+
+  # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled
+  deny   message        = This message scored $spam_score spam points
+         spam           = debian-spamd:true
+         condition      = ${if eq{$acl_m3}{yes}{yes}{no}}
+         condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}	
 .endif
+
 
   accept
 
@@ -248,6 +264,17 @@ dovecot_login:
 #               Specifies how addresses are handled                  #
 ######################################################################
 begin routers
+
+send_via_unauthenticated_smtp_relay:
+  driver = manualroute
+  address_data = SMTP_RELAY_HOST:SMTP_RELAY_PORT
+  domains = !+local_domains
+  require_files = SMTP_RELAY_FILE
+  condition = ${if eq{SMTP_RELAY_USER}{}}
+  transport = remote_smtp
+  route_list = * ${extract{1}{:}{$address_data}}::${extract{2}{:}{$address_data}}
+  no_more
+  no_verify
 
 send_via_smtp_relay:
   driver = manualroute

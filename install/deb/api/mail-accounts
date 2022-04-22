@@ -1,0 +1,2 @@
+ROLE='user'
+COMMANDS='v-list-mail-domains,v-list-mail-domain,v-list-mail-account,v-list-mail-accounts,v-list-mail-account-autoreply,v-delete-mail-account,v-delete-mail-account-alias,v-delete-mail-account-autoreply,v-delete-mail-account-forward,v-delete-mail-account-fwd-only,v-add-mail-account,v-add-mail-account-alias,v-add-mail-account-autoreply,v-add-mail-account-forward,v-add-mail-account-fwd-only,v-change-mail-account-password,v-change-mail-account-quota,v-suspend-mail-account,v-suspend-mail-accounts,v-unsuspend-mail-account,v-unsuspend-mail-accounts'

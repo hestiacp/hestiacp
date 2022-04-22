@@ -10,9 +10,8 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 verify_csrf($_GET);
 
 if (!empty($_GET['database'])) {
-    $v_username = escapeshellarg($user);
     $v_database = escapeshellarg($_GET['database']);
-    exec(HESTIA_CMD."v-suspend-database ".$v_username." ".$v_database, $output, $return_var);
+    exec(HESTIA_CMD."v-suspend-database ".$user." ".$v_database, $output, $return_var);
     check_return_code($return_var, $output);
     unset($output);
 }

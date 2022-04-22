@@ -2,7 +2,7 @@
 <div class="l-center edit">
 	<div class="l-sort clearfix">
 		<div class="l-unit-toolbar__buttonstrip">
-			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/add/webapp/?domain=<?=$v_domain?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/add/webapp/?domain=<?=htmlentities($v_domain);?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 		</div>
 		<div class="l-unit-toolbar__buttonstrip float-right">
 			<?php
@@ -56,6 +56,7 @@
 
 						$f_value = htmlentities($f_value);
 						$f_label = htmlentities($f_label);
+						$f_name = htmlentities($f_name);
 						$f_placeholder = htmlentities($f_placeholder);
 					?>
 					<div class="form-group">
@@ -65,10 +66,14 @@
 						<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
 							<p style="margin-top:0;"></p>
 							<select class="vst-list" name="<?=$f_name?>">
-								<?php foreach ($form_control['options'] as $option):?>
+								<?php foreach ($form_control['options'] as $key => $option){
+									if(is_numeric($key)){
+										$key = $option;
+									}
+								?>
 									<?php $selected = (!empty($form_control['value']) && $option === $form_control['value'])?'selected':''?>
-									<option value="<?=$option?>" <?=$selected?>><?=htmlentities($option)?></option>
-								<?php endforeach; ?>
+									<option value="<?=$key?>" <?=$selected?>><?=htmlentities($option)?></option>
+								<?php }; ?>
 							</select>
 							</p>
 						<?php elseif (in_array($f_type, ['boolean'])):?>

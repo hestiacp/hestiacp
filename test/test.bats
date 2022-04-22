@@ -348,6 +348,9 @@ function check_ip_not_banned(){
     run v-change-user-shell $user bash
     assert_success
     refute_output
+    
+    run stat -c '%U' /home/$user
+    assert_output --partial "$user"
 }
 
 @test "Change user invalid shell" {
@@ -355,6 +358,16 @@ function check_ip_not_banned(){
     assert_failure $E_INVALID
     assert_output --partial 'shell bashinvalid is not valid'
 }
+
+@test "Change user nologin" {
+    run v-change-user-shell $user nologin
+    assert_success
+    refute_output
+    
+    run stat -c '%U' /home/$user
+    assert_output --partial 'root'
+}
+
 
 @test "Change user default ns" {
     run v-change-user-ns $user ns0.com ns1.com ns2.com ns3.com

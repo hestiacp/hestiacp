@@ -21,9 +21,12 @@ class Util
         return preg_replace('#/+#', '/', join('/', $paths));
     }
 
-    public static function generate_string(int $length = 16)
+    public static function generate_string(int $length = 16, $full = true)
     {
-        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~`!@|#[]$%^&*() _-=+{}:;<>?,./';
+        $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if ($full) {
+            $chars .= '~`!@|#[]$%^&*() _-=+{}:;<>?,./';
+        }
         $random_string = '';
         for ($i = 0; $i < $length; $i++) {
             $random_string .= $chars[random_int(0, strlen($chars) - 1)];

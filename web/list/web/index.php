@@ -5,7 +5,7 @@ $TAB = 'WEB';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Data
-exec (HESTIA_CMD."v-list-web-domains ".escapeshellarg($user)." 'json'", $output, $return_var);
+exec (HESTIA_CMD."v-list-web-domains ".$user." 'json'", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 if ($_SESSION['userSortOrder'] == 'name') {
     ksort($data);

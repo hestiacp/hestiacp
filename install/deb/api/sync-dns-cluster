@@ -1,0 +1,2 @@
+ROLE='admin'
+COMMANDS='v-delete-dns-domains-src,v-insert-dns-domain,v-insert-dns-records,v-rebuild-dns-domains,v-delete-dns-record'

@@ -21,7 +21,7 @@ if (empty($_GET['ip'])) {
 // List ip
 $v_ip = escapeshellarg($_GET['ip']);
 exec(HESTIA_CMD."v-list-sys-ip ".$v_ip." 'json'", $output, $return_var);
-check_return_code($return_var, $output);
+check_return_code_redirect($return_var, $output, '/list/ip');
 $data = json_decode(implode('', $output), true);
 unset($output);
 
@@ -39,12 +39,7 @@ if ($v_ipstatus == 'dedicated') {
 $v_owner = $data[$v_ip]['OWNER'];
 $v_date = $data[$v_ip]['DATE'];
 $v_time = $data[$v_ip]['TIME'];
-$v_suspended = $data[$v_ip]['SUSPENDED'];
-if ($v_suspended == 'yes') {
-    $v_status =  'suspended';
-} else {
-    $v_status =  'active';
-}
+
 
 // List users
 exec(HESTIA_CMD."v-list-sys-users 'json'", $output, $return_var);

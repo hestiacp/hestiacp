@@ -1315,11 +1315,6 @@ chown root:mail $HESTIA/ssl/*
 chmod 660 $HESTIA/ssl/*
 rm /tmp/hst.pem
 
-# Adding nologin as a valid system shell
-if [ -z "$(grep nologin /etc/shells)" ]; then
-    echo "/usr/sbin/nologin" >> /etc/shells
-fi
-
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 

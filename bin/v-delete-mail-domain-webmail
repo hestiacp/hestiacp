@@ -58,14 +58,16 @@ if [ -n "$WEBMAIL_ALIAS" ]; then
     # Ensure that corresponding DNS records are removed
     if [ -n "$DNS_SYSTEM" ]; then
         dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-        webmail_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "$WEBMAIL_ALIAS" | cut -d' ' -f1)
-
-        if [ "$dns_domain" = "$domain" ]; then
-            if [ -n "$webmail_record" ]; then
-                if [ "$quiet" = "yes" ]; then
-                    $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
-                else
-                    $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart"
+        if [ "WEBMAIL_ALIAS" != "mail" ];then
+            #Prevent mail.domain.com being removed
+            webmail_record=$($BIN/v-list-dns-records $user $domain | grep -i " $WEBMAIL_ALIAS " | cut -d' ' -f1)
+            if [ "$dns_domain" = "$domain" ]; then
+                if [ -n "$webmail_record" ]; then
+                    if [ "$quiet" = "yes" ]; then
+                        $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
+                    else
+                        $BIN/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart"
+                    fi
                 fi
             fi
         fi

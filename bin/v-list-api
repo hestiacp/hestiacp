@@ -1,0 +1,71 @@
+#!/bin/bash
+# info: list api
+# options: API [FORMAT]
+#
+# example: v-list-api mail-accounts json
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+api="$1"
+format="${2:-shell}"
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+    local COMMANDS_ARR='[]'
+    if [[ -n "$COMMANDS" ]]; then
+        COMMANDS_ARR="[\"$(echo "$COMMANDS" | sed -E 's|,|", "|g')\"]"
+    fi
+
+    echo '{
+    "API": "'$api'",
+    "ROLE": "'$ROLE'",
+    "COMMANDS": '$COMMANDS_ARR'
+}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "API:           $api"
+    echo "ROLE:          $ROLE"
+    echo "COMMANDS:      $COMMANDS"
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'API [FORMAT]'
+
+if [[ -z "$api" || ! -f "$HESTIA/data/api/${api}" ]]; then
+    check_result "$E_INVALID" "API $api doesn't exist"
+fi
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+source_conf "${HESTIA}/data/api/${api}"
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    shell)  shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -38,20 +38,7 @@
 						</tr>
 						<tr>
 							<td>
-								<?php
-									if (!empty($_SESSION['error_msg'])) {
-										$msg_icon = 'fa-exclamation-circle status-icon red';
-										$msg_text = htmlentities($_SESSION['error_msg']);
-										$msg_id = 'vst-error';
-									} else {
-										if (!empty($_SESSION['ok_msg'])) {
-											$msg_icon = 'fa-check-circle status-icon green';
-											$msg_text = $_SESSION['ok_msg'];
-											$msg_id = 'vst-ok';
-										}
-									}
-								?>
-								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
 						<tr>
@@ -94,13 +81,28 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>"> <?php /*'*/ ?>
+								<input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour / account');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>">
 							</td>
 						</tr>
 						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
 							<tr>
 								<td class="vst-text input-label step-top">
 									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>><?=_('AntiSpam Support');?></label>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text input-label step-top">
+									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_reject" <?php if ($v_reject == 'yes') echo "checked=yes"; ?>><?=_('Reject spam');?></label>
 								</td>
 							</tr>
 						<?php } ?>
@@ -126,14 +128,15 @@
 								<table>
 									<tr>
 										<td class="input-label vst-text">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?>"><?=_('Lets Encrypt Support');?></label>
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?>"><?=_('Lets Encrypt Support');?></label>
 										</td>
 									</tr>
 									<tr id="le-warning" class="step-top">
 										<td>
 											<span class="alert alert-info alert-with-icon">
 												<i class="fas fa-exclamation"></i>
-												<?=_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.$v_domain and $v_webmail_alias!")?><br />
+												<?php echo $v_webmail_alias;?>
+												<?=sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias); ?><br />
 											</span>
 										</td>
 									</tr>
@@ -143,7 +146,7 @@
 												<tr>
 													<td class="vst-text input-label step-top">
 														<?=_('SSL Certificate');?>
-														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR');?></a></span>
+														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
 													</td>
 												</tr>
 												<tr>
@@ -181,7 +184,7 @@
 																	<b><?=_('SUBJECT');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_subject?>
+																	<?=htmlentities($v_ssl_subject);?>
 																</td>
 															</tr>
 															<?php if ($v_ssl_aliases){?>
@@ -190,7 +193,7 @@
 																		<b><?=_('Aliases');?>:</b>
 																	</td>
 																	<td class="details">
-																		<?=$v_ssl_aliases?>
+																		<?=htmlentities($v_ssl_aliases)?>
 																	</td>
 																</tr>
 															<?php } ?>
@@ -199,7 +202,7 @@
 																	<b><?=_('NOT_BEFORE');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_not_before?>
+																	<?=htmlentities($v_ssl_not_before)?>
 																</td>
 															</tr>
 															<tr>
@@ -207,7 +210,7 @@
 																	<b><?=_('NOT_AFTER');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_not_after?>
+																	<?=htmlentities($v_ssl_not_after)?>
 																</td>
 															</tr>
 															<tr>
@@ -215,7 +218,7 @@
 																	<b><?=_('SIGNATURE');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_signature?>
+																	<?=htmlentities($v_ssl_signature)?>
 																</td>
 															</tr>
 															<tr>
@@ -223,7 +226,7 @@
 																	<b><?=_('PUB_KEY');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_pub_key?>
+																	<?=htmlentities($v_ssl_pub_key)?>
 																</td>
 															</tr>
 															<tr>
@@ -231,7 +234,7 @@
 																	<b><?=_('ISSUER');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_issuer?>
+																	<?=htmlentities($v_ssl_issuer)?>
 																</td>
 															</tr>
 														</table>

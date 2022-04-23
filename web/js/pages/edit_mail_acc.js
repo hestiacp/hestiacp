@@ -119,7 +119,7 @@ generate_mail_credentials = function() {
     var div = $('.mail-infoblock').clone();
     div.find('#mail_configuration').remove();
     var pass=div.find('#v_password').text();
-    if (pass=="") div.find('#v_password').html(' ');
+    if (pass=="") div.find('#v_password').text(' ');
     var output = div.text();
     output=output.replace(/(?:\r\n|\r|\n|\t)/g, "|");
     output=output.replace(/  /g, "");
@@ -166,29 +166,29 @@ $(document).ready(function() {
 
         switch(opt.attr('v_type')){
             case 'hostname':
-                $('#td_imap_hostname').html(opt.attr('domain'));
-                $('#td_smtp_hostname').html(opt.attr('domain'));
+                $('#td_imap_hostname').text(opt.attr('domain'));
+                $('#td_smtp_hostname').text(opt.attr('domain'));
                 break;
             case 'starttls':
-                $('#td_imap_port').html('143');
-                $('#td_imap_encryption').html('STARTTLS');
-                $('#td_smtp_port').html('587');
-                $('#td_smtp_encryption').html('STARTTLS');
+                $('#td_imap_port').text('143');
+                $('#td_imap_encryption').text('STARTTLS');
+                $('#td_smtp_port').text('587');
+                $('#td_smtp_encryption').text('STARTTLS');
                 break;
             case 'ssl':
-                $('#td_imap_port').html('993');
-                $('#td_imap_encryption').html('SSL / TLS');
-                $('#td_smtp_port').html('465');
-                $('#td_smtp_encryption').html('SSL / TLS');
+                $('#td_imap_port').text('993');
+                $('#td_imap_encryption').text('SSL / TLS');
+                $('#td_smtp_port').text('465');
+                $('#td_smtp_encryption').text('SSL / TLS');
                 break;
             case 'no_encryption':
-                $('#td_imap_hostname').html(opt.attr('domain'));
-                $('#td_smtp_hostname').html(opt.attr('domain'));
+                $('#td_imap_hostname').text(opt.attr('domain'));
+                $('#td_smtp_hostname').text(opt.attr('domain'));
 
-                $('#td_imap_port').html('143');
-                $('#td_imap_encryption').html(opt.attr('no_encryption'));
-                $('#td_smtp_port').html('25');
-                $('#td_smtp_encryption').html(opt.attr('no_encryption'));
+                $('#td_imap_port').text('143');
+                $('#td_imap_encryption').text(opt.attr('no_encryption'));
+                $('#td_smtp_port').text('25');
+                $('#td_smtp_encryption').text(opt.attr('no_encryption'));
                 break;
         }
         generate_mail_credentials();

@@ -21,7 +21,7 @@ if (empty($_GET['rule'])) {
 // List rule
 $v_rule = escapeshellarg($_GET['rule']);
 exec(HESTIA_CMD."v-list-firewall-rule ".$v_rule." 'json'", $output, $return_var);
-check_return_code($return_var, $output);
+check_return_code_redirect($return_var, $output,'/list/firewall');
 $data = json_decode(implode('', $output), true);
 unset($output);
 

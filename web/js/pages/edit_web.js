@@ -254,7 +254,12 @@ $(function() {
         var select = $(evt.target);
 
         if(select.val() != 'caching'){
-            $('#v-clear-cache').hide();
+            const re = new RegExp('caching-');
+            if(re.test(select.val())){
+                $('#v-clear-cache').show();
+            }else{
+                $('#v-clear-cache').hide();
+            }
         } else {
             $('#v-clear-cache').show();
         }

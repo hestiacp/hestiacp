@@ -33,6 +33,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -211,6 +213,8 @@ echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WE
  BACKEND='$BACKEND_TEMPLATE' PROXY='$PROXY_TEMPLATE' PROXY_EXT='$PROXY_EXT'\
  STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'\
  SUSPENDED='no' TIME='$time' DATE='$date'" >> $USER_DATA/web.conf
+
+syshealth_repair_web_config
 
 # Restarting web server
 $BIN/v-restart-web "$restart"

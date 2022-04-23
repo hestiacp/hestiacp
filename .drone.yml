@@ -35,9 +35,6 @@ steps:
 - name: Run config tests 
   commands:
   - bats ./test/config-tests.bats
-- name: Run Check PHP
-  commands: 
-  - ./test/check_php.sh
 
 trigger:
   event: [ pull_request, push ]
@@ -89,10 +86,7 @@ steps:
 - name: Run config tests 
   commands:
   - bats ./test/config-tests.bats
-- name: Run Check PHP
-  commands: 
-  - ./test/check_php.sh
-
+  
 trigger:
   event: [ pull_request, push ]
   ref:
@@ -111,10 +105,14 @@ concurrency:
   limit: 1
 
 steps:
-  - name: shellcheck
+  - name: Shellcheck
     image: koalaman/shellcheck-alpine
     commands:
     - ./test/shellcheck.sh
+  - name: PHP 8.1
+    image: php:8.1-cli-bullseye
+    commands:
+      - ./test/check_php.sh ./web/
 
 trigger:
    event: [ pull_request, push ] 
@@ -160,7 +158,7 @@ steps:
         port: 22
         command_timeout: 2m
         script:
-            - freight-add ./hestia/*.deb apt/bionic apt/focal apt/strech apt/buster apt/bullseye
+            - freight-add ./hestia/*.deb apt/bionic apt/focal apt/stretch apt/buster apt/bullseye
             - freight-cache
             - rm -fr ./hestia/
   
@@ -169,4 +167,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 31806a1e5357c43d17d24ef797995fb9952a1d883ad282fd152d7d0378112213
+hmac: fc8c5e5e36ef990ef96ad8c03d55adb814fe8021a40e67877d7dc84a7c36a12f

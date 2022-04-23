@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'USER';
 
@@ -157,6 +158,27 @@ foreach ($language as $lang) {
 }
 asort($languages);
 
+if (empty($v_username)) {
+    $v_username = '';
+}
+if (empty($v_name)) {
+    $v_name = '';
+}
+if (empty($v_email)) {
+    $v_email = '';
+}
+if (empty($v_password)) {
+    $v_password = '';
+}
+if (empty($v_login_disabled)) {
+    $v_login_disabled = '';
+}
+if (empty($v_role)) {
+    $v_role = '';
+}
+if (empty($v_notify)) {
+    $v_notify = '';
+}
 // Render page
 render_page($user, $TAB, 'add_user');
 

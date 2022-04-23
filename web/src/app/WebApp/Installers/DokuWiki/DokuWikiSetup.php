@@ -49,30 +49,34 @@ class DokuWikiSetup extends BaseSetup {
 		 ],
 		'resources' => [
 			'archive'  => [ 'src' => 'https://github.com/splitbrain/dokuwiki/archive/refs/tags/release_stable_2020-07-29.zip' ],
+		],
+		'server' => [
+			'nginx' => [
+				'template' => 'default'
+			],
+			'php' => [ 
+				'supported' => [ '7.3','7.4' ],
+			]
 		], 
 	];
 	
-	public function install(array $options = null)
+	public function install(array $options = null, &$status=null)
 	{
 		parent::install($options);
-		
+		parent::setup($options);
+			
 		//check if ssl is enabled 
         $this->appcontext->run('v-list-web-domain', [$this->appcontext->user(), $this->domain, 'json'], $status);
-		
-        if($status->code !== 0) {
-            throw new \Exception("Cannot list domain");
-        }
-        
 		$sslEnabled = ($status->json[$this->domain]['SSL'] == 'no' ? 0 : 1);
 
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
 		
 		$this->appcontext->runUser('v-copy-fs-directory',[
 			$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2020-07-29/."),
-			$this->getDocRoot()], $result);
+			$this->getDocRoot()], $status);
 
 		// enable htaccess
-		$this->appcontext->runUser('v-move-fs-file', [$this->getDocRoot(".htaccess.dist"), $this->getDocRoot(".htaccess")], $result);
+		$this->appcontext->runUser('v-move-fs-file', [$this->getDocRoot(".htaccess.dist"), $this->getDocRoot(".htaccess")], $status);
 
 		$installUrl = $webDomain . "install.php";
 
@@ -92,12 +96,15 @@ class DokuWikiSetup extends BaseSetup {
 		  . "--data 'd[license]=" . explode(":", $options['content_license'])[0] . "' "
 		  . "--data submit=";
 
-		exec($cmd, $msg, $code);
+		exec($cmd, $output, $return_var);
+		if($return_var > 0){
+			throw new \Exception(implode( PHP_EOL, $output));
+		}
 
 		// remove temp folder
-		$this->appcontext->runUser('v-delete-fs-file', [$this->getDocRoot("install.php")], $result);
+		$this->appcontext->runUser('v-delete-fs-file', [$this->getDocRoot("install.php")], $status);
 		$this->cleanup();
 
-		return ($code === 0);
+		return ($status->code === 0);
 	}
 }

@@ -17,8 +17,8 @@
 					<td class="sort-by" title="<?=_('Sort items');?>">
 						<?=_('sort by');?>: <span>
 							<b>
-								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
-								<?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+								<?=$label;?> <i class="fas fa-sort-alpha-down"></i>
 							</b>
 						</span>
 					</td>
@@ -99,15 +99,15 @@
 				$spnd_confirmation = _('SUSPEND_USER_CONFIRMATION');
 			}
 		?>
-		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['USER'][$key] == 1) echo ' l-unit--starred';?> animated fadeIn" v_section="user"
+		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended';?> animated fadeIn" v_section="user"
 			v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=strtolower($key)?>"
-			sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>" sort-star="<?php if ($_SESSION['favourites']['USER'][$key] == 1) echo '1'; else echo '0'; ?>">
+			sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>">
 			<div class="l-unit__col l-unit__col--right" style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== 'admin') && ($key === 'admin')) { echo 'display: none';} else {echo 'display: table-cell';}?>">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="user[]" value="<?=$key?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 userlist-username">
-					<?php if ($key == $user) { ?>
+					<?php if ($key == $user_plain) { ?>
 						<b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User');?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></b></a>
 					<?php } else { ?>
 						<b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></b></a>
@@ -119,7 +119,7 @@
 				<div class="clearfix l-unit__stat-col--left text-right compact-3">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
 						<div class="actions-panel clearfix">
-							<?php if ($key == $user) { ?>
+							<?php if ($key == $user_plain) { ?>
 								<i class="fas fa-user-check status-icon status-icon dim icon-large" title="<?=$key?> (<?=$data[$key]['NAME']?>)"></i>
 							<?php } else { ?>
 								<a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$key?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
@@ -133,7 +133,7 @@
 							<?php if ($key == 'admin') { ?>
 								<!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->
 							<?php } else { ?>
-								<?php if ($key == $user) { ?>
+								<?php if ($key == $user_plain) { ?>
 									<!-- Hide suspend and delete buttons in the user list for current user -->
 								<?php } else { ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">

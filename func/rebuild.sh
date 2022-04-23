@@ -529,8 +529,9 @@ rebuild_dns_domain_conf() {
 
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
+    syshealth_repair_mail_config
+    
     get_domain_values 'mail'
-
     if [[ "$domain" = *[![:ascii:]]* ]]; then
         domain_idn=$(idn -t --quiet -a $domain)
     else
@@ -565,16 +566,19 @@ rebuild_mail_domain_conf() {
         rm -f $HOMEDIR/$user/conf/mail/$domain/accounts
         rm -f $HOMEDIR/$user/conf/mail/$domain/aliases
         rm -f $HOMEDIR/$user/conf/mail/$domain/antispam
+        rm -f $HOMEDIR/$user/conf/mail/$domain/reject_spam
         rm -f $HOMEDIR/$user/conf/mail/$domain/antivirus
         rm -f $HOMEDIR/$user/conf/mail/$domain/protection
         rm -f $HOMEDIR/$user/conf/mail/$domain/passwd
         rm -f $HOMEDIR/$user/conf/mail/$domain/fwd_only
         rm -f $HOMEDIR/$user/conf/mail/$domain/ip
+        rm -fr $HOMEDIR/$user/conf/mail/$domain/limits
         touch $HOMEDIR/$user/conf/mail/$domain/accounts
         touch $HOMEDIR/$user/conf/mail/$domain/aliases
         touch $HOMEDIR/$user/conf/mail/$domain/passwd
         touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
-
+        touch $HOMEDIR/$user/conf/mail/$domain/limits
+        
         # Setting outgoing ip address
         if [ -n "$local_ip" ]; then
             echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
@@ -588,6 +592,11 @@ rebuild_mail_domain_conf() {
         # Adding antivirus protection
         if [ "$ANTIVIRUS" = 'yes' ]; then
             touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+        fi
+        
+        # Adding reject spam protection
+        if [ "$REJECT" = 'yes' ]; then
+            touch $HOMEDIR/$user/conf/mail/$domain/reject_spam
         fi
 
         # Adding dkim
@@ -657,6 +666,21 @@ rebuild_mail_domain_conf() {
             fi
             if [ "$FWD_ONLY" = 'yes' ]; then
                 echo "$account" >> $HOMEDIR/$user/conf/mail/$domain/fwd_only
+            fi
+            user_rate_limit=$(get_object_value 'mail' 'DOMAIN' "$domain" '$RATE_LIMIT');
+            if [ -n "$RATE_LIMIT" ]; then
+                #user value
+                sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$RATE_LIMIT" >> $HOMEDIR/$user/conf/mail/$domain/limits
+            elif [ -n "$user_rate_limit" ]; then
+                #revert to account value
+                sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$user_rate_limit" >> $HOMEDIR/$user/conf/mail/$domain/limits
+            else
+                #revert to system value
+                system=$(cat /etc/exim4/limit.conf)
+                sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/limits
+                echo "$account@$domain_idn:$system" >> $HOMEDIR/$user/conf/mail/$domain/limits
             fi
         fi
     done

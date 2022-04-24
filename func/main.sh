@@ -1185,6 +1185,7 @@ is_format_valid() {
                 stats_pass)     is_password_format_valid "$arg" ;;
                 stats_user)     is_user_format_valid "$arg" "$arg_name" ;;
                 template)       is_object_format_valid "$arg" "$arg_name" ;;
+                theme)          is_common_format_valid "$arg" "$arg_name" ;;
                 ttl)            is_int_format_valid "$arg" 'ttl';;
                 user)           is_user_format_valid "$arg" $arg_name;;
                 wday)           is_cron_format_valid "$arg" $arg_name ;;

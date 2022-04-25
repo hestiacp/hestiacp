@@ -53,8 +53,9 @@ function setup() {
 }
 
 @test "is_access_key_id_format_valid LHF" {
-    run is_access_key_id_format_valid 'M0ocDoIK
-    soXSqtk1mgc' "key"
+    run is_access_key_id_format_valid 'c
+1eshutdown
+r' "key"
     assert_failure $E_INVALID
 }
 
@@ -312,4 +313,37 @@ r' "key"
     run is_type_valid 'c
     1eshutdown
     r' "test,key"
+    assert_failure $E_INVALID
+}
+
+@test "is_command_valid_format v-list-users" {
+    run is_command_valid_format 'v-list-users'
+    assert_success
+}
+
+@test "is_command_valid_format v-list--users (Fail)" {
+    run is_command_valid_format 'v-list--users'
+    assert_failure $E_INVALID
+}
+
+@test "is_command_valid_format h-list-users (Fail)" {
+    run is_command_valid_format 'h-list-users'
+    assert_failure $E_INVALID
+}
+
+@test "is_command_valid_format list-users (Fail)" {
+    run is_command_valid_format 'list-users'
+    assert_failure $E_INVALID
+}
+
+@test "is_command_valid_format vlist-users (Fail)" {
+    run is_command_valid_format 'vlist-users'
+    assert_failure $E_INVALID
+}
+
+@test "is_command_valid_format LF (Fail)" {
+     run is_command_valid_format 'v-
+1eshutdown
+r' "key"
+    assert_failure $E_INVALID
 }

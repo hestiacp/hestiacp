@@ -1139,6 +1139,7 @@ is_format_valid() {
                 dkim)           is_boolean_format_valid "$arg" 'dkim' ;;
                 dkim_size)      is_int_format_valid "$arg" ;;
                 domain)         is_domain_format_valid "$arg" ;;
+                dom_alias)      is_alias_format_valid "$arg" ;;
                 dvalue)         is_dns_record_format_valid "$arg";;
                 email)          is_email_format_valid "$arg" ;;
                 email_forward)  is_email_format_valid "$arg" ;;
@@ -1194,6 +1195,7 @@ is_format_valid() {
                 soa)            is_domain_format_valid "$arg" 'SOA' ;;
                 #missing command: is_format_valid_shell
                 shell)          is_format_valid_shell "$arg" ;;
+                ssl_dir)        is_folder_exists "$arg" "$arg_name" ;;
                 stats_pass)     is_password_format_valid "$arg" ;;
                 stats_user)     is_user_format_valid "$arg" "$arg_name" ;;
                 template)       is_object_format_valid "$arg" "$arg_name" ;;
@@ -1207,6 +1209,20 @@ is_format_valid() {
     done
 }
 
+is_folder_exists () {
+  if [ ! -f "$$1" ]; then 
+    check_result "$E_NOTEXIST" "folder $1 does not exist"
+  fi
+}
+
+is_command_valid_format () {
+  if [[ ! "$1" =~ ^v-[[:alnum:]][-|\.|_[:alnum:]]{0,64}[[:alnum:]]$ ]]; then 
+    check_result "$E_INVALID" "Invalid command format"
+  fi
+  if [[ -n $( echo "$1" | grep -e '\-\-' ) ]]; then 
+    check_result "$E_INVALID" "Invalid command format"
+  fi
+}
 # Check access_key_id name
 # Don't work with legacy key format
 is_access_key_id_format_valid() {

@@ -78,7 +78,7 @@ abort_missmatch() {
 CHECK_RESULT_CALLBACK="abort_missmatch"
 
 check_args '3' "$#" 'ACCESS_KEY_ID SECRET_ACCESS_KEY COMMAND [IP] [FORMAT]'
-is_format_valid 'access_key_id'
+is_format_valid 'access_key_id' 'ip' 'command'
 is_object_valid 'key' 'KEY' "$access_key_id"
 is_format_valid 'secret_access_key'
 check_access_key_secret "$access_key_id" "$secret_access_key" user

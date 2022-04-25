@@ -64,7 +64,7 @@ csv_list() {
 
 
 check_args '1' "$#" 'USER [IP] [SALT]'
-is_format_valid 'user'
+is_format_valid 'user' 'ip'
 
 # Checking user
 if [ ! -d "$HESTIA/data/users/$user" ]; then

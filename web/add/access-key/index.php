@@ -34,7 +34,7 @@ if (!empty($_POST['ok'])) {
     });
 
     if (empty($apis_selected)) {
-        $errors[] = _('apis');
+        $errors[] = _('Permissions');
     } else if (count($check_invalid_apis) > 0) {
         //$errors[] = sprintf("%d apis not allowed", count($check_invalid_apis));
         foreach ($check_invalid_apis as $api_name) {

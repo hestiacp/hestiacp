@@ -67,3 +67,14 @@ fi
 if [[ ! -d $HESTIA/data/api ]]; then
     cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
 fi
+
+# Update Cloudflare address
+if [ -f /etc/nginx/nginx.conf ] && [ "$(grep 'set_real_ip_from 2405:8100::/32' /etc/nginx/nginx.conf)" = "" ];then
+    echo "[ * ] Updating nginx configuration with changes to Cloudflare IP addresses"
+    sed -i "/#set_real_ip_from  2405:b500::\/32;/d" /etc/nginx/nginx.conf
+    sed -i "/#set_real_ip_from  2606:4700::\/32;/d" /etc/nginx/nginx.conf
+    sed -i "/#set_real_ip_from  2803:f800::\/32;/d" /etc/nginx/nginx.conf
+    sed -i "/#set_real_ip_from  2c0f:f248::\/32;/d" /etc/nginx/nginx.conf
+    sed -i "/#set_real_ip_from  2a06:98c0::\/29;/d" /etc/nginx/nginx.conf
+    sed -i "s/#set_real_ip_from  2400:cb00::\/32;/# set_real_ip_from 2400:cb00::\/32;\n    # set_real_ip_from 2606:4700::\/32;\n    # set_real_ip_from 2803:f800::\/32;\n    # set_real_ip_from 2405:b500::\/32;\n    # set_real_ip_from 2405:8100::\/32;\n    # set_real_ip_from 2a06:98c0::\/29;\n    # set_real_ip_from 2c0f:f248::\/32;/g" /etc/nginx/nginx.conf
+fi

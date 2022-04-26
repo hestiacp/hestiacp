@@ -122,9 +122,10 @@ done
 chown -R $user:$user $HOMEDIR/$user/web/$domain
 chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* $conf
 chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
-user_exec chmod 751 $HOMEDIR/$user/web/$domain $HOMEDIR/$user/web/$domain/*
+user_exec chmod 751 $HOMEDIR/$user/web/$domain/*
 user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
 user_exec chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
+user_exec chmod 551 $HOMEDIR/$user/web/$domain
 chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 
 # Adding PHP-FPM backend

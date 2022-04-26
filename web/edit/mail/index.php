@@ -212,6 +212,19 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         }
         unset($output);
     }
+    
+    if (!empty($_POST['v_reject']) && $v_antispam == "yes" && $v_reject != 'yes' ) {
+         exec(HESTIA_CMD."v-add-mail-domain-reject ".$user." ".$v_domain." yes", $output, $return_var);
+         check_return_code($return_var, $output);
+         $v_reject = 'yes';
+         unset($output);
+     }
+     if (empty($_POST['v_reject']) && $v_reject == 'yes' ) {
+          exec(HESTIA_CMD."v-delete-mail-domain-reject ".$user." ".$v_domain." yes", $output, $return_var);
+          check_return_code($return_var, $output);
+          $v_reject = '';
+          unset($output);
+      }
 
     // Change catchall address
     if ((!empty($v_catchall)) && (!empty($_POST['v_catchall'])) && (empty($_SESSION['error_msg']))) {

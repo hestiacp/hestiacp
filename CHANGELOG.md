@@ -23,8 +23,6 @@ All notable changes to this project will be documented in this file.
 - Allow "Purge" cache button visible on templates with the name cacheing-your-template-name (#2526 #2530)
 - Add hooks to hestia-nginx and hestia-php (#2440)
 
-
-
 ### Bugfixes
 
 - Fixed an issue where --hostname and --email did not validated when using --interactive no (#2532 #2531)
@@ -41,7 +39,11 @@ All notable changes to this project will be documented in this file.
 - Update example in v-add-web-domain-backend (#2500 gingerbeardman)
 - Update example in v-add-letsencrypt-domain (#2442)
 - Fixed an issue in configure-server-smtp.sh by loading /etc/hestiacp/hestia.conf (#2488)
-
+- Update Cloudflare ips in nginx.conf (#2542 @clarkchentw)
+- Remove duplicate code in Ubuntu installer (#2542 @clarkchentw)
+- Fixed an issue in Nginx + Apache2 mail "disabled" template. Causing users unable to request an valid ssl certificate (#2550 #2549)
+- Fixed an issue with "Reject spam" option not working (#2551 #2545)
+- Fixed an issue with Editing / Adding DNS records (#2546, #2547, #2548 @DuoCZ) 
 
 ### Dependencies
 - Update hestia-nginx to 1.21.6

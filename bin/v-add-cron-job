@@ -44,6 +44,7 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'CRON_JOBS'
 get_next_cronjob
 is_format_valid 'job'
+is_format_valid 'restart'
 is_object_new 'cron' 'JOB' "$job"
 
 # Perform verification if read-only mode is enabled

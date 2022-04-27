@@ -61,7 +61,7 @@ if [ -z "$webmail" ]; then
 fi
 
 check_args '2' "$#" 'USER DOMAIN [WEBMAIL] [RESTART]'
-is_format_valid 'user' 'domain'
+is_format_valid 'user' 'domain' 'restart'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
 is_type_valid "$WEBMAIL_SYSTEM disabled" "$webmail"

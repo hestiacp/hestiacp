@@ -51,7 +51,13 @@ All notable changes to this project will be documented in this file.
     - Update zlib to 1.2.12
 - Update hestia-php to 8.1.5
 
+## [1.5.12] - Service release
+
 ### Bugfixes
+
+- Fixed vulnerability with Sed [CVE-2022-XXXX](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-XXXX)
+- Remove localhost exception for invalidating sessions [SSD disclosure](https://ssd-disclosure.com/ssd-advisory-vestacp-multiple-vulnerabilities/)
+- 
 
 ## [1.5.11] - Service release
 

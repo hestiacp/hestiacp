@@ -13,6 +13,7 @@
 # Argument definition
 user=$1
 domain=$2
+rstart=$3
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -28,8 +29,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
-is_format_valid 'user' 'domain'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"

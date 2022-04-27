@@ -61,12 +61,9 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'USER [PERMISSIONS] [COMMENT] [FORMAT]'
-is_format_valid 'user'
+is_format_valid 'user' 'comment' 'format'
 is_object_valid 'user' 'USER' "$user"
 is_key_permissions_format_valid "$permissions" "$user"
-if [ -n "$comment" ]; then
-    is_format_valid 'comment'
-fi
 
 #----------------------------------------------------------#
 #                       Action                             #

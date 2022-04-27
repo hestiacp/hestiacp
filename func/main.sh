@@ -1212,7 +1212,7 @@ is_format_valid() {
 }
 
 is_folder_exists () {
-  if [ ! -f "$1" ]; then 
+  if [ ! -d "$1" ]; then 
     check_result "$E_NOTEXIST" "folder $1 does not exist"
   fi
 }

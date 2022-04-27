@@ -96,6 +96,9 @@ is_object_new "dns/$domain" 'ID' "$id"
 is_dns_fqnd "$rtype" "$dvalue"
 is_dns_nameserver_valid "$domain" "$rtype" "$dvalue"
 is_format_valid 'ttl'
+if [ -n "$restart" ]; then
+    is_format_valid 'restart'
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

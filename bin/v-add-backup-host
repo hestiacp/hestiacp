@@ -104,7 +104,7 @@ EOF
 if [ "$type" != 'local' ];then
     check_args '4' "$#" "TYPE HOST USERNAME PASSWORD [PATH] [PORT]"
     is_format_valid 'host' 'path' 'port'
-    is_type_valid "$type" 'sftp,ftp,b2'
+    is_type_valid  'sftp,ftp,b2' "$type"
     is_username_format_valid "$user" "username"
     is_password_valid
     format_no_quotes "$password" "password"

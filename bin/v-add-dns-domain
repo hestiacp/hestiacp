@@ -66,6 +66,10 @@ if [ -z "$(is_ip_format_valid $domain)" ]; then
     exit 1
 fi
 
+if [ -n "$restart" ]; then 
+    is_format_valid 'restart'
+fi
+
 is_package_full 'DNS_DOMAINS'
 template=$(get_user_value '$DNS_TEMPLATE')
 is_dns_template_valid "$template"

@@ -32,6 +32,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '2' "$#" 'USER DOMAIN [FLUSH]'
 is_format_valid 'user' 'domain'
+if [ -n "$flush" ]; then
+    is_type_valid "records yes no" "$flush" 
+fi
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_procces_running
 remote_dns_health_check

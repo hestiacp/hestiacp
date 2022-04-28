@@ -62,7 +62,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fixed vulnerability with Sed [CVE-2022-XXXX](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-XXXX)
+- Fixed vulnerability with Sed [CVE-2022-1509](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-1509)
 - Remove localhost exception for invalidating sessions [SSD disclosure](https://ssd-disclosure.com/ssd-advisory-vestacp-multiple-vulnerabilities/)
 
 ## [1.5.11] - Service release

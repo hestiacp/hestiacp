@@ -1164,6 +1164,135 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "DNS: Add domain record MX" {
+    run v-add-dns-record $user $domain '@' MX mx.hestiacp.com  '' 50
+    assert_success
+    refute_output
+    
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
+    
+    run v-change-dns-record $user $domain 50 '@' MX mx.hestia.com
+    assert_success
+    refute_output
+    
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
+    
+    run v-delete-dns-record $user $domain 50
+    assert_success
+    refute_output
+}
+
+@test "DNS: Add domain record NS" {
+    run v-add-dns-record $user $domain '@' NS mx.hestiacp.com  '' 50
+    assert_success
+    refute_output
+    
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
+    
+    run v-change-dns-record $user $domain 50 '@' NS mx.hestia.com
+    assert_success
+    refute_output
+    
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
+    
+    run v-delete-dns-record $user $domain 50
+    assert_success
+    refute_output
+}
+
+@test "DNS: Add domain record SRV" {
+    run v-add-dns-record $user $domain '_test_domain' SRV mx.hestiacp.com  '' 50
+    assert_success
+    refute_output
+    
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
+    
+    run v-change-dns-record $user $domain 50 '_test.domain' SRV mx.hestia.com
+    assert_success
+    refute_output
+    
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
+    
+    run v-delete-dns-record $user $domain 50
+    assert_success
+    refute_output
+}
+
+@test "DNS: Add domain record CNAME" {
+    run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com  '' 50
+    assert_success
+    refute_output
+    
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestiacp.com."
+    
+    run v-change-dns-record $user $domain 50 'mail' CNAME mx.hestia.com
+    assert_success
+    refute_output
+    
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "mx.hestia.com."
+    
+    run v-delete-dns-record $user $domain 50
+    assert_success
+    refute_output
+}
+
+@test "DNS: Check txt dns records type1" {
+    [ -z "$DNS_SYSTEM" ] && skip
+
+    run v-delete-dns-record $user $domain 50
+
+    record1_in='v=DMARC1; p=quarantine; pct=100'
+    record1_out='"v=DMARC1; p=quarantine; pct=100"'
+
+    # Test Create
+    run v-add-dns-record $user $domain 'test-long-txt' 'TXT' "$record1_in" '' 50
+    assert_success
+    refute_output
+
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record1_out"
+
+    # Test Edit
+    run v-change-dns-record $user $domain 50 'test-long-txt' 'TXT' "$record1_in"
+    assert_success
+    refute_output
+
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record1_out"
+
+    # Test Cleanup
+    run v-delete-dns-record $user $domain 50
+    assert_success
+    refute_output
+}
+
+@test "DNS: Check txt dns records type2" {
+    [ -z "$DNS_SYSTEM" ] && skip
+    # Edit domain is currently not working as expected
+    skip
+    run v-delete-dns-record $user $domain 50
+
+    record2_in='k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4+VEVsoTbl6tYLJlhozqAGju3IgpSVdBAS5LMyzpHP8/L0/PlyVRJnm2xECjVk3DRqCmelyIvmraw1VtFz2aH6DRlDhHsZghj1DmGhwN+7NkwIb4hEvmytMVAz1WyiLH6Rm6Iemm/ZCt1RhrAMUYLxHA9mJgky76YCcf8/cX35xC+1vd4a5U6YofAZeVP9DBvVgQ8ung4gVrOrQrXkU8QfVNAoXz5pfJo74GB7woIBFhZXsU6SKho7KnzT5inVCIOtWp7L5hyEnbySWQPHT2vAMCCAe2AY/Vv0N3HW14o8P3b4A6OU920wFB2kA7pkQNzO5OwH+HSttwG0PaIiQxYQIDAQAB'
+    record2_out='"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4+VEVsoTbl6tYLJlhozqAGju3IgpSVdBAS5LMyzpHP8/L0/PlyVRJnm2xECjVk3DRqCmelyIvmraw1VtFz2aH6DRlDhHsZghj1DmGhwN+7NkwIb4hEvmytMVAz1WyiLH6Rm6Iemm/ZCt1RhrAMUYLxHA9mJgky76YCcf8/cX35xC+1vd4a5U6YofAZeVP9DBvVgQ8ung4g""VrOrQrXkU8QfVNAoXz5pfJo74GB7woIBFhZXsU6SKho7KnzT5inVCIOtWp7L5hyEnbySWQPHT2vAMCCAe2AY/Vv0N3HW14o8P3b4A6OU920wFB2kA7pkQNzO5OwH+HSttwG0PaIiQxYQIDAQAB"'
+
+    # Test Create
+    run v-add-dns-record $user $domain 'test-long-txt' 'TXT' "$record2_in" '' 50
+    assert_success
+    refute_output
+
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record2_out"
+
+    # Test Edit
+    run v-change-dns-record $user $domain 50 'test-long-txt' 'TXT' "$record2_in"
+    assert_success
+    refute_output
+
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record2_out"
+
+    # Test Cleanup
+    run v-delete-dns-record $user $domain 50
+    assert_success
+    refute_output
+}
+
 @test "DNS: Change domain ip" {
     run v-change-dns-domain-ip $user $domain 127.0.0.1
     assert_success

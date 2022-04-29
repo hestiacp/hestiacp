@@ -16,7 +16,7 @@ domain=$2
 domain_idn=$2
 id=$3
 record=$4
-type=$5
+rtype=$5
 dvalue=$(idn -t --quiet -u "$6" )
 priority=$7
 restart=$8
@@ -42,7 +42,7 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '6' "$#" 'USER DOMAIN ID RECORD TYPE VALUE [PRIORITY] [RESTART] [TTL]'
-is_format_valid 'user' 'domain' 'id' 'record' 'type' 'dvalue'
+is_format_valid 'user' 'domain' 'id' 'record'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -66,31 +66,47 @@ unset TTL
 line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
 parse_object_kv_list "$line"
 
-if [ -z "$type" ]; then
-    type=$TYPE
+if [ -z "$rtype" ]; then
+    rtype=$TYPE
+fi
+
+if [ -z "$priority" ]; then
+    priority=$PRIORITY
 fi
 
 # Null priority for none MX/SRV records
-if [ "$type" != 'MX' ] && [ "$TYPE" != 'SRV' ]; then
+if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
     priority=''
 fi
 
 # Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
-if [[ $type =~ NS|CNAME|MX|PTR|SRV ]]; then
+if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     trailing_dot=$(echo "$dvalue" | grep "\.$")
     if [ -z "$trailing_dot" ]; then
         dvalue="$dvalue."
     fi
 fi
 
+if [ "$rtype" != "CAA" ]; then
+    dvalue=${dvalue//\"/}
+
+    if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
+        dvalue='"'"$dvalue"'"'
+    fi
+fi
+
+
+#RTYPE wasn't checked make sure to do it now correctly 
+is_format_valid 'user' 'domain' 'id' 'record' 'rtype' 'dvalue'
+
 # Additional verifications
 is_dns_fqnd "$TYPE" "$dvalue"
 is_dns_nameserver_valid "$domain" "$TYPE" "$dvalue"
 
-if [[ "$RECORD" == "$record" ]] && [[ "$TYPE" == "$type" ]] && [[ "$PRIORITY" -eq "$priority" ]] \
+if [[ "$RECORD" == "$record" ]] && [[ "$TYPE" == "$rtype" ]] && [[ "$PRIORITY" -eq "$priority" ]] \
         && [[ "$VALUE" == "$dvalue" ]] && [[ "$SUSPENDED" == 'no' ]] && [[ "$TTL" -eq "$ttl" ]]; then
     echo "No pending changes in DNS entry."
-    exit "$E_EXSIST"
+    exit "$E_EXISTS"
 fi
 
 # Generating timestamp
@@ -99,7 +115,7 @@ time=$(echo "$time_n_date" |cut -f 1 -d \ )
 date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 # Adding record
-dns_rec="ID='$id' RECORD='$record' TYPE='$type' PRIORITY='$priority'"
+dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
 dns_rec="$dns_rec VALUE='$dvalue' SUSPENDED='no' TIME='$time' DATE='$date'"
 [ -n "$ttl" ] && dns_rec="$dns_rec TTL='$ttl'"
 # Deleting old record
@@ -135,7 +151,7 @@ $BIN/v-restart-dns "$restart"
 check_result $? "DNS restart failed" >/dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "DNS" "DNS record value changed (Type: $type, Record: $record, Value: $dvalue, Domain: $domain)."
+$BIN/v-log-action "$user" "Info" "DNS" "DNS record value changed (Type: $rtype, Record: $record, Value: $dvalue, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

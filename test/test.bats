@@ -1183,6 +1183,7 @@ function check_ip_not_banned(){
 }
 
 @test "DNS: Add domain record NS" {
+    run v-delete-dns-record $user $domain 50
     run v-add-dns-record $user $domain '@' NS mx.hestiacp.com  '' 50
     assert_success
     refute_output
@@ -1201,6 +1202,7 @@ function check_ip_not_banned(){
 }
 
 @test "DNS: Add domain record SRV" {
+    run v-delete-dns-record $user $domain 50
     run v-add-dns-record $user $domain '_test_domain' SRV mx.hestiacp.com  '' 50
     assert_success
     refute_output
@@ -1218,7 +1220,8 @@ function check_ip_not_banned(){
     refute_output
 }
 
-@test "DNS: Add domain record CNAME" {
+@test "DNS: Add domain record CNAME" {    
+    run v-delete-dns-record $user $domain 50
     run v-add-dns-record $user $domain 'mail' CNAME mx.hestiacp.com  '' 50
     assert_success
     refute_output
@@ -1242,7 +1245,10 @@ function check_ip_not_banned(){
     run v-delete-dns-record $user $domain 50
 
     record1_in='v=DMARC1; p=quarantine; pct=100'
+    record2_in='v=DMARC1; p=quarantine; pct=90'
+        
     record1_out='"v=DMARC1; p=quarantine; pct=100"'
+    record2_in='"v=DMARC1; p=quarantine; pct=90"'
 
     # Test Create
     run v-add-dns-record $user $domain 'test-long-txt' 'TXT' "$record1_in" '' 50
@@ -1252,11 +1258,11 @@ function check_ip_not_banned(){
     assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record1_out"
 
     # Test Edit
-    run v-change-dns-record $user $domain 50 'test-long-txt' 'TXT' "$record1_in"
+    run v-change-dns-record $user $domain 50 'test-long-txt' 'TXT' "$record2_in"
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record1_out"
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record2_out"
 
     # Test Cleanup
     run v-delete-dns-record $user $domain 50
@@ -1266,26 +1272,28 @@ function check_ip_not_banned(){
 
 @test "DNS: Check txt dns records type2" {
     [ -z "$DNS_SYSTEM" ] && skip
-    # Edit domain is currently not working as expected
-    skip
+
     run v-delete-dns-record $user $domain 50
 
-    record2_in='k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4+VEVsoTbl6tYLJlhozqAGju3IgpSVdBAS5LMyzpHP8/L0/PlyVRJnm2xECjVk3DRqCmelyIvmraw1VtFz2aH6DRlDhHsZghj1DmGhwN+7NkwIb4hEvmytMVAz1WyiLH6Rm6Iemm/ZCt1RhrAMUYLxHA9mJgky76YCcf8/cX35xC+1vd4a5U6YofAZeVP9DBvVgQ8ung4gVrOrQrXkU8QfVNAoXz5pfJo74GB7woIBFhZXsU6SKho7KnzT5inVCIOtWp7L5hyEnbySWQPHT2vAMCCAe2AY/Vv0N3HW14o8P3b4A6OU920wFB2kA7pkQNzO5OwH+HSttwG0PaIiQxYQIDAQAB'
-    record2_out='"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4+VEVsoTbl6tYLJlhozqAGju3IgpSVdBAS5LMyzpHP8/L0/PlyVRJnm2xECjVk3DRqCmelyIvmraw1VtFz2aH6DRlDhHsZghj1DmGhwN+7NkwIb4hEvmytMVAz1WyiLH6Rm6Iemm/ZCt1RhrAMUYLxHA9mJgky76YCcf8/cX35xC+1vd4a5U6YofAZeVP9DBvVgQ8ung4g""VrOrQrXkU8QfVNAoXz5pfJo74GB7woIBFhZXsU6SKho7KnzT5inVCIOtWp7L5hyEnbySWQPHT2vAMCCAe2AY/Vv0N3HW14o8P3b4A6OU920wFB2kA7pkQNzO5OwH+HSttwG0PaIiQxYQIDAQAB"'
+    record3_in='k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4+VEVsoTbl6tYLJlhozqAGju3IgpSVdBAS5LMyzpHP8/L0/PlyVRJnm2xECjVk3DRqCmelyIvmraw1VtFz2aH6DRlDhHsZghj1DmGhwN+7NkwIb4hEvmytMVAz1WyiLH6Rm6Iemm/ZCt1RhrAMUYLxHA9mJgky76YCcf8/cX35xC+1vd4a5U6YofAZeVP9DBvVgQ8ung4gVrOrQrXkU8QfVNAoXz5pfJo74GB7woIBFhZXsU6SKho7KnzT5inVCIOtWp7L5hyEnbySWQPHT2vAMCCAe2AY/Vv0N3HW14o8P3b4A6OU920wFB2kA7pkQNzO5OwH+HSttwG0PaIiQxYQIDAQAB'
+    record3_out='"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4+VEVsoTbl6tYLJlhozqAGju3IgpSVdBAS5LMyzpHP8/L0/PlyVRJnm2xECjVk3DRqCmelyIvmraw1VtFz2aH6DRlDhHsZghj1DmGhwN+7NkwIb4hEvmytMVAz1WyiLH6Rm6Iemm/ZCt1RhrAMUYLxHA9mJgky76YCcf8/cX35xC+1vd4a5U6YofAZeVP9DBvVgQ8ung4g""VrOrQrXkU8QfVNAoXz5pfJo74GB7woIBFhZXsU6SKho7KnzT5inVCIOtWp7L5hyEnbySWQPHT2vAMCCAe2AY/Vv0N3HW14o8P3b4A6OU920wFB2kA7pkQNzO5OwH+HSttwG0PaIiQxYQIDAQAB"'
+    
+    record3_in='k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4+VEVsoTbl6tYLJlhozqAGju3IgpSVdBAS5LMyzpHP8/L0/PlyVRJnm2xECjVk3DRqCmelyIvmraw1VtFz2aH6DRlDhHsZghj1DmGhwN+7NkwIb4hEvmytMVAz1WyiLH6Rm6Iemm/ZCt1RhrAMUYLxHA9mJgky76YCcf8/cX35xC+1vd4a5U6YofAZeVP9DBvVgQ8ung4gVrOrQrXkU8QfVNAoXz5pfJo74GB7woIBFhZXsU6SKho7KnzT5inVCIOtWp7L5hyEnbySWQPHT2vAMCCAe2AY/Vv0N3HW14o8P3b4A6OU920wFB2kA7pkQNzO5OwH+HSttwG0PaIiQxYQIDAQA4'
+    record3_out='"k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4+VEVsoTbl6tYLJlhozqAGju3IgpSVdBAS5LMyzpHP8/L0/PlyVRJnm2xECjVk3DRqCmelyIvmraw1VtFz2aH6DRlDhHsZghj1DmGhwN+7NkwIb4hEvmytMVAz1WyiLH6Rm6Iemm/ZCt1RhrAMUYLxHA9mJgky76YCcf8/cX35xC+1vd4a5U6YofAZeVP9DBvVgQ8ung4g""VrOrQrXkU8QfVNAoXz5pfJo74GB7woIBFhZXsU6SKho7KnzT5inVCIOtWp7L5hyEnbySWQPHT2vAMCCAe2AY/Vv0N3HW14o8P3b4A6OU920wFB2kA7pkQNzO5OwH+HSttwG0PaIiQxYQIDAQA4"'
 
     # Test Create
-    run v-add-dns-record $user $domain 'test-long-txt' 'TXT' "$record2_in" '' 50
+    run v-add-dns-record $user $domain 'test-long-txt' 'TXT' "$record3_in" '' 50
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record2_out"
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record3_out"
 
     # Test Edit
-    run v-change-dns-record $user $domain 50 'test-long-txt' 'TXT' "$record2_in"
+    run v-change-dns-record $user $domain 50 'test-long-txt' 'TXT' "$record4_in"
     assert_success
     refute_output
 
-    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record2_out"
+    assert_file_contains "$HOMEDIR/$user/conf/dns/${domain}.db" "$record4_out"
 
     # Test Cleanup
     run v-delete-dns-record $user $domain 50

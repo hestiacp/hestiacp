@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.6.0~alpha'
+HESTIA_INSTALL_VER='1.6.0~beta-1'
 # Dependencies
 pma_v='5.1.3'
 rc_v="1.5.2"
@@ -1298,6 +1298,7 @@ else
         'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 fi
 # Parsing certificate file
+crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem |cut -f 1 -d:)
 if [ "$release" = "22.04" ]; then
   key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem |cut -f 1 -d:)
   key_end=$(grep -n  "END PRIVATE KEY" /tmp/hst.pem |cut -f 1 -d:)

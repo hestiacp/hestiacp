@@ -2,7 +2,7 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.5.12 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
+**Latest stable release:** Version 1.6.0 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
@@ -34,14 +34,13 @@ Supported platforms and operating systems
 
 AMD (x86_64 Intel/AMD)
 ----------------------------
-* **Debian:** 11, 10 or 9
-* **Ubuntu:** 20.04 LTS or 18.04 LTS
+* **Debian:** 11 or 10
+* **Ubuntu:** 22.04 LTS, 20.04 LTS or 18.04 LTS
 
 ARM64 (arm64)
 ----------------------------
-* **Debian:** 11, 10, 9
-* **Ubuntu:** 20.04 LTS or 18.04 LTS
-* **NOTE:** ARM 64 bit processors only! ARM 32bit (armhf) is currently not supported!
+* **Debian:** 11 or 10
+* **Ubuntu:** 22.04 LTS, 20.04 LTS or 18.04 LTS
 
 Installing Hestia Control Panel
 ============================

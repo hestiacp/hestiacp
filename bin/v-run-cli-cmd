@@ -39,6 +39,10 @@ if [ "$clicmd" = "composer" ]; then
     clicmd="$homedir/.composer/composer"
 fi
 
+if [ "$clicmd" = "wp" ]; then
+    clicmd="$homedir/.wp/wp"
+fi
+
 if [ -z "$(which "$clicmd")" ]; then
     check_result "$E_NOTEXIST" "Error: Cli command does not exist"
 fi

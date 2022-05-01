@@ -890,7 +890,7 @@ is_common_format_valid() {
 }
 
 is_no_new_line_format() {
-    test=$(echo $1 | sed -e 's/\.*$//g' -e 's/^\.*//g');
+    test=$(echo $1 | head -n1 );
     if [[ "$test" != "$1" ]]; then
       check_result "$E_INVALID" "invalid value :: $1"
     fi

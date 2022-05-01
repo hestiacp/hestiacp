@@ -40,7 +40,7 @@ if [ "$clicmd" = "composer" ]; then
 fi
 
 if [ "$clicmd" = "wp" ]; then
-    clicmd="$homedir/.wp/wp"
+    clicmd="$homedir/.wp/wp-cli"
 fi
 
 if [ -z "$(which "$clicmd")" ]; then

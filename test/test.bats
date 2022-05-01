@@ -471,10 +471,7 @@ function check_ip_not_banned(){
 
 @test "User: Check user password Incorrect password" {
   run v-check-user-password $user "$userpass1" 192.168.2.10 'no'
-  @test "User: Check user password Incorrect password" {
-    run v-check-user-password $user "$userpass1" 192.168.2.10 'no'
-    assert_success
-  }
+  assert_failure $E_PASSWORD
 }
 
 @test "User: Check user hash ipv4" {
@@ -489,6 +486,10 @@ function check_ip_not_banned(){
   assert_success
 }
 
+@test "User: Check user hash ipv6 incorrect" {
+  run v-check-user-hash $user 'jafawefaweijawe' 21DA:D3:0:2F3B:2AA:FF:FE28:9C5A
+  assert_failure $E_PASSWORD
+}
 
 #----------------------------------------------------------#
 #                         Cron                             #

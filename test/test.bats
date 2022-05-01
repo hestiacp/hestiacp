@@ -471,7 +471,10 @@ function check_ip_not_banned(){
 
 @test "User: Check user password Incorrect password" {
   run v-check-user-password $user "$userpass1" 192.168.2.10 'no'
-  assert_success
+  @test "User: Check user password Incorrect password" {
+    run v-check-user-password $user "$userpass1" 192.168.2.10 'no'
+    assert_success
+  }
 }
 
 @test "User: Check user hash ipv4" {

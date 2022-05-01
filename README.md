@@ -34,13 +34,13 @@ Supported platforms and operating systems
 
 AMD (x86_64 Intel/AMD)
 ----------------------------
-* **Debian:** 11, 10 or 9
-* **Ubuntu:** 20.04 LTS or 18.04 LTS
+* **Debian:** 11 or 10
+* **Ubuntu:** 22.04LTS, 20.04 LTS or 18.04 LTS
 
 ARM64 (arm64)
 ----------------------------
-* **Debian:** 11, 10 or 9
-* **Ubuntu:** 20.04 LTS or 18.04 LTS
+* **Debian:** 11 or 10
+* **Ubuntu:** 22.04LTS, 20.04 LTS or 18.04 LTS
 
 Installing Hestia Control Panel
 ============================

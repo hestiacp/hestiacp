@@ -44,6 +44,9 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue in Nginx + Apache2 mail "disabled" template. Causing users unable to request an valid ssl certificate (#2550 #2549)
 - Fixed an issue with "Reject spam" option not working (#2551 #2545)
 - Fixed an issue with Editing / Adding DNS records (#2546, #2547, #2548 @DuoCZ) 
+- Fixed an issue with TXT records longer then 255 characters (#2559)
+- Fixed an issue with wp-cli permission denied and allow wp-cli to be run in v-run-cmd command (#2562 and #2565)
+
 
 ### Dependencies
 - Update hestia-nginx to 1.21.6

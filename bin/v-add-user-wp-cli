@@ -40,7 +40,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-WPCLI_DIR="/home/$user/.wp"
+WPCLI_DIR="/home/$user/.wp-cli"
 WPCLI_BIN="$WPCLI_DIR/wp"
 
 if [ -f "$WPCLI_DIR" ]; then

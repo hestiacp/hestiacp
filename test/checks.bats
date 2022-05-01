@@ -149,10 +149,32 @@ r' "key"
      run is_domain_format_valid '..' "key"
     assert_failure $E_INVALID
 }
+
+@test "is_domain_format_valid hestiacp.com." {
+     run is_domain_format_valid 'mx.hestiacp.com.' "key"
+    assert_success
+}
+
 @test "is_domain_format_valid LF." {
      run is_domain_format_valid 'c
 1eshutdown
 r' "key"
+    assert_failure $E_INVALID
+}
+
+@test "is_dns_record_format_valid" {
+    rtype='MX'
+    priority=1; 
+    run is_dns_record_format_valid 'mx.hestiacp.com.'  
+    assert_success
+}
+
+@test "is_dns_record_format_valid test" {
+    rtype='MX'
+priority=1; 
+     run is_dns_record_format_valid 'c
+1eshutdown
+r' 
     assert_failure $E_INVALID
 }
 
@@ -218,13 +240,6 @@ r' "key"
 
 @test "is_dns_type_format_valid test" {
      run is_dns_type_format_valid 'c
-1eshutdown
-r' "key"
-    assert_failure $E_INVALID
-}
-
-@test "is_dns_record_format_valid test" {
-     run is_dns_record_format_valid 'c
 1eshutdown
 r' "key"
     assert_failure $E_INVALID
@@ -301,6 +316,22 @@ r' "key"
 r' "key"
     assert_failure $E_INVALID
 }
+
+@test "format_no_quotes .." {
+     run format_no_quotes '..' "key"
+    assert_success
+}
+
+@test "format_no_quotes text." {
+     run format_no_quotes 'text.' "key"
+    assert_success
+}
+
+@test "is_common_format_valid text" {
+     run is_common_format_valid 'text' "key"
+    assert_success
+}
+
 
 @test "format_no_quotes test" {
      run format_no_quotes 'c

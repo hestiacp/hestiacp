@@ -262,7 +262,7 @@ function check_ip_not_banned(){
 #                           IP                             #
 #----------------------------------------------------------#
 
-@test "Check reverse Dns validation" {
+@test "RDNS: Check reverse Dns validation" {
     # 1. PTR record for a IP should return a hostname(reverse) which in turn must resolve to the same IP addr(forward). (Full circle)
     #  `-> not implemented in `is_ip_rdns_valid` yet and also not tested here
     # 2. Reject rPTR records that match generic dynamic IP pool patterns
@@ -314,37 +314,37 @@ function check_ip_not_banned(){
 #                         User                             #
 #----------------------------------------------------------#
 
-@test "Add new user" {
+@test "User: Add new user" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
 }
 
-@test "Change user password" {
-    run v-change-user-password "$user" t3st-p4ssw0rd
+@test "User: Change user password" {
+    run v-change-user-password "$user" "$userpass2" 
     assert_success
     refute_output
 }
 
-@test "Change user email" {
+@test "User: Change user email" {
     run v-change-user-contact "$user" tester@hestiacp.com
     assert_success
     refute_output
 }
 
-@test "Change user contact invalid email " {
+@test "User: Change user contact invalid email " {
     run v-change-user-contact "$user" testerhestiacp.com
     assert_failure $E_INVALID
     assert_output --partial 'Error: invalid email format'
 }
 
-@test "Change user name" {
+@test "User: Change user name" {
     run v-change-user-name "$user" "New name"
     assert_success
     refute_output
 }
 
-@test "Change user shell" {
+@test "User: Change user shell" {
     run v-change-user-shell $user bash
     assert_success
     refute_output
@@ -353,13 +353,13 @@ function check_ip_not_banned(){
     assert_output --partial "$user"
 }
 
-@test "Change user invalid shell" {
+@test "User: Change user invalid shell" {
     run v-change-user-shell $user bashinvalid
     assert_failure $E_INVALID
     assert_output --partial 'shell bashinvalid is not valid'
 }
 
-@test "Change user nologin" {
+@test "User: Change user nologin" {
     run v-change-user-shell $user nologin
     assert_success
     refute_output
@@ -369,7 +369,7 @@ function check_ip_not_banned(){
 }
 
 
-@test "Change user default ns" {
+@test "User: Change user default ns" {
     run v-change-user-ns $user ns0.com ns1.com ns2.com ns3.com
     assert_success
     refute_output
@@ -379,64 +379,116 @@ function check_ip_not_banned(){
     assert_output --partial 'ns0.com'
 }
 
-@test "Change user language" {
+@test "User: Change user language" {
   run v-change-user-language $user "nl"
   assert_success
   refute_output
 }
 
-@test "Change user language (Does not exists)" {
+@test "User: Change user language (Does not exists)" {
   run v-change-user-language $user "aa"
   assert_failure $E_NOTEXIST
 }
 
-@test "Change user sort order" {
+@test "User: Change user sort order" {
   run v-change-user-sort-order $user "name"
   assert_success
   refute_output
 }
 
-@test "Change user theme" {
+@test "User: Change user theme" {
   run v-change-user-theme $user "flat"
   assert_success
   refute_output
 }
 
-@test "Change user theme (Does not exists)" {
+@test "User: Change user theme (Does not exists)" {
   run v-change-user-theme $user "aa"
   assert_failure $E_NOTEXIST
 }
 
-@test "Change user login ip" {
+@test "User: Change user login ip" {
   run v-change-user-config-value $user "LOGIN_USE_IPLIST" "1.2.3.4,1.2.3.5"
   assert_success
   refute_output
 }
 
-@test "Change user login ip (Failed)" {
+@test "User: Change user login ip (Failed)" {
   run v-change-user-config-value $user "LOGIN_USE_IPLIST" "'; echo 'jaap'; echo '"
   assert_failure $E_INVALID
 }
 
-@test "Add user notification" {
+@test "User: Add user notification" {
   run v-add-user-notification $user "Test message" "Message"
   assert_success
   refute_output
 }
-@test "Acknowledge user notification" {
+@test "User: Acknowledge user notification" {
   run v-acknowledge-user-notification $user 1
   assert_success
   refute_output
 }
-@test "List user notification" {
+@test "User: List user notification" {
   run v-list-user-notifications $user csv
   assert_success
   assert_output --partial "1,\"Test message\",\"Message\",yes"
 }
-@test "Delete user notification" {
+@test "User: Delete user notification" {
   run v-delete-user-notification admin 1
   assert_success
   refute_output
+}
+
+@test "User: Get User salt ipv4" {
+  run v-get-user-salt $user 192.168.2.10
+  assert_success
+}
+
+@test "User: Get User salt ipv4 invalid" {
+  run v-get-user-salt $user 192.168.992.10
+  assert_failure $E_INVALID
+}
+
+@test "User: Get User salt ipv6" {
+  run v-get-user-salt $user "21DA:D3:0:2F3B:2AA:FF:FE28:9C5A"
+  assert_success
+}
+
+@test "User: Get User salt ipv6 not exists" {
+  run v-get-user-salt "notexists" "21DA:D3:0:2F3B:2AA:FF:FE28:9C5B"
+  assert_failure $E_PASSWORD
+}
+
+@test "User: Get User salt ipv6 invalid" {
+  run v-get-user-salt "$user" "21DA:D3:0:2F3B:ZZZ:FF:FE28:9C5B"
+  assert_failure $E_INVALID
+}
+
+@test "User: Check user password" {
+  run v-check-user-password $user "$userpass2" 192.168.2.10 'no'
+  assert_success
+}
+
+@test "User: Check user password Incorrect password" {
+  run v-check-user-password $user "$userpass1" 192.168.2.10 'no'
+  assert_failure $E_PASSWORD
+}
+
+@test "User: Check user hash ipv4" {
+  hash=$(v-check-user-password $user "$userpass2" 192.168.2.10 'yes');
+  run v-check-user-hash $user $hash 192.168.2.10
+  assert_success
+}
+
+@test "User: Check user hash ipv6" {
+  hash=$(v-check-user-password $user "$userpass2" 21DA:D3:0:2F3B:2AA:FF:FE28:9C5A 'yes');
+  run v-check-user-hash $user $hash 21DA:D3:0:2F3B:2AA:FF:FE28:9C5A
+  assert_success
+}
+
+@test "User: Check user hash ipv6 incorrect" {
+  run v-check-user-hash $user 'jafawefaweijawe' 21DA:D3:0:2F3B:2AA:FF:FE28:9C5A
+  assert_failure $E_PASSWORD
 }
 
 #----------------------------------------------------------#
@@ -1383,13 +1435,13 @@ function check_ip_not_banned(){
 }
 
 @test "MAIL: Add account" {
-    run v-add-mail-account $user $domain test t3st-p4ssw0rd
+    run v-add-mail-account $user $domain test "$userpass2"
     assert_success
     refute_output
 }
 
 @test "MAIL: Add account (duplicate)" {
-    run v-add-mail-account $user $domain test t3st-p4ssw0rd
+    run v-add-mail-account $user $domain test "$userpass2"
     assert_failure $E_EXISTS
 }
 

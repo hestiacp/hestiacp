@@ -12,7 +12,7 @@
 
 # Argument definition
 user=$1
-ip=${2-127.0.0.1}
+ip46=${2-127.0.0.1}
 format=${3-shell}
 
 # Includes
@@ -63,13 +63,13 @@ csv_list() {
 #----------------------------------------------------------#
 
 
-check_args '1' "$#" 'USER [IP] [SALT]'
-is_format_valid 'user' 'ip'
+check_args '1' "$#" 'USER [IP] [FORMAT]'
+is_format_valid 'user' 'ip46'
 
 # Checking user
 if [ ! -d "$HESTIA/data/users/$user" ]; then
     echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
+    echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 
@@ -93,12 +93,12 @@ then
         method='sha-512'
     else
         echo "Error: password missmatch"
-        echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
+        echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
         exit 9
     fi
 elif [[ "$shadow" =~ ! ]]; then 
     echo "Error: Account has been suspended"
-    echo "$date $time $user $ip has been suspended" >> $HESTIA/log/auth.log
+    echo "$date $time $user $ip46 has been suspended" >> $HESTIA/log/auth.log
     exit 5
 else
     salt=${shadow:0:2}
@@ -107,7 +107,7 @@ fi
 
 if [ -z "$salt" ]; then
     echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
+    echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
     exit 9
 fi
 

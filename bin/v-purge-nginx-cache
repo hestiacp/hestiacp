@@ -13,7 +13,7 @@
 # Argument definition
 user=$1
 domain=$2
-rstart=$3
+restart=$3
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

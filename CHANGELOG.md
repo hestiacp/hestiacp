@@ -52,6 +52,13 @@ All notable changes to this project will be documented in this file.
 - Update hestia-php to 8.1.5
 
 
+## [1.5.14] - Service release
+
+### Bugfixes
+
+- Fixed an issue with login with ipv6 (#2564)
+- Fixed an issue with dns records containing an . (#2559)
+
 ## [1.5.13] - Service release
 
 ### Bugfixes

@@ -721,10 +721,16 @@ if [ "$install" = 'yes' ] || [ "$install" = 'y' ] || [ "$install" = 'true' ]; th
     if [ "$OSTYPE" = 'rhel' ]; then
         for i in $RPM_DIR/*.rpm; do
             dnf -y install $i
+            if [ $? -ne 0 ]; then
+              exit 1;
+            fi
         done
     else
         for i in $DEB_DIR/*.deb; do
             dpkg -i $i
+            if [ $? -ne 0 ]; then
+              exit 1;
+            fi
         done
     fi
     unset $answer

@@ -890,7 +890,7 @@ is_common_format_valid() {
 }
 
 is_no_new_line_format() {
-    test=$(echo $1 | head -n1 );
+    test=$(echo "$1" | head -n1 );
     if [[ "$test" != "$1" ]]; then
       check_result "$E_INVALID" "invalid value :: $1"
     fi
@@ -1359,7 +1359,7 @@ format_domain_idn() {
         domain_idn=$domain
     fi
     if [[ "$domain_idn" = *[![:ascii:]]* ]]; then
-        domain_idn=$(idn -t --quiet -a $domain_idn)
+        domain_idn=$(idn2 --quiet $domain_idn)
     fi
 }
 

@@ -814,7 +814,7 @@ function check_ip_not_banned(){
 
 @test "WEB: Add IDN domain ASCII idn-tést.eu" {
    # Expected to fail due to utf exists
-   run v-add-web-domain $user $( idn -a idn-tést.eu) 198.18.0.125
+   run v-add-web-domain $user "xn--idn-tst-fya.eu" 198.18.0.125
    assert_failure $E_EXISTS
 }
 
@@ -1171,6 +1171,12 @@ function check_ip_not_banned(){
 
 @test "DNS: Add domain record" {
     run v-add-dns-record $user $domain test A 198.18.0.125 20
+    assert_success
+    refute_output
+}
+
+@test "DNS: Add domain record *.domain.com" {
+    run v-add-dns-record $user $domain '*' A 198.18.0.125 '' 30
     assert_success
     refute_output
 }

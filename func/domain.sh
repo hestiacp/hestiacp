@@ -142,7 +142,7 @@ prepare_web_aliases() {
     for tmp_alias in ${1//,/ }; do
         tmp_alias_idn="$tmp_alias"
         if [[ "$tmp_alias" = *[![:ascii:]]* ]]; then
-            tmp_alias_idn=$(idn -t --quiet -a $tmp_alias)
+            tmp_alias_idn=$(idn2 --quiet $tmp_alias)
         fi
         if [[ $i -eq 1 ]]; then
             aliases="$tmp_alias"
@@ -165,7 +165,7 @@ prepare_web_aliases() {
 # Update web domain values
 prepare_web_domain_values() {
     if [[ "$domain" = *[![:ascii:]]* ]]; then
-        domain_idn=$(idn -t --quiet -a $domain)
+        domain_idn=$(idn2 --quiet $domain)
     else
         domain_idn=$domain
     fi
@@ -479,12 +479,12 @@ update_domain_zone() {
     domain_param=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
     parse_object_kv_list "$domain_param"
     local zone_ttl="$TTL"
-    SOA=$(idn --quiet -a -t "$SOA")
+    SOA=$(idn2 --quiet  "$SOA")
     if [ -z "$SERIAL" ]; then
         SERIAL=$(date +'%Y%m%d01')
     fi
     if [[ "$domain" = *[![:ascii:]]* ]]; then
-        domain_idn=$(idn -t --quiet -a $domain)
+        domain_idn=$(idn2 --quiet $domain)
     else
         domain_idn=$domain
     fi
@@ -508,9 +508,9 @@ update_domain_zone() {
         # inherit zone TTL if record lacks explicit TTL value
         [ -z "$TTL" ] && TTL="$zone_ttl"
 
-        RECORD=$(idn --quiet -a -t "$RECORD")
+        RECORD=$(idn2 --quiet  "$RECORD")
         if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
-            VALUE=$(idn --quiet -a -t "$VALUE")
+            VALUE=$(idn2 --quiet  "$VALUE")
         fi
         
         if [ "$TYPE" = 'TXT' ]; then
@@ -940,7 +940,7 @@ is_valid_extension() {
         chmod 750 $HESTIA/data/extensions/
         /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
     fi
-    test_domain=$(idn -t --quiet -u "$1" )
+    test_domain=$(idn2 -d  "$1" )
     extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1 | /usr/bin/rev );
     exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat);
 }
@@ -951,7 +951,7 @@ is_valid_2_part_extension() {
         chmod 750 $HESTIA/data/extensions/
         /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
     fi
-    test_domain=$(idn -t --quiet -u "$1" )
+    test_domain=$(idn2 -d  "$1" )
     extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
     exten=$(grep "^$extension\$" $HESTIA/data/extensions/public_suffix_list.dat);
 }

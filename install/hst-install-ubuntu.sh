@@ -43,7 +43,7 @@ mariadb_v="10.6"
 software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
     cron curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved
-    e2fslibs e2fsprogs exim4 exim4-daemon-heavy expect fail2ban flex ftp git idn
+    e2fslibs e2fsprogs exim4 exim4-daemon-heavy expect fail2ban flex ftp git idn2
     imagemagick libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
     lsof mc mariadb-client mariadb-common mariadb-server nginx
     php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
@@ -1042,7 +1042,7 @@ systemctl start systemd-timesyncd
 
 # Check iptables paths and add symlinks when necessary
 if [ ! -e "/sbin/iptables" ]; then
-    if which iptables; then
+    if which iptables > /dev/null; then
         ln -s "$(which iptables)" /sbin/iptables
     elif [ -e "/usr/sbin/iptables" ]; then
         ln -s /usr/sbin/iptables /sbin/iptables
@@ -1055,7 +1055,7 @@ if [ ! -e "/sbin/iptables" ]; then
 fi
 
 if [ ! -e "/sbin/iptables-save" ]; then
-    if which iptables-save; then
+    if which iptables-save > /dev/null; then
         ln -s "$(which iptables-save)" /sbin/iptables-save
     elif [ -e "/usr/sbin/iptables-save" ]; then
         ln -s /usr/sbin/iptables-save /sbin/iptables-save
@@ -1068,7 +1068,7 @@ if [ ! -e "/sbin/iptables-save" ]; then
 fi
 
 if [ ! -e "/sbin/iptables-restore" ]; then
-    if which iptables-restore; then
+    if which iptables-restore > /dev/null ; then
         ln -s "$(which iptables-restore)" /sbin/iptables-restore
     elif [ -e "/usr/sbin/iptables-restore" ]; then
         ln -s /usr/sbin/iptables-restore /sbin/iptables-restore
@@ -1800,6 +1800,8 @@ if [ "$spamd" = 'yes' ]; then
     if [[ "$unit_files" =~ "disabled" ]]; then
         systemctl enable spamassassin > /dev/null 2>&1
     fi
+    
+    sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
 fi
 
 

@@ -15,10 +15,10 @@ user=$1
 domain=$2
 alias=$3
 domain_idn=$2
-dom_alias=$(idn -t --quiet -u "$3" )
+dom_alias=$(idn2 --quiet -d "$3" )
 dom_alias=$(echo $dom_alias |sed -e 's/\.*$//g' -e 's/^\.*//g')
 dom_alias=$(echo $dom_alias |tr '[:upper:]' '[:lower:]')
-dom_alias_idn=$(idn -t --quiet -a "$dom_alias" )
+dom_alias_idn=$(idn2  --quiet "$dom_alias" )
 restart="$4"
 
 # Includes

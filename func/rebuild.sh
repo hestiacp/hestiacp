@@ -465,7 +465,7 @@ rebuild_dns_domain_conf() {
 
     # Get domain values
     get_domain_values 'dns'
-    domain_idn=$(idn -t --quiet -a "$domain")
+    domain_idn=$(idn2 --quiet "$domain")
 
     # Checking zone file
     if [ ! -e "$USER_DATA/dns/$domain.conf" ]; then
@@ -533,7 +533,7 @@ rebuild_mail_domain_conf() {
     
     get_domain_values 'mail'
     if [[ "$domain" = *[![:ascii:]]* ]]; then
-        domain_idn=$(idn -t --quiet -a $domain)
+        domain_idn=$(idn2 --quiet $domain)
     else
         domain_idn=$domain
     fi

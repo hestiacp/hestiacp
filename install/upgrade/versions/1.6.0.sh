@@ -55,6 +55,11 @@ if [ -f "/etc/dovecot/conf.d/10-ssl.conf" ]; then
     fi
 fi
 
+if [ -f "/etc/default/spamassassin" ]; then 
+    echo "[ * ] Enable Samassassin Cronjob"
+    sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
+fi 
+
 # Adding LE autorenew cronjob if there are none
 if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
 	min=$(generate_password '012345' '2')

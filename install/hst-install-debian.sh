@@ -1742,6 +1742,7 @@ if [ "$spamd" = 'yes' ]; then
     if [[ "$unit_files" =~ "disabled" ]]; then
         systemctl enable spamassassin > /dev/null 2>&1
     fi
+    sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
 fi
 
 

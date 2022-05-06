@@ -17,7 +17,7 @@ domain_idn=$2
 id=$3
 record=$4
 rtype=$5
-dvalue=$(idn -t --quiet -u "$6" )
+dvalue=$6
 priority=$7
 restart=$8
 ttl=$9
@@ -85,6 +85,11 @@ if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
     if [ -z "$trailing_dot" ]; then
         dvalue="$dvalue."
     fi
+fi
+
+if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
+    dvalue=$(idn2  --quiet  "$dvalue" )
+    record=$(idn2  --quiet  "$record" )
 fi
 
 if [ "$rtype" != "CAA" ]; then

@@ -70,7 +70,7 @@ function validate_web_domain() {
 
     # Test HTTP
     # Curl hates UTF domains so convert them to ascci. 
-    domain_idn=$(idn -a $domain)
+    domain_idn=$(idn2 $domain)
     run curl --location --silent --show-error --insecure --resolve "${domain_idn}:80:${domain_ip}" "http://${domain_idn}/${webpath}"
     assert_success
     assert_output --partial "$webproof"

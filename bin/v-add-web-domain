@@ -42,7 +42,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 format_aliases
-domain_utf=$(idn2 --quiet "$domain_idn")
+domain_utf=$(idn2 --quiet -d "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #

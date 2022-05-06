@@ -55,8 +55,8 @@ if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
 fi
 
 if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
-    dvalue=$(idn -t --quiet -a "$dvalue" )
-    record=$(idn -t --quiet -a "$record" )
+    dvalue=$(idn2 --quiet  "$dvalue" )
+    record=$(idn2 --quiet  "$record" )
 fi
 
 # Cleanup quotes on dvalue

@@ -34,7 +34,7 @@ if [[ "$domain" =~ .*\.$ ]]; then
 fi
 
 domain=$domain
-domain_idn=$(idn -t --quiet -a "$domain")
+domain_idn=$(idn2 --quiet "$domain")
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

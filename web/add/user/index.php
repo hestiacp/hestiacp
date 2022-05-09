@@ -96,7 +96,7 @@ if (!empty($_POST['ok'])) {
 
     // Set login restriction
     if (empty($_SESSION['error_msg'])) {
-        if (!empty($_POST['v_login_disabled')]) {
+        if (!empty($_POST['v_login_disabled'])) {
             $_POST['v_login_disabled'] = 'yes';
             exec(HESTIA_CMD."v-change-user-config-value ".$v_username." LOGIN_DISABLED ".escapeshellarg($_POST['v_login_disabled']), $output, $return_var);
             check_return_code($return_var, $output);

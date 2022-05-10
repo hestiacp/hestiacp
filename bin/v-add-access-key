@@ -31,7 +31,7 @@ keygen() {
 
     local MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
     if [[ "$USE_SPECIAL_CHARACTERS" == "yes" ]]; then
-        MATRIX+='_-^~=%'
+        MATRIX+='_-^~='
     fi
 
     local PASS N

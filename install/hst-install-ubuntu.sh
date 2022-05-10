@@ -946,7 +946,7 @@ chmod a+x /usr/sbin/policy-rc.d
 echo "The installer is now downloading and installing all required packages."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 echo
-apt-get -y install $software > /dev/null 2>&1 &
+apt-get -y install $software > $LOG
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner

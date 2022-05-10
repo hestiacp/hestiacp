@@ -1108,7 +1108,7 @@ is_service_format_valid() {
 }
 
 is_hash_format_valid() {
-  if ! [[ "$1" =~ ^[[:alnum:]\:\~\=_\-]{1,80}$ ]]; then
+  if ! [[ "$1" =~ ^[[:alnum:]|\:|\=|_|-]{1,80}$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
@@ -1301,10 +1301,12 @@ check_access_key_cmd() {
     if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
         check_result "$E_FORBIDEN" "Access key $access_key_id doesn't exist"
     fi
-
+    
     if [[ -z "$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command not provided"
-    elif [[ ! -e "$BIN/$cmd"  && $cmd != 'v-make-tmp-file' ]]; then
+    elif [[ "$cmd" = 'v-make-tmp-file' ]]; then
+      user_arg_position="0"
+    elif [[ ! -e "$BIN/$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command $cmd not found"
     else
         USER="" PERMISSIONS=""

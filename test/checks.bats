@@ -35,6 +35,10 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
+@test "is_hash_format_valid accesskey:secret valid" {
+    run is_hash_format_valid 'bxDaKPyAfLPRgSkoqlkI:Pc8czGPRECp3GxTNMr3LF6zWc8cjfPrNHy_-=A' "hash"
+    assert_success
+}
 @test "is_access_key_id_format_valid valid" {
     run is_access_key_id_format_valid 'M0ocDoIKbsoXSqtk1mgc' "key"
     assert_success

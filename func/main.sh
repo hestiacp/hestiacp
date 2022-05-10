@@ -1108,7 +1108,7 @@ is_service_format_valid() {
 }
 
 is_hash_format_valid() {
-  if ! [[ "$1" =~ ^[-_A-Za-z0-9]{1,32}$ ]]; then
+  if ! [[ "$1" =~ ^[[:alnum:]\:\~\=_\-]{1,80}$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
@@ -1304,7 +1304,7 @@ check_access_key_cmd() {
 
     if [[ -z "$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command not provided"
-    elif [[ ! -e "$BIN/$cmd" ]]; then
+    elif [[ ! -e "$BIN/$cmd"  && $cmd != 'v-make-tmp-file' ]]; then
         check_result "$E_FORBIDEN" "Command $cmd not found"
     else
         USER="" PERMISSIONS=""

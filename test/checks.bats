@@ -179,28 +179,27 @@ r'
 }
 
 @test "is_alias_format_valid success" {
-     run is_domain_format_valid 'hestiacp.com' "key"
+     run is_alias_format_valid 'hestiacp.com' "key"
     assert_success
 }
 
-@test "is_alias_format_valid www" {
-     run is_domain_format_valid 'www' "key"
-    assert_failure $E_INVALID
+@test "is_alias_format_valid success www.domain.com" {
+     run is_alias_format_valid 'www.hestiacp.com' "key"
+    assert_success
 }
-@test "is_alias_format_valid number" {
-     run is_domain_format_valid '12345' "key"
-    assert_failure $E_INVALID
+@test "is_alias_format_valid success hestiacp.com,www.hestiacp.com" {
+     run is_alias_format_valid 'hestiacp.com,www.hestiacp.com' "key"
+    assert_success
 }
 
-@test "is_alias_format_valid .." {
-     run is_domain_format_valid '..' "key"
-    assert_failure $E_INVALID
+@test "is_alias_format_valid success *.hestiacp.com" {
+     run is_alias_format_valid '*.hestiacp.com' "key"
+    assert_success
 }
-@test "is_alias_format_valid LF." {
-     run is_domain_format_valid 'c
-1eshutdown
-r' "key"
-    assert_failure $E_INVALID
+
+@test "is_alias_format_valid success www.hestiacp.com,*.hestiacp.com" {
+     run is_alias_format_valid 'www.hestiacp.com,*.hestiacp.com' "key"
+    assert_success
 }
 
 @test "is_extention_format_valid test" {

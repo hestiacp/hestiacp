@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.15] - Service release
+
+### Bugfixes
+
+- Fixed an issue with wildcard DNS records 
+
+### Dependencies
+
+- Update PHPmyadmin to 5.2.0 (https://www.phpmyadmin.net/files/5.2.0/)
 
 ## [1.5.14] - Service release
 

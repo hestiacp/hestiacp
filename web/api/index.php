@@ -133,10 +133,10 @@ function api_legacy(array $request_data) {
     }
     
     // Check command
-    if ($hst_cmd == "'v-make-tmp-file'") {
+    if ($hst_cmd == 'v-make-tmp-file') {
         // Used in DNS Cluster
-        $fp = fopen('/tmp/'.basename(escapeshellcmd($hst_cmd_args[2])), 'w');
-        fwrite($fp, $hst_arg1."\n");
+        $fp = fopen('/tmp/'.basename(escapeshellcmd($hst_cmd_args['arg2'])), 'w');
+        fwrite($fp, $hst_cmd_args['arg1']."\n");
         fclose($fp);
         $return_var = 0;
     } else {

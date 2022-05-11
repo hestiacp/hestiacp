@@ -38,11 +38,24 @@ function setup() {
     assert_output --partial "don't have permission to run the command v-add-user"
 }
 
-@test "[Success][ Hash ] Create new user" {
-    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$apikey&cmd=v-add-user&arg1=hestiatest&arg2=strongpassword&arg3=info@hestiacp.com&arg4=default" "https://$server:$port/api/index.php"
+@test "[Success][ Hash ] Create tmp file" {
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$apikey&cmd=v-make-tmp-file&arg1=strongpassword&arg2=clusterpassword" "https://$server:$port/api/index.php"
     assert_success
     assert_output --partial "OK"
 }
+
+@test "[Success][ Hash ] Create new user" {
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$apikey&cmd=v-add-user&arg1=hestiatest&arg2=/tmp/clusterpassword&arg3=info@hestiacp.com&arg4=default" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "OK"
+}
+
+@test "[Success][ Hash ] Check password" {
+    run curl -k -s -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "hash=$apikey&cmd=v-check-user-password&arg1=hestiatest&arg2=strongpassword" "https://$server:$port/api/index.php"
+    assert_success
+    assert_output --partial "OK"
+}
+
 
 @test "[Success][ Local ] Add user" {
     run v-add-user hestiatest 1234BCD info@hestiacp.com

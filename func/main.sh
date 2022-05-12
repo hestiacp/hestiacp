@@ -1305,6 +1305,10 @@ check_access_key_cmd() {
     if [[ -z "$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command not provided"
     elif [[ "$cmd" = 'v-make-tmp-file' ]]; then
+      allowed_commands="$(get_apis_commands "$PERMISSIONS")"
+      if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
+          check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+      fi
       user_arg_position="0"
     elif [[ ! -e "$BIN/$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command $cmd not found"

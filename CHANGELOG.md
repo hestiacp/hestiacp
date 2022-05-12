@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update PHPmyadmin to 5.1.4 (https://www.phpmyadmin.net/files/5.1.4/) (#2529)
+- Update phpMyAdmin to 5.1.4 (https://www.phpmyadmin.net/files/5.1.4/) (#2529)
 
 ## [1.5.14] - Service release
 

@@ -46,7 +46,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with Editing / Adding DNS records (#2546, #2547, #2548 @DuoCZ) 
 - Fixed an issue with TXT records longer then 255 characters (#2559)
 - Fixed an issue with wp-cli permission denied and allow wp-cli to be run in v-run-cmd command (#2562 and #2565)
-
+- Fixed an issue with apt-get install output not written to install log (#2585)
+- Fixed multiple issues with improved Quick installer app for Wordpress (#2583)
 
 ### Dependencies
 - Update hestia-nginx to 1.21.6
@@ -54,6 +55,15 @@ All notable changes to this project will be documented in this file.
     - Update zlib to 1.2.12
 - Update hestia-php to 8.1.5
 
+## [1.5.15] - Service release
+
+### Bugfixes
+
+- Fixed an issue with wildcard DNS records (#2573)
+
+### Dependencies
+
+- Update phpMyAdmin to 5.1.4 (https://www.phpmyadmin.net/files/5.1.4/) (#2529)
 
 ## [1.5.14] - Service release
 

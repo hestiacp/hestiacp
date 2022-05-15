@@ -601,7 +601,7 @@ upgrade_phpmyadmin() {
 
             # Create temporary folder and change permissions
             if [ ! -d /usr/share/phpmyadmin/tmp ]; then
-                mkdir /usr/share/phpmyadymin/tmp
+                mkdir /usr/share/phpmyadmin/tmp
                 chown root:www-data /usr/share/phpmyadmin/tmp
                 chmod 770 /usr/share/phpmyadmin/tmp
                 

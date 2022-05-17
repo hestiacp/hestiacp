@@ -85,8 +85,6 @@ fi
 
 if [ -n "$PHPMYADMIN_KEY" ]; then
     echo "[ * ] Refresh PMA SSO key due to update phpmyadmin"
-    apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php |  cut "-d'" -f4 );
-    $BIN/v-revoke-api-key  "$apikey"
     $BIN/v-delete-sys-pma-sso quiet
     $BIN/v-add-sys-pma-sso quiet
 fi

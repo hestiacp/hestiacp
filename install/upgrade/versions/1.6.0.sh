@@ -82,3 +82,11 @@ if [ -f /etc/nginx/nginx.conf ] && [ "$(grep 'set_real_ip_from 2405:8100::/32' /
     sed -i "/#set_real_ip_from  2a06:98c0::\/29;/d" /etc/nginx/nginx.conf
     sed -i "s/#set_real_ip_from  2400:cb00::\/32;/# set_real_ip_from 2400:cb00::\/32;\n    # set_real_ip_from 2606:4700::\/32;\n    # set_real_ip_from 2803:f800::\/32;\n    # set_real_ip_from 2405:b500::\/32;\n    # set_real_ip_from 2405:8100::\/32;\n    # set_real_ip_from 2a06:98c0::\/29;\n    # set_real_ip_from 2c0f:f248::\/32;/g" /etc/nginx/nginx.conf
 fi
+
+if [ -n "$PHPMYADMIN_KEY" ]; then
+    echo "[ * ] Refresh PMA SSO key due to update phpmyadmin"
+    apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php |  cut "-d'" -f4 );
+    $BIN/v-revoke-api-key  "$apikey"
+    $BIN/v-delete-sys-pma-sso quiet
+    $BIN/v-add-sys-pma-sso quiet
+fi

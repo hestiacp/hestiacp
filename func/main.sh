@@ -1108,7 +1108,7 @@ is_service_format_valid() {
 }
 
 is_hash_format_valid() {
-  if ! [[ "$1" =~ ^[-_A-Za-z0-9]{1,32}$ ]]; then
+  if ! [[ "$1" =~ ^[[:alnum:]|\:|\=|_|-]{1,80}$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
@@ -1297,16 +1297,33 @@ check_access_key_cmd() {
     local access_key_id="$(basename "$1")"
     local cmd=$2
     local -n user_arg_position=$3
-
+    
+    if [[ "$DEBUG_MODE" = "true" ]]; then 
+    new_timestamp
+      echo "[$date:$time] $1 $2" >> /var/log/hestia/api.log
+    fi
     if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
         check_result "$E_FORBIDEN" "Access key $access_key_id doesn't exist"
     fi
-
+    
     if [[ -z "$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command not provided"
+    elif [[ "$cmd" = 'v-make-tmp-file' ]]; then
+      USER="" PERMISSIONS=""
+      source_conf "${HESTIA}/data/access-keys/${access_key_id}"
+      local allowed_commands
+      if [[ -n "$PERMISSIONS" ]]; then
+          allowed_commands="$(get_apis_commands "$PERMISSIONS")"
+          if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
+              check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+          fi
+      elif [[ -z "$PERMISSIONS" && "$USER" != "admin" ]]; then
+          check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
+      fi 
+      user_arg_position="0"
     elif [[ ! -e "$BIN/$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command $cmd not found"
-    else
+    else 
         USER="" PERMISSIONS=""
         source_conf "${HESTIA}/data/access-keys/${access_key_id}"
 

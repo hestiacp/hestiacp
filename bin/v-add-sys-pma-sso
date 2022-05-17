@@ -61,7 +61,7 @@ if [ -f "/usr/local/hesta/web/api/index.php" ]; then
     exit 2
 fi
 
-if [ "$API" != "yes" ]; then 
+if [ "API_SYSTEM" = "0" ]; then 
     echo "Error: API is not enabled"
     exit 2
 fi
@@ -72,7 +72,7 @@ fi
 
 # Generate the keys to secure everything
 phpmyadminkey=$(generate_password);
-apikey=$($BIN/v-generate-api-key);
+apikey=$($BIN/v-add-access-key 'admin' 'phpmyadmin-sso' 'phpMyAdmin' 'plain');
 
 # copy config dir to /usr/share/phpmyadmin/
 cp -f $HESTIA_INSTALL_DIR/phpmyadmin/hestia-sso.php $PMA_INSTALL/hestia-sso.php

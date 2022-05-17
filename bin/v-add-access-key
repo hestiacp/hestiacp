@@ -93,6 +93,7 @@ echo "IP=''" >>"$HESTIA/data/access-keys/${access_key_id}"
 
 chmod 640 "$HESTIA/data/access-keys/${access_key_id}"
 
+echo $format
 $BIN/v-list-access-key "$access_key_id" "$format"
 
 #----------------------------------------------------------#

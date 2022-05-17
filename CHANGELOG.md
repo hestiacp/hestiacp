@@ -51,6 +51,15 @@ All notable changes to this project will be documented in this file.
     - Update zlib to 1.2.12
 - Update hestia-php to 8.1.5
 
+## [1.5.15] - Service release
+
+### Bugfixes
+
+- Fixed an issue with wildcard DNS records 
+
+### Dependencies
+
+- Update phpMyAdmin to 5.1.4 (https://www.phpmyadmin.net/files/5.1.4/) (#2529)
 
 ## [1.5.14] - Service release
 

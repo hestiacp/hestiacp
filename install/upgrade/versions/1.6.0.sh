@@ -69,9 +69,8 @@ if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
 fi
 
 # Add apis if they don't exist
-if [[ ! -d $HESTIA/data/api ]]; then
-    cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
-fi
+# Changes have been made make sure to overwrite them to prevent issues in the future
+cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
 
 # Update Cloudflare address
 if [ -f /etc/nginx/nginx.conf ] && [ "$(grep 'set_real_ip_from 2405:8100::/32' /etc/nginx/nginx.conf)" = "" ];then

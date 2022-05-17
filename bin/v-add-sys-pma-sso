@@ -109,7 +109,7 @@ fi
 
 $BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' "$phpmyadminkey"
 
-if [  "$(echo $API_ALLOWED_IP | grep 127.0.0.1)" != "127.0.0.1" ]; then 
+if [  -z "$(echo $API_ALLOWED_IP | grep 127.0.0.1)"  ]; then 
     $BIN/v-add-sys-api-ip "127.0.0.1"
 fi
 

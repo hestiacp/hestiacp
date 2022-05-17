@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Introduce new api allowing users to use certain commands over API (#2535 and #1333)
 - Allow "Purge" cache button visible on templates with the name cacheing-your-template-name (#2526 #2530)
 - Add hooks to hestia-nginx and hestia-php (#2440)
+- Update DNS cluster to support new API system (#2587)
 
 ### Bugfixes
 

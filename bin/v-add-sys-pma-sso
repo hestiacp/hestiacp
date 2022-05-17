@@ -41,11 +41,6 @@ if [ -n "$PHPMYADMIN_KEY" ] && [ "$PHPMYADMIN_KEY" != "" ] ; then
     exit 1;
 fi
 
-# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
-if [ -z "$HESTIA" ]; then
-    HESTIA="/usr/local/hestia"
-fi
-
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
     echo "Error: Hestia environment vars not present"
     exit 2

@@ -69,9 +69,8 @@ if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
 fi
 
 # Add apis if they don't exist
-if [[ ! -d $HESTIA/data/api ]]; then
-    cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
-fi
+# Changes have been made make sure to overwrite them to prevent issues in the future
+cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
 
 # Update Cloudflare address
 if [ -f /etc/nginx/nginx.conf ] && [ "$(grep 'set_real_ip_from 2405:8100::/32' /etc/nginx/nginx.conf)" = "" ];then
@@ -82,4 +81,10 @@ if [ -f /etc/nginx/nginx.conf ] && [ "$(grep 'set_real_ip_from 2405:8100::/32' /
     sed -i "/#set_real_ip_from  2c0f:f248::\/32;/d" /etc/nginx/nginx.conf
     sed -i "/#set_real_ip_from  2a06:98c0::\/29;/d" /etc/nginx/nginx.conf
     sed -i "s/#set_real_ip_from  2400:cb00::\/32;/# set_real_ip_from 2400:cb00::\/32;\n    # set_real_ip_from 2606:4700::\/32;\n    # set_real_ip_from 2803:f800::\/32;\n    # set_real_ip_from 2405:b500::\/32;\n    # set_real_ip_from 2405:8100::\/32;\n    # set_real_ip_from 2a06:98c0::\/29;\n    # set_real_ip_from 2c0f:f248::\/32;/g" /etc/nginx/nginx.conf
+fi
+
+if [ -n "$PHPMYADMIN_KEY" ]; then
+    echo "[ * ] Refresh PMA SSO key due to update phpmyadmin"
+    $BIN/v-delete-sys-pma-sso quiet
+    $BIN/v-add-sys-pma-sso quiet
 fi

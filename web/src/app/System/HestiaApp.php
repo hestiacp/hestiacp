@@ -118,9 +118,9 @@ class HestiaApp
 
     public function runWp($args, &$cmd_result=null): bool
     {
-        $wp = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.wp' . DIRECTORY_SEPARATOR . 'wp';
+        $wp = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.wp-cli' . DIRECTORY_SEPARATOR . 'wp';
         if (!is_file($wp)) {
-            $this -> runUser('v-add-user-wp-cli');
+            $this -> runUser('v-add-user-wp-cli', []);
         } else {
             $this->runUser('v-run-cli-cmd', [$wp, 'cli', 'update']);
         }

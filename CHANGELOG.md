@@ -60,7 +60,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fixed an issue with wildcard DNS records (#2573)
+- Fixed an issue with wildcard DNS records 
 
 ### Dependencies
 

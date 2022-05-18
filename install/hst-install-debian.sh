@@ -33,7 +33,7 @@ VERBOSE='no'
 # Define software versions
 HESTIA_INSTALL_VER='1.6.0~beta-3'
 # Dependencies
-pma_v='5.1.3'
+pma_v='5.2.0'
 rc_v="1.6.0"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
@@ -925,7 +925,7 @@ chmod a+x /usr/sbin/policy-rc.d
 echo "The installer is now downloading and installing all required packages."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 echo
-apt-get -y install $software > /dev/null 2>&1 &
+apt-get -y install $software > $LOG
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
@@ -1541,8 +1541,7 @@ if [ "$mysql" = 'yes' ]; then
     chown root:www-data /usr/share/phpmyadmin/tmp
 
     # Set config and log directory
-    sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-    sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+    sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
     # Create temporary folder and change permission
     chmod 770 /usr/share/phpmyadmin/tmp
@@ -1584,7 +1583,7 @@ if [ "$postgresql" = 'yes' ]; then
 
     # Configuring phpPgAdmin
     if [ "$apache" = 'yes' ]; then
-        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.conf
+        cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.inc
     fi
     cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 

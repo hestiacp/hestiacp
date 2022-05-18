@@ -71,7 +71,7 @@
 										$key = $option;
 									}
 								?>
-									<?php $selected = (!empty($form_control['value']) && $option === $form_control['value'])?'selected':''?>
+									<?php $selected = (!empty($form_control['value']) && $key == $form_control['value'])?'selected':''?>
 									<option value="<?=$key?>" <?=$selected?>><?=htmlentities($option)?></option>
 								<?php }; ?>
 							</select>

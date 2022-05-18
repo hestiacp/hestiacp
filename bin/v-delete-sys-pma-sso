@@ -44,9 +44,14 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
-apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php |  cut "-d'" -f4 )
+apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php |  cut "-d'" -f4  )
 
-$BIN/v-revoke-api-key "$apikey"
+if [ -z $(echo $apikey | grep ":") ]; then
+    $BIN/v-revoke-api-key  "$apikey"
+else
+    apikey=$(grep -Po "'API_KEY', '(.*)'" /usr/share/phpmyadmin/hestia-sso.php |  cut "-d'" -f4 | cut -d ":" -f1 )
+    $BIN/v-delete-access-key "$apikey"
+fi
 
 #remove new files
 rm /usr/share/phpmyadmin/hestia-sso.php

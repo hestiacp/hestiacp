@@ -83,8 +83,7 @@ then
    chmod 770 -R /var/lib/phpmyadmin/tmp
    
    # Set config and log directory
-   sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-   sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+   sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
    
    # Generate blowfish
    blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)

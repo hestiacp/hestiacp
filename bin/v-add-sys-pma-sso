@@ -41,16 +41,6 @@ if [ -n "$PHPMYADMIN_KEY" ] && [ "$PHPMYADMIN_KEY" != "" ] ; then
     exit 1;
 fi
 
-# Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
-if [ -z "$HESTIA" ]; then
-    HESTIA="/usr/local/hestia"
-fi
-
-if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
-    echo "Error: Hestia environment vars not present"
-    exit 2
-fi
-
 if [ -f "/usr/share/phpmyadmin/hestia-sso.php" ]; then 
     echo "Error: hestia-sso.php is already installed"
     exit 2
@@ -61,7 +51,7 @@ if [ -f "/usr/local/hesta/web/api/index.php" ]; then
     exit 2
 fi
 
-if [ "$API" != "yes" ]; then 
+if [ "API_SYSTEM" = "0" ]; then 
     echo "Error: API is not enabled"
     exit 2
 fi
@@ -72,7 +62,7 @@ fi
 
 # Generate the keys to secure everything
 phpmyadminkey=$(generate_password);
-apikey=$($BIN/v-generate-api-key);
+apikey=$($BIN/v-add-access-key 'admin' 'phpmyadmin-sso' 'phpMyAdmin' 'plain');
 
 # copy config dir to /usr/share/phpmyadmin/
 cp -f $HESTIA_INSTALL_DIR/phpmyadmin/hestia-sso.php $PMA_INSTALL/hestia-sso.php
@@ -109,7 +99,7 @@ fi
 
 $BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' "$phpmyadminkey"
 
-if [  "$(echo $API_ALLOWED_IP | grep 127.0.0.1)" != "127.0.0.1" ]; then 
+if [  -z "$(echo $API_ALLOWED_IP | grep 127.0.0.1)"  ]; then 
     $BIN/v-add-sys-api-ip "127.0.0.1"
 fi
 

@@ -1834,8 +1834,11 @@ if [ "$fail2ban" = 'yes' ]; then
     if [ -f /etc/fail2ban/jail.d/defaults-debian.conf ]; then
         rm -f /etc/fail2ban/jail.d/defaults-debian.conf
     fi
-
+  
     update-rc.d fail2ban defaults
+    # Ubuntu 22.04 doesn't start F2B by default on boot
+    update-rc.d fail2ban enable
+    
     systemctl start fail2ban >> $LOG
     check_result $? "fail2ban start failed"
 fi

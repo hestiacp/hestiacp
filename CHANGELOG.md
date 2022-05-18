@@ -49,12 +49,17 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with wp-cli permission denied and allow wp-cli to be run in v-run-cmd command (#2562 and #2565)
 - Fixed an issue with apt-get install output not written to install log (#2585)
 - Fixed multiple issues with improved Quick installer app for Wordpress (#2583)
+- Changes in upstream package caused phpMyAdmin Single Sign on feature to break (#2591)
+- Fixed issues with DNS cluster and the new API (#2587)
+- Fixed an issue where phpgaadmin config files was not renamed to .inc for Apache2 setups (#2592)
+- Startup Fail2ban on boot for Ubuntu 22.04 (#2596 #2594)
 
 ### Dependencies
 - Update hestia-nginx to 1.21.6
     - Update openssl to 3.0.2
     - Update zlib to 1.2.12
 - Update hestia-php to 8.1.5
+- Updated phpMyadmin to 5.2.0 (https://www.phpmyadmin.net/files/5.2.0/)
 
 ## [1.5.15] - Service release
 

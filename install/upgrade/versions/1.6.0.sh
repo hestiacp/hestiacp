@@ -88,3 +88,9 @@ if [ -n "$PHPMYADMIN_KEY" ]; then
     $BIN/v-delete-sys-pma-sso quiet
     $BIN/v-add-sys-pma-sso quiet
 fi
+
+# Mute output v-add-sys-sftp-jail out put then enabling sftp on boot
+if [ -f "/etc/cron.d/hestia-sftp" ]; then
+    rm /etc/cron.d/hestia-sftp
+    echo "@reboot root sleep 60 && /usr/local/hestia/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/hestia-sftp
+fi

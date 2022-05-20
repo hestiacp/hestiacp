@@ -60,7 +60,7 @@ fi
 
 # Deleting dkim dns record
 if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
-    dkim_records=$($BIN/v-list-dns-records "$user" "$domain" plain | awk '{print $1,$2}' | grep -w '_domainkey' | cut -f 1 -d ' ')
+    dkim_records=$($BIN/v-list-dns-records "$user" "$domain" | grep -E "\s(mail\._domainkey|_domainkey)\s" | cut -f 1 -d ' ')
     for id in $dkim_records; do
         $BIN/v-delete-dns-record "$user" "$domain" "$id" '' 'yes'
     done

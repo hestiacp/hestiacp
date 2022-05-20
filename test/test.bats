@@ -1468,6 +1468,49 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "MAIL: Delete DKIM" {
+    run v-delete-mail-domain-dkim $user $domain
+    assert_success
+    refute_output
+
+    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_failure
+    refute_output
+
+    run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_failure
+    refute_output
+}
+
+@test "MAIL: Add DKIM" {
+    run v-add-mail-domain-dkim $user $domain
+    assert_success
+    refute_output
+
+    run grep "RECORD='_domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_success
+    assert_output --partial "RECORD='_domainkey' TYPE='TXT'"
+
+    run grep "RECORD='mail._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_success
+    assert_output  --partial "RECORD='mail._domainkey' TYPE='TXT'"
+}
+
+@test "MAIL: Delete DKIM but preserve custom dkim records" {
+    run v-add-dns-record $user $domain 'k2._domainkey' 'TXT' 'v=DKIM1; k=rsa; p=123456'
+    assert_success
+    refute_output
+
+    run v-delete-mail-domain-dkim $user $domain
+    assert_success
+    refute_output
+
+    run grep "RECORD='k2._domainkey'" "${HESTIA}/data/users/${user}/dns/${domain}.conf"
+    assert_success
+    assert_output --partial "RECORD='k2._domainkey' TYPE='TXT'"
+}
+
+
 #----------------------------------------------------------#
 #    Limit possibilities adding different owner domain     #
 #----------------------------------------------------------#

@@ -25,12 +25,10 @@
 			<?php } ?>
 		</div>
 		<div class="l-unit-toolbar__buttonstrip float-right">
-			<div class="actions-panel clearfix">
 			<?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
 				<!-- Do not show delete button for currently logged in user-->
 			<?} else {?>
 				<a href="/login/?loginas=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('login as');?>"><i class="fas fa-sign-in-alt status-icon maroon"></i><?=_('login as');?></a>
-				<div class="display-inline-block" key-action="js">
 					<a class="data-controls do_delete ui-button danger cancel">
 						<i class="do_delete fas fa-times-circle status-icon red"></i>
 						<?=_('Delete');?>
@@ -39,10 +37,8 @@
 							<p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
 						</div>
 					</a>
-				</div>
 			<?php } ?>
 			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save');?></a>
-			</div>
 		</div>
 	</div>
 </div>

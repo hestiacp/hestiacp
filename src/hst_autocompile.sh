@@ -220,8 +220,8 @@ fi
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='3.0.2'
-PCRE_V='10.39'
+OPENSSL_V='3.0.3'
+PCRE_V='10.40'
 ZLIB_V='1.2.12'
 
 # Create build directories

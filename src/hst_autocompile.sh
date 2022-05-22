@@ -19,7 +19,7 @@ download_file() {
 
     [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: Downloading file "$url" to "$destination"
 
-    # Default destination is the curent working directory
+    # Default destination is the current working directory
     local dstopt=""
 
     if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then

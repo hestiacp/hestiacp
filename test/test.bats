@@ -590,8 +590,22 @@ function check_ip_not_banned(){
    skip
    fi
    
+   # Test will fail if systemd (For example Proxmox) is used for setting ip addresses. How ever there is no "decent" way to check if Netplan is used except via the method used in v-add-sys-ip and there for breaking the reason to test this. How ever if the test used in v-add-sys-ip fails it still should check if it exists!
+  
    assert_file_exist /etc/netplan/60-hestia.yaml
+   
+   # also check if file contains the newly added ip
    assert_file_contains /etc/netplan/60-hestia.yaml "$ip"
+}
+
+@test "Ip: [Ubuntu] Netplan file updated" {
+   # Skip with netplan
+   if [ -f /etc/netplan/60-hestia.yaml ]; then
+   skip
+   fi
+   
+   assert_file_exist /etc/networking/interfaces
+   assert_file_contains /etc/networking/interfaces "$ip"
 }
 
 @test "Ip: Add ip (duplicate)" {

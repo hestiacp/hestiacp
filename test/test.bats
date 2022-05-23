@@ -604,8 +604,8 @@ function check_ip_not_banned(){
    skip
    fi
    
-   assert_file_exist /etc/networking/interfaces
-   assert_file_contains /etc/networking/interfaces "$ip"
+   assert_file_exist  /etc/network/interfaces
+   assert_file_contains  /etc/network/interfaces "$ip"
 }
 
 @test "Ip: Add ip (duplicate)" {

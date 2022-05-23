@@ -94,3 +94,7 @@ if [ -f "/etc/cron.d/hestia-sftp" ]; then
     rm /etc/cron.d/hestia-sftp
     echo "@reboot root sleep 60 && /usr/local/hestia/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/hestia-sftp
 fi
+
+echo "[ * ] Fix an bug with duplicated config key value pair"
+sed -i "/^POLICY_SYSTEM_PROTECTED_ADMIN=/d" /usr/local/hestia/conf/hestia.conf
+$BIN/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' "$POLICY_SYSTEM_PROTECTED_ADMIN"

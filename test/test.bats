@@ -598,7 +598,7 @@ function check_ip_not_banned(){
    assert_file_contains /etc/netplan/60-hestia.yaml "$ip"
 }
 
-@test "Ip: [Ubuntu] Netplan file updated" {
+@test "Ip: [Debian] Netplan file updated" {
    # Skip with netplan
    if [ -f /etc/netplan/60-hestia.yaml ]; then
    skip

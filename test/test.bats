@@ -581,7 +581,17 @@ function check_ip_not_banned(){
         [ -f "$a2_rpaf" ] && assert_file_contains "$a2_rpaf" "RPAFproxy_ips.*$ip\b"
         [ -f "$a2_remoteip" ] && assert_file_contains "$a2_remoteip" "RemoteIPInternalProxy $ip\$"
     fi
+    
+}
 
+@test "Ip: [Ubuntu] Netplan file updated" {
+   # Skip if Debian
+   if [ $(lsb_release -s -i) != "Ubuntu" ]; then
+   skip
+   fi
+   
+   assert_file_exist /etc/netplan/60-hestia.yaml
+   assert_file_contains /etc/netplan/60-hestia.yaml "$ip"
 }
 
 @test "Ip: Add ip (duplicate)" {

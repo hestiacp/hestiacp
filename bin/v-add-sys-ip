@@ -76,7 +76,7 @@ if [ -z "$sys_ip_check" ]; then
     
     # Check if netplan is in use and generate configuration file
     if [ ! -z $(which netplan) ]; then 
-        if [ ! -z $(netplan generate --mapping "$iface" | grep networkd) ]; then   
+        if  [ ! -z "$(netplan generate --mapping "$iface" | grep networkd)" ]; then   
             netplan=1
         else
             netplan=0

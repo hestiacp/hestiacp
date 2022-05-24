@@ -468,6 +468,20 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_CSRF_STRICTNESS ('')"
         $BIN/v-change-sys-config-value "POLICY_CSRF_STRICTNESS" "1"
     fi
+    
+    mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.old.conf
+    touch $HESTIA/conf/hestia.conf 
+    while IFS='= ' read -r lhs rhs
+      do
+          if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+              rhs="${rhs%%^\#*}"   # Del in line right comments
+              rhs="${rhs%%*( )}"   # Del trailing spaces
+              rhs="${rhs%\'*}"     # Del opening string quotes
+              rhs="${rhs#\'*}"     # Del closing string quotes
+              $BIN/v-change-sys-config-value "$lhs" "$rhs"
+          fi
+      done < $HESTIA/conf/hestia.old.conf
+      rm $HESTIA/conf/hestia.old.conf
 }
 
 # Repair System Cron Jobs

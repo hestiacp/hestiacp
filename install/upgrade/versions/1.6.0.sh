@@ -97,7 +97,7 @@ fi
 
 if [ -d /etc/phpmyadmin/conf.d ]; then
     for file in /etc/phpmyadmin/conf.d/*; do
-        if [ -z $(cat $file | grep 'information_schema') ]; then
+        if [ -z "$(grep -i 'information_schema' $file)" ]; then
             echo "[ * ] Update phpMyAdmin server configuration"
             echo "\$cfg['Servers'][\$i]['hide_db'] = 'information_schema';" >> $file
         fi

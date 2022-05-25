@@ -103,3 +103,12 @@ if [ $release = 'Ubuntu' ]; then
         $HESTIA/bin/v-add-user-notification admin "Warning: Please check your network configuration!\n\n A bug has been discovered that might affect your setup and can lead to issues after a system reboot. Please review your network configuration. <a href='https://github.com/hestiacp/hestiacp/pull/2612#issuecomment-1135571835'>More info</a>"
     fi
 fi
+
+if [ -d /etc/phpmyadmin/conf.d ]; then
+    for file in /etc/phpmyadmin/conf.d/*; do
+        if [ -z $(cat $file | grep 'information_schema') ]; then
+            echo "[ * ] Update phpMyAdmin server configuration"
+            echo "\$cfg['Servers'][\$i]['hide_db'] = 'information_schema';" >> $file
+        fi
+    done
+fi

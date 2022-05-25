@@ -1433,6 +1433,10 @@ function check_ip_not_banned(){
     validate_mail_domain $user $domain
     
     validate_webmail_domain $user $domain 'Success!'
+    
+    run v-add-mail-domain-webmail $user $domain "roundcube" "yes"
+    assert_success
+    refute_output
 } 
 
 @test "MAIL: Add domain (duplicate)" {
@@ -1610,11 +1614,6 @@ function check_ip_not_banned(){
 
 @test "Allow Users: user2 can add user.user2.com again" {
     run v-add-web-domain $user2 $subdomain
-    assert_success
-    refute_output
-}
-@test "Allow Users: Delete user2" {
-    run v-delete-user $user2
     assert_success
     refute_output
 }
@@ -1949,21 +1948,61 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 #                         Backup user                      #
 #----------------------------------------------------------#
 
-@test "Backup user" {
+@test "Backup: Backup user" {
   run v-backup-user $user
   assert_success
 }
 
-@test "List Backups" {
+@test "Backup: List Backups" {
   run v-list-user-backups $user plain
   assert_success
   assert_output --partial "$user"
 }
 
-@test "Delete backups" {
+@test "Backup: Delete backups" {
   run v-delete-user-backup $user $(v-list-user-backups $user plain | cut -f1)
   assert_success
   run rm /backup/$user.log
+}
+
+#----------------------------------------------------------#
+#                  Change owner scripts                    #
+#----------------------------------------------------------#
+
+@test "Change: Change domain owner" {
+    run v-change-domain-owner $domain $user2 
+    assert_success
+    
+    # Validate Web
+    echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user2/web/$domain/public_html/php-test.php
+    validate_web_domain $user2 $domain 'Hestia Test:12' 'php-test.php'
+    rm $HOMEDIR/$user2/web/$domain/public_html/php-test.php
+    
+    # Validate Webmail 
+    validate_webmail_domain $user2 $domain 'Welcome to Roundcube Webmail'
+    
+    # Validate DNS
+    assert_file_contains /etc/bind/named.conf /home/$user2/conf/dns/$dmain.db  
+}
+
+@test "Change: Add database" {
+    run v-add-database $user database dbuser 1234 mysql
+    assert_success
+    refute_output
+    # validate_database mysql database_name database_user password
+    validate_database mysql $database $dbuser 1234
+}
+
+@test "Change: Change database owner" {
+    run v-change-database-owner $database $user2 
+    assert_success
+    validate_database mysql test-5286_database test-5286_dbuser 1234
+}
+
+@test "Change: Delete database" {
+    run v-delete-database $user database
+    assert_success
+    refute_output
 }
 
 #----------------------------------------------------------#
@@ -1971,19 +2010,19 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 #----------------------------------------------------------#
 
 @test "Mail: Delete domain" {
-    run v-delete-mail-domain $user $domain
+    run v-delete-mail-domain $user2 $domain
     assert_success
     refute_output
 }
 
 @test "DNS: Delete domain" {
-    run v-delete-dns-domain $user $domain
+    run v-delete-dns-domain $user2 $domain
     assert_success
     refute_output
 }
 
 @test "WEB: Delete domain" {
-    run v-delete-web-domain $user $domain
+    run v-delete-web-domain $user2 $domain
     assert_success
     refute_output
 }
@@ -1993,6 +2032,14 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
     assert_success
     refute_output
 }
+
+@test "Delete user2" {
+    run v-delete-user $user2
+    assert_success
+    refute_output
+}
+
+
 
 @test "Ip: Delete the test IP" {
     run v-delete-sys-ip 198.18.0.125

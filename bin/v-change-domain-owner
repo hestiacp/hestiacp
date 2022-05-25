@@ -61,7 +61,8 @@ if [ -n "$web_data" ]; then
     if [ -n "$ip" ]; then
         web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
     fi
-
+    web_data=$(echo "$web_data" | sed "s/SUSPENDED='no'/SUSPENDED='yes'/")
+            
     # Check SSL
     if [ "$SSL" = 'yes' ]; then
         ssl_crt=$HESTIA/data/users/$owner/ssl/$domain.crt
@@ -246,7 +247,7 @@ if [ -n "$mail_data" ]; then
     fi
 
     # Rebuild config
-    $BIN/v-unsuspend-mail-domain "$user" "$domain" no >> /dev/null 2>&1
+    $BIN/v-unsuspend-mail-domain "$user" "$domain" no
     $BIN/v-rebuild-mail-domains "$owner" no
     $BIN/v-rebuild-mail-domains "$user"
 fi

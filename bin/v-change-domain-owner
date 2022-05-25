@@ -56,7 +56,13 @@ if [ -n "$web_data" ]; then
     echo "[*] Moving web domain..."
     $BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
     parse_object_kv_list "$web_data"
-
+    
+    
+    if [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
+        echo "[*] IP dedicated to $owner select new ip adress..."
+        get_user_ip
+    fi 
+    
     # Change IP
     if [ -n "$ip" ]; then
         web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
@@ -256,6 +262,15 @@ fi
 $BIN/v-update-user-counters "$owner"
 $BIN/v-update-user-counters "$user"
 
+# Recalculate ip usage 
+if [ -n "$ip" ]; then
+    decrease_ip_value $IP $owner
+    increase_ip_value $ip 
+else
+    # recalculate ip 
+    decrease_ip_value $IP $owner
+    increase_ip_value $IP 
+fi
 # Send notification to panel
 if [ -n "$web_data" ] || [ -n "$dns_data" ] || [ -n "$mail_data" ]; then
     $HESTIA/bin/v-add-user-notification "$user" "$domain has been added to your account" ''

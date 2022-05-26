@@ -54,9 +54,25 @@ echo "Moving $domain from $owner to $user, please wait..."
 web_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/web.conf)
 if [ -n "$web_data" ]; then
     echo "[*] Moving web domain..."
-    $BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
+    #$BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
     parse_object_kv_list "$web_data"
     
+    if [ -n "$CUSTOM_DOCROOT" ]; then 
+        if [ -z $(echo $CUSTOM_DOCROOT | grep -i "/home/$owner/web/$domain") ]; then
+            docdomain=$(echo "$CUSTOM_DOCROOT" | cut -d'/' -f5)
+            $BIN/v-list-web-domain $user $docdomain > /dev/null
+            if [ "$?" != 0 ]; then
+                echo "Error: Target domain doesn't belong to the new user";
+                exit $E_NOTEXIST;
+            fi
+            new_docroot=$(echo $CUSTOM_DOCROOT | sed "s/\/home\/$owner/\/home\/$user/");
+            new_php_docroot=$(echo $CUSTOM_PHPROOT | sed "s/\/home\/$owner/\/home\/$user/");
+            
+        else
+            new_docroot=$(echo $CUSTOM_DOCROOT | sed "s/\/home\/$owner/\/home\/$user/");
+            new_php_docroot=$(echo $CUSTOM_PHPROOT | sed "s/\/home\/$owner/\/home\/$user/");
+        fi
+    fi
     
     if [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
         echo "[*] IP dedicated to $owner select new ip adress..."
@@ -67,8 +83,12 @@ if [ -n "$web_data" ]; then
     if [ -n "$ip" ]; then
         web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
     fi
+    if [ -n "$new_docroot" ]; then
+        web_data=$(echo "$web_data" | sed "s|CUSTOM_DOCROOT='$CUSTOM_DOCROOT'|CUSTOM_DOCROOT='$new_docroot'|")
+        web_data=$(echo "$web_data" | sed "s|CUSTOM_PHPROOT='$CUSTOM_PHPROOT'|CUSTOM_PHPROOT='$new_php_docroot'|")
+    fi
     web_data=$(echo "$web_data" | sed "s/SUSPENDED='no'/SUSPENDED='yes'/")
-            
+    
     # Check SSL
     if [ "$SSL" = 'yes' ]; then
         ssl_crt=$HESTIA/data/users/$owner/ssl/$domain.crt

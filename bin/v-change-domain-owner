@@ -54,7 +54,7 @@ echo "Moving $domain from $owner to $user, please wait..."
 web_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/web.conf)
 if [ -n "$web_data" ]; then
     echo "[*] Moving web domain..."
-    #$BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
+    $BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
     parse_object_kv_list "$web_data"
     
     if [ -n "$CUSTOM_DOCROOT" ]; then 

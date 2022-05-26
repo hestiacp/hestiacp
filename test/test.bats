@@ -2003,21 +2003,18 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 #----------------------------------------------------------#
 
 @test "Mail: Delete domain" {
-    skip
     run v-delete-mail-domain $user2 $domain
     assert_success
     refute_output
 }
 
 @test "DNS: Delete domain" {
-    skip
     run v-delete-dns-domain $user2 $domain
     assert_success
     refute_output
 }
 
 @test "WEB: Delete domain" {
-    skip
     run v-delete-web-domain $user2 $domain
     assert_success
     refute_output
@@ -2030,7 +2027,6 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 @test "Delete user2" {
-    skip
     run v-delete-user $user2
     assert_success
     refute_output

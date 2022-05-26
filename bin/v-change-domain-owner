@@ -78,6 +78,9 @@ if [ -n "$web_data" ]; then
         echo "[*] IP dedicated to $owner select new ip adress..."
         get_user_ip
     fi 
+    old_ip=$IP;
+    new_ip=$ip; 
+    echo $ip;
     
     # Change IP
     if [ -n "$ip" ]; then
@@ -271,6 +274,7 @@ if [ -n "$mail_data" ]; then
     if [ -e "$HESTIA/data/users/$owner/mail/$domain.conf" ]; then
         rm -f "$HESTIA/data/users/$owner/mail/$domain.conf"
     fi
+    
 
     # Rebuild config
     $BIN/v-unsuspend-mail-domain "$user" "$domain" no
@@ -284,12 +288,12 @@ $BIN/v-update-user-counters "$user"
 
 # Recalculate ip usage 
 if [ -n "$ip" ]; then
-    decrease_ip_value $IP $owner
-    increase_ip_value $ip 
+    decrease_ip_value $old_ip $owner
+    increase_ip_value $new_ip 
 else
     # recalculate ip 
-    decrease_ip_value $IP $owner
-    increase_ip_value $IP 
+    decrease_ip_value $old_ip $owner
+    increase_ip_value $old_ip 
 fi
 # Send notification to panel
 if [ -n "$web_data" ] || [ -n "$dns_data" ] || [ -n "$mail_data" ]; then

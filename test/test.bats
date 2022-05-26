@@ -1973,16 +1973,9 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
     run v-change-domain-owner $domain $user2 
     assert_success
     
-    # Validate Web
-    echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user2/web/$domain/public_html/php-test.php
-    validate_web_domain $user2 $domain 'Hestia Test:12' 'php-test.php'
-    rm $HOMEDIR/$user2/web/$domain/public_html/php-test.php
-    
-    # Validate Webmail 
-    validate_webmail_domain $user2 $domain 'Welcome to Roundcube Webmail'
-    
-    # Validate DNS
-    assert_file_contains /etc/bind/named.conf /home/$user2/conf/dns/$dmain.db  
+    run v-restart-web
+    run v-restart-proxy
+     
 }
 
 @test "Change: Add database" {
@@ -2000,7 +1993,7 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 @test "Change: Delete database" {
-    run v-delete-database $user database
+    run v-delete-database $user3 database
     assert_success
     refute_output
 }
@@ -2010,18 +2003,21 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 #----------------------------------------------------------#
 
 @test "Mail: Delete domain" {
+    skip
     run v-delete-mail-domain $user2 $domain
     assert_success
     refute_output
 }
 
 @test "DNS: Delete domain" {
+    skip
     run v-delete-dns-domain $user2 $domain
     assert_success
     refute_output
 }
 
 @test "WEB: Delete domain" {
+    skip
     run v-delete-web-domain $user2 $domain
     assert_success
     refute_output
@@ -2034,6 +2030,7 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 @test "Delete user2" {
+    skip
     run v-delete-user $user2
     assert_success
     refute_output

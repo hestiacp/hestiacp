@@ -1993,7 +1993,7 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 @test "Change: Delete database" {
-    run v-delete-database $user3 database
+    run v-delete-database $user2 database
     assert_success
     refute_output
 }

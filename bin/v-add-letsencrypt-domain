@@ -359,7 +359,11 @@ for auth in $authz; do
             check_result $? "Web restart failed" > /dev/null
         fi
     fi
-
+    
+    if [ "$DNS_CLUSTER" = "yes" ]; then 
+        $BIN/v-update-sys-queue dns-cluster
+    fi 
+    
     # Requesting ACME validation / STEP 5
     validation_check=$(echo "$answer" |grep '"valid"')
     if [[ -n "$validation_check" ]]; then

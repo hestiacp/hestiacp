@@ -69,6 +69,7 @@ if [ "$basecmd" != 'ps'         -a \
      "$basecmd" != 'php7.3'     -a \
      "$basecmd" != 'php7.4'     -a \
      "$basecmd" != 'php8.0'     -a \
+     "$basecmd" != 'php8.1'     -a \
      "$basecmd" != 'php'        -a \
      "$basecmd" != "wp"      -a \
      "$basecmd" != 'composer' ]; then

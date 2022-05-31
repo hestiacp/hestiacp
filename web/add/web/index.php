@@ -434,7 +434,7 @@ if (!empty($_POST['ok'])) {
                     if (!empty($v_ftp_user_data['v_ftp_user'])) {
                         $pw_len = strlen($v_ftp_user_data['v_ftp_password']);
                         if ($pw_len < 6) {
-                            $_SESSION['error_msg'] = _('Password is too short.', $error_msg);
+                            $_SESSION['error_msg'] =  sprintf(_('Password is too short.'), $error_msg);
                         }
                     }
                 }

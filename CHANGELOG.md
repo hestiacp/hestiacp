@@ -52,7 +52,7 @@ All notable changes to this project will be documented in this file.
     - Update PCRE2 to 10.40
 - Update hestia-php to 8.1.6
 - Update phpMyAdmin to 5.2.0 (https://www.phpmyadmin.net/files/5.2.0/)
-- Update Filegator to 7.8.0 (https://github.com/filegator/filegator/releases/tag/v7.8.0)
+- Update Filegator to 7.8.1 (https://github.com/filegator/filegator/releases/tag/v7.8.1)
 
 ## [1.5.15] - Service release
 

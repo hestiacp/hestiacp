@@ -556,7 +556,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+            $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
         } else {
             exec('mktemp -d', $mktemp_output, $return_var);
             $tmpdir = $mktemp_output[0];
@@ -702,7 +702,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+            $_SESSION['error_msg'] =  sprintf(_('Field "%s" can not be blank.'), $error_msg);
         } else {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
             $v_stats_password = tempnam("/tmp", "vst");
@@ -730,7 +730,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+            $_SESSION['error_msg'] =  sprintf(_('Field "%s" can not be blank.'), $error_msg);
         }
         if (($v_stats_user != $_POST['v_stats_user']) || (!empty($_POST['v_stats_password'])) && (empty($_SESSION['error_msg']))) {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
@@ -770,7 +770,7 @@ if (!empty($_POST['save'])) {
                             $error_msg = $error_msg.", ".$error;
                         }
                     }
-                    $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+                    $_SESSION['error_msg'] =  sprintf(_('Field "%s" can not be blank.'), $error_msg);
                 }
 
                 // Add ftp account
@@ -841,7 +841,7 @@ if (!empty($_POST['save'])) {
                             $error_msg = $error_msg.", ".$error;
                         }
                     }
-                    $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+                    $_SESSION['error_msg'] =  sprintf(_('Field "%s" can not be blank.'), $error_msg);
                 }
 
                 // Change FTP account path
@@ -868,7 +868,7 @@ if (!empty($_POST['save'])) {
                     $hostname = exec('hostname');
                     $from = "noreply@".$hostname;
                     $from_name = _('Hestia Control Panel');
-                    $mailtext = _('FTP_ACCOUNT_READY', escapeshellarg($_GET['domain']), $user, $v_ftp_username_for_emailing, $v_ftp_user_data['v_ftp_password']);
+                    $mailtext =  sprintf(_('FTP_ACCOUNT_READY'), escapeshellarg($_GET['domain']), $user, $v_ftp_username_for_emailing, $v_ftp_user_data['v_ftp_password']);
                     send_email($to, $subject, $mailtext, $from, $from_name);
                     unset($v_ftp_email);
                 }

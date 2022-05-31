@@ -95,6 +95,15 @@ if [ -f "/etc/cron.d/hestia-sftp" ]; then
     echo "@reboot root sleep 60 && /usr/local/hestia/bin/v-add-sys-sftp-jail > /dev/null" > /etc/cron.d/hestia-sftp
 fi
 
+ips=$(ls /usr/local/hestia/data/ips/ | wc -l)
+release=$(lsb_release -s -i);
+if [ $release = 'Ubuntu' ]; then 
+    if [ $ips -gt 1 ]; then
+        add_upgrade_message "Warning: Please check your network configuration!\n\n A bug has been discovered that might affect your setup and can lead to issues after a system reboot. Please review your network configuration. See https://github.com/hestiacp/hestiacp/pull/2612#issuecomment-1135571835 for more info regarding this issue!"
+        $HESTIA/bin/v-add-user-notification admin "Warning: Please check your network configuration!\n\n A bug has been discovered that might affect your setup and can lead to issues after a system reboot. Please review your network configuration. <a href='https://github.com/hestiacp/hestiacp/pull/2612#issuecomment-1135571835'>More info</a>"
+    fi
+fi
+
 if [ -d /etc/phpmyadmin/conf.d ]; then
     for file in /etc/phpmyadmin/conf.d/*; do
         if [ -z "$(grep -i 'information_schema' $file)" ]; then

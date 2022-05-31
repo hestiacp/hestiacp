@@ -702,7 +702,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+            $_SESSION['error_msg'] =  sprintf(_('Field "%s" can not be blank.'), $error_msg);
         } else {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
             $v_stats_password = tempnam("/tmp", "vst");
@@ -730,7 +730,7 @@ if (!empty($_POST['save'])) {
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+            $_SESSION['error_msg'] =  sprintf(_('Field "%s" can not be blank.'), $error_msg);
         }
         if (($v_stats_user != $_POST['v_stats_user']) || (!empty($_POST['v_stats_password'])) && (empty($_SESSION['error_msg']))) {
             $v_stats_user = escapeshellarg($_POST['v_stats_user']);
@@ -770,7 +770,7 @@ if (!empty($_POST['save'])) {
                             $error_msg = $error_msg.", ".$error;
                         }
                     }
-                    $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+                    $_SESSION['error_msg'] =  sprintf(_('Field "%s" can not be blank.'), $error_msg);
                 }
 
                 // Add ftp account

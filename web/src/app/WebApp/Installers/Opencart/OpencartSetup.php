@@ -10,7 +10,7 @@ class OpencartSetup extends BaseSetup
         'name' => 'Opencart',
         'group' => 'ecommerce',
         'enabled' => true,
-        'version' => '3.0.3.8',
+        'version' => '4.0.0.0',
         'thumbnail' => 'opencart-thumb.png'
     ];
 
@@ -25,14 +25,14 @@ class OpencartSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/3.0.3.8/opencart-3.0.3.8.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/4.0.0.0/opencart-4.0.0.0.zip' ],
         ],
         'server' => [
             'nginx' => [
                 'template' => 'opencart'
             ],
             'php' => [ 
-                'supported' => [ '7.3','7.4' ],
+                'supported' => [ '7.4','8.0','8.1' ],
             ]
         ], 
     ];

@@ -280,7 +280,10 @@ class HestiaApp
             }
             $archive_file = $download_result->file;
         }
-
-        return $this->runUser('v-extract-fs-archive', [$archive_file, $path, null, $skip_components]);
+        
+        $result = $this->runUser('v-extract-fs-archive', [$archive_file, $path, null, $skip_components]);
+        unlink($archive_file);
+        
+        return $result;
     }
 }

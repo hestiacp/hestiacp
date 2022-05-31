@@ -100,6 +100,11 @@ class AppWizard {
             if(empty($options['database_password'])) {
                 $options['database_password'] = bin2hex(random_bytes(10));
             }
+            
+            if(!$this->appcontext->checkDatabaseLimit()) {
+                $this->errors[] = _('Unable to add databse! Limit reached!');
+                return false;
+            }
 
             if(!$this->appcontext->databaseAdd($options['database_name'], $options['database_user'], $options['database_password'])) {
                 $this->errors[] = "Error adding database";

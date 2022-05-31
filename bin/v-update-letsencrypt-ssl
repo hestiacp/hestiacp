@@ -82,7 +82,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
             # Loop through all crt aliases
             for alias in ${aliases//,/ } ; do
                 # Validate if the alias still exists in web.conf
-                if [[ "$ALIAS" =~ $alias ]]; then
+                if [[ ",$ALIAS," =~ ",$alias," ]]; then
                     f_aliases+="$alias,"
                 fi
             done

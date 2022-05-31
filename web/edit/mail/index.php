@@ -382,7 +382,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
                     $error_msg = $error_msg.", ".$error;
                 }
             }
-            $_SESSION['error_msg'] = _('Field "%s" can not be blank.', $error_msg);
+            $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
         } else {
             exec('mktemp -d', $mktemp_output, $return_var);
             $tmpdir = $mktemp_output[0];

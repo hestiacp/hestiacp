@@ -353,11 +353,6 @@ function syshealth_repair_system_config() {
         fi
     fi
 
-    # Enforce subdomain ownership
-    if [[ -z $(check_key_exists 'ENFORCE_SUBDOMAIN_OWNERSHIP') ]]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
-        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-    fi
     # Debug mode
     if [[ -z $(check_key_exists 'DEBUG_MODE') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: DEBUG_MODE ('false')"

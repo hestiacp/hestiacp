@@ -1475,6 +1475,18 @@ function check_ip_not_banned(){
     assert_failure $E_EXISTS
 }
 
+@test "MAIL: change mail account password" {
+  run curl -k -X POST -d "email=test@$domain&password=$userpass2&new=123456" https://localhost:8083/reset/mail/ 
+  assert_success
+  assert_output --partial "==ok=="
+}
+
+@test "MAIL: change mail account password (Incorrect PW)" {
+  run curl -k -X POST -d "email=test@$domain&password=$userpass2&new=123456" https://localhost:8083/reset/mail/ 
+  assert_success
+  assert_output --partial "error"
+}
+
 @test "MAIL: Delete account" {
     run v-delete-mail-account $user $domain test
     assert_success

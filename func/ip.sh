@@ -90,7 +90,7 @@ get_ip_alias() {
 # Increase ip value
 increase_ip_value() {
     sip=${1-ip}
-    USER=$user
+    USER=${2-$user}
     web_key='U_WEB_DOMAINS'
     usr_key='U_SYS_USERS'
     current_web=$(grep "$web_key=" $HESTIA/data/ips/$sip |cut -f 2 -d \')
@@ -127,7 +127,7 @@ increase_ip_value() {
 # Decrease ip value
 decrease_ip_value() {
     sip=${1-ip}
-    USER=$user
+    local user=${2-$user}
     web_key='U_WEB_DOMAINS'
     usr_key='U_SYS_USERS'
 

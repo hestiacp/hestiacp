@@ -160,6 +160,16 @@ class HestiaApp
         return $this->runUser('v-list-web-domain', [$domain, 'json']);
     }
 
+    public function checkDatabaseLimit(){
+        $status = $this -> runUser('v-list-user', ['json'], $result);
+        $result -> json[$this -> user()];
+        if($result -> json[$this -> user()]['DATABASES'] != "unlimited" ){
+            if($result -> json[$this -> user()]['DATABASES'] - $result -> json[$this -> user()]['U_DATABASES'] < 1){
+                return false;
+            } 
+        } 
+        return true;
+    }
     public function databaseAdd(string $dbname, string $dbuser, string $dbpass, string $charset = 'utf8mb4')
     {
         $v_password = tempnam("/tmp", "hst");
@@ -167,6 +177,9 @@ class HestiaApp
         fwrite($fp, $dbpass."\n");
         fclose($fp);
         $status = $this->runUser('v-add-database', [$dbname, $dbuser, $v_password, 'mysql', 'localhost', $charset]);
+        if(!$status){
+            $this->errors[] = _('Unable to add databse!');
+        }
         unlink($v_password);
         return $status;
     }
@@ -267,7 +280,10 @@ class HestiaApp
             }
             $archive_file = $download_result->file;
         }
-
-        return $this->runUser('v-extract-fs-archive', [$archive_file, $path, null, $skip_components]);
+        
+        $result = $this->runUser('v-extract-fs-archive', [$archive_file, $path, null, $skip_components]);
+        unlink($archive_file);
+        
+        return $result;
     }
 }

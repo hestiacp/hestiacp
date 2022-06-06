@@ -27,7 +27,7 @@ class MediaWikiSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://releases.wikimedia.org/mediawiki/1.37/mediawiki-1.37.1.zip' ],
+            'archive'  => [ 'src' => 'https://releases.wikimedia.org/mediawiki/1.37/mediawiki-1.37.2.zip' ],
         ],
         'server' => [
             'nginx' => [
@@ -56,7 +56,7 @@ class MediaWikiSetup extends BaseSetup
         $webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
 
         $this->appcontext->runUser('v-copy-fs-directory', [
-            $this->getDocRoot($this->extractsubdir . "/mediawiki-1.36.1/."),
+            $this->getDocRoot($this->extractsubdir . "/mediawiki-1.37.2/."),
             $this->getDocRoot()], $result);
         $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
         $this->appcontext->runUser('v-run-cli-cmd', ["/usr/bin/php$php_version",

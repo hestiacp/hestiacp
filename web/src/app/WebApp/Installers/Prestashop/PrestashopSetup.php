@@ -10,7 +10,7 @@ class PrestashopSetup extends BaseSetup
         'name' => 'Prestashop',
         'group' => 'ecommerce',
         'enabled' => true,
-        'version' => '1.7.8.4',
+        'version' => '1.7.8.6',
         'thumbnail' => 'prestashop-thumb.png'
     ];
 
@@ -26,7 +26,7 @@ class PrestashopSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.8.4/prestashop_1.7.8.4.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.8.6/prestashop_1.7.8.6.zip' ],
         ],
         'server' => [
             'nginx' => [

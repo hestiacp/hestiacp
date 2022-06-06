@@ -10,7 +10,7 @@ class NextcloudSetup extends BaseSetup
         'name' => 'Nextcloud',
         'group' => 'cloud',
         'enabled' => true,
-        'version' => '23.0.2',
+        'version' => 'latest',
         'thumbnail' => 'nextcloud-thumb.png'
     ];
 
@@ -23,14 +23,14 @@ class NextcloudSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://download.nextcloud.com/server/releases/nextcloud-23.0.2.tar.bz2' ]
+            'archive'  => [ 'src' => 'https://download.nextcloud.com/server/releases/latest.tar.bz2' ]
         ],
         'server' => [
             'nginx' => [
                 'template' => 'owncloud'
             ],
             'php' => [ 
-                'supported' => [ '7.3','7.4','8.0' ],
+                'supported' => [ '7.3','7.4','8.0','8.1' ],
             ]
         ], 
     ];

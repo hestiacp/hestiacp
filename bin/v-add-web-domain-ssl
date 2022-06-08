@@ -22,17 +22,6 @@ ssl_dir=$3
 ssl_home=${4-same}
 restart="$5"
 
-# Additional argument formatting
-if [[ "$domain" =~ [[:upper:]] ]]; then
-    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
-fi
-if [[ "$domain" =~ ^www\..* ]]; then
-    domain=$(echo "$domain" |sed -e "s/^www.//")
-fi
-if [[ "$domain" =~ .*\.$ ]]; then
-    domain=$(echo "$domain" |sed -e "s/\.$//")
-fi
-
 domain=$domain
 domain_idn=$(idn2 --quiet "$domain")
 

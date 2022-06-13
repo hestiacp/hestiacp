@@ -49,9 +49,9 @@
 			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');">
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-2"><b><?=_('Action');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-1"><b><?=_('Action');?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><?=_('Comment');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Comment');?></b></div>
 			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Protocol');?></b></div>
 			<div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=_('Port');?></b></div>
 			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('IP address');?></b></div>
@@ -82,7 +82,7 @@
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="rule[]" value="<?=$key?>">
 					</div>
-					<div class="clearfix l-unit__stat-col--left wide-2">
+					<div class="clearfix l-unit__stat-col--left wide-1">
 						<b>
 							<a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Firewall Rule');?>">
 							<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
@@ -104,7 +104,7 @@
 					<!-- START QUICK ACTION TOOLBAR AREA -->
 					<div class="clearfix l-unit__stat-col--left compact-2 text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-							<div class="actions-panel clearfix">
+							<div class="actions-panel clearfix" style="padding-right: 10px;">
 								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Firewall Rule');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
@@ -128,7 +128,7 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left wide-1 text-center"><b><?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
+					<div class="clearfix l-unit__stat-col--left wide-3"><b><?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
 					<div class="clearfix l-unit__stat-col--left text-center"><?=_($data[$key]['PROTOCOL'])?></div>
 					<div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=$data[$key]['PORT']?></b></div>
 					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['IP']?></div>

@@ -1828,26 +1828,23 @@ if [ "$sieve" = 'yes' ]; then
 
     # exim4 install
     sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim4/exim4.conf.template
-
-   sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
-
-
-    # Modify Roundcube install
-    mkdir -p $RC_CONFIG_DIR/plugins/managesieve
-
-    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
-        ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
+    sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
 
     # Permission changes
     chown -R dovecot:mail /var/log/dovecot.log
     chmod 660 /var/log/dovecot.log
-    chown -R root:www-data $RC_CONFIG_DIR/
-    chmod 751 -R $RC_CONFIG_DIR
-    chmod 644 $RC_CONFIG_DIR/*.php
-    chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
-
-    sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
-
+    
+    if [ -d "/var/lib/roundcube" ]; then
+        # Modify Roundcube config 
+        mkdir -p $RC_CONFIG_DIR/plugins/managesieve
+        cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
+        ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php\
+        chown -R root:www-data $RC_CONFIG_DIR/
+        chmod 751 -R $RC_CONFIG_DIR
+        chmod 644 $RC_CONFIG_DIR/*.php
+        chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
+        sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
+    fi
     # Restart Dovecot and exim4
     systemctl restart dovecot > /dev/null 2>&1
     systemctl restart exim4 > /dev/null 2>&1

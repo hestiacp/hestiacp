@@ -18,7 +18,7 @@
 # Argument definition
 user=$1
 domain=$2
-redirect=$(echo $3 | idn2);
+redirect=$3
 code=${4-301}
 restart=${5-no}
 

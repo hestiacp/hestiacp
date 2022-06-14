@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Core Function Library                              #
+#                                                                           #
+#===========================================================================#
+
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
@@ -665,13 +672,13 @@ is_user_format_valid() {
 }
 
 # Domain format validator
-# removed "" around  \.\. and $(printf '\t'): SC2076: Don't quote right-hand side of =~, it'll match literally rather than as a regex. And we need regex match!
 is_domain_format_valid() {
     object_name=${2-domain}
     exclude="[!|@|#|$|^|&|*|(|)|+|=|{|}|:|,|<|>|?|_|/|\|\"|'|;|%|\`| ]"
     if [[ $1 =~ $exclude ]] || [[ $1 =~ ^[0-9]+$ ]] || [[ $1 =~ \.\. ]] || [[ $1 =~ $(printf '\t') ]] ||  [[ "$1" = "www" ]]; then
         check_result "$E_INVALID" "invalid $object_name format :: $1"
     fi
+    is_no_new_line_format "$1";
 }
 
 # Alias forman validator
@@ -808,6 +815,7 @@ is_extention_format_valid() {
     if [[ "$1" =~ $exclude ]]; then
         check_result "$E_INVALID" "invalid proxy extention format :: $1"
     fi
+    is_no_new_line_format "$1";
 }
 
 # Number format validator
@@ -864,6 +872,14 @@ is_common_format_valid() {
     if [[ $(echo -n "$1" | grep -c '\_\_') -gt 0 ]]; then
            check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
+    is_no_new_line_format "$1";
+}
+
+is_no_new_line_format() {
+    test=$(echo "$1" | head -n1 );
+    if [[ "$test" != "$1" ]]; then
+      check_result "$E_INVALID" "invalid value :: $1"
+    fi
 }
 
 is_string_format_valid() {
@@ -871,6 +887,7 @@ is_string_format_valid() {
   if [[ "$1" =~ $exclude ]]; then
       check_result "$E_INVALID" "invalid $2 format :: $1"
   fi
+  is_no_new_line_format "$1";
 }
 
 # Database format validator
@@ -879,6 +896,7 @@ is_database_format_valid() {
     if [[ "$1" =~ $exclude ]] || [ 64 -le ${#1} ]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
+    is_no_new_line_format "$1";
 }
 
 # Date format validator
@@ -897,6 +915,7 @@ is_dbuser_format_valid() {
     if [[ "$1" =~ $exclude ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
+    is_no_new_line_format "$1"
 }
 
 # DNS record type validator
@@ -919,13 +938,15 @@ is_dns_record_format_valid() {
         is_domain_format_valid "${1::-1}" 'mx_record'
         is_int_format_valid "$priority" 'priority_record'
     fi
-
+    is_no_new_line_format "$1";
 }
 
 # Email format validator
 is_email_format_valid() {
     if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+      if [[ ! "$1" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.(xn--)[[:alnum:]]{2,63}$ ]] ; then
         check_result "$E_INVALID" "invalid email format :: $1"
+      fi
     fi
 }
 
@@ -1043,7 +1064,7 @@ is_object_format_valid() {
 
 # Role validator 
 is_role_valid (){
-    if ! [[ "$1" =~ ^admin|user$ ]]; then
+    if ! [[ "$1" =~ ^admin$|^user$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
@@ -1088,12 +1109,14 @@ is_format_valid() {
                 action)         is_fw_action_format_valid "$arg";;
                 active)         is_boolean_format_valid "$arg" 'active' ;;
                 aliases)        is_alias_format_valid "$arg" ;;
+                alias)          is_alias_format_valid "$arg" ;;        
                 antispam)       is_boolean_format_valid "$arg" 'antispam' ;;
                 antivirus)      is_boolean_format_valid "$arg" 'antivirus' ;;
                 autoreply)      is_autoreply_format_valid "$arg" ;;
                 backup)         is_object_format_valid "$arg" 'backup' ;;
                 charset)        is_object_format_valid "$arg" "$arg_name" ;;
                 charsets)       is_common_format_valid "$arg" 'charsets' ;;
+                chain)          is_object_format_valid "$arg" 'chain' ;;
                 comment)        is_object_format_valid "$arg" 'comment' ;;
                 database)       is_database_format_valid "$arg" 'database';;
                 day)            is_cron_format_valid "$arg" $arg_name ;;
@@ -1102,11 +1125,13 @@ is_format_valid() {
                 dkim)           is_boolean_format_valid "$arg" 'dkim' ;;
                 dkim_size)      is_int_format_valid "$arg" ;;
                 domain)         is_domain_format_valid "$arg" ;;
+                dom_alias)      is_alias_format_valid "$arg" ;;
                 dvalue)         is_dns_record_format_valid "$arg";;
                 email)          is_email_format_valid "$arg" ;;
                 email_forward)  is_email_format_valid "$arg" ;;
                 exp)            is_date_format_valid "$arg" ;;
                 extentions)     is_common_format_valid "$arg" 'extentions' ;;
+                format)         is_type_valid 'plain json shell csv' "$arg" ;;
                 ftp_password)   is_password_format_valid "$arg" ;;
                 ftp_user)       is_user_format_valid "$arg" "$arg_name" ;;
                 hash)           is_hash_format_valid "$arg" "$arg_name" ;;
@@ -1154,9 +1179,11 @@ is_format_valid() {
                 soa)            is_domain_format_valid "$arg" 'SOA' ;;	
                 #missing command: is_format_valid_shell
                 shell)          is_format_valid_shell "$arg" ;;
+                ssl_dir)        is_folder_exists "$arg" "$arg_name" ;;
                 stats_pass)     is_password_format_valid "$arg" ;;
                 stats_user)     is_user_format_valid "$arg" "$arg_name" ;;
                 template)       is_object_format_valid "$arg" "$arg_name" ;;
+                theme)          is_common_format_valid "$arg" "$arg_name" ;;
                 ttl)            is_int_format_valid "$arg" 'ttl';;
                 user)           is_user_format_valid "$arg" $arg_name;;
                 wday)           is_cron_format_valid "$arg" $arg_name ;;
@@ -1166,6 +1193,11 @@ is_format_valid() {
     done
 }
 
+is_folder_exists () {
+  if [ ! -d "$1" ]; then 
+    check_result "$E_NOTEXIST" "folder $1 does not exist"
+  fi
+}
 # Domain argument formatting
 format_domain() {
     if [[ "$domain" = *[![:ascii:]]* ]]; then
@@ -1210,7 +1242,7 @@ format_aliases() {
 }
 
 is_restart_format_valid() {
-  if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ];  then
+  if [ "$1" != 'yes' ] && [ "$1" != 'no' ] && [ "$1" != 'ssl' ] && [ "$1" != 'reload' ]  && [ "$1" != 'updatessl' ];  then
   check_result "$E_INVALID" "invalid $2 format :: $1"
   fi
 }
@@ -1299,7 +1331,7 @@ multiphp_versions() {
 
 multiphp_default_version() {
     # Get system wide default php version (set by update-alternatives)
-    local sys_phpversion=$(php -r "echo (float)phpversion();")
+    local sys_phpversion=$(php -r "echo substr(phpversion(),0,3);")
 
     # Check if the system php also has php-fpm enabled, otherwise return
     # the most recent php version which does have it installed.
@@ -1347,7 +1379,7 @@ source_conf(){
   while IFS='= ' read -r lhs rhs
   do
       if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-          rhs="${rhs%%\#*}"    # Del in line right comments
+          rhs="${rhs%%^\#*}"   # Del in line right comments
           rhs="${rhs%%*( )}"   # Del trailing spaces
           rhs="${rhs%\'*}"     # Del opening string quotes 
           rhs="${rhs#\'*}"     # Del closing string quotes 
@@ -1361,6 +1393,7 @@ format_no_quotes() {
     if [[ "$1" =~ $exclude ]]; then
        check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ') :: $1"
     fi
+    is_no_new_line_format "$1"
 }
 
 is_username_format_valid(){

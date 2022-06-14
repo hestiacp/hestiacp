@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete remote dns domain record
 # options: USER DOMAIN ID
-# labels: dns
 #
 # example: v-delete-remote-dns-record user07 acme.com 44
 #
-# The function synchronize dns with the remote server.
-
+# This function synchronize dns with the remote server.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,7 +25,6 @@ source $HESTIA/func/remote.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -40,10 +37,10 @@ remote_dns_health_check
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
-
 
 # Starting cluster loop
 IFS=$'\n'
@@ -58,7 +55,7 @@ for cluster in $(cat $HESTIA/conf/dns-cluster.conf); do
     check_result $? "$HOST connection failed (soa sync)" "$E_CONNECT"
 
     # Sync domain
-    cluster_cmd v-delete-dns-record "$DNS_USER" "$domain" "$id "'no'
+    cluster_cmd v-delete-dns-record "$DNS_USER" "$domain" "$id" 'no'
     #check_result $? "$HOST connection failed (delete)" $E_CONNECT
 
     # Rebuilding dns zone
@@ -66,8 +63,6 @@ for cluster in $(cat $HESTIA/conf/dns-cluster.conf); do
     check_result $? "$HOST connection failed (rebuild)" "$E_CONNECT"
 
 done
-
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

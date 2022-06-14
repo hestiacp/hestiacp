@@ -2,6 +2,10 @@
 # info: Log User logout event
 # options: USER FINGERPRINT
 
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
 # Argument definition
 user=$1
 session_id=$2
@@ -20,6 +24,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '2' "$#" 'USER SESSION_ID'
 is_format_valid 'user'
+is_common_format_valid "$session_id" "Session ID"
 is_object_valid 'user' 'USER' "$user"
 
 if [ ! -f "$USER_DATA/auth.log" ]; then

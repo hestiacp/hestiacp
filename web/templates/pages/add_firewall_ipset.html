@@ -37,20 +37,7 @@
 						</tr>
 						<tr>
 							<td>
-								<?php
-									if (!empty($_SESSION['error_msg'])) {
-										$msg_icon = 'fa-exclamation-circle status-icon red';
-										$msg_text = htmlentities($_SESSION['error_msg']);
-										$msg_id = 'vst-error';
-									} else {
-										if (!empty($_SESSION['ok_msg'])) {
-											$msg_icon = 'fa-check-circle status-icon green';
-											$msg_text = $_SESSION['ok_msg'];
-											$msg_id = 'vst-ok';
-										}
-									}
-								?>
-								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
 						<tr>
@@ -112,36 +99,19 @@
 
 <script>
 	var country_iplists = [
-		// Define IPv4 country lists
-		{ name: "[IPv4] Country - Canada", source: "http://ipverse.net/ipblocks/data/countries/ca.zone" },
-		{ name: "[IPv4] Country - China", source: "http://ipverse.net/ipblocks/data/countries/cn.zone" },
-		{ name: "[IPv4] Country - France", source: "http://ipverse.net/ipblocks/data/countries/fr.zone" },
-		{ name: "[IPv4] Country - Germany", source: "http://ipverse.net/ipblocks/data/countries/de.zone" },
-		{ name: "[IPv4] Country - India", source: "http://ipverse.net/ipblocks/data/countries/in.zone" },
-		{ name: "[IPv4] Country - Netherlands", source: "http://ipverse.net/ipblocks/data/countries/nl.zone" },
-		{ name: "[IPv4] Country - Romania", source: "http://ipverse.net/ipblocks/data/countries/ro.zone" },
-		{ name: "[IPv4] Country - Russia", source: "http://ipverse.net/ipblocks/data/countries/ru.zone" },
-		{ name: "[IPv4] Country - Spain", source: "http://ipverse.net/ipblocks/data/countries/es.zone" },
-		{ name: "[IPv4] Country - Switzerland", source: "http://ipverse.net/ipblocks/data/countries/ch.zone" },
-		{ name: "[IPv4] Country - Ukraine", source: "http://ipverse.net/ipblocks/data/countries/ua.zone" },
-		{ name: "[IPv4] Country - United Kingdom", source: "http://ipverse.net/ipblocks/data/countries/gb.zone" },
-		{ name: "[IPv4] Country - United States", source: "http://ipverse.net/ipblocks/data/countries/us.zone" },
-
+		<?php 
+			$country = array('ca' => 'Canada', 'cn' => 'China', 'fr' => 'French', 'de' => 'Germany', 'in' => 'India', 'nl' => 'Netherlands', 'ro' => 'Romania', 'ru' => 'Russia', 'es' => 'Spain', 'ch' => 'Switzerland', 'tr' => 'Turkey', 'ua' => 'Ukraine',  'uk' => 'United Kingdom', 'us' => 'United States');
+			foreach($country as $iso =>$name){
+				echo '{name: "[IPv4] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv4-aggregated.txt"},'."\n";
+			}
+		?>
 		// Define IPv6 country lists
 		/*
-		{name: "[IPv6] Country - China",          source:"http://ipverse.net/ipblocks/data/countries/cn-ipv6.zone"},
-		{name: "[IPv6] Country - Canada",         source:"http://ipverse.net/ipblocks/data/countries/ca-ipv6.zone"},
-		{name: "[IPv6] Country - France",         source:"http://ipverse.net/ipblocks/data/countries/fr-ipv6.zone"},
-		{name: "[IPv6] Country - Germany",        source:"http://ipverse.net/ipblocks/data/countries/de-ipv6.zone"},
-		{name: "[IPv6] Country - India",          source:"http://ipverse.net/ipblocks/data/countries/in-ipv6.zone"},
-		{name: "[IPv6] Country - Netherlands",    source:"http://ipverse.net/ipblocks/data/countries/nl-ipv6.zone"},
-		{name: "[IPv6] Country - Romania",        source:"http://ipverse.net/ipblocks/data/countries/ro-ipv6.zone"},
-		{name: "[IPv6] Country - Russia",         source:"http://ipverse.net/ipblocks/data/countries/ru-ipv6.zone"},
-		{name: "[IPv6] Country - Spain",          source:"http://ipverse.net/ipblocks/data/countries/es-ipv6.zone"},
-		{name: "[IPv6] Country - Switzerland",    source:"http://ipverse.net/ipblocks/data/countries/ch-ipv6.zone"},
-		{name: "[IPv6] Country - Ukraine",        source:"http://ipverse.net/ipblocks/data/countries/ua-ipv6.zone"},
-		{name: "[IPv6] Country - United Kingdom", source:"http://ipverse.net/ipblocks/data/countries/gb-ipv6.zone"},
-		{name: "[IPv6] Country - United States",  source:"http://ipverse.net/ipblocks/data/countries/us-ipv6.zone"},
+		<?php
+			foreach($country as $iso =>$name){
+				echo '{name: "[IPv6] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv6-aggregated.txt"},'."\n";
+			}
+		?>
 		*/
 	];
 

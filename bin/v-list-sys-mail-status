@@ -1,20 +1,17 @@
 #!/bin/bash
 # info: list mail status
 # options: [FORMAT]
-# labels: mail
 #
 # example: v-list-sys-mail-status json
 #
-# The function lists mail server status
-
+# This function lists mail server status
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 #format=${1-shell}
-
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -52,7 +49,6 @@ if [ $? -ne 0 ]; then
     echo "[Exim4] No valid log lines read"
     exit 0;
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

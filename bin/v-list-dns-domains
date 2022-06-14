@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list dns domains
 # options: USER [FORMAT]
-# labels: dns
 #
 # example: v-list-dns-domains admin
 #
-# The function for obtaining all DNS domains of a user.
-
+# This function for obtaining all DNS domains of a user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -89,7 +87,6 @@ csv_list() {
     done < <(cat $USER_DATA/dns.conf)
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -97,7 +94,6 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -110,7 +106,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

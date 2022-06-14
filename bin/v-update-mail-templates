@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: update mail templates
 # options: [RESTART] [SKIP]
-# labels: hestia
 #
 # example: v-update-mail-templates
 #
-# The function for obtaining updated webmail templates from Hestia package.
+# This function for obtaining updated webmail templates from Hestia package.
 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

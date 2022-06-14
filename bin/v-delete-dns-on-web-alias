@@ -1,20 +1,19 @@
 #!/bin/bash
 # info: delete dns domain or dns record based on web domain alias
 # options: USER DOMAIN ALIAS [RESTART]
-# labels: dns
 #
 # example: v-delete-dns-on-web-alias admin example.com www.example.com
 #
-# The function deletes dns domain or dns record based on web domain alias.
-
+# This function deletes dns domain or dns record based on web domain alias.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 domain=$2
+alias=$3
 domain_idn=$2
 dom_alias=$(idn -t --quiet -u "$3" )
 dom_alias=$(echo $dom_alias |sed -e 's/\.*$//g' -e 's/^\.*//g')
@@ -45,7 +44,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN ALIAS [RESTART]'
-is_format_valid 'user' 'domain'
+is_format_valid 'user' 'domain' 'alias' 'restart'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -53,7 +52,6 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -83,7 +81,6 @@ else
         fi
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

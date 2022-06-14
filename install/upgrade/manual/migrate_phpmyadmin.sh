@@ -1,6 +1,5 @@
 #!/bin/bash
-# info: Disconnect PHPmyadmin from APT and solving issues with PHPMyadmin accidental updates from ATP
-
+# info: Disconnect phpMyadmin from APT and solving issues with PHPMyadmin accidental updates from ATP
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #
@@ -12,13 +11,17 @@ source $HESTIA/func/main.sh
 source $HESTIA/install/upgrade/upgrade.conf
 source $HESTIA/conf/hestia.conf
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-echo "For deleting PHPmyAdmin you will need confirm the removal with root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
+echo "To remove phpMyAdmin you will need use the root password. Password can be found in /usr/local/hestia/conf/mysql.conf"
 read -p 'Would you like to continue? [y/n]'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -30,23 +33,23 @@ then
     fi
     
    # Create an backup of current config
-   echo "[ * ] Make backup old config files"
+   echo "[ * ] Backing up old configuration files..."
    mkdir -p /root/hst_backup_man/phmyadmin
    cp -r /etc/phpmyadmin/* /root/hst_backup_man/phmyadmin
    
    mkdir -p /root/hst_backup_man/var_phmyadmin
    cp -r /var/lib/phpmyadmin/* /root/hst_backup_man/var_phmyadmin
    
-   echo '[ * ] Remove PHPmyAdmin via ATP'
+   echo '[ * ] Marking phpmyadmin as held in apt...'
    apt-mark hold phpmyadmin
    
-   echo '[ * ] Delete possible trail'
+   echo '[ * ] Removing old folders...'
    # make sure everything is deleted 
    rm -f -r /usr/share/phpmyadmin
    rm -f -r /etc/phpmyadmin
    rm -f -r /var/lib/phpmyadmin/
    
-   echo '[ * ] Create new folders'
+   echo '[ * ] Creating new folders...'
    # Create folders
    mkdir -p  /usr/share/phpmyadmin
    mkdir -p /etc/phpmyadmin
@@ -99,7 +102,7 @@ then
    # Special thanks to Pavel Galkin (https://skurudo.ru)
    # https://github.com/skurudo/phpmyadmin-fixer
    
-   echo "[ * ] Createing localhost config"
+   echo "[ * ] Creating localhost configuration..."
    #ubuntu phpmyadmin path
    pmapath="/etc/phpmyadmin/conf.d/01-localhost.php"
    echo "<?php " >> $pmapath
@@ -134,7 +137,7 @@ then
    PMADB=phpmyadmin
    PMAUSER=pma
    
-   echo '[ * ] Drop database could throw a error if successfull removal was preformed'
+   echo '[ * ] Dropping database (could throw an error if successful)...'
    # removed tabs due to here doc errors
    #DROP USER and TABLE
    mysql -uroot <<MYSQL_PMA1
@@ -143,14 +146,14 @@ DROP DATABASE $PMADB;
 FLUSH PRIVILEGES;
 MYSQL_PMA1
 
-   echo '[ * ] Create new user'
+   echo '[ * ] Creating new user...'
    #CREATE PMA USER
    mysql -uroot <<MYSQL_PMA2
 CREATE USER '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 CREATE DATABASE $PMADB;
 MYSQL_PMA2
    
-   echo '[ * ] Create new database'
+   echo '[ * ] Creating new database...'
    #GRANT PMA USE SOME RIGHTS
    mysql -uroot <<MYSQL_PMA3
 USE $PMADB;

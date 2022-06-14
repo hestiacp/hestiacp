@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change hostname
 # options: HOSTNAME
-# labels: panel
 #
 # example: v-change-sys-hostname mydomain.tld
 #
-# The function for changing system hostname.
-
+# This function for changing system hostname.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -33,7 +30,6 @@ is_format_valid 'domain'
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

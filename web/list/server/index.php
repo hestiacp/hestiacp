@@ -1,5 +1,4 @@
 <?php
-error_reporting(NULL);
 $TAB = 'SERVER';
 
 // Main include
@@ -119,6 +118,15 @@ if (isset($_GET['db'])) {
 exec (HESTIA_CMD."v-list-sys-info json", $output, $return_var);
 $sys = json_decode(implode('', $output), true);
 unset($output);
+
+exec (HESTIA_CMD."v-list-sys-php json", $output, $return_var);
+$php = json_decode(implode('', $output), true);
+unset($output);
+$phpfpm = array();
+foreach($php as $version){
+    $phpfpm[] = 'php'.$version.'-fpm';
+}
+
 exec (HESTIA_CMD."v-list-sys-services json", $output, $return_var);
 $data = json_decode(implode('', $output), true);
 ksort($data);

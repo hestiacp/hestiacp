@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update ssh rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-ssh
 #
-# The function is for updating ssh rrd database and graphic.
-
+# This function is for updating ssh rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,7 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -90,7 +87,6 @@ rrdtool graph $RRD/ssh/$period-ssh.png \
     GPRINT:a:'LAST:Current\:''%8.0lf' \
     GPRINT:a:'MIN:Min\:''%8.0lf' \
     GPRINT:a:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

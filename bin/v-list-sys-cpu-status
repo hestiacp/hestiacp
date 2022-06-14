@@ -1,27 +1,10 @@
 #!/bin/bash
 # info: list system cpu info
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-cpu-status
 #
-# The function lists cpu information
-
-
-#----------------------------------------------------------#
-#                    Variable&Function                     #
-#----------------------------------------------------------#
-
-# Argument definition
-#format=${1-shell}
-
-# Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-#source /etc/hestiacp/hestia.conf
-#source $HESTIA/func/main.sh
-# load config file
-#source_conf "$HESTIA/conf/hestia.conf"
-
+# This function lists cpu information
 
 #----------------------------------------------------------#
 #                       Action                             #

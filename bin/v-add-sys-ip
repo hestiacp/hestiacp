@@ -1,20 +1,18 @@
 #!/bin/bash
 # info: add system ip address
 # options: IP NETMASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]
-# labels:
 #
 # example: v-add-sys-ip 216.239.32.21 255.255.255.0
 #
-# The function adds ip address into a system. It also creates rc scripts. You
+# This function adds ip address into a system. It also creates rc scripts. You
 # can specify ip name which will be used as root domain for temporary aliases.
 # For example, if you set a1.myhosting.com as name, each new domain created on
 # this ip will automatically receive alias $domain.a1.myhosting.com. Of course
 # you must have wildcard record *.a1.myhosting.com pointed to ip. This feature 
 # is very handy when customer wants to test domain before dns migration.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Get interface name
@@ -63,7 +61,6 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -77,7 +74,7 @@ if [ -z "$sys_ip_check" ]; then
     /sbin/ip addr add $ip/$cidr dev $iface \
         broadcast $broadcast label $iface
     
-    # Improve check netplan
+    # Check if netplan is in use and generate configuration file
     if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then 
         result=$(cat /etc/netplan/*.yaml 2>/dev/null | grep $(hostname -I | cut -d' ' -f1));
         if [ -n "$result" ]; then 
@@ -106,7 +103,7 @@ if [ -z "$sys_ip_check" ]; then
         echo -e $sys_ip >> /etc/netplan/60-hestia.yaml
         unset IFS
     else
-        sys_ip="\n# Added by hestia"
+        sys_ip="\n# Added by Hestia Control Panel"
         sys_ip="$sys_ip\nauto $iface"
         sys_ip="$sys_ip\niface $iface inet static"
         sys_ip="$sys_ip\naddress $ip"
@@ -194,7 +191,6 @@ if [ -n "$PROXY_SYSTEM" ]; then
         fi
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

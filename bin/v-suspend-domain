@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: suspend web/dns/mail domain
 # options: USER DOMAIN
-# labels: panel
 #
 # example: v-suspend-domain admin example.com
 #
-# The function suspends web/dns/mail domain.
-
+# This function suspends web/dns/mail domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -25,7 +23,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -37,7 +34,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: Suspending sys cron jobs
 # options: USER [RESTART]
-# labels: panel
 #
 # example: v-suspend-cron-jobs admin
 #
-# The function suspends all user cron jobs.
-
+# This function suspends all user cron jobs.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -24,7 +22,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -36,7 +33,6 @@ is_object_valid 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -45,7 +41,6 @@ check_hestia_demo_mode
 for job in $(search_objects 'cron' 'SUSPENDED' 'no' 'JOB'); do
     $BIN/v-suspend-cron-job "$user" "$job" 'no'
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

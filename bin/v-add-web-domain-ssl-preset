@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
 # options: USER DOMAIN [SSL] 
-# labels: hestia web
 #
 # example: v-add-web-domain-ssl-preset
 #
@@ -9,7 +8,7 @@
 # When LE has been activated it will set the actions
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

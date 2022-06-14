@@ -1,19 +1,17 @@
 #!/bin/bash
 # info: add new remote dns host
 # options: HOST PORT USER PASSWORD [TYPE] [DNS_USER]
-# labels: dns
 #
 # example: v-add-remote-dns-host slave.your_host.com 8083 admin your_passw0rd
 # 
 # example: v-add-remote-dns-host slave.your_host.com 8083 api_key ''
 #
-# The function adds remote dns server to the dns cluster.
+# This function adds remote dns server to the dns cluster.
 # As alternative api_key generated on the slave server.
 # See v-generate-api-key can be used to connect the remote dns server
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -42,14 +40,13 @@ source $HESTIA/func/remote.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 args_usage='HOST PORT USER [PASSWORD] [TYPE] [DNS_USER]'
 check_args '3' "$#" "$args_usage"
-is_format_valid 'host' 'port' 'type' 'dns_user'
+is_format_valid 'host' 'port' 'dns_user'
 if [ -z "$password" ]; then
     is_format_valid 'hash'
 else
@@ -63,6 +60,7 @@ is_dnshost_alive
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -102,7 +100,6 @@ check_result $? "$HOST connection failed" "$E_CONNECT"
 # Syncing all domains
 $BIN/v-sync-dns-cluster "$host"
 check_result $? "$HOST sync failed" "$E_CONNECT"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

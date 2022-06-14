@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change user nameservers
 # options: USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]
-# labels: panel
 #
 # example: v-change-user-ns ns1.domain.tld ns2.domain.tld
 #
-# The function for changing default nameservers for specific user.
-
+# This function for changing default nameservers for specific user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -31,7 +29,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,29 +38,31 @@ check_args '3' "$#" 'USER NS1 NS2 [NS3] [NS4] [NS5] [NS6] [NS7] [NS8]'
 
 # Checking argument format
 is_format_valid 'user' 'ns1' 'ns2'
+
+ns="$ns1,$ns2"
 if [ -n "$ns3" ]; then
-    ns3=$(echo "$4" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns3'
+    ns="$ns,$ns3"
 fi
 if [ -n "$ns4" ]; then
-    ns4=$(echo "$5" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns4'
+    ns="$ns,$ns4"
 fi
 if [ -n "$ns5" ]; then
-    ns5=$(echo "$6" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns5'
+    ns="$ns,$ns5"
 fi
 if [ -n "$ns6" ]; then
-    ns6=$(echo "$7" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns6'
+    ns="$ns,$ns6"
 fi
 if [ -n "$ns7" ]; then
-    ns7=$(echo "$8" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns7'
+    ns="$ns,$ns7"
 fi
 if [ -n "$ns8" ]; then
-    ns8=$(echo "$9" | sed -e 's/\.*$//g' -e 's/^\.*//g')
     is_format_valid 'ns8'
+    ns="$ns,$ns8"
 fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -71,18 +70,12 @@ is_object_unsuspended 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Merging values
-ns="$ns1,$ns2,$ns3,$ns4,$ns5,$ns6,$ns7,$ns8"
-ns=$(echo "$ns" | sed -e "s/,,//g" -e "s/,$//")
-
 # Changing ns values
 update_user_value "$user" '$NS' "$ns"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

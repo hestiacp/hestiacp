@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add system sftp jail
 # options: [RESTART]
-# labels: 
 #
 # example: v-add-sys-sftp-jail yes
 #
-# The script enables sftp jailed environment
-
+# This function enables sftp jailed environment.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -19,7 +17,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 restart=$1
 
@@ -75,8 +72,17 @@ fi
 # Checking users
 shells="rssh|nologin"
 for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
-    $BIN/v-add-user-sftp-jail "$user" "$restart"
+    # Include all users v-add-user-sftp-jail will handle it
+    $BIN/v-add-user-sftp-jail "$user" "no"
 done
+
+# Restart ssh service
+if [ "$restart" = 'no' ]; then
+    # Skip restart of SSH daemon
+    echo "" > /dev/null 2>&1
+else
+    service ssh restart > /dev/null 2>&1
+fi
 
 # Add v-add-sys-sftp-jail to startup
 if [ ! -e "/etc/cron.d/hestia-sftp" ]; then

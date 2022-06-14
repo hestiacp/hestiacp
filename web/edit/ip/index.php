@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 $TAB = 'IP';
 
@@ -22,7 +21,7 @@ if (empty($_GET['ip'])) {
 // List ip
 $v_ip = escapeshellarg($_GET['ip']);
 exec(HESTIA_CMD."v-list-sys-ip ".$v_ip." 'json'", $output, $return_var);
-check_return_code($return_var, $output);
+check_return_code_redirect($return_var, $output,'/list/ip');
 $data = json_decode(implode('', $output), true);
 unset($output);
 
@@ -30,7 +29,7 @@ unset($output);
 $v_username = $user;
 $v_ip = $_GET['ip'];
 $v_netmask = $data[$v_ip]['NETMASK'];
-$v_interace = $data[$v_ip]['INTERFACE'];
+$v_interface = $data[$v_ip]['INTERFACE'];
 $v_name = $data[$v_ip]['NAME'];
 $v_nat = $data[$v_ip]['NAT'];
 $v_ipstatus = $data[$v_ip]['STATUS'];

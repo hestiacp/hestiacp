@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: deletes temp database user
 # options: USER DBUSER [TYPE] [HOST]
-# labels: hestia database
 #
 # example: v-add-database-temp-user wordress hestia_sso_user mysql
 #
@@ -9,7 +8,7 @@
 # To be used in combination with v-add-database-temp-user 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -34,7 +33,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DATABASE DBUSER [TYPE] [HOST]'
-is_format_valid 'user' 'dbuser'
+is_format_valid 'user' 'database' 'dbuser'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -62,8 +61,9 @@ delete_mysql_database_temp_user
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-$BIN/v-log-action "$user" "Info" "Database" "Revoked user access (Database: $database, User: $dbuser)."
 
 # Logging
+$BIN/v-log-action "$user" "Info" "Database" "Revoked user access (Database: $database, User: $dbuser)."
 log_event "$OK" "$ARGUMENTS"
+
 exit

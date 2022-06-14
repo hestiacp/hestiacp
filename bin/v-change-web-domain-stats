@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: change web domain statistics
 # options: USER DOMAIN TYPE
-# labels: web
 #
 # example: v-change-web-domain-stats admin example.com awstats
 #
-# The function of deleting site's system of statistics. Its type is
+# This function of deleting site's system of statistics. Its type is
 # automatically chooses from client's configuration file.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -32,7 +30,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -48,7 +45,6 @@ is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -38,20 +38,7 @@
 						</tr>
 						<tr>
 							<td>
-								<?php
-									if (!empty($_SESSION['error_msg'])) {
-										$msg_icon = 'fa-exclamation-circle status-icon red';
-										$msg_text = htmlentities($_SESSION['error_msg']);
-										$msg_id = 'vst-error';
-									} else {
-										if (!empty($_SESSION['ok_msg'])) {
-											$msg_icon = 'fa-check-circle status-icon green';
-											$msg_text = $_SESSION['ok_msg'];
-											$msg_id = 'vst-ok';
-										}
-									}
-								?>
-								<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+								<?php show_error_panel($_SESSION);?>
 							</td>
 						</tr>
 						<tr>
@@ -133,7 +120,8 @@
 										<td>
 											<span class="alert alert-info alert-with-icon">
 												<i class="fas fa-exclamation"></i>
-												<?=_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.$v_domain and $v_webmail_alias!")?><br />
+												<?php echo $v_webmail_alias;?>
+												<?=sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias); ?><br />
 											</span>
 										</td>
 									</tr>
@@ -143,7 +131,7 @@
 												<tr>
 													<td class="vst-text input-label step-top">
 														<?=_('SSL Certificate');?>
-														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=$v_domain?>"><?=_('Generate CSR');?></a></span>
+														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
 													</td>
 												</tr>
 												<tr>
@@ -181,7 +169,7 @@
 																	<b><?=_('SUBJECT');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_subject?>
+																	<?=htmlentities($v_ssl_subject);?>
 																</td>
 															</tr>
 															<?php if ($v_ssl_aliases){?>
@@ -190,7 +178,7 @@
 																		<b><?=_('Aliases');?>:</b>
 																	</td>
 																	<td class="details">
-																		<?=$v_ssl_aliases?>
+																		<?=htmlentities($v_ssl_aliases)?>
 																	</td>
 																</tr>
 															<?php } ?>
@@ -199,7 +187,7 @@
 																	<b><?=_('NOT_BEFORE');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_not_before?>
+																	<?=htmlentities($v_ssl_not_before)?>
 																</td>
 															</tr>
 															<tr>
@@ -207,7 +195,7 @@
 																	<b><?=_('NOT_AFTER');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_not_after?>
+																	<?=htmlentities($v_ssl_not_after)?>
 																</td>
 															</tr>
 															<tr>
@@ -215,7 +203,7 @@
 																	<b><?=_('SIGNATURE');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_signature?>
+																	<?=htmlentities($v_ssl_signature)?>
 																</td>
 															</tr>
 															<tr>
@@ -223,7 +211,7 @@
 																	<b><?=_('PUB_KEY');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_pub_key?>
+																	<?=htmlentities($v_ssl_pub_key)?>
 																</td>
 															</tr>
 															<tr>
@@ -231,7 +219,7 @@
 																	<b><?=_('ISSUER');?>:</b>
 																</td>
 																<td class="details">
-																	<?=$v_ssl_issuer?>
+																	<?=htmlentities($v_ssl_issuer)?>
 																</td>
 															</tr>
 														</table>

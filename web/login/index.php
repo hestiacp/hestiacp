@@ -1,7 +1,7 @@
 <?php
-
 define('NO_AUTH_REQUIRED', true);
 // Main include
+
 include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 
 $TAB = 'login';
@@ -36,6 +36,9 @@ if (isset($_SESSION['user'])) {
                 unset($_SESSION['_sf2_attributes']);
                 unset($_SESSION['_sf2_meta']);
                 header('Location: /login/');
+            }else{
+                # User doesn't exists
+                header('Location: /');
             }
         }
         exit;
@@ -105,7 +108,13 @@ function authenticate_user($user, $password, $twofa = '')
         $pam = json_decode(implode('', $output), true);
         if ($return_var > 0) {
             sleep(2);
-            $error = '<a class="error">' . _('Invalid username or password') . '</a>';
+            if($return_var == 5){
+                $error = '<a class="error">' . _('Account has been suspended') . '</a>';   
+            }elseif($return_var == 1){
+                $error = '<a class="error">' . _('Unsupported hash method') . '</a>';     
+            }else{
+                $error = '<a class="error">' . _('Invalid username or password') . '</a>';    
+            }
             return $error;
         } else {
             $salt = $pam[$user]['SALT'];

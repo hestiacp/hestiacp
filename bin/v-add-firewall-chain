@@ -1,20 +1,19 @@
 #!/bin/bash
 # info: add firewall chain
 # options: CHAIN [PORT] [PROTOCOL] [PROTOCOL]
-# labels: 
 #
 # example: v-add-firewall-chain CRM 5678 TCP
 #
-# The function adds new rule to system firewall
-
+# This function adds new rule to system firewall
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 port=$2
+port_ext=$2
 protocol=${4-TCP}
 protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 
@@ -42,7 +41,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL]'
-is_format_valid 'chain'
+is_format_valid 'chain' 'port_ext' 'protocol'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -97,7 +96,6 @@ fi
 
 # Changing permissions
 chmod 660 $chains
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

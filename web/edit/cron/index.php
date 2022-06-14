@@ -1,9 +1,6 @@
 <?php
 
-// Init
-error_reporting(null);
 ob_start();
-session_start();
 $TAB = 'CRON';
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
@@ -22,7 +19,7 @@ if (empty($_GET['job'])) {
 // List cron job
 $v_job = escapeshellarg($_GET['job']);
 exec(HESTIA_CMD."v-list-cron-job ".$user." ".$v_job." 'json'", $output, $return_var);
-check_return_code($return_var, $output);
+check_return_code_redirect($return_var, $output, '/list/cron/');
 
 $data = json_decode(implode('', $output), true);
 unset($output);
@@ -61,7 +58,7 @@ if (!empty($_POST['save'])) {
     $v_cmd = escapeshellarg($_POST['v_cmd']);
 
     // Save changes
-    exec(HESTIA_CMD."v-change-cron-job ".$v_username." ".$v_job." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
+    exec(HESTIA_CMD."v-change-cron-job ".$user." ".$v_job." ".$v_min." ".$v_hour." ".$v_day." ".$v_month." ".$v_wday." ".$v_cmd, $output, $return_var);
     check_return_code($return_var, $output);
     unset($output);
 

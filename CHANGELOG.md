@@ -1,15 +1,260 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.5.15] - Service release
+
+### Bugfixes
+
+- Fixed an issue with wildcard DNS records 
+
+### Dependencies
+
+- Update phpMyAdmin to 5.1.4 (https://www.phpmyadmin.net/files/5.1.4/) (#2529)
+
+## [1.5.14] - Service release
+
+### Bugfixes
+
+- Fixed an issue with login with ipv6 (#2564)
+- Fixed an issue with dns records containing an . (#2559)
+
+## [1.5.13] - Service release
+
+### Bugfixes
+
+- Fixed an issue in add / change dns record via GUI. (#2557)
+
+## [1.5.12] - Service release
+
+### Bugfixes
+
+- Fixed vulnerability with Sed [CVE-2022-1509](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-1509)
+- Remove localhost exception for invalidating sessions [SSD disclosure](https://ssd-disclosure.com/ssd-advisory-vestacp-multiple-vulnerabilities/)
+
+## [1.5.11] - Service release
+
+### Bugfixes
+- Fixed an issue where Hestia port change did not update chain for fail2ban (#2465)
+- Fixed permission issues with /var/log/roundcube (#2466)
+- Fixed multiple issues in UI (#2464)
+- Allow v-change-user-template update backend templates (#2475)
+- Update composer dependencies (#2458 #2459)
+- Fixed an XSS vulnerability in "Edit" server page. (#2471) [CVE-2022-0986](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0986)
+- Fixed an issue with caching templates and internal redirects (#2482)
+
+## [1.5.10] - Service release
+
+### Bugfixes
+- Fixed an issue where webmail client options were not displayed in the Web UI (#2445)
+- Fixed an issue where users where not able to create an backup. (#2448 / #2449)
+- Fixed an issue where saving server settings could fail due to an incorrect PHP version check on mod-php servers (#2451)
+- Fixed an issue where MariaDB installations were broken when performing a clean install of HestiaCP v1.5.9 (#2452 | 2446)
+- Fixed recently discovered XSS vulnerabilities (#2453) [CVE-2022-0838](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0838)
+
+## [1.5.9] - Service release
+
+### Bugfixes
+
+- Fixed multiple XSS vulnerabilities in the web user interface. [CVE-2022-0752](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0752) / [CVE-2022-0753](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-0753)
+- Fixed an issues with mariadb.sys user didn't work properly on MariaDB 10.6.x installs #2427
+- Change ipverse.net urls to new format hosted on Github #2429 and forum
+- Allow PTR to be used on domain.com 
+
+### Dependencies
+
+- Update PHPMailer to 6.6.0 (https://github.com/PHPMailer/PHPMailer/releases/tag/v6.6.0)
+- Update Filegator to 7.7.2 (https://github.com/filegator/filegator/releases/tag/v7.7.2)
+
+## [1.5.8] - Service release
+
+### Features
+
+ - No new features has been introduced
+
+### Bugfixes
+
+- Fixed an issue where SFTP jail was not enabled correctly for additional FTP accounts #2403 
+- Fixed an issue in the installer where the "Press any key to continue" prompt only responded to the Enter key #2398 
+- Fixed an issue where list sort order preference variable wasn't saved properly #2391
+- Fixed an issue with inconsistent behaviour in mail account settings information dialog #2392
+- Fixed an issue where .gnupg folder in /root/ had the wrong permissions set.
+- Fixed an issue where users were being redirected to login page when visiting /reset/ endpoint #2401
+- Fixed an issue where deleting sftp jail did not revert back permissions of said user. #2143
+- Fixed an issue where "REDIRECT" variable wasn't cleared correctly causing other sites to redirect to the domain after v-update-letsencrypt-ssl
+- Changed repository url MariaDB for new installs to https://wdlm.mariadb.com/repo/mariadb-server
+
+### Dependencies
+
+- Update phpMyAdmin to 5.1.3 (https://github.com/phpmyadmin/phpmyadmin/releases/tag/RELEASE_5_1_3)
+
+## [1.5.7] - Service release
+
+### Bugfixes
+
+- Fixed an issue with apt update and public key missing
+
+If you have to following error
+
+```
+The following signatures couldn't be verified because the public key is not available: NO_PUBKEY A189E93654F0B0E5
+```
+
+Follow the following instructions
+
+```
+rm /usr/share/keyrings/hestia-keyring.gpg
+mkdir /root/.gnupg/
+gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5
+```
+
+After that run apt update && apt upgrade 
+
+## [1.5.6] - Service release
+
+### Bugfixes
+
+- Fixed an issue with the installer. system.pkg didn't allow for a Web alias #2381
+- Fixed an issue with upgrade script causing command to to be executed (https://forum.hestiacp.com/t/upgrading-to-1-5-5-error-line/5449/3)
+
+## [1.5.5] - Service release
+
+### Features
+
+- Improve default php-fpm.conf files. (#2318, #2343)
+- Notify user when a suspended user tries to login (#2310, #2345)
+- Allow setting default web install templates for Quick install (#2344) (https://github.com/hestiacp/hestia-quick-install)
+- Improve security how apt keys are downloaded #2299 (https://blog.cloudflare.com/dont-use-apt-key/)
+- Allow users to set system php version in Web GUI (#2357)
+- Added a link to the firewall in list services (#2371) @fra81
+
+### Changes
+
+- Modify template warning #2346
+- Removed 127.0.0.1 from the default accepted ip list api. (#2325)
+- Update translations
+
+### Bugfixes
+
+- Update CSS to prevent wrapping in email info box (#2353) @chriscapisce
+- Remove unwanted debug information regarding PhpMyAdmin SSO causing emails to be send to administrator
+- Allow the use of 8 name servers for DNS templates (Gmail, Zoho and Office 365) (#2369, #2370)
+- Fixed an issue where databases where not able to backup if it required custom settings
+- Allow users to edit default.pkg again. On new installs the default admin user will get assigned a new system.pkg (#2365)
+- Disable enabling PMA SSO when Api was disabled + Added link to FAQ for frequently asked questions. (#2365)
+- Remove error_reporting(null) and allow all errors to be logged in /var/log/hestia/nginx-error.log (#2365)
+- Fixed an issue where value "Allow suspended wasn't saved" (#2356, #2355)
+- Fixed and issue where AUTH_USER and AUTH_HASH was not present and there for during rebuild caused issues with Nginx (#2350, #2355)
+
+### Dependencies
+
+- Update PHPmyadmin to 5.1.2 (https://www.phpmyadmin.net/files/5.1.2/)
+- Update Filegator to 7.7.1 (https://github.com/filegator/filegator/releases/tag/v7.7.1)
+- Update B2CLI to 3.2.0 (https://github.com/Backblaze/B2_Command_Line_Tool/releases/tag/v3.2.0) (#2349) @ptrinh
+
+## [1.5.4] - Service release
+
+### Features
+
+### Bugfixes
+
+- Fixed an issue with v-add-sys-phpmailer not updating properly (#2336)
+- Fixed an issue where users where not able to download backups via UI (#2335)
+- Fixed an issue where php8.0 got "rounded" to php8 causing default.tpl falling back to 8.1 (#2340)
+- Fixed an issue with recalculating disk usage (#2341)
+- Fixed an issue where php files where still executable in upload folder Wordpress
+- Fixed an bug where version numbers includeing revisions (-x) where unable to build properly
+
+## [1.5.3] - Service release
+
+### Features
+
+### Bugfixes
+
+- Fixed an issue where suspended objects where excluded in disk size calculation (#2312 #2313)
+- Fixed an issue when a users was unable edit them self when 2FA was enabled (#2314 #2316)
+- Fixed an issue in v-add-user-sftp as ftp users where not recognised as valid sftp jail set ups (#2308 #2319)
+- Fixed an issue when "Preview" features got disabled it kept the preview features enabled (#2322 #2323)
+- Limit access openbase dir hestia-php
+- Fixed an issue where an email was send after install nginx command not found (#2328)
+
+### Dependencies
+
+- Update PCRE 8.84 to PCRE2 10.39 for hestia-nginx package
+- Update Roundcube to 1.5.2 ([Release notes](https://github.com/roundcube/roundcubemail/releases/tag/1.5.2))
+- Update PHPMailer to 6.5.3 ([Release message](https://github.com/PHPMailer/PHPMailer/releases/tag/v6.5.3))
+
+## [1.5.2] - Service release
+
+### Features
+
+- Release notes are now available from the notification panel (#2276)
+- Web domain aliases are now displayed in the domain list (#2278 / #2289)
+- DNS, Mail, and Database sections will now be hidden in /edit/server if not installed (#2300)
+- Turkey has been added as an option for ipset (#2294)
+
+### Bugfixes
+
+- Improvements have been made to overall code quality (#2293, #2298, #2307)
+- Added improvements to the automated testing suite (bats) (#2280)
+- Clarified text that is shown during upgrade process (#2270)
+- Updated web domain templates to allow the use of .user.ini (#2267 / #2269)
+- Fixed an issue with the curl symlink on Debian during build process (#2275)
+- Fixed an issue where CAA records were deleted when turning off SSL for webmail (#2279)
+- Fixed an issue where email validation would fail when using IDN domains (#2273)
+- Changed behavior to prevent php-fpm restarts when modphp is installed (#2270)
+- Fixed an issue where passwords may not be correctly set on Debian 11 (#2270)
+- Fixed an issue with command path v-change-firewall-rule (#2249)
+- Fixed an issue in `v-backup-user` where you may encounter an error "invalid parameters for check_result" (#2284)
+- Fixed an issue which impacted the performance of Nextcloud/Owncloud ([forum post](https://forum.hestiacp.com/t/tip-create-a-nginx-template-for-nextcloud-to-let-synchronize-files-bigger-than-10mb/5123))
+- Fixed an issue where the access port for HestiaCP was not properly set on install (#2288 / #2291)
+- Fixed an issue where admins could not log in as a suspended user in the panel (#2286 / #2289)
+- Fixed an issue where the "Delete" button in the Edit User interface did not work as expected (#2282 / #2289)
+- Fixed an issue where editing an existing firewall rule with ipset would fail (#2292)
+- Fixed an error that may occur in /edit/server when no extra php versions were installed (#2289)
+- Fixed an issue where accessing the panel via Safari would result in error NSPOSIXErrorDomain:100 (#2274)
+- Corrected command syntax in v-delete-dns-records (#2295)
+- Fixed an issue where API allowed IP list values would be lost when saving changes (#2296 / #2300)
+- Fixed an issue where the debug mode option was not displayed on release builds and would be reset when saving server settings (#2300)
+- Fixed an issue where grep would throw an error when adding ipset rules for the first time (#2307)
+- Fixed incorrect variable spelling ($v_interace > $v_interface) (#2307)
+- Updated mail domain templates
+- Updated command line examples for docs.hestiacp.com
+- Fixed an issue where Lets encrypt was not able to obtain an valid ssl certificate when force ssl and / or redirect was enabled (#2176 / #2304 / #2304)
+- Fixed a issue in v-list-sys-dns-status
+
+### Dependencies
+
+
+## [1.5.1] - Service release
+
+### Bugfixes
+
+- Add B2 delete file support to BlackBlaze
+- Open phpmyadmin in new tab or window #2250 @manuelserol
+- Fix issue with ipset not working properly [Forum](https://forum.hestiacp.com/t/error-ipset-object-not-found/5015)
+- Improve port detection on multiple servers for SSH #2242 and #2255
+- Fixed an issue with # in config files
+- Fixed multiple bugs in installer
+- Set correct permission /install/deb/ folder 
+- Adjust /etc/apt/sources.list.d/hestia.list to include architecture to resolve issue with I386 missing in apt.hestiacp.com
+- Fallback to hostname without retrying ptr lookup in exim (#2259)
+- Enable quota with in dovecot when sieve is enabled @madito
+- Unable to edit php8.1 service #2261
+
+### Dependencies
+
+- Update Roundcube to 1.5.1 [Release Notice](https://roundcube.net/news/2021/11/28/update-1.5.1-released)
+
 ## [1.5.0] - Major Release (Feature / Quality Update)
 
 ### Breaking changes ###
 - **NOTE:** Changes have been made on how phpmyadmin/phppgadmin config are included in apache2 config. To restore to the old behaviour add `IncludeOptional conf.d/*.inc` below `IncludeOptional conf.d/*.conf` in /etc/apache2/apache2.conf and restart your server. 
 - **NOTE:** Hestia packages for arm64 has been added to atp.hestiacp.com please use the normal install instructions instead! For current ARM installs to enable auto update remove the `#` in /etc/apt/sources.list.d/hestia.list `# deb https://apt.hestiacp.com/ focal main` becomes `deb https://apt.hestiacp.com/ focal main` and then run `apt update && apt upgrade -y` 
+- **NOTE:** Make sure your server / VPS has a valid PTR record or otherwise you will not be able to send any mail!
 
 ### Features
 
-- Add support for Dovecote Sieve #2163 (@gejobj)
+- Add support for Dovecote Sieve #2163 (@gejobj) => [How to enable Managesieve](https://docs.hestiacp.com/admin_docs/mail.html#how-can-i-enable-managesieve)
 - Improve HELO based system and use RDNS lookup instead our old system
 - Add support for PHP 8.1 #2233 
 - Set default php version for new installs to PHP 8.0 

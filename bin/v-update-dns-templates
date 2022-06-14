@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update dns templates
 # options: [RESTART]
-# labels: dns
 #
 # example: v-update-dns-templates
 #
-# The function for obtaining updated dns templates from Hestia package.
-
+# This function for obtaining updated dns templates from Hestia package.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition

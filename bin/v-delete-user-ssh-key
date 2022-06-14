@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: add ssh key
 # options: USER KEY
-# labels: hestia
 #
 # example: v-delete-user-ssh-key user unique_id
 #
 # Delete user ssh key from authorized_keys
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -30,6 +29,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '2' "$#" 'USER KEYID'
 is_format_valid 'user'
+is_no_new_line_format "$key_id"
 is_object_valid 'user' 'USER' "$user"
 
 source "$USER_DATA/user.conf"

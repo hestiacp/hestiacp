@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Backup Function Library                            #
+#                                                                           #
+#===========================================================================#
+
 # Local storage
 # Defining local storage function
 local_backup(){
@@ -434,12 +441,12 @@ b2_backup() {
     echo -e "$(date "+%F %T") Upload to B2: $user/$user.$backup_new_date.tar"
     if [ "$localbackup" = 'yes' ]; then
         cd $BACKUP
-        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.tar
+        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
     else
         cd $tmpdir
         tar -cf $BACKUP/$user.$backup_new_date.tar .
         cd $BACKUP/
-        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.tar
+        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
         rc=$?
         rm -f $user.$backup_new_date.tar
         if [ "$rc" -ne 0 ]; then
@@ -472,4 +479,15 @@ b2_download() {
     if [ "$?" -ne 0 ]; then
     check_result "$E_CONNECT" "b2 failed to download $user.$1"
     fi
+}
+
+b2_delete(){
+    # Defining backblaze b2 settings
+    source_conf "$HESTIA/conf/b2.backup.conf"
+    
+    # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
+    b2 clear-account > /dev/null 2>&1
+    b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
+
+    b2 delete-file-version $1/$2 > /dev/null 2>&1
 }

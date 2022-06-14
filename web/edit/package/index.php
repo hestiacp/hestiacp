@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(null);
 ob_start();
 $TAB = 'PACKAGE';
 
@@ -20,8 +19,8 @@ if (empty($_GET['package'])) {
     exit;
 }
 
-// Prevent editing of default package
-if ($_GET['package'] === 'default') {
+// Prevent editing of system package
+if ($_GET['package'] === 'system') {
     header("Location: /list/package/");
     exit;
 }
@@ -29,6 +28,7 @@ if ($_GET['package'] === 'default') {
 // List package
 $v_package = escapeshellarg($_GET['package']);
 exec(HESTIA_CMD."v-list-user-package ".$v_package." 'json'", $output, $return_var);
+check_return_code_redirect($return_var, $output, '/list/package/');
 $data = json_decode(implode('', $output), true);
 unset($output);
 

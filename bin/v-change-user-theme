@@ -1,20 +1,18 @@
 #!/bin/bash
 # info: updates user role
 # options: USER ROLE
-# labels: hestia
 #
 # example: v-change-user-theme user theme
 #
 # Changes web UI display theme for specified user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 theme=$2
-
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -25,12 +23,11 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-is_format_valid 'user'
+is_format_valid 'user' 'theme'
 is_common_format_valid "$theme" "theme"
 is_object_valid 'user' 'USER' "$user"
 
@@ -42,7 +39,6 @@ if ! echo "$themes" | grep -q -x "$theme" ; then
     echo "Theme does not exists"
     exit "$E_NOTEXIST";
 fi
-
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -62,6 +58,8 @@ update_user_value "$user" '$THEME' "$theme"
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Logging
 $BIN/v-log-action "$user" "Info" "System" "Applied theme to user interface (Theme: $theme)."
 
 exit

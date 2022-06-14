@@ -1,7 +1,6 @@
 #!/bin/bash
 # info: add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
-# labels: 
 #
 # example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
 #          v-add-backup-host b2 bucketName keyID applicationKey
@@ -9,7 +8,7 @@
 # Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported 
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -22,17 +21,16 @@ path=${5-/backup}
 port=$6
 
 # Includes
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+# Fetch current verison B2 CLI tool
+source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
 # Paths
 b2cli="/usr/local/bin/b2"
-b2lnk="https://f000.backblazeb2.com/file/backblazefiles/b2/cli/linux/b2"
+b2lnk="https://github.com/Backblaze/B2_Command_Line_Tool/releases/download/v$b2_v/b2-linux"
 
 # Defining ftp command function
 ftpc() {
@@ -99,7 +97,6 @@ sftpc() {
 EOF
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -107,7 +104,8 @@ EOF
 if [ "$type" != 'local' ];then
     check_args '4' "$#" "TYPE HOST USERNAME PASSWORD [PATH] [PORT]"
     is_format_valid 'host' 'path' 'port'
-    is_username_format_valid "$username" "username"
+    is_type_valid  'sftp,ftp,b2' "$type"
+    is_username_format_valid "$user" "username"
     is_password_valid
     format_no_quotes "$password" "password"
     
@@ -229,7 +227,6 @@ elif [ $type == 'b2' ]; then
     echo -e "$str" > $HESTIA/conf/$type.backup.conf
     chmod 660 $HESTIA/conf/$type.backup.conf
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

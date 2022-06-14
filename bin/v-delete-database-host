@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: delete database server
 # options: TYPE HOST
-# labels: 
 #
 # example: v-delete-database-host pgsql localhost
 #
-# The function for deleting the database host from hestia configuration. It will
+# This function for deleting the database host from hestia configuration. It will
 # be deleted if there are no databases created on it only.
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -26,7 +24,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -45,9 +42,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
 # Deleting server
 sed -i "/HOST='$host' /d" "$HESTIA/conf/$type.conf"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

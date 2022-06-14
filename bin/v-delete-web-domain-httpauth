@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete http auth user
 # options: USER DOMAIN AUTH_USER [RESTART]
-# labels: web
 #
 # example: v-delete-web-domain-httpauth admin example.com alice
 #
-# The call is used for deleting http auth user
-
+# This function is used for deleting http auth user
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -47,7 +45,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

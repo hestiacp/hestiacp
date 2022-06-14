@@ -15,10 +15,11 @@
 					<td class="sort-by" title="<?=_('Sort items');?>">
 						<?=_('sort by');?>: <span>
 							<b>
-								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = 'Name'; } else { $label = 'Date'; } ?>
-								<?=_($label)?> <i class="fas fa-sort-alpha-down"></i>
+								<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+								<?=$label;?> <i class="fas fa-sort-alpha-down"></i>
 							</b>
 						</span>
+					</td>
 					<td>
 						<form action="/bulk/package/" method="post" id="objects">
 							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
@@ -75,7 +76,7 @@
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="user[]" value="<?=$key?>">
 				</div>
-				<?php if (($key == 'default') && ($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin')) { ?>
+				<?php if ($key == 'system'){ ?>
 					<div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><?=$key?></b></div>
 				<?php } else {?>
 					<div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package');?>: <?=$key?>"><?=$key?></b></a></div>
@@ -84,14 +85,14 @@
 				<div class="clearfix l-unit__stat-col--left text-right compact-3">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
 						<div class="actions-panel clearfix">
-							<?php if (($key == 'default')) { ?>
-								<!-- Restrict editing default package -->
+							<?php if (($key == 'system')) { ?>
+								<!-- Restrict editing system package -->
 							<?php } else {?>
 								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 							<?php } ?>
 							<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Copy');?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
-							<?php if ($key == 'default') { ?>
-								<!-- Restrict deleting default package -->
+							<?php if ($key == 'system') { ?>
+								<!-- Restrict deleting system package -->
 							<?php } else {?>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('Delete');?>">

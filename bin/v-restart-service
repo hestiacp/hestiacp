@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: restart service
 # options: SERVICE [RESTART]
-# labels: panel
 #
 # example: v-restart-service apache2
 #
-# The function restarts system service.
-
+# This function restarts system service.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -87,7 +85,6 @@ for service in $service_list; do
         $BIN/v-log-action "system" "Info" "System" "Service restarted (Name: $service)."
     fi
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

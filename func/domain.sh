@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - Domain Function Library                            #
+#                                                                           #
+#===========================================================================#
+
 #----------------------------------------------------------#
 #                        WEB                               #
 #----------------------------------------------------------#
@@ -505,9 +512,22 @@ update_domain_zone() {
         if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
             VALUE=$(idn --quiet -a -t "$VALUE")
         fi
-
-        if [ "$TYPE" = 'TXT' ] && [[ ${VALUE:0:1} != '"' ]]; then
-            VALUE=$(echo $VALUE | fold -w 255 | xargs -I '$' echo -n '"$"')
+        
+        if [ "$TYPE" = 'TXT' ]; then
+            txtlength=${#VALUE}
+            if [ $txtlength -gt 255 ]; then
+                already_chunked=0
+                if [[ $VALUE == *"\" \""* ]] || [[ $VALUE == *"\"\""* ]]; then
+                    already_chunked=1
+                fi
+                if [ $already_chunked -eq 0 ]; then
+                    if [[ ${VALUE:0:1} = '"' ]]; then
+                        txtlength=$(( $txtlength - 2 ))
+                        VALUE=${VALUE:1:txtlength}
+                    fi
+                    VALUE=$(echo $VALUE | fold -w 255 | xargs -I '$' echo -n '"$"')
+                fi
+            fi
         fi
 
         if [ "$SUSPENDED" != 'yes' ]; then
@@ -577,7 +597,7 @@ is_dns_fqnd() {
     r=$2
     fqdn_type=$(echo $t | grep "NS\|CNAME\|MX\|PTR\|SRV")
     tree_length=3
-    if [[ $t = 'CNAME' || $t = 'MX' ]]; then
+    if [[ $t = 'CNAME' || $t = 'MX' || $t = 'PTR' ]]; then
         tree_length=2
     fi
 

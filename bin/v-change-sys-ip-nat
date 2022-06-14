@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change ip nat address
 # options: IP NAT_IP [RESTART]
-# labels: panel
 #
 # example: v-change-sys-ip-nat 185.209.50.140 10.110.104.205
 #
-# The function for changing nat ip associated with ip.
-
+# This function for changing nat ip associated with ip.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,7 +25,6 @@ source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -39,7 +36,6 @@ is_ip_valid "$ip"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -106,8 +102,6 @@ if [ -n "$old" ] && [ -n "$FIREWALL_SYSTEM" ]; then
     sed -i "s/$old/$new/g" $HESTIA/data/firewall/*.conf
     $BIN/v-update-firewall
 fi
-
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

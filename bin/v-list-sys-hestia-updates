@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list system updates
 # options: [FORMAT]
-# labels: 
 #
 # example: v-list-sys-hestia-updates
 #
-# The function checks available updates for hestia packages.
-
+# This function checks available updates for hestia packages.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -61,7 +59,6 @@ shell_list() {
         echo "$NAME $VERSION $ARCH $UPDATED $DATE"
     done
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -129,7 +126,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list |column -t;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

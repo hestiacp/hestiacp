@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#===========================================================================#
+#                                                                           #
+# Hestia Control Panel - API Function Library                               #
+#                                                                           #
+#===========================================================================#
+
 # Check if script already running or not
 is_procces_running() {
     SCRIPT=$(basename $0)

@@ -3304,6 +3304,11 @@ a.button.cancel {
   color: #cc3366;
 }
 
+#v_password {
+    white-space: inherit;
+    word-break: break-word;
+}
+
 .additional-info {
   margin-top: 12px;
   width: 400px;

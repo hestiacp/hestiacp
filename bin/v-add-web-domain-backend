@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add web domain backend
 # options: USER DOMAIN [TEMPLATE] [RESTART]
-# labels: web
 #
 # example: v-add-web-domain-backend admin exmaple.com default yes
 #
-# The call is used for adding web backend configuration.
-
+# This function is used to add the web backend configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -42,7 +40,6 @@ is_backend_template_valid "$template"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

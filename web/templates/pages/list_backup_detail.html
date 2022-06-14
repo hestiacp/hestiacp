@@ -53,7 +53,7 @@
 
 	<!-- List web domains -->
 	<?php
-		$backup = $_GET['backup'];
+		$backup = htmlentities($_GET['backup']);
 		$web = explode(',',$data[$backup]['WEB']);
 		foreach ($web as $key) {
 			if (!empty($key)) {
@@ -183,7 +183,6 @@
 
 	<!-- List Cron Jobs -->
 	<?php
-		$backup = $_GET['backup'];
 		if (!empty($data[$backup]['CRON'])) {
 			if (!empty($key)) {
 		?>

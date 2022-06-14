@@ -1,6 +1,4 @@
 <?php
-
-error_reporting(null);
 ob_start();
 $TAB = 'PACKAGE';
 
@@ -239,19 +237,19 @@ if (empty($v_web_domains)) {
     $v_web_domains = "'1'";
 }
 if (empty($v_web_aliases)) {
-    $v_web_aliases = "'1'";
+    $v_web_aliases = "'5'";
 }
 if (empty($v_dns_domains)) {
     $v_dns_domains = "'1'";
 }
 if (empty($v_dns_records)) {
-    $v_dns_records = "'1'";
+    $v_dns_records = "'unlimited'";
 }
 if (empty($v_mail_domains)) {
     $v_mail_domains = "'1'";
 }
 if (empty($v_mail_accounts)) {
-    $v_mail_accounts = "'1'";
+    $v_mail_accounts = "'5'";
 }
 if (empty($v_databases)) {
     $v_databases = "'1'";

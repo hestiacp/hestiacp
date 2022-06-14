@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list web domain error log
 # options: USER DOMAIN [LINES] [FORMAT]
-# labels: web
 #
 # example: v-list-web-domain-errorlog admin acme.com
 #
-# The function of obtaining raw error web domain logs.
-
+# This function of obtaining raw error web domain logs.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -59,7 +57,6 @@ csv_list() {
     echo "$lines"
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -68,7 +65,6 @@ check_args '2' "$#" 'USER DOMAIN [LINES] [FORMAT]'
 is_format_valid 'user' 'domain' 'ttl'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -91,7 +87,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

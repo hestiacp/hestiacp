@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update all hestia packages
 # options: NONE
-# labels: panel
 #
 # example: v-update-sys-hestia-all
 #
-# The function of updating all hestia packages
-
+# This function of updating all hestia packages
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes

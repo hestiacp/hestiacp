@@ -1,16 +1,15 @@
 #!/bin/bash
 # info: Enable FastCGI cache for nginx
 # options: USER DOMAIN [DURATION] [DEBUG] [RESTART]
-# labels: hestia web
 #
 # example: v-add-fastcgi-cache user domain.tld 30m
 #
-# The function enables FastCGI cache for nginx
+# This function enables FastCGI cache for nginx
 # Acceptable values for duration is time in seconds (10s) minutes (10m) or days (10d)
 # Add "yes" as last parameter to append debug information to response headers
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -27,13 +26,12 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [DURATION] [DEBUG] [RESTART]'
-is_format_valid 'user' 'domain'
+is_format_valid 'user' 'domain' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
@@ -51,7 +49,6 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

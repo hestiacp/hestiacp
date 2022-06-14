@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update apache2 rrd
 # options: PERIOD
-# labels: panel
 #
 # example: v-update-sys-rrd-apache2
 #
-# The function is for updating apache rrd database and graphic.
-
+# This function is for updating apache rrd database and graphic.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -36,7 +33,6 @@ case $period in
     yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
     *) exit $E_RRD ;;
 esac
-
 
 # Checking directory
 if [ ! -d "$RRD/web" ]; then
@@ -97,7 +93,6 @@ rrdtool graph $RRD/web/$period-apache2.png \
     GPRINT:a:'LAST:Current\:''%8.0lf' \
     GPRINT:a:'MIN:Min\:''%8.0lf' \
     GPRINT:a:'MAX:Max\:''%8.0lf\j'  &>/dev/null; result=$?
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

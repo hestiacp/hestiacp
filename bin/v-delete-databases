@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete user databases
 # options: USER
-# labels: 
 #
 # example: v-delete-databases admin
 #
-# The function deletes all user databases.
-
+# This function deletes all user databases.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -23,7 +21,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -36,7 +33,6 @@ is_object_valid 'user' 'USER' "$user"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -45,7 +41,6 @@ check_hestia_demo_mode
 for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
     $BIN/v-delete-database "$user" "$database"
 done
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

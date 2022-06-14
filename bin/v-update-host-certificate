@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: update host certificate for hestia
 # options: USER HOSTNAME
-# labels: panel
 #
 # example: v-update-host-certificate admin example.com
 #
-# Function updates certificates for hestia
-
+# This function updates the SSL certificate used for Hestia Control Panel.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 whoami=$(whoami)
@@ -17,7 +15,6 @@ if [ "$whoami" != "root" ] && [ "$whoami" != "admin" ] ; then
     echo "Error: this script must be run as root or admin.";
     exit 1;
 fi
-
 
 # Argument definition
 user=$1
@@ -33,13 +30,13 @@ source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '1' "$#" '[USER] [HOSTNAME]'
 is_format_valid 'user'
+is_domain_format_valid "$hostname" "hostname"
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$WEB_SSL" 'SSL_SUPPORT'
 is_object_valid 'user' 'USER' "$user"

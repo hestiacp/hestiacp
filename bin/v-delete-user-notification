@@ -1,20 +1,18 @@
 #!/bin/bash
 # info: delete user notification
 # options: USER NOTIFICATION
-# labels: panel
 #
 # example: v-delete-user-notification admin 1
 #
-# The function deletes user notification.
-
+# This function deletes user notification.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
-nid=$2
+id=$2
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -24,25 +22,23 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER NOTIFICATION'
-is_format_valid 'user' 'nid'
+is_format_valid 'user' 'id'
 is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Deleting notification
-sed -i "/NID='$nid' /d" $USER_DATA/notifications.conf 2>/dev/null
+sed -i "/NID='$id' /d" $USER_DATA/notifications.conf 2>/dev/null
 
 # Checking last notification
 if [ -e "$USER_DATA/notifications.conf" ]; then

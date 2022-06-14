@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change dns domain record id
 # options: USER DOMAIN ID NEWID [RESTART]
-# labels: dns
 #
 # example: v-change-dns-record-id admin acme.com 24 42 yes
 #
-# The function for changing internal record id.
-
+# This function for changing internal record id.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -34,7 +32,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -78,7 +75,6 @@ if [ -n "$DNS_CLUSTER" ]; then
         echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

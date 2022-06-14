@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: schedule user backup restoration
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR]
-# labels: panel
 #
 # example: v-schedule-user-restore 2019-04-22_01-00-00.tar
 #
-# The function for scheduling user backup restoration.
-
+# This function for scheduling user backup restoration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -29,7 +27,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #

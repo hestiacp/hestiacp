@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list system configuration
 # options: [FORMAT]
-# labels:
 #
 # example: v-list-sys-config json
 #
-# The function for obtaining the list of system parameters.
-
+# This function for obtaining the list of system parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -232,7 +230,6 @@ plain_list() {
     echo -e "$POLICY_SYSTEM_PROTECTED_ADMIN\t$POLICY_SYSTEM_HIDE_ADMIN"
 }
 
-
 # CSV list
 csv_list() {
     echo -n "'WEB_SYSTEM','WEB_RGROUPS','WEB_PORT','WEB_SSL',"
@@ -260,10 +257,8 @@ csv_list() {
     echo -n "'$UPGRADE_SEND_EMAIL','$UPGRADE_SEND_EMAIL_LOG','$THEME','$LANGUAGE',"
     echo -n "'$BACKUP_GZIP','$BACKUP','$WEBMAIL_ALIAS','$DB_PMA_URL','$DB_PGA_URL'"
     echo -n "'$DEBUG_MODE','$API','$API_ALLOWED_IP','$POLICY_SYSTEM_PROTECTED_ADMIN,$POLICY_SYSTEM_HIDE_ADMIN"
-    
     echo
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -276,7 +271,6 @@ case $format in
     csv)    csv_list ;;
     shell)  shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

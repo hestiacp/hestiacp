@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: add mail domain
 # options: USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE]
-# labels: mail
 #
 # example: v-add-mail-domain admin mydomain.tld
 #
-# The function adds MAIL domain.
-
+# This function adds MAIL domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -50,7 +48,7 @@ domain_utf=$(idn -t --quiet -u "$domain_idn")
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE]'
-is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size'
+is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size' 'restart'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -75,7 +73,6 @@ is_base_domain_owner "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #

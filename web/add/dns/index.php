@@ -1,6 +1,4 @@
 <?php
-
-error_reporting(null);
 ob_start();
 $TAB = 'DNS';
 
@@ -142,7 +140,7 @@ if (!empty($_POST['ok_rec'])) {
     $v_ttl = escapeshellarg($_POST['v_ttl']);
     // Add dns record
     if (empty($_SESSION['error_msg'])) {
-        exec(HESTIA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority." '' false ".$v_ttl, $output, $return_var);
+        exec(HESTIA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority." '' no ".$v_ttl, $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
     }
@@ -181,7 +179,7 @@ unset($output);
 exec(HESTIA_CMD."v-list-user ".$user." json", $output, $return_var);
 $user_config = json_decode(implode('', $output), true);
 unset($output);
-$v_template = $user_config[$user]['DNS_TEMPLATE'];
+$v_template = $user_config[$user_plain]['DNS_TEMPLATE'];
 
 if (empty($_GET['domain'])) {
     // Display body for dns domain

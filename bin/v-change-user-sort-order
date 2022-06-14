@@ -1,20 +1,18 @@
 #!/bin/bash
 # info: updates user role
 # options: USER SORT_ORDER
-# labels: hestia
 #
 # example: v-change-user-sort-order user date
 #
 # Changes web UI display sort order for specified user.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 user=$1
 sort_order=$2
-
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -41,10 +39,13 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-$HESTIA/bin/v-change-user-config-value "$user" "$PREF_UI_SORT" "$sort_order"
-$BIN/v-log-action "$user" "Warning" "System" "Change user setting ($key)"
+$HESTIA/bin/v-change-user-config-value "$user" 'PREF_UI_SORT' "$sort_order"
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Warning" "System" "Change user setting ($key)"
 
 exit

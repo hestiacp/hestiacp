@@ -1,14 +1,13 @@
 #!/bin/bash
 # info: disable system wide smtp relay support
 # options: 
-# labels: hestia
 #
 # example: v-delete-sys-smtp-relay
 #
-# this function disables system wide smtp relay support.
+# This function disables system wide smtp relay support.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes

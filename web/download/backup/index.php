@@ -1,9 +1,6 @@
 <?php
 
-// Init
-error_reporting(null);
 ob_start();
-session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
@@ -12,9 +9,8 @@ verify_csrf($_GET);
 $backup = $_GET['backup'];
 
 if (!file_exists('/backup/'.$backup)) {
-    $v_username = escapeshellarg($user);
     $backup = escapeshellarg($_GET['backup']);
-    exec(HESTIA_CMD."v-schedule-user-backup-download ".$v_username." ".$backup, $output, $return_var);
+    exec(HESTIA_CMD."v-schedule-user-backup-download ".$user." ".$backup, $output, $return_var);
     if ($return_var == 0) {
         $_SESSION['error_msg'] = _('BACKUP_DOWNLOAD_SCHEDULED');
     } else {

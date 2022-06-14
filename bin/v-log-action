@@ -2,7 +2,6 @@
 # info: adds action event to user or system log
 # options: LOG_TYPE USER
 
-
 # Event Levels:
 # info, warning, error
 
@@ -11,6 +10,9 @@
 # system:   ip, firewall, service, updates,
 #           users, pwchange, pwreset, impersonation
 
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -29,6 +31,8 @@ event_level=$2
 export event_category=$3
 event_details=$4
 
+is_common_format_valid "$event_level" "event level"
+
 # Validate event type input
 if [ "$event_level" != "Info" ] && [ "$event_level" != "Warning" ] && [ "$event_level" != "Error" ]; then 
     echo "Error: Invalid event type specified."
@@ -45,6 +49,7 @@ fi
 
 check_args '4' "$#" 'USER TYPE CATEGORY DETAILS'
 if [ "$user" != "system" ]; then
+    is_format_valid 'user'
     is_object_valid 'user' 'USER' "$user"
 fi
 

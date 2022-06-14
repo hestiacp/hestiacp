@@ -242,38 +242,50 @@ if (!empty($_POST['save'])) {
         unset($output);
         $v_hostname = $_POST['v_hostname'];
     }
-
-    // Install/remove php versions
-    if (empty($_SESSION['error_msg'])) {
-        if (!empty($v_php_versions)) {
-            $post_php = $_POST['v_php_versions'];
-
-            array_map(function ($php_version) use ($post_php) {
-                if (array_key_exists($php_version->tpl, $post_php)) {
-                    if (!$php_version->installed) {
-                        exec(HESTIA_CMD . "v-add-web-php " . escapeshellarg($php_version->version), $output, $return_var);
-                        check_return_code($return_var, $output);
-                        unset($output);
-                        if (empty($_SESSION['error_msg'])) {
-                            $php_version->installed = true;
-                        }
-                    }
-                } else {
-                    if ($php_version->installed && !$php_version->protected) {
-                        exec(HESTIA_CMD . "v-delete-web-php " . escapeshellarg($php_version->version), $output, $return_var);
-                        check_return_code($return_var, $output);
-                        unset($output);
-                        if (empty($_SESSION['error_msg'])) {
-                            $php_version->installed = false;
-                        }
-                    }
+    
+    if($_SESSION['WEB_BACKEND'] == "php-fpm"){
+        // Install/remove php versions
+        if (empty($_SESSION['error_msg'])) {
+            if (!empty($v_php_versions)) {
+                $post_php = $_POST['v_php_versions'];
+                if(empty($post_php)){
+                    $post_php = array();
                 }
-
-                return $php_version;
-            }, $v_php_versions);
+                array_map(function ($php_version) use ($post_php) {
+                    if (array_key_exists($php_version->tpl, $post_php)) {
+                        if (!$php_version->installed) {
+                            exec(HESTIA_CMD . "v-add-web-php " . escapeshellarg($php_version->version), $output, $return_var);
+                            check_return_code($return_var, $output);
+                            unset($output);
+                            if (empty($_SESSION['error_msg'])) {
+                                $php_version->installed = true;
+                            }
+                        }
+                    } else {
+                        if ($php_version->installed && !$php_version->protected) {
+                            exec(HESTIA_CMD . "v-delete-web-php " . escapeshellarg($php_version->version), $output, $return_var);
+                            check_return_code($return_var, $output);
+                            unset($output);
+                            if (empty($_SESSION['error_msg'])) {
+                                $php_version->installed = false;
+                            }
+                        }
+                    }
+    
+                    return $php_version;
+                }, $v_php_versions);
+            }
+        }
+        
+        if (empty($_SESSION['error_msg'])) {
+            if($_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
+                exec(HESTIA_CMD . "v-change-sys-php " . escapeshellarg($_POST['v_php_default_version']), $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
+            }   
         }
     }
-
+    
     // Change timezone
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_timezone'])) {
@@ -395,6 +407,13 @@ if (!empty($_POST['save'])) {
             check_return_code($return_var, $output);
             unset($output);
             $v_debug_mode_adv = 'yes';
+            
+        }
+        if (($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) && $_POST['v_experimental_features'] == "false" ) {
+            //disable preview mode
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".escapeshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
+            check_return_code($return_var, $output);
+            unset($output);
         }
     }
 
@@ -1110,11 +1129,29 @@ if (!empty($_POST['save'])) {
         }
     }
 
+    // Change API access
+    if (empty($_SESSION['error_msg'])) {
+        if ($_POST['v_api'] != $_SESSION['API']) {
+            $api_status = 'disable';
+            if ($_POST['v_api'] == 'yes') {
+                $api_status = 'enable';
+            }
+            exec(HESTIA_CMD."v-change-sys-api ".escapeshellarg($api_status), $output, $return_var);
+            check_return_code($return_var, $output);
+            unset($output);
+            if (empty($_SESSION['error_msg'])) {
+                $v_api = $_POST['v_api'];
+            }
+            $v_security_adv = 'yes';
+        }
+    }
+
+    // Change API allowed IPs
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']) {
             $ips = array();
             foreach (explode("\n", $_POST['v_api_allowed_ip']) as $ip) {
-                if ($ip != "allow-all") {
+                if (trim($ip) != "allow-all") {
                     if (filter_var(trim($ip), FILTER_VALIDATE_IP)) {
                         $ips[] = trim($ip);
                     }
@@ -1127,26 +1164,10 @@ if (!empty($_POST['save'])) {
                 check_return_code($return_var, $output);
                 unset($output);
                 if (empty($_SESSION['error_msg'])) {
-                    $v_login_style = $_POST['v_api_allowed_ip'];
+                    $v_api_allowed_ip = $_POST['v_api_allowed_ip'];
                 }
                 $v_security_adv = 'yes';
             }
-        }
-    }
-
-    if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_api'] != $_SESSION['API']) {
-            $api_status = 'disable';
-            if ($_POST['v_api'] == 'yes') {
-                $api_status = 'enable';
-            }
-            exec(HESTIA_CMD."v-change-sys-api ".escapeshellarg($api_status), $output, $return_var);
-            check_return_code($return_var, $output);
-            unset($output);
-            if (empty($_SESSION['error_msg'])) {
-                $v_login_style = $_POST['v_api'];
-            }
-            $v_security_adv = 'yes';
         }
     }
 

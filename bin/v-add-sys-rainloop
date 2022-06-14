@@ -1,12 +1,11 @@
 #!/bin/bash
-# info: Install Rainloop in HestiaCP
+# info: Install Rainloop webmail client
 # options: [MODE]
-# labels: hestia
 #
-# The function installs Rainloop
+# This function installs the Rainloop webmail client.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Includes
@@ -168,7 +167,7 @@ else
 fi
 
 #----------------------------------------------------------#
-#                       Logging                            #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 if [ "$UPDATE" = "yes" ]; then

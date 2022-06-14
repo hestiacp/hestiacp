@@ -1,16 +1,14 @@
 #!/bin/bash
 # info: add composer (php dependency manager) for a user
 # options: USER
-# labels: hestia
 #
 # example: v-add-user-composer user [version]
 #
-# The function adds support for composer (php dependency manager)
+# This function adds support for composer (php dependency manager)
 # Homepage: https://getcomposer.org/
 
-
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -29,7 +27,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -44,7 +41,6 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -87,6 +83,9 @@ check_result $? "Composer install failed"
 
 [ -f "$COMPOSER_SETUP_FILE" ] && rm -f "$COMPOSER_SETUP_FILE"
 
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Plugins" "Composer support enabled."

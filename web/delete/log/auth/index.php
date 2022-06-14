@@ -1,8 +1,5 @@
 <?php
 
-// Init
-error_reporting(null);
-session_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Check token
@@ -10,13 +7,12 @@ verify_csrf($_GET);
 
 // Check if administrator is viewing system log (currently 'admin' user)
 if (($_SESSION['userContext'] === "admin") && (isset($_GET['user']))) {
-    $user=$_GET['user'];
+    $user=escapeshellarg($_GET['user']);
     $token=$_SESSION['token'];
 }
 
 // Clear log
-$v_username = escapeshellarg($user);
-exec(HESTIA_CMD."v-delete-user-auth-log ".$v_username, $output, $return_var);
+exec(HESTIA_CMD."v-delete-user-auth-log ".$user, $output, $return_var);
 check_return_code($return_var, $output);
 unset($output);
 
@@ -35,7 +31,7 @@ $v_session_id = escapeshellarg($_SESSION['token']);
 
 // Add current user session back to log unless impersonating another user
 if (!isset($_SESSION['look'])) {
-    exec(HESTIA_CMD."v-log-user-login ".$v_username." ".$v_ip." success ".$v_session_id." ".$v_user_agent, $output, $return_var);
+    exec(HESTIA_CMD."v-log-user-login ".$user." ".$v_ip." success ".$v_session_id." ".$v_user_agent, $output, $return_var);
 }
 
 // Flush session messages

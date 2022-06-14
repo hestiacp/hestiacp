@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: change system timezone
 # options: TIMEZONE
-# labels: panel
 #
 # example: v-change-sys-timezone Europe/Berlin
 #
-# The function for changing system timezone.
-
+# This function for changing system timezone.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -31,7 +29,6 @@ is_timezone_valid() {
     fi
 }
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,7 +38,6 @@ is_timezone_valid
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -70,7 +66,6 @@ if [ -n "$WEB_SYSTEM" ]; then
         sed -i "s|date.timezone =.*|date.timezone = $timezone|" $conf
     done
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

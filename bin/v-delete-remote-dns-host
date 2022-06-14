@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: delete remote dns host
 # options: HOST
-# labels: dns
 #
 # example: v-delete-remote-dns-host example.org
 #
-# The function for deleting the remote dns host from hestia configuration.
-
+# This function for deleting the remote dns host from hestia configuration.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -36,6 +34,7 @@ is_object_valid "../../conf/dns-cluster" 'HOST' "$host"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -60,7 +59,6 @@ if [ "$check_cluster" -eq '0' ]; then
         $BIN/v-delete-cron-job admin "$JOB"
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

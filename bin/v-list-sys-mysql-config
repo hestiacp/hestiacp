@@ -1,15 +1,13 @@
 #!/bin/bash
 # info: list mysql config parameters
 # options: [FORMAT]
-# labels: panel
 #
 # example: v-list-sys-mysql-config
 #
-# The function for obtaining the list of mysql config parameters.
-
+# This function for obtaining the list of mysql config parameters.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -58,7 +56,6 @@ csv_list() {
     echo "$config" |egrep "$keys" |tr '=' ' ' |awk '{print $2}' |tr '\n' ','
     echo
 }
-
 
 #----------------------------------------------------------#
 #                       Action                             #

@@ -1,15 +1,14 @@
 #!/bin/bash
 # info: add mail SSL for $domain
 # options: USER DOMAIN SSL_DIR [RESTART]
-# labels: hestia
 #
-# The function turns on SSL support for a mail domain. Parameter ssl_dir
+# This function turns on SSL support for a mail domain. Parameter ssl_dir
 # is a path to a directory where 2 or 3 ssl files can be found. Certificate file 
 # mail.domain.tld.crt and its key mail.domain.tld.key are mandatory. Certificate
 # authority mail.domain.tld.ca file is optional.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -64,6 +63,9 @@ is_web_domain_cert_valid
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+if [ -n "$restart" ]; then 
+    is_format_valid "$restart"
+fi
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#

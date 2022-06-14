@@ -1,6 +1,14 @@
 #!/bin/bash
 
-# Hestia Ubuntu installer v1.0
+# ======================================================== #
+#
+# Hestia Control Panel Installer for Ubuntu
+# https://www.hestiacp.com/
+#
+# Currently Supported Versions:
+# Ubuntu 18.04 LTS, 20.04 LTS
+#
+# ======================================================== #
 
 #----------------------------------------------------------#
 #                  Variables&Functions                     #
@@ -23,9 +31,10 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.5.0'
-pma_v='5.1.1'
-rc_v="1.5.0"
+HESTIA_INSTALL_VER='1.5.15'
+# Dependencies
+pma_v='5.1.4'
+rc_v="1.5.2"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
@@ -43,7 +52,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-mbstring
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
     postgresql postgresql-contrib proftpd-basic quota rrdtool rssh spamassassin sudo hestia=${HESTIA_INSTALL_VER}
-    hestia-nginx hestia-php vim-common vsftpd whois zip acl sysstat setpriv
+    hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv
     ipset libonig5 libzip5 openssh-server lsb-release zstd"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
@@ -126,7 +135,6 @@ set_default_lang() {
 set_default_port() {
     if [ -z "$port" ]; then
         eval port=$1
-        echo "BACKEND_PORT='$port'" >> $HESTIA/conf/hestia.conf
     fi
 }
 
@@ -302,6 +310,10 @@ fi
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
     check_result 1 "Script can be run executed only by root"
+fi
+
+if [ -d "/usr/local/hestia" ]; then
+  check_result 1 "Hestia install detected. Unable to continue"
 fi
 
 # Checking admin user account
@@ -539,7 +551,7 @@ fi
 
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
-    echo -n '   - Firewall (Iptables)'
+    echo -n '   - Firewall (iptables)'
 fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
     echo -n ' + Fail2Ban Access Monitor'
@@ -650,6 +662,9 @@ fi
 # Define apt conf location
 apt=/etc/apt/sources.list.d
 
+# Create new folder if not all-ready exists
+mkdir -p /root/.gnupg/ && chmod 700 /root/.gnupg/
+
 # Updating system
 echo "Adding required repositories to proceed with installation:"
 echo
@@ -657,9 +672,10 @@ echo
 # Installing Nginx repo
 
 echo "[ * ] NGINX"
-echo "deb [arch=$ARCH] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-apt-key adv --fetch-keys 'https://nginx.org/keys/nginx_signing.key' > /dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+curl -s  https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg >/dev/null 2>&1
 
+#add-apt-repository  does not support it yet see #https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 # Installing sury PHP repo
 echo "[ * ] PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
@@ -673,20 +689,20 @@ fi
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
     echo "[ * ] MariaDB"
-    echo "deb [arch=$ARCH] https://mirror.mva-n.net/mariadb/repo/$mariadb_v/$VERSION $codename main" > $apt/mariadb.list
-    apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' > /dev/null 2>&1
+   echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
+    curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb https://$RHOST/ $codename main" > $apt/hestia.list
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
+gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 >/dev/null 2>&1
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
     echo "[ * ] PostgreSQL"
-    echo "deb [arch=$ARCH] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-    apt-key adv --fetch-keys 'https://www.postgresql.org/media/keys/ACCC4CF8.asc' > /dev/null 2>&1
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+    curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg >/dev/null 2>&1
 fi
 
 # Echo for a new line
@@ -1099,9 +1115,11 @@ source /etc/profile.d/hestia.sh
 # Configuring logrotate for Hestia logs
 cp -f $HESTIA_INSTALL_DIR/logrotate/hestia /etc/logrotate.d/hestia
 
+# Create log path and symbolic link
 rm -f /var/log/hestia
 mkdir -p /var/log/hestia
 ln -s /var/log/hestia $HESTIA/log
+
 # Building directory tree and creating some blank files for Hestia
 mkdir -p $HESTIA/conf $HESTIA/ssl $HESTIA/data/ips \
     $HESTIA/data/queue $HESTIA/data/users $HESTIA/data/firewall \
@@ -1119,6 +1137,10 @@ chmod 770 $HESTIA/data/sessions
 rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
+
+# Write default port value to hestia.conf
+# If a custom port is specified it will be set at the end of the installation process.
+write_config_value "BACKEND_PORT" "8083"
 
 # Web stack
 if [ "$apache" = 'yes' ]; then
@@ -1312,7 +1334,7 @@ check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
 echo "[ * ] Create admin account..."
-$HESTIA/bin/v-add-user admin $vpass $email default "System Administrator"
+$HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-role admin admin
@@ -1414,22 +1436,25 @@ fi
 #                     Configure PHP-FPM                    #
 #----------------------------------------------------------#
 
-if [ "$multiphp" = 'yes' ] ; then
-    for v in "${multiphp_v[@]}"; do
-        rm -f /etc/php/$v/fpm/pool.d/*
-        echo "[ * ] Install PHP version $v..."
-        $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
-    done
-fi
-
-if [ "$phpfpm" = 'yes' ]; then
-    echo "[ * ] Configuring PHP-FPM..."
-    $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
-    update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
-    systemctl start php$fpm_v-fpm >> $LOG
-    check_result $? "php-fpm start failed"
-    update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
+if [ "$phpfpm" = "yes" ]; then
+  if [ "$multiphp" = 'yes' ] ; then
+      for v in "${multiphp_v[@]}"; do
+          echo "[ * ] Install PHP $v..."
+          $HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
+      done
+  else
+        echo "[ * ] Install  PHP $fpm_v..."
+        $HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
+  fi
+  
+  echo "[ * ] Configuring PHP-FPM $fpm_v..."
+  # Create www.conf for webmail and php(*)admin
+  cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
+  update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
+  systemctl start php$fpm_v-fpm >> $LOG
+  check_result $? "php-fpm start failed"
+  # Set default php version to $fpm_v
+  update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
 fi
 
 
@@ -1515,16 +1540,20 @@ if [ "$mysql" = 'yes' ]; then
 
     # Securing MariaDB installation
     mpass=$(gen_pass)
-    mysqladmin -u root password $mpass >> $LOG
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
-
-    # Clear MariaDB Test Users and Databases
-    mysql -e "DELETE FROM mysql.user WHERE User=''"
-    mysql -e "DROP DATABASE test" > /dev/null 2>&1
+    
+    # Ater root password
+    mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
+    # Allow mysql access via socket for startup
+    mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+    # Disable anonymous users
+    mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
+    # Drop test database
+    mysql -e "DROP DATABASE IF EXISTS test"
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
-    mysql -e "DELETE FROM mysql.user WHERE user='';"
-    mysql -e "DELETE FROM mysql.user WHERE password='' AND authentication_string='';"
+    # Flush privileges
+    mysql -e "FLUSH PRIVILEGES;"
 fi
 
 
@@ -1794,13 +1823,14 @@ fi
 #----------------------------------------------------------#
 #                       Install Roundcube                  #
 #----------------------------------------------------------#
-
-echo "[ * ] Install Roundcube..."
 # Min requirements Dovecot + Exim + Mysql
-
 if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
+    echo "[ * ] Install Roundcube..."
     $HESTIA/bin/v-add-sys-roundcube
     write_config_value "WEBMAIL_ALIAS" "webmail"
+else
+    write_config_value "WEBMAIL_ALIAS" ""
+    write_config_value "WEBMAIL_SYSTEM" ""
 fi
 
 
@@ -1823,7 +1853,7 @@ if [ "$sieve" = 'yes' ]; then
     #  10-master.conf
     sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
     #  15-lda.conf
-    sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
+    sed -i "s/\#mail_plugins = \\\$mail_plugins/mail_plugins = \$mail_plugins quota sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/g" /etc/dovecot/conf.d/15-lda.conf
     #  20-imap.conf
     sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
     
@@ -1889,7 +1919,7 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-echo "[ * ] Configure System IP..."
+echo "[ * ] Configuring System IP..."
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     if [ -e /etc/rc.local ]; then
@@ -2002,17 +2032,21 @@ chown admin:admin $HESTIA/data/sessions
 mkdir -p /backup/
 chmod 755 /backup/
 
+# create cronjob to generate ssl 
+echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+
 #----------------------------------------------------------#
-#                  Configure File Manager                   #
+#                  Configure File Manager                  #
 #----------------------------------------------------------#
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
 
-# create cronjob to generate ssl 
-echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
+#----------------------------------------------------------#
+#              Set hestia.conf default values              #
+#----------------------------------------------------------#
 
-echo "[ * ] Finish up install..."
+echo "[ * ] Updating configuration files..."
 write_config_value "PHPMYADMIN_KEY" ""
 write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
 write_config_value "POLICY_USER_VIEW_LOGS" "yes"
@@ -2036,6 +2070,7 @@ write_config_value "SERVER_SMTP_USER" ""
 write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
 write_config_value "POLICY_CSRF_STRICTNESS" "1"
+
 #----------------------------------------------------------#
 #                  Configure PHPMailer                     #
 #----------------------------------------------------------#
@@ -2074,16 +2109,17 @@ we hope that you enjoy using it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Web:     https://www.hestiacp.com/
-Forum:   https://forum.hestiacp.com/
-Discord: https://discord.gg/nXRUZch
-GitHub:  https://www.github.com/hestiacp/hestiacp
+Documentation:  https://docs.hestiacp.com/
+Forum:          https://forum.hestiacp.com/
+Discord:        https://discord.gg/nXRUZch
+GitHub:         https://www.github.com/hestiacp/hestiacp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,
 please log in and navigate to Server > Updates to turn them off.
 
 Help support the Hestia Control Panel project by donating via PayPal:
 https://www.hestiacp.com/donate
+
 --
 Sincerely yours,
 The Hestia Control Panel development team
@@ -2107,12 +2143,10 @@ $HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<b
 sort_config_file
 
 if [ "$interactive" = 'yes' ]; then
-    echo "[ ! ] IMPORTANT: System will reboot"
-    echo ""
-    echo -n " Press any key to continue!"
-    read reboot
+    echo "[ ! ] IMPORTANT: The system will now reboot to complete the installation process."
+    read -n 1 -s -r -p "Press any key to continue"
     reboot
 else
-    echo "[ ! ] IMPORTANT: You must logout or restart the server before continuing"
+    echo "[ ! ] IMPORTANT: You must restart the system before continuing!"
 fi
 # EOF

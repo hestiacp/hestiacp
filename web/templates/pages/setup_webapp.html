@@ -66,10 +66,14 @@
 						<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
 							<p style="margin-top:0;"></p>
 							<select class="vst-list" name="<?=$f_name?>">
-								<?php foreach ($form_control['options'] as $option):?>
-									<?php $selected = (!empty($form_control['value']) && $option === $form_control['value'])?'selected':''?>
-									<option value="<?=$option?>" <?=$selected?>><?=htmlentities($option)?></option>
-								<?php endforeach; ?>
+								<?php foreach ($form_control['options'] as $key => $option){
+									if(is_numeric($key)){
+										$key = $option;
+									}
+								?>
+									<?php $selected = (!empty($form_control['value']) && $key == $form_control['value'])?'selected':''?>
+									<option value="<?=$key?>" <?=$selected?>><?=htmlentities($option)?></option>
+								<?php }; ?>
 							</select>
 							</p>
 						<?php elseif (in_array($f_type, ['boolean'])):?>

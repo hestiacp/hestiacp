@@ -19,7 +19,7 @@ download_file() {
 
     [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: Downloading file "$url" to "$destination"
 
-    # Default destination is the curent working directory
+    # Default destination is the current working directory
     local dstopt=""
 
     if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
@@ -50,6 +50,11 @@ download_file() {
     if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
         [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
         wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+        if [ $? -ne 0 ]; then
+            >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted and exit script";
+            rm -f $ARCHIVE_DIR/$filename
+            exit 1;
+        fi
     fi
 
     if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
@@ -215,9 +220,9 @@ fi
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP_V"
 
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='1.1.1l'
-PCRE_V='10.39'
-ZLIB_V='1.2.11'
+OPENSSL_V='3.0.3'
+PCRE_V='10.40'
+ZLIB_V='1.2.12'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then
@@ -293,9 +298,11 @@ if [[ $NGINX_V =~ - ]]; then
 else
   NGINX='https://nginx.org/download/nginx-'$(echo $NGINX_V |cut -d"~" -f1)'.tar.gz'
 fi
+
 OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
-PCRE='https://github.com/PhilipHazel/pcre2/releases/download/pcre2-'$PCRE_V'/pcre2-'$PCRE_V'.tar.gz'
-ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
+PCRE='https://github.com/PCRE2Project/pcre2/releases/download/pcre2-'$PCRE_V'/pcre2-'$PCRE_V'.tar.gz'
+ZLIB='https://github.com/madler/zlib/archive/refs/tags/v'$ZLIB_V'.tar.gz'
+
 if [[ $PHP_V =~ - ]]; then
  PHP='http://de2.php.net/distributions/php-'$(echo $PHP_V |cut -d"-" -f1)'.tar.gz'
 else
@@ -419,7 +426,7 @@ if [ "$NGINX_B" = true ] ; then
 
         # Build the package
         echo Building Nginx DEB
-        dpkg-deb --build $BUILD_DIR_HESTIANGINX $DEB_DIR
+        dpkg-deb -Zxz --build $BUILD_DIR_HESTIANGINX $DEB_DIR
     fi
 
     if [ "$BUILD_RPM" = true ]; then
@@ -570,7 +577,7 @@ if [ "$PHP_B" = true ] ; then
         # Build the package
         echo Building PHP DEB
         [ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb --build $BUILD_DIR_HESTIAPHP $DEB_DIR
-        dpkg-deb --build $BUILD_DIR_HESTIAPHP $DEB_DIR
+        dpkg-deb  -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
     fi
 
     if [ "$BUILD_RPM" = true ]; then
@@ -676,7 +683,7 @@ if [ "$HESTIA_B" = true ]; then
           chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
   
           echo Building Hestia DEB
-          dpkg-deb --build $BUILD_DIR_HESTIA $DEB_DIR
+          dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
       fi
   
       if [ "$BUILD_RPM" = true ]; then
@@ -716,10 +723,16 @@ if [ "$install" = 'yes' ] || [ "$install" = 'y' ] || [ "$install" = 'true' ]; th
     if [ "$OSTYPE" = 'rhel' ]; then
         for i in $RPM_DIR/*.rpm; do
             dnf -y install $i
+            if [ $? -ne 0 ]; then
+              exit 1;
+            fi
         done
     else
         for i in $DEB_DIR/*.deb; do
             dpkg -i $i
+            if [ $? -ne 0 ]; then
+              exit 1;
+            fi
         done
     fi
     unset $answer

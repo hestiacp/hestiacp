@@ -75,9 +75,8 @@ if [ -z "$sys_ip_check" ]; then
         broadcast $broadcast label $iface
     
     # Check if netplan is in use and generate configuration file
-    if dpkg-query -W -f'${Status}' "netplan*" 2>/dev/null | grep -q "ok installed"; then 
-        result=$(cat /etc/netplan/*.yaml 2>/dev/null | grep $(hostname -I | cut -d' ' -f1));
-        if [ -n "$result" ]; then 
+    if [ ! -z $(which netplan) ]; then 
+        if  [ ! -z "$(netplan generate --mapping "$iface" | grep networkd)" ]; then   
             netplan=1
         else
             netplan=0

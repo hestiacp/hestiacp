@@ -64,7 +64,7 @@ fi
 
 # Parsing data
 if [ "$period" = 'daily' ]; then
-    mem=$(free -m)
+    mem=$(LC_ALL=C free -m)
     used=$(echo "$mem" |grep Mem |awk '{print $3}')
     if [ -z "$(echo "$mem" | grep available)" ]; then
         free=$(echo "$mem" |grep buffers/cache |awk '{print $4}')

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: restart web server
-# options: NONE
+# options: [RESTARRT]
 #
 # example: v-restart-web
 #
@@ -46,6 +46,7 @@ if [ "$1" = "no" ]; then
     exit
 fi
 
+restart=$1
 # Schedule restart
 if [ "$1" = 'scheduled' ] || [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
     sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
@@ -76,7 +77,7 @@ elif [ $WEB_SYSTEM = 'apache2' ]; then
     fi
 fi
 
-$BIN/v-restart-service "$WEB_SYSTEM" "$restart" > /dev/null 2>&1
+$BIN/v-restart-service "$WEB_SYSTEM" "$restart" 
 
 if [ $? -ne 0 ]; then
     send_email_report

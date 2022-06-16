@@ -1,0 +1,75 @@
+#!/bin/bash
+# info: add mail domain reject spam
+# options: USER DOMAIN
+# labels: mail
+#
+# example: v-add-mail-domain-antivirus admin mydomain.tld
+#
+# The function enables clamav scan for incoming emails.
+
+
+#----------------------------------------------------------#
+#                    Variable&Function                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+domain_idn=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
+
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'USER DOMAIN'
+is_format_valid 'user' 'domain'
+is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_value_empty 'mail' 'DOMAIN' "$domain" '$REJECT'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Adding antivirus flag
+if [[ "$MAIL_SYSTEM" =~ exim ]]; then
+    # Reject spam > 10 when enabled
+    touch $HOMEDIR/$user/conf/mail/$domain/reject_spam
+fi
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Adding antivirus in config
+update_object_value 'mail' 'DOMAIN' "$domain" '$REJECT' 'yes'
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Mail" "Anti-virus scanning enabled (Domain: $domain)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

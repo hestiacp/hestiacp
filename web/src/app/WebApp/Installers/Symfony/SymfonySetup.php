@@ -23,6 +23,14 @@ class SymfonySetup extends BaseSetup
         'resources' => [
             'composer' => [ 'src' => 'symfony/website-skeleton', 'dst' => '/' ],
         ],
+        'server' => [
+            'nginx' => [
+                'template' => 'symfony4-5',
+            ],
+            'php' => [ 
+                'supported' => [ '8.0','8.1' ],
+            ]
+        ],
     ];
 
     public function install(array $options=null): bool

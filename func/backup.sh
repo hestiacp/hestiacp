@@ -172,6 +172,7 @@ ftp_download() {
     if [ -z "$PORT" ]; then
         PORT='21'
     fi
+    cd $BACKUP
     if [ -z $BPATH ]; then
         ftpc "get $1"
     else

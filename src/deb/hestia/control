@@ -1,12 +1,12 @@
 Source: hestia
 Package: hestia
 Priority: optional
-Version: 1.5.15
+Version: 1.6.0
 Section: admin
 Maintainer: HestiaCP <info@hestiacp.com>
 Homepage: https://www.hestiacp.com
 Architecture: amd64
-Depends: bash, awk, sed, acl, sysstat, setpriv | util-linux (>= 2.33), zstd, lsb-release
+Depends: bash, awk, sed, acl, sysstat, setpriv | util-linux (>= 2.33), zstd, lsb-release, idn2
 Description: hestia
  hestia is an open source hosting control panel.
  hestia has a clean and focused interface without the clutter.

@@ -9,7 +9,7 @@
 # Read known configuration keys from $HESTIA/conf/defaults/$system.conf
 function read_kv_config_file() {
     local system=$1
-    
+
     if [ ! -f "$HESTIA/conf/defaults/$system.conf" ]; then
         write_kv_config_file $system
     fi
@@ -32,7 +32,6 @@ function write_kv_config_file() {
     fi
 
     touch $HESTIA/conf/defaults/$system.conf
-
     for key in $known_keys; do
         echo $key >> $HESTIA/conf/defaults/$system.conf
     done
@@ -84,14 +83,16 @@ function syshealth_update_mail_config_format() {
     # MAIL DOMAINS
     # Create array of known keys in configuration file
     system="mail"
-    known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS U_DISK SUSPENDED TIME DATE"
+    known_keys="DOMAIN ANTIVIRUS ANTISPAM DKIM WEBMAIL SSL LETSENCRYPT CATCHALL ACCOUNTS RATE_LIMIT REJECT U_DISK SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
+}
 
+function syshealth_update_mail_account_config_format(){
     # MAIL ACCOUNTS
     system="mail_accounts"
-    known_keys="ACCOUNT ALIAS AUTOREPLY FWD FWD_ONLY MD5 QUOTA U_DISK SUSPENDED TIME DATE"
+    known_keys="ACCOUNT ALIAS AUTOREPLY FWD FWD_ONLY MD5 QUOTA RATE_LIMIT U_DISK SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -149,7 +150,32 @@ function syshealth_repair_web_config() {
     prev="DOMAIN"
     for key in $known_keys; do
         if [ -z "${!key}" ]; then
-            add_object_key 'web' 'DOMAIN' "$domain" "$key" "$prev"   
+            add_object_key 'web' 'DOMAIN' "$domain" "$key" "$prev"
+        fi
+        prev=$key
+    done
+}
+
+function syshealth_repair_mail_config() {
+    system="mail"
+    sanitize_config_file "$system"
+    get_domain_values 'mail'
+    prev="DOMAIN"
+    for key in $known_keys; do
+        if [ -z "${!key}" ]; then
+            add_object_key 'mail' 'DOMAIN' "$domain" "$key" "$prev"
+        fi
+        prev=$key
+    done
+}
+
+function syshealth_repair_mail_account_config() {
+    system="mail_accounts"
+    sanitize_config_file "$system"
+    get_object_values "mail/$domain" 'ACCOUNT' "$account"
+    for key in $known_keys; do
+        if [ -z "${!key}" ]; then
+            add_object_key "mail/$domain" 'ACCOUNT' "$account" "$key" "$prev"
         fi
         prev=$key
     done
@@ -180,7 +206,7 @@ function syshealth_restore_system_config() {
 }
 
 function check_key_exists() {
-    grep -e "^$1=" $HESTIA/conf/hestia.conf 
+    grep -e "^$1=" $HESTIA/conf/hestia.conf
 }
 
 # Repair System Configuration
@@ -202,13 +228,13 @@ function syshealth_repair_system_config() {
     # phpMyAdmin/phpPgAdmin alias
     if [ -n "$DB_SYSTEM" ]; then
         if [ "$DB_SYSTEM" = "mysql" ]; then
-            if [[ -z $(check_key_exists 'DB_PMA_ALIAS') ]]; then 
+            if [[ -z $(check_key_exists 'DB_PMA_ALIAS') ]]; then
                 echo "[ ! ] Adding missing variable to hestia.conf: DB_PMA_ALIAS ('phpmyadmin)"
                 $BIN/v-change-sys-config-value 'DB_PMA_ALIAS' 'phpmyadmin'
             fi
         fi
         if [ "$DB_SYSTEM" = "pgsql" ]; then
-            if [[ -z $(check_key_exists 'DB_PGA_ALIAS') ]]; then 
+            if [[ -z $(check_key_exists 'DB_PGA_ALIAS') ]]; then
                 echo "[ ! ] Adding missing variable to hestia.conf: DB_PGA_ALIAS ('phppgadmin')"
                 $BIN/v-change-sys-config-value 'DB_PGA_ALIAS' 'phppgadmin'
             fi
@@ -216,50 +242,50 @@ function syshealth_repair_system_config() {
     fi
 
     # Backup compression level
-    if [[ -z $(check_key_exists 'BACKUP_GZIP') ]]; then 
+    if [[ -z $(check_key_exists 'BACKUP_GZIP') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: BACKUP_GZIP ('4')"
         $BIN/v-change-sys-config-value 'BACKUP_GZIP' '4'
     fi
 
     # Theme
-    if [[ -z $(check_key_exists 'THEME') ]]; then 
+    if [[ -z $(check_key_exists 'THEME') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: THEME ('dark')"
         $BIN/v-change-sys-config-value 'THEME' 'dark'
     fi
 
     # Default language
-    if [[ -z  $(check_key_exists 'LANGUAGE') ]]; then 
+    if [[ -z  $(check_key_exists 'LANGUAGE') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: LANGUAGE ('en')"
         $BIN/v-change-sys-language 'LANGUAGE' 'en'
     fi
 
     # Disk Quota
-    if [[ -z $(check_key_exists 'DISK_QUOTA') ]]; then 
+    if [[ -z $(check_key_exists 'DISK_QUOTA') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: DISK_QUOTA ('no')"
         $BIN/v-change-sys-config-value 'DISK_QUOTA' 'no'
     fi
 
     # CRON daemon
-    if [[ -z $(check_key_exists 'CRON_SYSTEM') ]]; then 
+    if [[ -z $(check_key_exists 'CRON_SYSTEM') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: CRON_SYSTEM ('cron')"
         $BIN/v-change-sys-config-value 'CRON_SYSTEM' 'cron'
     fi
 
     # Backend port
-    if [[ -z $(check_key_exists 'BACKEND_PORT') ]]; then 
+    if [[ -z $(check_key_exists 'BACKEND_PORT') ]]; then
         ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
         echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
         $HESTIA/bin/v-change-sys-config-value 'BACKEND_PORT' $ORIGINAL_PORT
     fi
 
     # Upgrade: Send email notification
-    if [[ -z $(check_key_exists 'UPGRADE_SEND_EMAIL') ]]; then 
+    if [[ -z $(check_key_exists 'UPGRADE_SEND_EMAIL') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: UPGRADE_SEND_EMAIL ('true')"
         $BIN/v-change-sys-config-value 'UPGRADE_SEND_EMAIL' 'true'
     fi
 
     # Upgrade: Send email notification
-    if [[ -z $(check_key_exists 'UPGRADE_SEND_EMAIL_LOG') ]]; then 
+    if [[ -z $(check_key_exists 'UPGRADE_SEND_EMAIL_LOG') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: UPGRADE_SEND_EMAIL_LOG ('false')"
         $BIN/v-change-sys-config-value 'UPGRADE_SEND_EMAIL_LOG' 'false'
     fi
@@ -269,22 +295,22 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: FILE_MANAGER ('true')"
         $BIN/v-add-sys-filemanager quiet
     fi
-    
+
     # Support for ZSTD / GZIP Change
     if [[ -z $(check_key_exists 'BACKUP_MODE') ]]; then
         echo "[ ! ] Setting zstd backup compression type as default..."
         $BIN/v-change-sys-config-value "BACKUP_MODE" "zstd"
     fi
-    
+
     # Login style switcher
     if [[ -z $(check_key_exists 'LOGIN_STYLE') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: LOGIN_STYLE ('default')"
         $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
     fi
-    
+
     # Webmail clients
     if [[ -z $(check_key_exists 'WEBMAIL_SYSTEM') ]]; then
-        if [ -d "/var/lib/roundcube" ]; then 
+        if [ -d "/var/lib/roundcube" ]; then
             echo "[ ! ] Adding missing variable to hestia.conf: WEBMAIL_SYSTEM ('roundcube')"
             $BIN/v-change-sys-config-value "WEBMAIL_SYSTEM" "roundcube"
         else
@@ -304,28 +330,29 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('no')"
         $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "no"
     fi
-    
-    if [[ -z $(check_key_exists 'API') ]]; then 
-        echo "[ ! ] Adding missing variable to hestia.conf: API ('no')"   
+
+    if [[ -z $(check_key_exists 'API') ]]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: API ('no')"
         $BIN/v-change-sys-config-value "API" "no"
     fi
-    
+
+    # Enable API V2
+    if [[ -z $(check_key_exists 'API_SYSTEM') ]]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: API_SYSTEM ('0')"
+        $BIN/v-change-sys-config-value "API_SYSTEM" "0"
+    fi
+
     # API access allowed IP's
     if [ "$API" = "yes" ]; then
         check_api_key=$(grep "API_ALLOWED_IP" $HESTIA/conf/hestia.conf)
         if [ -z "$check_api_key" ]; then
             if [[ -z $(check_key_exists 'API_ALLOWED_IP') ]]; then
-                echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('allow-all')"        
+                echo "[ ! ] Adding missing variable to hestia.conf: API_ALLOWED_IP ('allow-all')"
                 $BIN/v-change-sys-config-value "API_ALLOWED_IP" "allow-all"
             fi
         fi
     fi
-    
-    # Enforce subdomain ownership
-    if [[ -z $(check_key_exists 'ENFORCE_SUBDOMAIN_OWNERSHIP') ]]; then
-        echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
-        $BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-    fi
+
     # Debug mode
     if [[ -z $(check_key_exists 'DEBUG_MODE') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: DEBUG_MODE ('false')"
@@ -356,12 +383,12 @@ function syshealth_repair_system_config() {
     if [[ -z $(check_key_exists 'POLICY_USER_CHANGE_THEME') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"
         $BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "true"
-    fi    
+    fi
     # Protect admin user
     if [[ -z $(check_key_exists 'POLICY_SYSTEM_PROTECTED_ADMIN') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_PROTECTED_ADMIN ('no')"
         $BIN/v-change-sys-config-value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
-    fi  
+    fi
     # Allow user delete logs
     if [[ -z $(check_key_exists 'POLICY_USER_DELETE_LOGS') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_DELETE_LOGS ('yes')"
@@ -397,7 +424,7 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: PHPMYADMIN_KEY ('')"
         $BIN/v-change-sys-config-value "PHPMYADMIN_KEY" ""
     fi
-    # Use SMTP server for hestia internal mail 
+    # Use SMTP server for hestia internal mail
     if [[ -z $(check_key_exists 'USE_SERVER_SMTP') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: USE_SERVER_SMTP ('')"
         $BIN/v-change-sys-config-value "USE_SERVER_SMTP" "false"
@@ -422,20 +449,34 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_USER ('')"
         $BIN/v-change-sys-config-value "SERVER_SMTP_USER" ""
     fi
-    
+
     if [[ -z $(check_key_exists 'SERVER_SMTP_PASSWD') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_PASSWD ('')"
         $BIN/v-change-sys-config-value "SERVER_SMTP_PASSWD" ""
     fi
-        
+
     if [[ -z $(check_key_exists 'SERVER_SMTP_ADDR') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_ADDR ('')"
         $BIN/v-change-sys-config-value "SERVER_SMTP_ADDR" ""
-    fi    
+    fi
     if [[ -z $(check_key_exists 'POLICY_CSRF_STRICTNESS') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_CSRF_STRICTNESS ('')"
         $BIN/v-change-sys-config-value "POLICY_CSRF_STRICTNESS" "1"
-    fi  
+    fi
+    
+    mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.old.conf
+    touch $HESTIA/conf/hestia.conf 
+    while IFS='= ' read -r lhs rhs
+      do
+          if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+              rhs="${rhs%%^\#*}"   # Del in line right comments
+              rhs="${rhs%%*( )}"   # Del trailing spaces
+              rhs="${rhs%\'*}"     # Del opening string quotes
+              rhs="${rhs#\'*}"     # Del closing string quotes
+              $BIN/v-change-sys-config-value "$lhs" "$rhs"
+          fi
+      done < $HESTIA/conf/hestia.old.conf
+      rm $HESTIA/conf/hestia.old.conf
 }
 
 # Repair System Cron Jobs

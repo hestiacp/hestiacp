@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 session_start();
 $TAB = 'USER';
@@ -26,6 +27,7 @@ if (!empty($_POST['ok'])) {
             $data = json_decode(implode('', $output), true);
             unset($output);
             $keylist = array();
+            $idlist = array();
             foreach ($data as $key => $value) {
                 $idlist[] = trim($data[$key]['ID']);
                 $keylist[] = trim($data[$key]['KEY']);
@@ -60,7 +62,9 @@ if (!empty($_POST['ok'])) {
         $_SESSION['ok_msg'] = _('SSH KEY created');
     }
 }
-
+if (empty($v_key)) {
+    $v_key = '';
+}
 render_page($user, $TAB, 'add_key');
 
 // Flush session messages

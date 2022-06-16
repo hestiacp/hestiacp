@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'MAIL';
 
@@ -9,11 +10,13 @@ exec(HESTIA_CMD."v-list-sys-webmail json", $output, $return_var);
 $webmail_clients = json_decode(implode('', $output), true);
 unset($output);
 
-$v_domain = $_GET['domain'];
+if (!empty($_GET['domain'])) {
+    $v_domain = $_GET['domain'];
+}
 if (!empty($v_domain)) {
     // Set webmail alias
     exec(HESTIA_CMD."v-list-mail-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
-    if($return_var > 0){
+    if ($return_var > 0) {
         check_return_code_redirect($return_var, $output, '/list/mail/');
     }
     $data = json_decode(implode('', $output), true);
@@ -75,6 +78,12 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
+    if (!empty($_POST['v_reject']) && $v_antispam == "yes") {
+        exec(HESTIA_CMD."v-add-mail-domain-reject ".$user." ".$v_domain." yes", $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+    }
+
     if (!empty($_SESSION['IMAP_SYSTEM']) && !empty($_SESSION['WEBMAIL_SYSTEM'])) {
         if (empty($_SESSION['error_msg'])) {
             if (!empty($_POST['v_webmail'])) {
@@ -98,26 +107,22 @@ if (!empty($_POST['ok'])) {
 
     // Add SMTP Relay Support
     if (empty($_SESSION['error_msg'])) {
-        if (isset($_POST['v_smtp_relay']) && (!empty($_POST['v_smtp_relay_host'])) && (!empty($_POST['v_smtp_relay_user']))) {
+        if (isset($_POST['v_smtp_relay']) && !empty($_POST['v_smtp_relay_host'])) {
             if (($_POST['v_smtp_relay_host'] != $v_smtp_relay_host) ||
                 ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
                 ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port)) {
-                if (!empty($_POST['v_smtp_relay_pass'])) {
-                    $v_smtp_relay = true;
-                    $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
-                    $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
-                    $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
-                    if (!empty($_POST['v_smtp_relay_port'])) {
-                        $v_smtp_relay_port = escapeshellarg($_POST['v_smtp_relay_port']);
-                    } else {
-                        $v_smtp_relay_port = '587';
-                    }
-                    exec(HESTIA_CMD."v-add-mail-domain-smtp-relay ".$user." ".$v_domain." ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
-                    check_return_code($return_var, $output);
-                    unset($output);
+                $v_smtp_relay = true;
+                $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
+                $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
+                $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
+                if (!empty($_POST['v_smtp_relay_port'])) {
+                    $v_smtp_relay_port = escapeshellarg($_POST['v_smtp_relay_port']);
                 } else {
-                    $_SESSION['error_msg'] = _('SMTP Relay Password is required');
+                    $v_smtp_relay_port = '587';
                 }
+                exec(HESTIA_CMD."v-add-mail-domain-smtp-relay ".$user." ".$v_domain." ".$v_smtp_relay_host." '".$v_smtp_relay_user."' '".$v_smtp_relay_pass."' ".$v_smtp_relay_port, $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
             }
         }
     }
@@ -260,9 +265,17 @@ if (!empty($_POST['ok_acc'])) {
         unset($output);
     }
 
+    // Add fwd_only flag
+    if ((!empty($_POST['v_rate'])) && (empty($_SESSION['error_msg']))  && $_SESSION['userContext'] == 'admin') {
+        $v_rate = escapeshellarg($_POST['v_rate']);
+        exec(HESTIA_CMD."v-change-mail-account-rate-limit ".$user." ".$v_domain." ".$v_account." ".$v_rate, $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+    }
+
     // Get webmail url
     if (empty($_SESSION['error_msg'])) {
-        list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+        list($hostname, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
         $webmail = "http://".$hostname."/".$v_webmail_alias."/";
         if (!empty($_SESSION['WEBMAIL_ALIAS'])) {
             $webmail = $_SESSION['WEBMAIL_ALIAS'];
@@ -300,10 +313,57 @@ if (empty($_GET['domain'])) {
         //default is always roundcube unless it hasn't been installed. Then picks the first one in order
         $v_webmail  = 'roundcube';
     }
+
+    if (empty($_GET['accept'])) {
+        $_GET['accept'] = false;
+    }
+    if (empty($v_domain)) {
+        $v_domain = '';
+    }
+    if (empty($v_smtp_relay)) {
+        $v_smtp_relay = '';
+    }
+    if (empty($v_smtp_relay_user)) {
+        $v_smtp_relay_user = '';
+    }
+    if (empty($v_smtp_relay_password)) {
+        $v_smtp_relay_password = '';
+    }
+    if (empty($v_smtp_relay_host)) {
+        $v_smtp_relay_host = '';
+    }
+    if (empty($v_smtp_relay_port)) {
+        $v_smtp_relay_port = '';
+    }
+
+
     render_page($user, $TAB, 'add_mail');
 } else {
     // Display body for mail account
-
+    if (empty($v_account)) {
+        $v_account = '';
+    }
+    if (empty($v_quota)) {
+        $v_quota = '';
+    }
+    if (empty($v_rate)) {
+        $v_rate = '';
+    }
+    if (empty($v_blackhole)) {
+        $v_blackhole = '';
+    }
+    if (empty($v_fwd_only)) {
+        $v_fwd_only = '';
+    }
+    if (empty($v_aliases)) {
+        $v_aliases = '';
+    }
+    if (empty($v_send_email)) {
+        $v_send_email = '';
+    }
+    if (empty($v_fwd)) {
+        $v_fwd = '';
+    }
     $v_domain = $_GET['domain'];
     render_page($user, $TAB, 'add_mail_acc');
 }

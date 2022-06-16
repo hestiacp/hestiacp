@@ -56,12 +56,42 @@ if [ -n "$web_data" ]; then
     echo "[*] Moving web domain..."
     $BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
     parse_object_kv_list "$web_data"
-
+    
+    if [ -n "$CUSTOM_DOCROOT" ]; then 
+        if [ -z $(echo $CUSTOM_DOCROOT | grep -i "/home/$owner/web/$domain") ]; then
+            docdomain=$(echo "$CUSTOM_DOCROOT" | cut -d'/' -f5)
+            $BIN/v-list-web-domain $user $docdomain > /dev/null
+            if [ "$?" != 0 ]; then
+                echo "Error: Target domain doesn't belong to the new user";
+                exit $E_NOTEXIST;
+            fi
+            new_docroot=$(echo $CUSTOM_DOCROOT | sed "s/\/home\/$owner/\/home\/$user/");
+            new_php_docroot=$(echo $CUSTOM_PHPROOT | sed "s/\/home\/$owner/\/home\/$user/");
+            
+        else
+            new_docroot=$(echo $CUSTOM_DOCROOT | sed "s/\/home\/$owner/\/home\/$user/");
+            new_php_docroot=$(echo $CUSTOM_PHPROOT | sed "s/\/home\/$owner/\/home\/$user/");
+        fi
+    fi
+    
+    if [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
+        echo "[*] IP dedicated to $owner select new ip adress..."
+        get_user_ip
+    fi 
+    old_ip=$IP;
+    new_ip=$ip; 
+    echo $ip;
+    
     # Change IP
     if [ -n "$ip" ]; then
         web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
     fi
-
+    if [ -n "$new_docroot" ]; then
+        web_data=$(echo "$web_data" | sed "s|CUSTOM_DOCROOT='$CUSTOM_DOCROOT'|CUSTOM_DOCROOT='$new_docroot'|")
+        web_data=$(echo "$web_data" | sed "s|CUSTOM_PHPROOT='$CUSTOM_PHPROOT'|CUSTOM_PHPROOT='$new_php_docroot'|")
+    fi
+    web_data=$(echo "$web_data" | sed "s/SUSPENDED='no'/SUSPENDED='yes'/")
+    
     # Check SSL
     if [ "$SSL" = 'yes' ]; then
         ssl_crt=$HESTIA/data/users/$owner/ssl/$domain.crt
@@ -244,9 +274,10 @@ if [ -n "$mail_data" ]; then
     if [ -e "$HESTIA/data/users/$owner/mail/$domain.conf" ]; then
         rm -f "$HESTIA/data/users/$owner/mail/$domain.conf"
     fi
+    
 
     # Rebuild config
-    $BIN/v-unsuspend-mail-domain "$user" "$domain" no >> /dev/null 2>&1
+    $BIN/v-unsuspend-mail-domain "$user" "$domain" no
     $BIN/v-rebuild-mail-domains "$owner" no
     $BIN/v-rebuild-mail-domains "$user"
 fi
@@ -255,6 +286,15 @@ fi
 $BIN/v-update-user-counters "$owner"
 $BIN/v-update-user-counters "$user"
 
+# Recalculate ip usage 
+if [ -n "$ip" ]; then
+    decrease_ip_value $old_ip $owner
+    increase_ip_value $new_ip 
+else
+    # recalculate ip 
+    decrease_ip_value $old_ip $owner
+    increase_ip_value $old_ip 
+fi
 # Send notification to panel
 if [ -n "$web_data" ] || [ -n "$dns_data" ] || [ -n "$mail_data" ]; then
     $HESTIA/bin/v-add-user-notification "$user" "$domain has been added to your account" ''

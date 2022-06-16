@@ -55,7 +55,7 @@ for version in $($BIN/v-list-sys-php plain); do
         sed -i "s/9999/99${version//.}/g" "/etc/php/${version}/fpm/pool.d/dummy.conf"
     fi
 
-    $BIN/v-restart-service "$v_php" >> $tmpfile 2>&1
+    $BIN/v-restart-service "$v_php" "$1" >> $tmpfile 2>&1
     if [ $? -ne 0 ]; then
         send_email_report
         check_result "$E_RESTART" "$v_php restart failed"

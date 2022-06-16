@@ -597,8 +597,7 @@ upgrade_phpmyadmin() {
             cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 
             # Set config and log directory
-            sed -i "s|define('CONFIG_DIR', ROOT_PATH);|define('CONFIG_DIR', '/etc/phpmyadmin/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
-            sed -i "s|define('TEMP_DIR', ROOT_PATH . 'tmp/');|define('TEMP_DIR', '/var/lib/phpmyadmin/tmp/');|" /usr/share/phpmyadmin/libraries/vendor_config.php
+            sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
             # Create temporary folder and change permissions
             if [ ! -d /usr/share/phpmyadmin/tmp ]; then
@@ -764,6 +763,7 @@ upgrade_rebuild_users() {
 upgrade_replace_default_config() {
     syshealth_update_web_config_format
     syshealth_update_mail_config_format
+    syshealth_update_mail_account_config_format
     syshealth_update_dns_config_format
     syshealth_update_db_config_format
     syshealth_update_user_config_format

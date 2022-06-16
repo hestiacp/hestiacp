@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 $TAB = 'DB';
 
@@ -132,7 +133,13 @@ if (!empty($_POST['ok'])) {
 }
 
 // Get user email
-$v_db_email = $panel[$user]['CONTACT'];
+$v_db_email = '';
+if (empty($v_database)) {
+    $v_database = '';
+}
+if (empty($v_dbuser)) {
+    $v_dbuser = '';
+}
 
 // List avaiable database types
 $db_types = explode(',', $_SESSION['DB_SYSTEM']);

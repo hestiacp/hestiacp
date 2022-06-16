@@ -10,7 +10,7 @@ class NextcloudSetup extends BaseSetup
         'name' => 'Nextcloud',
         'group' => 'cloud',
         'enabled' => true,
-        'version' => '22.2.0',
+        'version' => 'latest',
         'thumbnail' => 'nextcloud-thumb.png'
     ];
 
@@ -23,23 +23,26 @@ class NextcloudSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://download.nextcloud.com/server/releases/nextcloud-22.2.0.tar.bz2' ]
+            'archive'  => [ 'src' => 'https://download.nextcloud.com/server/releases/latest.tar.bz2' ]
         ],
         'server' => [
             'nginx' => [
-                'template' => 'owncloud',
+                'template' => 'owncloud'
             ],
-        ],
+            'php' => [ 
+                'supported' => [ '7.3','7.4','8.0','8.1' ],
+            ]
+        ], 
     ];
 
     public function install(array $options = null): bool
     {
         parent::install($options);
-
-        $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot(".htaccess.txt"), $this->getDocRoot(".htaccess")]);
-
+        parent::setup($options);
+        
         // install nextcloud
-        $this->appcontext->runUser('v-run-cli-cmd', ['/usr/bin/php',
+        $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
+        $this->appcontext->runUser('v-run-cli-cmd', ["/usr/bin/php$php_version",
             $this->getDocRoot('occ'),
             'maintenance:install',
             '--database mysql',
@@ -57,8 +60,7 @@ class NextcloudSetup extends BaseSetup
                 'config:system:set',
                 'trusted_domains 2 --value='.$this->domain
             ],
-            $status2
-        );
-        return ($status->code === 0 && $status2->code === 0);
+            $status);
+        return ($status->code === 0);
     }
 }

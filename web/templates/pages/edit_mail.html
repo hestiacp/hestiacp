@@ -81,13 +81,28 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>"> <?php /*'*/ ?>
+								<input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>">
+							</td>
+						</tr>
+						<tr>
+							<td class="vst-text input-label">
+								<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour / account');?>)</span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" size="20" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>">
 							</td>
 						</tr>
 						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
 							<tr>
 								<td class="vst-text input-label step-top">
 									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>><?=_('AntiSpam Support');?></label>
+								</td>
+							</tr>
+							<tr>
+								<td class="vst-text input-label">
+									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_reject" <?php if ($v_reject == 'yes') echo "checked=yes"; ?>><?=_('Reject spam');?></label>
 								</td>
 							</tr>
 						<?php } ?>
@@ -113,7 +128,7 @@
 								<table>
 									<tr>
 										<td class="input-label vst-text">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letencrypt == 'on') echo "checked=yes" ?>"><?=_('Lets Encrypt Support');?></label>
+											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?>"><?=_('Lets Encrypt Support');?></label>
 										</td>
 									</tr>
 									<tr id="le-warning" class="step-top">

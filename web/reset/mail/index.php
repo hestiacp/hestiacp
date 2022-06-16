@@ -143,9 +143,19 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
     // Compare hashes
     if (!empty($v_hash)) {
         $salt = explode('$', $v_hash);
+        if($salt[0] == "{MD5}"){
         $n_hash = md5crypt($v_password, $salt[2]);
         $n_hash = '{MD5}'.$n_hash;
-
+        }else{
+            $v_password = escapeshellarg($v_password);
+            $s_hash = escapeshellarg($v_hash);
+            exec(HESTIA_CMD."v-check-mail-account-hash ARGONID2 ". $v_password ." ". $s_hash, $output, $return_var);
+            if($return_var != 0){
+                $n_hash = '';
+            }else{
+                $n_hash = $v_hash;
+            }
+        }
         // Change password
         if ( $v_hash == $n_hash ) {
             $v_new_password = tempnam("/tmp","vst");

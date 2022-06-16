@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Add mail domain smtp relay support
-# options: USER DOMAIN HOST USERNAME PASSWORD [PORT]
+# options: USER DOMAIN HOST [USERNAME] [PASSWORD] [PORT]
 #
 # example: v-add-mail-domain-smtp-relay user domain.tld srv.smtprelay.tld uname123 pass12345
 #
@@ -30,7 +30,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '5' "$#" 'USER DOMAIN HOST USERNAME PASSWORD'
+check_args '3' "$#" 'USER DOMAIN HOST [USERNAME] [PASSWORD] [PORT]'
 is_format_valid 'port' 'user' 'domain' 'host'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

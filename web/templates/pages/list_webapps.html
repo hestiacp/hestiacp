@@ -32,8 +32,10 @@
 							$msg_id = 'vst-ok';
 						}
 					}
+					if(!empty($msg_id)){
 				?>
 				<span class="<?=$msg_id;?>"> <i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></span>
+				<?php }; ?> 
 			</span>
 		</div>
 	</div>

@@ -146,20 +146,33 @@ if (is_array($dns_cluster)) {
         $v_dns_cluster = 'yes';
     }
 }
+if (empty($v_dns_cluster)) {
+    $v_dns_cluster = '';
+}
+$v_release_branch = $_SESSION['RELEASE_BRANCH'];
 
 // List smtp relay settings
 if (!empty($_SESSION['SMTP_RELAY'])) {
     $v_smtp_relay = $_SESSION['SMTP_RELAY'];
+} else {
+    $v_smtp_relay = '';
 }
 if (!empty($_SESSION['SMTP_RELAY_HOST'])) {
     $v_smtp_relay_host = $_SESSION['SMTP_RELAY_HOST'];
+} else {
+    $v_smtp_relay_host = '';
 }
 if (!empty($_SESSION['SMTP_RELAY_PORT'])) {
     $v_smtp_relay_port = $_SESSION['SMTP_RELAY_PORT'];
+} else {
+    $v_smtp_relay_port = '';
 }
 if (!empty($_SESSION['SMTP_RELAY_USER'])) {
     $v_smtp_relay_user = $_SESSION['SMTP_RELAY_USER'];
+} else {
+    $v_smtp_relay_user = '';
 }
+$v_smtp_relay_pass = '';
 
 // List Database hosts
 exec(HESTIA_CMD."v-list-database-hosts json", $output, $return_var);
@@ -213,6 +226,42 @@ foreach ($backup_types as $backup_type) {
         }
     }
 }
+if (empty($v_backup)) {
+    $v_backup = '';
+}
+if (empty($v_backup_host)) {
+    $v_backup_host = '';
+}
+if (empty($v_backup_type)) {
+    $v_backup_type = '';
+}
+if (empty($v_backup_username)) {
+    $v_backup_username = '';
+}
+if (empty($v_backup_password)) {
+    $v_backup_password = '';
+}
+if (empty($v_backup_port)) {
+    $v_backup_port = '';
+}
+if (empty($v_backup_bpath)) {
+    $v_backup_bpath = '';
+}
+if (empty($v_backup_bucket)) {
+    $v_backup_bucket = '';
+}
+if (empty($v_backup_application_id)) {
+    $v_backup_application_id = '';
+}
+if (empty($v_backup_application_key)) {
+    $v_backup_application_key = '';
+}
+if (empty($v_backup_remote_adv)) {
+    $v_backup_remote_adv = '';
+}
+if (empty($v_backup_remote_adv)) {
+    $v_backup_remote_adv = '';
+}
 
 // List ssl certificate info
 exec(HESTIA_CMD."v-list-sys-hestia-ssl json", $output, $return_var);
@@ -242,13 +291,13 @@ if (!empty($_POST['save'])) {
         unset($output);
         $v_hostname = $_POST['v_hostname'];
     }
-    
-    if($_SESSION['WEB_BACKEND'] == "php-fpm"){
+
+    if ($_SESSION['WEB_BACKEND'] == "php-fpm") {
         // Install/remove php versions
         if (empty($_SESSION['error_msg'])) {
             if (!empty($v_php_versions)) {
                 $post_php = $_POST['v_php_versions'];
-                if(empty($post_php)){
+                if (empty($post_php)) {
                     $post_php = array();
                 }
                 array_map(function ($php_version) use ($post_php) {
@@ -271,21 +320,21 @@ if (!empty($_POST['save'])) {
                             }
                         }
                     }
-    
+
                     return $php_version;
                 }, $v_php_versions);
             }
         }
-        
+
         if (empty($_SESSION['error_msg'])) {
-            if($_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
+            if ($_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
                 exec(HESTIA_CMD . "v-change-sys-php " . escapeshellarg($_POST['v_php_default_version']), $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
-            }   
+            }
         }
     }
-    
+
     // Change timezone
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_timezone'])) {
@@ -407,9 +456,8 @@ if (!empty($_POST['save'])) {
             check_return_code($return_var, $output);
             unset($output);
             $v_debug_mode_adv = 'yes';
-            
         }
-        if (($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) && $_POST['v_experimental_features'] == "false" ) {
+        if (($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) && $_POST['v_experimental_features'] == "false") {
             //disable preview mode
             exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".escapeshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
             check_return_code($return_var, $output);
@@ -528,27 +576,22 @@ if (!empty($_POST['save'])) {
 
     // Update system wide smtp relay
     if (empty($_SESSION['error_msg'])) {
-        if (isset($_POST['v_smtp_relay']) && (!empty($_POST['v_smtp_relay_host'])) && (!empty($_POST['v_smtp_relay_user']))) {
+        if (isset($_POST['v_smtp_relay']) && !empty($_POST['v_smtp_relay_host'])) {
             if (($_POST['v_smtp_relay_host'] != $v_smtp_relay_host) ||
                      ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
-                     ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port) ||
-                     (!empty($_POST['v_smtp_relay_pass']))) {
-                if (!empty($_POST['v_smtp_relay_pass'])) {
-                    $v_smtp_relay = true;
-                    $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
-                    $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
-                    $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
-                    if (!empty($_POST['v_smtp_relay_port'])) {
-                        $v_smtp_relay_port = escapeshellarg($_POST['v_smtp_relay_port']);
-                    } else {
-                        $v_smtp_relay_port = '587';
-                    }
-                    exec(HESTIA_CMD."v-add-sys-smtp-relay ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
-                    check_return_code($return_var, $output);
-                    unset($output);
+                     ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port)) {
+                $v_smtp_relay = true;
+                $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
+                $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
+                $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
+                if (!empty($_POST['v_smtp_relay_port'])) {
+                    $v_smtp_relay_port = escapeshellarg($_POST['v_smtp_relay_port']);
                 } else {
-                    $_SESSION['error_msg'] = _('SMTP Relay Password is required');
+                    $v_smtp_relay_port = '587';
                 }
+                exec(HESTIA_CMD."v-add-sys-smtp-relay ".$v_smtp_relay_host." ".$v_smtp_relay_user." ".$v_smtp_relay_pass." ".$v_smtp_relay_port, $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
             }
         }
         if ((!isset($_POST['v_smtp_relay'])) && ($v_smtp_relay == true)) {
@@ -580,16 +623,6 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Update release branch
-    if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_release_branch'] != $_SESSION['RELEASE_BRANCH']) {
-            exec(HESTIA_CMD."v-change-sys-release ".escapeshellarg($_POST['v_release_branch']), $output, $return_var);
-            check_return_code($return_var, $output);
-            unset($output);
-            $v_release_adv = 'yes';
-        }
-    }
-
     // Update send notification setting
     if (empty($_SESSION['error_msg'])) {
         if ($_SESSION['UPGRADE_SEND_EMAIL'] == 'true') {
@@ -616,6 +649,9 @@ if (!empty($_POST['save'])) {
             $send_email_log = 'on';
         } else {
             $send_email_log = '';
+        }
+        if (empty($_POST['v_upgrade_send_email_log'])) {
+            $_POST['v_upgrade_send_email_log'] = '';
         }
         if ($_POST['v_upgrade_send_email_log'] != $send_email_log) {
             if ($_POST['v_upgrade_send_email_log'] == 'on') {
@@ -694,6 +730,9 @@ if (!empty($_POST['save'])) {
 
     // Change backup path
     if (empty($_SESSION['error_msg'])) {
+        if (empty($_POST['v_backup_dir'])) {
+            $_POST['v_backup_dir']  = '';
+        }
         if ($_POST['v_backup_dir'] != $v_backup_dir) {
             /*
             See #1655
@@ -710,7 +749,7 @@ if (!empty($_POST['save'])) {
 
     // Add remote backup host
     if (empty($_SESSION['error_msg'])) {
-        if ((empty($v_backup_host) && empty($v_backup_bucket) && ((!empty($_POST['v_backup_host'])) || !empty($_POST['v_backup_bucket'])))) {
+        if (($v_backup_host == '' && $v_backup_bucket == '' && ((!empty($_POST['v_backup_host'])) || !empty($_POST['v_backup_bucket'])))) {
             if (in_array($_POST['v_backup_type'], array('ftp','sftp'))) {
                 $v_backup_host = escapeshellarg($_POST['v_backup_host']);
                 $v_backup_port = escapeshellarg($_POST['v_backup_port']);
@@ -768,7 +807,7 @@ if (!empty($_POST['save'])) {
 
     // Change remote backup host type
     if (empty($_SESSION['error_msg'])) {
-        if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] != $v_backup_type)) {
+        if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] != $v_backup_type) && $v_backup_type != '') {
             exec(HESTIA_CMD."v-delete-backup-host " . escapeshellarg($v_backup_type), $output, $return_var);
             unset($output);
             if (in_array($_POST['v_backup_type'], array('ftp','sftp'))) {
@@ -886,7 +925,7 @@ if (!empty($_POST['save'])) {
 
     // Delete remote backup host
     if (empty($_SESSION['error_msg'])) {
-        if (empty($_POST['v_backup_remote_adv']) && isset($v_backup_remote_adv)) {
+        if (empty($_POST['v_backup_remote_adv']) && $v_backup_remote_adv != '') {
             exec(HESTIA_CMD."v-delete-backup-host ".escapeshellarg($v_backup_type), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
@@ -1000,6 +1039,75 @@ if (!empty($_POST['save'])) {
             $v_security_adv = 'yes';
         }
     }
+    
+    if ($_POST['v_api_system'] != $_SESSION['API_SYSTEM'] || $_POST['v_api'] != $_SESSION['API'] || $_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']){
+        if (empty($_SESSION['error_msg'])) {
+            if($_POST['v_api'] == "no" && $_POST['v_api_system'] === 0 ){
+                exec(HESTIA_CMD."v-change-sys-api 'disable'", $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
+            }
+            if($_POST['v_api'] == "yes" || $_POST['v_api_system'] !== 0  && $_POST['v_api_system'] != $_SESSION['API_SYSTEM'] || $_POST['v_api'] != $_SESSION['API']){
+                exec(HESTIA_CMD."v-change-sys-api 'enable'", $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
+            }
+        }
+        if (empty($_SESSION['error_msg'])) {
+            if ($_POST['v_api_system'] != $_SESSION['API_SYSTEM']) {
+                exec(HESTIA_CMD."v-change-sys-config-value API_SYSTEM ".escapeshellarg($_POST['v_api_system']), $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) {
+                    $v_policy_user_edit_details = $_POST['v_api_system'];
+                }
+                $v_security_adv = 'yes';
+            }
+        }
+        
+        // Change API access
+        if (empty($_SESSION['error_msg'])) {
+            if ($_POST['v_api'] != $_SESSION['API']) {
+                $api_status = 'no';
+                if ($_POST['v_api'] == 'yes') {
+                    $api_status = 'yes';
+                }
+                exec(HESTIA_CMD."v-change-sys-config-value API ".escapeshellarg($api_status), $output, $return_var);
+                check_return_code($return_var, $output);
+                unset($output);
+                if (empty($_SESSION['error_msg'])) {
+                    $v_api = $_POST['v_api'];
+                }
+                $v_security_adv = 'yes';
+            }
+        }
+            
+        // Change API allowed IPs
+        if (empty($_SESSION['error_msg'])) {
+            if ($_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']) {
+                $ips = array();
+                foreach (explode("\n", $_POST['v_api_allowed_ip']) as $ip) {
+                    if (trim($ip) != "allow-all") {
+                        if (filter_var(trim($ip), FILTER_VALIDATE_IP)) {
+                            $ips[] = trim($ip);
+                        }
+                    } else {
+                        $ips[] = trim($ip);
+                    }
+                }
+                if (implode(',', $ips) != $_SESSION['API_ALLOWED_IP']) {
+                    exec(HESTIA_CMD."v-change-sys-config-value API_ALLOWED_IP ".escapeshellarg(implode(',', $ips)), $output, $return_var);
+                    check_return_code($return_var, $output);
+                    unset($output);
+                    if (empty($_SESSION['error_msg'])) {
+                        $v_api_allowed_ip = $_POST['v_api_allowed_ip'];
+                    }
+                    $v_security_adv = 'yes';
+                }
+            }
+        }   
+
+    }
 
     // Change POLICY_USER_VIEW_LOGS
     if (empty($_SESSION['error_msg'])) {
@@ -1068,6 +1176,9 @@ if (!empty($_POST['save'])) {
 
     // Change POLICY_USER_CHANGE_THEME
     if (empty($_SESSION['error_msg'])) {
+        if (empty($_POST['v_policy_user_change_theme'])) {
+            $_POST['v_policy_user_change_theme'] = '';
+        }
         if ($_POST['v_policy_user_change_theme'] == 'on') {
             $_POST['v_policy_user_change_theme'] = 'no';
         } else {
@@ -1126,48 +1237,6 @@ if (!empty($_POST['save'])) {
                 $v_login_style = $_POST['v_login_style'];
             }
             $v_security_adv = 'yes';
-        }
-    }
-
-    // Change API access
-    if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_api'] != $_SESSION['API']) {
-            $api_status = 'disable';
-            if ($_POST['v_api'] == 'yes') {
-                $api_status = 'enable';
-            }
-            exec(HESTIA_CMD."v-change-sys-api ".escapeshellarg($api_status), $output, $return_var);
-            check_return_code($return_var, $output);
-            unset($output);
-            if (empty($_SESSION['error_msg'])) {
-                $v_api = $_POST['v_api'];
-            }
-            $v_security_adv = 'yes';
-        }
-    }
-
-    // Change API allowed IPs
-    if (empty($_SESSION['error_msg'])) {
-        if ($_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']) {
-            $ips = array();
-            foreach (explode("\n", $_POST['v_api_allowed_ip']) as $ip) {
-                if (trim($ip) != "allow-all") {
-                    if (filter_var(trim($ip), FILTER_VALIDATE_IP)) {
-                        $ips[] = trim($ip);
-                    }
-                } else {
-                    $ips[] = trim($ip);
-                }
-            }
-            if (implode(',', $ips) != $_SESSION['API_ALLOWED_IP']) {
-                exec(HESTIA_CMD."v-change-sys-config-value API_ALLOWED_IP ".escapeshellarg(implode(',', $ips)), $output, $return_var);
-                check_return_code($return_var, $output);
-                unset($output);
-                if (empty($_SESSION['error_msg'])) {
-                    $v_api_allowed_ip = $_POST['v_api_allowed_ip'];
-                }
-                $v_security_adv = 'yes';
-            }
         }
     }
 

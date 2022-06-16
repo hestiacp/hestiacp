@@ -2,7 +2,8 @@
 # info: check letsencrypt domain
 # options: USER DOMAIN [ALIASES] [MAIL]
 #
-# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com
+# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
+# example: v-add-letsencrypt-domain admin wonderland.com '' yes
 #
 # This function check and validates domain with Let's Encrypt
 
@@ -123,6 +124,19 @@ if [ -n "$mail" ]; then
     if [ -n "$webmail" ]; then
         aliases="$WEBMAIL_ALIAS.$root_domain"
     fi
+else
+    parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+    
+    domain_redirect="$REDIRECT"
+    if [[ -n "$domain_redirect"  ]] ; then
+        domain_redirect_code="$REDIRECT_CODE"
+        $BIN/v-delete-web-domain-redirect $user $domain
+    fi
+    
+    domain_forcessl="$SSL_FORCE"
+    if [[ "$domain_forcessl" == 'yes' ]] ; then
+        $BIN/v-delete-web-domain-ssl-force $user $domain
+    fi
 fi
 
 log_file="/var/log/hestia/LE-${user}-${domain}.log"
@@ -170,7 +184,7 @@ echo -e "
 if [ "$proto" = "http-01" ]; then
     for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
         if [[ "$identifier" = *[![:ascii:]]* ]]; then
-            identifier=$(idn -t --quiet -a $identifier)
+            identifier=$(idn2 --quiet $identifier)
         fi
         if ! nslookup "${identifier}" > /dev/null 2>&1 ; then
             check_result "$E_NOTEXIST" "DNS record for $identifier doesn't exist"
@@ -345,7 +359,11 @@ for auth in $authz; do
             check_result $? "Web restart failed" > /dev/null
         fi
     fi
-
+    
+    if [ "$DNS_CLUSTER" = "yes" ]; then 
+        $BIN/v-update-sys-queue dns-cluster
+    fi 
+    
     # Requesting ACME validation / STEP 5
     validation_check=$(echo "$answer" |grep '"valid"')
     if [[ -n "$validation_check" ]]; then
@@ -540,6 +558,14 @@ if [ -z "$mail" ]; then
     fi
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+    
+    if [[ "$domain_forcessl" == 'yes' ]] ; then
+        $BIN/v-add-web-domain-ssl-force $user $domain
+    fi
+    if [[ -n "$domain_redirect" ]] ; then
+        $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
+    fi
+
 else
     if [ -z "$LETSENCRYPT" ]; then
         add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT'

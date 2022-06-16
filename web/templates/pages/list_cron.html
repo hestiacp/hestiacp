@@ -92,9 +92,8 @@
 				$spnd_confirmation = _('SUSPEND_CRON_CONFIRMATION') ;
 			}
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; if($_SESSION['favourites']['CRON'][$key] == 1) echo ' l-unit--starred'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="cron"
-			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"
-			sort-star="<?php if($_SESSION['favourites']['CRON'][$key] == 1) echo '1'; else echo '0';  ?>">
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animated fadeIn" v_unit_id="<?=$key?>" v_section="cron"
+			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="job[]" value="<?=$key?>" <?=$display_mode;?>>

@@ -28,6 +28,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -41,7 +43,7 @@ fi
 # Additional argument formatting
 format_domain
 format_domain_idn
-domain_utf=$(idn -t --quiet -u "$domain_idn")
+domain_utf=$(idn2 --quiet -d "$domain_idn")
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -96,6 +98,8 @@ s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='n
 s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf
+
+syshealth_repair_mail_config
 
 # Generating DKIM keys
 if [ "$dkim" = 'yes' ]; then

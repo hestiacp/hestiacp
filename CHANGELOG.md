@@ -2,7 +2,6 @@
 All notable changes to this project will be documented in this file.
 
 ## [1.6.0] - Major Release (Feature / Quality Update)
-## [1.5.15] - Service release
 
 ### Important Notes
 

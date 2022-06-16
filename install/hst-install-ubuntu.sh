@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.6.0~beta-1'
+HESTIA_INSTALL_VER='1.6.0'
 # Dependencies
 pma_v='5.2.0'
 rc_v="1.5.2"
@@ -1705,7 +1705,7 @@ if [ "$exim" = 'yes' ]; then
     gpasswd -a Debian-exim mail > /dev/null 2>&1
     if [ "$release" = "22.04" ]; then
       # Jammyy uses Exim 4.95 instead but config works with Exim4.94
-      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/
+      cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template 
     else
       cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
     fi

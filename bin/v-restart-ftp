@@ -50,7 +50,7 @@ if [ "$1" = 'scheduled' ] || [ -z "$1" ]  && [ "$SCHEDULED_RESTART" = 'yes' ]; t
 fi
 
 # Restart system
-$BIN/v-restart-service "$FTP_SYSTEM" > /dev/null 2>&1
+$BIN/v-restart-service "$FTP_SYSTEM" "$1" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     send_email_report
     check_result "$E_RESTART" "$FTP_SYSTEM restart failed"

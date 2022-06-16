@@ -2,7 +2,7 @@
 # info: restart proxy server
 # options: NONE
 #
-# example: v-restart-proxy
+# example: v-restart-proxy [RESTART]
 #
 # This function reloads proxy server configuration.
 

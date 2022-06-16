@@ -3,13 +3,19 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.0] - Major Release (Feature / Quality Update)
 
-### Breaking changes
-- Dropped support for Debian 9 for new installs (#2537)
-- Dropped support for RSSH for Debian 9 and Ubuntu 18.04 on install (#2537)
-- Dropped support for TLS1.1 and older for Dovecot (#2012 and #2538)
-- Added support for Yescrypt  (#2235 / #2499) Breaking possible restores from Debian 11 / Ubuntu 22.04 to older Operating version (Change user password to solve the issue)
-- Added support for ARGON2ID for mail accounts (#2421)  Breaking possible restores form Debian 10 and 11, Ubuntu 20.04 and 22.04 to Ubuntu 18.04 / Debian 9
+### Important Notes
 
+- Added support for Ubuntu 22.04 Jammy. If you planning to upgrade your server from Ubuntu 20.04 or 18.04 to Ubuntu 22.04 read the instruction carefully!
+- Issues with Ubuntu and Netplan and additional ip addresses has been discovered if this is the case for your setup please check if Netplan configuration is correct.
+- Due to know security issues with Rainloop [CVE-2022-29360](https://blog.sonarsource.com/rainloop-emails-at-risk-due-to-code-flaw/) and the lack of updates from there side we are planning to update / replace Rainloop with [Snappymail](https://github.com/the-djmaze/snappymail). How ever minor changes are needed to the release of Snappymail. The required changes have been made however we are waiting for for the final release of 2.16.4
+- Added support for Yescrypt and ARGON2ID for storing passwords of the users / email accounts password. If you encounter any issues (after importing a backup) with logging change the user / email account password and it will solve any issues. 
+
+### Deprecated
+
+- Dropped support for Debian 9 for new installs (#2537)
+- Dropped support for RSSH on Ubuntu 18.04 on install (#2537)
+- Dropped support for TLS1.1 and older for Dovecot (#2012 and #2538)
+ 
 ### Features
 
 - Added support for Ubuntu 22.04 Jammy (#2537 #2489)
@@ -22,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Introduce new api allowing users to use certain commands over API (#2535 and #1333)
 - Allow "Purge" cache button visible on templates with the name cacheing-your-template-name (#2526 #2530)
 - Add hooks to hestia-nginx and hestia-php (#2440)
+- Update DNS cluster to support new API system (#2587)
 
 ### Bugfixes
 
@@ -43,16 +50,39 @@ All notable changes to this project will be documented in this file.
 - Remove duplicate code in Ubuntu installer (#2542 @clarkchentw)
 - Fixed an issue in Nginx + Apache2 mail "disabled" template. Causing users unable to request an valid ssl certificate (#2550 #2549)
 - Fixed an issue with "Reject spam" option not working (#2551 #2545)
-- Fixed an issue with Editing / Adding DNS records (#2546, #2547, #2548 @DuoCZ) 
+- Fixed an issue with Editing / Adding DNS records (#2546, #2547, #2548 @DunoCZ) 
+- Fixed an issue with TXT records longer then 255 characters (#2559)
+- Fixed an issue with wp-cli permission denied and allow wp-cli to be run in v-run-cmd command (#2562 and #2565)
+- Fixed an issue with apt-get install output not written to install log (#2585)
+- Fixed multiple issues with improved Quick installer app for Wordpress (#2583)
+- Changes in upstream package caused phpMyAdmin Single Sign on feature to break (#2591)
+- Fixed issues with DNS cluster and the new API (#2587)
+- Fixed an issue where PHPpgAdmin config files was not renamed to .inc for Apache2 setups (#2592)
+- Startup Fail2ban on boot for Ubuntu 22.04 (#2596 #2594)
+- Fixed issue with duplicate config value (#2640 @Kujoe and #2605 #2610 )
+- Fixed an issue with change password function for webmail clients
+- Fixed multiple issues with Quick install apps in general (#2444, #1092, #2638)
+- Fixed an issue with memory usage graph and non english locale (#2643 #2540)
+- Fixed an issue with incorrect download path ftp backup (#2636 @cloudyhostcom)
+- Add php8.1 in v-run-cli-cmd (#2630 @gOOvER)
+- Fixed multiple issues with wildcard and Letsencrypt (#2627, #2626, #2624, #2623)
+- Fixed multiple issues in v-change-domain-owner (#2618, #2617, #1864)
+- Fixed an issue with MariadDB 10.8 detection (#2616)
+- Fixed an issue with netplan and additional ip addresses (#2612)
+- Removed MariaDB repo form Ubuntu 22.04 install 
+- Don not install Roundcube dependencies if Roundcube is missing while installing sieve.
+- Remove duplicated code in v-add-web-domain-ssl
 
 ### Dependencies
-- Update hestia-nginx to 1.21.6
-    - Update openssl to 3.0.3
+- Update hestia-nginx to 1.22.0
+    - Update OpenSSL to 3.0.3
     - Update zlib to 1.2.12
-    - Update PCRE2 to 10.40
-- Update hestia-php to 8.1.6
-- Update phpMyAdmin to 5.2.0 (https://www.phpmyadmin.net/files/5.2.0/)
-- Update Filegator to 7.8.1 (https://github.com/filegator/filegator/releases/tag/v7.8.1)
+    - Update PCRE to 10.40 
+- Update hestia-php to 8.1.7
+- Updated phpMyAdmin to 5.2.0 (https://www.phpmyadmin.net/files/5.2.0/)
+- Update Filegator to 7.8.1
+- Update PHPmailer to 6.6.2
+- Update composer dependencies
 
 ## [1.5.15] - Service release
 

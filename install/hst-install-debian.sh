@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 9, 10, 11
+# Debian 10, 11
 #
 # ======================================================== #
 
@@ -31,7 +31,7 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.6.0~beta-1'
+HESTIA_INSTALL_VER='1.6.0'
 # Dependencies
 pma_v='5.2.0'
 rc_v="1.6.0"

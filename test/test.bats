@@ -796,7 +796,7 @@ function check_ip_not_banned(){
     if [ "$WEB_SYSTEM" != "nginx" ]; then 
       skip "FastCGI cache is not supported"
     fi
-    run v-delete-fastcgi-cache $user $domain '1m' yes
+    run v-delete-fastcgi-cache $user $domain yes
     assert_success
     refute_output
 }

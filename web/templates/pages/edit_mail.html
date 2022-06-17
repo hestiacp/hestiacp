@@ -91,7 +91,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>">
+								<input type="text" size="20" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>>
 							</td>
 						</tr>
 						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>

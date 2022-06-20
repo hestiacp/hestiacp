@@ -24,7 +24,7 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 # Fix exim rate limit send issue
 if [ "$MAIL_SYSTEM" = "exim4" ]; then 
     acl=$(cat /etc/exim4/exim4.conf.template | grep '${extract{1}{:}{${lookup{$sender_address_local_part@$sender_address_domain}')
-    if [ -z "$acl" ]; then
+    if [ ! -z "$acl" ]; then
         sed -i 's/${extract{1}{:}{${lookup{$sender_address_local_part@$sender_address_domain}/${extract{1}{:}{${lookup{$authenticated_id}/' /etc/exim4/exim4.conf.template
     fi
 fi

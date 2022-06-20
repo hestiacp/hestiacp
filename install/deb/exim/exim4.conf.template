@@ -138,7 +138,7 @@ acl_check_rcpt:
 
 # Limit per email account for SMTP auhenticated users
   deny    message       = Email account $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
-          set acl_c_msg_limit = ${if exists{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains/}}/limits} {${extract{1}{:}{${lookup{$sender_address_local_part@$sender_address_domain}lsearch{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains/}}/limits}}}}} {${readfile{/etc/exim4/limit.conf}}} }
+          set acl_c_msg_limit = ${if exists{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains/}}/limits} {${extract{1}{:}{${lookup{$authenticated_id}lsearch{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains/}}/limits}}}}} {${readfile{/etc/exim4/limit.conf}}} }
           ratelimit     = $acl_c_msg_limit / 1h / strict/ $authenticated_id
 
   warn    ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id

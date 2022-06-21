@@ -118,9 +118,7 @@ $v_ftp_path = $data[$v_domain]['FTP_PATH'];
 if (!empty($v_ftp_user)) {
     $v_ftp_password = "";
 }
-
-
-if (isset($v_custom_doc_domain)) {
+if (isset($v_custom_doc_domain) && $v_custom_doc_domain != '') {
     $v_ftp_user_prepath = '/home/'.$user_plain.'/web/'.$v_custom_doc_domain;
 } else {
     $v_ftp_user_prepath = '/home/'.$user_plain.'/web/'.$v_domain;

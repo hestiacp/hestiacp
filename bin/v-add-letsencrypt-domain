@@ -187,7 +187,10 @@ if [ "$proto" = "http-01" ]; then
             identifier=$(idn2 --quiet $identifier)
         fi
         if ! nslookup "${identifier}" > /dev/null 2>&1 ; then
-            check_result "$E_NOTEXIST" "DNS record for $identifier doesn't exist"
+            # Attempt against Cloudflare DNS
+            if ! nslookup "${identifier}" 1.1.1.1 > /dev/null 2>&1 ; then
+                check_result "$E_NOTEXIST" "DNS record for $identifier doesn't exist"
+            fi
         fi
     done
 fi

@@ -32,7 +32,7 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
     if [ -z "$spamscore" ]; then
         echo "[ * ] Fixed an issue reject spam not working propperly"
         sed -i '/SPAM_SCORE = .*/a SPAM_REJECT_SCORE = 100' /etc/exim4/exim4.conf.template
-        sed -i '/          set acl_m1    = yes/a  warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}\n          set acl_m3    = yes' /etc/exim4/exim4.conf.template
+        sed -i '/          set acl_m1    = yes/a    warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}\n          set acl_m3    = yes' /etc/exim4/exim4.conf.template
     fi
     
 fi

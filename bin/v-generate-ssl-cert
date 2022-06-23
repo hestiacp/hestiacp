@@ -62,7 +62,7 @@ shell_list_ssl() {
 # Additional argument formatting
 format_domain_idn
 if [[ "$email" = *[![:ascii:]]* ]]; then
-    email=$(idn -t --quiet -a $email)
+    email=$(idn2 --quiet $email)
 fi
 
 #----------------------------------------------------------#
@@ -121,7 +121,7 @@ if [ -z "$aliases" ]; then
 else
     for alias in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
         if [[ "$alias" = *[![:ascii:]]* ]]; then
-            alias=$(idn -t --quiet -a $alias)
+            alias=$(idn2 --quiet $alias)
         fi
         dns_aliases="${dns_aliases}DNS:$alias,"
     done

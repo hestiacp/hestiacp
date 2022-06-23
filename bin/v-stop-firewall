@@ -68,9 +68,6 @@ rm -f $tmp
 # Saving rules to the master iptables file
 if [ -d "/etc/sysconfig" ]; then
     /sbin/iptables-save > /etc/sysconfig/iptables
-    if [ -z "$(ls /etc/rc3.d/S*iptables 2>/dev/null)" ]; then
-        /sbin/chkconfig iptables off
-    fi
 else
     /sbin/iptables-save > /etc/iptables.rules
     iptablesversion=$(iptables --version | head -1 | awk '{print $2}' | cut -f -2 -d .);

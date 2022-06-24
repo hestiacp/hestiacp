@@ -380,6 +380,7 @@ upgrade_init_logging() {
 }
 
 upgrade_start_backup() {
+    echo "============================================================================="
     echo "[ * ] Backing up existing templates and configuration files..."
     if [ "$DEBUG_MODE" = "true" ]; then
         echo "      - Packages"

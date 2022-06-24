@@ -1527,18 +1527,16 @@ no_symlink_chmod() {
 }
 
 source_conf(){
-  if [ -z "$WEB_SYSTEM" ]; then
-    while IFS='= ' read -r lhs rhs
-    do
-        if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-            rhs="${rhs%%^\#*}"   # Del in line right comments
-            rhs="${rhs%%*( )}"   # Del trailing spaces
-            rhs="${rhs%\'*}"     # Del opening string quotes
-            rhs="${rhs#\'*}"     # Del closing string quotes
-            declare -g $lhs="$rhs"
-        fi
-    done < $1
-  fi
+  while IFS='= ' read -r lhs rhs
+  do
+      if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+          rhs="${rhs%%^\#*}"   # Del in line right comments
+          rhs="${rhs%%*( )}"   # Del trailing spaces
+          rhs="${rhs%\'*}"     # Del opening string quotes
+          rhs="${rhs#\'*}"     # Del closing string quotes
+          declare -g $lhs="$rhs"
+      fi
+  done < $1
 }
 
 format_no_quotes() {

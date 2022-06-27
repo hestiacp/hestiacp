@@ -18,6 +18,8 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+date=$(date +"%Y-%m-%d %H:%M:%S");
+
 send_email_report() {
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
@@ -26,10 +28,12 @@ send_email_report() {
     if [ "$WEB_SYSTEM" = "apache2" ]; then 
         apache2ctl configtest >> "$tmpfile" 2>&1
     else 
-        nginx -t >> $tmpfile 2>&1
+        service $WEB_SYSTEM configtest >> "$tmpfile" 2>&1
     fi
     service "$WEB_SYSTEM" restart >> "$tmpfile" 2>&1
     cat "$tmpfile" |$SENDMAIL -s "$subj"  "$email"
+    echo "[ $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
+    cat $tmpfile >> /var/log/hestia/debug.log 2>&1
     rm -f $tmpfile
 }
 
@@ -64,13 +68,23 @@ if [ $WEB_SYSTEM = 'nginx' ]; then
     if [ "$1" = "ssl" ]; then
         restart="ssl"
     fi
-    service $WEB_SYSTEM configtest > /dev/null 2>&1
+    if [ "$DEBUG_MODE" = "true" ]; then 
+        echo "[  $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
+        service $WEB_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
+    else
+        service $WEB_SYSTEM configtest > /dev/null 2>&1
+    fi
     if [ $? -ne 0 ]; then
         send_email_report
         check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
     fi
 elif [ $WEB_SYSTEM = 'apache2' ]; then
-    apache2ctl configtest > /dev/null 2>&1
+    if [ "$DEBUG_MODE" = "true" ]; then 
+        echo "[  $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
+        apache2ctl configtest >> /var/log/hestia/debug.log 2>&1
+    else
+        apache2ctl configtest > /dev/null 2>&1
+    fi
     if [ $? -ne 0 ]; then
         send_email_report
         check_result "$E_RESTART" "$WEB_SYSTEM restart failed"

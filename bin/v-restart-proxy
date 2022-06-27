@@ -26,8 +26,10 @@ send_email_report() {
     nginx -t >> $tmpfile 2>&1
     service "$PROXY_SYSTEM" restart >> $tmpfile 2>&1
     cat "$tmpfile" |$SENDMAIL -s "$subj" "$email"
-    echo "[ $date | $PROXY_SYSTEM | PROXY ]"  >> /var/log/hestia/debug.log 2>&1
-    cat "$tmpfile" >> /var/log/hestia/debug.log 2>&1
+    if [ "$DEBUG_MODE" = "true" ]; then 
+        echo "[ $date | $PROXY_SYSTEM | PROXY ]"  >> /var/log/hestia/debug.log 2>&1
+        cat "$tmpfile" >> /var/log/hestia/debug.log 2>&1
+    fi
     rm -f $tmpfile
 }
 

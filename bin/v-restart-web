@@ -32,8 +32,10 @@ send_email_report() {
     fi
     service "$WEB_SYSTEM" restart >> "$tmpfile" 2>&1
     cat "$tmpfile" |$SENDMAIL -s "$subj"  "$email"
-    echo "[ $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
-    cat $tmpfile >> /var/log/hestia/debug.log 2>&1
+    if [ "$DEBUG_MODE" = "true" ]; then 
+        echo "[ $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
+        cat $tmpfile >> /var/log/hestia/debug.log 2>&1
+    fi
     rm -f $tmpfile
 }
 

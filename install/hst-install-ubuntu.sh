@@ -615,9 +615,11 @@ fi
   fi
 
 # Generating admin password if it wasn't set
-if [ -z "$vpass" ]; then
-    vpass=$(gen_pass)
-fi
+  displaypass="The password you chose during installation."
+  if [ -z "$vpass" ]; then
+      vpass=$(gen_pass);
+      displaypass=$vpass
+  fi
 
 # Set FQDN if it wasn't set
 mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
@@ -2138,7 +2140,7 @@ Ready to get started? Log in using the following credentials:
 
     Admin URL:  https://$ip:$port
     Username:   admin
-    Password:   $vpass
+    Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!

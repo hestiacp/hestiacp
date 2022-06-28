@@ -84,7 +84,7 @@ fi
 #----------------------------------------------------------#
 
 # Restart backend server
-$BIN/v-restart-web-backend "$restart"
+$BIN/v-restart-web-backend "$restart" "$backend_version"
 check_result $? "Web backend restart failed" >/dev/null
 
 # Logging

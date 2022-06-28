@@ -132,7 +132,7 @@ function authenticate_user($user, $password, $twofa = '')
             if ($method == 'yescrypt') {
                 $v_password = tempnam("/tmp", "vst");
                 $fp = fopen($v_password, "w");
-                fwrite($fp, $_POST['password']."\n");
+                fwrite($fp, $password."\n");
                 fclose($fp);
                 exec(HESTIA_CMD . 'v-check-user-password '. $v_user.' '. $v_password. ' '.$v_ip.' yes', $output, $return_var);
                 $hash = $output[0];

@@ -18,6 +18,8 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+date=$(date +"%Y-%m-%d %H:%M:%S");
+
 send_email_report() {
     email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
     email=$(echo "$email" | cut -f 2 -d "'")
@@ -26,6 +28,10 @@ send_email_report() {
     nginx -t >> $tmpfile 2>&1
     service "$PROXY_SYSTEM" restart >> $tmpfile 2>&1
     cat "$tmpfile" |$SENDMAIL -s "$subj" "$email"
+    if [ "$DEBUG_MODE" = "true" ]; then 
+        echo "[ $date | $PROXY_SYSTEM | PROXY ]"  >> /var/log/hestia/debug.log 2>&1
+        cat "$tmpfile" >> /var/log/hestia/debug.log 2>&1
+    fi
     rm -f $tmpfile
 }
 
@@ -76,7 +82,12 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
     # Default behaviour
     
     # Preform an check if Nginx is valid as reload doesn't throw an error / exit
-    service $PROXY_SYSTEM configtest > /dev/null 2>&1
+    if [ "$DEBUG_MODE" = "true" ]; then 
+        echo "[ $date | $PROXY_SYSTEM ]"  >> /var/log/hestia/debug.log 2>&1
+        service $PROXY_SYSTEM configtest > /var/log/hestia/debug.log 2>&1
+    else
+        service $PROXY_SYSTEM configtest > /dev/null 2>&1
+    fi
     if [ $? -ne 0 ]; then
         send_email_report
         check_result "$E_RESTART" "$PROXY_SYSTEM restart failed"

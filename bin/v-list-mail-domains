@@ -33,6 +33,8 @@ json_list() {
         echo -n '    "'$DOMAIN'": {
         "ANTIVIRUS": "'$ANTIVIRUS'",
         "ANTISPAM": "'$ANTISPAM'",
+        "REJECT": "'$REJECT'",
+        "RATE_LIMIT": "'$RATE_LIMIT'",
         "DKIM": "'$DKIM'",
         "CATCHALL": "'$CATCHALL'",
         "ACCOUNTS": "'$ACCOUNTS'",

@@ -9,7 +9,7 @@
 # Currently Supported Operating Systems:
 #
 # Debian 9, 10, 11
-# Ubuntu 18.04, 20.04
+# Ubuntu 18.04, 20.04, 22.04
 #
 # ======================================================== #
 

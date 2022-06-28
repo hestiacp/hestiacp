@@ -464,8 +464,7 @@ function syshealth_repair_system_config() {
         $BIN/v-change-sys-config-value "POLICY_CSRF_STRICTNESS" "1"
     fi
     
-    mv $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.old.conf
-    touch $HESTIA/conf/hestia.conf 
+    touch $HESTIA/conf/hestia.conf.new
     while IFS='= ' read -r lhs rhs
       do
           if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
@@ -473,10 +472,23 @@ function syshealth_repair_system_config() {
               rhs="${rhs%%*( )}"   # Del trailing spaces
               rhs="${rhs%\'*}"     # Del opening string quotes
               rhs="${rhs#\'*}"     # Del closing string quotes
-              $BIN/v-change-sys-config-value "$lhs" "$rhs"
+              
           fi
-      done < $HESTIA/conf/hestia.old.conf
-      rm $HESTIA/conf/hestia.old.conf
+          check_ckey=$(grep "^$lhs='" "$HESTIA/conf/hestia.conf.new")
+            if [ -z "$check_ckey" ]; then
+                echo "$lhs='$rhs'" >> "$HESTIA/conf/hestia.conf.new"
+            else
+                sed -i "s|^$lhs=.*|$lhs='$rhs'|g" "$HESTIA/conf/hestia.conf.new"
+            fi
+      done < $HESTIA/conf/hestia.conf
+      
+      cmp --silent $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.new
+      if [ $? -ne 0 ]; then 
+        echo "[ ! ] Duplicated keys found repair config"
+        rm  $HESTIA/conf/hestia.conf
+        cp $HESTIA/conf/hestia.conf.new $HESTIA/conf/hestia.conf
+        rm $HESTIA/conf/hestia.conf.new 
+      fi 
 }
 
 # Repair System Cron Jobs

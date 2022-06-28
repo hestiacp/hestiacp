@@ -31,10 +31,10 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.6.0'
+HESTIA_INSTALL_VER='1.6.1'
 # Dependencies
 pma_v='5.2.0'
-rc_v="1.6.0"
+rc_v="1.5.3"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
@@ -1838,7 +1838,7 @@ if [ "$sieve" = 'yes' ]; then
         # Modify Roundcube config 
         mkdir -p $RC_CONFIG_DIR/plugins/managesieve
         cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
-        ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php\
+        ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
         chown -R root:www-data $RC_CONFIG_DIR/
         chmod 751 -R $RC_CONFIG_DIR
         chmod 644 $RC_CONFIG_DIR/*.php

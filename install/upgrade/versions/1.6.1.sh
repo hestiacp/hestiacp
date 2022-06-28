@@ -36,3 +36,16 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
     fi
     
 fi
+
+# With setup from installer
+if [ -f "/etc/apt/sources.list.d/hestia-beta.list" ]; then
+    echo "[ ! ] Change to stable release!"
+    rm /etc/apt/sources.list.d/hestia-beta.list
+    sed -i 's/#//g' /etc/apt/sources.list.d/hestia.list
+fi
+check=$(cat /etc/apt/sources.list.d/hestia.list | grep "beta.hestiacp.com");
+if [ ! -z "$check" ]; then 
+    echo "[ ! ] Change to stable release!"
+    sed -i '/beta.hestiacp.com/d' /etc/apt/sources.list.d/hestia.list
+    sed -i 's/#//g' /etc/apt/sources.list.d/hestia.list
+fi

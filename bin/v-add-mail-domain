@@ -18,7 +18,7 @@ antivirus=${4-yes}
 dkim=${5-yes}
 dkim_size=${6-1024}
 restart=${7-yes}
-reject=${8-yes}
+reject=${8-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

@@ -1,7 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.6.1] - Major Release (Feature / Quality Update)
+## [1.6.2] - Service release
+
+- Fixed an issue with rate limits in Exim4 and make it more bullet proof (#2703)
+- Fixed an issue with system-filter not propperly loaded in Exim4 for Exim 4.94 and Ugrades from 1.5.x 
+
+## [1.6.1] - Service release
 
 ### Bugfixes
 
@@ -14,7 +19,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where v-change-sys-hostname does not update host file (#2688 #2683)
 - Fixed an issue with IDN conversions not working on new server installs (#2692 @wojsmol)
 
-### Enchantments
+### Enhancements
 
 - Improve restart behaviour php-fpm
 - Improve updating process to make it faster. 

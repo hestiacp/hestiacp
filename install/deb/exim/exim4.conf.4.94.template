@@ -82,6 +82,10 @@ SMTP_RELAY_PORT = ${lookup{port}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_USER = ${lookup{user}lsearch{SMTP_RELAY_FILE}}
 SMTP_RELAY_PASS = ${lookup{pass}lsearch{SMTP_RELAY_FILE}}
 
+# Custom Filter
+system_filter = /etc/exim4/system.filter
+system_filter_user = Debian-exim
+
 ######################################################################
 #                       ACL CONFIGURATION                            #
 #         Specifies access control lists for incoming SMTP mail      #

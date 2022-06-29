@@ -27,3 +27,10 @@ if [ -z "$alc" ]; then
     sed -i '/#replaceme/d' /etc/exim4/exim4.conf.template
     sed -i 's|#string1|set acl_c_msg_limit  = \${if exists{/etc/exim4/domains/\${lookup{\${domain:\$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{\${lookup {\$authenticated_id} lsearch{/etc/exim4/domains/\${lookup{${domain:\$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{\$value}{\${readfile{/etc/exim4/limit.conf}}}}}{\${readfile{/etc/exim4/limit.conf}}} }|g' /etc/exim4/exim4.conf.template
 fi
+
+system_filter=$(cat /etc/exim4/exim4.conf.template | grep 'system_filter');
+if [ -z "$system_filter" ]; then
+    sed -i '/SMTP_RELAY_PASS = \${lookup{pass}lsearch{SMTP_RELAY_FILE}}/a #shouldberemoved\n# Custom Filter\nsystem_filter = \/etc\/exim4\/system.filter\nsystem_filter_user = Debian-exim' /etc/exim4/exim4.conf.template
+    # Keep the spacing between the reley_pass and Custom Filter we need to insert a dummy text and remove it later on
+    sed -i 's/#shouldberemoved//g' /etc/exim4/exim4.conf.template
+fi

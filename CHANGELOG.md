@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.6.1] - Major Release (Feature / Quality Update)
+## [1.6.1] - Service release
 
 ### Bugfixes
 

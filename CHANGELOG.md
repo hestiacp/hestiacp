@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where v-change-sys-hostname does not update host file (#2688 #2683)
 - Fixed an issue with IDN conversions not working on new server installs (#2692 @wojsmol)
 
-### Enchantments
+### Enhancements
 
 - Improve restart behaviour php-fpm
 - Improve updating process to make it faster. 

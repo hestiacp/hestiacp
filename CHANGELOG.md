@@ -1,6 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.1] - Major Release (Feature / Quality Update)
+
+### Bugfixes
+
+- Fixed an issue with rate limit and alias domains (#2676, #2666)
+- Fixed an issue with reject spam option (#2687, #2864)
+- Fixed an issue in the installer when sieve is enabled (#2675, #2668)
+- Fixed an issue with File manager in development mode (#2682 #2644) 
+- Fixed multiple small in templates (#2659 @ledoktre, #2680, #2671, #2679, #2670, #2681, #2699)
+- Fixed add second check if DNS resolving fails (#2678)
+- Fixed an issue where v-change-sys-hostname does not update host file (#2688 #2683)
+- Fixed an issue with IDN conversions not working on new server installs (#2692 @wojsmol)
+
+### Enhancements
+
+- Improve restart behaviour php-fpm
+- Improve updating process to make it faster. 
+- Removed outdated / never used test scripts (#2685)
+
+### Dependencies
+
+- Update hestia-nginx to 1.23.0
+- Update PHPmailer to 6.6.3
+- Update Roundcube to 1.5.3
+
 ## [1.6.0] - Major Release (Feature / Quality Update)
 
 ### Important Notes

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add mail domain
-# options: USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE]
+# options: USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE] [RESTART] [REJECT_SPAM]
 #
 # example: v-add-mail-domain admin mydomain.tld
 #
@@ -18,6 +18,7 @@ antivirus=${4-yes}
 dkim=${5-yes}
 dkim_size=${6-1024}
 restart=${7-yes}
+reject=${8-yes}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -49,8 +50,8 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE]'
-is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size' 'restart'
+check_args '2' "$#" 'USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE] [RESTART] [REJECT_SPAM]'
+is_format_valid 'user' 'domain' 'antispam' 'antivirus' 'dkim' 'dkim_size' 'restart' 'reject'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -93,7 +94,7 @@ fi
 new_timestamp
 
 # Adding domain to mail.conf
-s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' DKIM='$dkim' WEBMAIL=''"
+s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' REJECT='$reject' DKIM='$dkim' WEBMAIL=''"
 s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='no' TIME='$time'"
 s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
@@ -132,6 +133,9 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
         # Adding antispam protection
         if [ "$antispam" = 'yes' ]; then
             touch "$HOMEDIR/$user/conf/mail/$domain/antispam"
+        fi
+        if [ "$reject" = 'yes' ]; then
+            touch "$HOMEDIR/$user/conf/mail/$domain/reject_spam"
         fi
     fi
     

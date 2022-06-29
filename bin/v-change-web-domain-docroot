@@ -26,6 +26,7 @@ domain=$2
 export target_domain=$3
 export target_directory=$4
 export php=$5
+restart=$6
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -44,15 +45,15 @@ format_domain
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN TARGET_DOMAIN [DIRECTORY]'
+check_args '2' "$#" 'USER DOMAIN [TARGET_DOMAIN] [DIRECTORY] [PHP-DOCROOT] [RESTART]'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 # Check to ensure that target domain is valid if we're
 # not setting the docroot value back to defaults
 if [ "$target_domain" != "default" ]; then
-    is_format_valid 'user' 'domain' 'target_domain'
+    is_format_valid 'user' 'domain' 'target_domain' 'restart'
     is_object_valid 'web' 'DOMAIN' "$target_domain"
 else
-    is_format_valid 'user' 'domain'
+    is_format_valid 'user' 'domain' 'restart'
 fi
 is_object_valid 'user' 'USER' "$user" "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -121,7 +122,7 @@ fi
 #----------------------------------------------------------#
 
 # Rebuild domain configuration
-$BIN/v-rebuild-web-domain "$user" "$domain"
+$BIN/v-rebuild-web-domain "$user" "$domain" "$restart"
 
 # Logging
 if [ "$target_domain" = "default" ]; then

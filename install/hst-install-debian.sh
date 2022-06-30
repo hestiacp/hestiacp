@@ -1513,6 +1513,7 @@ fi
 # Source upgrade.conf with phpmyadmin versions
 # shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
 source $HESTIA/install/upgrade/upgrade.conf
+
 if [ "$mysql" = 'yes' ]; then
     # Display upgrade information
     echo "[ * ] Installing phpMyAdmin version v$pma_v..."

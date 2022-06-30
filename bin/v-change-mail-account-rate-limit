@@ -24,6 +24,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -81,6 +83,8 @@ fi
 if [[ "$rate" = "system" ]]; then
     rate=''
 fi
+
+syshealth_repair_mail_account_config
 
 # Update quota
 update_object_value "mail/$domain" 'ACCOUNT' "$account" '$RATE_LIMIT' "$rate"

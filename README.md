@@ -32,15 +32,12 @@ Features and Services
 Supported platforms and operating systems
 ========================================================
 
-AMD (x86_64 Intel/AMD)
-----------------------------
+* **NOTE:** Hestia Control Panel does not support 32 bit operating systems!
+
 * **Debian:** 11 or 10
 * **Ubuntu:** 22.04LTS, 20.04 LTS or 18.04 LTS
 
-ARM64 (arm64)
-----------------------------
-* **Debian:** 11 or 10
-* **Ubuntu:** 22.04LTS, 20.04 LTS or 18.04 LTS
+* **NOTE:** Hestia Control Panel in combination with OpenVZ 7 or lower might have issue Bind9 server not starting or issues with Firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
 
 Installing Hestia Control Panel
 ============================

@@ -183,7 +183,15 @@ class HestiaApp
         unlink($v_password);
         return $status;
     }
-
+    
+    public function getCurrentBackendTemplate(string $domain){
+        $status = $this->runUser('v-list-web-domain', [$domain, 'json'],$return_message);
+        $version = $return_message -> json[$domain]['BACKEND'];
+        $test= preg_match('/^.*PHP-([0-9])\_([0-9])/',$version, $match);
+        return $match[1].'.'.$match[2];
+                
+    }
+    
     public function changeWebTemplate(string $domain, string $template)
     {
         $status = $this->runUser('v-change-web-domain-tpl', [$domain, $template]);
@@ -221,9 +229,9 @@ class HestiaApp
                 $supported_versions[] = $version;
             }
         }
-        if ($supported) {
-            return $supported_versions[count($supported_versions) - 1];
-        } else {
+        if($supported){
+            return $supported_versions;
+        }else{
             return false;
         }
     }

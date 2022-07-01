@@ -123,7 +123,7 @@ abstract class BaseSetup implements InstallerInterface
                     throw new \Exception('Required PHP version is not supported');
                 }
                 //convert from x.x to PHP-x_x  to accepted..
-                $this -> appcontext -> changeBackendTemplate($this -> domain, 'PHP-'.str_replace('.', '_', $php_version));
+                $this -> appcontext -> changeBackendTemplate($this -> domain, 'PHP-'.str_replace('.', '_', $options['php_version']));
             }
         }
     }

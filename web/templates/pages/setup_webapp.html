@@ -33,7 +33,7 @@
 				<?php if( !$WebappInstaller->isDomainRootClean()): ?>
 					<span class="alert alert-info alert-with-icon">
 						<i class="fas fa-info"></i>
-						<?=_('Data loss warning!<br>HESTIA found some files in your domain folder. The installer will overwrite your files and / or the installation might fail.<br/><br/> Please use the installer only for empty domain folders!');?>
+						<?=_('Data loss warning!<br>Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.<br><br> Please make sure ~/web/domain.com/public_html is empty!');?>
 					</span>
 					<br />
 				<?php endif; ?>

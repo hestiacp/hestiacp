@@ -176,7 +176,6 @@ function render_page($user, $TAB, $page)
 
     // Policies controller
     @include_once(dirname(__DIR__) . '/inc/policies.php');
-
     // Body
     include($__template_dir . 'pages/' . $page . '.html');
 
@@ -269,9 +268,9 @@ function top_panel($user, $TAB)
     if (!isset($_SESSION['look'])) {
         $_SESSION['userSortOrder'] = $panel[$user]['PREF_UI_SORT'];
     }
-
+    
     // Set home location URLs
-    if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
+    if (($_SESSION['userContext'] === 'admin') && (empty($_SESSION['look']))) {
         // Display users list for administrators unless they are impersonating a user account
         $home_url = '/list/user/';
     } else {

@@ -1,5 +1,8 @@
 <?php
 
+// Main include
+include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+
 if (empty($_GET['user'])) {
     $_GET['user'] = '';
 }
@@ -8,9 +11,6 @@ if ($_GET['user'] === 'system') {
 } else {
     $TAB = 'LOG';
 }
-
-// Main include
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Redirect non-administrators if they request another user's log
 if (($_SESSION['userContext'] !== 'admin') && (!empty($_GET['user']))) {
@@ -35,4 +35,7 @@ if (empty($_SESSION['look'])) {
 }
 
 // Render page
+if($user === 'system'){
+    $user = "'".$_SESSION['user']."'";
+}
 render_page($user, $TAB, 'list_log');

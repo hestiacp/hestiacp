@@ -167,7 +167,7 @@ sort_config_file(){
 
 # Validate hostname according to RFC1178
 validate_hostname () {
-    if [[ $(echo "$servername" | grep -o "\." | wc -l) -gt 1 ]] && [[ ! $servername =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    if [[ $(echo "$servername" | grep -o "\." | wc -l) -ge 1 ]] && [[ ! $servername =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         # Hostname valid
         return 1
     else

@@ -242,7 +242,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
     # Install needed software
     if [ "$OSTYPE" = 'rhel' ]; then
         # Set package dependencies for compiling
-        SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar git curl'
+        SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar git curl perl-IPC-Cmd'
 
         echo "Updating system DNF repositories..."
         dnf install -y -q 'dnf-command(config-manager)'
@@ -384,7 +384,7 @@ if [ "$NGINX_B" = true ] ; then
 
     # Clear up unused files
     if [ "$KEEPBUILD" != 'true' ]; then
-        rm -r $BUILD_DIR_NGINX $BUILD_DIR/openssl-$OPENSSL_V $BUILD_DIR/pcre-$PCRE_V $BUILD_DIR/zlib-$ZLIB_V
+        rm -r $BUILD_DIR_NGINX $BUILD_DIR/openssl-$OPENSSL_V $BUILD_DIR/pcre2-$PCRE_V $BUILD_DIR/zlib-$ZLIB_V
     fi
     cd $BUILD_DIR_HESTIANGINX
 

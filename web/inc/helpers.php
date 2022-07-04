@@ -133,3 +133,26 @@ function hst_add_history_log($message, $category = 'System', $level = 'Info', $u
     return $return_var;
 }
 
+/**
+ * quotes shell arguments 
+ * (doing a better job than escapeshellarg)
+ * 
+ * @param string $arg
+ * @throws UnexpectedValueException if $arg contains null bytes
+ * @return string
+ */
+function quoteshellarg(string $arg): string
+{
+    if (PHP_OS_FAMILY === 'Linux') {
+        // PHP's built-in escapeshellarg() for linux is garbage, corrupting-or-stripping UTF-8 unicode characters like "æøå"
+        // and stripping non-printable characters like \x01
+        // while single-quoted shell arguments in Linux are binary safe execpt for 2 bytes: \x00 and \x27
+        // to prevent corruption of UTF-8 characters, we implement our own shell argument quoting for Linux.
+        if (false !== strpos($arg, "\x00")) {
+            throw new UnexpectedValueException('linux shell arguments cannot contain null bytes!');
+        }
+        return "'" . strtr($arg, array("'" => "'\\''")) . "'";
+    }
+    // fallback to the php built-in function
+    return escapeshellarg($arg);
+}

@@ -17,7 +17,7 @@ if (empty($_GET['domain'])){
 
     render_page($user, $TAB, 'list_dns');
 } else {
-    exec (HESTIA_CMD."v-list-dns-records ".$user." ".escapeshellarg($_GET['domain'])." 'json'", $output, $return_var);
+    exec (HESTIA_CMD."v-list-dns-records ".$user." ".quoteshellarg($_GET['domain'])." 'json'", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     if($_SESSION['userSortOrder'] == 'name'){
         ksort($data);

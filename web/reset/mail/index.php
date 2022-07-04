@@ -120,8 +120,8 @@ function to64 ($v, $n)
 // Check arguments
 if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST['new']))) {
     list($v_account, $v_domain) = explode('@', $_POST['email']);
-    $v_domain = escapeshellarg($v_domain);
-    $v_account = escapeshellarg($v_account);
+    $v_domain = quoteshellarg($v_domain);
+    $v_account = quoteshellarg($v_account);
     $v_password = $_POST['password'];
 
     // Get domain owner
@@ -133,7 +133,7 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
 
     // Get current md5 hash
     if (!empty($v_user)) {
-        exec (HESTIA_CMD."v-get-mail-account-value ".escapeshellarg($v_user)." ".$v_domain." ".$v_account." 'md5'", $output, $return_var);
+        exec (HESTIA_CMD."v-get-mail-account-value ".quoteshellarg($v_user)." ".$v_domain." ".$v_account." 'md5'", $output, $return_var);
         if ($return_var == 0) {
             $v_hash = $output[0];
         }
@@ -147,8 +147,8 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
         $n_hash = md5crypt($v_password, $salt[2]);
         $n_hash = '{MD5}'.$n_hash;
         }else{
-            $v_password = escapeshellarg($v_password);
-            $s_hash = escapeshellarg($v_hash);
+            $v_password = quoteshellarg($v_password);
+            $s_hash = quoteshellarg($v_hash);
             exec(HESTIA_CMD."v-check-mail-account-hash ARGONID2 ". $v_password ." ". $s_hash, $output, $return_var);
             if($return_var != 0){
                 $n_hash = '';
@@ -162,7 +162,7 @@ if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST[
             $fp = fopen($v_new_password, "w");
             fwrite($fp, $_POST['new']."\n");
             fclose($fp);
-            exec (HESTIA_CMD."v-change-mail-account-password ".escapeshellarg($v_user)." ".$v_domain." ".$v_account." ".$v_new_password, $output, $return_var);
+            exec (HESTIA_CMD."v-change-mail-account-password ".quoteshellarg($v_user)." ".$v_domain." ".$v_account." ".$v_new_password, $output, $return_var);
             if ($return_var == 0) {
                 echo "==ok==";
                 exit;

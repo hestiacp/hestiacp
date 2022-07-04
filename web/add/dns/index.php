@@ -37,7 +37,7 @@ if (!empty($_POST['ok'])) {
 
     // Protect input
     $v_domain = preg_replace("/^www./i", "", $_POST['v_domain']);
-    $v_domain = escapeshellarg($v_domain);
+    $v_domain = quoteshellarg($v_domain);
     $v_domain = strtolower($v_domain);
     $v_ip = $_POST['v_ip'];
     // Change NameServers
@@ -65,18 +65,18 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_ns8'])) {
         $_POST['v_ns8'] = '';
     }
-    $v_ns1 = escapeshellarg($_POST['v_ns1']);
-    $v_ns2 = escapeshellarg($_POST['v_ns2']);
-    $v_ns3 = escapeshellarg($_POST['v_ns3']);
-    $v_ns4 = escapeshellarg($_POST['v_ns4']);
-    $v_ns5 = escapeshellarg($_POST['v_ns5']);
-    $v_ns6 = escapeshellarg($_POST['v_ns6']);
-    $v_ns7 = escapeshellarg($_POST['v_ns7']);
-    $v_ns8 = escapeshellarg($_POST['v_ns8']);
+    $v_ns1 = quoteshellarg($_POST['v_ns1']);
+    $v_ns2 = quoteshellarg($_POST['v_ns2']);
+    $v_ns3 = quoteshellarg($_POST['v_ns3']);
+    $v_ns4 = quoteshellarg($_POST['v_ns4']);
+    $v_ns5 = quoteshellarg($_POST['v_ns5']);
+    $v_ns6 = quoteshellarg($_POST['v_ns6']);
+    $v_ns7 = quoteshellarg($_POST['v_ns7']);
+    $v_ns8 = quoteshellarg($_POST['v_ns8']);
 
     // Add dns domain
     if (empty($_SESSION['error_msg'])) {
-        exec(HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".escapeshellarg($v_ip)." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." ".$v_ns5."  ".$v_ns6."  ".$v_ns7." ".$v_ns8." no", $output, $return_var);
+        exec(HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".quoteshellarg($v_ip)." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." ".$v_ns5."  ".$v_ns6."  ".$v_ns7." ".$v_ns8." no", $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
     }
@@ -86,7 +86,7 @@ if (!empty($_POST['ok'])) {
     $v_template = $user_config[$user_plain]['DNS_TEMPLATE'];
 
     if (($v_template != $_POST['v_template']) && (empty($_SESSION['error_msg']))) {
-        $v_template = escapeshellarg($_POST['v_template']);
+        $v_template = quoteshellarg($_POST['v_template']);
         exec(HESTIA_CMD."v-change-dns-domain-tpl ".$user." ".$v_domain." ".$v_template." 'no'", $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
@@ -95,7 +95,7 @@ if (!empty($_POST['ok'])) {
     // Set expiriation date
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_exp'])) && ($_POST['v_exp'] != date('Y-m-d', strtotime('+1 year')))) {
-            $v_exp = escapeshellarg($_POST['v_exp']);
+            $v_exp = quoteshellarg($_POST['v_exp']);
             exec(HESTIA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp." no", $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
@@ -105,7 +105,7 @@ if (!empty($_POST['ok'])) {
     // Set ttl
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_ttl'])) && ($_POST['v_ttl'] != '14400') && (empty($_SESSION['error_msg']))) {
-            $v_ttl = escapeshellarg($_POST['v_ttl']);
+            $v_ttl = quoteshellarg($_POST['v_ttl']);
             exec(HESTIA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl." no", $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
@@ -161,12 +161,12 @@ if (!empty($_POST['ok_rec'])) {
     }
 
     // Protect input
-    $v_domain = escapeshellarg($_POST['v_domain']);
-    $v_rec = escapeshellarg($_POST['v_rec']);
-    $v_type = escapeshellarg($_POST['v_type']);
-    $v_val = escapeshellarg($_POST['v_val']);
-    $v_priority = escapeshellarg($_POST['v_priority']);
-    $v_ttl = escapeshellarg($_POST['v_ttl']);
+    $v_domain = quoteshellarg($_POST['v_domain']);
+    $v_rec = quoteshellarg($_POST['v_rec']);
+    $v_type = quoteshellarg($_POST['v_type']);
+    $v_val = quoteshellarg($_POST['v_val']);
+    $v_priority = quoteshellarg($_POST['v_priority']);
+    $v_ttl = quoteshellarg($_POST['v_ttl']);
     // Add dns record
     if (empty($_SESSION['error_msg'])) {
         exec(HESTIA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority." '' yes ".$v_ttl, $output, $return_var);

@@ -56,7 +56,7 @@ if ($_SESSION['userContext'] === 'admin') {
 }
 
 foreach ($job as $value) {
-    $value = escapeshellarg($value);
+    $value = quoteshellarg($value);
     exec(HESTIA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
     $restart = 'yes';
 }

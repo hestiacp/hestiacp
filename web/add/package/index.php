@@ -96,23 +96,23 @@ if (!empty($_POST['ok'])) {
     }
 
     // Protect input
-    $v_package = escapeshellarg($_POST['v_package']);
-    $v_web_template = escapeshellarg($_POST['v_web_template']);
-    $v_backend_template = escapeshellarg($_POST['v_backend_template']);
-    $v_proxy_template = escapeshellarg($_POST['v_proxy_template']);
-    $v_dns_template = escapeshellarg($_POST['v_dns_template']);
-    $v_shell = escapeshellarg($_POST['v_shell']);
-    $v_web_domains = escapeshellarg($_POST['v_web_domains']);
-    $v_web_aliases = escapeshellarg($_POST['v_web_aliases']);
-    $v_dns_domains = escapeshellarg($_POST['v_dns_domains']);
-    $v_dns_records = escapeshellarg($_POST['v_dns_records']);
-    $v_mail_domains = escapeshellarg($_POST['v_mail_domains']);
-    $v_mail_accounts = escapeshellarg($_POST['v_mail_accounts']);
-    $v_databases = escapeshellarg($_POST['v_databases']);
-    $v_cron_jobs = escapeshellarg($_POST['v_cron_jobs']);
-    $v_backups = escapeshellarg($_POST['v_backups']);
-    $v_disk_quota = escapeshellarg($_POST['v_disk_quota']);
-    $v_bandwidth = escapeshellarg($_POST['v_bandwidth']);
+    $v_package = quoteshellarg($_POST['v_package']);
+    $v_web_template = quoteshellarg($_POST['v_web_template']);
+    $v_backend_template = quoteshellarg($_POST['v_backend_template']);
+    $v_proxy_template = quoteshellarg($_POST['v_proxy_template']);
+    $v_dns_template = quoteshellarg($_POST['v_dns_template']);
+    $v_shell = quoteshellarg($_POST['v_shell']);
+    $v_web_domains = quoteshellarg($_POST['v_web_domains']);
+    $v_web_aliases = quoteshellarg($_POST['v_web_aliases']);
+    $v_dns_domains = quoteshellarg($_POST['v_dns_domains']);
+    $v_dns_records = quoteshellarg($_POST['v_dns_records']);
+    $v_mail_domains = quoteshellarg($_POST['v_mail_domains']);
+    $v_mail_accounts = quoteshellarg($_POST['v_mail_accounts']);
+    $v_databases = quoteshellarg($_POST['v_databases']);
+    $v_cron_jobs = quoteshellarg($_POST['v_cron_jobs']);
+    $v_backups = quoteshellarg($_POST['v_backups']);
+    $v_disk_quota = quoteshellarg($_POST['v_disk_quota']);
+    $v_bandwidth = quoteshellarg($_POST['v_bandwidth']);
     $v_ns1 = trim($_POST['v_ns1'], '.');
     $v_ns2 = trim($_POST['v_ns2'], '.');
     $v_ns3 = trim($_POST['v_ns3'], '.');
@@ -140,9 +140,9 @@ if (!empty($_POST['ok'])) {
     if (!empty($v_ns8)) {
         $v_ns .= ",".$v_ns8;
     }
-    $v_ns = escapeshellarg($v_ns);
-    $v_time = escapeshellarg(date('H:i:s'));
-    $v_date = escapeshellarg(date('Y-m-d'));
+    $v_ns = quoteshellarg($v_ns);
+    $v_time = quoteshellarg(date('H:i:s'));
+    $v_date = quoteshellarg(date('Y-m-d'));
 
     // Create package file
     if (empty($_SESSION['error_msg'])) {

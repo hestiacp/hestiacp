@@ -26,7 +26,7 @@ if ($_SESSION['userContext'] === 'admin') {
 }
 
 foreach ($ip as $value) {
-    $value = escapeshellarg($value);
+    $value = quoteshellarg($value);
     exec(HESTIA_CMD.$cmd." ".$value, $output, $return_var);
 }
 

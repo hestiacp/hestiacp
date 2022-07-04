@@ -58,11 +58,11 @@ if (!empty($_POST['ok'])) {
     }
 
     // Protect input
-    $v_username = escapeshellarg($_POST['v_username']);
-    $v_email = escapeshellarg($_POST['v_email']);
-    $v_package = escapeshellarg($_POST['v_package']);
-    $v_language = escapeshellarg($_POST['v_language']);
-    $v_name = escapeshellarg($_POST['v_name']);
+    $v_username = quoteshellarg($_POST['v_username']);
+    $v_email = quoteshellarg($_POST['v_email']);
+    $v_package = quoteshellarg($_POST['v_package']);
+    $v_language = quoteshellarg($_POST['v_language']);
+    $v_name = quoteshellarg($_POST['v_name']);
     $v_notify = $_POST['v_notify'];
 
 
@@ -76,7 +76,7 @@ if (!empty($_POST['ok'])) {
         check_return_code($return_var, $output);
         unset($output);
         unlink($v_password);
-        $v_password = escapeshellarg($_POST['v_password']);
+        $v_password = quoteshellarg($_POST['v_password']);
     }
 
     // Set language
@@ -88,7 +88,7 @@ if (!empty($_POST['ok'])) {
 
     // Set Role
     if (empty($_SESSION['error_msg'])) {
-        $v_role = escapeshellarg($_POST['v_role']);
+        $v_role = quoteshellarg($_POST['v_role']);
         exec(HESTIA_CMD."v-change-user-role ".$v_username." ".$v_role, $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
@@ -98,7 +98,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_login_disabled'])) {
             $_POST['v_login_disabled'] = 'yes';
-            exec(HESTIA_CMD."v-change-user-config-value ".$v_username." LOGIN_DISABLED ".escapeshellarg($_POST['v_login_disabled']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-user-config-value ".$v_username." LOGIN_DISABLED ".quoteshellarg($_POST['v_login_disabled']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
         }

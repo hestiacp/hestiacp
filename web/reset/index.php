@@ -18,7 +18,7 @@ if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] == 'no') {
 if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
     // Check token
     verify_csrf($_POST);
-    $v_user = escapeshellarg($_POST['user']);
+    $v_user = quoteshellarg($_POST['user']);
     $user = $_POST['user'];
     $email = $_POST['email'];
     $cmd="/usr/bin/sudo /usr/local/hestia/bin/v-list-user";
@@ -83,7 +83,7 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
     // Check token
     verify_csrf($_POST);
     if ($_POST['password'] == $_POST['password_confirm']) {
-        $v_user = escapeshellarg($_POST['user']);
+        $v_user = quoteshellarg($_POST['user']);
         $user = $_POST['user'];
         exec(HESTIA_CMD . "v-list-user ".$v_user." json", $output, $return_var);
         if ($return_var == 0) {

@@ -5,8 +5,8 @@ include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 verify_csrf($_GET);
 
 if (!empty($_SESSION['look'])) {
-    $v_user = escapeshellarg($_SESSION['look']);
-    $v_impersonator = escapeshellarg($_SESSION['user']);
+    $v_user = quoteshellarg($_SESSION['look']);
+    $v_impersonator = quoteshellarg($_SESSION['user']);
     exec(HESTIA_CMD . "v-log-action system 'Warning' 'Security' 'User impersonation session ended (User: $v_user, Administrator: $v_impersonator)'", $output, $return_var);
     unset($_SESSION['look']);
     # Remove current path for filemanager
@@ -16,8 +16,8 @@ if (!empty($_SESSION['look'])) {
 } else {
     if ($_SESSION['token'] && $_SESSION['user']) {
         unset($_SESSION['userTheme']);
-        $v_user = escapeshellarg($_SESSION['user']);
-        $v_session_id = escapeshellarg($_SESSION['token']);
+        $v_user = quoteshellarg($_SESSION['user']);
+        $v_session_id = quoteshellarg($_SESSION['token']);
         exec(HESTIA_CMD . 'v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
     }
 

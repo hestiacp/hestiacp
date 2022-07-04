@@ -7,7 +7,7 @@ verify_csrf($_GET);
 
 // Check if administrator is viewing system log (currently 'admin' user)
 if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
-    $user=escapeshellarg($_GET['user']);
+    $user=quoteshellarg($_GET['user']);
     $token=$_SESSION['token'];
 }
 

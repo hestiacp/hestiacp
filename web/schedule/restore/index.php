@@ -7,7 +7,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 verify_csrf($_GET);
 
-$backup = escapeshellarg($_GET['backup']);
+$backup = quoteshellarg($_GET['backup']);
 
 $web = 'no';
 $dns = 'no';
@@ -17,22 +17,22 @@ $cron = 'no';
 $udir = 'no';
 
 if ($_GET['type'] == 'web') {
-    $web = escapeshellarg($_GET['object']);
+    $web = quoteshellarg($_GET['object']);
 }
 if ($_GET['type'] == 'dns') {
-    $dns = escapeshellarg($_GET['object']);
+    $dns = quoteshellarg($_GET['object']);
 }
 if ($_GET['type'] == 'mail') {
-    $mail = escapeshellarg($_GET['object']);
+    $mail = quoteshellarg($_GET['object']);
 }
 if ($_GET['type'] == 'db') {
-    $db = escapeshellarg($_GET['object']);
+    $db = quoteshellarg($_GET['object']);
 }
 if ($_GET['type'] == 'cron') {
     $cron = 'yes';
 }
 if ($_GET['type'] == 'udir') {
-    $udir = escapeshellarg($_GET['object']);
+    $udir = quoteshellarg($_GET['object']);
 }
 
 if (!empty($_GET['type'])) {

@@ -22,7 +22,7 @@ if (($_SESSION['userContext'] !== 'admin') && (!empty($_GET['user']))) {
 if (($_SESSION['userContext'] === "admin") && (!empty($_GET['user']))) {
     // Check token
     verify_csrf($_GET);
-    $user=escapeshellarg($_GET['user']);
+    $user=quoteshellarg($_GET['user']);
 }
 
 exec(HESTIA_CMD."v-list-user-log $user json", $output, $return_var);

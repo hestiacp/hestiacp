@@ -18,7 +18,7 @@ if ($_SESSION['userContext'] === 'admin') {
         default: header("Location: /list/updates/"); exit;
     }
     foreach ($pkg as $value) {
-        $value = escapeshellarg($value);
+        $value = quoteshellarg($value);
         exec(HESTIA_CMD.$cmd." ".$value, $output, $return_var);
     }
 }

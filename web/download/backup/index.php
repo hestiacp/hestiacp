@@ -9,7 +9,7 @@ verify_csrf($_GET);
 $backup = $_GET['backup'];
 
 if (!file_exists('/backup/'.$backup)) {
-    $backup = escapeshellarg($_GET['backup']);
+    $backup = quoteshellarg($_GET['backup']);
     exec(HESTIA_CMD."v-schedule-user-backup-download ".$user." ".$backup, $output, $return_var);
     if ($return_var == 0) {
         $_SESSION['error_msg'] = _('BACKUP_DOWNLOAD_SCHEDULED');

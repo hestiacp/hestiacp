@@ -15,7 +15,7 @@ if (!empty($_POST['user']) && !empty($_POST['twofa'])) {
     // Check token
     verify_csrf($_POST);
     $error = true;
-    $v_user = escapeshellarg($_POST['user']);
+    $v_user = quoteshellarg($_POST['user']);
     $user = $_POST['user'];
     $twofa = $_POST['twofa'];
     exec(HESTIA_CMD . "v-list-user ".$v_user .' json', $output, $return_var);

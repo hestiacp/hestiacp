@@ -25,8 +25,8 @@ switch ($action) {
 
 foreach ($ipchain as $value) {
     list($ip, $chain) = explode(":", $value);
-    $v_ip    = escapeshellarg($ip);
-    $v_chain = escapeshellarg($chain);
+    $v_ip    = quoteshellarg($ip);
+    $v_chain = quoteshellarg($chain);
     exec(HESTIA_CMD.$cmd." ".$v_ip." ".$v_chain, $output, $return_var);
 }
 

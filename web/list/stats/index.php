@@ -12,7 +12,7 @@ if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
         $data = array_reverse($data, true);
         unset($output);
     } else {
-        $v_user = escapeshellarg($_GET['user']);
+        $v_user = quoteshellarg($_GET['user']);
         exec (HESTIA_CMD."v-list-user-stats $v_user json", $output, $return_var);
         $data = json_decode(implode('', $output), true);
         $data = array_reverse($data, true);

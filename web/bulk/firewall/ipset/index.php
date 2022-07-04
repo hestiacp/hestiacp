@@ -24,7 +24,7 @@ switch ($action) {
 
 
 foreach ($setname as $value) {
-    $v_name = escapeshellarg($value);
+    $v_name = quoteshellarg($value);
     exec(HESTIA_CMD.$cmd." ".$v_name, $output, $return_var);
 }
 

@@ -21,10 +21,10 @@ class HestiaApp
 
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {
-                $cli_arguments .= escapeshellarg((string)$arg) . ' ';
+                $cli_arguments .= quoteshellarg((string)$arg) . ' ';
             }
         } else {
-            $cli_arguments = escapeshellarg($args);
+            $cli_arguments = quoteshellarg($args);
         }
 
         exec($cli_script . ' ' . $cli_arguments . ' 2>&1', $output, $exit_code);
@@ -65,7 +65,7 @@ class HestiaApp
 
         $composer_setup = self::TMPDIR_DOWNLOADS . DIRECTORY_SEPARATOR . 'composer-setup-' . $signature . '.php';
 
-        exec("wget https://getcomposer.org/installer --quiet -O " . escapeshellarg($composer_setup), $output, $return_code);
+        exec("wget https://getcomposer.org/installer --quiet -O " . quoteshellarg($composer_setup), $output, $return_code);
         if ($return_code !== 0) {
             throw new \Exception("Error downloading composer");
         }
@@ -247,7 +247,7 @@ class HestiaApp
             return false;
         }
 
-        exec("/usr/bin/wget --tries 3 --timeout=30 --no-dns-cache -nv " . escapeshellarg($src). " -P " . escapeshellarg(self::TMPDIR_DOWNLOADS) . ' 2>&1', $output, $return_var);
+        exec("/usr/bin/wget --tries 3 --timeout=30 --no-dns-cache -nv " . quoteshellarg($src). " -P " . quoteshellarg(self::TMPDIR_DOWNLOADS) . ' 2>&1', $output, $return_var);
         if ($return_var !== 0) {
             return false;
         }

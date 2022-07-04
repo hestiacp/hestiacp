@@ -12,7 +12,7 @@ if ($_SESSION['userContext'] === 'admin') {
         if ($_GET['srv'] == 'iptables') {
             exec(HESTIA_CMD."v-stop-firewall", $output, $return_var);
         } else {
-            $v_service = escapeshellarg($_GET['srv']);
+            $v_service = quoteshellarg($_GET['srv']);
             exec(HESTIA_CMD."v-stop-service ".$v_service, $output, $return_var);
         }
     }

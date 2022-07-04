@@ -1,5 +1,6 @@
 {
     "require": {
-        "phpmailer/phpmailer": "^6.6"
+        "phpmailer/phpmailer": "^6.6",
+        "divinity76/phpquoteshellarg": "^1.0"
     }
 }

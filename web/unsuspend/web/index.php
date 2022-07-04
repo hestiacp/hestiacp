@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 // Init
 ob_start();
@@ -8,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 verify_csrf($_GET);
 
 if (!empty($_GET['domain'])) {
-    $v_domain = escapeshellarg($_GET['domain']);
+    $v_domain = quoteshellarg($_GET['domain']);
     exec(HESTIA_CMD."v-unsuspend-domain ".$user." ".$v_domain, $output, $return_var);
     check_return_code($return_var, $output);
     unset($output);

@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = 'DB';
@@ -14,13 +15,13 @@ if (empty($_GET['database'])) {
 
 // Edit as someone else?
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user=escapeshellarg($_GET['user']);
+    $user=quoteshellarg($_GET['user']);
     $user_plain=htmlentities($_GET['user']);
 }
 
 // List datbase
 $v_database = $_GET['database'];
-exec(HESTIA_CMD."v-list-database ".$user." ".escapeshellarg($v_database)." 'json'", $output, $return_var);
+exec(HESTIA_CMD."v-list-database ".$user." ".quoteshellarg($v_database)." 'json'", $output, $return_var);
 check_return_code_redirect($return_var, $output, '/list/db/');
 $data = json_decode(implode('', $output), true);
 unset($output);
@@ -50,8 +51,8 @@ if (!empty($_POST['save'])) {
 
     // Change database user
     if (($v_dbuser != $_POST['v_dbuser']) && (empty($_SESSION['error_msg']))) {
-        $v_dbuser = escapeshellarg($v_dbuser);
-        exec(HESTIA_CMD."v-change-database-user ".$user." ".escapeshellarg($v_database)." ".$v_dbuser, $output, $return_var);
+        $v_dbuser = quoteshellarg($v_dbuser);
+        exec(HESTIA_CMD."v-change-database-user ".$user." ".quoteshellarg($v_database)." ".$v_dbuser, $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
         $v_dbuser = $_POST['v_dbuser'];
@@ -66,11 +67,11 @@ if (!empty($_POST['save'])) {
             $fp = fopen($v_password, "w");
             fwrite($fp, $_POST['v_password']."\n");
             fclose($fp);
-            exec(HESTIA_CMD."v-change-database-password ".$user." ".escapeshellarg($v_database)." ".$v_password, $output, $return_var);
+            exec(HESTIA_CMD."v-change-database-password ".$user." ".quoteshellarg($v_database)." ".$v_password, $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             unlink($v_password);
-            $v_password = escapeshellarg($_POST['v_password']);
+            $v_password = quoteshellarg($_POST['v_password']);
         }
     }
 

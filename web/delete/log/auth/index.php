@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
@@ -7,7 +8,7 @@ verify_csrf($_GET);
 
 // Check if administrator is viewing system log (currently 'admin' user)
 if (($_SESSION['userContext'] === "admin") && (isset($_GET['user']))) {
-    $user=escapeshellarg($_GET['user']);
+    $user=quoteshellarg($_GET['user']);
     $token=$_SESSION['token'];
 }
 
@@ -23,11 +24,11 @@ if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
         $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
     }
 }
-$v_ip = escapeshellarg($ip);
+$v_ip = quoteshellarg($ip);
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
-$v_user_agent = escapeshellarg($user_agent);
+$v_user_agent = quoteshellarg($user_agent);
 
-$v_session_id = escapeshellarg($_SESSION['token']);
+$v_session_id = quoteshellarg($_SESSION['token']);
 
 // Add current user session back to log unless impersonating another user
 if (!isset($_SESSION['look'])) {

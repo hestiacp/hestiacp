@@ -19,7 +19,8 @@
         "rakit/validation": "^1.1",
         "league/flysystem": "^1.1",
         "league/flysystem-ziparchive": "^1.0",
-        "league/flysystem-sftp": "^1.0"
+        "league/flysystem-sftp": "^1.0",
+        "divinity76/phpquoteshellarg": "^1.0"
     },
     "authors": [
         {

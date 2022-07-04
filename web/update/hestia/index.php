@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 // Init
 ob_start();
@@ -9,7 +10,7 @@ verify_csrf($_GET);
 
 if ($_SESSION['userContext'] === 'admin') {
     if (!empty($_GET['pkg'])) {
-        $v_pkg = escapeshellarg($_GET['pkg']);
+        $v_pkg = quoteshellarg($_GET['pkg']);
         exec(HESTIA_CMD."v-update-sys-hestia ".$v_pkg, $output, $return_var);
     }
 

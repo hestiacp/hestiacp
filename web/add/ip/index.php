@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = 'IP';
@@ -43,12 +44,12 @@ if (!empty($_POST['ok'])) {
     }
 
     // Protect input
-    $v_ip = escapeshellarg($_POST['v_ip']);
-    $v_netmask = escapeshellarg($_POST['v_netmask']);
-    $v_name = escapeshellarg($_POST['v_name']);
-    $v_nat = escapeshellarg($_POST['v_nat']);
-    $v_interface = escapeshellarg($_POST['v_interface']);
-    $v_owner = escapeshellarg($_POST['v_owner']);
+    $v_ip = quoteshellarg($_POST['v_ip']);
+    $v_netmask = quoteshellarg($_POST['v_netmask']);
+    $v_name = quoteshellarg($_POST['v_name']);
+    $v_nat = quoteshellarg($_POST['v_nat']);
+    $v_interface = quoteshellarg($_POST['v_interface']);
+    $v_owner = quoteshellarg($_POST['v_owner']);
     $v_shared = $_POST['v_shared'];
 
     // Check shared checkmark
@@ -61,7 +62,7 @@ if (!empty($_POST['ok'])) {
 
     // Add IP
     if (empty($_SESSION['error_msg'])) {
-        exec(HESTIA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." ".escapeshellarg($ip_status)." ".$v_name." ".$v_nat, $output, $return_var);
+        exec(HESTIA_CMD."v-add-sys-ip ".$v_ip." ".$v_netmask." ".$v_interface."  ".$v_owner." ".quoteshellarg($ip_status)." ".$v_name." ".$v_nat, $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
         $v_owner = $_POST['v_owner'];

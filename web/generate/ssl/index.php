@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 $TAB = 'WEB';
 
@@ -70,19 +71,19 @@ if (!empty($errors[0])) {
 }
 
 // Protect input
-$v_domain = escapeshellarg($_POST['v_domain']);
+$v_domain = quoteshellarg($_POST['v_domain']);
 $waliases = preg_replace("/\n/", " ", $_POST['v_aliases']);
 $waliases = preg_replace("/,/", " ", $waliases);
 $waliases = preg_replace('/\s+/', ' ', $waliases);
 $waliases = trim($waliases);
 $aliases = explode(" ", $waliases);
-$v_aliases = escapeshellarg(str_replace(' ', "\n", $waliases));
+$v_aliases = quoteshellarg(str_replace(' ', "\n", $waliases));
 
-$v_email = escapeshellarg($_POST['v_email']);
-$v_country = escapeshellarg($_POST['v_country']);
-$v_state = escapeshellarg($_POST['v_state']);
-$v_locality = escapeshellarg($_POST['v_locality']);
-$v_org = escapeshellarg($_POST['v_org']);
+$v_email = quoteshellarg($_POST['v_email']);
+$v_country = quoteshellarg($_POST['v_country']);
+$v_state = quoteshellarg($_POST['v_state']);
+$v_locality = quoteshellarg($_POST['v_locality']);
+$v_org = quoteshellarg($_POST['v_org']);
 
 exec(HESTIA_CMD."v-generate-ssl-cert ".$v_domain." ".$v_email." ".$v_country." ".$v_state." ".$v_locality." ".$v_org." IT  ".$v_aliases." json", $output, $return_var);
 

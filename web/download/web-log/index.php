@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
@@ -6,7 +7,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 verify_csrf($_GET);
 
 $v_domain = $_GET['domain'];
-$v_domain = escapeshellarg($_GET['domain']);
+$v_domain = quoteshellarg($_GET['domain']);
 if ($_GET['type'] == 'access') {
     $type = 'access';
 }
@@ -20,7 +21,7 @@ header("Content-Disposition: attachment; filename=".$_GET['domain'].".".$type."-
 header("Content-Type: application/octet-stream; ");
 header("Content-Transfer-Encoding: binary");
 
-$v_domain = escapeshellarg($_GET['domain']);
+$v_domain = quoteshellarg($_GET['domain']);
 if ($_GET['type'] == 'access') {
     $type = 'access';
 }

@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = 'WEB';
@@ -15,12 +16,12 @@ if (empty($_GET['domain'])) {
 
 // Edit as someone else?
 if (($_SESSION['user'] == 'admin') && (!empty($_GET['user']))) {
-    $user=escapeshellarg($_GET['user']);
+    $user=quoteshellarg($_GET['user']);
 }
 
 // Check if domain belongs to the user
 $v_domain = $_GET['domain'];
-exec(HESTIA_CMD."v-list-web-domain ".$user." ".escapeshellarg($v_domain)." json", $output, $return_var);
+exec(HESTIA_CMD."v-list-web-domain ".$user." ".quoteshellarg($v_domain)." json", $output, $return_var);
 if ($return_var > 0) {
     check_return_code_redirect($return_var, $output, '/list/web/');
 }

@@ -1,10 +1,11 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 $TAB = "WEB";
 
-$v_domain = escapeshellarg($_GET['domain']);
+$v_domain = quoteshellarg($_GET['domain']);
 $type = 'access';
 if ($_GET['type'] == 'access') {
     $type = 'access';

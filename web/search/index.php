@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 $TAB = 'SEARCH';
 
@@ -11,8 +12,8 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 verify_csrf($_GET);
 
 // Data
-$q = escapeshellarg($_GET['q']);
-$u = escapeshellarg($_GET['u']);
+$q = quoteshellarg($_GET['q']);
+$u = quoteshellarg($_GET['u']);
 
 if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
     if (!empty($_GET['u'])) {

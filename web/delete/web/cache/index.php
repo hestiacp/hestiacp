@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 ob_start();
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
@@ -8,11 +9,11 @@ verify_csrf($_GET);
 
 // Delete as someone else?
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user=escapeshellarg($_GET['user']);
+    $user=quoteshellarg($_GET['user']);
 }
 
 if (!empty($_GET['domain'])) {
-    $v_domain = escapeshellarg($_GET['domain']);
+    $v_domain = quoteshellarg($_GET['domain']);
     exec(HESTIA_CMD."v-purge-nginx-cache ".$user." ".$v_domain, $output, $return_var);
     check_return_code($return_var, $output);
 }

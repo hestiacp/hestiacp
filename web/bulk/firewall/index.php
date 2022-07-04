@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -29,7 +30,7 @@ switch ($action) {
 }
 
 foreach ($rule as $value) {
-    $value = escapeshellarg($value);
+    $value = quoteshellarg($value);
     exec(HESTIA_CMD.$cmd." ".$value, $output, $return_var);
     $restart = 'yes';
 }

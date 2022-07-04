@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 ob_start();
 $TAB = 'Access Key';
 
@@ -54,8 +55,8 @@ if (!empty($_POST['ok'])) {
     }
 
     // Protect input
-    $v_apis = escapeshellarg(implode(',', $apis_selected));
-    $v_comment = escapeshellarg(trim($_POST['v_comment'] ?? ''));
+    $v_apis = quoteshellarg(implode(',', $apis_selected));
+    $v_comment = quoteshellarg(trim($_POST['v_comment'] ?? ''));
 
     // Add access key
     if (empty($_SESSION['error_msg'])) {

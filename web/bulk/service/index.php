@@ -1,4 +1,5 @@
 <?php
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -30,7 +31,7 @@ if ($_SESSION['userContext'] === 'admin') {
     }
 
     foreach ($service as $value) {
-        $value = escapeshellarg($value);
+        $value = quoteshellarg($value);
         exec(HESTIA_CMD.$cmd." ".$value, $output, $return_var);
     }
 }

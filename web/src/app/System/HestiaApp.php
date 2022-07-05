@@ -1,9 +1,9 @@
 <?php
 
 declare(strict_types=1);
-use function Divinity76\quoteshellarg\quoteshellarg;
 
 namespace Hestia\System;
+use function Divinity76\quoteshellarg\quoteshellarg;
 
 class HestiaApp
 {

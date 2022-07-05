@@ -17,7 +17,7 @@
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'no'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'yes'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'yes'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 

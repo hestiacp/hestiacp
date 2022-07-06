@@ -37,13 +37,12 @@ steps:
   - bats ./test/config-tests.bats
 
 trigger:
-  event: [ pull_request, push ]
+  event: [ push ]
   ref:
   - refs/heads/staging/*
   - refs/heads/beta
   - refs/heads/release
   - refs/heads/main
-  - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -88,13 +87,12 @@ steps:
   - bats ./test/config-tests.bats
   
 trigger:
-  event: [ pull_request, push ]
+  event: [ push ]
   ref:
   - refs/heads/staging/*
   - refs/heads/beta
   - refs/heads/release
   - refs/heads/main
-  - refs/pull/*/head
 
 ---
 kind: pipeline

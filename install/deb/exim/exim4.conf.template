@@ -378,6 +378,7 @@ remote_smtp:
   dkim_private_key = DKIM_PRIVATE_KEY
   dkim_canon = relaxed
   dkim_strict = 0
+  hosts_try_fastopen = !*.l.google.com
   interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
 
 procmail:

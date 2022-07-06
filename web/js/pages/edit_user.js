@@ -2,7 +2,7 @@ randomString = function(min_length = 16) {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
     var string_length = min_length;
     var randomstring = '';
-    var shitty_but_secure_rng = function(min, max) {
+    var secure_rng = function(min, max) {
         if (min < 0 || min > 0xFFFF) {
             throw new Error("minimum supported number is 0, this shitty generator can only make numbers between 0-65535 inclusive.");
         }
@@ -30,7 +30,7 @@ randomString = function(min_length = 16) {
         }
     };
     for (var i = 0; i < string_length; i++) {
-        randomstring += chars.substr(shitty_but_secure_rng(0, chars.length - 1), 1);
+        randomstring += chars.substr(secure_rng(0, chars.length - 1), 1);
     }
     var regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/);
     if(!regex.test(randomstring)){

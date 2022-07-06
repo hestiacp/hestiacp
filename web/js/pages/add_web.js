@@ -240,7 +240,7 @@ function WEBrandom() {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
     var string_length = 16;
     var webrandom = '';
-    var shitty_but_secure_rng = function(min, max) {
+    var secure_rng = function(min, max) {
         if (min < 0 || min > 0xFFFF) {
             throw new Error("minimum supported number is 0, this shitty generator can only make numbers between 0-65535 inclusive.");
         }
@@ -268,7 +268,7 @@ function WEBrandom() {
         }
     };
     for (var i = 0; i < string_length; i++) {
-        webrandom += chars.substr(shitty_but_secure_rng(0, chars.length - 1), 1);
+        webrandom += chars.substr(secure_rng(0, chars.length - 1), 1);
     }
         document.v_add_web.v_stats_password.value = webrandom;
 }
@@ -277,7 +277,7 @@ function FTPrandom(elm) {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
     var string_length = 16;
     var ftprandomstring = '';
-    var shitty_but_secure_rng = function(min, max) {
+    var secure_rng = function(min, max) {
         if (min < 0 || min > 0xFFFF) {
             throw new Error("minimum supported number is 0, this shitty generator can only make numbers between 0-65535 inclusive.");
         }
@@ -305,7 +305,7 @@ function FTPrandom(elm) {
         }
     };
     for (var i = 0; i < string_length; i++) {
-        ftprandomstring += chars.substr(shitty_but_secure_rng(0, chars.length - 1), 1);
+        ftprandomstring += chars.substr(secure_rng(0, chars.length - 1), 1);
     }
     $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
 }

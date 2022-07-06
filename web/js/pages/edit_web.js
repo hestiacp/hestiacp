@@ -314,41 +314,7 @@ function WEBrandom() {
 }
 
 function FTPrandom(elm) {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = 16;
-    var ftprandomstring = '';
-    var secure_rng = function(min, max) {
-        if (min < 0 || min > 0xFFFF) {
-            throw new Error("minimum supported number is 0, this shitty generator can only make numbers between 0-65535 inclusive.");
-        }
-        if (max > 0xFFFF || max < 0) {
-            throw new Error("max supported number is 65535, this shitty generator can only make numbers between 0-65535 inclusive.");
-        }
-        if (min > max) {
-            throw new Error("dude min>max wtf");
-        }
-        // micro-optimization
-        let randArr = (max > 255 ? new Uint16Array(1) : new Uint8Array(1));
-        let ret;
-        let attempts = 0;
-        for(;;){
-            crypto.getRandomValues(randArr);
-            ret = randArr[0];
-            if(ret >= min && ret <= max) {
-                return ret;
-            }
-            ++attempts;
-            if (attempts > 1000000) {
-                // should basically never happen with max 0xFFFF/Uint16Array. 
-                throw new Error("tried a million times, something is wrong");
-            }
-        }
-    };
-    for (var i = 0; i < string_length; i++) {
-        ftprandomstring += chars.substr(secure_rng(0, chars.length - 1), 1);
-    }
-
-    $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
+    $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(randomString2(16));
     App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
 }
 

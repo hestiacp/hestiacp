@@ -625,7 +625,7 @@ $(document).ready(function(){
  * @returns string
  */
 function randomString2(length = 16) {
-  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   var secure_rng = function (min, max) {
     if (min < 0 || min > 0xffff) {
       throw new Error(

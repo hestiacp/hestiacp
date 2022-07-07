@@ -115,26 +115,14 @@ App.Listeners.MAIL_ACC.keypress_v_password();
 
 
 randomString = function(min_length = 16) {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = min_length;
-    var randomstring = '';
-    for (var i = 0; i < string_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        randomstring += chars.substr(rnum, 1);
-    }
-    var regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/);
-    if(!regex.test(randomstring)){
-        randomString();
-    }else{
+    var randomstring = randomString2(min_length);
         $('input[name=v_password]').val(randomstring);
         if($('input[name=v_password]').attr('type') == 'text')
             $('#v_password').text(randomstring);
         else
-            $('#v_password').text(Array(randomstring.length+1).join('*'));
-        
+            $('#v_password').text(Array(randomstring.length+1).join('*'));s        
         App.Actions.MAIL_ACC.update_v_password();
         generate_mail_credentials();
-    }    
 }
 
 generate_mail_credentials = function() {

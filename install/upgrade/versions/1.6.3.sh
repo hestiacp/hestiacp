@@ -21,7 +21,7 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'yes'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'yes'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-if [ -f /etc/exim4/exim4.conf.template ]; then 
+if [ "$MAIL_SYSTEM" == "exim4" ]; then
     host=$(cat /etc/exim4/exim4.conf.template | grep hosts_try_fastopen);
     if [ -z "$host" ]; then
         echo "[ * ] Fix an issue with sending large attachments to Google / Gmail"

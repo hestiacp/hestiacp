@@ -36,7 +36,7 @@ is_password_valid
 #----------------------------------------------------------#
 
 if [ "$type" = "ARGONID2" ]; then
-    match=$(doveadm pw -s ARGON2ID -p $password -t $hash | grep "verified");
+    match=$(doveadm pw -s ARGON2ID -p "$password" -t $hash | grep "verified");
     if [ -n "$match" ]; then
         exit 0;
     else

@@ -16,7 +16,11 @@ class HestiaApp
 
     public function run(string $cmd, $args, &$cmd_result=null): bool
     {
-        $cli_script = HESTIA_CMD . '/' . basename($cmd);
+        $cli_script = realpath(HESTIA_CMD . '/' . $cmd);
+        if( 0 !==strpos($cli_script, HESTIA_CMD )){
+            trigger_error("$cmd is trying to traverse outside of $HESTIA_CMD");
+            throw new \Exception("$cmd is trying to traverse outside of $HESTIA_CMD");   
+        }
         $cli_arguments = '';
 
         if (!empty($args) && is_array($args)) {

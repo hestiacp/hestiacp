@@ -27,14 +27,14 @@ if ($_GET['type'] == 'access') {
 if ($_GET['type'] == 'error') {
     $type = 'error';
 }
-$cmd = implode(" ",array(
-    escapeshellarg(HESTIA_CMD."v-list-web-domain-".$type."log"),
+$cmd = implode(" ", array(
+    escapeshellarg(HESTIA_CMD . "v-list-web-domain-" . $type . "log"),
     escapeshellarg($user),
     escapeshellarg($v_domain),
-    "5000"
+    "5000",
 ));
 passthru($cmd, $return_var);
-if($return_var != 0) {
+if ($return_var != 0) {
     $errstr = "Internal server error: command returned non-zero: {$return_var}: {$cmd}";
     echo $errstr;
     throw new Exception($errstr); // make sure it ends up in an errorlog somewhere

@@ -5,8 +5,6 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 verify_csrf($_GET);
 
-$v_domain = $_GET['domain'];
-$v_domain = escapeshellarg($_GET['domain']);
 if ($_GET['type'] == 'access') {
     $type = 'access';
 }
@@ -20,7 +18,7 @@ header("Content-Disposition: attachment; filename=".$_GET['domain'].".".$type."-
 header("Content-Type: application/octet-stream; ");
 header("Content-Transfer-Encoding: binary");
 
-$v_domain = escapeshellarg($_GET['domain']);
+$v_domain = $_GET['domain'];
 if ($_GET['type'] == 'access') {
     $type = 'access';
 }
@@ -29,7 +27,8 @@ if ($_GET['type'] == 'error') {
 }
 $cmd = implode(" ", array(
     escapeshellarg(HESTIA_CMD . "v-list-web-domain-" . $type . "log"),
-    escapeshellarg($user),
+    // $user is already shell-escaped
+    $user,
     escapeshellarg($v_domain),
     "5000",
 ));

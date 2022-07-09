@@ -613,5 +613,16 @@ $(document).ready(function(){
                 $('.l-unit').find('.ch-toggle').prop('checked', false);
                 $('.l-unit.selected').find('.ch-toggle').prop('checked', true);
             });
+            {
+              // todo: maybe give the save button id?
+              let saveButton = $("[data-id=vstobjects][data-action=submit]");
+              saveButton.on("click", function () {
+                let loadingAnimationEle = document.createElement("img");
+                loadingAnimationEle.src =
+                  "https://raw.githubusercontent.com/phpmyadmin/phpmyadmin/7a6d4e68d3f6238f837d92c84c80081436ff02cc/themes/original/img/ajax_clock_small.gif";
+                // this both gives an indication that we've clicked and is loading, also prevents double-clicking save
+                saveButton.replaceWith(loadingAnimationEle);
+              });
+            }
     });
 

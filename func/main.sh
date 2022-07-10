@@ -415,9 +415,9 @@ is_object_value_exist() {
 is_password_valid() {
     if [[ "$password" =~ ^/tmp/ ]]; then
         if ! [[ "$password" == *../* ]]; then
-          if [ -f "$password" ]; then
-              password="$(head -n1 $password)"
-          fi
+            if [ -f "$password" ]; then
+                password="$(head -n1 $password)"
+            fi
         fi
     fi
     echo $password;

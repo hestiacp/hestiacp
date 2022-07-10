@@ -520,7 +520,7 @@ fi
 
 # Adding SSL
 if [ -z "$mail" ]; then
-    ssl_home=$(search_objects 'web' 'LETSENCRYPT' 'yes' 'SSL_HOME')
+    ssl_home="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME')"
     ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
     if [ "$ssl_enabled" = "yes" ]; then 
         $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 

@@ -82,6 +82,7 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
+  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: no
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
@@ -221,6 +222,7 @@ for arg; do
         --port)                 args="${args}-r " ;;
         --lang)                 args="${args}-l " ;;
         --interactive)          args="${args}-y " ;;
+        --ipv6)                 args="${args}-6 " ;;
         --api)                  args="${args}-d " ;;
         --hostname)             args="${args}-s " ;;
         --email)                args="${args}-e " ;;
@@ -257,6 +259,7 @@ while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         l) lang=$OPTARG ;;              # Language
         d) api=$OPTARG ;;               # Activate API
         y) interactive=$OPTARG ;;       # Interactive install
+        6) ipv6=$OPTARG ;;              # IPv6
         s) servername=$OPTARG ;;        # Hostname
         e) email=$OPTARG ;;             # Admin email
         p) vpass=$OPTARG ;;             # Admin password
@@ -294,6 +297,7 @@ set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
+set_default_value 'ipv6' 'no'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
@@ -640,10 +644,16 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
         servername="example.com"
     fi
     echo "127.0.0.1 $servername" >> /etc/hosts
+    if [ "$ipv6" = 'yes' ]; then
+        echo "::1 $servername" >> /etc/hosts
+    fi
 fi
 
 if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
     echo "127.0.0.1 $servername" >> /etc/hosts
+    if [ "$ipv6" = 'yes' ]; then
+        echo "::1 $servername" >> /etc/hosts
+    fi
 fi
 
 # Set email if it wasn't set
@@ -1291,6 +1301,10 @@ cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
+if [ "$ipv6" = 'yes' ]; then
+    cp -f $HESTIA_INSTALL_DIR/nginx/nginx-ipv6.conf /etc/nginx/nginx.conf
+    cp -f $HESTIA_INSTALL_DIR/nginx/status-ipv6.conf /etc/nginx/conf.d/status.conf
+fi
 mkdir -p /etc/nginx/conf.d/domains
 mkdir -p /etc/nginx/modules-enabled
 mkdir -p /var/log/nginx/domains
@@ -1301,10 +1315,20 @@ for ip in $dns_resolver; do
     if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         resolver="$ip $resolver"
     fi
+    if [ "$ipv6" = 'yes' ]; then
+        if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
+            resolver="[$ip] $resolver"
+        fi
+    fi
 done
 if [ -n "$resolver" ]; then
-    sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
-    sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+    if [ "$ipv6" = 'yes' ]; then
+        sed -i "s/1.0.0.1 \[2606:4700:4700::1111\] 1.0.0.1 \[2606:4700:4700::1001\]/$resolver/g" /etc/nginx/nginx.conf
+        sed -i "s/1.0.0.1 \[2606:4700:4700::1111\] 1.0.0.1 \[2606:4700:4700::1001\]/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+    else
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
+        sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+    fi
 fi
 
 update-rc.d nginx defaults > /dev/null 2>&1
@@ -1327,6 +1351,10 @@ if [ "$apache" = 'yes' ]; then
     cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
     cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
     cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
+
+    if [ "$ipv6" = 'yes' ]; then
+        cp -f $HESTIA_INSTALL_DIR/apache2/status-ipv6.conf /etc/apache2/mods-available/hestia-status.conf
+    fi
 
     # Enable needed modules
     a2enmod rewrite > /dev/null 2>&1
@@ -1422,6 +1450,9 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 if [ "$vsftpd" = 'yes' ]; then
     echo "[ * ] Configuring Vsftpd server..."
     cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+    if [ "$ipv6" = 'yes' ]; then
+        cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd-ipv6.conf /etc/vsftpd.conf
+    fi
     touch /var/log/vsftpd.log
     chown root:adm /var/log/vsftpd.log
     chmod 640 /var/log/vsftpd.log
@@ -1893,7 +1924,9 @@ $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main IP
 ip=$(ip addr|grep 'inet '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
+ipv6=$(ip addr|grep 'inet6 '|grep global|head -n1|awk '{print $2}'|cut -f1 -d/)
 local_ip=$ip
+local_ipv6=$ipv6
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
@@ -1902,6 +1935,7 @@ fi
 
 # Get public IP
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
+pub_ipv6=$(curl --ipv6 -s https://ip.hestiacp.com/)
 
 if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
     $HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1

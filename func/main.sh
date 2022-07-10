@@ -420,7 +420,6 @@ is_password_valid() {
             fi
         fi
     fi
-    echo $password;
 }
 
 # Check if hash is transmitted via file

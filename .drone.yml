@@ -87,12 +87,13 @@ steps:
   - bats ./test/config-tests.bats
   
 trigger:
-  event: [ push ]
+  event: [ pull_request, push ]
   ref:
   - refs/heads/staging/*
   - refs/heads/beta
   - refs/heads/release
   - refs/heads/main
+  - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -113,7 +114,13 @@ steps:
       - ./test/check_php.sh ./web/
 
 trigger:
-   event: [ pull_request, push ] 
+      event: [ pull_request, push ]
+      ref:
+      - refs/heads/staging/*
+      - refs/heads/beta
+      - refs/heads/release
+      - refs/heads/main
+      - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -165,4 +172,4 @@ trigger:
 
 ---
 kind: signature
-hmac: eae01b205530fca67639708fdab86edce2767906481057e96bff5f635e1f0616
+hmac: 7230bb266287ae102167d451696407325a40c7b5001df0118d99ee3b9891e853

@@ -614,9 +614,9 @@ $(document).ready(function(){
                 $('.l-unit.selected').find('.ch-toggle').prop('checked', true);
             });
             // todo: maybe give the save button id?
-            $("[data-id=vstobjects][data-action=submit]").on("click", function () {
+            $(".ui-button[data-id=vstobjects][data-action=submit]").on("click", function () {
               let loadingAnimationEle = document.createElement("img");
-              loadingAnimationEle.src = "https://raw.githubusercontent.com/phpmyadmin/phpmyadmin/7a6d4e68d3f6238f837d92c84c80081436ff02cc/themes/original/img/ajax_clock_small.gif";
+              loadingAnimationEle.src = "/images/ajax_clock_small.gif";
               // this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
               $(".ui-button").replaceWith(loadingAnimationEle);
             });

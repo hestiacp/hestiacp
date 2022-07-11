@@ -1,6 +1,35 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.3] - Service release 
+
+### Features
+
+- Add additional support for bcrypt for mail passwords (#2752 @divinity76)
+
+### Enhancements 
+
+- Simplify md5crypt on reset form email (#2751 @divinity76)
+- Use secure RNG to generate passwords (#2726)
+- Add twig support filemanger (#2714, @anvme)
+
+### Bugfixes
+
+- Fixed an issue with restart Apache2 and Nginx after v-update-letsencrypt (#2748, #2563, #2744, #2677)
+- Prevent transversing path in Quick installer apps (#2742)
+- Avoid out of memory serving large logfiles (#2741, #2736,  @divinity76
+- Improve passwords loading in password_valid (#2739)
+- Use secure RNG to generate passwords (#2726)
+- Utilize entire alphabet for random string (#2735 @Shadowfied)
+- Don't use hosts_try_fastopen in Exim for Gmail / Google hostnames
+- Add check if Sieve is already installed (#2719  #manuekserol)
+- 
+
+### Dependencies
+
+- Update hestia-php to 8.1.8 
+    - Update disable_functions list php.ini for hestia-php (#2746, #2741)
+
 ## [1.6.2] - Service release
 
 - Fixed an issue with rate limits in Exim4 and make it more bullet proof (#2703)

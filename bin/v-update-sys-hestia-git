@@ -78,7 +78,7 @@ BUILD_DIR='/tmp/hestiacp-src'
 DEB_DIR="$BUILD_DIR/debs"
 INSTALL_DIR='/usr/local/hestia'
 ARCHIVE_DIR="${BUILD_DIR}/archive"
-architecture="$(uname -m)"
+architecture="$(arch)"
 if [ $architecture == 'aarch64' ]; then
     BUILD_ARCH='arm64'
 else

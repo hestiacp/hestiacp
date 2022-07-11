@@ -26,7 +26,7 @@ codename="$(lsb_release -s -c)"
 if [ -z "$codename" ]; then 
     codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 fi
-architecture="$(uname -m)"
+architecture="$(arch)"
 case $architecture in 
     x86_64)
         ARCH="amd64"

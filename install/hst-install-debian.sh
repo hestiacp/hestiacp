@@ -24,7 +24,7 @@ memory=$(grep 'MemTotal' /proc/meminfo |tr ' ' '\n' |grep [0-9])
 hst_backups="/root/hst_install_backups/$(date +%d%m%Y%H%M)"
 spinner="/-\|"
 os='debian'
-architecture="$(uname -m)"
+architecture="$(arch)"
 release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"

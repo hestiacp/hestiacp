@@ -21,7 +21,7 @@ path=${5-/backup}
 port=$6
 
 # CPU Architecture
-arch=$(uname -m)
+arch=$(arch)
 
 # Includes
 # shellcheck source=/usr/local/hestia/func/main.sh

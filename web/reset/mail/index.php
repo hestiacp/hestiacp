@@ -67,10 +67,10 @@ $v_hash = $output[0];
 unset($output);
 
 // v_hash use doveadm password hash format, which is basically {HASH_NAME}normal_crypt_format,
-// so we just need to remove the {HASH_NAME} before we can ask hash_verify if its correct or not.
+// so we just need to remove the {HASH_NAME} before we can ask password_verify if its correct or not.
 $hash_for_password_verify = explode('}', $v_hash, 2);
 $hash_for_password_verify = end($hash_for_password_verify);
-if (!hash_verify($v_password, $hash_for_password_verify)) {
+if (!password_verify($v_password, $hash_for_password_verify)) {
     die("error old password does not match");
 }
 

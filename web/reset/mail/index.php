@@ -28,6 +28,8 @@ if (isset($_SERVER['HTTP_X_REAL_IP']) || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
  * md5 crypt() password
  *
  * @param string $password
+ * @param string $salt
+ * 
  * @throws InvalidArgumentException if salt is emptystring
  * @throws InvalidArgumentException if salt is longer than 8 characters
  * @return string

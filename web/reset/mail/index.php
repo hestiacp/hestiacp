@@ -45,26 +45,6 @@ function md5crypt(string $pw, string $salt): string
 }
 
 
-
-//
-// sourceforge.net/projects/postfixadmin/
-// to64
-//
-
-function to64 ($v, $n)
-{
-    $ITOA64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    $ret = "";
-    while (($n - 1) >= 0)
-    {
-        $n--;
-        $ret .= $ITOA64[$v & 0x3f];
-        $v = $v >> 6;
-    }
-    return $ret;
-}
-
-
 // Check arguments
 if ((!empty($_POST['email'])) && (!empty($_POST['password'])) && (!empty($_POST['new']))) {
     list($v_account, $v_domain) = explode('@', $_POST['email']);

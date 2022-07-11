@@ -37,12 +37,13 @@ steps:
   - bats ./test/config-tests.bats
 
 trigger:
-  event: [ push ]
+  event: [ pull_request, push ]
   ref:
   - refs/heads/staging/*
   - refs/heads/beta
   - refs/heads/release
   - refs/heads/main
+  - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -172,4 +173,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 7230bb266287ae102167d451696407325a40c7b5001df0118d99ee3b9891e853
+hmac: a191a477aa337f2efff534022164906ff20ef2b6340ec808d128c09a06d7eaa3

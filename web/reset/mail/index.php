@@ -23,97 +23,27 @@ if ($ip == '127.0.0.1') $ok=1;
 if ($ok==0) exit;
 if (isset($_SERVER['HTTP_X_REAL_IP']) || isset($_SERVER['HTTP_X_FORWARDED_FOR'])) exit;
 
-//
-// sourceforge.net/projects/postfixadmin/
-// md5crypt 
-// Action: Creates MD5 encrypted password
-// Call: md5crypt (string cleartextpassword)
-//
 
-function md5crypt ($pw, $salt="", $magic="")
+/**
+ * md5 crypt() password
+ *
+ * @param string $password
+ * @param string $salt
+ * 
+ * @throws InvalidArgumentException if salt is emptystring
+ * @throws InvalidArgumentException if salt is longer than 8 characters
+ * @return string
+ */
+function md5crypt(string $pw, string $salt): string
 {
-    $MAGIC = "$1$";
-
-    if ($magic == "") $magic = $MAGIC;
-    if ($salt == "") $salt = create_salt ();
-    $slist = explode ("$", $salt);
-    if ($slist[0] == "1") $salt = $slist[1];
-
-    $salt = substr ($salt, 0, 8);
-    $ctx = $pw . $magic . $salt;
-    $final = hex2bin (md5 ($pw . $salt . $pw));
-
-    for ($i=strlen ($pw); $i>0; $i-=16)
-    {
-        if ($i > 16)
-        {
-            $ctx .= substr ($final,0,16);
-        }
-        else
-        {
-            $ctx .= substr ($final,0,$i);
-        }
+    if (strlen($salt) < 1) {
+        // old implementation would crash with error "function generate_salt not defined", lets throw an exception instead
+        throw new InvalidArgumentException('salt not given!');
     }
-    $i = strlen ($pw);
-
-    while ($i > 0)
-    {
-        if ($i & 1) $ctx .= chr (0);
-        else $ctx .= $pw[0];
-        $i = $i >> 1;
+    if (strlen($salt) > 8) {
+        throw new \InvalidArgumentException("maximum supported salt length for MD5 crypt is 8 characters!");
     }
-    $final = hex2bin (md5 ($ctx));
-
-    for ($i=0;$i<1000;$i++)
-    {
-        $ctx1 = "";
-        if ($i & 1)
-        {
-            $ctx1 .= $pw;
-        }
-        else
-        {
-            $ctx1 .= substr ($final,0,16);
-        }
-        if ($i % 3) $ctx1 .= $salt;
-        if ($i % 7) $ctx1 .= $pw;
-        if ($i & 1)
-        {
-            $ctx1 .= substr ($final,0,16);
-        }
-        else
-        {
-            $ctx1 .= $pw;
-        }
-        $final = hex2bin (md5 ($ctx1));
-    }
-    $passwd = "";
-    $passwd .= to64 (((ord ($final[0]) << 16) | (ord ($final[6]) << 8) | (ord ($final[12]))), 4);
-    $passwd .= to64 (((ord ($final[1]) << 16) | (ord ($final[7]) << 8) | (ord ($final[13]))), 4);
-    $passwd .= to64 (((ord ($final[2]) << 16) | (ord ($final[8]) << 8) | (ord ($final[14]))), 4);
-    $passwd .= to64 (((ord ($final[3]) << 16) | (ord ($final[9]) << 8) | (ord ($final[15]))), 4);
-    $passwd .= to64 (((ord ($final[4]) << 16) | (ord ($final[10]) << 8) | (ord ($final[5]))), 4);
-    $passwd .= to64 (ord ($final[11]), 2);
-    return "$magic$salt\$$passwd";
-}
-
-
-//
-// sourceforge.net/projects/postfixadmin/
-// to64
-//
-
-function to64 ($v, $n)
-{
-    $ITOA64 = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    $ret = "";
-    while (($n - 1) >= 0)
-    {
-        $n--;
-        $ret .= $ITOA64[$v & 0x3f];
-        $v = $v >> 6;
-    }
-    return $ret;
+    return crypt($pw, '$1$' . $salt);
 }
 
 

@@ -106,7 +106,7 @@ class AppWizard {
             }
             
             if(!$this->appcontext->checkDatabaseLimit()) {
-                $this->errors[] = _('Unable to add databse! Limit reached!');
+                $this->errors[] = _('Unable to add database! Limit reached!');
                 return false;
             }
 

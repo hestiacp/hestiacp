@@ -183,7 +183,7 @@ class HestiaApp
         fclose($fp);
         $status = $this->runUser('v-add-database', [$dbname, $dbuser, $v_password, 'mysql', 'localhost', $charset]);
         if(!$status){
-            $this->errors[] = _('Unable to add databse!');
+            $this->errors[] = _('Unable to add database!');
         }
         unlink($v_password);
         return $status;

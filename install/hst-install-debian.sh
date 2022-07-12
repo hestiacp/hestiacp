@@ -28,6 +28,7 @@ architecture="$(arch)"
 release=$(cat /etc/debian_version | tr "." "\n" | head -n1)
 codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
+HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
@@ -1203,7 +1204,7 @@ write_config_value "UPGRADE_SEND_EMAIL" "true"
 write_config_value "UPGRADE_SEND_EMAIL_LOG" "false"
 
 # Installing hosting packages
-cp -rf $HESTIA_INSTALL_DIR/packages $HESTIA/data/
+cp -rf $HESTIA_COMMON_DIR/packages $HESTIA/data/
 
 # Update nameservers in hosting package
 IFS='.' read -r -a domain_elements <<< "$servername"
@@ -1223,10 +1224,10 @@ cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/index.html /var/www/html/
 cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
 
 # Installing firewall rules
-cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
+cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/
 
 # Installing apis
-cp -rf $HESTIA_INSTALL_DIR/api $HESTIA/data/
+cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
 
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1

@@ -30,6 +30,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 
 is_user_free() {
+    # these names may cause issues with MariaDB/MySQL database names and should be reserved:
+    check_sysuser=$(php -r '$reserved_names=array("aria", "aria_log", "mysql", "mysql_upgrade", "ib", "ib_buffer",
+ "ddl", "ddl_recovery", "performance"); if(in_array(strtolower($argv[1]), $reserved_names, true)){echo implode(", ", $reserved_names);}' "$user" );
+    if [ -n "$check_sysuser" ]; then
+        check_result "$E_INVALID" "The user name '$user' is reserved and cannot be used. List of reserved names: $check_sysuser"
+        return
+    fi
     check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$user$" )
     if [ -n "$check_sysuser" ] || [ -e "$USER_DATA" ]; then
         check_result "$E_EXISTS" "user $user exists"

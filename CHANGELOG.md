@@ -20,10 +20,14 @@ All notable changes to this project will be documented in this file.
 - Avoid out of memory serving large logfiles (#2741, #2736,  @divinity76
 - Improve passwords loading in password_valid (#2739)
 - Use secure RNG to generate passwords (#2726)
-- Utilize entire alphabet for random string (#2735 @Shadowfied)
+- Utilise entire alphabet for random string (#2735 @Shadowfied)
 - Don't use hosts_try_fastopen in Exim for Gmail / Google hostnames
-- Add check if Sieve is already installed (#2719  #manuekserol)
-- 
+- Add check if Sieve is already installed (#2719  #manuelserol)
+- Allow PHP templates to be selected in Quick installer apps (#2713, #2711, #2690)
+- Small changes to translation strings (#2700 @V4M0N0S)
+- Rate limit in email address blank in UI (saved correct in limits) (#2710, #2707)
+- Fixed a bug in Settings sites where always websites got rebuild on save (#2705, #2710)
+- Fixed a bug in Weblog where the session got incorrectly reset as admin user (#2710)
 
 ### Dependencies
 

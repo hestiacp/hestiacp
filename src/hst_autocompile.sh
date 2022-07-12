@@ -505,33 +505,18 @@ if [ "$PHP_B" = true ] ; then
         cd $BUILD_DIR_PHP
 
         # Configure PHP
-        if [ $BUILD_ARCH = 'amd64' ]; then
-            ./configure --prefix=/usr/local/hestia/php \
-                        --enable-fpm \
-                        --with-fpm-user=admin \
-                        --with-fpm-group=admin \
-                        --with-libdir=lib/x86_64-linux-gnu \
-                        --with-openssl \
-                        --with-mysqli \
-                        --with-gettext \
-                        --with-curl \
-                        --with-zip \
-                        --with-gmp \
-                        --enable-mbstring
-        else
-            ./configure --prefix=/usr/local/hestia/php \
-                        --enable-fpm \
-                        --with-fpm-user=admin \
-                        --with-fpm-group=admin \
-                        --with-libdir=lib/aarch64-linux-gnu \
-                        --with-openssl \
-                        --with-mysqli \
-                        --with-gettext \
-                        --with-curl \
-                        --with-zip \
-                        --with-gmp \
-                        --enable-mbstring
-        fi
+        ./configure --prefix=/usr/local/hestia/php \
+                    --enable-fpm \
+                    --with-fpm-user=admin \
+                    --with-fpm-group=admin \
+                    --with-libdir=lib/$(arch)-linux-gnu \
+                    --with-openssl \
+                    --with-mysqli \
+                    --with-gettext \
+                    --with-curl \
+                    --with-zip \
+                    --with-gmp \
+                    --enable-mbstring
     fi
 
     cd $BUILD_DIR_PHP

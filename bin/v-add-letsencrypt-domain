@@ -523,7 +523,7 @@ if [ -z "$mail" ]; then
     ssl_home="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME')"
     ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
     if [ "$ssl_enabled" = "yes" ]; then 
-        $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "updatessl" 
     else
         $BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
     fi
@@ -531,9 +531,9 @@ if [ -z "$mail" ]; then
  # TODO replace with v-update-mail-domain-ssl if ssl is enabled
     ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
     if [ "$ssl_enabled" = "yes" ]; then 
-        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl" 
     else
-        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl" 
     fi
 fi
 

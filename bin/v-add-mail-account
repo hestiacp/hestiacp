@@ -66,11 +66,16 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Generating hashed password
-if [ -n "$(doveadm pw -l | grep ARGON2ID)" ]; then
+
+if [ -n "$(doveadm pw -l | grep BLF-CRYPT)" ]; then
+    set +H # disable ! style history substitution
+    md5="$(doveadm pw -s BLF-CRYPT -p "$password")"
+elif [ -n "$(doveadm pw -l | grep ARGON2ID)" ]; then
+    # Fall back on Argon2id if bcrypt is not available
     set +H # disable ! style history substitution
     md5="$(doveadm pw -s ARGON2ID -p "$password")"
 else
-    # Fall back on MD5
+    # Fall back on MD5 if neither bcrypt nor argon2id is available
     salt=$(generate_password "$PW_MATRIX" "8")
     md5="{MD5}$($BIN/v-generate-password-hash md5 $salt <<<$password)"
 fi

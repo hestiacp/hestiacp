@@ -27,6 +27,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'VERSION'
 
+if [ -z "$WEB_BACKEND" ];
+    echo "Multiple php versions are not supported for modphp"
+fi
+
 # Set file locations
 php_fpm="/etc/init.d/php$version-fpm"
 

@@ -27,7 +27,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'VERSION'
 
-if [ -z "$WEB_BACKEND" ];
+if [ -z "$WEB_BACKEND" ]; then
     echo "Multiple php versions are not supported for modphp"
 fi
 

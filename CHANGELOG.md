@@ -3,7 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.4] - Service release 
 
-Still in development
+
+### Bugfixes
+
+- Fixed an issue with downloading log files ()
+- Fixed an issue with installing Quick Installers (#2762, #2760, @divinity76)
+- Fixed an issue with Apache Access / Awstats logs IP after using v-update-sys-ip (#2759 @adion-gorani)
 
 ## [1.6.3] - Service release 
 

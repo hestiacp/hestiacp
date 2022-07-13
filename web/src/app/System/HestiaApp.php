@@ -17,12 +17,12 @@ class HestiaApp
     public function run(string $cmd, $args, &$cmd_result=null): bool
     {
         $cli_script = realpath(HESTIA_DIR_BIN . $cmd);
-        if(!str_starts_with((string)$cli_script, HESTIA_DIR_BIN )){
-            $errstr = "$cmd is trying to traverse outside of " .HESTIA_DIR_BIN;
+        if (!str_starts_with((string) $cli_script, HESTIA_DIR_BIN)) {
+            $errstr = "$cmd is trying to traverse outside of " . HESTIA_DIR_BIN;
             trigger_error($errstr);
-            throw new \Exception($errstr);   
+            throw new \Exception($errstr);
         }
-        $cli_script = '/usr/bin/sudo '. escapeshellarg($cli_script);
+        $cli_script = '/usr/bin/sudo ' . escapeshellarg($cli_script);
 
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {

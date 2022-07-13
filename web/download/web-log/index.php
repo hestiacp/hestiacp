@@ -26,7 +26,7 @@ if ($_GET['type'] == 'error') {
     $type = 'error';
 }
 $cmd = implode(" ", array(
-    escapeshellarg(HESTIA_CMD . "v-list-web-domain-" . $type . "log"),
+    HESTIA_CMD . "v-list-web-domain-" . $type . "log",
     // $user is already shell-escaped
     $user,
     escapeshellarg($v_domain),

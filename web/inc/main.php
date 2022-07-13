@@ -16,6 +16,8 @@ if (!file_exists(dirname(__FILE__).'/vendor/autoload.php')) {
 require 'vendor/autoload.php';
 
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
+define('HESTIA_BIN', '/usr/local/hestia/bin/');
+
 define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,3);"'));
 
 // Load Hestia Config directly

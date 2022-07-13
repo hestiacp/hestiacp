@@ -1,12 +1,12 @@
 Name:           hestia-nginx
 Version:        %HESTIA-NGINX-VERSION%
-Release:        0
+Release:        1%{dist}
 Summary:        Hestia internal nginx web server
 Group:          System Environment/Base
 URL:            https://www.hestiacp.com
 License:        BSD
 Vendor:         hestiacp.com
-Requires:       redhat-release >= 7
+Requires:       redhat-release >= 8
 Requires:       hestia-php
 Provides:       hestia-nginx = %{version}
 BuildRequires:  systemd-rpm-macros

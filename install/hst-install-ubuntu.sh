@@ -31,10 +31,8 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.6.2'
+HESTIA_INSTALL_VER='1.6.3'
 # Dependencies
-pma_v='5.2.0'
-rc_v="1.5.3"
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
 mariadb_v="10.6"
@@ -615,9 +613,11 @@ fi
   fi
 
 # Generating admin password if it wasn't set
-if [ -z "$vpass" ]; then
-    vpass=$(gen_pass)
-fi
+  displaypass="The password you chose during installation."
+  if [ -z "$vpass" ]; then
+      vpass=$(gen_pass);
+      displaypass=$vpass
+  fi
 
 # Set FQDN if it wasn't set
 mask1='(([[:alnum:]](-?[[:alnum:]])*)\.)'
@@ -1578,6 +1578,10 @@ fi
 #                    Configure phpMyAdmin                  #
 #----------------------------------------------------------#
 
+# Source upgrade.conf with phpmyadmin versions
+# shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
+source $HESTIA/install/upgrade/upgrade.conf
+
 if [ "$mysql" = 'yes' ]; then
     # Display upgrade information
     echo "[ * ] Installing phpMyAdmin version v$pma_v..."
@@ -2138,7 +2142,7 @@ Ready to get started? Log in using the following credentials:
 
     Admin URL:  https://$ip:$port
     Username:   admin
-    Password:   $vpass
+    Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!

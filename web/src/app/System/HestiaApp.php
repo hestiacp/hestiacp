@@ -16,8 +16,13 @@ class HestiaApp
 
     public function run(string $cmd, $args, &$cmd_result=null): bool
     {
-        $cli_script = HESTIA_CMD . '/' . basename($cmd);
-        $cli_arguments = '';
+        $cli_script = realpath(HESTIA_CMD . '/' . $cmd);
+        if(!str_starts_with((string)$cli_script, HESTIA_CMD."/" )){
+            $errstr = "$cmd is trying to traverse outside of " .HESTIA_CMD;
+            trigger_error($errstr);
+            throw new \Exception($errstr);   
+        }
+        $cli_script = escapeshellarg($cli_script);
 
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {
@@ -178,12 +183,20 @@ class HestiaApp
         fclose($fp);
         $status = $this->runUser('v-add-database', [$dbname, $dbuser, $v_password, 'mysql', 'localhost', $charset]);
         if(!$status){
-            $this->errors[] = _('Unable to add databse!');
+            $this->errors[] = _('Unable to add database!');
         }
         unlink($v_password);
         return $status;
     }
-
+    
+    public function getCurrentBackendTemplate(string $domain){
+        $status = $this->runUser('v-list-web-domain', [$domain, 'json'],$return_message);
+        $version = $return_message -> json[$domain]['BACKEND'];
+        $test= preg_match('/^.*PHP-([0-9])\_([0-9])/',$version, $match);
+        return $match[1].'.'.$match[2];
+                
+    }
+    
     public function changeWebTemplate(string $domain, string $template)
     {
         $status = $this->runUser('v-change-web-domain-tpl', [$domain, $template]);
@@ -221,9 +234,9 @@ class HestiaApp
                 $supported_versions[] = $version;
             }
         }
-        if ($supported) {
-            return $supported_versions[count($supported_versions) - 1];
-        } else {
+        if($supported){
+            return $supported_versions;
+        }else{
             return false;
         }
     }

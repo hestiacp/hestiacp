@@ -112,7 +112,7 @@ BUILD_DIR='/tmp/hestiacp-src'
 INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 ARCHIVE_DIR="$SRC_DIR/src/archive/"
-architecture="$(uname -m)"
+architecture="$(arch)"
 if [ $architecture == 'aarch64' ]; then
     BUILD_ARCH='arm64'
 else
@@ -219,7 +219,11 @@ fi
 
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP_V"
 
-HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
+if [ -e "/etc/redhat-release" ]; then
+    HESTIA_V="${BUILD_VER}"
+else
+    HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
+fi
 OPENSSL_V='3.0.3'
 PCRE_V='10.40'
 ZLIB_V='1.2.12'
@@ -242,7 +246,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
     # Install needed software
     if [ "$OSTYPE" = 'rhel' ]; then
         # Set package dependencies for compiling
-        SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar git curl'
+        SOFTWARE='gcc gcc-c++ make libxml2-devel zlib-devel libzip-devel gmp-devel libcurl-devel gnutls-devel unzip openssl openssl-devel pkg-config sqlite-devel oniguruma-devel rpm-build wget tar git curl perl-IPC-Cmd'
 
         echo "Updating system DNF repositories..."
         dnf install -y -q 'dnf-command(config-manager)'
@@ -275,7 +279,7 @@ NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
 
 if [ "$HESTIA_DEBUG" ]; then
     if [ "$OSTYPE" = 'rhel' ]; then
-        echo "OS type          : RHEL / CentOS / Fedora"
+        echo "OS type          : RHEL / Rocky Linux / AlmaLinux / EuroLinux"
     else
         echo "OS type          : Debian / Ubuntu"
     fi
@@ -384,7 +388,7 @@ if [ "$NGINX_B" = true ] ; then
 
     # Clear up unused files
     if [ "$KEEPBUILD" != 'true' ]; then
-        rm -r $BUILD_DIR_NGINX $BUILD_DIR/openssl-$OPENSSL_V $BUILD_DIR/pcre-$PCRE_V $BUILD_DIR/zlib-$ZLIB_V
+        rm -r $BUILD_DIR_NGINX $BUILD_DIR/openssl-$OPENSSL_V $BUILD_DIR/pcre2-$PCRE_V $BUILD_DIR/zlib-$ZLIB_V
     fi
     cd $BUILD_DIR_HESTIANGINX
 

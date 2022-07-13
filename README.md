@@ -2,7 +2,7 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.6.2 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
+**Latest stable release:** Version 1.6.3 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
@@ -24,7 +24,7 @@ Features and Services
 * Apache2 and NGINX with PHP-FPM
 * Multiple PHP versions (5.6 - 8.1, 8.0 as default)
 * DNS Server (Bind) with clustering capabilities
-* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Sieve, Roundcube, Rainloop)
+* POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Sieve, Roundcube)
 * MariaDB and/or PostgreSQL databases
 * Let's Encrypt SSL support with wildcard certificates
 * Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
@@ -32,15 +32,12 @@ Features and Services
 Supported platforms and operating systems
 ========================================================
 
-AMD (x86_64 Intel/AMD)
-----------------------------
+* **NOTE:** Hestia Control Panel does not support 32 bit operating systems!
+
 * **Debian:** 11 or 10
 * **Ubuntu:** 22.04LTS, 20.04 LTS or 18.04 LTS
 
-ARM64 (arm64)
-----------------------------
-* **Debian:** 11 or 10
-* **Ubuntu:** 22.04LTS, 20.04 LTS or 18.04 LTS
+* **NOTE:** Hestia Control Panel in combination with OpenVZ 7 or lower might have issue Bind9 server not starting or issues with Firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
 
 Installing Hestia Control Panel
 ============================

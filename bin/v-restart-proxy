@@ -84,7 +84,7 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
     # Preform an check if Nginx is valid as reload doesn't throw an error / exit
     if [ "$DEBUG_MODE" = "true" ]; then 
         echo "[ $date | $PROXY_SYSTEM ]"  >> /var/log/hestia/debug.log 2>&1
-        service $PROXY_SYSTEM configtest > /var/log/hestia/debug.log 2>&1
+        service $PROXY_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
     else
         service $PROXY_SYSTEM configtest > /dev/null 2>&1
     fi

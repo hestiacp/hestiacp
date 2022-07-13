@@ -327,10 +327,12 @@ if (!empty($_POST['save'])) {
         }
 
         if (empty($_SESSION['error_msg'])) {
-            if ($_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
+            if ('php-'.$_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
                 exec(HESTIA_CMD . "v-change-sys-php " . escapeshellarg($_POST['v_php_default_version']), $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
+                //force reload
+                $require_refresh = true;
             }
         }
     }

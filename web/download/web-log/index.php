@@ -26,12 +26,13 @@ if ($_GET['type'] == 'error') {
     $type = 'error';
 }
 $cmd = implode(" ", array(
-    escapeshellarg(HESTIA_CMD . "v-list-web-domain-" . $type . "log"),
+    '/usr/bin/sudo ' . escapeshellarg(HESTIA_DIR_BIN . "v-list-web-domain-" . $type . "log"),
     // $user is already shell-escaped
     $user,
     escapeshellarg($v_domain),
     "5000",
 ));
+
 passthru($cmd, $return_var);
 if ($return_var != 0) {
     $errstr = "Internal server error: command returned non-zero: {$return_var}: {$cmd}";

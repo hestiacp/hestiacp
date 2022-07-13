@@ -1,5 +1,6 @@
 <?php
 //die("Error: Disabled");
+define('HESTIA_DIR_BIN', '/usr/local/hestia/bin/');
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/helpers.php");

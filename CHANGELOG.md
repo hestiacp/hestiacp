@@ -28,6 +28,9 @@ All notable changes to this project will be documented in this file.
 - Rate limit in email address blank in UI (saved correct in limits) (#2710, #2707)
 - Fixed a bug in Settings sites where always websites got rebuild on save (#2705, #2710)
 - Fixed a bug in Weblog where the session got incorrectly reset as admin user (#2710)
+- Prevent v-add-web-php to be used for non fpm installs (#2753)
+- Update translations (#2750)
+- Chmod o+x .ssh folder when creating file manager ssh key (#2755)
 
 ### Dependencies
 

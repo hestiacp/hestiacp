@@ -3,7 +3,6 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.4] - Service release 
 
-
 ### Bugfixes
 
 - Fixed an issue with downloading log files ()

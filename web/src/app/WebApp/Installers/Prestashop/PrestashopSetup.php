@@ -61,7 +61,7 @@ class PrestashopSetup extends BaseSetup
         $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
         
         $this->appcontext->runUser('v-run-cli-cmd', [
-            "/usr/bin/php$php_version",
+            "/usr/bin/php".$options['php_version'],
             $this->getDocRoot("/install/index_cli.php"),
             "--db_user=" . $this->appcontext->user() . '_' .$options['database_user'],
             "--db_password=" . $options['database_password'],

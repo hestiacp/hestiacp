@@ -57,7 +57,8 @@ class GravSetup extends BaseSetup {
 				'-p '.$options['password'],
 				'-e '.$options['email'],
 				'-P a',
-				'-N '.$options['username']
+				'-N '.$options['username'],
+				'-l en'
 			 ], $status);
 		}
 		return ($status -> code === 1);

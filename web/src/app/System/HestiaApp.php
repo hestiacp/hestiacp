@@ -104,7 +104,7 @@ class HestiaApp
         $this->runUser('v-run-cli-cmd', ["composer", "selfupdate","--$version"]);
     }
 
-    public function runComposer($args, &$cmd_result=null, $version=1): bool
+    public function runComposer($args, &$cmd_result=null, $version=2): bool
     {
         $composer = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer' . DIRECTORY_SEPARATOR . 'composer';
         if (!is_file($composer)) {

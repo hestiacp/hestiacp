@@ -35,14 +35,13 @@ fi
 # Checking quota package
 quota=$(which --skip-alias --skip-functions quota 2>/dev/null)
 if [ $? -ne 0 ]; then
-    if [ -d "/etc/sysconfig" ]; then
-        yum -y install quota >/dev/null 2>&1
-        check_result $? "quota package installation failed" "$E_UPDATE"
+    if [ -f "/etc/redhat-release" ]; then
+        dnf -y install quota >/dev/null 2>&1
     else
         export DEBIAN_FRONTEND=noninteractive
         apt-get -y install quota >/dev/null 2>&1
-        check_result $? "quota package installation failed" "$E_UPDATE"
     fi
+    check_result $? "quota package installation failed" "$E_UPDATE"
 fi
 
 # Perform verification if read-only mode is enabled

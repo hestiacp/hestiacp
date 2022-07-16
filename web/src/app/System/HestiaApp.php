@@ -24,7 +24,8 @@ class HestiaApp
             throw new \Exception($errstr);
         }
         $cli_script = '/usr/bin/sudo ' . escapeshellarg($cli_script);
-
+        
+        $cli_arguments = '';
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {
                 $cli_arguments .= quoteshellarg((string)$arg) . ' ';

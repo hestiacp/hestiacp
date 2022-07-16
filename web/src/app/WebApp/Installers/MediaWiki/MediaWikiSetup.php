@@ -58,8 +58,8 @@ class MediaWikiSetup extends BaseSetup
         $this->appcontext->runUser('v-copy-fs-directory', [
             $this->getDocRoot($this->extractsubdir . "/mediawiki-1.37.2/."),
             $this->getDocRoot()], $result);
-        $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
-        $this->appcontext->runUser('v-run-cli-cmd', ["/usr/bin/php$php_version",
+
+        $this->appcontext->runUser('v-run-cli-cmd', ["/usr/bin/php".$options['php_version'],
             $this->getDocRoot('maintenance/install.php'),
             '--dbserver=localhost',
             '--dbname=' . $this->appcontext->user() . '_' . $options['database_name'],

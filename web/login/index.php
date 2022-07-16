@@ -324,7 +324,7 @@ if (empty($_SESSION['language'])) {
 }
 
 // Generate CSRF token
-$token = bin2hex(file_get_contents('/dev/urandom', false, null, 0, 16));
+$token = bin2hex(random_bytes(16));
 $_SESSION['token'] = $token;
 
 require_once('../templates/header.html');

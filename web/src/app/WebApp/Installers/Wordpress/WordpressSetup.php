@@ -120,10 +120,9 @@ class WordpressSetup extends BaseSetup
             . "&admin_email="    . rawurlencode($options['wordpress_account_email'])
             ), $output, $return_var);
         
-        if ( strpos(implode(PHP_EOL,$output),'Error establishing a database connection' !== false)){
+        if ( strpos(implode(PHP_EOL,$output),'Error establishing a database connection') !== false){
            throw new \Exception('Error establishing a database connection'); 
         }
-
         if ($return_var > 0) {
             throw new \Exception(implode(PHP_EOL, $output));
         }

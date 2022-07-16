@@ -83,7 +83,8 @@ no_support_message(){
     echo "****************************************************"
     echo "  Debian 10, 11"
     echo "  Ubuntu 18.04, 20.04, 22.04 LTS"
-    echo "  AlmaLinux, EuroLinux, Red Hat EnterPrise Linux, Rocky Linux 8,9"
+    # Commenting this out for now
+    # echo "  AlmaLinux, EuroLinux, Red Hat EnterPrise Linux, Rocky Linux 8,9"
     echo ""
     exit 1;
 }
@@ -95,25 +96,47 @@ fi
 check_wget_curl(){
     # Check wget
     if [ -e '/usr/bin/wget' ]; then
-        wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
-        if [ "$?" -eq '0' ]; then
-            bash hst-install-$type.sh $*
-            exit
+        if [ -e '/etc/redhat-release' ]; then
+            wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh -O hst-install-rhel.sh
+            if [ "$?" -eq '0' ]; then
+                bash hst-install-rhel.sh $*
+                exit
+            else
+                echo "Error: hst-install-rhel.sh download failed."
+                exit 1
+            fi
         else
-            echo "Error: hst-install-$type.sh download failed."
-            exit 1
+            wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh -O hst-install-$type.sh
+            if [ "$?" -eq '0' ]; then
+                bash hst-install-$type.sh $*
+                exit
+            else
+                echo "Error: hst-install-$type.sh download failed."
+                exit 1
+            fi
         fi
     fi
 
     # Check curl
     if [ -e '/usr/bin/curl' ]; then
-        curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
-        if [ "$?" -eq '0' ]; then
-            bash hst-install-$type.sh $*
-            exit
+        if [ -e '/etc/redhat-release' ]; then
+            curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh
+            if [ "$?" -eq '0' ]; then
+                bash hst-install-rhel.sh $*
+                exit
+            else
+                echo "Error: hst-install-rhel.sh download failed."
+                exit 1
+            fi
         else
-            echo "Error: hst-install-$type.sh download failed."
-            exit 1
+            curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-$type.sh
+            if [ "$?" -eq '0' ]; then
+                bash hst-install-$type.sh $*
+                exit
+            else
+                echo "Error: hst-install-$type.sh download failed."
+                exit 1
+            fi
         fi
     fi
 }

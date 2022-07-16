@@ -50,12 +50,12 @@ if (!empty($_POST['save'])) {
 
     // Change database user
     if (($v_dbuser != $_POST['v_dbuser']) && (empty($_SESSION['error_msg']))) {
-        $cmd = implode(" ",array(
-            HESTIA_CMD."v-change-database-user",
+        $cmd = implode(" ", array(
+            HESTIA_CMD . "v-change-database-user",
             // $user is already shell-quoted
             $user,
             escapeshellarg($v_database),
-            escapeshellarg($_POST['v_dbuser'])
+            escapeshellarg($_POST['v_dbuser']),
         ));
         exec($cmd, $output, $return_var);
         check_return_code($return_var, $output);
@@ -86,7 +86,7 @@ if (!empty($_POST['save'])) {
     // if the mysql username was changed, render_page() below will render with the OLD mysql username,
     // to prvent that, make the browser refresh the page.
     http_response_code(303);
-    header("Location: "  .$_SERVER['REQUEST_URI']);
+    header("Location: " . $_SERVER['REQUEST_URI']);
     die();
 }
 

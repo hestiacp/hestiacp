@@ -1,5 +1,5 @@
 <?php
-use function Divinity76\quoteshellarg\quoteshellarg;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 //die("Error: Disabled");
 define('HESTIA_DIR_BIN', '/usr/local/hestia/bin/');
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');

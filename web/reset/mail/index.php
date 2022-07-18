@@ -1,5 +1,5 @@
 <?php
-use function Divinity76\quoteshellarg\quoteshellarg;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 // Init
 define('NO_AUTH_REQUIRED',true);
 define('NO_AUTH_REQUIRED2',true);

@@ -7,7 +7,7 @@ use Filegator\Services\Archiver\ArchiverInterface;
 use Filegator\Services\Service;
 use Filegator\Services\Storage\Filesystem as Storage;
 use Filegator\Services\Tmpfs\TmpfsInterface;
-use function Divinity76\quoteshellarg\quoteshellarg;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 
 class HestiaZipArchiver extends ZipArchiver implements Service, ArchiverInterface

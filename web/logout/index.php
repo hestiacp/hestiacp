@@ -1,5 +1,5 @@
 <?php
-use function Divinity76\quoteshellarg\quoteshellarg;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 // Main include
 include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 // Check token

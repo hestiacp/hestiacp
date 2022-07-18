@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace Hestia\System;
-use function Divinity76\quoteshellarg\quoteshellarg;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class HestiaApp
 {
@@ -23,7 +23,7 @@ class HestiaApp
             trigger_error($errstr);
             throw new \Exception($errstr);
         }
-        $cli_script = '/usr/bin/sudo ' . escapeshellarg($cli_script);
+        $cli_script = '/usr/bin/sudo ' . quoteshellarg($cli_script);
         
         $cli_arguments = '';
         if (!empty($args) && is_array($args)) {

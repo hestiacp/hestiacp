@@ -1,5 +1,5 @@
 <?php
-use function Divinity76\quoteshellarg\quoteshellarg;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 $dist_config = require __DIR__.'/configuration_sample.php';
 

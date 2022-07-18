@@ -4,7 +4,7 @@ namespace Hestia\WebApp\Installers\Wordpress;
 
 use Hestia\System\Util;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
-use function Divinity76\quoteshellarg\quoteshellarg;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class WordpressSetup extends BaseSetup
 {

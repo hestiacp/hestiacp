@@ -722,7 +722,7 @@ add_mail_ssl_config() {
 
     # Check if using custom / wildcard mail certificate
     wildcard_domain="\\*.$(echo "$domain" | cut -f 1 -d . --complement)"
-    mail_cert_match=$(v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain");
+    mail_cert_match=$($BIN/v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain");
 
     if [ -n "$mail_cert_match" ]; then 
         # Add domain SSL configuration to dovecot
@@ -761,7 +761,7 @@ add_mail_ssl_config() {
 del_mail_ssl_config() {
     # Check to prevent accidental removal of mismatched certificate
     wildcard_domain="\\*.$(echo "$domain" | cut -f 1 -d . --complement)"
-    mail_cert_match=$(v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain");
+    mail_cert_match=$($BIN/v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain");
 
     # Remove old mail certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*

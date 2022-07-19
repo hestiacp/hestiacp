@@ -44,7 +44,11 @@ IPSET_PATH="$HESTIA/data/firewall/ipset"
 
 # Ensure ipset is installed
 if [ -z "$IPSET_BIN" ]; then
-    apt-get --quiet --yes install ipset > /dev/null
+    if [ -f '/etc/redhat-release' ]; then
+        dnf install -q -y ipset > /dev/null
+    else
+        apt-get --quiet --yes install ipset > /dev/null
+    fi
     check_result $? "Installing ipset package"
 
     IPSET_BIN="$(which ipset)"

@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -17,7 +18,7 @@ switch ($action) {
 }
 
 foreach ($backup as $value) {
-    $value = escapeshellarg($value);
+    $value = quoteshellarg($value);
     exec(HESTIA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
 }
 

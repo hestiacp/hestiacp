@@ -6,18 +6,18 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Fixed an issue with downloading log files ()
-- Fixed an issue with installing Quick Installers (#2762, #2760, @divinity76)
+- Fixed an issue with installing Quick Installers (#2762, #2760, @Hestiacp)
 - Fixed an issue with Apache Access / Awstats logs IP after using v-update-sys-ip (#2759 @adion-gorani)
 
 ## [1.6.3] - Service release 
 
 ### Features
 
-- Add additional support for bcrypt for mail passwords (#2752 @divinity76)
+- Add additional support for bcrypt for mail passwords (#2752 @Hestiacp)
 
 ### Enhancements 
 
-- Simplify md5crypt on reset form email (#2751 @divinity76)
+- Simplify md5crypt on reset form email (#2751 @Hestiacp)
 - Use secure RNG to generate passwords (#2726)
 - Add twig support filemanger (#2714, @anvme)
 
@@ -25,7 +25,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue with restart Apache2 and Nginx after v-update-letsencrypt (#2748, #2563, #2744, #2677)
 - Prevent transversing path in Quick installer apps (#2742)
-- Avoid out of memory serving large logfiles (#2741, #2736,  @divinity76
+- Avoid out of memory serving large logfiles (#2741, #2736,  @Hestiacp
 - Improve passwords loading in password_valid (#2739)
 - Use secure RNG to generate passwords (#2726)
 - Utilise entire alphabet for random string (#2735 @Shadowfied)

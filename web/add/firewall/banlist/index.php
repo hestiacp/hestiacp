@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = 'FIREWALL';
@@ -37,8 +38,8 @@ if (!empty($_POST['ok'])) {
     }
 
     // Protect input
-    $v_chain = escapeshellarg($_POST['v_chain']);
-    $v_ip = escapeshellarg($_POST['v_ip']);
+    $v_chain = quoteshellarg($_POST['v_chain']);
+    $v_ip = quoteshellarg($_POST['v_ip']);
 
     // Add firewall rule
     if (empty($_SESSION['error_msg'])) {

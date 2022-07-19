@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 $TAB = 'Access Key';
 
@@ -6,7 +7,7 @@ $TAB = 'Access Key';
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user = escapeshellarg($_GET['user']);
+    $user = quoteshellarg($_GET['user']);
     $user_plain = $_GET['user'];
 }
 
@@ -18,7 +19,7 @@ if (($user_plain == 'admin' && $api_status < 1) || ($user_plain != 'admin' && $a
 }
 
 if (!empty($_GET['key'])) {
-    $v_key = escapeshellarg(trim($_GET['key']));
+    $v_key = quoteshellarg(trim($_GET['key']));
 
     // Key data
     exec(HESTIA_CMD."v-list-access-key ".$v_key." json", $output, $return_var);

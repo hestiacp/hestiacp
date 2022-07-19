@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
@@ -26,10 +27,10 @@ if ($_GET['type'] == 'error') {
     $type = 'error';
 }
 $cmd = implode(" ", array(
-    '/usr/bin/sudo ' . escapeshellarg(HESTIA_DIR_BIN . "v-list-web-domain-" . $type . "log"),
+    '/usr/bin/sudo ' . quoteshellarg(HESTIA_DIR_BIN . "v-list-web-domain-" . $type . "log"),
     // $user is already shell-escaped
     $user,
-    escapeshellarg($v_domain),
+    quoteshellarg($v_domain),
     "5000",
 ));
 

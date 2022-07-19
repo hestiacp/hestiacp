@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 // Init
 ob_start();
@@ -9,7 +10,7 @@ verify_csrf($_GET);
 
 // Mail domain
 if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
-    $v_domain = escapeshellarg($_GET['domain']);
+    $v_domain = quoteshellarg($_GET['domain']);
     exec(HESTIA_CMD."v-unsuspend-mail-domain ".$user." ".$v_domain, $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);
@@ -30,9 +31,9 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
 
 // Mail account
 if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
-    $v_username = escapeshellarg($user);
-    $v_domain = escapeshellarg($_GET['domain']);
-    $v_account = escapeshellarg($_GET['account']);
+    $v_username = quoteshellarg($user);
+    $v_domain = quoteshellarg($_GET['domain']);
+    $v_account = quoteshellarg($_GET['account']);
     exec(HESTIA_CMD."v-unsuspend-mail-account ".$user." ".$v_domain." ".$v_account, $output, $return_var);
     if ($return_var != 0) {
         $error = implode('<br>', $output);

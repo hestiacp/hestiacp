@@ -3,7 +3,7 @@ ID='2' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns2%.' SUSPENDED='no' TIME='%tim
 ID='3' RECORD='@' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='4' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='5' RECORD='localhost' TYPE='A' PRIORITY='' VALUE='127.0.0.1' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='6' RECORD='www' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='6' RECORD='www' TYPE='CNAME' PRIORITY='' VALUE='%domain%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='7' RECORD='@' TYPE='MX' PRIORITY='1' VALUE='ASPMX.L.GOOGLE.COM.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='8' RECORD='@' TYPE='MX' PRIORITY='5' VALUE='ALT1.ASPMX.L.GOOGLE.COM.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='9' RECORD='@' TYPE='MX' PRIORITY='5' VALUE='ALT2.ASPMX.L.GOOGLE.COM.' SUSPENDED='no' TIME='%time%' DATE='%date%'

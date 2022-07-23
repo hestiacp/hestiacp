@@ -2,7 +2,7 @@ ID='1' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns1%.' SUSPENDED='no' TIME='%tim
 ID='2' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns2%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='3' RECORD='@' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='4' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='6' RECORD='www' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='6' RECORD='www' TYPE='CNAME' PRIORITY='' VALUE='%domain%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='7' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% include:spf.protection.outlook.com -all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='8' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='v=DMARC1; p=none; pct=100; fo=1'
 ID='9' RECORD='autodiscover' TYPE='CNAME' PRIORITY='' VALUE='autodiscover.outlook.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'

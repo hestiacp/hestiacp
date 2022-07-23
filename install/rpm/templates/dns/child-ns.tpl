@@ -3,7 +3,7 @@ ID='2' RECORD='@' TYPE='NS' PRIORITY='' VALUE='ns2.%domain%.' SUSPENDED='no' TIM
 ID='3' RECORD='@' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='4' RECORD='ns1' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='5' RECORD='ns2' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='6' RECORD='www' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='6' RECORD='www' TYPE='CNAME' PRIORITY='' VALUE='%domain%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='7' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='8' RECORD='mail' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='9' RECORD='smtp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'

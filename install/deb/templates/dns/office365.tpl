@@ -8,7 +8,7 @@ ID='7' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns7%.' SUSPENDED='no' TIME='%tim
 ID='8' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns8%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='9' RECORD='@' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='10' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='11' RECORD='www' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='11' RECORD='www' TYPE='CNAME' PRIORITY='' VALUE='%domain%' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='12' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% include:spf.protection.outlook.com -all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='13' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='v=DMARC1; p=none; pct=100; fo=1'
 ID='14' RECORD='autodiscover' TYPE='CNAME' PRIORITY='' VALUE='autodiscover.outlook.com.' SUSPENDED='no' TIME='%time%' DATE='%date%'

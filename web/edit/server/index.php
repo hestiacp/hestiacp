@@ -174,6 +174,12 @@ if (!empty($_SESSION['SMTP_RELAY_USER'])) {
     $v_smtp_relay_user = '';
 }
 $v_smtp_relay_pass = '';
+if (empty($_POST['v_experimental_features'])){
+    $_POST['v_experimental_features'] = 'false';
+}
+if (empty($_POST['v_policy_user_view_suspended'])){
+    $_POST['v_policy_user_view_suspended'] = 'false';
+}
 
 // List Database hosts
 exec(HESTIA_CMD."v-list-database-hosts json", $output, $return_var);
@@ -448,7 +454,7 @@ if (!empty($_POST['save'])) {
     }
 
     // Update experimental features status
-    if (empty($_SESSION['error_msg'])) {
+    if (empty($_SESSION['error_msg']) && $_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) {
         if ($_POST['v_experimental_features'] == 'on') {
             $_POST['v_experimental_features'] = 'true';
         } else {

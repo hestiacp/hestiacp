@@ -31,7 +31,7 @@ class DokuWikiSetup extends BaseSetup {
 					'0: Open Wiki (read, write, upload for everyone)', // 0
 					'1: Public Wiki (read for everyone, write and upload for registered users)', // 1
 					'2: Closed Wiki (read, write, upload for registered users only)' // 3
-			   	],
+			    	],
 			],
 			'content_license' => [
 				'type' => 'select',
@@ -85,15 +85,15 @@ class DokuWikiSetup extends BaseSetup {
 		  . "--url $installUrl "
 		  . "--header 'Content-Type: application/x-www-form-urlencoded' "
 		  . "--data l=en "
-		  . "--data 'd[title]=" . $options['wiki_name'] . "' "
+		  . "--data 'd[title]=" . rawurlencode($options['wiki_name']) . "' "
 		  . "--data 'd[acl]=on' "
-		  . "--data 'd[superuser]=" . $options['superuser'] . "' "
-		  . "--data 'd[fullname]=" . $options['real_name'] . "' "
-		  . "--data 'd[email]=" . $options['email'] . "' "
-		  . "--data 'd[password]=" . $options['password'] . "' "
-		  . "--data 'd[confirm]=" . $options['password'] . "' "
-		  . "--data 'd[policy]=" . substr($options['initial_ACL_policy'], 0, 1) . "' "
-		  . "--data 'd[license]=" . explode(":", $options['content_license'])[0] . "' "
+		  . "--data 'd[superuser]=" . rawurlencode($options['superuser']) . "' "
+		  . "--data 'd[fullname]=" . rawurlencode($options['real_name']) . "' "
+		  . "--data 'd[email]=" . rawurlencode($options['email']) . "' "
+		  . "--data 'd[password]=" . rawurlencode($options['password']) . "' "
+		  . "--data 'd[confirm]=" . rawurlencode($options['password']) . "' "
+		  . "--data 'd[policy]=" . substr(rawurlencode($options['initial_ACL_policy']), 0, 1) . "' "
+		  . "--data 'd[license]=" . explode(":", rawurlencode($options['content_license'])[0]) . "' "
 		  . "--data submit=";
 
 		exec($cmd, $output, $return_var);

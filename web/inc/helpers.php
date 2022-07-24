@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 # Return codes
 const E_ARGS = 1;
@@ -126,7 +127,7 @@ function hst_add_history_log($message, $category = 'System', $level = 'Info', $u
     $category = ucfirst(strtolower($category));
     $level = ucfirst(strtolower($level));
 
-    $command_args = escapeshellarg($user).' '.escapeshellarg($level).' '.escapeshellarg($category).' '.escapeshellarg($message);
+    $command_args = quoteshellarg($user).' '.quoteshellarg($level).' '.quoteshellarg($category).' '.quoteshellarg($message);
     exec(HESTIA_CMD."v-log-action ".$command_args, $output, $return_var);
     unset($output);
 

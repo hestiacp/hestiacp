@@ -110,7 +110,7 @@ prepare_web_backend() {
         pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
     else
         backend_version=$(multiphp_default_version)
-        if [ -z "$pool" ] || [ -z "$BACKEND" ]; then 
+        if [ -z "$pool" ] || [ -z "$BACKEND" ]; then
             pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
         fi
     fi
@@ -177,7 +177,7 @@ prepare_web_domain_values() {
         sdocroot="$HOMEDIR/$user/web/$domain/public_shtml"
         $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_shtml";
         chmod 751 $HOMEDIR/$user/web/$domain/public_shtml;
-        chown www-data:$user $HOMEDIR/$user/web/$domain/public_shtml;    
+        chown www-data:$user $HOMEDIR/$user/web/$domain/public_shtml;
     fi
 
     if [ -n "$WEB_BACKEND" ]; then
@@ -342,7 +342,7 @@ get_web_config_lines() {
     domain_idn=$domain
     format_domain_idn
     vhost_lines=$(grep -niF "name $domain_idn" $2)
-    vhost_lines=$(echo "$vhost_lines" |egrep "$domain_idn($| |;)") #"
+    vhost_lines=$(echo "$vhost_lines" |egrep "$domain_idn($| |;)")
     vhost_lines=$(echo "$vhost_lines" |cut -f 1 -d :)
     if [ -z "$vhost_lines" ]; then
         check_result $E_PARSING "can't parse config $2"
@@ -715,23 +715,29 @@ add_mail_ssl_config() {
         cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
     fi
 
-    # Add domain SSL configuration to dovecot
+    # Clean up dovecot configuration (if it exists)
     if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
         rm -f /etc/dovecot/conf.d/domains/$domain.conf
     fi
-    
-    mail_check=$($BIN/v-list-mail-domain-ssl "$user" "$domain" | grep SUBJECT | grep " $domain");
-    mail_check_alias=$($BIN/v-list-mail-domain-ssl "$user" "$domain" | grep ALIASES | grep " $domain");
-    if [ -n "$mail_check" ] || [ -n "$mail_check_alias" ]; then 
+
+    # Check if using custom / wildcard mail certificate
+    wildcard_domain="\\*.$(echo "$domain" | cut -f 1 -d . --complement)"
+    mail_cert_match=$($BIN/v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain");
+
+    if [ -n "$mail_cert_match" ]; then 
+        # Add domain SSL configuration to dovecot
         echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
         echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
         echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
         echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
         echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+
         # Add domain SSL configuration to exim4
         ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/$domain.crt
         ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/$domain.key
     fi 
+
+    # Add domain SSL configuration to dovecot
     echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
@@ -753,9 +759,9 @@ add_mail_ssl_config() {
 
 # Delete SSL support for mail domain
 del_mail_ssl_config() {
-    # Do a few checks to prevent accidentally removal of domain.com
-    mail_check=$(v-list-mail-domain-ssl $user $domain | grep SUBJECT | grep " $domain");
-    mail_check_alias=$(v-list-mail-domain-ssl $user $domain | grep ALIASES | grep " $domain");
+    # Check to prevent accidental removal of mismatched certificate
+    wildcard_domain="\\*.$(echo "$domain" | cut -f 1 -d . --complement)"
+    mail_cert_match=$($BIN/v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain");
 
     # Remove old mail certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
@@ -770,7 +776,7 @@ del_mail_ssl_config() {
 
     # Remove SSL certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
-    if [ -n "$mail_check" ] || [ -n "$mail_check_alias" ]; then 
+    if [ -n "$mail_cert_match" ]; then 
         rm -f $HESTIA/ssl/mail/$domain.crt $HESTIA/ssl/mail/$domain.key
     fi
     rm -f $HESTIA/ssl/mail/mail.$domain.crt $HESTIA/ssl/mail/mail.$domain.key
@@ -802,7 +808,6 @@ add_webmail_config() {
     if [ "$WEBMAIL_ALIAS" != "mail" ]; then
         override_alias="mail.$domain"
         override_alias_idn="mail.$domain_idn"
-        
     fi
     
     # Note: Removing or renaming template variables will lead to broken custom templates.

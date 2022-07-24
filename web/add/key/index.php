@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 session_start();
@@ -17,7 +18,7 @@ if (!empty($_POST['ok'])) {
     }
 
     if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-        $user = escapeshellarg($_GET['user']);
+        $user = quoteshellarg($_GET['user']);
     }
 
     if (!$_SESSION['error_msg']) {
@@ -48,7 +49,7 @@ if (!empty($_POST['ok'])) {
             if (in_array($v_key_parts[1], $keylist)) {
                 $_SESSION['error_msg']  =  _('SSH KEY already exists');
             }
-            $v_key = escapeshellarg(trim($_POST['v_key']));
+            $v_key = quoteshellarg(trim($_POST['v_key']));
         }
     }
 

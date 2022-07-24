@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -55,15 +56,15 @@ if ($_SESSION['userContext'] === 'admin') {
 if (empty($record)) {
     foreach ($domain as $value) {
         // DNS
-        $value = escapeshellarg($value);
+        $value = quoteshellarg($value);
         exec(HESTIA_CMD.$cmd." ".$user." ".$value." no", $output, $return_var);
         $restart = 'yes';
     }
 } else {
     foreach ($record as $value) {
         // DNS Record
-        $value = escapeshellarg($value);
-        $dom = escapeshellarg($domain);
+        $value = quoteshellarg($value);
+        $dom = quoteshellarg($domain);
         exec(HESTIA_CMD.$cmd." ".$user." ".$dom." ".$value." no", $output, $return_var);
         $restart = 'yes';
     }

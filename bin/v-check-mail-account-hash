@@ -35,7 +35,15 @@ is_password_valid
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$type" = "ARGONID2" ]; then
+if [ "$type" = "BCRYPT" ]; then
+    match=$(doveadm pw -s BLF-CRYPT -p "$password" -t $hash | grep "verified");
+    if [ -n "$match" ]; then
+        exit 0;
+    else
+        echo $match;
+        exit 2;
+    fi
+elif [ "$type" = "ARGONID2" ]; then
     match=$(doveadm pw -s ARGON2ID -p "$password" -t $hash | grep "verified");
     if [ -n "$match" ]; then
         exit 0;
@@ -44,9 +52,10 @@ if [ "$type" = "ARGONID2" ]; then
         exit 2;
     fi
 else
-    echo "Not supported"
+    echo "unsupported hash type.";
     exit 2;
 fi
+
 
 #----------------------------------------------------------#
 #                       Hestia                             #

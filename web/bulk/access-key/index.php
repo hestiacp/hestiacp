@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -8,7 +9,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 verify_csrf($_POST);
 
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user = escapeshellarg($_GET['user']);
+    $user = quoteshellarg($_GET['user']);
     $user_plain = $_GET['user'];
 }
 
@@ -29,7 +30,7 @@ switch ($action) {
 }
 
 foreach ($key as $value) {
-    $v_key = escapeshellarg(trim($value));
+    $v_key = quoteshellarg(trim($value));
 
     // Key data
     exec(HESTIA_CMD."v-list-access-key ".$v_key." json", $output, $return_var);

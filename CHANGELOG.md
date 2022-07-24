@@ -1,6 +1,50 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.4] - Service release 
+
+### Bugfixes
+
+- Fixed an issue with downloading log files ()
+- Fixed an issue with installing Quick Installers (#2762, #2760, @Hestiacp)
+- Fixed an issue with Apache Access / Awstats logs IP after using v-update-sys-ip (#2759 @adion-gorani)
+
+## [1.6.3] - Service release 
+
+### Features
+
+- Add additional support for bcrypt for mail passwords (#2752 @Hestiacp)
+
+### Enhancements 
+
+- Simplify md5crypt on reset form email (#2751 @Hestiacp)
+- Use secure RNG to generate passwords (#2726)
+- Add twig support filemanger (#2714, @anvme)
+
+### Bugfixes
+
+- Fixed an issue with restart Apache2 and Nginx after v-update-letsencrypt (#2748, #2563, #2744, #2677)
+- Prevent transversing path in Quick installer apps (#2742)
+- Avoid out of memory serving large logfiles (#2741, #2736,  @Hestiacp
+- Improve passwords loading in password_valid (#2739)
+- Use secure RNG to generate passwords (#2726)
+- Utilise entire alphabet for random string (#2735 @Shadowfied)
+- Don't use hosts_try_fastopen in Exim for Gmail / Google hostnames
+- Add check if Sieve is already installed (#2719  #manuelserol)
+- Allow PHP templates to be selected in Quick installer apps (#2713, #2711, #2690)
+- Small changes to translation strings (#2700 @V4M0N0S)
+- Rate limit in email address blank in UI (saved correct in limits) (#2710, #2707)
+- Fixed a bug in Settings sites where always websites got rebuild on save (#2705, #2710)
+- Fixed a bug in Weblog where the session got incorrectly reset as admin user (#2710)
+- Prevent v-add-web-php to be used for non fpm installs (#2753)
+- Update translations (#2750)
+- Chmod o+x .ssh folder when creating file manager ssh key (#2755)
+
+### Dependencies
+
+- Update hestia-php to 8.1.8 
+    - Update disable_functions list php.ini for hestia-php (#2746, #2741)
+
 ## [1.6.2] - Service release
 
 - Fixed an issue with rate limits in Exim4 and make it more bullet proof (#2703)

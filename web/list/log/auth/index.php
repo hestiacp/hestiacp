@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = 'LOG';
@@ -8,9 +9,9 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Edit as someone else?
 if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']))) {
-    $user = escapeshellarg($_SESSION['look']);
+    $user = quoteshellarg($_SESSION['look']);
 } elseif (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user = escapeshellarg($_GET['user']);
+    $user = quoteshellarg($_GET['user']);
 }
 
 exec(HESTIA_CMD."v-list-user-auth-log ".$user." json", $output, $return_var);

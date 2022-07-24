@@ -33,7 +33,7 @@ mkdir -p /root/.gnupg && chmod 700 /root/.gnupg
 
 if [ ! -f "/usr/share/keyrings/nginx-keyring.gpg" ]; then 
     # Get Architecture
-    architecture="$(uname -m)"
+    architecture="$(arch)"
     case $architecture in 
     x86_64)
         ARCH="amd64"

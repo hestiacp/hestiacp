@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 $dist_config = require __DIR__.'/configuration_sample.php';
 
@@ -24,7 +25,10 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
     }
     # Create filemanager sftp key if missing and trash it after 30 min
     if (! file_exists('/home/'.basename($v_user).'/.ssh/hst-filemanager-key')) {
-        exec("sudo /usr/local/hestia/bin/v-add-user-sftp-key " . escapeshellarg(basename($v_user)) . " 30", $output, $return_var);
+        exec("sudo /usr/local/hestia/bin/v-add-user-sftp-key " . quoteshellarg(basename($v_user)) . " 30", $output, $return_var);
+        // filemanager also requires .ssh chmod o+x ... hopefully we can improve it to g+x or u+x someday
+        // current minimum for filemanager: chmod 0701 .ssh
+        shell_exec("sudo chmod o+x " . quoteshellarg('/home/' . basename($v_user) . '/.ssh'));
     }
 
     if (!isset($_SESSION['SFTP_PORT'])) {

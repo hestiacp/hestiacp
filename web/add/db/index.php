@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = 'DB';
@@ -57,8 +58,8 @@ if (!empty($_POST['ok'])) {
     }
 
     // Protect input
-    $v_database = escapeshellarg($_POST['v_database']);
-    $v_dbuser = escapeshellarg($_POST['v_dbuser']);
+    $v_database = quoteshellarg($_POST['v_database']);
+    $v_dbuser = quoteshellarg($_POST['v_dbuser']);
     $v_type = $_POST['v_type'];
     $v_charset = $_POST['v_charset'];
     $v_host = $_POST['v_host'];
@@ -66,9 +67,9 @@ if (!empty($_POST['ok'])) {
 
     // Add database
     if (empty($_SESSION['error_msg'])) {
-        $v_type = escapeshellarg($_POST['v_type']);
-        $v_charset = escapeshellarg($_POST['v_charset']);
-        $v_host = escapeshellarg($_POST['v_host']);
+        $v_type = quoteshellarg($_POST['v_type']);
+        $v_charset = quoteshellarg($_POST['v_charset']);
+        $v_host = quoteshellarg($_POST['v_host']);
         $v_password = tempnam("/tmp", "vst");
         $fp = fopen($v_password, "w");
         fwrite($fp, $_POST['v_password']."\n");
@@ -77,7 +78,7 @@ if (!empty($_POST['ok'])) {
         check_return_code($return_var, $output);
         unset($output);
         unlink($v_password);
-        $v_password = escapeshellarg($_POST['v_password']);
+        $v_password = quoteshellarg($_POST['v_password']);
         $v_type = $_POST['v_type'];
         $v_host = $_POST['v_host'];
         $v_charset = $_POST['v_charset'];

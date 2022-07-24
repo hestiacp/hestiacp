@@ -1,5 +1,8 @@
 <?php
 
+session_start();
+if ((isset($_SESSION['userContext']) === False) && (php_sapi_name() !== 'cli'))  exit;
+
 require_once '/usr/local/hestia/web/inc/2fa/loader.php';
 Loader::register('./','RobThree\\Auth');
 

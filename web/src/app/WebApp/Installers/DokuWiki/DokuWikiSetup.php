@@ -80,21 +80,28 @@ class DokuWikiSetup extends BaseSetup {
 
 		$installUrl = $webDomain . "install.php";
 
-		$cmd = "curl --request POST "
-		  . ($sslEnabled ? "" : "--insecure " )
-		  . "--url $installUrl "
-		  . "--header 'Content-Type: application/x-www-form-urlencoded' "
-		  . "--data l=en "
-		  . "--data 'd[title]=" . $options['wiki_name'] . "' "
-		  . "--data 'd[acl]=on' "
-		  . "--data 'd[superuser]=" . $options['superuser'] . "' "
-		  . "--data 'd[fullname]=" . $options['real_name'] . "' "
-		  . "--data 'd[email]=" . $options['email'] . "' "
-		  . "--data 'd[password]=" . $options['password'] . "' "
-		  . "--data 'd[confirm]=" . $options['password'] . "' "
-		  . "--data 'd[policy]=" . substr($options['initial_ACL_policy'], 0, 1) . "' "
-		  . "--data 'd[license]=" . explode(":", $options['content_license'])[0] . "' "
-		  . "--data submit=";
+		$cmd = implode(" ", array(
+			"curl",
+			"--request POST",
+			($sslEnabled ? "" : "--insecure "),
+			"--url " . escapeshellarg($installUrl),
+			"--header 'Content-Type: application/x-www-form-urlencoded'",
+			'--data-binary ' . escapeshellarg(http_build_query(array(
+				"l" => "en",
+				"d" => array(
+					"title" => $options['wiki_name'],
+					'acl' => 'on',
+					'superuser' => $options['superuser'],
+					'fullname' => $options['real_name'],
+					'email' => $options['email'],
+					'password' => $options['password'],
+					'confirm' => $options['password'],
+					'policy' => substr($options['initial_ACL_policy'], 0, 1),
+					'license' => explode(":", $options['content_license'])[0]
+				),
+				'submit' => ''
+			)))
+		));
 
 		exec($cmd, $output, $return_var);
 		if($return_var > 0){

@@ -81,7 +81,7 @@ class DokuWikiSetup extends BaseSetup {
 		$installUrl = $webDomain . "install.php";
 
 		$cmd = implode(" ", array(
-			"curl",
+			"/usr/bin/curl",
 			"--request POST",
 			($sslEnabled ? "" : "--insecure "),
 			"--url " . escapeshellarg($installUrl),

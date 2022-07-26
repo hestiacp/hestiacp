@@ -7,13 +7,15 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-if (!file_exists(dirname(__FILE__).'/vendor/autoload.php')) {
-    trigger_error('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
-    echo 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line';
+
+try {
+    require_once 'vendor/autoload.php';
+} catch (Throwable $ex) {
+    $errstr = 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
+    trigger_error($errstr);
+    echo $errstr;
     exit(1);
 }
-
-require 'vendor/autoload.php';
 
 define('HESTIA_DIR_BIN', '/usr/local/hestia/bin/');
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
@@ -92,7 +94,7 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
 // Generate CSRF Token
 if (isset($_SESSION['user'])) {
     if (!isset($_SESSION['token'])) {
-        $token = bin2hex(file_get_contents('/dev/urandom', false, null, 0, 16));
+        $token = bin2hex(random_bytes(16));
         $_SESSION['token'] = $token;
     }
 }

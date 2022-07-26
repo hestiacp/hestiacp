@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.5] - Service release 
+
+### Bugfixes
+
+- Add missing translation strings (#2778 @myrevery)
+- Add check if folder exists in v-change-web-domain-docroot (#2778)
+
+### Security
+
+- Improve random bytes generator (#2774)
+- Don't allow /inc/2fa/secret.php called from the web browser directly (#2784 @mayappear)
+- Improve CSRF Origin Check Bypass (#2785 @mayappear)
+
+### Dependencies
+
+- Update Filegator to 7.8.2
+
 ## [1.6.4] - Service release 
 
 ### Bugfixes

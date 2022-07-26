@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 - Improve random bytes generator (#2774)
 - Don't allow /inc/2fa/secret.php called from the web browser directly (#2784 @mayappear)
 - Improve CSRF Origin Check Bypass (#2785 @mayappear)
+- Fix vulnerability in Docuwiki Quick Install App @redstarp2 (CVE 2022-xxx-xxx)
 
 ### Dependencies
 

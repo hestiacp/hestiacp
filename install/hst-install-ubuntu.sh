@@ -1751,7 +1751,7 @@ fi
 if [ "$dovecot" = 'yes' ]; then
     echo "[ * ] Configuring Dovecot POP/IMAP mail server..."
     gpasswd -a dovecot mail > /dev/null 2>&1
-    cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
+    cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 
@@ -1890,7 +1890,7 @@ if [ "$sieve" = 'yes' ]; then
     sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 
     # replace dovecot-sieve config files
-    cp -f $HESTIA_INSTALL_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+    cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
 
     # Dovecot default file install
     echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default

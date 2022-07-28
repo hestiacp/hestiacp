@@ -22,6 +22,7 @@
 
 #set default value for error
 err=0;
+shellcheck --version
 
 files=$(grep -rlE '#!/bin/(bash|sh)' ./ | grep -vE '\.(git|j2$|md$)'); 
 for file in $files; do 

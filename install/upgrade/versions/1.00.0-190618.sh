@@ -208,7 +208,7 @@ fi
 if [ -f /etc/dovecot/dovecot.conf ]; then
     # Update Dovecot configuration and restart Dovecot service
     mv  /etc/dovecot/dovecot.conf $HESTIA_BACKUP/conf/
-    cp -f $HESTIA_INSTALL_DIR/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
+    cp -f $HESTIA_COMMON_DIR/dovecot/dovecot.conf /etc/dovecot/dovecot.conf
     systemctl restart dovecot
     sleep 0.5
 fi

@@ -116,12 +116,6 @@ steps:
 
 trigger:
       event: [ pull_request, push ]
-      ref:
-      - refs/heads/staging/*
-      - refs/heads/beta
-      - refs/heads/release
-      - refs/heads/main
-      - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -173,4 +167,4 @@ trigger:
 
 ---
 kind: signature
-hmac: a191a477aa337f2efff534022164906ff20ef2b6340ec808d128c09a06d7eaa3
+hmac: 86e6e07c275d77c569fb1eaad9bed893d92743f5145dea2dad3f0a1d5e66460f

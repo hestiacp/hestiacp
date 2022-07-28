@@ -23,7 +23,7 @@
 #set default value for error
 err=0;
 
-files=$(grep -rlE '#!/bin/(bash|sh)' ./bin/ | grep -vE '\.(git|j2$|md$)'); 
+files=$(grep -rlE '#!/bin/(bash|sh)' ./ | grep -vE '\.(git|j2$|md$)'); 
 for file in $files; do 
     echo "Linting: $file"
     shellcheck -x "$file" --severity="error" -e "SC2086,SC2002,SC2153,SC2181,SC2153,SC2129,SC2016,SC2196,SC1090,SC2031,SC2010,SC2143,SC2046" 

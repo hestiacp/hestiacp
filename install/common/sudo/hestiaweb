@@ -6,5 +6,4 @@ Defaults:admin !requiretty
 Defaults:root !requiretty
 
 # sudo is limited to hestia scripts
-admin   ALL=NOPASSWD:/usr/local/vesta/bin/*
-admin   ALL=NOPASSWD:/usr/local/hestia/bin/*
+hestiaweb   ALL=NOPASSWD:/usr/local/hestia/bin/*

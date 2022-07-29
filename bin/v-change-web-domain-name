@@ -110,6 +110,11 @@ if [ -n "$PROXY_SYSTEM" ]; then
     fi
 fi
 
+# Delete backend
+if [ -n "$BACKEND" ]; then
+    delete_web_backend
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

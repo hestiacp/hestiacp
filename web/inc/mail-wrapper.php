@@ -26,7 +26,8 @@ if (!empty( $data['config']['LANGUAGE'])) {
 }
 
 // Define vars
-$from = 'noreply@'.gethostname();
+$hostname = gethostbyaddr(gethostbyname(gethostname()));
+$from = 'noreply@'.$hostname;
 $from_name = _('Hestia Control Panel');
 $to = $argv[3]."\n";
 $subject = $argv[2]."\n";

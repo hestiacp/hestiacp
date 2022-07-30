@@ -72,6 +72,15 @@ if [ ! -z "$new" ]; then
             sed -i "s/$old/$new/g" $HESTIA/data/users/$user/web.conf
             $BIN/v-rebuild-web-domains "$user" no
         done
+        
+        if [ -e "/etc/apache2/mods-available/remoteip.conf" ]; then
+           sed -i "s/$old/$new/g" /etc/apache2/mods-available/remoteip.conf
+        fi
+        
+        if [ -e "/etc/apache2/mods-enabled/rpaf.conf" ]; then
+           sed -i "s/$old/$new/g" /etc/apache2/mods-enabled/rpaf.conf
+        fi
+        
         $BIN/v-restart-proxy
         $BIN/v-restart-web
     fi

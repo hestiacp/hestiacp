@@ -4,6 +4,7 @@ namespace Hestia\WebApp\Installers\Wordpress;
 
 use Hestia\System\Util;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class WordpressSetup extends BaseSetup
 {
@@ -110,16 +111,18 @@ class WordpressSetup extends BaseSetup
         }
 
         exec("/usr/bin/curl --location --post301 --insecure --resolve ".$this->domain.":$webPort:".$this->appcontext->getWebDomainIp($this->domain)." "
-            . escapeshellarg($webDomain.$options['install_directory']."/wp-admin/install.php?step=2")
-            . " -d " . escapeshellarg(
+            . quoteshellarg($webDomain.$options['install_directory']."/wp-admin/install.php?step=2")
+            . " -d " . quoteshellarg(
                 "weblog_title=" . rawurlencode($options['site_name'])
             . "&user_name="      . rawurlencode($options['wordpress_account_username'])
             . "&admin_password=" . rawurlencode($options['wordpress_account_password'])
             . "&admin_password2=". rawurlencode($options['wordpress_account_password'])
             . "&admin_email="    . rawurlencode($options['wordpress_account_email'])
             ), $output, $return_var);
-
-
+        
+        if ( strpos(implode(PHP_EOL,$output),'Error establishing a database connection') !== false){
+           throw new \Exception('Error establishing a database connection'); 
+        }
         if ($return_var > 0) {
             throw new \Exception(implode(PHP_EOL, $output));
         }

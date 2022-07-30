@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 $TAB = 'SERVER';
 
@@ -173,6 +174,12 @@ if (!empty($_SESSION['SMTP_RELAY_USER'])) {
     $v_smtp_relay_user = '';
 }
 $v_smtp_relay_pass = '';
+if (empty($_POST['v_experimental_features'])){
+    $_POST['v_experimental_features'] = 'false';
+}
+if (empty($_POST['v_policy_user_view_suspended'])){
+    $_POST['v_policy_user_view_suspended'] = 'false';
+}
 
 // List Database hosts
 exec(HESTIA_CMD."v-list-database-hosts json", $output, $return_var);
@@ -206,7 +213,7 @@ foreach ($backup_types as $backup_type) {
     if ($backup_type == 'local') {
         $v_backup = 'yes';
     } else {
-        exec(HESTIA_CMD."v-list-backup-host ".escapeshellarg($backup_type)." json", $output, $return_var);
+        exec(HESTIA_CMD."v-list-backup-host ".quoteshellarg($backup_type)." json", $output, $return_var);
         $v_remote_backup = json_decode(implode('', $output), true);
         unset($output);
         if (in_array($backup_type, array('ftp','sftp'))) {
@@ -286,7 +293,7 @@ if (!empty($_POST['save'])) {
 
     // Change hostname
     if ((!empty($_POST['v_hostname'])) && ($v_hostname != $_POST['v_hostname'])) {
-        exec(HESTIA_CMD."v-change-sys-hostname ".escapeshellarg($_POST['v_hostname']), $output, $return_var);
+        exec(HESTIA_CMD."v-change-sys-hostname ".quoteshellarg($_POST['v_hostname']), $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
         $v_hostname = $_POST['v_hostname'];
@@ -303,7 +310,7 @@ if (!empty($_POST['save'])) {
                 array_map(function ($php_version) use ($post_php) {
                     if (array_key_exists($php_version->tpl, $post_php)) {
                         if (!$php_version->installed) {
-                            exec(HESTIA_CMD . "v-add-web-php " . escapeshellarg($php_version->version), $output, $return_var);
+                            exec(HESTIA_CMD . "v-add-web-php " . quoteshellarg($php_version->version), $output, $return_var);
                             check_return_code($return_var, $output);
                             unset($output);
                             if (empty($_SESSION['error_msg'])) {
@@ -312,7 +319,7 @@ if (!empty($_POST['save'])) {
                         }
                     } else {
                         if ($php_version->installed && !$php_version->protected) {
-                            exec(HESTIA_CMD . "v-delete-web-php " . escapeshellarg($php_version->version), $output, $return_var);
+                            exec(HESTIA_CMD . "v-delete-web-php " . quoteshellarg($php_version->version), $output, $return_var);
                             check_return_code($return_var, $output);
                             unset($output);
                             if (empty($_SESSION['error_msg'])) {
@@ -328,7 +335,7 @@ if (!empty($_POST['save'])) {
 
         if (empty($_SESSION['error_msg'])) {
             if ('php-'.$_POST['v_php_default_version'] != DEFAULT_PHP_VERSION) {
-                exec(HESTIA_CMD . "v-change-sys-php " . escapeshellarg($_POST['v_php_default_version']), $output, $return_var);
+                exec(HESTIA_CMD . "v-change-sys-php " . quoteshellarg($_POST['v_php_default_version']), $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
                 //force reload
@@ -382,7 +389,7 @@ if (!empty($_POST['save'])) {
             }
 
             if ($v_timezone != $v_tz) {
-                exec(HESTIA_CMD."v-change-sys-timezone ".escapeshellarg($v_tz), $output, $return_var);
+                exec(HESTIA_CMD."v-change-sys-timezone ".quoteshellarg($v_tz), $output, $return_var);
                 check_return_code($return_var, $output);
                 $v_timezone = $v_tz;
                 unset($output);
@@ -394,12 +401,12 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_language'])) && ($_SESSION['LANGUAGE'] != $_POST['v_language'])) {
             if (isset($_POST['v_language_update'])) {
-                exec(HESTIA_CMD."v-change-sys-language ".escapeshellarg($_POST['v_language'])." yes", $output, $return_var);
+                exec(HESTIA_CMD."v-change-sys-language ".quoteshellarg($_POST['v_language'])." yes", $output, $return_var);
                 if (empty($_SESSION['error_msg'])) {
                     $_SESSION['LANGUAGE'] = $_POST['v_language'];
                 }
             }
-            exec(HESTIA_CMD."v-change-sys-language ".escapeshellarg($_POST['v_language']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-language ".quoteshellarg($_POST['v_language']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -411,7 +418,7 @@ if (!empty($_POST['save'])) {
     // Update theme
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_theme'] != $_SESSION['THEME']) {
-            exec(HESTIA_CMD."v-change-sys-config-value THEME ".escapeshellarg($_POST['v_theme']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value THEME ".quoteshellarg($_POST['v_theme']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
         }
@@ -425,7 +432,7 @@ if (!empty($_POST['save'])) {
             $_POST['v_debug_mode'] = 'false';
         }
         if ($_POST['v_debug_mode'] != $_SESSION['DEBUG_MODE']) {
-            exec(HESTIA_CMD."v-change-sys-config-value DEBUG_MODE ".escapeshellarg($_POST['v_debug_mode']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value DEBUG_MODE ".quoteshellarg($_POST['v_debug_mode']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             $v_debug_mode_adv = 'yes';
@@ -440,28 +447,28 @@ if (!empty($_POST['save'])) {
             } else {
                 $_POST['v_plugin_app_installer'] = 'false';
             }
-            exec(HESTIA_CMD."v-change-sys-config-value PLUGIN_APP_INSTALLER ".escapeshellarg($_POST['v_plugin_app_installer']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value PLUGIN_APP_INSTALLER ".quoteshellarg($_POST['v_plugin_app_installer']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
         }
     }
 
     // Update experimental features status
-    if (empty($_SESSION['error_msg'])) {
+    if (empty($_SESSION['error_msg']) && $_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) {
         if ($_POST['v_experimental_features'] == 'on') {
             $_POST['v_experimental_features'] = 'true';
         } else {
             $_POST['v_experimental_features'] = 'false';
         }
         if ($_POST['v_experimental_features'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_ENABLE_BACON ".escapeshellarg($_POST['v_experimental_features']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_ENABLE_BACON ".quoteshellarg($_POST['v_experimental_features']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             $v_debug_mode_adv = 'yes';
         }
         if (($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_SYSTEM_ENABLE_BACON']) && $_POST['v_experimental_features'] == "false") {
             //disable preview mode
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".escapeshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".quoteshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
         }
@@ -559,7 +566,7 @@ if (!empty($_POST['save'])) {
     // Update mysql pasword
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_mysql_password'])) {
-            exec(HESTIA_CMD."v-change-database-host-password mysql localhost root ".escapeshellarg($_POST['v_mysql_password']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-database-host-password mysql localhost root ".quoteshellarg($_POST['v_mysql_password']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             $v_db_adv = 'yes';
@@ -569,7 +576,7 @@ if (!empty($_POST['save'])) {
     // Update webmail url
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_webmail_alias'] != $_SESSION['WEBMAIL_ALIAS']) {
-            exec(HESTIA_CMD."v-change-sys-webmail ".escapeshellarg($_POST['v_webmail_alias']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-webmail ".quoteshellarg($_POST['v_webmail_alias']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             $v_mail_adv = 'yes';
@@ -583,11 +590,11 @@ if (!empty($_POST['save'])) {
                      ($_POST['v_smtp_relay_user'] != $v_smtp_relay_user) ||
                      ($_POST['v_smtp_relay_port'] != $v_smtp_relay_port)) {
                 $v_smtp_relay = true;
-                $v_smtp_relay_host = escapeshellarg($_POST['v_smtp_relay_host']);
-                $v_smtp_relay_user = escapeshellarg($_POST['v_smtp_relay_user']);
-                $v_smtp_relay_pass = escapeshellarg($_POST['v_smtp_relay_pass']);
+                $v_smtp_relay_host = quoteshellarg($_POST['v_smtp_relay_host']);
+                $v_smtp_relay_user = quoteshellarg($_POST['v_smtp_relay_user']);
+                $v_smtp_relay_pass = quoteshellarg($_POST['v_smtp_relay_pass']);
                 if (!empty($_POST['v_smtp_relay_port'])) {
-                    $v_smtp_relay_port = escapeshellarg($_POST['v_smtp_relay_port']);
+                    $v_smtp_relay_port = quoteshellarg($_POST['v_smtp_relay_port']);
                 } else {
                     $v_smtp_relay_port = '587';
                 }
@@ -608,7 +615,7 @@ if (!empty($_POST['save'])) {
     // Update phpMyAdmin url
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_mysql_url'] != $_SESSION['DB_PMA_ALIAS']) {
-            exec(HESTIA_CMD."v-change-sys-db-alias pma ".escapeshellarg($_POST['v_mysql_url']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-db-alias pma ".quoteshellarg($_POST['v_mysql_url']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             $v_db_adv = 'yes';
@@ -618,7 +625,7 @@ if (!empty($_POST['save'])) {
     // Update phpPgAdmin url
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_pgsql_url'] != $_SESSION['DB_PGA_ALIAS']) {
-            exec(HESTIA_CMD."v-change-sys-db-alias pga ".escapeshellarg($_POST['v_pgsql_url']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-db-alias pga ".quoteshellarg($_POST['v_pgsql_url']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             $v_db_adv = 'yes';
@@ -638,7 +645,7 @@ if (!empty($_POST['save'])) {
             } else {
                 $_POST['v_upgrade_send_notification_email'] = 'false';
             }
-            exec(HESTIA_CMD."v-change-sys-config-value UPGRADE_SEND_EMAIL ".escapeshellarg($_POST['v_upgrade_send_notification_email']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value UPGRADE_SEND_EMAIL ".quoteshellarg($_POST['v_upgrade_send_notification_email']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             $v_upgrade_notification_adv = 'yes';
@@ -661,7 +668,7 @@ if (!empty($_POST['save'])) {
             } else {
                 $_POST['v_upgrade_send_email_log'] = 'false';
             }
-            exec(HESTIA_CMD."v-change-sys-config-value UPGRADE_SEND_EMAIL_LOG ".escapeshellarg($_POST['v_upgrade_send_email_log']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value UPGRADE_SEND_EMAIL_LOG ".quoteshellarg($_POST['v_upgrade_send_email_log']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             $v_upgrade_send_log_adv = 'yes';
@@ -700,7 +707,7 @@ if (!empty($_POST['save'])) {
             if ($_POST['v_backup_mode'] == 'gzip') {
                 $_POST['v_backup_gzip'] = 9;
             }
-            exec(HESTIA_CMD."v-change-sys-config-value BACKUP_GZIP ".escapeshellarg($_POST['v_backup_gzip']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value BACKUP_GZIP ".quoteshellarg($_POST['v_backup_gzip']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -713,7 +720,7 @@ if (!empty($_POST['save'])) {
     // Change backup mode
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_backup_mode'] != $v_backup_mode) {
-            exec(HESTIA_CMD."v-change-sys-config-value BACKUP_MODE ".escapeshellarg($_POST['v_backup_mode']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value BACKUP_MODE ".quoteshellarg($_POST['v_backup_mode']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -725,7 +732,7 @@ if (!empty($_POST['save'])) {
                 if (empty($_SESSION['error_msg'])) {
                     $v_backup_gzip = $_POST['v_backup_gzip'];
                 }
-                exec(HESTIA_CMD."v-change-sys-config-value BACKUP_GZIP ".escapeshellarg($_POST['v_backup_gzip']), $output, $return_var);
+                exec(HESTIA_CMD."v-change-sys-config-value BACKUP_GZIP ".quoteshellarg($_POST['v_backup_gzip']), $output, $return_var);
             }
         }
     }
@@ -738,7 +745,7 @@ if (!empty($_POST['save'])) {
         if ($_POST['v_backup_dir'] != $v_backup_dir) {
             /*
             See #1655
-            exec (HESTIA_CMD."v-change-sys-config-value BACKUP ".escapeshellarg($_POST['v_backup_dir']), $output, $return_var);
+            exec (HESTIA_CMD."v-change-sys-config-value BACKUP ".quoteshellarg($_POST['v_backup_dir']), $output, $return_var);
             check_return_code($return_var,$output);
             unset($output);
             */
@@ -753,12 +760,12 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         if (($v_backup_host == '' && $v_backup_bucket == '' && ((!empty($_POST['v_backup_host'])) || !empty($_POST['v_backup_bucket'])))) {
             if (in_array($_POST['v_backup_type'], array('ftp','sftp'))) {
-                $v_backup_host = escapeshellarg($_POST['v_backup_host']);
-                $v_backup_port = escapeshellarg($_POST['v_backup_port']);
-                $v_backup_type = escapeshellarg($_POST['v_backup_type']);
-                $v_backup_username = escapeshellarg($_POST['v_backup_username']);
+                $v_backup_host = quoteshellarg($_POST['v_backup_host']);
+                $v_backup_port = quoteshellarg($_POST['v_backup_port']);
+                $v_backup_type = quoteshellarg($_POST['v_backup_type']);
+                $v_backup_username = quoteshellarg($_POST['v_backup_username']);
                 $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
-                $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
+                $v_backup_bpath = quoteshellarg($_POST['v_backup_bpath']);
                 exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." ". $v_backup_password ." ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
@@ -784,21 +791,21 @@ if (!empty($_POST['save'])) {
                 $v_backup_adv = 'yes';
                 $v_backup_remote_adv = 'yes';
             } elseif (in_array($_POST['v_backup_type'], array('b2'))) {
-                $v_backup_type = escapeshellarg($_POST['v_backup_type']);
-                $v_backup_bucket = escapeshellarg($_POST['v_backup_bucket']);
-                $v_backup_application_id = escapeshellarg($_POST['v_backup_application_id']);
-                $v_backup_application_key = escapeshellarg($_POST['v_backup_application_key']);
+                $v_backup_type = quoteshellarg($_POST['v_backup_type']);
+                $v_backup_bucket = quoteshellarg($_POST['v_backup_bucket']);
+                $v_backup_application_id = quoteshellarg($_POST['v_backup_application_id']);
+                $v_backup_application_key = quoteshellarg($_POST['v_backup_application_key']);
                 exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_bucket ." ". $v_backup_application_id ." ". $v_backup_application_key, $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
                 if (empty($_SESSION['error_msg'])) {
-                    $v_backup_bucket = escapeshellarg($_POST['v_backup_bucket']);
+                    $v_backup_bucket = quoteshellarg($_POST['v_backup_bucket']);
                 }
                 if (empty($_SESSION['error_msg'])) {
-                    $v_backup_application_id = escapeshellarg($_POST['v_backup_application_id']);
+                    $v_backup_application_id = quoteshellarg($_POST['v_backup_application_id']);
                 }
                 if (empty($_SESSION['error_msg'])) {
-                    $v_backup_application_key = escapeshellarg($_POST['v_backup_application_key']);
+                    $v_backup_application_key = quoteshellarg($_POST['v_backup_application_key']);
                 }
                 $v_backup_new = 'yes';
                 $v_backup_adv = 'yes';
@@ -810,15 +817,15 @@ if (!empty($_POST['save'])) {
     // Change remote backup host type
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] != $v_backup_type) && $v_backup_type != '') {
-            exec(HESTIA_CMD."v-delete-backup-host " . escapeshellarg($v_backup_type), $output, $return_var);
+            exec(HESTIA_CMD."v-delete-backup-host " . quoteshellarg($v_backup_type), $output, $return_var);
             unset($output);
             if (in_array($_POST['v_backup_type'], array('ftp','sftp'))) {
-                $v_backup_host = escapeshellarg($_POST['v_backup_host']);
-                $v_backup_port = escapeshellarg($_POST['v_backup_port']);
-                $v_backup_type = escapeshellarg($_POST['v_backup_type']);
-                $v_backup_username = escapeshellarg($_POST['v_backup_username']);
+                $v_backup_host = quoteshellarg($_POST['v_backup_host']);
+                $v_backup_port = quoteshellarg($_POST['v_backup_port']);
+                $v_backup_type = quoteshellarg($_POST['v_backup_type']);
+                $v_backup_username = quoteshellarg($_POST['v_backup_username']);
                 $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
-                $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
+                $v_backup_bpath = quoteshellarg($_POST['v_backup_bpath']);
                 exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." ". $v_backup_password ." ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
@@ -843,21 +850,21 @@ if (!empty($_POST['save'])) {
                 $v_backup_adv = 'yes';
                 $v_backup_remote_adv = 'yes';
             } elseif (in_array($_POST['v_backup_type'], array('b2'))) {
-                $v_backup_bucket = escapeshellarg($_POST['v_backup_bucket']);
-                $v_backup_application_id = escapeshellarg($_POST['v_backup_application_id']);
-                $v_backup_application_key = escapeshellarg($_POST['v_backup_application_key']);
+                $v_backup_bucket = quoteshellarg($_POST['v_backup_bucket']);
+                $v_backup_application_id = quoteshellarg($_POST['v_backup_application_id']);
+                $v_backup_application_key = quoteshellarg($_POST['v_backup_application_key']);
                 exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_bucket ." ". $v_backup_application_id ." ". $v_backup_application_key, $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
-                $v_backup_type = escapeshellarg($_POST['v_backup_type']);
+                $v_backup_type = quoteshellarg($_POST['v_backup_type']);
                 if (empty($_SESSION['error_msg'])) {
-                    $v_backup_bucket = escapeshellarg($_POST['v_backup_bucket']);
+                    $v_backup_bucket = quoteshellarg($_POST['v_backup_bucket']);
                 }
                 if (empty($_SESSION['error_msg'])) {
-                    $v_backup_application_id = escapeshellarg($_POST['v_backup_application_id']);
+                    $v_backup_application_id = quoteshellarg($_POST['v_backup_application_id']);
                 }
                 if (empty($_SESSION['error_msg'])) {
-                    $v_backup_application_key = escapeshellarg($_POST['v_backup_application_key']);
+                    $v_backup_application_key = quoteshellarg($_POST['v_backup_application_key']);
                 }
                 $v_backup_adv = 'yes';
                 $v_backup_remote_adv = 'yes';
@@ -870,12 +877,12 @@ if (!empty($_POST['save'])) {
         if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] == $v_backup_type) && (!isset($v_backup_new))) {
             if (in_array($_POST['v_backup_type'], array('ftp','sftp'))) {
                 if (($_POST['v_backup_host'] != $v_backup_host) || ($_POST['v_backup_username'] != $v_backup_username) || ($_POST['v_backup_password'] != $v_backup_password) || ($_POST['v_backup_bpath'] != $v_backup_bpath || $_POST['v_backup_port'] != $v_backup_port)) {
-                    $v_backup_host = escapeshellarg($_POST['v_backup_host']);
-                    $v_backup_port = escapeshellarg($_POST['v_backup_port']);
-                    $v_backup_type = escapeshellarg($_POST['v_backup_type']);
-                    $v_backup_username = escapeshellarg($_POST['v_backup_username']);
+                    $v_backup_host = quoteshellarg($_POST['v_backup_host']);
+                    $v_backup_port = quoteshellarg($_POST['v_backup_port']);
+                    $v_backup_type = quoteshellarg($_POST['v_backup_type']);
+                    $v_backup_username = quoteshellarg($_POST['v_backup_username']);
                     $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
-                    $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
+                    $v_backup_bpath = quoteshellarg($_POST['v_backup_bpath']);
                     exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." ". $v_backup_password ." ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
                     check_return_code($return_var, $output);
                     unset($output);
@@ -902,21 +909,21 @@ if (!empty($_POST['save'])) {
                 }
             } elseif (in_array($_POST['v_backup_type'], array('b2'))) {
                 if (($_POST['v_backup_bucket'] != $v_backup_bucket) || ($_POST['v_backup_application_key'] != $v_backup_application_key) || ($_POST['v_backup_application_id'] != $v_backup_application_id)) {
-                    $v_backup_type = escapeshellarg($_POST['v_backup_type']);
-                    $v_backup_bucket = escapeshellarg($_POST['v_backup_bucket']);
-                    $v_backup_application_id = escapeshellarg($_POST['v_backup_application_id']);
-                    $v_backup_application_key = escapeshellarg($_POST['v_backup_application_key']);
+                    $v_backup_type = quoteshellarg($_POST['v_backup_type']);
+                    $v_backup_bucket = quoteshellarg($_POST['v_backup_bucket']);
+                    $v_backup_application_id = quoteshellarg($_POST['v_backup_application_id']);
+                    $v_backup_application_key = quoteshellarg($_POST['v_backup_application_key']);
                     exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_bucket ." ". $v_backup_application_id ." ". $v_backup_application_key, $output, $return_var);
                     check_return_code($return_var, $output);
                     unset($output);
                     if (empty($_SESSION['error_msg'])) {
-                        $v_backup_bucket = escapeshellarg($_POST['v_backup_bucket']);
+                        $v_backup_bucket = quoteshellarg($_POST['v_backup_bucket']);
                     }
                     if (empty($_SESSION['error_msg'])) {
-                        $v_backup_application_id = escapeshellarg($_POST['v_backup_application_id']);
+                        $v_backup_application_id = quoteshellarg($_POST['v_backup_application_id']);
                     }
                     if (empty($_SESSION['error_msg'])) {
-                        $v_backup_application_key = escapeshellarg($_POST['v_backup_application_key']);
+                        $v_backup_application_key = quoteshellarg($_POST['v_backup_application_key']);
                     }
                     $v_backup_adv = 'yes';
                     $v_backup_remote_adv = 'yes';
@@ -928,7 +935,7 @@ if (!empty($_POST['save'])) {
     // Delete remote backup host
     if (empty($_SESSION['error_msg'])) {
         if (empty($_POST['v_backup_remote_adv']) && $v_backup_remote_adv != '') {
-            exec(HESTIA_CMD."v-delete-backup-host ".escapeshellarg($v_backup_type), $output, $return_var);
+            exec(HESTIA_CMD."v-delete-backup-host ".quoteshellarg($v_backup_type), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -966,7 +973,7 @@ if (!empty($_POST['save'])) {
             if ($_POST['v_inactive_session_timeout'] < 1) {
                 $_SESSION['error_msg'] = _('Inactive session timeout can not lower than 1 minute');
             } else {
-                exec(HESTIA_CMD."v-change-sys-config-value INACTIVE_SESSION_TIMEOUT ".escapeshellarg($_POST['v_inactive_session_timeout']), $output, $return_var);
+                exec(HESTIA_CMD."v-change-sys-config-value INACTIVE_SESSION_TIMEOUT ".quoteshellarg($_POST['v_inactive_session_timeout']), $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
                 if (empty($_SESSION['error_msg'])) {
@@ -980,7 +987,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_CSRF_STRICTNESS
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_csrf_strictness'] != $_SESSION['POLICY_CSRF_STRICTNESS']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_CSRF_STRICTNESS ".escapeshellarg($_POST['v_policy_csrf_strictness']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_CSRF_STRICTNESS ".quoteshellarg($_POST['v_policy_csrf_strictness']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -993,7 +1000,7 @@ if (!empty($_POST['save'])) {
     // Change ENFORCE_SUBDOMAIN_OWNERSHIP
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_enforce_subdomain_ownership'] != $_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP']) {
-            exec(HESTIA_CMD."v-change-sys-config-value ENFORCE_SUBDOMAIN_OWNERSHIP ".escapeshellarg($_POST['v_enforce_subdomain_ownership']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value ENFORCE_SUBDOMAIN_OWNERSHIP ".quoteshellarg($_POST['v_enforce_subdomain_ownership']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1006,7 +1013,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_USER_EDIT_DETAILS
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_edit_details'] != $_SESSION['POLICY_USER_EDIT_DETAILS']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_DETAILS ".escapeshellarg($_POST['v_policy_user_edit_details']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_DETAILS ".quoteshellarg($_POST['v_policy_user_edit_details']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1019,7 +1026,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_USER_EDIT_WEB_TEMPLATES
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_edit_web_templates'] != $_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_WEB_TEMPLATES ".escapeshellarg($_POST['v_policy_user_edit_web_templates']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_WEB_TEMPLATES ".quoteshellarg($_POST['v_policy_user_edit_web_templates']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1032,7 +1039,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_USER_EDIT_DNS_TEMPLATES
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_edit_dns_templates'] != $_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_DNS_TEMPLATES ".escapeshellarg($_POST['v_policy_user_edit_dns_templates']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_EDIT_DNS_TEMPLATES ".quoteshellarg($_POST['v_policy_user_edit_dns_templates']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1057,7 +1064,7 @@ if (!empty($_POST['save'])) {
         }
         if (empty($_SESSION['error_msg'])) {
             if ($_POST['v_api_system'] != $_SESSION['API_SYSTEM']) {
-                exec(HESTIA_CMD."v-change-sys-config-value API_SYSTEM ".escapeshellarg($_POST['v_api_system']), $output, $return_var);
+                exec(HESTIA_CMD."v-change-sys-config-value API_SYSTEM ".quoteshellarg($_POST['v_api_system']), $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
                 if (empty($_SESSION['error_msg'])) {
@@ -1074,7 +1081,7 @@ if (!empty($_POST['save'])) {
                 if ($_POST['v_api'] == 'yes') {
                     $api_status = 'yes';
                 }
-                exec(HESTIA_CMD."v-change-sys-config-value API ".escapeshellarg($api_status), $output, $return_var);
+                exec(HESTIA_CMD."v-change-sys-config-value API ".quoteshellarg($api_status), $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
                 if (empty($_SESSION['error_msg'])) {
@@ -1098,7 +1105,7 @@ if (!empty($_POST['save'])) {
                     }
                 }
                 if (implode(',', $ips) != $_SESSION['API_ALLOWED_IP']) {
-                    exec(HESTIA_CMD."v-change-sys-config-value API_ALLOWED_IP ".escapeshellarg(implode(',', $ips)), $output, $return_var);
+                    exec(HESTIA_CMD."v-change-sys-config-value API_ALLOWED_IP ".quoteshellarg(implode(',', $ips)), $output, $return_var);
                     check_return_code($return_var, $output);
                     unset($output);
                     if (empty($_SESSION['error_msg'])) {
@@ -1114,7 +1121,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_USER_VIEW_LOGS
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_view_logs'] != $_SESSION['POLICY_USER_VIEW_LOGS']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_LOGS ".escapeshellarg($_POST['v_policy_user_view_logs']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_LOGS ".quoteshellarg($_POST['v_policy_user_view_logs']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1127,7 +1134,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_USER_DELETE_LOGS
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_delete_logs'] != $_SESSION['POLICY_USER_DELETE_LOGS']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_DELETE_LOGS ".escapeshellarg($_POST['v_policy_user_delete_logs']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_DELETE_LOGS ".quoteshellarg($_POST['v_policy_user_delete_logs']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1140,7 +1147,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_SYSTEM_PASSWORD_RESET
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_system_password_reset'] != $_SESSION['POLICY_SYSTEM_PASSWORD_RESET']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_PASSWORD_RESET ".escapeshellarg($_POST['v_policy_system_password_reset']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_PASSWORD_RESET ".quoteshellarg($_POST['v_policy_system_password_reset']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1153,7 +1160,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_SYSTEM_PROTECTED_ADMIN
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_system_protected_admin'] != $_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_PROTECTED_ADMIN ".escapeshellarg($_POST['v_policy_system_protected_admin']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_PROTECTED_ADMIN ".quoteshellarg($_POST['v_policy_system_protected_admin']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1166,7 +1173,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_USER_VIEW_SUSPENDED
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_user_view_suspended'] != $_SESSION['POLICY_USER_VIEW_SUSPENDED'] && !empty($_SESSION['POLICY_USER_VIEW_SUSPENDED'])) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".escapeshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED ".quoteshellarg($_POST['v_policy_user_view_suspended']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1188,7 +1195,7 @@ if (!empty($_POST['save'])) {
         }
         {
                 if ($_POST['v_policy_user_change_theme'] != $_SESSION['POLICY_USER_CHANGE_THEME']) {
-                    exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_CHANGE_THEME ".escapeshellarg($_POST['v_policy_user_change_theme']), $output, $return_var);
+                    exec(HESTIA_CMD."v-change-sys-config-value POLICY_USER_CHANGE_THEME ".quoteshellarg($_POST['v_policy_user_change_theme']), $output, $return_var);
                     check_return_code($return_var, $output);
                     unset($output);
                     if ($_POST['v_policy_user_change_theme']) {
@@ -1205,7 +1212,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_SYSTEM_HIDE_ADMIN
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_system_hide_admin'] != $_SESSION['POLICY_SYSTEM_HIDE_ADMIN']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_HIDE_ADMIN ".escapeshellarg($_POST['v_policy_system_hide_admin']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_HIDE_ADMIN ".quoteshellarg($_POST['v_policy_system_hide_admin']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1219,7 +1226,7 @@ if (!empty($_POST['save'])) {
     // Change POLICY_SYSTEM_HIDE_SERVICES
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_policy_system_hide_services'] != $_SESSION['POLICY_SYSTEM_HIDE_SERVICES']) {
-            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_HIDE_SERVICES ".escapeshellarg($_POST['v_policy_system_hide_services']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value POLICY_SYSTEM_HIDE_SERVICES ".quoteshellarg($_POST['v_policy_system_hide_services']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {
@@ -1232,7 +1239,7 @@ if (!empty($_POST['save'])) {
     // Change login style
     if (empty($_SESSION['error_msg'])) {
         if ($_POST['v_login_style'] != $_SESSION['LOGIN_STYLE']) {
-            exec(HESTIA_CMD."v-change-sys-config-value LOGIN_STYLE ".escapeshellarg($_POST['v_login_style']), $output, $return_var);
+            exec(HESTIA_CMD."v-change-sys-config-value LOGIN_STYLE ".quoteshellarg($_POST['v_login_style']), $output, $return_var);
             check_return_code($return_var, $output);
             unset($output);
             if (empty($_SESSION['error_msg'])) {

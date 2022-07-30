@@ -1,20 +1,22 @@
 <?php
 session_start();
 
-
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
-if (!file_exists(dirname(__FILE__).'/vendor/autoload.php')) {
-    trigger_error('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
-    echo 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line';
+
+try {
+    require_once 'vendor/autoload.php';
+} catch (Throwable $ex) {
+    $errstr = 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
+    trigger_error($errstr);
+    echo $errstr;
     exit(1);
 }
 
-require 'vendor/autoload.php';
-
+define('HESTIA_DIR_BIN', '/usr/local/hestia/bin/');
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,3);"'));
 
@@ -65,8 +67,8 @@ if (!isset($_SESSION['user_combined_ip'])) {
 
 // Checking user to use session from the same IP he has been logged in
 if ($_SESSION['user_combined_ip'] != $user_combined_ip) {
-    $v_user = escapeshellarg($_SESSION['user']);
-    $v_session_id = escapeshellarg($_SESSION['token']);
+    $v_user = quoteshellarg($_SESSION['user']);
+    $v_session_id = quoteshellarg($_SESSION['token']);
     exec(HESTIA_CMD . 'v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
     destroy_sessions();
     header('Location: /login/');
@@ -91,7 +93,7 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
 // Generate CSRF Token
 if (isset($_SESSION['user'])) {
     if (!isset($_SESSION['token'])) {
-        $token = bin2hex(file_get_contents('/dev/urandom', false, null, 0, 16));
+        $token = bin2hex(random_bytes(16));
         $_SESSION['token'] = $token;
     }
 }
@@ -107,8 +109,8 @@ if (!defined('NO_AUTH_REQUIRED')) {
         destroy_sessions();
         header('Location: /login/');
     } elseif ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
-        $v_user = escapeshellarg($_SESSION['user']);
-        $v_session_id = escapeshellarg($_SESSION['token']);
+        $v_user = quoteshellarg($_SESSION['user']);
+        $v_session_id = quoteshellarg($_SESSION['token']);
         exec(HESTIA_CMD . 'v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
         destroy_sessions();
         header('Location: /login/');
@@ -119,12 +121,12 @@ if (!defined('NO_AUTH_REQUIRED')) {
 }
 
 if (isset($_SESSION['user'])) {
-    $user = escapeshellarg($_SESSION['user']);
+    $user = quoteshellarg($_SESSION['user']);
     $user_plain = htmlentities($_SESSION['user']);
 }
 
 if (isset($_SESSION['look']) && $_SESSION['look']  != '' && ($_SESSION['userContext'] === 'admin')) {
-    $user = escapeshellarg($_SESSION['look']);
+    $user = quoteshellarg($_SESSION['look']);
     $user_plain = htmlentities($_SESSION['look']);
 }
 
@@ -498,7 +500,7 @@ function backendtpl_with_webdomains()
 
     $backend_list=[];
     foreach ($users as $user => $user_details) {
-        exec(HESTIA_CMD . 'v-list-web-domains '. escapeshellarg($user) . ' json', $output, $return_var);
+        exec(HESTIA_CMD . 'v-list-web-domains '. quoteshellarg($user) . ' json', $output, $return_var);
         $domains = json_decode(implode('', $output), true);
         unset($output);
         foreach ($domains as $domain => $domain_details) {

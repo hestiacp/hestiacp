@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = 'FIREWALL';
@@ -19,7 +20,7 @@ if (empty($_GET['rule'])) {
 }
 
 // List rule
-$v_rule = escapeshellarg($_GET['rule']);
+$v_rule = quoteshellarg($_GET['rule']);
 exec(HESTIA_CMD."v-list-firewall-rule ".$v_rule." 'json'", $output, $return_var);
 check_return_code_redirect($return_var, $output,'/list/firewall');
 $data = json_decode(implode('', $output), true);
@@ -89,15 +90,15 @@ if (!empty($_POST['save'])) {
         $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
     }
     if (empty($_SESSION['error_msg'])) {
-        $v_rule = escapeshellarg($_GET['rule']);
-        $v_action = escapeshellarg($_POST['v_action']);
-        $v_protocol = escapeshellarg($_POST['v_protocol']);
+        $v_rule = quoteshellarg($_GET['rule']);
+        $v_action = quoteshellarg($_POST['v_action']);
+        $v_protocol = quoteshellarg($_POST['v_protocol']);
         $v_port = str_replace(" ", ",", $_POST['v_port']);
         $v_port = preg_replace('/\,+/', ',', $v_port);
         $v_port = trim($v_port, ",");
-        $v_port = escapeshellarg($v_port);
-        $v_ip = escapeshellarg($_POST['v_ip']);
-        $v_comment = escapeshellarg($_POST['v_comment']);
+        $v_port = quoteshellarg($v_port);
+        $v_ip = quoteshellarg($_POST['v_ip']);
+        $v_comment = quoteshellarg($_POST['v_comment']);
 
         // Change Status
         exec(HESTIA_CMD."v-change-firewall-rule ".$v_rule." ".$v_action." ".$v_ip." ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);

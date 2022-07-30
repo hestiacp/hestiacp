@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 // Main include
@@ -14,8 +15,8 @@ if ($_SESSION['userContext'] != 'admin') {
 verify_csrf($_GET);
 
 if ((!empty($_GET['ip'])) && (!empty($_GET['chain']))) {
-    $v_ip = escapeshellarg($_GET['ip']);
-    $v_chain = escapeshellarg($_GET['chain']);
+    $v_ip = quoteshellarg($_GET['ip']);
+    $v_chain = quoteshellarg($_GET['chain']);
     exec(HESTIA_CMD."v-delete-firewall-ban ".$v_ip." ".$v_chain, $output, $return_var);
 }
 check_return_code($return_var, $output);

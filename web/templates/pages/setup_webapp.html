@@ -33,7 +33,9 @@
 				<?php if( !$WebappInstaller->isDomainRootClean()): ?>
 					<span class="alert alert-info alert-with-icon">
 						<i class="fas fa-info"></i>
-						<?=_('Data loss warning!<br>Your web domain already has files uploaded, the installer will overwrite your files and/or the installation might fail.<br/><br/> Please use the installer only for empty web domains');?>
+						<?=_('Data loss warning!');?><br /><br />
+						<?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?><br /><br />
+						<?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?>
 					</span>
 					<br />
 				<?php endif; ?>

@@ -94,7 +94,7 @@ abstract class BaseSetup implements InstallerInterface
             if ($res_type === 'composer') {
                 new ComposerResource($this->appcontext, $res_data, $resource_destination);
             } elseif ($res_type === 'wp') {
-                new WpResource($this->appcontext, $res_data, $resource_destination, $options);
+                new WpResource($this->appcontext, $res_data, $resource_destination, $options, $this -> info());
             } else {
                 $this->appcontext->archiveExtract($res_data['src'], $resource_destination, 1);
             }
@@ -123,7 +123,7 @@ abstract class BaseSetup implements InstallerInterface
                     throw new \Exception('Required PHP version is not supported');
                 }
                 //convert from x.x to PHP-x_x  to accepted..
-                $this -> appcontext -> changeBackendTemplate($this -> domain, 'PHP-'.str_replace('.', '_', $php_version));
+                $this -> appcontext -> changeBackendTemplate($this -> domain, 'PHP-'.str_replace('.', '_', $options['php_version']));
             }
         }
     }

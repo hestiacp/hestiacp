@@ -28,6 +28,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'VERSION'
 
+if [ -z "$WEB_BACKEND" ]; then
+    echo "Multiple php versions are not supported for modphp"
+fi
+
 # Set file locations
 php_fpm="/etc/init.d/php$version-fpm"
 
@@ -67,7 +71,11 @@ if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
 fi
 
 # Purge php packages
-apt-get -y purge $mph > /dev/null 2>&1 &
+if [ -f '/etc/redhat-release' ]; then
+    dnf remove -y $mph > /dev/null 2>&1 &
+else
+    apt-get -y purge $mph > /dev/null 2>&1 &
+fi
 BACK_PID=$!
 
 # Check if package removal is done, print a spinner
@@ -85,7 +93,11 @@ echo
 # Check if installation was successfully
 if [ -f "$php_fpm" ]; then
     echo "ERROR: Uninstallation failed, please run the following command manually for debugging:"
-    echo "apt-get purge $mph"
+    if [ -f '/etc/redhat-release' ]; then
+        echo "dnf remove $mph"
+    else
+        echo "apt-get purge $mph"
+    fi
     exit 1; 
 fi
 

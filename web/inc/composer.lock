@@ -4,8 +4,46 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c3d62e919c2177ee2d1eff04c5d4018",
+    "content-hash": "0e158cec04413ef6031c1cc8f2fdfc45",
     "packages": [
+        {
+            "name": "hestiacp/phpquoteshellarg",
+            "version": "v1.0.1-p3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hestiacp/phpquoteshellarg.git",
+                "reference": "89cbab9b81b4482127a7bd521ccb6394dd8cda37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hestiacp/phpquoteshellarg/zipball/89cbab9b81b4482127a7bd521ccb6394dd8cda37",
+                "reference": "89cbab9b81b4482127a7bd521ccb6394dd8cda37",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/Hestiacp/quoteshellarg/quoteshellarg.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "description": "Improved escape shell arguments for support of special charactars",
+            "homepage": "https://github.com/hestiacp",
+            "keywords": [
+                "escapeshellarg",
+                "quoteshellarg"
+            ],
+            "support": {
+                "source": "https://github.com/hestiacp/phpquoteshellarg/tree/v1.0.1-p3"
+            },
+            "time": "2022-07-17T14:48:05+00:00"
+        },
         {
             "name": "phpmailer/phpmailer",
             "version": "v6.6.3",

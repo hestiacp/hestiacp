@@ -112,7 +112,7 @@ BUILD_DIR='/tmp/hestiacp-src'
 INSTALL_DIR='/usr/local/hestia'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 ARCHIVE_DIR="$SRC_DIR/src/archive/"
-architecture="$(uname -m)"
+architecture="$(arch)"
 if [ $architecture == 'aarch64' ]; then
     BUILD_ARCH='arm64'
 else
@@ -219,8 +219,12 @@ fi
 
 echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP_V"
 
-HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-OPENSSL_V='3.0.3'
+if [ -e "/etc/redhat-release" ]; then
+    HESTIA_V="${BUILD_VER}"
+else
+    HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
+fi
+OPENSSL_V='3.0.5'
 PCRE_V='10.40'
 ZLIB_V='1.2.12'
 
@@ -275,7 +279,7 @@ NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
 
 if [ "$HESTIA_DEBUG" ]; then
     if [ "$OSTYPE" = 'rhel' ]; then
-        echo "OS type          : RHEL / CentOS / Fedora"
+        echo "OS type          : RHEL / Rocky Linux / AlmaLinux / EuroLinux"
     else
         echo "OS type          : Debian / Ubuntu"
     fi
@@ -442,8 +446,8 @@ if [ "$NGINX_B" = true ] ; then
         mkdir -p $BUILD_DIR/rpmbuild
         echo Building Nginx RPM
         rpmbuild -bb --define "sourcedir $BUILD_DIR_HESTIANGINX" --buildroot=$BUILD_DIR/rpmbuild/ ${BUILD_DIR_HESTIANGINX}/hestia-nginx.spec > ${BUILD_DIR_HESTIANGINX}.rpm.log
-        cp ~/rpmbuild/RPMS/x86_64/hestia-nginx-*.rpm $RPM_DIR
-        rm ~/rpmbuild/RPMS/x86_64/hestia-nginx-*.rpm
+        cp ~/rpmbuild/RPMS/$(arch)/hestia-nginx-*.rpm $RPM_DIR
+        rm ~/rpmbuild/RPMS/$(arch)/hestia-nginx-*.rpm
         rm -rf $BUILD_DIR/rpmbuild
     fi
 
@@ -501,33 +505,18 @@ if [ "$PHP_B" = true ] ; then
         cd $BUILD_DIR_PHP
 
         # Configure PHP
-        if [ $BUILD_ARCH = 'amd64' ]; then
-            ./configure --prefix=/usr/local/hestia/php \
-                        --enable-fpm \
-                        --with-fpm-user=admin \
-                        --with-fpm-group=admin \
-                        --with-libdir=lib/x86_64-linux-gnu \
-                        --with-openssl \
-                        --with-mysqli \
-                        --with-gettext \
-                        --with-curl \
-                        --with-zip \
-                        --with-gmp \
-                        --enable-mbstring
-        else
-            ./configure --prefix=/usr/local/hestia/php \
-                        --enable-fpm \
-                        --with-fpm-user=admin \
-                        --with-fpm-group=admin \
-                        --with-libdir=lib/aarch64-linux-gnu \
-                        --with-openssl \
-                        --with-mysqli \
-                        --with-gettext \
-                        --with-curl \
-                        --with-zip \
-                        --with-gmp \
-                        --enable-mbstring
-        fi
+        ./configure --prefix=/usr/local/hestia/php \
+                    --enable-fpm \
+                    --with-fpm-user=admin \
+                    --with-fpm-group=admin \
+                    --with-libdir=lib/$(arch)-linux-gnu \
+                    --with-openssl \
+                    --with-mysqli \
+                    --with-gettext \
+                    --with-curl \
+                    --with-zip \
+                    --with-gmp \
+                    --enable-mbstring
     fi
 
     cd $BUILD_DIR_PHP
@@ -594,8 +583,8 @@ if [ "$PHP_B" = true ] ; then
         mkdir -p $BUILD_DIR/rpmbuild
         echo Building PHP RPM
         rpmbuild -bb --define "sourcedir $BUILD_DIR_HESTIAPHP" --buildroot=$BUILD_DIR/rpmbuild/ ${BUILD_DIR_HESTIAPHP}/hestia-php.spec > ${BUILD_DIR_HESTIAPHP}.rpm.log
-        cp ~/rpmbuild/RPMS/x86_64/hestia-php-*.rpm $RPM_DIR
-        rm ~/rpmbuild/RPMS/x86_64/hestia-php-*.rpm
+        cp ~/rpmbuild/RPMS/$(arch)/hestia-php-*.rpm $RPM_DIR
+        rm ~/rpmbuild/RPMS/$(arch)/hestia-php-*.rpm
         rm -rf $BUILD_DIR/rpmbuild
     fi
 
@@ -696,8 +685,8 @@ if [ "$HESTIA_B" = true ]; then
           mkdir -p $BUILD_DIR/rpmbuild
           echo Building Hestia RPM
           rpmbuild -bb --define "sourcedir $BUILD_DIR_HESTIA" --buildroot=$BUILD_DIR/rpmbuild/ ${BUILD_DIR_HESTIA}/hestia.spec > ${BUILD_DIR_HESTIA}.rpm.log
-          cp ~/rpmbuild/RPMS/x86_64/hestia-*.rpm $RPM_DIR
-          rm ~/rpmbuild/RPMS/x86_64/hestia-*.rpm
+          cp ~/rpmbuild/RPMS/$(arch)/hestia-*.rpm $RPM_DIR
+          rm ~/rpmbuild/RPMS/$(arch)/hestia-*.rpm
           rm -rf $BUILD_DIR/rpmbuild
       fi
   

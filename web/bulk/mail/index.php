@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
@@ -63,15 +64,15 @@ if ($_SESSION['userContext'] === 'admin') {
 if (empty($account)) {
     foreach ($domain as $value) {
         // Mail
-        $value = escapeshellarg($value);
+        $value = quoteshellarg($value);
         exec(HESTIA_CMD.$cmd." ".$user." ".$value, $output, $return_var);
         $restart = 'yes';
     }
 } else {
     foreach ($account as $value) {
         // Mail Account
-        $value = escapeshellarg($value);
-        $dom = escapeshellarg($domain);
+        $value = quoteshellarg($value);
+        $dom = quoteshellarg($domain);
         exec(HESTIA_CMD.$cmd." ".$user." ".$dom." ".$value, $output, $return_var);
         $restart = 'yes';
     }

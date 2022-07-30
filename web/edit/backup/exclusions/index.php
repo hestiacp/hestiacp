@@ -1,4 +1,5 @@
 <?php
+use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 $TAB = 'BACKUP';
@@ -7,7 +8,7 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 
 // Edit as someone else?
 if (($_SESSION['userContext'] === 'admin') && (!empty($_GET['user']))) {
-    $user=escapeshellarg($_GET['user']);
+    $user=quoteshellarg($_GET['user']);
 }
 
 // List backup exclustions
@@ -70,32 +71,32 @@ if (!empty($_POST['save'])) {
     $v_web = $_POST['v_web'];
     $v_web_tmp = str_replace("\r\n", ",", $_POST['v_web']);
     $v_web_tmp = rtrim($v_web_tmp, ",");
-    $v_web_tmp = "WEB=" . escapeshellarg($v_web_tmp);
+    $v_web_tmp = "WEB=" . quoteshellarg($v_web_tmp);
 
     $v_dns = $_POST['v_dns'];
     $v_dns_tmp = str_replace("\r\n", ",", $_POST['v_dns']);
     $v_dns_tmp = rtrim($v_dns_tmp, ",");
-    $v_dns_tmp = "DNS=" . escapeshellarg($v_dns_tmp);
+    $v_dns_tmp = "DNS=" . quoteshellarg($v_dns_tmp);
 
     $v_mail = $_POST['v_mail'];
     $v_mail_tmp = str_replace("\r\n", ",", $_POST['v_mail']);
     $v_mail_tmp = rtrim($v_mail_tmp, ",");
-    $v_mail_tmp = "MAIL=" . escapeshellarg($v_mail_tmp);
+    $v_mail_tmp = "MAIL=" . quoteshellarg($v_mail_tmp);
 
     $v_db = $_POST['v_db'];
     $v_db_tmp = str_replace("\r\n", ",", $_POST['v_db']);
     $v_db_tmp = rtrim($v_db_tmp, ",");
-    $v_db_tmp = "DB=" . escapeshellarg($v_db_tmp);
+    $v_db_tmp = "DB=" . quoteshellarg($v_db_tmp);
 
     $v_cron = $_POST['v_cron'];
     $v_cron_tmp = str_replace("\r\n", ",", $_POST['v_cron']);
     $v_cron_tmp = rtrim($v_cron_tmp, ",");
-    $v_cron_tmp = "CRON=" . escapeshellarg($v_cron_tmp);
+    $v_cron_tmp = "CRON=" . quoteshellarg($v_cron_tmp);
 
     $v_userdir = $_POST['v_userdir'];
     $v_userdir_tmp = str_replace("\r\n", ",", $_POST['v_userdir']);
     $v_userdir_tmp = rtrim($v_userdir_tmp, ",");
-    $v_userdir_tmp = "USER=" . escapeshellarg($v_userdir_tmp);
+    $v_userdir_tmp = "USER=" . quoteshellarg($v_userdir_tmp);
 
     // Create temporary exeption list on a filesystem
     exec('mktemp', $mktemp_output, $return_var);

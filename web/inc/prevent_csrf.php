@@ -35,13 +35,16 @@
                 $hostname = explode(':', $_SERVER['HTTP_HOST']);
                 $port=$hostname[1];
                 $hostname=$hostname[0];
-                if (strpos($_SERVER['HTTP_ORIGIN'], gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
-                    return checkStrictness(2);
-                } else {
-                    if (strpos($_SERVER['HTTP_ORIGIN'], $hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
-                        return checkStrictness(1);
+                if (isset($_SERVER['HTTP_ORIGIN'])) {
+                    $origin_host = parse_url($_SERVER['HTTP_ORIGIN'], PHP_URL_HOST);
+                    if (strcmp($origin_host, gethostname()) === 0 && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
+                        return checkStrictness(2);
                     } else {
-                        return checkStrictness(0);
+                        if (strcmp($origin_host, $hostname) === 0 && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
+                            return checkStrictness(1);
+                        } else {
+                            return checkStrictness(0);
+                        }
                     }
                 }
             }
@@ -60,10 +63,11 @@
                     return true;
                 }
                 if (isset($_SERVER['HTTP_REFERER'])) {
-                    if (strpos($_SERVER['HTTP_REFERER'], gethostname()) !== false  && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
+                    $referrer_host = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+                    if (strcmp($referrer_host, gethostname()) === 0 && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
                         return checkStrictness(2);
                     } else {
-                        if (strpos($_SERVER['HTTP_REFERER'], $hostname) !== false && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
+                        if (strcmp($referrer_host, $hostname) === 0 && in_array($port, array('443',$_SERVER['SERVER_PORT']))) {
                             return checkStrictness(1);
                         } else {
                             return checkStrictness(0);

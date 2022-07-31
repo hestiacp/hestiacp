@@ -141,7 +141,6 @@ generate_mail_credentials = function() {
     output=output.replace(/ $/, "");
     output=output.replace(/:\|/g, ": ");
     output=output.replace(/\|/g, "\n");
-    //console.log(output);
     $('#v_credentials').val(output);
 }
 

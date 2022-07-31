@@ -622,7 +622,7 @@ is_dns_nameserver_valid() {
         remote=$(echo $r |grep ".$domain.$")
         if [ -n "$remote" ]; then
             zone=$USER_DATA/dns/$d.conf
-            a_record=$(echo $r |cut -f 1 -d '.')
+            a_record=${r%.$d.}
             n_record=$(grep "RECORD='$a_record'" $zone| grep "TYPE='A'")
             if [ -z "$n_record" ]; then
                 check_result "$E_NOTEXIST" "IN A $a_record.$d does not exist"

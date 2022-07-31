@@ -153,7 +153,6 @@ VE.helpers.createConfirmationDialog = function(elm, dialog_title, confirmed_loca
 
 
     var reference_copied = $(elm[0]).clone();
-    console.log(reference_copied);
     config = $.extend(config, custom_config);
     $(reference_copied).dialog(config);
 
@@ -228,7 +227,6 @@ function updateInterval(){
 }
 
 function stopTimer(){
-  console.log(reloadFunction);
   if(reloadFunction){
     clearInterval(reloadFunction);
     reloadFunction = false;

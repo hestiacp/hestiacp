@@ -2,7 +2,6 @@
     var prepath = $('input[name="v-custom-doc-root_prepath"]').val();
     var domain = $('select[name="v-custom-doc-domain"]').val();
     var folder = $('input[name="v-custom-doc-folder"]').val();
-    console.log(domain, folder);
     $('.custom_docroot_hint').text(prepath+domain+'/public_html/'+folder);
 }
 App.Listeners.DB.keypress_custom_folder = function() {

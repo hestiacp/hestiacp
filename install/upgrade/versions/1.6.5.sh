@@ -21,11 +21,7 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-#Add phpquoteshellarg as dependency
-if [ "$FILE_MANAGER" = "true" ]; then
-    $HESTIA/bin/v-delete-sys-filemanager quiet
-    $HESTIA/bin/v-delete-sys-filemanager quiet
+if [ -f "/etc/roundcube/config.inc.php" ]; then
+    sed -i "s|ssl://localhost|localhost|g" /etc/roundcube/config.inc.php
+    sed -i "s|993|143|g" /etc/roundcube/config.inc.php
 fi
-
-$HESTIA/bin/v-add-sys-phpmailer
-

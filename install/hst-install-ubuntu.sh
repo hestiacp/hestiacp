@@ -1335,6 +1335,8 @@ fi
 if [ -n "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1
 fi
+# Remove sudo "default" sudo permission admin user group should not exists any way 
+sed -i "s/%admin ALL=(ALL) ALL/#%admin ALL=(ALL) ALL/g" etc/sudoers
 
 # Enable sftp jail
 echo "[ * ] Enable SFTP jail..."

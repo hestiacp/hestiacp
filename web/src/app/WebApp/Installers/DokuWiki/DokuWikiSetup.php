@@ -11,7 +11,7 @@ class DokuWikiSetup extends BaseSetup {
 		'name' => 'DokuWiki',
 		'group' => 'wiki',
 		'enabled' => true,
-		'version' => 'stable_2020-07-29',
+		'version' => 'stable_2022-07-31',
 		'thumbnail' => 'dokuwiki-logo.svg'
 	];
 	
@@ -48,14 +48,14 @@ class DokuWikiSetup extends BaseSetup {
 			],
 		 ],
 		'resources' => [
-			'archive'  => [ 'src' => 'https://github.com/splitbrain/dokuwiki/archive/refs/tags/release_stable_2020-07-29.zip' ],
+			'archive'  => [ 'src' => 'https://github.com/splitbrain/dokuwiki/archive/refs/tags/release_stable_2022-07-31.zip' ],
 		],
 		'server' => [
 			'nginx' => [
 				'template' => 'default'
 			],
 			'php' => [ 
-				'supported' => [ '7.3','7.4' ],
+				'supported' => [ '7.3','7.4','8.0','8.1' ],
 			]
 		], 
 	];

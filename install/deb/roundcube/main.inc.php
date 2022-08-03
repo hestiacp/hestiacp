@@ -29,10 +29,7 @@ $config['smtp_debug'] = true;
 // For example %n = mail.domain.tld, %t = domain.tld
 // WARNING: After hostname change update of mail_host column in users table is
 //          required to match old user data records with the new host.
-$config['default_host'] = 'ssl://localhost';
-
-// TCP port used for IMAP connections
-$config['default_port'] = 993;
+$config['imap_host'] = 'localhost:143';
 
 // IMAP socket context options
 // See http://php.net/manual/en/context.ssl.php
@@ -103,7 +100,7 @@ $config['default_user'] = '%u';
 
 $config['default_pass'] = '%p';
 
-$config['smtp_host'] = 'ssl://localhost';
+$config['smtp_host'] = 'localhost:587';
 
 // Log session authentication errors to <log_dir>/session or to syslog
 $config['log_session'] = true;

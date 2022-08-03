@@ -1842,7 +1842,7 @@ if [ "$sieve" = 'yes' ]; then
     if [ -d "/var/lib/roundcube" ]; then
         # Modify Roundcube config 
         mkdir -p $RC_CONFIG_DIR/plugins/managesieve
-        cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
+        cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
         ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
         chown -R root:www-data $RC_CONFIG_DIR/
         chmod 751 -R $RC_CONFIG_DIR

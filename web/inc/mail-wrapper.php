@@ -25,8 +25,25 @@ if (!empty( $data['config']['LANGUAGE'])) {
     $_SESSION['language'] = 'en';
 }
 
-// Define vars
-$hostname = gethostbyaddr(gethostbyname(gethostname()));
+//define vars 
+//make hostname detection a bit more feature proof
+$hostname = (function():string{
+    $badValues = array(false, null, 0, '', "localhost", "127.0.0.1", "::1", "0000:0000:0000:0000:0000:0000:0000:0001");
+    $ret = gethostname();
+    if(in_array($ret, $badValues, true)){
+        throw new Exception('gethostname() failed');
+    }
+    $ret2 = gethostbyname($ret);
+    if(in_array($ret2, $badValues, true)){
+        return $ret;
+    }
+    $ret3 = gethostbyaddr($ret2);
+    if(in_array($ret3, $badValues, true)){
+        return $ret2;
+    }
+    return $ret3;
+})();
+
 $from = 'noreply@'.$hostname;
 $from_name = _('Hestia Control Panel');
 $to = $argv[3]."\n";

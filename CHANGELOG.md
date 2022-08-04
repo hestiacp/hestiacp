@@ -1,6 +1,26 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.6] - Service release 
+
+### Bugfixes
+
+- Update DNS templates with CNAME for ftp, www and webmail (#2808)
+- Fix name server A record validation error (#2807)
+- Fixed issue with renaming domains and config files not properly removed (#2803)
+- Add loading indicator after clicking save button (#2740)
+- Improve hostname detection in mail-wrapper (#2805 @clarkchentw)
+
+### Security
+
+- Fixed an vulnerability in v-add-web-domain-redirect (CVE-2022-2636)
+- Fixed an vulnerability in Ubuntu that can lead in privilege escalation for admin to root user (CVE-2022-2626)
+
+### Dependencies
+
+- Update Roundcube to 1.6.0
+- Update Dokuwiki to "2022-07-31" Igor (#2811)
+
 ## [1.6.5] - Service release 
 
 ### Bugfixes

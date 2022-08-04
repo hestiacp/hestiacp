@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - Don't allow /inc/2fa/secret.php called from the web browser directly (#2784 @mayappear)
 - Improve CSRF Origin Check Bypass (#2785 @mayappear)
 - Fix vulnerability in Dokuwiki Quick Install App @redstarp2 (CVE-2022-2550)
+- Fixed an issue where custom ports where not saved on restart fail2ban service making Hestia login screen vulnerable for brute force
 
 ### Dependencies
 

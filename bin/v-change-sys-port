@@ -72,12 +72,8 @@ else
         sed -i "/hestia_port/c\hestia_port = $PORT" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini
     fi
     sed -i "/COMMENT='HESTIA'/c\RULE='2' ACTION='ACCEPT' PROTOCOL='TCP' PORT='$PORT' IP='0.0.0.0/0' COMMENT='HESTIA' SUSPENDED='no' TIME='07:40:16' DATE='2014-05-25'" $HESTIA/data/firewall/rules.conf
-    
-    # Update F2B chains config
-    if [ -f "$HESTIA/data/firewall/chains.conf" ]; then
-        sed -i "/CHAIN='HESTIA'/c\CHAIN='HESTIA' PORT='$PORT' PROTOCOL='TCP'" $HESTIA/data/firewall/chains.conf
-    fi
-    
+    sed -i "/CHAIN='HESTIA'/c\CHAIN='HESTIA' PORT='$PORT' PROTOCOL='TCP'" $HESTIA/data/firewall/chains.conf
+     
     # Restart services
     if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
         $HESTIA/bin/v-restart-service iptables

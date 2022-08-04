@@ -75,7 +75,7 @@ else
     
     # Update F2B chains config
     if [ -f "$HESTIA/data/firewall/chains.conf" ]; then
-        sed -i "s/PORT='$ORIGINAL_PORT'/PORT='$PORT'/g" $HESTIA/data/firewall/chains.conf
+        sed -i "/CHAIN='HESTIA'/c\CHAIN='HESTIA' PORT='$PORT' PROTOCOL='TCP'" $HESTIA/data/firewall/chains.conf
     fi
     
     # Restart services

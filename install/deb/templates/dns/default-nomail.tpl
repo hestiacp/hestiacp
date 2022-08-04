@@ -7,5 +7,5 @@ ID='6' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns6%.' SUSPENDED='no' TIME='%tim
 ID='7' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns7%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='8' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns8%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='9' RECORD='@' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='10' RECORD='www' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='11' RECORD='ftp' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='10' RECORD='www' TYPE='CNAME' PRIORITY='' VALUE='%domain%' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='11' RECORD='ftp' TYPE='CNAME' PRIORITY='' VALUE='%CNAME%' SUSPENDED='no' TIME='%time%' DATE='%date%'

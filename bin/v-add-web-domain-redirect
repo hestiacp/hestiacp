@@ -42,21 +42,18 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
-scheme=0
 if [[ "$3" =~ http://|https:// ]]; then
     scheme=1
-    regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
-    if ! [[ "$3" =~ $regex ]]; then
-        echo "Invalid redirect"
-        exit 2;
+    isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "$3")
+    if  [ -z "$isValidUrl" ]; then
+        check_result $E_INVALID "Invalid redirect"
     fi
 else
-    regex='[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
-    if ! [[ "$3" =~ $regex ]]; then
-        echo "Invalid redirect"
-        exit 2;
+    isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "http://$3")
+    if  [ -z "$isValidUrl" ]; then
+        check_result $E_INVALID "Invalid redirect"
     fi
-fi
+fi 
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

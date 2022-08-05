@@ -125,8 +125,8 @@ install=$3
 # Allow the use of username:branch instead of username branch
 # Both fork and branch names can't contain a : anyway 
 if [ -z "$branch" ]; then 
-    branch = $(echo "$fork" | cut -d ":" -f2)
-    fork = $(echo "$fork" | cut -d ":" -f1)
+    branch=$(echo "$fork" | cut -d ":" -f2)
+    fork=$(echo "$fork" | cut -d ":" -f1)
 fi
 
 # Set Version for compiling

@@ -108,7 +108,7 @@ class WordpressSetup extends BaseSetup
             case 'SECURE_AUTH_SALT':
             case 'LOGGED_IN_SALT':
             case 'NONCE_SALT':
-                $result -> raw [ $line_num ] = "define( '" . Util::generate_string(64) . "' );";
+                $result -> raw [ $line_num ] = "define( '" . $constant . "'," . $padding . "'"  . Util::generate_string(64) . "' );";
                 break;
             }
         }

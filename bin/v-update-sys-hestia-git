@@ -91,6 +91,13 @@ branch=$2
 install=$3
 flags=$4
 
+# Allow the use of username:branch instead of username branch
+# Both fork and branch names can't contain a : anyway 
+if [ -z "$branch" ]; then 
+    branch = $(echo "$fork" | cut -d ":" -f2)
+    fork = $(echo "$fork" | cut -d ":" -f1)
+fi
+
 # Set Version for compiling
 BUILD_VER=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"

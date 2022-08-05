@@ -73,28 +73,55 @@ class WordpressSetup extends BaseSetup
         parent::setup($options);
 
         $this->appcontext->runUser('v-open-fs-file', [$this->getDocRoot("wp-config-sample.php")], $result);
-        $distconfig = preg_replace(
-            [
-            '/database_name_here/', '/username_here/', '/password_here/', '/utf8/', '/wp_/'
-        ],
-            [
-            $this->appcontext->user() . '_' . $options['database_name'],
-            $this->appcontext->user() . '_' . $options['database_user'],
-            $options['database_password'],
-            'utf8mb4',
-            Util::generate_string(3, false).'_'
-            ],
-            $result->text
-        );
-
-        while (strpos($distconfig, 'put your unique phrase here') !== false) {
-            $distconfig = preg_replace('/put your unique phrase here/', Util::generate_string(64), $distconfig, 1);
+        foreach($result -> raw as $line_num => $line){
+            if ( '$table_prefix =' === substr( $line, 0, 15 ) ) {
+                $result -> raw[ $line_num ] = '$table_prefix = \'' . addcslashes( Util::generate_string(5, false).'_', "\\'" ) . "';\r\n";
+                continue;
+            }
+            if ( ! preg_match( '/^define\(\s*\'([A-Z_]+)\',([ ]+)/', $line, $match ) ) {
+                continue;
+            }
+            $constant = $match[1];
+            $padding  = $match[2];
+            switch ( $constant ) {
+            case 'DB_NAME':
+                $result -> raw [ $line_num ] = "define( '" . $constant . "'," . $padding . "'" . addcslashes($this->appcontext->user() . '_' . $options['database_name'], "\\'" ) . "' );";
+                break;
+            case 'DB_USER':
+                $result -> raw [ $line_num ] = "define( '" . $constant . "'," . $padding . "'" . addcslashes($this->appcontext->user() . '_' . $options['database_user'], "\\'" ) . "' );";
+                break;
+            case 'DB_PASSWORD':
+                $result -> raw [ $line_num ] = "define( '" . $constant . "'," . $padding . "'" . addcslashes($options['database_password'], "\\'" ) . "' );";
+                break;
+            case 'DB_HOST':
+                $result -> raw [ $line_num ] = "define( '" . $constant . "'," . $padding . "'" . addcslashes('localhost', "\\'" ) . "' );";
+                break;
+            case 'DB_CHARSET':
+                $result -> raw [ $line_num ] = "define( '" . $constant . "'," . $padding . "'" . addcslashes('utf8mb4', "\\'" ) . "' );";
+                break;
+            case 'AUTH_KEY':
+            case 'SECURE_AUTH_KEY':
+            case 'LOGGED_IN_KEY':
+            case 'NONCE_KEY':
+            case 'AUTH_SALT':
+            case 'SECURE_AUTH_SALT':
+            case 'LOGGED_IN_SALT':
+            case 'NONCE_SALT':
+                $result -> raw [ $line_num ] = "define( '" . $constant . "'," . $padding . "'"  . Util::generate_string(64) . "' );";
+                break;
+            }
         }
-
-        $tmp_configpath = $this->saveTempFile($distconfig);
+        
+        $tmp_configpath = $this->saveTempFile(implode("\r\n",$result -> raw ));
 
         if (!$this->appcontext->runUser('v-move-fs-file', [$tmp_configpath, $this->getDocRoot("wp-config.php")], $result)) {
             throw new \Exception("Error installing config file in: " . $tmp_configpath . " to:" . $this->getDocRoot("wp-config.php") . $result->text);
+        }
+
+        $this->appcontext->downloadUrl('https://raw.githubusercontent.com/roots/wp-password-bcrypt/master/wp-password-bcrypt.php', null, $plugin_output);
+        $this->appcontext->runUser('v-add-fs-directory', [$this->getDocRoot("wp-content/mu-plugins/")], $result);
+        if (!$this->appcontext->runUser('v-copy-fs-file', [$plugin_output->file, $this->getDocRoot("wp-content/mu-plugins/wp-password-bcrypt.php")], $result)) {
+            throw new \Exception("Error installing wp-password-bcrypt file in: " . $plugin_output->file . " to:" . $this->getDocRoot("wp-content/mu-plugins/wp-password-bcrypt.php") . $result->text);
         }
 
         $this->appcontext->run('v-list-web-domain', [$this->appcontext->user(), $this->domain, 'json'], $status);

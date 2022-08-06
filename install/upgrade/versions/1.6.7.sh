@@ -22,5 +22,5 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 if [ -f "/etc/roundcube/config.inc.php" ]; then
-    sed -i "s/\$config\['auto_create_user'] = false;/\$config\['auto_create_user'] = true;/g" /etc/roundcube/config.inc.php
+    sed -i "s/\$config\['auto_create_user'] = false;/\$config\['auto_create_user'] = true;/g" /etc/roundcube/config.inc.php    
 fi

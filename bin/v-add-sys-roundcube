@@ -191,9 +191,6 @@ else
     fi
     rm -f -r $RC_INSTALL_DIR/$RC_FILE
     rm -f -r $RC_INSTALL_DIR/$RC_EXTRACT
-    
-    # "Bug" in Roundcube causes issues with creating mail accounts in database
-    sed -i "s/\$config\['auto_create_user'] = false;/\$config\['auto_create_user'] = true;/g" /etc/roundcube/config.inc.php    
 fi
 
 #----------------------------------------------------------#

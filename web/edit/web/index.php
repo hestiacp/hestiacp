@@ -790,7 +790,7 @@ if (!empty($_POST['save'])) {
                         $hostname = get_hostname();
                         $from = "noreply@".$hostname;
                         $from_name = _('Hestia Control Panel');
-                        $mailtext = sprintf(_('FTP_ACCOUNT_READY'), quoteshellarg($_GET['domain']), $user, $v_ftp_username, $v_ftp_user_data['v_ftp_password']);
+                        $mailtext = sprintf(_('FTP_ACCOUNT_READY'), $v_domain, $user_plain, $v_ftp_username, $v_ftp_user_data['v_ftp_password']);
                         send_email($to, $subject, $mailtext, $from, $from_name);
                         unset($v_ftp_email);
                     }

@@ -60,7 +60,7 @@ download_file() {
 
     if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
         [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
-        wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+        wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m    
         if [ $? -ne 0 ]; then
             >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted and exit script";
             rm -f $ARCHIVE_DIR/$filename
@@ -96,9 +96,9 @@ get_branch_file() {
 
 # Set compiling directory
 BUILD_DIR='/tmp/hestiacp-src'
-INSTALL_DIR='/usr/local/hestia'
+INSTALL_DIR='/tmp/hestia-src'
 SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-ARCHIVE_DIR="$SRC_DIR/src/archive/"
+ARCHIVE_DIR="/tmp/hestia-src/archive/"
 architecture="$(arch)"
 if [ $architecture == 'aarch64' ]; then
     BUILD_ARCH='arm64'
@@ -212,7 +212,8 @@ if [ -z "$branch" ]; then
     exit
 fi
 REPO="$fork/hestiacp"
-
+# Forward slashes in branchname are replaced with dashes to match foldername in github archive.
+branch_dash=$(echo "$branch" |sed 's/\//-/g');
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -252,7 +253,8 @@ fi
 GIT_REP='https://raw.githubusercontent.com/'$REPO'/'$branch'/src/deb'
 
 # Generate Links for sourcecode
-HESTIA_ARCHIVE_LINK='https://github.com/'$REPO'/'$branch'/archive/'$branch'.tar.gz'
+HESTIA_ARCHIVE_LINK='https://github.com/'$REPO'/archive/'$branch'.tar.gz'
+echo $HESTIA_ARCHIVE_LINK
 
       echo "Building Hestia Control Panel package..."
   
@@ -280,7 +282,7 @@ HESTIA_ARCHIVE_LINK='https://github.com/'$REPO'/'$branch'/archive/'$branch'.tar.
   elif [ -d $SRC_DIR ]; then
       download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
   fi
-
+  
   mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 
   # Move needed directories

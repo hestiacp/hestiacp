@@ -120,7 +120,7 @@ randomString = function(min_length = 16) {
         if($('input[name=v_password]').attr('type') == 'text')
             $('#v_password').text(randomstring);
         else
-            $('#v_password').text(Array(randomstring.length+1).join('*'));s        
+            $('#v_password').text(Array(randomstring.length+1).join('*'));      
         App.Actions.MAIL_ACC.update_v_password();
         generate_mail_credentials();
 }

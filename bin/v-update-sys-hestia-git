@@ -222,7 +222,7 @@ branch_dash=$(echo "$branch" |sed 's/\//-/g');
     # Install needed software
 if [ "$OSTYPE" = 'rhel' ]; then
     # Set package dependencies for compiling
-    SOFTWARE=' rpm-build wget tar git curl'
+    SOFTWARE=' rpm-build wget tar git curl unzip'
 
     echo "Updating system DNF repositories..."
     dnf install -y -q 'dnf-command(config-manager)'

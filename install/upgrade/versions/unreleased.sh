@@ -32,6 +32,5 @@ fi
 # Sync up config files #2819
 if [ -f "/etc/roundcube/config.inc.php" ]; then
     sed -i "s/?>//" /etc/roundcube/config.inc.php
-    sed -i "s/?>//" /etc/roundcube/db.inc.php
-    sed -i "s/?>//" /etc/roundcube/minetypes.inc.php     
+    sed -i "s/?>//" /etc/roundcube/mimetypes.php    
 fi

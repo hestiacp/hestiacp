@@ -63,4 +63,3 @@ $rcmail_config['db_sequence_messages'] = 'message_ids';
 
 
 // end db config file
-?>

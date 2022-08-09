@@ -32,7 +32,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.6.7~alpha'
+HESTIA_INSTALL_VER='1.7.0~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"

@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.7] - Service release 
+
+### Bugfixes
+
+- Fixed an issue with upgrade script Roundcube that caused issues with upgrade of new installs 
+- Fixed an bug with DNS templates #2827
+- Update v-update-sys-hestia-git
+
 ## [1.6.6] - Service release 
 
 ### Bugfixes

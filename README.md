@@ -2,7 +2,7 @@
 
 [Hestia Control Panel](https://www.hestiacp.com/)
 ==================================================
-**Latest stable release:** Version 1.6.6 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
+**Latest stable release:** Version 1.6.7 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
 
 **Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
 **Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>

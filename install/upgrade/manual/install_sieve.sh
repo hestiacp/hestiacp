@@ -54,10 +54,10 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
     sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
     
     # replace dovecot-sieve config files
-    cp -f $HESTIA_INSTALL_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+    cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
     
     # dovecot default file install
-    mkdir /etc/dovecot/sieve
+    mkdir -p /etc/dovecot/sieve
     echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
     
     # exim4 install

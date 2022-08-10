@@ -2,13 +2,11 @@
 # info: Install update from Git repository
 # options: REPOSITORY BRANCH INSTALL [PACKAGES]
 #
-# example: v-update-sys-hestia-git hestiacp staging/beta install all
+# example: v-update-sys-hestia-git hestiacp staging/beta install
 #          # Will download from the hestiacp repository
 #          # Pulls code from staging/beta branch
 #          # install: installs package immediately
 #          # install-auto: installs package and schedules automatic updates from Git
-#          # 'all': (optional) - compiles nginx and php alongside panel.
-#          #                     this option takes a long time, only use when needed
 #
 # Downloads and compiles/installs packages from GitHub repositories
 
@@ -32,10 +30,10 @@ download_file() {
     local destination=$2
     local force=$3
 
-    # Default destination is the curent working directory
+    # Default destination is the current working directory
     local dstopt=""
 
-    if [ -n "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
+    if [ ! -z "$(echo "$url" | grep -E "\.(gz|gzip|bz2|zip|xz)$")" ]; then
         # When an archive file is downloaded it will be first saved localy
         dstopt="--directory-prefix=$ARCHIVE_DIR"
         local is_archive="true"
@@ -44,15 +42,15 @@ download_file() {
             >&2 echo "[!] No filename was found in url, exiting ($url)"
             exit 1
         fi
-            if [ -n "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
+        if [ ! -z "$force" ] && [ -f "$ARCHIVE_DIR/$filename" ]; then
             rm -f $ARCHIVE_DIR/$filename
         fi
-        elif [ -n "$destination" ]; then
-            # Plain files will be written to specified location
-            dstopt="-O $destination"
-        fi
-        # check for corrupted archive
-        if [ -f "$ARCHIVE_DIR/$filename" ] && [ "$is_archive" = "true" ]; then
+    elif [ ! -z "$destination" ]; then
+        # Plain files will be written to specified location
+        dstopt="-O $destination"
+    fi
+    # check for corrupted archive
+    if [ -f "$ARCHIVE_DIR/$filename" ] && [ "$is_archive" = "true" ]; then
         tar -tzf "$ARCHIVE_DIR/$filename" > /dev/null 2>&1
         if [ $? -ne 0 ]; then
             >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted, redownloading"
@@ -61,10 +59,16 @@ download_file() {
     fi
 
     if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
-        wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+        [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
+        wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m    
+        if [ $? -ne 0 ]; then
+            >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted and exit script";
+            rm -f $ARCHIVE_DIR/$filename
+            exit 1;
+        fi
     fi
 
-    if [ -n "$destination" ] && [ "$is_archive" = "true" ]; then
+    if [ ! -z "$destination" ] && [ "$is_archive" = "true" ]; then
         if [ "$destination" = "-" ]; then
             cat "$ARCHIVE_DIR/$filename"
         elif [ -d "$(dirname $destination)" ]; then
@@ -73,32 +77,54 @@ download_file() {
     fi
 }
 
+get_branch_file() {
+    local filename=$1
+    local destination=$2
+    [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: Get branch file "$filename" to "$destination"
+    if [ "$use_src_folder" == 'true' ]; then
+        if [ -z "$destination" ]; then
+            [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: cp -f "$SRC_DIR/$filename" ./
+            cp -f "$SRC_DIR/$filename" ./
+        else
+            [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: cp -f "$SRC_DIR/$filename" "$destination"
+            cp -f "$SRC_DIR/$filename" "$destination"
+        fi
+    else
+        download_file "https://raw.githubusercontent.com/$REPO/$branch/$filename" "$destination" $3
+    fi
+}
+
 # Set compiling directory
 BUILD_DIR='/tmp/hestiacp-src'
-DEB_DIR="$BUILD_DIR/debs"
-INSTALL_DIR='/usr/local/hestia'
-ARCHIVE_DIR="${BUILD_DIR}/archive"
+INSTALL_DIR='/tmp/hestia-src'
+SRC_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+ARCHIVE_DIR="/tmp/hestia-src/archive/"
 architecture="$(arch)"
 if [ $architecture == 'aarch64' ]; then
     BUILD_ARCH='arm64'
 else
     BUILD_ARCH='amd64'
 fi
+RPM_DIR="$BUILD_DIR/rpm/"
+DEB_DIR="$BUILD_DIR/deb/"
+if [ -f '/etc/redhat-release' ]; then
+    BUILD_RPM=true
+    BUILD_DEB=false
+    OSTYPE='rhel'
+else
+    BUILD_RPM=false
+    BUILD_DEB=true
+    OSTYPE='debian'
+fi
 
 # Set command variables
 fork=$1
 branch=$2
 install=$3
-flags=$4
 
 # Set Version for compiling
 BUILD_VER=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
 HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
-NGINX_V=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/nginx/control |grep "Version:" |cut -d' ' -f2)
-OPENSSL_V='1.1.1g'
-PCRE_V='8.43'
-ZLIB_V='1.2.11'
-PHP_V=$(curl -s https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/php/control |grep "Version:" |cut -d' ' -f2)
 
 # Create build directories
 rm -rf $BUILD_DIR
@@ -126,11 +152,24 @@ warning_message() {
 
 # Build installation
 install_build() {
+    # Install all available packages
     echo "Installing packages..."
-    for i in $DEB_DIR/*.deb; do
-        # Install all available packages
-        dpkg -i $i
-    done
+    if [ "$OSTYPE" = 'rhel' ]; then
+        for i in $RPM_DIR/*.rpm; do
+            dnf -y install $i
+            if [ $? -ne 0 ]; then
+                exit 1;
+            fi
+        done
+    else
+        for i in $DEB_DIR/*.deb; do
+            dpkg -i $i
+            if [ $? -ne 0 ]; then
+                exit 1;
+            fi
+        done
+    fi
+    unset $answer
     # Remove temporary files
     rm -rf $BUILD_DIR
 }
@@ -172,287 +211,133 @@ if [ -z "$branch" ]; then
     echo "ERROR: No branch detected."
     exit
 fi
+REPO="$fork/hestiacp"
+# Forward slashes in branchname are replaced with dashes to match foldername in github archive.
+branch_dash=$(echo "$branch" |sed 's/\//-/g');
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Install needed software
-echo "[*] Updating APT package cache..."
-apt-get -qq update > /dev/null 2>&1
-echo "[*] Checking for missing dependencies and installing required libraries..."
-apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+    # Install needed software
+if [ "$OSTYPE" = 'rhel' ]; then
+    # Set package dependencies for compiling
+    SOFTWARE=' rpm-build wget tar git curl unzip'
 
-# Fix for Debian PHP Envroiment
-if [ $BUILD_ARCH == "amd64" ]; then
-    if [ ! -L /usr/local/include/curl ]; then
-        ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
-    fi
-fi
-
-# Get system cpu cores
-NUM_CPUS=$(grep "^cpu cores" /proc/cpuinfo | uniq |  awk '{print $4}')
-
-# Check for existence of flags argument and set packages to build
-if [ -n "$flags" ]; then
-    if [ "$flags" = "all" ]; then
-        HESTIA_B='true'
-        NGINX_B='true'
-        PHP_B='true'
-    fi
+    echo "Updating system DNF repositories..."
+    dnf install -y -q 'dnf-command(config-manager)'
+    dnf install -y -q dnf-plugins-core
+    dnf config-manager --set-enabled powertools > /dev/null 2>&1
+    dnf config-manager --set-enabled PowerTools > /dev/null 2>&1
+    dnf upgrade -y -q
+    echo "Installing dependencies for compilation..."
+    dnf install -y -q $SOFTWARE
 else
-    HESTIA_B='true'
+    # Set package dependencies for compiling
+    SOFTWARE='build-essential wget tar git curl unzip'
+
+    echo "Updating system APT repositories..."
+    apt-get -qq update > /dev/null 2>&1
+    echo "Installing dependencies for compilation..."
+    apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+
+    # Fix for Debian PHP Envroiment
+    if [ $BUILD_ARCH == "amd64" ]; then
+        if [ ! -L /usr/local/include/curl ]; then
+            ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl
+        fi
+    fi
 fi
 
 # Set git repository raw path
-GIT_REP='https://raw.githubusercontent.com/'$fork'/hestiacp/'$branch'/src/deb'
+GIT_REP='https://raw.githubusercontent.com/'$REPO'/'$branch'/src/deb'
 
 # Generate Links for sourcecode
-HESTIA_ARCHIVE_LINK='https://github.com/'$fork'/hestiacp/archive/'$branch'.tar.gz'
-NGINX='https://nginx.org/download/nginx-'$NGINX_V'.tar.gz'
-OPENSSL='https://www.openssl.org/source/openssl-'$OPENSSL_V'.tar.gz'
-PCRE='https://ftp.pcre.org/pub/pcre/pcre-'$PCRE_V'.tar.gz'
-ZLIB='https://www.zlib.net/zlib-'$ZLIB_V'.tar.gz'
-PHP='http://de2.php.net/distributions/php-'$PHP_V'.tar.gz'
+HESTIA_ARCHIVE_LINK='https://github.com/'$REPO'/archive/'$branch'.tar.gz'
+echo $HESTIA_ARCHIVE_LINK
 
-# Forward slashes in branchname are replaced with dashes to match foldername in github archive.
-branch=$(echo "$branch" |sed 's/\//-/g');
+      echo "Building Hestia Control Panel package..."
+  
+  BUILD_DIR_HESTIA=$BUILD_DIR/hestia_$HESTIA_V
 
-# Building hestia-nginx
-if [ "$NGINX_B" = true ] ; then
+  # Change to build directory
+  cd $BUILD_DIR
 
-    echo "[*] Building Package: hestia-nginx (backend web server)..."
-    # Change to build directory
-    cd $BUILD_DIR
+  if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIA" ]; then
+      # Check if target directory exist
+      if [ -d $BUILD_DIR_HESTIA ]; then
+          rm -r $BUILD_DIR_HESTIA
+      fi
 
-    # Check if target directory exist
-    if [ -d $BUILD_DIR/hestia-nginx_$NGINX_V ]; then
-          #mv $BUILD_DIR/hestia-nginx_$NGINX_V $BUILD_DIR/hestia-nginx_$NGINX_V-$(timestamp)
-          rm -r $BUILD_DIR/hestia-nginx_$NGINX_V
-    fi
+      # Create directory
+      mkdir -p $BUILD_DIR_HESTIA
+  fi
 
-    # Create directory
-    mkdir $BUILD_DIR/hestia-nginx_$NGINX_V
+  cd $BUILD_DIR
+  rm -rf $BUILD_DIR/hestiacp-$branch_dash
+  # Download and unpack source files
+  if [ "$use_src_folder" == 'true' ]; then
+      [ "$HESTIA_DEBUG" ] && echo DEBUG: cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+      cp -rf "$SRC_DIR/" $BUILD_DIR/hestiacp-$branch_dash
+  elif [ -d $SRC_DIR ]; then
+      download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
+  fi
+  
+  mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 
-    # Download and unpack source files
-    download_file $NGINX | tar xz
-    download_file $OPENSSL | tar xz
-    download_file $PCRE | tar xz
-    download_file $ZLIB | tar xz
+  # Move needed directories
+  cd $BUILD_DIR/hestiacp-$branch_dash
+  cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
 
-    # Change to nginx directory
-    cd nginx-$NGINX_V
+  # Set permissions
+  find $BUILD_DIR_HESTIA/usr/local/hestia/ -type f -exec chmod -x {} \;
+  
+  # Allow send email via /usr/local/hestia/web/inc/mail-wrapper.php via cli
+  chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/web/inc/mail-wrapper.php
+  # Allow the executable to be executed
+  chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/bin/*
+  find $BUILD_DIR_HESTIA/usr/local/hestia/install/ \( -name '*.sh' \) -exec chmod +x {} \;
+  chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/*.sh
+  chown -R root:root $BUILD_DIR_HESTIA
 
-    # configure nginx
-    ./configure   --prefix=/usr/local/hestia/nginx \
-                  --with-http_ssl_module \
-                  --with-openssl=../openssl-$OPENSSL_V \
-                  --with-openssl-opt=enable-ec_nistp_64_gcc_128 \
-                  --with-openssl-opt=no-nextprotoneg \
-                  --with-openssl-opt=no-weak-ssl-ciphers \
-                  --with-openssl-opt=no-ssl3 \
-                  --with-pcre=../pcre-$PCRE_V \
-                  --with-pcre-jit \
-                  --with-zlib=../zlib-$ZLIB_V
+  if [ "$BUILD_DEB" = true ]; then
+      # Get Debian package files
+      mkdir -p $BUILD_DIR_HESTIA/DEBIAN
+      get_branch_file 'src/deb/hestia/control' "$BUILD_DIR_HESTIA/DEBIAN/control"
+      if [ "$BUILD_ARCH" != "amd64" ]; then
+          sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA/DEBIAN/control"
+      fi
+      get_branch_file 'src/deb/hestia/copyright' "$BUILD_DIR_HESTIA/DEBIAN/copyright"
+      get_branch_file 'src/deb/hestia/preinst' "$BUILD_DIR_HESTIA/DEBIAN/preinst"
+      get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"
+      chmod +x $BUILD_DIR_HESTIA/DEBIAN/postinst
+      chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
 
-    # Check install directory and remove if exists
-    if [ -d "$BUILD_DIR$INSTALL_DIR" ]; then
-        rm -r "$BUILD_DIR$INSTALL_DIR"
-    fi
+      echo Building Hestia DEB
+      dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
+  fi
 
-    # Create the files and install them
-    make -j $NUM_CPUS && make DESTDIR=$BUILD_DIR install
+  if [ "$BUILD_RPM" = true ]; then
+      # Get RHEL package files
+      get_branch_file 'src/rpm/hestia/hestia.spec' "${BUILD_DIR_HESTIA}/hestia.spec"
+      sed -i "s/%HESTIA-VERSION%/${HESTIA_V}/g" "${BUILD_DIR_HESTIA}/hestia.spec"
+      get_branch_file 'src/rpm/hestia/hestia.service' "${BUILD_DIR_HESTIA}/hestia.service"
 
-    # Cleare up unused files
-    cd $BUILD_DIR
-    rm -r nginx-$NGINX_V openssl-$OPENSSL_V pcre-$PCRE_V zlib-$ZLIB_V
+      # Build RPM package
+      mkdir -p $BUILD_DIR/rpmbuild
+      echo Building Hestia RPM
+      rpmbuild -bb --define "sourcedir $BUILD_DIR_HESTIA" --buildroot=$BUILD_DIR/rpmbuild/ ${BUILD_DIR_HESTIA}/hestia.spec > ${BUILD_DIR_HESTIA}.rpm.log
+      cp ~/rpmbuild/RPMS/$(arch)/hestia-*.rpm $RPM_DIR
+      rm ~/rpmbuild/RPMS/$(arch)/hestia-*.rpm
+      rm -rf $BUILD_DIR/rpmbuild
+  fi
 
-    # Prepare Deb Package Folder Structure
-    cd hestia-nginx_$NGINX_V/
-    mkdir -p usr/local/hestia etc/init.d DEBIAN
-
-    # Download control, postinst and postrm files
-    cd DEBIAN
-    download_file $GIT_REP/nginx/control
-    if [ "$BUILD_ARCH" != "amd64" ]; then
-        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
-    fi
-    download_file $GIT_REP/nginx/copyright
-    download_file $GIT_REP/nginx/postinst
-    download_file $GIT_REP/nginx/postrm
-
-    # Set permission
-    chmod +x postinst postrm
-
-    # Move nginx directory
-    cd ..
-    mv $BUILD_DIR/usr/local/hestia/nginx usr/local/hestia/
-
-    # Get Service File
-    cd etc/init.d
-    download_file $GIT_REP/nginx/hestia
-    chmod +x hestia
-
-    # Get nginx.conf
-    cd ../../
-    rm usr/local/hestia/nginx/conf/nginx.conf
-    download_file $GIT_REP/nginx/nginx.conf -O usr/local/hestia/nginx/conf/nginx.conf
-
-    # copy binary
-    cp usr/local/hestia/nginx/sbin/nginx usr/local/hestia/nginx/sbin/hestia-nginx
-
-    # change permission and build the package
-    cd $BUILD_DIR
-    chown -R  root:root hestia-nginx_$NGINX_V
-    dpkg-deb --build hestia-nginx_$NGINX_V
-    mv *.deb $DEB_DIR
-
-    # clear up the source folder
-    rm -r hestia-nginx_$NGINX_V
-fi
-
-# Building hestia-php
-if [ "$PHP_B" = true ] ; then
-    echo "[*] Building Package: hestia-php (backend engine)..."
-    # Change to build directory
-    cd $BUILD_DIR
-
-    # Check if target directory exist
-    if [ -d $BUILD_DIR/hestia-php_$PHP_V ]; then
-          #mv $BUILD_DIR/hestia-php_$PHP_V $BUILD_DIR/hestia-php_$PHP_V-$(timestamp)
-          rm -r $BUILD_DIR/hestia-php_$PHP_V
-    fi
-
-    # Create directory
-    mkdir ${BUILD_DIR}/hestia-php_$PHP_V
-
-    # Download and unpack source files
-    download_file $PHP | tar xz
-
-    # Change to php directory
-    cd php-$PHP_V
-
-    # Configure PHP
-    if [ $BUILD_ARCH = 'amd64' ]; then
-        ./configure   --prefix=/usr/local/hestia/php \
-                    --enable-fpm \
-                    --with-fpm-user=admin \
-                    --with-fpm-group=admin \
-                    --with-libdir=lib/x86_64-linux-gnu \
-                    --with-mysqli \
-                    --with-gettext \
-                    --with-curl \
-                    --with-zip \
-                    --with-gmp \
-                    --enable-mbstring
-    else
-        ./configure   --prefix=/usr/local/hestia/php \
-                    --enable-fpm \
-                    --with-fpm-user=admin \
-                    --with-fpm-group=admin \
-                    --with-libdir=lib/aarch64-linux-gnu \
-                    --with-mysqli \
-                    --with-gettext \
-                    --with-curl \
-                    --with-zip \
-                    --with-gmp \
-                    --enable-mbstring
-    fi
-
-    # Create the files and install them
-    make -j $NUM_CPUS && make INSTALL_ROOT=$BUILD_DIR install
-
-    # Cleare up unused files
-    cd $BUILD_DIR
-    rm -r php-$PHP_V
-
-    # Prepare Deb Package Folder Structure
-    cd hestia-php_$PHP_V/
-    mkdir -p usr/local/hestia DEBIAN
-
-    # Download control, postinst and postrm files
-    cd DEBIAN
-    download_file $GIT_REP/php/control
-    if [ "$BUILD_ARCH" != "amd64" ]; then
-        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
-    fi
-    download_file $GIT_REP/php/copyright
-
-    # Move php directory
-    cd ..
-    mv ${BUILD_DIR}/usr/local/hestia/php usr/local/hestia/
-
-    # Get php-fpm.conf
-    download_file $GIT_REP/php/php-fpm.conf -O usr/local/hestia/php/etc/php-fpm.conf
-
-    # Get php.ini
-    download_file $GIT_REP/php/php.ini -O usr/local/hestia/php/lib/php.ini
-
-    # copy binary
-    cp usr/local/hestia/php/sbin/php-fpm usr/local/hestia/php/sbin/hestia-php
-
-    # change permission and build the package
-    cd $BUILD_DIR
-    chown -R  root:root hestia-php_$PHP_V
-    dpkg-deb --build hestia-php_$PHP_V
-    mv *.deb $DEB_DIR
-
-    # clear up the source folder
-    rm -r hestia-php_$PHP_V
-fi
-
-# Building hestia
-if [ "$HESTIA_B" = true ] ; then
-    echo "[*] Building Package: hestia (Control Panel)..."
-    # Change to build directory
-    cd $BUILD_DIR
-
-    # Check if target directory exist
-    if [ -d $BUILD_DIR/hestia_$HESTIA_V ]; then
-          #mv $BUILD_DIR/hestia_$HESTIA_V $BUILD_DIR/hestia_$HESTIA_V-$(timestamp)
-          rm -r $BUILD_DIR/hestia_$HESTIA_V
-    fi
-
-    # Create directory
-    mkdir $BUILD_DIR/hestia_$HESTIA_V
-
-    # Download and unpack source files
-    download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
-
-    # Prepare Deb Package Folder Structure
-    cd hestia_$HESTIA_V/
-    mkdir -p usr/local/hestia DEBIAN
-
-    # Download control, postinst and postrm files
-    cd DEBIAN
-    download_file $GIT_REP/hestia/control
-    if [ "$BUILD_ARCH" != "amd64" ]; then
-        sed -i "s/amd64/${BUILD_ARCH}/g" "control"
-    fi
-    download_file $GIT_REP/hestia/copyright
-    download_file $GIT_REP/hestia/postinst
-
-    # Set permission
-    chmod +x postinst
-
-    # Move needed directories
-    cd $BUILD_DIR/hestiacp-$branch
-    mv bin func install web ../hestia_$HESTIA_V/usr/local/hestia/
-
-    # Set permission
-    cd ../hestia_$HESTIA_V/usr/local/hestia/bin
-    chmod +x *
-
-    # change permission and build the package
-    cd $BUILD_DIR
-    chown -R root:root hestia_$HESTIA_V
-    dpkg-deb --build hestia_$HESTIA_V
-    mv *.deb $DEB_DIR
-
-    # clear up the source folder
-    rm -r hestia_$HESTIA_V
-    rm -r hestiacp-$branch
-fi
+  # clear up the source folder
+  if [ "$KEEPBUILD" != 'true' ]; then
+      rm -r $BUILD_DIR_HESTIA
+      rm -rf hestiacp-$branch_dash
+  fi
+  cd $BUILD_DIR/hestiacp-$branch_dash
 
 # Installation steps
 if [ "$install" = "install" ] || [ "$install" = "yes" ] || [ "$install" = "install-auto" ]; then 

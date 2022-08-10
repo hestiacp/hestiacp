@@ -106,7 +106,7 @@ concurrency:
 
 steps:
   - name: Shellcheck
-    image: koalaman/shellcheck-alpine
+    image: koalaman/shellcheck-alpine:v0.8.0
     commands:
     - ./test/shellcheck.sh
   - name: PHP 8.1
@@ -116,12 +116,6 @@ steps:
 
 trigger:
       event: [ pull_request, push ]
-      ref:
-      - refs/heads/staging/*
-      - refs/heads/beta
-      - refs/heads/release
-      - refs/heads/main
-      - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -173,4 +167,4 @@ trigger:
 
 ---
 kind: signature
-hmac: a191a477aa337f2efff534022164906ff20ef2b6340ec808d128c09a06d7eaa3
+hmac: f89a311b0f023c6ee92dbdb56bcd23ec663ef9242269a6b70c1c222bac4380ee

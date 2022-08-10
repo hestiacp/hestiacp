@@ -29,7 +29,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Update templates
-cp -rf $HESTIA_INSTALL_DIR/templates/dns $HESTIA/data/templates/
+cp -rf $HESTIA_COMMON_DIR/templates/dns $HESTIA/data/templates/
 
 #----------------------------------------------------------#
 #                       Hestia                             #

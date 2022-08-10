@@ -46,7 +46,7 @@ if [ -z "$HESTIA" ]; then
     HESTIA="/usr/local/hestia"
 fi
 
-if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
+if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_COMMON_DIR" ]; then
     echo "ERROR: Environment variables not present, installation aborted."
     exit 2
 fi
@@ -97,21 +97,21 @@ if [ "$UPDATE" == "no" ]; then
     rm -f -r $RC_INSTALL_DIR/config/
     ln -s $RC_CONFIG_DIR/ ./config
     # Replace with Hestia config
-    cp -f $HESTIA_INSTALL_DIR/roundcube/main.inc.php $RC_CONFIG_DIR/config.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/mimetypes.php $RC_CONFIG_DIR/mimetypes.php
+    cp -f $HESTIA_COMMON_DIR/roundcube/main.inc.php $RC_CONFIG_DIR/config.inc.php
+    cp -f $HESTIA_COMMON_DIR/roundcube/mimetypes.php $RC_CONFIG_DIR/mimetypes.php
     chmod 644 $RC_CONFIG_DIR/*.php
     
-    cp -f $HESTIA_INSTALL_DIR/roundcube/hestia.php $RC_INSTALL_DIR/plugins/password/drivers/
+    cp -f $HESTIA_COMMON_DIR/roundcube/hestia.php $RC_INSTALL_DIR/plugins/password/drivers/
     mkdir -p $RC_CONFIG_DIR/plugins/password
     mkdir -p $RC_CONFIG_DIR/plugins/newmail_notifier
     mkdir -p $RC_CONFIG_DIR/plugins/zipdownload
     
     # Allow changes to the respective config / Create symlinks to /etc/roundcube/ 
-    cp -f $HESTIA_INSTALL_DIR/roundcube/config.inc.php $RC_CONFIG_DIR/plugins/password/config.inc.php
+    cp -f $HESTIA_COMMON_DIR/roundcube/config.inc.php $RC_CONFIG_DIR/plugins/password/config.inc.php
     ln -s $RC_CONFIG_DIR/plugins/password/config.inc.php ./plugins/password/config.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_newmail_notifier.inc.php $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php
+    cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_newmail_notifier.inc.php $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php
     ln -s $RC_CONFIG_DIR/plugins/newmail_notifier/config.inc.php ./plugins/newmail_notifier/config.inc.php
-    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_zipdownload.inc.php $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
+    cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_zipdownload.inc.php $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php
     ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php
     
     # Set up correct permissions roundcube    

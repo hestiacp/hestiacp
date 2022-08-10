@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.6.6
+# Hestia Control Panel upgrade script for target version 1.6.7
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -16,7 +16,15 @@
 #######################################################################################
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'no'
-upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'no'
+upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'yes'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
+if [ -f "/etc/roundcube/config.inc.php" ]; then
+    sed -i "s/\$config\['auto_create_user'] = false;/\$config\['auto_create_user'] = true;/g" /etc/roundcube/config.inc.php  
+    sed -i "s/\$config\['prefer_html'] = false;/\$config\['prefer_html'] = true;/g" /etc/roundcube/config.inc.php  
+          
+    #For older installs
+    sed -i "s/\$config\['default_host']/\$config\['imap_host']/g" /etc/roundcube/config.inc.php    
+fi

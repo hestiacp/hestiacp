@@ -190,11 +190,11 @@ validate_email (){
 
 # Todo add check for usernames that are blocked
 validate_username (){
-  if [[ ! "$username" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
-    # Email invalid
-    return 0
-  else
+  if [[  "$user" =~  ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ]] ; then
+    # Username valid
     return 1
+  else
+    return 0
   fi
 }
 

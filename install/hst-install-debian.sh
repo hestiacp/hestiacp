@@ -192,7 +192,7 @@ validate_email (){
 
 # Todo add check for usernames that are blocked
 validate_username (){
-  if [[ ! "$username" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+  if [[ ! "$user" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
     # Email invalid
     return 0
   else
@@ -613,11 +613,11 @@ else
     fi
 fi
 
-# Asking for contact email
+  # Asking for contact email
 if [ -z "$username" ]; then
     while validate_username; do
         echo -e "\nPlease use a valid username (ex. user)."
-        read -p 'Please enter admin username: ' email
+        read -p 'Please enter admin username: ' username
     done
 else
     if validate_username; then
@@ -626,26 +626,17 @@ else
     fi
 fi
 
-# Asking to set FQDN hostname
-if [ -z "$servername" ]; then
-    # Ask and validate FQDN hostname.
-    read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
-
-    # Set hostname if it wasn't set
-    if [ -z "$servername" ]; then
-        servername=$(hostname -f)
-    fi
-
-    # Validate Hostname, go to loop if the validation fails.
-    while validate_hostname; do
-        echo -e "\nPlease use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
-        read -p "Please enter FQDN hostname [$(hostname -f)]: " servername
+# Validate Email / Hostname even when interactive = no
+# Asking for contact email
+if [ -z "$email" ]; then
+    while validate_email; do
+        echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
+        read -p "Please enter $username email address: " email
     done
 else
-    # Validate FQDN hostname if it is preset
-    if validate_hostname; then
-        echo "Please use a valid hostname according to RFC1178 (ex. hostname.domain.tld)."
-        exit 1
+    if validate_email; then
+      echo "Please use a valid emailadress (ex. info@domain.tld)."
+      exit 1
     fi
 fi
 

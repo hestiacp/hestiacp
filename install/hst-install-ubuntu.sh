@@ -589,12 +589,25 @@ if [ "$interactive" = 'yes' ]; then
     fi
 fi
 
+  # Asking for contact email
+if [ -z "$username" ]; then
+    while validate_username; do
+        echo -e "\nPlease use a valid username (ex. user)."
+        read -p 'Please enter admin username: ' username
+    done
+else
+    if validate_username; then
+        echo "Please use a valid username (ex. user)."
+        exit 1
+    fi
+fi
+
 # Validate Email / Hostname even when interactive = no
 # Asking for contact email
 if [ -z "$email" ]; then
     while validate_email; do
         echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
-        read -p 'Please enter admin email address: ' email
+        read -p "Please enter $username email address: " email
     done
 else
     if validate_email; then
@@ -626,19 +639,6 @@ fi
       fi
   fi
   
-  # Asking for contact email
-  if [ -z "$username" ]; then
-      while validate_username; do
-          echo -e "\nPlease use a valid username (ex. user)."
-          read -p 'Please enter admin username: ' email
-      done
-  else
-      if validate_username; then
-          echo "Please use a valid username (ex. user)."
-          exit 1
-      fi
-  fi
-
 # Generating admin password if it wasn't set
   displaypass="The password you chose during installation."
   if [ -z "$vpass" ]; then

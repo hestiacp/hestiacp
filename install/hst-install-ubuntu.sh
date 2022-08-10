@@ -188,6 +188,19 @@ validate_email (){
   fi
 }
 
+validate_username (){
+  if [[ ! "$username" =~ ^[A-Za-z0-9._%+-]+@[[:alnum:].-]+\.[A-Za-z]{2,63}$ ]] ; then
+    # Email invalid
+    return 0
+  else
+    if [[ "sudo hestiaweb mysql mariadb" =~ "$username" ]]; then
+      return 0
+    else
+      return 1
+    fi
+  fi
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#

@@ -1175,6 +1175,8 @@ rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
+
+echo "[ * ] Write hestia.conf"
 # Write default port value to hestia.conf
 # If a custom port is specified it will be set at the end of the installation process.
 write_config_value "BACKEND_PORT" "8083"
@@ -1298,6 +1300,7 @@ write_config_value "UPGRADE_SEND_EMAIL_LOG" "false"
 # Set "root" user 
 write_config_value "ROOT_USER" "$username"
 
+echo "[ * ] Prepare data folder..."
 # Installing hosting packages
 cp -rf $HESTIA_COMMON_DIR/packages $HESTIA/data/
 
@@ -1310,6 +1313,8 @@ fi
 
 # Installing templates
 cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
+# DNS templates are moved to $HESTIA_COMMON_DIR
+cp -rf $HESTIA_COMMON_DIR/templates/dns/ $HESTIA/data/templates
 
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors
@@ -1324,6 +1329,7 @@ cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/
 # Installing apis
 cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
 
+echo "[ * ] Setup hostname"
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
@@ -1347,7 +1353,7 @@ else
 fi
 
 # Adding SSL certificate
-echo "[ * ] Adding SSL certificate to Hestia Control Panel..."
+echo "[ * ] Install SSL certificate for Hestia Control Panel..."
 cd $HESTIA/ssl
 sed -n "1,${crt_end}p" /tmp/hst.pem > certificate.crt
 sed -n "$key_start,${key_end}p" /tmp/hst.pem > certificate.key
@@ -1358,17 +1364,6 @@ rm /tmp/hst.pem
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
-# Deleting old admin user
-if [ -n "$(grep ^$username: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
-    chattr -i /home/$username/conf > /dev/null 2>&1
-    userdel -f $username > /dev/null 2>&1
-    chattr -i /home/$username/conf > /dev/null 2>&1
-    mv -f /home/$username  $hst_backups/home/ > /dev/null 2>&1
-    rm -f /tmp/sess_* > /dev/null 2>&1
-fi
-if [ -n "$(grep ^$username: /etc/group)" ] && [ "$force" = 'yes' ]; then
-    groupdel $username > /dev/null 2>&1
-fi
 # Remove sudo "default" sudo permission admin user group should not exists any way 
 sed -i "s/%admin ALL=(ALL) ALL/#%admin ALL=(ALL) ALL/g" /etc/sudoers
 

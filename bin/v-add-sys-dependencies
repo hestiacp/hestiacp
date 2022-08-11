@@ -19,7 +19,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 source "$HESTIA/install/upgrade/upgrade.conf"
 
 MODE=$1
-user="admin"
+user="$ROOT_USER"
 
 PM_INSTALL_DIR="$HESTIA/web/inc"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"

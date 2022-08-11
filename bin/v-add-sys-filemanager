@@ -20,7 +20,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
 MODE=$1
-user="admin"
+user="$ROOT_USER"
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
 FM_FILE="filegator_v${fm_v}.zip"

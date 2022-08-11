@@ -200,6 +200,14 @@ validate_username (){
   fi
 }
 
+validate_password (){
+  if [ $vpass -ge 7 ];
+    return 0
+  else
+    return 1
+  fi
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -599,25 +607,12 @@ if [ "$interactive" = 'yes' ]; then
     fi
 fi
 
-# Validate Email / Hostname even when interactive = no
-# Asking for contact email
-if [ -z "$email" ]; then
-    while validate_email; do
-        echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
-        read -p 'Please enter admin email address: ' email
-    done
-else
-    if validate_email; then
-        echo "Please use a valid emailadress (ex. info@domain.tld)."
-        exit 1
-    fi
-fi
-
+# Validate Username / Password / Email / Hostname even when interactive = no
   # Asking for contact email
 if [ -z "$username" ]; then
     while validate_username; do
         echo -e "\nPlease use a valid username (ex. user)."
-        read -p 'Please enter admin username: ' username
+        read -p 'Please enter administrator username: ' username
     done
 else
     if validate_username; then
@@ -626,7 +621,18 @@ else
     fi
 fi
 
-# Validate Email / Hostname even when interactive = no
+# Ask for the password
+if [ -z "$vpass" ]; then
+    while validate_password; do
+        read -p 'Please enter administrator password: ' vpass
+    done
+else
+    if validate_password; then
+        echo "Please use a valid password"
+        exit 1
+    fi
+fi
+
 # Asking for contact email
 if [ -z "$email" ]; then
     while validate_email; do
@@ -1103,6 +1109,7 @@ rm -f $HESTIA/conf/hestia.conf > /dev/null 2>&1
 touch $HESTIA/conf/hestia.conf
 chmod 660 $HESTIA/conf/hestia.conf
 
+echo "[ * ] Write hestia.conf"
 # Write default port value to hestia.conf
 # If a custom port is specified it will be set at the end of the installation process.
 write_config_value "BACKEND_PORT" "8083"
@@ -1226,6 +1233,7 @@ write_config_value "UPGRADE_SEND_EMAIL_LOG" "false"
 # Set "root" user 
 write_config_value "ROOT_USER" "$username"
 
+echo "[ * ] Prepare data folder..."
 # Installing hosting packages
 cp -rf $HESTIA_COMMON_DIR/packages $HESTIA/data/
 
@@ -1238,6 +1246,8 @@ fi
 
 # Installing templates
 cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
+# DNS templates are moved to $HESTIA_COMMON_DIR
+cp -rf $HESTIA_COMMON_DIR/templates/dns/ $HESTIA/data/templates
 
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors
@@ -1252,6 +1262,7 @@ cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/
 # Installing apis
 cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
 
+echo "[ * ] Setup hostname"
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
@@ -1295,6 +1306,7 @@ $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
+echo "[ * ] Create admin account..."
 $HESTIA/bin/v-add-user $username $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell $username nologin
@@ -1886,10 +1898,10 @@ echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
 
 #----------------------------------------------------------#
-#                  Configure PHPMailer                     #
+#             Configure Hestia php dependencies            #
 #----------------------------------------------------------#
 
-echo "[ * ] Configuring PHPMailer..."
+echo "[ * ] Configuring hestia-php dependencies  "
 $HESTIA/bin/v-add-sys-dependencies quiet
 
 #----------------------------------------------------------#

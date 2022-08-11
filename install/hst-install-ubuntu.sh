@@ -198,6 +198,14 @@ validate_username (){
   fi
 }
 
+validate_password (){
+  if [ $vpass -ge 7 ];
+    return 0
+  else
+    return 1
+  fi
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -589,11 +597,13 @@ if [ "$interactive" = 'yes' ]; then
     fi
 fi
 
-  # Asking for contact email
+# Validate Username / Password / Email / Hostname even when interactive = no
+
+# Asking for administrator account
 if [ -z "$username" ]; then
     while validate_username; do
         echo -e "\nPlease use a valid username (ex. user)."
-        read -p 'Please enter admin username: ' username
+        read -p 'Please enter administrator username: ' username
     done
 else
     if validate_username; then
@@ -602,12 +612,23 @@ else
     fi
 fi
 
-# Validate Email / Hostname even when interactive = no
+# Ask for the password
+if [ -z "$vpass" ]; then
+    while validate_password; do
+        read -p 'Please enter administrator password: ' vpass
+    done
+else
+    if validate_password; then
+        echo "Please use a valid password"
+        exit 1
+    fi
+fi
+
 # Asking for contact email
 if [ -z "$email" ]; then
     while validate_email; do
         echo -e "\nPlease use a valid emailadress (ex. info@domain.tld)."
-        read -p "Please enter $username email address: " email
+        read -p "Please enter administrator email address: " email
     done
 else
     if validate_email; then
@@ -1353,7 +1374,7 @@ else
 fi
 
 # Adding SSL certificate
-echo "[ * ] Install SSL certificate for Hestia Control Panel..."
+echo "[ * ] Adding SSL certificate to Hestia Control Panel..."
 cd $HESTIA/ssl
 sed -n "1,${crt_end}p" /tmp/hst.pem > certificate.crt
 sed -n "$key_start,${key_end}p" /tmp/hst.pem > certificate.key
@@ -1953,6 +1974,19 @@ if [ "$sieve" = 'yes' ]; then
     systemctl restart exim4 > /dev/null 2>&1
 fi
 
+#----------------------------------------------------------#
+#                  Configure File Manager                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring File Manager..."
+$HESTIA/bin/v-add-sys-filemanager quiet
+
+#----------------------------------------------------------#
+#             Configure Hestia php dependencies            #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring hestia-php dependencies  "
+$HESTIA/bin/v-add-sys-dependencies quiet
 
 #----------------------------------------------------------#
 #                       Configure API                      #
@@ -1969,21 +2003,6 @@ else
     write_config_value "API_ALLOWED_IP" ""
     $HESTIA/bin/v-change-sys-api disable
 fi
-
-#----------------------------------------------------------#
-#                  Configure File Manager                  #
-#----------------------------------------------------------#
-
-echo "[ * ] Configuring File Manager..."
-$HESTIA/bin/v-add-sys-filemanager quiet
-
-#----------------------------------------------------------#
-#                  Configure PHPMailer                     #
-#----------------------------------------------------------#
-
-echo "[ * ] Configuring PHPMailer..."
-$HESTIA/bin/v-add-sys-dependencies quiet
-
 
 #----------------------------------------------------------#
 #                   Configure IP                           #
@@ -2214,3 +2233,4 @@ else
     echo "[ ! ] IMPORTANT: You must restart the system before continuing!"
 fi
 # EOF
+  

@@ -192,7 +192,7 @@ validate_email (){
 
 # Todo add check for usernames that are blocked
 validate_username (){
-  if [[  "$user" =~  ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ]] ; then
+  if [[  "$username" =~  ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ]] ; then
     # Username valid
     return 1
   else
@@ -1222,6 +1222,9 @@ write_config_value "RELEASE_BRANCH" "release"
 # Email notifications after upgrade
 write_config_value "UPGRADE_SEND_EMAIL" "true"
 write_config_value "UPGRADE_SEND_EMAIL_LOG" "false"
+
+# Set "root" user 
+write_config_value "ROOT_USER" "$username"
 
 # Installing hosting packages
 cp -rf $HESTIA_COMMON_DIR/packages $HESTIA/data/

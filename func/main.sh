@@ -119,7 +119,7 @@ log_history() {
 
     # Log system events to system log file
     if [ "$log_user" = "system" ]; then
-        log=$HESTIA/data/users/admin/system.log
+        log_file="$HESTIA/logs/activity.log"
     else
         if ! $BIN/v-list-user "$log_user" >/dev/null; then
             return $E_NOTEXIST

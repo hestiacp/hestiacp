@@ -2077,7 +2077,7 @@ echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all"  > /etc/cro
 # Adding cron jobs
 export SCHEDULED_RESTART="yes"
 
-$HESTIA/BIN/v-restart-cron yes
+$HESTIA/bin/v-restart-cron yes
 
 # Building initital rrd images
 $HESTIA/bin/v-update-sys-rrd

@@ -22,7 +22,10 @@ iface=$(/bin/ip token | awk -F 'dev ' '{print $2}')
 ip=${1// /}
 netmask=$2
 iface="${3-$iface}"
-user="${4-admin}"
+user="$4"
+if [ -z "$4" ]; then 
+    user="$ROOT_USER"
+fi 
 ip_status="${5-shared}"
 ip_name=$6
 nat_ip=$7
@@ -54,7 +57,7 @@ fi
 if [ -n "$nat_ip" ] ; then
     is_format_valid 'nat_ip'
 fi
-if [ "$user" != "admin" ]; then
+if [ "$user" != "$ROOT_USER" ]; then
     ip_status="dedicated"
 fi
 
@@ -197,17 +200,17 @@ fi
 
 # Updating user counters
 increase_user_value "$user" '$IP_OWNED'
-if [ "$user" = 'admin' ]; then
+if [ "$user" = "$ROOT_USER" ]; then
     if [ "$ip_status" = 'shared' ]; then
         for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
             increase_user_value "$hestia_user" '$IP_AVAIL'
         done
     else
-        increase_user_value 'admin' '$IP_AVAIL'
+        increase_user_value "$ROOT_USER" '$IP_AVAIL'
     fi
 else
     increase_user_value "$user" '$IP_AVAIL'
-    increase_user_value 'admin' '$IP_AVAIL'
+    increase_user_value "$ROOT_USER" '$IP_AVAIL'
 fi
 
 # Restarting web server

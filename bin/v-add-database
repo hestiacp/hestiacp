@@ -2,7 +2,7 @@
 # info: add database
 # options: USER DATABASE DBUSER DBPASS [TYPE] [HOST] [CHARSET]
 #
-# example: v-add-database admin wordpress_db matt qwerty123
+# example: v-add-database user wordpress_db matt qwerty123
 #
 # This function creates the database concatenating username and user_db.
 # Supported types of databases you can get using v-list-sys-config script.

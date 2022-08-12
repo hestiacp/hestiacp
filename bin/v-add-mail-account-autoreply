@@ -2,7 +2,7 @@
 # info: add mail account autoreply message
 # options: USER DOMAIN ACCOUNT MESSAGE
 #
-# example: v-add-mail-account-autoreply admin example.com user Hello from e-mail!
+# example: v-add-mail-account-autoreply user example.com user Hello from e-mail!
 #
 # This function add new email account.
 

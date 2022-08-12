@@ -2,7 +2,7 @@
 # info: change user default template
 # options: USER TYPE TEMPLATE
 #
-# example: v-change-user-template admin WEB wordpress
+# example: v-change-user-template user WEB wordpress
 #
 # This function changes default user web template.
 

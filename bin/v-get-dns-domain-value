@@ -2,7 +2,7 @@
 # info: get dns domain value
 # options: USER DOMAIN KEY
 #
-# example: v-get-dns-domain-value admin example.com SOA
+# example: v-get-dns-domain-value user example.com SOA
 #
 # This function for getting a certain DNS domain parameter.
 

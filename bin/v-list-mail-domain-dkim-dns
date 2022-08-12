@@ -2,7 +2,7 @@
 # info: list mail domain dkim dns records
 # options: USER DOMAIN [FORMAT]
 #
-# example: v-list-mail-domain-dkim-dns admin example.com
+# example: v-list-mail-domain-dkim-dns user example.com
 #
 # This function of obtaining domain dkim dns records for proper setup.
 

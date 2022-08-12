@@ -2,7 +2,7 @@
 # info: delete user notification
 # options: USER NOTIFICATION
 #
-# example: v-delete-user-notification admin 1
+# example: v-delete-user-notification user 1
 #
 # This function deletes user notification.
 

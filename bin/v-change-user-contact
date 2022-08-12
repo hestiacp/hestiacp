@@ -2,7 +2,7 @@
 # info: change user contact email
 # options: USER EMAIL
 #
-# example: v-change-user-contact admin admin@yahoo.com
+# example: v-change-user-contact user admin@yahoo.com
 #
 # This function for changing of e-mail associated with a certain user.
 

@@ -2,7 +2,7 @@
 # info: search objects
 # options: USER OBJECT [FORMAT]
 #
-# example: v-search-user-object admin example.com json
+# example: v-search-user-object user example.com json
 #
 # This function that allows to find user objects.
 

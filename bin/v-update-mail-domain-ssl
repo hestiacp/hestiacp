@@ -2,7 +2,7 @@
 # info: updating ssl certificate for domain
 # options: USER DOMAIN SSL_DIR [RESTART]
 #
-# example: v-update-mail-domain-ssl admin domain.com /home/admin/tmp
+# example: v-update-mail-domain-ssl user domain.com /home/admin/tmp
 #
 # This function updates the SSL certificate for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file 

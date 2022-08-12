@@ -2,7 +2,7 @@
 # info: adding cronjob for letsencrypt cetificate installation
 # options: USER DOMAIN [ALIASES]
 #
-# example: v-schedule-letsencrypt-domain admin example.com www.example.com
+# example: v-schedule-letsencrypt-domain user example.com www.example.com
 #
 # This function adds cronjob for letsencrypt ssl certificate installation
 

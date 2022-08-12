@@ -2,7 +2,7 @@
 # info: add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
 #
-# example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
+# example: v-add-backup-host sftp backup.acme.com user p4$$w@Rd
 #          v-add-backup-host b2 bucketName keyID applicationKey
 #
 # Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported 

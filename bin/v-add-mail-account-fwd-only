@@ -2,7 +2,7 @@
 # info: add mail account forward-only flag
 # options: USER DOMAIN ACCOUNT
 #
-# example: v-add-mail-account-fwd-only admin example.com user
+# example: v-add-mail-account-fwd-only user example.com user
 #
 # This function adds fwd-only flag
 

@@ -2,7 +2,7 @@
 # info: change path for ftp user.
 # options: USER DOMAIN FTP_USER FTP_PATH
 #
-# example: v-change-web-domain-ftp-path admin example.com /home/admin/example.com
+# example: v-change-web-domain-ftp-path user example.com /home/admin/example.com
 #
 # This function changes ftp user path.
 

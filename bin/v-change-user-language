@@ -2,7 +2,7 @@
 # info: change user language
 # options: USER LANGUAGE
 #
-# example: v-change-user-language admin en
+# example: v-change-user-language user en
 #
 # This function for changing language.
 

@@ -2,7 +2,7 @@
 # info: Adding force SSL for a domain
 # options: USER DOMAIN [RESTART] [QUIET]
 #
-# example: v-add-web-domain-ssl-force admin acme.com
+# example: v-add-web-domain-ssl-force user acme.com
 #
 # This function forces SSL for the requested domain.
 

@@ -2,7 +2,7 @@
 # info: change file permission
 # options: USER FILE PERMISSIONS
 #
-# example: v-change-fs-file-permission admin readme.txt 0777
+# example: v-change-fs-file-permission user readme.txt 0777
 #
 # This function changes file access permissions on the file system
 

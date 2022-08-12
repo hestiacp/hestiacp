@@ -2,7 +2,7 @@
 # info: delete webdomain ftp account
 # options: USER DOMAIN FTP_USER
 #
-# example: v-delete-web-domain-ftp admin wonderland.com bob_ftp
+# example: v-delete-web-domain-ftp user wonderland.com bob_ftp
 #
 # This function deletes additional ftp account.
 

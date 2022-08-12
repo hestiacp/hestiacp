@@ -2,7 +2,7 @@
 # info: list mail domain account
 # options: USER DOMAIN ACCOUNT [FORMAT]
 #
-# example: v-list-mail-account admin domain.tld tester
+# example: v-list-mail-account user domain.tld tester
 #
 # This function of obtaining the list of account parameters.
 

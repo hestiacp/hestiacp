@@ -11,7 +11,6 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user='admin'
 format=${1-shell}
 
 # Includes
@@ -21,6 +20,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+user="$ROOT_USER"
 
 # JSON list function
 json_list() {

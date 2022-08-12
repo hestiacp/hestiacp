@@ -2,7 +2,7 @@
 # info: delete user package
 # options: PACKAGE
 #
-# example: v-delete-user-package admin palegreen
+# example: v-delete-user-package user palegreen
 #
 # This function for deleting user package.
 #

@@ -2,7 +2,7 @@
 # info: change dns domain expiration date
 # options: USER DOMAIN EXP
 #
-# example: v-change-dns-domain-exp admin domain.pp.ua 2020-11-20
+# example: v-change-dns-domain-exp user domain.pp.ua 2020-11-20
 #
 # This function of changing the term of expiration domain's registration. The
 # serial number will be refreshed automatically during update.

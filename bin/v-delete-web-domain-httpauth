@@ -2,7 +2,7 @@
 # info: delete http auth user
 # options: USER DOMAIN AUTH_USER [RESTART]
 #
-# example: v-delete-web-domain-httpauth admin example.com alice
+# example: v-delete-web-domain-httpauth user example.com alice
 #
 # This function is used for deleting http auth user
 

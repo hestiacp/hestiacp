@@ -2,7 +2,7 @@
 # info: change user shell
 # options: USER SHELL
 #
-# example: v-change-user-shell admin nologin
+# example: v-change-user-shell user nologin
 #
 # This function changes system shell of a user. Shell gives ability to use ssh.
 

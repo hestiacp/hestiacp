@@ -2,7 +2,7 @@
 # info: change remote dns domain SOA
 # options: USER DOMAIN
 #
-# example: v-change-remote-dns-domain-soa admin example.org.uk
+# example: v-change-remote-dns-domain-soa user example.org.uk
 #
 # This function synchronize dns domain with the remote server.
 

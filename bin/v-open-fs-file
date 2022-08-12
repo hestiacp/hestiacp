@@ -2,7 +2,7 @@
 # info: open file
 # options: USER FILE
 #
-# example: v-open-fs-file admin README.md
+# example: v-open-fs-file user README.md
 #
 # This function opens/reads files on the file system
 

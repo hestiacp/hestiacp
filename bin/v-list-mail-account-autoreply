@@ -2,7 +2,7 @@
 # info: list mail account autoreply
 # options: USER DOMAIN ACCOUNT [FORMAT]
 #
-# example: v-list-mail-account-autoreply admin example.com testing
+# example: v-list-mail-account-autoreply user example.com testing
 #
 # This function of obtaining mail account autoreply message.
 

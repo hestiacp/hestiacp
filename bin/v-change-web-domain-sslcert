@@ -2,7 +2,7 @@
 # info: change domain ssl certificate
 # options: USER DOMAIN SSL_DIR [RESTART]
 #
-# example: v-change-web-domain-sslcert admin example.com /home/admin/tmp
+# example: v-change-web-domain-sslcert user example.com /home/admin/tmp
 #
 # This function changes SSL domain certificate and the key. If ca file present
 # it will be replaced as well.

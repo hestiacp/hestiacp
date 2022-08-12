@@ -2,7 +2,7 @@
 # info: get user value
 # options: USER KEY
 #
-# example: v-get-user-value admin FNAME
+# example: v-get-user-value user FNAME
 #
 # This function for obtaining certain user's parameters.
 

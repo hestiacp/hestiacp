@@ -2,7 +2,7 @@
 # info: delete dns domain or dns record based on web domain alias
 # options: USER DOMAIN ALIAS [RESTART]
 #
-# example: v-delete-dns-on-web-alias admin example.com www.example.com
+# example: v-delete-dns-on-web-alias user example.com www.example.com
 #
 # This function deletes dns domain or dns record based on web domain alias.
 

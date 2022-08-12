@@ -2,7 +2,7 @@
 # info: adding ssl for domain
 # options: USER DOMAIN SSL_DIR [SSL_HOME] [RESTART]
 #
-# example: v-add-web-domain-ssl admin example.com /home/admin/conf/example.com/web
+# example: v-add-web-domain-ssl user example.com /home/admin/conf/example.com/web
 #
 # This function turns on SSL support for a domain. Parameter ssl_dir is a path
 # to directory where 2 or 3 ssl files can be found. Certificate file 

@@ -2,7 +2,7 @@
 # info: changes user configuration value
 # options: USER KEY VALUE
 #
-# example: v-change-user-config-value admin ROLE admin
+# example: v-change-user-config-value user ROLE admin
 #
 # Changes key/value for specified user.
 

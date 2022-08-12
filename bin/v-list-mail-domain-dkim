@@ -2,7 +2,7 @@
 # info: list mail domain dkim
 # options: USER DOMAIN [FORMAT]
 #
-# example: v-list-mail-domain-dkim admin maildomain.tld
+# example: v-list-mail-domain-dkim user maildomain.tld
 #
 # This function of obtaining domain dkim files.
 

@@ -2,7 +2,7 @@
 # info: archive directory
 # options: USER ARCHIVE SOURCE [SOURCE...]
 #
-# example: v-add-fs-archive admin archive.tar readme.txt
+# example: v-add-fs-archive user archive.tar readme.txt
 #
 # This function creates tar archive
 

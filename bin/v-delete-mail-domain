@@ -2,7 +2,7 @@
 # info: delete mail domain
 # options: USER DOMAIN
 #
-# example: v-delete-mail-domain admin mydomain.tld
+# example: v-delete-mail-domain user mydomain.tld
 #
 # This function for deleting MAIL domain. By deleting it all accounts will
 # also be deleted.

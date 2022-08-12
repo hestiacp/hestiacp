@@ -2,7 +2,7 @@
 # info: delete database
 # options: USER DATABASE
 #
-# example: v-delete-database admin wp_db
+# example: v-delete-database user wp_db
 #
 # This function for deleting the database. If database user have access to
 # another database, he will not be deleted.

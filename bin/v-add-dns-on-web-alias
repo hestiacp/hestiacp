@@ -2,7 +2,7 @@
 # info: add dns domain or dns record after web domain alias
 # options: USER ALIAS IP [RESTART]
 #
-# example: v-add-dns-on-web-alias admin www.example.com 8.8.8.8
+# example: v-add-dns-on-web-alias user www.example.com 8.8.8.8
 #
 # This function adds dns domain or dns record based on web domain alias.
 

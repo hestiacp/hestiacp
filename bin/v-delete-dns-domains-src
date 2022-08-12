@@ -2,7 +2,7 @@
 # info: delete dns domains based on SRC field
 # options: USER SRC [RESTART]
 #
-# example: v-delete-dns-domains-src admin '' yes
+# example: v-delete-dns-domains-src user '' yes
 #
 # This function for deleting DNS domains related to a certain host.
 

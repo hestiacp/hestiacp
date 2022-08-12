@@ -2,7 +2,7 @@
 # info: backup system user with all its objects
 # options: USER NOTIFY
 #
-# example: v-backup-user admin yes
+# example: v-backup-user user yes
 #
 # This function is used for backing up user with all its domains and databases.
 

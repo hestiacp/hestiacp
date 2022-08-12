@@ -2,7 +2,7 @@
 # info: change cron job
 # options: USER JOB MIN HOUR DAY MONTH WDAY COMMAND
 #
-# example: v-change-cron-job admin 7 * * * * * * /usr/bin/uptime
+# example: v-change-cron-job user 7 * * * * * * /usr/bin/uptime
 #
 # This function is used for changing existing job. It fully replace job
 # parameters with new one but with same id.

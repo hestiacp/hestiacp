@@ -2,7 +2,7 @@
 # info: unsuspend database
 # options: USER DATABASE
 #
-# example: v-unsuspend-database admin mydb
+# example: v-unsuspend-database user mydb
 #
 # This function for unsuspending database.
 

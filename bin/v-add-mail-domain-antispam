@@ -2,7 +2,7 @@
 # info: add mail domain antispam support
 # options: USER DOMAIN
 #
-# example: v-add-mail-domain-antispam admin mydomain.tld
+# example: v-add-mail-domain-antispam user mydomain.tld
 #
 # This function enables spamassasin for incoming emails.
 

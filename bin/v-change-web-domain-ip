@@ -2,7 +2,7 @@
 # info: change web domain ip
 # options: USER DOMAIN DOMAIN [RESTART]
 #
-# example: v-change-web-domain-ip admin example.com 167.86.105.230 yes
+# example: v-change-web-domain-ip user example.com 167.86.105.230 yes
 #
 # This function is used for changing domain ip
 

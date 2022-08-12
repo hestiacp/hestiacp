@@ -2,7 +2,7 @@
 # info: change dns domain soa record
 # options: USER DOMAIN SOA [RESTART]
 #
-# example: v-change-dns-domain-soa admin acme.com d.ns.domain.tld
+# example: v-change-dns-domain-soa user acme.com d.ns.domain.tld
 #
 # This function for changing SOA record. This type of records can not be
 # modified by v-change-dns-record call.

@@ -2,7 +2,7 @@
 # info: deleting web domain backend configuration
 # options: USER DOMAIN [RESTART]
 #
-# example: v-delete-web-domain-backend admin acme.com
+# example: v-delete-web-domain-backend user acme.com
 #
 # This function of deleting the virtualhost backend configuration.
 

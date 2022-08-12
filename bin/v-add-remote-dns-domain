@@ -2,7 +2,7 @@
 # info: add remote dns domain
 # options: USER DOMAIN [FLUSH]
 #
-# example: v-add-remote-dns-domain admin mydomain.tld yes
+# example: v-add-remote-dns-domain user mydomain.tld yes
 #
 # This function synchronize dns domain with the remote server.
 

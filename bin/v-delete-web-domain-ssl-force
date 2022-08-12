@@ -2,7 +2,7 @@
 # info: remove ssl force from domain
 # options: USER DOMAIN [RESTART] [QUIET]
 #
-# example: v-delete-web-domain-ssl-force admin domain.tld
+# example: v-delete-web-domain-ssl-force user domain.tld
 #
 # This function removes force SSL configurations.
 

@@ -2,7 +2,7 @@
 # info: unsuspend dns domain record
 # options: USER DOMAIN ID [RESTART]
 #
-# example: v-unsuspend-dns-record admin example.com 33
+# example: v-unsuspend-dns-record user example.com 33
 #
 # This function unsuspends a certain domain record.
 

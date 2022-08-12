@@ -2,7 +2,7 @@
 # info: suspend dns domains
 # options: USER [RESTART]
 #
-# example: v-suspend-dns-domains admin yes
+# example: v-suspend-dns-domains user yes
 #
 # This function suspends all user's DNS domains.
 

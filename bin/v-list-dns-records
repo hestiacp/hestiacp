@@ -2,7 +2,7 @@
 # info: list dns domain records
 # options: USER DOMAIN [FORMAT]
 #
-# example: v-list-dns-records admin example.com
+# example: v-list-dns-records user example.com
 #
 # This function for getting all DNS domain records.
 

@@ -2,7 +2,7 @@
 # info: delete mail domain catchall email
 # options: USER DOMAIN
 #
-# example: v-delete-mail-domain-catchall admin mydomain.tld
+# example: v-delete-mail-domain-catchall user mydomain.tld
 #
 # This function disables mail domain cathcall.
 

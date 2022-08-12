@@ -2,7 +2,7 @@
 # info: delete mail account
 # options: USER DOMAIN ACCOUNT
 #
-# example: v-delete-mail-account admin acme.com alice
+# example: v-delete-mail-account user acme.com alice
 #
 # This function deletes email account.
 

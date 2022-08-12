@@ -2,7 +2,7 @@
 # info: change dns domain record
 # options: USER DOMAIN ID RECORD TYPE VALUE [PRIORITY] [RESTART] [TTL]
 #
-# example: v-change-dns-record admin domain.ua 42 192.18.22.43
+# example: v-change-dns-record user domain.ua 42 192.18.22.43
 #
 # This function for changing DNS record.
 

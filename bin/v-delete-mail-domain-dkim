@@ -2,7 +2,7 @@
 # info: delete mail domain dkim support
 # options: USER DOMAIN
 #
-# example: v-delete-mail-domain-dkim admin mydomain.tld
+# example: v-delete-mail-domain-dkim user mydomain.tld
 #
 # This function delete DKIM domain pem.
 

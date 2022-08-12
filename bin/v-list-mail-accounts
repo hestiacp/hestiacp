@@ -2,7 +2,7 @@
 # info: list mail domain accounts
 # options: USER DOMAIN [FORMAT]
 #
-# example: v-list-mail-accounts admin acme.com
+# example: v-list-mail-accounts user acme.com
 #
 # This function of obtaining the list of all user domains.
 

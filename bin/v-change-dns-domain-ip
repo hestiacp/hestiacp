@@ -2,7 +2,7 @@
 # info: change dns domain ip address
 # options: USER DOMAIN IP [RESTART]
 #
-# example: v-change-dns-domain-ip admin domain.com 123.212.111.222
+# example: v-change-dns-domain-ip user domain.com 123.212.111.222
 #
 # This function for changing the main ip of DNS zone.
 

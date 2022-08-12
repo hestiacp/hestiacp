@@ -2,7 +2,7 @@
 # info: update host certificate for hestia
 # options: USER HOSTNAME
 #
-# example: v-update-host-certificate admin example.com
+# example: v-update-host-certificate user example.com
 #
 # This function updates the SSL certificate used for Hestia Control Panel.
 
@@ -11,8 +11,8 @@
 #----------------------------------------------------------#
 
 whoami=$(whoami)
-if [ "$whoami" != "root" ] && [ "$whoami" != "admin" ] ; then
-    echo "Error: this script must be run as root or admin.";
+if [ "$whoami" != "root" ] ; then
+    echo "Error: this script must be run as root";
     exit 1;
 fi
 

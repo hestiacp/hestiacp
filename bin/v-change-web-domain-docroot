@@ -2,11 +2,11 @@
 # info: Changes the document root for an existing web domain
 # options: USER DOMAIN TARGET_DOMAIN [DIRECTORY] [PHP]
 #
-# example: v-change-web-domain-docroot admin domain.tld otherdomain.tld
+# example: v-change-web-domain-docroot user domain.tld otherdomain.tld
 #          # add custom docroot
 #          # points domain.tld to otherdomain.tld's document root.
 #
-# example: v-change-web-domain-docroot admin test.local default
+# example: v-change-web-domain-docroot user test.local default
 #          # remove custom docroot
 #          # returns document root to default value for domain.
 #

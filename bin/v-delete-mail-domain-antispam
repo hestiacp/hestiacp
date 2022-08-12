@@ -2,7 +2,7 @@
 # info: delete mail domain antispam support
 # options: USER DOMAIN
 #
-# example: v-delete-mail-domain-antispam admin mydomain.tld
+# example: v-delete-mail-domain-antispam user mydomain.tld
 #
 # This function disable spamassasin for incoming emails.
 

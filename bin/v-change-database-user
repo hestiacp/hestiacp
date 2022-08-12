@@ -2,7 +2,7 @@
 # info: change database username
 # options: USER DATABASE DBUSER [DBPASS]
 #
-# example: v-change-database-user admin my_db joe_user
+# example: v-change-database-user user my_db joe_user
 #
 # This function for changing database user. It uses the
 

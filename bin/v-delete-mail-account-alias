@@ -2,7 +2,7 @@
 # info: delete mail account alias aka nickname
 # options: USER DOMAIN ACCOUNT ALIAS
 #
-# example: v-delete-mail-account-alias admin example.com alice alicia
+# example: v-delete-mail-account-alias user example.com alice alicia
 #
 # This function deletes email account alias.
 

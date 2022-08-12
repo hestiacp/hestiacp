@@ -2,7 +2,7 @@
 # info: change user package
 # options: USER PACKAGE [FORCE]
 #
-# example: v-change-user-package admin yourpackage
+# example: v-change-user-package user yourpackage
 #
 # This function changes user's hosting package.
 

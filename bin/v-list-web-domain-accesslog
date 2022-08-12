@@ -2,7 +2,7 @@
 # info: list web domain access log
 # options: USER DOMAIN [LINES] [FORMAT]
 #
-# example: v-list-web-domain-accesslog admin example.com
+# example: v-list-web-domain-accesslog user example.com
 #
 # This function of obtaining raw access web domain logs.
 

@@ -2,7 +2,7 @@
 # info: update domain bandwidth usage
 # options: USER DOMAIN
 #
-# example: v-update-web-domain-traff admin example.com
+# example: v-update-web-domain-traff user example.com
 #
 # This function recalculates bandwidth usage for specific domain.
 

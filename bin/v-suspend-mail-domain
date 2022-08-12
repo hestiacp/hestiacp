@@ -2,7 +2,7 @@
 # info: suspend mail domain
 # options: USER DOMAIN
 #
-# example: v-suspend-mail-domain admin domain.com
+# example: v-suspend-mail-domain user domain.com
 #
 # This function suspends mail domain.
 

@@ -2,7 +2,7 @@
 # info: delete mail domain antivirus support
 # options: USER DOMAIN
 #
-# example: v-delete-mail-domain-antivirus admin mydomain.tld
+# example: v-delete-mail-domain-antivirus user mydomain.tld
 #
 # This function disables clamav scan for incoming emails.
 

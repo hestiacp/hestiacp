@@ -2,7 +2,7 @@
 # info: add system user
 # options: USER PASSWORD EMAIL [PACKAGE] [NAME] [LASTNAME]
 #
-# example: v-add-user admin2 P4$$w@rD bgates@aol.com
+# example: v-add-user user P4$$w@rD bgates@aol.com
 #
 # This function creates new user account.
 

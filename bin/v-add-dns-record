@@ -2,7 +2,7 @@
 # info: add dns record
 # options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART] [TTL]
 #
-# example: v-add-dns-record admin acme.com www A 162.227.73.112
+# example: v-add-dns-record user acme.com www A 162.227.73.112
 #
 # This function is used to add a new DNS record. Complex records of TXT, MX and
 # SRV types can be used by a filling in the 'value' argument. This function also

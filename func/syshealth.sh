@@ -492,16 +492,20 @@ function syshealth_repair_system_config() {
 }
 
 # Repair System Cron Jobs
-# Add default cron jobs to "admin" user account's cron tab
+# Add default cron jobs to "hestiaweb" user account's cron tab
 function syshealth_repair_system_cronjobs() {
-    $HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue restart" '' 'no'
-    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue daily" '' 'no'
-    $HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue disk" '' 'no'
-    $HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue traffic" '' 'no'
-    $HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue webstats" '' 'no'
-    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue backup" '' 'no'
-    $HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $HESTIA/bin/v-backup-users" '' 'no'
-    $HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-user-stats" '' 'no'
-    $HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-rrd" '' 'no'
+    echo "MAILTO=$email"  > /etc/cron.d/hestiaweb
+    echo "CONTENT_TYPE=\"text/plain; charset=utf-8\""  >> /etc/cron.d/hestiaweb
+    echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart"  >> /etc/cron.d/hestiaweb
+    echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily"  >> /etc/cron.d/hestiaweb
+    echo "15 02 * * * sudo /usr/local/hestia/bin/v-update-sys-queue disk"  >> /etc/cron.d/hestiaweb
+    echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue traffic"  >> /etc/cron.d/hestiaweb
+    echo "30 03 * * * sudo /usr/local/hestia/bin/v-update-sys-queue webstats"  >> /etc/cron.d/hestiaweb
+    echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue backup"  >> /etc/cron.d/hestiaweb
+    echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users"  >> /etc/cron.d/hestiaweb
+    echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats"  >> /etc/cron.d/hestiaweb
+    echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd"  >> /etc/cron.d/hestiaweb
+    echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl"  >> /etc/cron.d/hestiaweb
+    echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all"  >> /etc/cron.d/hestiaweb
     $HESTIA/bin/v-restart-cron
 }

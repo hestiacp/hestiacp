@@ -2,7 +2,7 @@
 # info: move file
 # options: USER SRC_FILE DST_FILE
 #
-# example: v-move-fs-file admin readme.txt new_readme.txt
+# example: v-move-fs-file user readme.txt new_readme.txt
 #
 # This function moved file or directory on the file system. This function
 # can also be used to rename files just like normal mv command.

@@ -2,7 +2,7 @@
 # info: add webdomain proxy support
 # options: USER DOMAIN [TEMPLATE] [EXTENTIONS] [RESTART]
 #
-# example: v-add-web-domain-proxy admin example.com
+# example: v-add-web-domain-proxy user example.com
 #
 # This function enables proxy support for a domain. This can significantly
 # improve website speed.

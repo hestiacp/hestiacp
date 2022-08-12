@@ -2,7 +2,7 @@
 # info: Schedule a backup
 # options: USER BACKUP
 #
-# example: v-schedule-user-backup-download admin 2019-04-22_01-00-00.tar
+# example: v-schedule-user-backup-download user 2019-04-22_01-00-00.tar
 #
 # This function for scheduling user backup creation.
 

@@ -2,13 +2,14 @@
 # info: add new remote dns host
 # options: HOST PORT USER PASSWORD [TYPE] [DNS_USER]
 #
-# example: v-add-remote-dns-host slave.your_host.com 8083 admin your_passw0rd
+# example: v-add-remote-dns-host slave.your_host.com 8083 "admin" your_passw0rd
 # 
 # example: v-add-remote-dns-host slave.your_host.com 8083 api_key ''
 #
 # This function adds remote dns server to the dns cluster.
 # As alternative api_key generated on the slave server.
 # See v-generate-api-key can be used to connect the remote dns server
+# Only the main "admin" can be used it can befound in /usr/local/hestia/confhestia.conf and then "ROOT_USER"
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -106,10 +107,10 @@ check_result $? "$HOST sync failed" "$E_CONNECT"
 #----------------------------------------------------------#
 
 # Adding local  dns-cluster cron job
-cmd="sudo $HESTIA/bin/v-update-sys-queue dns-cluster"
-check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
+cmd="v-update-sys-queue dns-cluster"
+check_cron=$(grep "$cmd" /etc/cron.d/hestiaweb 2> /dev/null)
 if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
-    $BIN/v-add-cron-job admin '*/5' '*' '*' '*' '*' "$cmd"
+   echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue dns-cluster"  >> /etc/cron.d/hestiaweb
 fi
 
 # Logging

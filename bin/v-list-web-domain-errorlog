@@ -2,7 +2,7 @@
 # info: list web domain error log
 # options: USER DOMAIN [LINES] [FORMAT]
 #
-# example: v-list-web-domain-errorlog admin acme.com
+# example: v-list-web-domain-errorlog user acme.com
 #
 # This function of obtaining raw error web domain logs.
 

@@ -2,7 +2,7 @@
 # info: add web/dns/mail domain
 # options: USER DOMAIN [IP] [RESTART]
 #
-# example: v-add-domain admin example.com
+# example: v-add-domain user example.com
 #
 # This function adds web/dns/mail domain to a server.
 

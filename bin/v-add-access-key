@@ -2,9 +2,9 @@
 # info: generate access key
 # options: USER [PERMISSIONS] [COMMENT] [FORMAT]
 #
-# example: v-add-access-key admin v-purge-nginx-cache,v-list-mail-accounts comment json
+# example: v-add-access-key user v-purge-nginx-cache,v-list-mail-accounts comment json
 #
-# The "PERMISSIONS" argument is optional for the admin user only.
+# The "PERMISSIONS" argument is optional for the "admin" user only.
 # This function creates a key file in $HESTIA/data/access-keys/
 
 #----------------------------------------------------------#

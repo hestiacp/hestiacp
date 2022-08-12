@@ -2,7 +2,7 @@
 # info: delete remote dns domain
 # options: USER DOMAIN
 #
-# example: v-delete-remote-dns-domain admin example.tld
+# example: v-delete-remote-dns-domain user example.tld
 #
 # This function synchronize dns with the remote server.
 

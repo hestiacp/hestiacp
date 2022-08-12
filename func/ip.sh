@@ -230,7 +230,7 @@ get_broadcast() {
 get_user_ips() {
     dedicated=$(grep -H "OWNER='$user'" $HESTIA/data/ips/*)
     dedicated=$(echo "$dedicated" |cut -f 1 -d : |sed 's=.*/==')
-    shared=$(grep -H -A1 "OWNER='admin'" $HESTIA/data/ips/* |grep shared)
+    shared=$(grep -H -A1 "OWNER='$ROOT_USER'" $HESTIA/data/ips/* |grep shared)
     shared=$(echo "$shared" |cut -f 1 -d : |sed 's=.*/==' |cut -f 1 -d \-)
     for dedicated_ip in $dedicated; do
         shared=$(echo "$shared" |grep -v $dedicated_ip)

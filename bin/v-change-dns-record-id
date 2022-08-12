@@ -2,7 +2,7 @@
 # info: change dns domain record id
 # options: USER DOMAIN ID NEWID [RESTART]
 #
-# example: v-change-dns-record-id admin acme.com 24 42 yes
+# example: v-change-dns-record-id user acme.com 24 42 yes
 #
 # This function for changing internal record id.
 

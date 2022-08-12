@@ -2,7 +2,7 @@
 # info: delete directory
 # options: USER DIRECTORY
 #
-# example: v-delete-fs-directory admin report1
+# example: v-delete-fs-directory user report1
 #
 # This function deletes directory on the file system
 

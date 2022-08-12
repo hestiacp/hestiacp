@@ -2,7 +2,7 @@
 # info: change web domain proxy template
 # options: USER DOMAIN TEMPLATE [EXTENTIONS] [RESTART]
 #
-# example: v-change-web-domain-proxy-tpl admin domain.tld hosting
+# example: v-change-web-domain-proxy-tpl user domain.tld hosting
 #
 # This function changes proxy template
 

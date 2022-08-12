@@ -2,7 +2,7 @@
 # info: get file type
 # options: USER FILE
 #
-# example: v-get-fs-file-type admin index.html
+# example: v-get-fs-file-type user index.html
 #
 # This function shows file type
 

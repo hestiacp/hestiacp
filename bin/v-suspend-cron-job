@@ -2,7 +2,7 @@
 # info: suspend cron job
 # options: USER JOB [RESTART]
 #
-# example: v-suspend-cron-job admin 5 yes
+# example: v-suspend-cron-job user 5 yes
 #
 # This function suspends a certain job of the cron scheduler.
 

@@ -17,7 +17,7 @@ if [ -z $domain ]; then
     domain=$HOSTNAME;
 fi
 user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
-[[ -z "$user" ]] && user="admin"
+[[ -z "$user" ]] && user="$ROOT_USER"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

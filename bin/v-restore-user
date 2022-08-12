@@ -2,7 +2,7 @@
 # info: restore user
 # options: USER BACKUP [WEB] [DNS] [MAIL] [DB] [CRON] [UDIR] [NOTIFY]
 #
-# example: v-restore-user admin 2019-04-22_01-00-00.tar
+# example: v-restore-user user 2019-04-22_01-00-00.tar
 #
 # This function for restoring user from backup. To be able to restore the backup,
 # the archive needs to be placed in /backup.
@@ -894,7 +894,7 @@ sed -i "/v-restore-user $user /d" $HESTIA/data/queue/backup.pipe
 
 # Update user counters
 $BIN/v-update-user-counters $user
-$BIN/v-update-user-counters admin
+$BIN/v-update-user-counters $ROOT_USER
 $BIN/v-update-sys-ip-counters
 
 # Logging

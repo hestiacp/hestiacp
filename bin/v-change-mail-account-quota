@@ -2,7 +2,7 @@
 # info: change mail account quota
 # options: USER DOMAIN ACCOUNT QUOTA
 #
-# example: v-change-mail-account-quota admin mydomain.tld user01 unlimited
+# example: v-change-mail-account-quota user mydomain.tld user01 unlimited
 #
 # This function changes email account disk quota.
 

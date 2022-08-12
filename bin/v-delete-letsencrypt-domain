@@ -2,7 +2,7 @@
 # info: deleting letsencrypt ssl cetificate for domain
 # options: USER DOMAIN [RESTART] [MAIL]
 #
-# example: v-delete-letsencrypt-domain admin acme.com yes
+# example: v-delete-letsencrypt-domain user acme.com yes
 #
 # This function turns off letsencrypt SSL support for a domain.
 

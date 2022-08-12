@@ -2,7 +2,7 @@
 # info: suspend web/dns/mail domain
 # options: USER DOMAIN
 #
-# example: v-suspend-domain admin example.com
+# example: v-suspend-domain user example.com
 #
 # This function suspends web/dns/mail domain.
 

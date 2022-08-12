@@ -2,7 +2,7 @@
 # info: change web domain backend template
 # options: USER DOMAIN TEMPLATE [RESTART]
 #
-# example: v-change-web-domain-backend-tpl admin acme.com PHP-7_4
+# example: v-change-web-domain-backend-tpl user acme.com PHP-7_4
 #
 # This function changes backend template
 

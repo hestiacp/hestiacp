@@ -2,7 +2,7 @@
 # info: change mail account rate limit
 # options: USER DOMAIN ACCOUNT RATE
 #
-# example: v-change-mail-account-quota admin mydomain.tld user01 100
+# example: v-change-mail-account-quota user mydomain.tld user01 100
 #
 # This function changes email account rate limit for the domain. account specific setting will overwrite domain setting!
 

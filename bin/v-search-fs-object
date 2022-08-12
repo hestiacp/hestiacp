@@ -2,7 +2,7 @@
 # info: search file or directory
 # options: USER OBJECT [PATH]
 #
-# example: v-search-fs-object admin hello.txt
+# example: v-search-fs-object user hello.txt
 #
 # This function search files and directories on the file system
 

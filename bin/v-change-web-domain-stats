@@ -2,7 +2,7 @@
 # info: change web domain statistics
 # options: USER DOMAIN TYPE
 #
-# example: v-change-web-domain-stats admin example.com awstats
+# example: v-change-web-domain-stats user example.com awstats
 #
 # This function of deleting site's system of statistics. Its type is
 # automatically chooses from client's configuration file.

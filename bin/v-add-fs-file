@@ -2,7 +2,7 @@
 # info: add file
 # options: USER FILE
 #
-# example: v-add-fs-file admin readme.md
+# example: v-add-fs-file user readme.md
 #
 # This function creates new files on file system
 

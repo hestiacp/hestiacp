@@ -2,7 +2,7 @@
 # info: list cron job
 # options: USER JOB [FORMAT]
 #
-# example: v-list-cron-job admin 7
+# example: v-list-cron-job user 7
 #
 # This function of obtaining cron job parameters.
 

@@ -2,7 +2,7 @@
 # info: update mail domain disk usage
 # options: USER DOMAIN
 #
-# example: v-update-mail-domain-disk admin example.com
+# example: v-update-mail-domain-disk user example.com
 #
 # This function updates domain disk usage.
 

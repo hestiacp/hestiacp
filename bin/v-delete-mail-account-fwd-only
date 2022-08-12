@@ -2,7 +2,7 @@
 # info: delete mail account forward-only flag
 # options: USER DOMAIN ACCOUNT
 #
-# example: v-delete-mail-account-fwd-only admin example.com jack
+# example: v-delete-mail-account-fwd-only user example.com jack
 #
 # This function deletes fwd-only flag
 

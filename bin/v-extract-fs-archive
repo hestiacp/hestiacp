@@ -2,7 +2,7 @@
 # info: archive to directory
 # options: USER ARCHIVE DIRECTORY [SELECTED_DIR] [STRIP] [TEST]
 #
-# example: v-extract-fs-archive admin latest.tar.gz /home/admin
+# example: v-extract-fs-archive user latest.tar.gz /home/admin
 #
 # This function extracts archive into directory on the file system
 

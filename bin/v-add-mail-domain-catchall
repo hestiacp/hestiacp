@@ -2,7 +2,7 @@
 # info: add mail domain catchall account
 # options: USER DOMAIN EMAIL
 #
-# example: v-add-mail-domain-catchall admin example.com master@example.com
+# example: v-add-mail-domain-catchall user example.com master@example.com
 #
 # This function enables catchall account for incoming emails.
 

@@ -2,7 +2,7 @@
 # info: rebuild cron jobs
 # options: USER [RESTART]
 #
-# example: v-rebuild-cron-jobs admin yes
+# example: v-rebuild-cron-jobs user yes
 #
 # This function rebuilds system cron config file for specified user.
 

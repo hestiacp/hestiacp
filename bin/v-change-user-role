@@ -4,7 +4,7 @@
 #
 # example: v-change-user-role user administrator
 #
-# Give/revoke user administrator rights to manage all accounts as admin 
+# Give/revoke user administrator rights to manage all accounts as administrator 
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

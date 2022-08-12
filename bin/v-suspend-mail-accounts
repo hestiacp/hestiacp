@@ -2,7 +2,7 @@
 # info: suspend all mail domain accounts
 # options: USER DOMAIN
 #
-# example: v-suspend-mail-accounts admin example.com
+# example: v-suspend-mail-accounts user example.com
 #
 # This function suspends all mail domain accounts.
 

@@ -2,7 +2,7 @@
 # info: change remote dns domain TTL
 # options: USER DOMAIN
 #
-# example: v-change-remote-dns-domain-ttl admin domain.tld
+# example: v-change-remote-dns-domain-ttl user domain.tld
 #
 # This function synchronize dns domain with the remote server.
 

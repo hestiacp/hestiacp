@@ -2,7 +2,7 @@
 # info: suspend web domain
 # options: USER DOMAIN [RESTART]
 #
-# example: v-suspend-web-domain admin example.com yes
+# example: v-suspend-web-domain user example.com yes
 #
 # This function for suspending the site's operation. After blocking it all
 # visitors will be redirected to a web page explaining the reason of suspend.

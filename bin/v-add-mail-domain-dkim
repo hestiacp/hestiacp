@@ -2,7 +2,7 @@
 # info: add mail domain dkim support
 # options: USER DOMAIN [DKIM_SIZE]
 #
-# example: v-add-mail-domain-dkim admin acme.com
+# example: v-add-mail-domain-dkim user acme.com
 #
 # This function adds DKIM signature to outgoing domain emails.
 

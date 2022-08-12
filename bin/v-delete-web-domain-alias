@@ -2,7 +2,7 @@
 # info: delete web domain alias
 # options: USER DOMAIN ALIAS [RESTART]
 #
-# example: v-delete-web-domain-alias admin example.com www.example.com
+# example: v-delete-web-domain-alias user example.com www.example.com
 #
 # This function of deleting the alias domain (parked domain). By this call
 # default www aliase can be removed as well.

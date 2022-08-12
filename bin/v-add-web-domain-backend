@@ -2,7 +2,7 @@
 # info: add web domain backend
 # options: USER DOMAIN [TEMPLATE] [RESTART]
 #
-# example: v-add-web-domain-backend admin example.com default yes
+# example: v-add-web-domain-backend user example.com default yes
 #
 # This function is used to add the web backend configuration.
 

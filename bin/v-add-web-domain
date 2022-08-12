@@ -2,7 +2,7 @@
 # info: add web domain
 # options: USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]
 #
-# example: v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
+# example: v-add-web-domain user wonderland.com 192.18.22.43 yes www.wonderland.com
 #
 # This function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of

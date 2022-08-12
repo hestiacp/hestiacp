@@ -2,7 +2,7 @@
 # info: change dns domain template
 # options: USER DOMAIN TEMPLATE [RESTART]
 #
-# example: v-change-dns-domain-tpl admin example.com child-ns yes
+# example: v-change-dns-domain-tpl user example.com child-ns yes
 #
 # This function for changing the template of records. By updating old records
 # will be removed and new records will be generated in accordance with

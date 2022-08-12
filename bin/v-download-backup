@@ -2,7 +2,7 @@
 # info: Download backup
 # options: USER BACKUP
 #
-# example: v-download-backup admin admin.2020-11-05_05-10-21.tar
+# example: v-download-backup user admin.2020-11-05_05-10-21.tar
 #
 # This function download back-up from remote server
 
@@ -82,7 +82,7 @@ if [ ! -e "$BACKUP/$backup" ]; then
     else
         if [ -e "$BACKUP/$backup" ]; then
         chmod 0640 $BACKUP/$backup
-        chown admin:admin $BACKUP/$backup
+        chown hestiaweb:hestiaweb $BACKUP/$backup
         echo "rm $BACKUP/$backup" | at now + 1 day
         fi
     fi

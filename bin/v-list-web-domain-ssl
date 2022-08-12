@@ -2,7 +2,7 @@
 # info: list web domain ssl certificate
 # options: USER DOMAIN [FORMAT]
 #
-# example: v-list-web-domain-ssl admin wonderland.com
+# example: v-list-web-domain-ssl user wonderland.com
 #
 # This function of obtaining domain ssl files.
 

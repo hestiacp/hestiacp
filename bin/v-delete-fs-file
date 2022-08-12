@@ -2,7 +2,7 @@
 # info: delete file
 # options: USER FILE
 #
-# example: v-delete-fs-file admin readme.txt
+# example: v-delete-fs-file user readme.txt
 #
 # This function deletes file on the file system
 

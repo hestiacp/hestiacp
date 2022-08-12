@@ -2,7 +2,7 @@
 # info: check user hash
 # options: USER HASH [IP]
 #
-# example: v-check-user-hash admin CN5JY6SMEyNGnyCuvmK5z4r7gtHAC4mRZ...
+# example: v-check-user-hash user CN5JY6SMEyNGnyCuvmK5z4r7gtHAC4mRZ...
 #
 # This function verifies user hash
 

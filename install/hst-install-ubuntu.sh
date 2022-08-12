@@ -2080,18 +2080,18 @@ check_result $? "can't create $servername domain"
 min=$(gen_pass '012345' '2')
 hour=$(gen_pass '1234567' '1')
 echo "MAILTO=$email"  > /etc/cron.d/hestiaweb
-echo "CONTENT_TYPE=\"text/plain; charset=utf-8\""  > /etc/cron.d/hestiaweb
-echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart"  > /etc/cron.d/hestiaweb
-echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily"  > /etc/cron.d/hestiaweb
-echo "15 02 * * * sudo /usr/local/hestia/bin/v-update-sys-queue disk"  > /etc/cron.d/hestiaweb
-echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue traffic"  > /etc/cron.d/hestiaweb
-echo "30 03 * * * sudo /usr/local/hestia/bin/v-update-sys-queue webstats"  > /etc/cron.d/hestiaweb
-echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue backup"  > /etc/cron.d/hestiaweb
-echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users"  > /etc/cron.d/hestiaweb
-echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats"  > /etc/cron.d/hestiaweb
-echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd"  > /etc/cron.d/hestiaweb
-echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl"  > /etc/cron.d/hestiaweb
-echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all"  > /etc/cron.d/hestiaweb
+echo "CONTENT_TYPE=\"text/plain; charset=utf-8\""  >> /etc/cron.d/hestiaweb
+echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart"  >> /etc/cron.d/hestiaweb
+echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily"  >> /etc/cron.d/hestiaweb
+echo "15 02 * * * sudo /usr/local/hestia/bin/v-update-sys-queue disk"  >> /etc/cron.d/hestiaweb
+echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue traffic"  >> /etc/cron.d/hestiaweb
+echo "30 03 * * * sudo /usr/local/hestia/bin/v-update-sys-queue webstats"  >> /etc/cron.d/hestiaweb
+echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue backup"  >> /etc/cron.d/hestiaweb
+echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users"  >> /etc/cron.d/hestiaweb
+echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats"  >> /etc/cron.d/hestiaweb
+echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd"  >> /etc/cron.d/hestiaweb
+echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl"  >> /etc/cron.d/hestiaweb
+echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all"  >> /etc/cron.d/hestiaweb
 
 # Adding cron jobs
 export SCHEDULED_RESTART="yes"

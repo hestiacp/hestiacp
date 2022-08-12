@@ -2,7 +2,7 @@
 # info: update database disk usage
 # options: USER DATABASE
 #
-# example: v-update-database-disk admin wp_db
+# example: v-update-database-disk user wp_db
 #
 # This function recalculates disk usage for specific database.
 

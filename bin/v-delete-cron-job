@@ -2,7 +2,7 @@
 # info: delete cron job
 # options: USER JOB
 #
-# example: v-delete-cron-job admin 9
+# example: v-delete-cron-job user 9
 #
 # This function deletes cron job.
 

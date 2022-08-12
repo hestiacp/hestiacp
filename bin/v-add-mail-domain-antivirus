@@ -2,7 +2,7 @@
 # info: add mail domain antivirus support
 # options: USER DOMAIN
 #
-# example: v-add-mail-domain-antivirus admin mydomain.tld
+# example: v-add-mail-domain-antivirus user mydomain.tld
 #
 # This function enables clamav scan for incoming emails.
 

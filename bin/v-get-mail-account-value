@@ -2,7 +2,7 @@
 # info: get mail account value
 # options: USER DOMAIN ACCOUNT KEY
 #
-# example: v-get-mail-account-value admin example.tld tester QUOTA
+# example: v-get-mail-account-value user example.tld tester QUOTA
 #
 # This function for getting a certain mail account parameter.
 

@@ -2,7 +2,7 @@
 # info: change service config
 # options: CONFIG SERVICE [RESTART]
 #
-# example: v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
+# example: v-change-sys-service-config /etc/exim4/exim4.conf.template exim4 yes
 #
 # This function for changing service confguration.
 

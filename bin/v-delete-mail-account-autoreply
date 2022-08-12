@@ -2,7 +2,7 @@
 # info: delete mail account autoreply message
 # options: USER DOMAIN ACCOUNT ALIAS
 #
-# example: v-delete-mail-account-autoreply admin mydomain.tld bob
+# example: v-delete-mail-account-autoreply user mydomain.tld bob
 #
 # This function deletes an email accounts autoreply.
 

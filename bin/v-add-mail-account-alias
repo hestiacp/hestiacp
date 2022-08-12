@@ -2,7 +2,7 @@
 # info: add mail account alias aka nickname
 # options: USER DOMAIN ACCOUNT ALIAS
 #
-# example: v-add-mail-account-alias admin acme.com alice alicia
+# example: v-add-mail-account-alias user acme.com alice alicia
 #
 # This function add new email alias.
 

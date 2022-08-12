@@ -2,7 +2,7 @@
 # info: add mail account forward address
 # options: USER DOMAIN ACCOUNT FORWARD
 #
-# example: v-add-mail-account-forward admin acme.com alice bob
+# example: v-add-mail-account-forward user acme.com alice bob
 #
 # This function add new email account.
 

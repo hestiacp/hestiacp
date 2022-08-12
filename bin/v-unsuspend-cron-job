@@ -2,7 +2,7 @@
 # info: unsuspend cron job
 # options: USER JOB [RESTART]
 #
-# example: v-unsuspend-cron-job admin 7 yes
+# example: v-unsuspend-cron-job user 7 yes
 #
 # This function unsuspend certain cron job.
 

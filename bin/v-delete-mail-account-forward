@@ -2,7 +2,7 @@
 # info: delete mail account forward
 # options: USER DOMAIN ACCOUNT EMAIL
 #
-# example: v-delete-mail-account-forward admin acme.com tony bob@acme.com
+# example: v-delete-mail-account-forward user acme.com tony bob@acme.com
 #
 # This function deletes an email accounts forwarding address.
 

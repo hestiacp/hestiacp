@@ -2,7 +2,7 @@
 # info: list web domain parameters
 # options: USER DOMAIN [FORMAT]
 #
-# example: v-list-web-domain admin example.com
+# example: v-list-web-domain user example.com
 #
 # This function to obtain web domain parameters.
 

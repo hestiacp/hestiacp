@@ -2,7 +2,7 @@
 # info: add mail domain
 # options: USER DOMAIN [ANTISPAM] [ANTIVIRUS] [DKIM] [DKIM_SIZE] [RESTART] [REJECT_SPAM]
 #
-# example: v-add-mail-domain admin mydomain.tld
+# example: v-add-mail-domain user mydomain.tld
 #
 # This function adds MAIL domain.
 

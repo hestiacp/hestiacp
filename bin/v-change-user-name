@@ -2,7 +2,7 @@
 # info: change user full name
 # options: USER NAME [LAST_NAME]
 #
-# example: v-change-user-name admin John Smith
+# example: v-change-user-name user "John Smith"
 #
 # This function allow to change user's full name.
 

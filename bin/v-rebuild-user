@@ -2,7 +2,7 @@
 # info: rebuild system user
 # options: USER [RESTART]
 #
-# example: v-rebuild-user admin yes
+# example: v-rebuild-user user yes
 #
 # This function rebuilds system user account.
 

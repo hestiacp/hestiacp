@@ -2,7 +2,7 @@
 # info: disable web domain stats authentication support
 # options: USER DOMAIN [RESTART]
 #
-# example: v-delete-web-domain-stats-user admin acme.com
+# example: v-delete-web-domain-stats-user user acme.com
 #
 # This function removes authentication of statistics system. If the script is
 # called without naming a certain user, all users will be removed. After

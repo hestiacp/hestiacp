@@ -2,7 +2,7 @@
 # info: add web domain alias
 # options: USER DOMAIN ALIASES [RESTART]
 #
-# example: v-add-web-domain-alias admin acme.com www.acme.com yes
+# example: v-add-web-domain-alias user acme.com www.acme.com yes
 #
 # This function adds one or more aliases to a domain (it is also called
 # "domain parking"). This function supports wildcards *.domain.tpl.

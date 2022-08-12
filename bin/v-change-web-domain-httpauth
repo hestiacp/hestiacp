@@ -2,7 +2,7 @@
 # info: change password for http auth user
 # options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
 #
-# example: v-change-web-domain-httpauth admin acme.com alice white_rA$$bIt
+# example: v-change-web-domain-httpauth user acme.com alice white_rA$$bIt
 #
 # This function is used for changing http auth user password
 

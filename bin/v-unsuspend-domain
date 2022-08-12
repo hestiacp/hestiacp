@@ -2,7 +2,7 @@
 # info: unsuspend web/dns/mail domain
 # options: USER DOMAIN
 #
-# example: v-unsuspend-domain admin acme.com
+# example: v-unsuspend-domain user acme.com
 #
 # This function unsuspends web/dns/mail domain.
 

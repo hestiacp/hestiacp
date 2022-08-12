@@ -2,7 +2,7 @@
 # info: add password protection to web domain statistics
 # options: USER DOMAIN STATS_USER STATS_PASSWORD [RESTART]
 #
-# example: v-add-web-domain-stats-user admin example.com watchdog your_password
+# example: v-add-web-domain-stats-user user example.com watchdog your_password
 #
 # This function is used for securing the web statistics page.
 

@@ -2,7 +2,7 @@
 # info: update backup exclusion list
 # options: USER FILE
 #
-# example: v-update-user-backup-exclusions admin /tmp/backup_exclusions
+# example: v-update-user-backup-exclusions user /tmp/backup_exclusions
 #
 # This function for updating backup exclusion list
 

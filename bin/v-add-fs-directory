@@ -2,7 +2,7 @@
 # info: add directory
 # options: USER DIRECTORY
 #
-# example: v-add-fs-directory admin mybar
+# example: v-add-fs-directory user mybar
 #
 # This function creates new directory on the file system
 

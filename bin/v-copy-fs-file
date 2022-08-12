@@ -2,7 +2,7 @@
 # info: copy file
 # options: USER SRC_FILE DST_FILE
 #
-# example: v-copy-fs-file admin readme.txt readme_new.txt
+# example: v-copy-fs-file user readme.txt readme_new.txt
 #
 # This function copies file on the file system
 

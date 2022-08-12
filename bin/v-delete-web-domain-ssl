@@ -2,7 +2,7 @@
 # info: delete web domain SSL support
 # options: USER DOMAIN [RESTART]
 #
-# example: v-delete-web-domain-ssl admin acme.com
+# example: v-delete-web-domain-ssl user acme.com
 #
 # This function disable https support and deletes SSL certificates.
 

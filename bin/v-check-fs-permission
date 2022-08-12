@@ -2,7 +2,7 @@
 # info: open file
 # options: USER FILE
 #
-# example: v-check-fs-permission admin readme.txt
+# example: v-check-fs-permission user readme.txt
 #
 # This function opens/reads files on the file system
 

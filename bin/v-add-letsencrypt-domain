@@ -2,8 +2,8 @@
 # info: check letsencrypt domain
 # options: USER DOMAIN [ALIASES] [MAIL]
 #
-# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
-# example: v-add-letsencrypt-domain admin wonderland.com '' yes
+# example: v-add-letsencrypt-domain user wonderland.com www.wonderland.com,demo.wonderland.com
+# example: v-add-letsencrypt-domain user wonderland.com '' yes
 #
 # This function check and validates domain with Let's Encrypt
 
@@ -546,11 +546,10 @@ if [ "$?" -ne '0' ]; then
 fi
 
 # Adding LE autorenew cronjob
-if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
+if [ -z "$(grep v-update-lets /etc/cron.d/hestiaweb)" ]; then
     min=$(generate_password '012345' '2')
     hour=$(generate_password '1234567' '1')
-    cmd="sudo $BIN/v-update-letsencrypt-ssl"
-    $BIN/v-add-cron-job admin "$min" "$hour" '*' '*' '*' "$cmd" > /dev/null
+    echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl"  > /etc/cron.d/hestiaweb
 fi
 
 # Updating letsencrypt key

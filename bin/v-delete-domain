@@ -2,7 +2,7 @@
 # info: delete web/dns/mail domain
 # options: USER DOMAIN
 #
-# example: v-delete-domain admin domain.tld
+# example: v-delete-domain user domain.tld
 #
 # This function deletes web/dns/mail domain.
 

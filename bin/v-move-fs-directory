@@ -2,7 +2,7 @@
 # info: move file
 # options: USER SRC_DIRECTORY DST_DIRECTORY
 #
-# example: v-move-fs-directory admin /home/admin/web /home/user02/
+# example: v-move-fs-directory user /home/admin/web /home/user02/
 #
 # This function moved file or directory on the file system. This function
 # can also be used to rename files just like normal mv command.

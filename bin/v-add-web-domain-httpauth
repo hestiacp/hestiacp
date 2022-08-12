@@ -2,7 +2,7 @@
 # info: add password protection for web domain
 # options: USER DOMAIN AUTH_USER AUTH_PASSWORD [RESTART]
 #
-# example: v-add-web-domain-httpauth admin acme.com user02 super_pass
+# example: v-add-web-domain-httpauth user acme.com user02 super_pass
 #
 # This function is used for securing web domain with http auth
 

@@ -2,7 +2,7 @@
 # info: suspend database
 # options: USER DATABASE
 #
-# example: v-suspend-database admin admin_wordpress_db
+# example: v-suspend-database user admin_wordpress_db
 #
 # This function for suspending a certain user database.
 

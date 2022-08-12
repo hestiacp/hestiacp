@@ -2,12 +2,12 @@
 # info: Allow other users create subdomains
 # options: USER DOMAIN
 #
-# example: v-add-web-domain-allow-users admin admin.com
+# example: v-add-web-domain-allow-users user admin.com
 #
 # Bypass the rule check for Enforce subdomain ownership for a specific domain. 
 # Enforce subdomain ownership setting in /edit/server/ set to no will always overwrite this behaviour
-# eg: admin adds admin.com
-# user can create user.admin.com
+# eg: user adds admin.com
+# user2 can create user.admin.com
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

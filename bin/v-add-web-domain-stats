@@ -2,7 +2,7 @@
 # info: add log analyzer to generate domain statistics
 # options: USER DOMAIN TYPE
 #
-# example: v-add-web-domain-stats admin example.com awstats
+# example: v-add-web-domain-stats user example.com awstats
 #
 # This function is used for enabling log analyzer system to a domain. For viewing
 # the domain statistics use http://domain.tld/vstats/ link. Access this page

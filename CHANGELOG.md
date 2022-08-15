@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.8] - Service release 
+
+- Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
+
 ## [1.6.7] - Service release 
 
 ### Bugfixes

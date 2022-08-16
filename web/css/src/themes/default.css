@@ -4270,6 +4270,13 @@ form#vstobjects.suspended {
   box-shadow: 0px 2px 4px rgb(0 0 0 / 25%);
 }
 
+.ui-button.button-suspended{
+    color: #aaa !important;
+}
+.ui-button.button-suspended i{
+    color: #aaa !important;
+}
+
 .body-login .debug-panel-header, .body-login .debug-panel-contents,
 .body-reset .debug-panel-header, .body-reset .debug-panel-contents {
   display: none;

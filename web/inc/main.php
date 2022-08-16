@@ -121,6 +121,15 @@ if (!defined('NO_AUTH_REQUIRED')) {
     }
 }
 
+function ipUsed(){
+    list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+    if(filter_var($http_host, FILTER_VALIDATE_IP)){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 if (isset($_SESSION['user'])) {
     $user = escapeshellarg($_SESSION['user']);
     $user_plain = htmlentities($_SESSION['user']);

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.6.4
+# Hestia Control Panel upgrade script for target version 1.6.6
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -20,12 +20,3 @@ upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
-
-#Add phpquoteshellarg as dependency
-if [ "$FILE_MANAGER" = "true" ]; then
-    $HESTIA/bin/v-delete-sys-filemanager quiet
-    $HESTIA/bin/v-delete-sys-filemanager quiet
-fi
-
-$HESTIA/bin/v-add-sys-phpmailer
-

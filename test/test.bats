@@ -1884,7 +1884,7 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 @test "Test create ipset" {
-  run v-add-firewall-ipset "blacklist" "script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh" v4 yes
+  run v-add-firewall-ipset "blacklist" "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh" v4 yes
   assert_success
   refute_output
 }

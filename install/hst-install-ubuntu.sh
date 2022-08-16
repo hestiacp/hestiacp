@@ -32,7 +32,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.6.5~alpha'
+HESTIA_INSTALL_VER='1.7.0~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
 fpm_v="8.0"
@@ -1335,6 +1335,8 @@ fi
 if [ -n "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
     groupdel admin > /dev/null 2>&1
 fi
+# Remove sudo "default" sudo permission admin user group should not exists any way 
+sed -i "s/%admin ALL=(ALL) ALL/#%admin ALL=(ALL) ALL/g" /etc/sudoers
 
 # Enable sftp jail
 echo "[ * ] Enable SFTP jail..."
@@ -1751,7 +1753,7 @@ fi
 if [ "$dovecot" = 'yes' ]; then
     echo "[ * ] Configuring Dovecot POP/IMAP mail server..."
     gpasswd -a dovecot mail > /dev/null 2>&1
-    cp -rf $HESTIA_INSTALL_DIR/dovecot /etc/
+    cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
     cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
     rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 
@@ -1890,7 +1892,7 @@ if [ "$sieve" = 'yes' ]; then
     sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 
     # replace dovecot-sieve config files
-    cp -f $HESTIA_INSTALL_DIR/dovecot/sieve/* /etc/dovecot/conf.d
+    cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
 
     # Dovecot default file install
     echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
@@ -1906,7 +1908,7 @@ if [ "$sieve" = 'yes' ]; then
     if [ -d "/var/lib/roundcube" ]; then
         # Modify Roundcube config 
         mkdir -p $RC_CONFIG_DIR/plugins/managesieve
-        cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
+        cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
         ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
         chown -R root:www-data $RC_CONFIG_DIR/
         chmod 751 -R $RC_CONFIG_DIR

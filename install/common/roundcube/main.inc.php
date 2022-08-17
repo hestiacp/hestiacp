@@ -104,4 +104,3 @@ $config['smtp_host'] = 'localhost:587';
 
 // Log session authentication errors to <log_dir>/session or to syslog
 $config['log_session'] = true;
-?>

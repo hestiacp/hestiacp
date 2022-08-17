@@ -114,7 +114,7 @@ if (!empty($_POST['ok'])) {
     if ((!empty($v_db_email)) && (empty($_SESSION['error_msg']))) {
         $to = $v_db_email;
         $subject = _("Database Credentials");
-        $hostname = exec('hostname');
+        $hostname = get_hostname();
         $from = "noreply@".$hostname;
         $from_name = _('Hestia Control Panel');
         $mailtext = sprintf(_('DATABASE_READY'), $user_plain."_".$_POST['v_database'], $user_plain."_".$_POST['v_dbuser'], $_POST['v_password'], $db_admin_link);

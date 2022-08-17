@@ -120,7 +120,7 @@ randomString = function(min_length = 16) {
         if($('input[name=v_password]').attr('type') == 'text')
             $('#v_password').text(randomstring);
         else
-            $('#v_password').text(Array(randomstring.length+1).join('*'));s        
+            $('#v_password').text(Array(randomstring.length+1).join('*'));      
         App.Actions.MAIL_ACC.update_v_password();
         generate_mail_credentials();
 }
@@ -128,8 +128,7 @@ randomString = function(min_length = 16) {
 generate_mail_credentials = function() {
     var div = $('.mail-infoblock').clone();
     div.find('#mail_configuration').remove();
-    var pass=div.find('#v_password').text();
-    if (pass=="") div.find('#v_password').text(' ');
+    var pass=$('#v_password').text();
     var output = div.text();
     output=output.replace(/(?:\r\n|\r|\n|\t)/g, "|");
     output=output.replace(/  /g, "");
@@ -163,10 +162,7 @@ $(document).ready(function() {
     });
 
     $('.toggle-psw-visibility-icon').click(function(){
-        if($('input[name=v_password]').attr('type') == 'text')
-            $('#v_password').text($('input[name=v_password]').val());
-        else
-            $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
+        $('#v_password').text($('input[name=v_password]').val());
         generate_mail_credentials();
     });
 

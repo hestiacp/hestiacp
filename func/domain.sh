@@ -990,14 +990,14 @@ is_base_domain_owner(){
                         # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
                         check=$(is_domain_new "" $basedomain)
                         if [ $? -ne 0 ]; then
-                            echo "Error: $basedomain belongs to a different user";
+                            echo "Error: Unable to add $object. $basedomain belongs to a different user";
                             exit 4;
                         fi
                     fi
                 else
                     check=$(is_domain_new "" "$basedomain")
                     if [ $? -ne 0 ]; then
-                        echo "Error: $basedomain belongs to a different user";
+                        echo "Error: Unable to add $object. $basedomain belongs to a different user";
                         exit 4;
                     fi
                 fi

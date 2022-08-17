@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 ## [1.6.8] - Service release 
 
 - Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
+- Fixed an isseu with v-change-web-domain-owner and mail only domains (#2840, #2841)
+- Grey out phpmyadmin buttons + add link to docs.hestia.com for support (#2843)
+- Block the use of CNAME records on @ or root records DNS domain (#2838, #2842)
+- Code clean up and remove unused tests and templates (#2829 and #2831)
 
 ## [1.6.7] - Service release 
 

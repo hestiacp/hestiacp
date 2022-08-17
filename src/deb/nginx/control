@@ -1,7 +1,7 @@
 Source: hestia-nginx
 Package: hestia-nginx
 Priority: optional
-Version: 1.23.0
+Version: 1.23.1
 Section: admin
 Maintainer: HestiaCP <info@hestiacp.com>
 Homepage: https://www.hestiacp.com

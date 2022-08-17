@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.6.6
+# Hestia Control Panel upgrade script for target version unreleased
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -21,10 +21,6 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-if [ -f "/etc/roundcube/config.inc.php" ]; then
-    if [ -n "$(grep 'ssl://localhost' /etc/roundcube/config.inc.php)" ]; then
-        # Echo prepare for 1.6.0 update
-        sed -i "s|ssl://localhost|localhost|g" /etc/roundcube/config.inc.php
-        sed -i "s|993|143|g" /etc/roundcube/config.inc.php
-    fi
+if [ -f /etc/nginx/nginx.conf ]; then 
+    sed -i "s/fastcgi_buffers                 4 256k;/fastcgi_buffers                 8 256k;/g" /etc/nginx/nginx.conf 
 fi

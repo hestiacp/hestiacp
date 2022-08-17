@@ -3,11 +3,17 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.8] - Service release 
 
+### Bugfixes
+
 - Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
 - Fixed an isseu with v-change-web-domain-owner and mail only domains (#2840, #2841)
 - Grey out phpmyadmin buttons + add link to docs.hestia.com for support (#2843)
 - Block the use of CNAME records on @ or root records DNS domain (#2838, #2842)
 - Code clean up and remove unused tests and templates (#2829 and #2831)
+- Fixed an issue where no password was send when a user create a new mail account (#2819 #2815)
+- Fixed an issue with Proxmox LXC and hostnames (#2819 #2048)
+- Improve new email account email send to the user (#2819 #1417)
+- Improve buffers nginx.conf #2796
 
 ## [1.6.7] - Service release 
 

@@ -68,7 +68,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
     # roundcube install
     mkdir -p $RC_CONFIG_DIR/plugins/managesieve
     
-    cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
+    cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
         ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
     
     # permission changes

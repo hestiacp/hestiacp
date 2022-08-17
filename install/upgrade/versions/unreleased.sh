@@ -28,9 +28,3 @@ if [ "$FILE_MANAGER" = "true" ]; then
     $HESTIA/bin/v-delete-sys-filemanger
     $HESTIA/bin/v-add-sys-filemanger        
 fi
-
-# Sync up config files #2819
-if [ -f "/etc/roundcube/config.inc.php" ]; then
-    sed -i "s/?>//" /etc/roundcube/config.inc.php
-    sed -i "s/?>//" /etc/roundcube/mimetypes.php    
-fi

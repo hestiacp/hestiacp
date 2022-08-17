@@ -786,7 +786,7 @@ if (!empty($_POST['save'])) {
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
                         $subject = _("FTP login credentials");
-                        $hostname = exec('hostname');
+                        $hostname = get_hostname();
                         $from = "noreply@".$hostname;
                         $from_name = _('Hestia Control Panel');
                         $mailtext = sprintf(_('FTP_ACCOUNT_READY'), escapeshellarg($_GET['domain']), $user, $v_ftp_username, $v_ftp_user_data['v_ftp_password']);
@@ -863,7 +863,7 @@ if (!empty($_POST['save'])) {
 
                     $to = $v_ftp_user_data['v_ftp_email'];
                     $subject = _("FTP login credentials");
-                    $hostname = exec('hostname');
+                    $hostname = get_hostname();
                     $from = "noreply@".$hostname;
                     $from_name = _('Hestia Control Panel');
                     $mailtext =  sprintf(_('FTP_ACCOUNT_READY'), escapeshellarg($_GET['domain']), $user, $v_ftp_username_for_emailing, $v_ftp_user_data['v_ftp_password']);

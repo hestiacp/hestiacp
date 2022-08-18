@@ -35,5 +35,5 @@ for version in $($HESTIA/bin/v-list-sys-php plain); do
     # Increase max upload and max post size 
     sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/$version/fpm/php.ini
     sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/$version/fpm/php.ini
-    sed -i "s/max_execution_time = 30/max_execution_time = 60/g" /etc/php/$version/fpm/php.ini    
+    sed -i "s/max_execution_time = 30$/max_execution_time = 60/g" /etc/php/$version/fpm/php.ini    
 done

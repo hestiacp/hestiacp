@@ -52,7 +52,7 @@ software="nginx apache2 apache2-utils apache2-suexec-custom
   dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
   hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
   rsyslog openssh-server util-linux ipset libapache2-mpm-itk zstd
-  lsb-release"
+  lsb-release jq"
 
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"

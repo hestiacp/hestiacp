@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.8] - Service release 
 
+### Features 
+
+- Update default php settings (#2849 #2635)
+
 ### Bugfixes
 
 - Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
@@ -13,7 +17,12 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where no password was send when a user create a new mail account (#2819 #2815)
 - Fixed an issue with Proxmox LXC and hostnames (#2819 #2048)
 - Improve new email account email send to the user (#2819 #1417)
-- Improve buffers nginx.conf #2796
+- Improve buffers nginx.conf (#2796)
+- Improve Letsencrypt error message (#1804 #2854)
+- Fixed an issue with error logs failed login attempts (#2853)
+- Fixed and issue with saving UTC time zone in Edit server (#2851 #2853)
+- Fixed an issue with sshd not running but still showing up in rare cases (#2850 @manuelserol)
+- Improve error message "Domain already exists" when the "main" domain belonged to an other user (#2848 #2771)
 
 ## [1.6.7] - Service release 
 

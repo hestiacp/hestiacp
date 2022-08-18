@@ -15,6 +15,7 @@ Requires:       acl
 Requires:       sysstat
 Requires:       (setpriv or util-linux)
 Requires:       zstd
+Requires:       jq
 Conflicts:      vesta
 Provides:       hestia = %{version}
 BuildRequires:  systemd-rpm-macros

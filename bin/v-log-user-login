@@ -38,7 +38,7 @@ is_format_valid 'user' 'ip'
 is_common_format_valid "$session_id" "SESSION_ID"
 format_no_quotes "$user_agent" "USER_AGENT"
 is_common_format_valid "$authlog" "AUTHLOG"
-is_common_format_valid "$reason" "REASON"
+format_no_quotes "$reason" "REASON"
 
 
 is_object_valid 'user' 'USER' "$user"

@@ -52,7 +52,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
     postgresql postgresql-contrib proftpd-basic quota rrdtool spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv rsyslog
-    ipset libonig5 libzip5 openssh-server lsb-release zstd"
+    ipset libonig5 libzip5 openssh-server lsb-release zstd jq"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
 

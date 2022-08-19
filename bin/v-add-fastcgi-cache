@@ -81,7 +81,7 @@ chown root:$user $fastcgi
 chmod 640 $fastcgi
 
 str="fastcgi_cache_path /var/cache/nginx/micro/$domain levels=1:2" 
-str="$str keys_zone=$domain:10m max_size=512m inactive=30m;" 
+str="$str keys_zone=$domain:10m max_size=512m inactive=30m use_temp_path=off;" 
 conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
 if [ -f "$conf" ]; then
     if [ -z "$(grep "=${domain}:" $conf)" ]; then

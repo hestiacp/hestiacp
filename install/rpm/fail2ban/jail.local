@@ -53,3 +53,7 @@ logpath  = /var/log/fail2ban.log
 maxretry = 5
 findtime = 86400
 bantime  = 864000
+
+#Uncomment and add your IPs and or domains to the Whitelist
+#[DEFAULT]
+#ignoreip = 111.111.111.111 222.222.222.222 subdomain.example.tld example.tld 333.333.333.333

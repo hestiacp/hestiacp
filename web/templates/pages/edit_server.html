@@ -80,6 +80,9 @@
 														if ((!empty($v_timezone)) && ( $key == $v_timezone)){
 															echo ' selected' ;
 														}
+														if($key == "UTC" && $v_timezone == "Etc/UTC"){
+															echo ' selected' ;
+														}
 														echo ">".$value."</option>\n";
 													}
 												?>

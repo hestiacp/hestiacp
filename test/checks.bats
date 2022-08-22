@@ -320,6 +320,11 @@ r' "key"
     assert_failure $E_INVALID
 }
 
+@test "format_no_quotes test2" {
+     run format_no_quotes 'test bericht' "key"
+    assert_success
+}
+
 @test "format_no_quotes .." {
      run format_no_quotes '..' "key"
     assert_success

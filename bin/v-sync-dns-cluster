@@ -2,7 +2,7 @@
 # info: synchronize dns domains
 # options: HOST
 #
-# This function synchronize all dns domains.
+# This function synchronise all dns domains.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

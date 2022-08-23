@@ -4,7 +4,7 @@
 #
 # example: v-delete-remote-dns-domain admin example.tld
 #
-# This function synchronize dns with the remote server.
+# This function synchronise dns with the remote server.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

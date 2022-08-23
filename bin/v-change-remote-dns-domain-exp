@@ -2,7 +2,7 @@
 # info: change remote dns domain expiration date
 # options: USER DOMAIN
 #
-# This function synchronize dns domain with the remote server.
+# This function synchronise dns domain with the remote server.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

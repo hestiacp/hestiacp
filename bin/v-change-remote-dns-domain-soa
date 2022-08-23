@@ -4,7 +4,7 @@
 #
 # example: v-change-remote-dns-domain-soa admin example.org.uk
 #
-# This function synchronize dns domain with the remote server.
+# This function synchronise dns domain with the remote server.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

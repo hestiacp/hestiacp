@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: add log analyzer to generate domain statistics
+# info: add log analyser to generate domain statistics
 # options: USER DOMAIN TYPE
 #
 # example: v-add-web-domain-stats admin example.com awstats
 #
-# This function is used for enabling log analyzer system to a domain. For viewing
+# This function is used for enabling log analyser system to a domain. For viewing
 # the domain statistics use http://domain.tld/vstats/ link. Access this page
 # is not protected by default. If you want to secure it with passwords you
 # should use v-add-web-domain_stat_auth script.

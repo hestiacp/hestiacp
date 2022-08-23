@@ -4,7 +4,7 @@
 #
 # example: v-add-remote-dns-record bob acme.com 23
 #
-# This function synchronize dns domain with the remote server.
+# This function synchronise dns domain with the remote server.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

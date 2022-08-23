@@ -4,7 +4,7 @@
 #
 # example: v-update-web-domain-stat alice acme.com
 #
-# This function runs log analyzer for specific webdomain.
+# This function runs log analyser for specific webdomain.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

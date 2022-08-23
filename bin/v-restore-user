@@ -335,8 +335,25 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
                 $BIN/v-add-web-domain-backend $user $domain $BACKEND
             fi
         fi
-                
-        # Rebuilding vhost
+        
+        # Restoring custom user config
+        # Except certificates, .conf files
+        if [ ! -d "$HOMEDIR/$user/conf/web/$domain/" ]; then
+            mkdir -p $HOMEDIR/$user/conf/web/$domain/
+        fi
+        for file in $tmpdir/web/$domain/conf/*; do 
+            if [[ "$file" == *.ca ]] || [[ "$file" == *.crt ]]  || [[ "$file" == *.key ]]  || [[ "$file" == *.pem ]]  || [[ "$file" == *.conf ]]; then
+               continue;
+            fi
+            if grep "fastcgi_pass" file; then 
+               # Do not allow to run php under a different user
+               continue;
+            fi 
+            filename=$(basename $file) 
+            cp -f "$file" "$HOMEDIR/$user/conf/web/$domain/$filename"
+        done
+        
+        # Rebuilding vhost to prevent user overwrite default config changes not ideal 
         rebuild_web_domain_conf
         
         # Restoring web domain data

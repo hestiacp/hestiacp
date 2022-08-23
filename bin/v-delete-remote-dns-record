@@ -4,7 +4,7 @@
 #
 # example: v-delete-remote-dns-record user07 acme.com 44
 #
-# This function synchronize dns with the remote server.
+# This function synchronise dns with the remote server.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

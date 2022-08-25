@@ -293,10 +293,10 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
             fi
             
             if [ -n "$CUSTOM_DOCROOT" ]; then
-               CUSTOM_DOCROOT=$(echo "$CUSTOM_DOCROOT" | sed -e "s|/home/${old_user}/web/|/home/${$user}/web/")
+               CUSTOM_DOCROOT=$(echo "$CUSTOM_DOCROOT" | sed -e "s|/home/${old_user}/web/|/home/${user}/web/")
             fi
             if [ -n "$CUSTOM_PHPROOT" ]; then
-               CUSTOM_PHPROOT=$(echo "$CUSTOM_PHPROOT" | sed -e "s|/home/${old_user}/web/|/home/${$user}/web/")
+               CUSTOM_PHPROOT=$(echo "$CUSTOM_PHPROOT" | sed -e "s|/home/${old_user}/web/|/home/${user}/web/")
             fi
 
             # Converting FTP users

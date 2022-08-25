@@ -312,7 +312,7 @@ function validate_web_domain() {
 @test "Restore[3]: From Hestia [WEB] Custom rule" {
     # check if custom rule is still working
     local domain="test.hestia.com"
-    validate_web_domain_fake $userbk $domain 'hestia-yes' '/hestia/hestia'
+    validate_web_domain $userbk $domain 'hestia-yes' '/hestia/hestia' 'no'
 }
 
 
@@ -405,7 +405,7 @@ function validate_web_domain() {
 @test "Restore[4]: From Hestia [WEB] Custom rule" {
     # check if custom rule is still working
     local domain="test.hestia.com"
-    validate_web_domain_fake $userbk $domain 'hestia-yes' '/hestia/hestia'
+    validate_web_domain $userbk $domain 'hestia-yes' '/hestia/hestia' 'no'
 }
 
 

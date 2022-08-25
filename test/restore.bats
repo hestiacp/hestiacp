@@ -376,7 +376,7 @@ function validate_web_domain() {
 
     mkdir -p /backup
     
-    local archive_name="hestia131.2020-12-12"
+    local archive_name="hestia170.2022-08-23"
     run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
     assert_success
     

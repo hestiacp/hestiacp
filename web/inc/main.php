@@ -10,7 +10,7 @@ use function Hestiacp\quoteshellarg\quoteshellarg;
 try {
     require_once 'vendor/autoload.php';
 } catch (Throwable $ex) {
-    $errstr = 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
+    $errstr = 'Unable able to load required libraries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
     trigger_error($errstr);
     echo $errstr;
     exit(1);

@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list mail status
-# options: [FORMAT]
+# options: 
 #
-# example: v-list-sys-mail-status json
+# example: v-list-sys-mail-status 
 #
 # This function lists mail server status
 

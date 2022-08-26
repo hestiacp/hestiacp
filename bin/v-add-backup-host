@@ -50,6 +50,8 @@ EOF
 
 # Defining sftp command function
 sftpc() {
+    if [ "$privatekey" != "yes" ]; then 
+    
     expect -f "-" <<EOF "$@"
         set count 0
         spawn /usr/bin/sftp -o StrictHostKeyChecking=no -o Port=$port $user@$host
@@ -98,6 +100,52 @@ sftpc() {
 
         exit \$rc
 EOF
+    else
+    expect -f "-" <<EOF "$@"
+            set count 0
+            spawn /usr/bin/sftp -o StrictHostKeyChecking=no -o Port=$port -i $raw_password $user@$host
+            expect {
+    
+                -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
+                    set count \$argc
+                    set output "Disconnected."
+                    set rc $E_FTP
+                    exp_continue
+                }
+    
+                -re ".*denied.*(publickey|password)." {
+                    set output "Permission denied, wrong publickey or password."
+                    set rc $E_CONNECT
+                }
+    
+                "sftp>" {
+                    if {\$count < \$argc} {
+                        set arg [lindex \$argv \$count]
+                        send "\$arg\r"
+                        incr count
+                    } else {
+                        send "exit\r"
+                        set output "Disconnected."
+                        if {[info exists rc] != 1} {
+                            set rc $OK
+                        }
+                    }
+                    exp_continue
+                }
+    
+                timeout {
+                    set output "Connection timeout."
+                    set rc $E_CONNECT
+                }
+            }
+    
+            if {[info exists output] == 1} {
+                puts "\$output"
+            }
+    
+            exit \$rc
+EOF
+    fi
 }
 
 #----------------------------------------------------------#
@@ -109,7 +157,19 @@ if [ "$type" != 'local' ];then
     is_format_valid 'host' 'path' 'port'
     is_type_valid  'sftp,ftp,b2' "$type"
     is_username_format_valid "$user" "username"
-    is_password_valid
+    
+    privatekey="no"
+    if [ -f "$raw_password" ]; then
+        if [[ $(cat  "$raw_password" | grep "OPENSSH PRIVATE") ]]; then
+            privatekey="yes"
+            password="$raw_password"
+        else
+            is_password_valid    
+        fi   
+    else
+        is_password_valid
+    fi
+    
     format_no_quotes "$password" "password"
     
     if [ "$type" = 'sftp' ]; then
@@ -224,7 +284,7 @@ fi
 # Adding backup host
 if [ $type != 'local' ] && [ $type != 'b2' ]; then
     new_timestamp
-    str="HOST='$host'\nUSERNAME='$user'\nPASSWORD='$password'"
+    str="HOST='$host'\nUSERNAME='$user'\nPASSWORD='$password'\nPRIVATEKEY='$privatekey'"
     str="$str\nBPATH='$path'\nPORT='$port'\nTIME='$time'\nDATE='$date'"
     echo -e "$str" > $HESTIA/conf/$type.backup.conf
     chmod 660 $HESTIA/conf/$type.backup.conf

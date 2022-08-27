@@ -675,7 +675,7 @@ a {
 }
 
 .l-header {
-  background: linear-gradient(to bottom, rgba(104,145,196,1) 0%,rgba(69,114,181,1) 50%,rgba(65,90,149,1) 100%); 
+  background: linear-gradient(to bottom, rgba(104,145,196,1) 0%,rgba(69,114,181,1) 50%,rgba(65,90,149,1) 100%);
   background-color: #5070a6;
   border-bottom: 1px solid rgba(255,255,255,0.95);
   overflow: hidden;
@@ -726,7 +726,7 @@ a {
   line-height: 39px;
   padding: 11px 10px;
   border-left: 1px solid transparent;
-  border-right: 1px solid transparent; 
+  border-right: 1px solid transparent;
 }
 
 .l-menu__item a:hover {
@@ -1545,7 +1545,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .body-firewall.lang-el .l-select {
-  max-width: 90px; 
+  max-width: 90px;
 }
 
 .body-mail.lang-el .l-select {
@@ -1584,7 +1584,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   font-weight: bold;
 }
 
-.lang-bg .l-stat__col .fas, 
+.lang-bg .l-stat__col .fas,
 .lang-bg .l-stat__col--active .fas {
   font-size: 0.85rem;
 }
@@ -3565,7 +3565,7 @@ form#vstobjects.suspended {
   padding-right: 8px;
   margin-right: 10px;
   line-height: 0.75rem;
-  box-shadow: 0px 1px 1px rgba(0,0,0,0.2), inset 0px 1px 0px rgba(0,0,0,0.08); 
+  box-shadow: 0px 1px 1px rgba(0,0,0,0.2), inset 0px 1px 0px rgba(0,0,0,0.08);
   background-color: rgba(255,255,255,0.75);
   font-weight: 500;
   border: 1px solid rgba(255,255,255,0.75);
@@ -3587,7 +3587,7 @@ form#vstobjects.suspended {
   border-radius: 50%;
   font-weight: 700;
   font-size: 0.75rem;
-  box-shadow: 0px 1px 2px rgba(70,70,70,0.5), 
+  box-shadow: 0px 1px 2px rgba(70,70,70,0.5),
 			  inset 0px 2px 2px #fff;
   text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
   border: 1px solid #b8b8b8 !important;
@@ -4031,7 +4031,7 @@ form#vstobjects.suspended {
   font-family: 'Exo', Arial, Helvetica, sans-serif !important;
   font-weight: 500 !important;
   background-color: rgba(255,255,255,0.9) !important;
-  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.25), 
+  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.25),
 			  0 8px 40px 0 rgba(0, 0, 0, 0.35) !important;
   border-radius: 6px !important;
   border: 1px solid rgba(255,255,255,0.98) !important;
@@ -4192,13 +4192,13 @@ form#vstobjects.suspended {
 }
 
 .server-info-output {
-  color: #cc3366; 
-  padding: 10px 0 20px 20px; 
+  color: #cc3366;
+  padding: 10px 0 20px 20px;
   background: #fff;
 }
 
 .server-info-data {
-  margin-left: 100px; 
+  margin-left: 100px;
   margin-top: -20px;
 }
 
@@ -4209,8 +4209,8 @@ form#vstobjects.suspended {
 }
 
 .server-info-output {
-  color: #cc3366; 
-  padding: 10px 0 20px 20px; 
+  color: #cc3366;
+  padding: 10px 0 20px 20px;
   background: #fff;
 }
 

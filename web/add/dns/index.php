@@ -93,7 +93,7 @@ if (!empty($_POST['ok'])) {
         unset($output);
     }
 
-    // Set expiriation date
+    // Set expiration date
     if (empty($_SESSION['error_msg'])) {
         if ((!empty($_POST['v_exp'])) && ($_POST['v_exp'] != date('Y-m-d', strtotime('+1 year')))) {
             $v_exp = quoteshellarg($_POST['v_exp']);

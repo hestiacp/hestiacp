@@ -116,7 +116,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
         $restart_dns = 'yes';
     }
 
-    // Change expiriation date
+    // Change expiration date
     if (($v_exp != $_POST['v_exp']) && (empty($_SESSION['error_msg']))) {
         $v_exp = quoteshellarg($_POST['v_exp']);
         exec(HESTIA_CMD."v-change-dns-domain-exp ".$user." ".$v_domain." ".$v_exp." 'no'", $output, $return_var);

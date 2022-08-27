@@ -279,7 +279,7 @@ function top_panel($user, $TAB)
     if (!isset($_SESSION['look'])) {
         $_SESSION['userSortOrder'] = $panel[$user]['PREF_UI_SORT'];
     }
-    
+
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (empty($_SESSION['look']))) {
         // Display users list for administrators unless they are impersonating a user account
@@ -462,7 +462,7 @@ function list_timezones()
 /**
  * A function that tells is it MySQL installed on the system, or it is MariaDB.
  *
- * Explaination:
+ * Explanation:
  * $_SESSION['DB_SYSTEM'] has 'mysql' value even if MariaDB is installed, so you can't figure out is it really MySQL or it's MariaDB.
  * So, this function will make it clear.
  *

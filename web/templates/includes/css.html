@@ -1,4 +1,5 @@
-<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+<link rel="alternate icon" href="/images/favicon.png" type="image/png">
+<link rel="icon" href="/images/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/themes/default.min.css?<?=JS_LATEST_UPDATE?>" rel="preload" />
 <?php
     $selected_theme = (!empty($_SESSION['userTheme'])) ? $_SESSION['userTheme'] : $_SESSION['THEME'];
@@ -18,7 +19,7 @@
         }else{
         ?>
 <link rel="stylesheet" href="/css/themes/custom/<?=$selected_theme?>.css?<?=JS_LATEST_UPDATE?>>" rel="preload" />
-        <?php    
+        <?php
         }
     }
 ?>

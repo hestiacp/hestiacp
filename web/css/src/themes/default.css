@@ -142,10 +142,6 @@
 /* Base
    ========================================================================== */
 
-body {
-  background-color: #fff;
-}
-
 .debug-panel-contents {
   background-color: #fff;
 }
@@ -177,6 +173,7 @@ body {
   font-size: 0.9rem;
   height: 100%;
   color: #7c7c7c;
+  background-color: #fff;
 }
 
 .body-login, .body-reset {
@@ -2907,15 +2904,15 @@ a.button.cancel {
 }
 
 .additional-info td {
-	font-size: 0.75rem;
-	height: 20px;
-	font-weight: normal;
-	line-height: 0.95rem;
-	min-width: 70px
+  font-size: 0.75rem;
+  height: 20px;
+  font-weight: normal;
+  line-height: 0.95rem;
+  min-width: 70px
 }
 
 .additional-info td.details {
-	padding-left: 20px !important;
+  padding-left: 20px !important;
 }
 
 :focus {outline:none;}
@@ -3876,7 +3873,7 @@ form#vstobjects.suspended {
 
 @media screen and (max-width: 950px) {
   .helper-container {
-	display: none;
+    display: none;
   }
 }
 

@@ -53,7 +53,7 @@ class MediaWikiSetup extends BaseSetup
 
         $sslEnabled = ($status->json[$this->domain]['SSL'] == 'no' ? 0 : 1);
 
-        $webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
+        $webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain;
 
         $this->appcontext->runUser('v-copy-fs-directory', [
             $this->getDocRoot($this->extractsubdir . "/mediawiki-1.38.2/."),
@@ -67,7 +67,7 @@ class MediaWikiSetup extends BaseSetup
             '--installdbpass=' . $options['database_password'],
             '--dbuser=' . $this->appcontext->user() . '_' . $options['database_user'],
             '--dbpass=' . $options['database_password'],
-            '--server=' . $webAddresss,
+            '--server=' . $webDomain,
             '--scriptpath=', // must NOT be /
             '--lang=' . $options['language'],
             '--pass=' . $options['admin_password'],

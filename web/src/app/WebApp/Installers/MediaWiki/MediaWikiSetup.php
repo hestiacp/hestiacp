@@ -11,7 +11,7 @@ class MediaWikiSetup extends BaseSetup
         'name' => 'MediaWiki',
         'group' => 'cms',
         'enabled' => true,
-        'version' => '1.37.2',
+        'version' => '1.38.2',
         'thumbnail' => 'MediaWiki-2020-logo.svg' //Max size is 300px by 300px
     ];
 
@@ -27,7 +27,7 @@ class MediaWikiSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://releases.wikimedia.org/mediawiki/1.37/mediawiki-1.37.2.zip' ],
+            'archive'  => [ 'src' => 'https://releases.wikimedia.org/mediawiki/1.38/mediawiki-1.38.2.zip' ],
         ],
         'server' => [
             'nginx' => [
@@ -53,10 +53,10 @@ class MediaWikiSetup extends BaseSetup
 
         $sslEnabled = ($status->json[$this->domain]['SSL'] == 'no' ? 0 : 1);
 
-        $webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
+        $webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain;
 
         $this->appcontext->runUser('v-copy-fs-directory', [
-            $this->getDocRoot($this->extractsubdir . "/mediawiki-1.37.2/."),
+            $this->getDocRoot($this->extractsubdir . "/mediawiki-1.38.2/."),
             $this->getDocRoot()], $result);
 
         $this->appcontext->runUser('v-run-cli-cmd', ["/usr/bin/php".$options['php_version'],
@@ -67,7 +67,7 @@ class MediaWikiSetup extends BaseSetup
             '--installdbpass=' . $options['database_password'],
             '--dbuser=' . $this->appcontext->user() . '_' . $options['database_user'],
             '--dbpass=' . $options['database_password'],
-            '--server=' . $webAddresss,
+            '--server=' . $webDomain,
             '--scriptpath=', // must NOT be /
             '--lang=' . $options['language'],
             '--pass=' . $options['admin_password'],

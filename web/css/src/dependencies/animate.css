@@ -3557,17 +3557,13 @@
 }
 
 .animated {
-  -webkit-animation-duration: 0.3s;
-  animation-duration: 0.3s;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
 
-.animated.extended {
-  -webkit-animation-duration: 0.6s;
-  animation-duration: 0.6s;
-}
-.animated.long {
+.animated.infinite {
   -webkit-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
 }
@@ -3617,7 +3613,7 @@
   animation-duration: 3s;
 }
 
-@media (print), (prefers-reduced-motion) {
+@media (prefers-reduced-motion) {
   .animated {
     -webkit-animation: unset !important;
     animation: unset !important;

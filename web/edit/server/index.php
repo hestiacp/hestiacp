@@ -813,12 +813,12 @@ if (!empty($_POST['save'])) {
             exec(HESTIA_CMD."v-delete-backup-host " . escapeshellarg($v_backup_type), $output, $return_var);
             unset($output);
             if (in_array($_POST['v_backup_type'], array('ftp','sftp'))) {
-                $v_backup_host = escapeshellarg($_POST['v_backup_host']);
-                $v_backup_port = escapeshellarg($_POST['v_backup_port']);
-                $v_backup_type = escapeshellarg($_POST['v_backup_type']);
-                $v_backup_username = escapeshellarg($_POST['v_backup_username']);
+                $v_backup_host = quoteshellarg($_POST['v_backup_host']);
+                $v_backup_port = quoteshellarg($_POST['v_backup_port']);
+                $v_backup_type = quoteshellarg($_POST['v_backup_type']);
+                $v_backup_username = quoteshellarg($_POST['v_backup_username']);
                 $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
-                $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
+                $v_backup_bpath = quoteshellarg($_POST['v_backup_bpath']);
                 exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." ". $v_backup_password ." ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
                 check_return_code($return_var, $output);
                 unset($output);
@@ -870,12 +870,12 @@ if (!empty($_POST['save'])) {
         if ((!empty($_POST['v_backup_host'])) && ($_POST['v_backup_type'] == $v_backup_type) && (!isset($v_backup_new))) {
             if (in_array($_POST['v_backup_type'], array('ftp','sftp'))) {
                 if (($_POST['v_backup_host'] != $v_backup_host) || ($_POST['v_backup_username'] != $v_backup_username) || ($_POST['v_backup_password'] != $v_backup_password) || ($_POST['v_backup_bpath'] != $v_backup_bpath || $_POST['v_backup_port'] != $v_backup_port)) {
-                    $v_backup_host = escapeshellarg($_POST['v_backup_host']);
-                    $v_backup_port = escapeshellarg($_POST['v_backup_port']);
-                    $v_backup_type = escapeshellarg($_POST['v_backup_type']);
-                    $v_backup_username = escapeshellarg($_POST['v_backup_username']);
+                    $v_backup_host = quoteshellarg($_POST['v_backup_host']);
+                    $v_backup_port = quoteshellarg($_POST['v_backup_port']);
+                    $v_backup_type = quoteshellarg($_POST['v_backup_type']);
+                    $v_backup_username = quoteshellarg($_POST['v_backup_username']);
                     $v_backup_password = escapeshellcmd($_POST['v_backup_password']);
-                    $v_backup_bpath = escapeshellarg($_POST['v_backup_bpath']);
+                    $v_backup_bpath = quoteshellarg($_POST['v_backup_bpath']);
                     exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_backup_host ." ". $v_backup_username ." ". $v_backup_password ." ". $v_backup_bpath." ".$v_backup_port, $output, $return_var);
                     check_return_code($return_var, $output);
                     unset($output);

@@ -182,20 +182,20 @@ install_build() {
 }
 
 # Set install flags
-if [ -n "$1" ]; then
+if [ -n "$fork" ]; then
     fork_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/main/src/deb/hestia/control -o /dev/null)
     if [ "$fork_check" -ne "200" ]; then
         echo "ERROR: invalid repository name specified."
         exit 1
     else
         echo "[!] Download code from GitHub repository: $fork"
-        fork="$1"
     fi
 else
     fork="hestiacp"
 fi
 
-if [ -n "$2" ]; then
+if [ -n "$branch" ]; then
+    echo https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control;
     branch_check=$(curl -s --head -w %{http_code} https://raw.githubusercontent.com/$fork/hestiacp/$branch/src/deb/hestia/control -o /dev/null)
     if [ $branch_check -ne "200" ]; then
         echo "ERROR: invalid branch name specified."

@@ -62,8 +62,8 @@ if (empty($v_letsencrypt)) {
 }
 $v_ssl_home = $data[$v_domain]['SSL_HOME'];
 $v_backend_template = $data[$v_domain]['BACKEND'];
-$v_nginx_cache = $data[$v_domain]['FASTCGI_CACHE'];
-$v_nginx_cache_duration = $data[$v_domain]['FASTCGI_DURATION'];
+$v_nginx_cache = $data[$v_domain]['FASTCGI_CACHE'] ?? '';
+$v_nginx_cache_duration = $data[$v_domain]['FASTCGI_DURATION'] ?? '';
 $v_nginx_cache_check = '';
 if (empty($v_nginx_cache_duration)) {
     $v_nginx_cache_duration = '2m';

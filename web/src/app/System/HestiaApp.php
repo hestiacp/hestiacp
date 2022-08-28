@@ -32,7 +32,7 @@ class HestiaApp
         } else {
             $cli_arguments = escapeshellarg($args);
         }
-
+        
         exec($cli_script . ' ' . $cli_arguments . ' 2>&1', $output, $exit_code);
 
         $result['code'] = $exit_code;
@@ -193,9 +193,13 @@ class HestiaApp
     public function getCurrentBackendTemplate(string $domain){
         $status = $this->runUser('v-list-web-domain', [$domain, 'json'],$return_message);
         $version = $return_message -> json[$domain]['BACKEND'];
-        $test= preg_match('/^.*PHP-([0-9])\_([0-9])/',$version, $match);
-        return $match[1].'.'.$match[2];
-                
+        if($version != "default"){
+            $test= preg_match('/^.*PHP-([0-9])\_([0-9])/',$version, $match);
+            return $match[1].'.'.$match[2];   
+        }else{
+            $supported = $this -> run('v-list-sys-php', 'json', $result);
+            return $this -> $supported -> json[0];
+        }                
     }
     
     public function changeWebTemplate(string $domain, string $template)

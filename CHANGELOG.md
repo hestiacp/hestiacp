@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
-- Fixed an isseu with v-change-web-domain-owner and mail only domains (#2840, #2841)
+- Fixed an issue with v-change-web-domain-owner and mail only domains (#2840, #2841)
 - Grey out phpmyadmin buttons + add link to docs.hestia.com for support (#2843)
 - Block the use of CNAME records on @ or root records DNS domain (#2838, #2842)
 - Code clean up and remove unused tests and templates (#2829 and #2831)
@@ -23,6 +23,22 @@ All notable changes to this project will be documented in this file.
 - Fixed and issue with saving UTC time zone in Edit server (#2851 #2853)
 - Fixed an issue with sshd not running but still showing up in rare cases (#2850 @manuelserol)
 - Improve error message "Domain already exists" when the "main" domain belonged to an other user (#2848 #2771)
+- Fixed an issue with v-delete-letsencrypt not working when deleting a mail domains SSL (#2878)
+- Fixed an issue with storing B2 Secret key in b2.conf (#2843)
+- Update jail.local with example to add ignore ip (#2856)
+- Add use_temp_path to no to slightly speedup caching (#2855)
+- Fix small php errors (#2863 #2857 @YacineSahli)
+
+### Enhancements
+
+- Clean up / decrease size of images, favicons, javascript, css and html (#2879, #2871, #2872, #2873, #2884, #2883, #2879 @AlecRust)
+
+### Dependencies
+
+- Update animate.js to 3.0.2 (#2879)
+- Update normalize.css to 3.0.3 (#2875)
+- Update jQuery to 3.6.1 (#2885)
+- Update MediaWiki to 1.38.2 
 
 ## [1.6.7] - Service release 
 

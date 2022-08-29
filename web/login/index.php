@@ -5,8 +5,7 @@ define('NO_AUTH_REQUIRED', true);
 
 include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 
-$TAB = 'login';
-
+$TAB = 'LOGIN';
 
 if (isset($_GET['logout'])) {
     unset($_SESSION);

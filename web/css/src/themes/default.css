@@ -2271,10 +2271,6 @@ body.mobile .l-icon-shortcuts {
   cursor: pointer;
 }
 
-input[type="radio"] {
-  margin-top: 10px;
-}
-
 .step-top {
   padding-top: 18px;
 }
@@ -2598,6 +2594,19 @@ a.vst-text:active b {
   font-size: 0.85rem;
   margin: 2px 6px 0 3px;
   padding: 5px;
+}
+
+.form-check {
+  padding-left: 20px;
+  margin-bottom: 2px;
+  margin-left: 3px;
+  min-height: 24px;
+}
+
+.form-check-input {
+  float: left;
+  margin-top: 3px;
+  margin-left: -20px;
 }
 
 .lets-encrypt-note {

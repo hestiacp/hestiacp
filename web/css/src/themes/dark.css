@@ -1,12 +1,8 @@
-/*  
+/*
     Theme Name:  Dark
     Author:      Kristan Kenney (@kristankenney)
-    Website:     www.hestiacp.com 
+    Website:     www.hestiacp.com
 */
-
-body {
-  background-color: #282828;
-}
 
 .debug-panel-contents {
   background-color: #282828;
@@ -24,6 +20,7 @@ select {
 
 body {
   color: #cdcdcd;
+  background-color: #282828;
 }
 
 .body-login, .body-reset {
@@ -33,9 +30,6 @@ body {
 
 a {
   color: #cdcdcd;
-}
-
-.disabled {
 }
 
 .l-header {
@@ -642,12 +636,12 @@ label:hover {
     box-shadow: 0px 1px 6px rgba(0,52,91,0.75);
 }
 .vst-textinput.console{
-    
+
 }
 .vst-textinput.short {
-    
+
 }
-    
+
 .vst-input {
   background-color: #454545;
   border: 1px solid #606060;
@@ -771,7 +765,7 @@ a.vst-text:active b{
   background: #454545 !important;
   border: 1px solid #505050 !important;
   text-shadow: 0px 1px rgba(0,0,0,0.4);
-  box-shadow: inset 0px 0px 2px rgba(0,0,0,0.5), 
+  box-shadow: inset 0px 0px 2px rgba(0,0,0,0.5),
               0px 2px 6px rgba(0,0,0,0.4) !important;
   color: #fff !important;
   padding: 4px 0px 0px 18px;
@@ -793,7 +787,7 @@ a.vst-text:active b{
 .generate {
   color: #29a9ff;
   border-radius: 4px;
-  
+
 }
 .generate:hover {
   background-color: #ff3478;
@@ -1204,7 +1198,7 @@ form#vstobjects.suspended {
 .pill.usage b { color: #d8d8d8; }
 
 .badge {
-  box-shadow: 0px 1px 2px rgba(70,70,70,0.5), 
+  box-shadow: 0px 1px 2px rgba(70,70,70,0.5),
               inset 0px 2px 2px rgba(0,0,0,0.65);
   text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
   border: 1px solid #212121 !important;
@@ -1427,7 +1421,7 @@ form#vstobjects.suspended {
 .ui-dialog {
   background-color: rgba(45,45,45,0.95) !important;
   border: 1px solid rgba(80,80,80,0.97) !important;
-  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.25), 
+  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.25),
               0px 8px 25px rgba(0,0,0,0.9) !important;
 }
 
@@ -1494,7 +1488,7 @@ form#vstobjects.suspended {
 }
 
 .ui-widget-header a {
-  color: #cacaca !important; 
+  color: #cacaca !important;
 }
 
 .graph-rounded {

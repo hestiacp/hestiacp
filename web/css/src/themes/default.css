@@ -201,10 +201,6 @@ a {
   color: #7c7c7c;
 }
 
-.disabled {
-  text-decoration: line-through;
-}
-
 .clearfix:before,
 .clearfix:after {
   content: '';

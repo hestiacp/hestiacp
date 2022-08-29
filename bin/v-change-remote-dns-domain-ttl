@@ -45,7 +45,7 @@ check_hestia_demo_mode
 
 IFS=$'\n'
 for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
-
+    clear_dns_cluster_settings
     # Parsing remote host parameters
     parse_object_kv_list "$cluster"
 

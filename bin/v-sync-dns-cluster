@@ -47,7 +47,8 @@ fi
 
 # Starting cluster loop
 for cluster in $hosts; do
-
+    
+    clear_dns_cluster_settings    
     # Parsing host values
     parse_object_kv_list "$cluster"
 

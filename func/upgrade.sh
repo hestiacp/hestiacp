@@ -678,18 +678,9 @@ upgrade_rainloop(){
     fi
 }
 
-upgrade_phpmailer(){
-    if [ ! -d "$HESTIA/web/inc/vendor/" ]; then
-        echo "[ ! ] Install PHPmailer";
-        $HESTIA/bin/v-add-sys-phpmailer
-    fi
-    phpm_version=$(cat $HESTIA/web/inc/vendor/phpmailer/phpmailer/VERSION);
-    if [ "$phpm_version" != "$pm_v" ]; then
-    echo "[ ! ] Upgrading PHPmailer to version $pm_v..."
-        $HESTIA/bin/v-add-sys-phpmailer
-    else
-        echo "[ * ] PHPmailer is up to date ($pm_v)..."
-    fi 
+upgrade_dependencies(){
+    echo "[ ! ] Update Hesita PHP dependencies";
+    $HESTIA/bin/v-add-sys-dependencies
 }
 
 upgrade_rebuild_web_templates() {

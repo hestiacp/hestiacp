@@ -83,8 +83,8 @@ upgrade_rainloop | tee -a $LOG
 # Upgrade Roundcube if applicable
 upgrade_roundcube | tee -a $LOG
 
-# Upgrade PHPMailer if applicable
-upgrade_phpmailer | tee -a $LOG
+# Upgrade PHP php dependencies
+upgrade_dependencies | tee -a $LOG
 
 # Upgrade phpMyAdmin if applicable
 upgrade_phpmyadmin | tee -a $LOG

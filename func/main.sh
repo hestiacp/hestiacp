@@ -1502,7 +1502,7 @@ multiphp_default_version() {
 }
 
 is_hestia_package(){
-    if [ -z "$(echo $1 | grep -w $2)" ]; then
+    if [ -z "$(echo $1 | grep -w "$2")" ]; then
         check_result "$E_INVALID" "$2 package is not controlled by hestiacp"
     fi
 }

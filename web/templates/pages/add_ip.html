@@ -79,8 +79,13 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<label><input type="checkbox" size="20" class="vst-checkbox" name="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');"><?=_('Shared');?></label>
+							<td class="input-label">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="v_shared" id="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');">
+									<label for="v_shared">
+										<?=_('Shared');?>
+									</label>
+								</div>
 							</td>
 						</tr>
 						<tr>

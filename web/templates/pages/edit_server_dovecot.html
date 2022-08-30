@@ -132,8 +132,13 @@
 								</td>
 							</tr>
 						<?php } ?>
-						<td class="vst-text input-label" style="text-transform: capitalize;">
-							<label><input type="checkbox" size="20" class="vst-checkbox" name="v_restart" checked="yes"><?=_('restart');?></label>
+						<td class="input-label" style="text-transform: capitalize;">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
+								<label for="v_restart">
+									<?=_('restart');?>
+								</label>
+							</div>
 						</td>
 					</table>
 					<table class="data-col2"></table>

@@ -22,7 +22,6 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 # Make sure to sync install quoteshell arg
-$HESTIA/bin/v-add-sys-depencies 
 if [ "$FILE_MANAGER" = "true" ]; then 
     $HESTIA/bin/v-delete-sys-filemanager
     $HESTIA/bin/v-add-sys-filemanager      

@@ -19,8 +19,8 @@
 				<a href="<?=$log_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs');?></a>
 			<?php } ?>
 			<?php
-            $api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
-            if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
+				$api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
+				if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
 				<a href="<?=$keys_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Access Keys');?>"><i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?></a>
 			<?php } ?>
 		</div>
@@ -138,13 +138,23 @@
 									<?php if ($_SESSION['userContext'] === 'admin') {?>
 										<tr>
 											<td>
-												<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" name="v_login_disabled" <?php if ($v_login_disabled === "yes") echo "checked=yes" ?>><?=_('Do not allow user to log in to Control Panel');?></label>
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" <?php if ($v_login_disabled === "yes") echo "checked=yes" ?>>
+													<label for="v_login_disabled">
+														<?=_('Do not allow user to log in to Control Panel');?>
+													</label>
+												</div>
 											</td>
 										</tr>
 									<?php } ?>
 									<tr>
 										<td id="password-options" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
-											<label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>><?=_('Enable 2FA');?></label>
+											<div class="form-check u-mt15">
+												<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>>
+												<label for="v_twofa">
+													<?=_('Enable 2FA');?>
+												</label>
+											</div>
 											<?php if (!empty($v_twofa)) { ?>
 											<p><?=_('2FA Reset Code:').' '.$v_twofa; ?></p>
 											<p><?=_('Please scan the code below in your 2FA application:'); ?></p>
@@ -154,7 +164,12 @@
 									</tr>
 									<tr>
 										<td id="password-options-ip" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
-											<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('ip-allowlist')" name="v_login_use_iplist" <?php if ($v_login_use_iplist === "yes") echo "checked=yes" ?>><?=_('Use IP address allow list for login attempts');?></label>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist" onclick="javascript:elementHideShow('ip-allowlist')" <?php if ($v_login_use_iplist === "yes") echo "checked=yes" ?>>
+												<label for="v_login_use_iplist">
+													<?=_('Use IP address allow list for login attempts');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr>

@@ -3048,10 +3048,6 @@ a.button.cancel {
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 }
 
-.password-option {
-  margin-top: 15px;
-}
-
 .login a.error {
   color: #be5abf;
   font-size: 0.8rem;
@@ -3998,3 +3994,10 @@ meter[value="1"]::-moz-meter-bar { background: red; }
 meter[value="2"]::-moz-meter-bar { background: orange; }
 meter[value="3"]::-moz-meter-bar { background: yellow; }
 meter[value="4"]::-moz-meter-bar { background: green; }
+
+/* Global utilities
+   ========================================================================== */
+
+.u-mt15 {
+  margin-top: 15px !important;
+}

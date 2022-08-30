@@ -28,6 +28,8 @@ All notable changes to this project will be documented in this file.
 - Update jail.local with example to add ignore ip (#2856)
 - Add use_temp_path to no to slightly speedup caching (#2855)
 - Fix small php errors (#2863 #2857 @YacineSahli)
+- Fixed an issue API and DNS cluster over multiple servers where username/password and hash where mixed (#2888)
+- Add option to use custom javascript code (#2747)
 
 ### Enhancements
 
@@ -35,10 +37,14 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
+- Update hestia-nginx to 1.23.1
+- Update hestia-php to 8.1.9
 - Update animate.js to 3.0.2 (#2879)
 - Update normalize.css to 3.0.3 (#2875)
 - Update jQuery to 3.6.1 (#2885)
 - Update MediaWiki to 1.38.2 
+- Update PHPmailer to 6.6.4
+- Update Blackblaze CLI to 3.5.0
 
 ## [1.6.7] - Service release 
 

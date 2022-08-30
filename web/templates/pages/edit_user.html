@@ -146,7 +146,7 @@
 										<td id="password-options" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
 											<label><input type="checkbox" class="vst-checkbox password-option" name="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>><?=_('Enable 2FA');?></label>
 											<?php if (!empty($v_twofa)) { ?>
-											<p><?=_('2FA Reset Code:').' '.$v_twofa; ?></br></p>
+											<p><?=_('2FA Reset Code:').' '.$v_twofa; ?></p>
 											<p><?=_('Please scan the code below in your 2FA application:'); ?></p>
 											<div><img class="qr-code" src="<?=htmlentities($v_qrcode); ?>"></div>
 											<?php } ?>

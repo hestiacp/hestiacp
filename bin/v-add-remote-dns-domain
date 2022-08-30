@@ -59,7 +59,10 @@ fi
 
 IFS=$'\n'
 for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
+    
+    # Reset user, password and hash vars
     clear_dns_cluster_settings
+    
     # Parsing remote dns host parameters
     parse_object_kv_list "$cluster"
 

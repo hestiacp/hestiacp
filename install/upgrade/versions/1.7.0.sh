@@ -23,6 +23,6 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 # Make sure to sync install quoteshell arg
 if [ "$FILE_MANAGER" = "true" ]; then 
-    $HESTIA/bin/v-delete-sys-filemanager
-    $HESTIA/bin/v-add-sys-filemanager      
+    $HESTIA/bin/v-delete-sys-filemanager quiet
+    $HESTIA/bin/v-add-sys-filemanager quiet  
 fi

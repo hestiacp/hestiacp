@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 
 - Update default php settings (#2849 #2635)
 
+### Security
+
+- Fix issue in is_hestia_package (#2889)
+
 ### Bugfixes
 
 - Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
@@ -30,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - Fix small php errors (#2863 #2857 @YacineSahli)
 - Fixed an issue API and DNS cluster over multiple servers where username/password and hash where mixed (#2888)
 - Add option to use custom javascript code (#2747)
+- Add "v-rebuild-dns-domains" to sync-dns-cluster options
 
 ### Enhancements
 

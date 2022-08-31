@@ -37,3 +37,9 @@ for version in $($HESTIA/bin/v-list-sys-php plain); do
     sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/$version/fpm/php.ini
     sed -i "s/max_execution_time = 30$/max_execution_time = 60/g" /etc/php/$version/fpm/php.ini    
 done
+
+# Update api key permissions
+if [ -f "$HESTIA/data/api/sync-dns-cluster" ]; then
+    rm $HESTIA/data/api/sync-dns-cluster
+    cp $HESTIA/install/deb/api/sync-dns-cluster $HESTIA/data/api/sync-dns-cluster
+fi

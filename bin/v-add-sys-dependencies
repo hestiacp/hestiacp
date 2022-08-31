@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: add PHPMailer functionality to Hestia Control Panel
+# Add php dependencies to Hestia 
 # options: [MODE]
 #
-# This function installs PHPMailer for server-side email communication.
+# This function install PHPMailer and quoteshellarg as via composer
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -30,7 +30,7 @@ COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
-    echo "ERROR: v-add-sys-phpmailer can be run executed only by root user"
+    echo "ERROR: v-add-sys-dependencies can be run executed only by root user"
     exit 10
 fi
 
@@ -48,7 +48,7 @@ fi
 if [ ! -f "$COMPOSER_BIN" ]; then
     $BIN/v-add-user-composer "$user"
     if [ $? -ne 0 ]; then
-        $BIN/v-add-user-notification admin 'Composer installation failed!' '<b>PHPMailer will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-phpmailer<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+        $BIN/v-add-user-notification admin 'Composer installation failed!' '<b>Hestia will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-phpmailer<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
         exit 1
     fi
 fi
@@ -77,11 +77,11 @@ if [ $? -ne 0 ]; then
     echo "ERROR: PHPMailer installation failed!"
     echo "Please report this to our development team:"
     echo "https://github.com/hestiacp/hestiacp/issues"
-    $BIN/v-add-user-notification admin 'PHPMailer installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+    $BIN/v-add-user-notification admin 'Hestia PHP dependencies installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
     # Installation failed, clean up files
     rm --recursive --force ${PM_INSTALL_DIR}/vendor
     $BIN/v-change-sys-config-value 'USE_SERVER_SMTP' 'n'
-    $BIN/v-log-action "system" "Error" "Plugins" "PHPMailer installation failed (Version: $pm_v)."
+    $BIN/v-log-action "system" "Error" "Plugins" "PHP dependencies installation failed"
     exit 1
 fi
 

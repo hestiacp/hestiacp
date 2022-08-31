@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version unknow
+# Hestia Control Panel upgrade script for target version unreleased
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -21,10 +21,8 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
-# make sure to sync install qouteshellarg
-$HESTIA/bin/v-add-sys-phpmailer
-if [ "$FILE_MANAGER" = "true" ]; then
-    # Sync up filemanger
-    $HESTIA/bin/v-delete-sys-filemanger
-    $HESTIA/bin/v-add-sys-filemanger        
+# Make sure to sync install quoteshell arg
+if [ "$FILE_MANAGER" = "true" ]; then 
+    $HESTIA/bin/v-delete-sys-filemanager quiet
+    $HESTIA/bin/v-add-sys-filemanager quiet  
 fi

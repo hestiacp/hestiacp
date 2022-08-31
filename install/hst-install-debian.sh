@@ -1866,8 +1866,8 @@ $HESTIA/bin/v-add-sys-filemanager quiet
 #                  Configure PHPMailer                     #
 #----------------------------------------------------------#
 
-echo "[ * ] Configuring PHPMailer..."
-$HESTIA/bin/v-add-sys-phpmailer quiet
+echo "[ * ] Configuring PHP dependencies..."
+$HESTIA/bin/v-add-sys-dependencies quiet
 
 #----------------------------------------------------------#
 #                       Configure API                      #

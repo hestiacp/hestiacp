@@ -84,6 +84,15 @@ function api_legacy(array $request_data) {
             $hash = crypt($password, '$6$rounds=5000$'.$salt.'$');
             $hash = str_replace('$rounds=5000', '', $hash);
         }
+        if ($method == 'yescrypt') {
+            $v_password = tempnam("/tmp", "vst");
+            $fp = fopen($v_password, "w");
+            fwrite($fp, $password."\n");
+            fclose($fp);
+            exec(HESTIA_CMD . 'v-check-user-password '. $v_user.' '. $v_password. ' '.$v_ip.' yes', $output, $return_var);
+            $hash = $output[0];
+            unset($output);
+        }
         if ($method == 'des') {
             $hash = crypt($password, $salt);
         }

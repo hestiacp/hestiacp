@@ -48,18 +48,18 @@
                                 <?= _('Permissions'); ?>
                             </td>
                         </tr>
-                        <?php
-                        foreach ($apis as $api_name => $api_data) {
-                            ?>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox"
-                                                  name="v_apis[]" value="<?= $api_name ?>"
-                                                  tabindex="5"/><?= _($api_name); ?></label>
-                                </td>
-                            </tr>
-                            <?php
-                        } ?>
+                        <tr>
+                            <td class="input-label">
+                                <?php foreach ($apis as $api_name => $api_data) { ?>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="<?= $api_name ?>" name="v_apis[]" id="v_apis_<?= $api_name ?>" tabindex="5">
+                                        <label for="v_apis_<?= $api_name ?>">
+                                            <?= _($api_name); ?>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </td>
+                        </tr>
 
                         <tr>
                             <td class="vst-text step-top">

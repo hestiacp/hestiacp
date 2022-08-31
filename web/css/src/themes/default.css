@@ -159,10 +159,6 @@
   background-color: #fff;
 }
 
-.hidden {
-  display: none;
-}
-
 * {
   -webkit-tap-highlight-color: transparent;
 }
@@ -3997,6 +3993,10 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 
 /* Global utilities
    ========================================================================== */
+
+.hidden {
+  display: none;
+}
 
 .u-mt15 {
   margin-top: 15px !important;

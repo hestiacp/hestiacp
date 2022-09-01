@@ -81,7 +81,7 @@ function api_legacy(array $request_data) {
             exit;
         }
         $v_ip = quoteshellarg(get_real_user_ip());
-        $output = '';
+        unset($output);
         exec(HESTIA_CMD."v-get-user-salt admin ".$v_ip." json", $output, $return_var);
         $pam = json_decode(implode('', $output), true);
         $salt = $pam['admin']['SALT'];
@@ -99,6 +99,7 @@ function api_legacy(array $request_data) {
             $fp = fopen($v_password, "w");
             fwrite($fp, $password."\n");
             fclose($fp);
+            unset($output);
             exec(HESTIA_CMD . 'v-check-user-password "admin" '. $password. ' '.$v_ip.' yes', $output, $return_var);
             $hash = $output[0];
             unset($output);

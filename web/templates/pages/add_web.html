@@ -110,7 +110,7 @@
 							<?php if ((isset($_SESSION['IMAP_SYSTEM'])) && (!empty($_SESSION['IMAP_SYSTEM']))) {?>
 								<?php if($panel[$user_plain]['MAIL_DOMAINS'] != "0") { ?>
 									<tr>
-										<td class="vst-text input-label">
+										<td class="input-label">
 											<div class="form-check">
 												<input class="form-check-input" type="checkbox" name="v_mail" id="v_mail" <?php if (empty($v_mail)&&$panel[$user_plain]['MAIL_DOMAINS'] != "0") ?>>
 												<label for="v_mail">
@@ -195,7 +195,7 @@
 						<?php }?>
 						<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
 							<tr>
-								<td class="vst-text step-top">
+								<td class="step-top">
 									<div class="form-check">
 										<input class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy" <?php if ($v_proxy !== 'off') echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');">
 										<label for="v_proxy">
@@ -304,7 +304,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
+							<td class="step-top">
 								<div class="form-check">
 									<input class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');">
 									<label for="v_custom_doc_root_check">
@@ -360,7 +360,7 @@
 						</tr>
 
 						<tr>
-							<td class="step-top vst-text">
+							<td class="step-top">
 								<div class="form-check">
 									<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if($v_ssl == 'yes' || $v_ssl == 'on') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');">
 									<label for="v_ssl">
@@ -373,7 +373,7 @@
 							<td>
 								<table style="display:<?php if (empty($v_ssl)) { echo 'none';} else {echo 'block';}?>;" id="ssltable">
 									<tr>
-										<td class="step-left input-label vst-text">
+										<td class="step-left input-label">
 											<div class="form-check">
 												<input class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_letsencrypt(this)">
 												<label for="v_letsencrypt">
@@ -388,7 +388,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="step-left input-label vst-text">
+										<td class="step-left input-label">
 											<div class="form-check">
 												<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl != 'no') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_forcessl(this)">
 												<label for="v_ssl_forcessl">
@@ -432,7 +432,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
+							<td class="step-top">
 								<div class="form-check">
 									<input class="form-check-input" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp) && count($v_ftp_users)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)">
 									<label for="v_ftp">

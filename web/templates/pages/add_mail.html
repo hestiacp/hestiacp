@@ -126,7 +126,7 @@
 								</tr>
 							<?php } ?>
 							<tr>
-								<td class="vst-text input-label">
+								<td class="input-label">
 									<div class="form-check">
 										<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>>
 										<label for="v_dkim">
@@ -136,7 +136,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text input-label">
+								<td class="input-label">
 									<div class="form-check">
 										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
 										<label for="v_smtp_relay">

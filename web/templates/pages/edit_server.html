@@ -111,7 +111,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
+										<td class="input-label">
 											<div class="form-check">
 												<input class="form-check-input" type="checkbox" name="v_policy_user_change_theme" id="v_policy_user_change_theme" <?php if ((isset($_SESSION['POLICY_USER_CHANGE_THEME'])) && (!empty($_SESSION['POLICY_USER_CHANGE_THEME'])) && ($_SESSION['POLICY_USER_CHANGE_THEME'] == "no")) echo "checked=yes" ?>>
 												<label for="v_policy_user_change_theme">
@@ -440,7 +440,7 @@
 											</tr>
 										<?php } ?>
 										<tr>
-											<td class="vst-text">
+											<td class="input-label">
 												<div class="form-check">
 													<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
 													<label for="v_smtp_relay">
@@ -748,7 +748,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
+										<td class="input-label">
 											<div class="form-check">
 												<input class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');">
 												<label for="v_backup_remote_adv">

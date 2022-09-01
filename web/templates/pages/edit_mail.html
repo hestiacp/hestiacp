@@ -18,7 +18,7 @@
 	<form id="vstobjects" name="v_edit_mail" method="post" class="<?=$v_status?>">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 		<input type="hidden" name="save" value="save" />
-		
+
 		<table class='data'>
 			<tr class="data-add">
 				<td class="data-dotted">
@@ -96,31 +96,56 @@
 						</tr>
 						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
 							<tr>
-								<td class="vst-text input-label step-top">
-									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>><?=_('AntiSpam Support');?></label>
+								<td class="input-label step-top">
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>>
+										<label for="v_antispam">
+											<?=_('AntiSpam Support');?>
+										</label>
+									</div>
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text input-label">
-									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_reject" <?php if ($v_reject == 'yes') echo "checked=yes"; ?>><?=_('Reject spam');?></label>
+								<td class="input-label">
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ($v_reject == 'yes') echo "checked=yes"; ?>>
+										<label for="v_reject">
+											<?=_('Reject spam');?>
+										</label>
+									</div>
 								</td>
 							</tr>
 						<?php } ?>
 						<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
 							<tr>
-								<td class="vst-text input-label">
-									<label><input type="checkbox" size="20" class="vst-checkbox" name="v_antivirus" <?php if ($v_antivirus == 'yes') echo "checked=yes"; ?>><?=_('AntiVirus Support');?></label>
+								<td class="input-label">
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ($v_antivirus == 'yes') echo "checked=yes"; ?>>
+										<label for="v_antivirus">
+											<?=_('AntiVirus Support');?>
+										</label>
+									</div>
 								</td>
 							</tr>
 						<?php } ?>
 						<tr>
-							<td class="vst-text input-label">
-								<label><input type="checkbox" size="20" class="vst-checkbox" name="v_dkim" <?php if ($v_dkim == 'yes') echo "checked=yes"; ?>><?=_('DKIM Support');?></label>
+							<td class="input-label">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if ($v_dkim == 'yes') echo "checked=yes"; ?>>
+									<label for="v_dkim">
+										<?=_('DKIM Support');?>
+									</label>
+								</div>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<label><input type="checkbox" size="20" class="vst-checkbox" name="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');"><?=_('SSL Support');?></label>
+							<td class="input-label">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');">
+									<label for="v_ssl">
+										<?=_('SSL Support');?>
+									</label>
+								</div>
 							</td>
 						</tr>
 						<tr id="ssltable" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" class="step-left">
@@ -128,7 +153,12 @@
 								<table>
 									<tr>
 										<td class="input-label vst-text">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?>"><?=_('Lets Encrypt Support');?></label>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?>">
+												<label for="v_letsencrypt">
+													<?=_('Lets Encrypt Support');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr id="le-warning" class="step-top">
@@ -249,7 +279,12 @@
 						<tr>
 							<td class="vst-text input-label">
 								<label>
-									<input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?=_('SMTP Relay');?>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+										<label for="v_smtp_relay">
+											<?=_('SMTP Relay');?>
+										</label>
+									</div>
 								</label>
 							</td>
 						</tr>

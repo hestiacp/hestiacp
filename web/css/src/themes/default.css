@@ -2586,12 +2586,6 @@ a.vst-text:active b {
   border: none !important;
 }
 
-.vst-checkbox {
-  font-size: 0.85rem;
-  margin: 2px 6px 0 3px;
-  padding: 5px;
-}
-
 .form-check {
   padding-left: 20px;
   margin-bottom: 2px;

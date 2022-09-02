@@ -333,7 +333,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
 
     // Delete Lets Encrypt support
     if (($v_letsencrypt == 'yes') && (empty($_POST['v_letsencrypt']) || empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
-        exec(HESTIA_CMD."v-delete-letsencrypt-domain ".$user." ".quoteshellarg($v_domain)." ' ' 'yes'", $output, $return_var);
+        exec(HESTIA_CMD."v-delete-letsencrypt-domain ".$user." ".quoteshellarg($v_domain)." '' 'yes'", $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
         $v_ssl_crt = '';
@@ -652,7 +652,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (!empty($_GET['acco
     if ((!empty($v_send_email)) && (empty($_SESSION['error_msg']))) {
         $to = $v_send_email;
         $subject = _("Email Credentials");
-        $hostname = exec('hostname');
+        $hostname = get_hostname();
         $from = "noreply@".$hostname;
         $from_name = _('Hestia Control Panel');
         $mailtext = $v_credentials;

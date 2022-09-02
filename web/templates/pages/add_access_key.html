@@ -2,12 +2,14 @@
 <div class="l-center edit">
     <div class="l-sort clearfix">
         <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/access-key/"><i
-                        class="fas fa-arrow-left status-icon blue"></i><?= _('Back'); ?></a>
+            <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/access-key/">
+                <i class="fas fa-arrow-left status-icon blue"></i><?= _('Back'); ?>
+            </a>
         </div>
         <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i
-                        class="fas fa-save status-icon purple"></i><?= _('Save'); ?></a>
+            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects">
+                <i class="fas fa-save status-icon purple"></i><?= _('Save'); ?>
+            </a>
         </div>
     </div>
 </div>
@@ -16,10 +18,9 @@
 <div class="l-separator"></div>
 
 <div class="l-center animated fadeIn">
-
     <form id="vstobjects" name="v_add_access_key" method="post">
-        <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>"/>
-        <input type="hidden" name="ok" value="Add"/>
+        <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+        <input type="hidden" name="ok" value="Add" />
 
         <table class="data mode-add">
             <tr class="data-add">
@@ -48,18 +49,18 @@
                                 <?= _('Permissions'); ?>
                             </td>
                         </tr>
-                        <?php
-                        foreach ($apis as $api_name => $api_data) {
-                            ?>
-                            <tr>
-                                <td class="vst-text input-label">
-                                    <label><input type="checkbox" size="20" class="vst-checkbox"
-                                                  name="v_apis[]" value="<?= $api_name ?>"
-                                                  tabindex="5"/><?= _($api_name); ?></label>
-                                </td>
-                            </tr>
-                            <?php
-                        } ?>
+                        <tr>
+                            <td class="input-label">
+                                <?php foreach ($apis as $api_name => $api_data) { ?>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="<?= $api_name ?>" name="v_apis[]" id="v_apis_<?= $api_name ?>" tabindex="5">
+                                        <label for="v_apis_<?= $api_name ?>">
+                                            <?= _($api_name); ?>
+                                        </label>
+                                    </div>
+                                <?php } ?>
+                            </td>
+                        </tr>
 
                         <tr>
                             <td class="vst-text step-top">

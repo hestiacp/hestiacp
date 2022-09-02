@@ -44,20 +44,9 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
                 $contact = $data[$user]['CONTACT'];
                 $to = $data[$user]['CONTACT'];
                 $subject = sprintf(_('MAIL_RESET_SUBJECT'), date("Y-m-d H:i:s"));
-                $hostname = exec('hostname');
-                $hostname_full = exec('hostname -f');
-                if ($hostname.":".$_SERVER['SERVER_PORT'] == $_SERVER['HTTP_HOST']) {
-                    $check = true; 
-                    $hostname_email = $hostname;
-                }else if ($hostname_full.":".$_SERVER['SERVER_PORT'] == $_SERVER['HTTP_HOST']) {
-                    $check = true;
-                    $hostname_email = $hostname_full;
-                }else{
-                    $check = false;
-                    $ERROR = "<a class=\"error\">"._('Invalid host domain')."</a>";
-                }
+                $hostname = get_hostname();
                 if ($check == true){
-                    $from = "noreply@".$hostname_email;
+                    $from = "noreply@".$hostname;
                     $from_name = _('Hestia Control Panel');
                     if (!empty($name)) {
                         $mailtext = sprintf(_('GREETINGS_GORDON'), $name);

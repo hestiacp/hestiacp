@@ -386,7 +386,7 @@ for auth in $authz; do
         status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
         details=$(echo "$answer"| grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
 
-        debug_log "Step 5" "- status: ${status}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
+        debug_log "Step 5" "- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
 
         if [[ "$status" -ne 200 ]]; then
             # Delete DNS CAA record
@@ -400,8 +400,14 @@ for auth in $authz; do
                     fi
                 fi
             fi
-            debug_log "Abort Step 5" "=> Wrong status"
-            check_result "$E_CONNECT" "Let's Encrypt validation status $status ($domain). Details: $details"
+            # Download debug info from LE server
+            result=$(wget -qO- $url)
+            debug_log "Debug information Step 5"  "$result"
+            details=$(echo $result | jq '.error.detail' )
+            error_code=$(echo $result | jq '.error.status' )            
+            
+            debug_log "Abort Step 5" "=> Wrong status" 
+            check_result "$E_CONNECT" "Let's Encrypt validation status $status ($domain). Details: $error_code:$details"
         fi
 
         i=$((i + 1))

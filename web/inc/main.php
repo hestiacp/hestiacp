@@ -10,7 +10,7 @@ use function Hestiacp\quoteshellarg\quoteshellarg;
 try {
     require_once 'vendor/autoload.php';
 } catch (Throwable $ex) {
-    $errstr = 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
+    $errstr = 'Unable able to load required libraries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
     trigger_error($errstr);
     echo $errstr;
     exit(1);
@@ -117,6 +117,15 @@ if (!defined('NO_AUTH_REQUIRED')) {
         exit;
     } else {
         $_SESSION['LAST_ACTIVITY'] = time();
+    }
+}
+
+function ipUsed(){
+    list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+    if(filter_var($http_host, FILTER_VALIDATE_IP)){
+        return true;
+    }else{
+        return false;
     }
 }
 
@@ -270,7 +279,7 @@ function top_panel($user, $TAB)
     if (!isset($_SESSION['look'])) {
         $_SESSION['userSortOrder'] = $panel[$user]['PREF_UI_SORT'];
     }
-    
+
     // Set home location URLs
     if (($_SESSION['userContext'] === 'admin') && (empty($_SESSION['look']))) {
         // Display users list for administrators unless they are impersonating a user account
@@ -453,7 +462,7 @@ function list_timezones()
 /**
  * A function that tells is it MySQL installed on the system, or it is MariaDB.
  *
- * Explaination:
+ * Explanation:
  * $_SESSION['DB_SYSTEM'] has 'mysql' value even if MariaDB is installed, so you can't figure out is it really MySQL or it's MariaDB.
  * So, this function will make it clear.
  *

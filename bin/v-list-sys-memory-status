@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list virtual memory info
-# options: [FORMAT]
+# options: 
 #
-# example: v-list-sys-memory-status json
+# example: v-list-sys-memory-status
 #
 # This function lists virtual memory information
 

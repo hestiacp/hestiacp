@@ -46,16 +46,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.6.3",
+            "version": "v6.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "9400f305a898f194caff5521f64e5dfa926626f3"
+                "reference": "a94fdebaea6bd17f51be0c2373ab80d3d681269b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/9400f305a898f194caff5521f64e5dfa926626f3",
-                "reference": "9400f305a898f194caff5521f64e5dfa926626f3",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/a94fdebaea6bd17f51be0c2373ab80d3d681269b",
+                "reference": "a94fdebaea6bd17f51be0c2373ab80d3d681269b",
                 "shasum": ""
             },
             "require": {
@@ -112,7 +112,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.6.3"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.6.4"
             },
             "funding": [
                 {
@@ -120,7 +120,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-20T09:21:02+00:00"
+            "time": "2022-08-22T09:22:00+00:00"
         }
     ],
     "packages-dev": [],

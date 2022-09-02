@@ -348,12 +348,7 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
             cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.tpl template/$PROXY_SYSTEM/
             cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.stpl template/$PROXY_SYSTEM/      
         fi
-        
-        # Backup custom config / backup LE config
-        for sconfig in $(ls $HOMEDIR/$user/conf/web/|grep ".$domain.conf"); do
-            cp $HOMEDIR/$user/conf/web/$sconfig conf/
-        done
-
+    
         # Backup ssl certificates
         if [ "$SSL" = 'yes' ] ; then
             cp $HOMEDIR/$user/conf/web/$domain/ssl/$domain.* conf/

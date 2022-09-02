@@ -93,12 +93,22 @@
 						</tr>
 						<tr>
 							<td>
-								<label><input type="checkbox" size="20" class="vst-checkbox" onclick="javascript:elementHideShow('send-welcome');" name="v_login_disabled" <?php if ($v_login_disabled == "yes") echo "checked=yes" ?>><?=_('Do not allow user to log in to Control Panel');?></label>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('send-welcome');" <?php if ($v_login_disabled == "yes") echo "checked=yes" ?>>
+									<label for="v_login_disabled">
+										<?=_('Do not allow user to log in to Control Panel');?>
+									</label>
+								</div>
 							</td>
 						</tr>
 						<tr id="send-welcome">
-							<td class="vst-text input-label">
-								<label><input type="checkbox" size="20" class="vst-checkbox" name="v_email_notice" id='v_email_notify' value="" tabindex="5" /><?=_('Send welcome email');?></label>
+							<td class="input-label">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="v_email_notice" id="v_email_notify" tabindex="5">
+									<label for="v_email_notify">
+										<?=_('Send welcome email');?>
+									</label>
+								</div>
 							</td>
 						</tr>
 						<tr>

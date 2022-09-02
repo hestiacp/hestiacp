@@ -1,12 +1,12 @@
 #!/bin/bash
 # info: Enable FastCGI cache for nginx
-# options: USER DOMAIN [DURATION] [DEBUG] [RESTART]
+# options: USER DOMAIN [DURATION] [RESTART]
 #
 # example: v-add-fastcgi-cache user domain.tld 30m
 #
 # This function enables FastCGI cache for nginx
 # Acceptable values for duration is time in seconds (10s) minutes (10m) or days (10d)
-# Add "yes" as last parameter to append debug information to response headers
+# Add "yes" as last parameter to restart nginx
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -30,7 +30,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN [DURATION] [DEBUG] [RESTART]'
+check_args '2' "$#" 'USER DOMAIN [DURATION] [RESTART]'
 is_format_valid 'user' 'domain' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -81,7 +81,7 @@ chown root:$user $fastcgi
 chmod 640 $fastcgi
 
 str="fastcgi_cache_path /var/cache/nginx/micro/$domain levels=1:2" 
-str="$str keys_zone=$domain:10m max_size=512m inactive=30m;" 
+str="$str keys_zone=$domain:10m max_size=512m inactive=30m use_temp_path=off;" 
 conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
 if [ -f "$conf" ]; then
     if [ -z "$(grep "=${domain}:" $conf)" ]; then

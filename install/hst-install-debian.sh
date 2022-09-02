@@ -53,7 +53,7 @@ software="nginx apache2 apache2-utils apache2-suexec-custom
   dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
   hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
   rsyslog openssh-server util-linux ipset libapache2-mpm-itk zstd
-  lsb-release"
+  lsb-release jq"
 
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
@@ -135,7 +135,7 @@ set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
     fi
-    lang_list="ar az bg bn bs cs da de el en es fa fi fr he hr hu hy id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
+    lang_list="ar az bg bn bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
     if ! (echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -1901,7 +1901,7 @@ $HESTIA/bin/v-add-sys-filemanager quiet
 #             Configure Hestia php dependencies            #
 #----------------------------------------------------------#
 
-echo "[ * ] Configuring hestia-php dependencies  "
+echo "[ * ] Configuring PHP dependencies..."
 $HESTIA/bin/v-add-sys-dependencies quiet
 
 #----------------------------------------------------------#

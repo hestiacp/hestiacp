@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue API and DNS cluster over multiple servers where username/password and hash where mixed (#2888)
 - Add option to use custom javascript code (#2747)
 - Add "v-rebuild-dns-domains" to sync-dns-cluster options
+- Fixed an issue with Yescript and api (#2899)
 
 ### Enhancements
 

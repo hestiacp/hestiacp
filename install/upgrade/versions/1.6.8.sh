@@ -37,3 +37,10 @@ for version in $($HESTIA/bin/v-list-sys-php plain); do
     sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/$version/fpm/php.ini
     sed -i "s/max_execution_time = 30$/max_execution_time = 60/g" /etc/php/$version/fpm/php.ini    
 done
+
+if [ -d /etc/roundcube ]; then 
+    if [ ! -f /etc/logrotate.d/roundcube ]; then
+        echo "[ * ] Create config roundcube logrotate file"
+        cp -f $HESTIA_INSTALL_DIR/logrotate/roundcube /etc/logrotate.d/
+    fi
+fi

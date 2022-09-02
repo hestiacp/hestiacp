@@ -287,7 +287,7 @@ if [ $type != 'local' ] && [ $type != 'b2' ]; then
     chmod 660 $HESTIA/conf/$type.backup.conf
 elif [ $type == 'b2' ]; then
     new_timestamp
-    str="BUCKET='$host'\nB2_KEYID='$user'\nB2_KEY='$password'"
+    str="BUCKET='$host'\nB2_KEYID='$user'\nB2_KEY='$raw_password'"
     str="$str\nTIME='$time'\nDATE='$date'"
     echo -e "$str" > $HESTIA/conf/$type.backup.conf
     chmod 660 $HESTIA/conf/$type.backup.conf

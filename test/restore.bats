@@ -42,6 +42,7 @@ function validate_web_domain() {
     local domain=$2
     local webproof=$3
     local webpath=${4}
+    local valwebpath=${5}
     
     refute [ -z "$user" ]
     refute [ -z "$domain" ]
@@ -57,15 +58,16 @@ function validate_web_domain() {
     SSL=$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')
     domain_ip=$(get_real_ip "$domain_ip")
     
-    if [ ! -z $webpath ]; then
-        domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
-        if [ -n "$domain_docroot" ] && [ -d "$domain_docroot" ]; then
-            assert_file_exist "${domain_docroot}/${webpath}"
-        else
-            assert_file_exist "${HOMEDIR}/${user}/web/${domain}/public_html/${webpath}"
+    if [ -z $valwebpath ]; then
+        if [ ! -z $webpath ]; then
+            domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
+            if [ -n "$domain_docroot" ] && [ -d "$domain_docroot" ]; then
+                assert_file_exist "${domain_docroot}/${webpath}"
+            else
+                assert_file_exist "${HOMEDIR}/${user}/web/${domain}/public_html/${webpath}"
+            fi
         fi
     fi
-    
     # Test HTTP
     run curl --location --silent --show-error --insecure --resolve "${domain}:80:${domain_ip}" "http://${domain}/${webpath}"
     assert_success
@@ -101,18 +103,24 @@ function validate_web_domain() {
 #      - hestia111_db
 #    cron:
 #      - 1: /bin/true
-#  Hestia 1.3.1 archive contains (As zstd format)
+#  Hestia 1.7.0 archive contains (As zstd format)
 #    user: hestia131
 #    web:
 #      - test.hestia.com (+SSL self-signed)
+#        FTP Account 
+#        Awstats enabled
 #    dns:
 #      - test.hestia.com
 #    mail:
 #      - test.hestia.com
+#        Ratelimit: 10
 #    mail acc:
 #      - testaccount@test.hestia.com
+#           Alias: info@test.hestiacp.com
+#           Ratelimit: 20
+#      - support@test.hestia.com
 #    db:
-#      - hestia131_db
+#      - hestia170_db
 #    cron:
 #      - 1: /bin/true 
 #  Vesta 0.9.8-23 archive contains:
@@ -275,7 +283,7 @@ function validate_web_domain() {
     
     mkdir -p /backup
     
-    local archive_name="hestia131.2020-12-12"
+    local archive_name="hestia170.2022-08-23"
     run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
     assert_success
     
@@ -289,6 +297,24 @@ function validate_web_domain() {
     local domain="test.hestia.com"
     validate_web_domain $userbk $domain 'Hello Hestia'
 }
+
+@test "Restore[3]: From Hestia [WEB] FTP" {
+    local domain="test.hestia.com"
+    assert_file_contains /etc/passwd "$userbk_test"
+    assert_file_contains /etc/passwd "/home/$userbk/web/$domain"
+}
+
+@test "Restore[3]: From Hestia [WEB] Awstats" {
+    local domain="test.hestia.com"
+    assert_file_exist /home/$userbk/conf/web/$domain/awstats.conf
+}
+
+@test "Restore[3]: From Hestia [WEB] Custom rule" {
+    # check if custom rule is still working
+    local domain="test.hestia.com"
+    validate_web_domain $userbk $domain 'hestia-yes' '/hestia/hestia' 'no'
+}
+
 
 @test "Restore[3]: From Hestia [DNS]" {
     local domain="test.hestia.com"
@@ -312,6 +338,11 @@ function validate_web_domain() {
     
     run v-list-mail-account $userbk $domain testaccount
     assert_success
+    # Check if alias is created
+    assert_file_contains /etc/exim4/domains/$domain/aliases "testaccount@$domain"
+    # Check if expected rate limits are set
+    assert_file_contains /etc/exim4/domains/$domain/limits "testaccount@$domain:20"
+    assert_file_contains /etc/exim4/domains/$domain/limits "support@$domain:10"  
 }
 
 @test "Restore[3]: From Hestia [DB]" {
@@ -323,6 +354,7 @@ function validate_web_domain() {
     run v-list-cron-job $userbk 1
     assert_success
 }
+
 
 @test "Restore[3]: From Hestia Cleanup" {
     run v-delete-user $userbk
@@ -344,7 +376,7 @@ function validate_web_domain() {
 
     mkdir -p /backup
     
-    local archive_name="hestia131.2020-12-12"
+    local archive_name="hestia170.2022-08-23"
     run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
     assert_success
     
@@ -358,6 +390,24 @@ function validate_web_domain() {
     local domain="test.hestia.com"
     validate_web_domain $userbk $domain 'Hello Hestia'
 }
+
+@test "Restore[4]: From Hestia [WEB] FTP" {
+    local domain="test.hestia.com"
+    assert_file_contains /etc/passwd "$userbk_test"
+    assert_file_contains /etc/passwd "/home/$userbk/web/$domain"
+}
+
+@test "Restore[4]: From Hestia [WEB] Awstats" {
+    local domain="test.hestia.com"
+    assert_file_exist /home/$userbk/conf/web/$domain/awstats.conf
+}
+
+@test "Restore[4]: From Hestia [WEB] Custom rule" {
+    # check if custom rule is still working
+    local domain="test.hestia.com"
+    validate_web_domain $userbk $domain 'hestia-yes' '/hestia/hestia' 'no'
+}
+
 
 @test "Restore[4]: From Hestia [DNS]" {
     local domain="test.hestia.com"
@@ -381,6 +431,11 @@ function validate_web_domain() {
     
     run v-list-mail-account $userbk $domain testaccount
     assert_success
+    # Check if alias is created
+    assert_file_contains /etc/exim4/domains/$domain/aliases "testaccount@$domain"
+    # Check if expected rate limits are set
+    assert_file_contains /etc/exim4/domains/$domain/limits "testaccount@$domain:20"
+    assert_file_contains /etc/exim4/domains/$domain/limits "support@$domain:10"  
 }
 
 @test "Restore[4]: From Hestia [DB]" {

@@ -111,8 +111,13 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_policy_user_change_theme" <?php if ((isset($_SESSION['POLICY_USER_CHANGE_THEME'])) && (!empty($_SESSION['POLICY_USER_CHANGE_THEME'])) && ($_SESSION['POLICY_USER_CHANGE_THEME'] == "no")) echo "checked=yes" ?>><?=_('Set as selected theme for all users');?></label>
+										<td class="input-label">
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_policy_user_change_theme" id="v_policy_user_change_theme" <?php if ((isset($_SESSION['POLICY_USER_CHANGE_THEME'])) && (!empty($_SESSION['POLICY_USER_CHANGE_THEME'])) && ($_SESSION['POLICY_USER_CHANGE_THEME'] == "no")) echo "checked=yes" ?>>
+												<label for="v_policy_user_change_theme">
+													<?=_('Set as selected theme for all users');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr>
@@ -136,8 +141,13 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_language_update"><?=_('Set as default language for all users');?></label>
+										<td class="input-label">
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_language_update" id="v_language_update">
+												<label for="v_language_update">
+													<?=_('Set as default language for all users');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr>
@@ -179,22 +189,43 @@
 									</tr>
 									<tr>
 										<td>
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>><?=_('Enable debug mode');?></label>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_debug_mode" id="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>>
+												<label for="v_debug_mode">
+													<?=_('Enable debug mode');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo "checked=yes" ?>><?=_('Enable preview features');?></label> <span class="hint">(<a href="/list/server/preview/"><?=_('View');?></a>)</span>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_experimental_features" id="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo "checked=yes" ?>>
+												<label for="v_experimental_features">
+													<?=_('Enable preview features');?>
+												</label>
+												<span class="hint">(<a href="/list/server/preview/"><?=_('View');?></a>)</span>
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_notification_email" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL'])) && ($_SESSION['UPGRADE_SEND_EMAIL'] == "true")) echo "checked=yes" ?>><?=_('SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL');?></label>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_upgrade_send_notification_email" id="v_upgrade_send_notification_email" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL'])) && ($_SESSION['UPGRADE_SEND_EMAIL'] == "true")) echo "checked=yes" ?>>
+												<label for="v_upgrade_send_notification_email">
+													<?=_('SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<td>
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_upgrade_send_email_log" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && ($_SESSION['UPGRADE_SEND_EMAIL_LOG'] == "true")) echo "checked=yes" ?>><?=_('SYSTEM_UPGRADE_SEND_EMAIL_LOG');?></label>
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_upgrade_send_email_log" id="v_upgrade_send_email_log" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && ($_SESSION['UPGRADE_SEND_EMAIL_LOG'] == "true")) echo "checked=yes" ?>>
+												<label for="v_upgrade_send_email_log">
+													<?=_('SYSTEM_UPGRADE_SEND_EMAIL_LOG');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr>
@@ -258,13 +289,17 @@
 										</tr>
 										<?php foreach($v_php_versions as $php_version): ?>
 											<tr>
-												<td class="vst-text input-label">
-													<input type="checkbox" size="20" class="vst-checkbox"
-														<?=$php_version->installed?'checked':''; ?>
-														<?=$php_version->protected?'disabled':''; ?>
-														id="<?=$php_version->name?>"
-														name="v_php_versions[<?=$php_version->tpl?>]">
-													<label for="<?=$php_version->name?>"><?=$php_version->name?></label>
+												<td class="input-label">
+													<div class="form-check">
+														<input class="form-check-input" type="checkbox"
+															<?=$php_version->installed?'checked':''; ?>
+															<?=$php_version->protected?'disabled':''; ?>
+															id="<?=$php_version->name?>"
+															name="v_php_versions[<?=$php_version->tpl?>]">
+														<label for="<?=$php_version->name?>">
+															<?=$php_version->name?>
+														</label>
+													</div>
 												</td>
 											</tr>
 											<?php foreach($php_version->usedby as $wd_user => $wd_domains ): ?>
@@ -405,10 +440,13 @@
 											</tr>
 										<?php } ?>
 										<tr>
-											<td class="vst-text">
-												<label>
-													<input type="checkbox" size="20" class="vst-checkbox" name="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');"><?=_('Global SMTP Relay');?>
-												</label>
+											<td class="input-label">
+												<div class="form-check">
+													<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+													<label for="v_smtp_relay">
+														<?=_('Global SMTP Relay');?>
+													</label>
+												</div>
 											</td>
 										</tr>
 										<tr>
@@ -710,8 +748,13 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
-											<label><input type="checkbox" size="20" class="vst-checkbox" name="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');"><?=_('Remote backup');?></label>
+										<td class="input-label">
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');">
+												<label for="v_backup_remote_adv">
+													<?=_('Remote backup');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr>
@@ -841,7 +884,7 @@
 						<tr>
 							<td class="vst-text input-label step-top advanced-options">
 								<a href="javascript:elementHideShow('ssl');" class="vst-text">
-									<i class="fas fa-lock"></i><b><?=_('Hestia SSL');?><img src="/images/arrow.png"></b>
+									<i class="fas fa-lock"></i><b><?=_('SSL');?><img src="/images/arrow.png"></b>
 								</a>
 							</td>
 						</tr>
@@ -972,21 +1015,21 @@
 														<br><br>
 													</td>
 												</tr>
-                                                <tr>
-                                                    <td class="vst-text input-label">
-                                                        <?=_('Enable API access');?>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <select class="vst-list" name="v_api_system" id="api-system">
-                                                            <option value='0' <?php if(empty($_SESSION['API_SYSTEM']) || $_SESSION['API_SYSTEM'] == '0') echo 'selected' ?>><?=_('Disabled'); ?></option>
-                                                            <option value='1' <?php if($_SESSION['API_SYSTEM'] == '1') echo 'selected' ?>><?=_('Enabled for admin'); ?></option>
-                                                            <option value='2' <?php if($_SESSION['API_SYSTEM'] == '2') echo 'selected' ?>><?=_('Enabled for all users'); ?></option>
-                                                        </select>
-                                                        <br><br>
-                                                    </td>
-                                                </tr>
+												<tr>
+													<td class="vst-text input-label">
+															<?=_('Enable API access');?>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<select class="vst-list" name="v_api_system" id="api-system">
+																<option value='0' <?php if(empty($_SESSION['API_SYSTEM']) || $_SESSION['API_SYSTEM'] == '0') echo 'selected' ?>><?=_('Disabled'); ?></option>
+																<option value='1' <?php if($_SESSION['API_SYSTEM'] == '1') echo 'selected' ?>><?=_('Enabled for admin'); ?></option>
+																<option value='2' <?php if($_SESSION['API_SYSTEM'] == '2') echo 'selected' ?>><?=_('Enabled for all users'); ?></option>
+														</select>
+														<br><br>
+													</td>
+												</tr>
 												<tr>
 													<td>
 														<table id="security_ip" style="<?php if ($_SESSION['API'] == "no" && $_SESSION['API_SYSTEM'] == '0') echo 'display:none;';?>">
@@ -999,7 +1042,7 @@
 																<td>
 																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php
 																		foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
-                                                                            echo trim($ip)."\n";
+																				echo trim($ip)."\n";
 																			}
 																		?></textarea>
 																	<br><br>

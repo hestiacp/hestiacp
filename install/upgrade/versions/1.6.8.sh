@@ -43,3 +43,10 @@ if [ -f "$HESTIA/data/api/sync-dns-cluster" ]; then
     rm $HESTIA/data/api/sync-dns-cluster
     cp $HESTIA/install/deb/api/sync-dns-cluster $HESTIA/data/api/sync-dns-cluster
 fi
+
+if [ -d /etc/roundcube ]; then 
+    if [ ! -f /etc/logrotate.d/roundcube ]; then
+        echo "[ * ] Create config roundcube logrotate file"
+        cp -f $HESTIA_INSTALL_DIR/logrotate/roundcube /etc/logrotate.d/
+    fi
+fi

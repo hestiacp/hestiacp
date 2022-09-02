@@ -36,6 +36,8 @@ All notable changes to this project will be documented in this file.
 - Add option to use custom javascript code (#2747)
 - Add "v-rebuild-dns-domains" to sync-dns-cluster options
 - Fixed an issue with Yescript and api (#2899)
+- Add logrotate config for Roundcube (#2868 #2904)
+- Fixed an issue with session files in /tmp/ folder caused by /web/inc/mail-wrapper.php (#2904)
 
 ### Enhancements
 

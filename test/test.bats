@@ -1471,6 +1471,7 @@ function check_ip_not_banned(){
 @test "MAIL: Add account" {
     run v-add-mail-account $user $domain test "$userpass2"
     assert_success
+    assert_file_contains /etc/exim4/domains/$domain/limits "test@$domain"
     refute_output
 }
 
@@ -1491,9 +1492,15 @@ function check_ip_not_banned(){
   assert_output --partial "error"
 }
 
+@test "MAIL: Change rate limit" {
+    run v-change-mail-account-rate-limit $user $domain test 10
+    assert_file_contains /etc/exim4/domains/$domain/limits "test@$domain:10"
+}
+
 @test "MAIL: Delete account" {
     run v-delete-mail-account $user $domain test
     assert_success
+    assert_size_zero /etc/exim4/domains/$domain/limits
     refute_output
 }
 

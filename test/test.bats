@@ -1500,7 +1500,6 @@ function check_ip_not_banned(){
 @test "MAIL: Delete account" {
     run v-delete-mail-account $user $domain test
     assert_success
-    assert_size_zero /etc/exim4/domains/$domain/limits
     refute_output
 }
 

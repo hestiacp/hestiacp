@@ -880,8 +880,6 @@ a.vst-text:active b {
   box-shadow: none !important;
 }
 
-.vst-checkbox {}
-
 .lets-encrypt-note {}
 
 .additional-control {
@@ -1185,10 +1183,6 @@ a.button.cancel {
 .qr-code {
   border: 1px solid #3b3b3b;
   box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
-}
-
-.password-option {
-
 }
 
 .login a.error {

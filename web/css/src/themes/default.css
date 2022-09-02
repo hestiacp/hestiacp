@@ -159,10 +159,6 @@
   background-color: #fff;
 }
 
-.hidden {
-  display: none;
-}
-
 * {
   -webkit-tap-highlight-color: transparent;
 }
@@ -2271,10 +2267,6 @@ body.mobile .l-icon-shortcuts {
   cursor: pointer;
 }
 
-input[type="radio"] {
-  margin-top: 10px;
-}
-
 .step-top {
   padding-top: 18px;
 }
@@ -2594,10 +2586,17 @@ a.vst-text:active b {
   border: none !important;
 }
 
-.vst-checkbox {
-  font-size: 0.85rem;
-  margin: 2px 6px 0 3px;
-  padding: 5px;
+.form-check {
+  padding-left: 20px;
+  margin-bottom: 2px;
+  margin-left: 3px;
+  min-height: 24px;
+}
+
+.form-check-input {
+  float: left;
+  margin-top: 3px;
+  margin-left: -20px;
 }
 
 .lets-encrypt-note {
@@ -3037,10 +3036,6 @@ a.button.cancel {
   border: 1px solid #cfcfcf;
   border-radius: 4px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-}
-
-.password-option {
-  margin-top: 15px;
 }
 
 .login a.error {
@@ -3989,3 +3984,14 @@ meter[value="1"]::-moz-meter-bar { background: red; }
 meter[value="2"]::-moz-meter-bar { background: orange; }
 meter[value="3"]::-moz-meter-bar { background: yellow; }
 meter[value="4"]::-moz-meter-bar { background: green; }
+
+/* Global utilities
+   ========================================================================== */
+
+.hidden {
+  display: none;
+}
+
+.u-mt15 {
+  margin-top: 15px !important;
+}

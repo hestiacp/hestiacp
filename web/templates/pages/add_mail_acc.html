@@ -122,13 +122,23 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
-											<label><input type="checkbox" size="20" class="vst-checkbox" id="v_blackhole" name="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>><?=_('Discard all mail');?></label>
+										<td class="input-label">
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>>
+												<label for="v_blackhole">
+													<?=_('Discard all mail');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for">
-										<td class="vst-text input-label">
-											<label><input type="checkbox" size="20" class="vst-checkbox" id="v_fwd_for" name="v_fwd_only" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>><?=_('Do not store forwarded mail');?></label>
+										<td class="input-label">
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>>
+												<label for="v_fwd_for">
+													<?=_('Do not store forwarded mail');?>
+												</label>
+											</div>
 										</td>
 									</tr>
 									<tr>
@@ -166,20 +176,20 @@
 						<tr><td><?=_('Username');?>: </td><td><span id="v_account">example</span>@<?=htmlentities(trim($v_domain, "'"))?></td></tr>
 						<tr><td><?=_('Password');?>: </td><td><span id="v_password"></span></td></tr>
 						<?php if ($_SESSION['WEBMAIL_SYSTEM']) {?><tr><td><?=_('Webmail');?>: </td><td><a class="vst" href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?></a></td></tr><?php } ?>
-						<tr><td><?=_('Hostname');?>: </td><td>mail.<?=htmlentities($v_domain)?></td></tr>	
-							
+						<tr><td><?=_('Hostname');?>: </td><td>mail.<?=htmlentities($v_domain)?></td></tr>
+
 						<tr><td colspan="2"><strong><?=strtoupper(_('IMAP settings'));?></strong></td></tr>
 						<tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
 						<tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 993
 						<tr><td><?=_('STARTTLS');?>: </td><td><?=_('Port');?> 143
 						<tr><td><?=_('No encryption');?>: </td><td><?=_('Port');?> 143
-							
+
 						<tr><td colspan="2"><strong><?=strtoupper(_('POP3 settings'));?></strong></td></tr>
 						<tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
 						<tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 995
 						<tr><td><?=_('STARTTLS');?>: </td><td><?=_('Port');?> 110
 						<tr><td><?=_('No encryption');?>: </td><td><?=_('Port');?> 110
-						
+
 						<tr><td colspan="2"><strong><?=strtoupper(_('SMTP settings'));?></strong></td></tr>
 						<tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
 						<tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 465

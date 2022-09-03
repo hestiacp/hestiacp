@@ -112,13 +112,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Language');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_language" tabindex="6">
+							<td class="input-label">
+								<label for="v_language" class="form-label"><?=_('Language');?></label>
+								<select class="form-select" name="v_language" id="v_language" tabindex="6">
 									<?php
 										foreach ($languages as $key => $value) {
 											echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";
@@ -137,26 +133,18 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Role');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_role" tabindex="7">
+							<td class="input-label">
+								<label for="v_role" class="form-label"><?=_('Role');?></label>
+								<select class="form-select" name="v_role" id="v_role">
 									<option value="user"><?=_('User');?>
 									<option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?=_('Administrator');?>
 								</select>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label" name="v_package">
-								<?=_('Package');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_package" tabindex="8">
+							<td class="input-label">
+								<label for="v_package" class="form-label"><?=_('Package');?></label>
+								<select class="form-select" name="v_package" id="v_package" tabindex="8">
 									<?php
 										foreach ($data as $key => $value) {
 											echo "\n\t\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";

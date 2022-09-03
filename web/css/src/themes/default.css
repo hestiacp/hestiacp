@@ -2322,6 +2322,7 @@ label:hover {
 
 .vst-input:disabled,
 .vst-list:disabled,
+.form-select:disabled,
 .vst-textinput:disabled {
   background-color: #e7e7e7;
   text-shadow: 1px 1px rgb(255 255 255 / 100%);
@@ -2335,7 +2336,9 @@ label:hover {
 }
 
 .vst-input:disabled:hover,
-.vst-list:disabled:hover .vst-textinput:disabled:hover {
+.vst-list:disabled:hover,
+.form-select:disabled:hover,
+.vst-textinput:disabled:hover {
   border-color: #cfcfcf;
 }
 
@@ -2359,7 +2362,7 @@ label:hover {
 }
 
 .vst-input.vst-list-editor:focus {
-  background-color: white;
+  background-color: #fff;
 }
 
 .vst-list {
@@ -2384,19 +2387,6 @@ label:hover {
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 }
 
-select.vst-list:-moz-focusring {
-  color: transparent;
-}
-
-.vst-list.long-2 {
-  width: 486px;
-  background-position: 465px;
-}
-
-.vst-list option {
-  padding: 6px 1px 6px 15px;
-}
-
 .vst-list:hover {
   border: 1px solid #94c8f0;
 }
@@ -2404,25 +2394,6 @@ select.vst-list:-moz-focusring {
 .vst-list:focus {
   border: 1px solid #008fee;
   color: #333;
-}
-
-.vst-list.flat {
-  border: 1px solid #fff;
-  color: #326b9b;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-size: 0.8rem;
-  margin-left: -10px;
-  text-shadow: none !important;
-  box-shadow: none !important;
-}
-
-.vst-list.flat:hover {
-  color: #c36;
-}
-
-.vst-list.flat option {
-  color: #4e4e4e;
 }
 
 .vst-text {
@@ -2584,6 +2555,39 @@ a.vst-text:active b {
   box-shadow: none !important;
   background: none !important;
   border: none !important;
+}
+
+.form-label {
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+.form-select {
+  display: block;
+  cursor: pointer;
+  width: 100%;
+  font-weight: normal;
+  font-size: .8rem;
+  padding: 7px 35px 7px 10px;
+  line-height: 1.5;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #4e4e4e;
+  appearance: none;
+  background-image: url(/images/arrow.png);
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  text-shadow: 0 0 0 #4b4b4b;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
+}
+
+.form-select:hover {
+  border: 1px solid #94c8f0;
+}
+
+.form-select:focus {
+  border: 1px solid #008fee;
 }
 
 .form-check {

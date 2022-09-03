@@ -283,7 +283,8 @@ strong {
   border-radius: 0 !important;
 }
 
-.vst-list {
+.vst-list,
+.form-select {
   box-shadow: none;
   border-radius: 0 !important;
 }
@@ -363,14 +364,16 @@ a.vst-text:hover b,
   color: #333;
 }
 
-.vst-list:focus {
+.vst-list:focus,
+.form-select:focus {
   border: 1px solid #ff6701;
   color: #333;
 }
 
 .vst-input:hover,
-.vst-textinput:hover,
-.vst-list:hover {
+.vst-list:hover,
+.form-select:hover,
+.vst-textinput:hover {
   border: 1px solid #e95e00;
 }
 
@@ -512,6 +515,7 @@ meter {
 
 .vst-input,
 .vst-list,
+.form-select,
 .vst-textinput {
   font-family: Arial, Helvetica, sans-serif !important;
 }
@@ -615,12 +619,6 @@ a#btn-back:focus {
   background: none !important;
   text-shadow: none !important;
   text-transform: none !important;
-}
-
-.vst-list.flat:hover,
-.vst-list.flat:focus {
-  color: #ff6701 !important;
-  border: 1px solid #fff !important;
 }
 
 a.ui-button:hover,

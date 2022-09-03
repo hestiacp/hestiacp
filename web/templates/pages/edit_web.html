@@ -250,17 +250,6 @@
 											</div>
 										</td>
 									</tr>
-									<!-- TODO: Why is this here/how does it get shown? -->
-									<tr style="display: none;">
-										<td class="input-label">
-											<label for="v_ssl_home" class="form-label"><?=_('Home Directory');?></label>
-											<select class="form-select" name="v_ssl_home" id="v_ssl_home">
-												<option value="same">
-													public_html
-												</option>
-											</select>
-										</td>
-									</tr>
 									<tr>
 										<td>
 											<table id="ssl-details" style="<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">

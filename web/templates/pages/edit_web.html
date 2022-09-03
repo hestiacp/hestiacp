@@ -81,13 +81,9 @@
 						</tr>
 						<?php } ?>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('IP Address');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_ip">
+							<td class="input-label">
+								<label for="v_ip" class="form-label"><?=_('IP Address');?></label>
+								<select class="form-select" name="v_ip" id="v_ip">
 									<?php
 										foreach ($ips as $ip => $value) {
 											$display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
@@ -97,14 +93,11 @@
 									?>
 								</select>
 							</td>
-						<tr>
-							<td class="vst-text step-top">
-								<?=_('Web Statistics');?>
-							</td>
 						</tr>
 						<tr>
-							<td>
-								<select class="vst-list" name="v_stats">
+							<td class="step-top">
+								<label for="v_stats" class="form-label"><?=_('Web Statistics');?></label>
+								<select class="form-select" name="v_stats" id="v_stats">
 									<?php
 										foreach ($stats as $key => $value) {
 											$svalue = "'".$value."'";
@@ -198,13 +191,9 @@
 											</td>
 										</tr>
 										<tr>
-											<td class="vst-text input-label">
-												<?=_('Status code');?>:
-											</td>
-										</tr>
-										<tr>
-											<td class="vst-text input-label">
-												<select class="vst-list" name="v-redirect-code">
+											<td class="input-label">
+												<label for="v-redirect-code" class="form-label"><?=_('Status code');?>:</label>
+												<select class="form-select" name="v-redirect-code" id="v-redirect-code">
 													<?php foreach ($redirect_code_options as $status_code): ?>
 													<option value="<?=$status_code;?>"
 														<?=($v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code))?' selected="selected" ':''; ?>>
@@ -261,15 +250,12 @@
 											</div>
 										</td>
 									</tr>
+									<!-- TODO: Why is this here/how does it get shown? -->
 									<tr style="display: none;">
-										<td class="vst-text input-label">
-											<?=_('Home Directory');?>
-										</td>
-									</tr>
-									<tr style="display: none;">
-										<td>
-											<select class="vst-list" name="v_ssl_home">
-												<option value='same'>
+										<td class="input-label">
+											<label for="v_ssl_home" class="form-label"><?=_('Home Directory');?></label>
+											<select class="form-select" name="v_ssl_home" id="v_ssl_home">
+												<option value="same">
 													public_html
 												</option>
 											</select>
@@ -396,13 +382,11 @@
 								<table id="advanced-opts" style="display: none;">
 									<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] === 'yes')) { ?>
 										<tr>
-											<td class="vst-text input-label">
-												<?=_('Web Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<select class="vst-list" name="v_template">
+											<td class="input-label">
+												<label for="v_template" class="form-label">
+													<?=_('Web Template') . "<span class='optional'>" . strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+												</label>
+												<select class="form-select" name="v_template" id="v_template">
 													<?php
 														foreach ($templates as $key => $value) {
 															echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -445,26 +429,24 @@
 										<?php } ?>
 										<?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
 											<tr>
-												<td class="vst-text input-label">
-													<?=_('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<select class="vst-list" name="v_backend_template">
+												<td class="input-label">
+													<label for="v_backend_template" class="form-label">
+														<?=_('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+													</label>
+													<select class="form-select" name="v_backend_template" id="v_backend_template">
 														<?php
-																	foreach ($backend_templates as $key => $value) {
-																		echo "\t\t\t\t<option value=\"".$value."\"";
-																		$svalue = "'".$value."'";
-																		if ((!empty($v_backend_template)) && ( $value == $v_backend_template ) || ($svalue == $v_backend_template)){
-																			echo ' selected' ;
-																		}
-																		if ((empty($v_backend_template)) && ($value == 'default')){
-																			echo ' selected' ;
-																		}
-																		echo ">".htmlentities($value)."</option>\n";
-																	}
-																?>
+															foreach ($backend_templates as $key => $value) {
+																echo "\t\t\t\t<option value=\"".$value."\"";
+																$svalue = "'".$value."'";
+																if ((!empty($v_backend_template)) && ( $value == $v_backend_template ) || ($svalue == $v_backend_template)){
+																	echo ' selected' ;
+																}
+																if ((empty($v_backend_template)) && ($value == 'default')){
+																	echo ' selected' ;
+																}
+																echo ">".htmlentities($value)."</option>\n";
+															}
+														?>
 													</select>
 												</td>
 											</tr>
@@ -484,13 +466,9 @@
 												<td>
 													<table style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
 														<tr>
-															<td class="vst-text input-label">
-																<?=_('Proxy Template');?>
-															</td>
-														</tr>
-														<tr>
-															<td>
-																<select class="vst-list" name="v_proxy_template">
+															<td class="input-label">
+																<label for="v_proxy_template" class="form-label"><?=_('Proxy Template');?></label>
+																<select class="form-select" name="v_proxy_template" id="v_proxy_template">
 																	<?php
 																		foreach ($proxy_templates as $key => $value) {
 																			echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -536,14 +514,10 @@
 										<td class="step-left">
 											<table style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;" id="v_custom_doc_root">
 												<tr>
-													<td class="vst-text input-label">
-														<?=_('Point to');?>
-													</td>
-												</tr>
-												<tr>
-													<td>
+													<td class="input-label">
+														<label for="v-custom-doc-domain" class="form-label"><?=_('Point to');?></label>
 														<input type="hidden" name="v-custom-doc-root_prepath" value="<?=$v_custom_doc_root_prepath;?>">
-														<select class="vst-list" name="v-custom-doc-domain">
+														<select class="form-select" name="v-custom-doc-domain" id="v-custom-doc-domain">
 															<?php foreach ($user_domains as $domain): ?>
 															<option value="<?=htmlentities($domain);?>"
 																<?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>

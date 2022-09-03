@@ -3797,27 +3797,30 @@ li[aria-expanded="true"] a {
   color: #c36;
 }
 
-.cron-helper-tabs select.short {
-  background-position: -388px -604px;
-  min-width: 30px;
-  width: 70px;
-}
-
 .cron-helper-tabs p {
   color: #777;
   font-size: 0.8rem;
 }
 
-.cron-helper-tabs p span {
+.cron-helper-tabs .form-label {
   padding-right: 15px;
   padding-left: 25px;
 }
 
-.cron-helper-tabs p span.first {
+.cron-helper-tabs .form-label.first {
   display: inline-block;
-  padding-right: 15px;
   width: 100px;
   padding-left: 0;
+}
+
+.cron-helper-tabs .form-select {
+  display: inline-block;
+  width: 379px;
+}
+
+.cron-helper-tabs .form-select.short {
+  min-width: 30px;
+  width: 70px;
 }
 
 .cron-helper-tabs .button {

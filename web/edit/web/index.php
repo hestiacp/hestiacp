@@ -407,19 +407,6 @@ if (!empty($_POST['save'])) {
         }
     }
 
-    // Change document root for ssl domain
-    if (($v_ssl == 'yes') && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
-        if ($v_ssl_home != $_POST['v_ssl_home']) {
-            $v_ssl_home = quoteshellarg($_POST['v_ssl_home']);
-            exec(HESTIA_CMD."v-change-web-domain-sslhome ".$user." ".quoteshellarg($v_domain)." ".$v_ssl_home." 'no'", $output, $return_var);
-            check_return_code($return_var, $output);
-            $v_ssl_home = $_POST['v_ssl_home'];
-            $restart_web = 'yes';
-            $restart_proxy = 'yes';
-            unset($output);
-        }
-    }
-
     // Change SSL certificate
     if (($v_letsencrypt == 'no') && (empty($_POST['v_letsencrypt'])) && ($v_ssl == 'yes') && (!empty($_POST['v_ssl'])) && (empty($_SESSION['error_msg']))) {
         if (($v_ssl_crt != str_replace("\r\n", "\n", $_POST['v_ssl_crt'])) || ($v_ssl_key != str_replace("\r\n", "\n", $_POST['v_ssl_key'])) || ($v_ssl_ca != str_replace("\r\n", "\n", $_POST['v_ssl_ca']))) {

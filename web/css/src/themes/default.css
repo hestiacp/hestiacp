@@ -4002,3 +4002,7 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 .u-mt15 {
   margin-top: 15px !important;
 }
+
+.u-mb20 {
+  margin-bottom: 20px !important;
+}

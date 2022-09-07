@@ -93,7 +93,8 @@ strong {
   box-shadow: none;
 }
 
-.vst-list {
+.vst-list,
+.form-select {
   box-shadow: none;
 }
 

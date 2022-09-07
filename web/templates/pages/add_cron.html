@@ -30,8 +30,9 @@
 					<input type="hidden" name="h_day" value="*" />
 					<input type="hidden" name="h_month" value="*" />
 					<input type="hidden" name="h_wday" value="*" />
-					<p><span class="first"><?=_('Run Command');?>:</span>
-						<select name="h_min" class="vst-list">
+					<p>
+						<label for="h_min_1" class="form-label first"><?=_('Run Command');?>:</label>
+						<select class="form-select" name="h_min" id="h_min_1">
 							<option value="*" selected="selected"><?=_('every minute');?></option>
 							<option value="*/2"><?=_('every two minutes');?></option>
 							<option value="*/5"><?=_('every');?> 5</option>
@@ -51,16 +52,18 @@
 					<input type="hidden" name="h_day" value="*" />
 					<input type="hidden" name="h_month" value="*" />
 					<input type="hidden" name="h_wday" value="*" />
-					<p><span class="first"><?=_('Run Command');?>:</span>
-						<select name="h_hour" class="vst-list">
+					<p>
+						<label for="h_hour_2" class="form-label first"><?=_('Run Command');?>:</label>
+						<select class="form-select" name="h_hour" id="h_hour_2">
 							<option value="*" selected="selected"><?=_('every hour');?></option>
 							<option value="*/2"><?=_('every two hours');?></option>
 							<option value="*/6"><?=_('every');?> 6</option>
 							<option value="*/12"><?=_('every');?> 12</option>
 						</select>
 					</p>
-					<p><span class="first"><?=_('Minute');?>:</span>
-						<select name="h_min" class="vst-list short">
+					<p>
+						<label for="h_min_2" class="form-label first"><?=_('Minute');?>:</label>
+						<select class="form-select short" name="h_min" id="h_min_2">
 							<option value="0" selected="selected">00</option>
 							<option value="15">15</option>
 							<option value="30">30</option>
@@ -77,8 +80,9 @@
 				<form>
 					<input type="hidden" name="h_month" value="*" />
 					<input type="hidden" name="h_wday" value="*" />
-					<p><span class="first"><?=_('Run Command');?>:</span>
-						<select name="h_day" class="vst-list">
+					<p>
+						<label for="h_day_3" class="form-label first"><?=_('Run Command');?>:</label>
+						<select class="form-select" name="h_day" id="h_day_3">
 							<option value="*" selected="selected"><?=_('every day');?></option>
 							<option value="1-31/2"><?=_('every odd day');?></option>
 							<option value="*/2"><?=_('every even day');?></option>
@@ -88,8 +92,9 @@
 							<option value="*/15"><?=_('every');?> 15</option>
 						</select>
 					</p>
-					<p><span class="first"><?=_('Hour');?>:</span>
-						<select name="h_hour" class="vst-list short">
+					<p>
+						<label for="h_hour_3" class="form-label first"><?=_('Hour');?>:</label>
+						<select class="form-select short" name="h_hour" id="h_hour_3">
 							<option value="0">00</option>
 							<option value="1">01</option>
 							<option value="2">02</option>
@@ -115,8 +120,8 @@
 							<option value="22">22</option>
 							<option value="23">23</option>
 						</select>
-						<span><?=_('Minute');?>:</span>
-						<select name="h_min" class="vst-list  short">
+						<label for="h_min_3" class="form-label"><?=_('Minute');?>:</label>
+						<select class="form-select short" name="h_min" id="h_min_3">
 							<option value="0" selected="selected">00</option>
 							<option value="1">01</option>
 							<option value="2">02</option>
@@ -143,8 +148,9 @@
 				<form>
 					<input type="hidden" name="h_month" value="*" />
 					<input type="hidden" name="h_day" value="*" />
-					<p><span class="first"><?=_('Run Command');?>:</span>
-						<select name="h_wday" class="vst-list">
+					<p>
+						<label for="h_wday_4" class="form-label first"><?=_('Run Command');?>:</label>
+						<select class="form-select" name="h_wday" id="h_wday_4">
 							<option value="*" selected="selected"><?=_('every day');?></option>
 							<option value="1,2,3,4,5"><?=_('weekdays (5 days)');?></option>
 							<option value="0,6"><?=_('weekend (2 days)');?></option>
@@ -157,8 +163,9 @@
 							<option value="0"><?=_('Sunday');?></option>
 						</select>
 					</p>
-					<p><span class="first"><?=_('Hour');?>:</span>
-						<select name="h_hour" class="vst-list short">
+					<p>
+						<label for="h_hour_4" class="form-label first"><?=_('Hour');?>:</label>
+						<select class="form-select short" name="h_hour" id="h_hour_4">
 							<option value="0">00</option>
 							<option value="1">01</option>
 							<option value="2">02</option>
@@ -184,8 +191,8 @@
 							<option value="22">22</option>
 							<option value="23">23</option>
 						</select>
-						<span><?=_('Minute');?>:</span>
-						<select name="h_min" class="vst-list short">
+						<label for="h_min_4" class="form-label"><?=_('Minute');?>:</label>
+						<select class="form-select short" name="h_min" id="h_min_4">
 							<option value="0" selected="selected">00</option>
 							<option value="1">01</option>
 							<option value="2">02</option>
@@ -211,8 +218,9 @@
 			<div id="tabs-5">
 				<form>
 					<input type="hidden" name="h_wday" value="*" />
-					<p><span class="first"><?=_('Run Command');?>:</span>
-						<select name="h_month" class="vst-list">
+					<p>
+						<label for="h_month_5" class="form-label first"><?=_('Run Command');?>:</label>
+						<select class="form-select" name="h_month" id="h_month_5">
 							<option value="*" selected="selected"><?=_('every month');?></option>
 							<option value="1-11/2"><?=_('every odd month');?></option>
 							<option value="*/2"><?=_('every even month');?></option>
@@ -232,8 +240,9 @@
 							<option value="12"><?=_('Dec');?></option>
 						</select>
 					</p>
-					<p><span class="first"><?=_('Date');?>:</span>
-						<select name="h_day" class="vst-list short">
+					<p>
+						<label for="h_day_5" class="form-label first"><?=_('Date');?>:</label>
+						<select class="form-select short" name="h_day" id="h_day_5">
 							<option value="1" selected="selected">1</option>
 							<option value="2">2</option>
 							<option value="3">3</option>
@@ -266,8 +275,8 @@
 							<option value="30">30</option>
 							<option value="31">31</option>
 						</select>
-						<span><?=_('Hour');?>:</span>
-						<select name="h_hour" class="vst-list short">
+						<label for="h_hour_5" class="form-label"><?=_('Hour');?>:</label>
+						<select class="form-select short" name="h_hour" id="h_hour_5">
 							<option value="0">00</option>
 							<option value="1">01</option>
 							<option value="2">02</option>
@@ -293,8 +302,8 @@
 							<option value="22">22</option>
 							<option value="23">23</option>
 						</select>
-						<span><?=_('Minute');?>:</span>
-						<select name="h_min" class="vst-list short">
+						<label for="h_min_5" class="form-label"><?=_('Minute');?>:</label>
+						<select class="form-select short" name="h_min" id="h_min_5">
 							<option value="0" selected="selected">00</option>
 							<option value="1">01</option>
 							<option value="2">02</option>

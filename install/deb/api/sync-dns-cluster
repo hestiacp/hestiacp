@@ -1,2 +1,2 @@
 ROLE='admin'
-COMMANDS='v-list-users,v-list-sys-config,v-list-user,v-add-cron-restart-job,v-delete-dns-domains-src,v-insert-dns-domain,v-insert-dns-record,v-insert-dns-records,v-rebuild-dns-domains,v-delete-dns-record,v-make-tmp-file,v-insert-dns-domain'
+COMMANDS='v-list-users,v-list-sys-config,v-list-user,v-add-cron-restart-job,v-delete-dns-domains-src,v-insert-dns-domain,v-insert-dns-record,v-insert-dns-records,v-rebuild-dns-domains,v-rebuild-dns-domain,v-delete-dns-record,v-make-tmp-file,v-insert-dns-domain'

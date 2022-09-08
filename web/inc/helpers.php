@@ -133,3 +133,20 @@ function hst_add_history_log($message, $category = 'System', $level = 'Info', $u
     return $return_var;
 }
 
+function get_hostname(){
+        $badValues = array(false, null, 0, '', "localhost", "127.0.0.1", "::1", "0000:0000:0000:0000:0000:0000:0000:0001");
+        $ret = gethostname();
+        if(in_array($ret, $badValues, true)){
+            throw new Exception('gethostname() failed');
+        }
+        $ret2 = gethostbyname($ret);
+        if(in_array($ret2, $badValues, true)){
+            return $ret;
+        }
+        $ret3 = gethostbyaddr($ret2);
+        if(in_array($ret3, $badValues, true)){
+            return $ret2;
+        }
+        return $ret3;
+}
+

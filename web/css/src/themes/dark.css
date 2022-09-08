@@ -1546,3 +1546,9 @@ form#vstobjects.suspended {
     display: none;
   }
 }
+.ui-button.button-suspended{
+    color: #999 !important;
+}
+.ui-button.button-suspended i{
+    color: #999 !important;
+}

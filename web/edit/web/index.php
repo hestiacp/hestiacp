@@ -62,8 +62,8 @@ if (empty($v_letsencrypt)) {
 }
 $v_ssl_home = $data[$v_domain]['SSL_HOME'];
 $v_backend_template = $data[$v_domain]['BACKEND'];
-$v_nginx_cache = $data[$v_domain]['FASTCGI_CACHE'];
-$v_nginx_cache_duration = $data[$v_domain]['FASTCGI_DURATION'];
+$v_nginx_cache = $data[$v_domain]['FASTCGI_CACHE'] ?? '';
+$v_nginx_cache_duration = $data[$v_domain]['FASTCGI_DURATION'] ?? '';
 $v_nginx_cache_check = '';
 if (empty($v_nginx_cache_duration)) {
     $v_nginx_cache_duration = '2m';
@@ -786,7 +786,7 @@ if (!empty($_POST['save'])) {
                     if ((!empty($v_ftp_user_data['v_ftp_email'])) && (empty($_SESSION['error_msg']))) {
                         $to = $v_ftp_user_data['v_ftp_email'];
                         $subject = _("FTP login credentials");
-                        $hostname = exec('hostname');
+                        $hostname = get_hostname();
                         $from = "noreply@".$hostname;
                         $from_name = _('Hestia Control Panel');
                         $mailtext = sprintf(_('FTP_ACCOUNT_READY'), escapeshellarg($_GET['domain']), $user, $v_ftp_username, $v_ftp_user_data['v_ftp_password']);
@@ -863,7 +863,7 @@ if (!empty($_POST['save'])) {
 
                     $to = $v_ftp_user_data['v_ftp_email'];
                     $subject = _("FTP login credentials");
-                    $hostname = exec('hostname');
+                    $hostname = get_hostname();
                     $from = "noreply@".$hostname;
                     $from_name = _('Hestia Control Panel');
                     $mailtext =  sprintf(_('FTP_ACCOUNT_READY'), escapeshellarg($_GET['domain']), $user, $v_ftp_username_for_emailing, $v_ftp_user_data['v_ftp_password']);

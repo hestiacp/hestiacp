@@ -14,7 +14,7 @@
 		<!-- Left Menu -->
 		<div class="l-menu clearfix noselect">
 			<!-- Records tab -->
-			<div class="l-menu__item <?php if($TAB == 'WEB') echo 'l-menu__item--active' ?> <?php if($TAB == 'DNS') echo 'l-menu__item--active' ?> <?php if($TAB == 'MAIL') echo 'l-menu__item--active' ?> <?php if($TAB == 'DB') echo 'l-menu__item--active' ?> <?php if($TAB == 'BACKUP') echo 'l-menu__item--active' ?> <?php if($TAB == 'CRON') echo 'l-menu__item--active' ?><?php if($TAB == 'PACKAGE') echo 'l-menu__item--active' ?> <?php if($TAB == 'USER') echo 'l-menu__item--active' ?><?php if($TAB == 'LOG') echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-tasks panel-icon"></i><?=_('Records');?></a></div>
+			<div class="l-menu__item <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-tasks panel-icon"></i><?=_('Records');?></a></div>
 			
 			<!-- File Manager tab -->
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
@@ -65,14 +65,14 @@
 				<?php if (($_SESSION['userContext'] === 'admin') && (!empty($_SESSION['look']))) {?>
 					<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
 				<?php } else { ?>				
-					<div class="l-menu__item <?php if($TAB == 'SERVER') echo 'l-menu__item--active' ?> <?php if($TAB == 'IP') echo 'l-menu__item--active' ?> <?php if($TAB == 'RRD') echo 'l-menu__item--active' ?> <?php if($TAB == 'FIREWALL') echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server');?>"><i class="fas fa-cog"></i></a></div>
+					<div class="l-menu__item <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server');?>"><i class="fas fa-cog"></i></a></div>
 				<?php } ?>
 			<?php } ?>
 
 			<!-- Edit User -->
 			<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
 				<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
-				<div class="l-menu__item"><a href="/list/log/" title="<?_('Logs');?>" class="l-profile__username"><i class="fas fa-history"></i></a></div>
+				<div class="l-menu__item <?php if($TAB == 'LOG') echo 'l-menu__item--active' ?>"><a href="/list/log/" title="<?_('Logs');?>" class="l-profile__username"><i class="fas fa-history"></i></a></div>
 			<?php } else { ?>
 				<?php if ($panel[$user]['SUSPENDED'] === 'no') {?>
 					<div class="l-menu__item"><a href="/edit/user/?user=<?=$user; ?>&token=<?=$_SESSION['token']?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
@@ -106,7 +106,7 @@
 						$user_count = $panel[$user]['U_USERS'];
 					} 
 				?>
-				<div class="l-stat__col <?php if($TAB == 'USER') echo 'l-stat__col--active' ?><?php if($TAB == 'LOG') echo 'l-stat__col--active' ?>">
+				<div class="l-stat__col <?php if(in_array($TAB, ['USER', 'LOG'])) echo 'l-stat__col--active' ?>">
 					<a href="/list/user/"  title="<?=_('Users');?>: <?=$user_count;?>&#13;<?=_('Suspended');?>: <?=$panel[$user]['SUSPENDED_USERS']?>">
 						<div class="l-stat__col-title"><?=_('USER');?>&nbsp;&nbsp;<i class="fas fa-users"></i></div>
 						<ul>

@@ -72,7 +72,7 @@
 			<!-- Edit User -->
 			<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
 				<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
-				<div class="l-menu__item"><a href="/list/log/" title="<?_('Logs');?>" class="l-profile__username"><i class="fas fa-history"></i></a></div>
+				<div class="l-menu__item <?php if($TAB == 'LOG') echo 'l-menu__item--active' ?>"><a href="/list/log/" title="<?_('Logs');?>" class="l-profile__username"><i class="fas fa-history"></i></a></div>
 			<?php } else { ?>
 				<?php if ($panel[$user]['SUSPENDED'] === 'no') {?>
 					<div class="l-menu__item"><a href="/edit/user/?user=<?=$user; ?>&token=<?=$_SESSION['token']?>" title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>

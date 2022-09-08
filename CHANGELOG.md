@@ -38,6 +38,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with Yescript and api (#2899)
 - Add logrotate config for Roundcube (#2868 #2904)
 - Fixed an issue with session files in /tmp/ folder caused by /web/inc/mail-wrapper.php (#2904)
+- Fixed an issue with v-restore-user does not delete old database before restoring causing new tables to remain exists (#2911 #2909)
+- Fixed an issue with deleting mail account does not remove ratelimit for that email account (#2905 #2903)
 
 ### Enhancements
 

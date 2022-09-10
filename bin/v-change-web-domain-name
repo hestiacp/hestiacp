@@ -112,6 +112,7 @@ fi
 
 # Delete backend
 if [ -n "$BACKEND" ]; then
+    prepare_web_backend
     delete_web_backend
 fi
 

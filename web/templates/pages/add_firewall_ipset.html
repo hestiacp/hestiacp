@@ -51,39 +51,29 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=_('Data Source') ?> <span class="optional">(<?=_('url, script or file');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
+							<td class="input-label step-top">
+								<label for="v_datasource" class="form-label">
+									<?=_('Data Source') ?> <span class="optional">(<?=_('url, script or file');?>)</span>
+								</label>
+								<select class="form-select" tabindex="-1" id="datasource_list" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
 									<option value="">clear</option>
 								</select>
-								<input type="text" size="20" class="vst-input vst-list-editor" name="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">
+								<input type="text" size="20" class="vst-input vst-list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=_('Ip Version') ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_ipver">
+							<td class="input-label step-top">
+								<label for="v_ipver" class="form-label"><?=_('Ip Version') ?></label>
+								<select class="form-select" name="v_ipver" id="v_ipver" style="max-width: 380px">
 									<option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>><?=_('ip v4');?></option>
 									<option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>><?=_('ip v6');?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=_('Autoupdate') ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_autoupdate">
+							<td class="input-label step-top">
+								<label for="v_autoupdate" class="form-label"><?=_('Autoupdate') ?></label>
+								<select class="form-select" name="v_autoupdate" id="v_autoupdate" style="max-width: 380px">
 									<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?=_('yes');?></option>
 									<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?=_('no');?></option>
 								</select>
@@ -99,7 +89,7 @@
 
 <script>
 	var country_iplists = [
-		<?php 
+		<?php
 			$country = array('ca' => 'Canada', 'cn' => 'China', 'fr' => 'French', 'de' => 'Germany', 'in' => 'India', 'nl' => 'Netherlands', 'ro' => 'Romania', 'ru' => 'Russia', 'es' => 'Spain', 'ch' => 'Switzerland', 'tr' => 'Turkey', 'ua' => 'Ukraine',  'uk' => 'United Kingdom', 'us' => 'United States');
 			foreach($country as $iso =>$name){
 				echo '{name: "[IPv4] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv4-aggregated.txt"},'."\n";

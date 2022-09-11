@@ -83,27 +83,17 @@
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<table style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
-									<tr>
-										<td class="vst-text input-label">
-											<?=_('Assigned user');?>
-										</td>
-									</tr>
-									<tr>
-										<td class="step-bottom">
-											<select class="vst-list" name="v_owner">
-												<?php
-													foreach ($users as $key => $value) {
-														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-														if ((!empty($v_owner)) && ( $value == $v_owner )) echo ' selected';
-														echo ">".htmlentities($value)."</option>\n";
-													}
-												?>
-											</select>
-										</td>
-									</tr>
-								</table>
+							<td class="input-label" style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
+								<label for="v_owner" class="form-label"><?=_('Assigned user');?></label>
+								<select class="form-select" name="v_owner" id="v_owner" style="max-width: 380px">
+									<?php
+										foreach ($users as $key => $value) {
+											echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+											if ((!empty($v_owner)) && ( $value == $v_owner )) echo ' selected';
+											echo ">".htmlentities($value)."</option>\n";
+										}
+									?>
+								</select>
 							</td>
 						</tr>
 						<tr>

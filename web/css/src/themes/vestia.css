@@ -284,7 +284,6 @@ strong {
   border-radius: 0 !important;
 }
 
-.vst-list,
 .form-select {
   box-shadow: none;
   border-radius: 0 !important;
@@ -366,7 +365,6 @@ a.vst-text:hover b,
   color: #333;
 }
 
-.vst-list:focus,
 .form-select:focus {
   border: 1px solid #ff6701;
   color: #333;
@@ -374,7 +372,6 @@ a.vst-text:hover b,
 
 .vst-input:hover,
 .form-control:hover,
-.vst-list:hover,
 .form-select:hover,
 .vst-textinput:hover {
   border: 1px solid #e95e00;
@@ -518,7 +515,6 @@ meter {
 
 .vst-input,
 .form-control,
-.vst-list,
 .form-select,
 .vst-textinput {
   font-family: Arial, Helvetica, sans-serif !important;

@@ -2338,7 +2338,6 @@ label:hover {
 
 .vst-input:disabled,
 .form-control:disabled,
-.vst-list:disabled,
 .form-select:disabled,
 .vst-textinput:disabled {
   background-color: #e7e7e7;
@@ -2355,7 +2354,6 @@ label:hover {
 
 .vst-input:disabled:hover,
 .form-control:disabled:hover,
-.vst-list:disabled:hover,
 .form-select:disabled:hover,
 .vst-textinput:disabled:hover {
   border-color: #cfcfcf;
@@ -2382,37 +2380,6 @@ label:hover {
 
 .vst-input.vst-list-editor:focus {
   background-color: #fff;
-}
-
-.vst-list {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  color: #4e4e4e;
-  font-family: Exo, Arial, Helvetica, sans-serif;
-  font-size: 0.8rem;
-  font-weight: normal;
-  height: 36px;
-  cursor: pointer;
-  margin: 2px 6px 0 0;
-  min-width: 380px;
-  padding: 4px 1px 4px 10px;
-  background-image: url("/images/arrow.png");
-  background-position: 360px;
-  background-repeat: no-repeat;
-  width: 380px;
-  appearance: none;
-  text-shadow: 0 0 0 #4b4b4b;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-}
-
-.vst-list:hover {
-  border: 1px solid #94c8f0;
-}
-
-.vst-list:focus {
-  border: 1px solid #008fee;
-  color: #333;
 }
 
 .vst-text {

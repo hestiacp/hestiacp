@@ -681,7 +681,6 @@ label:hover {
 
 .vst-input:disabled,
 .form-control:disabled,
-.vst-list:disabled,
 .form-select:disabled,
 .vst-textinput:disabled {
   background-color: #303030;
@@ -695,7 +694,6 @@ label:hover {
 
 .vst-input:disabled:hover,
 .form-control:disabled:hover,
-.vst-list:disabled:hover,
 .form-select:disabled:hover,
 .vst-textinput:disabled:hover {
   border-color: #606060 !important;
@@ -718,7 +716,6 @@ label:hover {
   box-shadow: none !important;
 }
 
-.vst-list,
 .form-select {
   background-color: #454545;
   border: 1px solid #606060;
@@ -743,13 +740,11 @@ textarea:focus::placeholder {
   color: #909090 !important;
 }
 
-.vst-list:hover,
 .form-select:hover {
   border-color: #0090ff;
   background-color: #494949;
 }
 
-.vst-list:focus,
 .form-select:focus {
   background-color: #222;
   border-color: #0080df;

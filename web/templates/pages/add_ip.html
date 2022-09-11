@@ -61,13 +61,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Interface');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_interface">
+							<td class="input-label">
+								<label for="v_interface" class="form-label"><?=_('Interface');?></label>
+								<select class="form-select" name="v_interface" id="v_interface">
 									<?php
 										foreach ($interfaces as $key => $value) {
 											echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";

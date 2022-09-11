@@ -51,13 +51,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=_('Banlist') ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_chain">
+							<td class="input-label step-top">
+								<label for="v_chain" class="form-label"><?=_('Banlist') ?></label>
+								<select class="form-select" name="v_chain" id="v_chain" style="max-width: 380px">
 									<option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?=_('SSH');?></option>
 									<option value="WEB" <?php if ((!empty($v_chain)) && ( $v_chain == "'WEB'" )) echo 'selected'?>><?=_('WEB');?></option>
 									<option value="FTP" <?php if ((!empty($v_chain)) && ( $v_chain == "'FTP'" )) echo 'selected'?>><?=_('FTP');?></option>

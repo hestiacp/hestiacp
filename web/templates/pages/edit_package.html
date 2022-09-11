@@ -18,7 +18,7 @@
 	<form id="vstobjects" name="v_edit_package" method="post" class="<?=$v_status?>">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 		<input type="hidden" name="save" value="save" />
-		
+
 		<table class='data'>
 			<tr class="data-add">
 				<td class="data-dotted">
@@ -116,13 +116,11 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
-											<?=_('Web Template')  . " <span class='optional'> " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<select class="vst-list" name="v_web_template">
+										<td class="input-label">
+											<label for="v_web_template" class="form-label">
+												<?=_('Web Template') . " <span class='optional'> " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+											</label>
+											<select class="form-select" name="v_web_template" id="v_web_template">
 												<?php
 													foreach ($web_templates as $key => $value) {
 														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -137,44 +135,40 @@
 									</tr>
 									<?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
 										<tr>
-											<td class="vst-text input-label">
-												<?=_('Backend Template')  . "<span class='optional'>" .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<select class="vst-list" name="v_backend_template">
+											<td class="input-label">
+												<label for="v_backend_template" class="form-label">
+													<?=_('Backend Template') . "<span class='optional'>" .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+												</label>
+												<select class="form-select" name="v_backend_template" id="v_backend_template">
 													<?php
-															foreach ($backend_templates as $key => $value) {
-																echo "\t\t\t\t<option value=\"".$value."\"";
-																if ((!empty($v_backend_template)) && ( $value == trim($v_backend_template, "'"))){
-																	echo ' selected' ;
-																}
-																echo ">".htmlentities($value)."</option>\n";
+														foreach ($backend_templates as $key => $value) {
+															echo "\t\t\t\t<option value=\"".$value."\"";
+															if ((!empty($v_backend_template)) && ( $value == trim($v_backend_template, "'"))){
+																echo ' selected' ;
 															}
-														?>
+															echo ">".htmlentities($value)."</option>\n";
+														}
+													?>
 												</select>
 											</td>
 										</tr>
 									<?=""; }?>
 									<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
 										<tr>
-											<td class="vst-text input-label">
-												<?=_('Proxy Template')  . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<select class="vst-list" name="v_proxy_template">
+											<td class="input-label">
+												<label for="v_proxy_template" class="form-label">
+													<?=_('Proxy Template') . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
+												</label>
+												<select class="form-select" name="v_proxy_template" id="v_proxy_template">
 													<?php
-															foreach ($proxy_templates as $key => $value) {
-																echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-																if ((!empty($v_proxy_template)) && ( $value == trim($v_proxy_template, "'"))){
-																	echo ' selected' ;
-																}
-																echo ">".htmlentities($value)."</option>\n";
+														foreach ($proxy_templates as $key => $value) {
+															echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
+															if ((!empty($v_proxy_template)) && ( $value == trim($v_proxy_template, "'"))){
+																echo ' selected' ;
 															}
-														?>
+															echo ">".htmlentities($value)."</option>\n";
+														}
+													?>
 												</select>
 											</td>
 										</tr>
@@ -193,13 +187,11 @@
 							<td>
 								<table id="dns-options" style="display: none;">
 									<tr>
-										<td class="vst-text input-label step-top">
-											<?=_('DNS Template')  . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<select class="vst-list" name="v_dns_template">
+										<td class="input-label step-top">
+											<label for="v_dns_template" class="form-label">
+												<?=_('DNS Template') . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
+											</label>
+											<select class="form-select" name="v_dns_template" id="v_dns_template">
 												<?php
 													foreach ($dns_templates as $key => $value) {
 														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -215,7 +207,6 @@
 											</select>
 										</td>
 									</tr>
-
 									<tr>
 										<td class="vst-text input-label">
 											<?=_('DNS domains');?>
@@ -256,7 +247,7 @@
 												<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 											</td>
 										</tr>
-										<?php 
+										<?php
 											if($v_ns3) {
 												echo '<tr>
 													<td>
@@ -393,13 +384,9 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
-											<?=_('SSH Access');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<select class="vst-list" name="v_shell">
+										<td class="input-label">
+											<label for="v_shell" class="form-label"><?=_('SSH Access');?></label>
+											<select class="form-select u-mb20" name="v_shell" id="v_shell">
 												<?php
 													foreach ($shells as $key => $value) {
 														echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";

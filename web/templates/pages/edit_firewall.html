@@ -42,26 +42,18 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=_('Action'); ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_action">
+							<td class="input-label step-top">
+								<label for="v_action" class="form-label"><?=_('Action') ?></label>
+								<select class="form-select" name="v_action" id="v_action" style="max-width: 380px">
 									<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?=_('DROP');?></option>
 									<option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>><?=_('ACCEPT');?></option>
 								</select>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Protocol') ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_protocol">
+							<td class="input-label">
+								<label for="v_protocol" class="form-label"><?=_('Protocol') ?></label>
+								<select class="form-select" name="v_protocol" id="v_protocol" style="max-width: 380px">
 									<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?=_('TCP');?></option>
 									<option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>><?=_('UDP');?></option>
 									<option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>><?=_('ICMP');?></option>
@@ -79,16 +71,14 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('IP address / IPset');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
+							<td class="input-label">
+								<label for="v_ip" class="form-label">
+									<?=_('IP address / IPset');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
+								</label>
+								<select class="form-select" tabindex="-1" id="quickips_list" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
 									<option value="">&nbsp;</option>
 								</select>
-								<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 							</td>
 						</tr>
 						<tr>

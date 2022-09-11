@@ -62,10 +62,12 @@
 						$f_placeholder = htmlentities($f_placeholder);
 					?>
 					<div style="max-width: 360px" class="u-mb20">
-						<label for="<?=$f_name?>" class="form-label">
-							<?=$f_label?>
-							<?php if ($f_type === 'password'):?> / <a href="javascript:randomString('<?=$f_name?>');" class="generate"><?=_('generate');?></a> <?php endif?>
-						</label>
+						<?php if($f_type != 'boolean'): ?>
+							<label for="<?=$f_name?>" class="form-label">
+								<?=$f_label?>
+								<?php if ($f_type === 'password'):?> / <a href="javascript:randomString('<?=$f_name?>');" class="generate"><?=_('generate');?></a> <?php endif?>
+							</label>
+						<?php endif; ?>
 						<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
 							<select class="form-select" name="<?=$f_name?>" id="<?=$f_name?>">
 								<?php foreach ($form_control['options'] as $key => $option){
@@ -81,6 +83,7 @@
 							<div class="form-check">
 								<?php $checked = (!empty($f_value))?'checked':''?>
 								<input class="form-check-input" type="checkbox" name="<?=$f_name?>" id="<?=$f_name?>" <?=$checked?> value="true">
+								<label for="<?=$f_name?>"><?=$f_label?></label>
 							</div>
 						<?php else:?>
 							<input type="text" class="form-control" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">

@@ -40,7 +40,7 @@ $(document).ready(function(){
 
 
             // CREATE BUTTON
-              
+
             $('.l-sort__create-btn').hover(function(){
               $(".l-sort__create-btn").append("<div id='add-icon'></div>");
               $(".l-sort__create-btn").append("<div id='tooltip'>"+$('.l-sort__create-btn').attr('title').replace(' ','&nbsp;')+"</div>");
@@ -48,10 +48,10 @@ $(document).ready(function(){
               $("#add-icon").remove();
               $("#tooltip").remove();
             });
-            
-              
+
+
             // SEARCH BOX
-                
+
             $('.l-sort-toolbar__search, .l-sort-toolbar__search-box .search-input').hover(function(){
               clearTimeout(VE.tmp.search_display_interval);
               clearTimeout(VE.tmp.search_hover_interval);
@@ -102,8 +102,8 @@ $(document).ready(function(){
                 $('.refresh-timer').removeClass('paused');
               });
             }
-            
-            
+
+
             // SORTING
 
             $('#vstobjects input, #vstobjects select, #vstobjects textarea').change(function(){VE.tmp.form_changed=1});
@@ -117,7 +117,7 @@ $(document).ready(function(){
               $(this).addClass('active');
               VE.tmp.sort_par = $(this).parent('li').attr('entity');
               VE.tmp.sort_as_int = $(this).parent('li').attr('sort_as_int');
-              VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1; 
+              VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1;
 
               $('.l-sort .sort-by span b').html($(this).parent('li').find('.name').html());
               $('.l-sort .sort-by i').removeClass('fa-sort-alpha-up fa-sort-alpha-down');
@@ -129,7 +129,7 @@ $(document).ready(function(){
                   return $(a).attr(VE.tmp.sort_par) <= $(b).attr(VE.tmp.sort_par) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;
                 }).appendTo(".l-center.units");
               });
-              
+
               $('#objects').submit( function (e){
                  if(!e.originalEvent){
                     return;
@@ -142,7 +142,7 @@ $(document).ready(function(){
                         $('#objects').append(div);
                     }
                  });
-                 
+
                  $('#objects').submit();
                  return false;
               });
@@ -557,7 +557,7 @@ $(document).ready(function(){
 
               // focusing on the first input at form
               if( location.href.indexOf('lead=') == -1 && !$('.ui-dialog').is(':visible') ){
-                $('#vstobjects .vst-input:not([disabled]), #vstobjects .vst-list:not([disabled])').first().focus();
+                $('#vstobjects .vst-input:not([disabled]), #vstobjects .form-select:not([disabled])').first().focus();
               }
 
               $('.l-profile__notifications').click(function(){
@@ -582,7 +582,7 @@ $(document).ready(function(){
             VE.core.register();
             if (location.href.search(/list/) != -1) {
                 var shift_select_ref = $('body').finderSelect({
-                    children: '.l-unit', 
+                    children: '.l-unit',
                     'onFinish': function(evt) {
                         if ($('.l-content').find('.l-unit.selected').length == $('.l-content').find('.l-unit').length) {
                             $('.toggle-all').addClass('clicked-on');
@@ -608,7 +608,7 @@ $(document).ready(function(){
                 });
             }
 
-            // 
+            //
             $('form#objects').on('submit', function(evt) {
                 $('.l-unit').find('.ch-toggle').prop('checked', false);
                 $('.l-unit.selected').find('.ch-toggle').prop('checked', true);
@@ -628,10 +628,10 @@ $(document).ready(function(){
 
 /**
  * generates a random string
- * using a cryptographically secure rng, 
+ * using a cryptographically secure rng,
  * and ensuring it contains at least 1 lowercase, 1 uppercase, and 1 number.
- * 
- * @param int length 
+ *
+ * @param int length
  * @throws Error if length is too small to create a "sufficiently secure" string
  * @returns string
  */

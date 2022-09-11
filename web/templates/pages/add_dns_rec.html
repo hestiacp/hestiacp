@@ -18,7 +18,7 @@
 	<form id="vstobjects" name="v_add_dns_rec" method="post">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 		<input type="hidden" name="ok_rec" value="add" />
-		
+
 		<table class="data mode-add">
 			<tr class="data-add">
 				<td class="data-dotted">
@@ -63,13 +63,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Type');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_type">
+							<td class="input-label">
+								<label for="v_type" class="form-label"><?=_('Type');?></label>
+								<select class="form-select" name="v_type" id="v_type" style="max-width: 380px">
 									<option value="A" <?php if ($v_type == 'A') echo "selected"; ?>>A</option>
 									<option value="AAAA" <?php if ($v_type == 'AAAA') echo "selected"; ?>>AAAA</option>
 									<option value="CAA" <?php if ($v_type == 'CAA') echo "selected"; ?>>CAA</option>
@@ -88,13 +84,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('IP or Value');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
+							<td class="input-label">
+								<label for="v_val" class="form-label"><?=_('IP or Value');?></label>
+								<select class="form-select" tabindex="-1" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
 									<option value="">&nbsp;</option>
 									<?php
 										foreach ($v_ips as $ip => $value) {
@@ -103,7 +95,7 @@
 										}
 									?>
 								</select>
-								<input type="text" size="20" class="vst-input vst-list-editor" name="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
+								<input type="text" size="20" class="vst-input vst-list-editor" name="v_val" id="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
 							</td>
 						</tr>
 						<tr>

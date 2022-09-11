@@ -56,13 +56,9 @@
 							<td class="vst-text input-label step-left">
 								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="basic">
 									<tr>
-										<td class="vst-text step-top">
-											<?=_('Hostname');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" size="20" class="vst-input" name="v_hostname" value="<?=htmlentities(trim($v_hostname, "'"))?>">
+										<td class="step-top">
+											<label for="v_hostname" class="form-label"><?=_('Hostname');?></label>
+											<input type="text" class="form-control" name="v_hostname" id="v_hostname" value="<?=htmlentities(trim($v_hostname, "'"))?>">
 										</td>
 									</tr>
 									<tr>

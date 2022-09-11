@@ -278,7 +278,8 @@ strong {
     inset 0 0 2px rgb(255 255 255 / 100%) !important;
 }
 
-.vst-input {
+.vst-input,
+.form-control {
   box-shadow: none;
   border-radius: 0 !important;
 }
@@ -356,6 +357,7 @@ a.vst-text:hover b,
 }
 
 .vst-input:focus,
+.form-control:focus,
 .vst-textinput:focus,
 .login .vst-input:focus,
 .login .vst-textinput:focus {
@@ -371,6 +373,7 @@ a.vst-text:hover b,
 }
 
 .vst-input:hover,
+.form-control:hover,
 .vst-list:hover,
 .form-select:hover,
 .vst-textinput:hover {
@@ -514,6 +517,7 @@ meter {
 }
 
 .vst-input,
+.form-control,
 .vst-list,
 .form-select,
 .vst-textinput {

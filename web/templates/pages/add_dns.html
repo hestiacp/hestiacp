@@ -70,13 +70,9 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text input-label">
-									<?=_('IP address');?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<select class="vst-list" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
+								<td class="input-label">
+									<label for="v_ip" class="form-label"><?=_('IP address');?></label>
+									<select class="form-select" tabindex="-1" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
 										<option value="">clear</option>
 										<?php
 											foreach ($v_ips as $ip => $value) {
@@ -85,18 +81,16 @@
 											}
 										?>
 									</select>
-									<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+									<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 								</td>
 							</tr>
 							<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes')) { ?>
 								<tr>
-									<td class="vst-text input-label">
-										<?=_('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<select class="vst-list" name="v_template">
+									<td class="input-label">
+										<label for="v_template" class="form-label">
+											<?=_('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
+										</label>
+										<select class="form-select" name="v_template" id="v_template" style="max-width: 380px">
 											<?php
 												foreach ($templates as $key => $value) {
 													echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";

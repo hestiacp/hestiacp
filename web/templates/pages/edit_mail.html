@@ -53,26 +53,22 @@
 							</td>
 						</tr>
 						<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
-						<tr>
-							<td class="vst-text step-top">
-								<?=_('Webmail Client');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_webmail" tabindex="6">
-									<?php foreach ($webmail_clients as $client){
-										echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
-										if (( htmlentities(trim($v_webmail,"'")) == $client )) {
-											echo ' selected' ;
-										}
-										echo ">".htmlentities(ucfirst($client))."</option>\n";
-										}
-									?>
-									<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected";}?>><?=_('Disabled');?></option>
-								</select>
-							</td>
-						</tr>
+							<tr>
+								<td class="input-label step-top">
+									<label for="v_webmail" class="form-label"><?=_('Webmail Client');?></label>
+									<select class="form-select" name="v_webmail" id="v_webmail" tabindex="6">
+										<?php foreach ($webmail_clients as $client){
+											echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
+											if (( htmlentities(trim($v_webmail,"'")) == $client )) {
+												echo ' selected' ;
+											}
+											echo ">".htmlentities(ucfirst($client))."</option>\n";
+											}
+										?>
+										<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected";}?>><?=_('Disabled');?></option>
+									</select>
+								</td>
+							</tr>
 						<?php } ?>
 						<tr>
 							<td class="vst-text input-label">

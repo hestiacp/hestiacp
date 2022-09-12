@@ -278,12 +278,12 @@ strong {
     inset 0 0 2px rgb(255 255 255 / 100%) !important;
 }
 
-.vst-input {
+.vst-input,
+.form-control {
   box-shadow: none;
   border-radius: 0 !important;
 }
 
-.vst-list,
 .form-select {
   box-shadow: none;
   border-radius: 0 !important;
@@ -356,6 +356,7 @@ a.vst-text:hover b,
 }
 
 .vst-input:focus,
+.form-control:focus,
 .vst-textinput:focus,
 .login .vst-input:focus,
 .login .vst-textinput:focus {
@@ -364,14 +365,13 @@ a.vst-text:hover b,
   color: #333;
 }
 
-.vst-list:focus,
 .form-select:focus {
   border: 1px solid #ff6701;
   color: #333;
 }
 
 .vst-input:hover,
-.vst-list:hover,
+.form-control:hover,
 .form-select:hover,
 .vst-textinput:hover {
   border: 1px solid #e95e00;
@@ -514,7 +514,7 @@ meter {
 }
 
 .vst-input,
-.vst-list,
+.form-control,
 .form-select,
 .vst-textinput {
   font-family: Arial, Helvetica, sans-serif !important;

@@ -61,13 +61,15 @@
 						$f_name = htmlentities($f_name);
 						$f_placeholder = htmlentities($f_placeholder);
 					?>
-					<div class="form-group">
-						<label style="padding-bottom: 2px;" for="<?=$f_name?>"><?=$f_label?>
-							<?php if ($f_type === 'password'):?> / <a href="javascript:randomString('<?=$f_name?>');" class="generate"><?=_('generate');?></a> <?php endif?>
-						</label>
+					<div style="max-width: 360px" class="u-mb20">
+						<?php if($f_type != 'boolean'): ?>
+							<label for="<?=$f_name?>" class="form-label">
+								<?=$f_label?>
+								<?php if ($f_type === 'password'):?> / <a href="javascript:randomString('<?=$f_name?>');" class="generate"><?=_('generate');?></a> <?php endif?>
+							</label>
+						<?php endif; ?>
 						<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
-							<p style="margin-top:0;"></p>
-							<select class="vst-list" name="<?=$f_name?>">
+							<select class="form-select" name="<?=$f_name?>" id="<?=$f_name?>">
 								<?php foreach ($form_control['options'] as $key => $option){
 									if(is_numeric($key)){
 										$key = $option;
@@ -77,16 +79,14 @@
 									<option value="<?=$key?>" <?=$selected?>><?=htmlentities($option)?></option>
 								<?php }; ?>
 							</select>
-							</p>
 						<?php elseif (in_array($f_type, ['boolean'])):?>
-							<p>
+							<div class="form-check">
 								<?php $checked = (!empty($f_value))?'checked':''?>
-								<input style="width:auto;" type="checkbox" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" <?=$checked?> value="true">
-							</p>
+								<input class="form-check-input" type="checkbox" name="<?=$f_name?>" id="<?=$f_name?>" <?=$checked?> value="true">
+								<label for="<?=$f_name?>"><?=$f_label?></label>
+							</div>
 						<?php else:?>
-							<p style="margin-top:0;"></p>
-							<input type="text" size="20" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
-							</p>
+							<input type="text" class="form-control" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
 						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>

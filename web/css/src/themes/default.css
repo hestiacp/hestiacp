@@ -2296,6 +2296,7 @@ label:hover {
 
 .form-control {
   background-color: #fff;
+  box-sizing: border-box;
   border: 1px solid #cfcfcf;
   display: block;
   width: 100%;
@@ -2550,11 +2551,12 @@ a.vst-text:active b {
 
 .form-select {
   display: block;
+  box-sizing: border-box;
   cursor: pointer;
   width: 100%;
   font-weight: normal;
   font-size: .8rem;
-  padding: 8px 35px 7px 12px;
+  padding: 8px 30px 7px 12px;
   line-height: 1.5;
   border-radius: 4px;
   background-color: #fff;

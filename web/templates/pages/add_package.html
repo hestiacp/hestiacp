@@ -332,6 +332,16 @@
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-mail-accounts"></i>
 										<td>
 									</tr>
+									<tr>
+										<td class="vst-text input-label">
+											<?=_('Rate limit');?> <span class="optional">(<?=_('per account / hour');?>)</span>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input type="text" size="20" class="vst-input" name="v_ratelimit" value="<?=htmlentities(trim($v_ratelimit, "'"))?>">
+										<td>
+									</tr>
 								</table>
 							</td>
 						</tr>

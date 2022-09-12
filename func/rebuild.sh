@@ -59,7 +59,9 @@ rebuild_user_conf() {
     if [ -z "${LOGIN_ALLOW_IPS+x}" ]; then 
         sed -i "/LOGIN_USE_IPLIST/a LOGIN_ALLOW_IPS=''" $USER_DATA/user.conf 
     fi
-
+    if [ -z "${RATE_LIMIT+x}" ]; then 
+        sed -i "/MAIL_ACCOUNTS/a RATE_LIMIT='200'" $USER_DATA/user.conf 
+    fi
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
         $HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"

@@ -3994,3 +3994,7 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 .u-mb20 {
   margin-bottom: 20px !important;
 }
+
+.u-inputWidth {
+  width: 380px !important;
+}

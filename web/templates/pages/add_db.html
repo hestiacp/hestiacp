@@ -79,7 +79,7 @@
 							<tr>
 								<td class="input-label">
 									<label for="v_type" class="form-label"><?=_('Type');?></label>
-									<select class="form-select" name="v_type" id="v_type" style="max-width: 380px">
+									<select class="form-select u-inputWidth" name="v_type" id="v_type">
 										<?php
 											foreach ($db_types as $key => $value) {
 												echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -143,7 +143,7 @@
 							<tr>
 								<td class="input-label step-top" id="advanced-opts" style="display: none;">
 									<label for="v_host" class="form-label"><?=_('Host');?></label>
-									<select class="form-select u-mb20" name="v_host" id="v_host" style="max-width: 380px">
+									<select class="form-select u-inputWidth u-mb20" name="v_host" id="v_host">
 										<?php
 											foreach ($db_hosts as $value) {
 												echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -153,7 +153,7 @@
 										?>
 									</select>
 									<label for="v_charset" class="form-label"><?=_('Charset');?></label>
-									<select class="form-select" name="v_charset" id="v_charset" style="max-width: 380px">
+									<select class="form-select u-inputWidth" name="v_charset" id="v_charset">
 										<option value=big5 <?php if ((!empty($v_charset)) && ( $v_charset == 'big5')) echo 'selected';?>>big5</option>
 										<option value=dec8 <?php if ((!empty($v_charset)) && ( $v_charset == 'dec8')) echo 'selected';?>>dec8</option>
 										<option value=cp850 <?php if ((!empty($v_charset)) && ( $v_charset == 'cp850')) echo 'selected';?>>cp850</option>

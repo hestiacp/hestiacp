@@ -67,7 +67,7 @@
 						<tr>
 							<td class="input-label">
 								<label for="v_type" class="form-label"><?=_('Type');?></label>
-								<select class="form-select" name="v_type" id="v_type" style="max-width: 380px">
+								<select class="form-select u-inputWidth" name="v_type" id="v_type">
 									<option value="A" <?php if ($v_type == 'A') echo "selected"; ?>>A</option>
 									<option value="AAAA" <?php if ($v_type == 'AAAA') echo "selected"; ?>>AAAA</option>
 									<option value="CAA" <?php if ($v_type == 'CAA') echo "selected"; ?>>CAA</option>
@@ -88,7 +88,7 @@
 						<tr>
 							<td class="input-label">
 								<label for="v_val" class="form-label"><?=_('IP or Value');?></label>
-								<select class="form-select" tabindex="-1" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
+								<select class="form-select u-inputWidth" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 									<option value="">clear</option>
 									<?php
 										foreach ($v_ips as $ip => $value) {

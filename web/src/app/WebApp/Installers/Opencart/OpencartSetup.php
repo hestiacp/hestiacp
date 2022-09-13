@@ -25,7 +25,7 @@ class OpencartSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/4.0.0.0/opencart-4.0.1.1.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/4.0.1.1/opencart-4.0.1.1.zip' ],
         ],
         'server' => [
             'nginx' => [

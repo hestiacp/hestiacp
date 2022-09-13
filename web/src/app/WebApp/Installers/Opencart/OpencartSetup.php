@@ -10,7 +10,7 @@ class OpencartSetup extends BaseSetup
         'name' => 'Opencart',
         'group' => 'ecommerce',
         'enabled' => true,
-        'version' => '4.0.0.0',
+        'version' => '4.0.1.1',
         'thumbnail' => 'opencart-thumb.png'
     ];
 
@@ -25,7 +25,7 @@ class OpencartSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/4.0.0.0/opencart-4.0.0.0.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/4.0.0.0/opencart-4.0.1.1.zip' ],
         ],
         'server' => [
             'nginx' => [

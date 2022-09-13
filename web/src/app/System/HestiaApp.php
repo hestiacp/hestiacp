@@ -28,7 +28,6 @@ class HestiaApp
         $cli_arguments = '';
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {
-                var_dump($arg);
                 $cli_arguments .= quoteshellarg((string)$arg) . ' ';
             }
         } else {

@@ -60,7 +60,7 @@ class GravSetup extends BaseSetup {
 				'-N '.$options['username'],
 				'-l en'
 			 ], $status);
-			 return ($status -> code === 1);
+			 return ($status -> code === 0);
 		}else{
 			return true;
 		}

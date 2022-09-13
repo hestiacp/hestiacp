@@ -72,7 +72,7 @@ class DokuWikiSetup extends BaseSetup {
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
 		
 		$this->appcontext->runUser('v-copy-fs-directory',[
-			$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2020-07-29/."),
+			$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2022-07-31/."),
 			$this->getDocRoot()], $status);
 
 		// enable htaccess

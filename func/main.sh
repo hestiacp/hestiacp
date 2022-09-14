@@ -1069,7 +1069,7 @@ is_cron_format_valid() {
 
 # Name validator
 is_name_format_valid() {
-    if ! [[ "$1" =~ ^[[:alnum:]][-|\ |\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+    if ! [[ "$1" =~ ^[-|\ |\.|_[:alnum:]]{0,50}$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }

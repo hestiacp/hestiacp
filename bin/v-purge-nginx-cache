@@ -62,7 +62,7 @@ fi
 #----------------------------------------------------------#
 
 # Restart services if requested
-if [ -n "$restart" ]; then
+if [ "$restart" != "no" ]; then
     $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" > /dev/null
 fi

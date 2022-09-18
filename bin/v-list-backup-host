@@ -25,7 +25,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 # JSON list function
 json_list() {
     case $type in 
-    'sftp' | 'ftp')
+    'sftp' | 'ftp' | 'backup')
     echo '{'
     echo '    "'$type'": {
         "HOST": "'$HOST'",
@@ -55,7 +55,7 @@ json_list() {
 # SHELL list function
 shell_list() {
     case $type in
-    'sftp' | 'ftp')
+    'sftp' | 'ftp' | 'rclone')
     echo "HOST:           $HOST"
     echo "USERNAME:       $USERNAME"
     echo "PORT:           $PORT"
@@ -77,7 +77,7 @@ shell_list() {
 # PLAIN list function
 plain_list() {
     case $type in
-    'sftp' | 'ftp')
+    'sftp' | 'ftp' | 'rclone')
     echo -e "$HOST\t$USERNAME\t$PORT\t$type\t$BPATH\t$TIME\t$DATE"
     ;;
     'b2')
@@ -89,7 +89,7 @@ plain_list() {
 # CSV list function
 csv_list() {
     case $type in
-    'sftp' | 'ftp')
+    'sftp' | 'ftp' | 'rclone')
     echo "HOST,USERNAME,PORT,TYPE,PATH,TIME,DATE"
     echo "$HOST,$USERNAME,$PORT,$type,$BPATH,$TIME,$DATE"
     ;;
@@ -113,7 +113,7 @@ is_type_format_valid() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'TYPE [FORMAT]'
-is_type_format_valid "$type"
+is_common_format_valid $type "type" 
 
 #----------------------------------------------------------#
 #                       Action                             #

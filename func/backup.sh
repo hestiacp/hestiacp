@@ -496,7 +496,7 @@ b2_delete(){
 rclone_backup(){
     # Define rclone config
     source_conf "$HESTIA/conf/rclone.backup.conf"
-    echo -e "$(date "+%F %T") Upload With Rclone: $user/$user.$backup_new_date.tar"
+    echo -e "$(date "+%F %T") Upload With Rclone: $user.$backup_new_date.tar"
     if [ "$localbackup" != 'yes' ]; then
         cd $tmpdir
         tar -cf $BACKUP/$user.$backup_new_date.tar .
@@ -537,7 +537,7 @@ rclone_backup(){
 }
 
 rclone_delete(){
-    # Defining backblaze b2 settings
+    # Defining rclone settings
     source_conf "$HESTIA/conf/rclone.backup.conf"
     if [ -z "$BPATH" ]; then
         rclone deletefile $HOST:/$1
@@ -547,12 +547,12 @@ rclone_delete(){
 }
 
 rclone_download() {
-    # Defining backblaze b2 settings
+    # Defining rclone b2 settings
     source_conf "$HESTIA/conf/rclone.backup.conf"
     cd $BACKUP
     if [ -z "$BPATH" ]; then
-        rclone copy $HOST:/$1 $1
+        rclone copy -v $HOST:/$1 ./
     else
-        rclone copy $HOST:$BPATH/$1 $1
+        rclone copy -v $HOST:$BPATH/$1 ./
     fi
 }

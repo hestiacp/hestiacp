@@ -722,6 +722,7 @@
 															<option value='ftp'><?=_('ftp'); ?></option>
 															<option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?=_('sftp'); ?></option>
 															<option value="b2" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'b2' )) echo 'selected="selected"'; ?>><?=_('Backblaze'); ?>
+															<option value="rclone" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'rclone' )) echo 'selected="selected"'; ?>><?=_('Rclone'); ?>
 														</select>
 													</td>
 												</tr>
@@ -824,6 +825,33 @@
 															</tr>
 														</table>
 													</td>
+												</tr>
+												<tr style="display: <?php if ((empty($v_backup_type)) || !in_array(trim($v_backup_type, "'"),array('rclone'))){ echo 'none';} else {echo 'block';} ?>" id="backup_rclone">
+													<td>
+														<table>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Host');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_rclone_host" value="<?=trim($v_rclone_host, "'")?>">
+																</td>
+															</tr>
+															<tr>
+																<td class="vst-text">
+																	<?=_('Directory');?>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<input type="text" size="20" class="vst-input" name="v_rclone_path" value="<?=trim($v_rclone_path, "'")?>">
+																	<br><br>
+																</td>
+															</tr>
+														</table>
+													</td>	
 												</tr>
 											</table>
 										</td>

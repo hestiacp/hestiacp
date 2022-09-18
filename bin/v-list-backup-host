@@ -25,7 +25,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 # JSON list function
 json_list() {
     case $type in 
-    'sftp' | 'ftp' | 'backup')
+    'sftp' | 'ftp' | 'rclone')
     echo '{'
     echo '    "'$type'": {
         "HOST": "'$HOST'",

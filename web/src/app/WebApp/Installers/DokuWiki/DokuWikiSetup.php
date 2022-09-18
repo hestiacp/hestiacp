@@ -11,7 +11,7 @@ class DokuWikiSetup extends BaseSetup {
 		'name' => 'DokuWiki',
 		'group' => 'wiki',
 		'enabled' => true,
-		'version' => 'stable_2022-07-31',
+		'version' => 'stable_2022-07-31a',
 		'thumbnail' => 'dokuwiki-logo.svg'
 	];
 	
@@ -48,7 +48,7 @@ class DokuWikiSetup extends BaseSetup {
 			],
 		 ],
 		'resources' => [
-			'archive'  => [ 'src' => 'https://github.com/splitbrain/dokuwiki/archive/refs/tags/release_stable_2022-07-31.zip' ],
+			'archive'  => [ 'src' => 'https://github.com/splitbrain/dokuwiki/archive/refs/tags/release_stable_2022-07-31a.zip' ],
 		],
 		'server' => [
 			'nginx' => [
@@ -72,7 +72,7 @@ class DokuWikiSetup extends BaseSetup {
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
 		
 		$this->appcontext->runUser('v-copy-fs-directory',[
-			$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2020-07-29/."),
+			$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2022-07-31a/."),
 			$this->getDocRoot()], $status);
 
 		// enable htaccess
@@ -100,7 +100,6 @@ class DokuWikiSetup extends BaseSetup {
 		if($return_var > 0){
 			throw new \Exception(implode( PHP_EOL, $output));
 		}
-
 		// remove temp folder
 		$this->appcontext->runUser('v-delete-fs-file', [$this->getDocRoot("install.php")], $status);
 		$this->cleanup();

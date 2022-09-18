@@ -536,7 +536,7 @@ rclone_backup(){
     fi
 }
 
-b2_delete(){
+rclone_delete(){
     # Defining backblaze b2 settings
     source_conf "$HESTIA/conf/rclone.backup.conf"
     if [ -z "$BPATH" ]; then
@@ -546,7 +546,7 @@ b2_delete(){
     fi
 }
 
-b2_download() {
+rclone_download() {
     # Defining backblaze b2 settings
     source_conf "$HESTIA/conf/rclone.backup.conf"
     cd $BACKUP

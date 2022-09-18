@@ -67,11 +67,18 @@ csv_list() {
 
 declare -a versions;
 # List through /etc/php
-for version in /etc/php/*/fpm; do
-    ver=$(echo "$version" | awk -F"/" '{ print $4 }');
-    versions+=("$ver")
-done
-
+if [ -n "$WEB_BACKEND" ]; then
+    for version in /etc/php/*/fpm; do
+        ver=$(echo "$version" | awk -F"/" '{ print $4 }');
+        versions+=("$ver")
+    done
+else
+    # Fix for modphp
+    for version in /etc/php/*/cli; do
+        ver=$(echo "$version" | awk -F"/" '{ print $4 }');
+        versions+=("$ver")
+    done
+fi
 # Listing data
 case $format in
     json)   json_list ;;

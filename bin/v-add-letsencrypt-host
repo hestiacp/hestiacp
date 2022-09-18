@@ -32,6 +32,8 @@ fi
 user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
 [[ -z "$user" ]] && user="admin"
 
+USER_DATA=$HESTIA/data/users/$user
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#

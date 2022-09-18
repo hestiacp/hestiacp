@@ -49,6 +49,9 @@ is_package_consistent() {
     if [ "$CRON_JOBS" != 'unlimited' ]; then
         is_int_format_valid "$CRON_JOBS" 'CRON_JOBS'
     fi
+    
+    is_int_format_valid "$RATE_LIMIT" 'RATE_LIMIT'
+
     if [ "$DISK_QUOTA" != 'unlimited' ]; then
         is_int_format_valid "$DISK_QUOTA" 'DISK_QUOTA'
     fi

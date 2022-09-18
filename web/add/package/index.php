@@ -30,11 +30,17 @@ if (!empty($_POST['ok'])) {
         if (empty($_POST['v_backend_template'])) {
             $errors[] = _('backend template');
         }
+    }else{
+        # When modphp is enabled
+        $_POST['v_backend_template'] = '';
     }
     if (!empty($_SESSION['PROXY_SYSTEM'])) {
         if (empty($_POST['v_proxy_template'])) {
             $errors[] = _('proxy template');
         }
+    }else{
+        # when nginx only is enabled
+        $_POST['v_proxy_template'] = 'default';
     }
     if (empty($_POST['v_dns_template'])) {
         $errors[] = _('dns template');
@@ -75,7 +81,9 @@ if (!empty($_POST['ok'])) {
     if (!isset($_POST['v_bandwidth'])) {
         $errors[] = _('bandwidth');
     }
-
+    if (!isset($_POST['v_ratelimit'])) {
+        $errors[] = _('rate limit');
+    }
     // Check if name server entries are blank if DNS server is installed
     if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {
         if (empty($_POST['v_ns1'])) {
@@ -114,6 +122,7 @@ if (!empty($_POST['ok'])) {
     $v_backups = quoteshellarg($_POST['v_backups']);
     $v_disk_quota = quoteshellarg($_POST['v_disk_quota']);
     $v_bandwidth = quoteshellarg($_POST['v_bandwidth']);
+    $v_ratelimit = quoteshellarg($_POST['v_ratelimit']);
     $v_ns1 = trim($_POST['v_ns1'], '.');
     $v_ns2 = trim($_POST['v_ns2'], '.');
     $v_ns3 = trim($_POST['v_ns3'], '.');
@@ -165,6 +174,7 @@ if (!empty($_POST['ok'])) {
         $pkg .= "CRON_JOBS=".$v_cron_jobs."\n";
         $pkg .= "DISK_QUOTA=".$v_disk_quota."\n";
         $pkg .= "BANDWIDTH=".$v_bandwidth."\n";
+        $pkg .= "RATE_LIMIT=".$v_ratelimit."\n";
         $pkg .= "NS=".$v_ns."\n";
         $pkg .= "SHELL=".$v_shell."\n";
         $pkg .= "BACKUPS=".$v_backups."\n";
@@ -270,6 +280,9 @@ if (empty($v_disk_quota)) {
 }
 if (empty($v_bandwidth)) {
     $v_bandwidth = "'1000'";
+}
+if (empty($v_ratelimit)) {
+    $v_ratelimit = "'200'";
 }
 if (empty($v_ns1)) {
     $v_ns1 = 'ns1.example.ltd';

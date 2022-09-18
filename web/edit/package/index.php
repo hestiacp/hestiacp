@@ -46,6 +46,7 @@ $v_dns_domains = $data[$v_package]['DNS_DOMAINS'];
 $v_dns_records = $data[$v_package]['DNS_RECORDS'];
 $v_mail_domains = $data[$v_package]['MAIL_DOMAINS'];
 $v_mail_accounts = $data[$v_package]['MAIL_ACCOUNTS'];
+$v_ratelimit = $data[$v_package]['RATE_LIMIT'];
 $v_databases = $data[$v_package]['DATABASES'];
 $v_cron_jobs = $data[$v_package]['CRON_JOBS'];
 $v_disk_quota = $data[$v_package]['DISK_QUOTA'];
@@ -175,6 +176,9 @@ if (!empty($_POST['save'])) {
     if (!isset($_POST['v_mail_accounts'])) {
         $errors[] = _('mail accounts');
     }
+    if (!isset($_POST['v_ratelimit'])) {
+        $errors[] = _('rate limit');
+    }
     if (!isset($_POST['v_databases'])) {
         $errors[] = _('databases');
     }
@@ -230,6 +234,7 @@ if (!empty($_POST['save'])) {
     $v_dns_records = quoteshellarg($_POST['v_dns_records']);
     $v_mail_domains = quoteshellarg($_POST['v_mail_domains']);
     $v_mail_accounts = quoteshellarg($_POST['v_mail_accounts']);
+    $v_ratelimit = quoteshellarg($_POST['v_ratelimit']);
     $v_databases = quoteshellarg($_POST['v_databases']);
     $v_cron_jobs = quoteshellarg($_POST['v_cron_jobs']);
     $v_backups = quoteshellarg($_POST['v_backups']);
@@ -277,6 +282,7 @@ if (!empty($_POST['save'])) {
     $pkg .= "DNS_RECORDS=".$v_dns_records."\n";
     $pkg .= "MAIL_DOMAINS=".$v_mail_domains."\n";
     $pkg .= "MAIL_ACCOUNTS=".$v_mail_accounts."\n";
+    $pkg .= "RATE_LIMIT=".$v_ratelimit."\n";
     $pkg .= "DATABASES=".$v_databases."\n";
     $pkg .= "CRON_JOBS=".$v_cron_jobs."\n";
     $pkg .= "DISK_QUOTA=".$v_disk_quota."\n";

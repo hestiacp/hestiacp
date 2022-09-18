@@ -57,6 +57,9 @@ fi
 if [[ "$TYPE" =~ "b2" ]]; then
     b2_delete "$user" "$backup"
 fi
+if [[ "$TYPE" =~ "rclone" ]]; then
+    rclone_delete "$user" "$backup"
+fi
 if [[ "$TYPE" =~ "local" ]]; then
     rm -f "$backup_folder/$2"
 fi

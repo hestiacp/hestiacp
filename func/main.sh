@@ -479,10 +479,12 @@ add_object_key() {
 search_objects() {
     OLD_IFS="$IFS"
     IFS=$'\n'
-    for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
-        parse_object_kv_list "$line"
-        eval echo \$$4
-    done
+    if [ -f $USER_DATA/$1.conf ]; then
+      for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
+          parse_object_kv_list "$line"
+          eval echo \$$4
+      done
+    fi
     IFS="$OLD_IFS"
 }
 

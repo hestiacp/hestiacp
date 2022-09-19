@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
 - Update Dokuwiki to stable_2022-07-31a
 - Update Opencart to 4.0.1.11
 - Update Prestashop to 1.7.8.7
+- Update Jquery on login pages to 3.6.1 (#2932 @4183r)
+
 ## [1.6.8] - Service release 
 
 ### Features 

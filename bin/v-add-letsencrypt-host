@@ -32,6 +32,16 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+# Argument definition
+domain=$(hostname -f);
+if [ -z $domain ]; then 
+    domain=$HOSTNAME;
+fi
+user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
+[[ -z "$user" ]] && user="admin"
+
+USER_DATA=$HESTIA/data/users/$user
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#

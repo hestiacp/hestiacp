@@ -3998,3 +3998,12 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 .u-inputWidth {
   width: 380px !important;
 }
+
+.u-minHeight100 {
+  min-height: 100px !important;
+}
+
+.u-console {
+  font-family: Inconsolata, "Lucida Console", Monaco, monospace !important;
+  white-space: pre !important;
+}

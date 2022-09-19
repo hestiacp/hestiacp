@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.9] - Service release 
+
+- Fixed an issue when Installing Wordpress in a non english locale (#2788 #2818)
+- Reload nginx on purging fastcgi cache (#2925)
+- Update max number of chars allowed for name (#2924)
+- Fixed few small issues with Letsencypt for hostname (#2922)
+- Fixed few issues with Quick installers (#2921)
+- Fixed an issue with v-change-web-domain-name
+
+### Dependencies
+
+- Update Dokuwiki to stable_2022-07-31a
+- Update Opencart to 4.0.1.11
+- Update Prestashop to 1.7.8.7
 ## [1.6.8] - Service release 
 
 ### Features 

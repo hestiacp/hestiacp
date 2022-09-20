@@ -599,12 +599,11 @@ is_dns_record_critical() {
 is_dns_fqnd() {
     t=$1
     r=$2
-    fqdn_type=$(echo $t | grep "NS\|CNAME\|MX\|PTR\|SRV")
+    fqdn_type=$(echo $t | grep "^NS\|CNAME\|MX\|PTR\|SRV")
     tree_length=3
     if [[ $t = 'CNAME' || $t = 'MX' || $t = 'PTR' ]]; then
         tree_length=2
     fi
-
     if [ -n "$fqdn_type" ]; then
         dots=$(echo $dvalue | grep -o "\." | wc -l)
         if [ "$dots" -lt "$tree_length" ]; then

@@ -47,29 +47,32 @@ if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
 fi
 
 # Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
-if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
+if [[ $rtype =~ ^NS|CNAME|MX|PTR|SRV ]]; then
     trailing_dot=$(echo $dvalue | grep "\.$")
     if [ -z "$trailing_dot" ]; then
         dvalue="$dvalue."
     fi
 fi
 
-if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
+if [[ $rtype =~ ^NS|CNAME|MX|PTR|SRV ]]; then
     dvalue=$(idn2 --quiet  "$dvalue" )
     record=$(idn2 --quiet  "$record" )
 fi
 
 # Cleanup quotes on dvalue
 # - [CAA] records will be left unchanged
-# - [SRV] will be  stripped of double quotes even when  containg spaces
+# - [SRV] will be  stripped of double quotes even when  containing spaces
+# - [DNSKEY] will be  stripped of double quotes even when  containing spaces
 # - Rest of record types will be striped of quotes and the final string
-#   will be enclosed in double quotes if  containg spaces or semicolons 
+#   will be enclosed in double quotes if  containing spaces or semicolons 
 
 if [ "$rtype" != "CAA" ]; then
     dvalue=${dvalue//\"/}
-
-    if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
-        dvalue='"'"$dvalue"'"'
+    
+    if [ "$rtype" != "DNSKEY" ]; then 
+        if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
+            dvalue='"'"$dvalue"'"'
+        fi
     fi
 fi
 

@@ -68,8 +68,8 @@ fi
 
 if [ "$rtype" != "CAA" ]; then
     dvalue=${dvalue//\"/}
-    
-    if [ "$rtype" != "DNSKEY" ]; then 
+    # Add support for DS key
+    if [ "$rtype" != "DNSKEY" ] && [ "$rtype" != "DS" ] ; then 
         if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
             dvalue='"'"$dvalue"'"'
         fi

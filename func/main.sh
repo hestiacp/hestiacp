@@ -878,7 +878,7 @@ is_common_format_valid() {
                         check_result "$E_INVALID" "invalid $2 format :: $1"
         fi
     fi
-    if [[ $(echo -n "$1" | tail -c 1) =~ [^a-zA-Z0-9_*@] ]]; then
+    if [[ $(echo -n "$1" | tail -c 1) =~ [^a-zA-Z0-9_*@.] ]]; then
            check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
     if [[ $(echo -n "$1" | grep -c '\.\.') -gt 0 ]];then
@@ -941,7 +941,7 @@ is_dbuser_format_valid() {
 
 # DNS record type validator
 is_dns_type_format_valid() {
-    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA'
+    known_dnstype='A,AAAA,NS,CNAME,MX,TXT,SRV,DNSKEY,KEY,IPSECKEY,PTR,SPF,TLSA,CAA,DS'
     if [ -z "$(echo $known_dnstype |grep -w $1)" ]; then
         check_result "$E_INVALID" "invalid dns record type format :: $1"
     fi

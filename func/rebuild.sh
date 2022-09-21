@@ -535,7 +535,7 @@ rebuild_dns_domain_conf() {
     update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
     
     if [ "$DNSSEC" = "yes" ]; then
-        key=$(/usr/sbin/rndc dnssec -status weetjes.net | grep ^key: | cut -f2 -d' ');
+        key=$(/usr/sbin/rndc dnssec -status $domain | grep ^key: | cut -f2 -d' ');
         record=$(/usr/sbin/dnssec-dsfromkey /var/cache/bind/K$domain.+013+$key | sed "s/$domain. IN DS //g");
         if [ -z $(cat $USER_DATA/dns/$domain.conf | grep $record) ]; then
             if [ -n "$( cat $USER_DATA/dns/$domain.conf | grep $record)" ]; then 

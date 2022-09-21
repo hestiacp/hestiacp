@@ -518,7 +518,12 @@ rebuild_dns_domain_conf() {
         fi
         suspended_dns=$((suspended_dns + 1))
     else
-        if [ -z "$(grep /$domain.db $dns_conf)" ]; then
+        sed -i "/dns\/weetjes.net.db/d" $dns_conf
+        if [ "$DNSSEC" = "yes" ]; then
+            named="zone \"$domain_idn\" in {type master; dnssec-policy default; file"
+            named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+            echo "$named" >> $dns_conf
+            else
             named="zone \"$domain_idn\" {type master; file"
             named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
             echo "$named" >> $dns_conf
@@ -528,6 +533,19 @@ rebuild_dns_domain_conf() {
     records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
     user_records=$((user_records + records))
     update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+    
+    if [ "$DNSSEC" = "yes" ]; then
+        key=$(/usr/sbin/rndc dnssec -status weetjes.net | grep ^key: | cut -f2 -d' ');
+        record=$(/usr/sbin/dnssec-dsfromkey /var/cache/bind/K$domain.+013+$key | sed "s/$domain. IN DS //g");
+        if [ -z $(cat $USER_DATA/dns/$domain.conf | grep $record) ]; then
+            if [ -n "$( cat $USER_DATA/dns/$domain.conf | grep $record)" ]; then 
+                # delete DNSKEY record fist
+                test="$( cat $USER_DATA/dns/$domain.conf | grep 'DS')"
+                echo "Delete"
+            fi
+            $BIN/v-add-dns-record "$user" "$domain" "$domain." "DS" "$record" "" "" "" 3600    
+        fi
+    fi
 }
 
 # MAIL domain rebuild

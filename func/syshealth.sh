@@ -64,7 +64,7 @@ function syshealth_update_dns_config_format() {
     # DNS DOMAINS
     # Create array of known keys in configuration file
     system="dns"
-    known_keys="DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS SUSPENDED TIME DATE"
+    known_keys="DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS DNSSEC SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys

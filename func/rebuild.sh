@@ -165,7 +165,12 @@ rebuild_user_conf() {
 
         mkdir -p $HOMEDIR/$user/conf/dns
         chmod 771 $HOMEDIR/$user/conf/dns
-        chown root:dns $HOMEDIR/$user/conf/dns
+        if [ "$DNS_SYSTEM" = 'named' ]; then
+            dns_group='named'
+        else
+            dns_group='bind'
+        fi
+        chown root:$dns_group $HOMEDIR/$user/conf/dns
         if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-dns-domains $user $restart
         fi

@@ -118,7 +118,8 @@ fi
 
 if [ -n "$DNS_SYSTEM" ]; then
     mkdir $HOMEDIR/$user/conf/dns
-    chmod 751 $HOMEDIR/$user/conf/dns
+    chmod 771 $HOMEDIR/$user/conf/dns
+    chown root:dns $HOMEDIR/$user/conf/dns
 fi 
 
 # Create default writeable folders

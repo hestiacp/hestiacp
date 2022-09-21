@@ -164,7 +164,8 @@ rebuild_user_conf() {
         chmod 660 $USER_DATA/dns.conf
 
         mkdir -p $HOMEDIR/$user/conf/dns
-        chmod 751 $HOMEDIR/$user/conf/dns
+        chmod 771 $HOMEDIR/$user/conf/dns
+        chown root:dns $HOMEDIR/$user/conf/dns
         if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-dns-domains $user $restart
         fi

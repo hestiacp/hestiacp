@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: list public dnssec key 
+# options: USER DOMAIN [FROMAT]
+#
+# example: v-list-dns-public-key admin acme.com
+#
+# This function list the public key to be used with DNSSEC and needs to be added to the domain register.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+format=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+format_domain
+format_domain_idn
+
+check_args '2' "$#" 'USER DOMAIN [FORMAT]'
+is_format_valid 'user' 'domain'
+is_object_valid 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+
+
+if [ -n "$KEY" ]; then
+  key=$(cat "/var/cache/bind/K$domain_idn.+013+$KEY.key" | grep DNSKEY );
+   echo "$key" 
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

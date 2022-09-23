@@ -523,7 +523,7 @@ rebuild_dns_domain_conf() {
         fi
         suspended_dns=$((suspended_dns + 1))
     else
-        sed -i "/dns\/weetjes.net.db/d" $dns_conf
+        sed -i "/dns\/$domain.db/d" $dns_conf
         if [ "$DNSSEC" = "yes" ]; then
             named="zone \"$domain_idn\" in {type master; dnssec-policy default; file"
             named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
@@ -539,18 +539,35 @@ rebuild_dns_domain_conf() {
     user_records=$((user_records + records))
     update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
     
+    # Load new config
+    /usr/sbin/rndc reconfig > /dev/null 2>&1
+    check_result $? "$E_RESTART" 'dns failed to restart'
+    # Reload config
+    /usr/sbin/rndc reload > /dev/null 2>&1
+    check_result $? "$E_RESTART" 'dns failed to restart'
+    
     if [ "$DNSSEC" = "yes" ]; then
         key=$(/usr/sbin/rndc dnssec -status $domain | grep ^key: | cut -f2 -d' ');
+        if [ ! -d "$USER_DATA/keys/" ]; then
+            mkdir -p $USER_DATA/keys/
+        fi
+        cp /var/cache/bind/K$domain.+013+$key.* $USER_DATA/keys/
+        update_object_value 'dns' 'DOMAIN' "$domain" '$KEY' "$key"
         record=$(/usr/sbin/dnssec-dsfromkey /var/cache/bind/K$domain.+013+$key | sed "s/$domain. IN DS //g");
         if [ -z $(cat $USER_DATA/dns/$domain.conf | grep $record) ]; then
             if [ -n "$( cat $USER_DATA/dns/$domain.conf | grep $record)" ]; then 
                 # delete DNSKEY record fist
-                test="$( cat $USER_DATA/dns/$domain.conf | grep 'DS')"
-                echo "Delete"
+                id="$( v-list-dns-records $user $domain shell | grep 'DS' | cut -d' ' -f1)"
+                $BIN/v-delete-dns-record "$user" "$domain" "$id"
+                $BIN/v-add-dns-record "$user" "$domain" "$domain." "DS" "$record" "" "$id" "" 3600            
+            else
+                $BIN/v-add-dns-record "$user" "$domain" "$domain." "DS" "$record" "" "" "" 3600    
             fi
-            $BIN/v-add-dns-record "$user" "$domain" "$domain." "DS" "$record" "" "" "" 3600    
         fi
     fi
+    # Reload config
+    /usr/sbin/rndc reload > /dev/null 2>&1
+    check_result $? "$E_RESTART" 'dns failed to restart'
 }
 
 # MAIL domain rebuild

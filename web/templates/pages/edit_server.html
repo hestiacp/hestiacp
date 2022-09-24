@@ -402,14 +402,11 @@
 										<?php } ?>
 										<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 											<tr>
-												<td class="vst-text step-top">
-													<?=_('Webmail URL');?> <span class="hint">(<?=$_SESSION['WEBMAIL_ALIAS'];?>.example.com)</span>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<input type="text" size="20" class="vst-input" name="v_webmail_alias" value="<?=$_SESSION['WEBMAIL_ALIAS']; ?>">
-													<br><br>
+												<td class="step-top">
+													<label for="v_webmail_alias" class="form-label">
+														<?=_('Webmail URL');?> <span class="hint">(<?=$_SESSION['WEBMAIL_ALIAS'];?>.example.com)</span>
+													</label>
+													<input type="text" class="form-control u-inputWidth u-mb20" name="v_webmail_alias" id="v_webmail_alias" value="<?=$_SESSION['WEBMAIL_ALIAS']; ?>">
 												</td>
 											</tr>
 										<?php } ?>
@@ -427,33 +424,21 @@
 											<td class="step-left">
 												<table style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
 													<tr>
-														<td class="input-label vst-text">
-															<?=_('Host');?>
+														<td class="input-label">
+															<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
+															<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
 														</td>
 													</tr>
 													<tr>
 														<td>
-															<input type="text" size="20" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+															<label for="v_smtp_relay_port" class="form-label"><?=_('Port');?></label>
+															<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
 														</td>
 													</tr>
 													<tr>
-														<td class="input-label vst-text">
-															<?=_('Port');?>
-														</td>
-													</tr>
-													<tr>
-														<td>
-															<input type="text" size="20" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
-														</td>
-													</tr>
-													<tr>
-														<td class="input-label vst-text">
-															<?=_('Username');?>
-														</td>
-													</tr>
-													<tr>
-														<td>
-															<input type="text" size="20" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+														<td class="input-label">
+															<label for="v_smtp_relay_user" class="form-label"><?=_('Username');?></label>
+															<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
 														</td>
 													</tr>
 													<tr>
@@ -842,24 +827,18 @@
 							<td class="vst-text input-label step-left">
 								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="ssl">
 									<tr>
-										<td class="vst-text step-top">
-											<?=_('SSL Certificate');?>
-											<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities(trim($v_hostname,'"'));?>"><?=_('Generate CSR');?></a></span>
+										<td class="step-top">
+											<label for="v_ssl_crt" class="form-label">
+												<?=_('SSL Certificate');?>
+												<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities(trim($v_hostname,'"'));?>"><?=_('Generate CSR');?></a></span>
+											</label>
+											<textarea class="form-control u-minHeight100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
 										</td>
 									</tr>
 									<tr>
-										<td>
-											<textarea size="20" class="vst-textinput short console" name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
-										</td>
-									</tr>
-									<tr>
-										<td class="vst-text input-label">
-											<?=_('SSL Key');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<textarea size="20" class="vst-textinput short console" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+										<td class="input-label">
+											<label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
+											<textarea class="form-control u-minHeight100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
 										</td>
 									</tr>
 									<tr>
@@ -974,18 +953,15 @@
 													<td>
 														<table id="security_ip" style="<?php if ($_SESSION['API'] == "no" && $_SESSION['API_SYSTEM'] == '0') echo 'display:none;';?>">
 															<tr>
-																<td class="vst-text input-label">
-																	<?=_('Allowed IP addresses for API');?> <span class="optional" style="float:right">1 IP address per line</span>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<textarea size="20" class="vst-textinput short" name="v_api_allowed_ip"><?php
-																		foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
+																<td class="input-label">
+																	<label for="v_api_allowed_ip" class="form-label" style="display: block">
+																		<?=_('Allowed IP addresses for API');?> <span class="optional" style="float: right">1 IP address per line</span>
+																	</label>
+																	<textarea class="form-control u-inputWidth" name="v_api_allowed_ip" id="v_api_allowed_ip"><?php
+																			foreach(explode(',',$_SESSION['API_ALLOWED_IP']) as $ip ){
 																				echo trim($ip)."\n";
 																			}
 																		?></textarea>
-																	<br><br>
 																</td>
 															</tr>
 														</table>
@@ -1187,7 +1163,7 @@
 									<tr>
 										<td class="input-label step-top">
 											<label for="v_plugin_app_installer" class="form-label"><?=_('Quick App Installer');?></label>
-											<select class="form-select" name="v_plugin_app_installer" id="v_plugin_app_installer">
+											<select class="form-select u-inputWidth" name="v_plugin_app_installer" id="v_plugin_app_installer">
 												<option value="false"><?=_('No'); ?></option>
 												<option value="true" <?php if($_SESSION['PLUGIN_APP_INSTALLER'] == 'true') echo 'selected' ?>><?=_('Yes'); ?></option>
 											</select>

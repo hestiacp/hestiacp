@@ -170,34 +170,26 @@
 										<td>
 											<table id="ssl-details" style="<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">
 												<tr>
-													<td class="vst-text input-label step-top">
-														<?=_('SSL Certificate');?>
-														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
+													<td class="input-label step-top">
+														<label for="v_ssl_crt" class="form-label">
+															<?=_('SSL Certificate');?>
+															<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
+														</label>
+														<textarea class="form-control u-inputWidth u-minHeight100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+													<td class="input-label">
+														<label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
+														<textarea class="form-control u-minHeight100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
-													<td class="vst-text input-label">
-														<?=_('SSL Key');?>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
-													</td>
-												</tr>
-												<tr>
-													<td class="vst-text input-label">
-														<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+													<td class="input-label">
+														<label for="v_ssl_ca" class="form-label">
+															<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
+														</label>
+														<textarea class="form-control u-minHeight100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
 													</td>
 												</tr>
 											</table>

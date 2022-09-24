@@ -131,15 +131,10 @@
 								<a href="javascript:toggleOptions();" class="vst-advanced"><?=_('Basic options');?></a>
 							</td>
 						</tr>
-
 						<tr>
-							<td class="vst-text step-top">
-								<?=$v_config_path;?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<textarea class="vst-textinput console" name="v_config"><?=$v_config;?></textarea>
+							<td class="step-top">
+								<label for="v_config" class="form-label"><?=$v_config_path;?></label>
+								<textarea class="form-control u-minHeight300 u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
 							</td>
 						</tr>
 						<td class="input-label" style="text-transform: capitalize;">

@@ -54,7 +54,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-type input-label">
+							<td class="vst-text input-label">
 								<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
 							</td>
 						</tr>
@@ -86,7 +86,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-type input-label">
+							<td class="vst-text input-label">
 								<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
 							</td>
 						</tr>
@@ -97,13 +97,11 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-type input-label">
-								<?=_('Aliases');?> <span class="optional">(<?=_('use local-part');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+							<td class="input-label">
+								<label for="v_aliases" class="form-label">
+									<?=_('Aliases');?> <span class="optional">(<?=_('use local-part');?>)</span>
+								</label>
+								<textarea class="form-control u-inputWidth" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -117,7 +115,7 @@
 							</td>
 						</tr>
 						<tr <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for">
-							<td class="input-type input-label">
+							<td class="input-label">
 								<div class="form-check">
 									<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>>
 									<label for="v_fwd_for">
@@ -127,7 +125,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-type input-label">
+							<td class="input-label">
 								<div class="form-check">
 									<input class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply" <?php if ($v_autoreply == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('autoreplytable');">
 									<label for="v_autoreply">
@@ -140,13 +138,9 @@
 							<td>
 								<table style="display:<?php if ($v_autoreply == 'yes') { echo 'block';} else {echo 'none';}?> ;" id="autoreplytable">
 									<tr>
-										<td class="vst-text" style="padding: 12px 0 0 0;">
-											<?=_('Message');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<textarea size="20" class="vst-textinput short" name="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>
+										<td class="input-label">
+											<label for="v_autoreply_message" class="form-label"><?=_('Message');?></label>
+											<textarea class="form-control u-inputWidth" name="v_autoreply_message" id="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>
 										</td>
 									</tr>
 								</table>
@@ -156,13 +150,11 @@
 							<td>
 								<table id="v-fwd-opt">
 									<tr>
-										<td class="vst-text input-type input-label">
-											<?=_('Forward to');?> <span class="optional">(<?=_('one or more email addresses');?>)</span>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<textarea size="20" class="vst-textinput short" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+										<td class="input-label">
+											<label for="v_fwd" class="form-label">
+												<?=_('Forward to');?> <span class="optional">(<?=_('one or more email addresses');?>)</span>
+											</label>
+											<textarea class="form-control u-inputWidth" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
 										</td>
 									</tr>
 								</table>

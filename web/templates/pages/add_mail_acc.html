@@ -102,23 +102,19 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
-											<?=_('Aliases');?> <span class="optional">(<?=_('use local-part');?>)</span>
+										<td class="input-label">
+											<label for="v_aliases" class="form-label">
+												<?=_('Aliases');?> <span class="optional">(<?=_('use local-part');?>)</span>
+											</label>
+											<textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
 										</td>
 									</tr>
 									<tr>
-										<td>
-											<textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
-										</td>
-									</tr>
-									<tr>
-										<td class="vst-text input-label">
-											<?=_('Forward to');?> <span class="optional">(<?=_('one or more email addresses');?>)</span>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<textarea size="20" class="vst-textinput short" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+										<td class="input-label">
+											<label for="v_fwd" class="form-label">
+												<?=_('Forward to');?> <span class="optional">(<?=_('one or more email addresses');?>)</span>
+											</label>
+											<textarea class="form-control" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
 										</td>
 									</tr>
 									<tr>

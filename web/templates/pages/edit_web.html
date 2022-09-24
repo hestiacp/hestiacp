@@ -61,13 +61,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Aliases');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+							<td class="input-label">
+								<label for="v_aliases" class="form-label"><?=_('Aliases');?></label>
+								<textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
 							</td>
 						</tr>
 						<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') {?>
@@ -254,34 +250,26 @@
 										<td>
 											<table id="ssl-details" style="<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">
 												<tr>
-													<td class="vst-text input-label step-top">
-														<?=_('SSL Certificate');?>
-														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
+													<td class="input-label step-top">
+														<label for="ssl_crt" class="form-label">
+															<?=_('SSL Certificate');?>
+															<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
+														</label>
+														<textarea class="form-control u-minHeight100 u-console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+													<td class="input-label">
+														<label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
+														<textarea class="form-control u-minHeight100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
-													<td class="vst-text input-label">
-														<?=_('SSL Key');?>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
-													</td>
-												</tr>
-												<tr>
-													<td class="vst-text input-label">
-														<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+													<td class="input-label">
+														<label for="v_ssl_ca" class="form-label">
+															<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
+														</label>
+														<textarea class="form-control u-minHeight100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
 													</td>
 												</tr>
 											</table>
@@ -475,13 +463,9 @@
 															</td>
 														</tr>
 														<tr>
-															<td class="vst-text input-label">
-																<?=_('Proxy Extensions');?>
-															</td>
-														</tr>
-														<tr>
-															<td>
-																<textarea size="20" class="vst-textinput short" name="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; }  ?></textarea>
+															<td class="input-label">
+																<label for="v_proxy_ext" class="form-label"><?=_('Proxy Extensions');?></label>
+																<textarea class="form-control u-inputWidth u-minHeight100" name="v_proxy_ext" id="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; } ?></textarea>
 															</td>
 														</tr>
 													</table>

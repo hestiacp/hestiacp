@@ -577,7 +577,7 @@ meter {
   margin-right: 15px;
 }
 
-td.input-label.step-top.advanced-options .fas {
+td.advanced-options .fas {
   display: none !important;
 }
 

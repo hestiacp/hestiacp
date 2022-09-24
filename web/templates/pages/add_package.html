@@ -31,7 +31,7 @@
 				<td class="data-dotted">
 					<table class="data-col2">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Adding Package');?></span>
 							</td>
 						</tr>
@@ -41,7 +41,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<?=_('Package Name');?>
 							</td>
 						</tr>
@@ -51,7 +51,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
 							</td>
 						</tr>
@@ -62,7 +62,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<?=_('Bandwidth');?> <span class="optional">(<?=_('in megabytes');?>)</span>
 							</td>
 						</tr>
@@ -73,7 +73,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<?=_('Backups');?>
 							</td>
 						</tr>
@@ -92,7 +92,7 @@
 							<td>
 								<table id="web-options" style="display: none;">
 									<tr>
-										<td class="input-label step-top">
+										<td class="u-pt18">
 											<?=_('Web Domains');?>
 										</td>
 									</tr>
@@ -103,7 +103,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<?=_('Web Aliases');?> <span class="optional">(<?=_('per domain');?>)</span>
 										</td>
 									</tr>
@@ -114,7 +114,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<label for="v_web_template" class="form-label">
 												<?=_('Web Template') . " <span class='optional'> " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
 											</label>
@@ -133,7 +133,7 @@
 									</tr>
 									<?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
 										<tr>
-											<td class="input-label">
+											<td class="u-pt6">
 												<label for="v_backend_template" class="form-label">
 													<?=_('Backend Template') . "<span class='optional'>" .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
 												</label>
@@ -154,7 +154,7 @@
 									<?=""; }?>
 									<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
 										<tr>
-											<td class="input-label">
+											<td class="u-pt6">
 												<label for="v_proxy_template" class="form-label">
 													<?=_('Proxy Template') . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
 												</label>
@@ -185,7 +185,7 @@
 							<td>
 								<table id="dns-options" style="display: none;">
 									<tr>
-										<td class="input-label step-top">
+										<td class="u-pt18">
 											<label for="v_dns_template" class="form-label">
 												<?=_('DNS Template') . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
 											</label>
@@ -203,7 +203,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<?=_('DNS domains');?>
 										</td>
 									</tr>
@@ -214,7 +214,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<?=_('DNS records');?> <span class="optional">(<?=_('per domain');?>)</span>
 										</td>
 									</tr>
@@ -226,7 +226,7 @@
 									</tr>
 									<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
 										<tr>
-											<td class="input-label">
+											<td class="u-pt6">
 												<?=_('Name Servers');?>
 											</td>
 										</tr>
@@ -293,7 +293,7 @@
 											}
 										?>
 										<tr class="add-ns" <?php if ($v_ns8) echo 'style="display:none;"' ; ?> >
-											<td class="step-top-small">
+											<td class="u-pt18">
 												<span class="add-ns-button additional-control add"><?=_('Add one more Name Server');?></span>
 											</td>
 										</tr>
@@ -311,7 +311,7 @@
 							<td>
 								<table id="mail-options" style="display: none;">
 									<tr>
-										<td class="input-label step-top">
+										<td class="u-pt18">
 											<?=_('Mail Domains');?>
 										</td>
 									</tr>
@@ -322,7 +322,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<?=_('Mail Accounts');?> <span class="optional">(<?=_('per domain');?>)</span>
 										</td>
 									</tr>
@@ -333,7 +333,7 @@
 										<td>
 									</tr>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<?=_('Rate limit');?> <span class="optional">(<?=_('per account / hour');?>)</span>
 										</td>
 									</tr>
@@ -355,7 +355,7 @@
 							<td>
 								<table id="database-options" style="display: none;">
 									<tr>
-										<td class="input-label step-top">
+										<td class="u-pt18">
 											<?=_('Databases');?>
 										</td>
 									</tr>
@@ -378,7 +378,7 @@
 							<td>
 								<table id="system-options" style="display: none;">
 									<tr>
-										<td class="input-label step-top">
+										<td class="u-pt18">
 											<?=_('Cron Jobs');?>
 										</td>
 									</tr>
@@ -389,7 +389,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<label for="v_shell" class="form-label"><?=_('SSH Access');?></label>
 											<select class="form-select u-mb20" name="v_shell" id="v_shell">
 												<?php

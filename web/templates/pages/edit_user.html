@@ -65,7 +65,7 @@
 				<td class="data-dotted">
 					<table class="data-col2">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing User');?></span>
 							</td>
 						</tr>
@@ -75,7 +75,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<?=_('Username');?>
 							</td>
 						</tr>
@@ -86,7 +86,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<?=_('Contact');?>
 							</td>
 						</tr>
@@ -99,7 +99,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<?=_('Email');?>
 							</td>
 						</tr>
@@ -112,7 +112,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
 							</td>
 						</tr>
@@ -187,7 +187,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_language" class="form-label"><?=_('Language');?></label>
 								<select class="form-select" name="v_language" id="v_language">
 									<?php
@@ -211,7 +211,7 @@
 						<?php } else { ?>
 							<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] != $v_username)) {?>
 							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<label for="v_role" class="form-label"><?=_('Role');?></label>
 									<select class="form-select" name="v_role" id="v_role">
 										<option value="user"><?=_('User');?>
@@ -223,7 +223,7 @@
 						<?php } ?>
 						<?php if ($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') {?>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_user_theme" class="form-label"><?=_('Theme') ?></label>
 								<select class="form-select" name="v_user_theme" id="v_user_theme">
 									<?php
@@ -243,7 +243,7 @@
 						</tr>
 						<?php } ?>
 							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<label for="v_sort_order" class="form-label"><?=_('Default list sort order');?></label>
 									<select class="form-select" name="v_sort_order" id="v_sort_order">
 										<option value='date' <?php if($v_sort_order === 'date') echo 'selected' ?>><?=_('Date'); ?></option>
@@ -253,7 +253,7 @@
 							</tr>
 						<?php if ($_SESSION['userContext'] === 'admin') {?>
 							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<label for="v_package" class="form-label"><?=_('Package');?></label>
 									<select class="form-select" name="v_package" id="v_package">
 										<?php
@@ -270,15 +270,15 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
 								</td>
 							</tr>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<table id="advanced-opts" style="display: none;">
 										<tr>
-											<td class="input-label">
+											<td class="u-pt6">
 												<label for="v_shell" class="form-label"><?=_('SSH Access');?></label>
 												<select class="form-select" name="v_shell" id="v_shell">
 													<?php
@@ -295,7 +295,7 @@
 											</td>
 										</tr>
 										<tr>
-											<td class="input-label">
+											<td class="u-pt6">
 												<label for="v_phpcli" class="form-label"><?=_('PHP CLI Version');?></label>
 												<select class="form-select" name="v_phpcli" id="v_phpcli">
 													<?php
@@ -317,7 +317,7 @@
 										</tr>
 										<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
 											<tr>
-												<td class="input-label">
+												<td class="u-pt6">
 													<?=_('Default Name Servers');?>
 												</td>
 											</tr>
@@ -384,7 +384,7 @@
 												}
 											?>
 											<tr class="add-ns" <?php if ($v_ns8) echo 'style="display:none;"' ; ?> >
-												<td class="step-top-small">
+												<td class="u-pt18">
 													<span class="add-ns-button vst-advanced button"><?=_('Add one more Name Server');?></span>
 												</td>
 											</tr>
@@ -395,7 +395,7 @@
 						<?php } ?>
 						<?php if ($_SESSION['userContext'] !== 'admin') {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 								</td>
 							</tr>
 						<?php } ?>

@@ -2257,21 +2257,9 @@ body.mobile .l-icon-shortcuts {
   font-weight: 600;
 }
 
-.input-label {
-  padding-top: 6px;
-}
-
 .data input[type="checkbox"] {
   display: inline;
   cursor: pointer;
-}
-
-.step-top {
-  padding-top: 18px;
-}
-
-.step-top-small {
-  padding-top: 14px;
 }
 
 .jump-top {
@@ -3542,10 +3530,6 @@ form#vstobjects.suspended {
   padding: 5px 20px;
 }
 
-.shortcuts ul li.step-top {
-  padding-top: 30px;
-}
-
 .shortcuts ul li span {
   color: #ff3478;
   display: inline-block;
@@ -3941,6 +3925,18 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 
 .u-mb20 {
   margin-bottom: 20px !important;
+}
+
+.u-pt6 {
+  padding-top: 6px !important;
+}
+
+.u-pt18 {
+  padding-top: 18px !important;
+}
+
+.u-pt30 {
+  padding-top: 30px !important;
 }
 
 .u-inputWidth {

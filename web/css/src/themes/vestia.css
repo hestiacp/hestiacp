@@ -125,10 +125,6 @@ strong {
   box-shadow: none !important;
 }
 
-.vst-textinput {
-  box-shadow: none;
-}
-
 .card a.ui-button {
   line-height: 2rem !important;
 }
@@ -289,10 +285,6 @@ strong {
   border-radius: 0 !important;
 }
 
-.vst-textinput {
-  border-radius: 0 !important;
-}
-
 .pill {
   border-radius: 4px;
 }
@@ -357,9 +349,7 @@ a.vst-text:hover b,
 
 .vst-input:focus,
 .form-control:focus,
-.vst-textinput:focus,
-.login .vst-input:focus,
-.login .vst-textinput:focus {
+.login .vst-input:focus {
   border: 1px solid #ff6701;
   background-color: #fff4ed;
   color: #333;
@@ -372,8 +362,7 @@ a.vst-text:hover b,
 
 .vst-input:hover,
 .form-control:hover,
-.form-select:hover,
-.vst-textinput:hover {
+.form-select:hover {
   border: 1px solid #e95e00;
 }
 
@@ -515,8 +504,7 @@ meter {
 
 .vst-input,
 .form-control,
-.form-select,
-.vst-textinput {
+.form-select {
   font-family: Arial, Helvetica, sans-serif !important;
 }
 

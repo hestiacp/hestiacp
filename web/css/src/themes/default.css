@@ -2339,24 +2339,21 @@ label:hover {
 
 .vst-input:disabled,
 .form-control:disabled,
-.form-select:disabled,
-.vst-textinput:disabled {
+.form-select:disabled {
   background-color: #e7e7e7;
   text-shadow: 1px 1px rgb(255 255 255 / 100%);
   color: #686868;
 }
 
 .vst-input:focus:disabled,
-.form-control:focus:disabled,
-.vst-textinput:disabled {
+.form-control:focus:disabled {
   border-color: #dedede;
   background-color: #f1f1f1;
 }
 
 .vst-input:disabled:hover,
 .form-control:disabled:hover,
-.form-select:disabled:hover,
-.vst-textinput:disabled:hover {
+.form-select:disabled:hover {
   border-color: #cfcfcf;
 }
 
@@ -2422,54 +2419,9 @@ a.vst-text:active b {
   width: 14px;
 }
 
-.vst-textinput {
-  background-color: #fff;
-  border: 1px solid #cfcfcf;
-  border-radius: 4px;
-  color: #4e4e4e;
-  font-size: 0.8rem;
-  width: 560px;
-  height: 60px;
-  font-family: Exo, Arial, Helvetica, sans-serif;
-  padding: 7px 1px 3px 14px;
-  font-weight: normal;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-}
-
-.vst-textinput:hover {
-  border: 1px solid #94c8f0;
-}
-
-.vst-textinput:focus {
-  border: 1px solid #008fee;
-  background-color: #d7f9ff;
-  color: #333;
-}
-
-.vst-textinput:disabled {
-  background-color: #f1f1f1;
-}
-
-.vst-textinput.console {
-  font-size: 0.8rem;
-  width: 630px;
-  height: 300px;
-  font-family: Inconsolata, "Lucida Console", Monaco, monospace;
-  white-space: pre;
-}
-
-.vst-textinput.short {
-  width: 360px;
-}
-
-.vst-textinput.short.console {
-  height: 80px;
-  overflow: scroll;
-}
-
-#advanced-options .console {
+#advanced-options .u-console {
   width: 833px;
-  height: 600px;
+  height: 600px !important;
 }
 
 .generate {

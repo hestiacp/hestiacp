@@ -102,10 +102,6 @@ strong {
   box-shadow: none !important;
 }
 
-.vst-textinput {
-  box-shadow: none;
-}
-
 .ui-button,
 .button,
 .ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit,

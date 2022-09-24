@@ -1430,10 +1430,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   vertical-align: top;
 }
 
-.l-unit__col--left.step-left {
-  padding-left: 30px;
-}
-
 .l-unit__col--right.total {
   padding-left: 16px;
 }

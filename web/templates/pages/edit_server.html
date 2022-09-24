@@ -46,14 +46,14 @@
 						</tr>
 						<!-- Basic options tab -->
 						<tr>
-							<td class="vst-text input-label step-top advanced-options">
+							<td class="input-label step-top advanced-options">
 								<a href="javascript:elementHideShow('basic');" class="vst-text">
 									<i class="fas fa-cog"></i><b><?=_('Basic options');?> <img src="/images/arrow.png"></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-left">
+							<td class="input-label step-left">
 								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="basic">
 									<tr>
 										<td class="step-top">
@@ -138,29 +138,29 @@
 
 						<!-- Updates tab -->
 						<tr>
-							<td class="vst-text input-label step-top advanced-options">
+							<td class="input-label step-top advanced-options">
 								<a href="javascript:elementHideShow('version');" class="vst-text">
 									<i class="fas fa-code-branch"></i><b><?=_('Updates');?> <img src="/images/arrow.png"></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-left">
+							<td class="input-label step-left">
 								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="version">
 									<tr>
-										<td class="vst-text step-top">
+										<td class="step-top">
 											<?=_('Version'); ?>: <span class="optional"><?=$_SESSION['VERSION'];?></span>
 										</td>
 									</tr>
 									<?php if ($_SESSION['RELEASE_BRANCH'] !== 'release') {?>
 										<tr>
-											<td class="vst-text">
+											<td>
 												<?=_('Release'); ?>: <span class="optional"><?=$_SESSION['RELEASE_BRANCH'];?></span>
 											</td>
 										</tr>
 									<?php } ?>
 									<tr>
-										<td class="vst-text input-label">
+										<td class="input-label">
 											<?=_('Options'); ?>
 										</td>
 									</tr>
@@ -216,46 +216,46 @@
 
 						<!-- Web Server tab -->
 						<tr>
-							<td class="vst-text input-label step-top advanced-options">
+							<td class="input-label step-top advanced-options">
 								<a href="javascript:elementHideShow('web');" class="vst-text">
 									<i class="fas fa-globe-americas"></i><b><?=_('Web Server');?> <img src="/images/arrow.png"></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-left">
+							<td class="input-label step-left">
 								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="web" class="step-top">
 									<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
 										<tr>
-											<td class="vst-text">
+											<td>
 												<?=_('Proxy Server');?>: <span class="optional"><?=$_SESSION['PROXY_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
 											</td>
 										</tr>
 									<?php } ?>
 									<?php if (!empty($_SESSION['WEB_SYSTEM'])) { ?>
 										<tr>
-											<td class="vst-text">
+											<td>
 												<?=_('Web Server');?>: <span class="optional"><?=$_SESSION['WEB_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
 											</td>
 										</tr>
 									<?php } ?>
 									<?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
 										<tr>
-											<td class="vst-text">
+											<td>
 												<?=_('Backend Server');?>: <span class="optional"><?=$_SESSION['WEB_BACKEND']; ?> <a href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
 											</td>
 										</tr>
 									<?php } ?>
 									<?php if (!empty($_SESSION['WEB_BACKEND_POOL'])) { ?>
 										<tr>
-											<td class="vst-text">
+											<td>
 												<?=_('Backend Pool Mode');?>: <span class="optional"><?=$_SESSION['WEB_BACKEND_POOL']; ?></span>
 											</td>
 										</tr>
 									<?php } ?>
 									<?php if(count($v_php_versions)): ?>
 										<tr>
-											<td class="vst-text step-top">
+											<td class="step-top">
 												<?=_('Enabled multi PHP versions');?>
 
 												<span class="alert alert-info alert-with-icon">
@@ -282,7 +282,7 @@
 											<?php foreach($php_version->usedby as $wd_user => $wd_domains ): ?>
 												<?php foreach($wd_domains as $wd_domain ): ?>
 													<tr>
-														<td class="vst-text" style="border: 1px lightgrey; padding:0 10px;">
+														<td style="border: 1px lightgrey; padding:0 10px;">
 															<span>
 																<i class="fas fa-user"></i>
 																<?=$wd_user;?>
@@ -327,22 +327,22 @@
 						<!-- DNS Server tab -->
 						<?php if (!empty($_SESSION['DNS_SYSTEM'])) { ?>
 							<tr>
-								<td class="vst-text input-label step-top advanced-options">
+								<td class="input-label step-top advanced-options">
 									<a href="javascript:elementHideShow('dns');" class="vst-text">
 										<i class="fas fa-atlas"></i><b><?=_('DNS Server');?> <img src="/images/arrow.png"></b>
 									</a>
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text input-label step-left">
+								<td class="input-label step-left">
 									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
 										<tr>
-											<td class="vst-text step-top">
+											<td class="step-top">
 												<?=_('DNS Server');?>: <span class="optional"><?=$_SESSION['DNS_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
 											</td>
 										</tr>
 										<tr>
-											<td class="vst-text">
+											<td>
 												<?=_('DNS Cluster');?>: <span class="optional"><?php if ($v_dns_cluster == 'yes') { echo _('Yes'); } else { echo _('No'); } ?></span>
 											</td>
 										</tr>
@@ -352,12 +352,12 @@
 												$i++;
 											?>
 											<tr>
-												<td class="vst-text">
+												<td>
 													<?=_('Host'). ' #'.$i  ?>
 												</td>
 											</tr>
 											<tr>
-												<td class="vst-text">
+												<td>
 													<input type="text" size="20" class="vst-input" name="v_dns_remote_host" value="<?=$key; ?>" disabled>
 												</td>
 											</tr>
@@ -372,30 +372,30 @@
 						<!-- Mail Server tab -->
 						<?php if ((!empty($_SESSION['MAIL_SYSTEM']))) { ?>
 							<tr>
-								<td class="vst-text input-label step-top advanced-options">
+								<td class="input-label step-top advanced-options">
 									<a href="javascript:elementHideShow('mail');" class="vst-text">
 										<i class="fas fa-mail-bulk"></i><b><?=_('Mail Server');?> <img src="/images/arrow.png"></b>
 									</a>
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text input-label step-left">
+								<td class="input-label step-left">
 									<table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
 										<tr>
-											<td class="vst-text step-top">
+											<td class="step-top">
 												<?=_('Mail Server');?>: <span class="optional"><?=$_SESSION['MAIL_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
 											</td>
 										</tr>
 										<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
 											<tr>
-												<td class="vst-text">
+												<td>
 													<?=_('Antivirus');?>: <span class="optional"><?=$_SESSION['ANTIVIRUS_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
 												</td>
 											</tr>
 										<?php } ?>
 										<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
 											<tr>
-												<td class="vst-text">
+												<td>
 													<?=_('AntiSpam');?>: <span class="optional"><?=$_SESSION['ANTISPAM_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
 												</td>
 											</tr>
@@ -442,7 +442,7 @@
 														</td>
 													</tr>
 													<tr>
-														<td class="input-label vst-text">
+														<td class="input-label">
 															<?=_('Password');?>
 														</td>
 													</tr>
@@ -466,14 +466,14 @@
 						<!-- Databases tab -->
 						<?php if (!empty($_SESSION['DB_SYSTEM'])) { ?>
 							<tr>
-								<td class="vst-text input-label step-top advanced-options">
+								<td class="input-label step-top advanced-options">
 									<a href="javascript:elementHideShow('db');" class="vst-text">
 										<i class="fas fa-database"></i><b><?=_('Databases');?> <img src="/images/arrow.png"></b>
 									</a>
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text input-label step-left">
+								<td class="input-label step-left">
 									<table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
 										<tr>
 											<td class="input-label step-top">
@@ -490,7 +490,7 @@
 										<!-- MySQL / MariaDB Options-->
 										<?php if ($v_mysql == 'yes') { ?>
 											<tr>
-												<td class="vst-text">
+												<td>
 													<?=_('phpMyAdmin URL');?>
 												</td>
 											</tr>
@@ -518,7 +518,7 @@
 												$i++;
 											?>
 											<tr>
-												<td class="vst-text step-left">
+												<td class="step-left">
 													<?=_('Host'). ' #'.$i  ?>
 												</td>
 											</tr>
@@ -529,7 +529,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td class="vst-text step-left">
+												<td class="step-left">
 													<?=_('Password');?>
 												</td>
 											</tr>
@@ -541,7 +541,7 @@
 											</tr>
 
 											<tr>
-												<td class="vst-text step-left">
+												<td class="step-left">
 													<?=_('Maximum Number Of Databases');?>
 												</td>
 											</tr>
@@ -552,7 +552,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td class="vst-text step-left">
+												<td class="step-left">
 													<?=_('Current Number Of Databases');?>
 												</td>
 											</tr>
@@ -578,7 +578,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td class="vst-text">
+												<td>
 													<?=_('phpPgAdmin URL');?>
 												</td>
 											</tr>
@@ -595,7 +595,7 @@
 												$i++;
 											?>
 											<tr>
-												<td class="vst-text step-left">
+												<td class="step-left">
 													<?=_('Host'). ' #'.$i  ?>
 												</td>
 											</tr>
@@ -606,7 +606,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td class="vst-text step-left">
+												<td class="step-left">
 													<?=_('Maximum Number Of Databases');?>
 												</td>
 											</tr>
@@ -617,7 +617,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td class="vst-text step-left">
+												<td class="step-left">
 													<?=_('Current Number Of Databases');?>
 												</td>
 											</tr>
@@ -633,14 +633,14 @@
 							</tr>
 						<?php } ?>
 						<tr>
-							<td class="vst-text input-label step-top advanced-options">
+							<td class="input-label step-top advanced-options">
 								<a href="javascript:elementHideShow('backup');" class="vst-text">
 									<i class="fas fa-undo"></i><b><?=_('Backups');?> <img src="/images/arrow.png"></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-left">
+							<td class="input-label step-left">
 								<table style="<?php if (empty($v_backup_adv)) echo 'display:none';?> ;" id="backup">
 									<tr>
 										<td class="input-label step-top">
@@ -675,7 +675,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text">
+										<td>
 											<?=_('Directory');?> <a target="_blank" href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"><i class="fas fa-question-circle"></i></a>
 										</td>
 									</tr>
@@ -696,7 +696,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label step-left">
+										<td class="input-label step-left">
 											<table style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;" id="remote_backup">
 												<tr>
 													<td class="input-label">
@@ -714,7 +714,7 @@
 													<td>
 														<table>
 															<tr>
-																<td class="vst-text">
+																<td>
 																	<?=_('Host');?>
 																</td>
 															</tr>
@@ -725,7 +725,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td class="vst-text">
+																<td>
 																	<?=_('Port');?>
 																</td>
 															</tr>
@@ -736,7 +736,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td class="vst-text">
+																<td>
 																	<?=_('Username');?>
 																</td>
 															</tr>
@@ -747,7 +747,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td class="vst-text">
+																<td>
 																	<?=_('Password');?>
 																</td>
 															</tr>
@@ -758,7 +758,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td class="vst-text">
+																<td>
 																	<?=_('Directory');?>
 																</td>
 															</tr>
@@ -775,7 +775,7 @@
 													<td>
 														<table>
 															<tr>
-																<td class="vst-text">
+																<td>
 																	<?=_('Bucket');?>
 																</td>
 															</tr>
@@ -786,7 +786,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td class="vst-text">
+																<td>
 																	<?=_('Key ID');?>
 																</td>
 															</tr>
@@ -797,7 +797,7 @@
 																</td>
 															</tr>
 															<tr>
-																<td class="vst-text">
+																<td>
 																	<?=_('Application Key');?>
 																</td>
 															</tr>
@@ -817,14 +817,14 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-top advanced-options">
+							<td class="input-label step-top advanced-options">
 								<a href="javascript:elementHideShow('ssl');" class="vst-text">
 									<i class="fas fa-lock"></i><b><?=_('SSL');?><img src="/images/arrow.png"></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-left">
+							<td class="input-label step-left">
 								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="ssl">
 									<tr>
 										<td class="step-top">
@@ -909,14 +909,14 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-top advanced-options">
+							<td class="input-label step-top advanced-options">
 								<a href="javascript:elementHideShow('security');" class="vst-text">
 									<i class="fas fa-key"></i><b><?=_('Security');?> <img src="/images/arrow.png"></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-left">
+							<td class="input-label step-left">
 								<table style="<?php if (empty($v_security_adv)) echo 'display:none;';?>" id="security">
 									<tr>
 										<td class="section-title" onclick="javascript:elementHideShow('security-system-table',this);">
@@ -927,7 +927,7 @@
 									<tr>
 										<td>
 											<table id="security-system-table" style="display: none;">
-												<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+												<td class="input-label step-top" style="font-size:1rem;padding-bottom:12px;">
 													<?=_('API');?>
 												</td>
 												<tr>
@@ -967,7 +967,7 @@
 														</table>
 													</td>
 												</tr>
-												<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+												<td class="input-label step-top" style="font-size:1rem;padding-bottom:12px;">
 													<?=_('Login');?>
 												</td>
 												<tr>
@@ -989,7 +989,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td class="vst-text input-label">
+													<td class="input-label">
 														<?=_('Inactive session timeout');?> (<?=_('Minutes');?>)
 													</td>
 												</tr>
@@ -1023,7 +1023,7 @@
 											<td>
 												<table id="security-sysadminprotect-table" class="step-top" style="display: none;">
 													<tr>
-														<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+														<td class="input-label step-top" style="font-size:1rem;padding-bottom:12px;">
 															<?=_('System Administrator account');?>
 														</td>
 													</tr>
@@ -1068,7 +1068,7 @@
 										<td>
 											<table id="security-policies-table" style="display: none;">
 												<tr>
-													<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+													<td class="input-label step-top" style="font-size:1rem;padding-bottom:12px;">
 														<?=_('Users');?>
 													</td>
 												</tr>
@@ -1131,7 +1131,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td class="vst-text input-label step-top" style="font-size:1rem;padding-bottom:12px;">
+													<td class="input-label step-top" style="font-size:1rem;padding-bottom:12px;">
 														<?=_('Domains');?>
 													</td>
 												</tr>
@@ -1151,14 +1151,14 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-top advanced-options">
+							<td class="input-label step-top advanced-options">
 								<a href="javascript:elementHideShow('hestia');" class="vst-text">
 									<i class="fas fa-puzzle-piece"></i><b><?=_('Hestia Control Panel Plugins');?> <img src="/images/arrow.png"></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label step-left">
+							<td class="input-label step-left">
 								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="hestia">
 									<tr>
 										<td class="input-label step-top">

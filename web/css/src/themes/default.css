@@ -2380,10 +2380,6 @@ label:hover {
   background-color: #fff;
 }
 
-.vst-text {
-  cursor: default;
-}
-
 a.vst-text,
 a.vst-text b {
   color: #326b9b;

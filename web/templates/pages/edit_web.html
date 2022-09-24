@@ -50,7 +50,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
+							<td class="step-top">
 								<?=_('Domain');?>
 							</td>
 						</tr>
@@ -122,7 +122,7 @@
 							<td class="step-left">
 								<table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
 									<tr>
-										<td class="vst-text input-label">
+										<td class="input-label">
 											<?=_('Username');?>
 										</td>
 									</tr>
@@ -132,7 +132,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="vst-text input-label">
+										<td class="input-label">
 											<?=_('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?=_('generate');?></a>
 										</td>
 									</tr>
@@ -177,12 +177,12 @@
 									</div>
 									<table id="custom_redirect" style="margin-left: 22px; display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
 										<tr>
-											<td class="vst-text input-label">
+											<td class="input-label">
 												<?=_('Target domain or URL');?>:
 											</td>
 										</tr>
 										<tr>
-											<td class="vst-text input-label">
+											<td class="input-label">
 												<input type="text" name="v-redirect-custom" class="vst-input" value="<?=$v_redirect_custom;?>" />
 											</td>
 										</tr>
@@ -349,7 +349,7 @@
 						</tr>
 
 						<tr>
-							<td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
+							<td class="step-top">
 								<a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
 							</td>
 						</tr>
@@ -394,7 +394,7 @@
 											<tr>
 												<td class="step-left">
 													<table id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
-														<td class="vst-text input-label">
+														<td class="input-label">
 															<?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
 														</td>
 														<tr>
@@ -501,7 +501,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td class="vst-text input-label">
+													<td class="input-label">
 														<?php print( _('Directory'));?> <span class="optional">(<?=_('optional');?>)</span>
 													</td>
 												</tr>
@@ -542,14 +542,14 @@
 												?>
 												<table style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" class="ftptable ftptable-nrm" name="v_add_domain_ftp">
 													<tr>
-														<td class="vst-text input-label">
+														<td class="input-label">
 															<?=_('FTP');?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
 															<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0" />
 															<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>" />
 														</td>
 													</tr>
 													<tr>
-														<td class="vst-text step-left input-label">
+														<td class="step-left input-label">
 															<?=_('Username');?><br>
 															<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 														</td>
@@ -562,7 +562,7 @@
 														</td>
 													</tr>
 													<tr>
-														<td class="vst-text step-left  input-label">
+														<td class="step-left input-label">
 															<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
 														</td>
 													</tr>
@@ -573,7 +573,7 @@
 													</tr>
 
 													<tr>
-														<td class="vst-text step-left input-label">
+														<td class="step-left input-label">
 															<?=_('Path');?>
 														</td>
 													</tr>
@@ -587,7 +587,7 @@
 													</tr>
 													<?php if ($ftp_user['is_new'] == 1): ?>
 													<tr>
-														<td class="vst-text step-left input-label">
+														<td class="step-left input-label">
 															<?=_('Send FTP credentials to email');?>
 														</td>
 													</tr>
@@ -603,7 +603,7 @@
 										</tr>
 
 										<tr class="add-new-ftp-user-button" style="<?=!empty($v_ftp_user) ? '' : 'display:none;' ?>">
-											<td class="vst-text step-top v-add-new-user step-bottom">
+											<td class="step-top v-add-new-user step-bottom">
 												<a class="additional-control vst-advanced" onClick="App.Actions.WEB.add_ftp_user_form()"><?=_('Add one more FTP Account');?></a>
 											</td>
 										</tr>
@@ -622,14 +622,14 @@
 	<div id="templates" class="hidden">
 		<table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
 			<tr>
-				<td class="vst-text input-label">
+				<td class="input-label">
 					<?=_('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
 					<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
 					<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1" />
 				</td>
 			</tr>
 			<tr>
-				<td class="vst-text step-left input-label">
+				<td class="step-left input-label">
 					<?=_('Username');?><br>
 					<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 				</td>
@@ -641,7 +641,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="vst-text step-left  input-label">
+				<td class="step-left input-label">
 					<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
 				</td>
 			</tr>
@@ -652,7 +652,7 @@
 			</tr>
 
 			<tr>
-				<td class="vst-text step-left input-label">
+				<td class="step-left input-label">
 					<?=_('Path');?>
 				</td>
 			</tr>
@@ -664,7 +664,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="vst-text step-left input-label">
+				<td class="step-left input-label">
 					<?=_('Send FTP credentials to email');?>
 				</td>
 			</tr>

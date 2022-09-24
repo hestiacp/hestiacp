@@ -56,7 +56,7 @@ App.Listeners.WEB.keypress_ftp_username = function() {
         if (current_val.trim() != '') {
             App.Actions.WEB.update_ftp_username_hint(ref, current_val);
         }
-        
+
         ref.bind('keypress input', function(evt) {
             clearTimeout(window.frp_usr_tmt);
             window.frp_usr_tmt = setTimeout(function() {
@@ -78,7 +78,7 @@ App.Actions.WEB.update_ftp_path_hint = function(elm, hint) {
     if (hint[0] != '/') {
         hint = '/' + hint;
     }
-    
+
     hint = hint.replace(/\/(\/+)/g, '/');
 
     $(elm).parent().find('.v-ftp-path-hint').text(hint);
@@ -92,7 +92,7 @@ App.Listeners.WEB.keypress_ftp_path = function() {
         if (current_val.trim() != '') {
             App.Actions.WEB.update_ftp_path_hint(ref, current_val);
         }
-        
+
         ref.bind('keypress input', function(evt) {
             clearTimeout(window.frp_usr_tmt);
             window.frp_usr_tmt = setTimeout(function() {
@@ -108,16 +108,16 @@ App.Listeners.WEB.keypress_ftp_path = function() {
 App.Actions.WEB.add_ftp_user_form = function() {
     var ref = $('#templates').find('.ftptable-nrm').clone(true);
     var index = $('.data-col2 .ftptable').length + 1;
-    
+
     ref.find('input').each(function(i, elm) {
         var attr_value = $(elm).prop('name').replace('%INDEX%', index);
         $(elm).prop('name', attr_value);
     });
-    
+
     ref.find('.ftp-user-number').text(index);
-    
+
     $('#ftp_users').append(ref);
-    
+
     var index = 1;
     $('.data-col2 .ftp-user-number:visible').each(function(i, o) {
         $(o).text(index);
@@ -134,13 +134,13 @@ App.Actions.WEB.remove_ftp_user = function(elm) {
     }
     ref.removeClass('ftptable-nrm');
     ref.hide();
-    
+
     var index = 1;
     $('.data-col2 .ftp-user-number:visible').each(function(i, o) {
         $(o).text(index);
         index += 1;
     });
-    
+
     if ($('.ftptable-nrm:visible').length == 0) {
         $('.add-new-ftp-user-button').hide();
         $('input[name="v_ftp"]').prop('checked', false);
@@ -193,17 +193,17 @@ App.Actions.WEB.toggle_letsencrypt = function(elm) {
     }
 }
 
-App.Actions.WEB.randomPasswordGenerated = function(elm) { 
+App.Actions.WEB.randomPasswordGenerated = function(elm) {
     return App.Actions.WEB.passwordChanged(elm);
 }
 
-App.Actions.WEB.passwordChanged = function(elm) { 
+App.Actions.WEB.passwordChanged = function(elm) {
     var ref = $(elm).parents('.ftptable');
     if (ref.find('.vst-email-alert-on-psw').length == 0) {
         var inp_name = ref.find('.v-ftp-user-is-new').prop('name');
         inp_name = inp_name.replace('is_new', 'v_ftp_email');
         ref.find('tr:last').after('<tr>\
-                                        <td class="vst-text step-left input-label">\
+                                        <td class="step-left input-label">\
                                              Send FTP credentials to email\
                                         </td>\
                                     </tr>\
@@ -237,10 +237,10 @@ $(function() {
             $('.stats-auth').show();
         }
     });
-    
+
     $('select[name="v_nginx_cache"]').change(function(evt){
         var select = $(evt.target);
-    
+
         if(select.val() != 'yes'){
             $('#v-clear-cache').hide();
             $('#v_nginx_cache_length').hide();
@@ -248,8 +248,8 @@ $(function() {
             $('#v-clear-cache').show();
             $('#v_nginx_cache_length').show();
         }
-    });  
-    
+    });
+
     $('select[name="v_proxy_template"]').change(function(evt){
         var select = $(evt.target);
 
@@ -263,7 +263,7 @@ $(function() {
         } else {
             $('#v-clear-cache').show();
         }
-    });  
+    });
 
     $('#vstobjects').on('submit', function(evt) {
         $('input[disabled]').each(function(i, elm) {
@@ -292,7 +292,7 @@ function elementHideShow(element){
 }
 
 $('.v-redirect-custom-value').change( function(){
-    
+
     if(this.value == "custom"){
         $('#custom_redirect').show();
     }else{

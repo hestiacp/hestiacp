@@ -15,7 +15,7 @@
 		<div class="l-menu clearfix noselect">
 			<!-- Records tab -->
 			<div class="l-menu__item <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-tasks panel-icon"></i><?=_('Records');?></a></div>
-			
+
 			<!-- File Manager tab -->
 			<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
 				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
@@ -24,7 +24,7 @@
 						<div class="l-menu__item <?php if($TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i><?=_('Files');?></a></div>
 				<?php } ?>
 			<?php } ?>
-			
+
 			<!-- Statistics tab-->
 			<div class="l-menu__item <?php if($TAB == 'STATS') echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i><?=_('Statistics');?></a></div>
 		</div>
@@ -64,7 +64,7 @@
 			<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') || ($_SESSION['user'] === 'admin')) {?>
 				<?php if (($_SESSION['userContext'] === 'admin') && (!empty($_SESSION['look']))) {?>
 					<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
-				<?php } else { ?>				
+				<?php } else { ?>
 					<div class="l-menu__item <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'l-menu__item--active' ?>"><a href="/list/server/" class="l-profile__serversettings" title="<?=_('Server');?>"><i class="fas fa-cog"></i></a></div>
 				<?php } ?>
 			<?php } ?>
@@ -81,7 +81,7 @@
 
 			<!-- Help / Documentation-->
 			<div class="l-menu__item"><a href="https://docs.hestiacp.com/" rel="noopener" title="<?=_('Help');?>" class="l-profile__help" target="_blank"><i class="fas fa-question-circle"></i></a></div>
-			
+
 			<!-- Logout -->
 			<?php if (isset($_SESSION['look']) && (!empty($_SESSION['look']))) { ?>
 				<div class="l-menu__item"><a href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?> (<?=$user?>)" class="l-profile__logout"><i class="fas fa-arrow-alt-circle-up"></i></a></div>
@@ -99,12 +99,12 @@
 		<div class="l-stat">
 			<!-- Users tab -->
 			<?php if (($_SESSION['userContext'] == 'admin') && (empty($_SESSION['look']))) {?>
-				<?php 
+				<?php
 					if (($_SESSION['user'] !== 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes')) {
 						$user_count = $panel[$user]['U_USERS'] - 1;
 					} else {
 						$user_count = $panel[$user]['U_USERS'];
-					} 
+					}
 				?>
 				<div class="l-stat__col <?php if(in_array($TAB, ['USER', 'LOG'])) echo 'l-stat__col--active' ?>">
 					<a href="/list/user/"  title="<?=_('Users');?>: <?=$user_count;?>&#13;<?=_('Suspended');?>: <?=$panel[$user]['SUSPENDED_USERS']?>">

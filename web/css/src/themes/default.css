@@ -198,16 +198,6 @@ a {
   color: #7c7c7c;
 }
 
-.clearfix::before,
-.clearfix::after {
-  content: "";
-  display: table;
-}
-
-.clearfix::after {
-  clear: both;
-}
-
 .text-right {
   text-align: right;
 }
@@ -1011,18 +1001,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-left: 96px;
 }
 
-.l-sort-toolbar td.step-right:first-of-type {
-  padding-right: 20px;
-}
-
-.l-sort-toolbar td:nth-of-type(2) {
-  /* padding-right: 60px; */
-}
-
-.l-sort-toolbar td:last-of-type {
-  /* padding-left: 40px; */
-}
-
 .l-sort-toolbar__filter-apply {
   float: left;
   width: 32px;
@@ -1442,24 +1420,12 @@ div.l-content > div.l-separator:nth-of-type(4) {
   vertical-align: top;
 }
 
-.l-unit__col--left.step-left {
-  padding-left: 30px;
-}
-
 .l-unit__col--right.total {
   padding-left: 16px;
 }
 
 .l-unit__col--right.back {
   padding-left: 78px;
-}
-
-.l-sort-toolbar .step-left {
-  padding-left: 40px;
-}
-
-.step-right {
-  padding-right: 40px;
 }
 
 .l-unit__date {
@@ -2257,21 +2223,9 @@ body.mobile .l-icon-shortcuts {
   font-weight: 600;
 }
 
-.input-label {
-  padding-top: 6px;
-}
-
 .data input[type="checkbox"] {
   display: inline;
   cursor: pointer;
-}
-
-.step-top {
-  padding-top: 18px;
-}
-
-.step-top-small {
-  padding-top: 14px;
 }
 
 .jump-top {
@@ -2378,10 +2332,6 @@ label:hover {
 
 .vst-input.vst-list-editor:focus {
   background-color: #fff;
-}
-
-.vst-text {
-  cursor: default;
 }
 
 a.vst-text,
@@ -2602,10 +2552,6 @@ a.vst-text:active b {
 
 .additional-control.remove-ns {
   display: none;
-}
-
-.data .step-left {
-  padding-left: 50px;
 }
 
 .hide-password {
@@ -3546,10 +3492,6 @@ form#vstobjects.suspended {
   padding: 5px 20px;
 }
 
-.shortcuts ul li.step-top {
-  padding-top: 30px;
-}
-
 .shortcuts ul li span {
   color: #ff3478;
   display: inline-block;
@@ -3935,6 +3877,16 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 /* Global utilities
    ========================================================================== */
 
+.clearfix::before,
+.clearfix::after {
+  content: " ";
+  display: table;
+}
+
+.clearfix::after {
+  clear: both;
+}
+
 .hidden {
   display: none;
 }
@@ -3945,6 +3897,22 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 
 .u-mb20 {
   margin-bottom: 20px !important;
+}
+
+.u-pt6 {
+  padding-top: 6px !important;
+}
+
+.u-pt18 {
+  padding-top: 18px !important;
+}
+
+.u-pt30 {
+  padding-top: 30px !important;
+}
+
+.u-pl50 {
+  padding-left: 50px !important;
 }
 
 .u-inputWidth {

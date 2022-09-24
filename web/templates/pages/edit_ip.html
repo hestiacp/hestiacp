@@ -19,7 +19,7 @@
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 		<input type="hidden" name="save" value="save" />
 
-		<table class='data'>
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
@@ -32,7 +32,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing IP Address');?></span>
 							</td>
 						</tr>
@@ -42,7 +42,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
+							<td class="u-pt18">
 								<?=_('IP address'); ?>
 							</td>
 						</tr>
@@ -53,7 +53,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Netmask');?>
 							</td>
 						</tr>
@@ -63,7 +63,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Interface'); ?>
 							</td>
 						</tr>
@@ -73,7 +73,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<div class="form-check">
 									<input class="form-check-input" type="checkbox" name="v_shared" id="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');">
 									<label for="v_shared">
@@ -83,7 +83,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label" style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
+							<td class="u-pt6" style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
 								<label for="v_owner" class="form-label"><?=_('Assigned user');?></label>
 								<select class="form-select u-inputWidth" name="v_owner" id="v_owner">
 									<?php
@@ -97,7 +97,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Assigned domain');?> <span class="optional">(<?=_('optional');?>)</span>
 							</td>
 						</tr>
@@ -107,7 +107,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('NAT IP association');?> <span class="optional">(<?=_('optional');?>)</span>
 							</td>
 						</tr>

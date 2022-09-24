@@ -31,7 +31,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Adding IP Address to Banlist');?></span>
 							</td>
 						</tr>
@@ -41,7 +41,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('IP address');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
 							</td>
 						</tr>
@@ -51,7 +51,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label step-top">
+							<td class="u-pt18">
 								<label for="v_chain" class="form-label"><?=_('Banlist') ?></label>
 								<select class="form-select u-inputWidth" name="v_chain" id="v_chain">
 									<option value="SSH" <?php if ((!empty($v_chain)) && ( $v_chain == "'SSH'" )) echo 'selected'?>><?=_('SSH');?></option>

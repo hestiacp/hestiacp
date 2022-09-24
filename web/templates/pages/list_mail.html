@@ -192,11 +192,11 @@
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
 					<div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
-							<?php 
-								if ($data[$key]['ACCOUNTS']) { 
+							<?php
+								if ($data[$key]['ACCOUNTS']) {
 									$mail_accounts = htmlentities($data[$key]['ACCOUNTS']);
 								} else {
-									$mail_accounts = '0'; 
+									$mail_accounts = '0';
 								}
 							?>
 							<span><?=$mail_accounts;?></span>
@@ -227,7 +227,7 @@
 	<div class="l-separator"></div>
 	<div class="l-center">
 		<div class="l-unit-ft">
-			<table class='data'></table>
+			<table class="data"></table>
 			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d mail domain', '%d mail domains', $i),$i); ?>
 			</div>

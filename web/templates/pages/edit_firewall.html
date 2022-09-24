@@ -19,7 +19,7 @@
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 		<input type="hidden" name="save" value="save" />
 
-		<table class='data'>
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
@@ -32,7 +32,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing Firewall Rule');?></span>
 							</td>
 						</tr>
@@ -42,7 +42,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label step-top">
+							<td class="u-pt18">
 								<label for="v_action" class="form-label"><?=_('Action') ?></label>
 								<select class="form-select u-inputWidth" name="v_action" id="v_action">
 									<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?=_('DROP');?></option>
@@ -51,7 +51,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_protocol" class="form-label"><?=_('Protocol') ?></label>
 								<select class="form-select u-inputWidth" name="v_protocol" id="v_protocol">
 									<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?=_('TCP');?></option>
@@ -61,7 +61,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Port');?> <span class="optional">(<?=_('Ranges and Lists are acceptable');?>)</span>
 							</td>
 						</tr>
@@ -71,7 +71,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_ip" class="form-label">
 									<?=_('IP address / IPset');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
 								</label>
@@ -82,7 +82,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Comment');?> <span class="optional">(<?=_('optional');?>)</span>
 							</td>
 						</tr>

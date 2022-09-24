@@ -37,7 +37,7 @@ if (!empty($_POST['ok'])) {
                 <td class="data-dotted">
                     <table class="data-col2">
                         <tr>
-                            <td class="step-top">
+                            <td class="u-pt18">
                                 <span class="page-title"><?= _("Access Key") ?></span>
                             </td>
                         </tr>
@@ -49,7 +49,7 @@ if (!empty($_POST['ok'])) {
 
                         <?php if (!empty($key_data['ACCESS_KEY_ID'])) { ?>
                             <tr>
-                                <td class="vst-text step-top">
+                                <td class="u-pt18">
                                     <?= _('Access Key Id'); ?>
                                 </td>
                             </tr>
@@ -66,7 +66,7 @@ if (!empty($_POST['ok'])) {
                             ?>
                             <?php if (!empty($key_data['ACCESS_KEY_ID']) && !empty($key_data['SECRET_ACCESS_KEY'])) { ?>
                                 <tr>
-                                    <td class="vst-text input-label">
+                                    <td class="u-pt6">
                                         <?= _('Secret Key'); ?><br>
                                         <span style="font-size: 10pt; color:#ffd500;"><?= _('Warning! Last chance to save secrect access key!'); ?></span>
                                     </td>
@@ -82,12 +82,12 @@ if (!empty($_POST['ok'])) {
                         ?>
 
                         <tr>
-                            <td class="vst-text step-top">
+                            <td class="u-pt18">
                                 <?= _('Permissions'); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td class="vst-text">
+                            <td>
                                 <ul>
                                     <?php
                                     foreach ($key_data['PERMISSIONS'] as $api_name) {
@@ -99,7 +99,7 @@ if (!empty($_POST['ok'])) {
                         </tr>
 
                         <tr>
-                            <td class="vst-text input-label">
+                            <td class="u-pt6">
                                 <?= _('Comment'); ?>
                             </td>
                         </tr>

@@ -203,12 +203,12 @@ App.Actions.WEB.passwordChanged = function(elm) {
         var inp_name = ref.find('.v-ftp-user-is-new').prop('name');
         inp_name = inp_name.replace('is_new', 'v_ftp_email');
         ref.find('tr:last').after('<tr>\
-                                        <td class="step-left u-pt6">\
+                                        <td class="u-pl50 u-pt6">\
                                              Send FTP credentials to email\
                                         </td>\
                                     </tr>\
                                     <tr>\
-                                        <td class="step-left">\
+                                        <td class="u-pl50">\
                                             <input type="text" value="" name="' + inp_name + '" class="vst-input vst-email-alert-on-psw">\
                                         </td>\
                                     </tr>');

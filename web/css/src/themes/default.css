@@ -1438,10 +1438,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-left: 78px;
 }
 
-.l-sort-toolbar .step-left {
-  padding-left: 40px;
-}
-
 .l-unit__date {
   font-size: 11px;
   margin-top: 10px;
@@ -2566,10 +2562,6 @@ a.vst-text:active b {
 
 .additional-control.remove-ns {
   display: none;
-}
-
-.data .step-left {
-  padding-left: 50px;
 }
 
 .hide-password {
@@ -3917,6 +3909,10 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 
 .u-pt30 {
   padding-top: 30px !important;
+}
+
+.u-pl50 {
+  padding-left: 50px !important;
 }
 
 .u-inputWidth {

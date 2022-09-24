@@ -119,7 +119,7 @@
 							</td>
 						</tr>
 						<tr class="stats-auth">
-							<td class="step-left">
+							<td class="u-pl50">
 								<table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
 									<tr>
 										<td class="u-pt6">
@@ -155,7 +155,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="step-left"> <!-- here -->
+							<td class="u-pl50"> <!-- here -->
 								<div style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;" id="v_redirect">
 									<div class="form-check">
 										<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?>>
@@ -214,7 +214,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="step-left">
+							<td class="u-pl50">
 								<table style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
 									<tr>
 										<td class="u-pt6">
@@ -392,7 +392,7 @@
 												</td>
 											</tr>
 											<tr>
-												<td class="step-left">
+												<td class="u-pl50">
 													<table id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
 														<td class="u-pt6">
 															<?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
@@ -484,7 +484,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="step-left">
+										<td class="u-pl50">
 											<table style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;" id="v_custom_doc_root">
 												<tr>
 													<td class="u-pt6">
@@ -549,36 +549,36 @@
 														</td>
 													</tr>
 													<tr>
-														<td class="step-left u-pt6">
+														<td class="u-pl50 u-pt6">
 															<?=_('Username');?><br>
 															<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 														</td>
 													</tr>
 													<tr>
-														<td class="step-left">
+														<td class="u-pl50">
 															<input type="text" size="20" class="vst-input v-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
 																name="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
 															<small class="hint"></small>
 														</td>
 													</tr>
 													<tr>
-														<td class="step-left u-pt6">
+														<td class="u-pl50 u-pt6">
 															<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
 														</td>
 													</tr>
 													<tr>
-														<td class="step-left">
+														<td class="u-pl50">
 															<input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
 														</td>
 													</tr>
 
 													<tr>
-														<td class="step-left u-pt6">
+														<td class="u-pl50 u-pt6">
 															<?=_('Path');?>
 														</td>
 													</tr>
 													<tr>
-														<td class="step-left">
+														<td class="u-pl50">
 															<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
 															<input type="hidden" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
 															<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")); ?>">
@@ -587,12 +587,12 @@
 													</tr>
 													<?php if ($ftp_user['is_new'] == 1): ?>
 													<tr>
-														<td class="step-left u-pt6">
+														<td class="u-pl50 u-pt6">
 															<?=_('Send FTP credentials to email');?>
 														</td>
 													</tr>
 													<tr>
-														<td class="step-left">
+														<td class="u-pl50">
 															<input type="text" class="vst-input vst-email-alert-on-psw" name="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
 														</td>
 													</tr>
@@ -629,47 +629,47 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="step-left u-pt6">
+				<td class="u-pl50 u-pt6">
 					<?=_('Username');?><br>
 					<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 				</td>
 			</tr>
 			<tr>
-				<td class="step-left">
+				<td class="u-pl50">
 					<input type="text" size="20" class="vst-input v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" value="">
 					<small class="hint"></small>
 				</td>
 			</tr>
 			<tr>
-				<td class="step-left u-pt6">
+				<td class="u-pl50 u-pt6">
 					<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
 				</td>
 			</tr>
 			<tr>
-				<td class="step-left">
+				<td class="u-pl50">
 					<input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[%INDEX%][v_ftp_password]" value="">
 				</td>
 			</tr>
 
 			<tr>
-				<td class="step-left u-pt6">
+				<td class="u-pl50 u-pt6">
 					<?=_('Path');?>
 				</td>
 			</tr>
 			<tr>
-				<td class="step-left">
+				<td class="u-pl50">
 					<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="">
 					<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" value="">
 					<br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
 				</td>
 			</tr>
 			<tr>
-				<td class="step-left u-pt6">
+				<td class="u-pl50 u-pt6">
 					<?=_('Send FTP credentials to email');?>
 				</td>
 			</tr>
 			<tr>
-				<td class="step-left">
+				<td class="u-pl50">
 					<input type="text" class="vst-input vst-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" value="">
 				</td>
 			</tr>

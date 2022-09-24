@@ -4003,7 +4003,12 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   min-height: 100px !important;
 }
 
+.u-minHeight300 {
+  min-height: 300px !important;
+}
+
 .u-console {
   font-family: Inconsolata, "Lucida Console", Monaco, monospace !important;
   white-space: pre !important;
+  line-height: 1.2 !important;
 }

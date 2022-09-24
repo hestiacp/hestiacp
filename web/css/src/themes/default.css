@@ -198,16 +198,6 @@ a {
   color: #7c7c7c;
 }
 
-.clearfix::before,
-.clearfix::after {
-  content: "";
-  display: table;
-}
-
-.clearfix::after {
-  clear: both;
-}
-
 .text-right {
   text-align: right;
 }
@@ -3886,6 +3876,16 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 
 /* Global utilities
    ========================================================================== */
+
+.clearfix::before,
+.clearfix::after {
+  content: " ";
+  display: table;
+}
+
+.clearfix::after {
+  clear: both;
+}
 
 .hidden {
   display: none;

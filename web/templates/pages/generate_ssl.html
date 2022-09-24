@@ -31,79 +31,61 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text" style="padding: 24px 0 0 0;">
-								<?=_('Domain');?>
+							<td class="step-top">
+								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+								<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'")) ?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'")) ?>">
+							<td class="input-label">
+								<label for="v_aliases" class="form-label"><?=_('Aliases');?></label>
+								<textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text" style="padding: 24px 0 0 0;">
-								<?=_('Aliases');?>
+							<td class="input-label">
+								<label for="v_email" class="form-label">
+									<?=_('Email');?>
+									<span class="optional">(<?php print _('optional');?>)</span>
+								</label>
+								<input type="text" class="form-control" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'")) ?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<textarea size="20" class="vst-textinput short" name="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+							<td class="input-label">
+								<label for="v_country" class="form-label">
+									<?=_('Country'); ?>
+									<span class="optional">(<?=_('2 letter code');?>)</span>
+								</label>
+								<input type="text" class="form-control" name="v_country" id="v_country" value="<?=htmlentities(trim($v_country, "'")) ?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text" style="padding: 12px 0 0 0;">
-								<?=_('Email');?>
-								<span class="optional">(<?php print _('optional');?>)</span>
+							<td class="input-label">
+								<label for="v_state" class="form-label">
+									<?=_('State / Province');?>
+								</label>
+								<input type="text" class="form-control" name="v_state" id="v_state" value="<?=htmlentities(trim($v_state, "'")) ?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'")) ?>">
+							<td class="input-label">
+								<label for="v_locality" class="form-label">
+									<?=_('City / Locality');?>
+								</label>
+								<input type="text" class="form-control" name="v_locality" id="v_locality" value="<?=htmlentities(trim($v_locality, "'")) ?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text" style="padding: 12px 0 0 0;">
-								<?=_('Country'); ?>
-								<span class="optional">(<?=_('2 letter code');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_country" value="<?=htmlentities(trim($v_country, "'"))?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="vst-text" style="padding: 12px 0 0 0;">
-								<?=_('State / Province');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_state" value="<?=htmlentities(trim($v_state, "'")) ?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="vst-text" style="padding: 12px 0 0 0;">
-								<?=_('City / Locality');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_locality" value="<?=htmlentities(trim($v_locality, "'")) ?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="vst-text" style="padding: 12px 0 0 0;">
-								<?=_('Organization');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_org" value="<?=htmlentities(trim($v_org, "'")) ?>">
+							<td class="input-label">
+								<label for="v_org" class="form-label">
+									<?=_('Organization');?>
+								</label>
+								<input type="text" class="form-control" name="v_org" id="v_org" value="<?=htmlentities(trim($v_org, "'")) ?>">
 							</td>
 						</tr>
 					</table>
-					<table class="data-col2">
+					<table class="data-col2 u-mb20">
 						<tr>
 							<td style="padding: 24px 0 0 0;" width="116px">
 								<input type="submit" class="button" name="generate" value="<?=_('Ok');?>">

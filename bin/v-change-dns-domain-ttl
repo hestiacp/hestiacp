@@ -56,8 +56,7 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$TTL' "$ttl"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    update_domain_serial
-    update_domain_zone
+    rebuild_dns_domain_conf
 fi
 
 # Updating dns-cluster queue

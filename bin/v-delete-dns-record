@@ -56,8 +56,7 @@ sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    update_domain_serial
-    update_domain_zone
+    rebuild_dns_domain_conf
 fi
 
 # Updating dns-cluster queue

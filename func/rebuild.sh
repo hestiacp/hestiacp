@@ -553,21 +553,7 @@ rebuild_dns_domain_conf() {
         fi
         cp /var/cache/bind/K$domain.+013+$key.* $USER_DATA/keys/
         update_object_value 'dns' 'DOMAIN' "$domain" '$KEY' "$key"
-        record=$(/usr/sbin/dnssec-dsfromkey /var/cache/bind/K$domain.+013+$key | sed "s/$domain. IN DS //g");
-        if [ -z $(cat $USER_DATA/dns/$domain.conf | grep $record) ]; then
-            if [ -n "$( cat $USER_DATA/dns/$domain.conf | grep $record)" ]; then 
-                # delete DNSKEY record fist
-                id="$( v-list-dns-records $user $domain shell | grep 'DS' | cut -d' ' -f1)"
-                $BIN/v-delete-dns-record "$user" "$domain" "$id"
-                $BIN/v-add-dns-record "$user" "$domain" "$domain." "DS" "$record" "" "$id" "" 3600            
-            else
-                $BIN/v-add-dns-record "$user" "$domain" "$domain." "DS" "$record" "" "" "" 3600    
-            fi
-        fi
     fi
-    # Reload config
-    /usr/sbin/rndc reload > /dev/null 2>&1
-    check_result $? "$E_RESTART" 'dns failed to restart'
 }
 
 # MAIL domain rebuild

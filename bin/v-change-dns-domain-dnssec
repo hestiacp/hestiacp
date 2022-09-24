@@ -76,8 +76,6 @@ if [ $status = "no" ]; then
     rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
     rm -fr /var/cache/bind/K$domain_idn.*
     rm -fr $USER_DATA/keys/K$domain_idn.*
-    id="$( v-list-dns-records $user $domain shell | grep 'DS' | cut -d' ' -f1)"
-    $BIN/v-delete-dns-record "$user" "$domain" "$id"
 fi
 
 #----------------------------------------------------------#

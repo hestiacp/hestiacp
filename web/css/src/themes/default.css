@@ -1011,18 +1011,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-left: 96px;
 }
 
-.l-sort-toolbar td.step-right:first-of-type {
-  padding-right: 20px;
-}
-
-.l-sort-toolbar td:nth-of-type(2) {
-  /* padding-right: 60px; */
-}
-
-.l-sort-toolbar td:last-of-type {
-  /* padding-left: 40px; */
-}
-
 .l-sort-toolbar__filter-apply {
   float: left;
   width: 32px;
@@ -1456,10 +1444,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-sort-toolbar .step-left {
   padding-left: 40px;
-}
-
-.step-right {
-  padding-right: 40px;
 }
 
 .l-unit__date {

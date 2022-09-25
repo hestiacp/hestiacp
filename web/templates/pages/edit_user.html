@@ -76,12 +76,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('Username');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
+								<label for="v_user" class="form-label"><?=_('Username');?></label>
+								<input type="text" class="form-control" name="v_user" id="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
 								<input type="hidden" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>">
 							</td>
 						</tr>
@@ -105,7 +101,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
+								<input type="email" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
 								<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 									<input type="hidden" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
 								<?php } ?>

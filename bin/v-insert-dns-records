@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: inserts dns records
-# options: USER DOMAIN DATA_FILE [RESTART]
+# options: USER DOMAIN DATA_FILE
 #
 # This function copy dns record to the domain conf
 
@@ -12,7 +12,6 @@
 user=$1
 domain=$2
 data_file=$3
-restart=$4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -49,10 +48,6 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Restarting named
-$BIN/v-restart-dns "$restart"
-check_result $? "Bind restart failed" >/dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

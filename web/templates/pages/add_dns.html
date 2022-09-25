@@ -58,15 +58,11 @@
 								</td>
 							</tr>
 						<?php } ?>
-						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin"))  {?>
+						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
 							<tr>
 								<td class="u-pt18">
-									<?=_('Domain');?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+									<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+									<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								</td>
 							</tr>
 							<tr>
@@ -115,22 +111,16 @@
 									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
 										<tr>
 											<td class="u-pt6">
-												<?=_('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" size="20" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
+												<label for="v_exp" class="form-label">
+													<?=_('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
+												</label>
+												<input type="text" class="form-control u-inputWidth" name="v_exp" id="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
 											</td>
 										</tr>
 										<tr>
 											<td class="u-pt6">
-												<?=_('TTL');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+												<label for="v_ttl" class="form-label"><?=_('TTL');?></label>
+												<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
 											</td>
 										</tr>
 										<tr>

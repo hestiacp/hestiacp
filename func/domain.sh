@@ -533,27 +533,8 @@ update_domain_zone() {
                 fi
             fi
         fi
-
-        if [ "$SUSPENDED" != 'yes' ] && [ "$TYPE" != "DS" ] ; then
-            eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $zn_conf
-        fi
-    done < $USER_DATA/dns/$domain.conf
-    while read line ; do
-        unset TTL
-        IFS=$'\n'
-        for key in $(echo $line|sed "s/' /'\n/g"); do
-            eval ${key%%=*}="${key#*=}"
-        done
-    
-        # inherit zone TTL if record lacks explicit TTL value
-        [ -z "$TTL" ] && TTL="$zone_ttl"
-    
-        RECORD=$(idn2 --quiet  "$RECORD")    
-        if [ "$SUSPENDED" != 'yes' ] && [ "$TYPE" == "DS" ] ; then
-            eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $zn_conf
-        fi
-    done < $USER_DATA/dns/$domain.conf
-    
+        eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $zn_conf
+    done < $USER_DATA/dns/$domain.conf    
 }
 
 # Update zone serial

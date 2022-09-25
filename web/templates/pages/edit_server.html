@@ -335,7 +335,7 @@
 							</tr>
 							<tr>
 								<td class="u-pl50 u-pt6">
-									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="dns">
+									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" class="u-mb20" id="dns">
 										<tr>
 											<td class="u-pt18">
 												<?=_('DNS Server');?>: <span class="optional"><?=$_SESSION['DNS_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
@@ -353,18 +353,11 @@
 											?>
 											<tr>
 												<td>
-													<?=_('Host'). ' #'.$i  ?>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<input type="text" size="20" class="vst-input" name="v_dns_remote_host" value="<?=$key; ?>" disabled>
+													<label for="v_dns_remote_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
+													<input type="text" class="form-control" name="v_dns_remote_host" id="v_dns_remote_host" value="<?=$key; ?>" disabled>
 												</td>
 											</tr>
 										<?php } } ?>
-										<tr>
-											<td><br></td>
-										</tr>
 									</table>
 								</td>
 							</tr>
@@ -430,7 +423,7 @@
 														</td>
 													</tr>
 													<tr>
-														<td>
+														<td class="u-pt6">
 															<label for="v_smtp_relay_port" class="form-label"><?=_('Port');?></label>
 															<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
 														</td>
@@ -490,14 +483,9 @@
 										<!-- MySQL / MariaDB Options-->
 										<?php if ($v_mysql == 'yes') { ?>
 											<tr>
-												<td>
-													<?=_('phpMyAdmin URL');?>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<input type="text" size="20" class="vst-input" name="v_mysql_url" value="<?=$_SESSION['DB_PMA_ALIAS']; ?>">
-													<br><br>
+												<td class="u-pt6">
+													<label for="v_mysql_url" class="form-label"><?=_('phpMyAdmin URL');?></label>
+													<input type="text" class="form-control u-mb20" name="v_mysql_url" id="v_mysql_url" value="<?=$_SESSION['DB_PMA_ALIAS']; ?>">
 												</td>
 											</tr>
 											<tr>
@@ -518,48 +506,35 @@
 												$i++;
 											?>
 											<tr>
-												<td class="u-pl50">
-													<?=_('Host'). ' #'.$i  ?>
+												<td class="u-pl50 u-pt6">
+													<label for="v_mysql_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
+													<input type="text" class="form-control" name="v_mysql_host" id="v_mysql_host" value="<?=$value['HOST']?>" disabled>
 												</td>
 											</tr>
 											<tr>
-												<td class="u-pl50">
-													<input type="text" size="20" class="vst-input" name="v_mysql_host" value="<?=$value['HOST']?>" disabled>
-													<br><br>
-												</td>
-											</tr>
-											<tr>
-												<td class="u-pl50">
+												<td class="u-pl50 u-pt6">
 													<?=_('Password');?>
 												</td>
 											</tr>
 											<tr>
 												<td class="u-pl50">
 													<input type="text" size="20" class="vst-input password" name="v_mysql_password" value="">
-													<br><br>
-												</td>
-											</tr>
-
-											<tr>
-												<td class="u-pl50">
-													<?=_('Maximum Number Of Databases');?>
 												</td>
 											</tr>
 											<tr>
-												<td class="u-pl50">
-													<input type="text" size="20" class="vst-input" name="v_mysql_max" value="<?=$value['MAX_DB']; ?>" disabled>
-													<br><br>
+												<td class="u-pl50 u-pt6">
+													<label for="v_mysql_max" class="form-label">
+														<?=_('Maximum Number Of Databases');?>
+													</label>
+													<input type="text" class="form-control" name="v_mysql_max" id="v_mysql_max" value="<?=$value['MAX_DB']; ?>" disabled>
 												</td>
 											</tr>
 											<tr>
-												<td class="u-pl50">
-													<?=_('Current Number Of Databases');?>
-												</td>
-											</tr>
-											<tr>
-												<td class="u-pl50">
-													<input type="text" size="20" class="vst-input" name="v_mysql_max" value="<?=$value['U_DB_BASES']; ?>" disabled>
-													<br><br>
+												<td class="u-pl50 u-pt6">
+													<label for="v_mysql_max" class="form-label">
+														<?=_('Current Number Of Databases');?>
+													</label>
+													<input type="text" class="form-control u-mb20" name="v_mysql_max" id="v_mysql_max" value="<?=$value['U_DB_BASES']; ?>" disabled>
 												</td>
 											</tr>
 										<?php }} ?>
@@ -579,13 +554,10 @@
 											</tr>
 											<tr>
 												<td>
-													<?=_('phpPgAdmin URL');?>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<input type="text" size="20" class="vst-input" name="v_pgsql_url" value="<?=$_SESSION['DB_PGA_ALIAS']; ?>">
-													<br><br>
+													<label for="v_pgsql_url" class="form-label">
+														<?=_('phpPgAdmin URL');?>
+													</label>
+													<input type="text" class="form-control u-mb20" name="v_pgsql_url" id="v_pgsql_url" value="<?=$_SESSION['DB_PGA_ALIAS']; ?>">
 												</td>
 											</tr>
 										<?php } ?>
@@ -595,36 +567,25 @@
 												$i++;
 											?>
 											<tr>
-												<td class="u-pl50">
-													<?=_('Host'). ' #'.$i  ?>
+												<td class="u-pl50 u-pt6">
+													<label for="v_pgsql_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
+													<input type="text" class="form-control" name="v_pgsql_host" id="v_pgsql_host" value="<?=$value['HOST']?>" disabled>
 												</td>
 											</tr>
 											<tr>
-												<td class="u-pl50">
-													<input type="text" size="20" class="vst-input" name="v_pgsql_host" value="<?=$value['HOST']?>" disabled>
-													<br><br>
+												<td class="u-pl50 u-pt6">
+													<label for="v_psql_max" class="form-label">
+														<?=_('Maximum Number Of Databases');?>
+													</label>
+													<input type="text" class="form-control" name="v_psql_max" id="v_psql_max" value="<?=$value['MAX_DB']; ?>" disabled>
 												</td>
 											</tr>
 											<tr>
-												<td class="u-pl50">
-													<?=_('Maximum Number Of Databases');?>
-												</td>
-											</tr>
-											<tr>
-												<td class="u-pl50">
-													<input type="text" size="20" class="vst-input" name="v_psql_max" value="<?=$value['MAX_DB']; ?>" disabled>
-													<br><br>
-												</td>
-											</tr>
-											<tr>
-												<td class="u-pl50">
-													<?=_('Current Number Of Databases');?>
-												</td>
-											</tr>
-											<tr>
-												<td class="u-pl50">
-													<input type="text" size="20" class="vst-input" name="v_pgsql_max" value="<?=$value['U_DB_BASES']; ?>" disabled>
-													<br><br><br><br>
+												<td class="u-pl50 u-pt6">
+													<label for="v_pgsql_max" class="form-label">
+														<?=_('Current Number Of Databases');?>
+													</label>
+													<input type="text" class="form-control u-mb20" name="v_pgsql_max" id="v_pgsql_max" value="<?=$value['U_DB_BASES']; ?>" disabled>
 												</td>
 											</tr>
 										<?php }} ?>
@@ -645,7 +606,7 @@
 									<tr>
 										<td class="u-pt18">
 											<label for="v_backup" class="form-label"><?=_('Local backup');?></label>
-											<select class="form-select" name="v_backup" id="v_backup">
+											<select class="form-select u-inputWidth" name="v_backup" id="v_backup">
 												<option value="no"><?=_('No'); ?></option>
 												<option value="yes" <?php if($v_backup == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
 											</select>
@@ -675,14 +636,11 @@
 										</td>
 									</tr>
 									<tr>
-										<td>
-											<?=_('Directory');?> <a target="_blank" href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"><i class="fas fa-question-circle"></i></a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" size="20" class="vst-input" name="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
-											<br><br>
+										<td class="u-pt6">
+											<label for="v_backup_dir" class="form-label">
+												<?=_('Directory');?> <a target="_blank" href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"><i class="fas fa-question-circle"></i></a>
+											</label>
+											<input type="text" class="form-control u-mb20" name="v_backup_dir" id="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
 										</td>
 									</tr>
 									<tr>
@@ -703,7 +661,7 @@
 														<label for="backup_type" class="form-label">
 															<?=_('Protocol');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"><i class="fas fa-question-circle"></i></a>
 														</label>
-														<select class="form-select" name="v_backup_type" id="backup_type">
+														<select class="form-select u-inputWidth" name="v_backup_type" id="backup_type">
 															<option value='ftp'><?=_('ftp'); ?></option>
 															<option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?=_('sftp'); ?></option>
 															<option value="b2" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'b2' )) echo 'selected="selected"'; ?>><?=_('Backblaze'); ?>
@@ -714,40 +672,25 @@
 													<td>
 														<table>
 															<tr>
-																<td>
-																	<?=_('Host');?>
+																<td class="u-pt6">
+																	<label for="v_backup_host" class="form-label"><?=_('Host');?></label>
+																	<input type="text" class="form-control" name="v_backup_host" id="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
 																</td>
 															</tr>
 															<tr>
-																<td>
-																	<input type="text" size="20" class="vst-input" name="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
-																	<br><br>
+																<td class="u-pt6">
+																	<label for="v_backup_port" class="form-label"><?=_('Port');?></label>
+																	<input type="text" class="form-control u-mb20" name="v_backup_port" id="v_backup_port" value="<?=trim($v_backup_port, "'")?>">
 																</td>
 															</tr>
 															<tr>
-																<td>
-																	<?=_('Port');?>
+																<td class="u-pt6">
+																	<label for="v_backup_username" class="form-label"><?=_('Username');?></label>
+																	<input type="text" class="form-control" name="v_backup_username" id="v_backup_username" value="<?=trim($v_backup_username, "'")?>">
 																</td>
 															</tr>
 															<tr>
-																<td>
-																	<input type="text" size="20" class="vst-input" name="v_backup_port" value="<?=trim($v_backup_port, "'")?>">
-																	<br><br>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<?=_('Username');?>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<input type="text" size="20" class="vst-input" name="v_backup_username" value="<?=trim($v_backup_username, "'")?>">
-																	<br><br>
-																</td>
-															</tr>
-															<tr>
-																<td>
+																<td class="u-pt6">
 																	<?=_('Password');?>
 																</td>
 															</tr>
@@ -758,14 +701,9 @@
 																</td>
 															</tr>
 															<tr>
-																<td>
-																	<?=_('Directory');?>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<input type="text" size="20" class="vst-input" name="v_backup_bpath" value="<?=trim($v_backup_bpath, "'")?>">
-																	<br><br>
+																<td class="u-pt6">
+																	<label for="v_backup_bpath" class="form-label"><?=_('Directory');?></label>
+																	<input type="text" class="form-control u-mb20" name="v_backup_bpath" id="v_backup_bpath" value="<?=trim($v_backup_bpath, "'")?>">
 																</td>
 															</tr>
 														</table>
@@ -775,36 +713,21 @@
 													<td>
 														<table>
 															<tr>
-																<td>
-																	<?=_('Bucket');?>
+																<td class="u-pt6">
+																	<label for="v_backup_bucket" class="form-label"><?=_('Bucket');?></label>
+																	<input type="text" class="form-control u-inputWidth" name="v_backup_bucket" id="v_backup_bucket" value="<?=trim($v_backup_bucket, "'")?>">
 																</td>
 															</tr>
 															<tr>
-																<td>
-																	<input type="text" size="20" class="vst-input" name="v_backup_bucket" value="<?=trim($v_backup_bucket, "'")?>">
-																	<br><br>
+																<td class="u-pt6">
+																	<label for="v_backup_application_id" class="form-label"><?=_('Key ID');?></label>
+																	<input type="text" class="form-control" name="v_backup_application_id" id="v_backup_application_id" value="<?=trim($v_backup_application_id, "'")?>">
 																</td>
 															</tr>
 															<tr>
-																<td>
-																	<?=_('Key ID');?>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<input type="text" size="20" class="vst-input" name="v_backup_application_id" value="<?=trim($v_backup_application_id, "'")?>">
-																	<br><br>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<?=_('Application Key');?>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<input type="text" size="20" class="vst-input" name="v_backup_application_key" value="<?=trim($v_backup_application_key, "'")?>">
-																	<br><br>
+																<td class="u-pt6">
+																	<label for="v_backup_application_key" class="form-label"><?=_('Application Key');?></label>
+																	<input type="text" class="form-control u-mb20" name="v_backup_application_key" id="v_backup_application_key" value="<?=trim($v_backup_application_key, "'")?>">
 																</td>
 															</tr>
 														</table>
@@ -990,13 +913,10 @@
 												</tr>
 												<tr>
 													<td class="u-pt6">
-														<?=_('Inactive session timeout');?> (<?=_('Minutes');?>)
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<input type="text" size="20" class="vst-input" name="v_inactive_session_timeout" value="<?=trim($_SESSION['INACTIVE_SESSION_TIMEOUT'], "'")?>">
-														<br><br>
+														<label for="v_inactive_session_timeout" class="form-label">
+															<?=_('Inactive session timeout');?> (<?=_('Minutes');?>)
+														</label>
+														<input type="text" class="form-control u-mb20" name="v_inactive_session_timeout" id="v_inactive_session_timeout" value="<?=trim($_SESSION['INACTIVE_SESSION_TIMEOUT'], "'")?>">
 													</td>
 												</tr>
 												<tr>

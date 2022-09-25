@@ -544,10 +544,9 @@ rebuild_dns_domain_conf() {
     
     # Load new config
     /usr/sbin/rndc reconfig > /dev/null 2>&1
-    check_result $? "$E_RESTART" 'dns failed to restart'
+    
     # Reload config
     /usr/sbin/rndc reload > /dev/null 2>&1
-    check_result $? "$E_RESTART" 'dns failed to restart'
     
     if [ "$DNSSEC" = "yes" ]; then
         key=$(/usr/sbin/rndc dnssec -status $domain | grep ^key: | cut -f2 -d' ');

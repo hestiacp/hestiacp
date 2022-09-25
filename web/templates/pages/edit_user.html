@@ -88,7 +88,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> >
+								<input type="text" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> >
 								<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 									<input type="hidden" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
 								<?php } ?>
@@ -101,7 +101,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="email" size="20" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
+								<input type="email" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
 								<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 									<input type="hidden" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
 								<?php } ?>
@@ -114,7 +114,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
+								<input type="text" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
 								<meter max="4" id="meter"></meter>
 							</td>
 						</tr>
@@ -173,7 +173,7 @@
 											<table id="ip-allowlist" style="<?php if ($v_login_use_iplist === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
 												<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
+														<input type="text" class="vst-input" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>">
 													</td>
 												</tr>
 											</table>
@@ -319,13 +319,13 @@
 											</tr>
 											<tr>
 												<td>
-													<input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+													<input type="text" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
 													<span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete');?></span>
 												</td>
 											</tr>
 											<tr>
 												<td>
-													<input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+													<input type="text" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
 													<span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete');?></span>
 												</td>
 											</tr>
@@ -333,7 +333,7 @@
 												if($v_ns3) {
 													echo '<tr>
 														<td>
-															<input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+															<input type="text" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
 															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
 														</td>
 													</tr>';
@@ -341,7 +341,7 @@
 												if($v_ns4) {
 													echo '<tr>
 														<td>
-															<input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+															<input type="text" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
 															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
 														</td>
 													</tr>';
@@ -349,7 +349,7 @@
 												if($v_ns5) {
 													echo '<tr>
 														<td>
-															<input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+															<input type="text" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
 															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
 														</td>
 													</tr>';
@@ -357,7 +357,7 @@
 												if($v_ns6) {
 													echo '<tr>
 														<td>
-															<input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+															<input type="text" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
 															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
 														</td>
 													</tr>';
@@ -365,7 +365,7 @@
 												if($v_ns7) {
 													echo '<tr>
 														<td>
-															<input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+															<input type="text" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
 															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
 														</td>
 													</tr>';
@@ -373,7 +373,7 @@
 												if($v_ns8) {
 													echo '<tr>
 														<td>
-															<input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+															<input type="text" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
 															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
 														</td>
 													</tr>';

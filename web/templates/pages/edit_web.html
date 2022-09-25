@@ -56,7 +56,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="text" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>
@@ -128,7 +128,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
+											<input type="text" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
 										</td>
 									</tr>
 									<tr>
@@ -138,7 +138,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
+											<input type="text" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
 										</td>
 									</tr>
 								</table>
@@ -399,7 +399,7 @@
 														</td>
 														<tr>
 															<td>
-																<input type="text" size="20" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
+																<input type="text" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
 															</td>
 														</tr>
 													</table>
@@ -509,7 +509,7 @@
 												</tr>
 												<tr>
 													<td>
-														<input type="text" size="20" class="vst-input"
+														<input type="text" class="vst-input"
 															name="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
 													</td>
 												</tr>
@@ -558,7 +558,7 @@
 													</tr>
 													<tr>
 														<td class="u-pl50">
-															<input type="text" size="20" class="vst-input v-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
+															<input type="text" class="vst-input v-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
 																name="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
 															<small class="hint"></small>
 														</td>
@@ -638,7 +638,7 @@
 			</tr>
 			<tr>
 				<td class="u-pl50">
-					<input type="text" size="20" class="vst-input v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" value="">
+					<input type="text" class="vst-input v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" value="">
 					<small class="hint"></small>
 				</td>
 			</tr>

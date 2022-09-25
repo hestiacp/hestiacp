@@ -48,7 +48,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="text" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>
@@ -65,7 +65,7 @@
 										}
 									?>
 								</select>
-								<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								<input type="text" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 							</td>
 						</tr>
 						<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes')) { ?>
@@ -96,7 +96,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
+								<input type="text" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
 							</td>
 						</tr>
 						<tr>
@@ -106,7 +106,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_soa" value="<?=htmlentities(trim($v_soa, "'"))?>">
+								<input type="text" class="vst-input" name="v_soa" value="<?=htmlentities(trim($v_soa, "'"))?>">
 							</td>
 						</tr>
 						<tr>
@@ -116,7 +116,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+								<input type="text" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
 							</td>
 						</tr>
 					</table>

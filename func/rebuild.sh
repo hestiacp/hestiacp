@@ -496,7 +496,6 @@ rebuild_dns_domain_conf() {
     rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
     # Updating zone
     update_domain_zone
-    fi
 
     # Set permissions
     if [ "$DNS_SYSTEM" = 'named' ]; then
@@ -504,11 +503,11 @@ rebuild_dns_domain_conf() {
     else
         dns_group='bind'
     fi
-
     # Set file permissions
     chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
-    chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db
-
+    chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db   
+    fi
+    
     # Get dns config path
     if [ -e '/etc/named.conf' ]; then
         dns_conf='/etc/named.conf'
@@ -528,11 +527,12 @@ rebuild_dns_domain_conf() {
     else
         sed -i "/dns\/$domain.db/d" $dns_conf
         if [ "$SLAVE" = "yes" ]; then
-            named="zone \"$domain_idn\" in {type slave; masters { $master; }; file"
+            named="zone \"$domain_idn\" in {type slave; masters { $MASTER; }; file"
             named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+            echo "$named" >> $dns_conf
         else
             if [ "$DNSSEC" = "yes" ]; then
-                named="zone \"$domain_idn\" in {type master; dnssec-policy default; file"
+                named="zone \"$domain_idn\" in {type master; dnssec-policy default; inline-signing yes; file"
                 named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
                 echo "$named" >> $dns_conf
                 else

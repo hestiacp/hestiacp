@@ -46,7 +46,7 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 
 
 if [ -n "$KEY" ]; then
-  key=$(cat "/var/cache/bind/K$domain_idn.+013+$KEY.key" | grep DNSKEY );
+   key=$(cat "/var/cache/bind/K$domain_idn.+013+$KEY.key" | grep DNSKEY );
    echo "$key" 
 fi
 

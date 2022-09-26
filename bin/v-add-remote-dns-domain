@@ -71,7 +71,7 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
     if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
         str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
-        ip=$($BIN/v-list-sys-ips plain | cut -f1 -d" ");
+        ip=$($BIN/v-list-sys-ips plain | cut -f1);
         str=$(echo "$str" | sed "s/MASTER='*'/MASTER='$ip'/g");
             
         # Syncing domain data

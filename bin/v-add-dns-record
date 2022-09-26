@@ -66,7 +66,7 @@ fi
 # - [SRV] will be  stripped of double quotes even when  containing spaces
 # - [DNSKEY] will be  stripped of double quotes even when  containing spaces
 # - Rest of record types will be striped of quotes and the final string
-#   will be enclosed in double quotes if  containing spaces or semicolons 
+#   will be enclosed in double quotes if containing spaces or semicolons 
 
 if [ "$rtype" != "CAA" ]; then
     dvalue=${dvalue//\"/}

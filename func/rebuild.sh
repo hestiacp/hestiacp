@@ -561,6 +561,8 @@ rebuild_dns_domain_conf() {
         cp /var/cache/bind/K$domain.+013+$key.* $USER_DATA/keys/
         update_object_value 'dns' 'DOMAIN' "$domain" '$KEY' "$key"
     fi
+    
+    rndc notify $domain  > /dev/null 2>&1
 }
 
 # MAIL domain rebuild

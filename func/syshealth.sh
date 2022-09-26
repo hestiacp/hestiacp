@@ -64,7 +64,7 @@ function syshealth_update_dns_config_format() {
     # DNS DOMAINS
     # Create array of known keys in configuration file
     system="dns"
-    known_keys="DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS DNSSEC KEY SUSPENDED TIME DATE"
+    known_keys="DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS DNSSEC KEY SLAVE SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -462,6 +462,10 @@ function syshealth_repair_system_config() {
     if [[ -z $(check_key_exists 'POLICY_CSRF_STRICTNESS') ]]; then
         echo "[ ! ] Adding missing variable to hestia.conf: POLICY_CSRF_STRICTNESS ('')"
         $BIN/v-change-sys-config-value "POLICY_CSRF_STRICTNESS" "1"
+    fi
+    if [[ -z $(check_key_exists 'DNS_CLUSTER_SYSTEM') ]]; then
+        echo "[ ! ] Adding missing variable to hestia.conf: DNS_CLUSTER_SYSTEM ('')"
+        $BIN/v-change-sys-config-value "DNS_CLUSTER_SYSTEM" "hestia"
     fi
     
     touch $HESTIA/conf/hestia.conf.new

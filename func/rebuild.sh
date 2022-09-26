@@ -475,6 +475,7 @@ rebuild_dns_domain_conf() {
     get_domain_values 'dns'
     domain_idn=$(idn2 --quiet "$domain")
 
+    if [ "$SLAVE" != "yes" ]; then
     # Checking zone file
     if [ ! -e "$USER_DATA/dns/$domain.conf" ]; then
         cat $DNSTPL/$TPL.tpl |\
@@ -491,12 +492,11 @@ rebuild_dns_domain_conf() {
 
     # Sorting records
     sort_dns_records
-    
     #Remove old sign files
     rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
-    
     # Updating zone
     update_domain_zone
+    fi
 
     # Set permissions
     if [ "$DNS_SYSTEM" = 'named' ]; then
@@ -527,14 +527,19 @@ rebuild_dns_domain_conf() {
         suspended_dns=$((suspended_dns + 1))
     else
         sed -i "/dns\/$domain.db/d" $dns_conf
-        if [ "$DNSSEC" = "yes" ]; then
-            named="zone \"$domain_idn\" in {type master; dnssec-policy default; file"
+        if [ "$SLAVE" = "yes" ]; then
+            named="zone \"$domain_idn\" in {type slave; masters { $master; }; file"
             named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
-            echo "$named" >> $dns_conf
-            else
-            named="zone \"$domain_idn\" {type master; file"
-            named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
-            echo "$named" >> $dns_conf
+        else
+            if [ "$DNSSEC" = "yes" ]; then
+                named="zone \"$domain_idn\" in {type master; dnssec-policy default; file"
+                named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+                echo "$named" >> $dns_conf
+                else
+                named="zone \"$domain_idn\" {type master; file"
+                named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+                echo "$named" >> $dns_conf
+            fi
         fi
     fi
     user_domains=$((user_domains + 1))

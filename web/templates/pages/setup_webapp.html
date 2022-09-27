@@ -22,10 +22,10 @@
 
 <div class="l-separator"></div>
 
-<div class="l-center animated fadeIn" style="padding-top:240px;">
+<div class="l-center animated fadeIn">
 
 	<?php if( !empty($WebappInstaller->getOptions())): ?>
-		<form id="vstobjects" method="POST" name="v_setup_webapp" style="padding-top:0px;">
+		<form id="vstobjects" method="POST" name="v_setup_webapp">
 			<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 			<input type="hidden" name="ok" value="true" />
 

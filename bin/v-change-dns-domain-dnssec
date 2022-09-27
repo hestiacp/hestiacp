@@ -56,16 +56,6 @@ check_hestia_demo_mode
 # Changing exp
 update_object_value 'dns' 'DOMAIN' "$domain" '$DNSSEC' "$status"
 
-# Updating dns-cluster queue
-if [ -n "$DNS_CLUSTER" ]; then
-    # Check for first sync
-    dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
-    if [ -z "$dlock" ]; then
-        cmd="$BIN/v-add-remote-dns-domain $user $domain domain"
-        echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
-    fi
-fi
-
 # Rebuild DNS config
 
 rebuild_dns_domain_conf
@@ -76,6 +66,16 @@ if [ $status = "no" ]; then
     rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
     rm -fr /var/cache/bind/K$domain_idn.*
     rm -fr $USER_DATA/keys/K$domain_idn.*
+fi
+
+# Updating dns-cluster queue
+if [ "$DNS_CLUSTER"  = "yes" ]; then
+    # Check for first sync
+    dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+    if [ -z "$dlock" ]; then
+        cmd="$BIN/v-add-remote-dns-domain $user $domain domain"
+        echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+    fi
 fi
 
 #----------------------------------------------------------#

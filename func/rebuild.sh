@@ -554,15 +554,14 @@ rebuild_dns_domain_conf() {
     /usr/sbin/rndc reload > /dev/null 2>&1
     
     if [ "$DNSSEC" = "yes" ]; then
-        key=$(/usr/sbin/rndc dnssec -status $idn_domain | grep ^key: | cut -f2 -d' ');
+        key=$(/usr/sbin/rndc dnssec -status $domain_idn | grep ^key: | cut -f2 -d' ');
         if [ ! -d "$USER_DATA/keys/" ]; then
             mkdir -p $USER_DATA/keys/
         fi
-        cp /var/cache/bind/K$idn_domain.+013+$key.* $USER_DATA/keys/
+        cp /var/cache/bind/K$domain_idn.+013+$key.* $USER_DATA/keys/
         update_object_value 'dns' 'DOMAIN' "$domain" '$KEY' "$key"
     fi
-    
-    rndc notify $domain  > /dev/null 2>&1
+    rndc notify $domain_idn  > /dev/null 2>&1
 }
 
 # MAIL domain rebuild

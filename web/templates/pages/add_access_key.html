@@ -61,15 +61,12 @@
                                 <?php } ?>
                             </td>
                         </tr>
-
                         <tr>
                             <td class="u-pt18">
-                                <?= _('Comment'); ?> <span class="optional">(<?= _('optional'); ?>)</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="text" class="vst-input" name="v_comment" maxlength="255" />
+                                <label for="v_comment" class="form-label">
+                                    <?= _('Comment'); ?> <span class="optional">(<?= _('optional'); ?>)</span>
+                                </label>
+                                <input type="text" class="form-control" name="v_comment" id="v_comment" maxlength="255">
                             </td>
                         </tr>
                     </table>

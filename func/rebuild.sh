@@ -476,36 +476,36 @@ rebuild_dns_domain_conf() {
     domain_idn=$(idn2 --quiet "$domain")
 
     if [ "$SLAVE" != "yes" ]; then
-    # Checking zone file
-    if [ ! -e "$USER_DATA/dns/$domain.conf" ]; then
-        cat $DNSTPL/$TPL.tpl |\
-            sed -e "s/%ip%/$IP/g" \
-                -e "s/%domain_idn%/$domain_idn/g" \
-                -e "s/%domain%/$domain/g" \
-                -e "s/%ns1%/$ns1/g" \
-                -e "s/%ns2%/$ns2/g" \
-                -e "s/%ns3%/$ns3/g" \
-                -e "s/%ns4%/$ns4/g" \
-                -e "s/%time%/$TIME/g" \
-                -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
-    fi
-
-    # Sorting records
-    sort_dns_records
-    #Remove old sign files
-    rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
-    # Updating zone
-    update_domain_zone
-
-    # Set permissions
-    if [ "$DNS_SYSTEM" = 'named' ]; then
-        dns_group='named'
-    else
-        dns_group='bind'
-    fi
-    # Set file permissions
-    chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
-    chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db   
+        # Checking zone file
+        if [ ! -e "$USER_DATA/dns/$domain.conf" ]; then
+            cat $DNSTPL/$TPL.tpl |\
+                sed -e "s/%ip%/$IP/g" \
+                    -e "s/%domain_idn%/$domain_idn/g" \
+                    -e "s/%domain%/$domain/g" \
+                    -e "s/%ns1%/$ns1/g" \
+                    -e "s/%ns2%/$ns2/g" \
+                    -e "s/%ns3%/$ns3/g" \
+                    -e "s/%ns4%/$ns4/g" \
+                    -e "s/%time%/$TIME/g" \
+                    -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+        fi
+    
+        # Sorting records
+        sort_dns_records
+        #Remove old sign files
+        rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
+        # Updating zone
+        update_domain_zone
+    
+        # Set permissions
+        if [ "$DNS_SYSTEM" = 'named' ]; then
+            dns_group='named'
+        else
+            dns_group='bind'
+        fi
+        # Set file permissions
+        chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
+        chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db   
     fi
     
     # Get dns config path

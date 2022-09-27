@@ -70,7 +70,7 @@ if [ "$DNSSEC" = 'yes' ]; then
 fi
 
 # Updating dns-cluster queue
-if [ -n "$DNS_CLUSTER" ]; then
+if [ "$DNS_CLUSTER"  = "yes" ]; then
     cmd="$BIN/v-delete-remote-dns-domain $user $domain"
     echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi

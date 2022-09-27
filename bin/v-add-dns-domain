@@ -198,7 +198,7 @@ chmod 660 $USER_DATA/dns.conf
 rebuild_dns_domain_conf
 
 # Updating dns-cluster queue
-if [ -n "$DNS_CLUSTER" ]; then
+if [ "$DNS_CLUSTER"  = "yes" ]; then
     cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
     echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi

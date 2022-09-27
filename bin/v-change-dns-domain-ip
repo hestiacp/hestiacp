@@ -69,7 +69,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 fi
 
 # Updating dns-cluster queue
-if [ -n "$DNS_CLUSTER" ]; then
+if [ "$DNS_CLUSTER"  = "yes" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
     if [ -z "$dlock" ]; then

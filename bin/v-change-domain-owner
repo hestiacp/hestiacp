@@ -162,7 +162,7 @@ if [ -n "$dns_data" ]; then
     rm -f $HOMEDIR/$owner/conf/dns/$domain.db
 
     # Resync dns cluster
-    if [ -n "$DNS_CLUSTER" ]; then
+    if [ "$DNS_CLUSTER"  = "yes" ]; then
         $BIN/v-sync-dns-cluster
     fi
 fi

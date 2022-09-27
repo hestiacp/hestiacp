@@ -61,7 +61,7 @@
 						$f_name = htmlentities($f_name);
 						$f_placeholder = htmlentities($f_placeholder);
 					?>
-					<div style="max-width: 360px" class="u-mb20">
+					<div class="u-mb20">
 						<?php if($f_type != 'boolean'): ?>
 							<label for="<?=$f_name?>" class="form-label">
 								<?=$f_label?>
@@ -69,7 +69,7 @@
 							</label>
 						<?php endif; ?>
 						<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
-							<select class="form-select" name="<?=$f_name?>" id="<?=$f_name?>">
+							<select class="form-select u-inputWidth" name="<?=$f_name?>" id="<?=$f_name?>">
 								<?php foreach ($form_control['options'] as $key => $option){
 									if(is_numeric($key)){
 										$key = $option;
@@ -86,7 +86,7 @@
 								<label for="<?=$f_name?>"><?=$f_label?></label>
 							</div>
 						<?php else:?>
-							<input type="text" class="form-control" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
+							<input type="text" class="form-control u-inputWidth" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
 						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>

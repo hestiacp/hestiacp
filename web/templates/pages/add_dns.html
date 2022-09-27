@@ -31,7 +31,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Adding DNS Domain');?></span>
 							</td>
 						</tr>
@@ -42,7 +42,7 @@
 						</tr>
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span class="alert alert-danger alert-with-icon">
 										<i class="fas fa-exclamation"></i>
 										<?=_('Avoid adding web domains on admin account');?>
@@ -52,7 +52,7 @@
 						<?php } ?>
 						<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
 									<span><a href="/add/dns/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a> </span>
 								</td>
@@ -60,7 +60,7 @@
 						<?php } ?>
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin"))  {?>
 							<tr>
-								<td class="vst-text step-top">
+								<td class="u-pt18">
 									<?=_('Domain');?>
 								</td>
 							</tr>
@@ -70,9 +70,9 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<label for="v_ip" class="form-label"><?=_('IP address');?></label>
-									<select class="form-select" tabindex="-1" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
+									<select class="form-select u-inputWidth" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 										<option value="">clear</option>
 										<?php
 											foreach ($v_ips as $ip => $value) {
@@ -86,11 +86,11 @@
 							</tr>
 							<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes')) { ?>
 								<tr>
-									<td class="input-label">
+									<td class="u-pt6">
 										<label for="v_template" class="form-label">
 											<?=_('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
 										</label>
-										<select class="form-select" name="v_template" id="v_template" style="max-width: 380px">
+										<select class="form-select u-inputWidth" name="v_template" id="v_template">
 											<?php
 												foreach ($templates as $key => $value) {
 													echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -106,15 +106,15 @@
 								</tr>
 							<?php } ?>
 							<tr>
-								<td class="vst-text input-label step-top">
+								<td class="u-pt18">
 									<a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?=_('Advanced options');?></a>
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text step-top">
+								<td class="u-pt18">
 									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
 										<tr>
-											<td class="vst-text input-label">
+											<td class="u-pt6">
 												<?=_('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
 											</td>
 										</tr>
@@ -124,7 +124,7 @@
 											</td>
 										</tr>
 										<tr>
-											<td class="vst-text input-label">
+											<td class="u-pt6">
 												<?=_('TTL');?>
 											</td>
 										</tr>
@@ -134,7 +134,7 @@
 											</td>
 										</tr>
 										<tr>
-											<td class="vst-text input-label">
+											<td class="u-pt6">
 												<?=_('Name servers');?>
 											</td>
 										</tr>
@@ -201,7 +201,7 @@
 											}
 										?>
 										<tr class="add-ns" <?php if ($v_ns8) echo 'style="display:none;"' ; ?> >
-											<td class="step-top-small">
+											<td class="u-pt18">
 												<span class="add-ns-button additional-control add"><?=_('Add one more Name Server');?></span>
 											</td>
 										</tr>

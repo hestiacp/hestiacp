@@ -32,7 +32,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px" id="basic-options">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Configuring Server');?>: <?=$v_service_name;?></span>
 							</td>
 						</tr>
@@ -42,7 +42,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
+							<td class="u-pt18">
 								worker_processes
 							</td>
 						</tr>
@@ -53,7 +53,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text">
+							<td>
 								worker_connections
 							</td>
 						</tr>
@@ -64,7 +64,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text">
+							<td>
 								client_max_body_size
 							</td>
 						</tr>
@@ -76,7 +76,7 @@
 						</tr>
 
 						<tr>
-							<td class="vst-text">
+							<td>
 								send_timeout
 							</td>
 						</tr>
@@ -87,7 +87,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text">
+							<td>
 								proxy_connect_timeout
 							</td>
 						</tr>
@@ -98,7 +98,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text">
+							<td>
 								proxy_send_timeout
 							</td>
 						</tr>
@@ -109,7 +109,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text">
+							<td>
 								proxy_read_timeout
 							</td>
 						</tr>
@@ -120,7 +120,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text">
+							<td>
 								gzip
 							</td>
 						</tr>
@@ -131,7 +131,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text">
+							<td>
 								gzip_comp_level
 							</td>
 						</tr>
@@ -142,7 +142,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text">
+							<td>
 								charset
 							</td>
 						</tr>
@@ -153,7 +153,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<a href="javascript:toggleOptions();" class="vst-advanced"><?=_('Advanced options');?></a>
 							</td>
 						</tr>
@@ -161,23 +161,18 @@
 
 					<table class="data-col2" width="600px" style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advanced-options">
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<a href="javascript:toggleOptions();" class="vst-advanced"><?=_('Basic options');?></a>
 							</td>
 						</tr>
-
 						<tr>
-							<td class="vst-text step-top">
-								<?=$v_config_path;?>
+							<td class="u-pt18">
+								<label for="v_config" class="form-label"><?=$v_config_path;?></label>
+								<textarea class="form-control u-minHeight300 u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<textarea class="vst-textinput console" name="v_config"><?=$v_config;?></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td class="input-label" style="text-transform: capitalize;">
+							<td class="u-pt6" style="text-transform: capitalize;">
 								<div class="form-check">
 									<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 									<label for="v_restart">

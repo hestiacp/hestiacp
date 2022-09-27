@@ -34,7 +34,7 @@
                 <td class="data-dotted">
                     <table class="data-col2">
                         <tr>
-                            <td class="step-top">
+                            <td class="u-pt18">
                                 <span class="page-title"><?= _('Adding Access Key'); ?></span>
                             </td>
                         </tr>
@@ -45,12 +45,12 @@
                         </tr>
 
                         <tr>
-                            <td class="vst-text input-label">
+                            <td class="u-pt6">
                                 <?= _('Permissions'); ?>
                             </td>
                         </tr>
                         <tr>
-                            <td class="input-label">
+                            <td class="u-pt6">
                                 <?php foreach ($apis as $api_name => $api_data) { ?>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="<?= $api_name ?>" name="v_apis[]" id="v_apis_<?= $api_name ?>" tabindex="5">
@@ -63,7 +63,7 @@
                         </tr>
 
                         <tr>
-                            <td class="vst-text step-top">
+                            <td class="u-pt18">
                                 <?= _('Comment'); ?> <span class="optional">(<?= _('optional'); ?>)</span>
                             </td>
                         </tr>

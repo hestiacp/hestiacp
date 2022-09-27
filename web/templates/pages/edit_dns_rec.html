@@ -19,7 +19,7 @@
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 		<input type="hidden" name="save" value="save" />
 
-		<table class='data'>
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
@@ -32,7 +32,7 @@
 				<td class="data-dotted">
 					<table class="data-col2">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing DNS Record');?></span>
 							</td>
 						</tr>
@@ -42,7 +42,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
+							<td class="u-pt18">
 								<?=_('Domain');?>
 							</td>
 						</tr>
@@ -53,7 +53,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Record');?>
 							</td>
 						</tr>
@@ -65,9 +65,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_type" class="form-label"><?=_('Type');?></label>
-								<select class="form-select" name="v_type" id="v_type" style="max-width: 380px">
+								<select class="form-select u-inputWidth" name="v_type" id="v_type">
 									<option value="A" <?php if ($v_type == 'A') echo "selected"; ?>>A</option>
 									<option value="AAAA" <?php if ($v_type == 'AAAA') echo "selected"; ?>>AAAA</option>
 									<option value="CAA" <?php if ($v_type == 'CAA') echo "selected"; ?>>CAA</option>
@@ -86,9 +86,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_val" class="form-label"><?=_('IP or Value');?></label>
-								<select class="form-select" tabindex="-1" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
+								<select class="form-select u-inputWidth" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 									<option value="">clear</option>
 									<?php
 										foreach ($v_ips as $ip => $value) {
@@ -101,7 +101,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Priority');?> <span class="optional">(<?=_('optional');?>)</span>
 							</td>
 						</tr>
@@ -111,7 +111,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('TTL');?> <span class="optional">(<?=_('optional');?>)</span>
 							</td>
 						</tr>

@@ -554,7 +554,9 @@ rebuild_dns_domain_conf() {
     /usr/sbin/rndc reload > /dev/null 2>&1
     
     if [ "$DNSSEC" = "yes" ]; then
-        key=$(/usr/sbin/rndc dnssec -status $domain_idn | grep ^key: | cut -f2 -d' ');
+        # Key consists always out of 5 digits when less is used they are "lost" 
+        key=$(/usr/sbin/rndc dnssec -status $domain_idn | grep ^key: | cut -f2 -d' ' | numfmt --format='%05.0f' --invalid=ignore);
+        
         if [ ! -d "$USER_DATA/keys/" ]; then
             mkdir -p $USER_DATA/keys/
         fi

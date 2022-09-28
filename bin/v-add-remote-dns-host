@@ -87,7 +87,7 @@ echo "$str" >> $HESTIA/conf/dns-cluster.conf
 chmod 660 $HESTIA/conf/dns-cluster.conf
 
 # Enabling DNS_CLUSTER
-if [ -z "$(grep DNS_CLUSTER $HESTIA/conf/hestia.conf)" ]; then
+if [ -z "$(grep DNS_CLUSTER= $HESTIA/conf/hestia.conf)" ]; then
     sed -i "s/^STATS_/DNS_CLUSTER='yes'\nSTATS_/g" $HESTIA/conf/hestia.conf
 else
     sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $HESTIA/conf/hestia.conf

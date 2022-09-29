@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Fixed few small issues with Letsencypt for hostname (#2922)
 - Fixed few issues with Quick installers (#2921)
 - Fixed an issue with v-change-web-domain-name
+- Update sync-dns-cluster role to run v-delete-dns-domain (#2943)
 
 ### Dependencies
 

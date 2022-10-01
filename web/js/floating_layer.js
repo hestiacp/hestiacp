@@ -60,12 +60,12 @@
             jQuery(ref.container).bind('click.fl', function(evt)
             {
                 jQuery(evt.target).hasClass(config.closeClass) ? flayer_destroy() : -1;
-                if(!!config.outerClose)
+                if(config.outerClose)
                     jQuery(evt.target).hasClass('fl-cloud') ? flayer_destroy() : -1;
             });
 
             // todo:
-            !!config.outerClose ? jQuery(window).bind('keypress.fl', function(evt){evt.keyCode == 27 ? flayer_destroy() : -1;}) : -1;
+            config.outerClose ? jQuery(window).bind('keypress.fl', function(evt){evt.keyCode == 27 ? flayer_destroy() : -1;}) : -1;
 
         }
 
@@ -121,7 +121,7 @@
             jQuery(window).unbind('scroll.fl');
             jQuery(window).unbind('resize.fl');
             jQuery(ref.container).unbind('click.fl');
-            !!config.outerClose ? jQuery(window).unbind('keypress.fl') : -1;
+            config.outerClose ? jQuery(window).unbind('keypress.fl') : -1;
             jQuery(config.returnParent).append(jQuery(elm).addClass('hidden'));
             jQuery(ref.container).remove();
             jQuery.browser.msie && jQuery.browser.version.substr(0,1)<7 ? show_selects() : -1;

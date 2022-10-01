@@ -617,7 +617,7 @@
 											<label for="v_backup_mode" class="form-label">
 												<?=_('Compression');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-difference-between-zstd-and-gzip"><i class="fas fa-question-circle"></i></a>
 											</label>
-											<select class="form-select" name="v_backup_mode" id="v_backup_mode">
+											<select class="form-select u-inputWidth" name="v_backup_mode" id="v_backup_mode">
 												<option value="gzip" <?php if($v_backup_mode != 'zstd') echo 'selected' ?>>gzip</option>
 												<option value="zstd" <?php if($v_backup_mode == 'zstd') echo 'selected' ?>>zstd</option>
 											</select>
@@ -628,7 +628,7 @@
 											<label for="v_backup_gzip" class="form-label">
 												<?=_('Compression level');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-optimal-compression-ratio"><i class="fas fa-question-circle"></i></a>
 											</label>
-											<select class="form-select" name="v_backup_gzip" id="v_backup_gzip">
+											<select class="form-select u-inputWidth" name="v_backup_gzip" id="v_backup_gzip">
 												<?php for ($level = 1; $level < 20; $level++) { ?>
 													<option value='<?=$level;?>' <?php if($v_backup_gzip == $level) echo 'selected' ?>><?=$level;?><?php if($level > 9){ echo sprintf(' (%s)', _('zstd only')); } ?></option>
 												<?php } ?>
@@ -640,7 +640,7 @@
 											<label for="v_backup_dir" class="form-label">
 												<?=_('Directory');?> <a target="_blank" href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"><i class="fas fa-question-circle"></i></a>
 											</label>
-											<input type="text" class="form-control u-mb20" name="v_backup_dir" id="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
+											<input type="text" class="form-control u-inputWidth u-mb20" name="v_backup_dir" id="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
 										</td>
 									</tr>
 									<tr>
@@ -674,7 +674,7 @@
 															<tr>
 																<td class="u-pt6">
 																	<label for="v_backup_host" class="form-label"><?=_('Host');?></label>
-																	<input type="text" class="form-control" name="v_backup_host" id="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
+																	<input type="text" class="form-control u-inputWidth" name="v_backup_host" id="v_backup_host" value="<?=trim($v_backup_host, "'")?>">
 																</td>
 															</tr>
 															<tr>

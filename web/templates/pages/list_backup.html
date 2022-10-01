@@ -12,7 +12,7 @@
 				<tr>
 					<td class="l-sort-toolbar__search-box">
 						<form action="/search/" method="get">
-							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+							<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 							<input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
 							<button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
 						</form>
@@ -20,7 +20,7 @@
 					<?php if ($read_only !== 'true') {?>
 						<td>
 							<form action="/bulk/backup/" method="post" id="objects">
-								<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+								<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 								<div class="l-select">
 									<select name="action" id="">
 										<option value=""><?=_('apply to selected');?></option>
@@ -104,7 +104,7 @@
 										<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 											<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
 												<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-												<input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" />
+												<input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>">
 												<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
 													<p class="confirmation"><?=sprintf(_('DELETE_BACKUP_CONFIRMATION'),$key)?></p>
 												</div>

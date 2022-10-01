@@ -32,7 +32,7 @@
 					<a class="data-controls do_delete ui-button danger cancel">
 						<i class="do_delete fas fa-times-circle status-icon red"></i>
 						<?=_('Delete');?>
-						<input type="hidden" name="delete_url" value="/delete/user/?user=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" />
+						<input type="hidden" name="delete_url" value="/delete/user/?user=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>">
 						<div class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
 							<p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
 						</div>
@@ -49,8 +49,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" method="post" name="v_edit_user" class="<?=$v_status?>">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="save" value="save" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="save" value="save">
 
 		<table class="data">
 			<tr class="data-add">

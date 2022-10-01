@@ -26,8 +26,8 @@
 
 	<?php if( !empty($WebappInstaller->getOptions())): ?>
 		<form id="vstobjects" method="POST" name="v_setup_webapp">
-			<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-			<input type="hidden" name="ok" value="true" />
+			<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+			<input type="hidden" name="ok" value="true">
 
 			<div class="app-form">
 				<?php if( !$WebappInstaller->isDomainRootClean()): ?>

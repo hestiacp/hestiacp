@@ -18,9 +18,9 @@
 						<a class="data-controls do_delete ui-button danger cancel">
 							<i class="do_delete fas fa-times-circle status-icon red"></i><?=_('Delete');?>
 							<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user']))) {?>
-								<input type="hidden" name="delete_url" value="/delete/log/auth/?user=<?=htmlentities($_GET['user']);?>&token=<?=$_SESSION['token']?>" />
+								<input type="hidden" name="delete_url" value="/delete/log/auth/?user=<?=htmlentities($_GET['user']);?>&token=<?=$_SESSION['token']?>">
 							<?php } else { ?>
-								<input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?=$_SESSION['token']?>" />
+								<input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?=$_SESSION['token']?>">
 							<?php } ?>
 							<div class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
 								<p class="confirmation"><?=_('DELETE_LOGS_CONFIRMATION');?></p>

@@ -42,12 +42,10 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('IP address');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								<label for="v_ip" class="form-label">
+									<?=_('IP address');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
+								</label>
+								<input type="text" class="form-control u-inputWidth" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 							</td>
 						</tr>
 						<tr>

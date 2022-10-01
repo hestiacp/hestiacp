@@ -11,7 +11,7 @@ class MediaWikiSetup extends BaseSetup
         'name' => 'MediaWiki',
         'group' => 'cms',
         'enabled' => true,
-        'version' => '1.38.2',
+        'version' => '1.38.4',
         'thumbnail' => 'MediaWiki-2020-logo.svg' //Max size is 300px by 300px
     ];
 
@@ -27,7 +27,7 @@ class MediaWikiSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://releases.wikimedia.org/mediawiki/1.38/mediawiki-1.38.2.zip' ],
+            'archive'  => [ 'src' => 'https://releases.wikimedia.org/mediawiki/1.38/mediawiki-1.38.4.zip' ],
         ],
         'server' => [
             'nginx' => [
@@ -56,7 +56,7 @@ class MediaWikiSetup extends BaseSetup
         $webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain;
 
         $this->appcontext->runUser('v-copy-fs-directory', [
-            $this->getDocRoot($this->extractsubdir . "/mediawiki-1.38.2/."),
+            $this->getDocRoot($this->extractsubdir . "/mediawiki-1.38.4/."),
             $this->getDocRoot()], $result);
 
         $this->appcontext->runUser('v-run-cli-cmd', ["/usr/bin/php".$options['php_version'],

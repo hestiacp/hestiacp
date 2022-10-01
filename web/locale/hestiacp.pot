@@ -1409,7 +1409,7 @@ msgid "Secret Key"
 msgstr ""
 
 #: ../../web/templates/pages/list_access_key.html:71
-msgid "Warning! Last chance to save secrect access key!"
+msgid "Warning! Last chance to save secret access key!"
 msgstr ""
 
 #: ../../web/templates/pages/list_stats.html:6

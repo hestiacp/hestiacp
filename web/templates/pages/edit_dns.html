@@ -87,32 +87,22 @@
 						<?php } ?>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Expiration Date');?><span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<?=_('SOA');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_soa" value="<?=htmlentities(trim($v_soa, "'"))?>">
+								<label for="v_exp" class="form-label">
+									<?=_('Expiration Date');?><span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
+								</label>
+								<input type="text" class="form-control u-inputWidth" name="v_exp" id="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('TTL');?>
+								<label for="v_soa" class="form-label"><?=_('SOA');?></label>
+								<input type="text" class="form-control u-inputWidth" name="v_soa" id="v_soa" value="<?=htmlentities(trim($v_soa, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+							<td class="u-pt6">
+								<label for="v_ttl" class="form-label"><?=_('TTL');?></label>
+								<input type="text" class="form-control u-inputWidth" name="v_ttl" id="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
 							</td>
 						</tr>
 					</table>

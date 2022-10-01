@@ -64,12 +64,8 @@
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
 							<tr>
 								<td class="u-pt18">
-									<?=_('Domain');?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+									<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+									<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								</td>
 							</tr>
 							<tr>
@@ -119,7 +115,7 @@
 							<?php } ?>
 						<?php } ?>
 					</table>
-					<table class="data-col2">
+					<table class="data-col2 u-mb20">
 					</table>
 				</td>
 			</tr>

@@ -42,12 +42,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('Ip List Name') ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_ipname" maxlength="255" value="<?=htmlentities(trim($v_ipname, "'"))?>">
+								<label for="v_ipname" class="form-label"><?=_('Ip List Name') ?></label>
+								<input type="text" class="form-control u-inputWidth" name="v_ipname" id="v_ipname" maxlength="255" value="<?=htmlentities(trim($v_ipname, "'"))?>">
 							</td>
 						</tr>
 						<tr>
@@ -58,7 +54,7 @@
 								<select class="form-select u-inputWidth" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
 									<option value="">clear</option>
 								</select>
-								<input type="text" size="20" class="vst-input vst-list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">
+								<input type="text" class="vst-input vst-list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">
 							</td>
 						</tr>
 						<tr>

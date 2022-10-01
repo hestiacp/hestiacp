@@ -43,12 +43,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('Domain');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+								<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>

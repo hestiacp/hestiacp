@@ -3895,6 +3895,10 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   margin-top: 15px !important;
 }
 
+.u-ml10 {
+  margin-left: 10px !important;
+}
+
 .u-mb20 {
   margin-bottom: 20px !important;
 }
@@ -3925,6 +3929,11 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 
 .u-minHeight300 {
   min-height: 300px !important;
+}
+
+.u-sideBySide {
+  display: flex !important;
+  align-items: center !important;
 }
 
 .u-console {

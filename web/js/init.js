@@ -557,7 +557,7 @@ $(document).ready(function(){
 
               // focusing on the first input at form
               if( location.href.indexOf('lead=') == -1 && !$('.ui-dialog').is(':visible') ){
-                $('#vstobjects .vst-input:not([disabled]), #vstobjects .form-select:not([disabled])').first().focus();
+                $('#vstobjects .vst-input:not([disabled]), #vstobjects .form-control:not([disabled]), #vstobjects .form-select:not([disabled])').first().focus();
               }
 
               $('.l-profile__notifications').click(function(){

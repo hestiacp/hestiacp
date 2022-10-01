@@ -579,7 +579,7 @@
 															<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
 															<input type="hidden" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
 															<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")); ?>">
-															<br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+															<br><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
 														</td>
 													</tr>
 													<?php if ($ftp_user['is_new'] == 1): ?>
@@ -652,7 +652,7 @@
 				<td class="u-pl50">
 					<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="">
 					<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-					<br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+					<br><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
 				</td>
 			</tr>
 			<tr>

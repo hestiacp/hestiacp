@@ -1560,7 +1560,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 130px;
 }
 
-.l-unit__stat-col.l-unit__stat-col--left.text-right.icon-pad-right.text-italic {
+.l-unit__stat-col.l-unit__stat-col--left.icon-pad-right {
   width: 180px;
 }
 
@@ -3876,19 +3876,19 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   display: none;
 }
 
-.text-right {
+.u-text-right {
   text-align: right !important;
 }
 
-.text-center {
+.u-text-center {
   text-align: center !important;
 }
 
-.text-small {
+.u-text-small {
   font-size: 0.85em !important;
 }
 
-.text-italic {
+.u-text-italic {
   font-style: italic !important;
 }
 

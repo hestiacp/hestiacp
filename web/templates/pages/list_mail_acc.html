@@ -70,12 +70,12 @@
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-right compact-4"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Disk');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Quota');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Aliases');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Forwarding');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Autoreply');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-4"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?=_('Disk');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Quota');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Aliases');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Forwarding');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Autoreply');?></b></div>
 			</div>
 		</div>
 	</div>
@@ -141,7 +141,7 @@
 					<?php } ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-right compact-4">
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-4">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
 						<div class="actions-panel clearfix">
 							<?php if ($read_only === 'true') { ?>
@@ -184,15 +184,15 @@
 					<!-- END QUICK ACTION TOOLBAR AREA -->
 				</div>
 
-				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="text-small"><?=_(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center">
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="u-text-small"><?=_(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center">
 					<i class="fas <?=$alias_icon;?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center">
+				<div class="clearfix l-unit__stat-col--left u-text-center">
 					<i class="fas <?=$fwd_icon;?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center">
+				<div class="clearfix l-unit__stat-col--left u-text-center">
 					<i class="fas <?=$autoreply_icon;?>"></i>
 				</div>
 			</div>

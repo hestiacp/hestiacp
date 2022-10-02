@@ -37,10 +37,10 @@
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Ip List Name');?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?=_('Autoupdate');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-4"><b><?=_('Ip Version');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-4"><b><?=_('Date');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-4"><b><?=_('Time');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?=_('Autoupdate');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?=_('Ip Version');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?=_('Date');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?=_('Time');?></b></div>
 		</div>
 	</div>
 
@@ -72,7 +72,7 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center compact-5"><b>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b>
 						<?php if ($data[$key]['AUTOUPDATE'] == 'no') { ?>
 							<i class="fas fa-times-circle status-icon red"></i>
 						<?php } else { ?>
@@ -80,9 +80,9 @@
 						<?php } ?>
 					</b>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center compact-4"><?=_($data[$key]['IP_VERSION'])?></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact-4"><?=_($data[$key]['DATE'])?></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact-4"><?=$data[$key]['TIME']?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><?=_($data[$key]['IP_VERSION'])?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><?=_($data[$key]['DATE'])?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><?=$data[$key]['TIME']?></div>
 			</div>
 		</div>
 	<?php } ?>

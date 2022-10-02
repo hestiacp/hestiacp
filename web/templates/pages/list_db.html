@@ -91,12 +91,12 @@
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-right compact-3"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Disk');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Type');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=_('Username');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Hostname');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Charset');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-right compact-3"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Disk');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?=_('Type');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?=_('Username');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Hostname');?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Charset');?></b></div>
 		</div>
 	</div>
 
@@ -140,7 +140,7 @@
 						<?php } ?>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left text-right compact-3">
+					<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
 							<div class="actions-panel clearfix">
 								<?php if ($read_only === 'true') {?>
@@ -176,11 +176,11 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-					<div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TYPE']?></div>
-					<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=$data[$key]['DBUSER']?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['HOST']?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['CHARSET']?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center compact"><?=$data[$key]['TYPE']?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?=$data[$key]['DBUSER']?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['HOST']?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['CHARSET']?></div>
 				</div>
 			</div>
 		</div>

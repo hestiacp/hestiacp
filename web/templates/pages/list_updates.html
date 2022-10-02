@@ -31,8 +31,8 @@
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide"><b><?=_('Package');?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-5"><b><?=_('Description');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=_('Version');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Status');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?=_('Version');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Status');?></b></div>
 			</div>
 		</div>
 	</div>
@@ -63,8 +63,8 @@
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide"><b><?=$key?></b></div>
 					<div class="clearfix l-unit__stat-col--left wide-5"><?=_($data[$key]['DESCR'])?></div>
-					<div class="clearfix l-unit__stat-col--left text-center wide"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
-					<div class="clearfix l-unit__stat-col--left text-center">
+					<div class="clearfix l-unit__stat-col--left u-text-center wide"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
+					<div class="clearfix l-unit__stat-col--left u-text-center">
 						<?php if ($data[$key]['UPDATED'] == 'no') { echo '<i class="fas fa-exclamation-triangle" style="color: orange;"></i>'; } ?>
 						<?php if ($data[$key]['UPDATED'] == 'yes') { echo '<i class="fas fa-check-circle status-icon green"></i>'; } ?>
 					</div>

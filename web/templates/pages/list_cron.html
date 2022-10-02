@@ -67,12 +67,12 @@
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-5"><b><?=_('Command');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=_('Min');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=_('Hour');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=_('Day');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=_('Month');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?=_('Day of week');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?=_('Min');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?=_('Hour');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?=_('Day');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?=_('Month');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?=_('Day of week');?></b></div>
 		</div>
 	</div>
 
@@ -106,7 +106,7 @@
 					<?php } ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact-2 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-2 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
 						<div class="actions-panel clearfix">
 							<?php if ($read_only === 'true') {?>
@@ -139,11 +139,11 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['MIN']?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['HOUR']?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['DAY']?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['MONTH']?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['WDAY']?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?=$data[$key]['MIN']?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?=$data[$key]['HOUR']?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?=$data[$key]['DAY']?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?=$data[$key]['MONTH']?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?=$data[$key]['WDAY']?></div>
 			</div>
 		</div>
 	<?php } ?>

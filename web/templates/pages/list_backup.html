@@ -48,11 +48,11 @@
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-4"><b><?=_('File Name');?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Date');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Size');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Type');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Runtime');?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Date');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Size');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Type');?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Runtime');?></b></div>
 			</div>
 		</div>
 	</div>
@@ -91,7 +91,7 @@
 						</b>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+					<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
 							<div class="actions-panel clearfix">
 								<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($read_only === 'true')) {?>
@@ -116,10 +116,10 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=translate_date($data[$key]['DATE'])?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['SIZE'])?></span></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['TYPE']?></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><?=humanize_time($data[$key]['RUNTIME'])?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=translate_date($data[$key]['DATE'])?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['SIZE'])?></span></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['TYPE']?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=humanize_time($data[$key]['RUNTIME'])?></div>
 				</div>
 			</div>
 		</div>

@@ -549,7 +549,7 @@ $(document).ready(function(){
               $(document).click(function(evt){
                 //close notification popup
                 if(!$(evt.target).hasClass('l-profile__notifications') && $(evt.target).parents('ul.notification-container').length == 0){
-                  $('.notification-container').hide();
+                  $('.notification-container').addClass('u-hidden');
                   $('.l-profile__notifications').removeClass('active');
                 }
               });
@@ -568,7 +568,7 @@ $(document).ready(function(){
                   $('.notification-container').css({left: left+'px'});
 
                 } else {
-                  $('.notification-container').hide();
+                  $('.notification-container').addClass('u-hidden');
                   $('.l-profile__notifications').removeClass('active');
                 }
               });

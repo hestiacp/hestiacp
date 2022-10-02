@@ -110,8 +110,17 @@ App.Actions.WEB.add_ftp_user_form = function() {
     var index = $('.data-col2 .ftptable').length + 1;
 
     ref.find('input').each(function(i, elm) {
-        var attr_value = $(elm).prop('name').replace('%INDEX%', index);
-        $(elm).prop('name', attr_value);
+        var name = $(elm).attr('name');
+        var id = $(elm).attr('id');
+        $(elm).attr('name', name.replace('%INDEX%', index));
+        if (id) {
+          $(elm).attr('id', id.replace('%INDEX%', index));
+        }
+    });
+
+    ref.find('input').prev('label').each(function(i, elm) {
+        var for_attr = $(elm).attr('for');
+        $(elm).attr('for', for_attr.replace('%INDEX%', index));
     });
 
     ref.find('.ftp-user-number').text(index);
@@ -204,12 +213,8 @@ App.Actions.WEB.passwordChanged = function(elm) {
         inp_name = inp_name.replace('is_new', 'v_ftp_email');
         ref.find('tr:last').after('<tr>\
                                         <td class="u-pl50 u-pt6">\
-                                             Send FTP credentials to email\
-                                        </td>\
-                                    </tr>\
-                                    <tr>\
-                                        <td class="u-pl50">\
-                                            <input type="text" value="" name="' + inp_name + '" class="vst-input vst-email-alert-on-psw">\
+                                            <label for="' + inp_name + '" class="form-label">Send FTP credentials to email</label>\
+                                            <input type="text" class="form-control vst-email-alert-on-psw u-inputWidth" value="" name="' + inp_name + '" id="' + inp_name + '">\
                                         </td>\
                                     </tr>');
     }

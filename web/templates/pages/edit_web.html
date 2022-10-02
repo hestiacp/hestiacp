@@ -119,12 +119,8 @@
 								<table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
 									<tr>
 										<td class="u-pt6">
-											<?=_('Username');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
+											<label for="v_stats_user" class="form-label"><?=_('Username');?></label>
+											<input type="text" class="form-control u-inputWidth" name="v_stats_user" id="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
 										</td>
 									</tr>
 									<tr>
@@ -174,12 +170,8 @@
 									<table id="custom_redirect" style="margin-left: 22px; display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
 										<tr>
 											<td class="u-pt6">
-												<?=_('Target domain or URL');?>:
-											</td>
-										</tr>
-										<tr>
-											<td class="u-pt6">
-												<input type="text" class="vst-input" name="v-redirect-custom" value="<?=$v_redirect_custom;?>">
+												<label for="v-redirect-custom" class="form-label"><?=_('Target domain or URL');?></label>
+												<input type="text" class="form-control u-inputWidth" name="v-redirect-custom" id="v-redirect-custom" value="<?=$v_redirect_custom;?>">
 											</td>
 										</tr>
 										<tr>
@@ -390,12 +382,12 @@
 											<tr>
 												<td class="u-pl50">
 													<table id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
-														<td class="u-pt6">
-															<?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
-														</td>
 														<tr>
-															<td>
-																<input type="text" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
+															<td class="u-pt6">
+																<label for="v_nginx_cache_duration" class="form-label">
+																	<?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
+																</label>
+																<input type="text" class="form-control u-inputWidth" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
 															</td>
 														</tr>
 													</table>
@@ -500,16 +492,10 @@
 												</tr>
 												<tr>
 													<td class="u-pt6">
-														<?php print( _('Directory'));?> <span class="optional">(<?=_('optional');?>)</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<input type="text" class="vst-input" name="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
-													</td>
-												</tr>
-												<tr>
-													<td>
+														<label for="v-custom-doc-folder" class="form-label">
+															<?php print( _('Directory'));?> <span class="optional">(<?=_('optional');?>)</span>
+														</label>
+														<input type="text" class="form-control u-inputWidth" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
 														<small class="custom_docroot_hint"></small>
 													</td>
 												</tr>
@@ -551,12 +537,10 @@
 																<?=_('Username');?><br>
 																<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 															</label>
-															<div class="u-sideBySide">
-																<input type="text" class="form-control v-ftp-user u-inputWidth" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
-																name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
-																<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
-																<small class="hint u-ml10"></small>
-															</div>
+															<input type="text" class="form-control v-ftp-user u-inputWidth" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
+															name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
+															<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
+															<small class="hint"></small>
 														</td>
 													</tr>
 													<tr>
@@ -571,15 +555,11 @@
 													</tr>
 													<tr>
 														<td class="u-pl50 u-pt6">
-															<?=_('Path');?>
-														</td>
-													</tr>
-													<tr>
-														<td class="u-pl50">
-															<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
-															<input type="hidden" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-															<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")); ?>">
-															<br><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+															<label for="v_ftp_user[<?=$i ?>][v_ftp_path]" class="form-label"><?=_('Path');?></label>
+															<input type="hidden" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
+															<input type="hidden" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
+															<input type="text" class="form-control v-ftp-path u-inputWidth" name="v_ftp_user[<?=$i ?>][v_ftp_path]" id="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
+															<span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
 														</td>
 													</tr>
 													<?php if ($ftp_user['is_new'] == 1): ?>
@@ -627,10 +607,8 @@
 						<?=_('Username');?><br>
 						<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 					</label>
-					<div class="u-sideBySide">
-						<input type="text" class="form-control v-ftp-user u-inputWidth" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
-						<small class="hint u-ml10"></small>
-					</div>
+					<input type="text" class="form-control v-ftp-user u-inputWidth" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
+					<small class="hint"></small>
 				</td>
 			</tr>
 			<tr>
@@ -645,14 +623,10 @@
 			</tr>
 			<tr>
 				<td class="u-pl50 u-pt6">
-					<?=_('Path');?>
-				</td>
-			</tr>
-			<tr>
-				<td class="u-pl50">
-					<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="">
-					<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-					<br><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+					<label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?=_('Path');?></label>
+					<input type="hidden" name="v_ftp_pre_path" value="">
+					<input type="text" class="form-control v-ftp-path u-inputWidth" name="v_ftp_user[%INDEX%][v_ftp_path]" id="v_ftp_user[%INDEX%][v_ftp_path]" value="">
+					<span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
 				</td>
 			</tr>
 			<tr>
@@ -666,5 +640,5 @@
 </div>
 
 <script>
-	GLOBAL.FTP_USER_PREFIX =  "<?=$user_plain.'_';?>";
+	GLOBAL.FTP_USER_PREFIX = "<?=$user_plain.'_';?>";
 </script>

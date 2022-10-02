@@ -164,7 +164,7 @@
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
 										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
 										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>">
-										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation');?>">
+										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention u-hidden" title="<?=_('Confirmation');?>">
 											<p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
 										</div>
 									</a>
@@ -173,7 +173,7 @@
 									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
 										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>">
-										<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+										<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete u-hidden" title="<?=_('Confirmation');?>">
 											<p class="confirmation"><?=sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'),$key)?></p>
 										</div>
 									</a>

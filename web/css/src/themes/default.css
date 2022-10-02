@@ -3872,8 +3872,8 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   clear: both;
 }
 
-.hidden {
-  display: none;
+.u-hidden {
+  display: none !important;
 }
 
 .u-text-right {

@@ -90,15 +90,15 @@ $(document).ready(function(){
 
               $('.pause').click(function(){
                 VE.helpers.refresh_timer.stop();
-                $('.pause').addClass('hidden');
-                $('.play').removeClass('hidden');
+                $('.pause').addClass('u-hidden');
+                $('.play').removeClass('u-hidden');
                 $('.refresh-timer').addClass('paused');
               });
 
               $('.play').click(function(){
                 VE.helpers.refresh_timer.start();
-                $('.pause').removeClass('hidden');
-                $('.play').addClass('hidden');
+                $('.pause').removeClass('u-hidden');
+                $('.play').addClass('u-hidden');
                 $('.refresh-timer').removeClass('paused');
               });
             }

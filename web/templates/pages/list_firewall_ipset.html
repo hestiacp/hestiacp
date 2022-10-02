@@ -63,7 +63,7 @@
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete">
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/firewall/ipset/?listname=<?=$listname?>&token=<?=$_SESSION['token']?>">
-									<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+									<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete u-hidden" title="<?=_('Confirmation');?>">
 										<p class="confirmation"><?=sprintf(_('DELETE_IPSET_CONFIRMATION'), $key)?></p>
 									</div>
 								</a>

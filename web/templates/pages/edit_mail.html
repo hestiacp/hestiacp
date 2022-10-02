@@ -44,7 +44,7 @@
 						<tr>
 							<td class="u-pt18">
 								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
-								<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>
@@ -171,7 +171,7 @@
 															<?=_('SSL Certificate');?>
 															<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
 														</label>
-														<textarea class="form-control u-inputWidth u-minHeight100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+														<textarea class="form-control u-input-width u-minHeight100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>

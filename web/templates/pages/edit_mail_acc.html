@@ -101,7 +101,7 @@
 								<label for="v_aliases" class="form-label">
 									<?=_('Aliases');?> <span class="optional">(<?=_('use local-part');?>)</span>
 								</label>
-								<textarea class="form-control u-inputWidth" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+								<textarea class="form-control u-input-width" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -140,7 +140,7 @@
 									<tr>
 										<td class="u-pt6">
 											<label for="v_autoreply_message" class="form-label"><?=_('Message');?></label>
-											<textarea class="form-control u-inputWidth" name="v_autoreply_message" id="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>
+											<textarea class="form-control u-input-width" name="v_autoreply_message" id="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>
 										</td>
 									</tr>
 								</table>
@@ -154,7 +154,7 @@
 											<label for="v_fwd" class="form-label">
 												<?=_('Forward to');?> <span class="optional">(<?=_('one or more email addresses');?>)</span>
 											</label>
-											<textarea class="form-control u-inputWidth" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+											<textarea class="form-control u-input-width" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
 										</td>
 									</tr>
 								</table>

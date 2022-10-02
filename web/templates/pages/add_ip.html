@@ -87,7 +87,7 @@
 						<tr>
 							<td class="u-pt6" style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
 								<label for="v_owner" class="form-label"><?=_('Assigned user');?></label>
-								<select class="form-select u-inputWidth" name="v_owner" id="v_owner">
+								<select class="form-select u-input-width" name="v_owner" id="v_owner">
 									<?php
 										foreach ($users as $key => $value) {
 											echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";

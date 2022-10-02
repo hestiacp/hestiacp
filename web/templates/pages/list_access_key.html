@@ -52,7 +52,7 @@ if (!empty($_POST['ok'])) {
 							<tr>
 								<td class="u-pt18">
 									<label for="access_key_id" class="form-label"><?= _('Access Key Id'); ?></label>
-									<input type="text" class="form-control u-inputWidth" id="access_key_id" maxlength="255" readonly value="<?= htmlentities(trim($key_data['ACCESS_KEY_ID'], "'")) ?>">
+									<input type="text" class="form-control u-input-width" id="access_key_id" maxlength="255" readonly value="<?= htmlentities(trim($key_data['ACCESS_KEY_ID'], "'")) ?>">
 								</td>
 							</tr>
 						<?php } ?>
@@ -67,7 +67,7 @@ if (!empty($_POST['ok'])) {
 											<?= _('Secret Key'); ?><br>
 											<span style="font-size: 10pt; color:#ffd500;"><?= _('Warning! Last chance to save secret access key!'); ?></span>
 										</label>
-										<input type="text" class="form-control u-inputWidth" id="secret_key" maxlength="255" readonly value="<?= htmlentities(trim($key_data['SECRET_ACCESS_KEY'], "'")) ?>">
+										<input type="text" class="form-control u-input-width" id="secret_key" maxlength="255" readonly value="<?= htmlentities(trim($key_data['SECRET_ACCESS_KEY'], "'")) ?>">
 									</td>
 								</tr>
 							<?php } ?>
@@ -93,7 +93,7 @@ if (!empty($_POST['ok'])) {
 						<tr>
 							<td class="u-pt6">
 								<label for="service" class="form-label"><?= _('Comment'); ?></label>
-								<input type="text" class="form-control u-inputWidth" id="service" maxlength="255" readonly value="<?= htmlentities(trim($key_data['COMMENT'], "'")) ?>">
+								<input type="text" class="form-control u-input-width" id="service" maxlength="255" readonly value="<?= htmlentities(trim($key_data['COMMENT'], "'")) ?>">
 							</td>
 						</tr>
 					</table>

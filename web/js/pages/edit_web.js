@@ -214,7 +214,7 @@ App.Actions.WEB.passwordChanged = function(elm) {
         ref.find('tr:last').after('<tr>\
                                         <td class="u-pl50 u-pt6">\
                                             <label for="' + inp_name + '" class="form-label">Send FTP credentials to email</label>\
-                                            <input type="text" class="form-control vst-email-alert-on-psw u-inputWidth" value="" name="' + inp_name + '" id="' + inp_name + '">\
+                                            <input type="text" class="form-control vst-email-alert-on-psw u-input-width" value="" name="' + inp_name + '" id="' + inp_name + '">\
                                         </td>\
                                     </tr>');
     }

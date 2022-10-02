@@ -1,22 +1,23 @@
 <?php
 // Prevent resubmit form on page refresh
 if (!empty($_POST['ok'])) {
-    ?>
-    <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-    </script>
+	?>
+	<script>
+		if (window.history.replaceState) {
+			window.history.replaceState(null, null, window.location.href);
+		}
+	</script>
 <?php } ?>
 
 <!-- Begin toolbar -->
 <div class="l-center edit">
-    <div class="l-sort clearfix">
-        <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/access-key/"><i
-                        class="fas fa-arrow-left status-icon blue"></i><?= _('Back'); ?></a>
-        </div>
-    </div>
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/access-key/">
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _('Back'); ?>
+			</a>
+		</div>
+	</div>
 </div>
 <!-- End toolbar -->
 
@@ -24,95 +25,81 @@ if (!empty($_POST['ok'])) {
 
 <div class="l-center animated fadeIn">
 
-    <form id="vstobjects">
-        <table class="data mode-add">
-            <tr class="data-add">
-                <td class="data-dotted">
-                    <table class="data-col1">
-                        <tr>
-                            <td></td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="data-dotted">
-                    <table class="data-col2">
-                        <tr>
-                            <td class="u-pt18">
-                                <span class="page-title"><?= _("Access Key") ?></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php show_error_panel($_SESSION); ?>
-                            </td>
-                        </tr>
+	<form id="vstobjects">
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="u-pt18">
+								<span class="page-title"><?= _("Access Key") ?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php show_error_panel($_SESSION); ?>
+							</td>
+						</tr>
 
-                        <?php if (!empty($key_data['ACCESS_KEY_ID'])) { ?>
-                            <tr>
-                                <td class="u-pt18">
-                                    <?= _('Access Key Id'); ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input type="text" size="20" class="vst-input" maxlength="255" readonly
-                                           value="<?= htmlentities(trim($key_data['ACCESS_KEY_ID'], "'")) ?>">
-                                </td>
-                            </tr>
-                        <?php } ?>
+						<?php if (!empty($key_data['ACCESS_KEY_ID'])) { ?>
+							<tr>
+								<td class="u-pt18">
+									<label for="access_key_id" class="form-label"><?= _('Access Key Id'); ?></label>
+									<input type="text" class="form-control u-inputWidth" id="access_key_id" maxlength="255" readonly value="<?= htmlentities(trim($key_data['ACCESS_KEY_ID'], "'")) ?>">
+								</td>
+							</tr>
+						<?php } ?>
 
-                        <?php
-                        if (!empty($_SESSION['ok_msg'])) {
-                            ?>
-                            <?php if (!empty($key_data['ACCESS_KEY_ID']) && !empty($key_data['SECRET_ACCESS_KEY'])) { ?>
-                                <tr>
-                                    <td class="u-pt6">
-                                        <?= _('Secret Key'); ?><br>
-                                        <span style="font-size: 10pt; color:#ffd500;"><?= _('Warning! Last chance to save secrect access key!'); ?></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input type="text" size="20" class="vst-input" maxlength="255" readonly
-                                               value="<?= htmlentities(trim($key_data['SECRET_ACCESS_KEY'], "'")) ?>">
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        <?php }
-                        ?>
+						<?php
+						if (!empty($_SESSION['ok_msg'])) {
+							?>
+							<?php if (!empty($key_data['ACCESS_KEY_ID']) && !empty($key_data['SECRET_ACCESS_KEY'])) { ?>
+								<tr>
+									<td class="u-pt6">
+										<label for="secret_key" class="form-label">
+											<?= _('Secret Key'); ?><br>
+											<span style="font-size: 10pt; color:#ffd500;"><?= _('Warning! Last chance to save secret access key!'); ?></span>
+										</label>
+										<input type="text" class="form-control u-inputWidth" id="secret_key" maxlength="255" readonly value="<?= htmlentities(trim($key_data['SECRET_ACCESS_KEY'], "'")) ?>">
+									</td>
+								</tr>
+							<?php } ?>
+						<?php }
+						?>
 
-                        <tr>
-                            <td class="u-pt18">
-                                <?= _('Permissions'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <ul>
-                                    <?php
-                                    foreach ($key_data['PERMISSIONS'] as $api_name) {
-                                        ?>
-                                        <li><?= _($api_name); ?></li>
-                                    <?php } ?>
-                                </ul>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="u-pt6">
-                                <?= _('Comment'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="text" size="20" class="vst-input" maxlength="255" readonly
-                                       value="<?= htmlentities(trim($key_data['COMMENT'], "'")) ?>">
-                            </td>
-                        </tr>
-                    </table>
-                    <table class="data-col2"></table>
-                </td>
-            </tr>
-        </table>
-    </form>
+						<tr>
+							<td class="u-pt18">
+								<?= _('Permissions'); ?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<ul>
+									<?php
+									foreach ($key_data['PERMISSIONS'] as $api_name) {
+										?>
+										<li><?= _($api_name); ?></li>
+									<?php } ?>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td class="u-pt6">
+								<label for="service" class="form-label"><?= _('Comment'); ?></label>
+								<input type="text" class="form-control u-inputWidth" id="service" maxlength="255" readonly value="<?= htmlentities(trim($key_data['COMMENT'], "'")) ?>">
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
 </div>

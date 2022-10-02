@@ -51,19 +51,15 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('Domain');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+								<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
 								<label for="v_aliases" class="form-label"><?=_('Aliases');?></label>
-								<textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+								<textarea class="form-control u-inputWidth" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
 							</td>
 						</tr>
 						<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') {?>
@@ -79,7 +75,7 @@
 						<tr>
 							<td class="u-pt6">
 								<label for="v_ip" class="form-label"><?=_('IP Address');?></label>
-								<select class="form-select" name="v_ip" id="v_ip">
+								<select class="form-select u-inputWidth" name="v_ip" id="v_ip">
 									<?php
 										foreach ($ips as $ip => $value) {
 											$display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
@@ -93,7 +89,7 @@
 						<tr>
 							<td class="u-pt18">
 								<label for="v_stats" class="form-label"><?=_('Web Statistics');?></label>
-								<select class="form-select" name="v_stats" id="v_stats">
+								<select class="form-select u-inputWidth" name="v_stats" id="v_stats">
 									<?php
 										foreach ($stats as $key => $value) {
 											$svalue = "'".$value."'";
@@ -128,7 +124,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
+											<input type="text" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
 										</td>
 									</tr>
 									<tr>
@@ -138,7 +134,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
+											<input type="text" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
 										</td>
 									</tr>
 								</table>
@@ -183,7 +179,7 @@
 										</tr>
 										<tr>
 											<td class="u-pt6">
-												<input type="text" name="v-redirect-custom" class="vst-input" value="<?=$v_redirect_custom;?>" />
+												<input type="text" class="vst-input" name="v-redirect-custom" value="<?=$v_redirect_custom;?>">
 											</td>
 										</tr>
 										<tr>
@@ -363,7 +359,7 @@
 												<label for="v_template" class="form-label">
 													<?=_('Web Template') . "<span class='optional'>" . strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
 												</label>
-												<select class="form-select" name="v_template" id="v_template">
+												<select class="form-select u-inputWidth" name="v_template" id="v_template">
 													<?php
 														foreach ($templates as $key => $value) {
 															echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -398,7 +394,9 @@
 															<?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
 														</td>
 														<tr>
-															<td><input type="text" size="20" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>"></td>
+															<td>
+																<input type="text" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
+															</td>
 														</tr>
 													</table>
 												</td>
@@ -410,7 +408,7 @@
 													<label for="v_backend_template" class="form-label">
 														<?=_('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
 													</label>
-													<select class="form-select" name="v_backend_template" id="v_backend_template">
+													<select class="form-select u-inputWidth" name="v_backend_template" id="v_backend_template">
 														<?php
 															foreach ($backend_templates as $key => $value) {
 																echo "\t\t\t\t<option value=\"".$value."\"";
@@ -445,7 +443,7 @@
 														<tr>
 															<td class="u-pt6">
 																<label for="v_proxy_template" class="form-label"><?=_('Proxy Template');?></label>
-																<select class="form-select" name="v_proxy_template" id="v_proxy_template">
+																<select class="form-select u-inputWidth" name="v_proxy_template" id="v_proxy_template">
 																	<?php
 																		foreach ($proxy_templates as $key => $value) {
 																			echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -507,8 +505,7 @@
 												</tr>
 												<tr>
 													<td>
-														<input type="text" size="20" class="vst-input"
-															name="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
+														<input type="text" class="vst-input" name="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
 													</td>
 												</tr>
 												<tr>
@@ -550,15 +547,16 @@
 													</tr>
 													<tr>
 														<td class="u-pl50 u-pt6">
-															<?=_('Username');?><br>
-															<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
-														</td>
-													</tr>
-													<tr>
-														<td class="u-pl50">
-															<input type="text" size="20" class="vst-input v-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
-																name="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
-															<small class="hint"></small>
+															<label for="v_ftp_user[<?=$i ?>][v_ftp_user]" class="form-label">
+																<?=_('Username');?><br>
+																<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
+															</label>
+															<div class="u-sideBySide">
+																<input type="text" class="form-control v-ftp-user u-inputWidth" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
+																name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
+																<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
+																<small class="hint u-ml10"></small>
+															</div>
 														</td>
 													</tr>
 													<tr>
@@ -571,7 +569,6 @@
 															<input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
 														</td>
 													</tr>
-
 													<tr>
 														<td class="u-pl50 u-pt6">
 															<?=_('Path');?>
@@ -586,16 +583,12 @@
 														</td>
 													</tr>
 													<?php if ($ftp_user['is_new'] == 1): ?>
-													<tr>
-														<td class="u-pl50 u-pt6">
-															<?=_('Send FTP credentials to email');?>
-														</td>
-													</tr>
-													<tr>
-														<td class="u-pl50">
-															<input type="text" class="vst-input vst-email-alert-on-psw" name="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
-														</td>
-													</tr>
+														<tr>
+															<td class="u-pl50 u-pt6">
+																<label for="v_ftp_user[<?=$i ?>][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
+																<input type="text" class="form-control vst-email-alert-on-psw u-inputWidth" name="v_ftp_user[<?=$i ?>][v_ftp_email]" id="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
+															</td>
+														</tr>
 													<?php endif; ?>
 												</table>
 												<?php endforeach; ?>
@@ -612,7 +605,7 @@
 							</td>
 						</tr>
 					</table>
-					<table class="data-col2">
+					<table class="data-col2 u-mb20">
 					</table>
 				</td>
 			</tr>
@@ -630,14 +623,14 @@
 			</tr>
 			<tr>
 				<td class="u-pl50 u-pt6">
-					<?=_('Username');?><br>
-					<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
-				</td>
-			</tr>
-			<tr>
-				<td class="u-pl50">
-					<input type="text" size="20" class="vst-input v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" value="">
-					<small class="hint"></small>
+					<label for="v_ftp_user[%INDEX%][v_ftp_user]" class="form-label">
+						<?=_('Username');?><br>
+						<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
+					</label>
+					<div class="u-sideBySide">
+						<input type="text" class="form-control v-ftp-user u-inputWidth" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
+						<small class="hint u-ml10"></small>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -650,7 +643,6 @@
 					<input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[%INDEX%][v_ftp_password]" value="">
 				</td>
 			</tr>
-
 			<tr>
 				<td class="u-pl50 u-pt6">
 					<?=_('Path');?>
@@ -665,17 +657,14 @@
 			</tr>
 			<tr>
 				<td class="u-pl50 u-pt6">
-					<?=_('Send FTP credentials to email');?>
-				</td>
-			</tr>
-			<tr>
-				<td class="u-pl50">
-					<input type="text" class="vst-input vst-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" value="">
+					<label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
+					<input type="text" class="form-control vst-email-alert-on-psw u-inputWidth" name="v_ftp_user[%INDEX%][v_ftp_email]" id="v_ftp_user[%INDEX%][v_ftp_email]" value="">
 				</td>
 			</tr>
 		</table>
 	</div>
 </div>
+
 <script>
 	GLOBAL.FTP_USER_PREFIX =  "<?=$user_plain.'_';?>";
 </script>

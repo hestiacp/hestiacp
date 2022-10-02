@@ -47,7 +47,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_package" value="<?=htmlentities(trim($v_package, "'"))?>">
+								<input type="text" class="vst-input" name="v_package" value="<?=htmlentities(trim($v_package, "'"))?>">
 							</td>
 						</tr>
 						<tr>
@@ -57,7 +57,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_disk_quota" value="<?=htmlentities(trim($v_disk_quota, "'"))?>">
+								<input type="text" class="vst-input" name="v_disk_quota" value="<?=htmlentities(trim($v_disk_quota, "'"))?>">
 								<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-disk-quota"></i>
 							</td>
 						</tr>
@@ -68,7 +68,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_bandwidth" value="<?=htmlentities(trim($v_bandwidth, "'"))?>">
+								<input type="text" class="vst-input" name="v_bandwidth" value="<?=htmlentities(trim($v_bandwidth, "'"))?>">
 								<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-bandwidth"></i>
 							</td>
 						</tr>
@@ -79,7 +79,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
+								<input type="text" class="vst-input" name="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
 							</td>
 						</tr>
 						<tr>
@@ -98,7 +98,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_web_domains" value="<?=htmlentities(trim($v_web_domains, "'"))?>">
+											<input type="text" class="vst-input" name="v_web_domains" value="<?=htmlentities(trim($v_web_domains, "'"))?>">
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-web-domains"></i>
 										</td>
 									</tr>
@@ -109,7 +109,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_web_aliases" value="<?=htmlentities(trim($v_web_aliases, "'"))?>">
+											<input type="text" class="vst-input" name="v_web_aliases" value="<?=htmlentities(trim($v_web_aliases, "'"))?>">
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-web-aliases"></i>
 										</td>
 									</tr>
@@ -209,7 +209,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_dns_domains" value="<?=htmlentities(trim($v_dns_domains, "'"))?>">
+											<input type="text" class="vst-input" name="v_dns_domains" value="<?=htmlentities(trim($v_dns_domains, "'"))?>">
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-dns-domain"></i>
 										</td>
 									</tr>
@@ -220,7 +220,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_dns_records" value="<?=htmlentities(trim($v_dns_records, "'"))?>">
+											<input type="text" class="vst-input" name="v_dns_records" value="<?=htmlentities(trim($v_dns_records, "'"))?>">
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-dns-records"></i>
 										</td>
 									</tr>
@@ -232,13 +232,13 @@
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+												<input type="text" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
 												<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+												<input type="text" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
 												<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 											</td>
 										</tr>
@@ -246,7 +246,7 @@
 											if($v_ns3) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+														<input type="text" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
 														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 													</td>
 												</tr>';
@@ -254,7 +254,7 @@
 											if($v_ns4) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+														<input type="text" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
 														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 													</td>
 												</tr>';
@@ -262,7 +262,7 @@
 											if($v_ns5) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+														<input type="text" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
 														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 													</td>
 												</tr>';
@@ -270,7 +270,7 @@
 											if($v_ns6) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+														<input type="text" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
 														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 													</td>
 												</tr>';
@@ -278,7 +278,7 @@
 											if($v_ns7) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+														<input type="text" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
 														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 													</td>
 												</tr>';
@@ -286,7 +286,7 @@
 											if($v_ns8) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+														<input type="text" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
 														<span class="remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
 													</td>
 												</tr>';
@@ -317,7 +317,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_mail_domains" value="<?=htmlentities(trim($v_mail_domains, "'"))?>">
+											<input type="text" class="vst-input" name="v_mail_domains" value="<?=htmlentities(trim($v_mail_domains, "'"))?>">
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-mail-domains"></i>
 										</td>
 									</tr>
@@ -328,7 +328,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
+											<input type="text" class="vst-input" name="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-mail-accounts"></i>
 										<td>
 									</tr>
@@ -339,7 +339,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_ratelimit" value="<?=htmlentities(trim($v_ratelimit, "'"))?>">
+											<input type="text" class="vst-input" name="v_ratelimit" value="<?=htmlentities(trim($v_ratelimit, "'"))?>">
 										<td>
 									</tr>
 								</table>
@@ -361,7 +361,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
+											<input type="text" class="vst-input" name="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-databases"></i>
 										</td>
 									</tr>
@@ -384,7 +384,7 @@
 									</tr>
 									<tr>
 										<td>
-											<input type="text" size="20" class="vst-input" name="v_cron_jobs" value="<?=htmlentities(trim($v_cron_jobs, "'"))?>">
+											<input type="text" class="vst-input" name="v_cron_jobs" value="<?=htmlentities(trim($v_cron_jobs, "'"))?>">
 											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-cron-jobs"></i>
 										</td>
 									</tr>

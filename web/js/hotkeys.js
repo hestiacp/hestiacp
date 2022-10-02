@@ -24,13 +24,12 @@ shortcut = {
 
         var ele = opt.target;
         if(typeof opt.target == 'string') ele = document.getElementById(opt.target);
-        var ths = this;
         shortcut_combination = shortcut_combination.toLowerCase();
 
         //The function to be called at keypress
         var func = function(e) {
             e = e || window.event;
-            
+
             if(opt['disable_in_input']) { //Don't enable shortcut keys in Input, Textarea fields
                 var element;
                 if(e.target) element=e.target;
@@ -39,19 +38,19 @@ shortcut = {
 
                 if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA') return;
             }
-    
+
             //Find Which key is pressed
             if (e.keyCode) code = e.keyCode;
             else if (e.which) code = e.which;
             var character = String.fromCharCode(code).toLowerCase();
-            
+
             if(code == 188) character=","; //If the user presses , when the type is onkeydown
             if(code == 190) character="."; //If the user presses , when the type is onkeydown
 
             var keys = shortcut_combination.split("+");
             //Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked
             var kp = 0;
-            
+
             //Work around for stupid Shift key bug created by using lowercase - as a result the shift+num combination was broken
             var shift_nums = {
                 "`":"~",
@@ -83,7 +82,7 @@ shortcut = {
                 'return':13,
                 'enter':13,
                 'backspace':8,
-    
+
                 'scrolllock':145,
                 'scroll_lock':145,
                 'scroll':145,
@@ -93,28 +92,28 @@ shortcut = {
                 'numlock':144,
                 'num_lock':144,
                 'num':144,
-                
+
                 'pause':19,
                 'break':19,
-                
+
                 'insert':45,
                 'home':36,
                 'delete':46,
                 'end':35,
-                
+
                 'pageup':33,
                 'page_up':33,
                 'pu':33,
-    
+
                 'pagedown':34,
                 'page_down':34,
                 'pd':34,
-    
+
                 'left':37,
                 'up':38,
                 'right':39,
                 'down':40,
-    
+
                 'f1':112,
                 'f2':113,
                 'f3':114,
@@ -128,19 +127,19 @@ shortcut = {
                 'f11':122,
                 'f12':123
             }
-    
-            var modifiers = { 
+
+            var modifiers = {
                 shift: { wanted:false, pressed:false},
                 ctrl : { wanted:false, pressed:false},
                 alt  : { wanted:false, pressed:false},
                 meta : { wanted:false, pressed:false}   //Meta is Mac specific
             };
-                        
+
             if(e.ctrlKey)   modifiers.ctrl.pressed = true;
             if(e.shiftKey)  modifiers.shift.pressed = true;
             if(e.altKey)    modifiers.alt.pressed = true;
             if(e.metaKey)   modifiers.meta.pressed = true;
-                        
+
             for(var i=0; k=keys[i],i<keys.length; i++) {
                 //Modifiers
                 if(k == 'ctrl' || k == 'control') {
@@ -159,7 +158,7 @@ shortcut = {
                     modifiers.meta.wanted = true;
                 } else if(k.length > 1) { //If it is a special key
                     if(special_keys[k] == code) kp++;
-                    
+
                 } else if(opt['keycode']) {
                     if(opt['keycode'] == code) kp++;
 
@@ -167,25 +166,25 @@ shortcut = {
                     if(character == k) kp++;
                     else {
                         if(shift_nums[character] && e.shiftKey) { //Stupid Shift key bug created by using lowercase
-                            character = shift_nums[character]; 
+                            character = shift_nums[character];
                             if(character == k) kp++;
                         }
                     }
                 }
             }
-            
-            if(kp == keys.length && 
+
+            if(kp == keys.length &&
                         modifiers.ctrl.pressed == modifiers.ctrl.wanted &&
                         modifiers.shift.pressed == modifiers.shift.wanted &&
                         modifiers.alt.pressed == modifiers.alt.wanted &&
                         modifiers.meta.pressed == modifiers.meta.wanted) {
                 callback(e);
-    
+
                 if(!opt['propagate']) { //Stop the event
                     //e.cancelBubble is supported by IE - this will kill the bubbling process.
                     e.cancelBubble = true;
                     e.returnValue = false;
-    
+
                     //e.stopPropagation works in Firefox.
                     if (e.stopPropagation) {
                         e.stopPropagation();
@@ -196,8 +195,8 @@ shortcut = {
             }
         }
         this.all_shortcuts[shortcut_combination] = {
-            'callback':func, 
-            'target':ele, 
+            'callback':func,
+            'target':ele,
             'event': opt['type']
         };
         //Attach the function with the event

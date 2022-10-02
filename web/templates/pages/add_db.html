@@ -67,13 +67,11 @@
 							</tr>
 							<tr>
 								<td class="u-pt18">
-									<?=_('Database');?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_database" value="<?=htmlentities(trim($v_database, "'"))?>">
-									<small class="hint"></small>
+									<label for="v_database" class="form-label"><?=_('Database');?></label>
+									<div class="u-sideBySide">
+										<input type="text" class="form-control u-inputWidth" name="v_database" id="v_database" value="<?=htmlentities(trim($v_database, "'"))?>">
+										<small class="hint u-ml10"></small>
+									</div>
 								</td>
 							</tr>
 							<tr>
@@ -92,16 +90,14 @@
 							</tr>
 							<tr>
 								<td class="u-pt6">
-									<?php
-										print _('Username');
-										echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".sprintf(_('maximum characters length, including prefix'), 32).")</small></em>";
-									?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_dbuser" value="<?=htmlentities(trim($v_dbuser, "'"))?>">
-									<small class="hint"></small>
+									<label for="v_dbuser" class="form-label">
+										<?=_('Username');?>
+										&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(<?=sprintf(_('maximum characters length, including prefix'), 32);?>)</small></em>
+									</label>
+									<div class="u-sideBySide">
+										<input type="text" class="form-control u-inputWidth" name="v_dbuser" id="v_dbuser" value="<?=htmlentities(trim($v_dbuser, "'"))?>">
+										<small class="hint u-ml10"></small>
+									</div>
 								</td>
 							</tr>
 							<tr>
@@ -111,7 +107,7 @@
 							</tr>
 							<tr>
 								<td>
-									<input type="text" size="20" class="vst-input password" name="v_password"><br />
+									<input type="text" class="vst-input password" name="v_password"><br />
 									<meter max="4" id="meter"></meter>
 								</td>
 							</tr>
@@ -127,12 +123,10 @@
 							</tr>
 							<tr>
 								<td class="u-pt6">
-									<?=_('Send login credentials to email address') ?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<input type="text" class="vst-input" name="v_db_email" value="<?=htmlentities(trim($v_db_email, "'"))?>">
+									<label for="v_db_email" class="form-label">
+										<?=_('Send login credentials to email address') ?>
+									</label>
+									<input type="email" class="form-control u-inputWidth" name="v_db_email" id="v_db_email" value="<?=htmlentities(trim($v_db_email, "'"))?>">
 								</td>
 							</tr>
 							<tr>
@@ -205,6 +199,6 @@
 </div>
 
 <script>
-GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
-GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
+	GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
+	GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
 </script>

@@ -1,81 +1,78 @@
 <!-- Begin toolbar -->
 <div class="l-center edit">
-    <div class="l-sort clearfix">
-        <div class="l-unit-toolbar__buttonstrip">
-            <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/access-key/">
-                <i class="fas fa-arrow-left status-icon blue"></i><?= _('Back'); ?>
-            </a>
-        </div>
-        <div class="l-unit-toolbar__buttonstrip float-right">
-            <a href="#" class="ui-button" data-action="submit" data-id="vstobjects">
-                <i class="fas fa-save status-icon purple"></i><?= _('Save'); ?>
-            </a>
-        </div>
-    </div>
+	<div class="l-sort clearfix">
+		<div class="l-unit-toolbar__buttonstrip">
+			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/access-key/">
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _('Back'); ?>
+			</a>
+		</div>
+		<div class="l-unit-toolbar__buttonstrip float-right">
+			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects">
+				<i class="fas fa-save status-icon purple"></i><?= _('Save'); ?>
+			</a>
+		</div>
+	</div>
 </div>
 <!-- End toolbar -->
 
 <div class="l-separator"></div>
 
 <div class="l-center animated fadeIn">
-    <form id="vstobjects" name="v_add_access_key" method="post">
-        <input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
-        <input type="hidden" name="ok" value="Add" />
+	<form id="vstobjects" name="v_add_access_key" method="post">
+		<input type="hidden" name="token" value="<?= $_SESSION['token'] ?>" />
+		<input type="hidden" name="ok" value="Add" />
 
-        <table class="data mode-add">
-            <tr class="data-add">
-                <td class="data-dotted">
-                    <table class="data-col1">
-                        <tr>
-                            <td></td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="data-dotted">
-                    <table class="data-col2">
-                        <tr>
-                            <td class="u-pt18">
-                                <span class="page-title"><?= _('Adding Access Key'); ?></span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <?php show_error_panel($_SESSION); ?>
-                            </td>
-                        </tr>
+		<table class="data mode-add">
+			<tr class="data-add">
+				<td class="data-dotted">
+					<table class="data-col1">
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td class="data-dotted">
+					<table class="data-col2">
+						<tr>
+							<td class="u-pt18">
+								<span class="page-title"><?= _('Adding Access Key'); ?></span>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<?php show_error_panel($_SESSION); ?>
+							</td>
+						</tr>
 
-                        <tr>
-                            <td class="u-pt6">
-                                <?= _('Permissions'); ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="u-pt6">
-                                <?php foreach ($apis as $api_name => $api_data) { ?>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="<?= $api_name ?>" name="v_apis[]" id="v_apis_<?= $api_name ?>" tabindex="5">
-                                        <label for="v_apis_<?= $api_name ?>">
-                                            <?= _($api_name); ?>
-                                        </label>
-                                    </div>
-                                <?php } ?>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="u-pt18">
-                                <?= _('Comment'); ?> <span class="optional">(<?= _('optional'); ?>)</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type="text" size="20" class="vst-input" name="v_comment" maxlength="255" />
-                            </td>
-                        </tr>
-                    </table>
-                    <table class="data-col2"></table>
-                </td>
-            </tr>
-        </table>
-    </form>
+						<tr>
+							<td class="u-pt6">
+								<?= _('Permissions'); ?>
+							</td>
+						</tr>
+						<tr>
+							<td class="u-pt6">
+								<?php foreach ($apis as $api_name => $api_data) { ?>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" value="<?= $api_name ?>" name="v_apis[]" id="v_apis_<?= $api_name ?>" tabindex="5">
+										<label for="v_apis_<?= $api_name ?>">
+											<?= _($api_name); ?>
+										</label>
+									</div>
+								<?php } ?>
+							</td>
+						</tr>
+						<tr>
+							<td class="u-pt18">
+								<label for="v_comment" class="form-label">
+									<?= _('Comment'); ?> <span class="optional">(<?= _('optional'); ?>)</span>
+								</label>
+								<input type="text" class="form-control u-inputWidth" name="v_comment" id="v_comment" maxlength="255">
+							</td>
+						</tr>
+					</table>
+					<table class="data-col2 u-mb20"></table>
+				</td>
+			</tr>
+		</table>
+	</form>
 </div>

@@ -62,12 +62,10 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Port');?> <span class="optional">(<?=_('Ranges and Lists are acceptable');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?=_('All ports: 0, Range: 80-82, List: 80,443,8080,8443');?>">
+								<label for="v_port" class="form-label">
+									<?=_('Port');?> <span class="optional">(<?=_('Ranges and Lists are acceptable');?>)</span>
+								</label>
+								<input type="text" class="form-control u-inputWidth" name="v_port" id="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?=_('All ports: 0, Range: 80-82, List: 80,443,8080,8443');?>">
 							</td>
 						</tr>
 						<tr>
@@ -78,17 +76,15 @@
 								<select class="form-select u-inputWidth" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
 									<option value="">&nbsp;</option>
 								</select>
-								<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								<input type="text" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Comment');?> <span class="optional">(<?=_('optional');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
+								<label for="v_comment" class="form-label">
+									<?=_('Comment');?> <span class="optional">(<?=_('optional');?>)</span>
+								</label>
+								<input type="text" class="form-control u-inputWidth" name="v_comment" id="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
 							</td>
 						</tr>
 					</table>

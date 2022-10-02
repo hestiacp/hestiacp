@@ -43,113 +43,62 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								worker_processes
+								<label for="v_worker_processes" class="form-label">worker_processes</label>
+								<input type="text" class="form-control u-inputWidth" regexp="worker_processes" prev_value="<?=htmlentities($v_worker_processes)?>" name="v_worker_processes" id="v_worker_processes" value="<?=htmlentities($v_worker_processes)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="worker_processes" prev_value="<?=htmlentities($v_worker_processes)?>" name="v_worker_processes" value="<?=htmlentities($v_worker_processes)?>">
-								<br><br>
+							<td class="u-pt18">
+								<label for="v_worker_connections" class="form-label">worker_connections</label>
+								<input type="text" class="form-control u-inputWidth" regexp="worker_connections" prev_value="<?=htmlentities($v_worker_connections)?>" name="v_worker_connections" id="v_worker_connections" value="<?=htmlentities($v_worker_connections)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								worker_connections
+							<td class="u-pt18">
+								<label for="v_client_max_body_size" class="form-label">client_max_body_size</label>
+								<input type="text" class="form-control u-inputWidth" regexp="client_max_body_size" prev_value="<?=htmlentities($v_client_max_body_size)?>" name="v_client_max_body_size" id="v_client_max_body_size" value="<?=htmlentities($v_client_max_body_size)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="worker_connections" prev_value="<?=htmlentities($v_worker_connections)?>" name="v_worker_connections" value="<?=htmlentities($v_worker_connections)?>">
-								<br><br>
+							<td class="u-pt18">
+								<label for="v_send_timeout" class="form-label">send_timeout</label>
+								<input type="text" class="form-control u-inputWidth" regexp="send_timeout" prev_value="<?=htmlentities($v_send_timeout)?>" name="v_send_timeout" id="v_send_timeout" value="<?=htmlentities($v_send_timeout)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								client_max_body_size
+							<td class="u-pt18">
+								<label for="v_proxy_connect_timeout" class="form-label">proxy_connect_timeout</label>
+								<input type="text" class="form-control u-inputWidth" regexp="proxy_connect_timeout" prev_value="<?=htmlentities($v_proxy_connect_timeout)?>" name="v_proxy_connect_timeout" id="v_proxy_connect_timeout" value="<?=htmlentities($v_proxy_connect_timeout)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="client_max_body_size" prev_value="<?=htmlentities($v_client_max_body_size)?>" name="v_client_max_body_size" value="<?=htmlentities($v_client_max_body_size)?>">
-								<br><br>
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								send_timeout
+							<td class="u-pt18">
+								<label for="v_proxy_send_timeout" class="form-label">proxy_send_timeout</label>
+								<input type="text" class="form-control u-inputWidth" regexp="proxy_send_timeout" prev_value="<?=htmlentities($v_proxy_send_timeout)?>" name="v_proxy_send_timeout" id="v_proxy_send_timeout" value="<?=htmlentities($v_proxy_send_timeout)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="send_timeout" prev_value="<?=htmlentities($v_send_timeout)?>" name="v_send_timeout" value="<?=htmlentities($v_send_timeout)?>">
-								<br><br>
+							<td class="u-pt18">
+								<label for="v_proxy_read_timeout" class="form-label">proxy_read_timeout</label>
+								<input type="text" class="form-control u-inputWidth" regexp="proxy_read_timeout" prev_value="<?=htmlentities($v_proxy_read_timeout)?>" name="v_proxy_read_timeout" id="v_proxy_read_timeout" value="<?=htmlentities($v_proxy_read_timeout)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								proxy_connect_timeout
+							<td class="u-pt18">
+								<label for="v_gzip" class="form-label">gzip</label>
+								<input type="text" class="form-control u-inputWidth" regexp="gzip" prev_value="<?=htmlentities($v_gzip)?>" name="v_gzip" id="v_gzip" value="<?=htmlentities($v_gzip)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="proxy_connect_timeout" prev_value="<?=htmlentities($v_proxy_connect_timeout)?>" name="v_proxy_connect_timeout" value="<?=htmlentities($v_proxy_connect_timeout)?>">
-								<br><br>
+							<td class="u-pt18">
+								<label for="v_gzip_comp_level" class="form-label">gzip_comp_level</label>
+								<input type="text" class="form-control u-inputWidth" regexp="gzip_comp_level" prev_value="<?=htmlentities($v_gzip_comp_level)?>" name="v_gzip_comp_level" id="v_gzip_comp_level" value="<?=htmlentities($v_gzip_comp_level)?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								proxy_send_timeout
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="proxy_send_timeout" prev_value="<?=htmlentities($v_proxy_send_timeout)?>" name="v_proxy_send_timeout" value="<?=htmlentities($v_proxy_send_timeout)?>">
-								<br><br>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								proxy_read_timeout
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="proxy_read_timeout" prev_value="<?=htmlentities($v_proxy_read_timeout)?>" name="v_proxy_read_timeout" value="<?=htmlentities($v_proxy_read_timeout)?>">
-								<br><br>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								gzip
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="gzip" prev_value="<?=htmlentities($v_gzip)?>" name="v_gzip" value="<?=htmlentities($v_gzip)?>">
-								<br><br>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								gzip_comp_level
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="gzip_comp_level" prev_value="<?=htmlentities($v_gzip_comp_level)?>" name="v_gzip_comp_level" value="<?=htmlentities($v_gzip_comp_level)?>">
-								<br><br>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								charset
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" regexp="charset" prev_value="<?=htmlentities($v_charset)?>" name="v_charset" value="<?=htmlentities($v_charset)?>">
-								<br><br>
+							<td class="u-pt18">
+								<label for="v_charset" class="form-label">charset</label>
+								<input type="text" class="form-control u-inputWidth u-mb20" regexp="charset" prev_value="<?=htmlentities($v_charset)?>" name="v_charset" id="v_charset" value="<?=htmlentities($v_charset)?>">
 							</td>
 						</tr>
 						<tr>

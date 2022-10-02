@@ -58,15 +58,11 @@
 								</td>
 							</tr>
 						<?php } ?>
-						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin"))  {?>
+						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
 							<tr>
 								<td class="u-pt18">
-									<?=_('Domain');?>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+									<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+									<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								</td>
 							</tr>
 							<tr>
@@ -81,7 +77,7 @@
 											}
 										?>
 									</select>
-									<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+									<input type="text" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 								</td>
 							</tr>
 							<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes')) { ?>
@@ -115,22 +111,16 @@
 									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
 										<tr>
 											<td class="u-pt6">
-												<?=_('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" size="20" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
+												<label for="v_exp" class="form-label">
+													<?=_('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
+												</label>
+												<input type="text" class="form-control u-inputWidth" name="v_exp" id="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
 											</td>
 										</tr>
 										<tr>
 											<td class="u-pt6">
-												<?=_('TTL');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+												<label for="v_ttl" class="form-label"><?=_('TTL');?></label>
+												<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
 											</td>
 										</tr>
 										<tr>
@@ -140,13 +130,13 @@
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+												<input type="text" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
 												<span class="remove-ns additional-control delete"><?=_('delete');?></span>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+												<input type="text" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
 												<span class="remove-ns additional-control delete"><?=_('delete');?></span>
 											</td>
 										</tr>
@@ -154,7 +144,7 @@
 											if($v_ns3) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+														<input type="text" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -162,7 +152,7 @@
 											if($v_ns4) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+														<input type="text" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -170,7 +160,7 @@
 											if($v_ns5) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+														<input type="text" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -178,7 +168,7 @@
 											if($v_ns6) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+														<input type="text" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -186,7 +176,7 @@
 											if($v_ns7) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+														<input type="text" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -194,7 +184,7 @@
 											if($v_ns8) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+														<input type="text" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';

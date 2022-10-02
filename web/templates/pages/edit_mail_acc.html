@@ -48,7 +48,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_email" value="<?=htmlentities($_GET['account'])."@".htmlentities($_GET['domain'])?>" disabled>
+								<input type="text" class="vst-input" name="v_email" value="<?=htmlentities($_GET['account'])."@".htmlentities($_GET['domain'])?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								<input type="hidden" name="v_account" value="<?=htmlentities(trim($v_account, "'"))?>">
 							</td>
@@ -60,7 +60,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
+								<input type="text" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br />
 								<meter max="4" id="meter"></meter>
 							</td>
 						</tr>
@@ -81,7 +81,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+								<input type="email" class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
 								<input type="hidden" name="v_credentials" id="v_credentials">
 							</td>
 						</tr>
@@ -92,7 +92,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_quota" value="<?php if (!empty($v_quota)) {echo htmlentities(trim($v_quota, "'"));} else { echo "0"; } ?>">
+								<input type="text" class="vst-input" name="v_quota" value="<?php if (!empty($v_quota)) {echo htmlentities(trim($v_quota, "'"));} else { echo "0"; } ?>">
 								<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-quota"></i>
 							</td>
 						</tr>
@@ -167,7 +167,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+								<input type="text" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 							</td>
 						</tr>
 					</table>

@@ -96,12 +96,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Email');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="email" class="vst-input" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
+								<label for="v_email" class="form-label"><?=_('Email');?></label>
+								<input type="email" class="form-control u-input-width" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
 								<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 									<input type="hidden" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
 								<?php } ?>

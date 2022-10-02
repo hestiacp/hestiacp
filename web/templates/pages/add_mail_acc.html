@@ -148,12 +148,10 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Send login credentials to email address') ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="email" class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+								<label for="v_send_email" class="form-label">
+									<?=_('Send login credentials to email address') ?>
+								</label>
+								<input type="email" class="form-control u-input-width" name="v_send_email" id="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
 								<input type="hidden" name="v_credentials" id="v_credentials">
 							</td>
 						</tr>

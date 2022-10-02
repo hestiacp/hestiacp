@@ -2866,7 +2866,8 @@ a.button.cancel {
   cursor: default;
 }
 
-.login .vst-input {
+.login .vst-input,
+.login .form-control {
   border-color: #5787c8;
 }
 

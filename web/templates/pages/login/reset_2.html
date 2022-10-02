@@ -21,14 +21,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td style="padding: 12px 0 0 2px;" colspan=2><?=_('Reset Code');?></td>
-									</tr>
-									<tr>
-										<td>
+										<td style="padding: 12px 0 0 2px;">
 											<input type="hidden" name="action" value="confirm">
 											<input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>"/>
 											<input type="hidden" name="user" value="<?=htmlentities($_GET['user'])?>">
-											<input type="text" class="vst-input" tabindex="1" style="width:240px" name="code">
+											<label for="code" class="form-label"><?=_('Reset Code');?></label>
+											<input type="text" class="form-control" name="code" id="code" tabindex="1" style="width:260px;">
 										</td>
 									</tr>
 									<tr>

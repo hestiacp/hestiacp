@@ -21,22 +21,14 @@
 											<input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>"/>
 											<input type="hidden" name="user" value="<?=htmlentities($_GET['user']);?>">
 											<input type="hidden" name="code" value="<?=htmlentities($_GET['code']);?>">
-											<?=_('New Password');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="password" class="vst-input" tabindex="1" style="width:200px;" name="password">
+											<label for="password" class="form-label"><?=_('New Password');?></label>
+											<input type="password" class="form-control" name="password" id="password" tabindex="1" style="width:220px;">
 										</td>
 									</tr>
 									<tr>
 										<td style="padding: 12px 0 0 2px;">
-											<?=_('Confirm Password');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="password" class="vst-input" tabindex="2" style="width:200px;" name="password_confirm">
+											<label for="password_confirm" class="form-label"><?=_('Confirm Password');?></label>
+											<input type="password" class="form-control" name="password_confirm" id="password_confirm" tabindex="2" style="width:220px;">
 										</td>
 									</tr>
 									<tr>

@@ -19,37 +19,27 @@
 									</tr>
 									<tr>
 										<td style="padding: 12px 0 5px 2px;">
-											<?=_('Username');?>
+											<label for="user" class="form-label"><?=_('Username');?></label>
+											<input type="text" class="form-control" name="user" id="user" tabindex="1" style="width:260px;" autofocus>
 										</td>
 									</tr>
 									<tr>
-										<td>
-											<input type="text" class="vst-input" tabindex="1" style="width:240px;" name="user" autofocus>
+										<td style="padding: 12px 0 0 2px;">
+											<label for="password" class="form-label" style="display:block;">
+												<?=_('Password');?>
+												<?php if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] !== 'no' ) {?>
+													<div style="padding:0 6px 0px 14px; float:right;">
+														<a tabindex="5" class="vst-advanced" href="/reset/">
+															<?=_('forgot password');?>
+														</a>
+													</div>
+												<?php } ?>
+											</label>
+											<input type="password" class="form-control" name="password" id="password" tabindex="2" style="width:260px;" autofocus>
 										</td>
 									</tr>
 									<tr>
-										<td style="padding: 12px 0 5px 2px;">
-											<?=_('Password');?>
-											<?php if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] !== 'no' ) {?>
-											<div style="padding:0 6px 0px 14px; float:right;">
-												<a tabindex="5" class="vst-advanced" href="/reset/">
-													<?=_('forgot password');?>
-												</a>
-											</div>
-										<?php } ?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="password" class="vst-input" tabindex="2" style="width:240px;" name="password">
-										</td>
-									</tr>
-									<tr>
-										<td height="10px">
-										</td>
-									</tr>
-									<tr>
-										<td style="padding: 0 0 5px 0;">
+										<td class="u-pt18">
 											<button tabindex="3" type="submit" class="button"><?=_('Next');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i></button>
 										</td>
 									</tr>
@@ -65,9 +55,11 @@
 						</td>
 					</tr>
 				</table>
+			</td>
 		</tr>
 	</table>
 </center>
+
 <script src="/inc/jquery/jquery-3.6.1.min.js"></script>
 </body>
 

@@ -38,6 +38,31 @@ is_format_valid 'user' 'domain'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 
+# JSON list function
+json_list() {
+    echo '{'
+    echo '    "'$DOMAIN'": {
+       "RECORD": "'$record'",
+       "FLAG": "'$flag'",
+       "ALGORITHM": "'$algorithm'",
+       "KEY": "'$key'",
+    }'
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+   echo "RECORD:    $record" 
+   echo "FLAG:      $flag" 
+   echo "ALGORITHM: $algorithm" 
+   echo "KEY:       $key"  
+}
+
+# PLAIN list function
+plain_list() {
+   echo -e "$record"
+}
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -46,9 +71,17 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 
 
 if [ -n "$KEY" ]; then
-   key=$(cat "/var/cache/bind/K$domain_idn.+013+$KEY.key" | grep DNSKEY );
-   echo "$key" 
+   record=$(cat "/var/cache/bind/K$domain_idn.+013+$KEY.key" | grep DNSKEY );
+   flag=$(echo "$record" | cut -d' ' -f5)
+   algorithm=$(echo "$record" | cut -d' ' -f7)
+   key="$(echo "$record" | cut -d' ' -f8) $(echo "$record" | cut -d' ' -f9)"
 fi
+
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    shell)  shell_list ;;
+esac
 
 #----------------------------------------------------------#
 #                       Hestia                             #

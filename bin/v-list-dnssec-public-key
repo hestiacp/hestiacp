@@ -45,7 +45,7 @@ json_list() {
        "RECORD": "'$record'",
        "FLAG": "'$flag'",
        "ALGORITHM": "'$algorithm'",
-       "KEY": "'$key'",
+       "KEY": "'$key'"
     }'
     echo '}'
 }

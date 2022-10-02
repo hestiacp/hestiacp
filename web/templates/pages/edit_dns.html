@@ -87,6 +87,14 @@
 						<?php } ?>
 						<tr>
 							<td class="u-pt6">
+								<input type="checkbox" class="" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec != 'no'){ echo ' checked="checked"'; } ?>
+								<label for="v_dnssec" class="form-label">
+									<?=_('Enable DNSEC');?></span>
+								</label>
+							</td>
+						</tr>
+						<tr>
+							<td class="u-pt6">
 								<label for="v_exp" class="form-label">
 									<?=_('Expiration Date');?><span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
 								</label>

@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort u-cf noselect">
+	<div class="l-sort clearfix noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<?php if ($read_only !== 'true') {?>
 				<a href="/add/mail/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Mail Domain');?></a>
@@ -12,7 +12,7 @@
 			<li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 			<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 		</ul>
-		<div class="l-sort-toolbar u-cf">
+		<div class="l-sort-toolbar clearfix">
 			<table>
 				<tr>
 					<td class="sort-by" title="<?=_('Sort items');?>">
@@ -61,17 +61,17 @@
 <div class="l-center units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="u-cf l-unit__stat-col--left super-compact">
+			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 			</div>
-			<div class="u-cf l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-right compact-5"><b>&nbsp;</b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center compact-2"><b><?=_('Accounts');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center compact-2"><b><?=_('Disk');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center compact-3"><b><?=_('Antivirus');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center compact-3"><b><?=_('AntiSpam');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center compact-3"><b><?=_('DKIM');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center compact-3"><b><?=_('SSL');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-right compact-5"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?=_('Accounts');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?=_('Disk');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?=_('Antivirus');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?=_('AntiSpam');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?=_('DKIM');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?=_('SSL');?></b></div>
 		</div>
 	</div>
 
@@ -142,14 +142,14 @@
 			sort-accounts="<?=$data[$key]['ACCOUNTS']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
-					<div class="u-cf l-unit__stat-col--left super-compact">
+					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
 					</div>
-					<div class="u-cf l-unit__stat-col--left wide-3 truncate"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts');?>: <?=$key?>"><?=$key?></a></b></div>
+					<div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts');?>: <?=$key?>"><?=$key?></a></b></div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="u-cf l-unit__stat-col--left u-text-right compact-5">
+					<div class="clearfix l-unit__stat-col--left text-right compact-5">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-							<div class="actions-panel u-cf">
+							<div class="actions-panel clearfix">
 								<?php if ($read_only === 'true') {?>
 									<!-- Restrict ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
 									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('mail accounts');?>"><i class="fas fa-users status-icon blue status-icon dim"></i></a></div>
@@ -191,7 +191,7 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="u-cf l-unit__stat-col--left u-text-center compact-2"><b>
+					<div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
 							<?php
 								if ($data[$key]['ACCOUNTS']) {
 									$mail_accounts = htmlentities($data[$key]['ACCOUNTS']);
@@ -202,19 +202,19 @@
 							<span><?=$mail_accounts;?></span>
 						</b>
 					</div>
-					<div class="u-cf l-unit__stat-col--left u-text-center compact-2"><b>
-							<?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
+					<div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
+							<?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
 					</div>
-					<div class="u-cf l-unit__stat-col--left u-text-center compact-3">
+					<div class="clearfix l-unit__stat-col--left text-center compact-3">
 						<i class="fas <?=$antivirus_icon;?>"></i>
 					</div>
-					<div class="u-cf l-unit__stat-col--left u-text-center compact-3">
+					<div class="clearfix l-unit__stat-col--left text-center compact-3">
 						<i class="fas <?=$antispam_icon;?>"></i>
 					</div>
-					<div class="u-cf l-unit__stat-col--left u-text-center compact-3">
+					<div class="clearfix l-unit__stat-col--left text-center compact-3">
 						<i class="fas <?=$dkim_icon;?>"></i>
 					</div>
-					<div class="u-cf l-unit__stat-col--left u-text-center compact-3">
+					<div class="clearfix l-unit__stat-col--left text-center compact-3">
 						<i class="fas <?=$ssl_icon;?>"></i>
 					</div>
 				</div>
@@ -228,7 +228,7 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right u-cf">
+			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d mail domain', '%d mail domains', $i),$i); ?>
 			</div>
 		</div>

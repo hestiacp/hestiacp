@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort u-cf noselect">
+	<div class="l-sort clearfix noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/edit/user/?token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
             <?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
@@ -18,11 +18,11 @@
 <div class="l-center units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="u-cf l-unit__stat-col--left wide-3"><b><?=_('SSH_ID');?></b></div>
-			<div class="u-cf l-unit__stat-col--left compact-2">
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('SSH_ID');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-2">
 				&nbsp;
 			</div>
-			<div class="u-cf l-unit__stat-col--left wide-7"><b><?=_('SSH KEY');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-7"><b><?=_('SSH KEY');?></b></div>
 		</div>
 	</div>
 
@@ -34,10 +34,10 @@
 		?>
 		<div class="l-unit header animated fadeIn" style="<?php if ($data[$key]['ID'] === 'filemanager.ssh.key'){ echo 'display: none;'; }?>">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="u-cf l-unit__stat-col--left wide-3"><b><?=htmlspecialchars($data[$key]['ID']);?></b></div>
-				<div class="u-cf l-unit__stat-col--left text-left compact-2">
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=htmlspecialchars($data[$key]['ID']);?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-left compact-2">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel u-cf">
+						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
@@ -54,7 +54,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="u-cf l-unit__stat-col--left wide-7"><b><?=htmlspecialchars($data[$key]['KEY'], ENT_QUOTES);?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-7"><b><?=htmlspecialchars($data[$key]['KEY'], ENT_QUOTES);?></b></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -65,7 +65,7 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right u-cf">
+			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d SSH Key', '%d SSH Keys', $i),$i); ?>
 			</div>
 		</div>

@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort u-cf noselect">
+	<div class="l-sort clearfix noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/edit/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 			<a href="/add/firewall/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Rule');?></a>
@@ -16,7 +16,7 @@
 			<li entity="sort-ip" sort_as_int="1"><span class="name"><?=_('IP address');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 			<li entity="sort-comment"><span class="name"><?=_('Comment');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 		</ul>
-		<div class="l-sort-toolbar u-cf">
+		<div class="l-sort-toolbar clearfix">
 			<table>
 				<tr>
 					<td class="sort-by" title="<?=_('Sort items');?>">
@@ -46,15 +46,15 @@
 <div class="l-center units compact">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="u-cf l-unit__stat-col--left super-compact">
+			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');">
 			</div>
-			<div class="u-cf l-unit__stat-col--left wide-1"><b><?=_('Action');?></b></div>
-			<div class="u-cf l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>
-			<div class="u-cf l-unit__stat-col--left wide-3"><b><?=_('Comment');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Protocol');?></b></div>
-			<div class="u-cf l-unit__stat-col--left wide-3 u-text-center"><b><?=_('Port');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('IP address');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-1"><b><?=_('Action');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Comment');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Protocol');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=_('Port');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('IP address');?></b></div>
 		</div>
 	</div>
 
@@ -79,10 +79,10 @@
 			sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
-					<div class="u-cf l-unit__stat-col--left super-compact">
+					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="rule[]" value="<?=$key?>">
 					</div>
-					<div class="u-cf l-unit__stat-col--left wide-1">
+					<div class="clearfix l-unit__stat-col--left wide-1">
 						<b>
 							<a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Firewall Rule');?>">
 							<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
@@ -102,9 +102,9 @@
 						</b>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="u-cf l-unit__stat-col--left compact-2 u-text-right">
+					<div class="clearfix l-unit__stat-col--left compact-2 text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-							<div class="actions-panel u-cf" style="padding-right: 10px;">
+							<div class="actions-panel clearfix" style="padding-right: 10px;">
 								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Firewall Rule');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
@@ -128,10 +128,10 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="u-cf l-unit__stat-col--left wide-3"><b><?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
-					<div class="u-cf l-unit__stat-col--left u-text-center"><?=_($data[$key]['PROTOCOL'])?></div>
-					<div class="u-cf l-unit__stat-col--left wide-3 u-text-center"><b><?=$data[$key]['PORT']?></b></div>
-					<div class="u-cf l-unit__stat-col--left u-text-center"><?=$data[$key]['IP']?></div>
+					<div class="clearfix l-unit__stat-col--left wide-3"><b><?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><?=_($data[$key]['PROTOCOL'])?></div>
+					<div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=$data[$key]['PORT']?></b></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['IP']?></div>
 				</div>
 			</div>
 		</div>
@@ -143,7 +143,7 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right u-cf">
+			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d firewall rule', '%d firewall rules', $i),$i); ?>
 			</div>
 		</div>

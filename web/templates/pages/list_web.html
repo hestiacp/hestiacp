@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort u-cf noselect">
+	<div class="l-sort clearfix noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<?php if ($read_only !== 'true') {?>
 				<a href="/add/web/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Web Domain');?></a>
@@ -13,7 +13,7 @@
 			<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 			<li entity="sort-ip" sort_as_int="1"><span class="name"><?=_('IP address');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 		</ul>
-		<div class="l-sort-toolbar u-cf">
+		<div class="l-sort-toolbar clearfix">
 			<table>
 				<tr>
 					<td class="sort-by" title="<?=_('Sort items');?>">
@@ -64,16 +64,16 @@
 	<!-- Table header -->
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="u-cf l-unit__stat-col--left super-compact">
+			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 			</div>
-			<div class="u-cf l-unit__stat-col--left wide-4"><b><?=_('Name');?></b></div>
-			<div class="u-cf l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('IP address');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Disk');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center compact"><b><?=_('Bandwidth');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('SSL');?></b></div>
-			<div class="u-cf l-unit__stat-col--left u-text-center compact"><b><?=_('Statistics');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-4"><b><?=_('Name');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('IP address');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Disk');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Bandwidth');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('SSL');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Statistics');?></b></div>
 		</div>
 	</div>
 
@@ -170,10 +170,10 @@
 				sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 				sort-name="<?=$key?>" sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>">
 				<div class="l-unit__col l-unit__col--right">
-					<div class="u-cf l-unit__stat-col--left super-compact">
+					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
 					</div>
-					<div class="u-cf l-unit__stat-col--left wide-4 truncate">
+					<div class="clearfix l-unit__stat-col--left wide-4 truncate">
 						<b>
 							<?php if ($read_only === 'true') {?>
 								<?=$key?>
@@ -191,9 +191,9 @@
 						</b>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="u-cf l-unit__stat-col--left compact-4 u-text-right">
+					<div class="clearfix l-unit__stat-col--left compact-4 text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-							<div class="actions-panel u-cf">
+							<div class="actions-panel clearfix">
 								<?php if (!empty($data[$key]['STATS'])) { ?>
 									<div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/" rel="noopener" target="_blank" rel="noopener" title="<?=_('Statistics');?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
 								<?php } ?>
@@ -229,13 +229,13 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="u-cf l-unit__stat-col--left u-text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
-					<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-					<div class="u-cf l-unit__stat-col--left u-text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
-					<div class="u-cf l-unit__stat-col--left u-text-center">
+					<div class="clearfix l-unit__stat-col--left text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+					<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
+					<div class="clearfix l-unit__stat-col--left text-center">
 						<i class="fas <?=$icon_ssl;?>"></i>
 					</div>
-					<div class="u-cf l-unit__stat-col--left u-text-center compact">
+					<div class="clearfix l-unit__stat-col--left text-center compact">
 						<i class="fas <?=$icon_webstats;?>"></i>
 					</div>
 				</div>
@@ -249,7 +249,7 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right u-cf">
+			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d web domain', '%d web domains', $i),$i); ?>
 			</div>
 		</div>

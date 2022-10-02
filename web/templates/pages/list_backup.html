@@ -1,13 +1,13 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort u-cf noselect">
+	<div class="l-sort clearfix noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<?php if ($read_only !== 'true') {?>
 				<a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Create Backup');?></a>
 				<a href="/list/backup/exclusions/" class="ui-button cancel" dir="ltr"><i class="fas fa-folder-minus status-icon orange"></i><?=_('backup exclusions');?></a>
 			<?php } ?>
 		</div>
-		<div class="l-sort-toolbar u-cf">
+		<div class="l-sort-toolbar clearfix">
 			<table>
 				<tr>
 					<td class="l-sort-toolbar__search-box">
@@ -44,15 +44,15 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
-				<div class="u-cf l-unit__stat-col--left super-compact">
+				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 				</div>
-				<div class="u-cf l-unit__stat-col--left wide-4"><b><?=_('File Name');?></b></div>
-				<div class="u-cf l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
-				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Date');?></b></div>
-				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Size');?></b></div>
-				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Type');?></b></div>
-				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Runtime');?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-4"><b><?=_('File Name');?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Date');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Size');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Type');?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Runtime');?></b></div>
 			</div>
 		</div>
 	</div>
@@ -78,10 +78,10 @@
 		<div class="l-unit animated fadeIn">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
-					<div class="u-cf l-unit__stat-col--left super-compact">
+					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="backup[]" value="<?=$key?>" <?=$display_mode;?>>
 					</div>
-					<div class="u-cf l-unit__stat-col--left wide-4 truncate">
+					<div class="clearfix l-unit__stat-col--left wide-4 truncate">
 						<b>
 							<?php if ($read_only === 'true') {?>
 								<?=$key?>
@@ -91,9 +91,9 @@
 						</b>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="u-cf l-unit__stat-col--left compact-4 u-text-right">
+					<div class="clearfix l-unit__stat-col--left compact-4 text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-							<div class="actions-panel u-cf">
+							<div class="actions-panel clearfix">
 								<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($read_only === 'true')) {?>
 									<!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
 									&nbsp;
@@ -116,10 +116,10 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=translate_date($data[$key]['DATE'])?></b></div>
-					<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['SIZE'])?></span></div>
-					<div class="u-cf l-unit__stat-col--left u-text-center"><?=$data[$key]['TYPE']?></div>
-					<div class="u-cf l-unit__stat-col--left u-text-center"><?=humanize_time($data[$key]['RUNTIME'])?></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?=translate_date($data[$key]['DATE'])?></b></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['SIZE'])?></span></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['TYPE']?></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><?=humanize_time($data[$key]['RUNTIME'])?></div>
 				</div>
 			</div>
 		</div>
@@ -131,7 +131,7 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right u-cf">
+			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d backup', '%d backups', $i),$i); ?>
 			</div>
 		</div>

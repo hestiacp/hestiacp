@@ -3924,20 +3924,20 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   width: 380px !important;
 }
 
-.u-minHeight100 {
+.u-min-height100 {
   min-height: 100px !important;
 }
 
-.u-minHeight300 {
+.u-min-height300 {
   min-height: 300px !important;
 }
 
-.u-sideBySide {
+.u-side-by-side {
   display: flex !important;
   align-items: center !important;
 }
 
-.u-flexAlignCenter {
+.u-flex-align-center {
   display: flex !important;
   justify-content: center !important;
 }

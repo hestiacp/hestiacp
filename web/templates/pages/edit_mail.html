@@ -171,13 +171,13 @@
 															<?=_('SSL Certificate');?>
 															<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
 														</label>
-														<textarea class="form-control u-input-width u-minHeight100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+														<textarea class="form-control u-input-width u-min-height100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
 													<td class="u-pt6">
 														<label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
-														<textarea class="form-control u-minHeight100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+														<textarea class="form-control u-min-height100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
@@ -185,7 +185,7 @@
 														<label for="v_ssl_ca" class="form-label">
 															<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
 														</label>
-														<textarea class="form-control u-minHeight100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+														<textarea class="form-control u-min-height100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
 													</td>
 												</tr>
 											</table>

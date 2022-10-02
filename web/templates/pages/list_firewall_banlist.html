@@ -1,11 +1,11 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort clearfix noselect">
+	<div class="l-sort u-cf noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 			<a href="/add/firewall/banlist/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Ban IP Address');?></a>
 		</div>
-		<div class="l-sort-toolbar clearfix">
+		<div class="l-sort-toolbar u-cf">
 			<table>
 				<tr>
 					<td>
@@ -32,14 +32,14 @@
 <div class="l-center units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact">
+			<div class="u-cf l-unit__stat-col--left super-compact">
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');">
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('IP address');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?=_('Date');?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?=_('Time');?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide u-text-center"><b><?=_('Comment');?></b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><?=_('IP address');?></b></div>
+			<div class="u-cf l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center compact-5"><b><?=_('Date');?></b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center compact-5"><b><?=_('Time');?></b></div>
+			<div class="u-cf l-unit__stat-col--left wide u-text-center"><b><?=_('Comment');?></b></div>
 		</div>
 	</div>
 
@@ -51,14 +51,14 @@
 		?>
 		<div class="l-unit animated fadeIn">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="ipchain[]" value="<?=$ip . ':' . $value['CHAIN'] ?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=$ip?></b></div>
+				<div class="u-cf l-unit__stat-col--left wide-3"><b><?=$ip?></b></div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact-4">
+				<div class="u-cf l-unit__stat-col--left compact-4">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete">
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
@@ -72,9 +72,9 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><?=_($data[$key]['DATE'])?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><?=$data[$key]['TIME']?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?=_($value['CHAIN'])?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center compact-5"><?=_($data[$key]['DATE'])?></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center compact-5"><?=$data[$key]['TIME']?></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center wide"><b><?=_($value['CHAIN'])?></b></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -85,7 +85,7 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right clearfix">
+			<div class="data-count l-unit__col l-unit__col--right u-cf">
 				<?php
 					if ( $i == 0) {
 						echo _('There are currently no banned IP addresses.');
@@ -94,7 +94,7 @@
 					}
 				?>
 			</div>
-			<div class="data-count l-unit__col l-unit__col--right back clearfix">
+			<div class="data-count l-unit__col l-unit__col--right back u-cf">
 			</div>
 		</div>
 	</div>

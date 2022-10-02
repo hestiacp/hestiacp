@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort clearfix noselect">
+	<div class="l-sort u-cf noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/edit/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 			<a href="/add/ip/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add IP');?></a>
@@ -13,7 +13,7 @@
 			<li entity="sort-domains" sort_as_int="1"><span class="name"><?=_('Domains');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 			<li entity="sort-owner"><span class="name"><?=_('Owner');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 		</ul>
-		<div class="l-sort-toolbar clearfix">
+		<div class="l-sort-toolbar u-cf">
 			<table>
 				<tr>
 					<td class="sort-by" title="<?=_('Sort items');?>">
@@ -45,16 +45,16 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');">
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('IP Address');?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?=_('Netmask');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Interface');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Status');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Domains');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Owner');?></b></div>
+				<div class="u-cf l-unit__stat-col--left wide-3"><b><?=_('IP Address');?></b></div>
+				<div class="u-cf l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center compact-5"><b><?=_('Netmask');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Interface');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Status');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Domains');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Owner');?></b></div>
 			</div>
 		</div>
 	</div>
@@ -70,15 +70,15 @@
 			sort-owner="<?=$data[$key]['OWNER']?>">
 
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="ip[]" value="<?=$key?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing IP Address');?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
+				<div class="u-cf l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing IP Address');?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact u-text-right">
+				<div class="u-cf l-unit__stat-col--left compact u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing IP Address');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
@@ -93,11 +93,11 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><?=$data[$key]['NETMASK']?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['INTERFACE']?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_($data[$key]['STATUS'])?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['U_WEB_DOMAINS']?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['OWNER']?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center compact-5"><?=$data[$key]['NETMASK']?></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><?=$data[$key]['INTERFACE']?></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_($data[$key]['STATUS'])?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=$data[$key]['U_WEB_DOMAINS']?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=$data[$key]['OWNER']?></b></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -108,7 +108,7 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right clearfix">
+			<div class="data-count l-unit__col l-unit__col--right u-cf">
 				<?php printf(ngettext('%d IP address', '%d IP addresses', $i),$i); ?>
 			</div>
 		</div>

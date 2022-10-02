@@ -3862,13 +3862,13 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 /* Global utilities
    ========================================================================== */
 
-.clearfix::before,
-.clearfix::after {
+.u-cf::before,
+.u-cf::after {
   content: " ";
   display: table;
 }
 
-.clearfix::after {
+.u-cf::after {
   clear: both;
 }
 

@@ -3,11 +3,11 @@
 	if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_ALIAS'];
 ?>
 <div class="l-center">
-	<div class="l-sort clearfix noselect">
+	<div class="l-sort u-cf noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 		</div>
-		<div class="l-sort-toolbar clearfix">
+		<div class="l-sort-toolbar u-cf">
 			<table>
 				<tr>
 					<td></td>
@@ -23,71 +23,71 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Record');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Type');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Priority');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('TTL');?></b></div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('IP or Value');?></b></div>
+				<div class="u-cf l-unit__stat-col--left wide-3"><b><?=_('Record');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Type');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Priority');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('TTL');?></b></div>
+				<div class="u-cf l-unit__stat-col--left wide-3"><b><?=_('IP or Value');?></b></div>
 			</div>
 		</div>
 	</div>
 
 	<div class="l-unit animated fadeIn">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="mail.<?=htmlspecialchars($_GET['domain']);?>"></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>A</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=(empty($ips[array_key_first($ips)]['NAT'])) ?  array_key_first($ips) : $ips[array_key_first($ips)]['NAT'];?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="mail.<?=htmlspecialchars($_GET['domain']);?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>A</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=(empty($ips[array_key_first($ips)]['NAT'])) ?  array_key_first($ips) : $ips[array_key_first($ips)]['NAT'];?>"></b></div>
 		</div>
 	</div>
 	<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 	<div class="l-unit animated fadeIn">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain']);?>"></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>A</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=(empty($ips[array_key_first($ips)]['NAT'])) ?  array_key_first($ips) : $ips[array_key_first($ips)]['NAT'];?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain']);?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>A</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=(empty($ips[array_key_first($ips)]['NAT'])) ?  array_key_first($ips) : $ips[array_key_first($ips)]['NAT'];?>"></b></div>
 		</div>
 	</div>
 	<?php } ?>
 	<div class="l-unit animated fadeIn">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=htmlspecialchars($_GET['domain']);?>"></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>MX</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>10</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="mail.<?=htmlspecialchars($_GET['domain']);?>."></b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=htmlspecialchars($_GET['domain']);?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>MX</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>10</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="mail.<?=htmlspecialchars($_GET['domain']);?>."></b></div>
 		</div>
 	</div>
 	<div class="l-unit animated fadeIn">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=htmlspecialchars($_GET['domain']);?>"></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>TXT</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=htmlspecialchars($_GET['domain']);?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>TXT</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
 			<?php $ip = (empty($ips[array_key_first($ips)]['NAT'])) ?  array_key_first($ips) : $ips[array_key_first($ips)]['NAT'];?>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=htmlspecialchars('v=spf1 a mx ip4:'.$ip.' -all');?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=htmlspecialchars('v=spf1 a mx ip4:'.$ip.' -all');?>"></b></div>
 		</div>
 	</div>
 	<div class="l-unit animated fadeIn">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="_dmarc"></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>TXT</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=htmlspecialchars('v=DMARC1; p=quarantine; pct=100');?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="_dmarc"></b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>TXT</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>14400</b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=htmlspecialchars('v=DMARC1; p=quarantine; pct=100');?>"></b></div>
 		</div>
 	</div>
 	<?php foreach($dkim as $key => $value){ ?>
 	<div class="l-unit animated fadeIn">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=htmlspecialchars($key);?>"></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>TXT</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt18"><b>3600</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=htmlspecialchars(str_replace(array('"',"'"),'',$dkim[$key]['TXT']));?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" style="width:200px !important;" value="<?=htmlspecialchars($key);?>"></b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>TXT</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>&nbsp;</b></div>
+			<div class="u-cf l-unit__stat-col--left u-text-center u-pt18"><b>3600</b></div>
+			<div class="u-cf l-unit__stat-col--left wide-3"><b><input type="text" class="vst-input" value="<?=htmlspecialchars(str_replace(array('"',"'"),'',$dkim[$key]['TXT']));?>"></b></div>
 		</div>
 	</div>
 	<?php } ?>
@@ -98,10 +98,10 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right clearfix">
+			<div class="data-count l-unit__col l-unit__col--right u-cf">
 
 			</div>
-			<div class="data-count l-unit__col l-unit__col--right back clearfix">
+			<div class="data-count l-unit__col l-unit__col--right back u-cf">
 			</div>
 		</div>
 	</div>

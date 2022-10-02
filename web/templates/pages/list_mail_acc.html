@@ -4,7 +4,7 @@
 ?>
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort clearfix noselect">
+	<div class="l-sort u-cf noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 			<?php if ($read_only !== 'true') { ?>
@@ -18,7 +18,7 @@
 			<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 			<li entity="sort-quota" sort_as_int="1"><span class="name"><?=_('Quota');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 		</ul>
-		<div class="l-sort-toolbar clearfix">
+		<div class="l-sort-toolbar u-cf">
 			<table>
 				<tr>
 					<td class="sort-by" title="<?=_('Sort items');?>">
@@ -66,16 +66,16 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-right compact-4"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?=_('Disk');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Quota');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Aliases');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Forwarding');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_('Autoreply');?></b></div>
+				<div class="u-cf l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-right compact-4"><b>&nbsp;</b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center compact"><b><?=_('Disk');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Quota');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Aliases');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Forwarding');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_('Autoreply');?></b></div>
 			</div>
 		</div>
 	</div>
@@ -130,10 +130,10 @@
 			v_unit_id="<?=$key."@".htmlentities($_GET['domain']);?>" v_section="mail_acc" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
 			sort-quota="<?=$data[$key]['QUOTA']?>" >
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="account[]" value="<?=$key?>" <?=$display_mode;?>>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3 truncate">
+				<div class="u-cf l-unit__stat-col--left wide-3 truncate">
 					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
 						<b><?=$key."@".htmlentities($_GET['domain']);?></b>
 					<?php } else { ?>
@@ -141,9 +141,9 @@
 					<?php } ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left u-text-right compact-4">
+				<div class="u-cf l-unit__stat-col--left u-text-right compact-4">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<?php if ($read_only === 'true') { ?>
 								<!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
 								<?php if ($data[$key]['SUSPENDED'] == 'yes') { ?>
@@ -184,15 +184,15 @@
 					<!-- END QUICK ACTION TOOLBAR AREA -->
 				</div>
 
-				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=_(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="u-text-small"><?=_(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center">
+				<div class="u-cf l-unit__stat-col--left u-text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center"><b><?=_(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="u-text-small"><?=_(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
+				<div class="u-cf l-unit__stat-col--left u-text-center">
 					<i class="fas <?=$alias_icon;?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left u-text-center">
+				<div class="u-cf l-unit__stat-col--left u-text-center">
 					<i class="fas <?=$fwd_icon;?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left u-text-center">
+				<div class="u-cf l-unit__stat-col--left u-text-center">
 					<i class="fas <?=$autoreply_icon;?>"></i>
 				</div>
 			</div>
@@ -205,10 +205,10 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right clearfix">
+			<div class="data-count l-unit__col l-unit__col--right u-cf">
 				<?php printf(ngettext('%d mail account', '%d mail accounts', $i),$i); ?>
 			</div>
-			<div class="data-count l-unit__col l-unit__col--right back clearfix">
+			<div class="data-count l-unit__col l-unit__col--right back u-cf">
 			</div>
 		</div>
 	</div>

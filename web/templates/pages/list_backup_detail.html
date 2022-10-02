@@ -1,11 +1,11 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort clearfix noselect">
+	<div class="l-sort u-cf noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 			<a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="ui-button cancel" dir="ltr"><i class="fas fa-undo status-icon green"></i><?=_('Restore All');?></a>
 		</div>
-		<div class="l-sort-toolbar clearfix">
+		<div class="l-sort-toolbar u-cf">
 			<table>
 				<tr>
 					<td class="l-sort-toolbar__search-box">
@@ -41,12 +41,12 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onchange="checkedAll('objects');">
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4"><b><?=_('Type');?></b></div>
-				<div class="clearfix l-unit__stat-col--left wide-7"><b><?=_('Details');?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-right compact-4"><b><?=_('Restore');?></b></div>
+				<div class="u-cf l-unit__stat-col--left compact-4"><b><?=_('Type');?></b></div>
+				<div class="u-cf l-unit__stat-col--left wide-7"><b><?=_('Details');?></b></div>
+				<div class="u-cf l-unit__stat-col--left u-text-right compact-4"><b><?=_('Restore');?></b></div>
 			</div>
 		</div>
 	</div>
@@ -61,18 +61,18 @@
 		?>
 		<div class="l-unit animated fadeIn">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="web[]" value="<?=$key?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4">
+				<div class="u-cf l-unit__stat-col--left compact-4">
 					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('Web domain');?></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-7">
+				<div class="u-cf l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
+				<div class="u-cf l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
 									<i class="fas fa-undo status-icon green status-icon dim icon-pad-right"></i>
@@ -93,18 +93,18 @@
 		?>
 		<div class="l-unit">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check2<?=$i?>" class="ch-toggle" type="checkbox" name="mail[]" value="<?=$key?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4">
+				<div class="u-cf l-unit__stat-col--left compact-4">
 					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('Mail domain');?></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-7">
+				<div class="u-cf l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
+				<div class="u-cf l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
 									<i class="fas fa-undo status-icon green status-icon dim"></i>
@@ -125,18 +125,18 @@
 		?>
 		<div class="l-unit">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check3<?=$i?>" class="ch-toggle" type="checkbox" name="dns[]" value="<?=$key?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4">
+				<div class="u-cf l-unit__stat-col--left compact-4">
 					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('DNS domain');?></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-7">
+				<div class="u-cf l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
+				<div class="u-cf l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
 									<i class="fas fa-undo status-icon green status-icon dim"></i>
@@ -157,18 +157,18 @@
 		?>
 		<div class="l-unit">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check4<?=$i?>" class="ch-toggle" type="checkbox" name="db[]" value="<?=$key?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4">
+				<div class="u-cf l-unit__stat-col--left compact-4">
 					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('Database');?></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-7">
+				<div class="u-cf l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
+				<div class="u-cf l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
 									<i class="fas fa-undo status-icon green status-icon dim"></i>
@@ -188,18 +188,18 @@
 		?>
 		<div class="l-unit">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check5<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="<?=$key?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4">
+				<div class="u-cf l-unit__stat-col--left compact-4">
 					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('Cron Records');?></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-7">
+				<div class="u-cf l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?='cron '._('records');?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
+				<div class="u-cf l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=cron&object=records&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
 									<i class="fas fa-undo status-icon green status-icon dim"></i>
@@ -220,18 +220,18 @@
 		?>
 		<div class="l-unit">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
+				<div class="u-cf l-unit__stat-col--left super-compact">
 					<input id="check6<?=$i?>" class="ch-toggle" type="checkbox" name="udir[]" value="<?=$key?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4">
+				<div class="u-cf l-unit__stat-col--left compact-4">
 					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('user dir');?></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-7">
+				<div class="u-cf l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
+				<div class="u-cf l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-						<div class="actions-panel clearfix">
+						<div class="actions-panel u-cf">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
 									<i class="fas fa-undo status-icon green status-icon dim"></i>
@@ -250,10 +250,10 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right total clearfix">
+			<div class="data-count l-unit__col l-unit__col--right total u-cf">
 				<?php printf(ngettext('%d item', '%d items', $i),$i); ?>
 			</div>
-			<div class="data-count l-unit__col l-unit__col--right back clearfix">
+			<div class="data-count l-unit__col l-unit__col--right back u-cf">
 			</div>
 		</div>
 	</div>

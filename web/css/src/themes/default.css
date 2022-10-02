@@ -3937,6 +3937,11 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   align-items: center !important;
 }
 
+.u-flexAlignCenter {
+  display: flex !important;
+  justify-content: center !important;
+}
+
 .u-console {
   font-family: Inconsolata, "Lucida Console", Monaco, monospace !important;
   white-space: pre !important;

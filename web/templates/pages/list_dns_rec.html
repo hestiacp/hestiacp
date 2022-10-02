@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-	<div class="l-sort u-cf noselect">
+	<div class="l-sort clearfix noselect">
 		<div class="l-unit-toolbar__buttonstrip">
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 			<?php if ($read_only !== 'true') {?>
@@ -15,7 +15,7 @@
 			<li entity="sort-ttl" sort_as_int="1"><span class="name"><?=_('TTL');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 			<li entity="sort-type"><span class="name"><?=_('Type');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
 		</ul>
-		<div class="l-sort-toolbar u-cf">
+		<div class="l-sort-toolbar clearfix">
 			<table>
 				<tr>
 					<td class="sort-by" title="<?=_('Sort items');?>">
@@ -62,16 +62,16 @@
 <div class="l-center units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="u-cf l-unit__stat-col--left super-compact">
+			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onChange="checkedAll('objects');" <?=$display_mode;?>>
 			</div>
-			<div class="u-cf l-unit__stat-col--left small"><b><?=_('Record');?></b></div>
-			<div class="u-cf l-unit__stat-col--left super-compact u-text-right"><b>&nbsp;</b></div>
-			<div class="u-cf l-unit__stat-col--left compact u-text-center" style="padding-left: 32px;"><b><?=_('Type');?></b></div>
-			<div class="u-cf l-unit__stat-col--left compact u-text-center"><b><?=_('Priority');?></b></div>
-			<div class="u-cf l-unit__stat-col--left compact u-text-center"><b><?=_('TTL');?></b></div>
-			<div class="u-cf l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
-			<div class="u-cf l-unit__stat-col--left wide-6"><b><?=_('IP or Value');?></b></div>
+			<div class="clearfix l-unit__stat-col--left small"><b><?=_('Record');?></b></div>
+			<div class="clearfix l-unit__stat-col--left super-compact text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?=_('Type');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?=_('Priority');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?=_('TTL');?></b></div>
+			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left wide-6"><b><?=_('IP or Value');?></b></div>
 		</div>
 	</div>
 
@@ -94,10 +94,10 @@
 		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animated fadeIn"
 			v_unit_id="<?=htmlentities($key);?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-record="<?=$data[$key]['RECORD']?>" sort-type="<?=$data[$key]['TYPE']?>" sort-ttl="<?=$data[$key]['TTL']?>" sort-value="<?=$data[$key]['VALUE']?>">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="u-cf l-unit__stat-col--left super-compact">
+				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="record[]" value="<?=$data[$key]['ID']?>" <?=$display_mode;?>>
 				</div>
-				<div class="u-cf l-unit__stat-col--left small truncate">
+				<div class="clearfix l-unit__stat-col--left small truncate">
 					<b>
 					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
 						<?=substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
@@ -107,9 +107,9 @@
 					</b>
 				</div>
 			<!-- START QUICK ACTION TOOLBAR AREA -->
-			<div class="u-cf l-unit__stat-col--left super-compact u-text-right">
+			<div class="clearfix l-unit__stat-col--left super-compact text-right">
 				<div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
-					<div class="actions-panel u-cf">
+					<div class="actions-panel clearfix">
 						<?php if ($read_only === 'true') {?>
 							<!-- Restrict editing of DNS records when impersonating 'admin' account -->
 							&nbsp;
@@ -131,11 +131,11 @@
 				</div>
 			</div>
 			<!-- END QUICK ACTION TOOLBAR AREA -->
-			<div class="u-cf l-unit__stat-col--left compact u-text-center" style="padding-left: 32px;"><b><?=$data[$key]['TYPE']?></b></div>
-			<div class="u-cf l-unit__stat-col--left compact u-text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
-			<div class="u-cf l-unit__stat-col--left compact u-text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
-			<div class="u-cf l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
-			<div class="u-cf l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8');?></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?=$data[$key]['TYPE']?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
+			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8');?></div>
 		</div>
 	</div>
 <?php } ?>
@@ -147,10 +147,10 @@
 	<div class="l-center">
 		<div class="l-unit-ft">
 			<table class="data"></table>
-			<div class="data-count l-unit__col l-unit__col--right total u-cf">
+			<div class="data-count l-unit__col l-unit__col--right total clearfix">
 				<?php printf(ngettext('%d DNS record', '%d DNS records', $i),$i); ?>
 			</div>
-			<div class="data-count l-unit__col l-unit__col--right back u-cf">
+			<div class="data-count l-unit__col l-unit__col--right back clearfix">
 			</div>
 		</div>
 	</div>

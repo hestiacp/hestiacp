@@ -3862,13 +3862,13 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 /* Global utilities
    ========================================================================== */
 
-.u-cf::before,
-.u-cf::after {
+.clearfix::before,
+.clearfix::after {
   content: " ";
   display: table;
 }
 
-.u-cf::after {
+.clearfix::after {
   clear: both;
 }
 
@@ -3876,19 +3876,19 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   display: none !important;
 }
 
-.u-text-right {
+.text-right {
   text-align: right !important;
 }
 
-.u-text-center {
+.text-center {
   text-align: center !important;
 }
 
-.u-text-small {
+.text-small {
   font-size: 0.85em !important;
 }
 
-.u-text-italic {
+.text-italic {
   font-style: italic !important;
 }
 

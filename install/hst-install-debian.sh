@@ -1215,13 +1215,14 @@ fi
 
 # Installing templates
 cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
+cp $HESTIA_COMMON_DIR/tempplates/web/* $HESTIA/data/web/
 
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors
 
 # Install default success page
-cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/index.html /var/www/html/
-cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
+cp -rf $HESTIA_COMMON_DIR/templates/web/unassigned/index.html /var/www/html/
+cp -rf $HESTIA_COMMON_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
 
 # Installing firewall rules
 cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/

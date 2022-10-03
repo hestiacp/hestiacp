@@ -1215,8 +1215,8 @@ fi
 
 # Installing templates
 cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
-cp $HESTIA_COMMON_DIR/templates/web/* $HESTIA/data/web/
-cp $HESTIA_COMMON_DIR/templates/dns/* $HESTIA/data/dns/
+cp -rf $HESTIA_COMMON_DIR/templates/web/ $HESTIA/data/
+cp -rf $HESTIA_COMMON_DIR/templates/dns/ $HESTIA/data/
 
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors

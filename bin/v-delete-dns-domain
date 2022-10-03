@@ -48,6 +48,8 @@ check_hestia_demo_mode
 
 suspended=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='yes'")
 
+dnssec=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "DNSSEC='yes'")
+
 records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
 
 # Deleting system configs
@@ -62,7 +64,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
     rm -f $HOMEDIR/$user/conf/dns/$domain.db
 fi
 
-if [ "$DNSSEC" = 'yes' ]; then 
+if [ -n "$dnssec" ]; then 
     # Delete existing keys
     rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
     rm -fr /var/cache/bind/K$domain_idn.*

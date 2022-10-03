@@ -14,6 +14,7 @@
 user=$1
 domain=$2
 format=$3
+dnstype=$4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -45,14 +46,16 @@ json_list() {
        "RECORD": "'$record'",
        "FLAG": "'$flag'",
        "ALGORITHM": "'$algorithm'",
-       "KEY": "'$key'"
+       "KEY": "'$key'",
+       "DS":"'$ds'"
     }'
     echo '}'
 }
 
 # SHELL list function
 shell_list() {
-   echo "RECORD:    $record" 
+   echo "RECORD:    $record"
+   echo "DS:        $DS" 
    echo "FLAG:      $flag" 
    echo "ALGORITHM: $algorithm" 
    echo "KEY:       $key"  
@@ -60,7 +63,11 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-   echo -e "$record"
+   if [ "$dnstype" != "DS" ];then
+      echo -e "$record"
+   else
+      echo -e "$ds"
+   fi
 }
 
 #----------------------------------------------------------#
@@ -75,6 +82,7 @@ if [ -n "$KEY" ]; then
    flag=$(echo "$record" | cut -d' ' -f5)
    algorithm=$(echo "$record" | cut -d' ' -f7)
    key="$(echo "$record" | cut -d' ' -f8) $(echo "$record" | cut -d' ' -f9)"
+   ds=$(dnssec-dsfromkey "/var/cache/bind/K$domain_idn.+013+$KEY.key");
 fi
 
 case $format in

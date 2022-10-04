@@ -208,6 +208,11 @@ sftpc() {
                     send "$PASSWORD\r"
                     exp_continue
                 }
+
+                -re "Password for (.*)@(.*)" {
+                    send "$PASSWORD\r"
+                    exp_continue
+                }
     
                 -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
                     set count \$argc

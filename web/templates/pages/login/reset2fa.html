@@ -1,11 +1,11 @@
-<center>
+<div class="u-flex-align-center">
 	<table class="login">
 		<tr>
 			<td>
 				<table>
 					<tr>
 						<td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
-							<a href="/"><img src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
+							<a href="/"><img src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;"></a>
 						</td>
 						<td style="padding: 40px 60px 0 0;" class="animated fadeIn">
 							<?php if ($success) {?>
@@ -32,22 +32,14 @@
 										</tr>
 										<tr>
 											<td style="padding: 12px 0 0 2px;">
-												<?=_('Username');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" class="vst-input" tabindex="1" style="width:240px" name="user">
+												<label for="user" class="form-label"><?=_('Username');?></label>
+												<input type="text" class="form-control" name="user" id="user" tabindex="1" style="width:260px;">
 											</td>
 										</tr>
 										<tr>
 											<td style="padding: 12px 0 0 2px;">
-												<?=_('2FA Reset Code');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" class="vst-input" tabindex="1" style="width:240px" name="twofa">
+												<label for="twofa" class="form-label"><?=_('2FA Reset Code');?></label>
+												<input type="text" class="form-control" name="twofa" id="twofa" tabindex="1" style="width:260px;">
 											</td>
 										</tr>
 										<tr>
@@ -72,7 +64,8 @@
 			</td>
 		</tr>
 	</table>
-</center>
+</div>
+
 </body>
 
 </html>

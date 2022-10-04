@@ -16,8 +16,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_add_ip" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="ok" value="Add" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="ok" value="Add">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -43,7 +43,7 @@
 						<tr>
 							<td class="u-pt18">
 								<label for="v_action" class="form-label"><?=_('Action') ?></label>
-								<select class="form-select u-inputWidth" name="v_action" id="v_action">
+								<select class="form-select u-input-width" name="v_action" id="v_action">
 									<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "'DROP'" )) echo 'selected'?>><?=_('DROP');?></option>
 									<option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "'ACCEPT'" )) echo 'selected'?>><?=_('ACCEPT');?></option>
 								</select>
@@ -52,7 +52,7 @@
 						<tr>
 							<td class="u-pt6">
 								<label for="v_protocol" class="form-label"><?=_('Protocol') ?></label>
-								<select class="form-select u-inputWidth" name="v_protocol" id="v_protocol">
+								<select class="form-select u-input-width" name="v_protocol" id="v_protocol">
 									<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'TCP'" )) echo 'selected'?>><?=_('TCP');?></option>
 									<option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'UDP'" )) echo 'selected'?>><?=_('UDP');?></option>
 									<option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'ICMP'" )) echo 'selected'?>><?=_('ICMP');?></option>
@@ -64,7 +64,7 @@
 								<label for="v_port" class="form-label">
 									<?=_('Port');?> <span class="optional">(<?=_('Ranges and Lists are acceptable');?>)</span>
 								</label>
-								<input type="text" class="form-control u-inputWidth" name="v_port" id="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?=_('All ports: 0, Range: 80-82, List: 80,443,8080,8443');?>">
+								<input type="text" class="form-control u-input-width" name="v_port" id="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?=_('All ports: 0, Range: 80-82, List: 80,443,8080,8443');?>">
 							</td>
 						</tr>
 						<tr>
@@ -72,7 +72,7 @@
 								<label for="v_ip" class="form-label">
 									<?=_('IP address / IPset');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
 								</label>
-								<select class="form-select u-inputWidth" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
+								<select class="form-select u-input-width" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
 									<option value="">&nbsp;</option>
 								</select>
 								<input type="text" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
@@ -83,7 +83,7 @@
 								<label for="v_comment" class="form-label">
 									<?=_('Comment');?> <span class="optional">(<?=_('optional');?>)</span>
 								</label>
-								<input type="text" class="form-control u-inputWidth" name="v_comment" id="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
+								<input type="text" class="form-control u-input-width" name="v_comment" id="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
 							</td>
 						</tr>
 					</table>

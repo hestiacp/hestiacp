@@ -45,6 +45,10 @@ fi
 for webtpl_folder in $(ls $HESTIA_INSTALL_DIR/templates/web/* -d 2>/dev/null | egrep -v '/(nginx)$' ); do
     cp -rf "${webtpl_folder}" "${WEBTPL}/"
 done
+# Skeleton, Unassinged and Suspended
+for webtpl_folder in $(ls $HESTIA_COMMON_DIR/templates/web/* -d 2>/dev/null ); do
+    cp -rf "${webtpl_folder}" "${WEBTPL}/"
+done
 
 versions_list=$(ls -d /etc/php/*)
 for php_ver in $versions_list; do

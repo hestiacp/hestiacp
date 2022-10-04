@@ -16,8 +16,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_add_mail_acc" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="ok_acc" value="add" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="ok_acc" value="add">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -43,7 +43,7 @@
 						<tr>
 							<td class="u-pt18">
 								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
-								<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>
@@ -64,7 +64,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" class="vst-input password" name="v_password"><br />
+								<input type="text" class="vst-input password" name="v_password"><br>
 								<meter max="4" id="meter"></meter>
 							</td>
 						</tr>
@@ -148,12 +148,10 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Send login credentials to email address') ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="email" class="vst-input" name="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+								<label for="v_send_email" class="form-label">
+									<?=_('Send login credentials to email address') ?>
+								</label>
+								<input type="email" class="form-control u-input-width" name="v_send_email" id="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
 								<input type="hidden" name="v_credentials" id="v_credentials">
 							</td>
 						</tr>

@@ -1560,7 +1560,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   width: 130px;
 }
 
-.l-unit__stat-col.l-unit__stat-col--left.text-right.icon-pad-right.text-italic {
+.l-unit__stat-col.l-unit__stat-col--left.icon-pad-right {
   width: 180px;
 }
 
@@ -2866,7 +2866,8 @@ a.button.cancel {
   cursor: default;
 }
 
-.login .vst-input {
+.login .vst-input,
+.login .form-control {
   border-color: #5787c8;
 }
 
@@ -3871,8 +3872,8 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   clear: both;
 }
 
-.hidden {
-  display: none;
+.u-hidden {
+  display: none !important;
 }
 
 .text-right {
@@ -3919,21 +3920,26 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   padding-left: 50px !important;
 }
 
-.u-inputWidth {
+.u-input-width {
   width: 380px !important;
 }
 
-.u-minHeight100 {
+.u-min-height100 {
   min-height: 100px !important;
 }
 
-.u-minHeight300 {
+.u-min-height300 {
   min-height: 300px !important;
 }
 
-.u-sideBySide {
+.u-side-by-side {
   display: flex !important;
   align-items: center !important;
+}
+
+.u-flex-align-center {
+  display: flex !important;
+  justify-content: center !important;
 }
 
 .u-console {

@@ -52,7 +52,7 @@
 							<tr>
 								<td class="u-pt18">
 									<label for="v_webmail" class="form-label"><?=_('Webmail Client');?></label>
-									<select class="form-select" name="v_webmail" id="v_webmail" tabindex="6">
+									<select class="form-select u-input-width" name="v_webmail" id="v_webmail" tabindex="6">
 										<?php foreach ($webmail_clients as $client){
 											echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
 											if (( htmlentities(trim($v_webmail,"'")) == $client )) {
@@ -68,22 +68,16 @@
 						<?php } ?>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Catchall email');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>">
+								<label for="v_catchall" class="form-label"><?=_('Catchall email');?></label>
+								<input type="email" class="form-control u-input-width" name="v_catchall" id="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour / account');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+								<label for="v_rate" class="form-label">
+									<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour / account');?>)</span>
+								</label>
+								<input type="text" class="form-control u-input-width" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 							</td>
 						</tr>
 						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
@@ -277,42 +271,26 @@
 								<table style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
 									<tr>
 										<td class="u-pt6">
-											<?=_('Host');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+											<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
+											<input type="text" class="form-control u-input-width" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
 										</td>
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('Port');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+											<label for="v_smtp_relay_port" class="form-label"><?=_('Port');?></label>
+											<input type="text" class="form-control u-input-width" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
 										</td>
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('Username');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+											<label for="v_smtp_relay_user" class="form-label"><?=_('Username');?></label>
+											<input type="text" class="form-control u-input-width" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
 										</td>
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('Password');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_smtp_relay_pass">
+											<label for="v_smtp_relay_pass" class="form-label"><?=_('Password');?></label>
+											<input type="text" class="form-control u-input-width" name="v_smtp_relay_pass" id="v_smtp_relay_pass">
 										</td>
 									</tr>
 								</table>

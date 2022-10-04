@@ -99,7 +99,7 @@
 									<tr>
 										<td class="u-pt6">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_policy_user_change_theme" id="v_policy_user_change_theme" <?php if ((isset($_SESSION['POLICY_USER_CHANGE_THEME'])) && (!empty($_SESSION['POLICY_USER_CHANGE_THEME'])) && ($_SESSION['POLICY_USER_CHANGE_THEME'] == "no")) echo "checked=yes" ?>>
+												<input class="form-check-input" type="checkbox" name="v_policy_user_change_theme" id="v_policy_user_change_theme" <?php if ((isset($_SESSION['POLICY_USER_CHANGE_THEME'])) && (!empty($_SESSION['POLICY_USER_CHANGE_THEME'])) && ($_SESSION['POLICY_USER_CHANGE_THEME'] == "no")) echo 'checked' ?>>
 												<label for="v_policy_user_change_theme">
 													<?=_('Set as selected theme for all users');?>
 												</label>
@@ -167,7 +167,7 @@
 									<tr>
 										<td>
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_debug_mode" id="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo "checked=yes" ?>>
+												<input class="form-check-input" type="checkbox" name="v_debug_mode" id="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo 'checked' ?>>
 												<label for="v_debug_mode">
 													<?=_('Enable debug mode');?>
 												</label>
@@ -177,7 +177,7 @@
 									<tr>
 										<td>
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_experimental_features" id="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo "checked=yes" ?>>
+												<input class="form-check-input" type="checkbox" name="v_experimental_features" id="v_experimental_features" <?php if ((isset($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && (!empty($_SESSION['POLICY_SYSTEM_ENABLE_BACON'])) && ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] == "true")) echo 'checked' ?>>
 												<label for="v_experimental_features">
 													<?=_('Enable preview features');?>
 												</label>
@@ -188,7 +188,7 @@
 									<tr>
 										<td>
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_upgrade_send_notification_email" id="v_upgrade_send_notification_email" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL'])) && ($_SESSION['UPGRADE_SEND_EMAIL'] == "true")) echo "checked=yes" ?>>
+												<input class="form-check-input" type="checkbox" name="v_upgrade_send_notification_email" id="v_upgrade_send_notification_email" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL'])) && ($_SESSION['UPGRADE_SEND_EMAIL'] == "true")) echo 'checked' ?>>
 												<label for="v_upgrade_send_notification_email">
 													<?=_('SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL');?>
 												</label>
@@ -198,7 +198,7 @@
 									<tr>
 										<td>
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_upgrade_send_email_log" id="v_upgrade_send_email_log" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && ($_SESSION['UPGRADE_SEND_EMAIL_LOG'] == "true")) echo "checked=yes" ?>>
+												<input class="form-check-input" type="checkbox" name="v_upgrade_send_email_log" id="v_upgrade_send_email_log" <?php if ((isset($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && (!empty($_SESSION['UPGRADE_SEND_EMAIL_LOG'])) && ($_SESSION['UPGRADE_SEND_EMAIL_LOG'] == "true")) echo 'checked' ?>>
 												<label for="v_upgrade_send_email_log">
 													<?=_('SYSTEM_UPGRADE_SEND_EMAIL_LOG');?>
 												</label>
@@ -406,7 +406,7 @@
 										<tr>
 											<td class="u-pt6">
 												<div class="form-check">
-													<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+													<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo 'checked'; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
 													<label for="v_smtp_relay">
 														<?=_('Global SMTP Relay');?>
 													</label>
@@ -646,7 +646,7 @@
 									<tr>
 										<td class="u-pt6">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo "checked=yes" ?> onclick="javascript:elementHideShow('remote_backup');">
+												<input class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo 'checked' ?> onclick="javascript:elementHideShow('remote_backup');">
 												<label for="v_backup_remote_adv">
 													<?=_('Remote backup');?>
 												</label>

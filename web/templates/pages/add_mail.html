@@ -87,7 +87,7 @@
 								<tr>
 									<td class="u-pt18">
 										<div class="form-check">
-											<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>>
+											<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo 'checked'; ?>>
 											<label for="v_antispam">
 												<?=_('AntiSpam Support');?>
 											</label>
@@ -97,7 +97,7 @@
 								<tr>
 									<td class="u-pt6">
 										<div class="form-check">
-											<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo "checked=yes"; ?>>
+											<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo 'checked'; ?>>
 											<label for="v_reject">
 												<?=_('Reject spam');?>
 											</label>
@@ -109,7 +109,7 @@
 								<tr>
 									<td class="u-pt6">
 										<div class="form-check">
-											<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>>
+											<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo 'checked'; ?>>
 											<label for="v_antivirus">
 												<?=_('AntiVirus Support');?>
 											</label>
@@ -120,7 +120,7 @@
 							<tr>
 								<td class="u-pt6">
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>>
+										<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo 'checked'; ?>>
 										<label for="v_dkim">
 											<?=_('DKIM Support');?>
 										</label>
@@ -130,7 +130,7 @@
 							<tr>
 								<td class="u-pt6">
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo 'checked'; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
 										<label for="v_smtp_relay">
 											<?=_('SMTP Relay');?>
 										</label>

@@ -105,7 +105,7 @@
 						<tr>
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>>
+									<input class="form-check-input" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
 									<label for="v_blackhole">
 										<?=_('Discard all mail');?>
 									</label>
@@ -115,7 +115,7 @@
 						<tr <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for">
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>>
+									<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
 									<label for="v_fwd_for">
 										<?=_('Do not store forwarded mail');?>
 									</label>
@@ -125,7 +125,7 @@
 						<tr>
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply" <?php if ($v_autoreply == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('autoreplytable');">
+									<input class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply" <?php if ($v_autoreply == 'yes') echo 'checked' ?> onclick="javascript:elementHideShow('autoreplytable');">
 									<label for="v_autoreply">
 										<?=_('Autoreply');?>
 									</label>

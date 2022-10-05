@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 - Fixed few issues with Quick installers (#2921)
 - Fixed an issue with v-change-web-domain-name
 - Update sync-dns-cluster role to run v-delete-dns-domain (#2943)
+- Fixed issue with connection with sftp server running FreeBSD (#2950 @gdarko)
+- Add support for Kurdish Sorani (#2945 @qezwan)
+- Small improvements in syntax for v-add-remote-dns-host (#2951)
+- Check if email is valid for phpmailer (#2944)
 
 ### Dependencies
 
@@ -17,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Update Opencart to 4.0.1.11
 - Update Prestashop to 1.7.8.7
 - Update Jquery on login pages to 3.6.1 (#2932 @4183r)
+- Update hestia-php to 8.1.11
 
 ## [1.6.8] - Service release 
 

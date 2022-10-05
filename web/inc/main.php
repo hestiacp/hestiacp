@@ -405,7 +405,11 @@ function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = '')
     $mail = new PHPMailer();
 
     if (isset($_SESSION['USE_SERVER_SMTP']) && $_SESSION['USE_SERVER_SMTP'] == "true") {
-        $from = $_SESSION['SERVER_SMTP_ADDR'];
+        if(!empty($_SESSION['SERVER_SMTP_ADDR']) && $_SESSION['SERVER_SMTP_ADDR'] != ''){
+            if(filter_var($_SESSION['SERVER_SMTP_ADDR'], FILTER_VALIDATE_EMAIL)){
+                $from = $_SESSION['SERVER_SMTP_ADDR'];
+            }
+        }
 
         $mail->IsSMTP();
         $mail->Mailer = "smtp";

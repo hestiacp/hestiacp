@@ -281,6 +281,13 @@ is_object_new() {
         if [ -d "$USER_DATA" ]; then
             object="OK"
         fi
+    elif [ $2 = 'DB' ]; then
+        object=$(grep "$2='$3'" $USER_DATA/$1.conf)
+        dbtype=$(echo "$object" | grep "TYPE='$4'")
+        if [ -n "$object" ] && [ -n "$dbtype" ]; then
+        check_result "$E_EXISTS" "$2=$3 of TYPE=$4 already exists"
+        fi
+        return
     else
         object=$(grep "$2='$3'" $USER_DATA/$1.conf)
     fi

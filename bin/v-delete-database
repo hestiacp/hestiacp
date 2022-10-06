@@ -58,7 +58,7 @@ esac
 #----------------------------------------------------------#
 
 # Deleting database
-sed -i "/DB='$database' /d" $USER_DATA/db.conf
+sed -i "/DB='$database'/!b;/TYPE='$TYPE'/d" $USER_DATA/db.conf
 
 # Decreasing counters
 decrease_dbhost_values
@@ -72,7 +72,7 @@ if [ -n "$suspended" ]; then
 fi
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Database" "Deleted database (Name: $database)."
+$BIN/v-log-action "$user" "Info" "Database" "Deleted database (Name: $database) $TYPE."
 log_event "$OK" "$ARGUMENTS"
 
 exit

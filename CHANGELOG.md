@@ -1,6 +1,32 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Development] - Service release 
+
+### Breaking changes
+
+- Dropped support for Debian 9 (Stretch) as it reached EOL date (New installs got already dropped with 1.6.0 release)
+
+### Features
+
+- Add support for rate limit exim in packages (#2920)
+- Add support for ssh keys for SFTP (#2906)
+
+### Bugfixes
+
+- Add an check before config exists before searching it (#2930)
+- Fixed an issue with v-change-web-domain-name does not clean up it everything (#2915)
+### Enhancements 
+
+- Cleanup old VestaCP html/js/css code  (#2949, #2941 #2941 #2940 #2919 #2907 @alecrust)
+
+### Security
+
+- Implement quoteshellarg as replacement for escapeshellarg (#2720 @divinity76)
+
+### Dependencies
+
+
 ## [1.6.9] - Service release 
 
 - Fixed an issue when Installing Wordpress in a non english locale (#2788 #2818)

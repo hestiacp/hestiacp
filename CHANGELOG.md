@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
+- Update Filegator to 7.8.3
 
 ## [1.6.9] - Service release 
 

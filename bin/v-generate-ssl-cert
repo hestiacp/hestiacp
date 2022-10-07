@@ -104,7 +104,7 @@ openssl genrsa "$KEY_SIZE" > "$domain.key" 2>/dev/null
 
 subj=""
 # Generate the CSR
-if [ -z "$email" ]; then 
+if [ -n "$email" ]; then 
     subj="/emailAddress=$email"
 fi
 

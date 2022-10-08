@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
-- Implement quoteshellarg as replacement for escapeshellarg (#2720 @divinity76)
+- Delete temp files after password has been verified (#2958)
 
 ### Dependencies
 

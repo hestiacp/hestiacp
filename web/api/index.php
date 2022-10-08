@@ -98,7 +98,7 @@ function api_legacy(array $request_data) {
             $v_password = stream_get_meta_data($fp)['uri'];
             fwrite($fp, $password."\n");
             unset($output);
-            exec(HESTIA_CMD . 'v-check-user-password "admin" '. quoteshellarg($v_password). ' '.$v_ip.' yes', $output, $return_var);
+            exec(HESTIA_CMD . 'v-check-user-password "admin" '. escapeshellarg($v_password). ' '.$v_ip.' yes', $output, $return_var);
             $hash = $output[0];
             fclose($fp);
             unset($output, $fp, $v_password);

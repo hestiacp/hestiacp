@@ -132,7 +132,7 @@ function authenticate_user($user, $password, $twofa = '')
                 $fp = tmpfile();
                 $v_password = stream_get_meta_data($fp)['uri'];
                 fwrite($fp, $password."\n");
-                exec(HESTIA_CMD . 'v-check-user-password '. $v_user.' '. quoteshellarg($v_password). ' '.$v_ip.' yes', $output, $return_var);
+                exec(HESTIA_CMD . 'v-check-user-password '. $v_user.' '. escapeshellarg($v_password). ' '.$v_ip.' yes', $output, $return_var);
                 $hash = $output[0];
                 fclose($fp);
                 unset($output,$fp, $v_password);

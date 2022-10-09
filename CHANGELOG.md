@@ -26,7 +26,16 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
+## [1.6.10] - Service release
+
+### Security
+
+- Delete temp files after password has been verified (#2958)
+
+### Dependencies
+
 - Update Filegator to 7.8.3
+- Update PHPmailer to 6.6.5
 
 ## [1.6.9] - Service release 
 

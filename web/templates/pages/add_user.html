@@ -16,8 +16,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_add_user" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="ok" value="Add" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="ok" value="Add">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -62,12 +62,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Email');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="email" class="vst-input" name="v_email" id='v_email' value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="3">
+								<label for="v_email" class="form-label"><?=_('Email');?></label>
+								<input type="email" class="form-control u-input-width" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="3">
 							</td>
 						</tr>
 						<tr>
@@ -77,7 +73,7 @@
 						</tr>
 						<tr>
 							<td>
-								<input type="text" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="4" /><br />
+								<input type="text" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="4"><br>
 								<meter max="4" id="meter"></meter>
 							</td>
 						</tr>
@@ -163,12 +159,10 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Send login credentials to email address');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="email" class="vst-input" name="v_notify" id="v_notify" value="<?=htmlentities(trim($v_notify, "'"))?>" tabindex="8">
+								<label for="v_notify" class="form-label">
+									<?=_('Send login credentials to email address') ?>
+								</label>
+								<input type="email" class="form-control u-input-width" name="v_notify" id="v_notify" value="<?=htmlentities(trim($v_notify, "'"))?>" tabindex="8">
 							</td>
 						</tr>
 					</table>

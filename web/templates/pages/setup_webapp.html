@@ -26,18 +26,18 @@
 
 	<?php if( !empty($WebappInstaller->getOptions())): ?>
 		<form id="vstobjects" method="POST" name="v_setup_webapp">
-			<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-			<input type="hidden" name="ok" value="true" />
+			<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+			<input type="hidden" name="ok" value="true">
 
 			<div class="app-form">
 				<?php if( !$WebappInstaller->isDomainRootClean()): ?>
 					<span class="alert alert-info alert-with-icon">
 						<i class="fas fa-info"></i>
-						<?=_('Data loss warning!');?><br /><br />
-						<?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?><br /><br />
+						<?=_('Data loss warning!');?><br><br>
+						<?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?><br><br>
 						<?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?>
 					</span>
-					<br />
+					<br>
 				<?php endif; ?>
 				<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>
 					<?php
@@ -69,7 +69,7 @@
 							</label>
 						<?php endif; ?>
 						<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
-							<select class="form-select u-inputWidth" name="<?=$f_name?>" id="<?=$f_name?>">
+							<select class="form-select u-input-width" name="<?=$f_name?>" id="<?=$f_name?>">
 								<?php foreach ($form_control['options'] as $key => $option){
 									if(is_numeric($key)){
 										$key = $option;
@@ -86,7 +86,7 @@
 								<label for="<?=$f_name?>"><?=$f_label?></label>
 							</div>
 						<?php else:?>
-							<input type="text" class="form-control u-inputWidth" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
+							<input type="text" class="form-control u-input-width" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
 						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>

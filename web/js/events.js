@@ -116,7 +116,7 @@ VE.callbacks.click.do_servicestop = function(evt, elm) {
 /*
  * Create dialog box on the fly
  * @param elm Element which contains the dialog contents
- * @param dialog_title 
+ * @param dialog_title
  * @param confirmed_location_url URL that will be redirected to if user hit "OK"
  * @param custom_config Custom configuration parameters passed to dialog initialization (optional)
  */
@@ -232,12 +232,12 @@ function stopTimer(){
     reloadFunction = false;
     $('.spinner').addClass('paused');
     $('.pause-stop i').removeClass('fa-pause');
-    $('.pause-stop i').addClass('fa-play'); 
+    $('.pause-stop i').addClass('fa-play');
   }else{
     reloadFunction = setInterval(updateInterval, 100);
     $('.spinner').removeClass('paused');
     $('.pause-stop i').removeClass('fa-play');
-    $('.pause-stop i').addClass('fa-pause'); 
+    $('.pause-stop i').addClass('fa-pause');
   }
 }
 
@@ -407,10 +407,10 @@ VE.notifications.get_list = function(){
             acc.push(tpl.finalize());
         }
 
-        $('.notification-container').html(acc.done()).show();
+        $('.notification-container').html(acc.done()).removeClass('u-hidden');
 
         $('.notification-container .mark-seen').click(function(event){
-//            VE.notifications.mark_seen($(event.target).attr('id').replace("notification-", ""));
+            // VE.notifications.mark_seen($(event.target).attr('id').replace("notification-", ""));
             VE.notifications.delete($(event.target).attr('id').replace("notification-", ""));
         });
 
@@ -442,7 +442,7 @@ VE.notifications.mark_seen = function(id){
 
 VE.navigation.init = function(){
     if($('.l-menu__item.l-menu__item--active').length){
-//        VE.navigation.switch_menu();
+        // VE.navigation.switch_menu();
         VE.navigation.state.active_menu = 0;
         VE.navigation.state.menu_selector = '.l-menu__item';
         VE.navigation.state.menu_active_selector = '.l-menu__item--active';
@@ -466,5 +466,3 @@ VE.navigation.shortcut = function(elm){
 }
 
 VE.helpers.extendPasswordFields();
-
-

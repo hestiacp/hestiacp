@@ -5,7 +5,7 @@
 			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
 		</div>
 		<div class="l-unit-toolbar__buttonstrip float-right">
-			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "hidden"; }?>" id="v-clear-cache">
+			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "u-hidden"; }?>" id="v-clear-cache">
 				<i class="fas fa-trash status-icon red"></i><?=_('Purge Nginx Cache');?>
 			</a>
 			<?php if ($_SESSION['PLUGIN_APP_INSTALLER'] !== 'false') {?>
@@ -24,8 +24,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_edit_web" method="post" class="<?=$v_status?>">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="save" value="save" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="save" value="save">
 
 		<table class="data">
 			<tr class="data-add">
@@ -52,14 +52,14 @@
 						<tr>
 							<td class="u-pt18">
 								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
-								<input type="text" class="form-control u-inputWidth" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+								<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
 								<label for="v_aliases" class="form-label"><?=_('Aliases');?></label>
-								<textarea class="form-control u-inputWidth" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+								<textarea class="form-control u-input-width" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
 							</td>
 						</tr>
 						<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') {?>
@@ -75,7 +75,7 @@
 						<tr>
 							<td class="u-pt6">
 								<label for="v_ip" class="form-label"><?=_('IP Address');?></label>
-								<select class="form-select u-inputWidth" name="v_ip" id="v_ip">
+								<select class="form-select u-input-width" name="v_ip" id="v_ip">
 									<?php
 										foreach ($ips as $ip => $value) {
 											$display_ip = htmlentities(empty($value['NAT']) ? $ip : "{$value['NAT']}");
@@ -89,7 +89,7 @@
 						<tr>
 							<td class="u-pt18">
 								<label for="v_stats" class="form-label"><?=_('Web Statistics');?></label>
-								<select class="form-select u-inputWidth" name="v_stats" id="v_stats">
+								<select class="form-select u-input-width" name="v_stats" id="v_stats">
 									<?php
 										foreach ($stats as $key => $value) {
 											$svalue = "'".$value."'";
@@ -119,12 +119,8 @@
 								<table style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
 									<tr>
 										<td class="u-pt6">
-											<?=_('Username');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
+											<label for="v_stats_user" class="form-label"><?=_('Username');?></label>
+											<input type="text" class="form-control u-input-width" name="v_stats_user" id="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
 										</td>
 									</tr>
 									<tr>
@@ -174,12 +170,8 @@
 									<table id="custom_redirect" style="margin-left: 22px; display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
 										<tr>
 											<td class="u-pt6">
-												<?=_('Target domain or URL');?>:
-											</td>
-										</tr>
-										<tr>
-											<td class="u-pt6">
-												<input type="text" class="vst-input" name="v-redirect-custom" value="<?=$v_redirect_custom;?>">
+												<label for="v-redirect-custom" class="form-label"><?=_('Target domain or URL');?></label>
+												<input type="text" class="form-control u-input-width" name="v-redirect-custom" id="v-redirect-custom" value="<?=$v_redirect_custom;?>">
 											</td>
 										</tr>
 										<tr>
@@ -251,13 +243,13 @@
 															<?=_('SSL Certificate');?>
 															<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
 														</label>
-														<textarea class="form-control u-minHeight100 u-console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+														<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
 													<td class="u-pt6">
 														<label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
-														<textarea class="form-control u-minHeight100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+														<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
@@ -265,7 +257,7 @@
 														<label for="v_ssl_ca" class="form-label">
 															<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
 														</label>
-														<textarea class="form-control u-minHeight100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+														<textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
 													</td>
 												</tr>
 											</table>
@@ -359,7 +351,7 @@
 												<label for="v_template" class="form-label">
 													<?=_('Web Template') . "<span class='optional'>" . strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
 												</label>
-												<select class="form-select u-inputWidth" name="v_template" id="v_template">
+												<select class="form-select u-input-width" name="v_template" id="v_template">
 													<?php
 														foreach ($templates as $key => $value) {
 															echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -390,12 +382,12 @@
 											<tr>
 												<td class="u-pl50">
 													<table id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
-														<td class="u-pt6">
-															<?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
-														</td>
 														<tr>
-															<td>
-																<input type="text" class="vst-input" name="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
+															<td class="u-pt6">
+																<label for="v_nginx_cache_duration" class="form-label">
+																	<?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
+																</label>
+																<input type="text" class="form-control u-input-width" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
 															</td>
 														</tr>
 													</table>
@@ -408,7 +400,7 @@
 													<label for="v_backend_template" class="form-label">
 														<?=_('Backend Template') . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
 													</label>
-													<select class="form-select u-inputWidth" name="v_backend_template" id="v_backend_template">
+													<select class="form-select u-input-width" name="v_backend_template" id="v_backend_template">
 														<?php
 															foreach ($backend_templates as $key => $value) {
 																echo "\t\t\t\t<option value=\"".$value."\"";
@@ -443,7 +435,7 @@
 														<tr>
 															<td class="u-pt6">
 																<label for="v_proxy_template" class="form-label"><?=_('Proxy Template');?></label>
-																<select class="form-select u-inputWidth" name="v_proxy_template" id="v_proxy_template">
+																<select class="form-select u-input-width" name="v_proxy_template" id="v_proxy_template">
 																	<?php
 																		foreach ($proxy_templates as $key => $value) {
 																			echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -463,7 +455,7 @@
 														<tr>
 															<td class="u-pt6">
 																<label for="v_proxy_ext" class="form-label"><?=_('Proxy Extensions');?></label>
-																<textarea class="form-control u-inputWidth u-minHeight100" name="v_proxy_ext" id="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; } ?></textarea>
+																<textarea class="form-control u-input-width u-min-height100" name="v_proxy_ext" id="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; } ?></textarea>
 															</td>
 														</tr>
 													</table>
@@ -500,16 +492,10 @@
 												</tr>
 												<tr>
 													<td class="u-pt6">
-														<?php print( _('Directory'));?> <span class="optional">(<?=_('optional');?>)</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<input type="text" class="vst-input" name="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
-													</td>
-												</tr>
-												<tr>
-													<td>
+														<label for="v-custom-doc-folder" class="form-label">
+															<?php print( _('Directory'));?> <span class="optional">(<?=_('optional');?>)</span>
+														</label>
+														<input type="text" class="form-control u-input-width" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
 														<small class="custom_docroot_hint"></small>
 													</td>
 												</tr>
@@ -541,8 +527,8 @@
 													<tr>
 														<td class="u-pt6">
 															<?=_('FTP');?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
-															<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0" />
-															<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>" />
+															<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
+															<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
 														</td>
 													</tr>
 													<tr>
@@ -551,12 +537,10 @@
 																<?=_('Username');?><br>
 																<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 															</label>
-															<div class="u-sideBySide">
-																<input type="text" class="form-control v-ftp-user u-inputWidth" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
-																name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
-																<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
-																<small class="hint u-ml10"></small>
-															</div>
+															<input type="text" class="form-control v-ftp-user u-input-width" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
+															name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
+															<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
+															<small class="hint"></small>
 														</td>
 													</tr>
 													<tr>
@@ -571,22 +555,18 @@
 													</tr>
 													<tr>
 														<td class="u-pl50 u-pt6">
-															<?=_('Path');?>
-														</td>
-													</tr>
-													<tr>
-														<td class="u-pl50">
-															<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
-															<input type="hidden" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-															<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")); ?>">
-															<br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+															<label for="v_ftp_user[<?=$i ?>][v_ftp_path]" class="form-label"><?=_('Path');?></label>
+															<input type="hidden" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
+															<input type="hidden" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
+															<input type="text" class="form-control v-ftp-path u-input-width" name="v_ftp_user[<?=$i ?>][v_ftp_path]" id="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
+															<span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
 														</td>
 													</tr>
 													<?php if ($ftp_user['is_new'] == 1): ?>
 														<tr>
 															<td class="u-pl50 u-pt6">
 																<label for="v_ftp_user[<?=$i ?>][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
-																<input type="text" class="form-control vst-email-alert-on-psw u-inputWidth" name="v_ftp_user[<?=$i ?>][v_ftp_email]" id="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
+																<input type="text" class="form-control vst-email-alert-on-psw u-input-width" name="v_ftp_user[<?=$i ?>][v_ftp_email]" id="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
 															</td>
 														</tr>
 													<?php endif; ?>
@@ -612,13 +592,13 @@
 		</table>
 	</form>
 
-	<div id="templates" class="hidden">
+	<div id="templates" class="u-hidden">
 		<table class="ftptable ftptable-nrm" name="v_add_domain_ftp">
 			<tr>
 				<td class="u-pt6">
 					<?=_('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onCLick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
-					<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0" />
-					<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1" />
+					<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
+					<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
 				</td>
 			</tr>
 			<tr>
@@ -627,10 +607,8 @@
 						<?=_('Username');?><br>
 						<span style="font-size: 10pt; color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 					</label>
-					<div class="u-sideBySide">
-						<input type="text" class="form-control v-ftp-user u-inputWidth" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
-						<small class="hint u-ml10"></small>
-					</div>
+					<input type="text" class="form-control v-ftp-user u-input-width" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
+					<small class="hint"></small>
 				</td>
 			</tr>
 			<tr>
@@ -645,20 +623,16 @@
 			</tr>
 			<tr>
 				<td class="u-pl50 u-pt6">
-					<?=_('Path');?>
-				</td>
-			</tr>
-			<tr>
-				<td class="u-pl50">
-					<input type="hidden" class="vst-input v-ftp-pre-path" name="v_ftp_pre_path" value="">
-					<input type="text" class="vst-input v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-					<br /><span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+					<label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?=_('Path');?></label>
+					<input type="hidden" name="v_ftp_pre_path" value="">
+					<input type="text" class="form-control v-ftp-path u-input-width" name="v_ftp_user[%INDEX%][v_ftp_path]" id="v_ftp_user[%INDEX%][v_ftp_path]" value="">
+					<span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
 				</td>
 			</tr>
 			<tr>
 				<td class="u-pl50 u-pt6">
 					<label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
-					<input type="text" class="form-control vst-email-alert-on-psw u-inputWidth" name="v_ftp_user[%INDEX%][v_ftp_email]" id="v_ftp_user[%INDEX%][v_ftp_email]" value="">
+					<input type="text" class="form-control vst-email-alert-on-psw u-input-width" name="v_ftp_user[%INDEX%][v_ftp_email]" id="v_ftp_user[%INDEX%][v_ftp_email]" value="">
 				</td>
 			</tr>
 		</table>
@@ -666,5 +640,5 @@
 </div>
 
 <script>
-	GLOBAL.FTP_USER_PREFIX =  "<?=$user_plain.'_';?>";
+	GLOBAL.FTP_USER_PREFIX = "<?=$user_plain.'_';?>";
 </script>

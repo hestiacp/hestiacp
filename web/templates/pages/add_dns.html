@@ -16,8 +16,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_add_dns" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="ok" value="Add" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="ok" value="Add">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -31,7 +31,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Adding DNS Domain');?></span>
 							</td>
 						</tr>
@@ -42,7 +42,7 @@
 						</tr>
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span class="alert alert-danger alert-with-icon">
 										<i class="fas fa-exclamation"></i>
 										<?=_('Avoid adding web domains on admin account');?>
@@ -52,27 +52,23 @@
 						<?php } ?>
 						<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
 									<span><a href="/add/dns/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a> </span>
 								</td>
 							</tr>
 						<?php } ?>
-						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin"))  {?>
+						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
 							<tr>
-								<td class="vst-text step-top">
-									<?=_('Domain');?>
+								<td class="u-pt18">
+									<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+									<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								</td>
 							</tr>
 							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
-								</td>
-							</tr>
-							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<label for="v_ip" class="form-label"><?=_('IP address');?></label>
-									<select class="form-select" tabindex="-1" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
+									<select class="form-select u-input-width" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 										<option value="">clear</option>
 										<?php
 											foreach ($v_ips as $ip => $value) {
@@ -81,16 +77,16 @@
 											}
 										?>
 									</select>
-									<input type="text" size="20" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+									<input type="text" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 								</td>
 							</tr>
 							<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] === 'yes')) { ?>
 								<tr>
-									<td class="input-label">
+									<td class="u-pt6">
 										<label for="v_template" class="form-label">
 											<?=_('Template') . "<span class='optional'>" . strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
 										</label>
-										<select class="form-select" name="v_template" id="v_template" style="max-width: 380px">
+										<select class="form-select u-input-width" name="v_template" id="v_template">
 											<?php
 												foreach ($templates as $key => $value) {
 													echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -106,47 +102,41 @@
 								</tr>
 							<?php } ?>
 							<tr>
-								<td class="vst-text input-label step-top">
+								<td class="u-pt18">
 									<a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?=_('Advanced options');?></a>
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text step-top">
+								<td class="u-pt18">
 									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
 										<tr>
-											<td class="vst-text input-label">
-												<?=_('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
+											<td class="u-pt6">
+												<label for="v_exp" class="form-label">
+													<?=_('Expiration Date');?> <span class="optional">(<?=_('YYYY-MM-DD');?>)</span>
+												</label>
+												<input type="text" class="form-control u-input-width" name="v_exp" id="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
 											</td>
 										</tr>
 										<tr>
-											<td>
-												<input type="text" size="20" class="vst-input" name="v_exp" value="<?=htmlentities(trim($v_exp, "'"))?>">
+											<td class="u-pt6">
+												<label for="v_ttl" class="form-label"><?=_('TTL');?></label>
+												<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
 											</td>
 										</tr>
 										<tr>
-											<td class="vst-text input-label">
-												<?=_('TTL');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
-											</td>
-										</tr>
-										<tr>
-											<td class="vst-text input-label">
+											<td class="u-pt6">
 												<?=_('Name servers');?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+												<input type="text" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
 												<span class="remove-ns additional-control delete"><?=_('delete');?></span>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+												<input type="text" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
 												<span class="remove-ns additional-control delete"><?=_('delete');?></span>
 											</td>
 										</tr>
@@ -154,7 +144,7 @@
 											if($v_ns3) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+														<input type="text" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -162,7 +152,7 @@
 											if($v_ns4) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+														<input type="text" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -170,7 +160,7 @@
 											if($v_ns5) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+														<input type="text" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -178,7 +168,7 @@
 											if($v_ns6) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+														<input type="text" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -186,7 +176,7 @@
 											if($v_ns7) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+														<input type="text" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
@@ -194,14 +184,14 @@
 											if($v_ns8) {
 												echo '<tr>
 													<td>
-														<input type="text" size="20" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+														<input type="text" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
 														<span class="remove-ns additional-control delete">'._('delete').'</span>
 													</td>
 												</tr>';
 											}
 										?>
 										<tr class="add-ns" <?php if ($v_ns8) echo 'style="display:none;"' ; ?> >
-											<td class="step-top-small">
+											<td class="u-pt18">
 												<span class="add-ns-button additional-control add"><?=_('Add one more Name Server');?></span>
 											</td>
 										</tr>

@@ -16,10 +16,10 @@
 <div class="l-center edit animated fadeIn">
 
 	<form id="vstobjects" name="v_edit_backup_exclusions" method="post" class="<?=_($v_status)?>">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="save" value="save" />
-		
-		<table class='data'>
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="save" value="save">
+
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
@@ -32,7 +32,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing Backup Exclusions');?></span>
 							</td>
 						</tr>
@@ -42,43 +42,27 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=_('Web Domains');?>
+							<td class="u-pt18">
+								<label for="v_web" class="form-label"><?=_('Web Domains');?></label>
+								<textarea class="form-control" name="v_web" id="v_web" placeholder="<?=_('WEB_EXCLUSIONS') ?>"><?=htmlentities(trim($v_web, "'"))?></textarea>
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<textarea class="vst-textinput" name="v_web" placeholder="<?=_('WEB_EXCLUSIONS') ?>"><?=htmlentities(trim($v_web, "'"))?></textarea>
+							<td class="u-pt6">
+								<label for="v_mail" class="form-label"><?=_('Mail Domains');?></label>
+								<textarea class="form-control" name="v_mail" id="v_mail" placeholder="<?=_('MAIL_EXCLUSIONS') ?>"><?=htmlentities(trim($v_mail, "'"))?></textarea>
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Mail Domains');?>
+							<td class="u-pt6">
+								<label for="v_db" class="form-label"><?=_('Databases');?></label>
+								<textarea class="form-control" name="v_db" id="v_db" placeholder="<?=_('DB_EXCLUSIONS') ?>"><?=htmlentities(trim($v_db, "'"))?></textarea>
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<textarea class="vst-textinput" name="v_mail" placeholder="<?=_('MAIL_EXCLUSIONS') ?>"><?=htmlentities(trim($v_mail, "'"))?></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td class="vst-text input-label">
-								<?=_('Databases');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<textarea class="vst-textinput" name="v_db" placeholder="<?=_('DB_EXCLUSIONS') ?>"><?=htmlentities(trim($v_db, "'"))?></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td class="vst-text input-label">
-								<?=_('User Directories');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<textarea size="20" class="vst-textinput" name="v_userdir" placeholder="<?=_('USER_EXCLUSIONS') ?>"><?=htmlentities(trim($v_userdir, "'"))?></textarea>
+							<td class="u-pt6">
+								<label for="v_userdir" class="form-label"><?=_('User Directories');?></label>
+								<textarea class="form-control" name="v_userdir" id="v_userdir" placeholder="<?=_('USER_EXCLUSIONS') ?>"><?=htmlentities(trim($v_userdir, "'"))?></textarea>
 							</td>
 						</tr>
 					</table>

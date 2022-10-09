@@ -18,11 +18,11 @@
 						<a class="data-controls do_delete ui-button danger cancel">
 							<i class="do_delete fas fa-times-circle status-icon red"></i><?=_('Delete');?>
 							<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user']))) {?>
-								<input type="hidden" name="delete_url" value="/delete/log/auth/?user=<?=htmlentities($_GET['user']);?>&token=<?=$_SESSION['token']?>" />
+								<input type="hidden" name="delete_url" value="/delete/log/auth/?user=<?=htmlentities($_GET['user']);?>&token=<?=$_SESSION['token']?>">
 							<?php } else { ?>
-								<input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?=$_SESSION['token']?>" />
+								<input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?=$_SESSION['token']?>">
 							<?php } ?>
-							<div class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+							<div class="confirmation-text-delete u-hidden" title="<?=_('Confirmation');?>">
 								<p class="confirmation"><?=_('DELETE_LOGS_CONFIRMATION');?></p>
 							</div>
 						</a>
@@ -88,7 +88,7 @@
 	<div class="l-separator"></div>
 	<div class="l-center">
 		<div class="l-unit-ft">
-			<table class='data'></table>
+			<table class="data"></table>
 			<div class="data-count l-unit_col l-unit_col--right clearfix">
 				<?php printf(ngettext('%d log record', '%d log records', $i),$i); ?>
 			</div>

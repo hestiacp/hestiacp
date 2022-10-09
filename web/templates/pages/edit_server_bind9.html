@@ -16,8 +16,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_configure_server" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="save" value="save" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="save" value="save">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -31,7 +31,7 @@
 				<td>
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Configuring Server');?>: <?=$v_service_name;?></span>
 							</td>
 						</tr>
@@ -41,26 +41,18 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=$v_options_path;?>
+							<td class="u-pt18">
+								<label for="v_options" class="form-label"><?=$v_options_path;?></label>
+								<textarea class="form-control u-min-height300 u-console" name="v_options" id="v_options"><?=$v_options;?></textarea>
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<textarea class="vst-textinput console" name="v_options"><?=$v_options;?></textarea>
+							<td class="u-pt18">
+								<label for="v_config" class="form-label"><?=$v_config_path;?></label>
+								<textarea class="form-control u-min-height300 u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
 							</td>
 						</tr>
-						<tr>
-							<td class="vst-text step-top">
-								<?=$v_config_path;?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<textarea class="vst-textinput console" name="v_config"><?=$v_config;?></textarea>
-							</td>
-						</tr>
-						<td class="input-label" style="text-transform: capitalize;">
+						<td class="u-pt6" style="text-transform: capitalize;">
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 								<label for="v_restart">

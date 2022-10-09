@@ -21,7 +21,7 @@
 					</td>
 					<td>
 						<form action="/bulk/ip/" method="post" id="objects">
-							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+							<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 							<div class="l-select">
 								<select name="action" id="">
 									<option value=""><?=_('apply to selected');?></option>
@@ -83,8 +83,8 @@
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-									<input type="hidden" name="delete_url" value="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" />
-									<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+									<input type="hidden" name="delete_url" value="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>">
+									<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete u-hidden" title="<?=_('Confirmation');?>">
 										<p class="confirmation"><?=sprintf(_('DELETE_IP_CONFIRMATION'),$key)?></p>
 									</div>
 								</a>
@@ -107,7 +107,7 @@
 	<div class="l-separator"></div>
 	<div class="l-center">
 		<div class="l-unit-ft">
-			<table class='data'></table>
+			<table class="data"></table>
 			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d IP address', '%d IP addresses', $i),$i); ?>
 			</div>

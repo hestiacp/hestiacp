@@ -26,15 +26,15 @@
 					</td>
 					<td class="l-sort-toolbar__search-box">
 						<form action="/search/" method="get">
-							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-							<input type="text" name="q" class="search-input" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>" />
+							<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+							<input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
 							<button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
 						</form>
 					</td>
 					<?php if ($read_only !== 'true') {?>
 						<td>
 							<form action="/bulk/web/" method="post" id="objects">
-								<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+								<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 								<div class="l-select">
 									<select name="action">
 										<option value=""><?=_('apply to selected');?></option>
@@ -60,7 +60,7 @@
 <div class="l-separator"></div>
 
 <div class="l-center units narrow">
-	
+
 	<!-- Table header -->
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
@@ -140,27 +140,27 @@
 						$proxy_ext = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
 				}
 				if ($data[$key]['SUSPENDED'] === 'yes') {
-					if ($data[$key]['SSL'] == 'no') { 
+					if ($data[$key]['SSL'] == 'no') {
 						$icon_ssl = 'fas fa-times-circle';
 					}
-					if ($data[$key]['SSL'] == 'yes') { 
+					if ($data[$key]['SSL'] == 'yes') {
 						$icon_ssl = 'fas fa-check-circle';
 					}
-					if ($web_stats == 'no') { 
+					if ($web_stats == 'no') {
 						$icon_webstats = 'fas fa-times-circle';
-					} else { 
+					} else {
 						$icon_webstats = 'fas fa-check-circle';
 					}
 				} else {
-					if ($data[$key]['SSL'] == 'no') { 
+					if ($data[$key]['SSL'] == 'no') {
 						$icon_ssl = 'fas fa-times-circle status-icon red';
 					}
-					if ($data[$key]['SSL'] == 'yes') { 
+					if ($data[$key]['SSL'] == 'yes') {
 						$icon_ssl = 'fas fa-check-circle status-icon green';
 					}
-					if ($web_stats == 'no') { 
+					if ($web_stats == 'no') {
 						$icon_webstats = 'fas fa-times-circle status-icon red';
-					} else { 
+					} else {
 						$icon_webstats = 'fas fa-check-circle status-icon green';
 					}
 				}
@@ -209,8 +209,8 @@
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 										<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
 											<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
-											<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention hidden" title="<?=_('Confirmation');?>">
+											<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>">
+											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="confirmation-text-suspention u-hidden" title="<?=_('Confirmation');?>">
 												<p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
 											</div>
 										</a>
@@ -218,8 +218,8 @@
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 										<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
 											<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-											<input type="hidden" name="delete_url" value="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" />
-											<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+											<input type="hidden" name="delete_url" value="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>">
+											<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete u-hidden" title="<?=_('Confirmation');?>">
 												<p class="confirmation"><?=sprintf(_('DELETE_DOMAIN_CONFIRMATION'),$key)?></p>
 											</div>
 										</a>
@@ -248,7 +248,7 @@
 	<div class="l-separator"></div>
 	<div class="l-center">
 		<div class="l-unit-ft">
-			<table class='data'></table>
+			<table class="data"></table>
 			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d web domain', '%d web domains', $i),$i); ?>
 			</div>

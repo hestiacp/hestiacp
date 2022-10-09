@@ -16,8 +16,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_add_ip" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="ok" value="Add" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="ok" value="Add">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -31,7 +31,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Adding IP address');?></span>
 							</td>
 						</tr>
@@ -41,27 +41,27 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
+							<td class="u-pt18">
 								<?=_('IP address') ?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								<input type="text" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Netmask');?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_netmask" value="<?=htmlentities(trim($v_netmask, "'"))?>">
+								<input type="text" class="vst-input" name="v_netmask" value="<?=htmlentities(trim($v_netmask, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_interface" class="form-label"><?=_('Interface');?></label>
 								<select class="form-select" name="v_interface" id="v_interface">
 									<?php
@@ -75,7 +75,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<div class="form-check">
 									<input class="form-check-input" type="checkbox" name="v_shared" id="v_shared" <?php if (empty($v_dedicated)) echo "checked=yes" ?> onclick="javascript:elementHideShow('usrtable');">
 									<label for="v_shared">
@@ -85,9 +85,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label" style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
+							<td class="u-pt6" style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;" id="usrtable">
 								<label for="v_owner" class="form-label"><?=_('Assigned user');?></label>
-								<select class="form-select" name="v_owner" id="v_owner" style="max-width: 380px">
+								<select class="form-select u-input-width" name="v_owner" id="v_owner">
 									<?php
 										foreach ($users as $key => $value) {
 											echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -99,23 +99,23 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Assigned domain');?> <span class="optional">(<?=_('optional');?>)</span>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
+								<input type="text" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('NAT IP association');?> <span class="optional">(<?=_('optional');?>)</span>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input" name="v_nat" value="<?=htmlentities(trim($v_nat, "'"))?>">
+								<input type="text" class="vst-input" name="v_nat" value="<?=htmlentities(trim($v_nat, "'"))?>">
 							</td>
 						</tr>
 					</table>

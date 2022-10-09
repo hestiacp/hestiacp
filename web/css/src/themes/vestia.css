@@ -125,10 +125,6 @@ strong {
   box-shadow: none !important;
 }
 
-.vst-textinput {
-  box-shadow: none;
-}
-
 .card a.ui-button {
   line-height: 2rem !important;
 }
@@ -289,10 +285,6 @@ strong {
   border-radius: 0 !important;
 }
 
-.vst-textinput {
-  border-radius: 0 !important;
-}
-
 .pill {
   border-radius: 4px;
 }
@@ -357,9 +349,8 @@ a.vst-text:hover b,
 
 .vst-input:focus,
 .form-control:focus,
-.vst-textinput:focus,
 .login .vst-input:focus,
-.login .vst-textinput:focus {
+.login .form-control:focus {
   border: 1px solid #ff6701;
   background-color: #fff4ed;
   color: #333;
@@ -372,8 +363,7 @@ a.vst-text:hover b,
 
 .vst-input:hover,
 .form-control:hover,
-.form-select:hover,
-.vst-textinput:hover {
+.form-select:hover {
   border: 1px solid #e95e00;
 }
 
@@ -515,8 +505,7 @@ meter {
 
 .vst-input,
 .form-control,
-.form-select,
-.vst-textinput {
+.form-select {
   font-family: Arial, Helvetica, sans-serif !important;
 }
 
@@ -589,7 +578,7 @@ meter {
   margin-right: 15px;
 }
 
-td.vst-text.input-label.step-top.advanced-options .fas {
+td.advanced-options .fas {
   display: none !important;
 }
 
@@ -727,7 +716,8 @@ a.vst-advanced:focus {
   color: #326b9b !important;
 }
 
-.login .vst-input {
+.login .vst-input,
+.login .form-control {
   border: 1px solid #bbb;
 }
 

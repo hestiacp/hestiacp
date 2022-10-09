@@ -1,11 +1,11 @@
-<center>
+<div class="u-flex-align-center">
 	<table class="login">
 		<tr>
 			<td>
 				<table>
 					<tr>
 						<td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
-							<a href="/"><img src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
+							<a href="/"><img src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;"></a>
 						</td>
 						<td style="padding: 40px 60px 0 0;" class="animated fadeIn">
 							<form method="get" action="/reset/">
@@ -21,14 +21,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td style="padding: 12px 0 0 2px;" colspan=2><?=_('Reset Code');?></td>
-									</tr>
-									<tr>
-										<td>
+										<td style="padding: 12px 0 0 2px;">
 											<input type="hidden" name="action" value="confirm">
 											<input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>"/>
 											<input type="hidden" name="user" value="<?=htmlentities($_GET['user'])?>">
-											<input tabindex="1" type="text" size="20px" style="width:240px" name="code" class="vst-input">
+											<label for="code" class="form-label"><?=_('Reset Code');?></label>
+											<input type="text" class="form-control" name="code" id="code" tabindex="1" style="width:260px;">
 										</td>
 									</tr>
 									<tr>
@@ -52,7 +50,8 @@
 			</td>
 		</tr>
 	</table>
-</center>
+</div>
+
 </body>
 
 </html>

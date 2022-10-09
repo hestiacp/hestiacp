@@ -134,7 +134,7 @@ set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
     fi
-    lang_list="ar az bg bn bs cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
+    lang_list="ar az bg bn bs ckb cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
     if ! (echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -1215,13 +1215,15 @@ fi
 
 # Installing templates
 cp -rf $HESTIA_INSTALL_DIR/templates $HESTIA/data/
+cp -rf $HESTIA_COMMON_DIR/templates/web/ $HESTIA/data/templates
+cp -rf $HESTIA_COMMON_DIR/templates/dns/ $HESTIA/data/templates
 
 mkdir -p /var/www/html
 mkdir -p /var/www/document_errors
 
 # Install default success page
-cp -rf $HESTIA_INSTALL_DIR/templates/web/unassigned/index.html /var/www/html/
-cp -rf $HESTIA_INSTALL_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
+cp -rf $HESTIA_COMMON_DIR/templates/web/unassigned/index.html /var/www/html/
+cp -rf $HESTIA_COMMON_DIR/templates/web/skel/document_errors/* /var/www/document_errors/
 
 # Installing firewall rules
 cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/

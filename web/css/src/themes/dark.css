@@ -630,33 +630,6 @@ label:hover {
   color: #d4d4d4 !important;
 }
 
-.vst-textinput {
-  background-color: #454545;
-  border: 1px solid #606060;
-  color: #d4d4d4;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
-}
-
-.vst-textinput:hover {
-  border: 1px solid #0090ff;
-  background-color: #494949;
-}
-
-.vst-textinput:focus {
-  background-color: #222;
-  border-color: #0080df;
-  color: #fff !important;
-  box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
-}
-
-.vst-textinput.console{
-
-}
-
-.vst-textinput.short {
-
-}
-
 .vst-input,
 .form-control {
   background-color: #454545;
@@ -681,8 +654,7 @@ label:hover {
 
 .vst-input:disabled,
 .form-control:disabled,
-.form-select:disabled,
-.vst-textinput:disabled {
+.form-select:disabled {
   background-color: #303030;
   text-shadow: 1px 1px rgb(0 0 0 / 30%);
   color: #acacac;
@@ -694,8 +666,7 @@ label:hover {
 
 .vst-input:disabled:hover,
 .form-control:disabled:hover,
-.form-select:disabled:hover,
-.vst-textinput:disabled:hover {
+.form-select:disabled:hover {
   border-color: #606060 !important;
 }
 
@@ -785,10 +756,6 @@ a.vst-text:active b {
 }
 
 .advanced-options .fas {
-
-}
-
-#advanced-options .console{
 
 }
 
@@ -886,8 +853,6 @@ a.vst-text:active b {
 .additional-control.add:active {}
 
 .additional-control.remove-ns {}
-
-.data .step-left {}
 
 .hide-password {}
 
@@ -1413,10 +1378,6 @@ form#vstobjects.suspended {
 }
 
 .shortcuts ul li {
-
-}
-
-.shortcuts ul li.step-top {
 
 }
 

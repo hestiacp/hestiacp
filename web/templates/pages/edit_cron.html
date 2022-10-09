@@ -15,7 +15,7 @@
 
 <div class="l-center animated fadeIn">
 
-	<div class="vst-text step-top helper-container">
+	<div class="u-pt18 helper-container">
 		<div id="tabs" class="cron-helper-tabs">
 			<ul>
 				<li><a href="#tabs-1"><?=_('Minutes');?></a></li>
@@ -26,10 +26,10 @@
 			</ul>
 			<div id="tabs-1">
 				<form>
-					<input type="hidden" name="h_hour" value="*" />
-					<input type="hidden" name="h_day" value="*" />
-					<input type="hidden" name="h_month" value="*" />
-					<input type="hidden" name="h_wday" value="*" />
+					<input type="hidden" name="h_hour" value="*">
+					<input type="hidden" name="h_day" value="*">
+					<input type="hidden" name="h_month" value="*">
+					<input type="hidden" name="h_wday" value="*">
 					<p>
 						<label for="h_min_1" class="form-label first"><?=_('Run Command');?>:</label>
 						<select class="form-select" name="h_min" id="h_min_1">
@@ -41,7 +41,7 @@
 							<option value="*/30"><?=_('every');?> 30</option>
 						</select>
 					</p>
-					<p class="step-top">
+					<p class="u-pt18">
 						<input type="submit" value="<?=_('generate');?>" class="button">
 					</p>
 				</form>
@@ -49,9 +49,9 @@
 
 			<div id="tabs-2">
 				<form>
-					<input type="hidden" name="h_day" value="*" />
-					<input type="hidden" name="h_month" value="*" />
-					<input type="hidden" name="h_wday" value="*" />
+					<input type="hidden" name="h_day" value="*">
+					<input type="hidden" name="h_month" value="*">
+					<input type="hidden" name="h_wday" value="*">
 					<p>
 						<label for="h_hour_2" class="form-label first"><?=_('Run Command');?>:</label>
 						<select class="form-select" name="h_hour" id="h_hour_2">
@@ -70,7 +70,7 @@
 							<option value="45">45</option>
 						</select>
 					</p>
-					<p class="step-top">
+					<p class="u-pt18">
 						<input type="submit" value="<?=_('generate');?>" class="button">
 					</p>
 				</form>
@@ -78,8 +78,8 @@
 
 			<div id="tabs-3">
 				<form>
-					<input type="hidden" name="h_month" value="*" />
-					<input type="hidden" name="h_wday" value="*" />
+					<input type="hidden" name="h_month" value="*">
+					<input type="hidden" name="h_wday" value="*">
 					<p>
 						<label for="h_day_3" class="form-label first"><?=_('Run Command');?>:</label>
 						<select class="form-select" name="h_day" id="h_day_3">
@@ -138,7 +138,7 @@
 							<option value="55">55</option>
 						</select>
 					</p>
-					<p class="step-top">
+					<p class="u-pt18">
 						<input type="submit" value="<?=_('generate');?>" class="button">
 					</p>
 				</form>
@@ -146,8 +146,8 @@
 
 			<div id="tabs-4">
 				<form>
-					<input type="hidden" name="h_month" value="*" />
-					<input type="hidden" name="h_day" value="*" />
+					<input type="hidden" name="h_month" value="*">
+					<input type="hidden" name="h_day" value="*">
 					<p>
 						<label for="h_wday_4" class="form-label first"><?=_('Run Command');?>:</label>
 						<select class="form-select" name="h_wday" id="h_wday_4">
@@ -209,7 +209,7 @@
 							<option value="55">55</option>
 						</select>
 					</p>
-					<p class="step-top">
+					<p class="u-pt18">
 						<input type="submit" value="<?=_('generate');?>" class="button">
 					</p>
 				</form>
@@ -217,7 +217,7 @@
 
 			<div id="tabs-5">
 				<form>
-					<input type="hidden" name="h_wday" value="*" />
+					<input type="hidden" name="h_wday" value="*">
 					<p>
 						<label for="h_month_5" class="form-label first"><?=_('Run Command');?>:</label>
 						<select class="form-select" name="h_month" id="h_month_5">
@@ -320,7 +320,7 @@
 							<option value="55">55</option>
 						</select>
 					</p>
-					<p class="step-top">
+					<p class="u-pt18">
 						<input type="submit" value="<?=_('generate');?>" class="button">
 					</p>
 				</form>
@@ -329,9 +329,9 @@
 	</div>
 
 	<form id="vstobjects" name="v_edit_cron" method="post" class="<?=$v_status?>">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="save" value="save" />
-		<table class='data'>
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="save" value="save">
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
@@ -344,7 +344,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing Cron Job');?></span>
 							</td>
 						</tr>
@@ -354,64 +354,64 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Command');?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input long" name="v_cmd" value="<?=htmlentities(trim($v_cmd, "'"))?>">
+								<input type="text" class="vst-input long" name="v_cmd" value="<?=htmlentities(trim($v_cmd, "'"))?>">
 							</td>
 						</tr>
 
 						<tr>
-							<td class="vst-text step-top">
+							<td class="u-pt18">
 								<?=_('Minute');?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input short" name="v_min" value="<?=htmlentities(trim($v_min, "'"))?>">
+								<input type="text" class="vst-input short" name="v_min" value="<?=htmlentities(trim($v_min, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Hour');?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input short" name="v_hour" value="<?=htmlentities(trim($v_hour, "'"))?>">
+								<input type="text" class="vst-input short" name="v_hour" value="<?=htmlentities(trim($v_hour, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Day');?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input short" name="v_day" value="<?=htmlentities(trim($v_day, "'"))?>">
+								<input type="text" class="vst-input short" name="v_day" value="<?=htmlentities(trim($v_day, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Month');?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input short" name="v_month" value="<?=htmlentities(trim($v_month, "'"))?>">
+								<input type="text" class="vst-input short" name="v_month" value="<?=htmlentities(trim($v_month, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
+							<td class="u-pt6">
 								<?=_('Day of week');?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="text" size="20" class="vst-input short" name="v_wday" value="<?=htmlentities(trim($v_wday, "'"))?>">
+								<input type="text" class="vst-input short" name="v_wday" value="<?=htmlentities(trim($v_wday, "'"))?>">
 							</td>
 						</tr>
 					</table>

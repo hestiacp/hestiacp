@@ -16,8 +16,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_add_db" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="ok" value="Add" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="ok" value="Add">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -31,7 +31,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Adding database');?></span>
 							</td>
 						</tr>
@@ -42,7 +42,7 @@
 						</tr>
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span class="alert alert-danger alert-with-icon">
 										<i class="fas fa-exclamation"></i>
 										<?=_('Avoid adding web domains on admin account');?>
@@ -52,7 +52,7 @@
 						<?php } ?>
 						<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
 									<span><a href="/add/db/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a> </span>
 								</td>
@@ -66,20 +66,18 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text step-top input-label">
-									<?=_('Database');?>
+								<td class="u-pt18">
+									<label for="v_database" class="form-label"><?=_('Database');?></label>
+									<div class="u-side-by-side">
+										<input type="text" class="form-control u-input-width" name="v_database" id="v_database" value="<?=htmlentities(trim($v_database, "'"))?>">
+										<small class="hint u-ml10"></small>
+									</div>
 								</td>
 							</tr>
 							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_database" value="<?=htmlentities(trim($v_database, "'"))?>">
-									<small class="hint"></small>
-								</td>
-							</tr>
-							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<label for="v_type" class="form-label"><?=_('Type');?></label>
-									<select class="form-select" name="v_type" id="v_type" style="max-width: 380px">
+									<select class="form-select u-input-width" name="v_type" id="v_type">
 										<?php
 											foreach ($db_types as $key => $value) {
 												echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -91,32 +89,30 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text input-label">
-									<?php
-										print _('Username');
-										echo "&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(".sprintf(_('maximum characters length, including prefix'), 32).")</small></em>";
-									?>
+								<td class="u-pt6">
+									<label for="v_dbuser" class="form-label">
+										<?=_('Username');?>
+										&nbsp;&nbsp;&nbsp;&nbsp;<em><small>(<?=sprintf(_('maximum characters length, including prefix'), 32);?>)</small></em>
+									</label>
+									<div class="u-side-by-side">
+										<input type="text" class="form-control u-input-width" name="v_dbuser" id="v_dbuser" value="<?=htmlentities(trim($v_dbuser, "'"))?>">
+										<small class="hint u-ml10"></small>
+									</div>
 								</td>
 							</tr>
 							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_dbuser" value="<?=htmlentities(trim($v_dbuser, "'"))?>">
-									<small class="hint"></small>
-								</td>
-							</tr>
-							<tr>
-								<td class="vst-text input-label">
+								<td class="u-pt6">
 									<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<input type="text" size="20" class="vst-input password" name="v_password"><br />
+									<input type="text" class="vst-input password" name="v_password"><br>
 									<meter max="4" id="meter"></meter>
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text">
+								<td>
 									<?=_('Your password must have at least');?>:
 									<ul>
 										<li><?=_('8 characters long');?></li>
@@ -126,24 +122,22 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="vst-text input-label">
-									<?=_('Send login credentials to email address') ?>
+								<td class="u-pt6">
+									<label for="v_db_email" class="form-label">
+										<?=_('Send login credentials to email address') ?>
+									</label>
+									<input type="email" class="form-control u-input-width" name="v_db_email" id="v_db_email" value="<?=htmlentities(trim($v_db_email, "'"))?>">
 								</td>
 							</tr>
 							<tr>
-								<td>
-									<input type="text" class="vst-input" name="v_db_email" value="<?=htmlentities(trim($v_db_email, "'"))?>">
-								</td>
-							</tr>
-							<tr>
-								<td class="step-top vst-text" style="/*padding: 32px 0 20px 0;*/">
+								<td class="u-pt18">
 									<a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
 								</td>
 							</tr>
 							<tr>
-								<td class="input-label step-top" id="advanced-opts" style="display: none;">
+								<td class="u-pt18" id="advanced-opts" style="display: none;">
 									<label for="v_host" class="form-label"><?=_('Host');?></label>
-									<select class="form-select u-mb20" name="v_host" id="v_host" style="max-width: 380px">
+									<select class="form-select u-input-width u-mb20" name="v_host" id="v_host">
 										<?php
 											foreach ($db_hosts as $value) {
 												echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -153,7 +147,7 @@
 										?>
 									</select>
 									<label for="v_charset" class="form-label"><?=_('Charset');?></label>
-									<select class="form-select" name="v_charset" id="v_charset" style="max-width: 380px">
+									<select class="form-select u-input-width" name="v_charset" id="v_charset">
 										<option value=big5 <?php if ((!empty($v_charset)) && ( $v_charset == 'big5')) echo 'selected';?>>big5</option>
 										<option value=dec8 <?php if ((!empty($v_charset)) && ( $v_charset == 'dec8')) echo 'selected';?>>dec8</option>
 										<option value=cp850 <?php if ((!empty($v_charset)) && ( $v_charset == 'cp850')) echo 'selected';?>>cp850</option>
@@ -205,6 +199,6 @@
 </div>
 
 <script>
-GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
-GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
+	GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
+	GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
 </script>

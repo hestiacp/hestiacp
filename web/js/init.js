@@ -90,15 +90,15 @@ $(document).ready(function(){
 
               $('.pause').click(function(){
                 VE.helpers.refresh_timer.stop();
-                $('.pause').addClass('hidden');
-                $('.play').removeClass('hidden');
+                $('.pause').addClass('u-hidden');
+                $('.play').removeClass('u-hidden');
                 $('.refresh-timer').addClass('paused');
               });
 
               $('.play').click(function(){
                 VE.helpers.refresh_timer.start();
-                $('.pause').removeClass('hidden');
-                $('.play').addClass('hidden');
+                $('.pause').removeClass('u-hidden');
+                $('.play').addClass('u-hidden');
                 $('.refresh-timer').removeClass('paused');
               });
             }
@@ -549,7 +549,7 @@ $(document).ready(function(){
               $(document).click(function(evt){
                 //close notification popup
                 if(!$(evt.target).hasClass('l-profile__notifications') && $(evt.target).parents('ul.notification-container').length == 0){
-                  $('.notification-container').hide();
+                  $('.notification-container').addClass('u-hidden');
                   $('.l-profile__notifications').removeClass('active');
                 }
               });
@@ -557,7 +557,7 @@ $(document).ready(function(){
 
               // focusing on the first input at form
               if( location.href.indexOf('lead=') == -1 && !$('.ui-dialog').is(':visible') ){
-                $('#vstobjects .vst-input:not([disabled]), #vstobjects .form-select:not([disabled])').first().focus();
+                $('#vstobjects .vst-input:not([disabled]), #vstobjects .form-control:not([disabled]), #vstobjects .form-select:not([disabled])').first().focus();
               }
 
               $('.l-profile__notifications').click(function(){
@@ -568,7 +568,7 @@ $(document).ready(function(){
                   $('.notification-container').css({left: left+'px'});
 
                 } else {
-                  $('.notification-container').hide();
+                  $('.notification-container').addClass('u-hidden');
                   $('.l-profile__notifications').removeClass('active');
                 }
               });

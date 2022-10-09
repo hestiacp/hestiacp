@@ -18,8 +18,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_add_web" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="ok" value="Add" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="ok" value="Add">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -33,7 +33,7 @@
 				<td class="data-dotted">
 					<table class="data-col2">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Add Web Domain');?></span>
 							</td>
 						</tr>
@@ -45,7 +45,7 @@
 						<?php
 						if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span class="alert alert-danger alert-with-icon">
 										<i class="fas fa-exclamation"></i>
 										<?=_('Avoid adding web domains on admin account');?>
@@ -55,7 +55,7 @@
 						<?php } ?>
 						<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
 									<span><a href="/add/web/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a> </span>
 								</td>
@@ -63,17 +63,13 @@
 						<?php } ?>
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
 							<tr>
-								<td class="vst-text step-top">
-									<?=_('Domain');?>
+								<td class="u-pt18">
+									<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+									<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								</td>
 							</tr>
 							<tr>
-								<td>
-									<input type="text" size="20" class="vst-input" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
-								</td>
-							</tr>
-							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<label for="v_ip" class="form-label"><?=_('IP Address');?></label>
 									<select class="form-select" name="v_ip" id="v_ip">
 										<?php
@@ -87,12 +83,12 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="input-label"></td>
+								<td class="u-pt6"></td>
 							</tr>
 							<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
 								<?php if($panel[$user_plain]['DNS_DOMAINS'] != "0") { ?>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<div class="form-check">
 												<input class="form-check-input" type="checkbox" name="v_dns" id="v_dns" <?php if (empty($v_dns)&&$panel[$user_plain]['DNS_DOMAINS'] != "0") ?>>
 												<label for="v_dns">
@@ -106,7 +102,7 @@
 							<?php if ((isset($_SESSION['IMAP_SYSTEM'])) && (!empty($_SESSION['IMAP_SYSTEM']))) {?>
 								<?php if($panel[$user_plain]['MAIL_DOMAINS'] != "0") { ?>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<div class="form-check">
 												<input class="form-check-input" type="checkbox" name="v_mail" id="v_mail" <?php if (empty($v_mail)&&$panel[$user_plain]['MAIL_DOMAINS'] != "0") ?>>
 												<label for="v_mail">
@@ -119,11 +115,10 @@
 							<?php } ?>
 						<?php } ?>
 					</table>
-					<table class="data-col2">
+					<table class="data-col2 u-mb20">
 					</table>
 				</td>
 			</tr>
 		</table>
 	</form>
 </div>
-

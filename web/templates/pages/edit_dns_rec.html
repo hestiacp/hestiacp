@@ -16,10 +16,10 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_edit_dns_rec" method="post" class="<?=$v_status?>">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="save" value="save" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="save" value="save">
 
-		<table class='data'>
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
@@ -32,7 +32,7 @@
 				<td class="data-dotted">
 					<table class="data-col2">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing DNS Record');?></span>
 							</td>
 						</tr>
@@ -42,32 +42,26 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=_('Domain');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+							<td class="u-pt18">
+								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+								<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Record');?>
+							<td class="u-pt6">
+								<label for="v_rec" class="form-label"><?=_('Record');?></label>
+								<div class="u-side-by-side">
+									<input type="text" class="form-control u-input-width" name="v_rec" id="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>">
+                  <input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
+									<small class="hint u-ml10"></small>
+								</div>
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>">
-								<input type="hidden" name="v_record_id" value="<?=htmlentities($v_record_id)?>">
-								<small class="hint"></small>
-							</td>
-						</tr>
-						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_type" class="form-label"><?=_('Type');?></label>
-								<select class="form-select" name="v_type" id="v_type" style="max-width: 380px">
+								<select class="form-select u-input-width" name="v_type" id="v_type">
 									<option value="A" <?php if ($v_type == 'A') echo "selected"; ?>>A</option>
 									<option value="AAAA" <?php if ($v_type == 'AAAA') echo "selected"; ?>>AAAA</option>
 									<option value="CAA" <?php if ($v_type == 'CAA') echo "selected"; ?>>CAA</option>
@@ -86,9 +80,9 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label for="v_val" class="form-label"><?=_('IP or Value');?></label>
-								<select class="form-select" tabindex="-1" style="max-width: 380px" onchange="this.nextElementSibling.value=this.value">
+								<select class="form-select u-input-width" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 									<option value="">clear</option>
 									<?php
 										foreach ($v_ips as $ip => $value) {
@@ -97,32 +91,23 @@
 										}
 									?>
 								</select>
-								<input type="text" size="20" class="vst-input vst-list-editor" name="v_val" id="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
+								<input type="text" class="vst-input vst-list-editor" name="v_val" id="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Priority');?> <span class="optional">(<?=_('optional');?>)</span>
+							<td class="u-pt6">
+								<label for="v_priority" class="form-label">
+									<?=_('Priority');?> <span class="optional">(<?=_('optional');?>)</span>
+								</label>
+								<input type="text" class="form-control u-input-width" name="v_priority" id="v_priority" value="<?=htmlentities(trim($v_priority, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_priority" value="<?=htmlentities(trim($v_priority, "'"))?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="vst-text input-label">
-								<?=_('TTL');?> <span class="optional">(<?=_('optional');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="hidden" size="20" class="vst-input" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
+							<td class="u-pt6">
+								<label for="v_ttl" class="form-label">
+									<?=_('TTL');?> <span class="optional">(<?=_('optional');?>)</span>
+								</label>
+								<input type="text" class="form-control u-input-width" name="v_ttl" id="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
 							</td>
 						</tr>
 					</table>
@@ -132,6 +117,7 @@
 		</table>
 	</form>
 </div>
+
 <script>
 	GLOBAL.DNS_REC_PREFIX = "<?=htmlentities($_GET['domain']); ?>";
 </script>

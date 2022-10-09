@@ -197,60 +197,124 @@ ftp_delete() {
 # SFTP Functions
 # sftp command function
 sftpc() {
-    expect -f "-" <<EOF "$@"
-        set timeout 60
-        set count 0
-        spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
-            -o Port=$PORT $USERNAME@$HOST
-        expect {
-            -nocase "password:" {
-                send "$PASSWORD\r"
-                exp_continue
-            }
-
-            -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
-                set count \$argc
-                set output "Disconnected."
-                set rc $E_FTP
-                exp_continue
-            }
-
-            -re ".*denied.*(publickey|password)." {
-                set output "Permission denied, wrong publickey or password."
-                set rc $E_CONNECT
-            }
-
-            -re "\[0-9]*%" {
-                exp_continue
-            }
-
-            "sftp>" {
-                if {\$count < \$argc} {
-                    set arg [lindex \$argv \$count]
-                    send "\$arg\r"
-                    incr count
-                } else {
-                    send "exit\r"
-                    set output "Disconnected."
-                    if {[info exists rc] != 1} {
-                        set rc $OK
-                    }
+    if [ $PRIVATEKEY != "yes" ]; then
+        expect -f "-" <<EOF "$@"
+            set timeout 60
+            set count 0
+            spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
+                -o Port=$PORT $USERNAME@$HOST
+            expect {
+                -nocase "password:" {
+                    send "$PASSWORD\r"
+                    exp_continue
                 }
-                exp_continue
+
+                -re "Password for (.*)@(.*)" {
+                    send "$PASSWORD\r"
+                    exp_continue
+                }
+    
+                -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
+                    set count \$argc
+                    set output "Disconnected."
+                    set rc $E_FTP
+                    exp_continue
+                }
+    
+                -re ".*denied.*(publickey|password)." {
+                    set output "Permission denied, wrong publickey or password."
+                    set rc $E_CONNECT
+                }
+    
+                -re "\[0-9]*%" {
+                    exp_continue
+                }
+    
+                "sftp>" {
+                    if {\$count < \$argc} {
+                        set arg [lindex \$argv \$count]
+                        send "\$arg\r"
+                        incr count
+                    } else {
+                        send "exit\r"
+                        set output "Disconnected."
+                        if {[info exists rc] != 1} {
+                            set rc $OK
+                        }
+                    }
+                    exp_continue
+                }
+    
+                timeout {
+                    set output "Connection timeout."
+                    set rc $E_CONNECT
+                }
             }
-
-            timeout {
-                set output "Connection timeout."
-                set rc $E_CONNECT
+    
+            if {[info exists output] == 1} {
+                puts "\$output"
             }
-        }
-
-        if {[info exists output] == 1} {
-            puts "\$output"
-        }
-
-    exit \$rc
+    
+        exit \$rc
 EOF
+    else
+
+        expect -f "-" <<EOF "$@"
+            set timeout 60
+            set count 0
+            spawn /usr/bin/sftp -o StrictHostKeyChecking=no \
+                -o Port=$PORT -i $PASSWORD $USERNAME@$HOST
+            expect {
+                -nocase "password:" {
+                    send "$PASSWORD\r"
+                    exp_continue
+                }
+    
+                -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
+                    set count \$argc
+                    set output "Disconnected."
+                    set rc $E_FTP
+                    exp_continue
+                }
+    
+                -re ".*denied.*(publickey|password)." {
+                    set output "Permission denied, wrong publickey or password."
+                    set rc $E_CONNECT
+                }
+    
+                -re "\[0-9]*%" {
+                    exp_continue
+                }
+    
+                "sftp>" {
+                    if {\$count < \$argc} {
+                        set arg [lindex \$argv \$count]
+                        send "\$arg\r"
+                        incr count
+                    } else {
+                        send "exit\r"
+                        set output "Disconnected."
+                        if {[info exists rc] != 1} {
+                            set rc $OK
+                        }
+                    }
+                    exp_continue
+                }
+    
+                timeout {
+                    set output "Connection timeout."
+                    set rc $E_CONNECT
+                }
+            }
+    
+            if {[info exists output] == 1} {
+                puts "\$output"
+            }
+    
+        exit \$rc
+EOF
+
+    fi
 }
 
 # SFTP backup download function

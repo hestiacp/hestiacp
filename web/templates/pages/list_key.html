@@ -42,11 +42,11 @@
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 									<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
-										<input type="hidden" name="delete_url" value="/delete/key/?user=<?=htmlentities($_GET['user']);?>&key=<?=$key?>&token=<?=$_SESSION['token']?>" />
+										<input type="hidden" name="delete_url" value="/delete/key/?user=<?=htmlentities($_GET['user']);?>&key=<?=$key?>&token=<?=$_SESSION['token']?>">
 									<?php } else { ?>
-										<input type="hidden" name="delete_url" value="/delete/key/?key=<?=$key?>&token=<?=$_SESSION['token']?>" />
+										<input type="hidden" name="delete_url" value="/delete/key/?key=<?=$key?>&token=<?=$_SESSION['token']?>">
 									<?php } ?>
-									<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete hidden" title="<?=_('Confirmation');?>">
+									<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete u-hidden" title="<?=_('Confirmation');?>">
 										<p class="confirmation"><?=sprintf(_('DELETE_KEY_CONFIRM'),$key)?></p>
 									</div>
 								</a>
@@ -64,7 +64,7 @@
 	<div class="l-separator"></div>
 	<div class="l-center">
 		<div class="l-unit-ft">
-			<table class='data'></table>
+			<table class="data"></table>
 			<div class="data-count l-unit__col l-unit__col--right clearfix">
 				<?php printf(ngettext('%d SSH Key', '%d SSH Keys', $i),$i); ?>
 			</div>

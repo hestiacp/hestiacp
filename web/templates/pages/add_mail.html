@@ -16,8 +16,8 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_add_mail" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="ok" value="Add" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="ok" value="Add">
 
 		<table class="data mode-add">
 			<tr class="data-add">
@@ -31,7 +31,7 @@
 				<td class="data-dotted">
 					<table class="data-col2" width="600px">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Adding Mail Domain');?></span>
 							</td>
 						</tr>
@@ -42,7 +42,7 @@
 						</tr>
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span class="alert alert-danger alert-with-icon">
 										<i class="fas fa-exclamation"></i>
 										<?=_('Avoid adding web domains on admin account');?>
@@ -52,7 +52,7 @@
 						<?php } ?>
 						<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<span><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></span>
 									<span><a href="/add/mail/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a> </span>
 								</td>
@@ -60,14 +60,14 @@
 						<?php } ?>
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin"))  {?>
 							<tr>
-								<td class="step-top">
+								<td class="u-pt18">
 									<label for="v_domain" class="form-label"><?=_('Domain');?></label>
 									<input type="text" class="form-control" name="v_domain" id="v_domain" style="max-width: 341px" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								</td>
 							</tr>
 							<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 								<tr>
-									<td class="input-label step-top">
+									<td class="u-pt18">
 										<label for="v_webmail" class="form-label"><?=_('Webmail Client');?></label>
 										<select class="form-select" name="v_webmail" id="v_webmail" tabindex="6" style="max-width: 360px">
 											<?php foreach ($webmail_clients as $client){
@@ -85,7 +85,7 @@
 							<?php } ?>
 							<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
 								<tr>
-									<td class="input-label step-top">
+									<td class="u-pt18">
 										<div class="form-check">
 											<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>>
 											<label for="v_antispam">
@@ -95,7 +95,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="input-label">
+									<td class="u-pt6">
 										<div class="form-check">
 											<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo "checked=yes"; ?>>
 											<label for="v_reject">
@@ -107,7 +107,7 @@
 							<?php } ?>
 							<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
 								<tr>
-									<td class="input-label">
+									<td class="u-pt6">
 										<div class="form-check">
 											<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>>
 											<label for="v_antivirus">
@@ -118,7 +118,7 @@
 								</tr>
 							<?php } ?>
 							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<div class="form-check">
 										<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>>
 										<label for="v_dkim">
@@ -128,7 +128,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<div class="form-check">
 										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
 										<label for="v_smtp_relay">
@@ -138,46 +138,46 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="step-left">
+								<td class="u-pl50">
 									<table style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
 										<tr>
-											<td class="input-label vst-text">
+											<td class="u-pt6">
 												<?=_('Host');?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+												<input type="text" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
 											</td>
 										</tr>
 										<tr>
-											<td class="input-label vst-text">
+											<td class="u-pt6">
 												<?=_('Port');?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+												<input type="text" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
 											</td>
 										</tr>
 										<tr>
-											<td class="input-label vst-text">
+											<td class="u-pt6">
 												<?=_('Username');?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+												<input type="text" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
 											</td>
 										</tr>
 										<tr>
-											<td class="input-label vst-text">
+											<td class="u-pt6">
 												<?=_('Password');?>
 											</td>
 										</tr>
 										<tr>
 											<td>
-												<input type="text" size="20" class="vst-input" name="v_smtp_relay_pass">
+												<input type="text" class="vst-input" name="v_smtp_relay_pass">
 											</td>
 										</tr>
 									</table>

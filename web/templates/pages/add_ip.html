@@ -42,28 +42,20 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('IP address') ?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								<label for="v_ip" class="form-label"><?=_('IP address') ?></label>
+								<input type="text" class="form-control u-input-width" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Netmask');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_netmask" value="<?=htmlentities(trim($v_netmask, "'"))?>">
+								<label for="v_netmask" class="form-label"><?=_('Netmask');?></label>
+								<input type="text" class="form-control u-input-width" name="v_netmask" id="v_netmask" value="<?=htmlentities(trim($v_netmask, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
 								<label for="v_interface" class="form-label"><?=_('Interface');?></label>
-								<select class="form-select" name="v_interface" id="v_interface">
+								<select class="form-select u-input-width" name="v_interface" id="v_interface">
 									<?php
 										foreach ($interfaces as $key => $value) {
 											echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -100,26 +92,22 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Assigned domain');?> <span class="optional">(<?=_('optional');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
+								<label for="v_name" class="form-label">
+									<?=_('Assigned domain');?> <span class="optional">(<?=_('optional');?>)</span>
+								</label>
+								<input type="text" class="form-control u-input-width" name="v_name" id="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('NAT IP association');?> <span class="optional">(<?=_('optional');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_nat" value="<?=htmlentities(trim($v_nat, "'"))?>">
+								<label for="v_nat" class="form-label">
+									<?=_('NAT IP association');?> <span class="optional">(<?=_('optional');?>)</span>
+								</label>
+								<input type="text" class="form-control u-input-width" name="v_nat" id="v_nat" value="<?=htmlentities(trim($v_nat, "'"))?>">
 							</td>
 						</tr>
 					</table>
-					<table class="data-col2"></table>
+					<table class="data-col2 u-mb20"></table>
 				</td>
 			</tr>
 		</table>

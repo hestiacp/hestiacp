@@ -2042,6 +2042,10 @@ write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
 write_config_value "POLICY_CSRF_STRICTNESS" "1"
 
+# Add /usr/local/hestia/bin/ to path variable
+echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
+    . /etc/profile.d/hestia.sh
+fi'  >> /root/.bashrc 
 
 #----------------------------------------------------------#
 #                   Hestia Access Info                     #

@@ -24,8 +24,7 @@
 				<td class="data-dotted">
 					<table class="data-col1">
 						<tr>
-							<td>
-							</td>
+							<td></td>
 						</tr>
 					</table>
 				</td>
@@ -43,12 +42,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('Account');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_email" value="<?=htmlentities($_GET['account'])."@".htmlentities($_GET['domain'])?>" disabled>
+								<label for="v_email" class="form-label"><?=_('Account');?></label>
+								<input type="text" class="form-control u-input-width" name="v_email" id="v_email" value="<?=htmlentities($_GET['account'])."@".htmlentities($_GET['domain'])?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								<input type="hidden" name="v_account" value="<?=htmlentities(trim($v_account, "'"))?>">
 							</td>
@@ -105,7 +100,7 @@
 						<tr>
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo "checked=yes" ?>>
+									<input class="form-check-input" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
 									<label for="v_blackhole">
 										<?=_('Discard all mail');?>
 									</label>
@@ -115,7 +110,7 @@
 						<tr <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for">
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo "checked=yes" ?>>
+									<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
 									<label for="v_fwd_for">
 										<?=_('Do not store forwarded mail');?>
 									</label>
@@ -125,7 +120,7 @@
 						<tr>
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply" <?php if ($v_autoreply == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('autoreplytable');">
+									<input class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply" <?php if ($v_autoreply == 'yes') echo 'checked' ?> onclick="javascript:elementHideShow('autoreplytable');">
 									<label for="v_autoreply">
 										<?=_('Autoreply');?>
 									</label>
@@ -160,12 +155,10 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+								<label for="v_rate" class="form-label">
+									<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour');?>)</span>
+								</label>
+								<input type="text" class="form-control u-input-width" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 							</td>
 						</tr>
 					</table>

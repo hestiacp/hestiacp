@@ -42,22 +42,14 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('Username');?>
+								<label for="v_username" class="form-label"><?=_('Username');?></label>
+								<input type="text" class="form-control" name="v_username" id="v_username" value="<?=htmlentities(trim($v_username, "'"))?>" tabindex="1">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>" tabindex="1">
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<?=_('Contact');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="2">
+							<td class="u-pt6">
+								<label for="v_name" class="form-label"><?=_('Contact');?></label>
+								<input type="text" class="form-control" name="v_name" id="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="2">
 							</td>
 						</tr>
 						<tr>
@@ -90,7 +82,7 @@
 						<tr>
 							<td>
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('send-welcome');" <?php if ($v_login_disabled == "yes") echo "checked=yes" ?>>
+									<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('send-welcome');" <?php if ($v_login_disabled == "yes") echo 'checked' ?>>
 									<label for="v_login_disabled">
 										<?=_('Do not allow user to log in to Control Panel');?>
 									</label>

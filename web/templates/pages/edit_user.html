@@ -57,8 +57,7 @@
 				<td class="data-dotted">
 					<table class="data-col1">
 						<tr>
-							<td>
-							</td>
+							<td></td>
 						</tr>
 					</table>
 				</td>
@@ -83,12 +82,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Contact');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> >
+								<label for="v_name" class="form-label"><?=_('Contact');?></label>
+								<input type="text" class="form-control" name="v_name" id="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> >
 								<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 									<input type="hidden" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
 								<?php } ?>
@@ -131,7 +126,7 @@
 										<tr>
 											<td>
 												<div class="form-check">
-													<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" <?php if ($v_login_disabled === "yes") echo "checked=yes" ?>>
+													<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" <?php if ($v_login_disabled === "yes") echo 'checked' ?>>
 													<label for="v_login_disabled">
 														<?=_('Do not allow user to log in to Control Panel');?>
 													</label>
@@ -142,7 +137,7 @@
 									<tr>
 										<td id="password-options" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
 											<div class="form-check u-mt15">
-												<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo "checked=yes" ?>>
+												<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo 'checked' ?>>
 												<label for="v_twofa">
 													<?=_('Enable 2FA');?>
 												</label>
@@ -157,7 +152,7 @@
 									<tr>
 										<td id="password-options-ip" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: table-cell;'; }?>">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist" onclick="javascript:elementHideShow('ip-allowlist')" <?php if ($v_login_use_iplist === "yes") echo "checked=yes" ?>>
+												<input class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist" onclick="javascript:elementHideShow('ip-allowlist')" <?php if ($v_login_use_iplist === "yes") echo 'checked' ?>>
 												<label for="v_login_use_iplist">
 													<?=_('Use IP address allow list for login attempts');?>
 												</label>
@@ -169,7 +164,7 @@
 											<table id="ip-allowlist" style="<?php if ($v_login_use_iplist === 'yes') { echo 'display: table-cell;'; } else { echo 'display: none;'; } ?>">
 												<tr>
 													<td>
-														<input type="text" class="vst-input" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>">
+														<input type="text" class="form-control u-input-width" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>">
 													</td>
 												</tr>
 											</table>

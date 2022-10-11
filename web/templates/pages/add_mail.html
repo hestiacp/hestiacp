@@ -62,14 +62,14 @@
 							<tr>
 								<td class="u-pt18">
 									<label for="v_domain" class="form-label"><?=_('Domain');?></label>
-									<input type="text" class="form-control" name="v_domain" id="v_domain" style="max-width: 341px" value="<?=htmlentities(trim($v_domain, "'"))?>">
+									<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 								</td>
 							</tr>
 							<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 								<tr>
 									<td class="u-pt18">
 										<label for="v_webmail" class="form-label"><?=_('Webmail Client');?></label>
-										<select class="form-select" name="v_webmail" id="v_webmail" tabindex="6" style="max-width: 360px">
+										<select class="form-select u-input-width" name="v_webmail" id="v_webmail" tabindex="6">
 											<?php foreach ($webmail_clients as $client){
 												echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
 												if (( $v_webmail == $client )) {
@@ -87,7 +87,7 @@
 								<tr>
 									<td class="u-pt18">
 										<div class="form-check">
-											<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo "checked=yes"; ?>>
+											<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo 'checked'; ?>>
 											<label for="v_antispam">
 												<?=_('AntiSpam Support');?>
 											</label>
@@ -97,7 +97,7 @@
 								<tr>
 									<td class="u-pt6">
 										<div class="form-check">
-											<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo "checked=yes"; ?>>
+											<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo 'checked'; ?>>
 											<label for="v_reject">
 												<?=_('Reject spam');?>
 											</label>
@@ -109,7 +109,7 @@
 								<tr>
 									<td class="u-pt6">
 										<div class="form-check">
-											<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo "checked=yes"; ?>>
+											<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo 'checked'; ?>>
 											<label for="v_antivirus">
 												<?=_('AntiVirus Support');?>
 											</label>
@@ -120,7 +120,7 @@
 							<tr>
 								<td class="u-pt6">
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo "checked=yes"; ?>>
+										<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo 'checked'; ?>>
 										<label for="v_dkim">
 											<?=_('DKIM Support');?>
 										</label>
@@ -130,7 +130,7 @@
 							<tr>
 								<td class="u-pt6">
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo 'checked'; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
 										<label for="v_smtp_relay">
 											<?=_('SMTP Relay');?>
 										</label>
@@ -142,42 +142,26 @@
 									<table style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
 										<tr>
 											<td class="u-pt6">
-												<?=_('Host');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+												<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
+												<input type="text" class="form-control u-input-width" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
 											</td>
 										</tr>
 										<tr>
 											<td class="u-pt6">
-												<?=_('Port');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+												<label for="v_smtp_relay_port" class="form-label"><?=_('Port');?></label>
+												<input type="text" class="form-control u-input-width" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
 											</td>
 										</tr>
 										<tr>
 											<td class="u-pt6">
-												<?=_('Username');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+												<label for="v_smtp_relay_user" class="form-label"><?=_('Username');?></label>
+												<input type="text" class="form-control u-input-width" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
 											</td>
 										</tr>
 										<tr>
 											<td class="u-pt6">
-												<?=_('Password');?>
-											</td>
-										</tr>
-										<tr>
-											<td>
-												<input type="text" class="vst-input" name="v_smtp_relay_pass">
+												<label for="v_smtp_relay_pass" class="form-label"><?=_('Password');?></label>
+												<input type="text" class="form-control u-input-width" name="v_smtp_relay_pass" id="v_smtp_relay_pass">
 											</td>
 										</tr>
 									</table>

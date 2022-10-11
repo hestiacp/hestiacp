@@ -32,8 +32,7 @@
 				<td class="data-dotted">
 					<table class="data-col1">
 						<tr>
-							<td>
-							</td>
+							<td></td>
 						</tr>
 					</table>
 				</td>
@@ -107,7 +106,7 @@
 						<tr class="stats-auth" style="<?php if ($v_stats == 'none') { ?>display:none<?php } ?>">
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_stats_auth" id="v_stats_auth" <?php if (!empty($v_stats_user)) echo "checked=yes" ?> onclick="javascript:elementHideShow('statstable');">
+									<input class="form-check-input" type="checkbox" name="v_stats_auth" id="v_stats_auth" <?php if (!empty($v_stats_user)) echo 'checked' ?> onclick="javascript:elementHideShow('statstable');">
 									<label for="v_stats_auth">
 										<?=_('Statistics Authorization');?>
 									</label>
@@ -139,7 +138,7 @@
 						<tr>
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v-redirect-checkbox" id="v-redirect-checkbox" <?php if (!empty($v_redirect)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_redirect');">
+									<input class="form-check-input" type="checkbox" name="v-redirect-checkbox" id="v-redirect-checkbox" <?php if (!empty($v_redirect)) echo 'checked' ?> onclick="javascript:elementHideShow('v_redirect');">
 									<label for="v-redirect-checkbox">
 										<?=_('Enable domain redirection');?>
 									</label>
@@ -150,19 +149,19 @@
 							<td class="u-pl50"> <!-- here -->
 								<div style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;" id="v_redirect">
 									<div class="form-check">
-										<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo "checked"; ?>>
+										<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
 										<label for="v-redirect-radio-1">
 											<?=sprintf(_('Redirect visitors to %s'),"www.".htmlentities($v_domain));?>
 										</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo "checked";?> >
+										<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo 'checked';?> >
 										<label class="form-check-label" for="v-redirect-radio-2">
 											<?=sprintf(_('Redirect visitors to %s'),htmlentities($v_domain));?>
 										</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if( !empty($v_redirect_custom)) echo "checked";?>>
+										<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if( !empty($v_redirect_custom)) echo 'checked';?>>
 										<label class="form-check-label" for="v-redirect-radio-3">
 											<?=_("Redirect visitors to a custom domain or web address");?>
 										</label>
@@ -194,7 +193,7 @@
 						<tr>
 							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);">
+									<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo 'checked' ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);">
 									<label for="v_ssl">
 										<?=_('SSL Support');?>
 									</label>
@@ -207,7 +206,7 @@
 									<tr>
 										<td class="u-pt6">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)">
+												<input class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo 'checked' ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)">
 												<label for="letsencrypt">
 													<?=_('Lets Encrypt Support');?>
 												</label>
@@ -217,7 +216,7 @@
 									<tr>
 										<td class="u-pt6">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo "checked=yes" ?> onclick="">
+												<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo 'checked' ?> onclick="">
 												<label for="v_ssl_forcessl">
 													<?=_('Force SSL/HTTPS');?>
 												</label>
@@ -227,7 +226,7 @@
 									<tr>
 										<td class="u-pt6">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_hsts(this)">
+												<input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo 'checked' ?> onclick="App.Actions.WEB.toggle_hsts(this)">
 												<label for="ssl_hsts">
 													<?=_('Enable SSL HSTS');?>
 												</label>
@@ -369,7 +368,7 @@
 											<tr>
 												<td>
 													<div class="form-check">
-														<input class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check" <?php if ($v_nginx_cache == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('v_nginx_duration');">
+														<input class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check" <?php if ($v_nginx_cache == 'yes') echo 'checked' ?> onclick="javascript:elementHideShow('v_nginx_duration');">
 														<label for="v_nginx_cache_check">
 															<?=_('Enable FastCGI Cache'); ?>
 															<a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank">
@@ -422,7 +421,7 @@
 											<tr style="display: none;">
 												<td class="u-pt6">
 													<div class="form-check">
-														<input class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy" <?php if (!empty($v_proxy)) echo "checked=yes" ?> onclick="javascript:elementHideShow('proxytable');">
+														<input class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy" <?php if (!empty($v_proxy)) echo 'checked' ?> onclick="javascript:elementHideShow('proxytable');">
 														<label for="v_proxy">
 															<?=_('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
 														</label>
@@ -466,7 +465,7 @@
 									<tr>
 										<td class="u-pt6">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo "checked=yes" ?> onclick="javascript:elementHideShow('v_custom_doc_root');">
+												<input class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo 'checked' ?> onclick="javascript:elementHideShow('v_custom_doc_root');">
 												<label for="v_custom_doc_root_check">
 													<?=_('Custom document root');?>
 												</label>
@@ -506,7 +505,7 @@
 										<tr>
 											<td class="u-pt6">
 												<div class="form-check">
-													<input class="form-check-input" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp_user)) echo "checked=yes" ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)">
+													<input class="form-check-input" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp_user)) echo 'checked' ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)">
 													<label for="v_ftp">
 														<?=_('Additional FTP Account');?>
 													</label>

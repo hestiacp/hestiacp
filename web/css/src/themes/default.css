@@ -2538,11 +2538,12 @@ a.vst-text:active b {
   display: none;
 }
 
-.hide-password {
+.toggle-password {
   color: #aaa;
-  margin-left: -36px;
-  padding-left: 3px;
   z-index: 1;
+  position: absolute;
+  top: 9px;
+  right: 12px;
 }
 
 .toggle-psw-visibility-icon {
@@ -3829,35 +3830,33 @@ li[aria-expanded="true"] a {
   }
 }
 
-meter {
-  /* Reset the default appearance */
+.password-meter {
   appearance: none;
-  margin: 0 auto 1em;
-  width: 373px;
+  display: block;
+  width: 100%;
   background-color: #e7e7e7;
   height: 3px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  margin-left: 3px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 25%);
 }
 
-meter[value="1"] { background: red; }
-meter[value="2"] { background: orange; }
-meter[value="3"] { background: yellow; }
-meter[value="4"] { background: green; }
+.password-meter[value="1"] { background: red; }
+.password-meter[value="2"] { background: orange; }
+.password-meter[value="3"] { background: yellow; }
+.password-meter[value="4"] { background: green; }
 
 /* Webkit based browsers */
-meter[value="1"]::-webkit-meter-optimum-value { background: red; }
-meter[value="2"]::-webkit-meter-optimum-value { background: orange; }
-meter[value="3"]::-webkit-meter-optimum-value { background: yellow; }
-meter[value="4"]::-webkit-meter-optimum-value { background: green; }
+.password-meter[value="1"]::-webkit-meter-optimum-value { background: red; }
+.password-meter[value="2"]::-webkit-meter-optimum-value { background: orange; }
+.password-meter[value="3"]::-webkit-meter-optimum-value { background: yellow; }
+.password-meter[value="4"]::-webkit-meter-optimum-value { background: green; }
 
 /* Gecko based browsers */
-meter[value="1"]::-moz-meter-bar { background: red; }
-meter[value="2"]::-moz-meter-bar { background: orange; }
-meter[value="3"]::-moz-meter-bar { background: yellow; }
-meter[value="4"]::-moz-meter-bar { background: green; }
+.password-meter[value="1"]::-moz-meter-bar { background: red; }
+.password-meter[value="2"]::-moz-meter-bar { background: orange; }
+.password-meter[value="3"]::-moz-meter-bar { background: yellow; }
+.password-meter[value="4"]::-moz-meter-bar { background: green; }
 
 /* Global utilities
    ========================================================================== */
@@ -3900,6 +3899,10 @@ meter[value="4"]::-moz-meter-bar { background: green; }
   margin-left: 10px !important;
 }
 
+.u-mb10 {
+  margin-bottom: 10px !important;
+}
+
 .u-mb20 {
   margin-bottom: 20px !important;
 }
@@ -3922,6 +3925,10 @@ meter[value="4"]::-moz-meter-bar { background: green; }
 
 .u-pl50 {
   padding-left: 50px !important;
+}
+
+.u-pos-relative {
+  position: relative !important;
 }
 
 .u-input-width {

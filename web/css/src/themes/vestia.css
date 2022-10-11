@@ -496,11 +496,9 @@ a.vst-text:hover b,
   border-radius: 4px !important;
 }
 
-meter {
-  width: 379px !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  margin-left: 0 !important;
+.password-meter {
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .vst-input,

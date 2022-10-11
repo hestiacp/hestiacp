@@ -73,7 +73,7 @@ $('#v_blackhole').on('click', function(evt){
        $('#id_fwd_for').hide();
     }else{
        $('#v_fwd').prop('disabled', false);
-       $('#id_fwd_for').show();        
+       $('#id_fwd_for').show();
     }
 });
 $('form[name="v_quota"]').on('submit', function(evt) {
@@ -85,19 +85,19 @@ $('form[name="v_quota"]').on('submit', function(evt) {
     });
 });
 
-App.Actions.MAIL_ACC.update_v_password = function (){
+App.Actions.MAIL_ACC.update_password_meter = function (){
     var password = $('input[name="v_password"]').val();
     var min_small = new RegExp(/^(?=.*[a-z]).+$/);
     var min_cap = new RegExp(/^(?=.*[A-Z]).+$/);
-    var min_num = new RegExp(/^(?=.*\d).+$/); 
+    var min_num = new RegExp(/^(?=.*\d).+$/);
     var min_length = 8;
     var score = 0;
-    
+
     if(password.length >= min_length) { score = score + 1; }
     if(min_small.test(password)) { score = score + 1;}
     if(min_cap.test(password)) { score = score + 1;}
     if(min_num.test(password)) { score = score+ 1; }
-    $('#meter').val(score);   
+    $('.password-meter').val(score);
 }
 
 App.Listeners.MAIL_ACC.keypress_v_password = function() {
@@ -106,7 +106,7 @@ App.Listeners.MAIL_ACC.keypress_v_password = function() {
         clearTimeout(window.frp_usr_tmt);
         window.frp_usr_tmt = setTimeout(function() {
             var elm = $(evt.target);
-            App.Actions.MAIL_ACC.update_v_password(elm, $(elm).val());
+            App.Actions.MAIL_ACC.update_password_meter(elm, $(elm).val());
         }, 100);
     });
 }
@@ -114,14 +114,14 @@ App.Listeners.MAIL_ACC.keypress_v_password = function() {
 App.Listeners.MAIL_ACC.keypress_v_password();
 
 
-randomString = function(min_length = 16) {
-    var randomstring = randomString2(min_length);
-        $('input[name=v_password]').val(randomstring);
+applyRandomString = function(min_length = 16) {
+    var randomString = randomString2(min_length);
+        $('input[name=v_password]').val(randomString);
         if($('input[name=v_password]').attr('type') == 'text')
-            $('#v_password').text(randomstring);
+            $('#v_password').text(randomString);
         else
-            $('#v_password').text(Array(randomstring.length+1).join('*'));      
-        App.Actions.MAIL_ACC.update_v_password();
+            $('#v_password').text(Array(randomString.length+1).join('*'));
+        App.Actions.MAIL_ACC.update_password_meter();
         generate_mail_credentials();
 }
 

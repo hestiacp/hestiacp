@@ -76,7 +76,7 @@
 						<tr>
 							<td class="u-pt18">
 								<label for="v_user" class="form-label"><?=_('Username');?></label>
-								<input type="text" class="form-control" name="v_user" id="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
+								<input type="text" class="form-control u-input-width" name="v_user" id="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
 								<input type="hidden" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>">
 							</td>
 						</tr>
@@ -92,7 +92,7 @@
 						<tr>
 							<td class="u-pt6">
 								<label for="v_email" class="form-label"><?=_('Email');?></label>
-								<input type="email" class="form-control u-input-width" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
+								<input type="email" class="form-control" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
 								<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 									<input type="hidden" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
 								<?php } ?>
@@ -100,13 +100,13 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br>
-								<meter max="4" id="meter"></meter>
+								<label for="v_password" class="form-label">
+									<?=_('Password');?> <a href="javascript:applyRandomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
+								</label>
+								<div class="u-pos-relative u-mb10">
+									<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
+									<meter max="4" class="password-meter"></meter>
+								</div>
 							</td>
 						</tr>
 						<tr>

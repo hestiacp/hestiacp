@@ -166,7 +166,7 @@ VE.helpers.warn = function(msg) {
 }
 
 VE.helpers.extendPasswordFields = function() {
-    var references = ['.password'];
+    var references = ['.js-password-input'];
 
     $(document).ready(function() {
         $(references).each(function(i, ref) {
@@ -184,7 +184,7 @@ VE.helpers.initAdditionalPasswordFieldElements = function(ref) {
     $(ref).prop('autocomplete', 'off');
 
     var enabled_html = enabled ? '' : 'show-passwords-enabled-action';
-    var html = '<span class="hide-password"><i class="toggle-psw-visibility-icon fas fa-eye-slash ' + enabled_html + '" onClick="VE.helpers.toggleHiddenPasswordText(\'' + ref + '\', this)"></i></span>';
+    var html = '<span class="toggle-password"><i class="toggle-psw-visibility-icon fas fa-eye-slash ' + enabled_html + '" onClick="VE.helpers.toggleHiddenPasswordText(\'' + ref + '\', this)"></i></span>';
     $(ref).after(html);
 }
 

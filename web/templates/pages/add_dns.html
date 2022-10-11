@@ -111,8 +111,10 @@
 									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
 										<tr>
 											<td class="u-pt6">
-												<input type="checkbox" class="form-check-input" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec != 'no'){ echo ' checked'; } ?>>
-												<label for="v_dnssec" class="form-label"> <?=_('Enable DNSEC');?></label>
+												<div class="form-check">
+													<input type="checkbox" class="form-check-input" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec != 'no'){ echo ' checked'; } ?>>
+													<label for="v_dnssec" class="form-label"> <?=_('Enable DNSEC');?></label>
+												</div>
 											</td>
 										</tr>
 										<tr>

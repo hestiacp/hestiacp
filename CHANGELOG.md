@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.11] - Service release 
+
+### Bugfixes
+
+- Update Ipverse url for United Kingdom (#2962)
+
+### Dependencies
+
+- Update Rainloop to 1.17.0 (#2957)
+
 ## [1.6.10] - Service release 
 
 ### Security

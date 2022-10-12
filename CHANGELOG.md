@@ -34,8 +34,7 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update Filegator to 7.8.3
-- Update PHPmailer to 6.6.5
+- Update Filegator to 7.8.5
 
 ## [1.6.9] - Service release 
 

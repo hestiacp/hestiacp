@@ -436,12 +436,10 @@
 													</tr>
 													<tr>
 														<td class="u-pt6">
-															<?=_('Password');?>
-														</td>
-													</tr>
-													<tr>
-														<td>
-															<input type="text" class="vst-input password" name="v_smtp_relay_pass">
+															<label for="v_smtp_relay_pass" class="form-label"><?=_('Password');?></label>
+															<div class="u-pos-relative">
+																<input type="text" class="form-control js-password-input" name="v_smtp_relay_pass" id="v_smtp_relay_pass">
+															</div>
 														</td>
 													</tr>
 												</table>
@@ -508,17 +506,15 @@
 											<tr>
 												<td class="u-pl50 u-pt6">
 													<label for="v_mysql_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
-													<input type="text" class="form-control" name="v_mysql_host" id="v_mysql_host" value="<?=$value['HOST']?>" disabled>
+													<input type="text" class="form-control u-input-width" name="v_mysql_host" id="v_mysql_host" value="<?=$value['HOST']?>" disabled>
 												</td>
 											</tr>
 											<tr>
 												<td class="u-pl50 u-pt6">
-													<?=_('Password');?>
-												</td>
-											</tr>
-											<tr>
-												<td class="u-pl50">
-													<input type="text" class="vst-input password" name="v_mysql_password" value="">
+													<label for="v_mysql_password" class="form-label"><?=_('Password');?></label>
+													<div class="u-pos-relative">
+														<input type="text" class="form-control js-password-input" name="v_mysql_password" id="v_mysql_password">
+													</div>
 												</td>
 											</tr>
 											<tr>
@@ -531,10 +527,10 @@
 											</tr>
 											<tr>
 												<td class="u-pl50 u-pt6">
-													<label for="v_mysql_max" class="form-label">
+													<label for="v_mysql_current" class="form-label">
 														<?=_('Current Number Of Databases');?>
 													</label>
-													<input type="text" class="form-control u-mb20" name="v_mysql_max" id="v_mysql_max" value="<?=$value['U_DB_BASES']; ?>" disabled>
+													<input type="text" class="form-control u-mb20" name="v_mysql_current" id="v_mysql_current" value="<?=$value['U_DB_BASES']; ?>" disabled>
 												</td>
 											</tr>
 										<?php }} ?>
@@ -691,12 +687,10 @@
 															</tr>
 															<tr>
 																<td class="u-pt6">
-																	<?=_('Password');?>
-																</td>
-															</tr>
-															<tr>
-																<td>
-																	<input type="text" class="vst-input password" name="v_backup_password" value="<?=trim($v_backup_password, "'")?>">
+																	<label for="v_backup_password" class="form-label"><?=_('Password');?></label>
+																	<div class="u-pos-relative">
+																		<input type="text" class="form-control js-password-input" name="v_backup_password" id="v_backup_password" value="<?=trim($v_backup_password, "'")?>">
+																	</div>
 																</td>
 															</tr>
 															<tr>

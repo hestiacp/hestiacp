@@ -50,13 +50,13 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Password');?> <a href="javascript:randomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input password" name="v_password" value="<?=htmlentities(trim($v_password, "'"))?>"><br>
-								<meter max="4" id="meter"></meter>
+								<label for="v_password" class="form-label">
+									<?=_('Password');?> <a href="javascript:applyRandomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
+								</label>
+								<div class="u-pos-relative u-input-width u-mb10">
+									<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
+									<meter max="4" class="password-meter"></meter>
+								</div>
 							</td>
 						</tr>
 						<tr>

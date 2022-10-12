@@ -124,12 +124,12 @@
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?=_('generate');?></a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input password" name="v_stats_password" value="<?=htmlentities(trim($v_stats_password, "'"))?>" id="v_password">
+											<label for="v_password" class="form-label">
+												<?=_('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?=_('generate');?></a>
+											</label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control js-password-input" name="v_stats_password" id="v_password" value="<?=trim($v_stats_password, "'")?>">
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -544,12 +544,10 @@
 													</tr>
 													<tr>
 														<td class="u-pl50 u-pt6">
-															<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
-														</td>
-													</tr>
-													<tr>
-														<td class="u-pl50">
-															<input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
+															<label for="v_ftp_user[<?=$i ?>][v_ftp_password]" class="form-label">
+																<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
+															</label>
+															<input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[<?=$i ?>][v_ftp_password]" id="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
 														</td>
 													</tr>
 													<tr>
@@ -612,12 +610,10 @@
 			</tr>
 			<tr>
 				<td class="u-pl50 u-pt6">
-					<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
-				</td>
-			</tr>
-			<tr>
-				<td class="u-pl50">
-					<input type="text" class="vst-input v-ftp-user-psw password" name="v_ftp_user[%INDEX%][v_ftp_password]" value="">
+					<label for="v_ftp_user[%INDEX%][v_ftp_password]" class="form-label">
+						<?=_('Password');?> / <a href="javascript:void(0);" onClick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
+					</label>
+					<input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
 				</td>
 			</tr>
 			<tr>

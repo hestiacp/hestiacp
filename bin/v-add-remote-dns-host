@@ -26,7 +26,7 @@ hash=$user
 HASH=$user
 password=$4; HIDE=4
 PASSWORD=$password
-type=${5-api}
+type=${5}
 TYPE="$type"
 dns_user=${6-dns-cluster}
 DNS_USER=$dns_user
@@ -44,6 +44,11 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
+
+if [ -z "$type" ]; then
+    type='api'
+    TYPE="$type"
+fi
 
 args_usage='HOST PORT USER [PASSWORD] [TYPE] [DNS_USER]'
 check_args '3' "$#" "$args_usage"

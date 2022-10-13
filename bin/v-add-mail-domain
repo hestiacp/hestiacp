@@ -81,6 +81,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+source_conf "$USER_DATA/user.conf"
 # Inherit web domain local ip address
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
 if [ ! -z "$domain_ip" ]; then
@@ -95,7 +96,7 @@ new_timestamp
 
 # Adding domain to mail.conf
 s="DOMAIN='$domain' ANTIVIRUS='$antivirus' ANTISPAM='$antispam' REJECT='$reject' DKIM='$dkim' WEBMAIL=''"
-s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' U_DISK='0' SUSPENDED='no' TIME='$time'"
+s="$s SSL='no' LETSENCRYPT='no' CATCHALL='' ACCOUNTS='0' RATE_LIMIT='$RATE_LIMIT' U_DISK='0' SUSPENDED='no' TIME='$time'"
 s="$s DATE='$date'"
 echo $s >> $USER_DATA/mail.conf
 touch $USER_DATA/mail/$domain.conf

@@ -630,46 +630,22 @@ label:hover {
   color: #d4d4d4 !important;
 }
 
-.vst-textinput {
+.vst-input,
+.form-control {
   background-color: #454545;
   border: 1px solid #606060;
   color: #d4d4d4;
   box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }
 
-.vst-textinput:hover {
-  border: 1px solid #0090ff;
-  background-color: #494949;
-}
-
-.vst-textinput:focus {
-  background-color: #222;
-  border-color: #0080df;
-  color: #fff !important;
-  box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
-}
-
-.vst-textinput.console{
-
-}
-
-.vst-textinput.short {
-
-}
-
-.vst-input {
-  background-color: #454545;
-  border: 1px solid #606060;
-  color: #d4d4d4;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
-}
-
-.vst-input:hover {
+.vst-input:hover,
+.form-control:hover {
   border-color: #0090ff;
   background-color: #494949;
 }
 
-.vst-input:focus {
+.vst-input:focus,
+.form-control:focus {
   background-color: #222;
   border-color: #0080df;
   color: #fff;
@@ -677,8 +653,8 @@ label:hover {
 }
 
 .vst-input:disabled,
-.vst-list:disabled,
-.vst-textinput:disabled {
+.form-control:disabled,
+.form-select:disabled {
   background-color: #303030;
   text-shadow: 1px 1px rgb(0 0 0 / 30%);
   color: #acacac;
@@ -689,8 +665,8 @@ label:hover {
 }
 
 .vst-input:disabled:hover,
-.vst-list:disabled:hover,
-.vst-textinput:disabled:hover {
+.form-control:disabled:hover,
+.form-select:disabled:hover {
   border-color: #606060 !important;
 }
 
@@ -711,7 +687,7 @@ label:hover {
   box-shadow: none !important;
 }
 
-.vst-list {
+.form-select {
   background-color: #454545;
   border: 1px solid #606060;
   color: #d4d4d4;
@@ -735,41 +711,16 @@ textarea:focus::placeholder {
   color: #909090 !important;
 }
 
-select.vst-list:-moz-focusring {
-
-}
-
-.vst-list.long-2 {
-
-}
-
-.vst-list option {
-
-}
-
-.vst-list:hover {
+.form-select:hover {
   border-color: #0090ff;
   background-color: #494949;
 }
 
-.vst-list:focus {
+.form-select:focus {
   background-color: #222;
   border-color: #0080df;
   color: #fff;
   box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
-}
-
-.vst-list.flat {
-  border: 1px solid #454545;
-  color: #fff;
-}
-
-.vst-list.flat:hover {
-  color: #ff3478;
-}
-
-.vst-list.flat option {
-  color: #d4d4d4;
 }
 
 a.vst-text,
@@ -805,10 +756,6 @@ a.vst-text:active b {
 }
 
 .advanced-options .fas {
-
-}
-
-#advanced-options .console{
 
 }
 
@@ -906,10 +853,6 @@ a.vst-text:active b {
 .additional-control.add:active {}
 
 .additional-control.remove-ns {}
-
-.data .step-left {}
-
-.hide-password {}
 
 .toggle-psw-visibility-icon {}
 
@@ -1433,10 +1376,6 @@ form#vstobjects.suspended {
 }
 
 .shortcuts ul li {
-
-}
-
-.shortcuts ul li.step-top {
 
 }
 

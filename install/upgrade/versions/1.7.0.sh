@@ -26,3 +26,10 @@ if [ "$FILE_MANAGER" = "true" ]; then
     $HESTIA/bin/v-delete-sys-filemanager quiet
     $HESTIA/bin/v-add-sys-filemanager quiet  
 fi
+
+packages=$(ls --sort=time $HESTIA/data/packages |grep .pkg)
+for package in $packages; do
+    if [ -z "$(grep -e 'RATE_LIMIT' $HESTIA/data/packages/$package)" ]; then
+       echo "RATE_LIMIT='200'" >> $HESTIA/data/packages/$package
+    fi
+done

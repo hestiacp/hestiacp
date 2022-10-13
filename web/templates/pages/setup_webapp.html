@@ -22,22 +22,22 @@
 
 <div class="l-separator"></div>
 
-<div class="l-center animated fadeIn" style="padding-top:240px;">
+<div class="l-center animated fadeIn">
 
 	<?php if( !empty($WebappInstaller->getOptions())): ?>
-		<form id="vstobjects" method="POST" name="v_setup_webapp" style="padding-top:0px;">
-			<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-			<input type="hidden" name="ok" value="true" />
+		<form id="vstobjects" method="POST" name="v_setup_webapp">
+			<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+			<input type="hidden" name="ok" value="true">
 
 			<div class="app-form">
 				<?php if( !$WebappInstaller->isDomainRootClean()): ?>
 					<span class="alert alert-info alert-with-icon">
 						<i class="fas fa-info"></i>
-						<?=_('Data loss warning!');?><br /><br />
-						<?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?><br /><br />
+						<?=_('Data loss warning!');?><br><br>
+						<?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?><br><br>
 						<?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?>
 					</span>
-					<br />
+					<br>
 				<?php endif; ?>
 				<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>
 					<?php
@@ -61,13 +61,15 @@
 						$f_name = htmlentities($f_name);
 						$f_placeholder = htmlentities($f_placeholder);
 					?>
-					<div class="form-group">
-						<label style="padding-bottom: 2px;" for="<?=$f_name?>"><?=$f_label?>
-							<?php if ($f_type === 'password'):?> / <a href="javascript:randomString('<?=$f_name?>');" class="generate"><?=_('generate');?></a> <?php endif?>
-						</label>
+					<div class="u-mb20">
+						<?php if($f_type != 'boolean'): ?>
+							<label for="<?=$f_name?>" class="form-label">
+								<?=$f_label?>
+								<?php if ($f_type === 'password'):?> / <a href="javascript:applyRandomStringToTarget('<?=$f_name?>');" class="generate"><?=_('generate');?></a> <?php endif?>
+							</label>
+						<?php endif; ?>
 						<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
-							<p style="margin-top:0;"></p>
-							<select class="vst-list" name="<?=$f_name?>">
+							<select class="form-select u-input-width" name="<?=$f_name?>" id="<?=$f_name?>">
 								<?php foreach ($form_control['options'] as $key => $option){
 									if(is_numeric($key)){
 										$key = $option;
@@ -77,16 +79,14 @@
 									<option value="<?=$key?>" <?=$selected?>><?=htmlentities($option)?></option>
 								<?php }; ?>
 							</select>
-							</p>
 						<?php elseif (in_array($f_type, ['boolean'])):?>
-							<p>
+							<div class="form-check">
 								<?php $checked = (!empty($f_value))?'checked':''?>
-								<input style="width:auto;" type="checkbox" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" <?=$checked?> value="true">
-							</p>
+								<input class="form-check-input" type="checkbox" name="<?=$f_name?>" id="<?=$f_name?>" <?=$checked?> value="true">
+								<label for="<?=$f_name?>"><?=$f_label?></label>
+							</div>
 						<?php else:?>
-							<p style="margin-top:0;"></p>
-							<input type="text" size="20" class="vst-input" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
-							</p>
+							<input type="text" class="form-control u-input-width" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
 						<?php endif; ?>
 					</div>
 				<?php endforeach; ?>

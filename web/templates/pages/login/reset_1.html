@@ -1,11 +1,11 @@
-<center>
+<div class="u-flex-align-center">
 	<table class="login">
 		<tr>
 			<td>
 				<table>
 					<tr>
 						<td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
-							<a href="/"><img src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
+							<a href="/"><img src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;"></a>
 						</td>
 						<td style="padding: 40px 60px 0 0;" class="animated fadeIn">
 							<form method="post" action="/reset/">
@@ -18,22 +18,14 @@
 									</tr>
 									<tr>
 										<td style="padding: 12px 0 0 2px;">
-											<?=_('Username');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input tabindex="1" type="text" size="20px" style="width:240px" name="user" class="vst-input">
+											<label for="user" class="form-label"><?=_('Username');?></label>
+											<input type="text" class="form-control" name="user" id="user" tabindex="1" style="width:260px;">
 										</td>
 									</tr>
 									<tr>
 										<td style="padding: 12px 0 0 2px;">
-											<?=_('Email');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input tabindex="1" type="text" size="20px" style="width:240px" name="email" class="vst-input">
+											<label for="email" class="form-label"><?=_('Email');?></label>
+											<input type="email" class="form-control" name="email" id="email" tabindex="1" style="width:260px;">
 										</td>
 									</tr>
 									<tr>
@@ -57,7 +49,8 @@
 			</td>
 		</tr>
 	</table>
-</center>
+</div>
+
 </body>
 
 </html>

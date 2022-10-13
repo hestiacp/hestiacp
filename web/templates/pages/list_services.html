@@ -12,8 +12,8 @@
 			<div class="actions-panel display-inline-block" key-action="js">
 				<a class="data-controls do_servicerestart ui-button danger cancel">
 					<i class="do_servicerestart fas fa-undo status-icon red"></i><?=_('Restart');?>
-					<input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?=$sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>&system_reset_token=<?=time(); ?>" />
-					<div class="confirmation-text-servicerestart hidden" title="<?=_('Confirmation');?>">
+					<input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?=$sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>&system_reset_token=<?=time(); ?>">
+					<div class="confirmation-text-servicerestart u-hidden" title="<?=_('Confirmation');?>">
 						<p class="confirmation"><?=sprintf(_('RESTART_CONFIRMATION'), 'Server');?></p>
 					</div>
 				</a>
@@ -24,7 +24,7 @@
 				<tr>
 					<td>
 						<form action="/bulk/service/" method="post" id="objects">
-							<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+							<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 							<div class="l-select" style="width:160px !important;">
 								<select class="" name="action">
 									<option value=""><?=_('apply to selected');?></option>
@@ -149,8 +149,8 @@
 						<div class="actions-panel__col actions-panel__stop shortcut-s" key-action="js">
 							<a id="restart_link_<?=$i?>" class="data-controls do_servicerestart" title="<?=_('restart');?>">
 								<i class="do_servicerestart data-controls fas fa-undo status-icon highlight status-icon dim icon-large"></i>
-								<input type="hidden" name="servicerestart_url" value="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>" />
-								<div id="restart_link_dialog_<?=$i?>" class="confirmation-text-servicerestart hidden" title="<?=_('Confirmation');?>">
+								<input type="hidden" name="servicerestart_url" value="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>">
+								<div id="restart_link_dialog_<?=$i?>" class="confirmation-text-servicerestart u-hidden" title="<?=_('Confirmation');?>">
 									<p class="confirmation"><?=sprintf(_('RESTART_CONFIRMATION'),$key); ?></p>
 								</div>
 							</a>
@@ -158,8 +158,8 @@
 						<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 							<a id="delete_link_<?=$i?>" class="data-controls do_servicestop" title="<?=_($action)?>">
 								<i class="do_servicestop fas <?=$spnd_icon?> status-icon red status-icon dim icon-large"></i>
-								<input type="hidden" name="servicestop_url" value="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>" />
-								<div id="delete_dialog_<?=$i?>" class="confirmation-text-servicestop hidden" title="<?=_('Confirmation');?>">
+								<input type="hidden" name="servicestop_url" value="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>">
+								<div id="delete_dialog_<?=$i?>" class="confirmation-text-servicestop u-hidden" title="<?=_('Confirmation');?>">
 									<p class="confirmation"><?php if($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service'),$key); }else{ echo sprintf(_('Are you sure you want to start service'),$key); }?></p>
 								</div>
 							</a>

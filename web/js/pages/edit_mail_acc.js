@@ -24,7 +24,7 @@ App.Actions.MAIL_ACC.disable_unlimited = function(elm, source_elm) {
     $(source_elm).css('opacity', '0.5');
 }
 
-// 
+//
 App.Actions.MAIL_ACC.toggle_unlimited_feature = function(evt) {
     var elm = $(evt.target);
     var ref = elm.prev('.vst-input');
@@ -53,19 +53,19 @@ App.Listeners.MAIL_ACC.init = function() {
     });
 }
 
-App.Actions.MAIL_ACC.update_v_password = function (){
+App.Actions.MAIL_ACC.update_password_meter = function (){
     var password = $('input[name="v_password"]').val();
     var min_small = new RegExp(/^(?=.*[a-z]).+$/);
     var min_cap = new RegExp(/^(?=.*[A-Z]).+$/);
-    var min_num = new RegExp(/^(?=.*\d).+$/); 
+    var min_num = new RegExp(/^(?=.*\d).+$/);
     var min_length = 8;
     var score = 0;
-    
+
     if(password.length >= min_length) { score = score + 1; }
     if(min_small.test(password)) { score = score + 1;}
     if(min_cap.test(password)) { score = score + 1;}
     if(min_num.test(password)) { score = score+ 1; }
-    $('#meter').val(score);   
+    $('.password-meter').val(score);
 }
 
 App.Listeners.MAIL_ACC.keypress_v_password = function() {
@@ -74,34 +74,34 @@ App.Listeners.MAIL_ACC.keypress_v_password = function() {
         clearTimeout(window.frp_usr_tmt);
         window.frp_usr_tmt = setTimeout(function() {
             var elm = $(evt.target);
-            App.Actions.MAIL_ACC.update_v_password(elm, $(elm).val());
+            App.Actions.MAIL_ACC.update_password_meter(elm, $(elm).val());
         }, 100);
     });
 }
 
 $('#v_blackhole').on('click', function(evt){
-       if($('#v_blackhole').is(':checked')){
-           $('#v_fwd').prop('disabled', true);
-           $('#v_fwd_for').prop('checked', true);
-           $('#id_fwd_for').hide();
-       }else{
-           $('#v_fwd').prop('disabled', false);
-           $('#id_fwd_for').show();       
-       }
-    });
+    if($('#v_blackhole').is(':checked')){
+        $('#v_fwd').prop('disabled', true);
+        $('#v_fwd_for').prop('checked', true);
+        $('#id_fwd_for').hide();
+    }else{
+        $('#v_fwd').prop('disabled', false);
+        $('#id_fwd_for').show();
+    }
+});
 
 App.Listeners.MAIL_ACC.keypress_v_password();
 
 
-randomString = function (min_length = 16) {
-  var randomstring = randomString2(min_length);
-  $("input[name=v_password]").val(randomstring);
-  if ($("input[name=v_password]").attr("type") == "text")
-    $("#v_password").text(randomstring);
-  else 
-    $("#v_password").text(Array(randomstring.length + 1).join("*"));
-  App.Actions.MAIL_ACC.update_v_password();
-  generate_mail_credentials();
+applyRandomString = function (min_length = 16) {
+    var randomString = randomString2(min_length);
+    $("input[name=v_password]").val(randomString);
+    if ($("input[name=v_password]").attr("type") == "text")
+        $("#v_password").text(randomString);
+    else
+        $("#v_password").text(Array(randomString.length + 1).join("*"));
+    App.Actions.MAIL_ACC.update_password_meter();
+    generate_mail_credentials();
 };
 
 generate_mail_credentials = function() {
@@ -132,7 +132,7 @@ $(document).ready(function() {
         $('#v_account').text($(this).val());
         generate_mail_credentials();
     });
-  
+
     $('input[name=v_password]').change(function(){
         if($('input[name=v_password]').attr('type') == 'text')
             $('#v_password').text($(this).val());

@@ -4,7 +4,7 @@
 App.Actions.DB.update_db_username_hint = function(elm, hint) {
     if (hint.trim() == '') {
         $(elm).parent().find('.hint').text('');
-    } 
+    }
     $(elm).parent().find('.hint').text(GLOBAL.DB_USER_PREFIX + hint);
 }
 
@@ -14,7 +14,7 @@ App.Actions.DB.update_db_username_hint = function(elm, hint) {
 App.Actions.DB.update_db_databasename_hint = function(elm, hint) {
     if (hint.trim() == '') {
         $(elm).parent().find('.hint').text('');
-    } 
+    }
     $(elm).parent().find('.hint').text(GLOBAL.DB_DBNAME_PREFIX + hint);
 }
 
@@ -26,7 +26,7 @@ App.Listeners.DB.keypress_db_username = function() {
     if (current_val.trim() != '') {
         App.Actions.DB.update_db_username_hint(ref, current_val);
     }
-    
+
     ref.bind('keypress input', function(evt) {
         clearTimeout(window.frp_usr_tmt);
         window.frp_usr_tmt = setTimeout(function() {
@@ -44,7 +44,7 @@ App.Listeners.DB.keypress_db_databasename = function() {
     if (current_val.trim() != '') {
         App.Actions.DB.update_db_databasename_hint(ref, current_val);
     }
-    
+
     ref.bind('keypress input', function(evt) {
         clearTimeout(window.frp_dbn_tmt);
         window.frp_dbn_tmt = setTimeout(function() {
@@ -54,19 +54,19 @@ App.Listeners.DB.keypress_db_databasename = function() {
     });
 }
 
-App.Actions.DB.update_v_password = function (){
+App.Actions.DB.update_password_meter = function (){
     var password = $('input[name="v_password"]').val();
     var min_small = new RegExp(/^(?=.*[a-z]).+$/);
     var min_cap = new RegExp(/^(?=.*[A-Z]).+$/);
-    var min_num = new RegExp(/^(?=.*\d).+$/); 
+    var min_num = new RegExp(/^(?=.*\d).+$/);
     var min_length = 8;
     var score = 0;
-    
+
     if(password.length >= min_length) { score = score + 1; }
     if(min_small.test(password)) { score = score + 1;}
     if(min_cap.test(password)) { score = score + 1;}
     if(min_num.test(password)) { score = score+ 1; }
-    $('#meter').val(score);   
+    $('.password-meter').val(score);
 }
 
 App.Listeners.DB.keypress_v_password = function() {
@@ -75,7 +75,7 @@ App.Listeners.DB.keypress_v_password = function() {
         clearTimeout(window.frp_usr_tmt);
         window.frp_usr_tmt = setTimeout(function() {
             var elm = $(evt.target);
-            App.Actions.DB.update_v_password(elm, $(elm).val());
+            App.Actions.DB.update_password_meter(elm, $(elm).val());
         }, 100);
     });
 }
@@ -88,7 +88,7 @@ App.Listeners.DB.keypress_v_password();
 App.Listeners.DB.keypress_db_username();
 App.Listeners.DB.keypress_db_databasename();
 
-randomString = function(min_length = 16) {    
-        $('input[name=v_password]').val(randomString2(min_length));
-        App.Actions.DB.update_v_password();
+applyRandomString = function(min_length = 16) {
+    $('input[name=v_password]').val(randomString2(min_length));
+    App.Actions.DB.update_password_meter();
 }

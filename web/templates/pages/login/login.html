@@ -1,11 +1,11 @@
-<center>
+<div class="u-flex-align-center">
 	<table class="login animated zoomIn">
 		<tr>
 			<td>
 				<table>
 					<tr>
 						<td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
-							<a href="/"><img src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;" /></a>
+							<a href="/"><img src="/images/logo.svg" title="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;"></a>
 						</td>
 						<td style="padding: 40px 60px 0 0;">
 							<form method="post" action="/login/" id="form_login">
@@ -18,21 +18,13 @@
 										</td>
 									</tr>
 									<tr>
-										<td style="padding: 12px 0 5px 2px;">
-											<?=_('Username');?>
+										<td style="padding: 12px 0 0 2px;">
+											<label for="user" class="form-label"><?=_('Username');?></label>
+											<input type="text" class="form-control" name="user" id="user" tabindex="1" style="width:260px;" autofocus>
 										</td>
 									</tr>
 									<tr>
-										<td>
-											<input tabindex="1" type="text" size="20px" style="width:240px;" name="user" class="vst-input" autofocus />
-										</td>
-									</tr>
-									<tr>
-										<td height="10px">
-										</td>
-									</tr>
-									<tr>
-										<td style="padding: 0 0 5px 0;">
+										<td class="u-pt18">
 											<button tabindex="3" type="submit" class="button"><?=_('Next');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i></button>
 										</td>
 									</tr>
@@ -48,10 +40,11 @@
 						</td>
 					</tr>
 				</table>
+			</td>
 		</tr>
 	</table>
-</center>
-<script src="/inc/jquery/jquery-3.6.0.min.js"></script>
+</div>
+
 </body>
 
 </html>

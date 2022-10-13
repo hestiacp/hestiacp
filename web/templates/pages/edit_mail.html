@@ -16,23 +16,22 @@
 <div class="l-center animated fadeIn">
 
 	<form id="vstobjects" name="v_edit_mail" method="post" class="<?=$v_status?>">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-		<input type="hidden" name="save" value="save" />
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="save" value="save">
 
-		<table class='data'>
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
 						<tr>
-							<td>
-							</td>
+							<td></td>
 						</tr>
 					</table>
 				</td>
 				<td class="data-dotted">
 					<table class="data-col2">
 						<tr>
-							<td class="step-top">
+							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing Mail Domain');?></span>
 							</td>
 						</tr>
@@ -42,63 +41,49 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="vst-text step-top">
-								<?=_('Domain');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+							<td class="u-pt18">
+								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+								<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 								<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 							</td>
 						</tr>
 						<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
-						<tr>
-							<td class="vst-text step-top">
-								<?=_('Webmail Client');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<select class="vst-list" name="v_webmail" tabindex="6">
-									<?php foreach ($webmail_clients as $client){
-										echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
-										if (( htmlentities(trim($v_webmail,"'")) == $client )) {
-											echo ' selected' ;
-										}
-										echo ">".htmlentities(ucfirst($client))."</option>\n";
-										}
-									?>
-									<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected";}?>><?=_('Disabled');?></option>
-								</select>
-							</td>
-						</tr>
+							<tr>
+								<td class="u-pt18">
+									<label for="v_webmail" class="form-label"><?=_('Webmail Client');?></label>
+									<select class="form-select u-input-width" name="v_webmail" id="v_webmail" tabindex="6">
+										<?php foreach ($webmail_clients as $client){
+											echo "\t\t\t\t<option value=\"".htmlentities($client)."\"";
+											if (( htmlentities(trim($v_webmail,"'")) == $client )) {
+												echo ' selected' ;
+											}
+											echo ">".htmlentities(ucfirst($client))."</option>\n";
+											}
+										?>
+										<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected";}?>><?=_('Disabled');?></option>
+									</select>
+								</td>
+							</tr>
 						<?php } ?>
 						<tr>
-							<td class="vst-text input-label">
-								<?=_('Catchall email');?>
+							<td class="u-pt6">
+								<label for="v_catchall" class="form-label"><?=_('Catchall email');?></label>
+								<input type="email" class="form-control u-input-width" name="v_catchall" id="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>">
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_catchall" value="<?=htmlentities(trim($v_catchall, "'"))?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="vst-text input-label">
-								<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour / account');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" size="20" class="vst-input" name="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+							<td class="u-pt6">
+								<label for="v_rate" class="form-label">
+									<?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour / account');?>)</span>
+								</label>
+								<input type="text" class="form-control u-input-width" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 							</td>
 						</tr>
 						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
 							<tr>
-								<td class="input-label step-top">
+								<td class="u-pt18">
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ($v_antispam == 'yes') echo "checked=yes"; ?>>
+										<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ($v_antispam == 'yes') echo 'checked'; ?>>
 										<label for="v_antispam">
 											<?=_('AntiSpam Support');?>
 										</label>
@@ -106,9 +91,9 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ($v_reject == 'yes') echo "checked=yes"; ?>>
+										<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ($v_reject == 'yes') echo 'checked'; ?>>
 										<label for="v_reject">
 											<?=_('Reject spam');?>
 										</label>
@@ -118,9 +103,9 @@
 						<?php } ?>
 						<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
 							<tr>
-								<td class="input-label">
+								<td class="u-pt6">
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ($v_antivirus == 'yes') echo "checked=yes"; ?>>
+										<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ($v_antivirus == 'yes') echo 'checked'; ?>>
 										<label for="v_antivirus">
 											<?=_('AntiVirus Support');?>
 										</label>
@@ -129,9 +114,9 @@
 							</tr>
 						<?php } ?>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if ($v_dkim == 'yes') echo "checked=yes"; ?>>
+									<input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if ($v_dkim == 'yes') echo 'checked'; ?>>
 									<label for="v_dkim">
 										<?=_('DKIM Support');?>
 									</label>
@@ -139,34 +124,34 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo "checked=yes" ?> onclick="javascript:elementHideShow('ssltable');">
+									<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo 'checked' ?> onclick="javascript:elementHideShow('ssltable');">
 									<label for="v_ssl">
 										<?=_('SSL Support');?>
 									</label>
 								</div>
 							</td>
 						</tr>
-						<tr id="ssltable" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" class="step-left">
+						<tr id="ssltable" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" class="u-pl50">
 							<td>
 								<table>
 									<tr>
-										<td class="input-label">
+										<td class="u-pt6">
 											<div class="form-check">
-												<input class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo "checked=yes" ?>">
+												<input class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt" onclick="javascript:elementHideShow('ssl-details');App.Actions.MAIL.toggle_letsencrypt(this);" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo 'checked' ?>">
 												<label for="v_letsencrypt">
 													<?=_('Lets Encrypt Support');?>
 												</label>
 											</div>
 										</td>
 									</tr>
-									<tr id="le-warning" class="step-top">
+									<tr id="le-warning" class="u-pt18">
 										<td>
 											<span class="alert alert-info alert-with-icon">
 												<i class="fas fa-exclamation"></i>
 												<?php echo $v_webmail_alias;?>
-												<?=sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias); ?><br />
+												<?=sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias); ?><br>
 											</span>
 										</td>
 									</tr>
@@ -174,34 +159,26 @@
 										<td>
 											<table id="ssl-details" style="<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">
 												<tr>
-													<td class="vst-text input-label step-top">
-														<?=_('SSL Certificate');?>
-														<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
+													<td class="u-pt18">
+														<label for="v_ssl_crt" class="form-label">
+															<?=_('SSL Certificate');?>
+															<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
+														</label>
+														<textarea class="form-control u-input-width u-min-height100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+													<td class="u-pt6">
+														<label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
+														<textarea class="form-control u-min-height100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
 													</td>
 												</tr>
 												<tr>
-													<td class="vst-text input-label">
-														<?=_('SSL Key');?>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
-													</td>
-												</tr>
-												<tr>
-													<td class="vst-text input-label">
-														<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<textarea size="20" class="vst-textinput short console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+													<td class="u-pt6">
+														<label for="v_ssl_ca" class="form-label">
+															<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
+														</label>
+														<textarea class="form-control u-min-height100 u-console" <?php if ($v_letsencrypt == 'yes') echo 'disabled' ?> name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
 													</td>
 												</tr>
 											</table>
@@ -277,10 +254,10 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="input-label">
+							<td class="u-pt6">
 								<label>
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo "checked=yes"; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+										<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo 'checked'; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
 										<label for="v_smtp_relay">
 											<?=_('SMTP Relay');?>
 										</label>
@@ -289,46 +266,30 @@
 							</td>
 						</tr>
 						<tr>
-							<td class="step-left">
+							<td class="u-pl50">
 								<table style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
 									<tr>
-										<td class="input-label vst-text">
-											<?=_('Host');?>
+										<td class="u-pt6">
+											<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
+											<input type="text" class="form-control u-input-width" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
 										</td>
 									</tr>
 									<tr>
-										<td>
-											<input type="text" size="20" class="vst-input" name="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+										<td class="u-pt6">
+											<label for="v_smtp_relay_port" class="form-label"><?=_('Port');?></label>
+											<input type="text" class="form-control u-input-width" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
 										</td>
 									</tr>
 									<tr>
-										<td class="input-label vst-text">
-											<?=_('Port');?>
+										<td class="u-pt6">
+											<label for="v_smtp_relay_user" class="form-label"><?=_('Username');?></label>
+											<input type="text" class="form-control u-input-width" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
 										</td>
 									</tr>
 									<tr>
-										<td>
-											<input type="text" size="20" class="vst-input" name="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
-										</td>
-									</tr>
-									<tr>
-										<td class="input-label vst-text">
-											<?=_('Username');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" size="20" class="vst-input" name="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
-										</td>
-									</tr>
-									<tr>
-										<td class="input-label vst-text">
-											<?=_('Password');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" size="20" class="vst-input" name="v_smtp_relay_pass">
+										<td class="u-pt6">
+											<label for="v_smtp_relay_pass" class="form-label"><?=_('Password');?></label>
+											<input type="text" class="form-control u-input-width" name="v_smtp_relay_pass" id="v_smtp_relay_pass">
 										</td>
 									</tr>
 								</table>

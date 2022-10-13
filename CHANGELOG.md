@@ -1,6 +1,118 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Development] - Service release 
+
+### Breaking changes
+
+- Dropped support for Debian 9 (Stretch) as it reached EOL date (New installs got already dropped with 1.6.0 release)
+
+### Features
+
+- Add support for rate limit exim in packages (#2920)
+- Add support for ssh keys for SFTP (#2906)
+
+### Bugfixes
+
+- Add an check before config exists before searching it (#2930)
+- Fixed an issue with v-change-web-domain-name does not clean up it everything (#2915)
+### Enhancements 
+
+- Cleanup old VestaCP html/js/css code  (#2949, #2941 #2941 #2940 #2919 #2907 @alecrust)
+
+### Security
+
+- Implement quoteshellarg as replacement for escapeshellarg (#2720 @divinity76)
+
+### Dependencies
+
+## [1.6.10] - Service release
+
+### Security
+
+- Delete temp files after password has been verified (#2958)
+
+### Dependencies
+
+- Update Filegator to 7.8.5
+
+## [1.6.9] - Service release 
+
+- Fixed an issue when Installing Wordpress in a non english locale (#2788 #2818)
+- Reload Nginx on purging fast cgi cache (#2925)
+- Update max number of chars allowed for name (#2924)
+- Fixed few small issues with Lets Encypt for hostname (#2922)
+- Fixed few issues with Quick installers (#2921)
+- Fixed an issue with v-change-web-domain-name
+- Update sync-dns-cluster role to run v-delete-dns-domain (#2943)
+- Fixed issue with connection with sftp server running FreeBSD (#2950 @gdarko)
+- Add support for Kurdish Sorani (#2945 @qezwan)
+- Small improvements in syntax for v-add-remote-dns-host (#2951)
+- Check if email is valid for PHPMailer (#2944)
+
+### Dependencies
+
+- Update Dokuwiki to stable_2022-07-31a
+- Update Opencart to 4.0.1.11
+- Update Prestashop to 1.7.8.7
+- Update Jquery on login pages to 3.6.1 (#2932 @4183r)
+- Update hestia-php to 8.1.11
+
+## [1.6.8] - Service release 
+
+### Features 
+
+- Update default php settings (#2849 #2635)
+
+### Security
+
+- Fix issue in is_hestia_package (#2889)
+
+### Bugfixes
+
+- Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
+- Fixed an issue with v-change-web-domain-owner and mail only domains (#2840, #2841)
+- Grey out phpmyadmin buttons + add link to docs.hestiacp.com for support (#2843)
+- Block the use of CNAME records on @ or root records DNS domain (#2838, #2842)
+- Code clean up and remove unused tests and templates (#2829 and #2831)
+- Fixed an issue where no password was send when a user create a new mail account (#2819 #2815)
+- Fixed an issue with Proxmox LXC and hostnames (#2819 #2048)
+- Improve new email account email send to the user (#2819 #1417)
+- Improve buffers nginx.conf (#2796)
+- Improve Letsencrypt error message (#1804 #2854)
+- Fixed an issue with error logs failed login attempts (#2853)
+- Fixed and issue with saving UTC time zone in Edit server (#2851 #2853)
+- Fixed an issue with sshd not running but still showing up in rare cases (#2850 @manuelserol)
+- Improve error message "Domain already exists" when the "main" domain belonged to an other user (#2848 #2771)
+- Fixed an issue with v-delete-letsencrypt not working when deleting a mail domains SSL (#2878)
+- Fixed an issue with storing B2 Secret key in b2.conf (#2843)
+- Update jail.local with example to add ignore ip (#2856)
+- Add use_temp_path to no to slightly speedup caching (#2855)
+- Fix small php errors (#2863 #2857 @YacineSahli)
+- Fixed an issue API and DNS cluster over multiple servers where username/password and hash where mixed (#2888)
+- Add option to use custom javascript code (#2747)
+- Add "v-rebuild-dns-domains" to sync-dns-cluster options
+- Fixed an issue with Yescript and api (#2899)
+- Add logrotate config for Roundcube (#2868 #2904)
+- Fixed an issue with session files in /tmp/ folder caused by /web/inc/mail-wrapper.php (#2904)
+- Fixed an issue with v-restore-user does not delete old database before restoring causing new tables to remain exists (#2911 #2909)
+- Fixed an issue with deleting mail account does not remove ratelimit for that email account (#2905 #2903)
+
+### Enhancements
+
+- Clean up / decrease size of images, favicons, javascript, css and html (#2879, #2871, #2872, #2873, #2884, #2883, #2879 @AlecRust)
+
+### Dependencies
+
+- Update hestia-nginx to 1.23.1
+- Update hestia-php to 8.1.9
+- Update animate.js to 3.0.2 (#2879)
+- Update normalize.css to 3.0.3 (#2875)
+- Update jQuery to 3.6.1 (#2885)
+- Update MediaWiki to 1.38.2 
+- Update PHPmailer to 6.6.4
+- Update Blackblaze CLI to 3.5.0
+
 ## [1.6.7] - Service release 
 
 ### Bugfixes

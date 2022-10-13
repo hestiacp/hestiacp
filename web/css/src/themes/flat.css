@@ -89,20 +89,17 @@ strong {
   box-shadow: none;
 }
 
-.vst-input {
+.vst-input,
+.form-control {
   box-shadow: none;
 }
 
-.vst-list {
+.form-select {
   box-shadow: none;
 }
 
 .advanced-options {
   box-shadow: none !important;
-}
-
-.vst-textinput {
-  box-shadow: none;
 }
 
 .ui-button,

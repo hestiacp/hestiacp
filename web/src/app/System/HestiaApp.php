@@ -28,7 +28,6 @@ class HestiaApp
         $cli_arguments = '';
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {
-                var_dump($arg);
                 $cli_arguments .= quoteshellarg((string)$arg) . ' ';
             }
         } else {
@@ -195,12 +194,17 @@ class HestiaApp
     public function getCurrentBackendTemplate(string $domain){
         $status = $this->runUser('v-list-web-domain', [$domain, 'json'],$return_message);
         $version = $return_message -> json[$domain]['BACKEND'];
-        if($version != "default"){
-            $test= preg_match('/^.*PHP-([0-9])\_([0-9])/',$version, $match);
-            return $match[1].'.'.$match[2];   
+        if (!empty($version)){
+            if($version != "default"){
+                $test= preg_match('/^.*PHP-([0-9])\_([0-9])/',$version, $match);
+                return $match[1].'.'.$match[2];   
+            }else{
+                $supported = $this -> run('v-list-sys-php', 'json', $result);
+                return $this -> $supported -> json[0];
+            }
         }else{
             $supported = $this -> run('v-list-sys-php', 'json', $result);
-            return $this -> $supported -> json[0];
+            return $this -> $supported -> json[0];  
         }                
     }
     

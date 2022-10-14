@@ -99,17 +99,17 @@ check_user=$(is_object_valid 'user' 'USER' "$user")
 if [ -z "$check_user" ]; then
     is_object_unsuspended 'user' 'USER' "$user"
     subj="$user → restore failed"
-    email=$(get_user_value '$CONTACT')
+    email_notify=$(get_user_value '$CONTACT')
 else
     create_user="yes"
-    email=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f2 -d \')
+    email_notify=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f2 -d \')
 fi
 
 
 # Checking available disk space
 disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
 if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
-    echo "Error: Not enough disk space" |$SENDMAIL -s "$subj" $email $notify
+    echo "Error: Not enough disk space" |$SENDMAIL -s "$subj" $email_notify $notify
     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
     check_result "$E_DISK" "Not enough disk space"
 fi
@@ -122,7 +122,7 @@ while [ "$la" -ge "$BACKUP_LA_LIMIT" ]; do
     sleep 60
     if [ "$i" -ge "15" ]; then
         la_error="LoadAverage $la is above threshold"
-        echo "Error: $la_error" |$SENDMAIL -s "$subj" $email $notify
+        echo "Error: $la_error" |$SENDMAIL -s "$subj" $email_notify $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_LA" "$la_error"
     fi
@@ -137,7 +137,7 @@ fi
 # Creating temporary directory
 tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 if [ "$?" -ne 0 ]; then
-    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email $notify
+    echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" $email_notify $notify
     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
     check_result "$E_NOTEXIST" "Can't create tmp dir"
 fi
@@ -171,7 +171,7 @@ if [ "$create_user" = 'yes' ]; then
     tar xf "$BACKUP/$backup" -C "$tmpdir" --no-wildcards "./$backup_system" 2>/dev/null
     if [ "$?" -ne 0 ]; then
         rm -rf $tmpdir
-        echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email $notify
+        echo "Can't unpack user container" |$SENDMAIL -s "$subj" $email_notify $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_PARSING" "Can't unpack user container"
     fi
@@ -191,7 +191,7 @@ chown "$user" "$tmpdir"
 tar xf $BACKUP/$backup -C $tmpdir ./pam
 if [ "$?" -ne 0 ]; then
     rm -rf $tmpdir
-    echo "Can't unpack PAM container" |$SENDMAIL -s "$subj" $email $notify
+    echo "Can't unpack PAM container" |$SENDMAIL -s "$subj" $email_notify $notify
     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
     check_result "$E_PARSING" "Can't unpack PAM container"
 fi
@@ -233,7 +233,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
             if [ -n "$check_new" ]; then
                 rm -rf $tmpdir
                 error="$domain belongs to another user"
-                echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"
             fi
@@ -244,7 +244,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain web container"
-            echo "$error" |$SENDMAIL -s "$subj" $email $notify
+            echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
             check_result "$E_PARSING" "$error"
         fi
@@ -385,7 +385,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain data tarball"
-            echo "$error" |$SENDMAIL -s "$subj" $email $notify
+            echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
             check_result "$E_PARSING" "$error"
         fi
@@ -443,7 +443,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
             if [ -n "$check_new" ]; then
                 rm -rf $tmpdir
                 error="$domain belongs to another user"
-                echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"
             fi
@@ -454,7 +454,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain dns container"
-            echo "$error" |$SENDMAIL -s "$subj" $email $notify
+            echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
             check_result "$E_PARSING" "$error"
         fi
@@ -541,7 +541,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
             if [ -n "$check_new" ]; then
                 rm -rf $tmpdir
                 error="$domain belongs to another user"
-                echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"
             fi
@@ -553,7 +553,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $domain mail container"
-            echo "$error" |$SENDMAIL -s "$subj" $email $notify
+            echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
             check_result "$E_PARSING" "$error"
         fi
@@ -668,7 +668,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
                     error="Can't unpack $domain mail account container"
-                    echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                    echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
                     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                     check_result "$E_PARSING" "$error"
                 fi
@@ -683,7 +683,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
                 if [ "$?" -ne 0 ]; then
                     rm -rf $tmpdir
                     error="Can't unpack $domain mail account container"
-                    echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                    echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
                     sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                     check_result "$E_PARSING" "$error"
                 fi
@@ -742,7 +742,7 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
         if [ "$?" -ne 0 ]; then
             rm -rf $tmpdir
             error="Can't unpack $database database container"
-            echo "$error" |$SENDMAIL -s "$subj" $email $notify
+            echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
             sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
             check_result "$E_PARSING" "$error"
         fi
@@ -797,7 +797,7 @@ if [ "$cron" != 'no' ] && [ -n "$CRON_SYSTEM" ]; then
     if [ "$?" -ne 0 ]; then
         rm -rf $tmpdir
         error="Can't unpack cron container"
-        echo "$error" |$SENDMAIL -s "$subj" $email $notify
+        echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         check_result "$E_PARSING" "$error"
     fi
@@ -860,7 +860,7 @@ if [ "$udir" != 'no' ]; then
             if [ "$?" -ne 0 ]; then
                 rm -rf $tmpdir
                 error="Can't unpack $user_dir user dir container"
-                echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"
             fi
@@ -878,7 +878,7 @@ if [ "$udir" != 'no' ]; then
             if [ "$cmdstatus" -ne 0 ]; then
                 rm -rf $tmpdir
                 error="Can't unpack $user_dir user dir container"
-                echo "$error" |$SENDMAIL -s "$subj" $email $notify
+                echo "$error" |$SENDMAIL -s "$subj" $email_notify $notify
                 sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
                 check_result "$E_PARSING" "$error"
             fi
@@ -902,7 +902,7 @@ rm -f $HOMEDIR/$user/.ssh/hst-filemanager-key
 
 # Sending mail notification
 subj="$user → restore has been completed"
-cat $tmpdir/restore.log |$SENDMAIL -s "$subj" $email $notify
+cat $tmpdir/restore.log |$SENDMAIL -s "$subj" $email_notify $notify
 
 # Send notification to panel
 $HESTIA/bin/v-add-user-notification "$user" "Backup restored successfully" "<b>Archive:</b> $backup"

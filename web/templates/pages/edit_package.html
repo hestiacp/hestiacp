@@ -42,12 +42,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('Package Name');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_package_new" value="<?=htmlentities(trim($v_package_new, "'"))?>">
+								<label for="v_package_new" class="form-label"><?=_('Package Name');?></label>
+								<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?=htmlentities(trim($v_package_new, "'"))?>">
 								<input type="hidden" name="v_package" value="<?=htmlentities(trim($v_package, "'"))?>">
 							</td>
 						</tr>
@@ -75,12 +71,8 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Backups');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
+								<label for="v_backups" class="form-label"><?=_('Backups');?></label>
+								<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
 							</td>
 						</tr>
 						<tr>

@@ -59,6 +59,9 @@ if ($v_timezone == 'America/Puerto_Rico') {
 if ($v_timezone == 'America/Halifax') {
     $v_timezone = 'ADT';
 }
+if ($v_timezone == 'Europe/Kiev') {
+    $v_timezone = 'Europe/Kyiv';
+}
 
 // List supported php versions
 exec(HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
@@ -387,11 +390,17 @@ if (!empty($_POST['save'])) {
             if ($v_tz == 'ADT') {
                 $v_tz = 'America/Halifax';
             }
+            if ($v_tz == 'Europe/Kyiv') {
+                $v_tz = 'Europe/Kiev';
+            }
 
             if ($v_timezone != $v_tz) {
                 exec(HESTIA_CMD."v-change-sys-timezone ".quoteshellarg($v_tz), $output, $return_var);
                 check_return_code($return_var, $output);
                 $v_timezone = $v_tz;
+                if ($v_timezone == 'Europe/Kiev') {
+                    $v_timezone = 'Europe/Kyiv';
+                }
                 unset($output);
             }
         }

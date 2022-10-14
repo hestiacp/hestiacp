@@ -2295,10 +2295,6 @@ label:hover {
   border-color: #cfcfcf;
 }
 
-.vst-input.long {
-  width: 832px;
-}
-
 .vst-input.short {
   width: 200px;
 }

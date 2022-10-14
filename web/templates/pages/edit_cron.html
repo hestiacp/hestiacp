@@ -15,7 +15,7 @@
 
 <div class="l-center animated fadeIn">
 
-	<div class="u-pt18 helper-container">
+	<div class="helper-container">
 		<div id="tabs" class="cron-helper-tabs">
 			<ul>
 				<li><a href="#tabs-1"><?=_('Minutes');?></a></li>
@@ -341,7 +341,7 @@
 					</table>
 				</td>
 				<td class="data-dotted">
-					<table class="data-col2" width="600px">
+					<table class="data-col2" width="850px">
 						<tr>
 							<td class="u-pt18">
 								<span class="page-title"><?=_('Editing Cron Job');?></span>
@@ -354,15 +354,10 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Command');?>
+								<label for="v_cmd" class="form-label"><?=_('Command');?></label>
+								<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?=htmlentities(trim($v_cmd, "'"))?>">
 							</td>
 						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input long" name="v_cmd" value="<?=htmlentities(trim($v_cmd, "'"))?>">
-							</td>
-						</tr>
-
 						<tr>
 							<td class="u-pt18">
 								<?=_('Minute');?>

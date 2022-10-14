@@ -226,7 +226,7 @@ else
 fi
 OPENSSL_V='3.0.5'
 PCRE_V='10.40'
-ZLIB_V='1.2.12'
+ZLIB_V='1.2.13'
 
 # Create build directories
 if [ "$KEEPBUILD" != 'true' ]; then

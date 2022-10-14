@@ -74,6 +74,14 @@ if [ ! -e "$BACKUP/$backup" ]; then
         ftp_download "$backup"
         downloaded='yes'
     fi
+    if [[ "$BACKUP_SYSTEM" =~ "rclone" ]] && [ -z "$downloaded" ]; then
+        rclone_download "$backup"
+        downloaded='yes'
+    fi
+    if [[ "$BACKUP_SYSTEM" =~ "b2" ]] && [ -z "$downloaded" ]; then
+        b2_download "$backup"
+        downloaded='yes'
+    fi
     if [ -z "$downloaded" ]; then
         subj="Download of $backup failed for $user"
         $BIN/v-add-user-notification $user "$subj" "<b>Unable to retrieve backup file from remote server.</b><br><b>Error:</b> $backup file doesn't exist in '${BACKUP}' directory."

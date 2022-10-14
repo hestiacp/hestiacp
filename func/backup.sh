@@ -556,3 +556,67 @@ b2_delete(){
 
     b2 delete-file-version $1/$2 > /dev/null 2>&1
 }
+
+rclone_backup(){
+    # Define rclone config
+    source_conf "$HESTIA/conf/rclone.backup.conf"
+    echo -e "$(date "+%F %T") Upload With Rclone: $user.$backup_new_date.tar"
+    if [ "$localbackup" != 'yes' ]; then
+        cd $tmpdir
+        tar -cf $BACKUP/$user.$backup_new_date.tar .
+    fi
+    cd $BACKUP/
+    
+    if [ -z "$BPATH" ]; then
+        rclone copy -v $user.$backup_new_date.tar $HOST
+        if [ "$?" -ne 0 ]; then
+            check_result "$E_CONNECT" "Unable to upload backup"
+        fi
+        
+        backup_list=$(rclone lsf $HOST | cut -d' ' -f1 |grep "^$user\.");
+        backups_count=$(echo "$backup_list" |wc -l)
+        backups_rm_number=$((backups_count - BACKUPS))
+        if [ "$backups_count" -ge "$BACKUPS" ]; then
+        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
+            echo "Delete file: $backup"
+            rclone deletefile $HOST:/$backup
+        done    
+        fi
+    else
+        rclone copy -v $user.$backup_new_date.tar $HOST:$BPATH
+        if [ "$?" -ne 0 ]; then
+            check_result "$E_CONNECT" "Unable to upload backup"
+        fi
+        
+        backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 |grep "^$user\.");
+        backups_count=$(echo "$backup_list" |wc -l)
+        backups_rm_number=$((backups_count - BACKUPS))
+        if [ "$backups_count" -ge "$BACKUPS" ]; then
+        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
+            echo "Delete file: $backup"
+            rclone deletefile $HOST:$BPATH/$backup
+        done    
+        fi
+    fi
+}
+
+rclone_delete(){
+    # Defining rclone settings
+    source_conf "$HESTIA/conf/rclone.backup.conf"
+    if [ -z "$BPATH" ]; then
+        rclone deletefile $HOST:/$1
+    else
+        rclone deletefile $HOST:$BPATH/$1
+    fi
+}
+
+rclone_download() {
+    # Defining rclone b2 settings
+    source_conf "$HESTIA/conf/rclone.backup.conf"
+    cd $BACKUP
+    if [ -z "$BPATH" ]; then
+        rclone copy -v $HOST:/$1 ./
+    else
+        rclone copy -v $HOST:$BPATH/$1 ./
+    fi
+}

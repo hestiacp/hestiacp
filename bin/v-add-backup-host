@@ -157,9 +157,9 @@ EOF
 #----------------------------------------------------------#
 
 if [ "$type" != 'local' ];then
-    check_args '4' "$#" "TYPE HOST USERNAME PASSWORD [PATH] [PORT]"
+    check_args '2' "$#" "TYPE HOST USERNAME PASSWORD [PATH] [PORT]"
     is_format_valid 'host' 'path' 'port'
-    is_type_valid  'sftp,ftp,b2' "$type"
+    is_type_valid  'sftp,ftp,b2,rclone' "$type"
     is_username_format_valid "$user" "username"
     privatekey="no"
     if [ -f "$raw_password" ]; then
@@ -178,7 +178,7 @@ if [ "$type" != 'local' ];then
         which expect >/dev/null 2>&1
         check_result $? "expect command not found"  "$E_NOTEXIST"
     fi
-    if [ "$type" != 'b2' ]; then
+    if [ "$type" != 'b2' ] && [ "$type" != 'rclone' ]; then
         if ! (is_ip_format_valid "$host" >/dev/null); then
             host "$host" >/dev/null 2>&1
             check_result $? "host connection failed" "$E_CONNECT"
@@ -283,8 +283,26 @@ if [ "$type" = 'b2' ]; then
     fi
 fi
 
+if [ "$type" = 'rclone' ]; then
+    curl -s https://rclone.org/install.sh | bash /dev/null > /dev/null 2>&1
+    # Verify account exists
+    if [ ! -z "$(cat /root/.config/rclone/rclone.conf | grep "\[$host\]")" ]; then 
+        echo "test" > /tmp/hestia-backup.txt
+        # Try to upload a single file
+        if [ -z "$path" ]; then
+            rclone copy /tmp/hestia-backup $host:/hestia-backup.txt
+            rclone delete $host:/hestia-backup.txt
+        else
+            rclone copy /tmp/hestia-backup $host:$path/hestia-backup.txt
+            rclone delete $host:$path/hestia-backup.txt
+        fi
+    else
+        check_result "$E_CONNECT" "Rclone config does not exits"
+    fi
+fi
+
 # Adding backup host
-if [ $type != 'local' ] && [ $type != 'b2' ]; then
+if [ $type == 'ftp' ] || [ $type = 'sftp' ] ; then
     new_timestamp
     str="HOST='$host'\nUSERNAME='$user'\nPASSWORD='$password'\nPRIVATEKEY='$privatekey'"
     str="$str\nBPATH='$path'\nPORT='$port'\nTIME='$time'\nDATE='$date'"
@@ -296,6 +314,11 @@ elif [ $type == 'b2' ]; then
     str="$str\nTIME='$time'\nDATE='$date'"
     echo -e "$str" > $HESTIA/conf/$type.backup.conf
     chmod 660 $HESTIA/conf/$type.backup.conf
+elif [ $type == "rclone" ]; then
+    new_timestamp
+    str="HOST='$host'\nBPATH='$path'"
+    str="$str\nTIME='$time'\nDATE='$date'"
+    echo -e "$str" > $HESTIA/conf/$type.backup.conf
 fi
 
 #----------------------------------------------------------#

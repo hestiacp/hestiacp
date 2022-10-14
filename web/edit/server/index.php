@@ -219,9 +219,9 @@ foreach ($backup_types as $backup_type) {
         if (in_array($backup_type, array('ftp','sftp'))) {
             $v_backup_host = $v_remote_backup[$backup_type]['HOST'];
             $v_backup_type = $v_remote_backup[$backup_type]['TYPE'];
-            $v_backup_username = $v_remote_backup[$backup_type]['USERNAME'];
+            $v_backup_username = $v_remote_backup[$backup_type]['USERNAME'] ?? '';
             $v_backup_password = "";
-            $v_backup_port = $v_remote_backup[$backup_type]['PORT'];
+            $v_backup_port = $v_remote_backup[$backup_type]['PORT'] ?? '';
             $v_backup_bpath = $v_remote_backup[$backup_type]['BPATH'];
             $v_backup_remote_adv = "yes";
         } elseif (in_array($backup_type, array('b2'))) {
@@ -229,6 +229,11 @@ foreach ($backup_types as $backup_type) {
             $v_backup_type = $v_remote_backup[$backup_type]['TYPE'];
             $v_backup_application_id = $v_remote_backup[$backup_type]['B2_KEY_ID'];
             $v_backup_application_key = '';
+            $v_backup_remote_adv = "yes";
+        } elseif (in_array($backup_type, array('rclone'))) {
+            $v_backup_type = $v_remote_backup[$backup_type]['TYPE'];
+            $v_rclone_host = $v_remote_backup[$backup_type]['HOST'];
+            $v_rclone_path = $v_remote_backup[$backup_type]['BPATH'];
             $v_backup_remote_adv = "yes";
         }
     }
@@ -266,8 +271,11 @@ if (empty($v_backup_application_key)) {
 if (empty($v_backup_remote_adv)) {
     $v_backup_remote_adv = '';
 }
-if (empty($v_backup_remote_adv)) {
-    $v_backup_remote_adv = '';
+if (empty($v_rclone_host)) {
+    $v_rclone_host = '';
+}
+if (empty($v_rclone_path)) {
+    $v_rclone_path = '';
 }
 
 // List ssl certificate info
@@ -811,6 +819,17 @@ if (!empty($_POST['save'])) {
                 $v_backup_adv = 'yes';
                 $v_backup_remote_adv = 'yes';
             }
+        }
+        if ($v_rclone_host == '' && !empty($_POST['v_rclone_host']) && $_POST['v_backup_type'] =="rclone" ) {
+            $v_rclone_host = quoteshellarg($_POST['v_rclone_host']);
+            $v_backup_type = quoteshellarg($_POST['v_backup_type']);
+            $v_rclone_path = quoteshellarg($_POST['v_rclone_path']);
+            exec(HESTIA_CMD."v-add-backup-host ". $v_backup_type ." ". $v_rclone_host ." '' '' ".$v_rclone_path, $output, $return_var);
+            check_return_code($return_var, $output);
+            unset($output);
+            $v_backup_new = 'yes';
+            $v_backup_adv = 'yes';
+            $v_backup_remote_adv = 'yes';
         }
     }
 

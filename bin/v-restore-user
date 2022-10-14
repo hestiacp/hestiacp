@@ -85,6 +85,10 @@ if [ ! -e "$BACKUP/$backup" ]; then
         b2_download "$backup"
         downloaded='yes'
     fi
+    if [[ "$BACKUP_SYSTEM" =~ "rclone" ]] && [ -z "$downloaded" ]; then
+         rclone_download "$backup"
+         downloaded='yes'
+    fi
     if [ -z "$downloaded" ]; then
         check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
     fi

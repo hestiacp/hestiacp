@@ -170,7 +170,6 @@ prepare_web_domain_values() {
         domain_idn=$domain
     fi
     group="$user"
-    email="info@$domain"
     docroot="$HOMEDIR/$user/web/$domain/public_html"
     sdocroot="$docroot"
     if [ "$SSL_HOME" = 'single' ]; then

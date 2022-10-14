@@ -2295,10 +2295,6 @@ label:hover {
   border-color: #cfcfcf;
 }
 
-.vst-input.short {
-  width: 200px;
-}
-
 .vst-input.vst-list-editor {
   border: none;
   box-shadow: none;
@@ -3680,11 +3676,6 @@ li[aria-expanded="true"] a {
 .cron-helper-tabs .form-select {
   display: inline-block;
   width: 379px;
-}
-
-.cron-helper-tabs .form-select.short {
-  min-width: 30px;
-  width: 70px;
 }
 
 .cron-helper-tabs .button {

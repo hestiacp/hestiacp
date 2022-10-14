@@ -27,7 +27,7 @@ App.Actions.MAIL_ACC.disable_unlimited = function(elm, source_elm) {
 //
 App.Actions.MAIL_ACC.toggle_unlimited_feature = function(evt) {
     var elm = $(evt.target);
-    var ref = elm.prev('.vst-input');
+    var ref = elm.prev('.form-control');
     if (!$(ref).data('checked')) {
         App.Actions.MAIL_ACC.enable_unlimited(ref, elm);
     }
@@ -42,7 +42,7 @@ App.Listeners.MAIL_ACC.checkbox_unlimited_feature = function() {
 
 App.Listeners.MAIL_ACC.init = function() {
     $('.unlim-trigger').each(function(i, elm) {
-        var ref = $(elm).prev('.vst-input');
+        var ref = $(elm).prev('.form-control');
         if (App.Helpers.isUnlimitedValue($(ref).val())) {
             App.Actions.MAIL_ACC.enable_unlimited(ref, elm);
         }
@@ -52,6 +52,18 @@ App.Listeners.MAIL_ACC.init = function() {
         }
     });
 }
+
+App.Helpers.isUnlimitedValue = function(value) {
+  var value = value.trim();
+  if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
+      return true;
+  }
+
+  return false;
+}
+
+App.Listeners.MAIL_ACC.init();
+App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
 
 App.Actions.MAIL_ACC.update_password_meter = function (){
     var password = $('input[name="v_password"]').val();

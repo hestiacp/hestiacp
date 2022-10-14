@@ -26,7 +26,7 @@ App.Actions.MAIL_ACC.disable_unlimited = function(elm, source_elm) {
 
 App.Actions.MAIL_ACC.toggle_unlimited_feature = function(evt) {
     var elm = $(evt.target);
-    var ref = elm.prev('.vst-input');
+    var ref = elm.prev('.form-control');
     if (!$(ref).data('checked')) {
         App.Actions.MAIL_ACC.enable_unlimited(ref, elm);
     }
@@ -41,7 +41,7 @@ App.Listeners.MAIL_ACC.checkbox_unlimited_feature = function() {
 
 App.Listeners.MAIL_ACC.init = function() {
     $('.unlim-trigger').each(function(i, elm) {
-        var ref = $(elm).prev('.vst-input');
+        var ref = $(elm).prev('.form-control');
         if (App.Helpers.isUnlimitedValue($(ref).val())) {
             App.Actions.MAIL_ACC.enable_unlimited(ref, elm);
         }

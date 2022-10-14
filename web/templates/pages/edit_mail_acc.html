@@ -80,13 +80,13 @@
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_quota" value="<?php if (!empty($v_quota)) {echo htmlentities(trim($v_quota, "'"));} else { echo "0"; } ?>">
-								<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-quota"></i>
+								<label for="v_quota" class="form-label">
+									<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+								</label>
+								<div class="u-pos-relative u-input-width">
+									<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?php if (!empty($v_quota)) {echo htmlentities(trim($v_quota, "'"));} else { echo "0"; } ?>">
+									<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-quota"></i>
+								</div>
 							</td>
 						</tr>
 						<tr>

@@ -2295,14 +2295,6 @@ label:hover {
   border-color: #cfcfcf;
 }
 
-.vst-input.long {
-  width: 832px;
-}
-
-.vst-input.short {
-  width: 200px;
-}
-
 .vst-input.vst-list-editor {
   border: none;
   box-shadow: none;
@@ -2747,8 +2739,8 @@ a.button.cancel {
 .unlim-trigger {
   cursor: pointer;
   position: absolute;
-  margin-left: -32px;
-  margin-top: 16px;
+  top: 13px;
+  right: 12px;
   z-index: 1;
   font-size: 0.8rem;
 }
@@ -3684,11 +3676,6 @@ li[aria-expanded="true"] a {
 .cron-helper-tabs .form-select {
   display: inline-block;
   width: 379px;
-}
-
-.cron-helper-tabs .form-select.short {
-  min-width: 30px;
-  width: 70px;
 }
 
 .cron-helper-tabs .button {

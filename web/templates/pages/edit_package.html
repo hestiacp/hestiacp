@@ -42,45 +42,37 @@
 						</tr>
 						<tr>
 							<td class="u-pt18">
-								<?=_('Package Name');?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_package_new" value="<?=htmlentities(trim($v_package_new, "'"))?>">
+								<label for="v_package_new" class="form-label"><?=_('Package Name');?></label>
+								<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?=htmlentities(trim($v_package_new, "'"))?>">
 								<input type="hidden" name="v_package" value="<?=htmlentities(trim($v_package, "'"))?>">
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_disk_quota" value="<?=htmlentities(trim($v_disk_quota, "'"))?>">
-								<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-disk-quota"></i>
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<?=_('Bandwidth');?> <span class="optional">(<?=_('in megabytes');?>)</span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_bandwidth" value="<?=htmlentities(trim($v_bandwidth, "'"))?>">
-								<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-bandwidth"></i>
+								<label for="v_disk_quota" class="form-label">
+									<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+								</label>
+								<div class="u-pos-relative">
+									<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?=htmlentities(trim($v_disk_quota, "'"))?>">
+									<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+								</div>
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pt6">
-								<?=_('Backups');?>
+								<label for="v_bandwidth" class="form-label">
+									<?=_('Bandwidth');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+								</label>
+								<div class="u-pos-relative">
+									<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?=htmlentities(trim($v_bandwidth, "'"))?>">
+									<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+								</div>
 							</td>
 						</tr>
 						<tr>
-							<td>
-								<input type="text" class="vst-input" name="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
+							<td class="u-pt6">
+								<label for="v_backups" class="form-label"><?=_('Backups');?></label>
+								<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
 							</td>
 						</tr>
 						<tr>
@@ -94,24 +86,22 @@
 								<table id="web-options" style="display: none;">
 									<tr>
 										<td class="u-pt18">
-											<?=_('Web Domains');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_web_domains" value="<?=htmlentities(trim($v_web_domains, "'"))?>">
-											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-web-domains"></i>
+											<label for="v_web_domains" class="form-label"><?=_('Web Domains');?></label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control u-input-width" name="v_web_domains" id="v_web_domains" value="<?=htmlentities(trim($v_web_domains, "'"))?>">
+												<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('Web Aliases');?> <span class="optional">(<?=_('per domain');?>)</span>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_web_aliases" value="<?=htmlentities(trim($v_web_aliases, "'"))?>">
-											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-web-aliases"></i>
+											<label for="v_web_aliases" class="form-label">
+												<?=_('Web Aliases');?> <span class="optional">(<?=_('per domain');?>)</span>
+											</label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?=htmlentities(trim($v_web_aliases, "'"))?>">
+												<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+											</div>
 										</td>
 									</tr>
 									<tr>
@@ -208,24 +198,22 @@
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('DNS domains');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_dns_domains" value="<?=htmlentities(trim($v_dns_domains, "'"))?>">
-											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-dns-domain"></i>
+											<label for="v_dns_domains" class="form-label"><?=_('DNS domains');?></label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?=htmlentities(trim($v_dns_domains, "'"))?>">
+												<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('DNS records');?> <span class="optional">(<?=_('per domain');?>)</span>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_dns_records" value="<?=htmlentities(trim($v_dns_records, "'"))?>">
-											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-dns-records"></i>
+											<label for="v_dns_records" class="form-label">
+												<?=_('DNS records');?> <span class="optional">(<?=_('per domain');?>)</span>
+											</label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?=htmlentities(trim($v_dns_records, "'"))?>">
+												<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+											</div>
 										</td>
 									</tr>
 									<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
@@ -316,35 +304,31 @@
 								<table id="mail-options" style="display: none;">
 									<tr>
 										<td class="u-pt18">
-											<?=_('Mail Domains');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_mail_domains" value="<?=htmlentities(trim($v_mail_domains, "'"))?>">
-											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-mail-domains"></i>
+											<label for="v_mail_domains" class="form-label"><?=_('Mail Domains');?></label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control u-input-width" name="v_mail_domains" id="v_mail_domains" value="<?=htmlentities(trim($v_mail_domains, "'"))?>">
+												<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+											</div>
 										</td>
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('Mail Accounts');?> <span class="optional">(<?=_('per domain');?>)</span>
+											<label for="v_mail_accounts" class="form-label">
+												<?=_('Mail Accounts');?> <span class="optional">(<?=_('per domain');?>)</span>
+											</label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
+												<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+											</div>
 										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
-											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-mail-accounts"></i>
-										<td>
 									</tr>
 									<tr>
 										<td class="u-pt6">
-											<?=_('Rate limit');?> <span class="optional">(<?=_('per account / hour');?>)</span>
+											<label for="v_ratelimit" class="form-label">
+												<?=_('Rate limit');?> <span class="optional">(<?=_('per account / hour');?>)</span>
+											</label>
+											<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?=htmlentities(trim($v_ratelimit, "'"))?>">
 										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_ratelimit" value="<?=htmlentities(trim($v_ratelimit, "'"))?>">
-										<td>
 									</tr>
 								</table>
 							</td>
@@ -360,13 +344,11 @@
 								<table id="database-options" style="display: none;">
 									<tr>
 										<td class="u-pt18">
-											<?=_('Databases');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
-											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-databases"></i>
+											<label for="v_databases" class="form-label"><?=_('Databases');?></label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control u-input-width" name="v_databases" id="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
+												<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -383,13 +365,11 @@
 								<table id="system-options" style="display: none;">
 									<tr>
 										<td class="u-pt18">
-											<?=_('Cron Jobs');?>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											<input type="text" class="vst-input" name="v_cron_jobs" value="<?=htmlentities(trim($v_cron_jobs, "'"))?>">
-											<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>" id="unlim-cron-jobs"></i>
+											<label for="v_cron_jobs" class="form-label"><?=_('Cron Jobs');?></label>
+											<div class="u-pos-relative">
+												<input type="text" class="form-control u-input-width" name="v_cron_jobs" id="v_cron_jobs" value="<?=htmlentities(trim($v_cron_jobs, "'"))?>">
+												<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+											</div>
 										</td>
 									</tr>
 									<tr>

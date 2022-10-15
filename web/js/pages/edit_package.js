@@ -24,10 +24,10 @@ App.Actions.PACKAGE.disable_unlimited = function(elm, source_elm) {
     $(source_elm).css('opacity', '0.5');
 }
 
-// 
+//
 App.Actions.PACKAGE.toggle_unlimited_feature = function(evt) {
     var elm = $(evt.target);
-    var ref = elm.prev('.vst-input');
+    var ref = elm.prev('.form-control');
     if (!$(ref).data('checked')) {
         App.Actions.PACKAGE.enable_unlimited(ref, elm);
     }
@@ -42,7 +42,7 @@ App.Listeners.PACKAGE.checkbox_unlimited_feature = function() {
 
 App.Listeners.PACKAGE.init = function() {
     $('.unlim-trigger').each(function(i, elm) {
-        var ref = $(elm).prev('.vst-input');
+        var ref = $(elm).prev('.form-control');
         if (App.Helpers.isUnlimitedValue($(ref).val())) {
             App.Actions.PACKAGE.enable_unlimited(ref, elm);
         }

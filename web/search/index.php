@@ -11,6 +11,12 @@ include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
 // Check token
 verify_csrf($_GET);
 
+if (empty($_GET['u'])){
+    $_GET['u'] = '';
+}
+if (empty($_GET['q'])){
+    $_GET['q'] = '';
+}
 // Data
 $q = quoteshellarg($_GET['q']);
 $u = quoteshellarg($_GET['u']);

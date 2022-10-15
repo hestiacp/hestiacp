@@ -143,7 +143,7 @@
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center"><?=translate_date($value['DATE'])?></div>
 				<div class="clearfix l-unit__stat-col--left text-center"><b>
-						<a href="/search/?q=<?=htmlspecialchars($q); ?>&u=<?=$value['USER']; ?>"><?=$value['USER']; ?></a></b></div>
+						<a href="/search/?q=<?=htmlentities($_GET['q']); ?>&u=<?=$value['USER']; ?>&token=<?=$_SESSION['token']?>"><?=$value['USER']; ?></a></b></div>
 				<div class="clearfix l-unit__stat-col--left text-center"><?=_($object)?></b></div>
 			</div>
 		</div>

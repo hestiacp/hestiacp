@@ -89,11 +89,7 @@ strong {
   box-shadow: none;
 }
 
-.vst-input,
-.form-control {
-  box-shadow: none;
-}
-
+.form-control,
 .form-select {
   box-shadow: none;
 }

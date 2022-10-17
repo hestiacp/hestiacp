@@ -52,7 +52,7 @@
 								<label for="v_rec" class="form-label"><?=_('Record');?></label>
 								<div class="u-side-by-side">
 									<input type="text" class="form-control u-input-width" name="v_rec" id="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>">
-                  <input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
+									<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
 									<small class="hint u-ml10"></small>
 								</div>
 							</td>
@@ -81,16 +81,18 @@
 						<tr>
 							<td class="u-pt6">
 								<label for="v_val" class="form-label"><?=_('IP or Value');?></label>
-								<select class="form-select u-input-width" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
-									<option value="">clear</option>
-									<?php
-										foreach ($v_ips as $ip => $value) {
-											$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
-											echo "<option value='{$display_ip}'>" . htmlentities($display_ip) . "</option>\n";
-										}
-									?>
-								</select>
-								<input type="text" class="vst-input vst-list-editor" name="v_val" id="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
+								<div class="u-pos-relative u-input-width">
+									<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
+										<option value="">&nbsp;</option>
+										<?php
+											foreach ($v_ips as $ip => $value) {
+												$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
+												echo "<option value='{$display_ip}'>" . htmlentities($display_ip) . "</option>\n";
+											}
+										?>
+									</select>
+									<input type="text" class="form-control list-editor" name="v_val" id="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
+								</div>
 							</td>
 						</tr>
 						<tr>

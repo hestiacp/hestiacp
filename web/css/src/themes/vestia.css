@@ -274,15 +274,19 @@ strong {
     inset 0 0 2px rgb(255 255 255 / 100%) !important;
 }
 
-.vst-input,
-.form-control {
+.form-control,
+.form-select {
   box-shadow: none;
   border-radius: 0 !important;
 }
 
-.form-select {
-  box-shadow: none;
-  border-radius: 0 !important;
+.form-label,
+.form-check label {
+  font-size: 0.8rem;
+}
+
+.form-check-input {
+  margin-top: 1px;
 }
 
 .pill {
@@ -347,9 +351,7 @@ a.vst-text:hover b,
   color: #ff791f !important;
 }
 
-.vst-input:focus,
 .form-control:focus,
-.login .vst-input:focus,
 .login .form-control:focus {
   border: 1px solid #ff6701;
   background-color: #fff4ed;
@@ -361,7 +363,6 @@ a.vst-text:hover b,
   color: #333;
 }
 
-.vst-input:hover,
 .form-control:hover,
 .form-select:hover {
   border: 1px solid #e95e00;
@@ -501,7 +502,6 @@ a.vst-text:hover b,
   box-shadow: none;
 }
 
-.vst-input,
 .form-control,
 .form-select {
   font-family: Arial, Helvetica, sans-serif !important;
@@ -511,8 +511,8 @@ a.vst-text:hover b,
   line-height: 1rem !important;
 }
 
-.vst-input.vst-list-editor:hover,
-.vst-input.vst-list-editor:focus {
+.form-control.list-editor:hover,
+.form-control.list-editor:focus {
   border: none !important;
 }
 
@@ -578,10 +578,6 @@ a.vst-text:hover b,
 
 td.advanced-options .fas {
   display: none !important;
-}
-
-label {
-  font-size: 0.8rem;
 }
 
 a#btn-back {
@@ -714,7 +710,6 @@ a.vst-advanced:focus {
   color: #326b9b !important;
 }
 
-.login .vst-input,
 .login .form-control {
   border: 1px solid #bbb;
 }

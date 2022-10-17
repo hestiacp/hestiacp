@@ -51,10 +51,12 @@
 								<label for="v_datasource" class="form-label">
 									<?=_('Data Source') ?> <span class="optional">(<?=_('url, script or file');?>)</span>
 								</label>
-								<select class="form-select u-input-width" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
-									<option value="">clear</option>
-								</select>
-								<input type="text" class="vst-input vst-list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">
+								<div class="u-pos-relative u-input-width">
+									<select class="form-select" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
+										<option value="">clear</option>
+									</select>
+									<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -117,32 +119,32 @@
 	});
 
 	$(function () {
-		var targetelement = document.getElementById('datasource_list');
+		var targetElement = document.getElementById('datasource_list');
 
 		// Blacklist
 		var newEl = document.createElement("option");
 		newEl.text = "<?=_('BLACKLIST') ?>";
 		newEl.disabled = true;
-		targetelement.appendChild(newEl);
+		targetElement.appendChild(newEl);
 
 		blacklist_iplists.forEach(iplist => {
 			var newEl = document.createElement("option");
 			newEl.text = iplist.name;
 			newEl.value = iplist.source;
-			targetelement.appendChild(newEl);
+			targetElement.appendChild(newEl);
 		});
 
 		// IPVERSE
 		var newEl = document.createElement("option");
 		newEl.text = "<?=_('IPVERSE') ?>";
 		newEl.disabled = true;
-		targetelement.appendChild(newEl);
+		targetElement.appendChild(newEl);
 
 		country_iplists.forEach(iplist => {
 			var newEl = document.createElement("option");
 			newEl.text = iplist.name;
 			newEl.value = iplist.source;
-			targetelement.appendChild(newEl);
+			targetElement.appendChild(newEl);
 		});
 	});
 </script>

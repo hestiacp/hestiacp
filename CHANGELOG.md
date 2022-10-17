@@ -16,6 +16,8 @@ All notable changes to this project will be documented in this file.
 
 - Add an check before config exists before searching it (#2930)
 - Fixed an issue with v-change-web-domain-name does not clean up it everything (#2915)
+- Fixed issue with search function. (#2977 #2974 and #2973)
+
 ### Enhancements 
 
 - Cleanup old VestaCP html/js/css code  (#2949, #2941 #2941 #2940 #2919 #2907 @alecrust)
@@ -34,7 +36,8 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update Filegator to 7.8.5
+- Update Filegator to 7.8.7
+- Update Zlib to 1.2.13
 
 ## [1.6.9] - Service release 
 

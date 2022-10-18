@@ -101,7 +101,8 @@
 						<tr>
 							<td class="u-pt6">
 								<label for="v_password" class="form-label">
-									<?=_('Password');?> <a href="javascript:applyRandomString();" title="<?=_('generate');?>"><i class="fas fa-sync status-icon green icon-large"></i></a>
+									<?=_('Password');?>
+									<a href="javascript:applyRandomString();" title="<?=_('generate');?>" class="u-ml5"><i class="fas fa-sync status-icon green icon-large"></i></a>
 								</label>
 								<div class="u-pos-relative u-mb10">
 									<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
@@ -305,74 +306,84 @@
 										<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
 											<tr>
 												<td class="u-pt6">
-													<?=_('Default Name Servers');?>
+													<p class="form-label"><?=_('Default Name Servers');?></p>
 												</td>
 											</tr>
 											<tr>
 												<td>
-													<input type="text" class="vst-input" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
-													<span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete');?></span>
+													<input type="text" class="form-control u-input-width" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
 												</td>
 											</tr>
 											<tr>
 												<td>
-													<input type="text" class="vst-input" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
-													<span class="remove-ns additional-control delete vst-advanced button danger"><?=_('delete');?></span>
+													<input type="text" class="form-control u-input-width" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
 												</td>
 											</tr>
 											<?php
 												if($v_ns3) {
 													echo '<tr>
 														<td>
-															<input type="text" class="vst-input" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+															<div class="u-side-by-side">
+																<input type="text" class="form-control u-input-width" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
+																<span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
+															</div>
 														</td>
 													</tr>';
 												}
 												if($v_ns4) {
 													echo '<tr>
 														<td>
-															<input type="text" class="vst-input" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+															<div class="u-side-by-side">
+																<input type="text" class="form-control u-input-width" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
+																<span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
+															</div>
 														</td>
 													</tr>';
 												}
 												if($v_ns5) {
 													echo '<tr>
 														<td>
-															<input type="text" class="vst-input" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+															<div class="u-side-by-side">
+																<input type="text" class="form-control u-input-width" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
+																<span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
+															</div>
 														</td>
 													</tr>';
 												}
 												if($v_ns6) {
 													echo '<tr>
 														<td>
-															<input type="text" class="vst-input" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+															<div class="u-side-by-side">
+																<input type="text" class="form-control u-input-width" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
+																<span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
+															</div>
 														</td>
 													</tr>';
 												}
 												if($v_ns7) {
 													echo '<tr>
 														<td>
-															<input type="text" class="vst-input" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+															<div class="u-side-by-side">
+																<input type="text" class="form-control u-input-width" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
+																<span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
+															</div>
 														</td>
 													</tr>';
 												}
 												if($v_ns8) {
 													echo '<tr>
 														<td>
-															<input type="text" class="vst-input" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-															<span class="remove-ns additional-control delete vst-advanced button danger">'._('delete').'</span>
+															<div class="u-side-by-side">
+																<input type="text" class="form-control u-input-width" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
+																<span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
+															</div>
 														</td>
 													</tr>';
 												}
 											?>
-											<tr class="add-ns" <?php if ($v_ns8) echo 'style="display:none;"' ; ?> >
+											<tr class="js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
 												<td class="u-pt18">
-													<span class="add-ns-button vst-advanced button"><?=_('Add one more Name Server');?></span>
+													<span class="js-add-ns-button additional-control add"><?=_('Add one more Name Server');?></span>
 												</td>
 											</tr>
 										<?php } ?>
@@ -387,7 +398,7 @@
 							</tr>
 						<?php } ?>
 					</table>
-					<table class="data-col2"></table>
+					<table class="data-col2 u-mb20"></table>
 				</td>
 			</tr>
 		</table>

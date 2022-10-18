@@ -72,10 +72,12 @@
 								<label for="v_ip" class="form-label">
 									<?=_('IP address / IPset');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
 								</label>
-								<select class="form-select u-input-width" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
-									<option value="">&nbsp;</option>
-								</select>
-								<input type="text" class="vst-input vst-list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								<div class="u-pos-relative u-input-width">
+									<select class="form-select" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
+										<option value="">&nbsp;</option>
+									</select>
+									<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -101,18 +103,18 @@
 	});
 
 	$(function () {
-		var targetelement = document.getElementById('quickips_list');
+		var targetElement = document.getElementById('quickips_list');
 
 		var newEl = document.createElement("option");
 		newEl.text = "IP address lists:";
 		newEl.disabled = true;
-		targetelement.appendChild(newEl);
+		targetElement.appendChild(newEl);
 
 		iplists.forEach(iplist => {
 			var newEl = document.createElement("option");
 			newEl.text = iplist.name;
 			newEl.value = "ipset:" + iplist.name;
-			targetelement.appendChild(newEl);
+			targetElement.appendChild(newEl);
 		});
 	});
 </script>

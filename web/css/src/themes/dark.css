@@ -623,14 +623,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .data a {
 }
 
-label {
-}
-
-label:hover {
-  color: #d4d4d4 !important;
-}
-
-.vst-input,
 .form-control {
   background-color: #454545;
   border: 1px solid #606060;
@@ -638,13 +630,11 @@ label:hover {
   box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }
 
-.vst-input:hover,
 .form-control:hover {
   border-color: #0090ff;
   background-color: #494949;
 }
 
-.vst-input:focus,
 .form-control:focus {
   background-color: #222;
   border-color: #0080df;
@@ -652,7 +642,6 @@ label:hover {
   box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
 }
 
-.vst-input:disabled,
 .form-control:disabled,
 .form-select:disabled {
   background-color: #303030;
@@ -661,20 +650,12 @@ label:hover {
   border-color: #606060;
 }
 
-.vst-input:focus:disabled {
-}
-
-.vst-input:disabled:hover,
 .form-control:disabled:hover,
 .form-select:disabled:hover {
   border-color: #606060 !important;
 }
 
-.vst-input.vst-list-editor {
-
-}
-
-.vst-input.vst-list-editor:focus {
+.form-control.list-editor:focus {
   background-color: #222;
   box-shadow: none !important;
 }
@@ -843,8 +824,6 @@ a.vst-text:active b {
 .additional-control.add:hover {}
 
 .additional-control.add:active {}
-
-.additional-control.remove-ns {}
 
 .toggle-psw-visibility-icon {}
 
@@ -1094,9 +1073,6 @@ a.button.cancel {
 .additional-info td.details {
 
 }
-
-:focus { outline: none; }
-::-moz-focus-inner { border: 0; }
 
 .login {
   background-color: #282828;

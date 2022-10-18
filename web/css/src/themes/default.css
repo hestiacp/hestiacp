@@ -185,6 +185,9 @@ body {
   background-color: #fff;
 }
 
+:focus { outline: none; }
+::-moz-focus-inner { border: 0; }
+
 .body-login,
 .body-reset {
   height: auto;
@@ -488,7 +491,7 @@ a {
 
 .notification-container a {
   font-weight: 600;
-  color: #1a4492;/* #eee; */
+  color: #1a4492;
 }
 
 .notification-container a:hover {
@@ -600,7 +603,6 @@ form#vstobjects .alert {
 .app-form label {
   font-size: 0.85rem;
   font-weight: 600;
-  cursor: default;
 }
 
 .card {
@@ -2207,11 +2209,6 @@ body.mobile .l-icon-shortcuts {
   font-weight: 600;
 }
 
-.data input[type="checkbox"] {
-  display: inline;
-  cursor: pointer;
-}
-
 .jump-top {
   margin-top: -60px;
 }
@@ -2222,14 +2219,6 @@ body.mobile .l-icon-shortcuts {
 
 .data a {
   text-decoration: none;
-}
-
-label {
-  cursor: pointer;
-}
-
-label:hover {
-  color: #333;
 }
 
 .form-control {
@@ -2248,34 +2237,16 @@ label:hover {
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 }
 
-.vst-input {
-  background-color: #fff;
-  border: 1px solid #cfcfcf;
-  border-radius: 4px;
-  color: #4e4e4e;
-  font-family: Exo, Arial, Helvetica, sans-serif;
-  font-size: 0.8rem;
-  height: 20px;
-  margin: 2px 6px 0 0;
-  padding: 8px 3px 8px 14px;
-  width: 360px;
-  font-weight: normal;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-}
-
-.vst-input:hover,
 .form-control:hover {
   border: 1px solid #94c8f0;
 }
 
-.vst-input:focus,
 .form-control:focus {
   border: 1px solid #008fee;
   background-color: #d7f9ff;
   color: #333;
 }
 
-.vst-input:disabled,
 .form-control:disabled,
 .form-select:disabled {
   background-color: #e7e7e7;
@@ -2283,30 +2254,29 @@ label:hover {
   color: #686868;
 }
 
-.vst-input:focus:disabled,
 .form-control:focus:disabled {
   border-color: #dedede;
   background-color: #f1f1f1;
 }
 
-.vst-input:disabled:hover,
 .form-control:disabled:hover,
 .form-select:disabled:hover {
   border-color: #cfcfcf;
 }
 
-.vst-input.vst-list-editor {
+.form-control.list-editor {
   border: none;
   box-shadow: none;
   position: absolute;
-  margin-top: -34px;
-  margin-left: 1px;
-  display: block;
-  width: 340px;
-  height: 1rem;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  width: auto;
+  top: 2px;
+  left: 2px;
+  right: 23px;
 }
 
-.vst-input.vst-list-editor:focus {
+.form-control.list-editor:focus {
   background-color: #fff;
 }
 
@@ -2434,7 +2404,7 @@ a.vst-text:active b {
   width: 100%;
   font-weight: normal;
   font-size: .8rem;
-  padding: 8px 30px 7px 12px;
+  padding: 8px 30px 8px 12px;
   line-height: 1.5;
   border-radius: 4px;
   background-color: #fff;
@@ -2457,14 +2427,19 @@ a.vst-text:active b {
 }
 
 .form-check {
+  position: relative;
   padding-left: 20px;
-  margin-bottom: 2px;
   margin-left: 3px;
   min-height: 24px;
 }
 
+.form-check label {
+  cursor: pointer;
+}
+
 .form-check-input {
-  float: left;
+  cursor: pointer;
+  position: absolute;
   margin-top: 3px;
   margin-left: -20px;
 }
@@ -2524,10 +2499,6 @@ a.vst-text:active b {
 .additional-control.add:active {
   background-color: #54a6e5;
   border-color: #54a6e5;
-}
-
-.additional-control.remove-ns {
-  display: none;
 }
 
 .toggle-password {
@@ -2841,9 +2812,6 @@ a.button.cancel {
   padding-left: 20px !important;
 }
 
-:focus { outline: none; }
-::-moz-focus-inner { border: 0; }
-
 .login {
   background-color: rgb(255 255 255 / 70%);
   box-shadow:
@@ -2859,7 +2827,6 @@ a.button.cancel {
   cursor: default;
 }
 
-.login .vst-input,
 .login .form-control {
   border-color: #5787c8;
 }
@@ -3880,6 +3847,10 @@ li[aria-expanded="true"] a {
 
 .u-mt15 {
   margin-top: 15px !important;
+}
+
+.u-ml5 {
+  margin-left: 5px !important;
 }
 
 .u-ml10 {

@@ -148,6 +148,10 @@ VE.helpers.createConfirmationDialog = function(elm, dialog_title, confirmed_loca
                 .find(".ui-button")
                 .eq(1) // the first button
                 .addClass("cancel");
+            $(this).closest(".ui-dialog")
+                .find(".ui-dialog-content:first")
+                .removeClass('u-hidden');
+            
         }
     }
 

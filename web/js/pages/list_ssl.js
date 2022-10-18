@@ -21,7 +21,6 @@ function saveTextToBlob ( file, element ){
     }
 
     downloadLink.click();
-    return false;
 }
 
 function destroyClickedElement(event)

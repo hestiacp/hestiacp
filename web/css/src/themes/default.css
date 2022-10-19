@@ -3563,13 +3563,12 @@ form#vstobjects.suspended {
 }
 
 .ui-widget {
-  font-size: 0.85rem !important;
+  font-size: 0.85rem;
 }
 
 .ui-widget-overlay {
-  opacity: 0.8 !important;
-  background: rgb(10 10 10 / 90%) !important;
-  position: fixed !important;
+  opacity: 0.8;
+  background: rgb(10 10 10 / 90%);
 }
 
 .helper-container {

@@ -1,13 +1,15 @@
 /*!
- * JQuery UI Custom + few changes
+ * jQuery UI v1.13.2 "dialog" and "tabs" styles
  */
+
+/* Dialog */
 .ui-dialog {
 	position: absolute;
 	top: 0;
 	left: 0;
 	padding: .2em;
 	outline: 0;
-	z-index: 1000 !important;
+	z-index: 1000; /* NOTE: This line is a custom addition */
 }
 .ui-dialog .ui-dialog-titlebar {
 	padding: .4em 1em;
@@ -90,6 +92,8 @@
 	left: 0;
 	top: 0;
 }
+
+/* Tabs */
 .ui-tabs {
 	position: relative;/* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
 	padding: .2em;
@@ -131,20 +135,25 @@
 	padding: 1em 1.4em;
 	background: none;
 }
-.ui-dialog-titlebar-close{
+
+/* Custom overrides */
+
+/* Hide the default close button in dialog header */
+.ui-dialog-titlebar-close {
 	display: none !important;
 }
 
-.ui-tabs-panel{
-	clear:both !important;
+.ui-tabs-panel {
+	clear: both !important;
 }
 
+/* Custom dialog backdrop */
 .ui-widget-overlay {
-	 background-color: rgba(0,0,0,0.9);
-	 height: 100%;
-	 width:100%;
-	 z-index: 999 !important;
-	 position: absolute;
-	 top:0px;
-	 left:0px;
- }
+	background-color: rgba(0,0,0,0.9);
+	height: 100%;
+	width: 100%;
+	z-index: 999;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}

@@ -2535,6 +2535,7 @@ td.hint {
 }
 
 .ui-dialog .ui-dialog-buttonpane button {
+  margin-bottom: 4px;
   box-shadow:
     0 1px 4px rgb(0 0 0 / 20%),
     inset 0 0 1px #fff,
@@ -2542,7 +2543,9 @@ td.hint {
 }
 
 .ui-dialog .ui-dialog-buttonpane {
-  margin-bottom: -6px !important;
+  border-color: #fff !important;
+  box-shadow: inset 0 0 2px rgb(0 0 0 / 25%);
+  margin-top: 0 !important;
   padding: 0 !important;
 }
 
@@ -3551,15 +3554,6 @@ form#vstobjects.suspended {
   text-align: center !important;
   float: none !important;
   font-weight: 500;
-}
-
-.ui-dialog-buttonpane {
-  border-color: #fff !important;
-  box-shadow: inset 0 0 2px rgb(0 0 0 / 25%);
-  border-bottom: 1px solid #fff !important;
-  background: #e0e0e0;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
 }
 
 .ui-widget {

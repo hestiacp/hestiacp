@@ -2530,6 +2530,10 @@ td.hint {
 
 .ftp-path-prefix { padding-top: 12px; font-size: 0.8rem; color: #555; }
 
+.dialog {
+  display: none;
+}
+
 .ui-dialog .ui-dialog-buttonpane button {
   box-shadow:
     0 1px 4px rgb(0 0 0 / 20%),

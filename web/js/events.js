@@ -75,7 +75,7 @@ VE.core.dispatch = function(evt, elm, event_type) {
 VE.callbacks.click.do_suspend = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="suspend_url"]', ref).val();
-     var dialog_elm = ref.find('.confirmation-text-suspention');
+     var dialog_elm = ref.find('.js-confirm-dialog-suspend');
      VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
@@ -85,7 +85,7 @@ VE.callbacks.click.do_suspend = function(evt, elm) {
 VE.callbacks.click.do_unsuspend = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="unsuspend_url"]', ref).val();
-     var dialog_elm = ref.find('.confirmation-text-suspention');
+     var dialog_elm = ref.find('.js-confirm-dialog-suspend');
      VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
@@ -95,21 +95,21 @@ VE.callbacks.click.do_unsuspend = function(evt, elm) {
 VE.callbacks.click.do_delete = function(evt, elm) {
      var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
      var url = $('input[name="delete_url"]', ref).val();
-     var dialog_elm = ref.find('.confirmation-text-delete');
+     var dialog_elm = ref.find('.js-confirm-dialog-delete');
      VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 VE.callbacks.click.do_servicerestart = function(evt, elm) {
     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
     var url = $('input[name="servicerestart_url"]', ref).val();
-    var dialog_elm = ref.find('.confirmation-text-servicerestart');
+    var dialog_elm = ref.find('.js-confirm-dialog-servicerestart');
     VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
 VE.callbacks.click.do_servicestop = function(evt, elm) {
     var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
     var url = $('input[name="servicestop_url"]', ref).val();
-    var dialog_elm = ref.find('.confirmation-text-servicestop');
+    var dialog_elm = ref.find('.js-confirm-dialog-servicestop');
     VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 }
 
@@ -148,10 +148,6 @@ VE.helpers.createConfirmationDialog = function(elm, dialog_title, confirmed_loca
                 .find(".ui-button")
                 .eq(1) // the first button
                 .addClass("cancel");
-            $(this).closest(".ui-dialog")
-                .find(".ui-dialog-content:first")
-                .removeClass('u-hidden');
-            
         }
     }
 

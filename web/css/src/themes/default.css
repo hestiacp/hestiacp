@@ -737,6 +737,8 @@ form#vstobjects .alert {
   font-size: 0.75rem;
   padding-left: 0;
   line-height: 14px;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .l-stat__col li {
@@ -2415,7 +2417,7 @@ a.vst-text:active b {
   appearance: none;
   background-image: url(/images/arrow.png);
   background-repeat: no-repeat;
-  background-position: right 8px center;
+  background-position: right 9px center;
   text-shadow: 0 0 0 #4b4b4b;
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 }
@@ -3649,7 +3651,7 @@ li[aria-expanded="true"] a {
 
 .cron-helper-tabs .form-select {
   display: inline-block;
-  width: 379px;
+  width: 384px;
 }
 
 .cron-helper-tabs .button {

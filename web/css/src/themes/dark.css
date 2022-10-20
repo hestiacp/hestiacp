@@ -219,9 +219,6 @@ a {
 .card .card-thumb img {
 }
 
-.card button {
-}
-
 .l-stat {
   background-color: #282828;
 }
@@ -846,7 +843,7 @@ td.hint {
   box-shadow:
     0 1px 4px rgb(0 0 0 / 10%),
     inset 0 0 1px #000,
-    inset 0 0 3px rgb(0 0 0 / 50%) !important;
+    inset 0 0 3px rgb(0 0 0 / 50%);
 }
 
 .ui-button,
@@ -1304,7 +1301,7 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog .ui-dialog-buttonpane {
-  border-top: 1px solid #404040 !important;
+  border-top: 1px solid #404040;
 }
 
 .shortcuts {
@@ -1415,19 +1412,19 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog {
-  background-color: rgb(45 45 45 / 95%) !important;
-  border: 1px solid rgb(80 80 80 / 97%) !important;
+  background-color: rgb(45 45 45 / 95%);
+  border: 1px solid rgb(80 80 80 / 97%);
   box-shadow:
     inset 0 1px 3px rgb(0 0 0 / 25%),
-    0 8px 25px rgb(0 0 0 / 90%) !important;
+    0 8px 25px rgb(0 0 0 / 90%);
 }
 
 .ui-dialog .ui-dialog-content {
-  color: #dadada !important;
+  color: #dadada;
 }
 
 .ui-dialog .ui-dialog-title {
-  color: #f12569 !important;
+  color: #f12569;
   font-weight: 600;
 }
 

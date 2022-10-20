@@ -122,7 +122,7 @@
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>">
 									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
-										<p class="confirmation"><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
+										<p><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
 									</div>
 								</a>
 							</div>

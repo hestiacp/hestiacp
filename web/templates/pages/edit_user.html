@@ -33,7 +33,7 @@
 						<i class="do_delete fas fa-times-circle status-icon red"></i>
 						<?=_('Delete');?>
 						<input type="hidden" name="delete_url" value="/delete/user/?user=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>">
-						<div class="confirmation-text-delete u-hidden" title="<?=_('Confirmation');?>">
+						<div class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
 							<p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
 						</div>
 					</a>

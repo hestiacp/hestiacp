@@ -46,7 +46,7 @@
 									<?php } else { ?>
 										<input type="hidden" name="delete_url" value="/delete/key/?key=<?=$key?>&token=<?=$_SESSION['token']?>">
 									<?php } ?>
-									<div id="delete_dialog_<?=$i?>" class="confirmation-text-delete u-hidden" title="<?=_('Confirmation');?>">
+									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
 										<p class="confirmation"><?=sprintf(_('DELETE_KEY_CONFIRM'),$key)?></p>
 									</div>
 								</a>

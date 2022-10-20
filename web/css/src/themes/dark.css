@@ -1304,8 +1304,7 @@ form#vstobjects.suspended {
 }
 
 .ui-dialog .ui-dialog-buttonpane {
-  border-color: #404040 !important;
-  background-color: #252525 !important;
+  border-top: 1px solid #404040 !important;
 }
 
 .shortcuts {
@@ -1430,18 +1429,6 @@ form#vstobjects.suspended {
 .ui-dialog .ui-dialog-title {
   color: #f12569 !important;
   font-weight: 600;
-}
-
-.ui-dialog-buttonpane {
-
-}
-
-.ui-widget {
-
-}
-
-.ui-widget-overlay {
-
 }
 
 .helper-container {

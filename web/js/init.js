@@ -162,7 +162,7 @@ $(document).ready(function(){
               shortcut.add("Ctrl+Backspace", function(){
                 var redirect = $('a.ui-button#btn-back').attr('href')
                 if(VE.tmp.form_changed && redirect){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', redirect);
+                  VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', redirect);
                 } else if($('form#vstobjects .button.cancel')[0]){
                   location.href=$('form#vstobjects input.cancel').attr('onclick').replace("location.href='", "").replace("'","");
                 } else if(redirect){
@@ -216,7 +216,7 @@ $(document).ready(function(){
                   return;
                 }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
+                  VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.attr('href'));
                 } else {
                   location.href=target.attr('href');
                 }
@@ -234,7 +234,7 @@ $(document).ready(function(){
                   return;
                 }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
+                  VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.attr('href'));
                 } else {
                   location.href=target.attr('href');
                 }
@@ -252,7 +252,7 @@ $(document).ready(function(){
                   return;
                 }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
+                  VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.attr('href'));
                 } else {
                   location.href=target.attr('href');
                 }
@@ -270,7 +270,7 @@ $(document).ready(function(){
                   return;
                 }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
+                  VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.attr('href'));
                 } else {
                   location.href=target.attr('href');
                 }
@@ -288,7 +288,7 @@ $(document).ready(function(){
                   return;
                 }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
+                  VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.attr('href'));
                 } else {
                   location.href=target.attr('href');
                 }
@@ -306,7 +306,7 @@ $(document).ready(function(){
                   return;
                 }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
+                  VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.attr('href'));
                 } else {
                   location.href=target.attr('href');
                 }
@@ -324,7 +324,7 @@ $(document).ready(function(){
                   return;
                 }
                 if(VE.tmp.form_changed){
-                  VE.helpers.createConfirmationDialog($('.confirmation-text-redirect'), '', target.attr('href'));
+                  VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.attr('href'));
                 } else {
                   location.href=target.attr('href');
                 }
@@ -512,7 +512,7 @@ $(document).ready(function(){
 
                 if(VE.tmp.form_changed){
                   if(!$('.ui-dialog').is(':visible')){
-                    VE.helpers.createConfirmationDialog($('.confirmation-text-redirect')[0], '', $(VE.navigation.state.menu_selector + '.focus a').attr('href'));
+                    VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect')[0], '', $(VE.navigation.state.menu_selector + '.focus a').attr('href'));
                   } else { // if dialog is opened - submitting confirm box by "enter" shortcut
                     $('.ui-dialog button.submit').click();
                   }

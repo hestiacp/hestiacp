@@ -34,7 +34,7 @@
 						<?=_('Delete');?>
 						<input type="hidden" name="delete_url" value="/delete/user/?user=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>">
 						<div class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
-							<p class="confirmation"><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
+							<p><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
 						</div>
 					</a>
 			<?php } ?>
@@ -115,8 +115,8 @@
 								<table id="password-details">
 									<tr>
 										<td>
-											<?=_('Your password must have at least');?>:
-											<ul>
+											<p class="u-mb10"><?=_('Your password must have at least');?>:</p>
+											<ul class="u-list-bulleted u-mb10">
 												<li><?=_('8 characters long');?></li>
 												<li><?=_('1 uppercase & 1 lowercase character');?></li>
 												<li><?=_('1 number');?></li>
@@ -144,9 +144,9 @@
 												</label>
 											</div>
 											<?php if (!empty($v_twofa)) { ?>
-											<p><?=_('2FA Reset Code:').' '.$v_twofa; ?></p>
-											<p><?=_('Please scan the code below in your 2FA application:'); ?></p>
-											<div><img class="qr-code" src="<?=htmlentities($v_qrcode); ?>"></div>
+												<p class="u-mb10"><?=_('2FA Reset Code:').' '.$v_twofa; ?></p>
+												<p class="u-mb10"><?=_('Please scan the code below in your 2FA application:'); ?></p>
+												<div><img class="qr-code" src="<?=htmlentities($v_qrcode); ?>"></div>
 											<?php } ?>
 										</td>
 									</tr>

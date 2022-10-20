@@ -165,7 +165,7 @@
 										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
 										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>">
 										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?=_('Confirmation');?>">
-											<p class="confirmation"><?=sprintf($spnd_confirmation,$key)?></p>
+											<p><?=sprintf($spnd_confirmation,$key)?></p>
 										</div>
 									</a>
 								</div>
@@ -174,7 +174,7 @@
 										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>">
 										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
-											<p class="confirmation"><?=sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'),$key)?></p>
+											<p><?=sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'),$key)?></p>
 										</div>
 									</a>
 								</div>

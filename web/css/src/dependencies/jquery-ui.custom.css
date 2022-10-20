@@ -1,5 +1,5 @@
 /*!
- * jQuery UI v1.13.2 + few changes
+ * Some parts of jQuery UI v1.13.2
  */
 
 /* Dialog */
@@ -153,16 +153,4 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-}
-
-/* NOTE: Custom changes follow */
-
-/* Hide the default close button in dialog header */
-.ui-dialog-titlebar-close {
-	display: none;
-}
-
-/* Set high z-index for dialog to override .l-header */
-.ui-front {
-	z-index: 1000;
 }

@@ -39,14 +39,16 @@
 			</span>
 		</div>
 	</div>
-	<div class="app-list cards">
+	<div class="app-list cards u-mb20">
 		<!-- List available web apps -->
 		<?php foreach($v_web_apps as $webapp):?>
-			<div class="card <?=($webapp['enabled']?'':'disable');?>">
-				<span class="card-thumb"><img src="/src/app/WebApp/Installers/<?=$webapp['name'];?>/<?=$webapp['thumbnail'];?>"></span>
+			<div class="card <?=($webapp['enabled'] ? '' : 'disable');?>">
+				<div class="card-thumb">
+					<img src="/src/app/WebApp/Installers/<?=$webapp['name'];?>/<?=$webapp['thumbnail'];?>" alt="<?=$webapp['name'];?>">
+				</div>
 				<div class="card-details">
 					<p class="card-title"><?=$webapp['name'];?></p>
-					<p><?=_('version');?>: <?=$webapp['version'];?></p>
+					<p class="u-mb10"><?=_('version');?>: <?=$webapp['version'];?></p>
 					<a href="/add/webapp/?app=<?=$webapp['name'];?>&domain=<?=htmlentities($v_domain)?>" class="ui-button cancel" dir="ltr"><?=_('Setup');?></a>
 				</div>
 			</div>

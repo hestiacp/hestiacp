@@ -164,7 +164,7 @@ strong {
 }
 
 .ui-dialog {
-  box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%) !important;
+  box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
 }
 
 .alert {

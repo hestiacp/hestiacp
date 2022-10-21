@@ -29,6 +29,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -137,12 +139,11 @@ sort_dns_records
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    update_domain_serial
-    update_domain_zone
+    rebuild_dns_domain_conf
 fi
 
 # Updating dns-cluster queue
-if [ -n "$DNS_CLUSTER" ]; then
+if [ "$DNS_CLUSTER"  = "yes" ]; then
     # Check for first sync
     dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
     if [ -z "$dlock" ]; then

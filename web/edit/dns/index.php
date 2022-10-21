@@ -38,6 +38,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['record_id']))) {
     $v_ip = $data[$v_domain]['IP'];
     $v_template = $data[$v_domain]['TPL'];
     $v_ttl = $data[$v_domain]['TTL'];
+    $v_dnssec = $data[$v_domain]['DNSSEC'];
     $v_exp = $data[$v_domain]['EXP'];
     $v_soa = $data[$v_domain]['SOA'];
     $v_date = $data[$v_domain]['DATE'];
@@ -130,6 +131,23 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
         exec(HESTIA_CMD."v-change-dns-domain-ttl ".$user." ".$v_domain." ".$v_ttl." 'no'", $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
+        $restart_dns = 'yes';
+    }
+    // Change domain dnssec
+    if (($_POST['v_dnssec'] == '' && $v_dnssec == 'yes') && (empty($_SESSION['error_msg']))) {
+        exec(HESTIA_CMD."v-change-dns-domain-dnssec ".$user." ".$v_domain." 'no'", $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+        $v_dnssec = 'no';
+        $restart_dns = 'yes';
+    }
+    
+    // Change domain dnssec
+    if (($_POST['v_dnssec'] == 'yes' && $v_dnssec == 'no') && (empty($_SESSION['error_msg']))) {
+        exec(HESTIA_CMD."v-change-dns-domain-dnssec ".$user." ".$v_domain." 'yes'", $output, $return_var);
+        check_return_code($return_var, $output);
+        unset($output);
+        $v_dnssec = 'yes';
         $restart_dns = 'yes';
     }
 

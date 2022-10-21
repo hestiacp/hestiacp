@@ -27,6 +27,7 @@ ns6=$9
 ns7=${10}
 ns8=${11}
 restart=${12}
+dnssec=${13}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -35,6 +36,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -68,6 +71,10 @@ fi
 
 if [ -n "$restart" ]; then 
     is_format_valid 'restart'
+fi
+
+if [ -n "$dnssec" ]; then
+    is_boolean_format_valid "$dnssec" 'dnssec'
 fi
 
 is_package_full 'DNS_DOMAINS'
@@ -152,6 +159,9 @@ fi
 if [ -z "$ns8" ]; then
     template_data=$(echo "$template_data" |grep -v %ns8%)
 fi
+if [ -z "$dnssec" ]; then
+    dnssec="no"
+fi
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
@@ -180,36 +190,15 @@ records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
 dns_rec="$dns_rec SOA='$soa' SERIAL='$serial' SRC='' RECORDS='$records'"
-dns_rec="$dns_rec SUSPENDED='no' TIME='$time' DATE='$date'"
+dns_rec="$dns_rec DNSSEC='$dnssec' KEY='' SLAVE='no' MASTER='' SUSPENDED='no' TIME='$time' DATE='$date'"
 
 echo "$dns_rec" >> $USER_DATA/dns.conf
 chmod 660 $USER_DATA/dns.conf
 
-# Creating system configs
-if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    if [ -e '/etc/named.conf' ]; then
-        dns_conf='/etc/named.conf'
-        dns_group='named'
-    else
-        dns_conf='/etc/bind/named.conf'
-        dns_group='bind'
-    fi
-
-    # Adding zone in named.conf
-    named="zone \"$domain_idn\" {type master; file"
-    named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
-    echo "$named" >> $dns_conf
-
-    # Updating domain dns zone
-    update_domain_zone
-
-    # Changing permissions
-    chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
-    chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db
-fi
+rebuild_dns_domain_conf
 
 # Updating dns-cluster queue
-if [ -n "$DNS_CLUSTER" ]; then
+if [ "$DNS_CLUSTER"  = "yes" ]; then
     cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
     echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi

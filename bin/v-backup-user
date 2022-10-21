@@ -419,6 +419,7 @@ if [ -n "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
 
         # Building directory tree
         mkdir -p $tmpdir/dns/$domain/conf
+        mkdir -p $tmpdir/dns/$domain/conf/keys
         mkdir -p $tmpdir/dns/$domain/hestia
 
         # Backup dns.conf
@@ -430,6 +431,12 @@ if [ -n "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
         cp $USER_DATA/dns/$domain.conf hestia/$domain.conf
         if [ "$DNS_SYSTEM" != 'remote' ]; then
             cp $HOMEDIR/$user/conf/dns/$domain.db conf/$domain.db
+        fi
+        # Backup DNSSEC public and private key if enabled
+        dnssec=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "DNSSEC='yes'")
+        if [ -n "$dnssec" ]; then
+            format_domain_idn
+            cp $USER_DATA/keys/K$domain_idn*.* $tmpdir/dns/$domain/conf/keys
         fi
     done
 

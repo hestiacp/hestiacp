@@ -117,8 +117,14 @@ if [ -n "$MAIL_SYSTEM" ]; then
 fi
 
 if [ -n "$DNS_SYSTEM" ]; then
+    if [ "$DNS_SYSTEM" = 'named' ]; then
+        dns_group='named'
+    else
+        dns_group='bind'
+    fi
     mkdir $HOMEDIR/$user/conf/dns
-    chmod 751 $HOMEDIR/$user/conf/dns
+    chmod 771 $HOMEDIR/$user/conf/dns
+    chown root:$dns_group $HOMEDIR/$user/conf/dns
 fi 
 
 # Create default writeable folders

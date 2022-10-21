@@ -71,7 +71,8 @@
 			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Records_DNS');?></b></div>
 			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Template');?></b></div>
 			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('TTL');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=_('SOA');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('SOA');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?=_('DNSSEC');?></b></div>
 			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Expiration Date');?></b></div>
 		</div>
 	</div>
@@ -90,6 +91,11 @@
 				$spnd_action = 'suspend';
 				$spnd_icon = 'fa-pause';
 				$spnd_confirmation = _('SUSPEND_DOMAIN_CONFIRMATION');
+			}
+			if ($data[$key]['DNSSEC'] == 'no') {
+				$dnssec_icon = 'fa-times-circle';
+			} else {
+				$dnssec_icon = 'fa-check-circle';
 			}
 		?>
 		<div class="l-unit <?php if ($status == 'suspended') echo ' l-unit--suspended'; ?> animated fadeIn" v_unit_id="<?=htmlentities($key);?>"
@@ -114,6 +120,8 @@
 								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
 									<div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?=_('Add DNS Record');?>"><i class="fas fa-plus-circle status-icon green status-icon dim"></i></a></div>
 									<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Domain');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+									<?php if($data[$key]['DNSSEC'] == "yes"){?><div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>" title="<?=_('View Public DNSSEC key');?>"><i class="fas fa-key status-icon orange status-icon dim"></i></a></div>
+									<?php } ?>
 								<?php } ?>
 								<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?=_('DNS records');?>"><i class="fas fa-list status-icon lightblue status-icon dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
@@ -144,7 +152,10 @@
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['TPL']?></b></div>
 				<div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TTL']?></div>
-				<div class="clearfix l-unit__stat-col--left text-center wide"><?=$data[$key]['SOA']?></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['SOA']?></div>
+				<div class="clearfix l-unit__stat-col--left text-center compact-3">
+					<i class="fas <?=$dnssec_icon;?>"></i>
+				</div>
 				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['EXP']?></b></div>
 			</div>
 		</div>

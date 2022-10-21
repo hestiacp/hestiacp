@@ -438,7 +438,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
         echo -e "$(date "+%F %T") $domain" |tee -a $tmpdir/restore.log
 
         # Cleanup previous config keys
-        unset -v DOMAIN IP TPL TTL EXP SOA RECORDS
+        unset -v DOMAIN IP TPL TTL EXP SOA RECORDS DNSSEC KEY SLAVE MASTER
 
         # Checking domain existance
         check_config=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
@@ -484,11 +484,20 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 
             # Merging dns.conf keys
             str="DOMAIN='$domain' IP='$IP' TPL='$TPL' TTL='$TTL' EXP='$EXP'"
-            str="$str SOA='$SOA' RECORDS='$RECORDS' SUSPENDED='no'"
+            str="$str SOA='$SOA' RECORDS='$RECORDS'  DNSSEC='$DNSSEC'"
+            str="$str KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER' SUSPENDED='no'"
             str="$str TIME='$(date +%T)' DATE='$(date +%F)'"
             echo $str >> $USER_DATA/dns.conf
         fi
-
+        
+        if [ "$DNSSEC" = "yes" ]; then
+            format_domain_idn
+            # Probably need to change the cache dir for RHEL
+            cp $tmpdir/dns/$domain/conf/keys/* /var/cache/bind/
+            chown bind:bind /var/cache/bind/K$domain_idn*
+            chmod 644 /var/cache/bind/K$domain_idn*
+        fi
+        
         # Restoring DNS records
         cp -f $tmpdir/dns/$domain/$backup_system/$domain.conf $USER_DATA/dns/
 

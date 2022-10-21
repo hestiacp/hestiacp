@@ -54,13 +54,27 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
     # Syncing TTL
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" 'domain' 'no'
-    check_result $? "$HOST connection failed (sync)" "$E_CONNECT"
-
-    # Rebuilding dns zone
-    cluster_cmd v-rebuild-dns-domain "$DNS_USER" "$domain" 'yes' 'no'
-    check_result $? "$HOST connection failed (rebuild)" "$E_CONNECT"
-
+    if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+        str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
+        ip=$($BIN/v-list-sys-ips plain | cut -f1);
+        str=$(echo "$str" | sed "s/MASTER='*'/MASTER='$ip'/g");
+            
+        # Syncing domain data
+        cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
+        check_result $? "$HOST connection failed" "$E_CONNECT"
+        
+        cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
+        check_result $? "$HOST connection failed" "$E_CONNECT"
+        
+        rndc notify $domain  > /dev/null 2>&1
+    else
+        cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" 'domain' 'no'
+        check_result $? "$HOST connection failed (sync)" "$E_CONNECT"
+    
+        # Rebuilding dns zone
+        cluster_cmd v-rebuild-dns-domain "$DNS_USER" "$domain" 'yes' 'no'
+        check_result $? "$HOST connection failed (rebuild)" "$E_CONNECT"
+    fi
 done
 
 #----------------------------------------------------------#

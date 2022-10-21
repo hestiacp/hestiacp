@@ -63,9 +63,13 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
     
     # Parsing remote host parameters
     parse_object_kv_list "$cluster"
-
+    
     # Syncing serial
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+    # Parsing domain parameters
+    parse_object_kv_list "$str"
+    
+    if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
     cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME 'domain' 'no'
     check_result $? "$HOST connection failed (soa sync)" "$E_CONNECT"
 
@@ -77,9 +81,12 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
     # Rebuilding dns zone
     cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
     check_result $? "$HOST connection failed (rebuild)" "$E_CONNECT"
-
+    fi
 done
 
+if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
+    rndc notify $domain  > /dev/null 2>&1
+fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

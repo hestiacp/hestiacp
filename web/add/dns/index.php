@@ -66,6 +66,9 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_ns8'])) {
         $_POST['v_ns8'] = '';
     }
+    if (empty($_POST['v_dnssec'])) {
+        $_POST['v_dnssec'] = 'no';
+    }
     $v_ns1 = quoteshellarg($_POST['v_ns1']);
     $v_ns2 = quoteshellarg($_POST['v_ns2']);
     $v_ns3 = quoteshellarg($_POST['v_ns3']);
@@ -74,10 +77,11 @@ if (!empty($_POST['ok'])) {
     $v_ns6 = quoteshellarg($_POST['v_ns6']);
     $v_ns7 = quoteshellarg($_POST['v_ns7']);
     $v_ns8 = quoteshellarg($_POST['v_ns8']);
+    $v_dnssec = quoteshellarg($_POST['v_dnssec']);
 
     // Add dns domain
     if (empty($_SESSION['error_msg'])) {
-        exec(HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".quoteshellarg($v_ip)." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." ".$v_ns5."  ".$v_ns6."  ".$v_ns7." ".$v_ns8." no", $output, $return_var);
+        exec(HESTIA_CMD."v-add-dns-domain ".$user." ".$v_domain." ".quoteshellarg($v_ip)." ".$v_ns1." ".$v_ns2." ".$v_ns3." ".$v_ns4." ".$v_ns5."  ".$v_ns6."  ".$v_ns7." ".$v_ns8." no ".$v_dnssec, $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);
     }
@@ -168,6 +172,7 @@ if (!empty($_POST['ok_rec'])) {
     $v_val = quoteshellarg($_POST['v_val']);
     $v_priority = quoteshellarg($_POST['v_priority']);
     $v_ttl = quoteshellarg($_POST['v_ttl']);
+
     // Add dns record
     if (empty($_SESSION['error_msg'])) {
         exec(HESTIA_CMD."v-add-dns-record ".$user." ".$v_domain." ".$v_rec." ".$v_type." ".$v_val." ".$v_priority." '' yes ".$v_ttl, $output, $return_var);
@@ -183,6 +188,7 @@ if (!empty($_POST['ok_rec'])) {
         unset($v_rec);
         unset($v_val);
         unset($v_priority);
+        unset($v_dnssec);
     }
 }
 
@@ -281,6 +287,9 @@ if (empty($_GET['domain'])) {
     }
     if (empty($v_ttl)) {
         $v_ttl = '';
+    }
+    if (empty($v_dnssec)) {
+        $v_dnssec = '';
     }
     render_page($user, $TAB, 'add_dns_rec');
 }

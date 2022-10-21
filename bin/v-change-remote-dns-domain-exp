@@ -52,8 +52,20 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
     # Syncing domain
     str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" 'no'
-    check_result $? "$HOST connection failed (exp insert)" "$E_CONNECT"
+    if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+        str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
+        ip=$($BIN/v-list-sys-ips plain | cut -f1);
+        str=$(echo "$str" | sed "s/MASTER='*'/MASTER='$ip'/g");
+            
+        # Syncing domain data
+        cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
+        check_result $? "$HOST connection failed" "$E_CONNECT"
+        
+        rndc notify $domain  > /dev/null 2>&1
+    else
+        cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" 'no'
+        check_result $? "$HOST connection failed (exp insert)" "$E_CONNECT"
+    fi
 
 done
 

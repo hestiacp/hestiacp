@@ -164,7 +164,13 @@ rebuild_user_conf() {
         chmod 660 $USER_DATA/dns.conf
 
         mkdir -p $HOMEDIR/$user/conf/dns
-        chmod 751 $HOMEDIR/$user/conf/dns
+        chmod 771 $HOMEDIR/$user/conf/dns
+        if [ "$DNS_SYSTEM" = 'named' ]; then
+            dns_group='named'
+        else
+            dns_group='bind'
+        fi
+        chown root:$dns_group $HOMEDIR/$user/conf/dns
         if [ "$create_user" = "yes" ]; then
             $BIN/v-rebuild-dns-domains $user $restart
         fi
@@ -469,37 +475,39 @@ rebuild_dns_domain_conf() {
     get_domain_values 'dns'
     domain_idn=$(idn2 --quiet "$domain")
 
-    # Checking zone file
-    if [ ! -e "$USER_DATA/dns/$domain.conf" ]; then
-        cat $DNSTPL/$TPL.tpl |\
-            sed -e "s/%ip%/$IP/g" \
-                -e "s/%domain_idn%/$domain_idn/g" \
-                -e "s/%domain%/$domain/g" \
-                -e "s/%ns1%/$ns1/g" \
-                -e "s/%ns2%/$ns2/g" \
-                -e "s/%ns3%/$ns3/g" \
-                -e "s/%ns4%/$ns4/g" \
-                -e "s/%time%/$TIME/g" \
-                -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+    if [ "$SLAVE" != "yes" ]; then
+        # Checking zone file
+        if [ ! -e "$USER_DATA/dns/$domain.conf" ]; then
+            cat $DNSTPL/$TPL.tpl |\
+                sed -e "s/%ip%/$IP/g" \
+                    -e "s/%domain_idn%/$domain_idn/g" \
+                    -e "s/%domain%/$domain/g" \
+                    -e "s/%ns1%/$ns1/g" \
+                    -e "s/%ns2%/$ns2/g" \
+                    -e "s/%ns3%/$ns3/g" \
+                    -e "s/%ns4%/$ns4/g" \
+                    -e "s/%time%/$TIME/g" \
+                    -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+        fi
+    
+        # Sorting records
+        sort_dns_records
+        #Remove old sign files
+        rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
+        # Updating zone
+        update_domain_zone
+    
+        # Set permissions
+        if [ "$DNS_SYSTEM" = 'named' ]; then
+            dns_group='named'
+        else
+            dns_group='bind'
+        fi
+        # Set file permissions
+        chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
+        chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db   
     fi
-
-    # Sorting records
-    sort_dns_records
-
-    # Updating zone
-    update_domain_zone
-
-    # Set permissions
-    if [ "$DNS_SYSTEM" = 'named' ]; then
-        dns_group='named'
-    else
-        dns_group='bind'
-    fi
-
-    # Set file permissions
-    chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
-    chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db
-
+    
     # Get dns config path
     if [ -e '/etc/named.conf' ]; then
         dns_conf='/etc/named.conf'
@@ -517,16 +525,45 @@ rebuild_dns_domain_conf() {
         fi
         suspended_dns=$((suspended_dns + 1))
     else
-        if [ -z "$(grep /$domain.db $dns_conf)" ]; then
-            named="zone \"$domain_idn\" {type master; file"
+        sed -i "/dns\/$domain.db/d" $dns_conf
+        if [ "$SLAVE" = "yes" ]; then
+            named="zone \"$domain_idn\" in {type slave; masters { $MASTER; }; file"
             named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
             echo "$named" >> $dns_conf
+        else
+            if [ "$DNSSEC" = "yes" ]; then
+                named="zone \"$domain_idn\" in {type master; dnssec-policy default; inline-signing yes; file"
+                named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+                echo "$named" >> $dns_conf
+                else
+                named="zone \"$domain_idn\" {type master; file"
+                named="$named \"$HOMEDIR/$user/conf/dns/$domain.db\";};"
+                echo "$named" >> $dns_conf
+            fi
         fi
     fi
     user_domains=$((user_domains + 1))
     records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
     user_records=$((user_records + records))
     update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
+    
+    # Load new config
+    /usr/sbin/rndc reconfig > /dev/null 2>&1
+    
+    # Reload config
+    /usr/sbin/rndc reload > /dev/null 2>&1
+    
+    if [ "$DNSSEC" = "yes" ]; then
+        # Key consists always out of 5 digits when less is used they are "lost" 
+        key=$(/usr/sbin/rndc dnssec -status $domain_idn | grep ^key: | cut -f2 -d' ' | numfmt --format='%05.0f' --invalid=ignore);
+        
+        if [ ! -d "$USER_DATA/keys/" ]; then
+            mkdir -p $USER_DATA/keys/
+        fi
+        cp /var/cache/bind/K$domain_idn.+013+$key.* $USER_DATA/keys/
+        update_object_value 'dns' 'DOMAIN' "$domain" '$KEY' "$key"
+    fi
+    rndc notify $domain_idn  > /dev/null 2>&1
 }
 
 # MAIL domain rebuild

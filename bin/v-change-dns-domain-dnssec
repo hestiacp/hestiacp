@@ -21,6 +21,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/rebuild.sh
 source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file
@@ -56,6 +58,8 @@ check_hestia_demo_mode
 if [ -f "$HESTIA/data/queue/dns-cluster.pipe" ]; then 
     bash $HESTIA/data/queue/dns-cluster.pipe
 fi
+
+syshealth_repair_dns_config
 
 # Changing exp
 update_object_value 'dns' 'DOMAIN' "$domain" '$DNSSEC' "$status"

@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Add support for DNSSEC support for DNS domains (#2938)
 - Add support for rate limit exim in packages (#2920)
 - Add support for ssh keys for SFTP (#2906)
 

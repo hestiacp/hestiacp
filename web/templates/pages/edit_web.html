@@ -418,7 +418,7 @@
                 $v_ftp_email    = $ftp_user['v_ftp_email'];
                 $v_ftp_pre_path = $ftp_user['v_ftp_pre_path'];
               ?>
-              <div style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" class="ftptable ftptable-nrm" name="v_add_domain_ftp">
+              <div style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
                 <div class="u-mb10">
                   <?=_('FTP');?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="ftp-remove-user additional-control" onclick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
                   <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
@@ -472,7 +472,7 @@
 </div>
 
 <div id="templates" class="u-hidden">
-  <div class="ftptable ftptable-nrm" name="v_add_domain_ftp">
+  <div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
     <div class="u-mb10">
       <?=_('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onclick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
       <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">

@@ -531,9 +531,8 @@ a {
 }
 
 .alert {
-  border-radius: 4px;
   box-sizing: border-box;
-  display: block;
+  border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 400;
   padding: 0.8rem;

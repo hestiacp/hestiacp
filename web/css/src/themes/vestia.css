@@ -237,8 +237,8 @@ strong {
 }
 
 .alert {
-  text-shadow: none !important;
-  box-shadow: none !important;
+  text-shadow: none;
+  box-shadow: none;
 }
 
 .pill.usage {

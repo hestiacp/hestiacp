@@ -43,10 +43,10 @@
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
 							<tr>
 								<td class="u-pt18">
-									<span class="alert alert-danger alert-with-icon">
+									<div class="alert alert-danger alert-with-icon">
 										<i class="fas fa-exclamation"></i>
-										<?=_('Avoid adding web domains on admin account');?>
-									</span>
+										<p><?=_('Avoid adding web domains on admin account');?></p>
+									</div>
 								</td>
 							</tr>
 						<?php } ?>
@@ -62,7 +62,6 @@
 							<tr>
 								<td class="hint">
 									<?=sprintf(_('Prefix %s will be automatically added to database name and database user'),'<b>'.$user_plain.'_</b>'); ?>
-								</td>
 								</td>
 							</tr>
 							<tr>

@@ -31,13 +31,12 @@
 
 			<div class="app-form">
 				<?php if( !$WebappInstaller->isDomainRootClean()): ?>
-					<span class="alert alert-info alert-with-icon">
+					<div class="alert alert-info alert-with-icon">
 						<i class="fas fa-info"></i>
-						<?=_('Data loss warning!');?><br><br>
-						<?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?><br><br>
-						<?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?>
-					</span>
-					<br>
+						<p class="u-mb10"><?=_('Data loss warning!');?></p>
+						<p class="u-mb10"><?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?></p>
+						<p><?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?></p>
+					</div>
 				<?php endif; ?>
 				<div class="u-input-width u-pt18">
 					<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>

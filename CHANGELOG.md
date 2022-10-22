@@ -14,21 +14,15 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Add an check before config exists before searching it (#2930)
-- Fixed an issue with v-change-web-domain-name does not clean up it everything (#2915)
-- Fixed issue with search function. (#2977 #2974 and #2973)
-
-### Enhancements 
-
-- Cleanup old VestaCP html/js/css code  (#2949, #2941 #2941 #2940 #2919 #2907 @alecrust)
-
-### Security
-
-- Implement quoteshellarg as replacement for escapeshellarg (#2720 @divinity76)
+- Update Ipverse url for United Kingdom (#2962)
 
 ### Dependencies
 
-## [1.6.10] - Service release
+- Update Rainloop to 1.17.0 (#2957)
+- Update Zlib to 1.2.13
+- Update hestia-nginx to 1.23.2
+
+## [1.6.10] - Service release 
 
 ### Security
 
@@ -36,8 +30,8 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
-- Update Filegator to 7.8.7
-- Update Zlib to 1.2.13
+- Update Filegator to 7.8.3
+- Update PHPmailer to 6.6.5
 
 ## [1.6.9] - Service release 
 
@@ -75,7 +69,7 @@ All notable changes to this project will be documented in this file.
 
 - Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
 - Fixed an issue with v-change-web-domain-owner and mail only domains (#2840, #2841)
-- Grey out phpmyadmin buttons + add link to docs.hestiacp.com for support (#2843)
+- Grey out phpmyadmin buttons + add link to docs.hestia.com for support (#2843)
 - Block the use of CNAME records on @ or root records DNS domain (#2838, #2842)
 - Code clean up and remove unused tests and templates (#2829 and #2831)
 - Fixed an issue where no password was send when a user create a new mail account (#2819 #2815)
@@ -156,7 +150,8 @@ All notable changes to this project will be documented in this file.
 - Improve random bytes generator (#2774)
 - Don't allow /inc/2fa/secret.php called from the web browser directly (#2784 @mayappear)
 - Improve CSRF Origin Check Bypass (#2785 @mayappear)
-- Fix vulnerability in Docuwiki Quick Install App @redstarp2 (CVE-2022-2550)
+- Fix vulnerability in Dokuwiki Quick Install App @redstarp2 (CVE-2022-2550)
+- Fixed an issue where custom ports where not saved on restart fail2ban service making Hestia login screen vulnerable for brute force
 
 ### Dependencies
 
@@ -167,18 +162,18 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Fixed an issue with downloading log files ()
-- Fixed an issue with installing Quick Installers (#2762, #2760, @Hestiacp)
+- Fixed an issue with installing Quick Installers (#2762, #2760, @divinity76)
 - Fixed an issue with Apache Access / Awstats logs IP after using v-update-sys-ip (#2759 @adion-gorani)
 
 ## [1.6.3] - Service release 
 
 ### Features
 
-- Add additional support for bcrypt for mail passwords (#2752 @Hestiacp)
+- Add additional support for bcrypt for mail passwords (#2752 @divinity76)
 
 ### Enhancements 
 
-- Simplify md5crypt on reset form email (#2751 @Hestiacp)
+- Simplify md5crypt on reset form email (#2751 @divinity76)
 - Use secure RNG to generate passwords (#2726)
 - Add twig support filemanger (#2714, @anvme)
 
@@ -186,7 +181,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue with restart Apache2 and Nginx after v-update-letsencrypt (#2748, #2563, #2744, #2677)
 - Prevent transversing path in Quick installer apps (#2742)
-- Avoid out of memory serving large logfiles (#2741, #2736,  @Hestiacp
+- Avoid out of memory serving large logfiles (#2741, #2736,  @divinity76
 - Improve passwords loading in password_valid (#2739)
 - Use secure RNG to generate passwords (#2726)
 - Utilise entire alphabet for random string (#2735 @Shadowfied)

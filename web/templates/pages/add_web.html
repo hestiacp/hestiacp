@@ -16,9 +16,11 @@
 <div class="l-separator"></div>
 
 <div class="l-center animated fadeIn">
+
   <form id="vstobjects" name="v_add_web" method="post">
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="ok" value="Add">
+
     <div class="app-form">
       <h1 class="page-title"><?=_('Add Web Domain');?></h1>
       <?php show_error_panel($_SESSION);?>
@@ -78,5 +80,7 @@
         <?php } ?>
       </div>
     </div>
+
   </form>
+
 </div>

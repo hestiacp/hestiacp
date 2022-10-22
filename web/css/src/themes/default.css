@@ -196,6 +196,7 @@ body {
   background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%) !important;
 }
 
+h1,
 p,
 pre {
   margin: 0;
@@ -2867,7 +2868,6 @@ a.button.cancel {
   font-weight: 500 !important;
   padding-bottom: 30px !important;
   letter-spacing: -0.01em;
-  cursor: default;
 }
 
 .section-title {

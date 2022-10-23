@@ -2861,7 +2861,7 @@ a.button.cancel {
 .page-title {
   font-size: 1.4rem !important;
   font-weight: 500 !important;
-  padding-bottom: 30px !important;
+  padding-bottom: 10px !important;
   letter-spacing: -0.01em;
 }
 

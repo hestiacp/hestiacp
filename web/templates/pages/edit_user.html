@@ -148,12 +148,12 @@
         <?php } else { ?>
           <?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] != $v_username)) {?>
             <div class="u-mb10">
-            <label for="v_role" class="form-label"><?=_('Role');?></label>
-            <select class="form-select" name="v_role" id="v_role">
-              <option value="user"><?=_('User');?>
-              <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?=_('Administrator');?>
-            </select>
-          </div>
+              <label for="v_role" class="form-label"><?=_('Role');?></label>
+              <select class="form-select" name="v_role" id="v_role">
+                <option value="user"><?=_('User');?>
+                <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?=_('Administrator');?>
+              </select>
+            </div>
           <?php } ?>
         <?php } ?>
         <?php if ($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') {?>

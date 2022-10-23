@@ -5,7 +5,7 @@
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
     <div class="l-unit-toolbar__buttonstrip float-right">
-      <?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin"))  {?>
+      <?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
         <a href="#" class="ui-button" title="<?=_('Save');?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
       <?php } ?>
     </div>
@@ -26,7 +26,7 @@
       <?php show_error_panel($_SESSION);?>
       <div class="u-input-width">
         <?php
-        if (($user_plain == 'admin') && (($_GET['accept'] !== "true")))  {?>
+        if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
           <div class="alert alert-danger alert-with-icon" role="alert">
             <i class="fas fa-exclamation"></i>
             <p><?=_('Avoid adding web domains on admin account');?></p>

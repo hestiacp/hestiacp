@@ -596,10 +596,6 @@ a {
   color: #fff;
 }
 
-form#vstobjects .alert {
-  width: 380px;
-}
-
 .app-list.cards {
   display: flex;
   flex-wrap: wrap;

@@ -64,7 +64,7 @@ function syshealth_update_dns_config_format() {
     # DNS DOMAINS
     # Create array of known keys in configuration file
     system="dns"
-    known_keys="DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS DNSSEC KEY SLAVE SUSPENDED TIME DATE"
+    known_keys="DOMAIN IP TPL TTL EXP SOA SERIAL SRC RECORDS DNSSEC KEY SLAVE MASTER SUSPENDED TIME DATE"
     write_kv_config_file
     unset system
     unset known_keys
@@ -164,6 +164,19 @@ function syshealth_repair_mail_config() {
     for key in $known_keys; do
         if [ -z "${!key}" ]; then
             add_object_key 'mail' 'DOMAIN' "$domain" "$key" "$prev"
+        fi
+        prev=$key
+    done
+}
+
+function syshealth_repair_dns_config() {
+    system="dns"
+    sanitize_config_file "$system"
+    get_domain_values 'dns'
+    prev="DOMAIN"
+    for key in $known_keys; do
+        if [ -z "${!key}" ]; then
+            add_object_key 'dns' 'DOMAIN' "$domain" "$key" "$prev"
         fi
         prev=$key
     done

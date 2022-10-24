@@ -2772,7 +2772,7 @@ a.button.cancel {
   color: #777;
   border: 1px solid #d9d9d9;
   padding: 6px 6px 6px 18px;
-  margin-top: 97px;
+  margin-right: 70px;
   min-width: 320px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
@@ -2788,6 +2788,7 @@ a.button.cancel {
   font-size: 0.75rem;
   height: 20px;
   font-weight: normal;
+  padding-bottom: 4px;
 }
 
 .mail-infoblock td:first-child {

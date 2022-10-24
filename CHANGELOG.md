@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 ### Dependencies
 
 - Update Rainloop to 1.17.0 (#2957)
+- Update Zlib to 1.2.13
+- Update hestia-nginx to 1.23.2
 
 ## [1.6.10] - Service release 
 

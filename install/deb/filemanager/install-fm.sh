@@ -22,8 +22,8 @@ fi
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
 
-FM_FILE="filegator_v${fm_v}.zip"
-FM_URL="https://github.com/filegator/filegator/releases/download/v${fm_v}/${FM_FILE}"
+FM_FILE="v${fm_v}.zip"
+FM_URL="https://github.com/filegator/filegator/archive/refs/tags/${FM_FILE}"
 
 
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"

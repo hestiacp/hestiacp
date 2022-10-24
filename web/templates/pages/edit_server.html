@@ -23,7 +23,7 @@
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="save" value="save">
 
-		<table class="data mode-add">
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
@@ -258,10 +258,10 @@
 											<td class="u-pt18">
 												<?=_('Enabled multi PHP versions');?>
 
-												<span class="alert alert-info alert-with-icon">
+												<div class="alert alert-info alert-with-icon u-input-width" role="alert">
 													<i class="fas fa-info"></i>
-													<?=_('Please wait while php is installed or removed');?>
-												</span>
+													<p><?=_('Please wait while php is installed or removed');?></p>
+												</div>
 											</td>
 										</tr>
 										<?php foreach($v_php_versions as $php_version): ?>

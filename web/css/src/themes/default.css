@@ -196,6 +196,7 @@ body {
   background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%) !important;
 }
 
+h1,
 p,
 pre {
   margin: 0;
@@ -530,9 +531,8 @@ a {
 }
 
 .alert {
-  border-radius: 4px;
   box-sizing: border-box;
-  display: block;
+  border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 400;
   padding: 0.8rem;
@@ -594,10 +594,6 @@ a {
 .alert a {
   font-weight: bold;
   color: #fff;
-}
-
-form#vstobjects .alert {
-  width: 380px;
 }
 
 .app-list.cards {
@@ -2865,9 +2861,8 @@ a.button.cancel {
 .page-title {
   font-size: 1.4rem !important;
   font-weight: 500 !important;
-  padding-bottom: 30px !important;
+  padding-bottom: 10px !important;
   letter-spacing: -0.01em;
-  cursor: default;
 }
 
 .section-title {
@@ -3864,6 +3859,10 @@ li[aria-expanded="true"] a {
 
 .u-ml10 {
   margin-left: 10px !important;
+}
+
+.u-mb5 {
+  margin-bottom: 5px !important;
 }
 
 .u-mb10 {

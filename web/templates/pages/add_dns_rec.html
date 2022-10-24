@@ -19,7 +19,7 @@
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="ok_rec" value="add">
 
-		<table class="data mode-add">
+		<table class="data">
 			<tr class="data-add">
 				<td class="data-dotted">
 					<table class="data-col1">
@@ -50,10 +50,8 @@
 						<tr>
 							<td class="u-pt6">
 								<label for="v_rec" class="form-label"><?=_('Record');?></label>
-								<div class="u-side-by-side">
-									<input type="text" class="form-control u-input-width" name="v_rec" id="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>">
-									<small class="hint u-ml10"></small>
-								</div>
+								<input type="text" class="form-control u-input-width" name="v_rec" id="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>">
+								<small class="hint"></small>
 							</td>
 						</tr>
 						<tr>

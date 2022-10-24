@@ -106,8 +106,8 @@ App.Listeners.WEB.keypress_ftp_path = function() {
 //
 //
 App.Actions.WEB.add_ftp_user_form = function() {
-    var ref = $('#templates').find('.ftptable-nrm').clone(true);
-    var index = $('.data-col2 .ftptable').length + 1;
+    var ref = $('#templates').find('.js-ftp-account-nrm').clone(true);
+    var index = $('.app-form .js-ftp-account').length + 1;
 
     ref.find('input').each(function(i, elm) {
         var name = $(elm).attr('name');
@@ -128,29 +128,29 @@ App.Actions.WEB.add_ftp_user_form = function() {
     $('#ftp_users').append(ref);
 
     var index = 1;
-    $('.data-col2 .ftp-user-number:visible').each(function(i, o) {
+    $('.app-form .ftp-user-number:visible').each(function(i, o) {
         $(o).text(index);
         index += 1;
     });
 }
 
 App.Actions.WEB.remove_ftp_user = function(elm) {
-    var ref = $(elm).parents('.ftptable');
+    var ref = $(elm).parents('.js-ftp-account');
     ref.find('.v-ftp-user-deleted').val('1');
     if (ref.find('.v-ftp-user-is-new').val() == 1) {
         ref.remove();
         return true;
     }
-    ref.removeClass('ftptable-nrm');
+    ref.removeClass('js-ftp-account-nrm');
     ref.hide();
 
     var index = 1;
-    $('.data-col2 .ftp-user-number:visible').each(function(i, o) {
+    $('.app-form .ftp-user-number:visible').each(function(i, o) {
         $(o).text(index);
         index += 1;
     });
 
-    if ($('.ftptable-nrm:visible').length == 0) {
+    if ($('.js-ftp-account-nrm:visible').length == 0) {
         $('.add-new-ftp-user-button').hide();
         $('input[name="v_ftp"]').prop('checked', false);
     }
@@ -158,8 +158,8 @@ App.Actions.WEB.remove_ftp_user = function(elm) {
 
 App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
     if ($(elm).prop('checked')) {
-        $('.ftptable-nrm, .v-add-new-user, .add-new-ftp-user-button').show();
-        $('.ftptable-nrm').each(function(i, elm) {
+        $('.js-ftp-account-nrm, .v-add-new-user, .add-new-ftp-user-button').show();
+        $('.js-ftp-account-nrm').each(function(i, elm) {
             var login = $(elm).find('.v-ftp-user');
             if (login.val().trim() != '') {
                 $(elm).find('.v-ftp-user-deleted').val(0);
@@ -167,8 +167,8 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
         });
     }
     else {
-        $('.ftptable-nrm, .v-add-new-user, .add-new-ftp-user-button').hide();
-        $('.ftptable-nrm').each(function(i, elm) {
+        $('.js-ftp-account-nrm, .v-add-new-user, .add-new-ftp-user-button').hide();
+        $('.js-ftp-account-nrm').each(function(i, elm) {
             var login = $(elm).find('.v-ftp-user');
             if (login.val().trim() != '') {
                 $(elm).find('.v-ftp-user-deleted').val(1);
@@ -207,16 +207,14 @@ App.Actions.WEB.randomPasswordGenerated = function(elm) {
 }
 
 App.Actions.WEB.passwordChanged = function(elm) {
-    var ref = $(elm).parents('.ftptable');
+    var ref = $(elm).parents('.js-ftp-account');
     if (ref.find('.vst-email-alert-on-psw').length == 0) {
         var inp_name = ref.find('.v-ftp-user-is-new').prop('name');
         inp_name = inp_name.replace('is_new', 'v_ftp_email');
-        ref.find('tr:last').after('<tr>\
-                                        <td class="u-pl50 u-pt6">\
-                                            <label for="' + inp_name + '" class="form-label">Send FTP credentials to email</label>\
-                                            <input type="text" class="form-control vst-email-alert-on-psw u-input-width" value="" name="' + inp_name + '" id="' + inp_name + '">\
-                                        </td>\
-                                    </tr>');
+        ref.find('div:last').after('<div class="u-pl50 u-mb10">\
+                                      <label for="' + inp_name + '" class="form-label">Send FTP credentials to email</label>\
+                                      <input type="email" class="form-control vst-email-alert-on-psw" value="" name="' + inp_name + '" id="' + inp_name + '">\
+                                   </div>');
     }
 }
 
@@ -285,7 +283,7 @@ function WEBrandom() {
 }
 
 function FTPrandom(elm) {
-    $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(randomString2(16));
+    $(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(randomString2(16));
     App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
 }
 

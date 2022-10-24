@@ -44,8 +44,8 @@ if [ "$fm_error" != "yes" ]; then
         wget "$FM_URL" --quiet -O "${FM_INSTALL_DIR}/${FM_FILE}"
 
     unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}"
-    mv --force ${FM_INSTALL_DIR}/filegator/* "${FM_INSTALL_DIR}"
-    rm --recursive --force ${FM_INSTALL_DIR}/filegator
+    mv --force ${FM_INSTALL_DIR}/filegator-${fm_v}/* "${FM_INSTALL_DIR}"
+    rm --recursive --force ${FM_INSTALL_DIR}/filegator-${fm_v}
     [[ -f "${FM_INSTALL_DIR}/${FM_FILE}" ]] && rm "${FM_INSTALL_DIR}/${FM_FILE}"
 
     cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"

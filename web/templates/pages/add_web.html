@@ -25,8 +25,7 @@
       <h1 class="page-title"><?=_('Add Web Domain');?></h1>
       <?php show_error_panel($_SESSION);?>
       <div class="u-input-width">
-        <?php
-        if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
+        <?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
           <div class="alert alert-danger alert-with-icon" role="alert">
             <i class="fas fa-exclamation"></i>
             <p><?=_('Avoid adding web domains on admin account');?></p>

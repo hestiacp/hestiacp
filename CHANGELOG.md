@@ -3,8 +3,15 @@ All notable changes to this project will be documented in this file.
 
 ## [1.6.11] - Service release 
 
+### Important
+
+A bug in v-update-sys-hestia caused auto update to be not working. Please run: ` apt update && apt upgrade `
+
 ### Bugfixes
 
+- Fixed an bug in auto update script for HestiaCP (#2967)
+- Fixed an issue in download ssl certificate in Firefox (#2979)
+- Resolve issue with idn domains and redirect (#2988)
 - Update Ipverse url for United Kingdom (#2962)
 
 ### Dependencies
@@ -12,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Update Rainloop to 1.17.0 (#2957)
 - Update Zlib to 1.2.13
 - Update hestia-nginx to 1.23.2
+- Update Filegator to 7.8.7
 
 ## [1.6.10] - Service release 
 

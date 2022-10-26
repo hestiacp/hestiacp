@@ -28,7 +28,7 @@ if (!empty($_POST['ok'])) {
 
     <div class="app-form">
       <h1 class="page-title"><?= _("Access Key") ?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <?php if (!empty($key_data['ACCESS_KEY_ID'])) { ?>
           <div class="u-mt15 u-mb10">

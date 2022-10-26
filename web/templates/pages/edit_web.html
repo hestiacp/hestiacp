@@ -29,7 +29,7 @@
 
     <div class="app-form">
       <h1 class="page-title"><?=_('Editing Domain');?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <div class="u-mb10">
           <label for="v_domain" class="form-label"><?=_('Domain');?></label>
@@ -86,7 +86,7 @@
         </div>
         <div class="stats-auth">
           <div class="u-pl50">
-            <div style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;" id="statstable" name="v-add-web-domain-stats-user">
+            <div id="statstable" name="v-add-web-domain-stats-user" style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;">
               <div class="u-mb10">
                 <label for="v_stats_user" class="form-label"><?=_('Username');?></label>
                 <input type="text" class="form-control" name="v_stats_user" id="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
@@ -108,171 +108,159 @@
             <?=_('Enable domain redirection');?>
           </label>
         </div>
-        <div class="u-pl50 u-mb10">
-          <div style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;" id="v_redirect">
-            <div class="form-check">
-              <input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
-              <label for="v-redirect-radio-1">
-                <?=sprintf(_('Redirect visitors to %s'),"www.".htmlentities($v_domain));?>
-              </label>
+        <div id="v_redirect" class="u-pl50 u-mb20" style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;">
+          <div class="form-check">
+            <input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
+            <label for="v-redirect-radio-1">
+              <?=sprintf(_('Redirect visitors to %s'),"www.".htmlentities($v_domain));?>
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo 'checked';?> >
+            <label for="v-redirect-radio-2">
+              <?=sprintf(_('Redirect visitors to %s'),htmlentities($v_domain));?>
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if( !empty($v_redirect_custom)) echo 'checked';?>>
+            <label for="v-redirect-radio-3">
+              <?=_("Redirect visitors to a custom domain or web address");?>
+            </label>
+          </div>
+          <div id="custom_redirect" style="margin-left: 22px; display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
+            <div class="u-mt15 u-mb10">
+              <label for="v-redirect-custom" class="form-label"><?=_('Target domain or URL');?></label>
+              <input type="text" class="form-control" name="v-redirect-custom" id="v-redirect-custom" value="<?=$v_redirect_custom;?>">
             </div>
-            <div class="form-check">
-              <input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo 'checked';?> >
-              <label for="v-redirect-radio-2">
-                <?=sprintf(_('Redirect visitors to %s'),htmlentities($v_domain));?>
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if( !empty($v_redirect_custom)) echo 'checked';?>>
-              <label for="v-redirect-radio-3">
-                <?=_("Redirect visitors to a custom domain or web address");?>
-              </label>
-            </div>
-            <div id="custom_redirect" style="margin-left: 22px; display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
-              <div class="u-mt15 u-mb10">
-                <label for="v-redirect-custom" class="form-label"><?=_('Target domain or URL');?></label>
-                <input type="text" class="form-control" name="v-redirect-custom" id="v-redirect-custom" value="<?=$v_redirect_custom;?>">
-              </div>
-              <div class="u-mb20">
-                <label for="v-redirect-code" class="form-label"><?=_('Status code');?>:</label>
-                <select class="form-select" name="v-redirect-code" id="v-redirect-code">
-                  <?php foreach ($redirect_code_options as $status_code): ?>
-                  <option value="<?=$status_code;?>"
-                    <?=($v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code))?' selected="selected" ':''; ?>>
-                    <?=$status_code;?>
-                  </option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
+            <div class="u-mb20">
+              <label for="v-redirect-code" class="form-label"><?=_('Status code');?>:</label>
+              <select class="form-select" name="v-redirect-code" id="v-redirect-code">
+                <?php foreach ($redirect_code_options as $status_code): ?>
+                <option value="<?=$status_code;?>"
+                  <?=($v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code))?' selected="selected" ':''; ?>>
+                  <?=$status_code;?>
+                </option>
+                <?php endforeach; ?>
+              </select>
             </div>
           </div>
         </div>
-        <div class="form-check">
+        <div class="form-check u-mb10">
           <input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo 'checked' ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);">
           <label for="v_ssl">
             <?=_('SSL Support');?>
           </label>
         </div>
-        <div class="u-pl50">
-          <div style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;" id="ssltable">
-            <div class="u-mt15 u-mb10">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo 'checked' ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)">
-                <label for="letsencrypt">
-                  <?=_('Lets Encrypt Support');?>
-                </label>
-              </div>
-            </div>
-            <div class="u-mb10">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo 'checked' ?> onclick="">
-                <label for="v_ssl_forcessl">
-                  <?=_('Force SSL/HTTPS');?>
-                </label>
-              </div>
-            </div>
-            <div class="u-mb10">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo 'checked' ?>>
-                <label for="ssl_hsts">
-                  <?=_('Enable SSL HSTS');?>
-                </label>
-              </div>
-            </div>
-            <div id="ssl-details" style="<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">
-              <div class="u-mb10">
-                <label for="ssl_crt" class="form-label">
-                  <?=_('SSL Certificate');?>
-                  <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
-                </label>
-                <textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
-              </div>
-              <div class="u-mb10">
-                <label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
-                <textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
-              </div>
-              <div class="u-mb10">
-                <label for="v_ssl_ca" class="form-label">
-                  <?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
-                </label>
-                <textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
-              </div>
-            </div>
-            <?php if ($v_ssl != 'no' ) { ?>
-              <table class="additional-info">
-                <tr>
-                  <td>
-                    <b><?=_('SUBJECT');?>:</b>
-                  </td>
-                  <td class="details">
-                    <?=$v_ssl_subject?>
-                  </td>
-                </tr>
-                <?php if ($v_ssl_aliases){?>
-                <tr>
-                  <td>
-                    <b><?=_('ALIASES');?>:</b>
-                  </td>
-                  <td class="details">
-                    <?=$v_ssl_aliases?>
-                  </td>
-                </tr>
-                <?php } ?>
-                <tr>
-                  <td>
-                    <b><?=_('NOT_BEFORE');?>:</b>
-                  </td>
-                  <td class="details">
-                    <?=$v_ssl_not_before?>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <b><?=_('NOT_AFTER');?>:</b>
-                  </td>
-                  <td class="details">
-                    <?=$v_ssl_not_after?>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <b><?=_('SIGNATURE');?>:</b>
-                  </td>
-                  <td class="details">
-                    <?=$v_ssl_signature?>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <b><?=_('PUB_KEY');?>:</b>
-                  </td>
-                  <td class="details">
-                    <?=$v_ssl_pub_key?>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <b><?=_('ISSUER');?>:</b>
-                  </td>
-                  <td class="details">
-                    <?=$v_ssl_issuer?>
-                  </td>
-                </tr>
-                <tr id="letsinfo" style="display:<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ) { echo 'block';} else {echo 'none';} ?>">
-                  <td><a href="#" onclick="elementHideShow('ssl-details'); return false;" class="generate"><?=_('Show Certificate');?></a></td>
-                </tr>
-              </table>
-            <? } // if ssl is enabled ?>
+        <div id="ssltable" class="u-pl50" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;">
+          <div class="form-check u-mb10">
+            <input class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo 'checked' ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)">
+            <label for="letsencrypt">
+              <?=_('Lets Encrypt Support');?>
+            </label>
           </div>
+          <div class="form-check u-mb10">
+            <input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo 'checked' ?> onclick="">
+            <label for="v_ssl_forcessl">
+              <?=_('Force SSL/HTTPS');?>
+            </label>
+          </div>
+          <div class="form-check u-mb20">
+            <input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo 'checked' ?>>
+            <label for="ssl_hsts">
+              <?=_('Enable SSL HSTS');?>
+            </label>
+          </div>
+          <div id="ssl-details" style="<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">
+            <div class="u-mb10">
+              <label for="ssl_crt" class="form-label">
+                <?=_('SSL Certificate');?>
+                <span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
+              </label>
+              <textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+            </div>
+            <div class="u-mb10">
+              <label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
+              <textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+            </div>
+            <div class="u-mb20">
+              <label for="v_ssl_ca" class="form-label">
+                <?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
+              </label>
+              <textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+            </div>
+          </div>
+          <?php if ($v_ssl != 'no' ) { ?>
+            <table class="additional-info">
+              <tr>
+                <td>
+                  <b><?=_('SUBJECT');?>:</b>
+                </td>
+                <td class="details">
+                  <?=$v_ssl_subject?>
+                </td>
+              </tr>
+              <?php if ($v_ssl_aliases){?>
+              <tr>
+                <td>
+                  <b><?=_('ALIASES');?>:</b>
+                </td>
+                <td class="details">
+                  <?=$v_ssl_aliases?>
+                </td>
+              </tr>
+              <?php } ?>
+              <tr>
+                <td>
+                  <b><?=_('NOT_BEFORE');?>:</b>
+                </td>
+                <td class="details">
+                  <?=$v_ssl_not_before?>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b><?=_('NOT_AFTER');?>:</b>
+                </td>
+                <td class="details">
+                  <?=$v_ssl_not_after?>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b><?=_('SIGNATURE');?>:</b>
+                </td>
+                <td class="details">
+                  <?=$v_ssl_signature?>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b><?=_('PUB_KEY');?>:</b>
+                </td>
+                <td class="details">
+                  <?=$v_ssl_pub_key?>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <b><?=_('ISSUER');?>:</b>
+                </td>
+                <td class="details">
+                  <?=$v_ssl_issuer?>
+                </td>
+              </tr>
+              <tr id="letsinfo" style="display:<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ) { echo 'block';} else {echo 'none';} ?>">
+                <td><a href="#" onclick="elementHideShow('ssl-details'); return false;" class="generate"><?=_('Show Certificate');?></a></td>
+              </tr>
+            </table>
+          <? } // if ssl is enabled ?>
         </div>
-
-        <div class="u-pt18">
+        <div class="u-mt15 u-mb20">
           <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
         </div>
-
         <div id="advanced-opts" style="display: none;">
           <?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] === 'yes')) { ?>
-            <div class="u-mt15 u-mb10">
+            <div class="u-mb10">
               <label for="v_template" class="form-label">
                 <?=_('Web Template') . "<span class='optional'>" . strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
               </label>
@@ -290,16 +278,14 @@
               </select>
             </div>
             <?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
-              <div class="u-mb10">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check" <?php if ($v_nginx_cache == 'yes') echo 'checked' ?> onclick="javascript:elementHideShow('v_nginx_duration');">
-                  <label for="v_nginx_cache_check">
-                    <?=_('Enable FastCGI Cache'); ?>
-                    <a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank">
-                      <i class="fas fa-question-circle"></i>
-                    </a>
-                  </label>
-                </div>
+              <div class="form-check u-mb10">
+                <input class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check" <?php if ($v_nginx_cache == 'yes') echo 'checked' ?> onclick="javascript:elementHideShow('v_nginx_duration');">
+                <label for="v_nginx_cache_check">
+                  <?=_('Enable FastCGI Cache'); ?>
+                  <a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank">
+                    <i class="fas fa-question-circle"></i>
+                  </a>
+                </label>
               </div>
               <div class="u-pl50">
                 <div id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
@@ -343,7 +329,7 @@
                   </label>
                 </div>
               </div>
-              <div style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;" id="proxytable">
+              <div id="proxytable" style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;">
                 <div class="u-mb10">
                   <label for="v_proxy_template" class="form-label"><?=_('Proxy Template');?></label>
                   <select class="form-select" name="v_proxy_template" id="v_proxy_template">
@@ -378,7 +364,7 @@
             </div>
           </div>
           <div class="u-pl50">
-            <div style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;" id="v_custom_doc_root">
+            <div id="v_custom_doc_root" style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;">
               <div class="u-mb10">
                 <label for="v-custom-doc-domain" class="form-label"><?=_('Point to');?></label>
                 <input type="hidden" name="v-custom-doc-root_prepath" value="<?=$v_custom_doc_root_prepath;?>">
@@ -418,7 +404,7 @@
                 $v_ftp_email    = $ftp_user['v_ftp_email'];
                 $v_ftp_pre_path = $ftp_user['v_ftp_pre_path'];
               ?>
-              <div style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;" class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
+              <div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;">
                 <div class="u-mb10">
                   <?=_('FTP');?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="ftp-remove-user additional-control" onclick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
                   <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">

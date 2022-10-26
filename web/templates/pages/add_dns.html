@@ -37,7 +37,7 @@
 						</tr>
 						<tr>
 							<td>
-								<?php show_error_panel($_SESSION);?>
+								<?php show_alert_message($_SESSION);?>
 							</td>
 						</tr>
 						<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
@@ -110,7 +110,7 @@
 							</tr>
 							<tr>
 								<td class="u-pt18">
-									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="advtable">
+									<table id="advtable" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 										<tr>
 											<td class="u-pt6">
 												<div class="form-check">

@@ -21,7 +21,7 @@
 
     <div class="app-form">
       <h1 class="page-title"><?=_('Adding Mail Account');?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div style="display: flex; justify-content: space-between;">
         <div class="u-input-width">
           <div class="u-mb10">
@@ -53,7 +53,7 @@
             <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?=_('Advanced options');?></a>
           </div>
           <div id="advtable" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
-            <div class="u-mt15 u-mb10">
+            <div class="u-mb10">
               <label for="v_quota" class="form-label">
                 <?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
               </label>

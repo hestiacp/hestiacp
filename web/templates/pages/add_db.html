@@ -21,7 +21,7 @@
 
     <div class="app-form">
       <h1 class="page-title"><?=_('Adding database');?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
           <div class="alert alert-danger alert-with-icon" role="alert">
@@ -86,11 +86,11 @@
             </label>
             <input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?=htmlentities(trim($v_db_email, "'"))?>">
           </div>
-          <div class="u-mb10">
+          <div class="u-mb20">
             <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
           </div>
           <div id="advanced-opts" style="display: none;">
-            <div class="u-mt15 u-mb10">
+            <div class="u-mb10">
               <label for="v_host" class="form-label"><?=_('Host');?></label>
               <select class="form-select u-mb20" name="v_host" id="v_host">
                 <?php

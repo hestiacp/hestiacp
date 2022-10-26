@@ -1,13 +1,13 @@
 <!-- Begin toolbar -->
 <div class="l-center edit">
-	<div class="l-sort clearfix">
-		<div class="l-unit-toolbar__buttonstrip">
-			<a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-		</div>
-		<div class="l-unit-toolbar__buttonstrip float-right">
-			<a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
-		</div>
-	</div>
+  <div class="l-sort clearfix">
+    <div class="l-unit-toolbar__buttonstrip">
+      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+    </div>
+    <div class="l-unit-toolbar__buttonstrip float-right">
+      <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+    </div>
+  </div>
 </div>
 <!-- End toolbar -->
 
@@ -15,106 +15,78 @@
 
 <div class="l-center animated fadeIn">
 
-	<form id="vstobjects" name="v_edit_firewall" method="post" class="<?=$v_status?>">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-		<input type="hidden" name="save" value="save">
+  <form id="vstobjects" name="v_edit_firewall" method="post" class="<?=$v_status?>">
+    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+    <input type="hidden" name="save" value="save">
 
-		<table class="data">
-			<tr class="data-add">
-				<td class="data-dotted">
-					<table class="data-col1">
-						<tr>
-							<td></td>
-						</tr>
-					</table>
-				</td>
-				<td class="data-dotted">
-					<table class="data-col2" width="600px">
-						<tr>
-							<td class="u-pt18">
-								<span class="page-title"><?=_('Editing Firewall Rule');?></span>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<?php show_error_panel($_SESSION);?>
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt18">
-								<label for="v_action" class="form-label"><?=_('Action') ?></label>
-								<select class="form-select u-input-width" name="v_action" id="v_action">
-									<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?=_('DROP');?></option>
-									<option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>><?=_('ACCEPT');?></option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_protocol" class="form-label"><?=_('Protocol') ?></label>
-								<select class="form-select u-input-width" name="v_protocol" id="v_protocol">
-									<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?=_('TCP');?></option>
-									<option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>><?=_('UDP');?></option>
-									<option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>><?=_('ICMP');?></option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_port" class="form-label">
-									<?=_('Port');?> <span class="optional">(<?=_('Ranges and Lists are acceptable');?>)</span>
-								</label>
-								<input type="text" class="form-control u-input-width" name="v_port" id="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?=_('All ports: 0, Range: 80-82, List: 80,443,8080,8443');?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_ip" class="form-label">
-									<?=_('IP address / IPset');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
-								</label>
-								<div class="u-pos-relative u-input-width">
-									<select class="form-select" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
-										<option value="">&nbsp;</option>
-									</select>
-									<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_comment" class="form-label">
-									<?=_('Comment');?> <span class="optional">(<?=_('optional');?>)</span>
-								</label>
-								<input type="text" class="form-control u-input-width" name="v_comment" id="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
-							</td>
-						</tr>
-					</table>
-					<table class="data-col2"></table>
-				</td>
-			</tr>
-		</table>
-	</form>
+    <div class="app-form">
+      <h1 class="page-title"><?=_('Editing Firewall Rule');?></h1>
+      <?php show_alert_message($_SESSION);?>
+      <div class="u-input-width">
+        <div class="u-mb10">
+          <label for="v_action" class="form-label"><?=_('Action') ?></label>
+          <select class="form-select" name="v_action" id="v_action">
+            <option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?=_('DROP');?></option>
+            <option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>><?=_('ACCEPT');?></option>
+          </select>
+        </div>
+        <div class="u-mb10">
+          <label for="v_protocol" class="form-label"><?=_('Protocol') ?></label>
+          <select class="form-select" name="v_protocol" id="v_protocol">
+            <option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?=_('TCP');?></option>
+            <option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>><?=_('UDP');?></option>
+            <option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>><?=_('ICMP');?></option>
+          </select>
+        </div>
+        <div class="u-mb10">
+          <label for="v_port" class="form-label">
+            <?=_('Port');?> <span class="optional">(<?=_('Ranges and Lists are acceptable');?>)</span>
+          </label>
+          <input type="text" class="form-control" name="v_port" id="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?=_('All ports: 0, Range: 80-82, List: 80,443,8080,8443');?>">
+        </div>
+        <div class="u-mb10">
+          <label for="v_ip" class="form-label">
+            <?=_('IP address / IPset');?> <span class="optional">(<?=_('CIDR format is supported');?>)</span>
+          </label>
+          <div class="u-pos-relative">
+            <select class="form-select" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
+              <option value="">&nbsp;</option>
+            </select>
+            <input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+          </div>
+        </div>
+        <div class="u-mb10">
+          <label for="v_comment" class="form-label">
+            <?=_('Comment');?> <span class="optional">(<?=_('optional');?>)</span>
+          </label>
+          <input type="text" class="form-control" name="v_comment" id="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
+        </div>
+      </div>
+    </div>
+
+  </form>
+
 </div>
 
 <script>
-	var iplists = JSON.parse('<?=$ipset_lists_json?>');
-	iplists.sort(function (a, b) {
-		return a.name > b.name;
-	});
+  var ipLists = JSON.parse('<?=$ipset_lists_json?>');
+  ipLists.sort(function (a, b) {
+    return a.name > b.name;
+  });
 
-	$(function () {
-		var targetElement = document.getElementById('quickips_list');
+  $(function () {
+    var targetElement = document.getElementById('quickips_list');
 
-		var newEl = document.createElement("option");
-		newEl.text = "IP address lists:";
-		newEl.disabled = true;
-		targetElement.appendChild(newEl);
+    var newEl = document.createElement("option");
+    newEl.text = "IP address lists:";
+    newEl.disabled = true;
+    targetElement.appendChild(newEl);
 
-		iplists.forEach(iplist => {
-			var newEl = document.createElement("option");
-			newEl.text = iplist.name;
-			newEl.value = "ipset:" + iplist.name;
-			targetElement.appendChild(newEl);
-		});
-	});
+    ipLists.forEach(iplist => {
+      var newEl = document.createElement("option");
+      newEl.text = iplist.name;
+      newEl.value = "ipset:" + iplist.name;
+      targetElement.appendChild(newEl);
+    });
+  });
 </script>

@@ -21,7 +21,7 @@
 
     <div class="app-form">
       <h1 class="page-title"><?=_('Adding Firewall Rule');?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <div class="u-mb10">
           <label for="v_action" class="form-label"><?=_('Action') ?></label>
@@ -69,8 +69,8 @@
 </div>
 
 <script>
-  var iplists = JSON.parse('<?=$ipset_lists_json?>');
-  iplists.sort(function (a, b) {
+  var ipLists = JSON.parse('<?=$ipset_lists_json?>');
+  ipLists.sort(function (a, b) {
     return a.name > b.name;
   });
 
@@ -82,7 +82,7 @@
     newEl.disabled = true;
     targetElement.appendChild(newEl);
 
-    iplists.forEach(iplist => {
+    ipLists.forEach(iplist => {
       var newEl = document.createElement("option");
       newEl.text = iplist.name;
       newEl.value = "ipset:" + iplist.name;

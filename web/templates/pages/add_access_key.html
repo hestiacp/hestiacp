@@ -24,7 +24,7 @@
 
     <div class="app-form">
       <h1 class="page-title"><?= _('Adding Access Key'); ?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <p class="u-mb10"><?= _('Permissions'); ?></p>
         <?php foreach ($apis as $api_name => $api_data) { ?>

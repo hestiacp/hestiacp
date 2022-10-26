@@ -2862,7 +2862,7 @@ a.button.cancel {
 .page-title {
   font-size: 1.4rem !important;
   font-weight: 500 !important;
-  padding-bottom: 10px !important;
+  padding-bottom: 20px !important;
   letter-spacing: -0.01em;
 }
 
@@ -3830,6 +3830,10 @@ li[aria-expanded="true"] a {
   clear: both;
 }
 
+.u-block {
+  display: block !important;
+}
+
 .u-hidden {
   display: none !important;
 }
@@ -3900,6 +3904,10 @@ li[aria-expanded="true"] a {
 
 .u-input-width {
   width: 380px !important;
+}
+
+.u-wide-input-width {
+  width: 600px !important;
 }
 
 .u-min-height100 {

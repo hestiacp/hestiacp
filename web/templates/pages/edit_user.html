@@ -54,7 +54,7 @@
 
     <div class="app-form">
       <h1 class="page-title"><?=_('Editing User');?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <div class="u-mb10">
           <label for="v_user" class="form-label"><?=_('Username');?></label>
@@ -198,9 +198,11 @@
               ?>
             </select>
           </div>
-          <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
+          <div class="u-mb20">
+            <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
+          </div>
           <div id="advanced-opts" style="display: none;">
-            <div class="u-mt15 u-mb10">
+            <div class="u-mb10">
               <label for="v_shell" class="form-label"><?=_('SSH Access');?></label>
               <select class="form-select" name="v_shell" id="v_shell">
                 <?php

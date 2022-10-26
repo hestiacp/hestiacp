@@ -1,101 +1,69 @@
 <div class="l-center">
-	<div class="l-sort clearfix">
-		<div class="l-sort-toolbar clearfix float-left">
-			<?php show_error_panel($_SESSION);?>
-		</div>
-	</div>
+  <div class="l-sort clearfix">
+    <div class="l-sort-toolbar clearfix float-left">
+      <?php show_alert_message($_SESSION);?>
+    </div>
+  </div>
 </div>
 
 <div class="l-separator"></div>
 
 <div class="l-center animated fadeIn">
 
-	<form id="vstobjects" name="v_generate_csr" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-		<input type="hidden" name="generate" value="generate">
-		<table class="data">
-			<tr class="data-add">
-				<td class="data-dotted">
-					<table class="data-col1">
-						<tr>
-							<td></td>
-						</tr>
-					</table>
-				</td>
-				<td class="data-dotted">
-					<table class="data-col2">
-						<tr>
-							<td class="u-pt18">
-								<span class="page-title"><?=_('Generating CSR');?></span>
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt18">
-								<label for="v_domain" class="form-label"><?=_('Domain');?></label>
-								<input type="text" class="form-control u-input-width" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'")) ?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_aliases" class="form-label"><?=_('Aliases');?></label>
-								<textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_email" class="form-label">
-									<?=_('Email');?>
-									<span class="optional">(<?php print _('optional');?>)</span>
-								</label>
-								<input type="email" class="form-control" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'")) ?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_country" class="form-label">
-									<?=_('Country'); ?>
-									<span class="optional">(<?=_('2 letter code');?>)</span>
-								</label>
-								<input type="text" class="form-control" name="v_country" id="v_country" value="<?=htmlentities(trim($v_country, "'")) ?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_state" class="form-label">
-									<?=_('State / Province');?>
-								</label>
-								<input type="text" class="form-control" name="v_state" id="v_state" value="<?=htmlentities(trim($v_state, "'")) ?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_locality" class="form-label">
-									<?=_('City / Locality');?>
-								</label>
-								<input type="text" class="form-control" name="v_locality" id="v_locality" value="<?=htmlentities(trim($v_locality, "'")) ?>">
-							</td>
-						</tr>
-						<tr>
-							<td class="u-pt6">
-								<label for="v_org" class="form-label">
-									<?=_('Organization');?>
-								</label>
-								<input type="text" class="form-control" name="v_org" id="v_org" value="<?=htmlentities(trim($v_org, "'")) ?>">
-							</td>
-						</tr>
-					</table>
-					<table class="data-col2 u-mb20">
-						<tr>
-							<td style="padding: 24px 0 0 0;" width="116px">
-								<input type="submit" class="button" name="generate" value="<?=_('Ok');?>">
-							</td>
-							<td style="padding: 24px 0 0 0;">
-								<input type="button" class="button cancel" value="<?=_('Back');?>" onclick="<?=$back?>">
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</form>
+  <form id="vstobjects" name="v_generate_csr" method="post">
+    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+    <input type="hidden" name="generate" value="generate">
+
+    <div class="app-form">
+      <h1 class="page-title"><?=_('Generating CSR');?></h1>
+      <div class="u-input-width">
+        <div class="u-mb10">
+          <label for="v_domain" class="form-label"><?=_('Domain');?></label>
+          <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'")) ?>">
+        </div>
+        <div class="u-mb10">
+          <label for="v_aliases" class="form-label"><?=_('Aliases');?></label>
+          <textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+        </div>
+        <div class="u-mb10">
+          <label for="v_email" class="form-label">
+            <?=_('Email');?>
+            <span class="optional">(<?php print _('optional');?>)</span>
+          </label>
+          <input type="email" class="form-control" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'")) ?>">
+        </div>
+        <div class="u-mb10">
+          <label for="v_country" class="form-label">
+            <?=_('Country'); ?>
+            <span class="optional">(<?=_('2 letter code');?>)</span>
+          </label>
+          <input type="text" class="form-control" name="v_country" id="v_country" value="<?=htmlentities(trim($v_country, "'")) ?>">
+        </div>
+        <div class="u-mb10">
+          <label for="v_state" class="form-label">
+            <?=_('State / Province');?>
+          </label>
+          <input type="text" class="form-control" name="v_state" id="v_state" value="<?=htmlentities(trim($v_state, "'")) ?>">
+        </div>
+        <div class="u-mb10">
+          <label for="v_locality" class="form-label">
+            <?=_('City / Locality');?>
+          </label>
+          <input type="text" class="form-control" name="v_locality" id="v_locality" value="<?=htmlentities(trim($v_locality, "'")) ?>">
+        </div>
+        <div class="u-mb20">
+          <label for="v_org" class="form-label">
+            <?=_('Organization');?>
+          </label>
+          <input type="text" class="form-control" name="v_org" id="v_org" value="<?=htmlentities(trim($v_org, "'")) ?>">
+        </div>
+        <div class="u-side-by-side">
+          <div><input type="submit" class="button" name="generate" value="<?=_('Ok');?>"></div>
+          <div class="u-ml10"><input type="button" class="button cancel" value="<?=_('Back');?>" onclick="<?=$back?>"></div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
 </div>

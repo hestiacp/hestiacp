@@ -21,7 +21,7 @@
 
     <div class="app-form">
       <h1 class="page-title"><?=_('Adding Mail Domain');?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
           <div class="alert alert-danger alert-with-icon" role="alert">
@@ -100,7 +100,7 @@
               </label>
             </div>
           </div>
-          <div class="u-pl50" style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
+          <div id="smtp_relay_table" class="u-pl50" style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;">
             <div class="u-mb10">
               <label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
               <input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">

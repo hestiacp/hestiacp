@@ -217,24 +217,19 @@ function verify_csrf($method, $return = false)
     }
 }
 
-function show_error_panel($data)
-{
-    $msg_id = '';
-    $msg_icon = '';
-    $msg_text = '';
-    if (!empty($data['error_msg'])) {
-        $msg_icon = 'fa-exclamation-circle status-icon red';
-        $msg_text = htmlentities($data['error_msg']);
-        $msg_id = 'vst-error';
-    } else {
-        if (!empty($data['ok_msg'])) {
+function show_alert_message($data) {
+    if (!empty($data['error_msg']) || !empty($data['ok_msg'])) {
+        if (!empty($data['error_msg'])) {
+            $msg_icon = 'fa-exclamation-circle status-icon red';
+            $msg_text = htmlentities($data['error_msg']);
+            $msg_id = 'vst-error';
+        } else {
             $msg_icon = 'fa-check-circle status-icon green';
             $msg_text = $data['ok_msg'];
             $msg_id = 'vst-ok';
         }
-    } ?>
-<span class="<?=$msg_id; ?>"> <i class="fas <?=$msg_icon; ?>"></i> <?=$msg_text; ?></span>
-<?php
+        echo '<p class="'.$msg_id.' u-mb20"><i class="fas '.$msg_icon.'"></i> '.$msg_text.'</p>';
+    }
 }
 
 function top_panel($user, $TAB)

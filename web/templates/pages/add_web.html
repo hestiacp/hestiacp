@@ -23,7 +23,7 @@
 
     <div class="app-form">
       <h1 class="page-title"><?=_('Add Web Domain');?></h1>
-      <?php show_error_panel($_SESSION);?>
+      <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
           <div class="alert alert-danger alert-with-icon" role="alert">
@@ -56,13 +56,11 @@
           </div>
           <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
             <?php if($panel[$user_plain]['DNS_DOMAINS'] != "0") { ?>
-              <div class="u-mb10">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="v_dns" id="v_dns" <?php if (empty($v_dns)&&$panel[$user_plain]['DNS_DOMAINS'] != "0") ?>>
-                  <label for="v_dns">
-                    <?=_('DNS Support');?>
-                  </label>
-                </div>
+              <div class="form-check u-mb10">
+                <input class="form-check-input" type="checkbox" name="v_dns" id="v_dns" <?php if (empty($v_dns)&&$panel[$user_plain]['DNS_DOMAINS'] != "0") ?>>
+                <label for="v_dns">
+                  <?=_('DNS Support');?>
+                </label>
               </div>
             <?php } ?>
           <?php } ?>

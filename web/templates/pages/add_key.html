@@ -25,8 +25,8 @@
 
     <div class="app-form">
       <h1 class="page-title"><?=_('Add SSH Key');?></h1>
-      <?php show_error_panel($_SESSION);?>
-      <div style="max-width: 600px;">
+      <?php show_alert_message($_SESSION);?>
+      <div class="u-wide-input-width">
         <label for="v_key" class="form-label"><?=_('SSH KEY') ?></label>
         <textarea class="form-control u-min-height100" name="v_key" id="v_key"><?=htmlentities(trim($v_key, "'"))?></textarea>
       </div>

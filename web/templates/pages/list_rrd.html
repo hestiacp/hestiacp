@@ -19,9 +19,9 @@
 						<div class="timer-container" style="float:right;">
 							<span class="timer-button pause-stop" onclick="stopTimer()"><i class="fas fa-pause"></i></span>
 							<div class="timer-button spinner">
-								  <div class="spinner-inner"></div>
-								  <div class="spinner-mask"></div>
-								  <div class="spinner-mask-two"></div>
+								<div class="spinner-inner"></div>
+								<div class="spinner-mask"></div>
+								<div class="spinner-mask-two"></div>
 							</div>
 						</div>
 					</td>
@@ -36,25 +36,23 @@
 
 <div class="l-center units animated fadeIn">
 	<!-- Begin graph list item loop -->
-	<?php
-		foreach ($data as $key => $value) {
-		?>
+	<?php foreach ($data as $key => $value) { ?>
 		<div class="l-unit l-unit__stats">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="l-unit__name separate">
 					<?= _($data[$key]['TITLE'])?>
 				</div>
 				<div>
-					<a href="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" target="_blank"><img class="graph-rounded" src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>"></a>
+					<a href="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" class="u-block" target="_blank">
+						<img class="graph-rounded" src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" alt="">
+					</a>
 				</div>
 			</div>
 		</div>
 	<?php } ?>
-
 </div>
 
 <div id="vstobjects">
 	<div class="l-separator"></div>
-	<div class="l-center">
-	</div>
+	<div class="l-center"></div>
 </div>

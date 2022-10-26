@@ -41,20 +41,20 @@
 						</tr>
 						<tr>
 							<td>
-								<?php show_error_panel($_SESSION);?>
+								<?php show_alert_message($_SESSION);?>
 							</td>
 						</tr>
 						<!-- Basic options tab -->
 						<tr>
 							<td class="advanced-options">
 								<a href="javascript:elementHideShow('basic');" class="vst-text">
-									<i class="fas fa-cog"></i><b><?=_('Basic options');?> <img src="/images/arrow.png"></b>
+									<i class="fas fa-cog"></i><b><?=_('Basic options');?> <img src="/images/arrow.png" alt=""></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pl50 u-pt6">
-								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="basic">
+								<table id="basic" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 									<tr>
 										<td class="u-pt18">
 											<label for="v_hostname" class="form-label"><?=_('Hostname');?></label>
@@ -140,13 +140,13 @@
 						<tr>
 							<td class="advanced-options">
 								<a href="javascript:elementHideShow('version');" class="vst-text">
-									<i class="fas fa-code-branch"></i><b><?=_('Updates');?> <img src="/images/arrow.png"></b>
+									<i class="fas fa-code-branch"></i><b><?=_('Updates');?> <img src="/images/arrow.png" alt=""></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pl50 u-pt6">
-								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="version">
+								<table id="version" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 									<tr>
 										<td class="u-pt18">
 											<?=_('Version'); ?>: <span class="optional"><?=$_SESSION['VERSION'];?></span>
@@ -218,13 +218,13 @@
 						<tr>
 							<td class="advanced-options">
 								<a href="javascript:elementHideShow('web');" class="vst-text">
-									<i class="fas fa-globe-americas"></i><b><?=_('Web Server');?> <img src="/images/arrow.png"></b>
+									<i class="fas fa-globe-americas"></i><b><?=_('Web Server');?> <img src="/images/arrow.png" alt=""></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pl50 u-pt6">
-								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="web" class="u-pt18">
+								<table id="web" class="u-pt18" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 									<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
 										<tr>
 											<td>
@@ -329,13 +329,13 @@
 							<tr>
 								<td class="advanced-options">
 									<a href="javascript:elementHideShow('dns');" class="vst-text">
-										<i class="fas fa-atlas"></i><b><?=_('DNS Server');?> <img src="/images/arrow.png"></b>
+										<i class="fas fa-atlas"></i><b><?=_('DNS Server');?> <img src="/images/arrow.png" alt=""></b>
 									</a>
 								</td>
 							</tr>
 							<tr>
 								<td class="u-pl50 u-pt6">
-									<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" class="u-mb20" id="dns">
+									<table id="dns" class="u-mb20" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 										<tr>
 											<td class="u-pt18">
 												<?=_('DNS Server');?>: <span class="optional"><?=$_SESSION['DNS_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
@@ -367,13 +367,13 @@
 							<tr>
 								<td class="advanced-options">
 									<a href="javascript:elementHideShow('mail');" class="vst-text">
-										<i class="fas fa-mail-bulk"></i><b><?=_('Mail Server');?> <img src="/images/arrow.png"></b>
+										<i class="fas fa-mail-bulk"></i><b><?=_('Mail Server');?> <img src="/images/arrow.png" alt=""></b>
 									</a>
 								</td>
 							</tr>
 							<tr>
 								<td class="u-pl50 u-pt6">
-									<table style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;" id="mail">
+									<table id="mail" style="display:<?php if (empty($v_mail_adv)) echo 'none';?> ;">
 										<tr>
 											<td class="u-pt18">
 												<?=_('Mail Server');?>: <span class="optional"><?=$_SESSION['MAIL_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><i class="fas fa-pencil-alt status-icon orange icon-pad-right"></i></a></span>
@@ -415,7 +415,7 @@
 										</tr>
 										<tr>
 											<td class="u-pl50">
-												<table style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;" id="smtp_relay_table">
+												<table id="smtp_relay_table" style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;">
 													<tr>
 														<td class="u-pt6">
 															<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
@@ -459,13 +459,13 @@
 							<tr>
 								<td class="advanced-options">
 									<a href="javascript:elementHideShow('db');" class="vst-text">
-										<i class="fas fa-database"></i><b><?=_('Databases');?> <img src="/images/arrow.png"></b>
+										<i class="fas fa-database"></i><b><?=_('Databases');?> <img src="/images/arrow.png" alt=""></b>
 									</a>
 								</td>
 							</tr>
 							<tr>
 								<td class="u-pl50 u-pt6">
-									<table style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;" id="db">
+									<table id="db" style="display:<?php if (empty($v_db_adv)) echo 'none';?> ;">
 										<tr>
 											<td class="u-pt18">
 												<label for="v_mysql" class="form-label">
@@ -592,7 +592,7 @@
 						<tr>
 							<td class="advanced-options">
 								<a href="javascript:elementHideShow('backup');" class="vst-text">
-									<i class="fas fa-undo"></i><b><?=_('Backups');?> <img src="/images/arrow.png"></b>
+									<i class="fas fa-undo"></i><b><?=_('Backups');?> <img src="/images/arrow.png" alt=""></b>
 								</a>
 							</td>
 						</tr>
@@ -651,7 +651,7 @@
 									</tr>
 									<tr>
 										<td class="u-pl50 u-pt6">
-											<table style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;" id="remote_backup">
+											<table id="remote_backup" style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;">
 												<tr>
 													<td class="u-pt6">
 														<label for="backup_type" class="form-label">
@@ -754,13 +754,13 @@
 						<tr>
 							<td class="advanced-options">
 								<a href="javascript:elementHideShow('ssl');" class="vst-text">
-									<i class="fas fa-lock"></i><b><?=_('SSL');?><img src="/images/arrow.png"></b>
+									<i class="fas fa-lock"></i><b><?=_('SSL');?><img src="/images/arrow.png" alt=""></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pl50 u-pt6">
-								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="ssl">
+								<table id="ssl" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 									<tr>
 										<td class="u-pt18">
 											<label for="v_ssl_crt" class="form-label">
@@ -846,7 +846,7 @@
 						<tr>
 							<td class="advanced-options">
 								<a href="javascript:elementHideShow('security');" class="vst-text">
-									<i class="fas fa-key"></i><b><?=_('Security');?> <img src="/images/arrow.png"></b>
+									<i class="fas fa-key"></i><b><?=_('Security');?> <img src="/images/arrow.png" alt=""></b>
 								</a>
 							</td>
 						</tr>
@@ -1085,13 +1085,13 @@
 						<tr>
 							<td class="advanced-options">
 								<a href="javascript:elementHideShow('hestia');" class="vst-text">
-									<i class="fas fa-puzzle-piece"></i><b><?=_('Hestia Control Panel Plugins');?> <img src="/images/arrow.png"></b>
+									<i class="fas fa-puzzle-piece"></i><b><?=_('Hestia Control Panel Plugins');?> <img src="/images/arrow.png" alt=""></b>
 								</a>
 							</td>
 						</tr>
 						<tr>
 							<td class="u-pl50 u-pt6">
-								<table style="display:<?php if (empty($v_adv)) echo 'none';?> ;" id="hestia">
+								<table id="hestia" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 									<tr>
 										<td class="u-pt18">
 											<label for="v_plugin_app_installer" class="form-label"><?=_('Quick App Installer');?></label>

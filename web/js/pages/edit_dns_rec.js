@@ -12,7 +12,7 @@ App.Actions.DB.update_dns_record_hint = function(elm, hint) {
         hint = '';
     }
 
-    // dont show pregix if domain name = rec value
+    // dont show prefix if domain name = rec value
     if (hint == GLOBAL.DNS_REC_PREFIX + '.') {
         hint = '';
     }

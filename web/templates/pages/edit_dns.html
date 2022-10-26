@@ -63,13 +63,11 @@
             </select>
           </div>
         <?php } ?>
-        <div class="u-mb10">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec === 'yes'){ echo ' checked'; } ?>>
-            <label for="v_dnssec">
-              <?=_('Enable DNSEC');?>
-            </label>
-          </div>
+        <div class="form-check u-mb10">
+          <input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec === 'yes'){ echo ' checked'; } ?>>
+          <label for="v_dnssec">
+            <?=_('Enable DNSEC');?>
+          </label>
         </div>
         <div class="u-mb10">
           <label for="v_exp" class="form-label">

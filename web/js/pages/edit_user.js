@@ -56,5 +56,4 @@ $(document).ready(function(){
     $('input[name^=v_ns]').each(function(i, ns){
         i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
     });
-
 });

@@ -355,13 +355,11 @@
               </table>
             <?php } ?>
           <?php } ?>
-          <div class="u-mb10">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo 'checked' ?> onclick="javascript:elementHideShow('v_custom_doc_root');">
-              <label for="v_custom_doc_root_check">
-                <?=_('Custom document root');?>
-              </label>
-            </div>
+          <div class="form-check u-mb10">
+            <input class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo 'checked' ?> onclick="javascript:elementHideShow('v_custom_doc_root');">
+            <label for="v_custom_doc_root_check">
+              <?=_('Custom document root');?>
+            </label>
           </div>
           <div class="u-pl50">
             <div id="v_custom_doc_root" style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;">
@@ -387,13 +385,11 @@
             </div>
           </div>
           <?php if (in_array($_SESSION['FTP_SYSTEM'], array('vsftpd', 'proftpd'))) { ?>
-            <div class="u-mb10">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp_user)) echo 'checked' ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)">
-                <label for="v_ftp">
-                  <?=_('Additional FTP Account');?>
-                </label>
-              </div>
+            <div class="form-check u-mb10">
+              <input class="form-check-input" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp_user)) echo 'checked' ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)">
+              <label for="v_ftp">
+                <?=_('Additional FTP Account');?>
+              </label>
             </div>
             <div id="ftp_users">
               <?php foreach ($v_ftp_users as $i => $ftp_user): ?>

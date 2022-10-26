@@ -51,13 +51,11 @@
           <li><?=_('1 uppercase & 1 lowercase character');?></li>
           <li><?=_('1 number');?></li>
         </ul>
-        <div class="u-mb10">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('send-welcome');" <?php if ($v_login_disabled == "yes") echo 'checked' ?>>
-            <label for="v_login_disabled">
-              <?=_('Do not allow user to log in to Control Panel');?>
-            </label>
-          </div>
+        <div class="form-check u-mb10">
+          <input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('send-welcome');" <?php if ($v_login_disabled == "yes") echo 'checked' ?>>
+          <label for="v_login_disabled">
+            <?=_('Do not allow user to log in to Control Panel');?>
+          </label>
         </div>
         <div id="send-welcome">
           <div class="form-check u-mb10">

@@ -39,7 +39,8 @@ strong {
 }
 
 .advanced-options {
-  background: #fafafa !important;
+  background: #fafafa;
+  box-shadow: none;
 }
 
 .l-header {
@@ -119,10 +120,6 @@ strong {
 
 .l-stat__col--active a {
   border-bottom: 4px solid #ff6701;
-}
-
-.advanced-options {
-  box-shadow: none !important;
 }
 
 .card a.ui-button {
@@ -576,7 +573,7 @@ a.vst-text:hover b,
   margin-right: 15px;
 }
 
-td.advanced-options .fas {
+.advanced-options .fas {
   display: none !important;
 }
 

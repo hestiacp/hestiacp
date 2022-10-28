@@ -57,48 +57,38 @@
             </div>
           <?php } ?>
           <?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
-            <div class="u-mb10">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo 'checked'; ?>>
-                <label for="v_antispam">
-                  <?=_('AntiSpam Support');?>
-                </label>
-              </div>
+            <div class="form-check u-mb10">
+              <input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo 'checked'; ?>>
+              <label for="v_antispam">
+                <?=_('AntiSpam Support');?>
+              </label>
             </div>
-            <div class="u-mb10">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo 'checked'; ?>>
-                <label for="v_reject">
-                  <?=_('Reject spam');?>
-                </label>
-              </div>
+            <div class="form-check u-mb10">
+              <input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo 'checked'; ?>>
+              <label for="v_reject">
+                <?=_('Reject spam');?>
+              </label>
             </div>
           <?php } ?>
           <?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
-            <div class="u-mb10">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo 'checked'; ?>>
-                <label for="v_antivirus">
-                  <?=_('AntiVirus Support');?>
-                </label>
-              </div>
+            <div class="form-check u-mb10">
+              <input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo 'checked'; ?>>
+              <label for="v_antivirus">
+                <?=_('AntiVirus Support');?>
+              </label>
             </div>
           <?php } ?>
-          <div class="u-mb10">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo 'checked'; ?>>
-              <label for="v_dkim">
-                <?=_('DKIM Support');?>
-              </label>
-            </div>
+          <div class="form-check u-mb10">
+            <input class="form-check-input" type="checkbox" name="v_dkim" id="v_dkim" <?php if (isset($v_dkim)&&$v_dkim == 'yes') echo 'checked'; ?>>
+            <label for="v_dkim">
+              <?=_('DKIM Support');?>
+            </label>
           </div>
-          <div class="u-mb10">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo 'checked'; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
-              <label for="v_smtp_relay">
-                <?=_('SMTP Relay');?>
-              </label>
-            </div>
+          <div class="form-check u-mb10">
+            <input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo 'checked'; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+            <label for="v_smtp_relay">
+              <?=_('SMTP Relay');?>
+            </label>
           </div>
           <div id="smtp_relay_table" class="u-pl50" style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;">
             <div class="u-mb10">

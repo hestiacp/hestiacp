@@ -197,6 +197,8 @@ body {
 }
 
 h1,
+h2,
+h3,
 p,
 pre {
   margin: 0;
@@ -2296,14 +2298,14 @@ a.vst-text:active b {
 }
 
 .advanced-options {
-  background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%) !important;
-  border: 1px solid #ddd !important;
+  background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
+  border: 1px solid #ddd;
   text-shadow: 0 1px rgb(255 255 255 / 95%);
-  box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 4px 6px rgb(190 190 190 / 40%) !important;
-  color: #30659d !important;
-  padding: 4px 0 0 18px;
+  box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 4px 6px rgb(190 190 190 / 40%);
+  color: #30659d;
+  padding: 9px 18px;
   overflow: hidden;
-  height: 28px;
+  font-size: .85rem;
 }
 
 .advanced-options a {
@@ -2398,9 +2400,8 @@ a.vst-text:active b {
 }
 
 .form-select {
-  display: block;
   box-sizing: border-box;
-  cursor: pointer;
+  display: block;
   width: 100%;
   font-weight: normal;
   font-size: .8rem;
@@ -2433,12 +2434,7 @@ a.vst-text:active b {
   min-height: 24px;
 }
 
-.form-check label {
-  cursor: pointer;
-}
-
 .form-check-input {
-  cursor: pointer;
   position: absolute;
   margin-top: 3px;
   margin-left: -20px;
@@ -2772,7 +2768,7 @@ a.button.cancel {
   color: #777;
   border: 1px solid #d9d9d9;
   padding: 6px 6px 6px 18px;
-  margin-right: 70px;
+  margin-right: 50px;
   min-width: 320px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
@@ -3858,6 +3854,10 @@ li[aria-expanded="true"] a {
   margin-top: 15px !important;
 }
 
+.u-mt20 {
+  margin-top: 20px !important;
+}
+
 .u-ml5 {
   margin-left: 5px !important;
 }
@@ -3903,7 +3903,7 @@ li[aria-expanded="true"] a {
 }
 
 .u-input-width {
-  width: 380px !important;
+  width: 400px !important;
 }
 
 .u-wide-input-width {

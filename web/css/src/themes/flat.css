@@ -24,7 +24,7 @@ strong {
 }
 
 .advanced-options {
-  background: #fafafa !important;
+  background: #fafafa;
 }
 
 .to-top,
@@ -95,7 +95,7 @@ strong {
 }
 
 .advanced-options {
-  box-shadow: none !important;
+  box-shadow: none;
 }
 
 .ui-button,

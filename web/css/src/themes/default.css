@@ -2187,24 +2187,7 @@ body.mobile .l-icon-shortcuts {
   color: #d53067;
 }
 
-.data {
-  margin: 0 0 90px;
-}
-
-.data-col1 {
-  width: 148px;
-}
-
-.data-col1 td {
-  padding: 10px 0 0 5px;
-}
-
-.data-col1 tr:first-child td {
-  padding: 59px 0 0 5px;
-}
-
-.login-box td,
-.data td {
+.login-box td {
   color: #4b4b4b;
   font-size: 0.85rem;
   padding-bottom: 4px;
@@ -2217,10 +2200,6 @@ body.mobile .l-icon-shortcuts {
 
 .jump-small-top {
   margin-top: -12px;
-}
-
-.data a {
-  text-decoration: none;
 }
 
 .form-control {
@@ -2733,30 +2712,6 @@ a.button.cancel {
   font-size: 0.8rem;
   padding: 0 0 0 6px;
   font-weight: normal;
-}
-
-.data-active b {
-  color: #3b9de8;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-}
-
-.data-suspended b {
-  color: #a3a3a3;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.data-date {
-  font-weight: normal;
-  color: #777;
-  font-size: 0.8rem;
-  line-height: 23px;
-}
-
-.data-dotted {
-  vertical-align: top;
 }
 
 .mail-infoblock-td {
@@ -3572,7 +3527,7 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 410px;
+  margin-top: 423px;
   margin-right: 22px;
   padding-top: 0;
   width: 600px;

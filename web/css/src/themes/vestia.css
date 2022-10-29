@@ -4,16 +4,6 @@
     Website:     www.hestiacp.com
 */
 
-/* Extend animate.css
-   ========================================================================== */
-
-.animated {
-  -webkit-animation-duration: 0s !important;
-  animation-duration: 0s !important;
-  -webkit-animation-fill-mode: none !important;
-  animation-fill-mode: none !important;
-}
-
 /* Base
    ========================================================================== */
 
@@ -374,8 +364,8 @@ a.vst-text:hover b,
 }
 
 .page-title {
-  font-weight: 600 !important;
-  font-size: 1.2rem !important;
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .l-sort-toolbar__filter-apply {
@@ -736,9 +726,9 @@ a.vst-advanced:focus {
 }
 
 .helper-container {
-  margin-top: 406px !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  margin-top: 412px;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .cron-helper-tabs .ui-tabs-selected a,
@@ -756,4 +746,14 @@ li[aria-expanded="true"] a {
 
 a.vst-advanced {
   margin-left: -10px;
+}
+
+/* Extend animate.css
+   ========================================================================== */
+
+.animated {
+  -webkit-animation-duration: 0s !important;
+  animation-duration: 0s !important;
+  -webkit-animation-fill-mode: none !important;
+  animation-fill-mode: none !important;
 }

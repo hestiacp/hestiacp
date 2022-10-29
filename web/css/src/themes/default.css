@@ -8,8 +8,8 @@
   font-style: normal;
   font-weight: 300;
   src: local('Exo Light'), local('Exo-Light'),
-	   url('/webfonts/exo-v8-latin-ext_latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -19,8 +19,8 @@
   font-style: italic;
   font-weight: 300;
   src: local('Exo Light Italic'), local('Exo-LightItalic'),
-	   url('/webfonts/exo-v8-latin-ext_latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-300italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-300italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -30,8 +30,8 @@
   font-style: normal;
   font-weight: 400;
   src: local('Exo Regular'), local('Exo-Regular'),
-	   url('/webfonts/exo-v8-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -41,8 +41,8 @@
   font-style: italic;
   font-weight: 400;
   src: local('Exo Italic'), local('Exo-Italic'),
-	   url('/webfonts/exo-v8-latin-ext_latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -52,8 +52,8 @@
   font-style: normal;
   font-weight: 500;
   src: local('Exo Medium'), local('Exo-Medium'),
-	   url('/webfonts/exo-v8-latin-ext_latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -63,8 +63,8 @@
   font-style: italic;
   font-weight: 500;
   src: local('Exo Medium Italic'), local('Exo-MediumItalic'),
-	   url('/webfonts/exo-v8-latin-ext_latin-500italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-500italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-500italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-500italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -74,8 +74,8 @@
   font-style: normal;
   font-weight: 600;
   src: local('Exo SemiBold'), local('Exo-SemiBold'),
-	   url('/webfonts/exo-v8-latin-ext_latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -85,8 +85,8 @@
   font-style: italic;
   font-weight: 600;
   src: local('Exo SemiBold Italic'), local('Exo-SemiBoldItalic'),
-	   url('/webfonts/exo-v8-latin-ext_latin-600italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-600italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-600italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-600italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -96,8 +96,8 @@
   font-style: normal;
   font-weight: 700;
   src: local('Exo Bold'), local('Exo-Bold'),
-	   url('/webfonts/exo-v8-latin-ext_latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -107,8 +107,8 @@
   font-style: italic;
   font-weight: 700;
   src: local('Exo Bold Italic'), local('Exo-BoldItalic'),
-	   url('/webfonts/exo-v8-latin-ext_latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-	   url('/webfonts/exo-v8-latin-ext_latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+     url('/webfonts/exo-v8-latin-ext_latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+     url('/webfonts/exo-v8-latin-ext_latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
   font-display: swap;
 }
 
@@ -121,8 +121,8 @@
 @font-face {
   font-family: 'Inconsolata';
   src: local('Inconsolata Bold'), local('Inconsolata-Bold'),
-	  url('/webfonts/Inconsolata-Bold.woff2') format('woff2'),
-	  url('/webfonts/Inconsolata-Bold.woff') format('woff');
+    url('/webfonts/Inconsolata-Bold.woff2') format('woff2'),
+    url('/webfonts/Inconsolata-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -132,32 +132,15 @@
 @font-face {
   font-family: 'Inconsolata';
   src: local('Inconsolata Regular'), local('Inconsolata-Regular'),
-	  url('/webfonts/Inconsolata-Regular.woff2') format('woff2'),
-	  url('/webfonts/Inconsolata-Regular.woff') format('woff');
+    url('/webfonts/Inconsolata-Regular.woff2') format('woff2'),
+    url('/webfonts/Inconsolata-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
-/* Extend animate.css
-   ========================================================================== */
-
-.animated {
-  -webkit-animation-duration: 0.3s;
-  animation-duration: 0.3s;
-}
-
-.animated.extended {
-  -webkit-animation-duration: 0.6s;
-  animation-duration: 0.6s;
-}
-
 /* Base
    ========================================================================== */
-
-.debug-panel-contents {
-  background-color: #fff;
-}
 
 * {
   -webkit-tap-highlight-color: transparent;
@@ -178,7 +161,6 @@ html {
 
 body {
   font-family: Exo, Arial, sans-serif;
-  overflow-x: hidden;
   font-size: 0.9rem;
   height: 100%;
   color: #7c7c7c;
@@ -187,14 +169,6 @@ body {
 
 :focus { outline: none; }
 ::-moz-focus-inner { border: 0; }
-
-.body-login,
-.body-reset {
-  height: auto;
-  padding-top: 10%;
-  background: rgb(102 158 231) !important;
-  background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%) !important;
-}
 
 h1,
 h2,
@@ -1074,6 +1048,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit-toolbar__buttonstrip .fas {
   padding-right: 6px;
+}
+
+.body-login,
+.body-reset {
+  height: auto;
+  padding-top: 10%;
+  background: rgb(102 158 231) !important;
+  background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%) !important;
 }
 
 .body-user .l-unit.animated.fadeIn {
@@ -1968,10 +1950,6 @@ body.mobile .l-icon-shortcuts {
   text-align: center;
 }
 
-#vstobjects {
-  /*  margin-top: -1px; */
-}
-
 #vstobjects .l-center {
   padding-top: 20px;
   padding-bottom: 30px;
@@ -2131,10 +2109,6 @@ body.mobile .l-icon-shortcuts {
   animation-play-state: paused;
 }
 
-.uppercase {
-  text-transform: uppercase;
-}
-
 .title b,
 .title {
   color: #c36;
@@ -2187,24 +2161,7 @@ body.mobile .l-icon-shortcuts {
   color: #d53067;
 }
 
-.data {
-  margin: 0 0 90px;
-}
-
-.data-col1 {
-  width: 148px;
-}
-
-.data-col1 td {
-  padding: 10px 0 0 5px;
-}
-
-.data-col1 tr:first-child td {
-  padding: 59px 0 0 5px;
-}
-
-.login-box td,
-.data td {
+.login-box td {
   color: #4b4b4b;
   font-size: 0.85rem;
   padding-bottom: 4px;
@@ -2219,8 +2176,9 @@ body.mobile .l-icon-shortcuts {
   margin-top: -12px;
 }
 
-.data a {
-  text-decoration: none;
+.form-label {
+  margin-bottom: 6px;
+  display: inline-block;
 }
 
 .form-control {
@@ -2249,6 +2207,63 @@ body.mobile .l-icon-shortcuts {
   color: #333;
 }
 
+.form-control.list-editor {
+  border: none;
+  box-shadow: none;
+  position: absolute;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  width: auto;
+  top: 2px;
+  left: 2px;
+  right: 23px;
+}
+
+.form-control.list-editor:focus {
+  background-color: #fff;
+}
+
+.form-select {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  font-weight: normal;
+  font-size: .8rem;
+  padding: 8px 30px 8px 12px;
+  line-height: 1.5;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #4e4e4e;
+  appearance: none;
+  background-image: url(/images/arrow.png);
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  text-shadow: 0 0 0 #4b4b4b;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
+}
+
+.form-select:hover {
+  border: 1px solid #94c8f0;
+}
+
+.form-select:focus {
+  border: 1px solid #008fee;
+}
+
+.form-check {
+  position: relative;
+  padding-left: 20px;
+  margin-left: 3px;
+  min-height: 24px;
+}
+
+.form-check-input {
+  position: absolute;
+  margin-top: 3px;
+  margin-left: -20px;
+}
+
 .form-control:disabled,
 .form-select:disabled {
   background-color: #e7e7e7;
@@ -2264,22 +2279,6 @@ body.mobile .l-icon-shortcuts {
 .form-control:disabled:hover,
 .form-select:disabled:hover {
   border-color: #cfcfcf;
-}
-
-.form-control.list-editor {
-  border: none;
-  box-shadow: none;
-  position: absolute;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  width: auto;
-  top: 2px;
-  left: 2px;
-  right: 23px;
-}
-
-.form-control.list-editor:focus {
-  background-color: #fff;
 }
 
 a.vst-text,
@@ -2394,52 +2393,6 @@ a.vst-text:active b {
   border: none !important;
 }
 
-.form-label {
-  margin-bottom: 6px;
-  display: inline-block;
-}
-
-.form-select {
-  box-sizing: border-box;
-  display: block;
-  width: 100%;
-  font-weight: normal;
-  font-size: .8rem;
-  padding: 8px 30px 8px 12px;
-  line-height: 1.5;
-  border-radius: 4px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  color: #4e4e4e;
-  appearance: none;
-  background-image: url(/images/arrow.png);
-  background-repeat: no-repeat;
-  background-position: right 9px center;
-  text-shadow: 0 0 0 #4b4b4b;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-}
-
-.form-select:hover {
-  border: 1px solid #94c8f0;
-}
-
-.form-select:focus {
-  border: 1px solid #008fee;
-}
-
-.form-check {
-  position: relative;
-  padding-left: 20px;
-  margin-left: 3px;
-  min-height: 24px;
-}
-
-.form-check-input {
-  position: absolute;
-  margin-top: 3px;
-  margin-left: -20px;
-}
-
 .lets-encrypt-note {
   color: #89a40a !important;
   font-style: italic;
@@ -2516,8 +2469,7 @@ a.vst-text:active b {
 }
 
 .ftp-path-value,
-.hint,
-td.hint {
+.hint {
   color: #777;
   font-size: 0.8rem;
   font-style: italic;
@@ -2532,12 +2484,12 @@ td.hint {
 
 /* Hide the default close button in dialog header */
 .ui-dialog-titlebar-close {
-	display: none;
+  display: none;
 }
 
 /* Set high z-index for dialog to override .l-header */
 .ui-front {
-	z-index: 1000;
+  z-index: 1000;
 }
 
 .ui-dialog .ui-dialog-buttonpane button {
@@ -2735,30 +2687,6 @@ a.button.cancel {
   font-weight: normal;
 }
 
-.data-active b {
-  color: #3b9de8;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-}
-
-.data-suspended b {
-  color: #a3a3a3;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.data-date {
-  font-weight: normal;
-  color: #777;
-  font-size: 0.8rem;
-  line-height: 23px;
-}
-
-.data-dotted {
-  vertical-align: top;
-}
-
 .mail-infoblock-td {
   vertical-align: top;
 }
@@ -2856,27 +2784,26 @@ a.button.cancel {
 }
 
 .page-title {
-  font-size: 1.4rem !important;
-  font-weight: 500 !important;
-  padding-bottom: 20px !important;
+  font-size: 1.4rem;
+  font-weight: 500;
+  padding-bottom: 20px;
   letter-spacing: -0.01em;
 }
 
 .section-title {
-  position: relative;
-  font-size: 1.05rem !important;
-  font-weight: 600 !important;
-  padding-bottom: 12px !important;
-  padding-top: 28px !important;
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding-top: 28px;
+  padding-bottom: 12px;
   letter-spacing: -0.01em;
   border-bottom: 1px solid #ccc;
-  cursor: pointer;
-  min-width: 390px;
 }
 
 .section-hide-button {
-  position: absolute;
-  right: 0;
   font-size: 13.6px;
 }
 
@@ -3251,8 +3178,6 @@ form#vstobjects.suspended {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   border-right: 0;
-
-  /*  visibility: hidden; */
   transition: width 0.2s ease-out;
 }
 
@@ -3267,10 +3192,6 @@ form#vstobjects.suspended {
 .search-input.activated {
   width: 120px;
   visibility: visible;
-}
-
-.search-input:focus {
-  /*  Adjusts elements of search box when focused/selected */
 }
 
 .lang-fr .search-input,
@@ -3572,7 +3493,7 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 410px;
+  margin-top: 423px;
   margin-right: 22px;
   padding-top: 0;
   width: 600px;
@@ -3682,10 +3603,6 @@ li[aria-expanded="true"] a {
   filter: none;
 }
 
-.server-info {
-  /* empty element */
-}
-
 .server-info-output {
   color: #c36;
   padding: 10px 0 20px 20px;
@@ -3733,7 +3650,6 @@ li[aria-expanded="true"] a {
 }
 
 .debug-panel-header {
-  width: 100%;
   text-align: center;
   border-bottom: 1px solid rgb(255 255 255 / 25%);
   box-shadow: 0 -2px 4px rgb(0 0 0 / 40%);
@@ -3752,7 +3668,8 @@ li[aria-expanded="true"] a {
 }
 
 .debug-panel-contents {
-  font-size: 12px !important;
+  background-color: #fff;
+  font-size: 12px;
   padding: 18px;
   position: absolute;
   top: 0;
@@ -3812,6 +3729,19 @@ li[aria-expanded="true"] a {
 .password-meter[value="2"]::-moz-meter-bar { background: orange; }
 .password-meter[value="3"]::-moz-meter-bar { background: yellow; }
 .password-meter[value="4"]::-moz-meter-bar { background: green; }
+
+/* Extend animate.css
+   ========================================================================== */
+
+.animated {
+  -webkit-animation-duration: 0.3s;
+  animation-duration: 0.3s;
+}
+
+.animated.extended {
+  -webkit-animation-duration: 0.6s;
+  animation-duration: 0.6s;
+}
 
 /* Global utilities
    ========================================================================== */

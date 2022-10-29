@@ -4,8 +4,13 @@
     Website:     www.hestiacp.com
 */
 
-.debug-panel-contents {
+body {
+  color: #cdcdcd;
   background-color: #282828;
+}
+
+a {
+  color: #cdcdcd;
 }
 
 b,
@@ -16,21 +21,6 @@ strong {
 button,
 select {
   text-shadow: 0 0 0 #d4d4d4 !important;
-}
-
-body {
-  color: #cdcdcd;
-  background-color: #282828;
-}
-
-.body-login,
-.body-reset {
-  background: #303030 !important;
-  background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%) !important;
-}
-
-a {
-  color: #cdcdcd;
 }
 
 .l-header {
@@ -608,15 +598,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .vst-ok a:active {
 }
 
-.login-box td,
-.data td {
+.login-box td {
   color: #d4d4d4;
-}
-
-.data input[type="checkbox"] {
-}
-
-.data a {
 }
 
 .form-control {
@@ -999,22 +982,6 @@ a.button.cancel {
 
 }
 
-.data-active b {
-
-}
-
-.data-suspended b {
-
-}
-
-.data-date {
-
-}
-
-.data-dotted {
-
-}
-
 .mail-infoblock-td {
 
 }
@@ -1072,11 +1039,11 @@ a.button.cancel {
 }
 
 .page-title {
-  color: #e8e8e8 !important;
+  color: #e8e8e8;
 }
 
 .section-title {
-  border-bottom-color: #484848 !important;
+  border-bottom-color: #484848;
 }
 
 .qr-code {
@@ -1468,6 +1435,16 @@ li[aria-expanded="true"] a {
 
 .graph-rounded {
   border-radius: 8px;
+}
+
+.body-login,
+.body-reset {
+  background: #303030 !important;
+  background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%) !important;
+}
+
+.debug-panel-contents {
+  background-color: #282828;
 }
 
 .body-rrd .units .l-unit {

@@ -22,8 +22,8 @@ fi
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
 
-FM_FILE="filegator_v${fm_v}.zip"
-FM_URL="https://github.com/filegator/filegator/releases/download/v${fm_v}/${FM_FILE}"
+FM_FILE="v${fm_v}.zip"
+FM_URL="https://github.com/filegator/filegator/archive/refs/tags/${FM_FILE}"
 
 
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
@@ -44,8 +44,8 @@ if [ "$fm_error" != "yes" ]; then
         wget "$FM_URL" --quiet -O "${FM_INSTALL_DIR}/${FM_FILE}"
 
     unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}"
-    mv --force ${FM_INSTALL_DIR}/filegator/* "${FM_INSTALL_DIR}"
-    rm --recursive --force ${FM_INSTALL_DIR}/filegator
+    mv --force ${FM_INSTALL_DIR}/filegator-${fm_v}/* "${FM_INSTALL_DIR}"
+    rm --recursive --force ${FM_INSTALL_DIR}/filegator-${fm_v}
     [[ -f "${FM_INSTALL_DIR}/${FM_FILE}" ]] && rm "${FM_INSTALL_DIR}/${FM_FILE}"
 
     cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"

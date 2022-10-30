@@ -107,7 +107,7 @@ App.Listeners.WEB.keypress_ftp_path = function() {
 //
 App.Actions.WEB.add_ftp_user_form = function() {
     var ref = $('#templates').find('.js-ftp-account-nrm').clone(true);
-    var index = $('.app-form .js-ftp-account').length + 1;
+    var index = $('.form-container .js-ftp-account').length + 1;
 
     ref.find('input').each(function(i, elm) {
         var name = $(elm).attr('name');
@@ -128,7 +128,7 @@ App.Actions.WEB.add_ftp_user_form = function() {
     $('#ftp_users').append(ref);
 
     var index = 1;
-    $('.app-form .ftp-user-number:visible').each(function(i, o) {
+    $('.form-container .ftp-user-number:visible').each(function(i, o) {
         $(o).text(index);
         index += 1;
     });
@@ -145,7 +145,7 @@ App.Actions.WEB.remove_ftp_user = function(elm) {
     ref.hide();
 
     var index = 1;
-    $('.app-form .ftp-user-number:visible').each(function(i, o) {
+    $('.form-container .ftp-user-number:visible').each(function(i, o) {
         $(o).text(index);
         index += 1;
     });

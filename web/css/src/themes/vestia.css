@@ -340,7 +340,7 @@ a.vst-text:hover b,
 
 .form-control:focus,
 .login .form-control:focus {
-  border: 1px solid #ff6701;
+  border-color: #ff6701;
   background-color: #fff4ed;
   color: #333;
 }
@@ -363,7 +363,7 @@ a.vst-text:hover b,
   text-align: left;
 }
 
-.page-title {
+.form-title {
   font-weight: 600;
   font-size: 1.2rem;
 }
@@ -698,7 +698,7 @@ a.vst-advanced:focus {
 }
 
 .login .form-control {
-  border: 1px solid #bbb;
+  border-color: #bbb;
 }
 
 .body-login button.button,

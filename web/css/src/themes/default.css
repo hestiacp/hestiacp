@@ -142,8 +142,16 @@
 /* Base
    ========================================================================== */
 
-* {
-  -webkit-tap-highlight-color: transparent;
+html {
+  height: 100%;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 html,
@@ -155,12 +163,8 @@ button {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html {
-  height: 100%;
-}
-
 body {
-  font-family: Exo, Arial, sans-serif;
+  font-family: Exo, Arial, Helvetica, sans-serif;
   font-size: 0.9rem;
   height: 100%;
   color: #7c7c7c;
@@ -242,7 +246,7 @@ a {
   position: fixed;
   width: 100%;
   z-index: 900;
-  height: 38px;
+  height: 39px;
   text-shadow: 1px 1px rgb(0 0 0 / 25%);
   box-shadow: 0 4px 10px rgb(100 100 100 / 40%);
   border-bottom: 1px solid #fff;
@@ -507,7 +511,6 @@ a {
 }
 
 .alert {
-  box-sizing: border-box;
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 400;
@@ -578,17 +581,11 @@ a {
   justify-content: center;
 }
 
-.app-form {
-  padding: 2em 1em 2em 9rem;
-}
-
-.app-form label {
-  font-size: 0.85rem;
-  font-weight: 600;
+.form-container {
+  padding: 1em 1em 2em 9rem;
 }
 
 .card {
-  box-sizing: border-box;
   overflow: hidden;
   background-color: #f5f5f5;
   border: 1px solid #d3d3d3;
@@ -629,7 +626,6 @@ a {
 }
 
 .card .card-thumb {
-  box-sizing: border-box;
   background-color: #fff;
   display: flex;
   align-items: center;
@@ -666,7 +662,7 @@ a {
 .l-stat__col a {
   display: inline-block;
   padding-bottom: 36px;
-  min-height: 70px;
+  min-height: 113px;
   width: 136px;
   border-bottom: 4px solid #fff;
   overflow: hidden;
@@ -770,7 +766,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
   background-color: #fff;
   z-index: 120;
   margin-top: 181px;
-  height: 44px;
+  height: 43px;
 }
 
 .l-sort__create-btn {
@@ -1926,8 +1922,8 @@ body.mobile .l-icon-shortcuts {
     0 2px 4px rgb(120 120 120 / 25%),
     inset 0 0 1px rgb(255 255 255 / 90%);
   z-index: 200;
-  width: 16px;
-  height: 16px;
+  width: 34px;
+  height: 34px;
   text-align: center;
 }
 
@@ -1945,8 +1941,8 @@ body.mobile .l-icon-shortcuts {
     0 2px 4px rgb(120 120 120 / 25%),
     inset 0 0 1px rgb(255 255 255 / 90%);
   z-index: 200;
-  height: 16px;
-  width: 16px;
+  height: 34px;
+  width: 34px;
   text-align: center;
 }
 
@@ -2181,9 +2177,15 @@ body.mobile .l-icon-shortcuts {
   display: inline-block;
 }
 
+.form-label,
+.form-check label {
+  color: #4b4b4b;
+  font-size: .85rem;
+  font-weight: 600;
+}
+
 .form-control {
   background-color: #fff;
-  box-sizing: border-box;
   border: 1px solid #cfcfcf;
   display: block;
   width: 100%;
@@ -2224,7 +2226,6 @@ body.mobile .l-icon-shortcuts {
 }
 
 .form-select {
-  box-sizing: border-box;
   display: block;
   width: 100%;
   font-weight: normal;
@@ -2384,13 +2385,15 @@ a.vst-text:active b {
 .login-box .vst-advanced {
   border-bottom: none;
   color: #326b9b;
-  padding: 2px !important;
   text-decoration: none;
   text-transform: uppercase;
   font-size: 0.85em !important;
   box-shadow: none !important;
   background: none !important;
   border: none !important;
+  height: auto !important;
+  padding: 0 !important;
+  min-width: 0 !important;
 }
 
 .lets-encrypt-note {
@@ -2759,14 +2762,9 @@ a.button.cancel {
   box-shadow:
     0 8px 25px rgb(0 0 0 / 30%),
     inset 0 0 2px rgb(255 255 255 / 100%);
-  font-family: Exo, Tahoma, Arial, Helvetica, sans-serif;
-  margin: 0;
-  padding: 0;
-  text-align: left;
   vertical-align: top;
   width: 500px;
   border-radius: 6px;
-  cursor: default;
 }
 
 .login .form-control {
@@ -2783,10 +2781,10 @@ a.button.cancel {
   padding-bottom: 30px !important;
 }
 
-.page-title {
+.form-title {
   font-size: 1.4rem;
   font-weight: 500;
-  padding-bottom: 20px;
+  padding-bottom: 30px;
   letter-spacing: -0.01em;
 }
 
@@ -2891,7 +2889,7 @@ div.l-content.collapsed .l-sort {
 .l-content > .units.l-center::before {
   content: "";
   display: block;
-  height: 225px;
+  height: 224px;
 }
 
 .console-output {
@@ -3170,11 +3168,11 @@ form#vstobjects.suspended {
 .search-input {
   background-color: #fff;
   border: 1px solid #ddd;
-  height: 26px;
+  height: 30px;
   line-height: 28px;
   padding-left: 7px;
   float: left;
-  width: 120px;
+  width: 130px;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   border-right: 0;
@@ -3190,7 +3188,7 @@ form#vstobjects.suspended {
 }
 
 .search-input.activated {
-  width: 120px;
+  width: 150px;
   visibility: visible;
 }
 
@@ -3322,7 +3320,6 @@ form#vstobjects.suspended {
   border-top-right-radius: 6px;
   box-shadow: 0 4px 30px rgb(0 0 0 / 50%);
   line-height: 0.9rem;
-  cursor: default;
 }
 
 .shortcuts .header {
@@ -3360,10 +3357,14 @@ form#vstobjects.suspended {
   line-height: 1.4rem;
 }
 
+.shortcuts-inner {
+  display: flex;
+  width: 100%;
+}
+
 .shortcuts ul {
+  flex-grow: 1;
   padding: 30px 20px;
-  float: left;
-  width: 360px;
 }
 
 .shortcuts ul li {
@@ -3493,10 +3494,10 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 423px;
-  margin-right: 22px;
+  margin-top: 420px;
+  margin-right: 14px;
   padding-top: 0;
-  width: 600px;
+  width: 610px;
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
   border: 1px solid #cfcfcf;
   border-radius: 4px;
@@ -3558,7 +3559,7 @@ li[aria-expanded="true"] a {
 
 .cron-helper-tabs .form-label.first {
   display: inline-block;
-  width: 100px;
+  width: 120px;
   padding-left: 0;
 }
 
@@ -3850,6 +3851,7 @@ li[aria-expanded="true"] a {
 
 .u-side-by-side {
   display: flex !important;
+  justify-content: space-between !important;
   align-items: center !important;
 }
 

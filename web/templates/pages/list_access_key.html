@@ -26,8 +26,8 @@ if (!empty($_POST['ok'])) {
 <div class="l-center animated fadeIn">
   <form id="vstobjects">
 
-    <div class="app-form">
-      <h1 class="page-title"><?= _("Access Key") ?></h1>
+    <div class="form-container">
+      <h1 class="form-title"><?= _("Access Key") ?></h1>
       <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <?php if (!empty($key_data['ACCESS_KEY_ID'])) { ?>

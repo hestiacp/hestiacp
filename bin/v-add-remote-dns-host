@@ -102,8 +102,15 @@ fi
 cluster_cmd v-add-cron-restart-job
 check_result $? "$HOST connection failed" "$E_CONNECT"
 
+# Loop trough domains to generate new serial
+for dns_user in $($BIN/v-list-sys-users plain); do
+    for dns_domain in $($BIN/v-list-dns-domains $dns_user plain | cut -f1); do
+        $BIN/v-rebuild-dns-domain $dns_user $dns_domain "no" "yes"
+    done
+done
+
 # Syncing all domains
-$BIN/v-sync-dns-cluster "$host"
+$BIN/v-sync-dns-cluster
 check_result $? "$HOST sync failed" "$E_CONNECT"
 
 #----------------------------------------------------------#

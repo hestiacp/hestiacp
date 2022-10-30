@@ -40,6 +40,16 @@ App.Listeners.MAIL_ACC.checkbox_unlimited_feature = function() {
     $('.unlim-trigger').on('click', App.Actions.MAIL_ACC.toggle_unlimited_feature);
 }
 
+
+App.Helpers.isUnlimitedValue = function(value) {
+    var value = value.trim();
+    if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
+        return true;
+    }
+
+    return false;
+}
+
 App.Listeners.MAIL_ACC.init = function() {
     $('.unlim-trigger').each(function(i, elm) {
         var ref = $(elm).prev('.vst-input');
@@ -52,6 +62,7 @@ App.Listeners.MAIL_ACC.init = function() {
         }
     });
 }
+App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
 
 App.Actions.MAIL_ACC.update_v_password = function (){
     var password = $('input[name="v_password"]').val();

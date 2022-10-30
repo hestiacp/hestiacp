@@ -141,9 +141,9 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['recor
         $v_dnssec = 'no';
         $restart_dns = 'yes';
     }
-    
+
     // Change domain dnssec
-    if (($_POST['v_dnssec'] == 'yes' && $v_dnssec == 'no') && (empty($_SESSION['error_msg']))) {
+    if (($_POST['v_dnssec'] == 'yes' && $v_dnssec !== 'yes') && (empty($_SESSION['error_msg']))) {
         exec(HESTIA_CMD."v-change-dns-domain-dnssec ".$user." ".$v_domain." 'yes'", $output, $return_var);
         check_return_code($return_var, $output);
         unset($output);

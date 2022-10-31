@@ -92,7 +92,7 @@
         $spnd_icon = 'fa-pause';
         $spnd_confirmation = _('SUSPEND_DOMAIN_CONFIRMATION');
       }
-      if ($data[$key]['DNSSEC'] == 'no') {
+      if ($data[$key]['DNSSEC'] !== 'yes') {
         $dnssec_icon = 'fa-times-circle';
       } else {
         $dnssec_icon = 'fa-check-circle';

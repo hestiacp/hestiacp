@@ -33,7 +33,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_args '2' "$#" 'USER DOMAIN [FLUSH]'
 is_format_valid 'user' 'domain'
 if [ -n "$flush" ]; then
-    is_type_valid "records yes no" "$flush" 
+    is_type_valid "records yes no" "$flush"
 fi
 is_system_enabled "$DNS_CLUSTER" 'DNS_CLUSTER'
 is_procces_running
@@ -56,13 +56,18 @@ if [ -z "$str" ]; then
     fi
     exit
 fi
+if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+    str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
+    str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g");
+    ip=$($BIN/v-list-sys-ips plain | cut -f1);
+    str=$(echo "$str" | sed "s/MASTER=''/MASTER='$ip'/g");
+fi
 
 IFS=$'\n'
 for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
-    
     # Reset user, password and hash vars
     clear_dns_cluster_settings
-    
+
     # Parsing remote dns host parameters
     parse_object_kv_list "$cluster"
 
@@ -70,32 +75,28 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
     parse_object_kv_list "$str"
 
     if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
-        str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
-        ip=$($BIN/v-list-sys-ips plain | cut -f1);
-        str=$(echo "$str" | sed "s/MASTER='*'/MASTER='$ip'/g");
-            
         # Syncing domain data
         cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
         check_result $? "$HOST connection failed" "$E_CONNECT"
-        
+
         cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
         check_result $? "$HOST connection failed" "$E_CONNECT"
-        
+
         rndc notify $domain  > /dev/null 2>&1
     else
         # Syncing domain data
         cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
         check_result $? "$HOST connection failed" "$E_CONNECT"
-    
+
         # Syncing domain records
         tmp_file="/tmp/vst-sync.$DOMAIN"
         cluster_file $USER_DATA/dns/$DOMAIN.conf $tmp_file
         check_result $? "$HOST connection failed" "$E_CONNECT"
-    
+
         # Inserting synced records
         cluster_cmd v-insert-dns-records $DNS_USER $DOMAIN $tmp_file 'no'
         check_result $? "$HOST connection failed" "$E_CONNECT"
-    
+
         # Rebuilding dns zone
         cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
         check_result $? "$HOST connection failed" "$E_CONNECT"

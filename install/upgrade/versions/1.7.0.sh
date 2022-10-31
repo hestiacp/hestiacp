@@ -18,13 +18,13 @@
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'yes'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 # Make sure to sync install quoteshell arg
-if [ "$FILE_MANAGER" = "true" ]; then 
+if [ "$FILE_MANAGER" = "true" ]; then
     $HESTIA/bin/v-delete-sys-filemanager quiet
-    $HESTIA/bin/v-add-sys-filemanager quiet  
+    $HESTIA/bin/v-add-sys-filemanager quiet
 fi
 
 packages=$(ls --sort=time $HESTIA/data/packages |grep .pkg)

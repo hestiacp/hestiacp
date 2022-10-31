@@ -58,6 +58,7 @@ if [ -z "$str" ]; then
 fi
 if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
     str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
+    str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g");
     ip=$($BIN/v-list-sys-ips plain | cut -f1);
     str=$(echo "$str" | sed "s/MASTER=''/MASTER='$ip'/g");
 fi

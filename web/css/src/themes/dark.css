@@ -598,10 +598,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .vst-ok a:active {
 }
 
-.login-box td {
-  color: #d4d4d4;
-}
-
 .form-label,
 .form-check label {
   color: #d4d4d4;
@@ -734,7 +730,7 @@ a.vst-text:active b {
   text-transform: none !important;
 }
 
-.login-box .vst-advanced:hover {
+.login .vst-advanced:hover {
   color: #ff3478 !important;
   background-color: transparent;
   border-color: transparent;
@@ -743,7 +739,7 @@ a.vst-text:active b {
   box-shadow: none !important;
 }
 
-.login-box .vst-advanced:active {
+.login .vst-advanced:active {
   color: #be1f54 !important;
   border: none !important;
   background: none !important;
@@ -757,7 +753,7 @@ a.vst-text:active b {
   text-decoration: none;
 }
 
-.login-box .vst-advanced:active,
+.login .vst-advanced:active,
 .vst-advanced:active {
   color: #fff;
   background-color: #be1f54;
@@ -765,7 +761,7 @@ a.vst-text:active b {
   text-decoration: none;
 }
 
-.login-box .vst-advanced {
+.login .vst-advanced {
   border-bottom: none;
   color: #326b9b;
   font-size: 0.85em !important;
@@ -1035,11 +1031,15 @@ a.button.cancel {
 
 .login {
   background-color: #282828;
-  box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(0 0 0 / 25%) !important;
+  box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(0 0 0 / 25%);
 }
 
-.login-welcome {
-  color: #fff !important;
+.login-title {
+  color: #fff;
+}
+
+.login a.error {
+  color: #f864fa;
 }
 
 .form-title {
@@ -1055,10 +1055,6 @@ a.button.cancel {
   box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }
 
-.login a.error {
-  color: #f864fa;
-}
-
 .hestiacp {
 
 }
@@ -1069,10 +1065,6 @@ a.button.cancel {
 
 .hestiacp:active {
   color: #ff3478;
-}
-
-.login-bottom {
-
 }
 
 .l-unit.selected {

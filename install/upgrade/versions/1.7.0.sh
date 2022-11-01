@@ -5,6 +5,8 @@
 #######################################################################################
 #######                      Place additional commands below.                   #######
 #######################################################################################
+####### upgrade_config_set_value only accepts true or false.                    #######
+#######                                                                         #######
 ####### Pass through information to the end user in case of a issue or problem  #######
 #######                                                                         #######
 ####### Use add_upgrade_message "My message here" to include a message          #######

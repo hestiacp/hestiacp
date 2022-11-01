@@ -705,7 +705,6 @@ upgrade_rebuild_dns_templates() {
 }
 
 upgrade_rebuild_users() {
-    echo $UPGRADE_REBUILD_USERS;
     if [ "$UPGRADE_REBUILD_USERS" = "true" ]; then
         if [ "$DEBUG_MODE" = "true" ]; then
             echo "[ * ] Rebuilding user accounts and domains:"

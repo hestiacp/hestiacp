@@ -19,8 +19,8 @@
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="ok" value="Add">
 
-    <div class="app-form">
-      <h1 class="page-title"><?=_('Adding database');?></h1>
+    <div class="form-container">
+      <h1 class="form-title"><?=_('Adding database');?></h1>
       <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
@@ -32,7 +32,7 @@
         <?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
           <div class="u-side-by-side u-pt18">
             <div><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></div>
-            <div class="u-ml10"><a href="/add/db/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a></div>
+            <div><a href="/add/db/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a></div>
           </div>
         <?php } ?>
         <?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>

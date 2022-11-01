@@ -25,14 +25,12 @@
                   </tr>
                   <tr>
                     <td style="padding: 12px 0 0 2px;">
-                      <label for="password" class="form-label" style="display:block;">
+                      <label for="password" class="form-label u-side-by-side">
                         <?=_('Password');?>
                         <?php if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] !== 'no' ) {?>
-                          <div style="padding:0 6px 0px 14px; float:right;">
-                            <a tabindex="5" class="vst-advanced" href="/reset/">
-                              <?=_('forgot password');?>
-                            </a>
-                          </div>
+                          <a tabindex="5" class="vst-advanced" href="/reset/">
+                            <?=_('forgot password');?>
+                          </a>
                         <?php } ?>
                       </label>
                       <input type="password" class="form-control" name="password" id="password" tabindex="2" style="width:260px;" autofocus>

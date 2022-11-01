@@ -29,7 +29,7 @@
       <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
       <input type="hidden" name="ok" value="true">
 
-      <div class="app-form">
+      <div class="form-container">
         <?php if( !$WebappInstaller->isDomainRootClean()): ?>
           <div class="alert alert-info alert-with-icon u-input-width" role="alert">
             <i class="fas fa-info"></i>
@@ -38,7 +38,7 @@
             <p><?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?></p>
           </div>
         <?php endif; ?>
-        <div class="u-input-width u-pt18">
+        <div class="u-input-width u-mt20">
           <?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>
             <?php
               $f_name = $WebappInstaller->formNs() . '_' . $form_name;

@@ -178,7 +178,7 @@ Date.prototype.format = function (mask, utc) {
 
 ﻿/*
  * http://code.google.com/p/flexible-js-formatting/
- * 
+ *
  * Copyright (C) 2004 Baron Schwartz <baron at sequent dot org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -509,7 +509,7 @@ Date.today = function() {
     now.setHours(0);
     now.setMinutes(0);
     now.setSeconds(0);
-    
+
     return now;
 }
 
@@ -700,15 +700,15 @@ var lastScrollTop = 0;
 var App = {
     // Main namespases for page specific functions
     // Core namespaces
-    Ajax: { 
-        Busy: {} 
+    Ajax: {
+        Busy: {}
     },
     Core: {},
     // CONSTANT VALUES
     Constants: {
         UNLIM_VALUE: 'unlimited', // overritten in i18n.js.php
         UNLIM_TRANSLATED_VALUE: 'unlimited' // overritten in i18n.js.php
-    }, 
+    },
     // Actions. More widly used funcs
     Actions: {
         DB:      {},
@@ -751,8 +751,8 @@ var App = {
             }, delay*10);
         }
     },
-    Settings: { 
-        GLOBAL:  {}, 
+    Settings: {
+        GLOBAL:  {},
         General: {}
     },
     Templates: {
@@ -1024,8 +1024,8 @@ hover_menu = function() {
     }
 
     if(st == 0){
-        nav_a.css({'min-height': '70px'});
-        nav_a.css({'height': '70px'});
+        nav_a.css({'min-height': '113px'});
+        nav_a.css({'height': '113px'});
     }
 
     if(st < 109 ){
@@ -1034,7 +1034,7 @@ hover_menu = function() {
     }
 
     if (st <= 112 && st > 110 ) {
-        nav_main.css({'padding-top': 36 - st + 109  + 'px'});
+        nav_main.css({'padding-top': 36 - st + 109 + 'px'});
     }
 
     lastScrollTop = st;
@@ -1064,7 +1064,7 @@ function doSearch(url) {
 function elementHideShow(elementToHideOrShow,trigger){
     var el = document.getElementById(elementToHideOrShow);
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
-    
+
     if (typeof trigger !== 'undefined') {
         trigger.querySelector('.section-hide-button').classList.toggle('fa-minus-square');
         trigger.querySelector('.section-hide-button').classList.toggle('fa-plus-square');

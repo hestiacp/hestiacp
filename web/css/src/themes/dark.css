@@ -602,6 +602,11 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #d4d4d4;
 }
 
+.form-label,
+.form-check label {
+  color: #d4d4d4;
+}
+
 .form-control {
   background-color: #454545;
   border: 1px solid #606060;
@@ -764,7 +769,6 @@ a.vst-text:active b {
   border-bottom: none;
   color: #326b9b;
   font-size: 0.85em !important;
-  padding: 2px 2px 0;
   text-decoration: none;
   text-transform: uppercase;
   border: none !important;
@@ -1038,7 +1042,7 @@ a.button.cancel {
   color: #fff !important;
 }
 
-.page-title {
+.form-title {
   color: #e8e8e8;
 }
 

@@ -617,6 +617,9 @@ $(document).ready(function(){
             $(".ui-button[data-id=vstobjects][data-action=submit]").on('click', function(ev){
               let loadingAnimationEle = document.createElement("div");
               loadingAnimationEle.innerHTML = '<div class="timer-container" style="float:right;"><div class="timer-button spinner"><div class="spinner-inner"></div><div class="spinner-mask"></div> <div class="spinner-mask-two"></div></div></div>';
+              // improve alignment
+              var buttonStrip = this.closest(".l-unit-toolbar__buttonstrip");
+              buttonStrip.style.marginTop = "8px";
               // this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
               $(".ui-button[data-id=vstobjects][data-action=submit]").replaceWith(loadingAnimationEle);
               $(".ui-button").replaceWith('');

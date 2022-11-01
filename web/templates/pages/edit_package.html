@@ -19,8 +19,8 @@
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="save" value="save">
 
-    <div class="app-form">
-      <h1 class="page-title"><?=_('Editing Package');?></h1>
+    <div class="form-container">
+      <h1 class="form-title"><?=_('Editing Package');?></h1>
       <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <div class="u-mb10">
@@ -177,37 +177,37 @@
                 echo '<div class="u-side-by-side u-mb5">
                   <input type="text" class="form-control" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
                   <span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
-                </tr>';
+                </div>';
               }
               if($v_ns4) {
                 echo '<div class="u-side-by-side u-mb5">
                   <input type="text" class="form-control" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
                   <span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
-                </tr>';
+                </div>';
               }
               if($v_ns5) {
                 echo '<div class="u-side-by-side u-mb5">
                   <input type="text" class="form-control" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
                   <span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
-                </tr>';
+                </div>';
               }
               if($v_ns6) {
                 echo '<div class="u-side-by-side u-mb5">
                   <input type="text" class="form-control" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
                   <span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
-                </tr>';
+                </div>';
               }
               if($v_ns7) {
                 echo '<div class="u-side-by-side u-mb5">
                   <input type="text" class="form-control" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
                   <span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
-                </tr>';
+                </div>';
               }
               if($v_ns8) {
                 echo '<div class="u-side-by-side u-mb5">
                   <input type="text" class="form-control" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
                   <span class="js-remove-ns u-ml10"><i class="fas fa-trash status-icon dim red"></i></span>
-                </tr>';
+                </div>';
               }
             ?>
             <div class="u-pt18 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>

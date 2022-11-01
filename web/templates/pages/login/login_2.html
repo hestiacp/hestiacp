@@ -19,13 +19,11 @@
                   </tr>
                   <tr>
                     <td style="padding-top: 12px; padding-left:2px;">
-                      <label for="twofa" class="form-label" style="display:block;">
+                      <label for="twofa" class="form-label u-side-by-side">
                         <?=_('2FA Token');?>
-                        <div style="padding:0 6px 0px 14px; float:right;">
-                          <a tabindex="5" class="vst-advanced" href="/reset2fa/">
-                            <?=_('Forgot token');?>
-                          </a>
-                        </div>
+                        <a tabindex="5" class="vst-advanced" href="/reset2fa/">
+                          <?=_('Forgot token');?>
+                        </a>
                       </label>
                       <input type="text" class="form-control" name="twofa" id="twofa" tabindex="2" style="width:260px;" autofocus>
                     </td>

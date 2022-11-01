@@ -29,8 +29,8 @@ if [ "$FILE_MANAGER" = "true" ]; then
 fi
 
 packages=$(ls --sort=time $HESTIA/data/packages |grep .pkg)
+echo "[ * ] Update existing packages to support rate limit mail accounts..."
 for package in $packages; do
-    echo "[ * ] Update existing packages to support rate limit mail accounts..."
     if [ -z "$(grep -e 'RATE_LIMIT' $HESTIA/data/packages/$package)" ]; then
        echo "RATE_LIMIT='200'" >> $HESTIA/data/packages/$package
     fi

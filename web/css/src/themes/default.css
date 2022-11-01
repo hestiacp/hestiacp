@@ -1580,6 +1580,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__stat-col--left.super-compact {
   width: 50px;
+  white-space: nowrap;
 }
 
 .l-unit__stat-col--left.compact {
@@ -3823,6 +3824,10 @@ li[aria-expanded="true"] a {
 
 .u-pt30 {
   padding-top: 30px !important;
+}
+
+.u-pl30 {
+  padding-left: 30px !important;
 }
 
 .u-pl50 {

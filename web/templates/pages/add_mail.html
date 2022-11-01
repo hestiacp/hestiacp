@@ -90,7 +90,7 @@
               <?=_('SMTP Relay');?>
             </label>
           </div>
-          <div id="smtp_relay_table" class="u-pl50" style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;">
+          <div id="smtp_relay_table" class="u-pl30" style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;">
             <div class="u-mb10">
               <label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
               <input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">

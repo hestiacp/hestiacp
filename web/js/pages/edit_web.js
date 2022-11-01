@@ -211,7 +211,7 @@ App.Actions.WEB.passwordChanged = function(elm) {
     if (ref.find('.vst-email-alert-on-psw').length == 0) {
         var inp_name = ref.find('.v-ftp-user-is-new').prop('name');
         inp_name = inp_name.replace('is_new', 'v_ftp_email');
-        ref.find('div:last').after('<div class="u-pl50 u-mb10">\
+        ref.find('div:last').after('<div class="u-pl30 u-mb10">\
                                       <label for="' + inp_name + '" class="form-label">Send FTP credentials to email</label>\
                                       <input type="email" class="form-control vst-email-alert-on-psw" value="" name="' + inp_name + '" id="' + inp_name + '">\
                                    </div>');

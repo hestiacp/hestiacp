@@ -284,7 +284,7 @@
                 <?=_('Global SMTP Relay');?>
               </label>
             </div>
-            <div id="smtp_relay_table" class="u-pl50" style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;">
+            <div id="smtp_relay_table" class="u-pl30" style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;">
               <div class="u-input-width">
                 <div class="u-mb10">
                   <label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
@@ -349,7 +349,7 @@
               foreach ($v_mysql_hosts as $value) {
                 $i++;
               ?>
-              <div class="u-input-width u-pl50">
+              <div class="u-input-width u-pl30">
                 <div class="u-mb10">
                   <label for="v_mysql_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
                   <input type="text" class="form-control" name="v_mysql_host" id="v_mysql_host" value="<?=$value['HOST']?>" disabled>
@@ -399,7 +399,7 @@
               foreach ($v_pgsql_hosts as $value) {
                 $i++;
               ?>
-              <div class="u-input-width u-pl50">
+              <div class="u-input-width u-pl30">
                 <div class="u-mb10">
                   <label for="v_pgsql_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
                   <input type="text" class="form-control" name="v_pgsql_host" id="v_pgsql_host" value="<?=$value['HOST']?>" disabled>

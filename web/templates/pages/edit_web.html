@@ -85,7 +85,7 @@
           </div>
         </div>
         <div class="stats-auth">
-          <div class="u-pl50">
+          <div class="u-pl30">
             <div id="statstable" name="v-add-web-domain-stats-user" style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;">
               <div class="u-mb10">
                 <label for="v_stats_user" class="form-label"><?=_('Username');?></label>
@@ -108,7 +108,7 @@
             <?=_('Enable domain redirection');?>
           </label>
         </div>
-        <div id="v_redirect" class="u-pl50 u-mb20" style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;">
+        <div id="v_redirect" class="u-pl30 u-mb10" style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;">
           <div class="form-check">
             <input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
             <label for="v-redirect-radio-1">
@@ -151,7 +151,7 @@
             <?=_('SSL Support');?>
           </label>
         </div>
-        <div id="ssltable" class="u-pl50" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;">
+        <div id="ssltable" class="u-pl30" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;">
           <div class="form-check u-mb10">
             <input class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo 'checked' ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)">
             <label for="letsencrypt">
@@ -287,15 +287,13 @@
                   </a>
                 </label>
               </div>
-              <div class="u-pl50">
-                <div id="v_nginx_duration" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
-                  <div class="u-pt6">
-                    <label for="v_nginx_cache_duration" class="form-label">
-                      <?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
-                    </label>
-                    <input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
-                  </div>
-                </table>
+              <div id="v_nginx_duration" class="u-pl30" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
+                <div class="u-pt6">
+                  <label for="v_nginx_cache_duration" class="form-label">
+                    <?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
+                  </label>
+                  <input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
+                </div>
               </div>
             <?php } ?>
             <?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
@@ -352,7 +350,7 @@
                   <label for="v_proxy_ext" class="form-label"><?=_('Proxy Extensions');?></label>
                   <textarea class="form-control u-min-height100" name="v_proxy_ext" id="v_proxy_ext"><?php if (!empty($v_proxy_ext)) { echo htmlentities(trim($v_proxy_ext, "'"));} else { echo 'jpg, jpeg, gif, png, ico, svg, css, zip, tgz, gz, rar, bz2, exe, pdf, doc, xls, ppt, txt, odt, ods, odp, odf, tar, bmp, rtf, js, mp3, avi, mpeg, flv, html, htm'; } ?></textarea>
                 </div>
-              </table>
+              </div>
             <?php } ?>
           <?php } ?>
           <div class="form-check u-mb10">
@@ -361,27 +359,25 @@
               <?=_('Custom document root');?>
             </label>
           </div>
-          <div class="u-pl50">
-            <div id="v_custom_doc_root" style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;">
-              <div class="u-mb10">
-                <label for="v-custom-doc-domain" class="form-label"><?=_('Point to');?></label>
-                <input type="hidden" name="v-custom-doc-root_prepath" value="<?=$v_custom_doc_root_prepath;?>">
-                <select class="form-select" name="v-custom-doc-domain" id="v-custom-doc-domain">
-                  <?php foreach ($user_domains as $domain): ?>
-                  <option value="<?=htmlentities($domain);?>"
-                    <?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>
-                    <?=htmlentities($domain);?>
-                  </option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              <div class="u-mb10">
-                <label for="v-custom-doc-folder" class="form-label">
-                  <?php print( _('Directory'));?> <span class="optional">(<?=_('optional');?>)</span>
-                </label>
-                <input type="text" class="form-control" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
-                <small class="custom_docroot_hint"></small>
-              </div>
+          <div id="v_custom_doc_root" class="u-pl30" style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;">
+            <div class="u-mb10">
+              <label for="v-custom-doc-domain" class="form-label"><?=_('Point to');?></label>
+              <input type="hidden" name="v-custom-doc-root_prepath" value="<?=$v_custom_doc_root_prepath;?>">
+              <select class="form-select" name="v-custom-doc-domain" id="v-custom-doc-domain">
+                <?php foreach ($user_domains as $domain): ?>
+                <option value="<?=htmlentities($domain);?>"
+                  <?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>
+                  <?=htmlentities($domain);?>
+                </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="u-mb10">
+              <label for="v-custom-doc-folder" class="form-label">
+                <?php print( _('Directory'));?> <span class="optional">(<?=_('optional');?>)</span>
+              </label>
+              <input type="text" class="form-control" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
+              <small class="custom_docroot_hint"></small>
             </div>
           </div>
           <?php if (in_array($_SESSION['FTP_SYSTEM'], array('vsftpd', 'proftpd'))) { ?>
@@ -406,7 +402,7 @@
                   <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
                   <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
                 </div>
-                <div class="u-pl50 u-mb10">
+                <div class="u-pl30 u-mb10">
                   <label for="v_ftp_user[<?=$i ?>][v_ftp_user]" class="form-label">
                     <?=_('Username');?><br>
                     <span style="color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
@@ -416,13 +412,13 @@
                   <input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
                   <small class="hint"></small>
                 </div>
-                <div class="u-pl50 u-mb10">
+                <div class="u-pl30 u-mb10">
                   <label for="v_ftp_user[<?=$i ?>][v_ftp_password]" class="form-label">
                     <?=_('Password');?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
                   </label>
                   <input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[<?=$i ?>][v_ftp_password]" id="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
                 </div>
-                <div class="u-pl50 u-mb10">
+                <div class="u-pl30 u-mb10">
                   <label for="v_ftp_user[<?=$i ?>][v_ftp_path]" class="form-label"><?=_('Path');?></label>
                   <input type="hidden" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
                   <input type="hidden" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
@@ -430,7 +426,7 @@
                   <span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
                 </div>
                 <?php if ($ftp_user['is_new'] == 1): ?>
-                  <div class="u-pl50 u-mb10">
+                  <div class="u-pl30 u-mb10">
                     <label for="v_ftp_user[<?=$i ?>][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
                     <input type="email" class="form-control vst-email-alert-on-psw" name="v_ftp_user[<?=$i ?>][v_ftp_email]" id="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
                   </div>
@@ -460,7 +456,7 @@
       <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
       <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
     </div>
-    <div class="u-pl50 u-mb10">
+    <div class="u-pl30 u-mb10">
       <label for="v_ftp_user[%INDEX%][v_ftp_user]" class="form-label">
         <?=_('Username');?><br>
         <span style="color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
@@ -468,19 +464,19 @@
       <input type="text" class="form-control v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
       <small class="hint"></small>
     </div>
-    <div class="u-pl50 u-mb10">
+    <div class="u-pl30 u-mb10">
       <label for="v_ftp_user[%INDEX%][v_ftp_password]" class="form-label">
         <?=_('Password');?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
       </label>
       <input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
     </div>
-    <div class="u-pl50 u-mb10">
+    <div class="u-pl30 u-mb10">
       <label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?=_('Path');?></label>
       <input type="hidden" name="v_ftp_pre_path" value="">
       <input type="text" class="form-control v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" id="v_ftp_user[%INDEX%][v_ftp_path]" value="">
       <span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
     </div>
-    <div class="u-pl50 u-mb10">
+    <div class="u-pl30 u-mb10">
       <label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
       <input type="email" class="form-control vst-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" id="v_ftp_user[%INDEX%][v_ftp_email]" value="">
     </div>

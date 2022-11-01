@@ -59,7 +59,7 @@ fi
 if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
     str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
     str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g");
-    ip=$($BIN/v-list-sys-ips plain | cut -f1);
+    ip=$($BIN/v-list-sys-ips plain | cut -f1 | head -n1);
     str=$(echo "$str" | sed "s/MASTER=''/MASTER='$ip'/g");
 fi
 
@@ -82,7 +82,6 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
         cluster_cmd v-rebuild-dns-domain $DNS_USER $domain 'yes' 'no'
         check_result $? "$HOST connection failed" "$E_CONNECT"
 
-        rndc notify $domain  > /dev/null 2>&1
     else
         # Syncing domain data
         cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
@@ -103,6 +102,9 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
     fi
 done
 
+if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+    rndc notify $domain  > /dev/null 2>&1
+fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

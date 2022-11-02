@@ -254,21 +254,15 @@ strong {
   background: #fff !important;
 }
 
+.form-container {
 
+}
 
 .form-control,
 .form-select {
+  font-family: Arial, Helvetica, sans-serif;
   box-shadow: none;
-  border-radius: 0 !important;
-}
-
-.form-label,
-.form-check label {
-  font-size: 0.8rem;
-}
-
-.form-check-input {
-  margin-top: 1px;
+  border-radius: 0;
 }
 
 .pill {
@@ -311,8 +305,8 @@ strong {
   color: #ff791f;
 }
 
-.notification-container .unseen .title a,
-.notification-container .unseen .title {
+.notification-container .unseen .notification-title a,
+.notification-container .unseen .notification-title {
   color: #111;
 }
 
@@ -484,11 +478,6 @@ a.vst-text:hover b,
   box-shadow: none;
 }
 
-.form-control,
-.form-select {
-  font-family: Arial, Helvetica, sans-serif !important;
-}
-
 .server-info-data {
   line-height: 1rem !important;
 }
@@ -505,9 +494,9 @@ a.vst-text:hover b,
   box-shadow: 0 3px 12px rgb(0 0 0 / 80%) !important;
 }
 
-.shortcuts .title,
+.shortcuts-title,
 .shortcuts ul li span {
-  color: #b5da0b !important;
+  color: #b5da0b;
 }
 
 .l-sort-toolbar .sort-by b {

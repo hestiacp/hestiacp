@@ -13,8 +13,8 @@ $dist_config['frontend_config']['upload_max_size'] = 1024 * 1024 * 1024;
 $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['adapter'] = function () {
     if (!empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
     if ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
-        $v_user = quoteshellarg($_SESSION['user']);
-        $v_session_id = quoteshellarg($_SESSION['token']);
+        $v_user = escapeshellarg($_SESSION['user']);
+        $v_session_id = escapeshellarg($_SESSION['token']);
         exec('/usr/local/hestia/bin/v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
         unset($_SESSION);
         session_unset();

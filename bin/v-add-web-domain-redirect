@@ -42,14 +42,19 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
+idn_redirect=$(idn2 --quiet $3)
+if [ $? == 0 ]; then
+    redirect=$idn_redirect;
+fi
+
 if [[ "$3" =~ http://|https:// ]]; then
     scheme=1
-    isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "$3")
+    isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "$redirect")
     if  [ -z "$isValidUrl" ]; then
         check_result $E_INVALID "Invalid redirect"
     fi
 else
-    isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "http://$3")
+    isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "http://$redirect")
     if  [ -z "$isValidUrl" ]; then
         check_result $E_INVALID "Invalid redirect"
     fi

@@ -1502,8 +1502,8 @@ multiphp_default_version() {
 
 is_hestia_package(){
     check=false;
-    for package in $1; do 
-      if [ $package == "$2" ]; then 
+    for pkg in $1; do 
+      if [ "$pkg" == "$2" ]; then 
         check="true";
       fi
     done

@@ -1,6 +1,34 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.11] - Service release 
+
+### Important
+
+A bug in v-update-sys-hestia caused auto update to be not working. Please run: ` apt update && apt upgrade `
+
+### Security
+
+- Fix issues with session timeout and filemnanger (#3004)
+
+### Bugfixes
+
+- Fixed an issue in auto update script for HestiaCP (#2967)
+- Fixed an issue in download ssl certificate in Firefox (#2979)
+- Resolve issue with idn domains and redirect (#2988)
+- Update Ipverse url for United Kingdom (#2962)
+- Fixed an issue with icons disapearing when viewing system logs
+- Fixd issue with unlimeted quota button on edit mail account
+
+### Dependencies
+
+- Update Rainloop to 1.17.0 (#2957)
+- Update Zlib to 1.2.13
+- Update hestia-nginx to 1.23.2
+- Update hestia-php to 8.1.12
+- Update OpenSSL to 3.0.7
+- Update Filegator to 7.8.7
+
 ## [1.6.10] - Service release 
 
 ### Security
@@ -48,7 +76,7 @@ All notable changes to this project will be documented in this file.
 
 - Force update composer to v2 instead of v1 when no version is provided (#2839 #2777)
 - Fixed an issue with v-change-web-domain-owner and mail only domains (#2840, #2841)
-- Grey out phpmyadmin buttons + add link to docs.hestia.com for support (#2843)
+- Grey out phpmyadmin buttons + add link to docs.hestiacp.com for support (#2843)
 - Block the use of CNAME records on @ or root records DNS domain (#2838, #2842)
 - Code clean up and remove unused tests and templates (#2829 and #2831)
 - Fixed an issue where no password was send when a user create a new mail account (#2819 #2815)

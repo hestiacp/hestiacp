@@ -632,18 +632,18 @@
                 <?=_('API');?>
               </p>
               <div class="u-mb10">
-                <label for="api" class="form-label"><?=_('Enable legacy API access');?></label>
-                <select class="form-select" name="v_api" id="api">
-                  <option value="yes"><?=_('Yes'); ?></option>
-                  <option value="no" <?php if($_SESSION['API'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
-                </select>
-              </div>
-              <div class="u-mb10">
                 <label for="api-system" class="form-label"><?=_('Enable API access');?></label>
                 <select class="form-select" name="v_api_system" id="api-system">
                   <option value='0' <?php if(empty($_SESSION['API_SYSTEM']) || $_SESSION['API_SYSTEM'] == '0') echo 'selected' ?>><?=_('Disabled'); ?></option>
                   <option value='1' <?php if($_SESSION['API_SYSTEM'] == '1') echo 'selected' ?>><?=_('Enabled for admin'); ?></option>
                   <option value='2' <?php if($_SESSION['API_SYSTEM'] == '2') echo 'selected' ?>><?=_('Enabled for all users'); ?></option>
+                </select>
+              </div>
+              <div class="u-mb10">
+                <label for="api" class="form-label"><?=_('Enable legacy API access');?></label>
+                <select class="form-select" name="v_api" id="api">
+                  <option value="yes"><?=_('Yes'); ?></option>
+                  <option value="no" <?php if($_SESSION['API'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
                 </select>
               </div>
               <div id="security_ip" style="<?php if ($_SESSION['API'] == "no" && $_SESSION['API_SYSTEM'] == '0') echo 'display:none;';?>">

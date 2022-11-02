@@ -1049,6 +1049,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .body-login,
 .body-reset {
   height: auto;
+  display: flex;
+  justify-content: center;
   padding-top: 10%;
   background: rgb(102 158 231) !important;
   background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%) !important;
@@ -2158,13 +2160,6 @@ body.mobile .l-icon-shortcuts {
   color: #d53067;
 }
 
-.login-box td {
-  color: #4b4b4b;
-  font-size: 0.85rem;
-  padding-bottom: 4px;
-  font-weight: 600;
-}
-
 .jump-top {
   margin-top: -60px;
 }
@@ -2351,7 +2346,7 @@ a.vst-text:active b {
   text-transform: none;
 }
 
-.login-box .vst-advanced:hover {
+.login .vst-advanced:hover {
   color: #c36;
   background-color: transparent;
   border-color: transparent;
@@ -2368,7 +2363,7 @@ a.vst-text:active b {
   text-decoration: none;
 }
 
-.login-box .vst-advanced:active {
+.login .vst-advanced:active {
   color: #fff;
   background-color: #f7d616;
   border-color: #f7d616;
@@ -2383,7 +2378,7 @@ a.vst-text:active b {
   font-size: unset;
 }
 
-.login-box .vst-advanced {
+.login .vst-advanced {
   border-bottom: none;
   color: #326b9b;
   text-decoration: none;
@@ -2759,13 +2754,25 @@ a.button.cancel {
 }
 
 .login {
+  display: flex;
+  padding: 80px 50px;
   background-color: rgb(255 255 255 / 70%);
+  border-radius: 6px;
   box-shadow:
     0 8px 25px rgb(0 0 0 / 30%),
     inset 0 0 2px rgb(255 255 255 / 100%);
-  vertical-align: top;
-  width: 500px;
-  border-radius: 6px;
+}
+
+.login-title {
+  color: #4b4b4b;
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.login a.error {
+  color: #be5abf;
+  font-size: 0.8rem;
 }
 
 .login .form-control {
@@ -2776,13 +2783,8 @@ a.button.cancel {
   font-size: 0.8rem !important;
 }
 
-.login-welcome {
-  font-size: 1.05rem !important;
-  font-weight: 500 !important;
-  padding-bottom: 30px !important;
-}
-
 .form-title {
+  color: #4b4b4b;
   font-size: 1.4rem;
   font-weight: 500;
   padding-bottom: 30px;
@@ -2812,11 +2814,6 @@ a.button.cancel {
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 }
 
-.login a.error {
-  color: #be5abf;
-  font-size: 0.8rem;
-}
-
 .hestiacp {
   color: #505050;
 }
@@ -2827,14 +2824,6 @@ a.button.cancel {
 
 .hestiacp:active {
   color: #c36;
-}
-
-.login-bottom {
-  height: 60px;
-  text-align: right;
-  vertical-align: top;
-  font-size: 0.75rem !important;
-  margin-right: 65px;
 }
 
 .l-unit.selected {
@@ -3863,11 +3852,6 @@ li[aria-expanded="true"] a {
 .u-list-bulleted {
   list-style: disc !important;
   padding-left: 40px !important;
-}
-
-.u-flex-align-center {
-  display: flex !important;
-  justify-content: center !important;
 }
 
 .u-console {

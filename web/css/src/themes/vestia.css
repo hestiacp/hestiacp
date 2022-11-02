@@ -254,12 +254,7 @@ strong {
   background: #fff !important;
 }
 
-.login {
-  background-color: rgb(255 255 255 / 80%) !important;
-  box-shadow:
-    0 2px 10px rgb(0 0 0 / 30%),
-    inset 0 0 2px rgb(255 255 255 / 100%) !important;
-}
+
 
 .form-control,
 .form-select {
@@ -661,10 +656,10 @@ a.vst-advanced:focus {
 }
 
 .login {
-  background-color: rgb(255 255 255 / 100%) !important;
-  box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255) !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  border-radius: 0 !important;
+  background-color: rgb(255 255 255 / 100%);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 0;
 }
 
 .body-login,

@@ -17,7 +17,7 @@ antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
 dkim_size=${6-1024}
-restart=${7-yes}
+restart="$7"
 reject=${8-no}
 
 # Includes
@@ -65,7 +65,7 @@ else
     is_domain_new 'mail' "$domain"
 fi
 if [ -z "$(is_ip_format_valid $domain)" ]; then
-    echo "Error: Invalid domain format. IP address detected as input." 
+    echo "Error: Invalid domain format. IP address detected as input."
     exit 1
 fi
 
@@ -129,8 +129,8 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
     if [ -n "$local_ip" ]; then
         echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
     fi
-    
-    if [ -n "$ANTISPAM_SYSTEM" ]; then 
+
+    if [ -n "$ANTISPAM_SYSTEM" ]; then
         # Adding antispam protection
         if [ "$antispam" = 'yes' ]; then
             touch "$HOMEDIR/$user/conf/mail/$domain/antispam"
@@ -139,7 +139,7 @@ if [[ "$MAIL_SYSTEM" =~ exim ]]; then
             touch "$HOMEDIR/$user/conf/mail/$domain/reject_spam"
         fi
     fi
-    
+
     if [ -n "$ANTIVIRUS_SYSTEM" ]; then
         # Adding antivirus protection
         if [ "$antivirus" = 'yes' ]; then
@@ -189,7 +189,7 @@ if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
         $BIN/v-add-mail-domain-webmail "$user" "$domain" '' 'no'
     fi
 fi
-    
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -552,9 +552,8 @@ rebuild_dns_domain_conf() {
 
     # Load new config
     /usr/sbin/rndc reconfig > /dev/null 2>&1
-
     # Reload config
-    /usr/sbin/rndc reload > /dev/null 2>&1
+    /usr/sbin/rndc reload $domain > /dev/null 2>&1
 
     if [ "$DNSSEC" = "yes" ]; then
         # Key consists always out of 5 digits when less is used they are "lost"

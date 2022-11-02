@@ -7,18 +7,26 @@ All notable changes to this project will be documented in this file.
 
 A bug in v-update-sys-hestia caused auto update to be not working. Please run: ` apt update && apt upgrade `
 
+### Security
+
+- Fix issues with session timeout and filemnanger (#3004)
+
 ### Bugfixes
 
-- Fixed an bug in auto update script for HestiaCP (#2967)
+- Fixed an issue in auto update script for HestiaCP (#2967)
 - Fixed an issue in download ssl certificate in Firefox (#2979)
 - Resolve issue with idn domains and redirect (#2988)
 - Update Ipverse url for United Kingdom (#2962)
+- Fixed an issue with icons disapearing when viewing system logs
+- Fixd issue with unlimeted quota button on edit mail account
 
 ### Dependencies
 
 - Update Rainloop to 1.17.0 (#2957)
 - Update Zlib to 1.2.13
 - Update hestia-nginx to 1.23.2
+- Update hestia-php to 8.1.12
+- Update OpenSSL to 3.0.7
 - Update Filegator to 7.8.7
 
 ## [1.6.10] - Service release 

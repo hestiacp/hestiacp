@@ -3,10 +3,10 @@
 # set -e
 # Autocompile Script for HestiaCP package Files.
 # For building from local source folder use "~localsrc" keyword as hesia branch name,
-#   and the script will not try to download the arhive from github, since '~' char is 
+#   and the script will not try to download the arhive from github, since '~' char is
 #   not accepted in branch name.
 # Compile but dont install -> ./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
-# Compile and install -> ./hst_autocompile.sh --hestia --install '~localsrc' 
+# Compile and install -> ./hst_autocompile.sh --hestia --install '~localsrc'
 
 # Clear previous screen output
 clear
@@ -131,7 +131,7 @@ else
 fi
 
 # Set packages to compile
-for i in $*; do 
+for i in $*; do
     case "$i" in
         --all)
           NGINX_B='true'
@@ -190,7 +190,7 @@ if [ -z $branch ]; then
 fi
 
 if [ $(echo "$branch" | grep '^~localsrc')  ]; then
-    branch=$(echo "$branch" | sed 's/^~//'); 
+    branch=$(echo "$branch" | sed 's/^~//');
     use_src_folder='true'
 else
     use_src_folder='false'
@@ -224,7 +224,7 @@ if [ -e "/etc/redhat-release" ]; then
 else
     HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 fi
-OPENSSL_V='3.0.5'
+OPENSSL_V='3.0.7'
 PCRE_V='10.40'
 ZLIB_V='1.2.12'
 
@@ -324,7 +324,7 @@ branch_dash=$(echo "$branch" |sed 's/\//-/g');
 
 if [ "$NGINX_B" = true ] ; then
     echo "Building hestia-nginx package..."
-    if [ "$CROSS" = "true" ]; then 
+    if [ "$CROSS" = "true" ]; then
       echo "Cross compile not supported for hestia-nginx or hestia-php"
       exit 1;
     fi
@@ -334,10 +334,10 @@ if [ "$NGINX_B" = true ] ; then
     BUILD_DIR_HESTIANGINX=$BUILD_DIR/hestia-nginx_$NGINX_V
     if [[ $NGINX_V =~ - ]]; then
       BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"-" -f1)
-    else 
+    else
       BUILD_DIR_NGINX=$BUILD_DIR/nginx-$(echo $NGINX_V |cut -d"~" -f1)
     fi
-    
+
     if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIANGINX" ]; then
         # Check if target directory exist
         if [ -d "$BUILD_DIR_HESTIANGINX" ]; then
@@ -471,23 +471,23 @@ fi
 #################################################################################
 
 if [ "$PHP_B" = true ] ; then
-    if [ "$CROSS" = "true" ]; then 
+    if [ "$CROSS" = "true" ]; then
       echo "Cross compile not supported for hestia-nginx or hestia-php"
       exit 1;
     fi
-    
+
     echo "Building hestia-php package..."
 
     BUILD_DIR_HESTIAPHP=$BUILD_DIR/hestia-php_$PHP_V
-    
+
     BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
-    
+
     if [[ $PHP_V =~ - ]]; then
       BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"-" -f1)
     else
       BUILD_DIR_PHP=$BUILD_DIR/php-$(echo $PHP_V |cut -d"~" -f1)
     fi
-    
+
     if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIAPHP" ]; then
         # Check if target directory exist
         if [ -d $BUILD_DIR_HESTIAPHP ]; then
@@ -547,7 +547,7 @@ if [ "$PHP_B" = true ] ; then
     # Move php directory
     [ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
     mkdir -p $BUILD_DIR_HESTIAPHP/usr/local/hestia
-    
+
     [ "$HESTIA_DEBUG" ] && echo DEBUG: rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
     if [ -d $BUILD_DIR_HESTIAPHP/usr/local/hestia/php ]; then
         rm -r $BUILD_DIR_HESTIAPHP/usr/local/hestia/php
@@ -625,27 +625,27 @@ fi
 arch="$BUILD_ARCH"
 
 if [ "$HESTIA_B" = true ]; then
-  if [ "$CROSS" = "true" ]; then 
+  if [ "$CROSS" = "true" ]; then
     arch="amd64 arm64"
   fi
-  for BUILD_ARCH in $arch; do 
+  for BUILD_ARCH in $arch; do
       echo "Building Hestia Control Panel package..."
-      
+
       BUILD_DIR_HESTIA=$BUILD_DIR/hestia_$HESTIA_V
-  
+
       # Change to build directory
       cd $BUILD_DIR
-  
+
       if [ "$KEEPBUILD" != 'true' ] || [ ! -d "$BUILD_DIR_HESTIA" ]; then
           # Check if target directory exist
           if [ -d $BUILD_DIR_HESTIA ]; then
               rm -r $BUILD_DIR_HESTIA
           fi
-  
+
           # Create directory
           mkdir -p $BUILD_DIR_HESTIA
       fi
-  
+
       cd $BUILD_DIR
       rm -rf $BUILD_DIR/hestiacp-$branch_dash
       # Download and unpack source files
@@ -655,16 +655,16 @@ if [ "$HESTIA_B" = true ]; then
       elif [ -d $SRC_DIR ]; then
           download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
       fi
-  
+
       mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
-  
+
       # Move needed directories
       cd $BUILD_DIR/hestiacp-$branch_dash
       cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
-  
+
       # Set permissions
       find $BUILD_DIR_HESTIA/usr/local/hestia/ -type f -exec chmod -x {} \;
-      
+
       # Allow send email via /usr/local/hestia/web/inc/mail-wrapper.php via cli
       chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/web/inc/mail-wrapper.php
       # Allow the executable to be executed
@@ -672,7 +672,7 @@ if [ "$HESTIA_B" = true ]; then
       find $BUILD_DIR_HESTIA/usr/local/hestia/install/ \( -name '*.sh' \) -exec chmod +x {} \;
       chmod -x $BUILD_DIR_HESTIA/usr/local/hestia/install/*.sh
       chown -R root:root $BUILD_DIR_HESTIA
-  
+
       if [ "$BUILD_DEB" = true ]; then
           # Get Debian package files
           mkdir -p $BUILD_DIR_HESTIA/DEBIAN
@@ -685,17 +685,17 @@ if [ "$HESTIA_B" = true ]; then
           get_branch_file 'src/deb/hestia/postinst' "$BUILD_DIR_HESTIA/DEBIAN/postinst"
           chmod +x $BUILD_DIR_HESTIA/DEBIAN/postinst
           chmod +x $BUILD_DIR_HESTIA/DEBIAN/preinst
-  
+
           echo Building Hestia DEB
           dpkg-deb -Zxz --build $BUILD_DIR_HESTIA $DEB_DIR
       fi
-  
+
       if [ "$BUILD_RPM" = true ]; then
           # Get RHEL package files
           get_branch_file 'src/rpm/hestia/hestia.spec' "${BUILD_DIR_HESTIA}/hestia.spec"
           sed -i "s/%HESTIA-VERSION%/${HESTIA_V}/g" "${BUILD_DIR_HESTIA}/hestia.spec"
           get_branch_file 'src/rpm/hestia/hestia.service' "${BUILD_DIR_HESTIA}/hestia.service"
-  
+
           # Build RPM package
           mkdir -p $BUILD_DIR/rpmbuild
           echo Building Hestia RPM
@@ -704,7 +704,7 @@ if [ "$HESTIA_B" = true ]; then
           rm ~/rpmbuild/RPMS/x86_64/hestia-*.rpm
           rm -rf $BUILD_DIR/rpmbuild
       fi
-  
+
       # clear up the source folder
       if [ "$KEEPBUILD" != 'true' ]; then
           rm -r $BUILD_DIR_HESTIA

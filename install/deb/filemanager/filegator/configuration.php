@@ -11,6 +11,23 @@ $dist_config['frontend_config']['guest_redirection'] = '/login/' ;
 $dist_config['frontend_config']['upload_max_size'] = 1024 * 1024 * 1024;
 
 $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['adapter'] = function () {
+    if (!empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
+    if ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
+        $v_user = quoteshellarg($_SESSION['user']);
+        $v_session_id = quoteshellarg($_SESSION['token']);
+        exec('/usr/local/hestia/bin/v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
+        unset($_SESSION);
+        session_unset();
+        session_destroy();
+        session_start();
+        echo '<meta http-equiv="refresh" content="0; url=/">';
+        exit;
+    } else {
+        $_SESSION['LAST_ACTIVITY'] = time();
+    }
+    }else{
+        echo '<meta http-equiv="refresh" content="0; url=/">';
+    }
     if (isset($_SESSION['user'])) {
         $v_user = $_SESSION['user'];
     }
@@ -104,7 +121,7 @@ $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
             }
             observer = new MutationObserver(callback);
             observer.observe(div,config);
-        }    
+        }
     }, 200);
 </script>',
 ];

@@ -662,35 +662,6 @@ textarea:focus::placeholder {
   box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
 }
 
-a.vst-text,
-a.vst-text b {
-  color: #fff;
-}
-
-a.vst-text:hover,
-a.vst-text:hover b {
-  color: #ff3478;
-}
-
-a.vst-text:active,
-a.vst-text:active b {
-  color: #ff3478;
-}
-
-.advanced-options {
-  background: #454545;
-  border: 1px solid #505050;
-  text-shadow: 0 1px rgb(0 0 0 / 40%);
-  box-shadow:
-    inset 0 0 2px rgb(0 0 0 / 50%),
-    0 2px 6px rgb(0 0 0 / 40%);
-  color: #fff;
-}
-
-.advanced-options a {
-  color: #fff !important;
-}
-
 .generate {
   color: #29a9ff;
   border-radius: 4px;
@@ -1478,4 +1449,17 @@ li[aria-expanded="true"] a {
 
 .ui-button.button-suspended i {
   color: #999 !important;
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse-header {
+  background: #454545;
+  border: 1px solid #505050;
+  text-shadow: 0 1px rgb(0 0 0 / 40%);
+  box-shadow:
+    inset 0 0 2px rgb(0 0 0 / 50%),
+    0 2px 6px rgb(0 0 0 / 40%);
+  color: #fff;
 }

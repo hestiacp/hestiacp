@@ -842,14 +842,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .context-menu.sort-order span.name {
   display: inline-block;
   padding: 12px;
-  width: 117px;
+  width: 141px;
   font-weight: 500;
 }
 
 .context-menu.sort-order span.up {
   display: inline-block;
   padding: 12px 14px;
-  width: 16px;
+  width: 44px;
 }
 
 .context-menu.sort-order span.active {
@@ -1134,9 +1134,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 28px;
   min-width: 175px;
   padding-left: 10px;
-  background-image: url("/images/arrow.png");
-  background-position: 160px;
+  background-image: url(/images/arrow.svg);
   background-repeat: no-repeat;
+  background-size: 14px auto;
+  background-position: right 7px center;
   appearance: none;
 }
 
@@ -2197,7 +2198,8 @@ body.mobile .l-icon-shortcuts {
   border: 1px solid #ccc;
   color: #4e4e4e;
   appearance: none;
-  background-image: url(/images/arrow.png);
+  background-image: url(/images/arrow.svg);
+  background-size: 16px auto;
   background-repeat: no-repeat;
   background-position: right 9px center;
   text-shadow: 0 0 0 #4b4b4b;
@@ -2240,41 +2242,6 @@ body.mobile .l-icon-shortcuts {
 .form-control:disabled:hover,
 .form-select:disabled:hover {
   border-color: #cfcfcf;
-}
-
-a.vst-text,
-a.vst-text b {
-  color: #326b9b;
-}
-
-a.vst-text:hover,
-a.vst-text:hover b {
-  color: #c36;
-}
-
-a.vst-text:active,
-a.vst-text:active b {
-  color: #c36;
-}
-
-.advanced-options {
-  background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
-  border: 1px solid #ddd;
-  text-shadow: 0 1px rgb(255 255 255 / 95%);
-  box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 4px 6px rgb(190 190 190 / 40%);
-  color: #30659d;
-  padding: 9px 18px;
-  overflow: hidden;
-  font-size: 0.85rem;
-}
-
-.advanced-options a {
-  color: #30659d !important;
-}
-
-.advanced-options .fas {
-  margin-right: 20px;
-  width: 14px;
 }
 
 #advanced-options .u-console {
@@ -3690,6 +3657,50 @@ li[aria-expanded="true"] a {
 .password-meter[value="3"]::-moz-meter-bar { background: yellow; }
 .password-meter[value="4"]::-moz-meter-bar { background: green; }
 
+/* Collapse component
+   ========================================================================== */
+
+.collapse {}
+
+.collapse[open] .collapse-header::after {
+  transform: rotate(180deg);
+}
+
+.collapse-header {
+  background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
+  border: 1px solid #ddd;
+  text-shadow: 0 1px rgb(255 255 255 / 95%);
+  box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 4px 6px rgb(190 190 190 / 40%);
+  font-weight: 600;
+  color: #30659d;
+  cursor: pointer;
+  position: relative;
+  padding: 9px 18px;
+}
+
+.collapse-header:hover {
+  color: #ff3478;
+}
+
+.collapse-header::after {
+  content: "";
+  display: block;
+  background-image: url(/images/arrow.svg);
+  background-size: 22px auto;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 22px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+.collapse-content {
+  box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
+  padding: 20px 20px 10px;
+}
+
 /* Extend animate.css
    ========================================================================== */
 
@@ -3754,6 +3765,10 @@ li[aria-expanded="true"] a {
 
 .u-ml10 {
   margin-left: 10px !important;
+}
+
+.u-mr15 {
+  margin-right: 15px !important;
 }
 
 .u-mb5 {

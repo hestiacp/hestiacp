@@ -28,11 +28,6 @@ strong {
   line-height: 1.2rem !important;
 }
 
-.advanced-options {
-  background: #fafafa;
-  box-shadow: none;
-}
-
 .l-header {
   box-shadow: none;
   background: #5d5d5d;
@@ -319,18 +314,6 @@ strong {
   border: 1px solid #f16100;
 }
 
-a.vst-text,
-a.vst-text b,
-.advanced-options a {
-  color: #444 !important;
-}
-
-a.vst-text:hover,
-a.vst-text:hover b,
-.advanced-options a:hover {
-  color: #ff791f !important;
-}
-
 .form-control:focus,
 .login .form-control:focus {
   border-color: #ff6701;
@@ -553,10 +536,6 @@ a.vst-text:hover b,
   margin-right: 15px;
 }
 
-.advanced-options .fas {
-  display: none !important;
-}
-
 a#btn-back {
   color: #30659d !important;
   background: none !important;
@@ -736,6 +715,23 @@ li[aria-expanded="true"] a {
 
 a.vst-advanced {
   margin-left: -10px;
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse-header {
+  background: #fafafa;
+  box-shadow: none;
+  color: #444;
+}
+
+.collapse-header:hover {
+  color: #ff791f;
+}
+
+.collapse-header .fas {
+  display: none;
 }
 
 /* Extend animate.css

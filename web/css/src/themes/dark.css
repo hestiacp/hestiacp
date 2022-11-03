@@ -139,8 +139,8 @@ select {
   background-color: #ff3478;
 }
 
-.notification-container .unseen .title a,
-.notification-container .unseen .title {
+.notification-container .unseen .notification-title a,
+.notification-container .unseen .notification-title {
   color: #fff !important;
 }
 
@@ -382,10 +382,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit-toolbar__buttonstrip .fas {
 }
 
-.subtitle {
-  color: #ff3478;
-}
-
 .l-select {
   border: 1px solid #454545;
   box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
@@ -546,11 +542,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #707070 !important;
 }
 
-.l-unit-ft .subtitle,
-.l-unit .subtitle {
-  color: #ff3478;
-}
-
 .l-unit__name {
   color: #dadada;
 }
@@ -566,15 +557,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__stat-col--left a:hover {
   color: #fff;
-}
-
-.title b,
-.title {
-  color: #ff3478;
-}
-
-.title {
-
 }
 
 /* form styles */
@@ -1265,12 +1247,8 @@ form#vstobjects.suspended {
   border-bottom: none !important;
 }
 
-.shortcuts .header {
+.shortcuts-header {
   border-bottom: 1px solid #353535;
-}
-
-.shortcuts .title {
-
 }
 
 .shortcuts .close {

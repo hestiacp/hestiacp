@@ -123,6 +123,10 @@ select {
   border: 1px solid #404040;
 }
 
+.notification-container .empty {
+  color: #dadada;
+}
+
 .notification-container .empty .status-icon {
   color: #dadada;
 }

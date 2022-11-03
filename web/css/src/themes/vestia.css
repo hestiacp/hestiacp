@@ -265,6 +265,10 @@ strong {
   border-radius: 0;
 }
 
+.form-check-input {
+  margin-top: 1px;
+}
+
 .pill {
   border-radius: 4px;
 }
@@ -476,6 +480,8 @@ a.vst-text:hover b,
 .password-meter {
   border-radius: 0;
   box-shadow: none;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .server-info-data {

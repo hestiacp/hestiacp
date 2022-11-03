@@ -254,22 +254,15 @@ strong {
   background: #fff !important;
 }
 
-.login {
-  background-color: rgb(255 255 255 / 80%) !important;
-  box-shadow:
-    0 2px 10px rgb(0 0 0 / 30%),
-    inset 0 0 2px rgb(255 255 255 / 100%) !important;
+.form-container {
+
 }
 
 .form-control,
 .form-select {
+  font-family: Arial, Helvetica, sans-serif;
   box-shadow: none;
-  border-radius: 0 !important;
-}
-
-.form-label,
-.form-check label {
-  font-size: 0.8rem;
+  border-radius: 0;
 }
 
 .form-check-input {
@@ -316,8 +309,8 @@ strong {
   color: #ff791f;
 }
 
-.notification-container .unseen .title a,
-.notification-container .unseen .title {
+.notification-container .unseen .notification-title a,
+.notification-container .unseen .notification-title {
   color: #111;
 }
 
@@ -487,11 +480,8 @@ a.vst-text:hover b,
 .password-meter {
   border-radius: 0;
   box-shadow: none;
-}
-
-.form-control,
-.form-select {
-  font-family: Arial, Helvetica, sans-serif !important;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .server-info-data {
@@ -510,9 +500,9 @@ a.vst-text:hover b,
   box-shadow: 0 3px 12px rgb(0 0 0 / 80%) !important;
 }
 
-.shortcuts .title,
+.shortcuts-title,
 .shortcuts ul li span {
-  color: #b5da0b !important;
+  color: #b5da0b;
 }
 
 .l-sort-toolbar .sort-by b {
@@ -661,10 +651,10 @@ a.vst-advanced:focus {
 }
 
 .login {
-  background-color: rgb(255 255 255 / 100%) !important;
-  box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255) !important;
-  font-family: Arial, Helvetica, sans-serif !important;
-  border-radius: 0 !important;
+  background-color: rgb(255 255 255 / 100%);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 0;
 }
 
 .body-login,

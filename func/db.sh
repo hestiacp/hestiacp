@@ -16,16 +16,16 @@ database_set_default_ports() {
     # Handle missing values for both $PORT and $port
     # however don't override both at once or custom ports will be overridden.
 
-    if [ -z "$PORT" ]; then 
-        if [ "$type" = 'mysql' ]; then 
+    if [ -z "$PORT" ]; then
+        if [ "$type" = 'mysql' ]; then
             PORT="$mysql_default"
         fi
         if [ "$type" = 'pgsql' ]; then
             PORT="$pgsql_default"
         fi
     fi
-    if [ -z "$port" ]; then 
-        if [ "$type" = 'mysql' ]; then 
+    if [ -z "$port" ]; then
+        if [ "$type" = 'mysql' ]; then
             port="$mysql_default"
         fi
         if [ "$type" = 'pgsql' ]; then
@@ -126,7 +126,7 @@ psql_connect() {
         log_event "$E_PARSING" "$ARGUMENTS"
         exit $E_PARSING
     fi
-    
+
     psql -h $HOST -U $USER -p $PORT -c "SELECT VERSION()" > /dev/null 2>/tmp/e.psql
     if [ '0' -ne "$?" ]; then
         if [ "$notify" != 'no' ]; then
@@ -253,7 +253,7 @@ decrease_dbhost_values() {
 # Create MySQL database
 add_mysql_database() {
     mysql_connect $host
-    
+
     mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
     mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
 
@@ -264,28 +264,28 @@ add_mysql_database() {
         query="CREATE USER \`$dbuser\`@\`%\`
             IDENTIFIED BY '$dbpass'"
         mysql_query "$query" > /dev/null
-    
+
         query="CREATE USER \`$dbuser\`@localhost
             IDENTIFIED BY '$dbpass'"
         mysql_query "$query" > /dev/null
-    
+
         query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
         mysql_query "$query" > /dev/null
-    
+
         query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
         mysql_query "$query" > /dev/null
     else
         query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
             IDENTIFIED BY '$dbpass'"
         mysql_query "$query" > /dev/null
-    
+
         query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
             IDENTIFIED BY '$dbpass'"
         mysql_query "$query" > /dev/null
     fi
-    
-    
-      
+
+
+
     if [ "$mysql_fork" = "mysql" ]; then
         # mysql
         if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
@@ -352,7 +352,7 @@ delete_mysql_database_temp_user(){
     mysql_query "$query" > /dev/null
 }
 
-# Check if database host do not exist in config 
+# Check if database host do not exist in config
 is_dbhost_new() {
     if [ -e "$HESTIA/conf/$type.conf" ]; then
         check_host=$(grep "HOST='$host'" $HESTIA/conf/$type.conf)
@@ -372,10 +372,10 @@ get_database_values() {
 # Change MySQL database password
 change_mysql_password() {
   mysql_connect $HOST
-      
+
       mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
       mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
-  
+
       if [ "$mysql_fork" = "mysql" ]; then
           # mysql
           if [ "$mysql_ver_sub" -ge 8 ]; then
@@ -389,7 +389,7 @@ change_mysql_password() {
               query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
                   IDENTIFIED BY '$dbpass'"
               mysql_query "$query" > /dev/null
-  
+
               query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
                   IDENTIFIED BY '$dbpass'"
               mysql_query "$query" > /dev/null
@@ -399,12 +399,12 @@ change_mysql_password() {
           query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`
               IDENTIFIED BY '$dbpass'"
           mysql_query "$query" > /dev/null
-  
+
           query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost
               IDENTIFIED BY '$dbpass'"
           mysql_query "$query" > /dev/null
       fi
-  
+
       if [ "$mysql_fork" = "mysql" ]; then
           # mysql
           if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
@@ -537,7 +537,7 @@ suspend_pgsql_database() {
 # Unsuspend MySQL database
 unsuspend_mysql_database() {
     mysql_connect $HOST
-    query="GRANT ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
+    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`"
     mysql_query "$query" > /dev/null
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
     mysql_query "$query" > /dev/null

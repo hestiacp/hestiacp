@@ -3688,6 +3688,11 @@ li[aria-expanded="true"] a {
 .password-meter[value="3"]::-moz-meter-bar { background: yellow; }
 .password-meter[value="4"]::-moz-meter-bar { background: green; }
 
+.js-password-input{
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
 /* Extend animate.css
    ========================================================================== */
 

@@ -123,6 +123,10 @@ select {
   border: 1px solid #404040;
 }
 
+.notification-container .empty {
+  color: #dadada;
+}
+
 .notification-container .empty .status-icon {
   color: #dadada;
 }
@@ -139,8 +143,8 @@ select {
   background-color: #ff3478;
 }
 
-.notification-container .unseen .title a,
-.notification-container .unseen .title {
+.notification-container .unseen .notification-title a,
+.notification-container .unseen .notification-title {
   color: #fff !important;
 }
 
@@ -382,10 +386,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit-toolbar__buttonstrip .fas {
 }
 
-.subtitle {
-  color: #ff3478;
-}
-
 .l-select {
   border: 1px solid #454545;
   box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
@@ -546,11 +546,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #707070 !important;
 }
 
-.l-unit-ft .subtitle,
-.l-unit .subtitle {
-  color: #ff3478;
-}
-
 .l-unit__name {
   color: #dadada;
 }
@@ -566,15 +561,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-unit__stat-col--left a:hover {
   color: #fff;
-}
-
-.title b,
-.title {
-  color: #ff3478;
-}
-
-.title {
-
 }
 
 /* form styles */
@@ -596,10 +582,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .vst-ok a:active {
-}
-
-.login-box td {
-  color: #d4d4d4;
 }
 
 .form-label,
@@ -680,35 +662,6 @@ textarea:focus::placeholder {
   box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
 }
 
-a.vst-text,
-a.vst-text b {
-  color: #fff;
-}
-
-a.vst-text:hover,
-a.vst-text:hover b {
-  color: #ff3478;
-}
-
-a.vst-text:active,
-a.vst-text:active b {
-  color: #ff3478;
-}
-
-.advanced-options {
-  background: #454545;
-  border: 1px solid #505050;
-  text-shadow: 0 1px rgb(0 0 0 / 40%);
-  box-shadow:
-    inset 0 0 2px rgb(0 0 0 / 50%),
-    0 2px 6px rgb(0 0 0 / 40%);
-  color: #fff;
-}
-
-.advanced-options a {
-  color: #fff !important;
-}
-
 .generate {
   color: #29a9ff;
   border-radius: 4px;
@@ -734,7 +687,7 @@ a.vst-text:active b {
   text-transform: none !important;
 }
 
-.login-box .vst-advanced:hover {
+.login .vst-advanced:hover {
   color: #ff3478 !important;
   background-color: transparent;
   border-color: transparent;
@@ -743,7 +696,7 @@ a.vst-text:active b {
   box-shadow: none !important;
 }
 
-.login-box .vst-advanced:active {
+.login .vst-advanced:active {
   color: #be1f54 !important;
   border: none !important;
   background: none !important;
@@ -757,7 +710,7 @@ a.vst-text:active b {
   text-decoration: none;
 }
 
-.login-box .vst-advanced:active,
+.login .vst-advanced:active,
 .vst-advanced:active {
   color: #fff;
   background-color: #be1f54;
@@ -765,7 +718,7 @@ a.vst-text:active b {
   text-decoration: none;
 }
 
-.login-box .vst-advanced {
+.login .vst-advanced {
   border-bottom: none;
   color: #326b9b;
   font-size: 0.85em !important;
@@ -1035,11 +988,15 @@ a.button.cancel {
 
 .login {
   background-color: #282828;
-  box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(0 0 0 / 25%) !important;
+  box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(0 0 0 / 25%);
 }
 
-.login-welcome {
-  color: #fff !important;
+.login-title {
+  color: #fff;
+}
+
+.login a.error {
+  color: #f864fa;
 }
 
 .form-title {
@@ -1055,10 +1012,6 @@ a.button.cancel {
   box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }
 
-.login a.error {
-  color: #f864fa;
-}
-
 .hestiacp {
 
 }
@@ -1069,10 +1022,6 @@ a.button.cancel {
 
 .hestiacp:active {
   color: #ff3478;
-}
-
-.login-bottom {
-
 }
 
 .l-unit.selected {
@@ -1273,12 +1222,8 @@ form#vstobjects.suspended {
   border-bottom: none !important;
 }
 
-.shortcuts .header {
+.shortcuts-header {
   border-bottom: 1px solid #353535;
-}
-
-.shortcuts .title {
-
 }
 
 .shortcuts .close {
@@ -1504,4 +1449,17 @@ li[aria-expanded="true"] a {
 
 .ui-button.button-suspended i {
   color: #999 !important;
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse-header {
+  background: #454545;
+  border: 1px solid #505050;
+  text-shadow: 0 1px rgb(0 0 0 / 40%);
+  box-shadow:
+    inset 0 0 2px rgb(0 0 0 / 50%),
+    0 2px 6px rgb(0 0 0 / 40%);
+  color: #fff;
 }

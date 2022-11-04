@@ -453,7 +453,7 @@ a {
   display: inline-block;
 }
 
-.notification-container .title {
+.notification-container .notification-title {
   color: #9e9e9e;
   font-weight: 600;
   line-height: 30px;
@@ -463,20 +463,20 @@ a {
   display: block;
 }
 
-.notification-container .title a {
+.notification-container .notification-title a {
   color: #9e9e9e;
 }
 
-.notification-container .unseen .title a,
-.notification-container .unseen .title {
+.notification-container .unseen .notification-title a,
+.notification-container .unseen .notification-title {
   color: #c36;
 }
 
-.notification-container .unseen .title a:hover {
+.notification-container .unseen .notification-title a:hover {
   color: #e83b75;
 }
 
-.notification-container .unseen .title a:active {
+.notification-container .unseen .notification-title a:active {
   color: #e83b75;
 }
 
@@ -512,7 +512,6 @@ a {
 
 .alert {
   border-radius: 4px;
-  font-size: 0.8rem;
   font-weight: 400;
   padding: 0.8rem;
   position: relative;
@@ -579,10 +578,6 @@ a {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.form-container {
-  padding: 1em 1em 2em 9rem;
 }
 
 .card {
@@ -847,14 +842,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .context-menu.sort-order span.name {
   display: inline-block;
   padding: 12px;
-  width: 117px;
+  width: 141px;
   font-weight: 500;
 }
 
 .context-menu.sort-order span.up {
   display: inline-block;
   padding: 12px 14px;
-  width: 16px;
+  width: 44px;
 }
 
 .context-menu.sort-order span.active {
@@ -955,10 +950,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   vertical-align: middle;
 }
 
-.l-sort-toolbar.subtitle {
-  padding-left: 96px;
-}
-
 .l-sort-toolbar__filter-apply {
   float: left;
   width: 32px;
@@ -1049,6 +1040,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .body-login,
 .body-reset {
   height: auto;
+  display: flex;
+  justify-content: center;
   padding-top: 10%;
   background: rgb(102 158 231) !important;
   background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%) !important;
@@ -1060,14 +1053,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .body-user .actions-panel {
   line-height: 2rem;
-}
-
-.subtitle {
-  color: #c36;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin: 20px 0 18px 129px;
-  text-transform: uppercase;
 }
 
 .l-select {
@@ -1149,9 +1134,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 28px;
   min-width: 175px;
   padding-left: 10px;
-  background-image: url("/images/arrow.png");
-  background-position: 160px;
+  background-image: url(/images/arrow.svg);
   background-repeat: no-repeat;
+  background-size: 14px auto;
+  background-position: right 7px center;
   appearance: none;
 }
 
@@ -1417,15 +1403,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-unit--outdated .l-unit__suspended,
 .l-unit--suspended .l-unit__suspended {
   display: block;
-}
-
-.l-unit-ft .subtitle,
-.l-unit .subtitle {
-  color: #c36;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin: 20px 0 18px 129px;
-  text-transform: uppercase;
 }
 
 .l-unit.l-unit--outdated .l-unit__date {
@@ -2106,22 +2083,12 @@ body.mobile .l-icon-shortcuts {
   animation-play-state: paused;
 }
 
-.title b,
-.title {
-  color: #c36;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 0 30px 0 73px;
-  line-height: 30px;
-  text-transform: uppercase;
-}
-
-.title {
-  display: inline-block;
-  float: left;
-}
-
 /* form styles */
+
+.form-container {
+  font-size: 0.85rem;
+  padding: 1em 1em 2em 9rem;
+}
 
 .vst-error {
   color: #f33;
@@ -2134,6 +2101,7 @@ body.mobile .l-icon-shortcuts {
 
 .vst-ok {
   color: #53ba55;
+  font-weight: 600;
   overflow: hidden;
   max-width: 500px;
   text-overflow: ellipsis;
@@ -2158,13 +2126,6 @@ body.mobile .l-icon-shortcuts {
   color: #d53067;
 }
 
-.login-box td {
-  color: #4b4b4b;
-  font-size: 0.85rem;
-  padding-bottom: 4px;
-  font-weight: 600;
-}
-
 .jump-top {
   margin-top: -60px;
 }
@@ -2181,7 +2142,6 @@ body.mobile .l-icon-shortcuts {
 .form-label,
 .form-check label {
   color: #4b4b4b;
-  font-size: .85rem;
   font-weight: 600;
 }
 
@@ -2230,7 +2190,7 @@ body.mobile .l-icon-shortcuts {
   display: block;
   width: 100%;
   font-weight: normal;
-  font-size: .8rem;
+  font-size: 0.8rem;
   padding: 8px 30px 8px 12px;
   line-height: 1.5;
   border-radius: 4px;
@@ -2238,7 +2198,8 @@ body.mobile .l-icon-shortcuts {
   border: 1px solid #ccc;
   color: #4e4e4e;
   appearance: none;
-  background-image: url(/images/arrow.png);
+  background-image: url(/images/arrow.svg);
+  background-size: 16px auto;
   background-repeat: no-repeat;
   background-position: right 9px center;
   text-shadow: 0 0 0 #4b4b4b;
@@ -2283,41 +2244,6 @@ body.mobile .l-icon-shortcuts {
   border-color: #cfcfcf;
 }
 
-a.vst-text,
-a.vst-text b {
-  color: #326b9b;
-}
-
-a.vst-text:hover,
-a.vst-text:hover b {
-  color: #c36;
-}
-
-a.vst-text:active,
-a.vst-text:active b {
-  color: #c36;
-}
-
-.advanced-options {
-  background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
-  border: 1px solid #ddd;
-  text-shadow: 0 1px rgb(255 255 255 / 95%);
-  box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 4px 6px rgb(190 190 190 / 40%);
-  color: #30659d;
-  padding: 9px 18px;
-  overflow: hidden;
-  font-size: .85rem;
-}
-
-.advanced-options a {
-  color: #30659d !important;
-}
-
-.advanced-options .fas {
-  margin-right: 20px;
-  width: 14px;
-}
-
 #advanced-options .u-console {
   width: 833px;
   height: 600px !important;
@@ -2351,7 +2277,7 @@ a.vst-text:active b {
   text-transform: none;
 }
 
-.login-box .vst-advanced:hover {
+.login .vst-advanced:hover {
   color: #c36;
   background-color: transparent;
   border-color: transparent;
@@ -2368,7 +2294,7 @@ a.vst-text:active b {
   text-decoration: none;
 }
 
-.login-box .vst-advanced:active {
+.login .vst-advanced:active {
   color: #fff;
   background-color: #f7d616;
   border-color: #f7d616;
@@ -2383,7 +2309,7 @@ a.vst-text:active b {
   font-size: unset;
 }
 
-.login-box .vst-advanced {
+.login .vst-advanced {
   border-bottom: none;
   color: #326b9b;
   text-decoration: none;
@@ -2759,13 +2685,29 @@ a.button.cancel {
 }
 
 .login {
+  display: flex;
+  padding: 80px 50px;
   background-color: rgb(255 255 255 / 70%);
+  border-radius: 6px;
   box-shadow:
     0 8px 25px rgb(0 0 0 / 30%),
     inset 0 0 2px rgb(255 255 255 / 100%);
-  vertical-align: top;
-  width: 500px;
-  border-radius: 6px;
+}
+
+.login-title {
+  color: #4b4b4b;
+  font-size: 1.05rem;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.login a.error {
+  color: #be5abf;
+  font-size: 0.8rem;
+}
+
+.login .form-label {
+  font-size: 0.85rem;
 }
 
 .login .form-control {
@@ -2776,13 +2718,8 @@ a.button.cancel {
   font-size: 0.8rem !important;
 }
 
-.login-welcome {
-  font-size: 1.05rem !important;
-  font-weight: 500 !important;
-  padding-bottom: 30px !important;
-}
-
 .form-title {
+  color: #4b4b4b;
   font-size: 1.4rem;
   font-weight: 500;
   padding-bottom: 30px;
@@ -2812,11 +2749,6 @@ a.button.cancel {
   box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 }
 
-.login a.error {
-  color: #be5abf;
-  font-size: 0.8rem;
-}
-
 .hestiacp {
   color: #505050;
 }
@@ -2827,14 +2759,6 @@ a.button.cancel {
 
 .hestiacp:active {
   color: #c36;
-}
-
-.login-bottom {
-  height: 60px;
-  text-align: right;
-  vertical-align: top;
-  font-size: 0.75rem !important;
-  margin-right: 65px;
 }
 
 .l-unit.selected {
@@ -3323,26 +3247,25 @@ form#vstobjects.suspended {
   line-height: 0.9rem;
 }
 
-.shortcuts .header {
+.shortcuts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border-bottom: 1px solid #606060;
-  height: 43px;
+  padding: 10px 10px 10px 15px;
 }
 
-.shortcuts .title {
+.shortcuts-title {
   text-transform: uppercase;
   color: #ff3478;
-  padding: 7px 0 7px 14px;
-  float: left;
   font-size: 0.85rem;
   letter-spacing: -0.01em;
+  font-weight: 600;
 }
 
 .shortcuts .close {
   cursor: pointer;
-  float: right;
-  height: 32px;
-  padding-top: 11px;
-  width: 46px;
+  width: 20px;
 }
 
 .shortcuts .close:hover {
@@ -3365,7 +3288,7 @@ form#vstobjects.suspended {
 
 .shortcuts ul {
   flex-grow: 1;
-  padding: 30px 20px;
+  padding: 40px 20px;
 }
 
 .shortcuts ul li {
@@ -3495,7 +3418,7 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 420px;
+  margin-top: 418px;
   margin-right: 14px;
   padding-top: 0;
   width: 610px;
@@ -3707,9 +3630,11 @@ li[aria-expanded="true"] a {
 .password-meter {
   appearance: none;
   display: block;
-  width: 100%;
+  width: auto;
   background-color: #e7e7e7;
   height: 3px;
+  margin-left: 3px;
+  margin-right: 3px;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
   box-shadow: 0 1px 2px rgb(0 0 0 / 25%);
@@ -3731,6 +3656,50 @@ li[aria-expanded="true"] a {
 .password-meter[value="2"]::-moz-meter-bar { background: orange; }
 .password-meter[value="3"]::-moz-meter-bar { background: yellow; }
 .password-meter[value="4"]::-moz-meter-bar { background: green; }
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse {}
+
+.collapse[open] .collapse-header::after {
+  transform: rotate(180deg);
+}
+
+.collapse-header {
+  background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
+  border: 1px solid #ddd;
+  text-shadow: 0 1px rgb(255 255 255 / 95%);
+  box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 4px 6px rgb(190 190 190 / 40%);
+  font-weight: 600;
+  color: #30659d;
+  cursor: pointer;
+  position: relative;
+  padding: 9px 18px;
+}
+
+.collapse-header:hover {
+  color: #ff3478;
+}
+
+.collapse-header::after {
+  content: "";
+  display: block;
+  background-image: url(/images/arrow.svg);
+  background-size: 22px auto;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 22px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+.collapse-content {
+  box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
+  padding: 20px 20px 10px;
+}
 
 /* Extend animate.css
    ========================================================================== */
@@ -3798,6 +3767,10 @@ li[aria-expanded="true"] a {
   margin-left: 10px !important;
 }
 
+.u-mr15 {
+  margin-right: 15px !important;
+}
+
 .u-mb5 {
   margin-bottom: 5px !important;
 }
@@ -3863,11 +3836,6 @@ li[aria-expanded="true"] a {
 .u-list-bulleted {
   list-style: disc !important;
   padding-left: 40px !important;
-}
-
-.u-flex-align-center {
-  display: flex !important;
-  justify-content: center !important;
 }
 
 .u-console {

@@ -687,22 +687,6 @@ textarea:focus::placeholder {
   text-transform: none !important;
 }
 
-.login .vst-advanced:hover {
-  color: #ff3478 !important;
-  background-color: transparent;
-  border-color: transparent;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
-}
-
-.login .vst-advanced:active {
-  color: #be1f54 !important;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
-}
-
 .vst-advanced:hover {
   color: #fff;
   background-color: #ff3478;
@@ -710,23 +694,11 @@ textarea:focus::placeholder {
   text-decoration: none;
 }
 
-.login .vst-advanced:active,
 .vst-advanced:active {
   color: #fff;
   background-color: #be1f54;
   border-color: #be1f54;
   text-decoration: none;
-}
-
-.login .vst-advanced {
-  border-bottom: none;
-  color: #326b9b;
-  font-size: 0.85em !important;
-  text-decoration: none;
-  text-transform: uppercase;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
 }
 
 .lets-encrypt-note {}
@@ -986,6 +958,12 @@ a.button.cancel {
 
 }
 
+.body-login,
+.body-reset {
+  background: #303030;
+  background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%);
+}
+
 .login {
   background-color: #282828;
   box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(0 0 0 / 25%);
@@ -995,8 +973,18 @@ a.button.cancel {
   color: #fff;
 }
 
-.login a.error {
+.login .error {
   color: #f864fa;
+}
+
+.login .label-link {
+  color: #eee;
+  text-transform: initial;
+  font-weight: 400;
+}
+
+.login .label-link:hover {
+  color: #ff3478;
 }
 
 .form-title {
@@ -1226,38 +1214,6 @@ form#vstobjects.suspended {
   border-bottom: 1px solid #353535;
 }
 
-.shortcuts .close {
-
-}
-
-.shortcuts .close:hover {
-
-}
-
-.shortcuts .close:active {
-
-}
-
-.shortcuts .close .fas {
-
-}
-
-.shortcuts ul {
-
-}
-
-.shortcuts ul li {
-
-}
-
-.shortcuts ul li span {
-
-}
-
-.shortcuts ul li span.bigger {
-
-}
-
 .description {
 
 }
@@ -1386,12 +1342,6 @@ li[aria-expanded="true"] a {
   border-radius: 8px;
 }
 
-.body-login,
-.body-reset {
-  background: #303030 !important;
-  background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%) !important;
-}
-
 .debug-panel-contents {
   background-color: #282828;
 }
@@ -1430,11 +1380,6 @@ li[aria-expanded="true"] a {
 .body-stats .units:hover .l-unit:hover b,
 .body-stats .units:hover .l-unit:hover strong {
   color: #fff !important;
-}
-
-.admin-warning-button {
-  padding-left: 65px !important;
-  padding-right: 65px !important;
 }
 
 @media screen and (max-width: 950px) {

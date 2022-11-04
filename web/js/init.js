@@ -337,7 +337,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("h", function(){
-                $('.shortcuts').toggle();
+                $('.shortcuts').toggleClass('u-hidden');
               }, {
                   'type':             'keydown',
                   'propagate':        false,
@@ -347,7 +347,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("Esc", function(){
-                $('.shortcuts').hide();
+                $('.shortcuts').addClass('u-hidden');
                 $('input, checkbox, textarea, select').blur();
               }, {
                   'type':             'keydown',
@@ -538,12 +538,12 @@ $(document).ready(function(){
 
 
 
-              $('.shortcuts .close').click(function(){
-                $('.shortcuts').hide();
+              $('.shortcuts-close').click(function(){
+                $('.shortcuts').addClass('u-hidden');
               });
 
               $('.to-shortcuts').click(function(){
-                $('.shortcuts').toggle();
+                $('.shortcuts').toggleClass('u-hidden');
               });
 
               $(document).click(function(evt){

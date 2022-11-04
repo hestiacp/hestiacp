@@ -60,10 +60,10 @@ if ((!empty($_POST['user'])) && (empty($_POST['code']))) {
                         header("Location: /reset/?action=code&user=".$_POST['user']);
                         exit;
                 }
-                
+
             }
         } else {
-            $ERROR = "<a class=\"error\">"._('Please wait 15 minutes before sending a new request')."</a>";
+            $ERROR = "<p class=\"error\">"._('Please wait 15 minutes before sending a new request')."</p>";
         }
     }
     unset($output);
@@ -91,7 +91,7 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
                     unlink($v_password);
                     if ($return_var > 0) {
                         sleep(5);
-                        $ERROR = "<a class=\"error\">"._('An internal error occurred')."</a>";
+                        $ERROR = "<p class=\"error\">"._('An internal error occurred')."</p>";
                     } else {
                         $_SESSION['user'] = $_POST['user'];
                         header("Location: /");
@@ -99,20 +99,20 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
                     }
                 } else {
                     sleep(5);
-                    $ERROR = "<a class=\"error\">"._('Code has been expired')."</a>";
+                    $ERROR = "<p class=\"error\">"._('Code has been expired')."</p>";
                     exec(HESTIA_CMD . 'v-log-user-login ' . $v_user . ' ' . $v_ip . ' failed ' . $v_session_id . ' ' . $v_user_agent .' yes "Reset code has been expired"', $output, $return_var);
                 }
             } else {
                 sleep(5);
-                $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
+                $ERROR = "<p class=\"error\">"._('Invalid username or code')."</p>";
                 exec(HESTIA_CMD . 'v-log-user-login ' . $v_user . ' ' . $v_ip . ' failed ' . $v_session_id . ' ' . $v_user_agent .' yes "Invalid Username or Code"', $output, $return_var);
             }
         } else {
             sleep(5);
-            $ERROR = "<a class=\"error\">"._('Invalid username or code')."</a>";
+            $ERROR = "<p class=\"error\">"._('Invalid username or code')."</p>";
         }
     } else {
-        $ERROR = "<a class=\"error\">"._('Passwords not match')."</a>";
+        $ERROR = "<p class=\"error\">"._('Passwords not match')."</p>";
     }
 }
 

@@ -17,11 +17,6 @@ strong {
   font-weight: 600;
 }
 
-.body-login,
-.body-reset {
-  background: #5f7eb3 !important;
-}
-
 .table-header {
   box-shadow: none !important;
   background: #fafafa !important;
@@ -314,8 +309,7 @@ strong {
   border: 1px solid #f16100;
 }
 
-.form-control:focus,
-.login .form-control:focus {
+.form-control:focus {
   border-color: #ff6701;
   background-color: #fff4ed;
   color: #333;
@@ -566,11 +560,6 @@ a.ui-button:focus {
   background: none !Important;
 }
 
-a.vst-advanced .fas {
-  display: none !important;
-  overflow: hidden;
-}
-
 a.vst-advanced {
   text-transform: uppercase;
   font-size: 0.9em !important;
@@ -629,6 +618,11 @@ a.vst-advanced:focus {
   color: #809c00 !important;
 }
 
+.body-login,
+.body-reset {
+  background: #ededed;
+}
+
 .login {
   background-color: rgb(255 255 255 / 100%);
   box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
@@ -636,9 +630,12 @@ a.vst-advanced:focus {
   border-radius: 0;
 }
 
-.body-login,
-.body-reset {
-  background: #ededed !important;
+.login .button {
+  background: #94be00 !important;
+  text-shadow: none !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 0 !important;
 }
 
 .body-login input.button.cancel,
@@ -664,20 +661,6 @@ a.vst-advanced:focus {
 .body-login input.button.cancel:hover,
 .body-reset input.button.cancel:hover {
   color: #326b9b !important;
-}
-
-.login .form-control {
-  border-color: #bbb;
-}
-
-.body-login button.button,
-.body-reset button.button,
-.login .button {
-  background: #94be00 !important;
-  text-shadow: none !important;
-  color: #fff !important;
-  border: none !important;
-  border-radius: 0 !important;
 }
 
 .l-logo {

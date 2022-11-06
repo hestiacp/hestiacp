@@ -111,11 +111,11 @@ function authenticate_user($user, $password, $twofa = '')
         if ($return_var > 0) {
             sleep(2);
             if ($return_var == 5) {
-                $error = '<a class="error">' . _('Account has been suspended') . '</a>';
+                $error = '<p class="error">' . _('Account has been suspended') . '</p>';
             } elseif ($return_var == 1) {
-                $error = '<a class="error">' . _('Unsupported hash method') . '</a>';
+                $error = '<p class="error">' . _('Unsupported hash method') . '</p>';
             } else {
-                $error = '<a class="error">' . _('Invalid username or password') . '</a>';
+                $error = '<p class="error">' . _('Invalid username or password') . '</p>';
             }
             return $error;
         } else {
@@ -157,7 +157,7 @@ function authenticate_user($user, $password, $twofa = '')
             // Check API answer
             if ($return_var > 0) {
                 sleep(2);
-                $error = '<a class="error">' . _('Invalid username or password') . '</a>';
+                $error = '<p class="error">' . _('Invalid username or password') . '</p>';
                 $v_session_id = quoteshellarg($_POST['token']);
                 exec(HESTIA_CMD . 'v-log-user-login ' . $v_user . ' ' . $v_ip . ' failed ' . $v_session_id . ' ' . $v_user_agent, $output, $return_var);
                 return $error;
@@ -169,7 +169,7 @@ function authenticate_user($user, $password, $twofa = '')
                 unset($output);
                 if ($data[$user]['LOGIN_DISABLED'] === 'yes') {
                     sleep(2);
-                    $error = '<a class="error">' . _('Invalid username or password') . '</a>';
+                    $error = '<p class="error">' . _('Invalid username or password') . '</p>';
                     $v_session_id = quoteshellarg($_POST['token']);
                     exec(HESTIA_CMD . 'v-log-user-login ' . $v_user . ' ' . $v_ip . ' failed ' . $v_session_id . ' ' . $v_user_agent .' yes "Login disabled for this user"', $output, $return_var);
                     return $error;
@@ -180,7 +180,7 @@ function authenticate_user($user, $password, $twofa = '')
                     $v_login_user_allowed_ips = array_map('trim', $v_login_user_allowed_ips);
                     if (!in_array($ip, $v_login_user_allowed_ips, true)) {
                         sleep(2);
-                        $error = '<a class="error">' . _('Invalid username or password') . '</a>';
+                        $error = '<p class="error">' . _('Invalid username or password') . '</p>';
                         $v_session_id = quoteshellarg($_POST['token']);
                         exec(HESTIA_CMD . 'v-log-user-login ' . $v_user . ' ' . $v_ip . ' failed ' . $v_session_id . ' ' . $v_user_agent .' yes "Ip not in allowed list"', $output, $return_var);
                         return $error;
@@ -189,7 +189,7 @@ function authenticate_user($user, $password, $twofa = '')
 
                 if ($data[$user]['TWOFA'] != '') {
                     exec(HESTIA_CMD . "v-check-user-2fa " . $v_user . " " . $v_twofa, $output, $return_var);
-                    $error = "<a class=\"error\">" . _('Invalid or missing 2FA token') . "</a>";
+                    $error = "<p class=\"error\">" . _('Invalid or missing 2FA token') . "</p>";
                     if (empty($twofa)) {
                         $_SESSION['login']['username'] = $user;
                         $_SESSION['login']['password'] = $password;
@@ -200,7 +200,7 @@ function authenticate_user($user, $password, $twofa = '')
                         unset($output);
                         if ($return_var > 0) {
                             sleep(2);
-                            $error = '<a class="error">' ._('Invalid or missing 2FA token') . '</a>';
+                            $error = '<p class="error">' . _('Invalid or missing 2FA token') . '</p>';
                             $_SESSION['login']['username'] = $user;
                             $_SESSION['login']['password'] = $password;
                             $v_session_id = quoteshellarg($_POST['token']);

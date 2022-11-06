@@ -842,14 +842,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .context-menu.sort-order span.name {
   display: inline-block;
   padding: 12px;
-  width: 117px;
+  width: 141px;
   font-weight: 500;
 }
 
 .context-menu.sort-order span.up {
   display: inline-block;
   padding: 12px 14px;
-  width: 16px;
+  width: 44px;
 }
 
 .context-menu.sort-order span.active {
@@ -1037,16 +1037,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-right: 6px;
 }
 
-.body-login,
-.body-reset {
-  height: auto;
-  display: flex;
-  justify-content: center;
-  padding-top: 10%;
-  background: rgb(102 158 231) !important;
-  background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%) !important;
-}
-
 .body-user .l-unit.animated.fadeIn {
   line-height: 2rem;
 }
@@ -1134,9 +1124,10 @@ div.l-content > div.l-separator:nth-of-type(4) {
   height: 28px;
   min-width: 175px;
   padding-left: 10px;
-  background-image: url("/images/arrow.png");
-  background-position: 160px;
+  background-image: url(/images/arrow.svg);
   background-repeat: no-repeat;
+  background-size: 14px auto;
+  background-position: right 7px center;
   appearance: none;
 }
 
@@ -2197,7 +2188,8 @@ body.mobile .l-icon-shortcuts {
   border: 1px solid #ccc;
   color: #4e4e4e;
   appearance: none;
-  background-image: url(/images/arrow.png);
+  background-image: url(/images/arrow.svg);
+  background-size: 16px auto;
   background-repeat: no-repeat;
   background-position: right 9px center;
   text-shadow: 0 0 0 #4b4b4b;
@@ -2242,41 +2234,6 @@ body.mobile .l-icon-shortcuts {
   border-color: #cfcfcf;
 }
 
-a.vst-text,
-a.vst-text b {
-  color: #326b9b;
-}
-
-a.vst-text:hover,
-a.vst-text:hover b {
-  color: #c36;
-}
-
-a.vst-text:active,
-a.vst-text:active b {
-  color: #c36;
-}
-
-.advanced-options {
-  background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
-  border: 1px solid #ddd;
-  text-shadow: 0 1px rgb(255 255 255 / 95%);
-  box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 4px 6px rgb(190 190 190 / 40%);
-  color: #30659d;
-  padding: 9px 18px;
-  overflow: hidden;
-  font-size: 0.85rem;
-}
-
-.advanced-options a {
-  color: #30659d !important;
-}
-
-.advanced-options .fas {
-  margin-right: 20px;
-  width: 14px;
-}
-
 #advanced-options .u-console {
   width: 833px;
   height: 600px !important;
@@ -2310,16 +2267,6 @@ a.vst-text:active b {
   text-transform: none;
 }
 
-.login .vst-advanced:hover {
-  color: #c36;
-  background-color: transparent;
-  border-color: transparent;
-  font-size: 0.85em !important;
-  box-shadow: none !important;
-  background: none !important;
-  border: none !important;
-}
-
 .vst-advanced:hover {
   color: #fff;
   background-color: #c36;
@@ -2327,33 +2274,8 @@ a.vst-text:active b {
   text-decoration: none;
 }
 
-.login .vst-advanced:active {
-  color: #fff;
-  background-color: #f7d616;
-  border-color: #f7d616;
-  text-decoration: none;
-  font-size: 0.85em !important;
-  box-shadow: none !important;
-  background: none !important;
-  border: none !important;
-}
-
 .vst-advanced:active {
   font-size: unset;
-}
-
-.login .vst-advanced {
-  border-bottom: none;
-  color: #326b9b;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 0.85em !important;
-  box-shadow: none !important;
-  background: none !important;
-  border: none !important;
-  height: auto !important;
-  padding: 0 !important;
-  min-width: 0 !important;
 }
 
 .lets-encrypt-note {
@@ -2717,8 +2639,27 @@ a.button.cancel {
   padding-left: 20px !important;
 }
 
+.body-login,
+.body-reset {
+  height: auto;
+  display: flex;
+  justify-content: center;
+  padding-top: 10%;
+  background: rgb(102 158 231);
+  background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%);
+}
+
+.body-login .debug-panel-header,
+.body-login .debug-panel-contents,
+.body-reset .debug-panel-header,
+.body-reset .debug-panel-contents {
+  display: none;
+}
+
 .login {
   display: flex;
+  align-items: flex-end;
+  font-size: 0.85rem;
   padding: 80px 50px;
   background-color: rgb(255 255 255 / 70%);
   border-radius: 6px;
@@ -2734,13 +2675,18 @@ a.button.cancel {
   margin-bottom: 30px;
 }
 
-.login a.error {
+.login .error {
   color: #be5abf;
-  font-size: 0.8rem;
+  margin-bottom: 20px;
 }
 
-.login .form-label {
-  font-size: 0.85rem;
+.login .label-link {
+  color: #326b9b;
+  text-transform: uppercase;
+}
+
+.login .label-link:hover {
+  color: #0077c6;
 }
 
 .login .form-control {
@@ -3161,8 +3107,8 @@ form#vstobjects.suspended {
 }
 
 .admin-warning-button {
-  padding-left: 59px !important;
-  padding-right: 59px !important;
+  padding-left: 65px !important;
+  padding-right: 65px !important;
 }
 
 .footer-banner {
@@ -3231,22 +3177,6 @@ form#vstobjects.suspended {
   color: #fff;
 }
 
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
-.display-inline-block {
-  display: inline-block;
-}
-
-.width-100p {
-  width: 100%;
-}
-
 .l-sort-toolbar table td {
   float: left;
   margin-left: 10px;
@@ -3296,22 +3226,17 @@ form#vstobjects.suspended {
   font-weight: 600;
 }
 
-.shortcuts .close {
+.shortcuts-close {
   cursor: pointer;
-  width: 20px;
+  padding: 5px;
 }
 
-.shortcuts .close:hover {
+.shortcuts-close:hover {
   color: #db0000;
 }
 
-.shortcuts .close:active {
+.shortcuts-close:active {
   color: #a60000;
-}
-
-.shortcuts .close .fas {
-  font-size: 0.8rem;
-  line-height: 1.4rem;
 }
 
 .shortcuts-inner {
@@ -3647,13 +3572,6 @@ li[aria-expanded="true"] a {
   color: #aaa !important;
 }
 
-.body-login .debug-panel-header,
-.body-login .debug-panel-contents,
-.body-reset .debug-panel-header,
-.body-reset .debug-panel-contents {
-  display: none;
-}
-
 @media screen and (max-width: 950px) {
   .helper-container {
     display: none;
@@ -3690,6 +3608,50 @@ li[aria-expanded="true"] a {
 .password-meter[value="3"]::-moz-meter-bar { background: yellow; }
 .password-meter[value="4"]::-moz-meter-bar { background: green; }
 
+/* Collapse component
+   ========================================================================== */
+
+.collapse {}
+
+.collapse[open] .collapse-header::after {
+  transform: rotate(180deg);
+}
+
+.collapse-header {
+  background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
+  border: 1px solid #ddd;
+  text-shadow: 0 1px rgb(255 255 255 / 95%);
+  box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 4px 6px rgb(190 190 190 / 40%);
+  font-weight: 600;
+  color: #30659d;
+  cursor: pointer;
+  position: relative;
+  padding: 9px 18px;
+}
+
+.collapse-header:hover {
+  color: #ff3478;
+}
+
+.collapse-header::after {
+  content: "";
+  display: block;
+  background-image: url(/images/arrow.svg);
+  background-size: 22px auto;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 22px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+.collapse-content {
+  box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
+  padding: 20px 20px 10px;
+}
+
 /* Extend animate.css
    ========================================================================== */
 
@@ -3724,6 +3686,18 @@ li[aria-expanded="true"] a {
   display: none !important;
 }
 
+.u-inline-block {
+  display: inline-block !important;
+}
+
+.u-float-left {
+  float: left !important;
+}
+
+.u-float-right {
+  float: right !important;
+}
+
 .text-right {
   text-align: right !important;
 }
@@ -3754,6 +3728,14 @@ li[aria-expanded="true"] a {
 
 .u-ml10 {
   margin-left: 10px !important;
+}
+
+.u-mr15 {
+  margin-right: 15px !important;
+}
+
+.u-mr30 {
+  margin-right: 30px !important;
 }
 
 .u-mb5 {

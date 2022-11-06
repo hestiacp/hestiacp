@@ -662,35 +662,6 @@ textarea:focus::placeholder {
   box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
 }
 
-a.vst-text,
-a.vst-text b {
-  color: #fff;
-}
-
-a.vst-text:hover,
-a.vst-text:hover b {
-  color: #ff3478;
-}
-
-a.vst-text:active,
-a.vst-text:active b {
-  color: #ff3478;
-}
-
-.advanced-options {
-  background: #454545;
-  border: 1px solid #505050;
-  text-shadow: 0 1px rgb(0 0 0 / 40%);
-  box-shadow:
-    inset 0 0 2px rgb(0 0 0 / 50%),
-    0 2px 6px rgb(0 0 0 / 40%);
-  color: #fff;
-}
-
-.advanced-options a {
-  color: #fff !important;
-}
-
 .generate {
   color: #29a9ff;
   border-radius: 4px;
@@ -716,22 +687,6 @@ a.vst-text:active b {
   text-transform: none !important;
 }
 
-.login .vst-advanced:hover {
-  color: #ff3478 !important;
-  background-color: transparent;
-  border-color: transparent;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
-}
-
-.login .vst-advanced:active {
-  color: #be1f54 !important;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
-}
-
 .vst-advanced:hover {
   color: #fff;
   background-color: #ff3478;
@@ -739,23 +694,11 @@ a.vst-text:active b {
   text-decoration: none;
 }
 
-.login .vst-advanced:active,
 .vst-advanced:active {
   color: #fff;
   background-color: #be1f54;
   border-color: #be1f54;
   text-decoration: none;
-}
-
-.login .vst-advanced {
-  border-bottom: none;
-  color: #326b9b;
-  font-size: 0.85em !important;
-  text-decoration: none;
-  text-transform: uppercase;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
 }
 
 .lets-encrypt-note {}
@@ -1015,6 +958,12 @@ a.button.cancel {
 
 }
 
+.body-login,
+.body-reset {
+  background: #303030;
+  background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%);
+}
+
 .login {
   background-color: #282828;
   box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(0 0 0 / 25%);
@@ -1024,8 +973,18 @@ a.button.cancel {
   color: #fff;
 }
 
-.login a.error {
+.login .error {
   color: #f864fa;
+}
+
+.login .label-link {
+  color: #eee;
+  text-transform: initial;
+  font-weight: 400;
+}
+
+.login .label-link:hover {
+  color: #ff3478;
 }
 
 .form-title {
@@ -1255,38 +1214,6 @@ form#vstobjects.suspended {
   border-bottom: 1px solid #353535;
 }
 
-.shortcuts .close {
-
-}
-
-.shortcuts .close:hover {
-
-}
-
-.shortcuts .close:active {
-
-}
-
-.shortcuts .close .fas {
-
-}
-
-.shortcuts ul {
-
-}
-
-.shortcuts ul li {
-
-}
-
-.shortcuts ul li span {
-
-}
-
-.shortcuts ul li span.bigger {
-
-}
-
 .description {
 
 }
@@ -1415,12 +1342,6 @@ li[aria-expanded="true"] a {
   border-radius: 8px;
 }
 
-.body-login,
-.body-reset {
-  background: #303030 !important;
-  background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%) !important;
-}
-
 .debug-panel-contents {
   background-color: #282828;
 }
@@ -1461,11 +1382,6 @@ li[aria-expanded="true"] a {
   color: #fff !important;
 }
 
-.admin-warning-button {
-  padding-left: 65px !important;
-  padding-right: 65px !important;
-}
-
 @media screen and (max-width: 950px) {
   .helper-container {
     display: none;
@@ -1478,4 +1394,17 @@ li[aria-expanded="true"] a {
 
 .ui-button.button-suspended i {
   color: #999 !important;
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse-header {
+  background: #454545;
+  border: 1px solid #505050;
+  text-shadow: 0 1px rgb(0 0 0 / 40%);
+  box-shadow:
+    inset 0 0 2px rgb(0 0 0 / 50%),
+    0 2px 6px rgb(0 0 0 / 40%);
+  color: #fff;
 }

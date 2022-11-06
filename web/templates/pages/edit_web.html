@@ -4,7 +4,7 @@
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
-    <div class="l-unit-toolbar__buttonstrip float-right">
+    <div class="l-unit-toolbar__buttonstrip u-float-right">
       <a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "u-hidden"; }?>" id="v-clear-cache">
         <i class="fas fa-trash status-icon red"></i><?=_('Purge Nginx Cache');?>
       </a>

@@ -15,6 +15,12 @@
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 
+upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'no'
+upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'no'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
+upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
 if [ -f "/etc/fail2ban/jail.local" ]; then
     sed -i "s|/var/log/mysql.log|/var/log/mysql/error.log|g" /etc/fail2ban/jail.local
 fi

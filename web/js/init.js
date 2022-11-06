@@ -337,7 +337,12 @@ $(document).ready(function(){
               );
 
               shortcut.add("h", function(){
-                $('.shortcuts').toggleClass('u-hidden');
+                var shortcutsDialog = document.querySelector('.shortcuts');
+                if (shortcutsDialog.open) {
+                  shortcutsDialog.close();
+                } else {
+                  shortcutsDialog.showModal();
+                }
               }, {
                   'type':             'keydown',
                   'propagate':        false,
@@ -347,7 +352,10 @@ $(document).ready(function(){
               );
 
               shortcut.add("Esc", function(){
-                $('.shortcuts').addClass('u-hidden');
+                var shortcutsDialog = document.querySelector('.shortcuts');
+                if (shortcutsDialog.open) {
+                  shortcutsDialog.close();
+                }
                 $('input, checkbox, textarea, select').blur();
               }, {
                   'type':             'keydown',
@@ -536,14 +544,21 @@ $(document).ready(function(){
                   }
               );
 
-
-
-              $('.shortcuts-close').click(function(){
-                $('.shortcuts').addClass('u-hidden');
+              document.querySelector('.shortcuts-close').addEventListener('click', function(){
+                var shortcutsDialog = document.querySelector('.shortcuts');
+                if (shortcutsDialog.open) {
+                  shortcutsDialog.close();
+                }
               });
 
-              $('.to-shortcuts').click(function(){
-                $('.shortcuts').toggleClass('u-hidden');
+              document.querySelector('.to-shortcuts').addEventListener('click', function() {
+                event.preventDefault();
+                var shortcutsDialog = document.querySelector('.shortcuts');
+                if (shortcutsDialog.open) {
+                  shortcutsDialog.close();
+                } else {
+                  shortcutsDialog.showModal();
+                }
               });
 
               $(document).click(function(evt){

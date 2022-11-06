@@ -2,6 +2,7 @@
    Define Exo font family
    Primary font used throughout the user interface
    ========================================================================== */
+
 /* exo-300 - latin-ext_latin */
 @font-face {
   font-family: 'Exo';
@@ -180,6 +181,15 @@ h3,
 p,
 pre {
   margin: 0;
+}
+
+dialog {
+  position: fixed;
+  padding: 0;
+}
+
+dialog::backdrop {
+  background-color: rgb(0 0 0 / 60%);
 }
 
 ol,
@@ -2361,7 +2371,11 @@ body.mobile .l-icon-shortcuts {
   font-weight: normal;
 }
 
-.ftp-path-prefix { padding-top: 12px; font-size: 0.8rem; color: #555; }
+.ftp-path-prefix {
+  padding-top: 12px;
+  font-size: 0.8rem;
+  color: #555;
+}
 
 .dialog {
   display: none;
@@ -2641,10 +2655,9 @@ a.button.cancel {
 
 .body-login,
 .body-reset {
-  height: auto;
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding-top: 10%;
   background: rgb(102 158 231);
   background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%);
 }
@@ -2657,15 +2670,29 @@ a.button.cancel {
 }
 
 .login {
-  display: flex;
-  align-items: flex-end;
   font-size: 0.85rem;
   padding: 80px 50px;
+  min-width: 320px;
+  margin-bottom: 20%;
   background-color: rgb(255 255 255 / 70%);
   border-radius: 6px;
   box-shadow:
     0 8px 25px rgb(0 0 0 / 30%),
     inset 0 0 2px rgb(255 255 255 / 100%);
+}
+
+@media screen and (min-width: 768px) {
+
+  .login {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .login form {
+    flex-grow: 1;
+  }
 }
 
 .login-title {
@@ -3193,21 +3220,11 @@ form#vstobjects.suspended {
 
 .shortcuts {
   background: rgb(50 50 50 / 93%);
-  display: inline-block;
-  position: fixed;
-  left: 50%;
-  bottom: 0;
   color: #eee;
-  width: 800px;
   border: 1px solid rgb(255 255 255 / 70%);
-  border-bottom: 0;
   font-size: 0.8rem;
-  z-index: 120;
-  transform: translate(-50%, 0);
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-radius: 6px;
   box-shadow: 0 4px 30px rgb(0 0 0 / 50%);
-  line-height: 0.9rem;
 }
 
 .shortcuts-header {
@@ -3215,7 +3232,7 @@ form#vstobjects.suspended {
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #606060;
-  padding: 10px 10px 10px 15px;
+  padding: 10px 10px 10px 20px;
 }
 
 .shortcuts-title {
@@ -3228,7 +3245,7 @@ form#vstobjects.suspended {
 
 .shortcuts-close {
   cursor: pointer;
-  padding: 5px;
+  padding: 5px 10px;
 }
 
 .shortcuts-close:hover {
@@ -3239,101 +3256,33 @@ form#vstobjects.suspended {
   color: #a60000;
 }
 
-.shortcuts-inner {
-  display: flex;
-  width: 100%;
+.shortcuts-inner {}
+
+@media screen and (min-width: 768px) {
+
+  .shortcuts-inner {
+    display: flex;
+  }
 }
 
-.shortcuts ul {
+.shortcuts-list {
   flex-grow: 1;
-  padding: 40px 20px;
+  padding: 40px;
 }
 
-.shortcuts ul li {
+.shortcuts li {
   padding: 5px 20px;
 }
 
-.shortcuts ul li span {
+.shortcuts .key {
   color: #ff3478;
   display: inline-block;
   font-weight: 600;
-  padding: 0 20px 0 0;
-  text-align: right;
+  padding-right: 20px;
 }
 
-.shortcuts ul li span.bigger {
+.shortcuts .key.bigger {
   font-size: 18px;
-}
-
-.description {
-  font-weight: normal;
-  line-height: 25px;
-  padding-bottom: 45px;
-  margin-left: 50px;
-}
-
-.description ul {
-  margin-top: 15px;
-  padding-left: 0;
-}
-
-.description li {
-  margin: 10px 0;
-}
-
-.description a {
-  line-height: 30px;
-  text-decoration: underline;
-  color: #326b9b;
-}
-
-.description a.purchase {
-  color: #fff;
-  background-color: #3b9de8;
-  border: none;
-  border-radius: 3px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 7px 15px;
-  text-transform: capitalize;
-  text-decoration: none;
-}
-
-.description a.cancel {
-  background-color: #999;
-  border: none;
-  border-radius: 3px;
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 7px 15px;
-  text-transform: capitalize;
-  text-decoration: none;
-}
-
-.description a.cancel:hover {
-  background-color: #326b9b;
-}
-
-.description a.cancel:active {
-  background-color: #5f9491;
-}
-
-.description.cancel-success {
-  color: #8fac0a;
-  font-weight: 600;
-}
-
-.description span {
-  font-style: italic;
-  line-height: 45px;
-  padding-top: 20px;
-}
-
-.description .twoco {
-  font-style: italic;
-  line-height: 15px;
-  font-size: 0.8rem;
 }
 
 .ui-dialog {
@@ -3369,8 +3318,7 @@ form#vstobjects.suspended {
 }
 
 .ui-widget-overlay {
-  opacity: 0.8;
-  background: rgb(10 10 10 / 90%);
+  background-color: rgb(0 0 0 / 60%);
 }
 
 .helper-container {
@@ -3760,10 +3708,6 @@ li[aria-expanded="true"] a {
 
 .u-pt18 {
   padding-top: 18px !important;
-}
-
-.u-pt30 {
-  padding-top: 30px !important;
 }
 
 .u-pl30 {

@@ -24,7 +24,7 @@
         <a href="<?=$keys_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Access Keys');?>"><i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?></a>
       <?php } ?>
     </div>
-    <div class="l-unit-toolbar__buttonstrip float-right">
+    <div class="l-unit-toolbar__buttonstrip u-float-right">
       <?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
         <!-- Do not show delete button for currently logged in user-->
       <?} else {?>

@@ -1,37 +1,33 @@
 <div class="login animated zoomIn">
-  <div style="padding-top: 40px; padding-right: 30px;">
-    <a href="/" class="u-block">
-      <img src="/images/logo.svg" alt="<?=_('Hestia Control Panel');?>" width="100" height="120">
-    </a>
-  </div>
-  <div>
-    <form id="form_login" method="post" action="/login/">
-      <input type="hidden" name="token" value="<?=$_SESSION['token']; ?>">
-      <input type="hidden" name="murmur" value="" id="murmur">
-      <h1 class="login-title">
-        <?=_('Welcome to Hestia Control Panel');?>
-      </h1>
-      <?php if (isset($error)) echo $error ?>
-      <div class="u-mb10">
-        <label for="user" class="form-label"><?=_('Username');?></label>
-        <input type="text" class="form-control" name="user" id="user" tabindex="1" style="width:260px;" autofocus>
-      </div>
-      <div class="u-mb20">
-        <label for="password" class="form-label u-side-by-side">
-          <?=_('Password');?>
-          <?php if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] !== 'no' ) {?>
-            <a tabindex="5" class="vst-advanced" href="/reset/">
-              <?=_('forgot password');?>
-            </a>
-          <?php } ?>
-        </label>
-        <input type="password" class="form-control" name="password" id="password" tabindex="2" style="width:260px;" autofocus>
-      </div>
-      <button tabindex="3" type="submit" class="button">
-        <?=_('Next');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i>
-      </button>
-    </form>
-  </div>
+  <a href="/" class="u-block u-mr30">
+    <img src="/images/logo.svg" alt="<?=_('Hestia Control Panel');?>" width="100" height="120">
+  </a>
+  <form id="form_login" method="post" action="/login/">
+    <input type="hidden" name="token" value="<?=$_SESSION['token']; ?>">
+    <input type="hidden" name="murmur" value="" id="murmur">
+    <h1 class="login-title">
+      <?=_('Welcome to Hestia Control Panel');?>
+    </h1>
+    <?php if (isset($error)) echo $error ?>
+    <div class="u-mb10">
+      <label for="user" class="form-label"><?=_('Username');?></label>
+      <input type="text" class="form-control" name="user" id="user" tabindex="1" style="width:260px;" autofocus>
+    </div>
+    <div class="u-mb20">
+      <label for="password" class="form-label u-side-by-side">
+        <?=_('Password');?>
+        <?php if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] !== 'no' ) {?>
+          <a tabindex="5" class="label-link" href="/reset/">
+            <?=_('forgot password');?>
+          </a>
+        <?php } ?>
+      </label>
+      <input type="password" class="form-control" name="password" id="password" tabindex="2" style="width:260px;" autofocus>
+    </div>
+    <button tabindex="3" type="submit" class="button">
+      <?=_('Next');?>&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-in-alt"></i>
+    </button>
+  </form>
 </div>
 
 </body>

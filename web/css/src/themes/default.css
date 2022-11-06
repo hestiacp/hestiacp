@@ -1037,16 +1037,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   padding-right: 6px;
 }
 
-.body-login,
-.body-reset {
-  height: auto;
-  display: flex;
-  justify-content: center;
-  padding-top: 10%;
-  background: rgb(102 158 231) !important;
-  background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%) !important;
-}
-
 .body-user .l-unit.animated.fadeIn {
   line-height: 2rem;
 }
@@ -2277,16 +2267,6 @@ body.mobile .l-icon-shortcuts {
   text-transform: none;
 }
 
-.login .vst-advanced:hover {
-  color: #c36;
-  background-color: transparent;
-  border-color: transparent;
-  font-size: 0.85em !important;
-  box-shadow: none !important;
-  background: none !important;
-  border: none !important;
-}
-
 .vst-advanced:hover {
   color: #fff;
   background-color: #c36;
@@ -2294,33 +2274,8 @@ body.mobile .l-icon-shortcuts {
   text-decoration: none;
 }
 
-.login .vst-advanced:active {
-  color: #fff;
-  background-color: #f7d616;
-  border-color: #f7d616;
-  text-decoration: none;
-  font-size: 0.85em !important;
-  box-shadow: none !important;
-  background: none !important;
-  border: none !important;
-}
-
 .vst-advanced:active {
   font-size: unset;
-}
-
-.login .vst-advanced {
-  border-bottom: none;
-  color: #326b9b;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 0.85em !important;
-  box-shadow: none !important;
-  background: none !important;
-  border: none !important;
-  height: auto !important;
-  padding: 0 !important;
-  min-width: 0 !important;
 }
 
 .lets-encrypt-note {
@@ -2684,8 +2639,27 @@ a.button.cancel {
   padding-left: 20px !important;
 }
 
+.body-login,
+.body-reset {
+  height: auto;
+  display: flex;
+  justify-content: center;
+  padding-top: 10%;
+  background: rgb(102 158 231);
+  background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%);
+}
+
+.body-login .debug-panel-header,
+.body-login .debug-panel-contents,
+.body-reset .debug-panel-header,
+.body-reset .debug-panel-contents {
+  display: none;
+}
+
 .login {
   display: flex;
+  align-items: flex-end;
+  font-size: 0.85rem;
   padding: 80px 50px;
   background-color: rgb(255 255 255 / 70%);
   border-radius: 6px;
@@ -2701,13 +2675,18 @@ a.button.cancel {
   margin-bottom: 30px;
 }
 
-.login a.error {
+.login .error {
   color: #be5abf;
-  font-size: 0.8rem;
+  margin-bottom: 20px;
 }
 
-.login .form-label {
-  font-size: 0.85rem;
+.login .label-link {
+  color: #326b9b;
+  text-transform: uppercase;
+}
+
+.login .label-link:hover {
+  color: #0077c6;
 }
 
 .login .form-control {
@@ -3128,8 +3107,8 @@ form#vstobjects.suspended {
 }
 
 .admin-warning-button {
-  padding-left: 59px !important;
-  padding-right: 59px !important;
+  padding-left: 65px !important;
+  padding-right: 65px !important;
 }
 
 .footer-banner {
@@ -3198,22 +3177,6 @@ form#vstobjects.suspended {
   color: #fff;
 }
 
-.float-left {
-  float: left;
-}
-
-.float-right {
-  float: right;
-}
-
-.display-inline-block {
-  display: inline-block;
-}
-
-.width-100p {
-  width: 100%;
-}
-
 .l-sort-toolbar table td {
   float: left;
   margin-left: 10px;
@@ -3263,22 +3226,17 @@ form#vstobjects.suspended {
   font-weight: 600;
 }
 
-.shortcuts .close {
+.shortcuts-close {
   cursor: pointer;
-  width: 20px;
+  padding: 5px;
 }
 
-.shortcuts .close:hover {
+.shortcuts-close:hover {
   color: #db0000;
 }
 
-.shortcuts .close:active {
+.shortcuts-close:active {
   color: #a60000;
-}
-
-.shortcuts .close .fas {
-  font-size: 0.8rem;
-  line-height: 1.4rem;
 }
 
 .shortcuts-inner {
@@ -3614,13 +3572,6 @@ li[aria-expanded="true"] a {
   color: #aaa !important;
 }
 
-.body-login .debug-panel-header,
-.body-login .debug-panel-contents,
-.body-reset .debug-panel-header,
-.body-reset .debug-panel-contents {
-  display: none;
-}
-
 @media screen and (max-width: 950px) {
   .helper-container {
     display: none;
@@ -3735,6 +3686,18 @@ li[aria-expanded="true"] a {
   display: none !important;
 }
 
+.u-inline-block {
+  display: inline-block !important;
+}
+
+.u-float-left {
+  float: left !important;
+}
+
+.u-float-right {
+  float: right !important;
+}
+
 .text-right {
   text-align: right !important;
 }
@@ -3769,6 +3732,10 @@ li[aria-expanded="true"] a {
 
 .u-mr15 {
   margin-right: 15px !important;
+}
+
+.u-mr30 {
+  margin-right: 30px !important;
 }
 
 .u-mb5 {

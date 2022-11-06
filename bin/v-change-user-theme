@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: updates user role
-# options: USER ROLE
+# info: updates user theme
+# options: USER THEME
 #
-# example: v-change-user-theme user theme
+# example:   v-change-user-theme admin dark
+# example:   v-change-user-theme peter vestia
 #
 # Changes web UI display theme for specified user.
 

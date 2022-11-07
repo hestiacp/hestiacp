@@ -255,10 +255,6 @@ strong {
   border-radius: 0;
 }
 
-.form-check-input {
-  margin-top: 1px;
-}
-
 .pill {
   border-radius: 4px;
 }
@@ -375,10 +371,6 @@ strong {
   font-size: 1.05em !important;
 }
 
-.l-unit-toolbar__buttonstrip {
-  margin-top: 14px !important;
-}
-
 .ui-widget,
 .ui-dialog,
 .ui-dialog .ui-dialog-title {
@@ -422,7 +414,6 @@ strong {
 }
 
 .l-sort-toolbar .sort-by {
-  padding-top: 8px !important;
   font-size: 0.75rem !important;
 }
 
@@ -471,10 +462,9 @@ strong {
 }
 
 .shortcuts {
-  border: 1px solid #111 !important;
-  border-top-left-radius: 2px !important;
-  border-top-right-radius: 2px !important;
-  box-shadow: 0 3px 12px rgb(0 0 0 / 80%) !important;
+  border-color: #111;
+  border-radius: 2px;
+  box-shadow: 0 3px 12px rgb(0 0 0 / 80%);
 }
 
 .shortcuts-title,
@@ -525,8 +515,6 @@ strong {
 }
 
 .l-unit-toolbar__buttonstrip a {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
   margin-right: 15px;
 }
 
@@ -678,7 +666,7 @@ a.vst-advanced:focus {
 }
 
 .helper-container {
-  margin-top: 412px;
+  margin-top: 422px;
   border-radius: 0;
   box-shadow: none;
 }

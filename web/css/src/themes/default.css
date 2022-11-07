@@ -167,13 +167,13 @@ button {
 body {
   font-family: Exo, Arial, Helvetica, sans-serif;
   font-size: 0.9rem;
+  line-height: 1.5;
   height: 100%;
   color: #7c7c7c;
   background-color: #fff;
 }
 
 :focus { outline: none; }
-::-moz-focus-inner { border: 0; }
 
 h1,
 h2,
@@ -202,6 +202,16 @@ ul {
 a {
   text-decoration: none;
   color: #7c7c7c;
+}
+
+button {
+  cursor: pointer;
+  line-height: inherit;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .check-label {
@@ -902,7 +912,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-sort-toolbar {
   float: right;
-  padding: 7px 0;
+  padding-top: 6px;
   text-transform: uppercase;
   font-size: 0.8rem;
 }
@@ -1032,14 +1042,13 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .l-unit-toolbar__buttonstrip {
-  margin-top: 12px;
+  margin-top: 11px;
   display: inline-block;
   font-size: 0.9em;
 }
 
 .l-unit-toolbar__buttonstrip a {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+  padding: 2px 10px 3px;
   margin-right: 5px;
 }
 
@@ -1131,6 +1140,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 .l-select select {
   border: 0;
   background-color: transparent;
+  color: inherit;
   height: 28px;
   min-width: 175px;
   padding-left: 10px;
@@ -2135,7 +2145,7 @@ body.mobile .l-icon-shortcuts {
 }
 
 .form-label {
-  margin-bottom: 6px;
+  margin-bottom: 5px;
   display: inline-block;
 }
 
@@ -2415,9 +2425,8 @@ body.mobile .l-icon-shortcuts {
   border-radius: 3px !important;
   font-size: 1.05em !important;
   font-weight: 500 !important;
-  padding: 2px 16px 3px 20px !important;
+  padding: 3px 20px;
   min-width: 100px !important;
-  height: 28px !important;
   color: #30659d !important;
   border: 1px solid #0083db !important;
   background-color: #3b9de8 !important;
@@ -2734,6 +2743,7 @@ a.button.cancel {
 
 .section-title {
   display: flex;
+  color: #4b4b4b;
   cursor: pointer;
   justify-content: space-between;
   align-items: center;
@@ -3324,7 +3334,7 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 418px;
+  margin-top: 427px;
   margin-right: 14px;
   padding-top: 0;
   width: 610px;
@@ -3574,7 +3584,12 @@ li[aria-expanded="true"] a {
   color: #30659d;
   cursor: pointer;
   position: relative;
-  padding: 9px 18px;
+  padding: 8px 18px;
+}
+
+.collapse-header::marker {
+  display: none;
+  content: "";
 }
 
 .collapse-header:hover {

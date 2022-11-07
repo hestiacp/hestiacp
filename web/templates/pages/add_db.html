@@ -1,5 +1,5 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/db/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
@@ -92,7 +92,7 @@
           <div id="advanced-opts" style="display: none;">
             <div class="u-mb10">
               <label for="v_host" class="form-label"><?=_('Host');?></label>
-              <select class="form-select u-mb20" name="v_host" id="v_host">
+              <select class="form-select" name="v_host" id="v_host">
                 <?php
                   foreach ($db_hosts as $value) {
                     echo "\n\t\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($value)."\"";

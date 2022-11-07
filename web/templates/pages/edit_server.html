@@ -1,5 +1,5 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
@@ -201,7 +201,7 @@
                 <?php endforeach; ?>
               <?php endif; ?>
               <?php if(!empty($_SESSION['WEB_BACKEND'])){ ?>
-                <div class="u-pt6 u-mb10">
+                <div class="u-mt10">
                   <label for="v_php_default_version" class="form-label"><?=_('System PHP version');?></label>
                   <select class="form-select" name="v_php_default_version" id="v_php_default_version">
                     <?php
@@ -281,7 +281,7 @@
                   <?=_('Global SMTP Relay');?>
                 </label>
               </div>
-              <div id="smtp_relay_table" class="u-pl30 u-mt20" style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';} ?>;">
+              <div id="smtp_relay_table" class="u-pl30 u-mt20" style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';}?> ;">
                 <div class="u-input-width">
                   <div class="u-mb10">
                     <label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
@@ -452,7 +452,7 @@
                   <?php } ?>
                 </select>
               </div>
-              <div class="u-mb10">
+              <div class="u-mb20">
                 <label for="v_backup_dir" class="form-label">
                   <?=_('Directory');?> <a target="_blank" href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"><i class="fas fa-question-circle"></i></a>
                 </label>
@@ -778,7 +778,7 @@
                 </p>
                 <div class="u-mb10">
                   <label for="v_enforce_subdomain_ownership" class="form-label"><?=_('Enforce subdomain ownership');?></label>
-                  <select class="form-select u-mb20" name="v_enforce_subdomain_ownership" id="v_enforce_subdomain_ownership">
+                  <select class="form-select" name="v_enforce_subdomain_ownership" id="v_enforce_subdomain_ownership">
                     <option value="yes"><?=_('Yes'); ?></option>
                     <option value="no" <?php if($_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
                   </select>
@@ -818,7 +818,7 @@
               </div>
               <div class="u-mb10">
                 <label for="v_firewall" class="form-label"><?=_('Firewall');?></label>
-                <select class="form-select u-mb20" name="v_firewall" id="v_firewall">
+                <select class="form-select" name="v_firewall" id="v_firewall">
                   <option value="no"><?=_('No'); ?></option>
                   <option value="yes" <?php if($_SESSION['FIREWALL_SYSTEM'] == 'iptables') echo 'selected' ?>><?=_('Yes'); ?></option>
                 </select>

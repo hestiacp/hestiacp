@@ -1207,71 +1207,10 @@ form#vstobjects.suspended {
   background: rgb(30 30 30 / 95%);
   border: 1px solid rgb(255 255 255 / 25%);
   box-shadow: 0 0 20px rgb(0 0 0 / 50%);
-  border-bottom: none !important;
 }
 
 .shortcuts-header {
   border-bottom: 1px solid #353535;
-}
-
-.description {
-
-}
-
-.description ul{
-
-}
-
-.description li{
-
-}
-
-.description a {
-
-}
-
-.description a.purchase {
-
-}
-
-.description a.purchase:hover {
-  color: #d4d4d4;
-}
-
-.description a.purchase:active {
-  color: #d4d4d4;
-}
-
-.description a.cancel {
-
-}
-
-.description a.cancel:hover {
-
-}
-
-.description a.cancel:active {
-
-}
-
-.description.cancel-success {
-
-}
-
-.description .licence {
-
-}
-
-.description .licence input {
-
-}
-
-.description span {
-
-}
-
-.description .twoco {
-
 }
 
 .ui-dialog {

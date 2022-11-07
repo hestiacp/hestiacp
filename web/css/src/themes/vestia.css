@@ -478,7 +478,7 @@ strong {
 }
 
 .shortcuts-title,
-.shortcuts ul li span {
+.shortcuts .key {
   color: #b5da0b;
 }
 

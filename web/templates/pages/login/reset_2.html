@@ -15,7 +15,7 @@
       <input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>"/>
       <input type="hidden" name="user" value="<?=htmlentities($_GET['user'])?>">
       <label for="code" class="form-label"><?=_('Reset Code');?></label>
-      <input type="text" class="form-control" name="code" id="code" tabindex="1" style="width:260px;">
+      <input type="text" class="form-control" name="code" id="code" tabindex="1">
     </div>
     <div>
       <input tabindex="2" type="submit" value="<?=_('Confirm');?>" class="button">&nbsp;&nbsp;

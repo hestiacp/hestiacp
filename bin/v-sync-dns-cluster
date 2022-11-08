@@ -61,40 +61,43 @@ for cluster in $hosts; do
     # Syncing user domains
     user_list=$(ls -d $HESTIA/data/users/*/ | sed "s#$HESTIA/data/users/##" | sed s"/.$//" | grep -v "dns-cluster")
     for user in $user_list; do
-        for str in $(cat $HESTIA/data/users/$user/dns.conf); do
-            unset $SLAVE
-            parse_object_kv_list "$str"
-            if [ $SLAVE != "yes" ]; then
-                if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
-                    # Syncing domain index
+        ROLE=$(get_user_value '$ROLE');
+        if [ $ROLE != "dns-slave"]; then
+            for str in $(cat $HESTIA/data/users/$user/dns.conf); do
+                unset $SLAVE
+                parse_object_kv_list "$str"
+                if [ $SLAVE != "yes" ]; then
+                    if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
+                        # Syncing domain index
 
-                    cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" ' ' "no"
-                    check_result $? "$HOST connection failed" "$E_CONNECT"
+                        cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" ' ' "no"
+                        check_result $? "$HOST connection failed" "$E_CONNECT"
 
-                    # Syncing domain records
-                    tmp_file="/tmp/vst-sync.$DOMAIN"
-                    cluster_file "$USER_DATA/$user/dns/$DOMAIN.conf" "$tmp_file"
-                    check_result $? "$HOST connection failed" "$E_CONNECT"
+                        # Syncing domain records
+                        tmp_file="/tmp/vst-sync.$DOMAIN"
+                        cluster_file "$USER_DATA/$user/dns/$DOMAIN.conf" "$tmp_file"
+                        check_result $? "$HOST connection failed" "$E_CONNECT"
 
-                    cluster_cmd v-insert-dns-records "$DNS_USER" "$DOMAIN" "$tmp_file" 'no'
-                    check_result $? "$HOST connection failed" "$E_CONNECT"
+                        cluster_cmd v-insert-dns-records "$DNS_USER" "$DOMAIN" "$tmp_file" 'no'
+                        check_result $? "$HOST connection failed" "$E_CONNECT"
+                    fi
+                    if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+                        str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
+                        str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g");
+
+                        ip=$($BIN/v-list-sys-ips plain | cut -f1 | head -n1);
+                        str=$(echo "$str" | sed "s/MASTER=''/MASTER='$ip'/g");
+
+                        # Syncing domain data
+                        cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
+                        check_result $? "$HOST connection failed" "$E_CONNECT"
+
+                        cluster_cmd v-rebuild-dns-domain "$DNS_USER" "$DOMAIN"
+                        rndc notify $DOMAIN  > /dev/null 2>&1
+                    fi
                 fi
-                if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
-                    str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
-                    str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g");
-
-                    ip=$($BIN/v-list-sys-ips plain | cut -f1 | head -n1);
-                    str=$(echo "$str" | sed "s/MASTER=''/MASTER='$ip'/g");
-
-                    # Syncing domain data
-                    cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
-                    check_result $? "$HOST connection failed" "$E_CONNECT"
-
-                    cluster_cmd v-rebuild-dns-domain "$DNS_USER" "$DOMAIN"
-                    rndc notify $DOMAIN  > /dev/null 2>&1
-                fi
-            fi
-        done
+            done
+        fi
     done
     if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
         # Rebuilding dns zones

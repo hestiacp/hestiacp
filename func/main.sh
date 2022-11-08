@@ -1085,7 +1085,7 @@ is_object_format_valid() {
 
 # Role validator
 is_role_valid (){
-    if ! [[ "$1" =~ ^admin$|^user$ ]]; then
+    if ! [[ "$1" =~ ^admin$|^user$|^dns-cluster$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
@@ -1131,7 +1131,7 @@ is_format_valid() {
                 action)         is_fw_action_format_valid "$arg";;
                 active)         is_boolean_format_valid "$arg" 'active' ;;
                 aliases)        is_alias_format_valid "$arg" ;;
-                alias)          is_alias_format_valid "$arg" ;;        
+                alias)          is_alias_format_valid "$arg" ;;
                 antispam)       is_boolean_format_valid "$arg" 'antispam' ;;
                 antivirus)      is_boolean_format_valid "$arg" 'antivirus' ;;
                 autoreply)      is_autoreply_format_valid "$arg" ;;
@@ -1219,16 +1219,16 @@ is_format_valid() {
 }
 
 is_folder_exists () {
-  if [ ! -d "$1" ]; then 
+  if [ ! -d "$1" ]; then
     check_result "$E_NOTEXIST" "folder $1 does not exist"
   fi
 }
 
 is_command_valid_format () {
-  if [[ ! "$1" =~ ^v-[[:alnum:]][-|\.|_[:alnum:]]{0,64}[[:alnum:]]$ ]]; then 
+  if [[ ! "$1" =~ ^v-[[:alnum:]][-|\.|_[:alnum:]]{0,64}[[:alnum:]]$ ]]; then
     check_result "$E_INVALID" "Invalid command format"
   fi
-  if [[ -n $( echo "$1" | grep -e '\-\-' ) ]]; then 
+  if [[ -n $( echo "$1" | grep -e '\-\-' ) ]]; then
     check_result "$E_INVALID" "Invalid command format"
   fi
 }
@@ -1304,15 +1304,15 @@ check_access_key_cmd() {
     local access_key_id="$(basename "$1")"
     local cmd=$2
     local -n user_arg_position=$3
-    
-    if [[ "$DEBUG_MODE" = "true" ]]; then 
+
+    if [[ "$DEBUG_MODE" = "true" ]]; then
     new_timestamp
       echo "[$date:$time] $1 $2" >> /var/log/hestia/api.log
     fi
     if [[ -z "$access_key_id" || ! -f "$HESTIA/data/access-keys/${access_key_id}" ]]; then
         check_result "$E_FORBIDEN" "Access key $access_key_id doesn't exist"
     fi
-    
+
     if [[ -z "$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command not provided"
     elif [[ "$cmd" = 'v-make-tmp-file' ]]; then
@@ -1326,11 +1326,11 @@ check_access_key_cmd() {
           fi
       elif [[ -z "$PERMISSIONS" && "$USER" != "admin" ]]; then
           check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
-      fi 
+      fi
       user_arg_position="0"
     elif [[ ! -e "$BIN/$cmd" ]]; then
         check_result "$E_FORBIDEN" "Command $cmd not found"
-    else 
+    else
         USER="" PERMISSIONS=""
         source_conf "${HESTIA}/data/access-keys/${access_key_id}"
 
@@ -1505,8 +1505,8 @@ multiphp_default_version() {
 
 is_hestia_package(){
     check=false;
-    for pkg in $1; do 
-      if [ "$pkg" == "$2" ]; then 
+    for pkg in $1; do
+      if [ "$pkg" == "$2" ]; then
         check="true";
       fi
     done

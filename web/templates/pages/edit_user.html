@@ -152,6 +152,7 @@
               <select class="form-select" name="v_role" id="v_role">
                 <option value="user"><?=_('User');?>
                 <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?=_('Administrator');?>
+                <option value="dns-cluster" <?php if($v_role == "dns-cluster" ){ echo "selected"; } ?>><?=_('DNS Sync user');?>
               </select>
             </div>
           <?php } ?>

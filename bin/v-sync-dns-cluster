@@ -62,7 +62,7 @@ for cluster in $hosts; do
     user_list=$(ls -d $HESTIA/data/users/*/ | sed "s#$HESTIA/data/users/##" | sed s"/.$//" | grep -v "dns-cluster")
     for user in $user_list; do
         ROLE=$(get_user_value '$ROLE');
-        if [ $ROLE != "dns-slave"]; then
+        if [ $ROLE != "dns-cluster" ]; then
             for str in $(cat $HESTIA/data/users/$user/dns.conf); do
                 unset $SLAVE
                 parse_object_kv_list "$str"

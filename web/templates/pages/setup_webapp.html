@@ -1,5 +1,5 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/add/webapp/?domain=<?=htmlentities($v_domain);?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
@@ -7,10 +7,10 @@
     <div class="l-unit-toolbar__buttonstrip u-float-right">
       <?php
         if (!empty($_SESSION['error_msg'])) {
-          echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+          echo "<p class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</p>";
         } else {
           if (!empty($_SESSION['ok_msg'])) {
-            echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+            echo "<p class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</p>";
           }
         }
       ?>

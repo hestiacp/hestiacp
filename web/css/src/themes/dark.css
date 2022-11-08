@@ -991,24 +991,13 @@ a.button.cancel {
 }
 
 .section-title {
+  color: #d4d4d4;
   border-bottom-color: #484848;
 }
 
 .qr-code {
   border: 1px solid #3b3b3b;
   box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
-}
-
-.hestiacp {
-
-}
-
-.hestiacp:hover {
-
-}
-
-.hestiacp:active {
-  color: #ff3478;
 }
 
 .l-unit.selected {

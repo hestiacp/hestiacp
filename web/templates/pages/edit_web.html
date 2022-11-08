@@ -1,5 +1,5 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
@@ -288,7 +288,7 @@
                 </label>
               </div>
               <div id="v_nginx_duration" class="u-pl30" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
-                <div class="u-pt6">
+                <div class="u-mb10">
                   <label for="v_nginx_cache_duration" class="form-label">
                     <?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
                   </label>

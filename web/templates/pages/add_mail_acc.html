@@ -1,5 +1,5 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
@@ -80,15 +80,15 @@
                 <?=_('Discard all mail');?>
               </label>
             </div>
-            <div <?php if ($v_blackhole == 'yes') echo 'style="display:none"'; ?> id="id_fwd_for" class="u-pt6">
-              <div class="form-check u-mb10">
+            <div id="id_fwd_for" style="display:<?php if ($v_blackhole == 'yes') {echo 'none';} else {echo 'block';}?> ;">
+              <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
                 <label for="v_fwd_for">
                   <?=_('Do not store forwarded mail');?>
                 </label>
               </div>
             </div>
-            <div class="u-mb10">
+            <div class="u-mt10 u-mb10">
               <label for="v_rate" class="form-label">
                 <?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour');?>)</span>
               </label>

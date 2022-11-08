@@ -61,12 +61,13 @@ for cluster in $hosts; do
     # Syncing user domains
     user_list=$(ls -d $HESTIA/data/users/*/ | sed "s#$HESTIA/data/users/##" | sed s"/.$//" | grep -v "dns-cluster")
     for user in $user_list; do
+        USER_DATA="$HESTIA/data/users/$user"
         ROLE=$(get_user_value '$ROLE');
-        if [ $ROLE != "dns-cluster" ]; then
+        if [ "$ROLE" != "dns-cluster" ]; then
             for str in $(cat $HESTIA/data/users/$user/dns.conf); do
                 unset $SLAVE
                 parse_object_kv_list "$str"
-                if [ $SLAVE != "yes" ]; then
+                if [ "$SLAVE" != "yes" ]; then
                     if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
                         # Syncing domain index
 

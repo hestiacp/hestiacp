@@ -76,7 +76,7 @@ for cluster in $hosts; do
 
                         # Syncing domain records
                         tmp_file="/tmp/vst-sync.$DOMAIN"
-                        cluster_file "$USER_DATA/$user/dns/$DOMAIN.conf" "$tmp_file"
+                        cluster_file "$HESTIA/data/users/$user/dns/$DOMAIN.conf" "$tmp_file"
                         check_result $? "$HOST connection failed" "$E_CONNECT"
 
                         cluster_cmd v-insert-dns-records "$DNS_USER" "$DOMAIN" "$tmp_file" 'no'

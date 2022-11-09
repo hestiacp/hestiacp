@@ -1,5 +1,5 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
@@ -8,7 +8,7 @@
         <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/key/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <?php } ?>
     </div>
-    <div class="l-unit-toolbar__buttonstrip float-right">
+    <div class="l-unit-toolbar__buttonstrip u-float-right">
       <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
     </div>
   </div>
@@ -23,8 +23,8 @@
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="ok" value="Add">
 
-    <div class="app-form">
-      <h1 class="page-title"><?=_('Add SSH Key');?></h1>
+    <div class="form-container">
+      <h1 class="form-title"><?=_('Add SSH Key');?></h1>
       <?php show_alert_message($_SESSION);?>
       <div class="u-wide-input-width">
         <label for="v_key" class="form-label"><?=_('SSH KEY') ?></label>

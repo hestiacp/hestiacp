@@ -7,7 +7,7 @@ App.Templates.html = {
         hint: [''],
         notification: [
                     '<li class="~!:UNSEEN~!"><span class="unselectable mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
-                        <span class="title"><span class="unselectable icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
+                        <span class="notification-title"><span class="unselectable icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
                         ~!:NOTICE~!\
                         <b><span class="time">~!:TIME~! ~!:DATE~!</span></b>\
                     </li>'

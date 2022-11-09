@@ -1,55 +1,27 @@
-<div class="u-flex-align-center">
-  <table class="login">
-    <tr>
-      <td>
-        <table>
-          <tr>
-            <td style="padding: 22px 30px 0 42px; height: 280px; width: 170px;">
-              <a href="/" class="u-block"><img src="/images/logo.svg" alt="<?=_('Hestia Control Panel');?>" style="margin-top: 70px;"></a>
-            </td>
-            <td style="padding: 40px 60px 0 0;" class="animated fadeIn">
-              <form method="get" action="/reset/">
-                <table class="login-box">
-                  <tr>
-                    <td style="padding: 12px 0 0 2px;" class="login-welcome">
-                      <?=_('Forgot Password');?>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 12px 0 0 2px;">
-                      <?=_('RESET_CODE_SENT');?>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 12px 0 0 2px;">
-                      <input type="hidden" name="action" value="confirm">
-                      <input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>"/>
-                      <input type="hidden" name="user" value="<?=htmlentities($_GET['user'])?>">
-                      <label for="code" class="form-label"><?=_('Reset Code');?></label>
-                      <input type="text" class="form-control" name="code" id="code" tabindex="1" style="width:260px;">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 20px 0 12px 0;">
-                      <input tabindex="2" type="submit" value="<?=_('Confirm');?>" class="button">&nbsp;&nbsp;
-                      <input type="button" class="button cancel" value="<?=_('Back');?>" onclick="location.href='/reset/'">
-                    </td>
-                  </tr>
-                </table>
-              </form>
-            </td>
-          </tr>
-          <tr>
-            <td colspan=2>
-              <div class="login-bottom">
-                <div style="height:20px"><?php if (isset($ERROR)) echo $ERROR ?></div>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+<div class="login animated zoomIn">
+  <a href="/" class="u-block u-mr30">
+    <img src="/images/logo.svg" alt="<?=_('Hestia Control Panel');?>" width="100" height="120">
+  </a>
+  <form method="get" action="/reset/">
+    <h1 class="login-title">
+      <?=_('Forgot Password');?>
+    </h1>
+    <?php if (isset($ERROR)) echo $ERROR ?>
+    <p style="padding: 12px 0 0 2px;">
+      <?=_('RESET_CODE_SENT');?>
+    </p>
+    <div class="u-mb20">
+      <input type="hidden" name="action" value="confirm">
+      <input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>"/>
+      <input type="hidden" name="user" value="<?=htmlentities($_GET['user'])?>">
+      <label for="code" class="form-label"><?=_('Reset Code');?></label>
+      <input type="text" class="form-control" name="code" id="code" tabindex="1">
+    </div>
+    <div>
+      <input tabindex="2" type="submit" value="<?=_('Confirm');?>" class="button">&nbsp;&nbsp;
+      <input type="button" class="button cancel" value="<?=_('Back');?>" onclick="location.href='/reset/'">
+    </div>
+  </form>
 </div>
 
 </body>

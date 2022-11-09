@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Purge nginx cache
-# options: USER DOMAINå
+# options: USER DOMAIN
 #
 # example: v-purge-nginx-cache user domain.tld
 #

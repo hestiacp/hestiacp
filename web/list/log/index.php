@@ -32,7 +32,7 @@ $data = json_decode(implode('', $output), true);
 $data = array_reverse($data);
 unset($output);
 if (empty($_SESSION['look'])) {
-    $_SESSION['look'] = '';
+    unset($_SESSION['look']);
 }
 
 // Render page

@@ -337,7 +337,12 @@ $(document).ready(function(){
               );
 
               shortcut.add("h", function(){
-                $('.shortcuts').toggle();
+                var shortcutsDialog = document.querySelector('.shortcuts');
+                if (shortcutsDialog.open) {
+                  shortcutsDialog.close();
+                } else {
+                  shortcutsDialog.showModal();
+                }
               }, {
                   'type':             'keydown',
                   'propagate':        false,
@@ -347,7 +352,10 @@ $(document).ready(function(){
               );
 
               shortcut.add("Esc", function(){
-                $('.shortcuts').hide();
+                var shortcutsDialog = document.querySelector('.shortcuts');
+                if (shortcutsDialog.open) {
+                  shortcutsDialog.close();
+                }
                 $('input, checkbox, textarea, select').blur();
               }, {
                   'type':             'keydown',
@@ -536,14 +544,21 @@ $(document).ready(function(){
                   }
               );
 
-
-
-              $('.shortcuts .close').click(function(){
-                $('.shortcuts').hide();
+              document.querySelector('.shortcuts-close').addEventListener('click', function(){
+                var shortcutsDialog = document.querySelector('.shortcuts');
+                if (shortcutsDialog.open) {
+                  shortcutsDialog.close();
+                }
               });
 
-              $('.to-shortcuts').click(function(){
-                $('.shortcuts').toggle();
+              document.querySelector('.to-shortcuts').addEventListener('click', function() {
+                event.preventDefault();
+                var shortcutsDialog = document.querySelector('.shortcuts');
+                if (shortcutsDialog.open) {
+                  shortcutsDialog.close();
+                } else {
+                  shortcutsDialog.showModal();
+                }
               });
 
               $(document).click(function(evt){
@@ -617,6 +632,9 @@ $(document).ready(function(){
             $(".ui-button[data-id=vstobjects][data-action=submit]").on('click', function(ev){
               let loadingAnimationEle = document.createElement("div");
               loadingAnimationEle.innerHTML = '<div class="timer-container" style="float:right;"><div class="timer-button spinner"><div class="spinner-inner"></div><div class="spinner-mask"></div> <div class="spinner-mask-two"></div></div></div>';
+              // improve alignment
+              var buttonStrip = this.closest(".l-unit-toolbar__buttonstrip");
+              buttonStrip.style.marginTop = "8px";
               // this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
               $(".ui-button[data-id=vstobjects][data-action=submit]").replaceWith(loadingAnimationEle);
               $(".ui-button").replaceWith('');

@@ -1,10 +1,10 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/ip/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
-    <div class="l-unit-toolbar__buttonstrip float-right">
+    <div class="l-unit-toolbar__buttonstrip u-float-right">
       <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
     </div>
   </div>
@@ -19,8 +19,8 @@
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="ok" value="Add">
 
-    <div class="app-form">
-      <h1 class="page-title"><?=_('Adding IP address');?></h1>
+    <div class="form-container">
+      <h1 class="form-title"><?=_('Adding IP address');?></h1>
       <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <div class="u-mb10">

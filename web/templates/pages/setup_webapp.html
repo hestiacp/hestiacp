@@ -1,16 +1,16 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/add/webapp/?domain=<?=htmlentities($v_domain);?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
-    <div class="l-unit-toolbar__buttonstrip float-right">
+    <div class="l-unit-toolbar__buttonstrip u-float-right">
       <?php
         if (!empty($_SESSION['error_msg'])) {
-          echo "<span class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</span>";
+          echo "<p class=\"vst-error\"> → ".htmlentities($_SESSION['error_msg'])."</p>";
         } else {
           if (!empty($_SESSION['ok_msg'])) {
-            echo "<span class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</span>";
+            echo "<p class=\"vst-ok\"> → ".$_SESSION['ok_msg']."</p>";
           }
         }
       ?>
@@ -29,7 +29,7 @@
       <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
       <input type="hidden" name="ok" value="true">
 
-      <div class="app-form">
+      <div class="form-container">
         <?php if( !$WebappInstaller->isDomainRootClean()): ?>
           <div class="alert alert-info alert-with-icon u-input-width" role="alert">
             <i class="fas fa-info"></i>
@@ -38,7 +38,7 @@
             <p><?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?></p>
           </div>
         <?php endif; ?>
-        <div class="u-input-width u-pt18">
+        <div class="u-input-width u-mt20">
           <?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>
             <?php
               $f_name = $WebappInstaller->formNs() . '_' . $form_name;

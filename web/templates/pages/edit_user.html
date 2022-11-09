@@ -1,5 +1,5 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
@@ -24,7 +24,7 @@
         <a href="<?=$keys_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Access Keys');?>"><i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?></a>
       <?php } ?>
     </div>
-    <div class="l-unit-toolbar__buttonstrip float-right">
+    <div class="l-unit-toolbar__buttonstrip u-float-right">
       <?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
         <!-- Do not show delete button for currently logged in user-->
       <?} else {?>
@@ -52,8 +52,8 @@
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="save" value="save">
 
-    <div class="app-form">
-      <h1 class="page-title"><?=_('Editing User');?></h1>
+    <div class="form-container">
+      <h1 class="form-title"><?=_('Editing User');?></h1>
       <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <div class="u-mb10">
@@ -121,7 +121,7 @@
               </label>
             </div>
           </div>
-          <div id="ip-allowlist" class="u-pt6" style="<?php if ($v_login_use_iplist === 'yes') { echo 'display: block;'; } else { echo 'display: none;'; } ?>">
+          <div id="ip-allowlist" class="u-mt10" style="<?php if ($v_login_use_iplist === 'yes') { echo 'display: block;'; } else { echo 'display: none;'; } ?>">
             <input type="text" class="form-control" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>">
           </div>
         </div>

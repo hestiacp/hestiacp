@@ -1,10 +1,10 @@
 <!-- Begin toolbar -->
-<div class="l-center edit">
+<div class="l-center">
   <div class="l-sort clearfix">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
-    <div class="l-unit-toolbar__buttonstrip float-right">
+    <div class="l-unit-toolbar__buttonstrip u-float-right">
       <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
     </div>
   </div>
@@ -19,8 +19,8 @@
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="ok" value="Add">
 
-    <div class="app-form">
-      <h1 class="page-title"><?=_('Adding Mail Domain');?></h1>
+    <div class="form-container">
+      <h1 class="form-title"><?=_('Adding Mail Domain');?></h1>
       <?php show_alert_message($_SESSION);?>
       <div class="u-input-width">
         <?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
@@ -31,8 +31,8 @@
         <?php } ?>
         <?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
           <div class="u-side-by-side u-pt18">
-            <div><a href="/add/user/" class="vst-advanced admin-warning-button"><?=_('Add User');?></a></div>
-            <div class="u-ml10"><a href="/add/mail/?accept=true" class="vst-advanced button danger admin-warning-button"><?=_('Continue');?></a></div>
+            <div><a href="/add/user/" class="button admin-warning-button"><?=_('Add User');?></a></div>
+            <div><a href="/add/mail/?accept=true" class="button danger admin-warning-button"><?=_('Continue');?></a></div>
           </div>
         <?php } ?>
         <?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
@@ -90,7 +90,7 @@
               <?=_('SMTP Relay');?>
             </label>
           </div>
-          <div id="smtp_relay_table" class="u-pl50" style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';} ?>;">
+          <div id="smtp_relay_table" class="u-pl30" style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';}?> ;">
             <div class="u-mb10">
               <label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
               <input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">

@@ -141,13 +141,9 @@ VE.helpers.createConfirmationDialog = function(elm, dialog_title, confirmed_loca
             }
         },
         create:function () {
-            $(this).closest(".ui-dialog")
-                .find(".ui-button:first")
-                .addClass("submit");
-            $(this).closest(".ui-dialog")
-                .find(".ui-button")
-                .eq(1) // the first button
-                .addClass("cancel");
+            var buttonGroup = $(this).closest(".ui-dialog").find('.ui-dialog-buttonset');
+            buttonGroup.find('button:first').addClass('button submit')
+            buttonGroup.find('button:last').addClass('button button-secondary cancel');
         }
     }
 

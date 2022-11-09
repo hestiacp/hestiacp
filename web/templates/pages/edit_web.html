@@ -1,19 +1,19 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a class="button button-secondary" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
     <div class="l-unit-toolbar__buttonstrip u-float-right">
-      <a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="ui-button cancel <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "u-hidden"; }?>" id="v-clear-cache">
+      <a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "u-hidden"; }?>" id="v-clear-cache">
         <i class="fas fa-trash status-icon red"></i><?=_('Purge Nginx Cache');?>
       </a>
       <?php if ($_SESSION['PLUGIN_APP_INSTALLER'] !== 'false') {?>
-        <a href="/add/webapp/?domain=<?=htmlentities($v_domain);?>" class="ui-button cancel" dir="ltr">
+        <a href="/add/webapp/?domain=<?=htmlentities($v_domain);?>" class="button button-secondary">
           <i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App');?>
         </a>
       <?php } ?>
-      <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+      <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
     </div>
   </div>
 </div>
@@ -256,7 +256,7 @@
           <? } // if ssl is enabled ?>
         </div>
         <div class="u-mt15 u-mb20">
-          <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
+          <a href="javascript:elementHideShow('advanced-opts');" class="button button-secondary"><?=_('Advanced options');?></a>
         </div>
         <div id="advanced-opts" style="display: none;">
           <?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] === 'yes')) { ?>
@@ -398,7 +398,7 @@
               ?>
               <div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;">
                 <div class="u-mb10">
-                  <?=_('FTP');?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="ftp-remove-user additional-control" onclick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
+                  <?=_('FTP');?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="additional-control delete" onclick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
                   <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
                   <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
                 </div>
@@ -435,9 +435,9 @@
               <?php endforeach; ?>
             </div>
 
-            <div class="add-new-ftp-user-button" style="<?=!empty($v_ftp_user) ? '' : 'display:none;' ?>">
-              <div class="u-pt18 v-add-new-user step-bottom">
-                <a class="additional-control vst-advanced" onclick="App.Actions.WEB.add_ftp_user_form()"><?=_('Add one more FTP Account');?></a>
+            <div class="js-add-new-ftp-user-button" style="<?=!empty($v_ftp_user) ? '' : 'display:none;' ?>">
+              <div class="u-pt18 v-add-new-user">
+                <a class="additional-control add" onclick="App.Actions.WEB.add_ftp_user_form()"><?=_('Add one more FTP Account');?></a>
               </div>
             </div>
           <?php } ?>
@@ -452,7 +452,7 @@
 <div id="templates" class="u-hidden">
   <div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
     <div class="u-mb10">
-      <?=_('FTP') ?> #<span class="ftp-user-number"></span> <a class="ftp-remove-user additional-control" onclick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
+      <?=_('FTP') ?> #<span class="ftp-user-number"></span> <a class="additional-control delete" onclick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
       <input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
       <input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
     </div>

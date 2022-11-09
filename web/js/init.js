@@ -12,10 +12,11 @@ $(document).ready(function(){
         $(this).next(".holder").text(selectedOption);
     }).trigger('change');
     $('.to-top').on('click', function(evt) {
+        evt.preventDefault();
         $("html, body").animate({ scrollTop: 0 }, "normal");
     });
 
-    $('.ui-button').on('click',function(evt){
+    $('.button').on('click',function(evt){
         var action = $(this).data('action');
         var id = $(this).data('id');
         if(action=='submit' && document.getElementById(id)){
@@ -160,7 +161,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("Ctrl+Backspace", function(){
-                var redirect = $('a.ui-button#btn-back').attr('href')
+                var redirect = $('a.button#btn-back').attr('href')
                 if(VE.tmp.form_changed && redirect){
                   VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', redirect);
                 } else if($('form#vstobjects .button.cancel')[0]){
@@ -193,8 +194,8 @@ $(document).ready(function(){
                       evt.preventDefault();
                       if (!evt.ctrlKey && !evt.shiftKey) {
                           //if ($('.l-sort__create-btn')[0]) {
-                          if ($('.ui-button#btn-create').length) {
-                              location.href=$('.ui-button#btn-create').attr('href');
+                          if ($('.button#btn-create').length) {
+                              location.href=$('.button#btn-create').attr('href');
                           }
                       }
                       else {
@@ -629,15 +630,15 @@ $(document).ready(function(){
                 $('.l-unit.selected').find('.ch-toggle').prop('checked', true);
             });
             // todo: maybe give the save button id?
-            $(".ui-button[data-id=vstobjects][data-action=submit]").on('click', function(ev){
+            $(".button[data-id=vstobjects][data-action=submit]").on('click', function(ev){
               let loadingAnimationEle = document.createElement("div");
               loadingAnimationEle.innerHTML = '<div class="timer-container" style="float:right;"><div class="timer-button spinner"><div class="spinner-inner"></div><div class="spinner-mask"></div> <div class="spinner-mask-two"></div></div></div>';
               // improve alignment
               var buttonStrip = this.closest(".l-unit-toolbar__buttonstrip");
               buttonStrip.style.marginTop = "8px";
               // this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
-              $(".ui-button[data-id=vstobjects][data-action=submit]").replaceWith(loadingAnimationEle);
-              $(".ui-button").replaceWith('');
+              $(".button[data-id=vstobjects][data-action=submit]").replaceWith(loadingAnimationEle);
+              $(".button").replaceWith('');
               // workaround a render bug on Safari (loading icon doesn't render without this)
               ev.preventDefault();
               $('#vstobjects').submit();

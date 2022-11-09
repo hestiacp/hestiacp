@@ -1,9 +1,9 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if ($read_only !== 'true') {?>
-        <a href="/add/web/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Web Domain');?></a>
+        <a href="/add/web/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Web Domain');?></a>
       <?php } ?>
     </div>
     <ul class="context-menu sort-order animated fadeIn" style="display:none;">
@@ -192,7 +192,7 @@
           </div>
           <!-- START QUICK ACTION TOOLBAR AREA -->
           <div class="clearfix l-unit__stat-col--left compact-4 text-right">
-            <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
               <div class="actions-panel clearfix">
                 <?php if (!empty($data[$key]['STATS'])) { ?>
                   <div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/" rel="noopener" target="_blank" rel="noopener" title="<?=_('Statistics');?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>

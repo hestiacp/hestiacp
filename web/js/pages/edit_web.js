@@ -151,14 +151,14 @@ App.Actions.WEB.remove_ftp_user = function(elm) {
     });
 
     if ($('.js-ftp-account-nrm:visible').length == 0) {
-        $('.add-new-ftp-user-button').hide();
+        $('.js-add-new-ftp-user-button').hide();
         $('input[name="v_ftp"]').prop('checked', false);
     }
 }
 
 App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
     if ($(elm).prop('checked')) {
-        $('.js-ftp-account-nrm, .v-add-new-user, .add-new-ftp-user-button').show();
+        $('.js-ftp-account-nrm, .v-add-new-user, .js-add-new-ftp-user-button').show();
         $('.js-ftp-account-nrm').each(function(i, elm) {
             var login = $(elm).find('.v-ftp-user');
             if (login.val().trim() != '') {
@@ -167,7 +167,7 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function(elm) {
         });
     }
     else {
-        $('.js-ftp-account-nrm, .v-add-new-user, .add-new-ftp-user-button').hide();
+        $('.js-ftp-account-nrm, .v-add-new-user, .js-add-new-ftp-user-button').hide();
         $('.js-ftp-account-nrm').each(function(i, elm) {
             var login = $(elm).find('.v-ftp-user');
             if (login.val().trim() != '') {

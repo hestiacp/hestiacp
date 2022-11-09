@@ -1066,7 +1066,7 @@ function elementHideShow(elementToHideOrShow,trigger){
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
 
     if (typeof trigger !== 'undefined') {
-        trigger.querySelector('.section-hide-button').classList.toggle('fa-minus-square');
-        trigger.querySelector('.section-hide-button').classList.toggle('fa-plus-square');
+        trigger.querySelector('.section-toggle-icon').classList.toggle('fa-minus-square');
+        trigger.querySelector('.section-toggle-icon').classList.toggle('fa-plus-square');
     }
 }

@@ -42,7 +42,7 @@
         <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-mail-bulk panel-icon"></i><?=_('Mail');?></a></div><?php }?>
         <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database panel-icon"></i><?=_('DB');?></a></div><?php }?>
       </div>
-      <div class="l-profile noselect">
+      <div class="l-profile u-noselect">
         <div class="l-menu__item"><a href="javascript:location.reload();" title="<?=_('Refresh');?>"><i class="fas fa-redo"></i></a></div>
         <div class="l-menu__item"><a href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
       </div>

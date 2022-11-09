@@ -1,13 +1,13 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if ($read_only !== 'true') {?>
-        <a href="/add/cron/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job');?></a>
+        <a href="/add/cron/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Cron Job');?></a>
         <?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') { ?>
-          <a class="ui-button cancel" dir="ltr" href="/delete/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off status-icon green"></i><?=_('turn off notifications');?></a>
+          <a class="button button-secondary" href="/delete/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off status-icon green"></i><?=_('turn off notifications');?></a>
         <?php } else { ?>
-          <a class="ui-button cancel" dir="ltr" href="/add/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off status-icon grey"></i><?=_('turn on notifications');?></a>
+          <a class="button button-secondary" href="/add/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off status-icon grey"></i><?=_('turn on notifications');?></a>
         <?php } ?>
       <?php } ?>
     </div>
@@ -107,7 +107,7 @@
         </div>
         <!-- START QUICK ACTION TOOLBAR AREA -->
         <div class="clearfix l-unit__stat-col--left compact-2 text-right">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
             <div class="actions-panel clearfix">
               <?php if ($read_only === 'true') {?>
                 <!-- Restrict other administrators from editing, deleting, or suspending 'admin' user cron jobs -->

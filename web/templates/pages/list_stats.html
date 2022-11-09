@@ -1,9 +1,9 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>
-        <a class="ui-button cancel" dir="ltr" href='/list/stats/'><i class="fas fa-binoculars status-icon lightblue"></i><?=_('Overall Statistics');?></a>
+        <a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars status-icon lightblue"></i><?=_('Overall Statistics');?></a>
       <?php } ?>
     </div>
     <div class="l-sort-toolbar clearfix">

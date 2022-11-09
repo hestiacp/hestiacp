@@ -1,15 +1,15 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-      <a href="/list/ip/" class="ui-button cancel" dir="ltr"><i class="fas fa-ethernet status-icon blue"></i><?=_('IP');?></a>
+      <a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a href="/list/ip/" class="button button-secondary"><i class="fas fa-ethernet status-icon blue"></i><?=_('IP');?></a>
       <?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?>
-        <a href="/list/firewall/" class="ui-button cancel" dir="ltr"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall');?></a>
+        <a href="/list/firewall/" class="button button-secondary"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall');?></a>
       <?php }?>
     </div>
     <div class="l-unit-toolbar__buttonstrip u-float-right">
-      <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+      <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
     </div>
   </div>
 </div>
@@ -622,7 +622,7 @@
             <div class="u-input-width">
               <h3 class="section-title" onclick="javascript:elementHideShow('security-system-table',this);">
                 <?=_('System');?>
-                <i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+                <i class="fas fa-plus-square status-icon dim maroon section-toggle-icon"></i>
               </h3>
               <div id="security-system-table" style="display: none;">
                 <p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
@@ -690,7 +690,7 @@
               <?php if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
                 <h3 class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table',this);">
                   <?=_('System Protection');?>
-                  <i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+                  <i class="fas fa-plus-square status-icon dim maroon section-toggle-icon"></i>
                 </h3>
                 <div id="security-sysadminprotect-table" style="display: none;">
                   <p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
@@ -721,7 +721,7 @@
               <?php } ?>
               <h3 class="section-title" onclick="javascript:elementHideShow('security-policies-table',this);">
                 <?=_('Policies');?>
-                <i class="fas fa-plus-square status-icon dim maroon section-hide-button"></i>
+                <i class="fas fa-plus-square status-icon dim maroon section-toggle-icon"></i>
               </h3>
               <div id="security-policies-table" style="display: none;">
                 <p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">

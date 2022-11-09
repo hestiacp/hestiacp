@@ -1,11 +1,11 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a class="button button-secondary" id="btn-back" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
     <div class="l-unit-toolbar__buttonstrip u-float-right">
-      <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+      <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
     </div>
   </div>
 </div>
@@ -50,7 +50,7 @@
             <li><?=_('1 number');?></li>
           </ul>
           <div class="u-pt18 u-mb20">
-            <a href="javascript:elementHideShow('advtable');" class="vst-advanced"><?=_('Advanced options');?></a>
+            <a href="javascript:elementHideShow('advtable');" class="button button-secondary"><?=_('Advanced options');?></a>
           </div>
           <div id="advtable" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
             <div class="u-mb10">

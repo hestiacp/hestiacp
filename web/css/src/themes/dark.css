@@ -18,11 +18,6 @@ strong {
   color: #cacaca;
 }
 
-button,
-select {
-  text-shadow: 0 0 0 #d4d4d4 !important;
-}
-
 .l-header {
   background: #454545;
   border-bottom: 1px solid #505050;
@@ -377,15 +372,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   color: #ff3478;
 }
 
-.l-unit-toolbar__buttonstrip {
-}
-
-.l-unit-toolbar__buttonstrip a {
-}
-
-.l-unit-toolbar__buttonstrip .fas {
-}
-
 .l-select {
   border: 1px solid #454545;
   box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
@@ -677,53 +663,7 @@ textarea:focus::placeholder {
   border-color: #be1f54;
 }
 
-.vst-advanced {
-  border-bottom: 0 solid #326b9b;
-  color: #0094f7;
-  font-size: 0.8rem;
-  text-decoration: none;
-  border-radius: 4px;
-  text-transform: none !important;
-}
-
-.vst-advanced:hover {
-  color: #fff;
-  background-color: #ff3478;
-  border-color: #ff3478;
-  text-decoration: none;
-}
-
-.vst-advanced:active {
-  color: #fff;
-  background-color: #be1f54;
-  border-color: #be1f54;
-  text-decoration: none;
-}
-
 .lets-encrypt-note {}
-
-.additional-control {
-  color: #09f;
-}
-
-.additional-control:hover {
-  background-color: #ff3478;
-  border-color: #ff3478;
-}
-
-.additional-control:active {}
-
-.additional-control.ftp-remove-user {}
-
-.additional-control.delete:hover,
-.additional-control.ftp-remove-user:hover {}
-
-.additional-control.delete:active,
-.additional-control.ftp-remove-user:active {}
-
-.additional-control.add:hover {}
-
-.additional-control.add:active {}
 
 .toggle-psw-visibility-icon {}
 
@@ -742,17 +682,75 @@ td.hint {
   color: #555;
 }
 
-.ui-dialog .ui-dialog-buttonpane button {
+/* Buttons
+   ========================================================================== */
+
+.button {
+  color: #eee;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 35%);
+  font-weight: 400;
+  border-color: #707070;
+  background: rgb(48 48 48);
+  background: linear-gradient(0deg, rgb(48 48 48 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(69 69 69 / 100%) 100%);
   box-shadow:
-    0 1px 4px rgb(0 0 0 / 10%),
-    inset 0 0 1px #000,
+    0 1px 4px rgb(0 0 0 / 20%),
+    inset 0 0 1px rgb(20 20 20 / 100%),
     inset 0 0 3px rgb(0 0 0 / 50%);
 }
 
-.ui-button,
-.button,
-.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit,
-.vst-advanced,
+.button:hover {
+  color: #fff;
+  text-shadow: 1px 1px rgb(0 0 0 / 25%);
+  border-color: #0098ff;
+  background: linear-gradient(0deg, rgb(58 58 58 / 100%) 0%, rgb(68 68 68 / 100%) 35%, rgb(79 79 79 / 100%) 100%);
+  background-color: #454545;
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 35%),
+    inset 0 0 1px rgb(0 0 0 / 100%),
+    inset 0 0 3px rgb(0 0 0 / 65%);
+  transition: 0.2s;
+}
+
+.button:active,
+.button:focus {
+  color: #d4d4d4;
+  text-shadow: 0 -1px 1px rgb(0 0 0 / 55%);
+  border-color: #0066b4;
+  background: linear-gradient(0deg, rgb(69 69 69 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(48 48 48 / 100%) 100%);
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 30%),
+    inset 0 0 1px rgb(0 0 0 / 100%),
+    inset -1px -1px 4px rgb(30 30 30 / 40%);
+}
+
+.button-secondary {
+  border-color: #454545;
+  background-color: #343434;
+  background: linear-gradient(0deg, rgb(48 48 48 / 100%) 0%, rgb(53 53 53 / 100%) 100%, rgb(69 69 69 / 100%) 100%);
+}
+
+.button-secondary:hover {
+  background-color: #343434;
+  background: linear-gradient(0deg, rgb(48 48 48 / 100%) 0%, rgb(53 53 53 / 100%) 100%, rgb(69 69 69 / 100%) 100%);
+}
+
+.button-danger:hover {
+  background: rgb(133 0 0);
+  background: linear-gradient(0deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%);
+  color: #fff;
+  text-shadow: 0 1px rgb(0 0 0 / 45%);
+  border-color: rgb(170 0 0);
+}
+
+.button-danger:active,
+.button-danger:focus {
+  background: rgb(133 0 0);
+  background: linear-gradient(180deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%);
+  color: #4d0000;
+  text-shadow: 0 -1px 1px rgb(255 255 255 / 30%);
+  border-color: rgb(251 71 51);
+}
+
 .to-shortcuts,
 .to-top {
   font-size: 0.85rem !important;
@@ -768,12 +766,6 @@ td.hint {
   text-shadow: 0 1px 1px rgb(0 0 0 / 35%) !important;
 }
 
-.ui-button:hover,
-.button:hover,
-.ui-button.cancel:hover,
-.button.cancel:hover,
-.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:hover,
-.vst-advanced:hover,
 .to-shortcuts:hover,
 .to-top:hover {
   color: #fff !important;
@@ -788,16 +780,6 @@ td.hint {
   transition: 0.2s;
 }
 
-.ui-button:focus,
-.ui-button:active,
-.button:active,
-.button:focus,
-.ui-button.cancel:focus,
-.ui-button.cancel:active,
-.button.cancel:active,
-.button.cancel:focus,
-.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active,
-.vst-advanced:active,
 .to-shortcuts:active,
 .to-top:active,
 .to-shortcuts:focus,
@@ -812,95 +794,28 @@ td.hint {
     inset -1px -1px 4px rgb(30 30 30 / 40%) !important;
 }
 
-.ui-button-text-only {
-  text-shadow: 0 1px rgb(0 0 0 / 50%);
-}
-
-.ui-dialog .ui-dialog-buttonpane button span.ui-button-text {
-
-}
-
-.ui-dialog .ui-button:hover span {
-  color: #fafafa !important;
-}
-
-.ui-button-text-only .selected {
-
-}
-
-.ui-button.cancel,
-.button.cancel {
-  color: #eee !important;
-  border: 1px solid #454545 !important;
-  background: rgb(48 48 48) !important;
-  background: linear-gradient(0deg, rgb(48 48 48 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(69 69 69 / 100%) 100%) !important;
-}
-
-.ui-button-text {
-  color: #eee !important;
-}
-
-.ui-button.cancel:active,
-.button.cancel:active {
-
-}
-
-a.button.cancel {
-
-}
-
-.ui-dialog button.cancel {
-  border: 1px solid #d4d4d4;
-  background-color: #d4d4d4;
-}
-
-.ui-button.danger:hover,
-.button.danger:hover {
-  background: rgb(133 0 0);
-  background: linear-gradient(0deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%) !important;
-  color: #fff !important;
-  text-shadow: 0 1px rgb(0 0 0 / 45%) !important;
-  border: 1px solid rgb(170 0 0) !important;
-}
-
-.ui-button.danger:active,
-.button.danger:active,
-.ui-button.danger:focus,
-.button.danger:focus {
-  background: rgb(133 0 0);
-  background: linear-gradient(180deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%) !important;
-  color: #4d0000 !important;
-  text-shadow: 0 -1px 1px rgb(255 255 255 / 30%) !important;
-  border: 1px solid rgb(251 71 51) !important;
-}
-
-.ui-button span {
-
-}
-
-.ui-button:hover span {
-  color: #d4d4d4 !important;
-}
-
-.ui-button:active span {
-  color: #d4d4d4;
-}
-
-.ui-button.cancel span {
-
-}
-
-.ui-button:hover span {
-
-}
-
-.ui-button:active span {
-
-}
-
 .ui-dialog button.cancel span {
   color: #fff !important;
 }
+
+.additional-control {
+  color: #09f;
+}
+
+.additional-control:hover {
+  background-color: #ff3478;
+  border-color: #ff3478;
+}
+
+.additional-control:active {}
+
+.additional-control.delete:hover,
+
+.additional-control.delete:active,
+
+.additional-control.add:hover {}
+
+.additional-control.add:active {}
 
 .unlim-trigger {
 
@@ -1191,6 +1106,13 @@ form#vstobjects.suspended {
   border-top: 1px solid #404040;
 }
 
+.ui-dialog .ui-dialog-buttonpane button {
+  box-shadow:
+    0 1px 4px rgb(0 0 0 / 10%),
+    inset 0 0 1px #000,
+    inset 0 0 3px rgb(0 0 0 / 50%);
+}
+
 .shortcuts {
   background: rgb(30 30 30 / 95%);
   border: 1px solid rgb(255 255 255 / 25%);
@@ -1313,14 +1235,6 @@ li[aria-expanded="true"] a {
   .helper-container {
     display: none;
   }
-}
-
-.ui-button.button-suspended {
-  color: #999 !important;
-}
-
-.ui-button.button-suspended i {
-  color: #999 !important;
 }
 
 /* Collapse component

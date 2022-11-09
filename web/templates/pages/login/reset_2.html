@@ -1,5 +1,5 @@
 <div class="login animated zoomIn">
-  <a href="/" class="u-block u-mr30">
+  <a href="/" class="u-block u-mr30 u-mb40">
     <img src="/images/logo.svg" alt="<?=_('Hestia Control Panel');?>" width="100" height="120">
   </a>
   <form method="get" action="/reset/">
@@ -17,9 +17,9 @@
       <label for="code" class="form-label"><?=_('Reset Code');?></label>
       <input type="text" class="form-control" name="code" id="code" tabindex="1">
     </div>
-    <div>
-      <input tabindex="2" type="submit" value="<?=_('Confirm');?>" class="button">&nbsp;&nbsp;
-      <input type="button" class="button cancel" value="<?=_('Back');?>" onclick="location.href='/reset/'">
+    <div class="u-side-by-side">
+      <input tabindex="2" type="submit" value="<?=_('Confirm');?>" class="button">
+      <input type="button" class="button button-secondary" value="<?=_('Back');?>" onclick="location.href='/reset/'">
     </div>
   </form>
 </div>

@@ -1,9 +1,9 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/edit/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-      <a href="/add/access-key/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Access Key');?></a>
+      <a class="button button-secondary" id="btn-back" href="/edit/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a href="/add/access-key/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Access Key');?></a>
     </div>
 
     <ul class="context-menu sort-order animated fadeIn" style="display:none;">
@@ -80,7 +80,7 @@
 
         <!-- START QUICK ACTION TOOLBAR AREA -->
         <div class="clearfix l-unit__stat-col--left compact text-right">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">

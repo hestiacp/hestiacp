@@ -1,8 +1,8 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <?php
         if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look'])) && ($_SESSION['user'] !== $v_username)) {
           $ssh_key_url = "/list/key/?user=".htmlentities($user_plain)."&token=".$_SESSION['token']."";
@@ -14,31 +14,31 @@
           $keys_url = "/list/access-key/";
         }
       ?>
-      <a href="<?=$ssh_key_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys');?></a>
+      <a href="<?=$ssh_key_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys');?></a>
       <?php if (($_SESSION['userContext'] == 'admin') || ($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no')) {?>
-        <a href="<?=$log_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs');?></a>
+        <a href="<?=$log_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Logs');?>"><i class="fas fa-history status-icon maroon"></i><?=_('Logs');?></a>
       <?php } ?>
       <?php
         $api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
         if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
-        <a href="<?=$keys_url; ?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('Access Keys');?>"><i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?></a>
+        <a href="<?=$keys_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Access Keys');?>"><i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?></a>
       <?php } ?>
     </div>
     <div class="l-unit-toolbar__buttonstrip u-float-right">
       <?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
         <!-- Do not show delete button for currently logged in user-->
       <?} else {?>
-        <a href="/login/?loginas=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" id="btn-create" class="ui-button cancel" dir="ltr" title="<?=_('login as');?>"><i class="fas fa-sign-in-alt status-icon maroon"></i><?=_('login as');?></a>
-          <a class="data-controls do_delete ui-button danger cancel">
-            <i class="do_delete fas fa-times-circle status-icon red"></i>
-            <?=_('Delete');?>
-            <input type="hidden" name="delete_url" value="/delete/user/?user=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>">
-            <div class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
-              <p><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
-            </div>
-          </a>
+        <a href="/login/?loginas=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-create" title="<?=_('login as');?>"><i class="fas fa-sign-in-alt status-icon maroon"></i><?=_('login as');?></a>
+        <a class="data-controls do_delete button button-secondary button-danger">
+          <i class="do_delete fas fa-times-circle status-icon red"></i>
+          <?=_('Delete');?>
+          <input type="hidden" name="delete_url" value="/delete/user/?user=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>">
+          <div class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
+            <p><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
+          </div>
+        </a>
       <?php } ?>
-      <a href="#" class="ui-button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save');?></a>
+      <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i> <?=_('Save');?></a>
     </div>
   </div>
 </div>
@@ -199,7 +199,7 @@
             </select>
           </div>
           <div class="u-mb20">
-            <a href="javascript:elementHideShow('advanced-opts');" class="vst-advanced"><?=_('Advanced options');?></a>
+            <a href="javascript:elementHideShow('advanced-opts');" class="button button-secondary"><?=_('Advanced options');?></a>
           </div>
           <div id="advanced-opts" style="display: none;">
             <div class="u-mb10">

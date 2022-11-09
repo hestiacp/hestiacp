@@ -1,8 +1,8 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <?php
         if($autoupdate == 'Enabled') {
           $btn_url = '/delete/cron/autoupdate/?token='.$_SESSION['token'].'';
@@ -14,7 +14,7 @@
           $btn_label = _('Enable automatic updates');
         }
       ?>
-      <a class="ui-button cancel" dir="ltr" href="<?=$btn_url;?>"><i class="fas <?=$btn_icon;?>"></i><?=$btn_label;?></a>
+      <a class="button button-secondary" href="<?=$btn_url;?>"><i class="fas <?=$btn_icon;?>"></i><?=$btn_label;?></a>
     </div>
   </div>
 </div>
@@ -52,7 +52,7 @@
     ?>
     <div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--outdated';?> animated fadeIn">
       <div class="l-unit-toolbar clearfix">
-        <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+        <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
         </div>
       </div>
 

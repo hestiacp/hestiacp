@@ -1,12 +1,12 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/edit/user/?token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a class="button button-secondary" id="btn-back" href="/edit/user/?token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
             <?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
-            <a href="/add/key/?user=<?=htmlentities($_GET['user']);?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add SSH Key');?></a>
+            <a href="/add/key/?user=<?=htmlentities($_GET['user']);?>" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add SSH Key');?></a>
             <?php } else { ?>
-      <a href="/add/key/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add SSH Key');?></a>
+      <a href="/add/key/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add SSH Key');?></a>
             <?php } ?>
     </div>
   </div>
@@ -36,7 +36,7 @@
       <div class="l-unit__col l-unit__col--right">
         <div class="clearfix l-unit__stat-col--left wide-3"><b><?=htmlspecialchars($data[$key]['ID']);?></b></div>
         <div class="clearfix l-unit__stat-col--left text-left compact-2">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                 <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">

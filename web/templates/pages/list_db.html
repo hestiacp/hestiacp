@@ -13,15 +13,15 @@
 
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if ($read_only !== 'true') {?>
-        <a href="/add/db/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database');?></a>
+        <a href="/add/db/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Database');?></a>
         <?php if (($_SESSION['DB_SYSTEM'] === 'mysql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
-          <a class="ui-button cancel <?=(ipUsed() ? 'button-suspended':'');?>" dir="ltr" href="<?=$db_myadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>
+          <a class="button button-secondary <?=(ipUsed() ? 'button-suspended':'');?>" href="<?=$db_myadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>
         <?php } ?>
         <?php if (($_SESSION['DB_SYSTEM'] === 'pgsql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
-          <a class="ui-button cancel <?=(ipUsed() ? 'button-suspended':'');?>" dir="ltr" href="<?=$db_pgadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>
+          <a class="button button-secondary <?=(ipUsed() ? 'button-suspended':'');?>" href="<?=$db_pgadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>
         <?php } ?>
         <?php if(ipUsed()){
         ?>
@@ -141,7 +141,7 @@
           </div>
           <!-- START QUICK ACTION TOOLBAR AREA -->
           <div class="clearfix l-unit__stat-col--left text-right compact-3">
-            <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+            <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
               <div class="actions-panel clearfix">
                 <?php if ($read_only === 'true') {?>
                   <!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' user -->

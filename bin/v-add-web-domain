@@ -53,11 +53,11 @@ check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_package_full 'WEB_DOMAINS' 
+is_package_full 'WEB_DOMAINS'
 
-if [ "$aliases" != "none" ]; then 
+if [ "$aliases" != "none" ]; then
     ALIAS="$aliases"
-    is_package_full 'WEB_ALIASES' 
+    is_package_full 'WEB_ALIASES'
 fi
 
 if [ "$($BIN/v-list-web-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
@@ -69,7 +69,7 @@ else
     is_domain_new 'web' "$domain,$aliases"
 fi
 if [ -z "$(is_ip_format_valid $domain)" ]; then
-    echo "Error: Invalid domain format. IP address detected as input." 
+    echo "Error: Invalid domain format. IP address detected as input."
     exit 1
 fi
 
@@ -153,7 +153,12 @@ else
         # Check and skip www alias for subdomains.
         IFS='.' read -r -a domain_elements <<< "$domain"
         if [ "${#domain_elements[@]}" -gt 2 ]; then
-            ALIAS=""
+            is_valid_2_part_extension $domain
+            if [ $? -ne 0 ]; then
+                ALIAS=""
+            else
+                ALIAS="www.$domain"
+            fi
         else
             ALIAS="www.$domain"
         fi
@@ -170,7 +175,7 @@ fi
 # Preparing domain variables
 prepare_web_domain_values
 
-if [ -z "$WEB_TEMPLATE" ]; then 
+if [ -z "$WEB_TEMPLATE" ]; then
     WEB_TEMPLATE='default'
     update_user_value "$user" '$WEB_TEMPLATE' "default"
 fi
@@ -186,12 +191,12 @@ if [ -n "$PROXY_SYSTEM" ]; then
         PROXY_EXT="$PROXY_EXT,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp"
         PROXY_EXT="$PROXY_EXT,rtf,js,mp3,avi,mpeg,flv,html,htm"
     fi
-    if [ -z "$PROXY_TEMPLATE" ]; then 
+    if [ -z "$PROXY_TEMPLATE" ]; then
         PROXY_TEMPLATE='default'
         update_user_value "$user" '$PROXY_TEMPLATE' "default"
     fi
-    
-    add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl" 
+
+    add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl"
 fi
 
 #----------------------------------------------------------#

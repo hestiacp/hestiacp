@@ -179,11 +179,12 @@ let u_disk=$(($(get_user_disk_usage) * 2))
 let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 
 if [ "$u_disk" -gt "$v_disk" ]; then
+    let u_disk_original=$(get_user_disk_usage)
     # Always notify on failure
-    echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" "$email" "yes"
+    echo "Not enough disk space available ($v_disk mb) to perform the backup  of $user. ( $u_disk_original mb * 2 = $u_disk mb). https://hestiacp.com/docs/server-administration/backup-restore.html" | $SENDMAIL -s "$subj" "$email" "yes"
     # Deleting task from queue
     sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
-    check_result "$E_LIMIT" "not enough diskspace available to perform the backup."
+    check_result "$E_LIMIT" "not enough disk space available ($v_disk mb) to perform the backup  of $user. ( $u_disk_original mb * 2 = $u_disk mb)."
 fi
 
 if [ -z "$BACKUP_TEMP" ]; then

@@ -31,6 +31,8 @@ json_list() {
 
 shell_list() {
   IFS=$'\n'
+  echo "Timezone"
+  echo "--------"
   for zone in $zones; do
     echo $zone;
   done

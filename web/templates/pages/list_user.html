@@ -1,9 +1,9 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a href="/add/user/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add User');?></a>
-      <a href="/list/package/" class="ui-button cancel" dir="ltr"><i class="fas fa-box-open status-icon orange"></i><?=_('Packages');?></a>
+      <a href="/add/user/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add User');?></a>
+      <a href="/list/package/" class="button button-secondary"><i class="fas fa-box-open status-icon orange"></i><?=_('Packages');?></a>
     </div>
     <ul class="context-menu sort-order animated fadeIn" style="display:none;">
       <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=_('Bandwidth');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
@@ -117,7 +117,7 @@
         </div>
         <!-- START QUICK ACTION TOOLBAR AREA -->
         <div class="clearfix l-unit__stat-col--left text-right compact-3">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
             <div class="actions-panel clearfix">
               <?php if ($key == $user_plain) { ?>
                 <i class="fas fa-user-check status-icon status-icon dim icon-large" title="<?=$key?> (<?=$data[$key]['NAME']?>)"></i>

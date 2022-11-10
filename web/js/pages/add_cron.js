@@ -1,6 +1,6 @@
 $(document).ready(function(){
-    $( "#tabs" ).tabs();
-    $('.context-helper').click(function(){ $('#tabs').toggle(); $('.context-helper').toggle();  });
+    $('#tabs').tabs();
+    $('.context-helper').click(function(){ $('#tabs').toggle(); $('.context-helper').toggle(); });
     $('.context-helper-close').click(function(){ $('#tabs').toggle(); $('.context-helper').toggle(); });
 
     $('.helper-container form').submit(function(){
@@ -13,4 +13,3 @@ $(document).ready(function(){
         return false;
     });
 })
-

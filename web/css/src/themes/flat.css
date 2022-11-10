@@ -23,17 +23,6 @@ strong {
   background: #fafafa !important;
 }
 
-.to-top,
-.to-shortcuts,
-.to-top:hover,
-.to-shortcuts:hover,
-.to-top:active,
-.to-shortcuts:active {
-  box-shadow: none !important;
-  background: none !important;
-  background-color: #eee !important;
-}
-
 .l-header {
   box-shadow: none;
   background: #5070a6;
@@ -90,28 +79,61 @@ strong {
   box-shadow: none;
 }
 
-.ui-button,
-.button,
-.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit,
-.vst-advanced {
-  box-shadow: none !important;
-  background: linear-gradient(to bottom, rgb(235 243 249 / 100%) 0%, rgb(223 235 245 / 100%) 100%) !important;
+/* Buttons
+   ========================================================================== */
+
+.button {
+  box-shadow: none;
+  background: linear-gradient(to bottom, rgb(235 243 249 / 100%) 0%, rgb(223 235 245 / 100%) 100%);
 }
 
-.ui-button.cancel,
-.button.cancel,
+.button:hover {
+  color: #6986b7;
+  box-shadow: none;
+  background: linear-gradient(to bottom, rgb(241 248 253 / 100%) 0%, rgb(227 240 251 / 100%) 100%);
+}
+
+.button:active,
+.button:focus {
+  box-shadow: none;
+  background: linear-gradient(to bottom, rgb(210 232 250 / 100%) 0%, rgb(194 224 248 / 100%) 100%);
+}
+
+.button-secondary {
+  box-shadow: none;
+  background: linear-gradient(to bottom, rgb(250 250 250 / 100%) 0%, rgb(241 241 241 / 100%) 100%);
+}
+
+.button-danger:hover {
+  background: #fcd3cf;
+  color: #f4301a;
+  border-color: #f27e71;
+}
+
+.button-danger:active,
+.button-danger:focus {
+  background: #a91200;
+  color: #fff;
+  border-color: #f4301a;
+}
+
+.to-top,
+.to-shortcuts,
+.to-top:hover,
+.to-shortcuts:hover,
+.to-top:active,
+.to-shortcuts:active {
+  box-shadow: none !important;
+  background: none !important;
+  background-color: #eee !important;
+}
+
 .to-top,
 .to-shortcuts {
   box-shadow: none !important;
   background: linear-gradient(to bottom, rgb(250 250 250 / 100%) 0%, rgb(241 241 241 / 100%) 100%) !important;
 }
 
-.ui-button:hover,
-.button:hover,
-.ui-button.cancel:hover,
-.button.cancel:hover,
-.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:hover,
-.vst-advanced:hover,
 .to-top:hover,
 .to-shortcuts:hover {
   color: #6986b7 !important;
@@ -119,40 +141,14 @@ strong {
   background: linear-gradient(to bottom, rgb(241 248 253 / 100%) 0%, rgb(227 240 251 / 100%) 100%) !important;
 }
 
-.ui-button:focus,
-.ui-button:active,
-.button:active,
-.button:focus,
-.ui-button.cancel:focus,
-.ui-button.cancel:active,
-.button.cancel:active,
-.button.cancel:focus,
-.ui-button.ui-widget.ui-state-default.ui-corner-all.ui-button-text-only.submit:active,
-.vst-advanced:active,
 .to-top:focus,
 .to-shortcuts:focus {
   box-shadow: none !important;
   background: linear-gradient(to bottom, rgb(210 232 250 / 100%) 0%, rgb(194 224 248 / 100%) 100%) !important;
 }
 
-.ui-button.danger:hover,
-.button.danger:hover {
-  background: #fcd3cf !important;
-  color: #f4301a !important;
-  border: 1px solid #f27e71 !important;
-}
-
-.ui-button.danger:active,
-.button.danger:active,
-.ui-button.danger:focus,
-.button.danger:focus {
-  background: #a91200 !important;
-  color: #fff !important;
-  border: 1px solid #f4301a !important;
-}
-
 .ui-dialog .ui-dialog-buttonpane button:nth-of-type(2) {
-  box-shadow: none !important;
+  box-shadow: none;
 }
 
 .ui-dialog {

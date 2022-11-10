@@ -1,12 +1,12 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a class="button button-secondary" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
     <div class="l-unit-toolbar__buttonstrip u-float-right">
       <?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
-        <a href="#" class="ui-button" title="<?=_('Save');?>" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
+        <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
       <?php } ?>
     </div>
   </div>
@@ -33,8 +33,8 @@
         <?php } ?>
         <?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
           <div class="u-side-by-side u-pt18">
-            <div><a href="/add/user/" class="button admin-warning-button"><?=_('Add User');?></a></div>
-            <div><a href="/add/web/?accept=true" class="button danger admin-warning-button"><?=_('Continue');?></a></div>
+            <a href="/add/user/" class="button u-width-full u-mr5"><?=_('Add User');?></a>
+            <a href="/add/web/?accept=true" class="button button-danger u-width-full u-ml5"><?=_('Continue');?></a>
           </div>
         <?php } ?>
         <?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>

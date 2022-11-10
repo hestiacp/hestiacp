@@ -1,9 +1,9 @@
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if ($read_only !== 'true') {?>
-        <a href="/add/dns/" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add DNS Domain');?></a>
+        <a href="/add/dns/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add DNS Domain');?></a>
       <?php } ?>
     </div>
     <ul class="context-menu sort-order animated fadeIn" style="display: none;">
@@ -111,7 +111,7 @@
         </div>
         <!-- START QUICK ACTION TOOLBAR AREA -->
         <div class="clearfix l-unit__stat-col--left text-right">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
             <div class="actions-panel clearfix">
               <?php if ($read_only === 'true') {?>
                 <!-- Restrict administrators from editing domain items when impersonating the 'admin' user -->

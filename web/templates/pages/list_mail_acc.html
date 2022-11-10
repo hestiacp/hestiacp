@@ -4,12 +4,12 @@
 ?>
 <!-- Begin toolbar -->
 <div class="l-center">
-  <div class="l-sort clearfix noselect">
+  <div class="l-sort">
     <div class="l-unit-toolbar__buttonstrip">
-      <a class="ui-button cancel" dir="ltr" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+      <a class="button button-secondary" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <?php if ($read_only !== 'true') { ?>
-        <a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Mail Account');?></a>
-        <a href="/edit/mail/?domain=<?=htmlentities($_GET['domain'])?>" id="btn-create" class="ui-button cancel" dir="ltr"><i class="fas fa-pencil-alt status-icon blue"></i><?=_('Editing Mail Domain');?></a>
+        <a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Mail Account');?></a>
+        <a href="/edit/mail/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil-alt status-icon blue"></i><?=_('Editing Mail Domain');?></a>
       <?php } ?>
     </div>
     <ul class="context-menu sort-order animated fadeIn" style="display:none;">
@@ -142,7 +142,7 @@
         </div>
         <!-- START QUICK ACTION TOOLBAR AREA -->
         <div class="clearfix l-unit__stat-col--left text-right compact-4">
-          <div class="l-unit-toolbar__col l-unit-toolbar__col--right noselect">
+          <div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
             <div class="actions-panel clearfix">
               <?php if ($read_only === 'true') { ?>
                 <!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' account -->

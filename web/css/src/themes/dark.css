@@ -66,25 +66,13 @@ strong {
   padding: 13px 18px;
 }
 
-.l-profile {
-  overflow: hidden;
-  float: right;
-}
-
 .l-profile__logout {
   color: #e7e7e7 !important;
-}
-
-.l-profile__server {
-  color: #ceefff;
-  margin-top: 10px;
-  float: left;
 }
 
 .l-profile__notifications {
   color: #fff;
   font-weight: 600;
-  padding: 10px 5px 0;
   font-size: 1.2rem !important;
   line-height: 0.95rem;
   border-left: 1px solid transparent !important;
@@ -174,7 +162,6 @@ strong {
 }
 
 .card {
-  float: left;
   background: #454545;
   color: #fafafa;
   text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
@@ -941,18 +928,11 @@ td.hint {
   color: #dadada !important;
 }
 
-form#vstobjects {
-
-}
-
 form#vstobjects.suspended {
   background-color: #282828;
 }
 
-.pill {
-}
-
-.pill.usage {
+.usage-pill {
   box-shadow: inset 0 1px 1px rgb(0 0 0 / 85%), 0 1px 1px rgb(0 0 0 / 20%);
   background-color: rgb(15 15 15 / 50%);
   border: 1px solid rgb(120 120 120 / 95%);
@@ -960,7 +940,9 @@ form#vstobjects.suspended {
   color: #909090;
 }
 
-.pill.usage b { color: #d8d8d8; }
+.usage-pill b {
+  color: #d8d8d8;
+}
 
 .badge {
   box-shadow:
@@ -984,7 +966,6 @@ form#vstobjects.suspended {
   box-shadow: 0 1px 2px rgb(25 25 25 / 30%) !important;
 }
 
-.pill.gray,
 .badge.gray {
   border: 1px solid #181818;
   background-color: #252525;
@@ -992,42 +973,34 @@ form#vstobjects.suspended {
   text-shadow: 0 1px rgb(0 0 0 / 70%) !important;
 }
 
-.pill.blue,
 .badge.blue {
 
 }
 
-.pill.purple,
 .badge.purple {
 
 }
 
-.pill.teal,
 .badge.teal {
 
 }
 
-.pill.maroon,
 .badge.maroon {
   background-color: #ff3478;
 }
 
-.pill.red,
 .badge.red {
 
 }
 
-.pill.orange,
 .badge.orange {
 
 }
 
-.pill.green,
 .badge.green {
 
 }
 
-.pill.lightblue,
 .badge.lightblue {
 
 }

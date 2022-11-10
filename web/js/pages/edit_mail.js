@@ -2,14 +2,14 @@ App.Actions.MAIL.toggle_letsencrypt = function(elm) {
     if ($(elm).prop('checked')) {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
         $('#generate-csr').hide();
-	if(!$('.lets-encrypt-note').hasClass('enabled')){
-	    $('.lets-encrypt-note').show();
-	}
+    if(!$('.lets-encrypt-note').hasClass('enabled')){
+        $('.lets-encrypt-note').show();
+    }
     }
     else {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').removeAttr('disabled');
         $('#generate-csr').show();
-	$('.lets-encrypt-note').hide();
+    $('.lets-encrypt-note').hide();
     }
 }
 

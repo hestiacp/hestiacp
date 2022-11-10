@@ -4,7 +4,7 @@
     <div class="l-unit-toolbar__buttonstrip">
       <a class="button button-secondary" id="btn-back" href="/edit/web/?domain=<?=htmlentities($v_domain)?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
-    <div class="l-unit-toolbar__buttonstrip u-float-right">
+    <div class="l-unit-toolbar__buttonstrip">
     </div>
   </div>
 </div>
@@ -37,7 +37,7 @@
       </span>
     </div>
   </div>
-  <div class="app-list cards u-mb20">
+  <div class="cards">
     <!-- List available web apps -->
     <?php foreach($v_web_apps as $webapp):?>
       <div class="card <?=($webapp['enabled'] ? '' : 'disable');?>">

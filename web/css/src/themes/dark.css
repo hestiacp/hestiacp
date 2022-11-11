@@ -126,8 +126,8 @@ strong {
   background-color: #ff3478;
 }
 
-.notification-container .unseen .notification-title a,
-.notification-container .unseen .notification-title {
+.notification-container .unseen .notification-title,
+.notification-container .unseen .notification-title a {
   color: #fff !important;
 }
 
@@ -607,14 +607,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }
 
-textarea::input-placeholder {
-  color: #bbb !important;
-}
-
-textarea:focus::input-placeholder {
-  color: #909090 !important;
-}
-
 textarea::placeholder {
   color: #bbb !important;
 }
@@ -797,9 +789,7 @@ td.hint {
 .additional-control:active {}
 
 .additional-control.delete:hover,
-
 .additional-control.delete:active,
-
 .additional-control.add:hover {}
 
 .additional-control.add:active {}

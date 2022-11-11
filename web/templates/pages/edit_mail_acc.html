@@ -51,7 +51,7 @@
               <?=_('Send login credentials to email address') ?>
             </label>
             <input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
-            <input type="hidden" name="v_credentials" id="v_credentials">
+            <input type="hidden" name="v_credentials" class="js-hidden-credentials">
           </div>
           <div class="u-mb10">
             <label for="v_quota" class="form-label">
@@ -113,8 +113,8 @@
           <div class="mail-infoblock">
             <table>
               <tr><td colspan="2"><strong><?=strtoupper(_('Common account settings'));?></strong></td><tr>
-              <tr><td><?=_('Username');?>: </td><td><span id="v_account"></span>@<?=htmlentities(trim($v_domain, "'"))?></td></tr>
-              <tr><td><?=_('Password');?>: </td><td><span id="v_password"></span></td></tr>
+              <tr><td><?=_('Username');?>: </td><td><span class="js-account-output"></span>@<?=htmlentities(trim($v_domain, "'"))?></td></tr>
+              <tr><td><?=_('Password');?>: </td><td><span class="js-password-output"></span></td></tr>
               <?php if ($_SESSION['WEBMAIL_SYSTEM']) {?><tr><td><?=_('Webmail');?>: </td><td><a class="vst" href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?></a></td></tr><?php } ?>
               <tr><td><?=_('Hostname');?>: </td><td>mail.<?=htmlentities($v_domain)?></td></tr>
 

@@ -109,9 +109,9 @@ applyRandomString = function (min_length = 16) {
     var randomString = randomString2(min_length);
     $("input[name=v_password]").val(randomString);
     if ($("input[name=v_password]").attr("type") == "text")
-        $("#v_password").text(randomString);
+        $(".js-password-output").text(randomString);
     else
-        $("#v_password").text(Array(randomString.length + 1).join("*"));
+        $(".js-password-output").text(Array(randomString.length + 1).join("*"));
     App.Actions.MAIL_ACC.update_password_meter();
     generate_mail_credentials();
 };
@@ -119,8 +119,8 @@ applyRandomString = function (min_length = 16) {
 generate_mail_credentials = function() {
     var div = $('.mail-infoblock').clone();
     div.find('#mail_configuration').remove();
-    var pass=div.find('#v_password').text();
-    if (pass=="") div.find('#v_password').text(' ');
+    var pass=div.find('.js-password-output').text();
+    if (pass=="") div.find('.js-password-output').text(' ');
     var output = div.text();
     output=output.replace(/(?:\r\n|\r|\n|\t)/g, "|");
     output=output.replace(/ {2}/g, "");
@@ -132,32 +132,32 @@ generate_mail_credentials = function() {
     output=output.replace(/ $/, "");
     output=output.replace(/:\|/g, ": ");
     output=output.replace(/\|/g, "\n");
-    $('#v_credentials').val(output);
+    $('.js-hidden-credentials').val(output);
 }
 
 $(document).ready(function() {
-    $('#v_account').text($('input[name=v_account]').val());
-    $('#v_password').text($('input[name=v_password]').val());
+    $('.js-account-output').text($('input[name=v_account]').val());
+    $('.js-password-output').text($('input[name=v_password]').val());
     generate_mail_credentials();
 
     $('input[name=v_account]').change(function(){
-        $('#v_account').text($(this).val());
+        $('.js-account-output').text($(this).val());
         generate_mail_credentials();
     });
 
     $('input[name=v_password]').change(function(){
         if($('input[name=v_password]').attr('type') == 'text')
-            $('#v_password').text($(this).val());
+            $('.js-password-output').text($(this).val());
         else
-            $('#v_password').text(Array($(this).val().length+1).join('*'));
+            $('.js-password-output').text(Array($(this).val().length+1).join('*'));
         generate_mail_credentials();
     });
 
     $('.toggle-psw-visibility-icon').click(function(){
         if($('input[name=v_password]').attr('type') == 'text')
-            $('#v_password').text($('input[name=v_password]').val());
+            $('.js-password-output').text($('input[name=v_password]').val());
         else
-            $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
+            $('.js-password-output').text(Array($('input[name=v_password]').val().length+1).join('*'));
         generate_mail_credentials();
     });
 

@@ -23,44 +23,44 @@ rebuild_user_conf() {
     chmod 660 $USER_DATA/history.log
     touch $USER_DATA/stats.log
     chmod 660 $USER_DATA/stats.log
-    
+
     # Update FNAME LNAME to NAME
-    if [ -z "$NAME" ]; then 
+    if [ -z "$NAME" ]; then
         NAME="$FNAME $LNAME"
         if [ -z $FNAME ]; then NAME=""; fi
-        
+
         sed -i "s/FNAME='$FNAME'/NAME='$NAME'/g" $USER_DATA/user.conf
-        sed -i "/LNAME='$LNAME'/d" $USER_DATA/user.conf  
+        sed -i "/LNAME='$LNAME'/d" $USER_DATA/user.conf
     fi
-    if [ -z "${TWOFA+x}" ]; then 
-        sed -i "/RKEY/a TWOFA=''" $USER_DATA/user.conf 
+    if [ -z "${TWOFA+x}" ]; then
+        sed -i "/RKEY/a TWOFA=''" $USER_DATA/user.conf
     fi
     if [ -z "${QRCODE+x}" ]; then
-        sed -i "/TWOFA/a QRCODE=''" $USER_DATA/user.conf 
+        sed -i "/TWOFA/a QRCODE=''" $USER_DATA/user.conf
     fi
-    if [ -z "${PHPCLI+x}" ]; then 
-        sed -i "/QRCODE/a PHPCLI=''" $USER_DATA/user.conf 
+    if [ -z "${PHPCLI+x}" ]; then
+        sed -i "/QRCODE/a PHPCLI=''" $USER_DATA/user.conf
     fi
-    if [ -z "${ROLE+x}" ]; then 
-        sed -i "/PHPCLI/a ROLE='user'" $USER_DATA/user.conf 
+    if [ -z "${ROLE+x}" ]; then
+        sed -i "/PHPCLI/a ROLE='user'" $USER_DATA/user.conf
     fi
-    if [ -z "${THEME+x}" ]; then 
-        sed -i "/LANGUAGE/a THEME=''" $USER_DATA/user.conf 
+    if [ -z "${THEME+x}" ]; then
+        sed -i "/LANGUAGE/a THEME=''" $USER_DATA/user.conf
     fi
-    if [ -z "${PREF_UI_SORT+x}" ]; then 
-        sed -i "/NOTIFICATIONS/a PREF_UI_SORT='name'" $USER_DATA/user.conf 
+    if [ -z "${PREF_UI_SORT+x}" ]; then
+        sed -i "/NOTIFICATIONS/a PREF_UI_SORT='name'" $USER_DATA/user.conf
     fi
-    if [ -z "${LOGIN_DISABLED+x}" ]; then 
-        sed -i "/PREF_UI_SORT/a LOGIN_DISABLED=''" $USER_DATA/user.conf 
+    if [ -z "${LOGIN_DISABLED+x}" ]; then
+        sed -i "/PREF_UI_SORT/a LOGIN_DISABLED=''" $USER_DATA/user.conf
     fi
-    if [ -z "${LOGIN_USE_IPLIST+x}" ]; then 
-        sed -i "/LOGIN_DISABLED/a LOGIN_USE_IPLIST=''" $USER_DATA/user.conf 
+    if [ -z "${LOGIN_USE_IPLIST+x}" ]; then
+        sed -i "/LOGIN_DISABLED/a LOGIN_USE_IPLIST=''" $USER_DATA/user.conf
     fi
-    if [ -z "${LOGIN_ALLOW_IPS+x}" ]; then 
-        sed -i "/LOGIN_USE_IPLIST/a LOGIN_ALLOW_IPS=''" $USER_DATA/user.conf 
+    if [ -z "${LOGIN_ALLOW_IPS+x}" ]; then
+        sed -i "/LOGIN_USE_IPLIST/a LOGIN_ALLOW_IPS=''" $USER_DATA/user.conf
     fi
-    if [ -z "${RATE_LIMIT+x}" ]; then 
-        sed -i "/MAIL_ACCOUNTS/a RATE_LIMIT='200'" $USER_DATA/user.conf 
+    if [ -z "${RATE_LIMIT+x}" ]; then
+        sed -i "/MAIL_ACCOUNTS/a RATE_LIMIT='200'" $USER_DATA/user.conf
     fi
     # Run template trigger
     if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
@@ -230,7 +230,7 @@ rebuild_web_domain_conf() {
     if [ ! -d /etc/$PROXY_SYSTEM/conf.d/domains ]; then
         mkdir -p /etc/$PROXY_SYSTEM/conf.d/domains
     fi
-    
+
     syshealth_repair_web_config
     get_domain_values 'web'
     is_ip_valid $IP
@@ -285,7 +285,7 @@ rebuild_web_domain_conf() {
         $HOMEDIR/$user/web/$domain \
         $HOMEDIR/$user/web/$domain/private \
         $HOMEDIR/$user/web/$domain/cgi-bin \
-        $HOMEDIR/$user/web/$domain/public_*html 
+        $HOMEDIR/$user/web/$domain/public_*html
     chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
     chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
 
@@ -489,14 +489,14 @@ rebuild_dns_domain_conf() {
                     -e "s/%time%/$TIME/g" \
                     -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
         fi
-    
+
         # Sorting records
         sort_dns_records
         #Remove old sign files
         rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
         # Updating zone
         update_domain_zone
-    
+
         # Set permissions
         if [ "$DNS_SYSTEM" = 'named' ]; then
             dns_group='named'
@@ -505,9 +505,12 @@ rebuild_dns_domain_conf() {
         fi
         # Set file permissions
         chmod 640 $HOMEDIR/$user/conf/dns/$domain.db
-        chown root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db   
+        chown $root:$dns_group $HOMEDIR/$user/conf/dns/$domain.db
+    else
+        rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
+        chown $dns_group:$dns_group $HOMEDIR/$user/conf/dns/$domain.db
     fi
-    
+
     # Get dns config path
     if [ -e '/etc/named.conf' ]; then
         dns_conf='/etc/named.conf'
@@ -546,17 +549,16 @@ rebuild_dns_domain_conf() {
     records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
     user_records=$((user_records + records))
     update_object_value 'dns' 'DOMAIN' "$domain" '$RECORDS' "$records"
-    
+
     # Load new config
     /usr/sbin/rndc reconfig > /dev/null 2>&1
-    
     # Reload config
-    /usr/sbin/rndc reload > /dev/null 2>&1
-    
+    /usr/sbin/rndc reload $domain > /dev/null 2>&1
+
     if [ "$DNSSEC" = "yes" ]; then
-        # Key consists always out of 5 digits when less is used they are "lost" 
+        # Key consists always out of 5 digits when less is used they are "lost"
         key=$(/usr/sbin/rndc dnssec -status $domain_idn | grep ^key: | cut -f2 -d' ' | numfmt --format='%05.0f' --invalid=ignore);
-        
+
         if [ ! -d "$USER_DATA/keys/" ]; then
             mkdir -p $USER_DATA/keys/
         fi
@@ -569,7 +571,7 @@ rebuild_dns_domain_conf() {
 # MAIL domain rebuild
 rebuild_mail_domain_conf() {
     syshealth_repair_mail_config
-    
+
     get_domain_values 'mail'
     if [[ "$domain" = *[![:ascii:]]* ]]; then
         domain_idn=$(idn2 --quiet $domain)
@@ -617,7 +619,7 @@ rebuild_mail_domain_conf() {
         touch $HOMEDIR/$user/conf/mail/$domain/passwd
         touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
         touch $HOMEDIR/$user/conf/mail/$domain/limits
-        
+
         # Setting outgoing ip address
         if [ -n "$local_ip" ]; then
             echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
@@ -632,7 +634,7 @@ rebuild_mail_domain_conf() {
         if [ "$ANTIVIRUS" = 'yes' ]; then
             touch $HOMEDIR/$user/conf/mail/$domain/antivirus
         fi
-        
+
         # Adding reject spam protection
         if [ "$REJECT" = 'yes' ]; then
             touch $HOMEDIR/$user/conf/mail/$domain/reject_spam
@@ -643,7 +645,7 @@ rebuild_mail_domain_conf() {
             cp $USER_DATA/mail/$domain.pem \
                 $HOMEDIR/$user/conf/mail/$domain/dkim.pem
         fi
-        
+
         # Rebuild SMTP Relay configuration
         if [ "$U_SMTP_RELAY" = 'true' ]; then
             $BIN/v-add-mail-domain-smtp-relay $user $domain "$U_SMTP_RELAY_HOST" "$U_SMTP_RELAY_USERNAME" "$U_SMTP_RELAY_PASSWORD" "$U_SMTP_RELAY_PORT"
@@ -659,7 +661,7 @@ rebuild_mail_domain_conf() {
         if [ ! -e $HOMEDIR/$user/mail/$domain_idn ]; then
             mkdir "$HOMEDIR/$user/mail/$domain_idn"
         fi
-        
+
         # Webamil client
         if [ "$WEBMAIL" = '' ]; then
            $HESTIA/bin/v-add-mail-domain-webmail $user $domain 'roundcube' 'no'

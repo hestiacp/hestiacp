@@ -82,6 +82,7 @@ for domain in $(search_objects 'dns' 'DOMAIN' "*" 'DOMAIN'); do
    if [ "$update_serial" != 'no' ]; then
         update_domain_serial
     fi
+    syshealth_repair_dns_config
     rebuild_dns_domain_conf
 done
 

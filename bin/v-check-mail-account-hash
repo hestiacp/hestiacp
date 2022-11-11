@@ -2,7 +2,7 @@
 # info: check user password
 # options: TYPE PASSWORD HASH
 #
-# example: v-check-mail-account-hash ARGONID2 PASS HASH 
+# example: v-check-mail-account-hash ARGONID2 PASS HASH
 #
 # This function verifies email account password hash
 

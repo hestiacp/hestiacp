@@ -16,49 +16,13 @@ if ($_SESSION['userContext'] != 'admin') {
 $v_hostname = exec('hostname');
 
 // List available timezones and get current one
-$v_timezones = list_timezones();
 exec(HESTIA_CMD."v-get-sys-timezone", $output, $return_var);
 $v_timezone = $output[0];
 unset($output);
-if ($v_timezone == 'Etc/UTC') {
-    $v_timezone = 'UTC';
-}
-if ($v_timezone == 'Pacific/Honolulu') {
-    $v_timezone = 'HAST';
-}
-if ($v_timezone == 'US/Aleutian') {
-    $v_timezone = 'HADT';
-}
-if ($v_timezone == 'Etc/GMT+9') {
-    $v_timezone = 'AKST';
-}
-if ($v_timezone == 'America/Anchorage') {
-    $v_timezone = 'AKDT';
-}
-if ($v_timezone == 'America/Dawson_Creek') {
-    $v_timezone = 'PST';
-}
-if ($v_timezone == 'PST8PDT') {
-    $v_timezone = 'PDT';
-}
-if ($v_timezone == 'MST7MDT') {
-    $v_timezone = 'MDT';
-}
-if ($v_timezone == 'Canada/Saskatchewan') {
-    $v_timezone = 'CST';
-}
-if ($v_timezone == 'CST6CDT') {
-    $v_timezone = 'CDT';
-}
-if ($v_timezone == 'EST5EDT') {
-    $v_timezone = 'EDT';
-}
-if ($v_timezone == 'America/Puerto_Rico') {
-    $v_timezone = 'AST';
-}
-if ($v_timezone == 'America/Halifax') {
-    $v_timezone = 'ADT';
-}
+
+exec(HESTIA_CMD."v-get-sys-timezones json", $output, $return_var);
+$v_timezones = json_decode(implode('', $output), true);
+unset($output);
 
 // List supported php versions
 exec(HESTIA_CMD."v-list-web-templates-backend json", $output, $return_var);
@@ -355,51 +319,10 @@ if (!empty($_POST['save'])) {
     // Change timezone
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_timezone'])) {
-            $v_tz = $_POST['v_timezone'];
-            if ($v_tz == 'UTC') {
-                $v_tz = 'Etc/UTC';
-            }
-            if ($v_tz == 'HAST') {
-                $v_tz = 'Pacific/Honolulu';
-            }
-            if ($v_tz == 'HADT') {
-                $v_tz = 'US/Aleutian';
-            }
-            if ($v_tz == 'AKST') {
-                $v_tz = 'Etc/GMT+9';
-            }
-            if ($v_tz == 'AKDT') {
-                $v_tz = 'America/Anchorage';
-            }
-            if ($v_tz == 'PST') {
-                $v_tz = 'America/Dawson_Creek';
-            }
-            if ($v_tz == 'PDT') {
-                $v_tz = 'PST8PDT';
-            }
-            if ($v_tz == 'MDT') {
-                $v_tz = 'MST7MDT';
-            }
-            if ($v_tz == 'CST') {
-                $v_tz = 'Canada/Saskatchewan';
-            }
-            if ($v_tz == 'CDT') {
-                $v_tz = 'CST6CDT';
-            }
-            if ($v_tz == 'EDT') {
-                $v_tz = 'EST5EDT';
-            }
-            if ($v_tz == 'AST') {
-                $v_tz = 'America/Puerto_Rico';
-            }
-            if ($v_tz == 'ADT') {
-                $v_tz = 'America/Halifax';
-            }
-
-            if ($v_timezone != $v_tz) {
-                exec(HESTIA_CMD."v-change-sys-timezone ".quoteshellarg($v_tz), $output, $return_var);
+            if ($v_timezone != $_POST['v_timezone']) {
+                exec(HESTIA_CMD."v-change-sys-timezone ".quoteshellarg($_POST['v_timezone']), $output, $return_var);
                 check_return_code($return_var, $output);
-                $v_timezone = $v_tz;
+                $v_timezone = $_POST['v_timezone'];
                 unset($output);
             }
         }
@@ -1067,7 +990,7 @@ if (!empty($_POST['save'])) {
             $v_security_adv = 'yes';
         }
     }
-    
+
     if ($_POST['v_api_system'] != $_SESSION['API_SYSTEM'] || $_POST['v_api'] != $_SESSION['API'] || $_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']){
         if (empty($_SESSION['error_msg'])) {
             if($_POST['v_api'] == "no" && $_POST['v_api_system'] === 0 ){
@@ -1092,7 +1015,7 @@ if (!empty($_POST['save'])) {
                 $v_security_adv = 'yes';
             }
         }
-        
+
         // Change API access
         if (empty($_SESSION['error_msg'])) {
             if ($_POST['v_api'] != $_SESSION['API']) {
@@ -1109,7 +1032,7 @@ if (!empty($_POST['save'])) {
                 $v_security_adv = 'yes';
             }
         }
-            
+
         // Change API allowed IPs
         if (empty($_SESSION['error_msg'])) {
             if ($_POST['v_api_allowed_ip'] != $_SESSION['API_ALLOWED_IP']) {
@@ -1133,7 +1056,7 @@ if (!empty($_POST['save'])) {
                     $v_security_adv = 'yes';
                 }
             }
-        }   
+        }
 
     }
 

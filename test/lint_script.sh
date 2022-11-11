@@ -52,7 +52,7 @@ time_n_date=$(date +'%F %T')
 time_n_date=$(echo $time_n_date | sed "s|:||g" | sed "s| |_|g")
 
 # If logging specified, export shellcheck output to log
-if [ "$log" = "yes" ]; then 
+if [ "$log" = "yes" ]; then
     shellcheck -x "$script" > "$DEBUG_PATH/${script}_$date-$time.log"
 else
     # Prompt user to scroll output from shellcheck

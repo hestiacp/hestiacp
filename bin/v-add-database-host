@@ -41,11 +41,11 @@ is_mysql_host_alive() {
     echo "user='$dbuser'" >> $mycnf
     echo "password='$password'" >> $mycnf
     echo "port='$port'" >> $mycnf
-    
+
     chmod 600 $mycnf
     mysql --defaults-file=$mycnf -e 'SELECT VERSION()' >/dev/null 2>&1
     rm $mycnf
-    
+
     if [ "$?" -ne '0' ]; then
         echo "Error: MySQL connection to $host failed"
         log_event "$E_CONNECT" "$ARGUMENTS"

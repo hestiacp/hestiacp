@@ -4,7 +4,7 @@
     <div class="l-unit-toolbar__buttonstrip">
       <a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
     </div>
-    <div class="l-unit-toolbar__buttonstrip u-float-right">
+    <div class="l-unit-toolbar__buttonstrip">
       <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
     </div>
   </div>
@@ -89,6 +89,7 @@
           <select class="form-select" name="v_role" id="v_role">
             <option value="user"><?=_('User');?>
             <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?=_('Administrator');?>
+            <option value="dns-cluster" <?php if($v_role == "dns-cluster" ){ echo "selected"; } ?>><?=_('DNS Sync user');?>
           </select>
         </div>
         <div class="u-mb10">

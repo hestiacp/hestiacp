@@ -32,8 +32,8 @@ is_format_valid 'service' 'restart'
 #----------------------------------------------------------#
 
 log="/dev/null"
-if [ "$DEBUG_MODE" = "true" ]; then 
-    
+if [ "$DEBUG_MODE" = "true" ]; then
+
     log="/var/log/hestia/debug.log"
 fi
 

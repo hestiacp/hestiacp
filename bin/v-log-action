@@ -34,7 +34,7 @@ event_details=$4
 is_common_format_valid "$event_level" "event level"
 
 # Validate event type input
-if [ "$event_level" != "Info" ] && [ "$event_level" != "Warning" ] && [ "$event_level" != "Error" ]; then 
+if [ "$event_level" != "Info" ] && [ "$event_level" != "Warning" ] && [ "$event_level" != "Error" ]; then
     echo "Error: Invalid event type specified."
     exit 1
 fi

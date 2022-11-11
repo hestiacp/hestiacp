@@ -33,10 +33,10 @@ class MediaWikiSetup extends BaseSetup
             'nginx' => [
                 'template' => 'default'
             ],
-            'php' => [ 
+            'php' => [
                 'supported' => [ '7.3','7.4' ],
             ]
-        ], 
+        ],
     ];
 
     public function install(array $options = null)

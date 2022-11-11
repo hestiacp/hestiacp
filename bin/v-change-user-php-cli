@@ -42,7 +42,7 @@ source $USER_DATA/user.conf
 
 versions=$($BIN/v-list-sys-php plain);
 support=0;
-for v in $versions; do 
+for v in $versions; do
   if [ "$v" == "$version" ]; then
     support=1;
   fi

@@ -3,7 +3,7 @@
 # options: HOST PORT USER PASSWORD [TYPE] [DNS_USER]
 #
 # example: v-add-remote-dns-host slave.your_host.com 8083 admin your_passw0rd
-# 
+#
 # example: v-add-remote-dns-host slave.your_host.com 8083 api_key ''
 #
 # This function adds remote dns server to the dns cluster.
@@ -85,7 +85,7 @@ else
     str="HOST='$host' PORT='$port' USER='$user' PASSWORD='$password'"
     str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
     str="$str TIME='$time' DATE='$date'"
-fi    
+fi
 
 # Adding host to dns-cluster.conf
 echo "$str" >> $HESTIA/conf/dns-cluster.conf

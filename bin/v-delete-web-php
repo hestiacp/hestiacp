@@ -64,7 +64,7 @@ mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli 
  php$version-soap php$version-xml php$version-zip php$version-mbstring
  php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql
  php$version-imap php$version-ldap"
- 
+
 # Check is version is 7.1 or below to add mcrypt
 if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
     mph="$mph php$version-mcrypt"
@@ -98,7 +98,7 @@ if [ -f "$php_fpm" ]; then
     else
         echo "apt-get purge $mph"
     fi
-    exit 1; 
+    exit 1;
 fi
 
 # Cleanup php folder

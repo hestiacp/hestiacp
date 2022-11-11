@@ -2,7 +2,7 @@
 # info: Delete log file for user
 # options: USER
 #
-# example: v-delete-user-log user 
+# example: v-delete-user-log user
 #
 # This function for deleting a users log file
 

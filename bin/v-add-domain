@@ -14,7 +14,7 @@
 user=$1
 domain=$2
 ip=$3
-restart="${4-yes}"
+restart=$4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -66,7 +66,7 @@ fi
 
 # Working on mail domain
 if [ -n "$MAIL_SYSTEM" ]; then
-    $BIN/v-add-mail-domain $user $domain
+    $BIN/v-add-mail-domain $user $domain 'no'
     check_result $? "can't add mail domain" >/dev/null
 fi
 

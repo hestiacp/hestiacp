@@ -12,7 +12,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location = /favicon.ico {
@@ -45,7 +45,7 @@ server {
 
     # Any other attempt to access PHP files returns a 404.
     location ~* ^.+\.php$ {
-            return 404; 
+            return 404;
     }
 
     # Return a 404 for all text files.
@@ -57,8 +57,8 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

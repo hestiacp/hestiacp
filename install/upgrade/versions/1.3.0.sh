@@ -38,10 +38,10 @@ if [ "$FTP_SYSTEM" == "proftpd" ]; then
     if [ -e  /etc/proftpd/tls.conf ]; then
         rm /etc/proftpd/tls.conf
     fi
-    
+
     cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
     cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
-    
+
 fi
 
 # Update exim configuration
@@ -64,13 +64,13 @@ fi
 # Change backup mode to zstd.
 echo "[ * ] Setting zstd backup compression type as default..."
 $BIN/v-change-sys-config-value "BACKUP_MODE" "zstd"
- 
+
 # Set LOGIN_STYLE variable in hestia.conf
 echo "[ * ] Updating configuration file: hestia.conf..."
 $BIN/v-change-sys-config-value "LOGIN_STYLE" "default"
 
 # Remove old lanugage files.
-if [ -e $HESTIA/web/inc/i18n/en.php ]; then 
+if [ -e $HESTIA/web/inc/i18n/en.php ]; then
     echo "[ * ] Performing language library clean-up..."
     rm -fr $HESTIA/web/inc/i18n
 fi

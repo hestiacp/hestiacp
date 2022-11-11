@@ -2,7 +2,7 @@
 # info: list nginx config parameters
 # options: [FORMAT]
 #
-# example: v-list-sys-nginx-config 
+# example: v-list-sys-nginx-config
 #
 # This function for obtaining the list of nginx config parameters.
 

@@ -6,7 +6,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location = /favicon.ico {
@@ -32,11 +32,11 @@ server {
     location ~ ^/sites/.*/private/ {
         return 403;
     }
-    
+
     location ~ ^/sites/[^/]+/files/.*\.php$ {
         deny all;
     }
-    
+
     location / {
         try_files $uri /index.php?$query_string;
     }
@@ -44,7 +44,7 @@ server {
     location ~ /vendor/.*\.php$ {
         deny all;
         return 404;
-    }        
+    }
 
     location ~ ^/sites/.*/files/styles/ {
         try_files $uri @rewrite;

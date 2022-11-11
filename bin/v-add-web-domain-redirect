@@ -2,14 +2,14 @@
 # info: Adding force redirect to domain
 # options: USER DOMAIN REDIRECT HTTPCODE [RESTART]
 #
-# example: v-add-web-domain-redirect user domain.tld domain.tld 
-# example: v-add-web-domain-redirect user domain.tld www.domain.tld 
-# example: v-add-web-domain-redirect user domain.tld shop.domain.tld  
+# example: v-add-web-domain-redirect user domain.tld domain.tld
+# example: v-add-web-domain-redirect user domain.tld www.domain.tld
+# example: v-add-web-domain-redirect user domain.tld shop.domain.tld
 # example: v-add-web-domain-redirect user domain.tld different-domain.com
 # example: v-add-web-domain-redirect user domain.tld shop.different-domain.com
 # example: v-add-web-domain-redirect user domain.tld different-domain.com 302
 #
-# Function creates a forced redirect to a domain 
+# Function creates a forced redirect to a domain
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -58,7 +58,7 @@ else
     if  [ -z "$isValidUrl" ]; then
         check_result $E_INVALID "Invalid redirect"
     fi
-fi 
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -75,7 +75,7 @@ fi
 # Insert redirect commands
 if [ -n "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
     if [ "$scheme" = 1 ]; then
-        echo "   return $code $redirect\$request_uri;" > $conf        
+        echo "   return $code $redirect\$request_uri;" > $conf
         if [ ! -e "$sconf" ]; then
             ln -s "$conf" "$sconf"
         fi
@@ -83,13 +83,13 @@ if [ -n "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
         echo "if (\$host != \"$redirect\") {" > $conf
         echo "   return $code \$scheme://$redirect\$request_uri;" >> $conf
         echo "}" >> $conf
-        
+
         if [ ! -e "$sconf" ]; then
             ln -s "$conf" "$sconf"
         fi
     fi
 else
-    echo "Non supported please use .htaccess instead" 
+    echo "Non supported please use .htaccess instead"
     exit 2;
 fi
 
@@ -111,7 +111,7 @@ if [ "$restart" = "yes" ]; then
     # Restarting web server
     $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" >/dev/null
-    
+
     $BIN/v-restart-proxy "$restart"
     check_result $? "Proxy restart failed" >/dev/null
 fi

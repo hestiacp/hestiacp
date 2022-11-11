@@ -15,6 +15,6 @@ fi
 # Reset PMA SSO
 if [ "$PHPMYADMIN_KEY" != "" ]; then
     echo "[ * ] Refressh hestia-sso for PMA..."
-    $BIN/v-delete-sys-pma-sso 
-    $BIN/v-add-sys-pma-sso 
+    $BIN/v-delete-sys-pma-sso
+    $BIN/v-add-sys-pma-sso
 fi

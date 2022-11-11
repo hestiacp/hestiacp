@@ -78,13 +78,13 @@ server {
         deny all;
 	return 404;
     }
-    
+
     # vendor in modules directory
     location ~ ^/modules/.*/vendor/ {
         deny all;
 	return 404;
     }
-    
+
     # Prevent exposing other sensitive files
     location ~ \.(yml|log|tpl|twig|sass)$ {
         deny all;

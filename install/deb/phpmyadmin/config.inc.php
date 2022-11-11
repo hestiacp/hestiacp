@@ -31,7 +31,7 @@ $cfg['SaveDir'] = '';
  foreach (glob('/etc/phpmyadmin/conf.d/*.php') as $filename)
  {
      include($filename);
-     /*Don't remove / alter code here below this will add SSO support for all servers*/ 
+     /*Don't remove / alter code here below this will add SSO support for all servers*/
      //Add Hestia SSO code here
      $i++;
  }

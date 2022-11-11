@@ -213,7 +213,7 @@ if ((!empty($_POST['save'])) && (!empty($_GET['domain'])) && (empty($_GET['accou
         }
         unset($output);
     }
-    
+
     if (!empty($_POST['v_reject']) && $v_antispam == "yes" && $v_reject != 'yes' ) {
          exec(HESTIA_CMD."v-add-mail-domain-reject ".$user." ".$v_domain." yes", $output, $return_var);
          check_return_code($return_var, $output);

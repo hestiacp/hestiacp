@@ -6,9 +6,9 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
-    
+
     location = /favicon.ico {
         log_not_found off;
         access_log off;
@@ -22,7 +22,7 @@ server {
 
     location / {
         try_files $uri $uri/ /index.php?$args;
-        
+
         if (!-e $request_filename)
         {
             rewrite ^(.+)$ /index.php?q=$1 last;

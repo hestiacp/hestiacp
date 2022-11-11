@@ -4,7 +4,7 @@
 #
 # example: v-add-web-domain-allow-users admin admin.com
 #
-# Bypass the rule check for Enforce subdomain ownership for a specific domain. 
+# Bypass the rule check for Enforce subdomain ownership for a specific domain.
 # Enforce subdomain ownership setting in /edit/server/ set to no will always overwrite this behaviour
 # eg: admin adds admin.com
 # user can create user.admin.com

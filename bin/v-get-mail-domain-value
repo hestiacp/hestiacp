@@ -55,4 +55,4 @@ get_object_value 'mail' 'DOMAIN' "$domain" "$key"
 # Logging
 log_event "$OK" "$ARGUMENTS"
 
-exit 
+exit

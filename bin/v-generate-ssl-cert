@@ -80,7 +80,7 @@ is_common_format_valid $unit "unit"
 
 release="$(lsb_release -s -r)"
 
-if [ -z "$email" ] && [ "$release" = "18.04" ]; then 
+if [ -z "$email" ] && [ "$release" = "18.04" ]; then
     echo "Email address is required";
     exit 2;
 fi
@@ -104,7 +104,7 @@ openssl genrsa "$KEY_SIZE" > "$domain.key" 2>/dev/null
 
 subj=""
 # Generate the CSR
-if [ -n "$email" ]; then 
+if [ -n "$email" ]; then
     subj="/emailAddress=$email"
 fi
 

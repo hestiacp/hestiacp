@@ -59,7 +59,7 @@ fi
 echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> "$USER_DATA/auth.log"
 
 if [ "$authlog" = "yes" ]; then
-    echo "$date $time $user $ip failed to login ($reason)" >> "$HESTIA/log/auth.log"    
+    echo "$date $time $user $ip failed to login ($reason)" >> "$HESTIA/log/auth.log"
 fi
 
 #----------------------------------------------------------#

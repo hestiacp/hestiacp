@@ -25,7 +25,7 @@ if (!empty( $data['config']['LANGUAGE'])) {
     $_SESSION['language'] = 'en';
 }
 
-//define vars 
+//define vars
 //make hostname detection a bit more feature proof
 $hostname = get_hostname();
 

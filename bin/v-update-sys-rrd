@@ -4,7 +4,7 @@
 #
 # example: v-update-sys-rrd
 #
-# This function is wrapper for all rrd functions. It updates all 
+# This function is wrapper for all rrd functions. It updates all
 # v-update-sys-rrd_* at once.
 
 #----------------------------------------------------------#

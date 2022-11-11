@@ -61,7 +61,7 @@ case $chain in
                 if [ -z "$sshport" ]; then
                     sshport=22
                 fi
-                port=$sshport; 
+                port=$sshport;
                 protocol=TCP ;;
     FTP)        port=21; protocol=TCP  ;;
     MAIL)       port='25,465,587,110,995,143,993'; protocol=TCP  ;;

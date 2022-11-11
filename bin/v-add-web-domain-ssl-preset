@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
-# options: USER DOMAIN [SSL] 
+# options: USER DOMAIN [SSL]
 #
 # example: v-add-web-domain-ssl-preset
 #

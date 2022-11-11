@@ -84,7 +84,7 @@ if echo "$shadow" | grep -qE '^\$[0-9a-z]+\$[^\$]+\$'
 then
     salt=$(echo "$shadow" |cut -f 3 -d \$)
     method=$(echo "$shadow" |cut -f 2 -d \$)
-    if [ "$method" = "y" ]; then 
+    if [ "$method" = "y" ]; then
         method='yescrypt'
         salt=$(echo "$shadow" |cut -f 4 -d \$)
     elif [ "$method" -eq '1' ]; then
@@ -96,7 +96,7 @@ then
         echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
         exit 9
     fi
-elif [[ "$shadow" =~ ! ]]; then 
+elif [[ "$shadow" =~ ! ]]; then
     echo "Error: Account has been suspended"
     echo "$date $time $user $ip46 has been suspended" >> $HESTIA/log/auth.log
     exit 5

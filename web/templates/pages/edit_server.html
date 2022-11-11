@@ -8,7 +8,7 @@
         <a href="/list/firewall/" class="button button-secondary"><i class="fas fa-shield-alt status-icon red"></i><?=_('Firewall');?></a>
       <?php }?>
     </div>
-    <div class="l-unit-toolbar__buttonstrip u-float-right">
+    <div class="l-unit-toolbar__buttonstrip">
       <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-save status-icon purple"></i><?=_('Save');?></a>
     </div>
   </div>
@@ -44,11 +44,8 @@
                 <select class="form-select" name="v_timezone" id="v_timezone">
                   <?php
                     foreach ($v_timezones as $key => $value) {
-                      echo "\t\t\t\t<option value=\"".$key."\"";
-                      if ((!empty($v_timezone)) && ( $key == $v_timezone)){
-                        echo ' selected' ;
-                      }
-                      if($key == "UTC" && $v_timezone == "Etc/UTC"){
+                      echo "\t\t\t\t<option value=\"".$value."\"";
+                      if ((!empty($v_timezone)) && ( $value == $v_timezone)){
                         echo ' selected' ;
                       }
                       echo ">".$value."</option>\n";

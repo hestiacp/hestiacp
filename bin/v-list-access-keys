@@ -35,9 +35,9 @@ json_list() {
                 if [[ -n "$PERMISSIONS" ]]; then
                     PERMISSIONS_ARR="[\"$(echo "$PERMISSIONS" | sed -E 's|,|", "|g')\"]"
                 fi
-    
+
                 ACCESS_KEY_ID="$(basename "$key_file")"
-    
+
                 echo -en "${quote:-\n}"
                 echo -n '    "'$ACCESS_KEY_ID'": {'
                 echo -n '"ACCESS_KEY_ID": "'${ACCESS_KEY_ID}'", '

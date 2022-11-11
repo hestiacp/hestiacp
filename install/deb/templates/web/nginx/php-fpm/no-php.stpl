@@ -26,7 +26,7 @@ server {
             fastcgi_hide_header "Set-Cookie";
         }
     }
-    
+
     location ~ [^/]\.php(/|$) {
         types { } default_type "text/html";
     }
@@ -35,8 +35,8 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

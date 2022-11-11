@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # phpmyadmin-fixer
 #
 # Fixes for phpmyadmin (configuration storage and some extended features)
@@ -16,7 +16,7 @@ PASS=$(gen_pass)
 pmapath1="/etc/phpmyadmin/config.inc.php"
 pmapath2="/usr/share/phpmyadmin/config.sample.inc.php"
 
-#delete old and paste new value 
+#delete old and paste new value
 sed -i '/pmadb/d' $pmapath1
 sed -i '/controluser/d' $pmapath1
 sed -i '/bookmarktable/d' $pmapath1

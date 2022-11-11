@@ -46,7 +46,7 @@ fi
 
 # Creating file
 user_exec touch "$dst_file" >/dev/null 2>&1
-if [ $? -ne 0 ]; then 
+if [ $? -ne 0 ]; then
     echo "Error: file $dst_file was not created"
     exit 3
 fi

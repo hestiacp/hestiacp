@@ -4,8 +4,8 @@
 #
 # example: v-add-database-temp-user wordress wordpress_db mysql
 #
-# This function creates an temporary database user mysql_sso_db_XXXXXXXX and a random password 
-# The user has an limited validity and only granted access to the specific database 
+# This function creates an temporary database user mysql_sso_db_XXXXXXXX and a random password
+# The user has an limited validity and only granted access to the specific database
 # Returns json to be read SSO Script
 
 #----------------------------------------------------------#
@@ -57,7 +57,7 @@ check_hestia_demo_mode
 # Get database values
 get_database_values
 
-#generate password and unique user 
+#generate password and unique user
 dbpass=$(generate_password);
 dbuser="hestia_sso_$(generate_password)";
 

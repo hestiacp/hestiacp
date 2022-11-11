@@ -31,15 +31,15 @@ class OpencartSetup extends BaseSetup
             'nginx' => [
                 'template' => 'opencart'
             ],
-            'php' => [ 
+            'php' => [
                 'supported' => [ '7.4','8.0','8.1' ],
             ]
-        ], 
+        ],
     ];
 
     public function install(array $options = null): bool
     {
-        
+
         parent::install($options);
         parent::setup($options);
 
@@ -50,7 +50,7 @@ class OpencartSetup extends BaseSetup
         $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot("config-dist.php"), $this->getDocRoot("config.php")]);
         $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot("admin/config-dist.php"), $this->getDocRoot("admin/config.php")]);
         $this->appcontext->runUser('v-copy-fs-file', [$this->getDocRoot(".htaccess.txt"), $this->getDocRoot(".htaccess")]);
-        #Check if SSL is enabled 
+        #Check if SSL is enabled
         $this->appcontext->run('v-list-web-domain', [$this -> appcontext->user(),$this -> domain,'json'], $status);
         if ($status->code !== 0) {
             throw new \Exception("Cannot list domain");
@@ -60,8 +60,8 @@ class OpencartSetup extends BaseSetup
         } else {
             $protocol = 'https://';
         }
-        
-        
+
+
         $this->appcontext->runUser('v-run-cli-cmd', [
            "/usr/bin/php".$options['php_version'],
             $this->getDocRoot("/install/cli_install.php"),

@@ -28,7 +28,7 @@ function setup() {
         echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
         echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
     fi
-    
+
     source /tmp/hestia-test-env.sh
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
@@ -168,17 +168,17 @@ r' "key"
 
 @test "is_dns_record_format_valid" {
     rtype='MX'
-    priority=1; 
-    run is_dns_record_format_valid 'mx.hestiacp.com.'  
+    priority=1;
+    run is_dns_record_format_valid 'mx.hestiacp.com.'
     assert_success
 }
 
 @test "is_dns_record_format_valid test" {
     rtype='MX'
-priority=1; 
+priority=1;
      run is_dns_record_format_valid 'c
 1eshutdown
-r' 
+r'
     assert_failure $E_INVALID
 }
 

@@ -705,4 +705,4 @@ function randomString2(length = 16) {
       throw new Error("tried a million times, something is wrong");
     }
   }
-};
+}

@@ -2,7 +2,7 @@
 # info: delete system sftp jail
 # options: NONE
 #
-# example: v-delete-sys-sftp-jail 
+# example: v-delete-sys-sftp-jail
 #
 # This function disables sftp jailed environment
 

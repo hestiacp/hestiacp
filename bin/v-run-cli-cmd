@@ -82,7 +82,7 @@ for ((I=3; I <= $# ; I++)); do
 done
 
 runuser -u "$user" -- $clicmd $cmdArgs
-if [ $? -ne 0 ]; then 
+if [ $? -ne 0 ]; then
     echo "Error: cmd exited with errors"
     exit 3
 fi

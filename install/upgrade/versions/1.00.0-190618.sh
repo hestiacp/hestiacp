@@ -140,7 +140,7 @@ for ipaddr in $($BIN/v-list-sys-ips plain | cut -f1); do
             sed -i "1s/^/Listen $ipaddr:$WEB_SSL_PORT\n/" $web_conf
             sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' $web_conf
         fi
-    
+
     elif [ "$WEB_SYSTEM" = "nginx" ]; then
         cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc $web_conf
         sed -i 's/directIP/'$ipaddr'/g' $web_conf

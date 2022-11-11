@@ -1,5 +1,5 @@
 #!/bin/bash
-# Add php dependencies to Hestia 
+# Add php dependencies to Hestia
 # options: [MODE]
 #
 # This function install PHPMailer and quoteshellarg as via composer
@@ -66,7 +66,7 @@ mkdir -p ${PM_INSTALL_DIR}/vendor
 chown $user: -R ${PM_INSTALL_DIR}/vendor
 
 openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl);
-if [ -z "$openssl_installed"  ]; then 
+if [ -z "$openssl_installed"  ]; then
     COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 else
     COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install

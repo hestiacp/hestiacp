@@ -68,13 +68,13 @@ fi
 
 # Delete SSL certificates and configuration
 if [ "$SSL" = 'yes' ] || [ -e "$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt" ]; then
-    $BIN/v-delete-mail-domain-ssl "$user" "$domain" 
+    $BIN/v-delete-mail-domain-ssl "$user" "$domain"
 fi
 
 # Delete webmail configuration if it exists
 if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
     if [ -n "$IMAP_SYSTEM" ]; then
-        $BIN/v-delete-mail-domain-webmail "$user" "$domain" 'yes'    
+        $BIN/v-delete-mail-domain-webmail "$user" "$domain" 'yes'
     fi
 fi
 

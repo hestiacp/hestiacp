@@ -23,11 +23,11 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'true'
 
 RHOST='apt.hestiacp.com'
 codename="$(lsb_release -s -c)"
-if [ -z "$codename" ]; then 
+if [ -z "$codename" ]; then
     codename="$(cat /etc/os-release |grep VERSION= |cut -f 2 -d \(|cut -f 1 -d \))"
 fi
 architecture="$(arch)"
-case $architecture in 
+case $architecture in
     x86_64)
         ARCH="amd64"
         ;;
@@ -42,7 +42,7 @@ chmod +x $HESTIA/install/deb/
 echo "[ * ] Updating hestia apt configuration..."
 sed -i "s|deb https://$RHOST/ $codename main|deb [arch=$ARCH] https://$RHOST/ $codename main|g" /etc/apt/sources.list.d/hestia.list
 
-if [ -n "$IMAP_SYSTEM" ]; then 
+if [ -n "$IMAP_SYSTEM" ]; then
     echo "[ * ] Updating dovecot configuration..."
     sed -i "s/mail_plugins = \$mail_plugins sieve/mail_plugins = \$mail_plugins quota sieve/g" /etc/dovecot/conf.d/15-lda.conf
 fi

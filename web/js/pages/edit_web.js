@@ -190,15 +190,15 @@ App.Actions.WEB.toggle_letsencrypt = function(elm) {
         $('#ssl-details').hide();
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').attr('disabled', 'disabled');
         $('#generate-csr').hide();
-	if(!$('.lets-encrypt-note').hasClass('enabled')){
-	    $('.lets-encrypt-note').show();
-	}
+    if(!$('.lets-encrypt-note').hasClass('enabled')){
+        $('.lets-encrypt-note').show();
+    }
     }
     else {
         $('#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]').removeAttr('disabled');
         $('#generate-csr').show();
         $('#ssl-details').show();
-	$('.lets-encrypt-note').hide();
+    $('.lets-encrypt-note').hide();
     }
 }
 

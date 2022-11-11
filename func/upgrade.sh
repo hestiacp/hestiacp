@@ -17,13 +17,13 @@ source $HESTIA/func/syshealth.sh
 # Define version check function
 function version_ge(){ test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
 
-add_upgrade_message (){ 
-    if [ -f "$HESTIA_BACKUP/message.log" ]; then 
+add_upgrade_message (){
+    if [ -f "$HESTIA_BACKUP/message.log" ]; then
         echo -e $1 >> $HESTIA_BACKUP/message.log
         echo -e "\n\n" >> $HESTIA_BACKUP/message.log
     else
         echo -e $1 > $HESTIA_BACKUP/message.log
-    fi    
+    fi
 }
 
 is_debug_build() {
@@ -36,7 +36,7 @@ is_debug_build() {
 }
 
 upgrade_health_check() {
-    
+
     echo "============================================================================="
     echo "[ ! ] Performing system health check before proceeding with installation...  "
     # Perform basic health check against hestia.conf to ensure that
@@ -103,12 +103,12 @@ upgrade_welcome_message_log() {
     else
         echo "BUILD TYPE:            Production release"
     fi
-    echo 
+    echo
     echo "INSTALLER OPTIONS:"
     echo "============================================================================="
     echo "Send email notification on upgrade complete:      $UPGRADE_SEND_EMAIL"
     echo "Send installed log output to admin email:         $UPGRADE_SEND_EMAIL_LOG"
-    echo 
+    echo
 }
 
 upgrade_step_message() {
@@ -137,7 +137,7 @@ upgrade_complete_message() {
     echo "Forum:    https://forum.hestiacp.com/                                        "
     echo "Discord:  https://discord.gg/nXRUZch                                         "
     echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
-    echo 
+    echo
     echo "Help support the Hestia Control Panel project by donating via PayPal:        "
     echo "https://www.hestiacp.com/donate                                              "
     echo
@@ -148,13 +148,13 @@ upgrade_complete_message() {
 }
 
 upgrade_complete_message_log() {
-    echo 
+    echo
     echo "============================================================================="
     echo "UPGRADE COMPLETE.                                                            "
     echo "Please report any issues on GitHub:                                          "
     echo "https://github.com/hestiacp/hestiacp/issues                                  "
     echo "============================================================================="
-    echo 
+    echo
     $BIN/v-log-action "system" "Info" "Updates" "Update installed (Version: $new_version)."
 }
 
@@ -177,7 +177,7 @@ upgrade_set_version() {
 upgrade_set_branch() {
     # Set branch in hestia.conf
     DISPLAY_VER=$(echo "$1" | sed "s|~alpha||g" | sed "s|~beta||g");
-    if [ "$DISPLAY_VER" = "$1" ]; then 
+    if [ "$DISPLAY_VER" = "$1" ]; then
         $BIN/v-change-sys-config-value "RELEASE_BRANCH" "release"
     fi
 }
@@ -232,7 +232,7 @@ upgrade_send_notification_to_email () {
         echo "==================================================="  >> $message_tmp_file
         echo "Have a wonderful day," >> $message_tmp_file
         echo "The Hestia Control Panel development team" >> $message_tmp_file
-        
+
         # Read back message from file and pass through to sendmail
         cat $message_tmp_file | $send_mail -s "Update Installed - v${new_version}" $admin_email
         rm -f $message_tmp_file
@@ -248,8 +248,8 @@ upgrade_send_log_to_email() {
 }
 
 upgrade_config_set_value() {
-    if [ -f "$HESTIA_BACKUP/upgrade.conf" ]; then 
-        if [ "$2" = "true" ]; then 
+    if [ -f "$HESTIA_BACKUP/upgrade.conf" ]; then
+        if [ "$2" = "true" ]; then
             sed -i "s/$1='false'/$1='true'/g" $HESTIA_BACKUP/upgrade.conf
         fi
     fi
@@ -263,8 +263,8 @@ prepare_upgrade_config () {
           if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
               rhs="${rhs%%\#*}"    # Del in line right comments
               rhs="${rhs%%*( )}"   # Del trailing spaces
-              rhs="${rhs%\'*}"     # Del opening string quotes 
-              rhs="${rhs#\'*}"     # Del closing string quotes 
+              rhs="${rhs%\'*}"     # Del opening string quotes
+              rhs="${rhs#\'*}"     # Del closing string quotes
               echo "$lhs='$rhs'" >> $HESTIA_BACKUP/upgrade.conf
           fi
       done < "$HESTIA/install/upgrade/upgrade.conf"
@@ -330,11 +330,11 @@ upgrade_init_backup() {
         mkdir -p $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
     fi
     if [ -n "$DB_SYSTEM" ]; then
-        if [[  "$DB_SYSTEM" =~ "mysql" ]]; then 
-            mkdir -p $HESTIA_BACKUP/conf/mysql/        
+        if [[  "$DB_SYSTEM" =~ "mysql" ]]; then
+            mkdir -p $HESTIA_BACKUP/conf/mysql/
         fi
-        if [[  "$DB_SYSTEM" =~ "pgsql" ]]; then 
-            mkdir -p $HESTIA_BACKUP/conf/pgsql/        
+        if [[  "$DB_SYSTEM" =~ "pgsql" ]]; then
+            mkdir -p $HESTIA_BACKUP/conf/pgsql/
         fi
     fi
     if [ -n "$FTP_SYSTEM" ]; then
@@ -440,14 +440,14 @@ upgrade_start_backup() {
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      ---- mysql"
             fi
-            cp -fr /etc/mysql/* $HESTIA_BACKUP/conf/mysql/       
+            cp -fr /etc/mysql/* $HESTIA_BACKUP/conf/mysql/
         fi
         if [[ "$DB_SYSTEM" =~ "pgsql" ]]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      ---- pgsql"
             fi
             # config for postgresql is stored in /etc/postgresql/version/main/
-            cp -fr /etc/postgresql/* $HESTIA_BACKUP/conf/pgsql/         
+            cp -fr /etc/postgresql/* $HESTIA_BACKUP/conf/pgsql/
         fi
     fi
     if [ -n "$FTP_SYSTEM" ]; then
@@ -499,14 +499,14 @@ upgrade_refresh_config() {
     source_conf "/usr/local/hestia/conf/hestia.conf"
 }
 
-upgrade_start_routine() {   
+upgrade_start_routine() {
     # Parse version numbers for comparison
     function check_version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
-    
+
     # Remove pre-release designation from version number for upgrade scripts
     VERSION=$(echo "$VERSION" | sed "s/~\([a-zA-Z0-9].*\)//g");
 
-    
+
     # Get list of all available version steps and create array
     upgrade_steps=$(ls $HESTIA/install/upgrade/versions/*.sh)
     for script in $upgrade_steps; do
@@ -515,7 +515,7 @@ upgrade_start_routine() {
     done
 
     # Define variables for accessing supported versions
-    # Sort version by -V due to issues with version numbers 1.4.10 and higher 
+    # Sort version by -V due to issues with version numbers 1.4.10 and higher
     all_versions=$(printf "%s\n" "${available_versions[@]}" | sort -V)
     oldest_version=$(printf "%s\n" "$all_versions" | head -n1)
     latest_version=$(printf "%s\n" "$all_versions" | sort -V | tail -n1)
@@ -566,7 +566,7 @@ upgrade_b2_tool(){
                 exit 3
             fi
         fi
-    fi   
+    fi
 }
 
 upgrade_phpmyadmin() {
@@ -605,7 +605,7 @@ upgrade_phpmyadmin() {
                 mkdir /usr/share/phpmyadmin/tmp
                 chown root:www-data /usr/share/phpmyadmin/tmp
                 chmod 770 /usr/share/phpmyadmin/tmp
-                
+
             fi
 
             if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
@@ -623,19 +623,19 @@ upgrade_phpmyadmin() {
 upgrade_filemanager() {
     FILE_MANAGER_CHECK=$(cat $HESTIA/conf/hestia.conf | grep "FILE_MANAGER='false'")
     if [ -z "$FILE_MANAGER_CHECK" ]; then
-        if [ -f "$HESTIA/web/fm/version" ]; then 
+        if [ -f "$HESTIA/web/fm/version" ]; then
             fm_version=$(cat $HESTIA/web/fm/version);
         else
             fm_version="1.0.0"
         fi
-        if [ "$fm_version" != "$fm_v" ]; then 
+        if [ "$fm_version" != "$fm_v" ]; then
             echo "[ ! ] Upgrading File Manager to version $fm_v..."
             # Reinstall the File Manager
             $HESTIA/bin/v-delete-sys-filemanager quiet yes
             $HESTIA/bin/v-add-sys-filemanager quiet
         else
             echo "[ * ] File Manager is up to date ($fm_v)..."
-            
+
             if [ "$UPGRADE_UPDATE_FILEMANAGER_CONFIG" = "true" ]; then
                 if [ -e "$HESTIA/web/fm/configuration.php" ]; then
                     echo "[ ! ] Updating File Manager configuration..."
@@ -646,7 +646,7 @@ upgrade_filemanager() {
                 fi
             fi
         fi
-    fi  
+    fi
 }
 
 upgrade_roundcube(){
@@ -734,7 +734,7 @@ upgrade_rebuild_users() {
                     $BIN/v-rebuild-dns-domains "$user" 'no' >/dev/null 2>&1
                 fi
             fi
-            if [ -n "$MAIL_SYSTEM" ]; then 
+            if [ -n "$MAIL_SYSTEM" ]; then
                 if [ "$DEBUG_MODE" = "true" ]; then
                     echo "      ---- Mail domains..."
                     $BIN/v-rebuild-mail-domains "$user" 'no'
@@ -795,15 +795,15 @@ upgrade_restart_services() {
             fi
             $BIN/v-restart-dns 'yes'
         fi
-        if [ -n "$WEB_BACKEND" ]; then 
+        if [ -n "$WEB_BACKEND" ]; then
             versions_list=$($BIN/v-list-sys-php plain)
-            for v in $versions_list; do 
+            for v in $versions_list; do
                 if [ "$DEBUG_MODE" = "true" ]; then
                     echo "      - php$v-fpm"
                 fi
                 $BIN/v-restart-service "php$v-fpm" 'yes'
             done
-        fi 
+        fi
         if [ -n "$FTP_SYSTEM" ]; then
             if [ "$DEBUG_MODE" = "true" ]; then
                 echo "      - $FTP_SYSTEM"

@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: enable GeoIP2 in Awstats 
+# info: enable GeoIP2 in Awstats
 #
 # This function enables GeoIP2 location lookup for
 # IP addresses that are listed in awstats.
@@ -19,7 +19,7 @@ source $HESTIA/conf/hestia.conf
 #----------------------------------------------------------#
 
 #check if string already exists
-if grep "geoip2" $HESTIA/data/templates/web/awstats/awstats.tpl; then 
+if grep "geoip2" $HESTIA/data/templates/web/awstats/awstats.tpl; then
     echo "Plugin allready enabled"
     exit 0
 fi
@@ -33,7 +33,7 @@ if [ -d /etc/awstats ]; then
     perl -MCPAN -f -e "GeoIP2::Database::Reader"
     sed -i '/LoadPlugin=\"geoip2_country \/pathto\/GeoLite2-Country.mmdb\"/s/^#//g;s/pathto/usr\/share\/GeoIP/g' /etc/awstats/awstats.conf
     echo "LoadPlugin=\"geoip2_country /usr/share/GeoIP/GeoLite2-Country.mmdb\"" >> $HESTIA/data/templates/web/awstats/awstats.tpl
-    
+
     for user in $($BIN/v-list-sys-users plain); do
         $BIN/v-rebuild-web-domains $user no
     done

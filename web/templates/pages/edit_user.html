@@ -24,7 +24,7 @@
         <a href="<?=$keys_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Access Keys');?>"><i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?></a>
       <?php } ?>
     </div>
-    <div class="l-unit-toolbar__buttonstrip u-float-right">
+    <div class="l-unit-toolbar__buttonstrip">
       <?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
         <!-- Do not show delete button for currently logged in user-->
       <?} else {?>
@@ -152,6 +152,7 @@
               <select class="form-select" name="v_role" id="v_role">
                 <option value="user"><?=_('User');?>
                 <option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?=_('Administrator');?>
+                <option value="dns-cluster" <?php if($v_role == "dns-cluster" ){ echo "selected"; } ?>><?=_('DNS Sync user');?>
               </select>
             </div>
           <?php } ?>

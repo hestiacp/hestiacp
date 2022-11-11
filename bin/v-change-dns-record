@@ -107,7 +107,7 @@ if [ "$rtype" != "CAA" ]; then
 fi
 
 
-#RTYPE wasn't checked make sure to do it now correctly 
+#RTYPE wasn't checked make sure to do it now correctly
 is_format_valid 'user' 'domain' 'id' 'record' 'rtype' 'dvalue'
 
 # Additional verifications

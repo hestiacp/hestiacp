@@ -7,14 +7,14 @@ use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class DokuWikiSetup extends BaseSetup {
 
-	protected $appInfo = [ 
+	protected $appInfo = [
 		'name' => 'DokuWiki',
 		'group' => 'wiki',
 		'enabled' => true,
 		'version' => 'stable_2022-07-31a',
 		'thumbnail' => 'dokuwiki-logo.svg'
 	];
-	
+
 	protected $appname = 'dokuwiki';
 	protected $extractsubdir = "/tmp-dokuwiki";
 
@@ -25,7 +25,7 @@ class DokuWikiSetup extends BaseSetup {
 			'real_name' => 'text',
 			'email' => 'text',
 			'password' => 'password',
-			'initial_ACL_policy' => [ 
+			'initial_ACL_policy' => [
 				'type' => 'select',
 				'options' => [
 					'0: Open Wiki (read, write, upload for everyone)', // 0
@@ -44,7 +44,7 @@ class DokuWikiSetup extends BaseSetup {
 					'cc-by-nc: CC Attribution-Noncommercial 4.0 International',
 					'cc-by-nc-sa: CC Attribution-Noncommercial-Share Alike 4.0 International',
 					'0: Do not show any license information',
-				]	
+				]
 			],
 		 ],
 		'resources' => [
@@ -54,23 +54,23 @@ class DokuWikiSetup extends BaseSetup {
 			'nginx' => [
 				'template' => 'default'
 			],
-			'php' => [ 
+			'php' => [
 				'supported' => [ '7.3','7.4','8.0','8.1' ],
 			]
-		], 
+		],
 	];
-	
+
 	public function install(array $options = null, &$status=null)
 	{
 		parent::install($options);
 		parent::setup($options);
-			
-		//check if ssl is enabled 
+
+		//check if ssl is enabled
         $this->appcontext->run('v-list-web-domain', [$this->appcontext->user(), $this->domain, 'json'], $status);
 		$sslEnabled = ($status->json[$this->domain]['SSL'] == 'no' ? 0 : 1);
 
 		$webDomain = ($sslEnabled ? "https://" : "http://") . $this->domain . "/";
-		
+
 		$this->appcontext->runUser('v-copy-fs-directory',[
 			$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2022-07-31a/."),
 			$this->getDocRoot()], $status);

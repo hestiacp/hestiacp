@@ -116,7 +116,7 @@ if [ -n "$PROXY_SYSTEM" ]; then
         # Remove RPAFproxy_ips line when ip list is empty
         [ "$(grep RPAFproxy_ips $rpaf_conf | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" $rpaf_conf
     fi
-    
+
     #mod_remoteip
     remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
     if [ -e "$remoteip_conf" ]; then

@@ -7,46 +7,48 @@
 </a>
 
 <div class="l-header">
-  <div class="l-center">
-    <!-- Logo / Home Button -->
-    <a href="<?=htmlspecialchars($home_url)?>" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
+  <div class="l-center l-header__inner">
 
-    <!-- Left Menu -->
-    <div class="l-menu clearfix u-noselect">
-      <!-- Records tab -->
-      <div class="l-menu__item <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-tasks panel-icon"></i><?=_('Records');?></a></div>
+    <!-- Logo / Left Menu wrapper -->
+    <div class="l-header__left">
+      <!-- Logo / Home Button -->
+      <a href="<?=htmlspecialchars($home_url)?>" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
 
-      <!-- File Manager tab -->
-      <?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
-        <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
-            <!-- Hide file manager when impersonating admin-->
-          <?php } else { ?>
-            <div class="l-menu__item <?php if($TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i><?=_('Files');?></a></div>
+      <!-- Left Menu -->
+      <div class="l-menu clearfix u-noselect">
+        <!-- Records tab -->
+        <div class="l-menu__item <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-tasks panel-icon"></i><?=_('Records');?></a></div>
+
+        <!-- File Manager tab -->
+        <?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
+          <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
+              <!-- Hide file manager when impersonating admin-->
+            <?php } else { ?>
+              <div class="l-menu__item <?php if($TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i><?=_('Files');?></a></div>
+          <?php } ?>
         <?php } ?>
-      <?php } ?>
 
-      <!-- Statistics tab-->
-      <div class="l-menu__item <?php if($TAB == 'STATS') echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i><?=_('Statistics');?></a></div>
+        <!-- Statistics tab-->
+        <div class="l-menu__item <?php if($TAB == 'STATS') echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i><?=_('Statistics');?></a></div>
+      </div>
     </div>
 
     <!-- Right Menu -->
     <div class="l-profile u-noselect">
-      <div class="l-menu__item">
-        <!-- Logged in as / Usage Statistics Overview -->
-        <span class="pill usage">
-          <?php
-            if (isset($_SESSION['look'])) {
-              $user_icon = 'fa-binoculars';
-            } else if ($_SESSION['userContext'] === 'admin') {
-              $user_icon = 'fa-user-tie';
-            } else {
-              $user_icon = 'fa-user';
-            }
-          ?>
-          <span class="label-space-right"><i class="fas <?=$user_icon;?> icon-pad-right" title="<?=_('Logged in as');?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i><b><?=htmlspecialchars($user)?></b></span>
-          <span class="label-space-right"><i class="fas fa-hdd icon-pad-right" title="<?=_('Disk');?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?></span>
-          <span><i class="fas fa-exchange-alt icon-pad-right" title="<?=_('Bandwidth');?>: <?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span>
-        </span>
+      <!-- Logged in as / Usage Statistics Overview -->
+      <div class="usage-pill">
+        <?php
+          if (isset($_SESSION['look'])) {
+            $user_icon = 'fa-binoculars';
+          } else if ($_SESSION['userContext'] === 'admin') {
+            $user_icon = 'fa-user-tie';
+          } else {
+            $user_icon = 'fa-user';
+          }
+        ?>
+        <span class="usage-pill__item"><i class="fas <?=$user_icon;?> icon-pad-right" title="<?=_('Logged in as');?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i><b><?=htmlspecialchars($user)?></b></span>
+        <span class="usage-pill__item"><i class="fas fa-hdd icon-pad-right" title="<?=_('Disk');?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?></span>
+        <span class="usage-pill__item"><i class="fas fa-exchange-alt icon-pad-right" title="<?=_('Bandwidth');?>: <?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>"></i><b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?></span>
       </div>
 
       <!-- Notifications -->

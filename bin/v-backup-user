@@ -160,7 +160,7 @@ if [ -z "$BACKUP" ]; then
 fi
 
 # Check if backup folder exists and have the correct permission
-if [[ ! -d "$BACKUP" ]]; then 
+if [[ ! -d "$BACKUP" ]]; then
     mkdir -p $BACKUP
 fi
 if [ "$(stat -c %a "$BACKUP")" != 755 ]; then
@@ -179,9 +179,12 @@ let u_disk=$(($(get_user_disk_usage) * 2))
 let v_disk=$(($(stat -f --format="%a*%S" $BACKUP)))/1024/1024
 
 if [ "$u_disk" -gt "$v_disk" ]; then
+    let u_disk_original=$(get_user_disk_usage)
     # Always notify on failure
-    echo "not enough diskspace available to perform the backup." | $SENDMAIL -s "$subj" "$email" "yes"
-    check_result "$E_LIMIT" "not enough diskspace available to perform the backup."
+    echo "Not enough disk space available ($v_disk mb) to perform the backup  of $user. ( $u_disk_original mb * 2 = $u_disk mb). https://hestiacp.com/docs/server-administration/backup-restore.html" | $SENDMAIL -s "$subj" "$email" "yes"
+    # Deleting task from queue
+    sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
+    check_result "$E_LIMIT" "not enough disk space available ($v_disk mb) to perform the backup  of $user. ( $u_disk_original mb * 2 = $u_disk mb)."
 fi
 
 if [ -z "$BACKUP_TEMP" ]; then
@@ -193,6 +196,8 @@ tmpdir=$(mktemp -p $BACKUP_TEMP -d)
 
 if [ "$?" -ne 0 ]; then
     echo "Can't create tmp dir $tmpdir" |$SENDMAIL -s "$subj" "$email" "yes"
+    # Deleting task from queue
+    sed -i "/v-backup-user $user /d" $HESTIA/data/queue/backup.pipe
     check_result "$E_NOTEXIST" "can't create tmp dir"
 fi
 
@@ -331,24 +336,24 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
         domain_conf=$(grep "DOMAIN='$domain'" $conf)
         parse_object_kv_list_non_eval domain_conf
-        
+
         mkdir -p template/$WEB_SYSTEM/
         mkdir template/php-fpm/
-        
-        if [ $WEB_BACKEND == 'php-fpm' ]; then 
+
+        if [ $WEB_BACKEND == 'php-fpm' ]; then
             cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.tpl template/$WEB_SYSTEM/
             cp $HESTIA/data/templates/web/$WEB_SYSTEM/php-fpm/$TPL.stpl template/$WEB_SYSTEM/
             cp $HESTIA/data/templates/web/php-fpm/$BACKEND.tpl template/php-fpm/
         else
             cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.tpl template/$WEB_SYSTEM/
-            cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.stpl template/$WEB_SYSTEM/   
+            cp $HESTIA/data/templates/web/$WEB_SYSTEM/$TPL.stpl template/$WEB_SYSTEM/
         fi
         if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
             mkdir  template/$PROXY_SYSTEM
             cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.tpl template/$PROXY_SYSTEM/
-            cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.stpl template/$PROXY_SYSTEM/      
+            cp $HESTIA/data/templates/web/$PROXY_SYSTEM/$PROXY.stpl template/$PROXY_SYSTEM/
         fi
-    
+
         # Backup ssl certificates
         if [ "$SSL" = 'yes' ] ; then
             cp $HOMEDIR/$user/conf/web/$domain/ssl/$domain.* conf/
@@ -382,7 +387,7 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
         # Backup files
         if [ "$BACKUP_MODE" = 'zstd' ]; then
             tar "${fargs[@]}" -cpf- * | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
-        else    
+        else
             tar "${fargs[@]}" -cpf- * | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
         fi
     done
@@ -508,9 +513,9 @@ if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
         if [ ${#accounts[@]} -gt 0 ]; then
             if [ "$BACKUP_MODE" = 'zstd' ]; then
                 tar -cpf- "${accounts[@]}"  | pzstd -"$BACKUP_GZIP" - > $tmpdir/mail/$domain/accounts.tar.zst
-            else    
+            else
                 tar -cpf- "${accounts[@]}" | gzip -"$BACKUP_GZIP" - > $tmpdir/mail/$domain/accounts.tar.gz
-            fi        
+            fi
         fi
     done
 
@@ -558,7 +563,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
         if [ "$BACKUP_MODE" = 'zstd' ]; then
                     dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.zst"
         else
-            dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"        
+            dumpgz="$tmpdir/db/$database/$database.$TYPE.sql.gz"
         fi
 
         grants="$tmpdir/db/$database/conf/$database.$TYPE.$DBUSER"
@@ -589,9 +594,9 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB" != '*' ]; then
             if [ "$BACKUP_MODE" = 'zstd' ]; then
                 pzstd -$BACKUP_GZIP $dump
                 rm $dump;
-            else    
+            else
                 gzip -$BACKUP_GZIP $dump
-            fi                     
+            fi
         fi
     done
 
@@ -669,10 +674,10 @@ if [ "$USER" != '*' ]; then
             # Backup files and dirs
             if [ "$BACKUP_MODE" = 'zstd' ]; then
                 tar --anchored -cpf- "${fargs[@]}" $udir | pzstd -"$BACKUP_GZIP" - > $tmpdir/user_dir/$udir.tar.zst
-            else    
+            else
                 tar --anchored -cpf- "${fargs[@]}" $udir | gzip -"$BACKUP_GZIP" - > $tmpdir/user_dir/$udir.tar.gz
-            fi 
-            
+            fi
+
         fi
     done
     set +f
@@ -720,7 +725,7 @@ done
 # Removing tmpdir
 rm -rf $tmpdir
 if [[ "$errorcode" != "0" ]]; then
-    if [[ "$BACKUP_SYSTEM"  =~ "local" ]]; then 
+    if [[ "$BACKUP_SYSTEM"  =~ "local" ]]; then
         echo -e "$(date "+%F %T") *** Local backup was successfully executed. Remote backup failed ***" |\
         tee -a $BACKUP/$user.log
         BACKUP_SYSTEM="local"

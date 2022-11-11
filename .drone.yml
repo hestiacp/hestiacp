@@ -99,27 +99,6 @@ trigger:
 ---
 kind: pipeline
 type: docker
-name: Linting
-
-concurrency:
-  limit: 1
-
-steps:
-  - name: Shellcheck
-    image: koalaman/shellcheck-alpine:v0.8.0
-    commands:
-    - ./test/shellcheck.sh
-  - name: PHP 8.1
-    image: php:8.1-cli-bullseye
-    commands:
-      - ./test/check_php.sh ./web/
-
-trigger:
-      event: [ pull_request, push ]
-
----
-kind: pipeline
-type: docker
 name: Push to beta atp server
 
 platform:
@@ -147,24 +126,7 @@ steps:
       target: /root/
       source:
         - ./hestia/*
-  - name: Publish
-    image: appleboy/drone-ssh
-    settings:
-        host:
-          from_secret: apt_server
-        user: root
-        key:
-          from_secret: ssh_key
-        port: 22
-        command_timeout: 2m
-        script:
-            - freight-add ./hestia/*.deb apt/bionic apt/focal apt/jammy apt/stretch apt/buster apt/bullseye
-            - freight-cache
-            - rm -fr ./hestia/
 
 trigger:
     event: [ promote]
 
----
-kind: signature
-hmac: f89a311b0f023c6ee92dbdb56bcd23ec663ef9242269a6b70c1c222bac4380ee

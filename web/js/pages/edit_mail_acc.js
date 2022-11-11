@@ -123,7 +123,7 @@ generate_mail_credentials = function() {
     if (pass=="") div.find('#v_password').text(' ');
     var output = div.text();
     output=output.replace(/(?:\r\n|\r|\n|\t)/g, "|");
-    output=output.replace(/  /g, "");
+    output=output.replace(/ {2}/g, "");
     output=output.replace(/\|\|/g, "|");
     output=output.replace(/\|\|/g, "|");
     output=output.replace(/\|\|/g, "|");

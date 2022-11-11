@@ -188,10 +188,6 @@ strong {
   box-shadow: none;
 }
 
-.pill.usage {
-  box-shadow: none;
-}
-
 .badge {
   box-shadow: none;
 }
@@ -225,23 +221,19 @@ strong {
   border-radius: 0;
 }
 
-.pill {
+.usage-pill {
   border-radius: 4px;
-}
-
-.pill.usage b {
-  color: #fff;
-}
-
-.pill.usage {
   color: #fafafa;
-  margin-top: 8px;
   line-height: 0.8em;
   text-shadow: none;
-  padding: 5px !important;
-  border: none !important;
-  background: none !important;
-  box-shadow: none !important;
+  padding: 5px;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.usage-pill b {
+  color: #fff;
 }
 
 .l-menu__item.l-menu__item--active a {
@@ -435,7 +427,6 @@ strong {
   background: none !important;
 }
 
-.pill.gray,
 .badge.gray {
   border: 1px solid rgb(255 255 255 / 40%) !important;
 }
@@ -518,8 +509,7 @@ a#btn-back:focus {
 }
 
 .l-logo {
-  height: 24px !important;
-  margin-top: 8px !important;
+  height: 24px;
 }
 
 .mail-infoblock {

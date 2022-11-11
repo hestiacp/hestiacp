@@ -27,7 +27,7 @@ class SymfonySetup extends BaseSetup
             'nginx' => [
                 'template' => 'symfony4-5',
             ],
-            'php' => [ 
+            'php' => [
                 'supported' => [ '8.0','8.1' ],
             ]
         ],

@@ -3,7 +3,7 @@
 # options: USER BACKUP DATABASE [NOTIFY]
 #
 # example: v-restore-database USER BACKUP DATABASE [NOTIFY]
-# 
+#
 # This function allows the user to restore a single database
 # from a backup archive.
 

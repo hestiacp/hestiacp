@@ -25,14 +25,14 @@ send_email_report() {
     email=$(echo "$email" | cut -f 2 -d "'")
     tmpfile=$(mktemp)
     subj="$(hostname): $WEB_SYSTEM restart failed"
-    if [ "$WEB_SYSTEM" = "apache2" ]; then 
+    if [ "$WEB_SYSTEM" = "apache2" ]; then
         apache2ctl configtest >> "$tmpfile" 2>&1
-    else 
+    else
         service $WEB_SYSTEM configtest >> "$tmpfile" 2>&1
     fi
     service "$WEB_SYSTEM" restart >> "$tmpfile" 2>&1
     cat "$tmpfile" |$SENDMAIL -s "$subj"  "$email"
-    if [ "$DEBUG_MODE" = "true" ]; then 
+    if [ "$DEBUG_MODE" = "true" ]; then
         echo "[ $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
         cat $tmpfile >> /var/log/hestia/debug.log 2>&1
     fi
@@ -70,7 +70,7 @@ if [ $WEB_SYSTEM = 'nginx' ]; then
     if [ "$1" = "ssl" ]; then
         restart="ssl"
     fi
-    if [ "$DEBUG_MODE" = "true" ]; then 
+    if [ "$DEBUG_MODE" = "true" ]; then
         echo "[  $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
         service $WEB_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
     else
@@ -81,7 +81,7 @@ if [ $WEB_SYSTEM = 'nginx' ]; then
         check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
     fi
 elif [ $WEB_SYSTEM = 'apache2' ]; then
-    if [ "$DEBUG_MODE" = "true" ]; then 
+    if [ "$DEBUG_MODE" = "true" ]; then
         echo "[  $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
         apache2ctl configtest >> /var/log/hestia/debug.log 2>&1
     else
@@ -93,7 +93,7 @@ elif [ $WEB_SYSTEM = 'apache2' ]; then
     fi
 fi
 
-$BIN/v-restart-service "$WEB_SYSTEM" "$restart" 
+$BIN/v-restart-service "$WEB_SYSTEM" "$restart"
 
 if [ $? -ne 0 ]; then
     send_email_report

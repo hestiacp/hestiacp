@@ -72,19 +72,19 @@ if [ ! -z "$new" ]; then
             sed -i "s/$old/$new/g" $HESTIA/data/users/$user/web.conf
             $BIN/v-rebuild-web-domains "$user" no
         done
-        
+
         if [ -e "/etc/apache2/mods-available/remoteip.conf" ]; then
            sed -i "s/$old/$new/g" /etc/apache2/mods-available/remoteip.conf
         fi
-        
+
         if [ -e "/etc/apache2/mods-enabled/rpaf.conf" ]; then
            sed -i "s/$old/$new/g" /etc/apache2/mods-enabled/rpaf.conf
         fi
-        
+
         $BIN/v-restart-proxy
         $BIN/v-restart-web
     fi
-    
+
     if [ -n "$IMAP_SYSTEM" ]; then
         for user in $($HESTIA/bin/v-list-sys-users plain); do
             $BIN/v-rebuild-mail-domains "$user" no
@@ -100,7 +100,7 @@ if [ ! -z "$new" ]; then
         done
         $BIN/v-restart-dns
     fi
-    
+
     # Updating FTP
     if [ ! -z "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" = 'vsftpd' ]; then
         conf=$(find /etc/ -maxdepth 2 -name $FTP_SYSTEM.conf)

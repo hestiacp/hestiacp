@@ -11,7 +11,7 @@ if (empty($_GET['domain'])){
     $data = json_decode(implode('', $output), true);
     if($_SESSION['userSortOrder'] == 'name'){
         ksort($data);
-    }else{ 
+    }else{
         $data = array_reverse($data,true);
     }
     unset($output);
@@ -37,7 +37,7 @@ if (empty($_GET['domain'])){
     $data = json_decode(implode('', $output), true);
     if($_SESSION['userSortOrder'] == 'name'){
         ksort($data);
-    }else{ 
+    }else{
         $data = array_reverse($data,true);
     }
     unset($output);

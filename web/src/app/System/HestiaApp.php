@@ -24,7 +24,7 @@ class HestiaApp
             throw new \Exception($errstr);
         }
         $cli_script = '/usr/bin/sudo ' . quoteshellarg($cli_script);
-        
+
         $cli_arguments = '';
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {
@@ -33,7 +33,7 @@ class HestiaApp
         } else {
             $cli_arguments = quoteshellarg($args);
         }
-        
+
         exec($cli_script . ' ' . $cli_arguments . ' 2>&1', $output, $exit_code);
 
         $result['code'] = $exit_code;
@@ -173,8 +173,8 @@ class HestiaApp
         if($result -> json[$this -> user()]['DATABASES'] != "unlimited" ){
             if($result -> json[$this -> user()]['DATABASES'] - $result -> json[$this -> user()]['U_DATABASES'] < 1){
                 return false;
-            } 
-        } 
+            }
+        }
         return true;
     }
     public function databaseAdd(string $dbname, string $dbuser, string $dbpass, string $charset = 'utf8mb4')
@@ -190,24 +190,24 @@ class HestiaApp
         unlink($v_password);
         return $status;
     }
-    
+
     public function getCurrentBackendTemplate(string $domain){
         $status = $this->runUser('v-list-web-domain', [$domain, 'json'],$return_message);
         $version = $return_message -> json[$domain]['BACKEND'];
         if (!empty($version)){
             if($version != "default"){
                 $test= preg_match('/^.*PHP-([0-9])\_([0-9])/',$version, $match);
-                return $match[1].'.'.$match[2];   
+                return $match[1].'.'.$match[2];
             }else{
                 $supported = $this -> run('v-list-sys-php', 'json', $result);
                 return $this -> $supported -> json[0];
             }
         }else{
             $supported = $this -> run('v-list-sys-php', 'json', $result);
-            return $this -> $supported -> json[0];  
-        }                
+            return $this -> $supported -> json[0];
+        }
     }
-    
+
     public function changeWebTemplate(string $domain, string $template)
     {
         $status = $this->runUser('v-change-web-domain-tpl', [$domain, $template]);
@@ -304,10 +304,10 @@ class HestiaApp
             }
             $archive_file = $download_result->file;
         }
-        
+
         $result = $this->runUser('v-extract-fs-archive', [$archive_file, $path, null, $skip_components]);
         unlink($archive_file);
-        
+
         return $result;
     }
 }

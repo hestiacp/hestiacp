@@ -38,8 +38,8 @@ json_list() {
             echo ','
         fi
         ((i++))
-        done		
-        echo "}"   
+        done
+        echo "}"
 }
 
 shell_list() {

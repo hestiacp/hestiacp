@@ -7,15 +7,15 @@ use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 class DrupalSetup extends BaseSetup {
 
     protected $appname = 'drupal';
-    
-    protected $appInfo = [ 
+
+    protected $appInfo = [
         'name' => 'Drupal',
         'group' => 'cms',
         'enabled' => 'yes',
         'version' => 'latest',
         'thumbnail' => 'drupal-thumb.png'
     ];
-    
+
     protected $config = [
         'form' => [
             'username' => ['type'=>'text', 'value'=>'admin'],
@@ -30,7 +30,7 @@ class DrupalSetup extends BaseSetup {
             'nginx' => [
                 'template' => 'drupal-composer'
             ],
-            'php' => [ 
+            'php' => [
                 'supported' => [ '8.0','8.1' ],
             ]
         ],
@@ -40,22 +40,22 @@ class DrupalSetup extends BaseSetup {
     {
         parent::install($options);
         parent::setup($options);
-        
+
         $this->appcontext->runComposer(["require", "-d " . $this->getDocRoot(), "drush/drush:^10"]);
-        
+
         $htaccess_rewrite = '
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^(.*)$ web/$1 [L]
 </IfModule>';
-        
+
         $tmp_configpath = $this->saveTempFile($htaccess_rewrite);
         $this->appcontext->runUser('v-move-fs-file',[$tmp_configpath, $this->getDocRoot(".htaccess")], $result);
-        
-       
+
+
         $this -> appcontext -> runUser('v-run-cli-cmd', [
             "/usr/bin/php".$options['php_version'],
-            $this -> getDocRoot('/vendor/drush/drush/drush'), 
+            $this -> getDocRoot('/vendor/drush/drush/drush'),
             'site-install',
             'standard',
             '--db-url=mysql://'.$this->appcontext->user() . '_' . $options['database_user'].':' . $options['database_password'].'@localhost:3306/'.$this->appcontext->user() . '_' . $options['database_name'].'',

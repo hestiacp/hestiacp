@@ -86,7 +86,7 @@ else
         echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset" >> $sd_unit
         if [ "$iptablesversion" = "v1.6" ]; then
             echo "ExecStart=/sbin/iptables-restore /etc/iptables.rules" >> $sd_unit
-        else 
+        else
             echo "ExecStart=/sbin/iptables-restore --wait=10 /etc/iptables.rules" >> $sd_unit
         fi
         echo "" >> $sd_unit

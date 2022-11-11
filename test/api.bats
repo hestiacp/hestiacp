@@ -97,7 +97,7 @@ function setup() {
     run nslookup test.ilovehestiacp.org $server
     assert_failure 1
     assert_output --partial "REFUSED"
-    
+
     run nslookup test.ilovehestiacp.org localhost
     assert_success
     assert_output --partial "127.0.0.1"
@@ -106,7 +106,7 @@ function setup() {
 @test "[Success][ APIV2 ] Sync DNS cluster 2" {
     run v-sync-dns-cluster
     assert_success
-    
+
     run nslookup test.ilovehestiacp.org $server
     assert_success
     assert_output --partial "127.0.0.1"
@@ -121,7 +121,7 @@ function setup() {
     run nslookup test.ilovehestiacp.org $server
     assert_success
     assert_output --partial "127.0.0.1"
-    
+
     run nslookup test.ilovehestiacp.org localhost
     assert_failure
 }
@@ -129,7 +129,7 @@ function setup() {
 @test "[Success][ APIV2 ] Sync DNS cluster 3" {
     run v-sync-dns-cluster
     assert_success
-    
+
     run nslookup test.ilovehestiacp.org $server
     assert_failure
 }

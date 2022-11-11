@@ -61,7 +61,7 @@ fi
 if [ ! -z "$IMAP_SYSTEM" ]; then
     echo "[ * ] Enabling OCSP stapling support for webmail services..."
     $BIN/v-update-mail-templates > /dev/null 2>&1
-fi 
+fi
 
 # Enhance webmail security
 if [ -e "/etc/nginx/conf.d/webmail.inc" ]; then

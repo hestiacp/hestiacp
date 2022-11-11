@@ -24,7 +24,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Ensure that quota kernel modules are installed
 kernel_module_check=$(find /lib/modules/`uname -r` -type f -name '*quota_v*.ko*' | egrep '.*' && [ $? -eq 0 ])
 if [ -z "$kernel_module_check" ]; then
-    # Install kernel modules for quota support. 
+    # Install kernel modules for quota support.
     # Requires reboot to activate updated kernel.
     echo "Installing required kernel modules for quota support..."
     reboot_req="Y"

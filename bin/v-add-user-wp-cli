@@ -54,7 +54,7 @@ fi
 mkdir -p "$WPCLI_DIR"
 chown $user:$user "$WPCLI_DIR"
 
-user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$WPCLI_BIN" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar 
+user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$WPCLI_BIN" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 user_exec chmod +x "$WPCLI_BIN"
 
 #----------------------------------------------------------#

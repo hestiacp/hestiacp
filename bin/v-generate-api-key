@@ -2,7 +2,7 @@
 # info: generate api key
 # options: NONE
 #
-# example: v-generate-api-key 
+# example: v-generate-api-key
 #
 # This function creates a key file in $HESTIA/data/keys/
 

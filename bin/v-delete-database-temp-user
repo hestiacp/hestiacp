@@ -5,7 +5,7 @@
 # example: v-add-database-temp-user wordress hestia_sso_user mysql
 #
 # Revokes "temp user" access to a database and removes the user
-# To be used in combination with v-add-database-temp-user 
+# To be used in combination with v-add-database-temp-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

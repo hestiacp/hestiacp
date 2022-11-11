@@ -150,7 +150,7 @@ function session_invalid()
                 if(is_numeric($_GET['exp'])){
                     $time = $_GET['exp'];
                 }else{
-                    $time = 0; 
+                    $time = 0;
                 }
 
                 if ($time + 60 > time()) {

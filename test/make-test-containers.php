@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-#  
+#
 # Auto create multiple Hesia containers with various features enabled/disabled
 # lxc/lxd should be allready configured
 #   echo "root:1000:1" | sudo tee -a /etc/subuid
@@ -16,7 +16,7 @@
 #   export SHARED_HOST_FOLDER="/home/myuser/projectfiles"
 #   mkdir -p $SHARED_HOST_FOLDER
 #   cd $SHARED_HOST_FOLDER && git clone https://github.com/hestiacp/hestiacp.git && cd hestiacp && git checkout ..branch..
-# 
+#
 
 /*
 # Nginx reverse proxy config: /etc/nginx/conf.d/lxc-hestia.conf
@@ -76,7 +76,7 @@ $containers = [
 ];
 
 array_walk($containers, function(&$element) {
-    $lxc_name='hst-';           // hostname and lxc name prefix. Update nginx reverse proxy config after altering this value 
+    $lxc_name='hst-';           // hostname and lxc name prefix. Update nginx reverse proxy config after altering this value
     $hst_args = HST_ARGS;
 
     $element['hst_installer'] = 'hst-install-ubuntu.sh';
@@ -98,7 +98,7 @@ array_walk($containers, function(&$element) {
         $element['os'] = "ubuntu18.04";
     }
 
-    if($element['nginx'] === true) { 
+    if($element['nginx'] === true) {
         $lxc_name .= '-ngx';
         $hst_args .= " --nginx yes";
     } else
@@ -107,9 +107,9 @@ array_walk($containers, function(&$element) {
     if($element['apache2'] === true) {
         $lxc_name .= '-a2';
         $hst_args .= " --apache yes";
-    } else 
+    } else
         $hst_args .= " --apache no";
-    
+
 
     if($element['php'] == 'fpm') {
         $lxc_name .= '-fpm';
@@ -188,7 +188,7 @@ function getHestiaVersion($branch) {
         list($key,$value) = explode(':', $line);
         if(strtolower($key) === 'version')
             return  trim($value);
-    } 
+    }
 
     throw new Exception("Error reading Hestia version for branch: [${branch}]", 1);
 }
@@ -306,8 +306,8 @@ while(count($worker_pool)) {
 // Custom config
 foreach ($containers as $container) {
     echo "Apply custom config on: ".$container['lxc_name'].PHP_EOL;
-    
-    # Allow running a reverse proxy in front of Hestia 
+
+    # Allow running a reverse proxy in front of Hestia
     system( 'lxc exec '.$container['lxc_name'].' -- bash -c "sed -i \'s/session.cookie_secure] = on\$/session.cookie_secure] = off/\' /usr/local/hestia/php/etc/php-fpm.conf"');
 
     # get rid off "mesg: ttyname failed: No such device" error

@@ -76,7 +76,7 @@ dns_rec="$dns_rec DNSSEC='$DNSSEC' KEY='$KEY' SLAVE='$SLAVE' MASTER='$MASTER'"
 dns_rec="$dns_rec SUSPENDED='$SUSPENDED' TIME='$time' DATE='$date'"
 echo "$dns_rec" >> $USER_DATA/dns.conf
 
-if [ "$SLAVE" = "yes" ]; then 
+if [ "$SLAVE" = "yes" ]; then
     touch $USER_DATA/dns/$domain.conf
 fi
 # Set permission

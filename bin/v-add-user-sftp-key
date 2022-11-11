@@ -68,7 +68,7 @@ if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_privkey" = true ]; then
     echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${expire} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
 fi
 
-# 
+#
 chown ${user}: "${AUTHKEY_FILE}"
 chown admin: "${PRVKEY_FILE}"
 

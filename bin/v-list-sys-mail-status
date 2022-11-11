@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list mail status
-# options: 
+# options:
 #
-# example: v-list-sys-mail-status 
+# example: v-list-sys-mail-status
 #
 # This function lists mail server status
 

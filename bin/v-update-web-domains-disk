@@ -35,7 +35,7 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Loop through all domains that are not suspended
-for domain in $($BIN/v-list-web-domains $user plain | cut -f 1); do 
+for domain in $($BIN/v-list-web-domains $user plain | cut -f 1); do
     home_dir="$HOMEDIR/$user/web/$domain/"
     if [ -e "$home_dir" ]; then
         disk_usage=$(nice -n 19 du -shm $home_dir | cut -f 1 )

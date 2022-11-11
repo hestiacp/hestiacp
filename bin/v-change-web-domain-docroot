@@ -81,7 +81,7 @@ fi
 # Otherwise, set target document root path accordingly based on passed values.
 if [ "$target_domain" = "default" ]; then
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT' ""
-    update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' "" 
+    update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' ""
 else
     # Check for existence of specified directory under target domain's public_html folder
     target_domain_directory="$HOMEDIR/$user/web/$target_domain"
@@ -104,14 +104,14 @@ else
         CUSTOM_DOCROOT="${target_domain_directory}/public_html/"
         custom_phproot="${target_domain_directory}/public_html/"
     fi
-    
+
     add_object_key 'web' 'DOMAIN' "$domain" 'CUSTOM_DOCROOT' 'IP6'
     add_object_key 'web' 'DOMAIN' "$domain" 'CUSTOM_PHPROOT' 'IP6'
-    
+
     update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT' "$CUSTOM_DOCROOT"
     # CUSTOM_PHPROOT got overwriten by default
     CUSTOM_PHPROOT=$custom_phproot
-    update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' "$CUSTOM_PHPROOT"  
+    update_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_PHPROOT' "$CUSTOM_PHPROOT"
 fi
 
 #----------------------------------------------------------#

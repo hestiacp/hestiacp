@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system cpu info
-# options: 
+# options:
 #
 # example: v-list-sys-cpu-status
 #

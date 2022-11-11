@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list web status
-# options: 
+# options:
 #
 # example: v-list-sys-web-status
 #

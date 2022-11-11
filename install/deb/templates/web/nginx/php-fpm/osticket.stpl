@@ -68,7 +68,7 @@ server {
 
     location ~ \.php$ {
         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
- 
+
         fastcgi_param  PATH_INFO        $path_info;
         fastcgi_pass    %backend_lsnr%;
 		fastcgi_index   index.php;
@@ -80,8 +80,8 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

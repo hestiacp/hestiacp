@@ -1,5 +1,5 @@
 /var/log/dovecot*.log {
-    rotate 4  
+    rotate 4
     weekly
     missingok
     notifempty

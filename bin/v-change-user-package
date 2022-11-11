@@ -24,7 +24,7 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 is_package_avalable() {
-    
+
     source_conf "$USER_DATA/user.conf"
 
     WEB_DOMAINS='0'

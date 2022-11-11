@@ -82,7 +82,7 @@ function setup() {
     run v-update-letsencrypt-ssl
     assert_success
     refute_output
-    
+
 }
 
 
@@ -105,7 +105,7 @@ function setup() {
 }
 
 @test "[ Redirect ] Create web domain" {
-    run v-add-web-domain $user "redirect.$domain" $ip yes 
+    run v-add-web-domain $user "redirect.$domain" $ip yes
     assert_success
     refute_output
 }

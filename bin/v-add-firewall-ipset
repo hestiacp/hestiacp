@@ -57,7 +57,7 @@ fi
 
 # Ensure ipset configuration path and master file exist before attempting to parse
 mkdir -p "$IPSET_PATH"
-if [ ! -f "$HESTIA/data/firewall/ipset.conf" ]; then 
+if [ ! -f "$HESTIA/data/firewall/ipset.conf" ]; then
     touch $HESTIA/data/firewall/ipset.conf
 fi
 
@@ -98,8 +98,8 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
         check_result $? "Downloading ip list"
 
         # Advanced: execute script with the same basename for aditional pre-processing
-        # ex: 
-        if [ -x "${IPSET_PATH}/${IPSET_FILE}.sh" ]; then 
+        # ex:
+        if [ -x "${IPSET_PATH}/${IPSET_FILE}.sh" ]; then
             preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
             check_result $? "Preprocessing script failed (${IPSET_FILE}.sh)"
             [[ "$preprocess_output" ]] && echo "$preprocess_output" > "$iplist_tempfile"

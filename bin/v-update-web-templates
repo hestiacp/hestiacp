@@ -26,7 +26,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Check if /install/upgrade/manual/install_awstats_geoip.sh has been applied 
+# Check if /install/upgrade/manual/install_awstats_geoip.sh has been applied
 awstats_patch=$(cat  $HESTIA/data/templates/web/awstats/awstats.tpl | grep "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"");
 
 # Update templates
@@ -56,7 +56,7 @@ for php_ver in $versions_list; do
     cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
 done
 
-if [ -n "$awstats_patch" ]; then 
+if [ -n "$awstats_patch" ]; then
     # restore LoadPlugin variable
     echo "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"" >> $HESTIA/data/templates/web/awstats/awstats.tpl
 fi
@@ -75,7 +75,7 @@ fi
 # Restarting web server
 $BIN/v-restart-web "$restart"
 check_result $? "restart" >/dev/null 2>&1
-    
+
 $BIN/v-restart-proxy "$restart"
 check_result $? "restart" >/dev/null 2>&1
 

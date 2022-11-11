@@ -25,7 +25,7 @@ mkdir -p %{buildroot}%{_unitdir}
 
 %clean
 
-%pre      
+%pre
 
 %post
 %systemd_post hestia-nginx.service

@@ -7,7 +7,7 @@
 server {
     listen      %ip%:%proxy_port%;
     server_name %domain_idn% %alias_idn%;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location / {
@@ -50,7 +50,7 @@ server {
     }
 
     location ~ /\.(?!well-known\/|file) {
-       deny all; 
+       deny all;
        return 404;
     }
 

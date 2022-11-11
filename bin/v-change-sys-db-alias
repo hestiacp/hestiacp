@@ -54,7 +54,7 @@ if [ "$type" = "pma" ] || [ "$type" = "PMA" ] || [ "$type" = "phpmyadmin" ]; the
         rm -f /etc/apache2/conf.d/phpmyadmin.inc
         cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/apache2/conf.d/phpmyadmin.inc
         sed -i "s|%pma_alias%|$alias|g" /etc/apache2/conf.d/phpmyadmin.inc
-        
+
         # Restart services
         $HESTIA/bin/v-restart-service apache2
     fi
@@ -63,7 +63,7 @@ if [ "$type" = "pma" ] || [ "$type" = "PMA" ] || [ "$type" = "phpmyadmin" ]; the
         rm -f /etc/nginx/conf.d/phpmyadmin.inc
         cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/phpmyadmin.inc
         sed -i "s|%pma_alias%|$alias|g" /etc/nginx/conf.d/phpmyadmin.inc
-        
+
         # Restart services
         $HESTIA/bin/v-restart-service nginx
     fi
@@ -81,8 +81,8 @@ if [ "$type" = "pga" ] || [ "$type" = "PGA" ] || [ "$type" = "phppgadmin" ]; the
     if [ -e "/etc/apache2/conf.d/phppgadmin.inc" ]; then
         rm -f /etc/apache2/conf.d/phppgadmin.inc
         cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.inc
-        sed -i "s|%pga_alias%|$alias|g" /etc/apache2/conf.d/phppgadmin.inc 
-        
+        sed -i "s|%pga_alias%|$alias|g" /etc/apache2/conf.d/phppgadmin.inc
+
         # Restart services
         $HESTIA/bin/v-restart-service apache2
     fi
@@ -91,7 +91,7 @@ if [ "$type" = "pga" ] || [ "$type" = "PGA" ] || [ "$type" = "phppgadmin" ]; the
         rm -f /etc/nginx/conf.d/phppgadmin.inc
         cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/phppgadmin.inc
         sed -i "s|%pga_alias%|$alias|g" /etc/nginx/conf.d/phppgadmin.inc
-        
+
         # Restart services
         $HESTIA/bin/v-restart-service nginx
     fi

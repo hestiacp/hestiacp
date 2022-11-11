@@ -3,7 +3,7 @@
 #
 # Script for preparing lxd enviorment and building Hestia packages for all supported distros
 # - Run with sudo, not directly as root!
-# 
+#
 # Arguments:
 # ./lxd_build_all --cleanup
 #     - Stop and delete all containers

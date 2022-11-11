@@ -28,7 +28,7 @@ send_email_report() {
     nginx -t >> $tmpfile 2>&1
     service "$PROXY_SYSTEM" restart >> $tmpfile 2>&1
     cat "$tmpfile" |$SENDMAIL -s "$subj" "$email"
-    if [ "$DEBUG_MODE" = "true" ]; then 
+    if [ "$DEBUG_MODE" = "true" ]; then
         echo "[ $date | $PROXY_SYSTEM | PROXY ]"  >> /var/log/hestia/debug.log 2>&1
         cat "$tmpfile" >> /var/log/hestia/debug.log 2>&1
     fi
@@ -80,9 +80,9 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
         nohup $BIN/v-restart-proxy 'background' &>/dev/null &
     else
     # Default behaviour
-    
+
     # Preform an check if Nginx is valid as reload doesn't throw an error / exit
-    if [ "$DEBUG_MODE" = "true" ]; then 
+    if [ "$DEBUG_MODE" = "true" ]; then
         echo "[ $date | $PROXY_SYSTEM ]"  >> /var/log/hestia/debug.log 2>&1
         service $PROXY_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
     else

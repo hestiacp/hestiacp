@@ -48,12 +48,12 @@ server {
             expires 30d;
             fastcgi_hide_header "Set-Cookie";
         }
-        
+
         location ~ \..*/.*\.php$ {
             deny all;
             return 404;
         }
-        
+
         location ~ ^/sites/[^/]+/files/.*\.php$ {
             deny all;
             return 404;

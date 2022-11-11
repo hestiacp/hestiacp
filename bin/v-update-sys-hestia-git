@@ -60,7 +60,7 @@ download_file() {
 
     if [ ! -f "$ARCHIVE_DIR/$filename" ]; then
         [ "$HESTIA_DEBUG" ] && >&2 echo DEBUG: wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
-        wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m    
+        wget $url -q $dstopt --show-progress --progress=bar:force --limit-rate=3m
         if [ $? -ne 0 ]; then
             >&2 echo "[!] Archive $ARCHIVE_DIR/$filename is corrupted and exit script";
             rm -f $ARCHIVE_DIR/$filename
@@ -123,8 +123,8 @@ branch=$2
 install=$3
 
 # Allow the use of username:branch instead of username branch
-# Both fork and branch names can't contain a : anyway 
-if [ -z "$branch" ]; then 
+# Both fork and branch names can't contain a : anyway
+if [ -z "$branch" ]; then
     branch=$(echo "$fork" | cut -d ":" -f2)
     fork=$(echo "$fork" | cut -d ":" -f1)
 fi
@@ -264,7 +264,7 @@ HESTIA_ARCHIVE_LINK='https://github.com/'$REPO'/archive/'$branch'.tar.gz'
 echo $HESTIA_ARCHIVE_LINK
 
       echo "Building Hestia Control Panel package..."
-  
+
   BUILD_DIR_HESTIA=$BUILD_DIR/hestia_$HESTIA_V
 
   # Change to build directory
@@ -289,7 +289,7 @@ echo $HESTIA_ARCHIVE_LINK
   elif [ -d $SRC_DIR ]; then
       download_file $HESTIA_ARCHIVE_LINK '-' 'fresh' | tar xz
   fi
-  
+
   mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 
   # Move needed directories
@@ -298,7 +298,7 @@ echo $HESTIA_ARCHIVE_LINK
 
   # Set permissions
   find $BUILD_DIR_HESTIA/usr/local/hestia/ -type f -exec chmod -x {} \;
-  
+
   # Allow send email via /usr/local/hestia/web/inc/mail-wrapper.php via cli
   chmod +x $BUILD_DIR_HESTIA/usr/local/hestia/web/inc/mail-wrapper.php
   # Allow the executable to be executed
@@ -347,7 +347,7 @@ echo $HESTIA_ARCHIVE_LINK
   cd $BUILD_DIR/hestiacp-$branch_dash
 
 # Installation steps
-if [ "$install" = "install" ] || [ "$install" = "yes" ] || [ "$install" = "install-auto" ]; then 
+if [ "$install" = "install" ] || [ "$install" = "yes" ] || [ "$install" = "install-auto" ]; then
     install_build
     if [ "$install" = "install-auto" ]; then
         $HESTIA/bin/v-add-cron-hestia-autoupdate git

@@ -41,7 +41,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-case $type in 
+case $type in
     WEB) is_web_template_valid "$template";
         update_user_value "$user" '$WEB_TEMPLATE' "$template";;
     PROXY) is_proxy_template_valid "$template";

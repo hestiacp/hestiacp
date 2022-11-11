@@ -47,7 +47,7 @@ local_backup(){
         tee -a $BACKUP/$user.log
 }
 
-# FTP Functions 
+# FTP Functions
 # Defining ftp command function
 ftpc() {
     /usr/bin/ftp -np $HOST $PORT <<EOF
@@ -133,7 +133,7 @@ ftp_backup() {
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS + 1))
-        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do 
+        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             backup_date=$(echo $backup |sed -e "s/$user.//" -e "s/.tar$//")
             echo -e "$(date "+%F %T") Rotated ftp backup: $backup_date" |\
                 tee -a $BACKUP/$user.log
@@ -190,7 +190,7 @@ ftp_delete() {
         ftpc "delete $1"
     else
         ftpc "cd $BPATH" "delete $1"
-    fi    
+    fi
 }
 
 
@@ -213,23 +213,23 @@ sftpc() {
                     send "$PASSWORD\r"
                     exp_continue
                 }
-    
+
                 -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
                     set count \$argc
                     set output "Disconnected."
                     set rc $E_FTP
                     exp_continue
                 }
-    
+
                 -re ".*denied.*(publickey|password)." {
                     set output "Permission denied, wrong publickey or password."
                     set rc $E_CONNECT
                 }
-    
+
                 -re "\[0-9]*%" {
                     exp_continue
                 }
-    
+
                 "sftp>" {
                     if {\$count < \$argc} {
                         set arg [lindex \$argv \$count]
@@ -244,17 +244,17 @@ sftpc() {
                     }
                     exp_continue
                 }
-    
+
                 timeout {
                     set output "Connection timeout."
                     set rc $E_CONNECT
                 }
             }
-    
+
             if {[info exists output] == 1} {
                 puts "\$output"
             }
-    
+
         exit \$rc
 EOF
     else
@@ -269,23 +269,23 @@ EOF
                     send "$PASSWORD\r"
                     exp_continue
                 }
-    
+
                 -re "Couldn't|(.*)disconnect|(.*)stalled|(.*)not found" {
                     set count \$argc
                     set output "Disconnected."
                     set rc $E_FTP
                     exp_continue
                 }
-    
+
                 -re ".*denied.*(publickey|password)." {
                     set output "Permission denied, wrong publickey or password."
                     set rc $E_CONNECT
                 }
-    
+
                 -re "\[0-9]*%" {
                     exp_continue
                 }
-    
+
                 "sftp>" {
                     if {\$count < \$argc} {
                         set arg [lindex \$argv \$count]
@@ -300,17 +300,17 @@ EOF
                     }
                     exp_continue
                 }
-    
+
                 timeout {
                     set output "Connection timeout."
                     set rc $E_CONNECT
                 }
             }
-    
+
             if {[info exists output] == 1} {
                 puts "\$output"
             }
-    
+
         exit \$rc
 EOF
 
@@ -343,7 +343,7 @@ sftp_delete() {
     else
         sftpc "cd $BPATH" "rm $1" > /dev/null 2>&1
     fi
-    
+
 }
 
 sftp_backup() {
@@ -354,7 +354,7 @@ sftp_backup() {
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         echo "$error"
         errorcode="$E_NOTEXIST"
-        return "$E_NOTEXIST" 
+        return "$E_NOTEXIST"
     fi
 
     # Parse config
@@ -372,7 +372,7 @@ sftp_backup() {
         sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
         echo "$error"
         errorcode="$E_PARSING"
-        return "$E_PARSING" 
+        return "$E_PARSING"
     fi
 
     # Debug info
@@ -459,7 +459,7 @@ google_backup() {
     backups_count=$(echo "$backup_list" |wc -l)
     if [ "$backups_count" -ge "$BACKUPS" ]; then
         backups_rm_number=$((backups_count - BACKUPS))
-        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do 
+        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             echo -e "$(date "+%F %T") Rotated gcp backup: $backup"
             $gsutil rm $backup > /dev/null 2>&1
         done
@@ -549,7 +549,7 @@ b2_download() {
 b2_delete(){
     # Defining backblaze b2 settings
     source_conf "$HESTIA/conf/b2.backup.conf"
-    
+
     # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
     b2 clear-account > /dev/null 2>&1
     b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
@@ -566,13 +566,13 @@ rclone_backup(){
         tar -cf $BACKUP/$user.$backup_new_date.tar .
     fi
     cd $BACKUP/
-    
+
     if [ -z "$BPATH" ]; then
         rclone copy -v $user.$backup_new_date.tar $HOST
         if [ "$?" -ne 0 ]; then
             check_result "$E_CONNECT" "Unable to upload backup"
         fi
-        
+
         backup_list=$(rclone lsf $HOST | cut -d' ' -f1 |grep "^$user\.");
         backups_count=$(echo "$backup_list" |wc -l)
         backups_rm_number=$((backups_count - BACKUPS))
@@ -580,14 +580,14 @@ rclone_backup(){
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             echo "Delete file: $backup"
             rclone deletefile $HOST:/$backup
-        done    
+        done
         fi
     else
         rclone copy -v $user.$backup_new_date.tar $HOST:$BPATH
         if [ "$?" -ne 0 ]; then
             check_result "$E_CONNECT" "Unable to upload backup"
         fi
-        
+
         backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 |grep "^$user\.");
         backups_count=$(echo "$backup_list" |wc -l)
         backups_rm_number=$((backups_count - BACKUPS))
@@ -595,7 +595,7 @@ rclone_backup(){
         for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
             echo "Delete file: $backup"
             rclone deletefile $HOST:$BPATH/$backup
-        done    
+        done
         fi
     fi
 }

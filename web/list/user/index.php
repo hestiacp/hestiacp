@@ -25,7 +25,7 @@ if ($_SESSION['userContext'] === 'admin') {
 $data = json_decode(implode('', $output), true);
 if ($_SESSION['userSortOrder'] == 'name') {
     ksort($data);
-} else { 
+} else {
     $data = array_reverse($data,true);
 }
 

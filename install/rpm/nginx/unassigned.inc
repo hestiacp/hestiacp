@@ -20,7 +20,7 @@ server {
             alias /var/www/document_errors/;
             return 404;
         }
-        
+
         location /webmail/ {
             alias /var/www/document_errors/;
             return 404;

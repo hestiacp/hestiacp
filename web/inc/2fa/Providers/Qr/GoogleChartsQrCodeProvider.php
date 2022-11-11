@@ -22,8 +22,8 @@ class GoogleChartsQrCodeProvider extends BaseHTTPQRCodeProvider
      */
     public function __construct($verifyssl = false, $errorcorrectionlevel = 'L', $margin = 4, $encoding = 'UTF-8')
     {
-        if (!is_bool($verifyssl)) { 
-            throw new QRException('VerifySSL must be bool'); 
+        if (!is_bool($verifyssl)) {
+            throw new QRException('VerifySSL must be bool');
         }
 
         $this->verifyssl = $verifyssl;
@@ -40,13 +40,13 @@ class GoogleChartsQrCodeProvider extends BaseHTTPQRCodeProvider
     {
         return 'image/png';
     }
-    
+
     /**
      * {@inheritdoc}
      */
     public function getQRCodeImage($qrtext, $size)
     {
-        return $this->getContent($this->getUrl($qrtext, $size));   
+        return $this->getContent($this->getUrl($qrtext, $size));
     }
 
     /**

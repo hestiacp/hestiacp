@@ -65,11 +65,11 @@ else
     is_domain_new 'dns' "$domain"
 fi
 if [ -z "$(is_ip_format_valid $domain)" ]; then
-    echo "Error: Invalid domain format. IP address detected as input." 
+    echo "Error: Invalid domain format. IP address detected as input."
     exit 1
 fi
 
-if [ -n "$restart" ]; then 
+if [ -n "$restart" ]; then
     is_format_valid 'restart'
 fi
 

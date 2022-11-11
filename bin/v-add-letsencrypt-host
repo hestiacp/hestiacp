@@ -26,7 +26,7 @@ check_hestia_demo_mode
 
 # Argument definition
 domain=$(hostname -f);
-if [ -z $domain ]; then 
+if [ -z $domain ]; then
     domain=$HOSTNAME;
 fi
 user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"

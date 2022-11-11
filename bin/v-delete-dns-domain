@@ -64,7 +64,7 @@ if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
     rm -f $HOMEDIR/$user/conf/dns/$domain.db
 fi
 
-if [ -n "$dnssec" ]; then 
+if [ -n "$dnssec" ]; then
     # Delete existing keys
     rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
     rm -fr /var/cache/bind/K$domain_idn.*

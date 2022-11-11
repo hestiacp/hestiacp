@@ -43,7 +43,7 @@ $config['imap_host'] = 'localhost:143';
 // );
 // Note: These can be also specified as an array of options indexed by hostname
 $config['imap_conn_options'] = array (
-  'ssl' => 
+  'ssl' =>
   array (
     'verify_peer' => false,
     'verify_peer_name' => false,
@@ -65,7 +65,7 @@ $config['imap_conn_options'] = array (
 // );
 // Note: These can be also specified as an array of options indexed by hostname
 $config['smtp_conn_options'] = array (
-  'ssl' => 
+  'ssl' =>
   array (
     'verify_peer' => false,
     'verify_peer_name' => false,

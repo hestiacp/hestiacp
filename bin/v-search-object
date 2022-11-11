@@ -103,7 +103,7 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
         $HESTIA/data/users/$user/mail/*.conf \
         $HESTIA/data/users/$user/db.conf \
         $HESTIA/data/users/$user/cron.conf 2> /dev/null)
-    
+
     for row in $search; do
         # Initialise variable
         key=''

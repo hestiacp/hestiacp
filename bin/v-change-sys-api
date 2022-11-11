@@ -1,6 +1,6 @@
 #!/bin/bash
-# info: Enable / Disable API access 
-# options: STATUS 
+# info: Enable / Disable API access
+# options: STATUS
 #
 # example: v-change-sys-api enable legacy
 #          # Enable legacy api currently default on most of api based systems
@@ -40,7 +40,7 @@ if [ "$status" = "enable" ]; then
     if [ ! -f "$HESTIA/web/api/index.php" ]; then
         wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/$RELEASE_BRANCH/web/api/index.php -O $HESTIA/web/api/index.php
         if [ ! -s "$HESTIA/web/api/index.php" ]; then
-            wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/api/index.php -O $HESTIA/web/api/index.php    
+            wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/api/index.php -O $HESTIA/web/api/index.php
             if [ ! -s "$HESTIA/web/api/index.php" ]; then
                 # Throw error message to user
                 echo "ERROR: API installation failed."

@@ -110,9 +110,9 @@ fi
 for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
     if [ -n "$WEB_BACKEND" ]; then
         template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND');
-        if [ -z "$template" ]; then 
+        if [ -z "$template" ]; then
             template="default"
-            update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' 'default'  
+            update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' 'default'
         fi
         $BIN/v-add-web-domain-backend "$user" "$domain" "$template" "$restart"
     fi

@@ -43,7 +43,7 @@ server {
 
     # Any other attempt to access PHP files returns a 404.
     location ~* ^.+\.php$ {
-        return 404; 
+        return 404;
     }
 
     # Return a 404 for all text files.

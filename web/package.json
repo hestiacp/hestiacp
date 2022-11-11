@@ -1,0 +1,13 @@
+{
+  "name": "hestia",
+  "version": "1.7.0-alpha",
+  "description": "An open-source Linux web server control panel.",
+  "repository": "https://github.com/hestiacp/hestiacp",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "lint": "eslint --ext .js js"
+  },
+  "devDependencies": {
+    "eslint": "^8.27.0"
+  }
+}

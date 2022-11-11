@@ -129,4 +129,3 @@ steps:
 
 trigger:
     event: [ promote]
-

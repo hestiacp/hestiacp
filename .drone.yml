@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: ssh
-name: Ubuntu | Nginx + Apache2  
+name: Ubuntu | Nginx + Apache2
 
 concurrency:
   limit: 1
@@ -9,15 +9,15 @@ concurrency:
 server:
   host:
     from_secret: server_address
-  user: 
+  user:
     from_secret: username
-  ssh_key: 
+  ssh_key:
     from_secret: ssh_key
 
 platform:
   os: linux
   arch: amd64
-   
+
 steps:
 - name: Download submodules
   image: alpine/git
@@ -32,7 +32,7 @@ steps:
 - name: Run restore tests
   commands:
   - bats ./test/restore.bats
-- name: Run config tests 
+- name: Run config tests
   commands:
   - bats ./test/config-tests.bats
 
@@ -48,7 +48,7 @@ trigger:
 ---
 kind: pipeline
 type: ssh
-name: Debian | Nginx  
+name: Debian | Nginx
 
 concurrency:
   limit: 1
@@ -56,15 +56,15 @@ concurrency:
 server:
   host:
     from_secret: server_address2
-  user: 
+  user:
     from_secret: username
-  ssh_key: 
+  ssh_key:
     from_secret: ssh_key
 
 platform:
   os: linux
   arch: amd64
-   
+
 steps:
 - name: Download submodules
   image: alpine/git
@@ -83,10 +83,10 @@ steps:
   commands:
   - cp /root/le-env.sh /tmp/hestia-le-env.sh
   - bats ./test/letsencrypt.bats
-- name: Run config tests 
+- name: Run config tests
   commands:
   - bats ./test/config-tests.bats
-  
+
 trigger:
   event: [ pull_request, push ]
   ref:
@@ -105,10 +105,6 @@ concurrency:
   limit: 1
 
 steps:
-  - name: Shellcheck
-    image: koalaman/shellcheck-alpine:v0.8.0
-    commands:
-    - ./test/shellcheck.sh
   - name: PHP 8.1
     image: php:8.1-cli-bullseye
     commands:
@@ -161,9 +157,9 @@ steps:
             - freight-add ./hestia/*.deb apt/bionic apt/focal apt/jammy apt/stretch apt/buster apt/bullseye
             - freight-cache
             - rm -fr ./hestia/
-  
+
 trigger:
-    event: [ promote] 
+    event: [ promote]
 
 ---
 kind: signature

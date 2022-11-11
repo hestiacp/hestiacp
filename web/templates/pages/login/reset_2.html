@@ -15,11 +15,15 @@
       <input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>"/>
       <input type="hidden" name="user" value="<?=htmlentities($_GET['user'])?>">
       <label for="code" class="form-label"><?=_('Reset Code');?></label>
-      <input type="text" class="form-control" name="code" id="code" tabindex="1">
+      <input type="text" class="form-control" name="code" id="code">
     </div>
     <div class="u-side-by-side">
-      <input tabindex="2" type="submit" value="<?=_('Confirm');?>" class="button">
-      <input type="button" class="button button-secondary" value="<?=_('Back');?>" onclick="location.href='/reset/'">
+      <button type="submit" class="button">
+        <?=_('Confirm');?>
+      </button>
+      <button type="button" class="button button-secondary" onclick="location.href='/reset/'">
+        <?=_('Back');?>
+      </button>
     </div>
   </form>
 </div>

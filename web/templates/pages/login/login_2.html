@@ -12,17 +12,19 @@
     <div class="u-mb20">
       <label for="twofa" class="form-label u-side-by-side">
         <?=_('2FA Token');?>
-        <a tabindex="5" class="label-link" href="/reset2fa/">
+        <a class="label-link" href="/reset2fa/">
           <?=_('Forgot token');?>
         </a>
       </label>
-      <input type="text" class="form-control" name="twofa" id="twofa" tabindex="2" autofocus>
+      <input type="text" class="form-control" name="twofa" id="twofa" autofocus>
     </div>
     <div class="u-side-by-side">
-      <button tabindex="3" type="submit" class="button">
+      <button type="submit" class="button">
         <i class="fas fa-sign-in-alt"></i><?=_('Login');?>
       </button>
-      <input type="button" class="button button-secondary" value="<?=_('Back');?>" onclick="location.href='/login/?logout'">
+      <button type="button" class="button button-secondary" onclick="location.href='/login/?logout'">
+        <?=_('Back');?>
+      </button>
     </div>
   </form>
 </div>

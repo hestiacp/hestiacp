@@ -9,7 +9,9 @@
       </h1>
       <?php if (isset($ERROR)) echo $ERROR ?>
       <div class="u-mt20">
-        <input type="button" class="button" value="<?=_('Log in');?>" onclick="location.href='/login/'">
+        <button type="button" class="button button-secondary" onclick="location.href='/login/'">
+          <?=_('Log in');?>
+        </button>
       </div>
     </div>
   <?php } else { ?>
@@ -21,15 +23,19 @@
       <?php if (isset($ERROR)) echo $ERROR ?>
       <div class="u-mb10">
         <label for="user" class="form-label"><?=_('Username');?></label>
-        <input type="text" class="form-control" name="user" id="user" tabindex="1">
+        <input type="text" class="form-control" name="user" id="user">
       </div>
       <div class="u-mb20">
         <label for="twofa" class="form-label"><?=_('2FA Reset Code');?></label>
-        <input type="text" class="form-control" name="twofa" id="twofa" tabindex="1">
+        <input type="text" class="form-control" name="twofa" id="twofa">
       </div>
       <div class="u-side-by-side">
-        <input tabindex="2" type="submit" value="<?=_('Submit');?>" class="button">
-        <input type="button" class="button button-secondary" value="<?=_('Back');?>" onclick="location.href='/login/?logout'">
+        <button type="submit" class="button">
+          <?=_('Submit');?>
+        </button>
+        <button type="button" class="button button-secondary" onclick="location.href='/login/?logout'">
+          <?=_('Back');?>
+        </button>
       </div>
     </form>
   <?php } ?>

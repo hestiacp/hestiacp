@@ -58,8 +58,12 @@
           <input type="text" class="form-control" name="v_org" id="v_org" value="<?=htmlentities(trim($v_org, "'")) ?>">
         </div>
         <div class="u-side-by-side">
-          <div><input type="submit" class="button" name="generate" value="<?=_('Ok');?>"></div>
-          <div><input type="button" class="button button-secondary" value="<?=_('Back');?>" onclick="<?=$back?>"></div>
+          <button type="submit" class="button" name="generate">
+            <?=_('Ok');?>
+          </button>
+          <button type="button" class="button button-secondary" onclick="<?=$back?>">
+            <?=_('Back');?>
+          </button>
         </div>
       </div>
     </div>

@@ -10,15 +10,19 @@
     <?php if (isset($ERROR)) echo $ERROR ?>
     <div class="u-mb10">
       <label for="user" class="form-label"><?=_('Username');?></label>
-      <input type="text" class="form-control" name="user" id="user" tabindex="1">
+      <input type="text" class="form-control" name="user" id="user">
     </div>
     <div class="u-mb20">
       <label for="email" class="form-label"><?=_('Email');?></label>
-      <input type="email" class="form-control" name="email" id="email" tabindex="1">
+      <input type="email" class="form-control" name="email" id="email">
     </div>
     <div class="u-side-by-side">
-      <input tabindex="2" type="submit" value="<?=_('Submit');?>" class="button">
-      <input type="button" class="button button-secondary" value="<?=_('Back');?>" onclick="location.href='/login/?logout'">
+      <button type="submit" class="button">
+        <?=_('Submit');?>
+      </button>
+      <button type="button" class="button button-secondary" onclick="location.href='/login/?logout'">
+        <?=_('Back');?>
+      </button>
     </div>
   </form>
 </div>

@@ -11,20 +11,20 @@
     <?php if (isset($error)) echo $error ?>
     <div class="u-mb10">
       <label for="user" class="form-label"><?=_('Username');?></label>
-      <input type="text" class="form-control" name="user" id="user" tabindex="1" autofocus>
+      <input type="text" class="form-control" name="user" id="user" autofocus>
     </div>
     <div class="u-mb20">
       <label for="password" class="form-label u-side-by-side">
         <?=_('Password');?>
         <?php if ($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] !== 'no' ) {?>
-          <a tabindex="5" class="label-link" href="/reset/">
+          <a class="label-link" href="/reset/">
             <?=_('forgot password');?>
           </a>
         <?php } ?>
       </label>
-      <input type="password" class="form-control" name="password" id="password" tabindex="2" autofocus>
+      <input type="password" class="form-control" name="password" id="password" autofocus>
     </div>
-    <button tabindex="3" type="submit" class="button">
+    <button type="submit" class="button">
       <i class="fas fa-sign-in-alt"></i><?=_('Next');?>
     </button>
   </form>

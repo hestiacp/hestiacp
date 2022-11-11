@@ -40,4 +40,26 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run ESLint
-        run: yarn lint
+        run: yarn eslint js
+
+  stylelint:
+    name: Stylelint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          cache-dependency-path: web/yarn.lock
+
+      - name: Install Node packages
+        run: yarn install --frozen-lockfile
+
+      - name: Run Stylelint
+        run: yarn stylelint css/src/themes/*.css

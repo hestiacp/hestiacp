@@ -5,9 +5,11 @@
   "repository": "https://github.com/hestiacp/hestiacp",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "lint": "eslint --ext .js js"
+    "lint": "eslint js --fix && stylelint css/src/themes/*.css --fix"
   },
   "devDependencies": {
-    "eslint": "^8.27.0"
+    "eslint": "^8.27.0",
+    "stylelint": "^14.14.1",
+    "stylelint-config-standard": "^29.0.0"
   }
 }

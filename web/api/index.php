@@ -126,7 +126,7 @@ function api_legacy(array $request_data) {
             echo 'Error: authentication failed';
             exit;
         }
-        
+
     } else {
         $key = '/usr/local/hestia/data/keys/'.basename($request_data['hash']);
         $v_ip = quoteshellarg(get_real_user_ip());
@@ -138,7 +138,7 @@ function api_legacy(array $request_data) {
             exit;
         }
     }
-    
+
     $hst_return = (($request_data['returncode'] ?? 'no') === 'yes') ? 'code' : 'data';
     $hst_cmd = trim($request_data['cmd'] ?? '');
     $hst_cmd_args = [];
@@ -147,13 +147,13 @@ function api_legacy(array $request_data) {
             $hst_cmd_args["arg{$i}"] = trim($request_data["arg{$i}"]);
         }
     }
-    
+
     if (empty($hst_cmd)) {
         api_error(E_INVALID, "Command not provided");
     } else if (!preg_match('/^[a-zA-Z0-9_-]+$/', $hst_cmd)) {
         api_error(E_INVALID, "$hst_cmd command invalid");
     }
-    
+
     // Check command
     if ($hst_cmd == 'v-make-tmp-file') {
         // Used in DNS Cluster
@@ -164,15 +164,15 @@ function api_legacy(array $request_data) {
     } else {
         // Prepare command
         $cmdquery = HESTIA_CMD.escapeshellcmd($hst_cmd);
-        
+
         // Prepare arguments
         foreach ($hst_cmd_args as $cmd_arg) {
             $cmdquery .= " ".quoteshellarg($cmd_arg);
         }
-        
+
         // Run cmd query
         exec($cmdquery, $output, $cmd_exit_code);
-    
+
     }
 
     if ((!empty($hst_return)) && ($hst_return == 'code')) {
@@ -268,7 +268,7 @@ function api_connection(array $request_data) {
     foreach ($hst_cmd_args as $cmd_arg) {
         $cmdquery .= " ".quoteshellarg($cmd_arg);
     }
-    
+
     # v-make-temp files is manodory other wise some functions will break
     if ($hst_cmd == 'v-make-tmp-file'){
         $fp = fopen('/tmp/'.basename($hst_cmd_args['arg2']), 'w');

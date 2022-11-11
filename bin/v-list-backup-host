@@ -24,7 +24,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    case $type in 
+    case $type in
     'sftp' | 'ftp' | 'rclone')
     echo '{'
     echo '    "'$type'": {
@@ -47,7 +47,7 @@ json_list() {
          "TIME": "'$TIME'",
          "DATE": "'$DATE'"
      }'
-     echo '}' 
+     echo '}'
     ;;
     esac
 }
@@ -83,7 +83,7 @@ plain_list() {
     'b2')
     echo -e "$BUCKET\t$type\t$B2_KEYID\t$TIME\t$DATE"
     ;;
-    esac 
+    esac
 }
 
 # CSV list function
@@ -97,7 +97,7 @@ csv_list() {
     echo "BUCKET,TYPE,B2_KEYID,TIME,DATE"
     echo "$BUCKET,$type,$B2_KEYID,$TIME,$DATE"
     ;;
-    esac 
+    esac
 }
 
 # Type format validator
@@ -113,7 +113,7 @@ is_type_format_valid() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'TYPE [FORMAT]'
-is_common_format_valid $type "type" 
+is_common_format_valid $type "type"
 
 #----------------------------------------------------------#
 #                       Action                             #

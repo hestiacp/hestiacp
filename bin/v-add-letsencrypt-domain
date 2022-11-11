@@ -78,7 +78,7 @@ fi
 # Set DNS CAA record retrieval commands
 if [ -n "$DNS_SYSTEM" ]; then
     dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-    caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "CAA" | grep -i "letsencrypt.org" | cut -d' ' -f1 )    
+    caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "CAA" | grep -i "letsencrypt.org" | cut -d' ' -f1 )
 fi
 
 if [ -z "$mail" ] || [ "$mail" = 'no' ]; then
@@ -126,13 +126,13 @@ if [ -n "$mail" ]; then
     fi
 else
     parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
-    
+
     domain_redirect="$REDIRECT"
     if [[ -n "$domain_redirect"  ]] ; then
         domain_redirect_code="$REDIRECT_CODE"
         $BIN/v-delete-web-domain-redirect $user $domain
     fi
-    
+
     domain_forcessl="$SSL_FORCE"
     if [[ "$domain_forcessl" == 'yes' ]] ; then
         $BIN/v-delete-web-domain-ssl-force $user $domain
@@ -346,9 +346,9 @@ for auth in $authz; do
                     $BIN/v-restart-proxy
                     check_result $? "Proxy restart failed" > /dev/null
                 fi
-            else  
-                get_object_value 'mail' 'DOMAIN' "$root_domain" "WEBMAIL" 
-                if [ -n "$WEBMAIL" ]; then 
+            else
+                get_object_value 'mail' 'DOMAIN' "$root_domain" "WEBMAIL"
+                if [ -n "$WEBMAIL" ]; then
                     well_known="/var/lib/$WEBMAIL/.well-known"
                     acme_challenge="$well_known/acme-challenge"
                     mkdir -p $acme_challenge
@@ -362,11 +362,11 @@ for auth in $authz; do
             check_result $? "Web restart failed" > /dev/null
         fi
     fi
-    
-    if [ "$DNS_CLUSTER" = "yes" ]; then 
+
+    if [ "$DNS_CLUSTER" = "yes" ]; then
         $BIN/v-update-sys-queue dns-cluster
-    fi 
-    
+    fi
+
     # Requesting ACME validation / STEP 5
     validation_check=$(echo "$answer" |grep '"valid"')
     if [[ -n "$validation_check" ]]; then
@@ -404,9 +404,9 @@ for auth in $authz; do
             result=$(wget -qO- $url)
             debug_log "Debug information Step 5"  "$result"
             details=$(echo $result | jq '.error.detail' )
-            error_code=$(echo $result | jq '.error.status' )            
-            
-            debug_log "Abort Step 5" "=> Wrong status" 
+            error_code=$(echo $result | jq '.error.status' )
+
+            debug_log "Abort Step 5" "=> Wrong status"
             check_result "$E_CONNECT" "Let's Encrypt validation status $status ($domain). Details: $error_code:$details"
         fi
 
@@ -528,18 +528,18 @@ fi
 if [ -z "$mail" ]; then
     ssl_home="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME')"
     ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
-    if [ "$ssl_enabled" = "yes" ]; then 
-        $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "updatessl" 
+    if [ "$ssl_enabled" = "yes" ]; then
+        $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "updatessl"
     else
-        $BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl"
     fi
  else
  # TODO replace with v-update-mail-domain-ssl if ssl is enabled
     ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
-    if [ "$ssl_enabled" = "yes" ]; then 
-        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl" 
+    if [ "$ssl_enabled" = "yes" ]; then
+        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl"
     else
-        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl" 
+        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl"
     fi
 fi
 
@@ -567,7 +567,7 @@ if [ -z "$mail" ]; then
     fi
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
     update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
-    
+
     if [[ "$domain_forcessl" == 'yes' ]] ; then
         $BIN/v-add-web-domain-ssl-force $user $domain
     fi

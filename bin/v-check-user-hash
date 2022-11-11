@@ -62,7 +62,7 @@ if echo "$shadow" | grep -qE '^\$[0-9a-z]+\$[^\$]+\$'
 then
     salt=$(echo "$shadow" |cut -f 3 -d \$)
     method=$(echo "$shadow" |cut -f 2 -d \$)
-    if [ "$method" = "y" ]; then 
+    if [ "$method" = "y" ]; then
         method="yescrypt"
     elif [ "$method" -eq '1' ]; then
         method='md5'

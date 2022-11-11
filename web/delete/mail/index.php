@@ -21,7 +21,7 @@ if ((!empty($_GET['domain'])) && (empty($_GET['account']))) {
     unset($output);
     $back = $_SESSION['back'];
     if($return_var > 0){
-       header("Location: /list/mail/"); 
+       header("Location: /list/mail/");
     }
     if (!empty($back)) {
         header("Location: ".$back);
@@ -39,7 +39,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['account']))) {
     check_return_code($return_var, $output);
     unset($output);
     if($return_var > 0){
-       header("Location: /list/mail/"); 
+       header("Location: /list/mail/");
     }else{
     $back = $_SESSION['back'];
     if (!empty($back)) {

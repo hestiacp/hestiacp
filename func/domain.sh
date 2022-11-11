@@ -64,10 +64,10 @@ is_web_alias_new() {
         if [ -n "$ALIAS" ]; then
             a1=$(echo "'$ALIAS'" |grep -F "'$1'");
             if [ -n "$a1" ] && [ "$2" == "web"  ]; then
-                return "$E_EXISTS" 
+                return "$E_EXISTS"
             fi
             if [ -n "$a1" ] && [ "$user" != "$user" ]; then
-                return "$E_EXISTS" 
+                return "$E_EXISTS"
             fi
             a2=$(echo "'$ALIAS'" |grep -F "'$1,")
             if [ -n "$a2" ] && [ "$2" == "web"  ]; then
@@ -114,7 +114,7 @@ prepare_web_backend() {
             pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
         fi
     fi
- 
+
     if [ ! -e "$pool" ]; then
         check_result $E_NOTEXIST "php-fpm pool doesn't exist"
     fi
@@ -233,7 +233,7 @@ add_web_config() {
     if [ ! -d "$HOMEDIR/$user/conf/web/$domain" ]; then
         mkdir -p "$HOMEDIR/$user/conf/web/$domain/"
     fi
-    
+
     conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
     if [[ "$2" =~ stpl$ ]]; then
         conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
@@ -249,11 +249,11 @@ add_web_config() {
             WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"
         fi
     fi
-    
+
     # Note: Removing or renaming template variables will lead to broken custom templates.
     #   -If possible custom templates should be automatically upgraded to use the new format
-    #   -Alternatively a depreciation period with proper notifications should be considered 
-    
+    #   -Alternatively a depreciation period with proper notifications should be considered
+
     cat "${WEBTPL_LOCATION}/$2" | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$domain|g" \
@@ -324,7 +324,7 @@ add_web_config() {
             fi
         done
     fi
-    
+
     trigger="${2/.*pl/.sh}"
     if [ -x "${WEBTPL_LOCATION}/$trigger" ]; then
         $WEBTPL_LOCATION/$trigger \
@@ -515,7 +515,7 @@ update_domain_zone() {
         if [ "$TYPE" = 'CNAME' ] || [ "$TYPE" = 'MX' ]; then
             VALUE=$(idn2 --quiet  "$VALUE")
         fi
-        
+
         if [ "$TYPE" = 'TXT' ]; then
             txtlength=${#VALUE}
             if [ $txtlength -gt 255 ]; then
@@ -533,7 +533,7 @@ update_domain_zone() {
             fi
         fi
         eval echo -e "\"$fields\""|sed "s/%quote%/'/g" >> $zn_conf
-    done < $USER_DATA/dns/$domain.conf    
+    done < $USER_DATA/dns/$domain.conf
 }
 
 # Update zone serial
@@ -703,7 +703,7 @@ add_mail_ssl_config() {
             cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
         fi
     fi
-    
+
     chmod 660 $USER_DATA/ssl/mail.$domain.*
 
     # Add certificate to user home directory
@@ -723,7 +723,7 @@ add_mail_ssl_config() {
     wildcard_domain="\\*.$(echo "$domain" | cut -f 1 -d . --complement)"
     mail_cert_match=$($BIN/v-list-mail-domain-ssl $user $domain | awk '/SUBJECT|ALIASES/' | grep -wE " $domain| $wildcard_domain");
 
-    if [ -n "$mail_cert_match" ]; then 
+    if [ -n "$mail_cert_match" ]; then
         # Add domain SSL configuration to dovecot
         echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
         echo "local_name $domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
@@ -734,7 +734,7 @@ add_mail_ssl_config() {
         # Add domain SSL configuration to exim4
         ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/$domain.crt
         ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/$domain.key
-    fi 
+    fi
 
     # Add domain SSL configuration to dovecot
     echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
@@ -742,7 +742,7 @@ add_mail_ssl_config() {
     echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
     echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
-    
+
     # Add domain SSL configuration to exim4
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem $HESTIA/ssl/mail/mail.$domain.crt
     ln -s $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key $HESTIA/ssl/mail/mail.$domain.key
@@ -775,7 +775,7 @@ del_mail_ssl_config() {
 
     # Remove SSL certificates
     rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
-    if [ -n "$mail_cert_match" ]; then 
+    if [ -n "$mail_cert_match" ]; then
         rm -f $HESTIA/ssl/mail/$domain.crt $HESTIA/ssl/mail/$domain.key
     fi
     rm -f $HESTIA/ssl/mail/mail.$domain.crt $HESTIA/ssl/mail/mail.$domain.key
@@ -808,11 +808,11 @@ add_webmail_config() {
         override_alias="mail.$domain"
         override_alias_idn="mail.$domain_idn"
     fi
-    
+
     # Note: Removing or renaming template variables will lead to broken custom templates.
     #   -If possible custom templates should be automatically upgraded to use the new format
-    #   -Alternatively a depreciation period with proper notifications should be considered 
-    
+    #   -Alternatively a depreciation period with proper notifications should be considered
+
     cat $MAILTPL/$1/$2 | \
         sed -e "s|%ip%|$local_ip|g" \
             -e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
@@ -884,7 +884,7 @@ add_webmail_config() {
 
 # Delete webmail support
 del_webmail_config() {
-    if [ -n "$WEB_SYSTEM" ]; then 
+    if [ -n "$WEB_SYSTEM" ]; then
         rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.conf
         rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.conf
     fi
@@ -897,11 +897,11 @@ del_webmail_config() {
 
 # Delete SSL webmail support
 del_webmail_ssl_config() {
-    if [ -n "$WEB_SYSTEM" ]; then 
+    if [ -n "$WEB_SYSTEM" ]; then
         rm -f $HOMEDIR/$user/conf/mail/$domain/$WEB_SYSTEM.*ssl.conf
         rm -f /etc/$WEB_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
     fi
-    
+
     if [ -n "$PROXY_SYSTEM" ]; then
         rm -f $HOMEDIR/$user/conf/mail/$domain/$PROXY_SYSTEM.*ssl.conf
         rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$WEBMAIL_ALIAS.$domain.ssl.conf
@@ -942,7 +942,7 @@ is_valid_extension() {
     if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
         mkdir $HESTIA/data/extensions/
         chmod 750 $HESTIA/data/extensions/
-        /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
+        /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat
     fi
     test_domain=$(idn2 -d  "$1" )
     extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1 | /usr/bin/rev );
@@ -953,7 +953,7 @@ is_valid_2_part_extension() {
     if [ ! -e "$HESTIA/data/extensions/public_suffix_list.dat" ]; then
         mkdir $HESTIA/data/extensions/
         chmod 750 $HESTIA/data/extensions/
-        /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat 
+        /usr/bin/wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O $HESTIA/data/extensions/public_suffix_list.dat https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat
     fi
     test_domain=$(idn2 -d  "$1" )
     extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
@@ -964,13 +964,13 @@ get_base_domain() {
     test_domain=$1
     is_valid_extension "$test_domain"
     if [ $? -ne 0 ]; then
-        basedomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
-    else 
+        basedomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
+    else
         is_valid_2_part_extension "$test_domain"
         if [ $? -ne 0 ]; then
-           basedomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
+           basedomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
         else
-           extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev ); 
+           extension=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 1-2 | /usr/bin/rev );
            partdomain=$( /bin/echo "${test_domain}" | /usr/bin/rev | /usr/bin/cut -d "." --output-delimiter="." -f 3 | /usr/bin/rev );
            basedomain="$partdomain.$extension"
         fi

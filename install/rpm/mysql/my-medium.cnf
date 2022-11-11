@@ -18,7 +18,7 @@ log_error=/var/log/mysql/error.log
 
 symbolic-links=0
 local-infile=0
-  
+
 skip-external-locking
 key_buffer_size = 16M
 max_allowed_packet = 16M

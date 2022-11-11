@@ -480,7 +480,7 @@ function syshealth_repair_system_config() {
         echo "[ ! ] Adding missing variable to hestia.conf: DNS_CLUSTER_SYSTEM ('')"
         $BIN/v-change-sys-config-value "DNS_CLUSTER_SYSTEM" "hestia"
     fi
-    
+
     touch $HESTIA/conf/hestia.conf.new
     while IFS='= ' read -r lhs rhs
       do
@@ -489,7 +489,7 @@ function syshealth_repair_system_config() {
               rhs="${rhs%%*( )}"   # Del trailing spaces
               rhs="${rhs%\'*}"     # Del opening string quotes
               rhs="${rhs#\'*}"     # Del closing string quotes
-              
+
           fi
           check_ckey=$(grep "^$lhs='" "$HESTIA/conf/hestia.conf.new")
             if [ -z "$check_ckey" ]; then
@@ -498,14 +498,14 @@ function syshealth_repair_system_config() {
                 sed -i "s|^$lhs=.*|$lhs='$rhs'|g" "$HESTIA/conf/hestia.conf.new"
             fi
       done < $HESTIA/conf/hestia.conf
-      
+
       cmp --silent $HESTIA/conf/hestia.conf $HESTIA/conf/hestia.conf.new
-      if [ $? -ne 0 ]; then 
+      if [ $? -ne 0 ]; then
         echo "[ ! ] Duplicated keys found repair config"
         rm  $HESTIA/conf/hestia.conf
         cp $HESTIA/conf/hestia.conf.new $HESTIA/conf/hestia.conf
-        rm $HESTIA/conf/hestia.conf.new 
-      fi 
+        rm $HESTIA/conf/hestia.conf.new
+      fi
 }
 
 # Repair System Cron Jobs

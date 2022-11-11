@@ -12,18 +12,18 @@ if (empty($_GET['domain'])){
     $data = json_decode(implode('', $output), true);
     if($_SESSION['userSortOrder'] == 'name'){
         ksort($data);
-    }else{ 
+    }else{
         $data = array_reverse($data,true);
     }
     unset($output);
 
     render_page($user, $TAB, 'list_dns');
 } else if (!empty($_GET['action'])){
-    
+
     exec (HESTIA_CMD."v-list-dnssec-public-key ".$user." ".quoteshellarg($_GET['domain'])." 'json'", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     $domain=$_GET['domain'];
-    
+
     switch ($data[$domain]['FLAG']) {
         case 257:
             $flag="KSK (257)";
@@ -32,7 +32,7 @@ if (empty($_GET['domain'])){
             $flag="ZSK (256)";
             break;
     }
-    
+
     switch ($data[$domain]['ALGORITHM']) {
         case 3:
             $algorithm="3 - DSA";
@@ -70,16 +70,16 @@ if (empty($_GET['domain'])){
         default:
             $algorithm="Unknown";
     }
-    
+
     unset($output);
-    
-    render_page($user, $TAB, 'list_dns_public');    
+
+    render_page($user, $TAB, 'list_dns_public');
 }else {
     exec (HESTIA_CMD."v-list-dns-records ".$user." ".quoteshellarg($_GET['domain'])." 'json'", $output, $return_var);
     $data = json_decode(implode('', $output), true);
     if($_SESSION['userSortOrder'] == 'name'){
         ksort($data);
-    }else{ 
+    }else{
         $data = array_reverse($data,true);
     }
     unset($output);

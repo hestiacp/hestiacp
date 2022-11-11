@@ -37,12 +37,12 @@ server {
             expires 30d;
             fastcgi_hide_header "Set-Cookie";
         }
-        
+
         location ~* /(?:uploads|files)/.*.php$ {
             deny all;
             return 404;
         }
-        
+
         location ~ [^/]\.php(/|$) {
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             try_files $uri =404;

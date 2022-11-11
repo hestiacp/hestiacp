@@ -45,7 +45,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 change_sys_value "USE_SERVER_SMTP" 'true'
-change_sys_value "SERVER_SMTP_HOST" "$domain" 
+change_sys_value "SERVER_SMTP_HOST" "$domain"
 change_sys_value "SERVER_SMTP_PORT" "$port"
 change_sys_value "SERVER_SMTP_SECURITY" "$smtp_security"
 change_sys_value "SERVER_SMTP_USER" "$username"

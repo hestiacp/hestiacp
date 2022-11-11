@@ -11,7 +11,7 @@ if (empty($_GET['backup'])){
     $data = json_decode(implode('', $output), true);
     if ($_SESSION['userSortOrder'] == 'name') {
         ksort($data);
-    } else { 
+    } else {
         $data = array_reverse($data,true);
     }
     unset($output);

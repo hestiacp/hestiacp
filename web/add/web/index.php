@@ -20,7 +20,7 @@ if (!empty($_POST['ok'])) {
     if (empty($_POST['v_ip'])) {
         $errors[] = _('ip');
     }
-    
+
     if (!empty($errors[0])) {
         foreach ($errors as $i => $error) {
             if ($i == 0) {
@@ -53,7 +53,7 @@ if (!empty($_POST['ok'])) {
 
     // Define domain aliases
     $v_aliases = '';
-    
+
     // Define proxy extensions
     $_POST['v_proxy_ext'] = '';
 
@@ -64,7 +64,7 @@ if (!empty($_POST['ok'])) {
     $v_template = $user_config[$user_plain]['WEB_TEMPLATE'];
     $v_backend_template = $user_config[$user_plain]['BACKEND_TEMPLATE'];
     $v_proxy_template = $user_config[$user_plain]['PROXY_TEMPLATE'];
-    
+
     // Add web domain
     if (empty($_SESSION['error_msg'])) {
         exec(HESTIA_CMD."v-add-web-domain ".$user." ".quoteshellarg($v_domain)." ".$v_ip." 'yes'", $output, $return_var);
@@ -72,7 +72,7 @@ if (!empty($_POST['ok'])) {
         unset($output);
         $domain_added = empty($_SESSION['error_msg']);
     }
-    
+
     if (empty($_POST['v_dns'])){
         $_POST['v_dns'] = 'no';
     }

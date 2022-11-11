@@ -29,20 +29,20 @@ class NextcloudSetup extends BaseSetup
             'nginx' => [
                 'template' => 'owncloud'
             ],
-            'php' => [ 
+            'php' => [
                 'supported' => [ '7.3','7.4','8.0','8.1' ],
             ]
-        ], 
+        ],
     ];
 
     public function install(array $options = null): bool
     {
         parent::install($options);
         parent::setup($options);
-        
+
         // install nextcloud
         $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
-    
+
         $this->appcontext->runUser('v-run-cli-cmd', ["/usr/bin/php".$options['php_version'],
             $this->getDocRoot('occ'),
             'maintenance:install',

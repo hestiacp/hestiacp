@@ -3,7 +3,7 @@
 # options: [FORMAT]
 # labels: web panel
 #
-# example: v-list-web-stats 
+# example: v-list-web-stats
 #
 # This function for obtaining the list of web statistics analyzer.
 

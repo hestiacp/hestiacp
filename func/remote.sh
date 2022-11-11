@@ -31,7 +31,7 @@ send_api_cmd() {
             --data-urlencode "arg6=$7" \
             --data-urlencode "arg7=$8" \
             --data-urlencode "arg8=$9" \
-            https://$HOST:$PORT/api/)    
+            https://$HOST:$PORT/api/)
     else
         answer=$(curl -s -k \
             --data-urlencode "hash=$HASH" \
@@ -59,7 +59,7 @@ send_api_file() {
                 --data-urlencode "cmd=v-make-tmp-file" \
                 --data-urlencode "arg1=$(cat $1)" \
                 --data-urlencode "arg2=$2" \
-                https://$HOST:$PORT/api/) 
+                https://$HOST:$PORT/api/)
     else
         answer=$(curl -s -k \
                 --data-urlencode "hash=$HASH" \
@@ -128,10 +128,10 @@ remote_dns_health_check() {
 
     # Starting health-check
     for str in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
-        
+
         # Reset user, password and hash vars
         clear_dns_cluster_settings
-        
+
         # Parsing host values
         parse_object_kv_list "$str"
 

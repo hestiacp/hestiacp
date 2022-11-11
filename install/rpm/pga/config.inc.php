@@ -60,7 +60,7 @@
     //$conf['srv_groups'][0]['desc'] = 'group one';
     //
     // Add here servers indexes belonging to the group '0' seperated by comma
-    //$conf['srv_groups'][0]['servers'] = '0,1,2'; 
+    //$conf['srv_groups'][0]['servers'] = '0,1,2';
     //
     // A server can belong to multi groups
     //$conf['srv_groups'][1]['desc'] = 'group two';
@@ -68,12 +68,12 @@
 
 
     // Default language. E.g.: 'english', 'polish', etc.  See lang/ directory
-    // for all possibilities. If you specify 'auto' (the default) it will use 
+    // for all possibilities. If you specify 'auto' (the default) it will use
     // your browser preference.
     $conf['default_lang'] = 'auto';
 
-    // AutoComplete uses AJAX interaction to list foreign key values 
-    // on insert fields. It currently only works on single column 
+    // AutoComplete uses AJAX interaction to list foreign key values
+    // on insert fields. It currently only works on single column
     // foreign keys. You can choose one of the following values:
     // 'default on' enables AutoComplete and turns it on by default.
     // 'default off' enables AutoComplete but turns it off by default.
@@ -97,9 +97,9 @@
     // a database, but they do take up space in the interface.
     $conf['show_comments'] = true;
 
-    // Display "advanced" objects? Setting this to true will show 
-    // aggregates, types, operators, operator classes, conversions, 
-    // languages and casts in phpPgAdmin. These objects are rarely 
+    // Display "advanced" objects? Setting this to true will show
+    // aggregates, types, operators, operator classes, conversions,
+    // languages and casts in phpPgAdmin. These objects are rarely
     // administered and can clutter the interface.
     $conf['show_advanced'] = false;
 

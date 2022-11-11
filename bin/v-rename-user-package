@@ -56,7 +56,7 @@ check_hestia_demo_mode
 if [ -e "$HESTIA/data/packages/$old_name.pkg" ]; then
     mv "$HESTIA/data/packages/$old_name.pkg" "$HESTIA/data/packages/$new_name.pkg"
     # Don't leave the .sh file behind
-    if [ -e "$HESTIA/data/packages/$old_name.sh" ]; then 
+    if [ -e "$HESTIA/data/packages/$old_name.sh" ]; then
         mv "$HESTIA/data/packages/$old_name.sh" "$HESTIA/data/packages/$new_name.sh"
     fi
 
@@ -70,7 +70,7 @@ if [ -e "$HESTIA/data/packages/$old_name.pkg" ]; then
             v-change-user-package "$user" "$new_name"
         fi
     done
-    if [ "$mode" == "yes" ]; then 
+    if [ "$mode" == "yes" ]; then
         echo  "Successfully renamed package $old_name to $new_name."
     fi
 else

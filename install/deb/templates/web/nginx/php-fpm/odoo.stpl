@@ -34,8 +34,8 @@ server {
     send_timeout            720;
 
     # Allow "Well-Known URIs" as per RFC 5785
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 
@@ -46,7 +46,7 @@ server {
     location /longpolling {
         proxy_pass http://127.0.0.1:8072;
     }
-    
+
     location ~* /web/static/ {
         proxy_cache_valid 200 60m;
         proxy_buffering on;

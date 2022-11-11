@@ -142,7 +142,7 @@ if [ -z "$FILE_MANAGER_CHECK" ]; then
         echo "[ ! ] Installing File Manager..."
         # Install the File Manager
         $HESTIA/bin/v-add-sys-filemanager quiet
-    else 
+    else
         echo "[ * ] Updating File Manager configuration..."
         # Update configuration.php
         cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php

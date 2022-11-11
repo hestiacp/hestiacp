@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ ! -e /usr/bin/xgettext ]; then 
+if [ ! -e /usr/bin/xgettext ]; then
     echo " **********************************************************"
     echo " * Unable to find xgettext please install gettext package *"
     echo " **********************************************************"
@@ -32,7 +32,7 @@ echo "[ * ] Scan language folders"
 languages=$(ls -d $HESTIA/web/locale/*/ | awk -F'/' '{print $(NF-1)}');
 echo "[ * ] Update hestiacp.pot with new files"
 for lang in $languages; do
-    if [ -e "$HESTIA/web/locale/$lang/LC_MESSAGES/hestiacp.po" ]; then 
+    if [ -e "$HESTIA/web/locale/$lang/LC_MESSAGES/hestiacp.po" ]; then
         echo "[ * ] Update $lang "
         mv $HESTIA/web/locale/$lang/LC_MESSAGES/hestiacp.po $HESTIA/web/locale/$lang/LC_MESSAGES/hestiacp.po.bak
         msgmerge --verbose "$HESTIA/web/locale/$lang/LC_MESSAGES/hestiacp.po.bak" "$HESTIA/web/locale/hestiacp.pot" > $HESTIA/web/locale/$lang/LC_MESSAGES/hestiacp.po

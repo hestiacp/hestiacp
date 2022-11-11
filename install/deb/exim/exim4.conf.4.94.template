@@ -138,9 +138,9 @@ acl_check_rcpt:
 
 # Limit per email account for SMTP auhenticated users
   deny    message       = Email account $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
-          set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} } 
+          set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} }
           ratelimit     = $acl_c_msg_limit / 1h / strict/ $authenticated_id
-  
+
   warn    ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
   log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
 
@@ -214,12 +214,12 @@ acl_check_data:
         condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
         add_header     = X-Spam-Status: Yes
         message        = SpamAssassin detected spam (from $sender_address to $recipients).
- 
+
   # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled
   deny   message        = This message scored $spam_score spam points
          spam           = debian-spamd:true
          condition      = ${if eq{$acl_m3}{yes}{yes}{no}}
-         condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}	
+         condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}
 .endif
 
   accept

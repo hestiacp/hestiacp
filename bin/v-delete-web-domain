@@ -84,7 +84,7 @@ if [ "$SSL" = 'yes' ]; then
 fi
 
 if [ "$FASTCGI_CACHE" = "yes" ]; then
-    # make sure no trails left behind 
+    # make sure no trails left behind
     $BIN/v-delete-fastcgi-cache "$user" "$domain"
 fi
 

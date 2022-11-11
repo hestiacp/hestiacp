@@ -7,7 +7,7 @@
 
 # Includes
 source $HESTIA/func/main.sh
-# get current phpmyadmin version 
+# get current phpmyadmin version
 source $HESTIA/install/upgrade/upgrade.conf
 source $HESTIA/conf/hestia.conf
 
@@ -25,74 +25,74 @@ read -p 'Would you like to continue? [y/n]'
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    # Remove PMA SSO first 
+    # Remove PMA SSO first
     sso="no"
     if [ "$PHPMYADMIN_KEY" != "" ]; then
         sso="yes"
         $HESTIA/bin/v-delete-sys-pma-sso
     fi
-    
+
    # Create an backup of current config
    echo "[ * ] Backing up old configuration files..."
    mkdir -p /root/hst_backup_man/phmyadmin
    cp -r /etc/phpmyadmin/* /root/hst_backup_man/phmyadmin
-   
+
    mkdir -p /root/hst_backup_man/var_phmyadmin
    cp -r /var/lib/phpmyadmin/* /root/hst_backup_man/var_phmyadmin
-   
+
    echo '[ * ] Marking phpmyadmin as held in apt...'
    apt-mark hold phpmyadmin
-   
+
    echo '[ * ] Removing old folders...'
-   # make sure everything is deleted 
+   # make sure everything is deleted
    rm -f -r /usr/share/phpmyadmin
    rm -f -r /etc/phpmyadmin
    rm -f -r /var/lib/phpmyadmin/
-   
+
    echo '[ * ] Creating new folders...'
    # Create folders
    mkdir -p  /usr/share/phpmyadmin
    mkdir -p /etc/phpmyadmin
-   mkdir -p /etc/phpmyadmin/conf.d/  
+   mkdir -p /etc/phpmyadmin/conf.d/
    mkdir /usr/share/phpmyadmin/tmp
    chmod 770 /usr/share/phpmyadmin/tmp/
    chown root:www-data /usr/share/phpmyadmin/tmp/
-   mkdir -p /etc/phpmyadmin/conf.d/  
-   
+   mkdir -p /etc/phpmyadmin/conf.d/
+
    # Configuring Apache2 for PHPMYADMIN
    if [ "$WEB_SYSTEM" == "apache2" ]; then
        cp -f $HESTIA_INSTALL_DIR/pma/apache.conf /etc/phpmyadmin/
        rm /etc/apache2/conf.d/phpmyadmin.conf
        ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf.d/phpmyadmin.conf
    fi
-   
+
    PASS=$(generate_password)
-      
+
    echo "[ * ] Installing phpMyAdmin version v$pma_v..."
    # Download latest phpmyadmin release
    wget --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
    # Unpack files
    tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
-   
+
    # Overwrite old files
    cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
-   
+
    # Create copy of config file
    cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
    mkdir -p /var/lib/phpmyadmin/tmp
    chmod 770 -R /var/lib/phpmyadmin/tmp
-   
+
    # Set config and log directory
    sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
-   
+
    # Generate blowfish
    blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
    sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
-   
+
    # Clear Up
    rm -fr phpMyAdmin-$pma_v-all-languages
    rm -f phpMyAdmin-$pma_v-all-languages.tar.gz
-   
+
    if [ -z "$DB_PMA_ALIAS" ]; then
        echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
    fi
@@ -100,7 +100,7 @@ then
 
    # Special thanks to Pavel Galkin (https://skurudo.ru)
    # https://github.com/skurudo/phpmyadmin-fixer
-   
+
    echo "[ * ] Creating localhost configuration..."
    #ubuntu phpmyadmin path
    pmapath="/etc/phpmyadmin/conf.d/01-localhost.php"
@@ -131,11 +131,11 @@ then
    echo "\$cfg['Servers'][\$i]['table_coords'] = 'pma__table_coords';" >> $pmapath
    echo "\$cfg['Servers'][\$i]['pdf_pages'] = 'pma__pdf_pages';" >> $pmapath
    echo "\$cfg['Servers'][\$i]['designer_coords'] = 'pma__designer_coords';" >> $pmapath
-   
+
    #SOME WORK with DATABASE (table / user)
    PMADB=phpmyadmin
    PMAUSER=pma
-   
+
    echo '[ * ] Dropping database (could throw an error if successful)...'
    # removed tabs due to here doc errors
    #DROP USER and TABLE
@@ -151,7 +151,7 @@ MYSQL_PMA1
 CREATE USER '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 CREATE DATABASE $PMADB;
 MYSQL_PMA2
-   
+
    echo '[ * ] Creating new database...'
    #GRANT PMA USE SOME RIGHTS
    mysql -uroot <<MYSQL_PMA3
@@ -160,10 +160,10 @@ GRANT USAGE ON $PMADB.* TO '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 GRANT ALL PRIVILEGES ON $PMADB.* TO '$PMAUSER'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_PMA3
-   
+
    #MYSQL DB and TABLES ADDITION
    mysql -uroot < $HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql
-      
+
     if [ "$sso" == "yes" ]; then
         $HESTIA/bin/v-add-sys-pma-sso
     fi

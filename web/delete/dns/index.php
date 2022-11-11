@@ -47,7 +47,7 @@ if ((!empty($_GET['domain'])) && (!empty($_GET['record_id']))) {
         header("Location: /list/dns/?domain=".$_GET['domain']);
         exit;
     }
-    
+
 }
 
 $back = $_SESSION['back'];

@@ -54,4 +54,4 @@ get_object_value 'dns' 'DOMAIN' "$domain" "$key"
 # Logging
 log_event "$OK" "$ARGUMENTS"
 
-exit 
+exit

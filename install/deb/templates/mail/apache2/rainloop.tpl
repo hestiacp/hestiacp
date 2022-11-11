@@ -4,7 +4,7 @@
     Alias / /var/lib/rainloop/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
     #SuexecUserGroup %user% %group%
-        
+
     IncludeOptional %home%/%user%/conf/mail/%root_domain%/apache2.forcessl.conf*
 
     <Directory /var/lib/rainloop/>

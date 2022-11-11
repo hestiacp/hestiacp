@@ -1,5 +1,5 @@
 <?php
-// Example usage 
+// Example usage
 // change_password.php "admin_account admin_password mysql_password"
 $_ENV['RAINLOOP_INCLUDE_AS_API'] = true;
 include '/var/lib/rainloop/index.php';

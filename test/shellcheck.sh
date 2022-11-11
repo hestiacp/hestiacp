@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Note use sh and not bash! 
+# Note use sh and not bash!
 
-# To be used with in shellcheck and automated usage 
+# To be used with in shellcheck and automated usage
 # Generate timestamp
 
 # If logging specified, export shellcheck output to log
@@ -17,27 +17,27 @@
 # SC1090; Can't follow non-constant source. Use a directive to specify location. - Hestia loves $HESTIA/data/ips/$ip
 # SC2031: var was modified in a subshell. That change might be lost.
 # SC2010
-# SC2143 
+# SC2143
 # SC2046
 
 #set default value for error
 err=0;
 shellcheck --version
 
-files=$(grep -rlE '#!/bin/(bash|sh)' ./ | grep -vE '\.(git|j2$|md$)'); 
-for file in $files; do 
+files=$(grep -rlE '#!/bin/(bash|sh)' ./ | grep -vE '\.(git|j2$|md$)');
+for file in $files; do
     echo "Linting: $file"
     shellcheck -x "$file" --severity="error"
-    if [ $? -gt 0 ]; then 
+    if [ $? -gt 0 ]; then
        printf "%s: \033[0;31m Fail \033[0m\n" "$file"
        err=1
-    else 
+    else
         # split loop in 2 parts allowing debuggin in earier stage
        printf "%s: \033[0;32m Success \033[0m\n" "$file"
     fi
 done
 
 if [ $err == 1 ];
-then 
+then
 exit "$err";
 fi

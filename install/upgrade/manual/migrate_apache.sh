@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: enable multiphp 
+# info: enable multiphp
 #
 # This function enables php-fpm backend for standalone apache2 configurations.
 

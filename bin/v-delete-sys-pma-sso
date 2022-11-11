@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: disables support for single sign on PHPMYADMIN 
+# info: disables support for single sign on PHPMYADMIN
 # options: [mode]
 #
 # example: v-delete-sys-pma-sso
@@ -38,7 +38,7 @@ fi
 if [ ! -e "$PMA_INSTALL/hestia-sso.php" ]; then
      echo 'Error:  PMA Single Sign On already disabled'
      exit 1;
-fi 
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #

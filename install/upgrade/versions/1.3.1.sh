@@ -9,7 +9,7 @@
 # Remove duplicate values in U_SYS_USERS variable for ips
 for ip in $($BIN/v-list-sys-ips plain | cut -f1); do
     current_usr=$(grep "U_SYS_USERS=" $HESTIA/data/ips/$ip |cut -f 2 -d \')
-    
+
     new_usr=$(echo "$current_usr" |\
         sed "s/,/\n/g"|\
         sort -u |\

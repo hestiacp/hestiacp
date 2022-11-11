@@ -15,7 +15,7 @@ include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
     location / {
         proxy_pass  http://%ip%:%web_port%;
     }
-    
+
     include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;
 
 }

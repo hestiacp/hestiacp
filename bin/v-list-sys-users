@@ -2,7 +2,7 @@
 # info: list system users
 # options: [FORMAT]
 #
-# example: v-list-sys-users 
+# example: v-list-sys-users
 #
 # This function for obtaining the list of system users without
 # detailed information.

@@ -39,7 +39,7 @@
             finderSelect.apply(this, arguments);
             return this;
         }
-        
+
     };
 
     function finderSelect(opt) {
@@ -73,7 +73,7 @@
         };
 
         $.extend(options, opt);
-        
+
         o = options;
 
         if(!o.children) {
@@ -104,7 +104,7 @@
             f.core.loadMenu(p,o);
         }
     };
-    
+
     function highlight(el) {
         f.h.on(el, o);
         return this;
@@ -173,7 +173,7 @@
                         ( $(e.target).hasClass('l-unit-toolbar__col--left')) ) {
 
                         var c = f.get.clicks(p,o,$(this));
-                        
+
                         var ref = $(e.target);
                         if (ref.parents('.l-unit').hasClass('selected')/* && $('.l-unit.selected').length == 1*/) {
                             $('.toggle-all').removeClass('clicked-on');
@@ -207,9 +207,9 @@
             p.on('mouseout', function(){
                 //d.off("keydown", turnOff);
             });
-            
+
             function turnOff(e) {
-                if (f.detect.ctrl(e)) { 
+                if (f.detect.ctrl(e)) {
 /*
                   shortcut.add("Ctrl+a", function(evt){
                     if(jQuery('.ch-toggle:checked').length > 0) {
@@ -353,7 +353,7 @@
                     f.h.off(child, o);
                 }
             });
- 
+
         },
         state: function(el,o) {
             el.each(function () {
@@ -367,7 +367,7 @@
 
                 }
             });
-            
+
         }
     };
 
@@ -503,7 +503,7 @@
         toggleClick: function(p,c,o) {
             var s = f.get.siblings(p,o);
             f.h.tog(c.current.v, o);
-            f.h.state(s,o);      
+            f.h.state(s,o);
             f.set.clicks(c.current.v, null, null, p, o);
         },
         toggleClick: function(p,c,o) {
@@ -516,7 +516,7 @@
             var s = f.get.siblings(p,o);
             f.h.reset(s,o);
             if(s.index(c.current.v) != s.index(c.hard.v)) {
-                f.h.tog(f.get.between(s, c.current, c.hard), o);                       
+                f.h.tog(f.get.between(s, c.current, c.hard), o);
                 f.h.tog(c.current.v, o);
             }
             f.set.clicks(c.hard.v, null, null, p, o);

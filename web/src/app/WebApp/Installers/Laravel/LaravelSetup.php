@@ -27,7 +27,7 @@ class LaravelSetup extends BaseSetup {
             'nginx' => [
                 'template' => 'laravel',
             ],
-            'php' => [ 
+            'php' => [
                 'supported' => [ '8.0','8.1' ],
             ]
         ],
@@ -37,7 +37,7 @@ class LaravelSetup extends BaseSetup {
     {
         parent::install($options);
         parent::setup($options);
-            
+
         $result = null;
 
         $htaccess_rewrite = '

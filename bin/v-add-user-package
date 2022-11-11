@@ -49,7 +49,7 @@ is_package_consistent() {
     if [ "$CRON_JOBS" != 'unlimited' ]; then
         is_int_format_valid "$CRON_JOBS" 'CRON_JOBS'
     fi
-    
+
     is_int_format_valid "$RATE_LIMIT" 'RATE_LIMIT'
 
     if [ "$DISK_QUOTA" != 'unlimited' ]; then
@@ -82,7 +82,7 @@ is_package_consistent() {
             i=$((i+1))
         done
     fi
-    
+
     is_format_valid_shell "$SHELL"
 }
 
@@ -94,11 +94,11 @@ check_args '2' "$#" 'PKG_DIR PACKAGE' 'rewrite'
 is_format_valid 'package'
 if [ "$rewrite" != 'yes' ]; then
     is_package_new "$package"
-else 
+else
     is_package_valid "$package"
 fi
 
-if [ ! -f "$tmpfile" ]; then 
+if [ ! -f "$tmpfile" ]; then
     echo "$tmpfile does not exists"
     exit "$E_NOTEXIST";
 fi

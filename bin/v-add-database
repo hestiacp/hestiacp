@@ -38,7 +38,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 if [ "$type" = "pgsql" ]; then
    database=$(echo "$user"_"$2" | tr '[:upper:]' '[:lower:]');
-   dbuser=$(echo "$user"_"$3" | tr '[:upper:]' '[:lower:]'); 
+   dbuser=$(echo "$user"_"$3" | tr '[:upper:]' '[:lower:]');
 fi
 
 #----------------------------------------------------------#
@@ -60,7 +60,7 @@ is_object_unsuspended "../../../conf/$type" 'DBHOST' "$host"
 is_package_full 'DATABASES'
 is_password_valid
 
-if [ "$type" = "pgsql" ]; then 
+if [ "$type" = "pgsql" ]; then
    exclude="-"
     if [[ "$dbuser" =~ $exclude ]]; then
         check_result "$E_INVALID" "invalid database user format"

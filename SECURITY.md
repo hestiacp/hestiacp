@@ -11,7 +11,7 @@ If you are unable to use [Huntr.dev](https://huntr.dev/bounties/disclose/?target
 
 We ask you to include a detailed description of the vulnerability, a list of services involved (e.g. exim, dovecot) and the versions which you've tested, full steps to reproduce the vulnerability, and include your findings and expected results.
 
-Please do not open any public issue on Github or any other social media before the report has been published and a fix has been released. 
+Please do not open any public issue on Github or any other social media before the report has been published and a fix has been released.
 
 With that, good luck hacking us ;)
 

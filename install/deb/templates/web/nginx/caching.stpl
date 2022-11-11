@@ -54,8 +54,8 @@ server {
         proxy_pass      https://%ip%:%web_ssl_port%;
     }
 
-    location ~ /\.(?!well-known\/|file) { 
-       deny all; 
+    location ~ /\.(?!well-known\/|file) {
+       deny all;
        return 404;
     }
 

@@ -37,7 +37,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Define conf 
+# Define conf
 case $type in
     web)    conf="$HESTIA/data/users/*/web.conf" ;;
     dns)    conf="$HESTIA/data/users/*/dns.conf" ;;

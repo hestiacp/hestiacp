@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: list public dnssec key 
+# info: list public dnssec key
 # options: USER DOMAIN [FROMAT]
 #
 # example: v-list-dns-public-key admin acme.com
@@ -55,10 +55,10 @@ json_list() {
 # SHELL list function
 shell_list() {
    echo "RECORD:    $record"
-   echo "DS:        $DS" 
-   echo "FLAG:      $flag" 
-   echo "ALGORITHM: $algorithm" 
-   echo "KEY:       $key"  
+   echo "DS:        $DS"
+   echo "FLAG:      $flag"
+   echo "ALGORITHM: $algorithm"
+   echo "KEY:       $key"
 }
 
 # PLAIN list function

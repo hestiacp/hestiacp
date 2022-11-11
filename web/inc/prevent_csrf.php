@@ -70,7 +70,7 @@
                     $hostname = gethostname();
                     $port = 443;
                 }
-                
+
                 //list of possible entries route and these should never be blocked
                 if (in_array($_SERVER['DOCUMENT_URI'], array('/list/user/index.php', '/login/index.php','/list/web/index.php','/list/dns/index.php','/list/mail/index.php','/list/db/index.php','/list/cron/index.php','/list/backup/index.php','/reset/index.php'))) {
                     return true;

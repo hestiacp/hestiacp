@@ -18,7 +18,7 @@ textdomain($domain);
  */
 function detect_user_language() {
    if (!empty($_SESSION['language'])) {
-        return $_SESSION['language'];   
+        return $_SESSION['language'];
    }elseif (!empty($_SESSION['LANGUAGE'])){
        return $_SESSION['LANGUAGE'];
    }else{
@@ -26,7 +26,7 @@ function detect_user_language() {
    }
 }
 /**
- * Translate ISO2 to "Language" 
+ * Translate ISO2 to "Language"
  * nl = Dutch, de = German
  * @param string iso2 code
  * @return string Language

@@ -71,7 +71,7 @@ if [ -n "$IMAP_SYSTEM" ]; then
             webmail="$client"
         done
         $BIN/v-add-mail-domain-webmail "$user" "$domain" "$webmail" "$restart"
-    fi   
+    fi
 fi
 # Logging
 $BIN/v-log-action "system" "Info" "Mail" "Unsuspended mail domain (User: $user, Domain: $domain)."

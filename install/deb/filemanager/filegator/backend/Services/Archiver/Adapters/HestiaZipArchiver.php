@@ -26,7 +26,7 @@ class HestiaZipArchiver extends ZipArchiver implements Service, ArchiverInterfac
         $auth = $this->container->get('Filegator\Services\Auth\AuthInterface');
 
         $v_user = basename($auth->user()->getUsername());
-        
+
         if(!strlen($v_user)) {
             return;
         }

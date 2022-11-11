@@ -60,8 +60,8 @@ if [ -z "$version" ]; then
             cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "/etc/php/${version}/fpm/pool.d/"
             sed -i "s/9999/99${version//.}/g" "/etc/php/${version}/fpm/pool.d/dummy.conf"
         fi
-    
-        $BIN/v-restart-service "$v_php" "$restart" 
+
+        $BIN/v-restart-service "$v_php" "$restart"
         if [ $? -ne 0 ]; then
             send_email_report
             check_result "$E_RESTART" "$v_php restart failed"
@@ -69,7 +69,7 @@ if [ -z "$version" ]; then
     done
 else
     v_php="php$version-fpm"
-    $BIN/v-restart-service "$v_php" "$restart" 
+    $BIN/v-restart-service "$v_php" "$restart"
     if [ $? -ne 0 ]; then
         send_email_report
         check_result "$E_RESTART" "$v_php restart failed"

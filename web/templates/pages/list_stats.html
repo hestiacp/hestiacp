@@ -6,48 +6,42 @@
         <a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars status-icon lightblue"></i><?=_('Overall Statistics');?></a>
       <?php } ?>
     </div>
-    <div class="l-sort-toolbar clearfix">
-      <table>
-        <tr>
-          <td class="l-sort-toolbar__search-box">
-            <form action="/search/" method="get">
-              <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-              <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-              <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
-            </form>
-          </td>
-        </tr>
-      </table>
+    <div class="l-sort-toolbar">
       <?php if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>
-        <table>
-          <tr>
-            <td>
-              <form action="/list/stats/" method="get" id="objects">
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-                <div class="l-select">
-                  <select class="" name="user">
-                    <option value=""><?=_('show per user');?></option>
-                    <?php
-                      foreach ($users as $key => $value) {
-                        if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value === 'admin')) {
-                          // Hide admin user from statistics list
-                        } else {
-                        echo "\t\t\t\t<option value=\"".$value."\"";
-                        if ((!empty($v_user)) && ( $value == $_GET['user'])){
-                          echo ' selected';
-                        }
-                          echo ">".$value."</option>\n";
-                        }
-                      }
-                    ?>
-                  </select>
-                </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
-              </form>
-            </td>
-          </tr>
-        </table>
+        <form action="/list/stats/" method="get" id="objects">
+          <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+          <div class="l-select">
+            <select class="" name="user">
+              <option value=""><?=_('show per user');?></option>
+              <?php
+                foreach ($users as $key => $value) {
+                  if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value === 'admin')) {
+                    // Hide admin user from statistics list
+                  } else {
+                  echo "\t\t\t\t<option value=\"".$value."\"";
+                  if ((!empty($v_user)) && ( $value == $_GET['user'])){
+                    echo ' selected';
+                  }
+                    echo ">".$value."</option>\n";
+                  }
+                }
+              ?>
+            </select>
+          </div>
+          <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
       <?php } ?>
+      <div class="l-sort-toolbar__search-box">
+        <form action="/search/" method="get">
+          <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+          <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
+          <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
@@ -96,6 +90,7 @@
                     <div class="l-percent">
                       <div class="l-percent__fill" style="width: <?=get_percentage($data[$key]['U_BANDWIDTH'],$data[$key]['BANDWIDTH'])?>%"></div>
                     </div>
+                  </div>
                 </td>
                 <td>
                   <div class="l-unit__stat-cols clearfix">

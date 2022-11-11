@@ -6,54 +6,51 @@
         <a href="/add/dns/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add DNS Domain');?></a>
       <?php } ?>
     </div>
-    <ul class="context-menu sort-order animated fadeIn" style="display: none;">
-      <li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-      <li entity="sort-expire" sort_as_int="1"><span class="name"><?=_('Expire');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-      <li entity="sort-ip"><span class="name"><?=_('IP address');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-      <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-      <li entity="sort-records"><span class="name"><?=_('Records');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-    </ul>
-    <span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>">
-      <div class="l-sort-toolbar clearfix">
-        <table>
-          <tr>
-            <td class="sort-by" title="<?=_('Sort items');?>">
-              <?=_('sort by');?>: <span>
-                <b>
-                  <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-                  <?=$label;?> <i class="fas fa-sort-alpha-down"></i>
-                </b>
-              </span>
-            </td>
-            <td class="l-sort-toolbar__search-box">
-              <form action="/search/" method="get">
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-                <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
-              </form>
-            </td>
-            <?php if ($read_only !== 'true') {?>
-              <td>
-                <form action="/bulk/dns/" method="post" id="objects">
-                  <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-                  <div class="l-select">
-                    <select name="action" id="">
-                      <option value=""><?=_('apply to selected');?></option>
-                      <?php if ($_SESSION['userContext'] === 'admin') {?>
-                        <option value="rebuild"><?=_('rebuild');?></option>
-                      <?php } ?>
-                      <option value="suspend"><?=_('suspend');?></option>
-                      <option value="unsuspend"><?=_('unsuspend');?></option>
-                      <option value="delete"><?=_('delete');?></option>
-                    </select>
-                  </div>
-                  <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
-                </form>
-              </td>
-            <?php } ?>
-          </tr>
-        </table>
+    <div class="l-sort-toolbar">
+      <ul class="context-menu sort-order animated fadeIn" style="display: none;">
+        <li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-expire" sort_as_int="1"><span class="name"><?=_('Expire');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-ip"><span class="name"><?=_('IP address');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-records"><span class="name"><?=_('Records');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+      </ul>
+      <div class="sort-by" title="<?=_('Sort items');?>">
+        <?=_('sort by');?>: <span>
+          <b>
+            <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+            <?=$label;?> <i class="fas fa-sort-alpha-down"></i>
+          </b>
+        </span>
       </div>
+      <?php if ($read_only !== 'true') {?>
+        <form action="/bulk/dns/" method="post" id="objects">
+          <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+          <div class="l-select">
+            <select name="action" id="">
+              <option value=""><?=_('apply to selected');?></option>
+              <?php if ($_SESSION['userContext'] === 'admin') {?>
+                <option value="rebuild"><?=_('rebuild');?></option>
+              <?php } ?>
+              <option value="suspend"><?=_('suspend');?></option>
+              <option value="unsuspend"><?=_('unsuspend');?></option>
+              <option value="delete"><?=_('delete');?></option>
+            </select>
+          </div>
+          <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+      <?php } ?>
+      <div class="l-sort-toolbar__search-box">
+        <form action="/search/" method="get">
+          <input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+          <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
+          <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 <!-- End toolbar -->

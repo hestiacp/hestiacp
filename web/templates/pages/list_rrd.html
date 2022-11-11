@@ -5,28 +5,21 @@
       <a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <a href="/list/server/?cpu" class="button button-secondary"><i class="fas fa-chart-pie status-icon green"></i><?=_('show: CPU / MEM / NET / DISK');?></a>
     </div>
-    <div class="l-sort-toolbar clearfix">
-      <table>
-        <tr>
-          <td>
-            <a class="vst<?php if ((empty($period)) || ($period == 'daily')) echo " selected" ?>" href="?period=daily"><?=_('Daily');?></a>
-            <a class="vst<?php if ((!empty($period)) && ($period == 'weekly')) echo " selected" ?>" href="?period=weekly"><?=_('Weekly');?></a>
-            <a class="vst<?php if ((!empty($period)) && ($period == 'monthly')) echo " selected" ?>" href="?period=monthly"><?=_('Monthly');?></a>
-            <a class="vst<?php if ((!empty($period)) && ($period == 'yearly')) echo " selected" ?>" href="?period=yearly"><?=_('Yearly');?></a>
-          </td>
-
-          <td>
-            <div class="timer-container" style="float:right;">
-              <span class="timer-button pause-stop" onclick="stopTimer()"><i class="fas fa-pause"></i></span>
-              <div class="timer-button spinner">
-                <div class="spinner-inner"></div>
-                <div class="spinner-mask"></div>
-                <div class="spinner-mask-two"></div>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </table>
+    <div class="l-sort-toolbar">
+      <div>
+        <a class="vst<?php if ((empty($period)) || ($period == 'daily')) echo " selected" ?>" href="?period=daily"><?=_('Daily');?></a>
+        <a class="vst<?php if ((!empty($period)) && ($period == 'weekly')) echo " selected" ?>" href="?period=weekly"><?=_('Weekly');?></a>
+        <a class="vst<?php if ((!empty($period)) && ($period == 'monthly')) echo " selected" ?>" href="?period=monthly"><?=_('Monthly');?></a>
+        <a class="vst<?php if ((!empty($period)) && ($period == 'yearly')) echo " selected" ?>" href="?period=yearly"><?=_('Yearly');?></a>
+      </div>
+      <div class="timer-container" style="float:right;">
+        <span class="timer-button pause-stop" onclick="stopTimer()"><i class="fas fa-pause"></i></span>
+        <div class="timer-button spinner">
+          <div class="spinner-inner"></div>
+          <div class="spinner-mask"></div>
+          <div class="spinner-mask-two"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

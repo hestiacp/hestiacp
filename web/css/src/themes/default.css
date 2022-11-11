@@ -866,15 +866,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
 }
 
 .context-menu.sort-order {
-  display: inline-block;
   position: absolute;
+  top: 35px;
+  left: 0;
   z-index: 3;
-  left: 397px;
   overflow: hidden;
-  top: 42px;
+  border-radius: 4px;
   background-color: rgb(255 255 255 / 95%);
   box-shadow: 0 2px 14px 0 rgb(20 20 20 / 35%);
-  border-radius: 4px;
   border: 1px solid rgb(255 255 255 / 100%);
 }
 
@@ -892,14 +891,14 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .context-menu.sort-order span.name {
   display: inline-block;
-  padding: 12px;
+  padding: 11px;
   width: 141px;
   font-weight: 500;
 }
 
 .context-menu.sort-order span.up {
   display: inline-block;
-  padding: 12px 14px;
+  padding: 11px 14px;
   width: 44px;
 }
 
@@ -943,7 +942,7 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-sort-toolbar {
   display: flex;
-  text-transform: uppercase;
+  position: relative;
   font-size: 0.8rem;
 }
 
@@ -954,8 +953,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
 
 .l-sort-toolbar .sort-by {
   cursor: pointer;
-  padding-top: 7px;
-  padding-left: 10px;
+  text-transform: uppercase;
+  padding: 6px 12px 0;
 }
 
 .l-sort-toolbar .sort-by:hover {
@@ -2963,8 +2962,7 @@ form#vstobjects.suspended {
 }
 
 .l-sort-toolbar__search-box {
-  float: right !important;
-  padding-right: 0 !important;
+  margin-left: 12px;
 }
 
 .ui-dialog .ui-dialog-buttonpane {

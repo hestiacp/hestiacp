@@ -13,15 +13,19 @@
       <input type="hidden" name="user" value="<?=htmlentities($_GET['user']);?>">
       <input type="hidden" name="code" value="<?=htmlentities($_GET['code']);?>">
       <label for="password" class="form-label"><?=_('New Password');?></label>
-      <input type="password" class="form-control" name="password" id="password" tabindex="1">
+      <input type="password" class="form-control" name="password" id="password">
     </div>
     <div class="u-mb20">
       <label for="password_confirm" class="form-label"><?=_('Confirm Password');?></label>
-      <input type="password" class="form-control" name="password_confirm" id="password_confirm" tabindex="2">
+      <input type="password" class="form-control" name="password_confirm" id="password_confirm">
     </div>
     <div class="u-side-by-side">
-      <input tabindex="3" type="submit" value="<?=_('Reset');?>" class="button">
-      <input type="button" class="button button-secondary" value="<?=_('Back');?>" onclick="location.href='/login/'">
+      <button type="submit" class="button">
+        <?=_('Reset');?>
+      </button>
+      <button type="button" class="button button-secondary" onclick="location.href='/login/'">
+        <?=_('Back');?>
+      </button>
     </div>
   </form>
 </div>

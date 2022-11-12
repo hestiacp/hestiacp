@@ -9,33 +9,29 @@
         <a class="button button-secondary" href="/list/firewall/ipset/"><i class="fas fa-list status-icon blue"></i><?=_('list ipset');?></a>
       <?php endif; ?>
     </div>
-    <ul class="context-menu sort-order animated fadeIn" style="display:none;">
-      <li entity="sort-action"><span class="name"><?=_('Action');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up active"><i class="fas fa-sort-alpha-up"></i></span></li>
-      <li entity="sort-protocol"><span class="name"><?=_('Protocol');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-      <li entity="sort-port"><span class="name"><?=_('Port');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-      <li entity="sort-ip" sort_as_int="1"><span class="name"><?=_('IP address');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-      <li entity="sort-comment"><span class="name"><?=_('Comment');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-    </ul>
-    <div class="l-sort-toolbar clearfix">
-      <table>
-        <tr>
-          <td class="sort-by" title="<?=_('Sort items');?>">
-            <?=_('sort by');?>: <span><b><?=_('Action');?> <i class="fas fa-sort-alpha-up"></i></b></span>
-          </td>
-          <td>
-            <form action="/bulk/firewall/" method="post" id="objects">
-              <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-              <div class="l-select">
-                <select name="action" id="">
-                  <option value=""><?=_('apply to selected');?></option>
-                  <option value="delete"><?=_('delete') ?></option>
-                </select>
-              </div>
-              <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
-            </form>
-          </td>
-        </tr>
-      </table>
+    <div class="l-sort-toolbar">
+      <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+        <li entity="sort-action"><span class="name"><?=_('Action');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up active"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-protocol"><span class="name"><?=_('Protocol');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-port"><span class="name"><?=_('Port');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-ip" sort_as_int="1"><span class="name"><?=_('IP address');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-comment"><span class="name"><?=_('Comment');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+      </ul>
+      <div class="sort-by" title="<?=_('Sort items');?>">
+        <?=_('sort by');?>: <span><b><?=_('Action');?> <i class="fas fa-sort-alpha-up"></i></b></span>
+      </div>
+      <form action="/bulk/firewall/" method="post" id="objects">
+        <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+        <div class="l-select">
+          <select name="action" id="">
+            <option value=""><?=_('apply to selected');?></option>
+            <option value="delete"><?=_('delete') ?></option>
+          </select>
+        </div>
+        <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
     </div>
   </div>
 </div>

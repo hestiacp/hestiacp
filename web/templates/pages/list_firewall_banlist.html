@@ -5,23 +5,19 @@
       <a class="button button-secondary" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Ban IP Address');?></a>
     </div>
-    <div class="l-sort-toolbar clearfix">
-      <table>
-        <tr>
-          <td>
-            <form action="/bulk/firewall/banlist/" method="post" id="objects">
-              <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-              <div class="l-select">
-                <select name="action" id="">
-                  <option value=""><?=_('apply to selected');?></option>
-                  <option value="delete"><?=_('delete') ?></option>
-                </select>
-              </div>
-              <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
-            </form>
-          </td>
-        </tr>
-      </table>
+    <div class="l-sort-toolbar">
+      <form action="/bulk/firewall/banlist/" method="post" id="objects">
+        <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+        <div class="l-select">
+          <select name="action" id="">
+            <option value=""><?=_('apply to selected');?></option>
+            <option value="delete"><?=_('delete') ?></option>
+          </select>
+        </div>
+        <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
     </div>
   </div>
 </div>

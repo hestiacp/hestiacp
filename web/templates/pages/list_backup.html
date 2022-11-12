@@ -7,32 +7,30 @@
         <a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus status-icon orange"></i><?=_('backup exclusions');?></a>
       <?php } ?>
     </div>
-    <div class="l-sort-toolbar clearfix">
-      <table>
-        <tr>
-          <td class="l-sort-toolbar__search-box">
-            <form action="/search/" method="get">
-              <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-              <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-              <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>"><i class="fas fa-search"></i></button>
-            </form>
-          </td>
-          <?php if ($read_only !== 'true') {?>
-            <td>
-              <form action="/bulk/backup/" method="post" id="objects">
-                <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-                <div class="l-select">
-                  <select name="action" id="">
-                    <option value=""><?=_('apply to selected');?></option>
-                    <option value="delete"><?=_('delete') ?></option>
-                  </select>
-                </div>
-                <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
-              </form>
-            </td>
-          <?php } ?>
-        </tr>
-      </table>
+    <div class="l-sort-toolbar">
+      <?php if ($read_only !== 'true') {?>
+        <form action="/bulk/backup/" method="post" id="objects">
+          <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+          <div class="l-select">
+            <select name="action" id="">
+              <option value=""><?=_('apply to selected');?></option>
+              <option value="delete"><?=_('delete') ?></option>
+            </select>
+          </div>
+          <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+      <?php } ?>
+      <div class="l-sort-toolbar__search-box">
+        <form action="/search/" method="get">
+          <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+          <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
+          <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </div>

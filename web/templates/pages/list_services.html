@@ -19,25 +19,21 @@
         </a>
       </div>
     </div>
-    <div class="l-sort-toolbar clearfix">
-      <table>
-        <tr>
-          <td>
-            <form action="/bulk/service/" method="post" id="objects">
-              <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-              <div class="l-select">
-                <select class="" name="action">
-                  <option value=""><?=_('apply to selected');?></option>
-                  <option value="stop"><?=_('stop');?></option>
-                  <option value="start"><?=_('start');?></option>
-                  <option value="restart"><?=_('restart');?></option>
-                </select>
-              </div>
-              <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>"><i class="fas fa-arrow-right"></i></button>
-            </form>
-          </td>
-        </tr>
-      </table>
+    <div class="l-sort-toolbar">
+      <form action="/bulk/service/" method="post" id="objects">
+        <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+        <div class="l-select">
+          <select class="" name="action">
+            <option value=""><?=_('apply to selected');?></option>
+            <option value="stop"><?=_('stop');?></option>
+            <option value="start"><?=_('start');?></option>
+            <option value="restart"><?=_('restart');?></option>
+          </select>
+        </div>
+        <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
     </div>
   </div>
 </div>

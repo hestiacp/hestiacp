@@ -256,22 +256,17 @@ strong {
   color: #aaa;
 }
 
-.l-separator.selected,
 .l-separator {
   border-top: 1px solid #454545;
 }
 
-div.l-content > div.l-separator:nth-of-type(2) {
-}
-
-div.l-content > div.l-separator:nth-of-type(4) {
-  border-bottom: 1px solid #454545;
-  background-color: #282828;
-  box-shadow: 0 4px 6px rgb(0 0 0 / 25%) !important;
-}
-
 .l-sort {
+  border-color: #454545;
   background-color: #282828;
+}
+
+.l-sort.is-active {
+  box-shadow: 0 4px 6px rgb(0 0 0 / 25%);
 }
 
 .context-menu.sort-order {
@@ -396,7 +391,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-left: 1px solid #212121 !important;
   border-right: 1px solid #212121 !important;
   border-bottom: 1px solid #212121 !important;
-  border-top: 1px solid #454545 !important;
   text-shadow: 0 1px rgb(0 0 0 / 95%);
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;

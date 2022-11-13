@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
-<div class="l-center">
-  <div class="l-sort">
+<div class="l-sort">
+  <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && (htmlentities($_GET['user']) !== 'admin')) { ?>
         <a href="/list/log/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
@@ -33,8 +33,6 @@
   </div>
 </div>
 <!-- End toolbar -->
-
-<div class="l-separator"></div>
 
 <div class="l-center units">
   <div class="header table-header">

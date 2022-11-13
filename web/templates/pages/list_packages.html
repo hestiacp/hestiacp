@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
-<div class="l-center">
-  <div class="l-sort">
+<div class="l-sort">
+  <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <a href="/add/package/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add Package');?></a>
@@ -34,8 +34,6 @@
   </div>
 </div>
 <!-- End toolbar -->
-
-<div class="l-separator"></div>
 
 <div class="l-center units">
   <div class="table-header">
@@ -216,10 +214,10 @@
 </div>
 
 <div id="vstobjects">
-  <div class="l-separator visible"></div>
+  <div class="l-separator"></div>
   <div class="l-center">
     <div class="l-unit-ft">
-      <div class="l-unit__col l-unit__col--right clearfix">
+      <div class="l-unit__col l-unit__col--right">
         <?php printf(ngettext('%d package', '%d packages', $i),$i); ?>
       </div>
     </div>

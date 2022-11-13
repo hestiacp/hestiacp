@@ -291,11 +291,11 @@ table {
 .l-header {
   background: linear-gradient(to bottom, rgb(104 145 196 / 100%) 0%, rgb(69 114 181 / 100%) 50%, rgb(65 90 149 / 100%) 100%);
   background-color: #5070a6;
-  overflow: hidden;
   position: fixed;
   width: 100%;
   height: 39px;
   z-index: 900;
+  top: 0;
   font-size: 0.8rem;
   text-shadow: 1px 1px rgb(0 0 0 / 25%);
   box-shadow: 0 4px 10px rgb(100 100 100 / 40%);
@@ -684,35 +684,26 @@ table {
 }
 
 .l-stat {
-  margin: 34px auto;
-  position: fixed;
   background-color: #fff;
-  z-index: 100;
-  padding-top: 36px;
+  padding-top: 31px;
   overflow: hidden;
   text-align: center;
   display: flex;
-  width: 100%;
-  max-width: 1020px;
 }
 
 .l-stat__col {
-  display: inline-block;
-  vertical-align: top;
   flex: 1;
 }
 
 .l-stat__col a {
-  display: inline-block;
-  padding-bottom: 36px;
-  min-height: 113px;
-  width: 136px;
-  border-bottom: 4px solid #fff;
+  display: block;
+  min-height: 110px;
   overflow: hidden;
+  margin-left: 20px;
+  margin-right: 20px;
+  border-bottom: 4px solid #fff;
+  padding-bottom: 16px;
   background-color: #fff;
-  padding-top: 3px;
-  margin-top: -3px;
-  padding-left: 5px;
 }
 
 .l-stat__col a:hover {
@@ -780,39 +771,35 @@ table {
   color: #c36;
 }
 
-.l-separator.selected,
 .l-separator {
   height: 1px;
   border-top: 1px solid #ddd;
 }
 
-div.l-content > div.l-separator:nth-of-type(2) {
-  margin-top: 180px;
-  width: 100%;
-  position: fixed;
-  z-index: 120;
-}
-
-div.l-content > div.l-separator:nth-of-type(4) {
-  margin-top: 225px;
-  width: 100%;
-  position: fixed;
-  z-index: 110;
-  border-top: none;
+.l-sort {
+  display: flex;
+  position: sticky;
+  z-index: 2;
+  top: 38px;
+  height: 44px;
+  justify-content: center;
+  background-color: #fff;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
 }
 
-.l-sort {
-  position: fixed;
+.l-sort.is-active {
+  box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
+}
+
+.l-sort__inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   max-width: 1020px;
-  background-color: #fff;
-  z-index: 120;
-  margin-top: 181px;
-  height: 44px;
+  width: 100%;
 }
 
 .l-sort__create-btn {
@@ -869,7 +856,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   position: absolute;
   top: 35px;
   left: 0;
-  z-index: 3;
   overflow: hidden;
   border-radius: 4px;
   background-color: rgb(255 255 255 / 95%);
@@ -1208,7 +1194,6 @@ div.l-content > div.l-separator:nth-of-type(4) {
   border-left: 1px solid #d0d0d0 !important;
   border-right: 1px solid #d0d0d0 !important;
   border-bottom: 1px solid #d0d0d0 !important;
-  border-top: 1px solid #d0d0d0 !important;
   text-shadow: 0 1px rgb(255 255 255 / 100%);
   box-shadow: inset 0 1px 1px rgb(255 255 255 / 100%), inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%), 0 1px 4px rgb(140 140 140 / 35%) !important;
   border-radius: 0 0 6px 6px;
@@ -1219,8 +1204,8 @@ div.l-content > div.l-separator:nth-of-type(4) {
   line-height: 1rem;
   margin-top: 1px;
   position: sticky;
-  top: 145px;
-  z-index: 100;
+  top: 82px;
+  z-index: 1;
   padding-top: 4px;
   padding-bottom: 4px;
 }
@@ -1959,7 +1944,7 @@ body.mobile .l-unit-toolbar__col--right {
 
 .form-container {
   font-size: 0.85rem;
-  padding: 1em 1em 2em 9rem;
+  padding: 2em 1em 2em 9rem;
 }
 
 .vst-error {
@@ -2580,34 +2565,18 @@ body.mobile .l-unit-toolbar__col--right {
   padding-top: 2px;
 }
 
-div.l-content.collapsed > div.l-separator:nth-of-type(2) {
-  margin-top: 93px;
-  position: fixed;
+.l-content {
+  padding-top: 39px;
 }
 
-div.l-content.collapsed > div.l-separator:nth-of-type(4) {
-  margin-top: 138px;
-  position: fixed;
-}
-
-div.l-content.collapsed .l-sort {
+.l-content.collapsed .l-sort {
   margin-top: 94px;
-}
-
-.l-content > .units.l-center::before {
-  content: "";
-  display: block;
-  height: 224px;
 }
 
 .console-output {
   font-family: Inconsolata, "Lucida Console", Monaco, monospace;
   font-size: 0.92rem;
   color: #202020;
-}
-
-form#vstobjects {
-  padding-top: 240px;
 }
 
 form#vstobjects.suspended {
@@ -3085,7 +3054,7 @@ form#vstobjects.suspended {
 .helper-container {
   float: right;
   margin-bottom: -450px;
-  margin-top: 425px;
+  margin-top: 199px;
   margin-right: 14px;
   padding-top: 0;
   width: 610px;

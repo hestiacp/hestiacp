@@ -78,19 +78,29 @@ function generate_ssh_table () {
 }
 
 function generate_mysql_table () {
-        rrdtool xport --json -s $start -e $end --step $step \
-        DEF:a=$RRD/db/mysql_$host.rrd:A:AVERAGE \
-        DEF:s=$RRD/db/mysql_$host.rrd:S:AVERAGE \
-        XPORT:a:Queries \
-        XPORT:s:Slow
+        if [ -f "$RRD/db/mysql_$host.rrd" ]; then
+            rrdtool xport --json -s $start -e $end --step $step \
+            DEF:a=$RRD/db/mysql_$host.rrd:A:AVERAGE \
+            DEF:s=$RRD/db/mysql_$host.rrd:S:AVERAGE \
+            XPORT:a:Queries \
+            XPORT:s:Slow
+        else
+            echo "Does not exists";
+            exit 1;
+        fi
 }
 
 function generate_pgsql_table () {
-        rrdtool xport --json -s $start -e $end --step $step \
-        DEF:a=$RRD/db/pgsql_$host.rrd:A:AVERAGE \
-        DEF:t=$RRD/db/pgsql_$host.rrd:T:AVERAGE \
-        XPORT:a:Queries \
-        XPORT:t:Transactions
+        if [ -f "$RRD/db/pgsql_$host.rrd" ]; then
+            rrdtool xport --json -s $start -e $end --step $step \
+            DEF:a=$RRD/db/pgsql_$host.rrd:A:AVERAGE \
+            DEF:t=$RRD/db/pgsql_$host.rrd:T:AVERAGE \
+            XPORT:a:Queries \
+            XPORT:t:Transactions
+        else
+            echo "Does not exists";
+            exit 1;
+        fi
 }
 
 function generate_mail_table () {
@@ -100,37 +110,16 @@ function generate_mail_table () {
 }
 
 function generate_net_table () {
-        # Parsing network interfaces
-        ndev=$(cat /proc/net/dev)
-        ifaces=$(echo "$ndev" |grep : |cut -f 1 -d : | sed "s/ //g")
-        
-        # Parsing excludes
-        if [ -z "$RRD_IFACE_EXCLUDE" ]; then
-            RRD_IFACE_EXCLUDE='lo,docker0,br-.*,veth.*'
-        fi
-        for exclude in $(echo ${RRD_IFACE_EXCLUDE//,/ }); do
-            ifaces=$(echo "$ifaces" |grep -vw "$exclude" )
-        done
-        
-        echo '{'
-        i=1
-        objects=$(echo $ifaces | wc -w );
-        for iface in $ifaces; do
-            echo -n '    "'$iface'": { '
+        if [ -f "$RRD/net/$host.rrd" ]; then
             rrdtool xport --json -s $start -e $end --step $step \
-            DEF:inoctets=$RRD/net/$iface.rrd:RX:AVERAGE \
-            DEF:outoctets=$RRD/net/$iface.rrd:TX:AVERAGE \
+            DEF:inoctets=$RRD/net/$host.rrd:RX:AVERAGE \
+            DEF:outoctets=$RRD/net/$host.rrd:TX:AVERAGE \
             XPORT:inoctets:"Input (rx)" \
             XPORT:outoctets:"Output (rx)"
-            echo '}'
-            if [ "$i" -lt "$objects" ]; then
-                echo ','
-            else
-                echo
-            fi
-            ((i++))
-        done
-        echo '}'
+        else
+            echo "Does not exists";
+            exit 1;
+        fi
 }
 
 
@@ -152,11 +141,14 @@ else
 fi
 end=$(date +%s)
 
+host=$(echo $chart | cut -d'_' -f2 );
+chart=$(echo $chart | cut -d'_' -f1 );
+
 case $chart in
     "la")
     generate_load_table
     ;;
-    
+
     "mem")
     generate_mem_table
     ;;
@@ -164,40 +156,41 @@ case $chart in
     "apache2")
     generate_apache2_table
     ;;
-    
+
     "httpd")
     generate_httpd_table
     ;;
-    
+
     "nginx")
     generate_nginx_table
     ;;
-    
+
     "ftp")
     generate_ftp_table
     ;;
-    
+
     "ssh")
     generate_ssh_table
     ;;
-    
+
     "mysql")
     generate_mysql_table
     ;;
-    
+
     "pgsql")
     generate_pgsql_table
     ;;
-    
+
     "mail")
     generate_mail_table
     ;;
-    
+
     "net")
     generate_net_table
     ;;
-    
-    
+
+
     *)
     echo "Does not exists";
+    exit 1;
 esac

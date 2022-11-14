@@ -208,7 +208,7 @@ VE.helpers.toggleHiddenPasswordText = function(ref, triggering_elm) {
 var reloadTimer = 150;
 var reloadFunction = '';
 
-$(document).ready(startTime);
+//$(document).ready(startTime);
 function startTime(){
     if ($(".spinner")[0]){
     reloadFunction = setInterval(updateInterval, 100);

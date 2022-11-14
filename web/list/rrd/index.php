@@ -17,9 +17,9 @@ $data = json_decode(implode('', $output), true);
 unset($output);
 
 if (empty($_GET['period'])) {
-    $period = 'daily';
-} elseif (!in_array($_GET['period'], array('daily', 'weekly', 'monthly', 'yearly'))) {
-    $period = 'daily';
+    $period = 'day';
+} elseif (!in_array($_GET['period'], array('day', 'week', 'month', 'year'))) {
+    $period = 'day';
 } else {
     $period = $_GET['period'];
 }

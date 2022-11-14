@@ -7,18 +7,10 @@
     </div>
     <div class="l-sort-toolbar">
       <div>
-        <a class="vst<?php if ((empty($period)) || ($period == 'daily')) echo " selected" ?>" href="?period=daily"><?=_('Daily');?></a>
-        <a class="vst<?php if ((!empty($period)) && ($period == 'weekly')) echo " selected" ?>" href="?period=weekly"><?=_('Weekly');?></a>
-        <a class="vst<?php if ((!empty($period)) && ($period == 'monthly')) echo " selected" ?>" href="?period=monthly"><?=_('Monthly');?></a>
-        <a class="vst<?php if ((!empty($period)) && ($period == 'yearly')) echo " selected" ?>" href="?period=yearly"><?=_('Yearly');?></a>
-      </div>
-      <div class="timer-container" style="float:right;">
-        <span class="timer-button pause-stop" onclick="stopTimer()"><i class="fas fa-pause"></i></span>
-        <div class="timer-button spinner">
-          <div class="spinner-inner"></div>
-          <div class="spinner-mask"></div>
-          <div class="spinner-mask-two"></div>
-        </div>
+        <a class="vst<?php if ((empty($period)) || ($period == 'day')) echo " selected" ?>" href="?period=day"><?=_('Daily');?></a>
+        <a class="vst<?php if ((!empty($period)) && ($period == 'week')) echo " selected" ?>" href="?period=week"><?=_('Weekly');?></a>
+        <a class="vst<?php if ((!empty($period)) && ($period == 'month')) echo " selected" ?>" href="?period=month"><?=_('Monthly');?></a>
+        <a class="vst<?php if ((!empty($period)) && ($period == 'year')) echo " selected" ?>" href="?period=year"><?=_('Yearly');?></a>
       </div>
     </div>
   </div>
@@ -26,7 +18,6 @@
 <!-- End toolbar -->
 
 <div class="l-separator"></div>
-
 <div class="l-center units animated fadeIn">
   <!-- Begin graph list item loop -->
   <?php foreach ($data as $key => $value) { ?>
@@ -36,9 +27,9 @@
           <?= _($data[$key]['TITLE'])?>
         </div>
         <?php if($data[$key]['TYPE'] != 'net'){?>
-        <canvas id="<?=$data[$key]['RRD'];?>" class="js-chart" width="800" height="200"></canvas>
+        <canvas id="<?=$data[$key]['RRD'];?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period);?>"></canvas>
         <?php }else{?>
-        <canvas id="net_<?=$data[$key]['RRD'];?>" class="js-chart" width="800" height="200"></canvas>
+        <canvas id="net_<?=$data[$key]['RRD'];?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period);?>"></canvas>
         <?php } ?>
       </div>
     </div>

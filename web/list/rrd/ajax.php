@@ -12,7 +12,7 @@ if ($_SESSION['userContext'] != 'admin') {
 if (empty($_POST['period'])) {
     $period = "daily";
 } else {
-    if (in_array($_POST['period'] ,array('daily', 'weekly','monthly','yearly'))) {
+    if (in_array($_POST['period'] ,array('day', 'week','month','year'))) {
         $period=$_POST['period'];
     } else {
         $period = "daily";

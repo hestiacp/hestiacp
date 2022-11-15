@@ -141,7 +141,7 @@ $(document).ready(function(){
                  $('.ch-toggle').each( function (){
                     if($(this).prop('checked')){
                         key=this.name;
-                        div=$('<input type="hidden" name="'+key+'" value="'+this.value+'"/>');
+                        div=$('<input type="hidden" name="'+key+'" value="'+this.value+'">');
                         $('#objects').append(div);
                     }
                  });

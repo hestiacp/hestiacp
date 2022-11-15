@@ -359,9 +359,6 @@ strong {
   box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
 }
 
-.l-select::after {
-}
-
 .l-select select {
   background-color: #212121;
   box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
@@ -1186,12 +1183,6 @@ li[aria-expanded="true"] a {
 .body-stats .units:hover .l-unit:hover b,
 .body-stats .units:hover .l-unit:hover strong {
   color: #fff !important;
-}
-
-@media screen and (max-width: 950px) {
-  .helper-container {
-    display: none;
-  }
 }
 
 /* Collapse component

@@ -4,11 +4,15 @@
     Website:     www.hestiacp.com
 */
 
+:root {
+  --animate-duration: 0s;
+}
+
 /* Base
    ========================================================================== */
 
 body {
-  font-family: Arial, Helvetica, sans-serif !important;
+  font-family: Arial, system-ui !important;
   letter-spacing: 0;
 }
 
@@ -119,30 +123,30 @@ strong {
   background-color: #a0c105;
   border-radius: 2px;
   box-shadow: none;
-}
 
-.button .fas {
-  display: none;
-}
+  &:hover {
+    border-color: transparent;
+    color: #fff;
+    background: #a9cc06;
+    background-color: #a9cc06;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+    transition: none;
+    box-shadow: none;
+  }
 
-.button:hover {
-  border-color: transparent;
-  color: #fff;
-  background: #a9cc06;
-  background-color: #a9cc06;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
-  transition: none;
-  box-shadow: none;
-}
+  &:active,
+  &:focus {
+    border-color: transparent;
+    color: #fff;
+    background: #809c00;
+    background-color: #809c00;
+    text-shadow: 0 0 2px rgb(0 0 0 / 20%);
+    box-shadow: none;
+  }
 
-.button:active,
-.button:focus {
-  border-color: transparent;
-  color: #fff;
-  background: #809c00;
-  background-color: #809c00;
-  text-shadow: 0 0 2px rgb(0 0 0 / 20%);
-  box-shadow: none;
+  & .fas {
+    display: none;
+  }
 }
 
 .button-secondary {
@@ -151,21 +155,21 @@ strong {
   text-transform: none;
   border-color: #bbb;
   background: #fff;
-}
 
-.button-secondary:hover {
-  color: #326b9b;
-  text-shadow: none;
-  border-color: #bbb;
-  background: #f5f5f5;
-}
+  &:hover {
+    color: #326b9b;
+    text-shadow: none;
+    border-color: #bbb;
+    background: #f5f5f5;
+  }
 
-.button-secondary:active,
-.button-secondary:focus {
-  color: #326b9b;
-  text-shadow: none;
-  border-color: #aaa;
-  background: #f5f5f5;
+  &:active,
+  &:focus {
+    color: #326b9b;
+    text-shadow: none;
+    border-color: #aaa;
+    background: #f5f5f5;
+  }
 }
 
 .button-danger:hover {
@@ -192,10 +196,10 @@ strong {
   border-bottom-left-radius: 2px !important;
   border-bottom-right-radius: 2px !important;
   box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%) !important;
-}
 
-.notification-container li {
-  line-height: 1.1rem;
+  & li {
+    line-height: 1.1rem;
+  }
 }
 
 .context-menu.sort-order {
@@ -205,13 +209,9 @@ strong {
   background: #fff !important;
 }
 
-.form-container {
-
-}
-
 .form-control,
 .form-select {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, system-ui;
   box-shadow: none;
   border-radius: 0;
 }
@@ -225,10 +225,10 @@ strong {
   border: none;
   background: none;
   box-shadow: none;
-}
 
-.usage-pill b {
-  color: #fff;
+  & b {
+    color: #fff;
+  }
 }
 
 .l-menu__item.l-menu__item--active a {
@@ -309,7 +309,7 @@ strong {
 .ui-widget,
 .ui-dialog,
 .ui-dialog .ui-dialog-title {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, system-ui;
 }
 
 .ui-dialog .ui-dialog-title {
@@ -485,7 +485,7 @@ a#btn-back:focus {
 .login {
   background-color: rgb(255 255 255 / 100%);
   box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, system-ui;
   border-radius: 0;
 }
 
@@ -536,14 +536,4 @@ li[aria-expanded="true"] a {
 
 .collapse-header .fas {
   display: none;
-}
-
-/* Extend animate.css
-   ========================================================================== */
-
-.animated {
-  -webkit-animation-duration: 0s !important;
-  animation-duration: 0s !important;
-  -webkit-animation-fill-mode: none !important;
-  animation-fill-mode: none !important;
 }

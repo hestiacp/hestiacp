@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <div class="l-unit animated fadeIn">
+  <div class="l-unit animate__animated animate__fadeIn">
     <div class="l-unit__col l-unit__col--right">
       <div class="clearfix l-unit__stat-col--left wide-3">
         <b><input type="text" class="form-control" style="width:260px;" value="mail.<?=htmlspecialchars($_GET['domain']);?>"></b>
@@ -39,7 +39,7 @@
     </div>
   </div>
   <?php if($_SESSION['WEBMAIL_SYSTEM']){?>
-    <div class="l-unit animated fadeIn">
+    <div class="l-unit animate__animated animate__fadeIn">
       <div class="l-unit__col l-unit__col--right">
         <div class="clearfix l-unit__stat-col--left wide-3">
           <b><input type="text" class="form-control" style="width:260px;" value="<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain']);?>"></b>
@@ -53,7 +53,7 @@
       </div>
     </div>
   <?php } ?>
-  <div class="l-unit animated fadeIn">
+  <div class="l-unit animate__animated animate__fadeIn">
     <div class="l-unit__col l-unit__col--right">
       <div class="clearfix l-unit__stat-col--left wide-3">
         <b><input type="text" class="form-control" style="width:260px;" value="<?=htmlspecialchars($_GET['domain']);?>"></b>
@@ -66,7 +66,7 @@
       </div>
     </div>
   </div>
-  <div class="l-unit animated fadeIn">
+  <div class="l-unit animate__animated animate__fadeIn">
     <div class="l-unit__col l-unit__col--right">
       <div class="clearfix l-unit__stat-col--left wide-3">
         <b><input type="text" class="form-control" style="width:260px;" value="<?=htmlspecialchars($_GET['domain']);?>"></b>
@@ -80,7 +80,7 @@
       </div>
     </div>
   </div>
-  <div class="l-unit animated fadeIn">
+  <div class="l-unit animate__animated animate__fadeIn">
     <div class="l-unit__col l-unit__col--right">
       <div class="clearfix l-unit__stat-col--left wide-3">
         <b><input type="text" class="form-control" style="width:260px;" value="_dmarc"></b>
@@ -94,7 +94,7 @@
     </div>
   </div>
   <?php foreach($dkim as $key => $value){ ?>
-    <div class="l-unit animated fadeIn">
+    <div class="l-unit animate__animated animate__fadeIn">
       <div class="l-unit__col l-unit__col--right">
         <div class="clearfix l-unit__stat-col--left wide-3">
           <b><input type="text" class="form-control" style="width:260px;" value="<?=htmlspecialchars($key);?>"></b>

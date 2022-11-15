@@ -2007,6 +2007,11 @@ postcss-selector-parser@^6.0.10, postcss-selector-parser@^6.0.4, postcss-selecto
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
 
+postcss-size@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/postcss-size/-/postcss-size-4.0.1.tgz#6e2e16a831de65f41e2efe213f7535117e61104f"
+  integrity sha512-XmQZWYiM21oeU85xSFdAbTrz0tY4PYo04TBAgSxnDGXrLYbvz/p8EGtNKApt6gC5hd2fQ3M8fhxeFfoMehJbGA==
+
 postcss-svgo@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/postcss-svgo/-/postcss-svgo-5.1.0.tgz#0a317400ced789f233a28826e77523f15857d80d"

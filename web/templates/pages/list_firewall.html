@@ -10,7 +10,7 @@
       <?php endif; ?>
     </div>
     <div class="l-sort-toolbar">
-      <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+      <ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
         <li entity="sort-action"><span class="name"><?=_('Action');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up active"><i class="fas fa-sort-alpha-up"></i></span></li>
         <li entity="sort-protocol"><span class="name"><?=_('Protocol');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
         <li entity="sort-port"><span class="name"><?=_('Port');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
@@ -68,7 +68,7 @@
         $spnd_confirmation = _('SUSPEND_RULE_CONFIRMATION') ;
       }
     ?>
-    <div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animated fadeIn" v_unit_id="<?=$key?>" v_section="firewall"
+    <div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="firewall"
       sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>"
       sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>">
       <div class="l-unit__col l-unit__col--right">

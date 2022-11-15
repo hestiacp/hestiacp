@@ -35,7 +35,7 @@ $(document).ready(function(){
             }
             /* eslint-enable no-useless-escape */
 
-            $(window).scroll(function(){hover_menu()});
+            $(window).scroll(function(){set_sticky_class()});
 
             $('.l-sort-toolbar .sort-by').click(function(){
               $('.context-menu.sort-order').toggle().css({left: $(this).parent().parent().parent().position().left - 0});

@@ -669,8 +669,6 @@ var fb = _DEBUG && 'undefined' != typeof(console) ? console : {
 
 var checked = false;
 var frmname = '';
-var lastScrollTop = 0;
-
 
 //
 var App = {
@@ -968,54 +966,17 @@ String.prototype.trim = function()
     return str;
 }
 
-hover_menu = function() {
-    var sep_1 = $('div.l-content > div.l-separator:nth-of-type(2)');
-    var sep_2 = $('div.l-content > div.l-separator:nth-of-type(4)');
-    var nav_main = $('.l-stat');
-    var nav_a = $('.l-stat .l-stat__col a');
-    var nav_context = $('.l-sort');
+set_sticky_class = function() {
+    var sort = $('.l-sort');
+    var sortOffset = sort.offset().top;
+    var headerHeight = $('.l-header').outerHeight();
 
-    var st = $(window).scrollTop();
-
-    if (st <= 112) {
-        sep_1.css({'margin-top': 180 - st + 'px'});
-        sep_2.css({'margin-top': 225 - st + 'px'});
-        nav_a.css({'height': 111 - st + 'px'});
-        nav_a.css({'min-height': 111 - st + 'px'});
-        nav_context.css({'margin-top': 181 - st + 'px'});
-        sep_2.css({'box-shadow':'none'});
-        sep_2.css({'height': '1px'});
+    if ($(window).scrollTop() > sortOffset - headerHeight) {
+        sort.addClass('is-active');
+    } else {
+        sort.removeClass('is-active');
     }
-
-    if(st > 112){
-        sep_1.css({'margin-top': '100px'});
-        sep_2.css({'margin-top': '130px'});
-        sep_2.css({'height': '15px'});
-        nav_a.css({'height': '0'});
-        nav_a.css({'min-height': '0'});
-        nav_context.css({'margin-top': '101px'});
-        nav_a.find('ul').css({'visibility': 'hidden'});
-        nav_main.css({'padding-top': '27px'});
-        sep_2.css({'box-shadow':'0 5px 6px 0 rgba(200, 200, 200, 0.35)'});
-    }
-
-    if(st == 0){
-        nav_a.css({'min-height': '113px'});
-        nav_a.css({'height': '113px'});
-    }
-
-    if(st < 109 ){
-        nav_a.find('ul').css({'visibility': 'visible'});
-        nav_main.css({'padding-top': 36 + 'px'});
-    }
-
-    if (st <= 112 && st > 110 ) {
-        nav_main.css({'padding-top': 36 - st + 109 + 'px'});
-    }
-
-    lastScrollTop = st;
 }
-
 
 function checkedAll(frmname) {
     if($('input#toggle-all').prop('checked')){

@@ -1,6 +1,6 @@
 <!-- Begin toolbar -->
-<div class="l-center">
-  <div class="l-sort">
+<div class="l-sort">
+  <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
         <a href="/list/user/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
@@ -54,8 +54,6 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-separator"></div>
-
 <div class="l-center units">
 
   <div class="header table-header">
@@ -101,7 +99,7 @@
   <div class="l-separator"></div>
   <div class="l-center">
     <div class="l-unit-ft">
-      <div class="l-unit__col l-unit__col--right clearfix">
+      <div class="l-unit__col l-unit__col--right">
         <?php printf(ngettext('%d log record', '%d log records', $i),$i); ?>
       </div>
     </div>

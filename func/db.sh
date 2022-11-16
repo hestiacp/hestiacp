@@ -91,7 +91,10 @@ mysql_query() {
     sql_tmp=$(mktemp)
     echo "$1" > $sql_tmp
     mysql --defaults-file=$mycnf < "$sql_tmp"  2>/dev/null
+    # Store return code in var otherwise return code for rm will be returned...
+    return_code=$?
     rm -f "$sql_tmp"
+    return $return_code;
 }
 
 mysql_dump() {
@@ -258,30 +261,38 @@ add_mysql_database() {
     mysql_ver_sub_sub=$(echo $mysql_ver |cut -d '.' -f2)
 
     query="CREATE DATABASE \`$database\` CHARACTER SET $charset"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to create database $database"
+
 
     if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ] ; then
         query="CREATE USER \`$dbuser\`@\`%\`
             IDENTIFIED BY '$dbpass'"
-        mysql_query "$query" > /dev/null
+        mysql_query "$query"
+        check_result $? "Unable to create $dbuser"
 
         query="CREATE USER \`$dbuser\`@localhost
             IDENTIFIED BY '$dbpass'"
-        mysql_query "$query" > /dev/null
+        mysql_query "$query"
+        check_result $? "Unable to create $dbuser"
 
         query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`"
-        mysql_query "$query" > /dev/null
+        mysql_query "$query"
+        check_result $? "Unable to create $dbuser"
 
         query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
-        mysql_query "$query" > /dev/null
+        mysql_query "$query"
+        check_result $? "Unable to create $dbuser"
     else
         query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@\`%\`
             IDENTIFIED BY '$dbpass'"
-        mysql_query "$query" > /dev/null
+        mysql_query "$query"
+        check_result $? "Unable to create $dbuser"
 
         query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
             IDENTIFIED BY '$dbpass'"
-        mysql_query "$query" > /dev/null
+        mysql_query "$query"
+        check_result $? "Unable to create $dbuser"
     fi
 
 
@@ -341,7 +352,8 @@ add_mysql_database_temp_user() {
     mysql_connect $host;
     query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
     IDENTIFIED BY '$dbpass'"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to create tempory user for $database"
   }
 
 delete_mysql_database_temp_user(){
@@ -446,13 +458,16 @@ delete_mysql_database() {
     mysql_connect $HOST
 
     query="DROP DATABASE \`$database\`"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to drop  $database"
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to revoke permission from  $DBUSER"
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
     mysql_query "$query" > /dev/null
+    check_result $? "Unable to revoke permission from  $DBUSER"
 
     if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
         query="DROP USER '$DBUSER'@'%'"
@@ -460,6 +475,7 @@ delete_mysql_database() {
 
         query="DROP USER '$DBUSER'@'localhost'"
         mysql_query "$query" > /dev/null
+        check_result $? "Unable to drop $DBUSER"
     fi
 }
 
@@ -522,9 +538,11 @@ is_dbhost_free() {
 suspend_mysql_database() {
     mysql_connect $HOST
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to revoke permissions $DBUSER"
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to revoke permissions $DBUSER"
 }
 
 # Suspend PostgreSQL database
@@ -538,9 +556,11 @@ suspend_pgsql_database() {
 unsuspend_mysql_database() {
     mysql_connect $HOST
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to grant permissions $DBUSER"
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to grant permissions $DBUSER"
 }
 
 # Unsuspend PostgreSQL database
@@ -585,16 +605,20 @@ delete_mysql_user() {
     mysql_connect $HOST
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@\`%\`"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to revoke permissions $DBUSER"
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$old_dbuser\`@localhost"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to revoke permissions $DBUSER"
 
     query="DROP USER '$old_dbuser'@'%'"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to drop $DBUSER"
 
     query="DROP USER '$old_dbuser'@'localhost'"
-    mysql_query "$query" > /dev/null
+    mysql_query "$query"
+    check_result $? "Unable to drop $DBUSER"
 }
 
 # Delete PostgreSQL user

@@ -139,12 +139,8 @@ chmod 660 $HESTIA/conf/$type.conf
 if [ -z "$(grep DB_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
     echo "DB_SYSTEM='$type'" >> $HESTIA/conf/hestia.conf
 else
-    db=$(echo "$DB_SYSTEM,$type" |\
-        sed "s/,/\n/g"|\
-        sort -r -u |\
-        sed "/^$/d"|\
-        sed ':a;N;$!ba;s/\n/,/g')
-    sed -i "s/DB_SYSTEM=.*/DB_SYSTEM='$db'/g" $HESTIA/conf/hestia.conf
+    db=$(echo "$DB_SYSTEM,$type")
+    change_sys_value "DB_SYSTEM" "$db"
 fi
 
 # Logging

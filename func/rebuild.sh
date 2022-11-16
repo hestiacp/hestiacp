@@ -781,7 +781,8 @@ rebuild_mail_domain_conf() {
 # Rebuild MySQL
 rebuild_mysql_database() {
     mysql_connect $HOST
-    mysql_query "CREATE DATABASE \`$DB\` CHARACTER SET $CHARSET" >/dev/null
+    mysql_query "CREATE DATABASE IF NOT EXISTS \`$DB\` CHARACTER SET $CHARSET"
+    check_result $? "Unable to create database $database"
     if [ "$mysql_fork" = "mysql" ]; then
         # mysql
         mysql_ver_sub=$(echo $mysql_ver |cut -d '.' -f1)
@@ -821,9 +822,11 @@ rebuild_mysql_database() {
     fi
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@\`%\`" >/dev/null
     mysql_query "GRANT ALL ON \`$DB\`.* TO \`$DBUSER\`@localhost" >/dev/null
-    mysql_query "$query" >/dev/null
+    mysql_query "$query"
+    check_result $? "Unable to create $query "
     if [ ! -z "$query2" ]; then
-        mysql_query "$query2" >/dev/null
+        mysql_query "$query2"
+        check_result $? "Unable to create database $query"
     fi
     mysql_query "FLUSH PRIVILEGES" >/dev/null
 }

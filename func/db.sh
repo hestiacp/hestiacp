@@ -457,7 +457,7 @@ change_pgsql_password() {
 delete_mysql_database() {
     mysql_connect $HOST
 
-    query="DROP DATABASE \`$database\`"
+    query="DROP DATABASE IF EXISTS \`$database\`"
     mysql_query "$query"
     check_result $? "Unable to drop  $database"
 

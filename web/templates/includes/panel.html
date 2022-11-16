@@ -57,7 +57,7 @@
       <?php } else { ?>
         <div class="l-menu__item">
           <a title="<?=_('Notifications');?>" class="l-profile__notifications <?php if ($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>">
-            <i class="fas fa-bell <?php if ($panel[$user]['NOTIFICATIONS'] == 'yes') echo " animated extended swing status-icon orange"; ?>"></i>
+            <i class="fas fa-bell <?php if ($panel[$user]['NOTIFICATIONS'] == 'yes') echo " animate__animated animate__swing status-icon orange"; ?>"></i>
           </a>
         </div>
       <?php } ?>
@@ -94,7 +94,7 @@
   </div>
 </div>
 
-<ul class="notification-container u-hidden animated fadeIn"></ul>
+<ul class="notification-container u-hidden animate__animated animate__fadeIn"></ul>
 
 <div class="l-content">
   <div class="l-center">

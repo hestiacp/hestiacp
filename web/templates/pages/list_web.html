@@ -7,7 +7,7 @@
       <?php } ?>
     </div>
     <div class="l-sort-toolbar">
-      <ul class="context-menu sort-order animated fadeIn" style="display:none;">
+      <ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
         <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=_('Bandwidth');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
         <li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
         <li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
@@ -161,7 +161,7 @@
           }
         }
       ?>
-      <div class="l-unit <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended';?> animated fadeIn" v_section="web" v_unit_id="<?=$key?>"
+      <div class="l-unit <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended';?> animate__animated animate__fadeIn" v_section="web" v_unit_id="<?=$key?>"
         id="web-unit-<?=$i?>" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
         sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
         sort-name="<?=$key?>" sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>">

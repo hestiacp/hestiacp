@@ -1,4 +1,4 @@
-<div class="login animated zoomIn">
+<div class="login animate__animated animate__zoomIn">
   <a href="/" class="u-block u-mr30 u-mb40">
     <img src="/images/logo.svg" alt="<?=_('Hestia Control Panel');?>" width="100" height="120">
   </a>
@@ -9,7 +9,7 @@
     <?php if (isset($ERROR)) echo $ERROR ?>
     <div class="u-mb10">
       <input type="hidden" name="action" value="confirm">
-      <input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>"/>
+      <input type="hidden" name="token" value="<?=htmlentities($_SESSION['token']);?>">
       <input type="hidden" name="user" value="<?=htmlentities($_GET['user']);?>">
       <input type="hidden" name="code" value="<?=htmlentities($_GET['code']);?>">
       <label for="password" class="form-label"><?=_('New Password');?></label>

@@ -31,15 +31,12 @@
         margin-left: auto;
       }
 
-      .animated {
-        -webkit-animation-duration: 1s;
+      .animate__animated {
         animation-duration: 1s;
-        -webkit-animation-fill-mode: both;
         animation-fill-mode: both;
       }
 
-      .fadeIn {
-        -webkit-animation-name: fadeIn;
+      .animate__fadeIn {
         animation-name: fadeIn;
       }
 
@@ -80,8 +77,7 @@
         font-size: 0.7em;
       }
 
-      .delay-1s {
-        -webkit-animation-delay: 1s;
+      .animate__delay-1s {
         animation-delay: 1s;
       }
 
@@ -99,7 +95,7 @@
     <div class="container">
       <div class="row">
         <div class="col">
-          <div class="animated fadeIn">
+          <div class="animate__animated animate__fadeIn">
             <svg
               class="info icon-large fa-question-circle"
               xmlns="http://www.w3.org/2000/svg"
@@ -110,8 +106,8 @@
               ></path>
             </svg>
           </div>
-          <h1 class="animated fadeIn">Page Not Found</h1>
-          <div class="description-text animated fadeIn delay-1s">
+          <h1 class="animate__animated animate__fadeIn">Page Not Found</h1>
+          <div class="description-text animate__animated animate__fadeIn animate__delay-1s">
             <p>Oops! We couldn't find the page that you're looking for.</p>
             <p>Please check the address and try again.</p>
             <section class="footer"><strong>Error Code:</strong> 404</section>

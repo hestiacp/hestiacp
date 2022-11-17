@@ -463,19 +463,18 @@ delete_mysql_database() {
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
     mysql_query "$query"
-    check_result $? "Unable to revoke permission from  $DBUSER"
 
     query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@localhost"
-    mysql_query "$query" > /dev/null
-    check_result $? "Unable to revoke permission from  $DBUSER"
+    mysql_query "$query"
 
     if [ "$(grep "DBUSER='$DBUSER'" $USER_DATA/db.conf |wc -l)" -lt 2 ]; then
-        query="DROP USER '$DBUSER'@'%'"
-        mysql_query "$query" > /dev/null
+      query="DROP USER IF EXISTS '$DBUSER'@'%'"
+      mysql_query "$query"
+      check_result $? "Unable to drop user $DBUSER"
 
-        query="DROP USER '$DBUSER'@'localhost'"
-        mysql_query "$query" > /dev/null
-        check_result $? "Unable to drop $DBUSER"
+      query="DROP USER IF EXISTS '$DBUSER'@'localhost'"
+      mysql_query "$query"
+      check_result $? "Unable to drop user $DBUSER"
     fi
 }
 

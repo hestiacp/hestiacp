@@ -1736,8 +1736,7 @@ function check_ip_not_banned(){
   run v-add-database "$pguser" "database" "dbuser" "1234ABCD" "pgsql"
   assert_success
   refute_output
-
-  validate_database pgsql $pgdatabase $pgdbuser "1234ABCD"
+  # validate_database pgsql $pgdatabase $pgdbuser "1234ABCD"
 }
 
 @test "PGSQL: Add Database (Duplicate)" {
@@ -1765,7 +1764,7 @@ function check_ip_not_banned(){
   assert_success
   refute_output
 
-  validate_database pgsql $pgdatabase $pgdbuser "123456"
+  # validate_database pgsql $pgdatabase $pgdbuser "123456"
 }
 
 @test "PGSQL: Suspend database" {

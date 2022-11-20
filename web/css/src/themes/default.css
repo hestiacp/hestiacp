@@ -1,4 +1,6 @@
 @import url("normalize.css");
+@import url("@fortawesome/fontawesome-free/css/fontawesome.css");
+@import url("../dependencies/fontawesome-solid.css");
 @import url("../dependencies/animate.css");
 @import url("../dependencies/jquery-ui.css");
 

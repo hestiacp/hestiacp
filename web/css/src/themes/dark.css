@@ -4,13 +4,9 @@
     Website:     www.hestiacp.com
 */
 
-body {
-  color: #cdcdcd;
-  background-color: #282828;
-}
-
-a {
-  color: #cdcdcd;
+:root {
+  --color-text: #cdcdcd;
+  --color-background: #282828;
 }
 
 b,
@@ -33,25 +29,25 @@ strong {
   border-right-color: #353535;
 }
 
-.l-menu__item a {
-  color: #e7e7e7;
-}
-
-.l-menu__item a:hover {
-  color: #dadada !important;
-  text-shadow: 1px 1px rgb(0 0 0 / 50%) !important;
-  background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
-  box-shadow: none !important;
-}
-
-.l-menu__item a:active {
-  background: linear-gradient(to bottom, rgb(15 15 15 / 70%) 0%, rgb(45 45 45 / 85%) 30%, rgb(50 50 50 / 100%) 95%) !important;
-  color: #fff !important;
-  text-shadow: 0 -1px 1px rgb(0 0 0 / 50%) !important;
-}
-
 .l-menu__item.l-menu__item--active:hover {
   background: linear-gradient(to bottom, rgb(255 255 255 / 15%) 0%, rgb(255 255 255 / 15%) 30%, rgb(255 255 255 / 15%) 95%) !important;
+}
+
+.l-menu__item a {
+  color: #e7e7e7;
+
+  &:hover {
+    color: #dadada !important;
+    text-shadow: 1px 1px rgb(0 0 0 / 50%) !important;
+    background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
+    box-shadow: none !important;
+  }
+
+  &:active {
+    background: linear-gradient(to bottom, rgb(15 15 15 / 70%) 0%, rgb(45 45 45 / 85%) 30%, rgb(50 50 50 / 100%) 95%) !important;
+    color: #fff !important;
+    text-shadow: 0 -1px 1px rgb(0 0 0 / 50%) !important;
+  }
 }
 
 .lang-ar .l-menu__item a {
@@ -77,26 +73,26 @@ strong {
   line-height: 0.95rem;
   border-left: 1px solid transparent !important;
   border-right: 1px solid transparent !important;
-}
 
-.l-profile__notifications.active.l-profile__notifications.updates:active {
-  background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
-  color: #046c98 !important;
-  text-shadow: 0 -1px 1px rgb(0 0 0 / 50%) !important;
-  box-shadow: none !important;
-  transition: 0.2s;
-  border-left: 1px solid transparent !important;
-  border-right: 1px solid transparent !important;
-}
+  &.active.l-profile__notifications.updates:active {
+    background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
+    color: #046c98 !important;
+    text-shadow: 0 -1px 1px rgb(0 0 0 / 50%) !important;
+    box-shadow: none !important;
+    transition: 0.2s;
+    border-left: 1px solid transparent !important;
+    border-right: 1px solid transparent !important;
+  }
 
-.l-profile__notifications:hover,
-.l-profile__notifications.updates:hover {
-  text-shadow: 1px 1px rgb(0 0 0 / 50%) !important;
-  background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
-  border: none !important;
-  border-left: 1px solid transparent !important;
-  border-right: 1px solid transparent !important;
-  box-shadow: none !important;
+  &:hover,
+  &.updates:hover {
+    text-shadow: 1px 1px rgb(0 0 0 / 50%) !important;
+    background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
+    border: none !important;
+    border-left: 1px solid transparent !important;
+    border-right: 1px solid transparent !important;
+    box-shadow: none !important;
+  }
 }
 
 .notification-container {
@@ -147,18 +143,12 @@ strong {
   border: 1px solid #212121;
 }
 
-.alert.alert-danger {
+.alert-danger {
   background-color: #d13535;
-}
 
-.alert.alert-danger i.fas {
-  color: #d13535;
-}
-
-.alert.alert-success {
-}
-
-.alert.alert-success i.fas {
+  & i.fas {
+    color: #d13535;
+  }
 }
 
 .card {
@@ -339,38 +329,26 @@ strong {
   box-shadow: inset 1px 1px 0 rgb(0 0 0 / 20%);
 }
 
-.l-sort-toolbar .vst {
+.l-sort-toolbar .toolbar-link {
   color: #dadada;
-}
 
-.l-sort-toolbar .vst:hover {
-  color: #ff3478;
-}
+  &.selected {
+    color: #ff3478;
+  }
 
-.l-sort-toolbar .vst:active {
-}
-
-.l-sort-toolbar .vst.selected {
-  color: #ff3478;
+  &:hover {
+    color: #ff3478;
+  }
 }
 
 .l-select {
   border: 1px solid #454545;
   box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
-}
 
-.l-select select {
-  background-color: #212121;
-  box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
-}
-
-.l-select select:focus {
-}
-
-.lang-ru .l-select select {
-}
-
-.l-select select option {
+  & select {
+    background-color: #212121;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
+  }
 }
 
 .l-sort-toolbar .l-select {
@@ -393,16 +371,13 @@ strong {
   border-bottom-right-radius: 0 !important;
   color: #dadada;
   box-shadow: inset 0 1px 1px rgb(0 0 0 / 30%) !important;
-}
 
-.table-header:hover {
-  background-color: #404040 !important;
-  border-left: 1px solid #212121 !important;
-  border-right: 1px solid #212121 !important;
-  box-shadow: inset 0 1px 1px rgb(0 0 0 / 30%) !important;
-}
-
-.table-header .fas {
+  &:hover {
+    background-color: #404040 !important;
+    border-left: 1px solid #212121 !important;
+    border-right: 1px solid #212121 !important;
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 30%) !important;
+  }
 }
 
 .units .l-unit {
@@ -529,23 +504,20 @@ strong {
 
 /* form styles */
 
-.vst-error {
+.inline-danger {
   color: #f33;
 }
 
-.vst-ok {
+.inline-success {
   color: #53ba55;
-}
 
-.vst-ok a {
-  color: #fff;
-}
+  & a {
+    color: #fff;
 
-.vst-ok a:hover {
-  color: #ff3478;
-}
-
-.vst-ok a:active {
+    &:hover {
+      color: #ff3478;
+    }
+  }
 }
 
 .form-label,
@@ -723,30 +695,30 @@ td.hint {
 
 .to-shortcuts,
 .to-top {
-  font-size: 0.85rem !important;
-  font-weight: 400 !important;
-  color: #eee !important;
-  border: 1px solid #707070 !important;
-  background: rgb(48 48 48) !important;
-  background: linear-gradient(0deg, rgb(48 48 48 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(69 69 69 / 100%) 100%) !important;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #eee;
+  border: 1px solid #707070;
+  background: rgb(48 48 48);
+  background: linear-gradient(0deg, rgb(48 48 48 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(69 69 69 / 100%) 100%);
   box-shadow:
     0 1px 4px rgb(0 0 0 / 20%),
     inset 0 0 1px rgb(20 20 20 / 100%),
-    inset 0 0 3px rgb(0 0 0 / 50%) !important;
-  text-shadow: 0 1px 1px rgb(0 0 0 / 35%) !important;
+    inset 0 0 3px rgb(0 0 0 / 50%);
+  text-shadow: 0 1px 1px rgb(0 0 0 / 35%);
 }
 
 .to-shortcuts:hover,
 .to-top:hover {
-  color: #fff !important;
-  text-shadow: 1px 1px rgb(0 0 0 / 25%) !important;
-  border: 1px solid #0098ff !important;
-  background: linear-gradient(0deg, rgb(58 58 58 / 100%) 0%, rgb(68 68 68 / 100%) 35%, rgb(79 79 79 / 100%) 100%) !important;
+  color: #fff;
+  text-shadow: 1px 1px rgb(0 0 0 / 25%);
+  border: 1px solid #0098ff;
+  background: linear-gradient(0deg, rgb(58 58 58 / 100%) 0%, rgb(68 68 68 / 100%) 35%, rgb(79 79 79 / 100%) 100%);
   background-color: #454545;
   box-shadow:
     0 1px 3px rgb(0 0 0 / 35%),
     inset 0 0 1px rgb(0 0 0 / 100%),
-    inset 0 0 3px rgb(0 0 0 / 65%) !important;
+    inset 0 0 3px rgb(0 0 0 / 65%);
   transition: 0.2s;
 }
 
@@ -754,14 +726,14 @@ td.hint {
 .to-top:active,
 .to-shortcuts:focus,
 .to-top:focus {
-  border: 1px solid #0066b4 !important;
-  background: linear-gradient(0deg, rgb(69 69 69 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(48 48 48 / 100%) 100%) !important;
-  color: #d4d4d4 !important;
-  text-shadow: 0 -1px 1px rgb(0 0 0 / 55%) !important;
+  border: 1px solid #0066b4;
+  background: linear-gradient(0deg, rgb(69 69 69 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(48 48 48 / 100%) 100%);
+  color: #d4d4d4;
+  text-shadow: 0 -1px 1px rgb(0 0 0 / 55%);
   box-shadow:
     0 1px 3px rgb(0 0 0 / 30%),
     inset 0 0 1px rgb(0 0 0 / 100%),
-    inset -1px -1px 4px rgb(30 30 30 / 40%) !important;
+    inset -1px -1px 4px rgb(30 30 30 / 40%);
 }
 
 .ui-dialog button.cancel span {

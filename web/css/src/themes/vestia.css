@@ -6,13 +6,10 @@
 
 :root {
   --animate-duration: 0s;
+  --font-family: "Arial", system-ui;
 }
 
-/* Base
-   ========================================================================== */
-
 body {
-  font-family: Arial, system-ui !important;
   letter-spacing: 0;
 }
 
@@ -211,7 +208,6 @@ strong {
 
 .form-control,
 .form-select {
-  font-family: Arial, system-ui;
   box-shadow: none;
   border-radius: 0;
 }
@@ -294,22 +290,22 @@ strong {
   border-radius: 0 !important;
   color: #fff;
   text-shadow: 0 1px 2px rgb(0 0 0 / 35%) !important;
-}
 
-.l-sort-toolbar__filter-apply:hover {
-  color: #777;
-  text-shadow: 0 1px 2px rgb(255 255 255 / 45%) !important;
-}
+  &:hover {
+    color: #777;
+    text-shadow: 0 1px 2px rgb(255 255 255 / 45%) !important;
+  }
 
-.l-sort-toolbar__filter-apply:active {
-  text-shadow: none !important;
-  color: #a9cc06;
+  &:active {
+    text-shadow: none !important;
+    color: #a9cc06;
+  }
 }
 
 .ui-widget,
 .ui-dialog,
 .ui-dialog .ui-dialog-title {
-  font-family: Arial, system-ui;
+  font-family: var(--font-family);
 }
 
 .ui-dialog .ui-dialog-title {
@@ -458,23 +454,23 @@ a#btn-back:focus {
 .to-top:hover,
 .to-shortcuts:focus,
 .to-top:focus {
-  background: none !important;
-  background-color: none !important;
-  border: none !important;
-  text-shadow: none !important;
-  box-shadow: none !important;
+  background: none;
+  background-color: none;
+  border: none;
+  text-shadow: none;
+  box-shadow: none;
 }
 
 .to-shortcuts:hover,
 .to-top:hover {
-  color: #94be00 !important;
+  color: #94be00;
 }
 
 .to-shortcuts:focus,
 .to-top:focus,
 .to-shortcuts:active,
 .to-top:active {
-  color: #809c00 !important;
+  color: #809c00;
 }
 
 .body-login,
@@ -485,7 +481,6 @@ a#btn-back:focus {
 .login {
   background-color: rgb(255 255 255 / 100%);
   box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
-  font-family: Arial, system-ui;
   border-radius: 0;
 }
 

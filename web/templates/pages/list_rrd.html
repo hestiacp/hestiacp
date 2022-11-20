@@ -6,12 +6,10 @@
       <a href="/list/server/?cpu" class="button button-secondary"><i class="fas fa-chart-pie status-icon green"></i><?=_('show: CPU / MEM / NET / DISK');?></a>
     </div>
     <div class="l-sort-toolbar">
-      <div>
-        <a class="vst<?php if ((empty($period)) || ($period == 'day')) echo " selected" ?>" href="?period=day"><?=_('Daily');?></a>
-        <a class="vst<?php if ((!empty($period)) && ($period == 'week')) echo " selected" ?>" href="?period=week"><?=_('Weekly');?></a>
-        <a class="vst<?php if ((!empty($period)) && ($period == 'month')) echo " selected" ?>" href="?period=month"><?=_('Monthly');?></a>
-        <a class="vst<?php if ((!empty($period)) && ($period == 'year')) echo " selected" ?>" href="?period=year"><?=_('Yearly');?></a>
-      </div>
+      <a class="toolbar-link<?php if ((empty($period)) || ($period == 'day')) echo " selected" ?>" href="?period=day"><?=_('Daily');?></a>
+      <a class="toolbar-link<?php if ((!empty($period)) && ($period == 'week')) echo " selected" ?>" href="?period=week"><?=_('Weekly');?></a>
+      <a class="toolbar-link<?php if ((!empty($period)) && ($period == 'month')) echo " selected" ?>" href="?period=month"><?=_('Monthly');?></a>
+      <a class="toolbar-link<?php if ((!empty($period)) && ($period == 'year')) echo " selected" ?>" href="?period=year"><?=_('Yearly');?></a>
     </div>
   </div>
 </div>

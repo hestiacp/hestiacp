@@ -20,7 +20,7 @@
     <div class="form-container">
       <h1 class="form-title"><?=_('Configuring Server');?>: PHP</h1>
       <?php show_alert_message($_SESSION);?>
-      <div id="basic-options" class="u-input-width">
+      <div id="basic-options" class="u-max-width400">
         <div class="u-mb10">
           <label for="v_max_execution_time" class="form-label">max_execution_time</label>
           <input type="text" class="form-control" regexp="max_execution_time" prev_value="<?=htmlentities($v_max_execution_time)?>" name="v_max_execution_time" id="v_max_execution_time" value="<?=htmlentities($v_max_execution_time)?>">
@@ -53,7 +53,7 @@
           <a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Advanced options');?></a>
         </div>
       </div>
-      <div id="advanced-options" class="u-wide-input-width" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
+      <div id="advanced-options" class="u-max-width600" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
         <div class="u-mb20">
           <a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Basic options');?></a>
         </div>

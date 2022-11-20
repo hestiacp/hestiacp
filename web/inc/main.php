@@ -222,13 +222,13 @@ function show_alert_message($data) {
         if (!empty($data['error_msg'])) {
             $msg_icon = 'fa-circle-exclamation status-icon red';
             $msg_text = htmlentities($data['error_msg']);
-            $msg_id = 'vst-error';
+            $msg_class = 'inline-danger';
         } else {
             $msg_icon = 'fa-circle-check status-icon green';
             $msg_text = $data['ok_msg'];
-            $msg_id = 'vst-ok';
+            $msg_class = 'inline-success';
         }
-        echo '<p class="'.$msg_id.' u-mb20"><i class="fas '.$msg_icon.'"></i> '.$msg_text.'</p>';
+        echo '<p class="'.$msg_class.' u-mb20"><i class="fas '.$msg_icon.'"></i> '.$msg_text.'</p>';
     }
 }
 

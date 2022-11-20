@@ -13,11 +13,6 @@ strong {
   font-weight: 600;
 }
 
-.body-login,
-.body-reset {
-  background: #5f7eb3 !important;
-}
-
 .table-header {
   box-shadow: none !important;
   background: #fafafa !important;
@@ -123,28 +118,28 @@ strong {
 .to-shortcuts:hover,
 .to-top:active,
 .to-shortcuts:active {
-  box-shadow: none !important;
-  background: none !important;
-  background-color: #eee !important;
+  box-shadow: none;
+  background: none;
+  background-color: #eee;
 }
 
 .to-top,
 .to-shortcuts {
-  box-shadow: none !important;
-  background: linear-gradient(to bottom, rgb(250 250 250 / 100%) 0%, rgb(241 241 241 / 100%) 100%) !important;
+  box-shadow: none;
+  background: linear-gradient(to bottom, rgb(250 250 250 / 100%) 0%, rgb(241 241 241 / 100%) 100%);
 }
 
 .to-top:hover,
 .to-shortcuts:hover {
-  color: #6986b7 !important;
-  box-shadow: none !important;
-  background: linear-gradient(to bottom, rgb(241 248 253 / 100%) 0%, rgb(227 240 251 / 100%) 100%) !important;
+  color: #6986b7;
+  box-shadow: none;
+  background: linear-gradient(to bottom, rgb(241 248 253 / 100%) 0%, rgb(227 240 251 / 100%) 100%);
 }
 
 .to-top:focus,
 .to-shortcuts:focus {
-  box-shadow: none !important;
-  background: linear-gradient(to bottom, rgb(210 232 250 / 100%) 0%, rgb(194 224 248 / 100%) 100%) !important;
+  box-shadow: none;
+  background: linear-gradient(to bottom, rgb(210 232 250 / 100%) 0%, rgb(194 224 248 / 100%) 100%);
 }
 
 .ui-dialog .ui-dialog-buttonpane button:nth-of-type(2) {
@@ -178,6 +173,11 @@ strong {
   box-shadow: none;
   border: 1px solid #ccc;
   background: #fff !important;
+}
+
+.body-login,
+.body-reset {
+  background: #5f7eb3;
 }
 
 .login {

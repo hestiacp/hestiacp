@@ -20,7 +20,7 @@
     <div class="form-container">
       <h1 class="form-title"><?=_('Adding Firewall Ipset List');?></h1>
       <?php show_alert_message($_SESSION);?>
-      <div class="u-input-width">
+      <div class="u-max-width400">
         <div class="u-mb10">
           <label for="v_ipname" class="form-label"><?=_('Ip List Name') ?></label>
           <input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?=htmlentities(trim($v_ipname, "'"))?>">

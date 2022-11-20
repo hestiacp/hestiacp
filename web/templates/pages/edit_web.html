@@ -28,7 +28,7 @@
     <div class="form-container">
       <h1 class="form-title"><?=_('Editing Domain');?></h1>
       <?php show_alert_message($_SESSION);?>
-      <div class="u-input-width">
+      <div class="u-max-width400">
         <div class="u-mb10">
           <label for="v_domain" class="form-label"><?=_('Domain');?></label>
           <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
@@ -426,7 +426,7 @@
                 <?php if ($ftp_user['is_new'] == 1): ?>
                   <div class="u-pl30 u-mb10">
                     <label for="v_ftp_user[<?=$i ?>][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
-                    <input type="email" class="form-control vst-email-alert-on-psw" name="v_ftp_user[<?=$i ?>][v_ftp_email]" id="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
+                    <input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[<?=$i ?>][v_ftp_email]" id="v_ftp_user[<?=$i ?>][v_ftp_email]" value="<?=htmlentities(trim($v_ftp_email, "'"))?>">
                   </div>
                 <?php endif; ?>
               </div>
@@ -476,7 +476,7 @@
     </div>
     <div class="u-pl30 u-mb10">
       <label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
-      <input type="email" class="form-control vst-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" id="v_ftp_user[%INDEX%][v_ftp_email]" value="">
+      <input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" id="v_ftp_user[%INDEX%][v_ftp_email]" value="">
     </div>
   </div>
 </div>

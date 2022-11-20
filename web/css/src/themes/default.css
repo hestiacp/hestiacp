@@ -1,6 +1,8 @@
 @import url("normalize.css");
 @import url("@fortawesome/fontawesome-free/css/fontawesome.css");
-@import url("../dependencies/fontawesome-solid.css");
+@import url("@fortawesome/fontawesome-free/css/brands.css");
+@import url("@fortawesome/fontawesome-free/css/solid.css");
+@import url("../dependencies/fontawesome.css");
 @import url("../dependencies/animate.css");
 @import url("../dependencies/jquery-ui.css");
 
@@ -920,8 +922,7 @@ table {
     inset -1px -1px 4px rgb(220 220 220 / 40%);
 }
 
-.context-menu.sort-order span.name i.fas.fa-sort-amount-down,
-.context-menu.sort-order span.name i.fas.fa-sort-alpha-down {
+.context-menu.sort-order span.name i.fas.fa-arrow-down-a-z {
   float: right;
   margin-top: 2px;
 }

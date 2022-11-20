@@ -18,12 +18,12 @@
       <span>
         <?php
           if (!empty($_SESSION['error_msg'])) {
-            $msg_icon = 'fa-exclamation-circle status-icon red';
+            $msg_icon = 'fa-circle-exclamation status-icon red';
             $msg_text = htmlentities($_SESSION['error_msg']);
             $msg_id = 'vst-error';
           } else {
             if (!empty($_SESSION['ok_msg'])) {
-              $msg_icon = 'fa-check-circle status-icon green';
+              $msg_icon = 'fa-circle-check status-icon green';
               $msg_text = $_SESSION['ok_msg'];
               $msg_id = 'vst-ok';
             }

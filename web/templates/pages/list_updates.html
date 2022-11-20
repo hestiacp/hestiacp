@@ -63,8 +63,8 @@
           <div class="clearfix l-unit__stat-col--left wide-5"><?=_($data[$key]['DESCR'])?></div>
           <div class="clearfix l-unit__stat-col--left text-center wide"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
           <div class="clearfix l-unit__stat-col--left text-center">
-            <?php if ($data[$key]['UPDATED'] == 'no') { echo '<i class="fas fa-exclamation-triangle" style="color: orange;"></i>'; } ?>
-            <?php if ($data[$key]['UPDATED'] == 'yes') { echo '<i class="fas fa-check-circle status-icon green"></i>'; } ?>
+            <?php if ($data[$key]['UPDATED'] == 'no') { echo '<i class="fas fa-triangle-exclamation" style="color: orange;"></i>'; } ?>
+            <?php if ($data[$key]['UPDATED'] == 'yes') { echo '<i class="fas fa-circle-check status-icon green"></i>'; } ?>
           </div>
         </div>
       </div>

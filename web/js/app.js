@@ -1004,6 +1004,6 @@ function elementHideShow(elementToHideOrShow,trigger){
 
     if (typeof trigger !== 'undefined') {
         trigger.querySelector('.section-toggle-icon').classList.toggle('fa-minus-square');
-        trigger.querySelector('.section-toggle-icon').classList.toggle('fa-plus-square');
+        trigger.querySelector('.section-toggle-icon').classList.toggle('fa-square-plus');
     }
 }

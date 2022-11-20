@@ -3,7 +3,7 @@
   <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
       <?php if ($read_only !== 'true') {?>
-        <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="button button-secondary"><i class="fas fa-plus-circle status-icon green"></i><?=_('Create Backup');?></a>
+        <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="button button-secondary"><i class="fas fa-circle-plus status-icon green"></i><?=_('Create Backup');?></a>
         <a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus status-icon orange"></i><?=_('backup exclusions');?></a>
       <?php } ?>
     </div>
@@ -27,7 +27,7 @@
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
           <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
           <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-magnifying-glass"></i>
           </button>
         </form>
       </div>
@@ -94,9 +94,9 @@
                   <!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
                   &nbsp;
                 <?php } else { ?>
-                  <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('download');?>"><i class="fas fa-file-download status-icon lightblue status-icon dim"></i></a></div>
+                  <div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('download');?>"><i class="fas fa-file-arrow-down status-icon lightblue status-icon dim"></i></a></div>
                   <?php if ($read_only !== 'true') {?>
-                    <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore');?>"><i class="fas fa-undo status-icon green status-icon dim"></i></a></div>
+                    <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('restore');?>"><i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i></a></div>
                     <div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
                       <a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
                         <i class="fas fa-trash status-icon red status-icon dim do_delete"></i>

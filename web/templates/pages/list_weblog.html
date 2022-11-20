@@ -33,15 +33,15 @@
       <div class="l-header__left">
         <a href="/" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
         <div class="l-menu">
-          <div class="l-menu__item"><a href="/list/web/"><i class="fas fa-arrow-alt-circle-left"></i>&nbsp;&nbsp;&nbsp;<?=_('Back');?></a></div>
+          <div class="l-menu__item"><a href="/list/web/"><i class="fas fa-circle-left"></i>&nbsp;&nbsp;&nbsp;<?=_('Back');?></a></div>
           <div class="l-menu__item <?php if($_GET['type'] == 'access') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access&token=<?=$_SESSION['token']?>"><i class="fas fa-eye"></i>&nbsp;&nbsp;&nbsp;<?=_('Access Log');?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access&&token=<?=$_SESSION['token']?>" title="<?=_('Download');?>"><i class="fas fa-download"></i></a></div>
-          <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>"><i class="fas fa-exclamation-circle"></i>&nbsp;&nbsp;&nbsp;<?=_('Error Log');?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>" title="<?=_('Download');?>"><i class="fas fa-download"></i></a></div>
+          <div class="l-menu__item <?php if($_GET['type'] == 'error') echo 'l-menu__item--active' ?>"><a href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>"><i class="fas fa-circle-exclamation"></i>&nbsp;&nbsp;&nbsp;<?=_('Error Log');?></a><a href="/download/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>" title="<?=_('Download');?>"><i class="fas fa-download"></i></a></div>
         </div>
       </div>
       <div class="l-profile">
-        <div class="l-menu__item"><a href="javascript:location.reload();" title="<?=_('Refresh');?>"><i class="fas fa-redo"></i></a></div>
-        <div class="l-menu__item"><a href="/edit/user/" title="<?=htmlentities($user)?>" class="l-profile__username"><i class="fas fa-user-circle"></i></a></div>
-        <div class="l-menu__item"><a href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?>" class="l-profile__logout"><i class="fas fa-sign-out-alt"></i></a></div>
+        <div class="l-menu__item"><a href="javascript:location.reload();" title="<?=_('Refresh');?>"><i class="fas fa-arrow-rotate-right"></i></a></div>
+        <div class="l-menu__item"><a href="/edit/user/" title="<?=htmlentities($user)?>" class="l-profile__username"><i class="fas fa-circle-user"></i></a></div>
+        <div class="l-menu__item"><a href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?>" class="l-profile__logout"><i class="fas fa-right-from-bracket"></i></a></div>
       </div>
     </div>
   </div>

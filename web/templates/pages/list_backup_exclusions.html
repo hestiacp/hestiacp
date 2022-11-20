@@ -3,7 +3,7 @@
   <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-      <a href="/edit/backup/exclusions/" class="button button-secondary"><i class="fas fa-pencil-alt status-icon orange"></i><?=_('Editing Backup Exclusions');?></a>
+      <a href="/edit/backup/exclusions/" class="button button-secondary"><i class="fas fa-pencil status-icon orange"></i><?=_('Editing Backup Exclusions');?></a>
     </div>
     <div class="l-sort-toolbar">
       <div class="l-sort-toolbar__search-box">
@@ -11,7 +11,7 @@
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
           <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
           <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-magnifying-glass"></i>
           </button>
         </form>
       </div>

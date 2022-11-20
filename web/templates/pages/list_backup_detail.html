@@ -3,7 +3,7 @@
   <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-      <a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="button button-secondary"><i class="fas fa-undo status-icon green"></i><?=_('Restore All');?></a>
+      <a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left status-icon green"></i><?=_('Restore All');?></a>
     </div>
     <div class="l-sort-toolbar">
       <form action="/bulk/restore/" method="post" id="objects">
@@ -21,7 +21,7 @@
         <form action="/search/" method="get">
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
           <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>">
-          <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-search"></i></button>
+          <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-magnifying-glass"></i></button>
         </form>
       </div>
     </div>
@@ -67,7 +67,7 @@
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
                 <a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
-                  <i class="fas fa-undo status-icon green status-icon dim icon-pad-right"></i>
+                  <i class="fas fa-arrow-rotate-left status-icon green status-icon dim icon-pad-right"></i>
                 </a>
               </div>
             </div>
@@ -99,7 +99,7 @@
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
                 <a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
-                  <i class="fas fa-undo status-icon green status-icon dim"></i>
+                  <i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
                 </a>
               </div>
             </div>
@@ -131,7 +131,7 @@
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
                 <a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
-                  <i class="fas fa-undo status-icon green status-icon dim"></i>
+                  <i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
                 </a>
               </div>
             </div>
@@ -163,7 +163,7 @@
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
                 <a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
-                  <i class="fas fa-undo status-icon green status-icon dim"></i>
+                  <i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
                 </a>
               </div>
             </div>
@@ -194,7 +194,7 @@
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
                 <a href="/schedule/restore/?backup=<?=$backup?>&type=cron&object=records&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
-                  <i class="fas fa-undo status-icon green status-icon dim"></i>
+                  <i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
                 </a>
               </div>
             </div>
@@ -226,7 +226,7 @@
             <div class="actions-panel clearfix">
               <div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
                 <a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
-                  <i class="fas fa-undo status-icon green status-icon dim"></i>
+                  <i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
                 </a>
               </div>
             </div>

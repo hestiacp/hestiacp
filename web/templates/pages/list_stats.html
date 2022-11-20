@@ -38,7 +38,7 @@
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
           <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
           <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-magnifying-glass"></i>
           </button>
         </form>
       </div>
@@ -79,7 +79,7 @@
                   <div class="l-unit__stat-cols clearfix">
                     <div class="l-unit__stat-cols clearfix graph">
                       <div class="l-unit__stat-col l-unit__stat-col--left">
-                        <i class="fas fa-exchange-alt status-icon dim large icon-pad-right" title="<?=_('Bandwidth');?>"></i><b><?=_('Bandwidth');?></b>
+                        <i class="fas fa-right-left status-icon dim large icon-pad-right" title="<?=_('Bandwidth');?>"></i><b><?=_('Bandwidth');?></b>
                       </div>
                       <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
                         <b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?>
@@ -137,7 +137,7 @@
               <tr>
                 <td>
                   <div class="l-unit__stat-cols clearfix graph">
-                    <div class="l-unit__stat-col l-unit__stat-col--left"><i class="fas fa-hdd status-icon dim large icon-pad-right" title="<?=_('Disk');?>"></i><b><?=_('Disk');?></b></div>
+                    <div class="l-unit__stat-col l-unit__stat-col--left"><i class="fas fa-hard-drive status-icon dim large icon-pad-right" title="<?=_('Disk');?>"></i><b><?=_('Disk');?></b></div>
                     <div class="l-unit__stat-col l-unit__stat-col--right text-right volume">
                       <b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <?=humanize_usage_measure($data[$key]['U_DISK'])?>
                     </div>

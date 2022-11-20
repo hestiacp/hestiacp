@@ -2,21 +2,21 @@
 <div class="l-sort">
   <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
-      <a href="/add/user/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add User');?></a>
+      <a href="/add/user/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add User');?></a>
       <a href="/list/package/" class="button button-secondary"><i class="fas fa-box-open status-icon orange"></i><?=_('Packages');?></a>
     </div>
     <div class="l-sort-toolbar">
       <ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
-        <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=_('Bandwidth');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-        <li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-        <li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-        <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-bandwidth" sort_as_int="1"><span class="name"><?=_('Bandwidth');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+        <li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+        <li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+        <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
         <?=_('sort by');?>: <span>
           <b>
             <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-            <?=$label;?> <i class="fas fa-sort-alpha-down"></i>
+            <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
           </b>
         </span>
       </div>
@@ -47,7 +47,7 @@
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
           <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
           <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-magnifying-glass"></i>
           </button>
         </form>
       </div>
@@ -68,14 +68,14 @@
       <div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
       <div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Package');?></b></div>
       <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=_('IPs');?></b></div>
-      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-hdd" title="<?=_('Disk');?>"></i></b></div>
-      <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-exchange-alt" title="<?=_('Bandwidth');?>"></i></b></div>
-      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe-americas" title="<?=_('Web Domains');?>"></i></b></div>
-      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-atlas" title="<?=_('DNS Domains');?>"></i></b></div>
-      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-mail-bulk" title="<?=_('Mail Domains');?>"></i></b></div>
+      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-hard-drive" title="<?=_('Disk');?>"></i></b></div>
+      <div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-right-left" title="<?=_('Bandwidth');?>"></i></b></div>
+      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-earth-americas" title="<?=_('Web Domains');?>"></i></b></div>
+      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-book-atlas" title="<?=_('DNS Domains');?>"></i></b></div>
+      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?=_('Mail Domains');?>"></i></b></div>
       <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?=_('Databases');?>"></i></b></div>
       <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?=_('Cron Jobs');?>"></i></b></div>
-      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-archive" title="<?=_('Backups');?>"></i></b></div>
+      <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-zipper" title="<?=_('Backups');?>"></i></b></div>
     </div>
   </div>
 
@@ -118,13 +118,13 @@
               <?php if ($key == $user_plain) { ?>
                 <i class="fas fa-user-check status-icon status-icon dim icon-large" title="<?=$key?> (<?=$data[$key]['NAME']?>)"></i>
               <?php } else { ?>
-                <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$key?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
+                <a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$key?>"><i class="fas fa-right-to-bracket status-icon green status-icon dim icon-large"></i></a>
               <?php } ?>
               <?php if (($_SESSION['userContext'] === 'admin') && ($key == 'admin') && ($_SESSION['user'] != 'admin')) { ?>
                 <!-- Hide edit button from admin user when logged in with another admin user -->
                 &nbsp;
               <?php } else { ?>
-                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User');?>"><i class="fas fa-pencil-alt status-icon orange status-icon dim"></i></a></div>
+                <div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User');?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
               <?php } ?>
               <?php if ($key == 'admin') { ?>
                 <!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->

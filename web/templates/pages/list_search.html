@@ -3,22 +3,22 @@
   <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
       <a href="javascript:window.history.back();" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-      <a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-sync status-icon green"></i> <?=_('Refresh');?></a>
+      <a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrows-rotate status-icon green"></i> <?=_('Refresh');?></a>
     </div>
     <div class="l-sort-toolbar">
       <ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
-        <li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
-        <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-sort-alpha-down"></i></span><span class="up"><i class="fas fa-sort-alpha-up"></i></span></li>
+        <li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+        <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <span><b><?=_('Date');?> <i class="fas fa-sort-alpha-down"></i></b></span>
+        <?=_('sort by');?>: <span><b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b></span>
       </div>
       <div class="l-sort-toolbar__search-box">
         <form action="/search/" method="get">
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
           <input type="text" class="search-input" name="q" value="<? echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" title="<?=_('Search');?>">
           <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-magnifying-glass"></i>
           </button>
         </form>
       </div>
@@ -74,16 +74,16 @@
         <div class="clearfix l-unit__stat-col--left super-compact text-center">
           <?php
             if ($object === 'web domain') {
-                $icon = 'fa-globe-americas';
+                $icon = 'fa-earth-americas';
             }
             if ($object === 'mail domain') {
-                $icon = 'fa-mail-bulk';
+                $icon = 'fa-envelopes-bulk';
             }
             if ($object === 'dns domain') {
-                $icon = 'fa-atlas';
+                $icon = 'fa-book-atlas';
             }
             if ($object === 'dns record') {
-                $icon = 'fa-atlas';
+                $icon = 'fa-book-atlas';
             }
             if ($object === 'database') {
                 $icon = 'fa-database';
@@ -97,10 +97,10 @@
         <div class="clearfix l-unit__stat-col--left compact-2 text-center">
           <b>
             <?php if ($status === 'active') {?>
-              <i class="fas fa-check-circle status-icon green"></i>
+              <i class="fas fa-circle-check status-icon green"></i>
             <?php  } ?>
             <?php if ($status === 'suspended') {?>
-              <i class="fas fa-exclamation-triangle status-icon orange"></i>
+              <i class="fas fa-triangle-exclamation status-icon orange"></i>
             <?php  } ?>
           </b>
         </div>
@@ -143,7 +143,7 @@
             <?php if (!($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes' && $value['USER'] !== 'admin')){
             if ($_SESSION['userContext'] === 'admin'){
             ?>
-              <a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$value['USER']?>"><i class="fas fa-sign-in-alt status-icon green status-icon dim icon-large"></i></a>
+              <a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$value['USER']?>"><i class="fas fa-right-to-bracket status-icon green status-icon dim icon-large"></i></a>
             <?php
             }
             }

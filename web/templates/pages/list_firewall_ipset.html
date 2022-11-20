@@ -3,7 +3,7 @@
   <div class="l-sort__inner">
     <div class="l-unit-toolbar__buttonstrip">
       <a class="button button-secondary" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-      <a href="/add/firewall/ipset/" class="button button-secondary" id="btn-create"><i class="fas fa-plus-circle status-icon green"></i><?=_('Add IP list');?></a>
+      <a href="/add/firewall/ipset/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add IP list');?></a>
     </div>
     <div class="l-sort-toolbar">
       <form action="/bulk/firewall/ipset/" method="post" id="objects">
@@ -68,9 +68,9 @@
         <!-- END QUICK ACTION TOOLBAR AREA -->
         <div class="clearfix l-unit__stat-col--left text-center compact-5"><b>
             <?php if ($data[$key]['AUTOUPDATE'] == 'no') { ?>
-              <i class="fas fa-times-circle status-icon red"></i>
+              <i class="fas fa-circle-xmark status-icon red"></i>
             <?php } else { ?>
-              <i class="fas fa-check-circle status-icon green"></i>
+              <i class="fas fa-circle-check status-icon green"></i>
             <?php } ?>
           </b>
         </div>

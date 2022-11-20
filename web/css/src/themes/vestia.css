@@ -498,7 +498,7 @@ a#btn-back:focus {
   box-shadow: none !important;
 }
 
-.l-menu__item i.fas.fa-arrow-alt-circle-left {
+.l-menu__item i.fas.fa-circle-left {
   display: inline-block !important;
 }
 

@@ -9,12 +9,12 @@
     "lint": "eslint js --fix && stylelint css/src/themes/*.css --fix"
   },
   "dependencies": {
-    "normalize.css": "^8.0.1",
-    "@fortawesome/fontawesome-free": "^5.15.4"
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "normalize.css": "^8.0.1"
   },
   "devDependencies": {
     "cssnano": "^5.1.14",
-    "eslint": "^8.27.0",
+    "eslint": "^8.28.0",
     "postcss": "^8.4.19",
     "postcss-cli": "^10.0.0",
     "postcss-import": "^15.0.0",

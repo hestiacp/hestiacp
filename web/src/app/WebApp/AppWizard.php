@@ -74,6 +74,10 @@ class AppWizard {
         return $options;
     }
 
+    public function info(){
+        return $this -> appsetup -> info();
+    }
+
     public function filterOptions(array $options)
     {
         $filteredoptions = [];

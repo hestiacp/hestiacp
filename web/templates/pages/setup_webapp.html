@@ -28,6 +28,7 @@
       <input type="hidden" name="ok" value="true">
 
       <div class="form-container">
+        <h1 class="form-title"><?=sprintf(_('Install %s'),$WebappInstaller -> info()['name'])?></h1>
         <?php if( !$WebappInstaller->isDomainRootClean()): ?>
           <div class="alert alert-info alert-with-icon u-input-width" role="alert">
             <i class="fas fa-info"></i>

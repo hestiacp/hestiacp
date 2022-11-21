@@ -21,7 +21,7 @@
     <div class="l-unit l-unit__stats">
       <div class="l-unit__col l-unit__col--right">
         <div class="l-unit__name separate">
-          <?= _($data[$key]['TITLE'])?>
+          <?=_($data[$key]['TITLE'])?>
         </div>
         <?php if($data[$key]['TYPE'] != 'net'){?>
         <canvas id="<?=$data[$key]['RRD'];?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period);?>"></canvas>

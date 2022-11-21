@@ -107,7 +107,7 @@
             </div>
             <?php if (!empty($v_twofa)) { ?>
               <p class="u-mb10"><?=_('2FA Reset Code:').' '.$v_twofa; ?></p>
-              <p class="u-mb10"><?=_('Please scan the code below in your 2FA application:'); ?></p>
+              <p class="u-mb10"><?=_('Please scan the code below in your 2FA application:');?></p>
               <div><img class="qr-code" src="<?=htmlentities($v_qrcode); ?>" alt=""></div>
             <?php } ?>
           </div>
@@ -177,8 +177,8 @@
           <div class="u-mb10">
             <label for="v_sort_order" class="form-label"><?=_('Default list sort order');?></label>
             <select class="form-select" name="v_sort_order" id="v_sort_order">
-              <option value='date' <?php if($v_sort_order === 'date') echo 'selected' ?>><?=_('Date'); ?></option>
-              <option value='name' <?php if($v_sort_order === 'name') echo 'selected' ?>><?=_('Name'); ?></option>
+              <option value='date' <?php if($v_sort_order === 'date') echo 'selected' ?>><?=_('Date');?></option>
+              <option value='name' <?php if($v_sort_order === 'name') echo 'selected' ?>><?=_('Name');?></option>
             </select>
           </div>
         <?php if ($_SESSION['userContext'] === 'admin') {?>

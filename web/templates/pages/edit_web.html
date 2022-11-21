@@ -279,7 +279,7 @@
               <div class="form-check u-mb10">
                 <input class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check" <?php if ($v_nginx_cache == 'yes') echo 'checked' ?> onclick="javascript:elementHideShow('v_nginx_duration');">
                 <label for="v_nginx_cache_check">
-                  <?=_('Enable FastCGI Cache'); ?>
+                  <?=_('Enable FastCGI Cache');?>
                   <a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank">
                     <i class="fas fa-circle-question"></i>
                   </a>
@@ -288,7 +288,7 @@
               <div id="v_nginx_duration" class="u-pl30" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
                 <div class="u-mb10">
                   <label for="v_nginx_cache_duration" class="form-label">
-                    <?=_('Cache Duration'); ?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
+                    <?=_('Cache Duration');?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
                   </label>
                   <input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
                 </div>
@@ -420,8 +420,8 @@
                   <label for="v_ftp_user[<?=$i ?>][v_ftp_path]" class="form-label"><?=_('Path');?></label>
                   <input type="hidden" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
                   <input type="hidden" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-                  <input type="text" class="form-control v-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" id="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-                  <span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+                  <input type="text" class="form-control js-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" id="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
+                  <span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="ftp-path-value js-ftp-path-hint"></span>
                 </div>
                 <?php if ($ftp_user['is_new'] == 1): ?>
                   <div class="u-pl30 u-mb10">
@@ -471,8 +471,8 @@
     <div class="u-pl30 u-mb10">
       <label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?=_('Path');?></label>
       <input type="hidden" name="v_ftp_pre_path" value="">
-      <input type="text" class="form-control v-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" id="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-      <span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value v-ftp-path-hint"></span>
+      <input type="text" class="form-control js-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" id="v_ftp_user[%INDEX%][v_ftp_path]" value="">
+      <span class="ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="ftp-path-value js-ftp-path-hint"></span>
     </div>
     <div class="u-pl30 u-mb10">
       <label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>

@@ -267,13 +267,13 @@ strong {
 }
 
 .form-select:focus {
-  border: 1px solid #ff6701;
+  border-color: #ff6701;
   color: #333;
 }
 
 .form-control:hover,
 .form-select:hover {
-  border: 1px solid #e95e00;
+  border-color: #e95e00;
 }
 
 .l-stat {
@@ -286,18 +286,19 @@ strong {
 }
 
 .l-sort-toolbar__filter-apply {
-  background-color: #cacaca !important;
-  border-radius: 0 !important;
+  background-color: #cacaca;
+  border-radius: 0;
   color: #fff;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 35%) !important;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 35%);
 
   &:hover {
     color: #777;
-    text-shadow: 0 1px 2px rgb(255 255 255 / 45%) !important;
+    background-color: #cacaca;
+    text-shadow: 0 1px 2px rgb(255 255 255 / 45%);
   }
 
   &:active {
-    text-shadow: none !important;
+    text-shadow: none;
     color: #a9cc06;
   }
 }
@@ -343,12 +344,14 @@ strong {
   font-size: 0.75rem !important;
 }
 
-.search-input {
-  border-radius: 0 !important;
-}
+.l-sort-toolbar .form-control {
+  &:hover {
+    border-right-color: #e95e00;
+  }
 
-.l-sort-toolbar .l-select {
-  border-radius: 0 !important;
+  &:focus {
+    border-right-color: #e95e00;
+  }
 }
 
 .l-unit__name {
@@ -371,11 +374,6 @@ strong {
 
 .server-info-data {
   line-height: 1rem !important;
-}
-
-.form-control.list-editor:hover,
-.form-control.list-editor:focus {
-  border: none !important;
 }
 
 .shortcuts {
@@ -411,11 +409,6 @@ strong {
 .lang-el .l-stat__col-title,
 .lang-fr .l-stat__col-title {
   font-size: 15px !important;
-}
-
-.body-firewall.lang-el .l-select {
-  max-width: 60px !important;
-  text-overflow: ellipsis;
 }
 
 .l-stat__col .fas {

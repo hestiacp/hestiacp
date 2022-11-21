@@ -22,22 +22,20 @@
       </div>
       <form action="/bulk/user/" method="post" id="objects">
         <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-        <div class="l-select">
-          <select class="" name="action">
-            <option value=""><?=_('apply to selected');?></option>
-            <option value="rebuild"><?=_('rebuild');?></option>
-            <option value="rebuild user"><?=_('rebuild user');?></option>
-            <option value="rebuild web"><?=_('rebuild web');?></option>
-            <option value="rebuild dns"><?=_('rebuild dns');?></option>
-            <option value="rebuild mail"><?=_('rebuild mail');?></option>
-            <option value="rebuild db"><?=_('rebuild db');?></option>
-            <option value="rebuild cron"><?=_('rebuild cron');?></option>
-            <option value="update counters"><?=_('update counters');?></option>
-            <option value="suspend"><?= _('suspend');?></option>
-            <option value="unsuspend"><?=_('unsuspend');?></option>
-            <option value="delete"><?=_('delete');?></option>
-          </select>
-        </div>
+        <select class="form-select" name="action">
+          <option value=""><?=_('apply to selected');?></option>
+          <option value="rebuild"><?=_('rebuild');?></option>
+          <option value="rebuild user"><?=_('rebuild user');?></option>
+          <option value="rebuild web"><?=_('rebuild web');?></option>
+          <option value="rebuild dns"><?=_('rebuild dns');?></option>
+          <option value="rebuild mail"><?=_('rebuild mail');?></option>
+          <option value="rebuild db"><?=_('rebuild db');?></option>
+          <option value="rebuild cron"><?=_('rebuild cron');?></option>
+          <option value="update counters"><?=_('update counters');?></option>
+          <option value="suspend"><?=_('suspend');?></option>
+          <option value="unsuspend"><?=_('unsuspend');?></option>
+          <option value="delete"><?=_('delete');?></option>
+        </select>
         <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
           <i class="fas fa-arrow-right"></i>
         </button>
@@ -45,7 +43,7 @@
       <div class="l-sort-toolbar__search-box">
         <form action="/search/" method="get">
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-          <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
+          <input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
           <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
             <i class="fas fa-magnifying-glass"></i>
           </button>

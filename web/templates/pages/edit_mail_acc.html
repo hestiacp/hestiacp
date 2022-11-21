@@ -21,7 +21,7 @@
       <h1 class="form-title"><?=_('Editing Mail Account');?></h1>
       <?php show_alert_message($_SESSION);?>
       <div style="display: flex; justify-content: space-between;">
-        <div class="u-input-width">
+        <div class="u-max-width400 u-width-full">
           <div class="u-mb10">
             <label for="v_email" class="form-label"><?=_('Account');?></label>
             <input type="text" class="form-control" name="v_email" id="v_email" value="<?=htmlentities($_GET['account'])."@".htmlentities($_GET['domain'])?>" disabled>
@@ -113,7 +113,7 @@
               <tr><td colspan="2"><strong><?=strtoupper(_('Common account settings'));?></strong></td><tr>
               <tr><td><?=_('Username');?>: </td><td><span class="js-account-output"></span>@<?=htmlentities(trim($v_domain, "'"))?></td></tr>
               <tr><td><?=_('Password');?>: </td><td><span class="js-password-output"></span></td></tr>
-              <?php if ($_SESSION['WEBMAIL_SYSTEM']) {?><tr><td><?=_('Webmail');?>: </td><td><a class="vst" href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?></a></td></tr>
+              <?php if ($_SESSION['WEBMAIL_SYSTEM']) {?><tr><td><?=_('Webmail');?>: </td><td><a href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?></a></td></tr>
               <?php } ?>
               <tr><td><?=_('Hostname');?>: </td><td>mail.<?=htmlentities($v_domain)?></td></tr>
 

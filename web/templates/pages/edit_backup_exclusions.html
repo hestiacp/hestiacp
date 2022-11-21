@@ -20,7 +20,7 @@
     <div class="form-container">
       <h1 class="form-title"><?=_('Editing Backup Exclusions');?></h1>
       <?php show_alert_message($_SESSION);?>
-      <div class="u-wide-input-width">
+      <div class="u-max-width600">
         <div class="u-mb10">
           <label for="v_web" class="form-label"><?=_('Web Domains');?></label>
           <textarea class="form-control" name="v_web" id="v_web" placeholder="<?=_('WEB_EXCLUSIONS') ?>"><?=htmlentities(trim($v_web, "'"))?></textarea>

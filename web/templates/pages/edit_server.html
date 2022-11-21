@@ -24,7 +24,7 @@
     <div class="form-container">
       <h1 class="form-title"><?=_('Configuring Server');?></h1>
       <?php show_alert_message($_SESSION);?>
-      <div class="u-wide-input-width">
+      <div class="u-max-width600">
 
         <!-- Basic options tab -->
         <details class="collapse u-mb10">
@@ -32,7 +32,7 @@
             <i class="fas fa-gear u-mr15"></i><?=_('Basic options');?>
           </summary>
           <div class="collapse-content u-pl50">
-            <div class="u-input-width">
+            <div class="u-max-width400">
               <div class="u-mb10">
                 <label for="v_hostname" class="form-label"><?=_('Hostname');?></label>
                 <input type="text" class="form-control" name="v_hostname" id="v_hostname" value="<?=htmlentities(trim($v_hostname, "'"))?>">
@@ -142,7 +142,7 @@
             <i class="fas fa-earth-americas u-mr15"></i><?=_('Web Server');?>
           </summary>
           <div class="collapse-content u-pl50">
-            <div class="u-input-width">
+            <div class="u-max-width400">
               <?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
                 <p>
                   <?=_('Proxy Server');?>: <span class="optional"><?=$_SESSION['PROXY_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a></span>
@@ -233,7 +233,7 @@
                 foreach ($dns_cluster as $key => $value) {
                   $i++;
                 ?>
-                <div class="u-input-width">
+                <div class="u-max-width400">
                   <label for="v_dns_remote_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
                   <input type="text" class="form-control" name="v_dns_remote_host" id="v_dns_remote_host" value="<?=$key; ?>" disabled>
                 </div>
@@ -263,7 +263,7 @@
                 </p>
               <?php } ?>
               <?php if($_SESSION['WEBMAIL_SYSTEM']){?>
-                <div class="u-input-width u-mt15 u-mb10">
+                <div class="u-max-width400 u-mt15 u-mb10">
                   <label for="v_webmail_alias" class="form-label">
                     <?=_('Webmail URL');?> <span class="hint">(<?=$_SESSION['WEBMAIL_ALIAS'];?>.example.com)</span>
                   </label>
@@ -277,7 +277,7 @@
                 </label>
               </div>
               <div id="smtp_relay_table" class="u-pl30 u-mt20" style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';}?> ;">
-                <div class="u-input-width">
+                <div class="u-max-width400">
                   <div class="u-mb10">
                     <label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
                     <input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
@@ -309,7 +309,7 @@
               <i class="fas fa-database u-mr15"></i><?=_('Databases');?>
             </summary>
             <div class="collapse-content u-pl50">
-              <div class="u-input-width">
+              <div class="u-max-width400">
                 <div class="u-mb10">
                   <label for="v_mysql" class="form-label">
                     <?=_('MySQL Support');?> <a href="/edit/server/mysql/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a>
@@ -341,7 +341,7 @@
                 foreach ($v_mysql_hosts as $value) {
                   $i++;
                 ?>
-                <div class="u-input-width u-pl30">
+                <div class="u-max-width400 u-pl30">
                   <div class="u-mb10">
                     <label for="v_mysql_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
                     <input type="text" class="form-control" name="v_mysql_host" id="v_mysql_host" value="<?=$value['HOST']?>" disabled>
@@ -368,7 +368,7 @@
               <?php }} ?>
               <!-- PostgreSQL Options-->
               <?php if ($v_pgsql == 'yes') { ?>
-                <div class="u-input-width">
+                <div class="u-max-width400">
                   <div class="u-mb10">
                     <label for="v_pgsql" class="form-label">
                       <?=_('PostgreSQL Support');?> <a href="/edit/server/postgresql/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a>
@@ -391,7 +391,7 @@
                 foreach ($v_pgsql_hosts as $value) {
                   $i++;
                 ?>
-                <div class="u-input-width u-pl30">
+                <div class="u-max-width400 u-pl30">
                   <div class="u-mb10">
                     <label for="v_pgsql_host" class="form-label"><?=_('Host'). ' #'.$i ?></label>
                     <input type="text" class="form-control" name="v_pgsql_host" id="v_pgsql_host" value="<?=$value['HOST']?>" disabled>
@@ -420,7 +420,7 @@
             <i class="fas fa-arrow-rotate-left u-mr15"></i><?=_('Backups');?>
           </summary>
           <div class="collapse-content u-pl50">
-            <div class="u-input-width">
+            <div class="u-max-width400">
               <div class="u-mb10">
                 <label for="v_backup" class="form-label"><?=_('Local backup');?></label>
                 <select class="form-select" name="v_backup" id="v_backup">
@@ -461,7 +461,7 @@
               </div>
             </div>
             <div id="remote_backup" class="u-pl50 u-mt20" style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;">
-              <div class="u-input-width">
+              <div class="u-max-width400">
                 <div class="u-mb10">
                   <label for="backup_type" class="form-label">
                     <?=_('Protocol');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"><i class="fas fa-circle-question"></i></a>
@@ -532,7 +532,7 @@
             <i class="fas fa-lock u-mr15"></i><?=_('SSL');?>
           </summary>
           <div class="collapse-content u-pl50">
-            <div class="u-input-width">
+            <div class="u-max-width400">
               <div class="u-mb20">
                 <label for="v_ssl_crt" class="form-label">
                   <?=_('SSL Certificate');?>
@@ -614,7 +614,7 @@
             <i class="fas fa-key u-mr15"></i><?=_('Security');?>
           </summary>
           <div class="collapse-content u-pl50">
-            <div class="u-input-width">
+            <div class="u-max-width400">
               <h3 class="section-title" onclick="javascript:elementHideShow('security-system-table',this);">
                 <?=_('System');?>
                 <i class="fas fa-square-plus status-icon dim maroon section-toggle-icon"></i>
@@ -789,7 +789,7 @@
             <i class="fas fa-puzzle-piece u-mr15"></i><?=_('Hestia Control Panel Plugins');?>
           </summary>
           <div class="collapse-content u-pl50">
-            <div class="u-input-width">
+            <div class="u-max-width400">
               <div class="u-mb10">
                 <label for="v_plugin_app_installer" class="form-label"><?=_('Quick App Installer');?></label>
                 <select class="form-select" name="v_plugin_app_installer" id="v_plugin_app_installer">

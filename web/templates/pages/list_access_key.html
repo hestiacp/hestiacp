@@ -27,7 +27,7 @@ if (!empty($_POST['ok'])) {
     <div class="form-container">
       <h1 class="form-title"><?= _("Access Key") ?></h1>
       <?php show_alert_message($_SESSION);?>
-      <div class="u-input-width">
+      <div class="u-max-width400">
         <?php if (!empty($key_data['ACCESS_KEY_ID'])) { ?>
           <div class="u-mt15 u-mb10">
             <label for="access_key_id" class="form-label"><?= _('Access Key Id'); ?></label>

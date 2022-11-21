@@ -208,12 +208,12 @@ App.Actions.WEB.randomPasswordGenerated = function(elm) {
 
 App.Actions.WEB.passwordChanged = function(elm) {
     var ref = $(elm).parents('.js-ftp-account');
-    if (ref.find('.vst-email-alert-on-psw').length == 0) {
+    if (ref.find('.js-email-alert-on-psw').length == 0) {
         var inp_name = ref.find('.v-ftp-user-is-new').prop('name');
         inp_name = inp_name.replace('is_new', 'v_ftp_email');
         ref.find('div:last').after('<div class="u-pl30 u-mb10">\
                                       <label for="' + inp_name + '" class="form-label">Send FTP credentials to email</label>\
-                                      <input type="email" class="form-control vst-email-alert-on-psw" value="" name="' + inp_name + '" id="' + inp_name + '">\
+                                      <input type="email" class="form-control js-email-alert-on-psw" value="" name="' + inp_name + '" id="' + inp_name + '">\
                                    </div>');
     }
 }
@@ -222,7 +222,6 @@ App.Actions.WEB.passwordChanged = function(elm) {
 // Page entry point
 App.Listeners.WEB.keypress_ftp_username();
 App.Listeners.WEB.keypress_ftp_path();
-
 
 $(function() {
     $('.v-ftp-user-psw').on('keypress', function (evt) {

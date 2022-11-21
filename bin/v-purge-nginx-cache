@@ -65,6 +65,10 @@ fi
 if [ "$restart" != "no" ]; then
     $BIN/v-restart-web "$restart"
     check_result $? "Web restart failed" > /dev/null
+
+    $BIN/v-restart-proxy "$restart"
+    check_result $? "Proxy restart failed" >/dev/null
+
 fi
 
 # Logging

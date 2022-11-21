@@ -49,12 +49,12 @@ parse_object_kv_list "$conf"
 
 # Purge nginx FastCGI cache
 if [ -d "/var/cache/nginx/micro/$domain" ]; then
-    rm -rf /var/cache/nginx/micro/$domain
+    rm -rf /var/cache/nginx/micro/$domain/*
 fi
 
 # Purge nginx proxy cache
 if [ -d "/var/cache/nginx/$domain" ]; then
-    rm -rf /var/cache/nginx/$domain
+    rm -rf /var/cache/nginx/$domain/*
 fi
 
 #----------------------------------------------------------#

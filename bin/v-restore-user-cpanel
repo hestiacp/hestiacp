@@ -16,7 +16,7 @@ fi
 if [[ $PATH != *"/usr/local/hestia/bin"* ]]; then
     HESTIA=/usr/local/hestia
     export HESTIA
-    
+
     PATH=$PATH:/usr/local/hestia/bin
     export PATH
 fi
@@ -38,18 +38,18 @@ sk_hestia_package=default
 #
 # Only for gen_password but I dont like it, a lot of lt
 # maybe will use it for other functions :)
-source /usr/local/hestia/func/main.sh 
+source /usr/local/hestia/func/main.sh
 sk_file=$1
 sk_tmp=sk_tmp
 # I see than this is stupid, not know why is here.
 sk_file_name=$(ls $sk_file)
 tput setaf 2
 echo "Checking provided file..."
-tput sgr0 
+tput sgr0
 if file $sk_file |grep -q -c "gzip compressed data," ; then
 	tput setaf 2
 	echo "OK - Gziped File"
-	tput sgr0 	
+	tput sgr0
 	if [ ! -d /root/${sk_tmp} ]; then
 		echo "Creating tmp.."
 		mkdir /root/${sk_tmp}
@@ -67,7 +67,7 @@ if file $sk_file |grep -q -c "gzip compressed data," ; then
 		if [ $? -eq 0 ];then
 			tput setaf 2
 			echo "Backup extracted without errors..."
-			tput sgr0 
+			tput sgr0
 		else
 			echo "Error on backup extraction, check your file, try extract it manually"
 			echo "Remove tmp"
@@ -85,8 +85,8 @@ echo "Access tmp directory $sk_importer_in"
 echo "Get prefix..."
 sk_dead_prefix=$(cat meta/dbprefix)
 if [ $sk_dead_prefix = 1 ]; then
-	echo "Error 666 - I dont like your prefix, I dont want do this job"
-	exit 666
+	echo "Error 255 - I dont like your prefix, I dont want do this job"
+	exit 255
 else
 	echo "I like your prefix, start working"
 fi
@@ -123,7 +123,7 @@ else
 	/usr/local/hestia/bin/v-add-user $sk_cp_user $sk_password administrator@${main_domain1} $sk_hestia_package $sk_cp_user $sk_cp_user
 	if [ $? != 0 ]; then
 		tput setaf 2
-		echo "Stop Working... Cant create user...if is fresh install of hestiacp try reboot or reopen session check bug https://bugs.hestiacp.com/issues/138"
+		echo "Stop Working... Cant create user...if is fresh install of hestiacp try reboot or reopen session check bugs"
 		tput sgr0
 		rm -rf "/root/${sk_tmp}"
 		exit 4
@@ -134,7 +134,7 @@ fi
 mysql -e "SET GLOBAL max_allowed_packet=1073741824;"
 tput setaf 2
 echo "Start with Databases"
-tput sgr0 
+tput sgr0
 sed -i 's/\\//g' mysql.sql
 sed -i "s/\`/'/g" mysql.sql
 
@@ -149,7 +149,7 @@ sk_db_list=$(grep -m 1 Database: mysql/*.create | awk '{ print  $5 }')
 mysql -e "SHOW DATABASES" > server_dbs
 for sk_dbr in $sk_db_list
 	do
-		grep -w $sk_dbr server_dbs	
+		grep -w $sk_dbr server_dbs
 		if [ $? == "1" ]; then
 			echo " Create and restore ${sk_dbr} "
 			mysql < mysql/${sk_dbr}.create
@@ -166,7 +166,7 @@ do
 # default cpanel user has all database privileges
 # if you use default user in your config files to connect with database
 # you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
-# this will cause database duplication in db.conf and will interfer with hestiacp backups 
+# this will cause database duplication in db.conf and will interfer with hestiacp backups
 			if [ "$userdb" == "$user" ] && [ "$userdb" != "$sk_cp_user" ] && [ "$userdb" != "$sk_real_cp_user" ] ; then
 				echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'" >> /usr/local/hestia/data/users/${sk_cp_user}/db.conf
 			fi
@@ -176,7 +176,7 @@ done
 # Leave hestia restore passwords and create users
 tput setaf 2
 echo "Rebuild databases files for $sk_cp_user"
-tput sgr0 
+tput sgr0
 /usr/local/hestia/bin/v-rebuild-databases $sk_cp_user
 
 ## end mysql
@@ -207,7 +207,7 @@ function get_domain_path() {
 			echo "Restoring $sk_domain..."
 			rm -f /home/${sk_cp_user}/web/${sk_domain}/public_html/index.html
 			if [ "$sk_debug" != 0 ]; then
-				rsync -av homedir/${path}/ /home/${sk_cp_user}/web/${sk_domain}/public_html 2>&1 | 
+				rsync -av homedir/${path}/ /home/${sk_cp_user}/web/${sk_domain}/public_html 2>&1 |
     			while read sk_file_dm; do
        			 	sk_sync=$((sk_sync+1))
        			 	echo -en "-- $sk_sync restored files\r"
@@ -222,7 +222,7 @@ function get_domain_path() {
 		fi
 done
 
-} 
+}
 get_domain_path < sk_sds2
 
 /usr/local/hestia/bin/v-add-domain $sk_cp_user $main_domain1
@@ -233,7 +233,7 @@ fi
 echo "Restore main domain: $main_domain1"
 rm -f /home/${sk_cp_user}/web/${main_domain1}/public_html/index.html
 if [ "$sk_debug" != 0 ]; then
-	rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/${sk_cp_user}/web/${main_domain1}/public_html 2>&1 | 
+	rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/${sk_cp_user}/web/${main_domain1}/public_html 2>&1 |
     		while read sk_file_dm; do
        			 sk_sync=$((sk_sync+1))
        			 echo -en "-- $sk_sync restored files\r"
@@ -260,9 +260,9 @@ if [[ "$sk_maild" != "cur" && "$sk_maild" != "new" && "$sk_maild" != "tmp"  ]]; 
 	if [ -d "$sk_maild" ]; then
 		for sk_mail_account in $(ls $sk_maild/)
 		 do
-					
+
 					echo "Create and restore mail account: $sk_mail_account@$sk_maild"
-					sk_mail_pass1=$(generate_password)		
+					sk_mail_pass1=$(generate_password)
 					/usr/local/hestia/bin/v-add-mail-account $sk_cp_user $sk_maild $sk_mail_account $sk_mail_pass1
 					mv ${sk_maild}/${sk_mail_account} /home/${sk_cp_user}/mail/${sk_maild}
 					chown ${sk_cp_user}:mail -R /home/${sk_cp_user}/mail/${sk_maild}
@@ -301,7 +301,7 @@ done
 function sk_restore_pass () {
 sk_actual_pass=$(grep -w "^$sk_cp_user:" /etc/shadow |tr ":" " " | awk '{ print  $2 }' )
 sk_new_pass=$(cat $sk_importer_in/shadow)
-# need replace I hope you have installed it as in most systems...  
+# need replace I hope you have installed it as in most systems...
 # sed is a hero but replace is easy and not need space // :D
 replace "$sk_cp_user:$sk_actual_pass" "$sk_cp_user:$sk_new_pass" -- /etc/shadow
 tput setaf 5
@@ -313,7 +313,7 @@ tput setaf 2
 	echo "Start With MX Records"
 tput sgr0
 cd $sk_importer_in/dnszones
-for sk_mx in $sk_domains 
+for sk_mx in $sk_domains
 do
 	if [ -e $sk_mx.db ]; then
 		sk_id=$(grep MX /usr/local/hestia/data/users/${sk_cp_user}/dns/${sk_mx}.conf |tr "'" " " | cut -d " " -f 2)
@@ -321,7 +321,7 @@ do
 		grep MX ${sk_mx}.db |  awk '{for(sk=NF;sk>=1;sk--) printf "%s ", $sk;print ""}' | while read value pri ns rest
 			do
 				if [ "$ns" == "MX" ];then
-					if [ "$value" == "$sk_mx" ] || [ "$value" == "$sk_mx." ];then 
+					if [ "$value" == "$sk_mx" ] || [ "$value" == "$sk_mx." ];then
 						value=mail.$value
 					fi
 					/usr/local/hestia/bin/v-add-dns-record $sk_cp_user $sk_mx @ MX $value $pri
@@ -331,7 +331,7 @@ do
 					echo "MX fixed in $sk_mx"
 				fi
 			done
-	fi	
+	fi
 done
 }
 if [ "$2" == "MX" ];then

@@ -725,6 +725,24 @@ if [ "$mysql" = 'yes' ]; then
     curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
 fi
 
+# Installing Mysql8 repo
+if [ "$mysqlclassic" = 'yes' ]; then
+    echo "[ * ] Mysql 8"
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-apt-config" >> /etc/apt/sources.list.d/mysql.list
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
+    echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-tools" >> /etc/apt/sources.list.d/mysql.list
+    echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-tools-preview" >> /etc/apt/sources.list.d/mysql.list
+    echo "deb-src [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
+
+    GNUPGHOME="$(mktemp -d)"
+    export GNUPGHOME
+    for keyserver in $(shuf -e ha.pool.sks-keyservers.net hkp://p80.pool.sks-keyservers.net:80 keyserver.ubuntu.com hkp://keyserver.ubuntu.com:80)
+    do
+        gpg --no-default-keyring --keyring /usr/share/keyrings/mysql-keyring.gpg --keyserver "${keyserver}" --recv-keys "467B942D3A79BD29" >/dev/null 2>&1 && break
+    done
+fi
+
+
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list

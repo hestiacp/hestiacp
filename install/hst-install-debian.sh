@@ -319,6 +319,9 @@ fi
 if [ "$apache" = "no" ]; then
     phpfpm='yes'
 fi
+if [ "$mysql" = 'yes' ] && [ "$mysqlclassic" = 'yes' ]; then
+    mysql='no'
+fi
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then

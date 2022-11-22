@@ -19,13 +19,11 @@
       </div>
       <form action="/bulk/ip/" method="post" id="objects">
         <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-        <div class="l-select">
-          <select name="action" id="">
-            <option value=""><?=_('apply to selected');?></option>
-            <option value="reread IP"><?=_('reread IP');?></option>
-            <option value="delete"><?=_('delete');?></option>
-          </select>
-        </div>
+        <select class="form-select" name="action">
+          <option value=""><?=_('apply to selected');?></option>
+          <option value="reread IP"><?=_('reread IP');?></option>
+          <option value="delete"><?=_('delete');?></option>
+        </select>
         <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
           <i class="fas fa-arrow-right"></i>
         </button>

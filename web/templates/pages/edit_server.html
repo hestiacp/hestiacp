@@ -102,12 +102,12 @@
           </summary>
           <div class="collapse-content u-pl50">
             <p class="u-mb10">
-              <?=_('Version'); ?>: <span class="optional"><?=$_SESSION['VERSION'];?></span>
+              <?=_('Version');?>: <span class="optional"><?=$_SESSION['VERSION'];?></span>
             </p>
             <?php if ($_SESSION['RELEASE_BRANCH'] !== 'release') {?>
-              <p><?=_('Release'); ?>: <span class="optional"><?=$_SESSION['RELEASE_BRANCH'];?></span></p>
+              <p><?=_('Release');?>: <span class="optional"><?=$_SESSION['RELEASE_BRANCH'];?></span></p>
             <?php } ?>
-            <p class="u-mb5"><?=_('Options'); ?></p>
+            <p class="u-mb5"><?=_('Options');?></p>
             <div class="form-check">
               <input class="form-check-input" type="checkbox" name="v_debug_mode" id="v_debug_mode" <?php if ((isset($_SESSION['DEBUG_MODE'])) && (!empty($_SESSION['DEBUG_MODE'])) && ($_SESSION['DEBUG_MODE'] == "true")) echo 'checked' ?>>
               <label for="v_debug_mode">
@@ -315,8 +315,8 @@
                     <?=_('MySQL Support');?> <a href="/edit/server/mysql/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a>
                   </label>
                   <select class="form-select" name="v_mysql" id="v_mysql" disabled>
-                    <option value="no"><?=_('No'); ?></option>
-                    <option value="yes" <?php if($v_mysql == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
+                    <option value="no"><?=_('No');?></option>
+                    <option value="yes" <?php if($v_mysql == 'yes') echo 'selected' ?>><?=_('Yes');?></option>
                   </select>
                 </div>
                 <!-- MySQL / MariaDB Options-->
@@ -330,8 +330,8 @@
                       <?=_('phpMyAdmin Single Sign On');?><span class="hint">(<a href="https://docs.hestiacp.com/admin_docs/database/phpmyadmin-sso.html" target="_blank"><?=_('More info');?></a>)</span>
                     </label>
                     <select class="form-select" name="v_phpmyadmin_key" id="v_phpmyadmin_key" <?php if ($_SESSION['API'] != 'yes'){ echo "disabled"; }?>>
-                      <option value="no"><?=_('Disabled'); ?></option>
-                      <option value='yes' <?php if($_SESSION['PHPMYADMIN_KEY'] != ''){ echo 'selected="selected"'; }; ?>><?=_('Enabled'); ?></option>
+                      <option value="no"><?=_('Disabled');?></option>
+                      <option value='yes' <?php if($_SESSION['PHPMYADMIN_KEY'] != ''){ echo 'selected="selected"'; }; ?>><?=_('Enabled');?></option>
                     </select>
                   </div>
                 <?php } ?>
@@ -374,8 +374,8 @@
                       <?=_('PostgreSQL Support');?> <a href="/edit/server/postgresql/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a>
                     </label>
                     <select class="form-select" name="v_pgsql" id="v_pgsql" disabled>
-                      <option value="no"><?=_('No'); ?></option>
-                      <option value='yes' <?php if($v_pgsql == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
+                      <option value="no"><?=_('No');?></option>
+                      <option value='yes' <?php if($v_pgsql == 'yes') echo 'selected' ?>><?=_('Yes');?></option>
                     </select>
                   </div>
                   <div class="u-mb20">
@@ -424,8 +424,8 @@
               <div class="u-mb10">
                 <label for="v_backup" class="form-label"><?=_('Local backup');?></label>
                 <select class="form-select" name="v_backup" id="v_backup">
-                  <option value="no"><?=_('No'); ?></option>
-                  <option value="yes" <?php if($v_backup == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
+                  <option value="no"><?=_('No');?></option>
+                  <option value="yes" <?php if($v_backup == 'yes') echo 'selected' ?>><?=_('Yes');?></option>
                 </select>
               </div>
               <div class="u-mb10">
@@ -467,10 +467,10 @@
                     <?=_('Protocol');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"><i class="fas fa-circle-question"></i></a>
                   </label>
                   <select class="form-select" name="v_backup_type" id="backup_type">
-                    <option value='ftp'><?=_('ftp'); ?></option>
-                    <option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?=_('sftp'); ?></option>
-                    <option value="b2" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'b2' )) echo 'selected="selected"'; ?>><?=_('Backblaze'); ?>
-                    <option value="rclone" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'rclone' )) echo 'selected="selected"'; ?>><?=_('Rclone'); ?>
+                    <option value='ftp'><?=_('ftp');?></option>
+                    <option value='sftp' <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'sftp' )) echo 'selected="selected"'; ?>><?=_('sftp');?></option>
+                    <option value="b2" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'b2' )) echo 'selected="selected"'; ?>><?=_('Backblaze');?>
+                    <option value="rclone" <?php if((!empty($v_backup_type)) && (trim($v_backup_type,"'")  == 'rclone' )) echo 'selected="selected"'; ?>><?=_('Rclone');?>
                   </select>
                 </div>
                 <div id="backup_sftp" style="display: <?php if ((!empty($v_backup_type)) && !in_array(trim($v_backup_type, "'"),array('ftp','sftp'))){ echo 'none';} else {echo 'block';} ?>">
@@ -626,16 +626,16 @@
                 <div class="u-mb10">
                   <label for="api-system" class="form-label"><?=_('Enable API access');?></label>
                   <select class="form-select" name="v_api_system" id="api-system">
-                    <option value='0' <?php if(empty($_SESSION['API_SYSTEM']) || $_SESSION['API_SYSTEM'] == '0') echo 'selected' ?>><?=_('Disabled'); ?></option>
-                    <option value='1' <?php if($_SESSION['API_SYSTEM'] == '1') echo 'selected' ?>><?=_('Enabled for admin'); ?></option>
-                    <option value='2' <?php if($_SESSION['API_SYSTEM'] == '2') echo 'selected' ?>><?=_('Enabled for all users'); ?></option>
+                    <option value='0' <?php if(empty($_SESSION['API_SYSTEM']) || $_SESSION['API_SYSTEM'] == '0') echo 'selected' ?>><?=_('Disabled');?></option>
+                    <option value='1' <?php if($_SESSION['API_SYSTEM'] == '1') echo 'selected' ?>><?=_('Enabled for admin');?></option>
+                    <option value='2' <?php if($_SESSION['API_SYSTEM'] == '2') echo 'selected' ?>><?=_('Enabled for all users');?></option>
                   </select>
                 </div>
                 <div class="u-mb10">
                   <label for="api" class="form-label"><?=_('Enable legacy API access');?></label>
                   <select class="form-select" name="v_api" id="api">
-                    <option value="yes"><?=_('Yes'); ?></option>
-                    <option value="no" <?php if($_SESSION['API'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                    <option value="yes"><?=_('Yes');?></option>
+                    <option value="no" <?php if($_SESSION['API'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                   </select>
                 </div>
                 <div id="security_ip" style="<?php if ($_SESSION['API'] == "no" && $_SESSION['API_SYSTEM'] == '0') echo 'display:none;';?>">
@@ -656,15 +656,15 @@
                 <div class="u-mb10">
                   <label for="v_login_style" class="form-label"><?=_('Login screen style');?></label>
                   <select class="form-select" name="v_login_style" id="v_login_style">
-                    <option value="default"><?=_('Default'); ?></option>
-                    <option value="old" <?php if($_SESSION['LOGIN_STYLE'] == 'old') echo 'selected' ?>><?=_('Old Style'); ?></option>
+                    <option value="default"><?=_('Default');?></option>
+                    <option value="old" <?php if($_SESSION['LOGIN_STYLE'] == 'old') echo 'selected' ?>><?=_('Old Style');?></option>
                   </select>
                 </div>
                 <div class="u-mb10">
                   <label for="v_policy_system_password_reset" class="form-label"><?=_('Allow users to reset their passwords');?></label>
                   <select class="form-select" name="v_policy_system_password_reset" id="v_policy_system_password_reset">
-                    <option value="yes"><?=_('Yes'); ?></option>
-                    <option value="no" <?php if($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                    <option value="yes"><?=_('Yes');?></option>
+                    <option value="no" <?php if($_SESSION['POLICY_SYSTEM_PASSWORD_RESET'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                   </select>
                 </div>
                 <div class="u-mb20">
@@ -694,22 +694,22 @@
                   <div class="u-mb10">
                     <label for="v_policy_system_protected_admin" class="form-label"><?=_('Restrict access to read-only for other administrators');?></label>
                     <select class="form-select" name="v_policy_system_protected_admin" id="v_policy_system_protected_admin">
-                      <option value="yes"><?=_('Yes'); ?></option>
-                      <option value="no" <?php if($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] !== 'yes') echo 'selected' ?>><?=_('No'); ?></option>
+                      <option value="yes"><?=_('Yes');?></option>
+                      <option value="no" <?php if($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] !== 'yes') echo 'selected' ?>><?=_('No');?></option>
                     </select>
                   </div>
                   <div class="u-mb10">
                     <label for="v_policy_system_hide_admin" class="form-label"><?=_('Hide account from other administrators');?></label>
                     <select class="form-select" name="v_policy_system_hide_admin" id="v_policy_system_hide_admin">
-                      <option value="yes"><?=_('Yes'); ?></option>
-                      <option value="no" <?php if($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] !== 'yes') echo 'selected' ?>><?=_('No'); ?></option>
+                      <option value="yes"><?=_('Yes');?></option>
+                      <option value="no" <?php if($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] !== 'yes') echo 'selected' ?>><?=_('No');?></option>
                     </select>
                   </div>
                   <div class="u-mb10">
                     <label for="v_policy_system_hide_services" class="form-label"><?=_('Do not allow other administrators to access Server Settings');?></label>
                     <select class="form-select" name="v_policy_system_hide_services" id="v_policy_system_hide_services">
-                      <option value="yes"><?=_('Yes'); ?></option>
-                      <option value="no" <?php if($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') echo 'selected' ?>><?=_('No'); ?></option>
+                      <option value="yes"><?=_('Yes');?></option>
+                      <option value="no" <?php if($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') echo 'selected' ?>><?=_('No');?></option>
                     </select>
                   </div>
                 </div>
@@ -728,44 +728,44 @@
                       <?=_('Allow suspended users to log in with read-only access');?> <span class="hint">(<?=_('Preview');?>)</span>
                     </label>
                     <select class="form-select" name="v_policy_user_view_suspended" id="v_policy_user_view_suspended">
-                      <option value="yes" <?php if($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
-                      <option value="no" <?php if($_SESSION['POLICY_USER_VIEW_SUSPENDED'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                      <option value="yes" <?php if($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'no') echo 'selected' ?>><?=_('Yes');?></option>
+                      <option value="no" <?php if($_SESSION['POLICY_USER_VIEW_SUSPENDED'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                     </select>
                   </div>
                 <?php } ?>
                 <div class="u-mb10">
                   <label for="v_policy_user_edit_details" class="form-label"><?=_('Allow users to edit their account details');?></label>
                   <select class="form-select" name="v_policy_user_edit_details" id="v_policy_user_edit_details">
-                    <option value="yes" <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
-                    <option value="no" <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                    <option value="yes" <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'no') echo 'selected' ?>><?=_('Yes');?></option>
+                    <option value="no" <?php if($_SESSION['POLICY_USER_EDIT_DETAILS'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                   </select>
                 </div>
                 <div class="u-mb10">
                   <label for="v_policy_user_edit_web_templates" class="form-label"><?=_('Allow users to change templates when editing web domains');?></label>
                   <select class="form-select" name="v_policy_user_edit_web_templates" id="v_policy_user_edit_web_templates">
-                    <option value="yes" <?php if($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
-                    <option value="no" <?php if($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                    <option value="yes" <?php if($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] !== 'no') echo 'selected' ?>><?=_('Yes');?></option>
+                    <option value="no" <?php if($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                   </select>
                 </div>
                 <div class="u-mb10">
                   <label for="v_policy_user_edit_dns_templates" class="form-label"><?=_('Allow users to change templates when editing DNS zones');?></label>
                   <select class="form-select" name="v_policy_user_edit_dns_templates" id="v_policy_user_edit_dns_templates">
-                    <option value="yes" <?php if($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
-                    <option value="no" <?php if($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                    <option value="yes" <?php if($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] !== 'no') echo 'selected' ?>><?=_('Yes');?></option>
+                    <option value="no" <?php if($_SESSION['POLICY_USER_EDIT_DNS_TEMPLATES'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                   </select>
                 </div>
                 <div class="u-mb10">
                   <label for="v_policy_user_view_logs" class="form-label"><?=_('Allow users to view action and login history logs');?></label>
                   <select class="form-select" name="v_policy_user_view_logs" id="v_policy_user_view_logs">
-                    <option value="yes" <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
-                    <option value="no" <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                    <option value="yes" <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no') echo 'selected' ?>><?=_('Yes');?></option>
+                    <option value="no" <?php if($_SESSION['POLICY_USER_VIEW_LOGS'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                   </select>
                 </div>
                 <div class="u-mb10">
                   <label for="v_policy_user_delete_logs" class="form-label"><?=_('Allow users to delete log history');?></label>
                   <select class="form-select" name="v_policy_user_delete_logs" id="v_policy_user_delete_logs">
-                    <option value="yes" <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no') echo 'selected' ?>><?=_('Yes'); ?></option>
-                    <option value="no" <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                    <option value="yes" <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no') echo 'selected' ?>><?=_('Yes');?></option>
+                    <option value="no" <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                   </select>
                 </div>
                 <p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
@@ -774,8 +774,8 @@
                 <div class="u-mb10">
                   <label for="v_enforce_subdomain_ownership" class="form-label"><?=_('Enforce subdomain ownership');?></label>
                   <select class="form-select" name="v_enforce_subdomain_ownership" id="v_enforce_subdomain_ownership">
-                    <option value="yes"><?=_('Yes'); ?></option>
-                    <option value="no" <?php if($_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP'] == 'no') echo 'selected' ?>><?=_('No'); ?></option>
+                    <option value="yes"><?=_('Yes');?></option>
+                    <option value="no" <?php if($_SESSION['ENFORCE_SUBDOMAIN_OWNERSHIP'] == 'no') echo 'selected' ?>><?=_('No');?></option>
                   </select>
                 </div>
               </div>
@@ -793,29 +793,29 @@
               <div class="u-mb10">
                 <label for="v_plugin_app_installer" class="form-label"><?=_('Quick App Installer');?></label>
                 <select class="form-select" name="v_plugin_app_installer" id="v_plugin_app_installer">
-                  <option value="false"><?=_('No'); ?></option>
-                  <option value="true" <?php if($_SESSION['PLUGIN_APP_INSTALLER'] == 'true') echo 'selected' ?>><?=_('Yes'); ?></option>
+                  <option value="false"><?=_('No');?></option>
+                  <option value="true" <?php if($_SESSION['PLUGIN_APP_INSTALLER'] == 'true') echo 'selected' ?>><?=_('Yes');?></option>
                 </select>
               </div>
               <div class="u-mb10">
                 <label for="v_filemanager" class="form-label"><?=_('Filemanager');?></label>
                 <select class="form-select" name="v_filemanager" id="v_filemanager">
-                  <option value="false"><?=_('No'); ?></option>
-                  <option value="true" <?php if($_SESSION['FILE_MANAGER'] == 'true') echo 'selected' ?>><?=_('Yes'); ?></option>
+                  <option value="false"><?=_('No');?></option>
+                  <option value="true" <?php if($_SESSION['FILE_MANAGER'] == 'true') echo 'selected' ?>><?=_('Yes');?></option>
                 </select>
               </div>
               <div class="u-mb10">
                 <label for="v_quota" class="form-label"><?=_('FileSystem Disk Quota');?></label>
                 <select class="form-select" name="v_quota" id="v_quota">
-                  <option value="no"><?=_('No'); ?></option>
-                  <option value="yes" <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?>><?=_('Yes'); ?></option>
+                  <option value="no"><?=_('No');?></option>
+                  <option value="yes" <?php if($_SESSION['DISK_QUOTA'] == 'yes') echo 'selected' ?>><?=_('Yes');?></option>
                 </select>
               </div>
               <div class="u-mb10">
                 <label for="v_firewall" class="form-label"><?=_('Firewall');?></label>
                 <select class="form-select" name="v_firewall" id="v_firewall">
-                  <option value="no"><?=_('No'); ?></option>
-                  <option value="yes" <?php if($_SESSION['FIREWALL_SYSTEM'] == 'iptables') echo 'selected' ?>><?=_('Yes'); ?></option>
+                  <option value="no"><?=_('No');?></option>
+                  <option value="yes" <?php if($_SESSION['FIREWALL_SYSTEM'] == 'iptables') echo 'selected' ?>><?=_('Yes');?></option>
                 </select>
               </div>
             </div>

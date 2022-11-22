@@ -1,9 +1,30 @@
-/* ==========================================================================
-   Define Exo font family
-   Primary font used throughout the user interface
+/* Overrides for Font Awesome Free 6.2.1 to change webfont paths
    ========================================================================== */
 
-/* exo-300 - latin-ext_latin */
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src:
+    url("/webfonts/fa-solid-900.woff2") format("woff2"),
+    url("/webfonts/fa-solid-900.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Font Awesome 6 Brands";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src:
+    url("/webfonts/fa-brands-400.woff2") format("woff2"),
+    url("/webfonts/fa-brands-400.ttf") format("truetype");
+}
+
+/* Exo primary font
+   ========================================================================== */
+
+/* exo-300 - latin */
 @font-face {
   font-family: Exo;
   font-style: normal;
@@ -11,12 +32,12 @@
   src:
     local("Exo Light"),
     local("Exo-Light"),
-    url("/webfonts/exo-v8-latin-ext_latin-300.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-300.woff") format("woff");
+    url("/webfonts/exo-v20-latin-300.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-300.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-300italic - latin-ext_latin */
+/* exo-300italic - latin */
 @font-face {
   font-family: Exo;
   font-style: italic;
@@ -24,12 +45,12 @@
   src:
     local("Exo Light Italic"),
     local("Exo-LightItalic"),
-    url("/webfonts/exo-v8-latin-ext_latin-300italic.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-300italic.woff") format("woff");
+    url("/webfonts/exo-v20-latin-300italic.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-300italic.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-regular - latin-ext_latin */
+/* exo-regular - latin */
 @font-face {
   font-family: Exo;
   font-style: normal;
@@ -37,12 +58,12 @@
   src:
     local("Exo Regular"),
     local("Exo-Regular"),
-    url("/webfonts/exo-v8-latin-ext_latin-regular.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-regular.woff") format("woff");
+    url("/webfonts/exo-v20-latin-regular.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-regular.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-italic - latin-ext_latin */
+/* exo-italic - latin */
 @font-face {
   font-family: Exo;
   font-style: italic;
@@ -50,12 +71,12 @@
   src:
     local("Exo Italic"),
     local("Exo-Italic"),
-    url("/webfonts/exo-v8-latin-ext_latin-italic.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-italic.woff") format("woff");
+    url("/webfonts/exo-v20-latin-italic.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-italic.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-500 - latin-ext_latin */
+/* exo-500 - latin */
 @font-face {
   font-family: Exo;
   font-style: normal;
@@ -63,12 +84,12 @@
   src:
     local("Exo Medium"),
     local("Exo-Medium"),
-    url("/webfonts/exo-v8-latin-ext_latin-500.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-500.woff") format("woff");
+    url("/webfonts/exo-v20-latin-500.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-500.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-500italic - latin-ext_latin */
+/* exo-500italic - latin */
 @font-face {
   font-family: Exo;
   font-style: italic;
@@ -76,12 +97,12 @@
   src:
     local("Exo Medium Italic"),
     local("Exo-MediumItalic"),
-    url("/webfonts/exo-v8-latin-ext_latin-500italic.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-500italic.woff") format("woff");
+    url("/webfonts/exo-v20-latin-500italic.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-500italic.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-600 - latin-ext_latin */
+/* exo-600 - latin */
 @font-face {
   font-family: Exo;
   font-style: normal;
@@ -89,12 +110,12 @@
   src:
     local("Exo SemiBold"),
     local("Exo-SemiBold"),
-    url("/webfonts/exo-v8-latin-ext_latin-600.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-600.woff") format("woff");
+    url("/webfonts/exo-v20-latin-600.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-600.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-600italic - latin-ext_latin */
+/* exo-600italic - latin */
 @font-face {
   font-family: Exo;
   font-style: italic;
@@ -102,12 +123,12 @@
   src:
     local("Exo SemiBold Italic"),
     local("Exo-SemiBoldItalic"),
-    url("/webfonts/exo-v8-latin-ext_latin-600italic.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-600italic.woff") format("woff");
+    url("/webfonts/exo-v20-latin-600italic.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-600italic.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-700 - latin-ext_latin */
+/* exo-700 - latin */
 @font-face {
   font-family: Exo;
   font-style: normal;
@@ -115,12 +136,12 @@
   src:
     local("Exo Bold"),
     local("Exo-Bold"),
-    url("/webfonts/exo-v8-latin-ext_latin-700.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-700.woff") format("woff");
+    url("/webfonts/exo-v20-latin-700.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-700.woff") format("woff");
   font-display: swap;
 }
 
-/* exo-700italic - latin-ext_latin */
+/* exo-700italic - latin */
 @font-face {
   font-family: Exo;
   font-style: italic;
@@ -128,38 +149,23 @@
   src:
     local("Exo Bold Italic"),
     local("Exo-BoldItalic"),
-    url("/webfonts/exo-v8-latin-ext_latin-700italic.woff2") format("woff2"),
-    url("/webfonts/exo-v8-latin-ext_latin-700italic.woff") format("woff");
+    url("/webfonts/exo-v20-latin-700italic.woff2") format("woff2"),
+    url("/webfonts/exo-v20-latin-700italic.woff") format("woff");
   font-display: swap;
 }
 
-/* ==========================================================================
-   Define Inconsolata font family
-   Console font
+/* Inconsolata console font
    ========================================================================== */
 
-/* Inconsolata-bold - latin */
+/* inconsolata-regular - latin */
 @font-face {
   font-family: Inconsolata;
-  src:
-    local("Inconsolata Bold"),
-    local("Inconsolata-Bold"),
-    url("/webfonts/Inconsolata-Bold.woff2") format("woff2"),
-    url("/webfonts/Inconsolata-Bold.woff") format("woff");
-  font-weight: bold;
   font-style: normal;
-  font-display: swap;
-}
-
-/* Inconsolata - latin */
-@font-face {
-  font-family: Inconsolata;
+  font-weight: 400;
   src:
     local("Inconsolata Regular"),
     local("Inconsolata-Regular"),
-    url("/webfonts/Inconsolata-Regular.woff2") format("woff2"),
-    url("/webfonts/Inconsolata-Regular.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
+    url("/webfonts/inconsolata-regular.woff2") format("woff2"),
+    url("/webfonts/inconsolata-regular.woff") format("woff");
   font-display: swap;
 }

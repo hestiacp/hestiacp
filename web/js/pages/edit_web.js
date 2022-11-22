@@ -72,7 +72,7 @@ App.Listeners.WEB.keypress_ftp_username = function() {
 
 App.Actions.WEB.update_ftp_path_hint = function(elm, hint) {
     if (hint.trim() == '') {
-        $(elm).parent().find('.v-ftp-path-hint').html('');
+        $(elm).parent().find('.js-ftp-path-hint').html('');
     }
 
     if (hint[0] != '/') {
@@ -81,11 +81,11 @@ App.Actions.WEB.update_ftp_path_hint = function(elm, hint) {
 
     hint = hint.replace(/\/(\/+)/g, '/');
 
-    $(elm).parent().find('.v-ftp-path-hint').text(hint);
+    $(elm).parent().find('.js-ftp-path-hint').text(hint);
 }
 
 App.Listeners.WEB.keypress_ftp_path = function() {
-    var ftp_path_inputs = $('.v-ftp-path');
+    var ftp_path_inputs = $('.js-ftp-path');
     $.each(ftp_path_inputs, function(i, ref) {
         var ref = $(ref);
         var current_val = ref.val();

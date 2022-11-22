@@ -140,7 +140,7 @@ strong {
 }
 
 .alert {
-  border: 1px solid #212121;
+  border-color: #212121;
 }
 
 .alert-danger {
@@ -155,7 +155,7 @@ strong {
   background: #454545;
   color: #fafafa;
   text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
-  border: 1px solid #606060;
+  border-color: #606060;
   box-shadow:
     0 1px 4px rgb(0 0 0 / 20%),
     inset 0 0 60px rgb(0 0 0 / 25%);
@@ -310,23 +310,23 @@ strong {
 }
 
 .l-sort-toolbar__filter-apply {
-  border: 1px solid #454545;
+  border-color: #454545;
   background-color: #424242;
-  text-shadow: 1px 1px rgb(0 0 0 / 90%) !important;
-  box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
+  text-shadow: 1px 1px rgb(0 0 0 / 90%);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 40%);
   color: #cacaca;
   font-size: 1em;
-}
 
-.l-sort-toolbar__filter-apply:hover {
-  color: #09f;
-  background-color: #454545;
-}
+  &:hover {
+    color: #09f;
+    background-color: #454545;
+  }
 
-.l-sort-toolbar__filter-apply:active {
-  color: #0074c2;
-  text-shadow: 0 -1px rgb(255 255 255 / 20%);
-  box-shadow: inset 1px 1px 0 rgb(0 0 0 / 20%);
+  &:active {
+    color: #0074c2;
+    text-shadow: 0 -1px rgb(255 255 255 / 20%);
+    box-shadow: inset 1px 1px 0 rgb(0 0 0 / 20%);
+  }
 }
 
 .l-sort-toolbar .toolbar-link {
@@ -341,20 +341,27 @@ strong {
   }
 }
 
-.l-select {
-  border: 1px solid #454545;
-  box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
+.l-sort-toolbar .form-select {
+  border-color: #454545;
+  background-color: #212121;
 
-  & select {
+  &:hover {
     background-color: #212121;
-    box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
   }
 }
 
-.l-sort-toolbar .l-select {
-  border: 1px solid #454545;
-  background-color: #454545;
-  text-shadow: 1px 1px rgb(0 0 0 / 90%);
+.l-sort-toolbar .form-control {
+  border-color: #454545;
+  background-color: #212121;
+
+  &:hover {
+    background-color: #212121;
+    border-right-color: #0090ff;
+  }
+
+  &:focus {
+    border-right-color: #0080df;
+  }
 }
 
 .l-unit {
@@ -527,21 +534,46 @@ strong {
 
 .form-control {
   background-color: #454545;
-  border: 1px solid #606060;
+  border-color: #606060;
   color: #d4d4d4;
   box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
+
+  &:hover {
+    border-color: #0090ff;
+    background-color: #494949;
+  }
+
+  &:focus {
+    background-color: #222;
+    border-color: #0080df;
+    color: #fff;
+    box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
+  }
+
+  &.list-editor:focus {
+    background-color: #222;
+    box-shadow: none;
+  }
 }
 
-.form-control:hover {
-  border-color: #0090ff;
-  background-color: #494949;
-}
+.form-select {
+  background-color: #454545;
+  border-color: #606060;
+  color: #d4d4d4;
+  text-shadow: 0 0 0 #d4d4d4;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 
-.form-control:focus {
-  background-color: #222;
-  border-color: #0080df;
-  color: #fff;
-  box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
+  &:hover {
+    border-color: #0090ff;
+    background-color: #494949;
+  }
+
+  &:focus {
+    background-color: #222;
+    border-color: #0080df;
+    color: #fff;
+    box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
+  }
 }
 
 .form-control:disabled,
@@ -550,59 +582,33 @@ strong {
   text-shadow: 1px 1px rgb(0 0 0 / 30%);
   color: #acacac;
   border-color: #606060;
-}
 
-.form-control:disabled:hover,
-.form-select:disabled:hover {
-  border-color: #606060 !important;
-}
-
-.form-control.list-editor:focus {
-  background-color: #222;
-  box-shadow: none !important;
-}
-
-.form-select {
-  background-color: #454545;
-  border: 1px solid #606060;
-  color: #d4d4d4;
-  text-shadow: 0 0 0 #d4d4d4;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
-}
-
-textarea::placeholder {
-  color: #bbb !important;
-}
-
-textarea:focus::placeholder {
-  color: #909090 !important;
-}
-
-.form-select:hover {
-  border-color: #0090ff;
-  background-color: #494949;
-}
-
-.form-select:focus {
-  background-color: #222;
-  border-color: #0080df;
-  color: #fff;
-  box-shadow: 0 1px 6px rgb(0 52 91 / 75%);
+  &:hover {
+    border-color: #606060;
+  }
 }
 
 .generate {
   color: #29a9ff;
   border-radius: 4px;
+
+  &:hover {
+    background-color: #ff3478;
+    border-color: #ff3478;
+  }
+
+  &:active {
+    background-color: #be1f54;
+    border-color: #be1f54;
+  }
 }
 
-.generate:hover {
-  background-color: #ff3478;
-  border-color: #ff3478;
+textarea::placeholder {
+  color: #bbb;
 }
 
-.generate:active {
-  background-color: #be1f54;
-  border-color: #be1f54;
+textarea:focus::placeholder {
+  color: #909090;
 }
 
 .lets-encrypt-note {}
@@ -612,8 +618,7 @@ textarea:focus::placeholder {
 .show-passwords-enabled-action {}
 
 .ftp-path-value,
-.hint,
-td.hint {
+.hint {
   color: #a2a2a2;
   font-size: 0.8rem;
 }
@@ -698,7 +703,7 @@ td.hint {
   font-size: 0.85rem;
   font-weight: 400;
   color: #eee;
-  border: 1px solid #707070;
+  border-color: 1px solid #707070;
   background: rgb(48 48 48);
   background: linear-gradient(0deg, rgb(48 48 48 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(69 69 69 / 100%) 100%);
   box-shadow:
@@ -712,7 +717,7 @@ td.hint {
 .to-top:hover {
   color: #fff;
   text-shadow: 1px 1px rgb(0 0 0 / 25%);
-  border: 1px solid #0098ff;
+  border-color: #0098ff;
   background: linear-gradient(0deg, rgb(58 58 58 / 100%) 0%, rgb(68 68 68 / 100%) 35%, rgb(79 79 79 / 100%) 100%);
   background-color: #454545;
   box-shadow:
@@ -726,7 +731,7 @@ td.hint {
 .to-top:active,
 .to-shortcuts:focus,
 .to-top:focus {
-  border: 1px solid #0066b4;
+  border-color: #0066b4;
   background: linear-gradient(0deg, rgb(69 69 69 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(48 48 48 / 100%) 100%);
   color: #d4d4d4;
   text-shadow: 0 -1px 1px rgb(0 0 0 / 55%);
@@ -876,9 +881,8 @@ td.hint {
   color: #d4d4d4;
 }
 
-/* MAIN MENU COLLAPSED */
 .console-output {
-  color: #dadada !important;
+  color: #dadada;
 }
 
 form#vstobjects.suspended {
@@ -1022,12 +1026,6 @@ form#vstobjects.suspended {
   text-shadow: 0 !important;
 }
 
-.search-input {
-  background-color: #212121;
-  border: 1px solid #454545;
-  box-shadow: 0 1px 1px rgb(0 0 0 / 40%) !important;
-}
-
 .ui-dialog .ui-dialog-buttonpane {
   border-top: 1px solid #404040;
 }
@@ -1162,7 +1160,7 @@ li[aria-expanded="true"] a {
 
 .collapse-header {
   background: #454545;
-  border: 1px solid #505050;
+  border-color: #505050;
   text-shadow: 0 1px rgb(0 0 0 / 40%);
   box-shadow:
     inset 0 0 2px rgb(0 0 0 / 50%),

@@ -22,14 +22,12 @@
     <div class="l-sort-toolbar">
       <form action="/bulk/service/" method="post" id="objects">
         <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-        <div class="l-select">
-          <select class="" name="action">
-            <option value=""><?=_('apply to selected');?></option>
-            <option value="stop"><?=_('stop');?></option>
-            <option value="start"><?=_('start');?></option>
-            <option value="restart"><?=_('restart');?></option>
-          </select>
-        </div>
+        <select class="form-select" name="action">
+          <option value=""><?=_('apply to selected');?></option>
+          <option value="stop"><?=_('stop');?></option>
+          <option value="start"><?=_('start');?></option>
+          <option value="restart"><?=_('restart');?></option>
+        </select>
         <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
           <i class="fas fa-arrow-right"></i>
         </button>
@@ -41,7 +39,7 @@
 
 <div class="l-center units">
 
-  <div class="">
+  <div>
     <div class="l-unit__col l-unit__col--right server-info">
       <div class="icon-server-info"><i class="fas fa-server"></i></div>
       <div class="l-unit__servername separate server-info-name"><?=$sys['sysinfo']['HOSTNAME']?></div>

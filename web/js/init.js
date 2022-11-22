@@ -55,30 +55,30 @@ $(document).ready(function(){
 
             // SEARCH BOX
 
-            $('.l-sort-toolbar__search, .l-sort-toolbar__search-box .search-input').hover(function(){
+            $('.l-sort-toolbar__search, .l-sort-toolbar__search-box .js-search-input').hover(function(){
               clearTimeout(VE.tmp.search_display_interval);
               clearTimeout(VE.tmp.search_hover_interval);
-              VE.tmp.search_display_interval = setTimeout(function(){$('.search-input').addClass('activated');}, 150);
+              VE.tmp.search_display_interval = setTimeout(function(){$('.js-search-input').addClass('activated');}, 150);
             }, function(){
               clearTimeout(VE.tmp.search_display_interval);
               clearTimeout(VE.tmp.search_hover_interval);
               VE.tmp.search_hover_interval = setTimeout(function(){
-                if(!VE.tmp.search_activated && !$(".search-input").val().length){
-                  $(".search-input").removeClass('activated');
+                if(!VE.tmp.search_activated && !$(".js-search-input").val().length){
+                  $(".js-search-input").removeClass('activated');
                 }
               }, 600);
             });
 
-            $('.search-input').focus(function(){
+            $('.js-search-input').focus(function(){
               VE.tmp.search_activated = 1;
               clearTimeout(VE.tmp.search_hover_interval);
             });
-            $('.search-input').blur(function(){
+            $('.js-search-input').blur(function(){
               VE.tmp.search_activated = 0;
               clearTimeout(VE.tmp.search_hover_interval);
               VE.tmp.search_hover_interval = setTimeout(function(){
-                if(!$(".search-input").val().length){
-                  $(".search-input").removeClass('activated');
+                if(!$(".js-search-input").val().length){
+                  $(".js-search-input").removeClass('activated');
                 }
               }, 600);
             });
@@ -181,7 +181,7 @@ $(document).ready(function(){
 
 
               shortcut.add("f", function(){
-                $('.search-input').addClass('activated').focus();
+                $('.js-search-input').addClass('activated').focus();
               }, {
                   'type':             'keydown',
                   'propagate':        false,
@@ -634,10 +634,11 @@ $(document).ready(function(){
             // todo: maybe give the save button id?
             $(".button[data-id=vstobjects][data-action=submit]").on('click', function(ev){
               let loadingAnimationEle = document.createElement("div");
-              loadingAnimationEle.innerHTML = '<div class="timer-container" style="float:right;"><div class="timer-button spinner"><div class="spinner-inner"></div><div class="spinner-mask"></div> <div class="spinner-mask-two"></div></div></div>';
+              loadingAnimationEle.className = "spinner";
+              loadingAnimationEle.innerHTML = '<div class="spinner-inner"></div><div class="spinner-mask"></div> <div class="spinner-mask-two"></div>';
+
               // improve alignment
               var buttonStrip = this.closest(".l-unit-toolbar__buttonstrip");
-              buttonStrip.style.marginTop = "8px";
               // this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
               $(".button[data-id=vstobjects][data-action=submit]").replaceWith(loadingAnimationEle);
               $(".button").replaceWith('');

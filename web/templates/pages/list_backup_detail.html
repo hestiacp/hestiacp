@@ -9,18 +9,16 @@
       <form action="/bulk/restore/" method="post" id="objects">
         <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
         <input type="hidden" name="backup" value="<?=htmlentities($_GET['backup']); ?>">
-        <div class="l-select">
-          <select name="action" id="">
-            <option value=""><?=_('apply to selected');?></option>
-            <option value="restore"><?=_('restore') ?></option>
-          </select>
-        </div>
+        <select class="form-select" name="action">
+          <option value=""><?=_('apply to selected');?></option>
+          <option value="restore"><?=_('restore') ?></option>
+        </select>
         <button type="submit" class="l-sort-toolbar__filter-apply" value=""><i class="fas fa-arrow-right"></i></button>
       </form>
       <div class="l-sort-toolbar__search-box">
         <form action="/search/" method="get">
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-          <input type="text" class="search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>">
+          <input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>">
           <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value=""><i class="fas fa-magnifying-glass"></i></button>
         </form>
       </div>

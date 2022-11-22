@@ -239,7 +239,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
             mariadb_string="MariaDB"
             if [[ ! $mysql_version =~ $mariadb_string ]]; then
                 # MySQL
-                service='mysqld'
+                service='mysql'
                 proc_name='mysqld'
             else
                 # MariaDB

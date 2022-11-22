@@ -17,11 +17,11 @@
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="save" value="save">
 
-    <div class="form-container">
+    <div class="form-container form-container-wide">
       <h1 class="form-title"><?=_('Editing Mail Account');?></h1>
       <?php show_alert_message($_SESSION);?>
-      <div style="display: flex; justify-content: space-between;">
-        <div class="u-max-width400 u-width-full">
+      <div class="sidebar-container">
+        <div>
           <div class="u-mb10">
             <label for="v_email" class="form-label"><?=_('Account');?></label>
             <input type="text" class="form-control" name="v_email" id="v_email" value="<?=htmlentities($_GET['account'])."@".htmlentities($_GET['domain'])?>" disabled>
@@ -100,7 +100,7 @@
               <textarea class="form-control" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
             </div>
           </div>
-          <div class="u-mb10">
+          <div class="u-mb20">
             <label for="v_rate" class="form-label">
               <?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour');?>)</span>
             </label>

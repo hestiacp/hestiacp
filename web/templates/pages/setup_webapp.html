@@ -30,14 +30,14 @@
       <div class="form-container">
         <h1 class="form-title"><?=sprintf(_('Install %s'),$WebappInstaller -> info()['name'])?></h1>
         <?php if( !$WebappInstaller->isDomainRootClean()): ?>
-          <div class="alert alert-info alert-with-icon u-max-width400" role="alert">
+          <div class="alert alert-info alert-with-icon" role="alert">
             <i class="fas fa-info"></i>
             <p class="u-mb10"><?=_('Data loss warning!');?></p>
             <p class="u-mb10"><?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?></p>
             <p><?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?></p>
           </div>
         <?php endif; ?>
-        <div class="u-max-width400 u-mt20">
+        <div class="u-mt20">
           <?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>
             <?php
               $f_name = $WebappInstaller->formNs() . '_' . $form_name;

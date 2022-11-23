@@ -12,7 +12,7 @@
 
 <div class="l-center animate__animated animate__fadeIn">
 
-  <div style="margin-left:68px; margin-top: 20px">
+  <div class="form-container form-container-wide">
     <h1 class="form-title"><?=_('Quick Install App');?></h1>
     <?php
       if (!empty($_SESSION['error_msg'])) {
@@ -30,20 +30,21 @@
     ?>
     <p class="<?=$msg_class;?> u-mb20"><i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></p>
     <?php }; ?>
-  </div>
-  <div class="cards">
-    <!-- List available web apps -->
-    <?php foreach($v_web_apps as $webapp):?>
-      <div class="card <?=($webapp['enabled'] ? '' : 'disable');?>">
-        <div class="card-thumb">
-          <img src="/src/app/WebApp/Installers/<?=$webapp['name'];?>/<?=$webapp['thumbnail'];?>" alt="<?=$webapp['name'];?>">
+    <div class="cards">
+      <!-- List available web apps -->
+      <?php foreach($v_web_apps as $webapp):?>
+        <div class="card <?=($webapp['enabled'] ? '' : 'disable');?>">
+          <div class="card-thumb">
+            <img src="/src/app/WebApp/Installers/<?=$webapp['name'];?>/<?=$webapp['thumbnail'];?>" alt="<?=$webapp['name'];?>">
+          </div>
+          <div class="card-details">
+            <p class="card-title"><?=$webapp['name'];?></p>
+            <p class="u-mb10"><?=_('version');?>: <?=$webapp['version'];?></p>
+            <a href="/add/webapp/?app=<?=$webapp['name'];?>&domain=<?=htmlentities($v_domain)?>" class="button"><?=_('Setup');?></a>
+          </div>
         </div>
-        <div class="card-details">
-          <p class="card-title"><?=$webapp['name'];?></p>
-          <p class="u-mb10"><?=_('version');?>: <?=$webapp['version'];?></p>
-          <a href="/add/webapp/?app=<?=$webapp['name'];?>&domain=<?=htmlentities($v_domain)?>" class="button"><?=_('Setup');?></a>
-        </div>
-      </div>
-    <?php endforeach; ?>
+      <?php endforeach; ?>
+    </div>
   </div>
+
 </div>

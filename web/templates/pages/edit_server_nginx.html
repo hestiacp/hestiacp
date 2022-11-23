@@ -21,7 +21,7 @@
     <div class="form-container">
       <h1 class="form-title"><?=_('Configuring Server');?>: <?=$v_service_name;?></h1>
       <?php show_alert_message($_SESSION);?>
-      <div id="basic-options" class="u-max-width400">
+      <div id="basic-options">
         <div class="u-mb10">
           <label for="v_worker_processes" class="form-label">worker_processes</label>
           <input type="text" class="form-control" regexp="worker_processes" prev_value="<?=htmlentities($v_worker_processes)?>" name="v_worker_processes" id="v_worker_processes" value="<?=htmlentities($v_worker_processes)?>">
@@ -66,13 +66,13 @@
           <a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Advanced options');?></a>
         </div>
       </div>
-      <div id="advanced-options" class="u-max-width600" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
+      <div id="advanced-options" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
         <div class="u-mb20">
           <a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Basic options');?></a>
         </div>
         <div class="u-mb20">
           <label for="v_config" class="form-label"><?=$v_config_path;?></label>
-          <textarea class="form-control u-min-height300 u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
+          <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
         </div>
         <div class="form-check">
           <input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>

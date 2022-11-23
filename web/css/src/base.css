@@ -46,23 +46,6 @@ pre {
   margin: 0;
 }
 
-dialog {
-  position: fixed;
-  padding: 0;
-
-  &::backdrop {
-    background-color: rgb(0 0 0 / 60%);
-  }
-}
-
-summary {
-  list-style: none;
-
-  &::-webkit-details-marker {
-    display: none;
-  }
-}
-
 ol,
 ul {
   list-style: none;
@@ -78,4 +61,26 @@ button {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+dialog {
+  position: fixed;
+  padding: 0;
+
+  &::backdrop {
+    background-color: rgb(0 0 0 / 60%);
+  }
+}
+
+summary {
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
 }

@@ -14,14 +14,14 @@ strong {
 }
 
 .table-header {
-  box-shadow: none !important;
-  background: #fafafa !important;
+  box-shadow: none;
+  background: #fafafa;
 }
 
 .l-header {
   box-shadow: none;
   background: #5070a6;
-  text-shadow: none !important;
+  text-shadow: none;
 }
 
 .l-menu__item--active {

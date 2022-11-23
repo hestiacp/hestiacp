@@ -159,29 +159,10 @@ strong {
   box-shadow:
     0 1px 4px rgb(0 0 0 / 20%),
     inset 0 0 60px rgb(0 0 0 / 25%);
-}
 
-.card.disable {
-}
-
-.card.disable .card-thumb {
-}
-
-.card .card-details {
-}
-
-.card .card-details p {
-  color: #bdbdbd;
-}
-
-.card p.card-title {
-  color: #fafafa;
-}
-
-.card .card-thumb {
-}
-
-.card .card-thumb img {
+  & p.card-title {
+    color: #fafafa;
+  }
 }
 
 .l-stat {
@@ -369,21 +350,21 @@ strong {
 }
 
 .table-header {
-  background: #404040 !important;
-  border-left: 1px solid #212121 !important;
-  border-right: 1px solid #212121 !important;
-  border-bottom: 1px solid #212121 !important;
+  background: #404040;
+  border-left: 1px solid #212121;
+  border-right: 1px solid #212121;
+  border-bottom: 1px solid #212121;
   text-shadow: 0 1px rgb(0 0 0 / 95%);
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   color: #dadada;
-  box-shadow: inset 0 1px 1px rgb(0 0 0 / 30%) !important;
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 30%);
 
   &:hover {
-    background-color: #404040 !important;
-    border-left: 1px solid #212121 !important;
-    border-right: 1px solid #212121 !important;
-    box-shadow: inset 0 1px 1px rgb(0 0 0 / 30%) !important;
+    background-color: #404040;
+    border-left: 1px solid #212121;
+    border-right: 1px solid #212121;
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 30%);
   }
 }
 
@@ -770,10 +751,6 @@ textarea:focus::placeholder {
 
 }
 
-.mail-infoblock-td {
-
-}
-
 .mail-infoblock {
   color: #fff;
   border: 1px solid #606060;
@@ -799,10 +776,10 @@ textarea:focus::placeholder {
 
 .mail-infoblock a {
   color: #52b9ff;
-}
 
-.mail-infoblock a:hover {
-  color: #ff3478;
+  &:hover {
+    color: #ff3478;
+  }
 }
 
 .additional-info {

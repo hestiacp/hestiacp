@@ -17,11 +17,11 @@
     <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
     <input type="hidden" name="ok_acc" value="add">
 
-    <div class="form-container">
+    <div class="form-container form-container-wide">
       <h1 class="form-title"><?=_('Adding Mail Account');?></h1>
       <?php show_alert_message($_SESSION);?>
-      <div style="display: flex; justify-content: space-between;">
-        <div class="u-max-width400 u-width-full">
+      <div class="sidebar-container">
+        <div>
           <div class="u-mb10">
             <label for="v_domain" class="form-label"><?=_('Domain');?></label>
             <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
@@ -93,7 +93,7 @@
               <input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
             </div>
           </div>
-          <div class="u-mt15">
+          <div class="u-mt15 u-mb20">
             <label for="v_send_email" class="form-label">
               <?=_('Send login credentials to email address') ?>
             </label>

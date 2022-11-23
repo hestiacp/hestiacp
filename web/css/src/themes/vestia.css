@@ -19,11 +19,11 @@ strong {
 }
 
 .table-header {
-  box-shadow: none !important;
-  background: #fafafa !important;
-  line-height: 1.2rem !important;
-  border-bottom-left-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
+  box-shadow: none;
+  background: #fafafa;
+  line-height: 1.2rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .l-header {
@@ -34,10 +34,6 @@ strong {
 
 .l-menu__item--active {
   background-color: #fff;
-}
-
-.l-menu__item a {
-  line-height: 38px !important;
 }
 
 .l-menu__item a:hover {
@@ -99,10 +95,6 @@ strong {
 
 .l-stat__col--active a {
   border-bottom: 4px solid #ff6701;
-}
-
-.l-menu .fas {
-  display: none !important;
 }
 
 /* Buttons
@@ -491,7 +483,7 @@ a#btn-back:focus {
 }
 
 .helper-container {
-  margin-top: 194px;
+  margin-top: 197px;
   border-radius: 0;
   box-shadow: none;
 }

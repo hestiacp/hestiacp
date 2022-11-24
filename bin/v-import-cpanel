@@ -5,7 +5,15 @@
 
 # Based on sk-import-cpanel-backup-to-hestiacp
 # Credits: Maks Usmanov (skamasle) and contributors:
-# Thanks to https://github.com/Skamasle/sk-import-cpanel-backup-to-hestiacp/graphs/contributors
+# Thanks to https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors
+
+# Known issue
+
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
 
 if [ $# -lt 1 ]; then
     echo "usage: bash $0 cpanel-backup.tar.gz"
@@ -13,13 +21,7 @@ if [ $# -lt 1 ]; then
     echo "usage: bash $0 cpanel-backup.tar.gz MX"
     exit 1
 fi
-if [[ $PATH != *"/usr/local/hestia/bin"* ]]; then
-    HESTIA=/usr/local/hestia
-    export HESTIA
 
-    PATH=$PATH:/usr/local/hestia/bin
-    export PATH
-fi
 if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ] ; then
 	echo "#######################################"
 	echo "rsync not installed, try install it"
@@ -32,105 +34,80 @@ if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ] ; then
 	fi
 	exit 3
 fi
+# Default settings
 # Put this to 0 if you want use bash -x to debug it
-sk_debug=1
-sk_hestia_package=default
-#
-# Only for gen_password but I dont like it, a lot of lt
-# maybe will use it for other functions :)
-source /usr/local/hestia/func/main.sh
-sk_file=$1
-sk_tmp=sk_tmp
-# I see than this is stupid, not know why is here.
-sk_file_name=$(ls $sk_file)
+debug=1
+# Pacakge to be used by default "default"
+hestia_package=default
+
+if [ -f "$1" ]; then
+	cpanel_backup="$1"
+fi
+if [ -z "$BACKUP_TEMP" ]; then
+	BACKUP_TEMP=$BACKUP
+else
+	echo "File does not exists";
+	exit 1;
+fi
+
+# Creating temporary directory
+tmpdir=$(mktemp -p "$BACKUP_TEMP" -d)
+
 tput setaf 2
 echo "Checking provided file..."
 tput sgr0
-if file $sk_file |grep -q -c "gzip compressed data," ; then
-	tput setaf 2
-	echo "OK - Gziped File"
-	tput sgr0
-	if [ ! -d /root/${sk_tmp} ]; then
-		echo "Creating tmp.."
-		mkdir /root/${sk_tmp}
-	fi
-	echo "Extracting backup..."
-	if [ "$sk_debug" != 0 ]; then
-		tar xzvf $sk_file -C /root/${sk_tmp} 2>&1 |
-     		   while read sk_extracted_file; do
-       				ex=$((ex+1))
-       				echo -en "wait... $ex files extracted\r"
-       		   done
-		else
-			tar xzf $sk_file -C /root/${sk_tmp}
-	fi
-		if [ $? -eq 0 ];then
-			tput setaf 2
-			echo "Backup extracted without errors..."
-			tput sgr0
-		else
-			echo "Error on backup extraction, check your file, try extract it manually"
-			echo "Remove tmp"
-			rm -rf "/root/${sk_tmp}"
-			exit 1
-		fi
-	else
+if ! file "$cpanel_backup" |grep -q -c "gzip compressed data," ; then
 	echo "Error 3 not-gzip - no stantard cpanel backup provided of file not installed ( Try yum install file, or apt-get install file )"
-	rm -rf "/root/${sk_tmp}"
+	rm -rf "$tmpdir"
 	exit 3
 fi
-cd /root/${sk_tmp}/*
-sk_importer_in=$(pwd)
-echo "Access tmp directory $sk_importer_in"
-echo "Get prefix..."
-sk_dead_prefix=$(cat meta/dbprefix)
-if [ $sk_dead_prefix = 1 ]; then
-	echo "Error 255 - I dont like your prefix, I dont want do this job"
-	exit 255
-else
-	echo "I like your prefix, start working"
-fi
-main_domain1=$(grep main_domain userdata/main |cut -d " " -f2)
-if [ "$(ls -A mysql)" ]; then
-	sk_cp_user=$(ls mysql |grep sql | grep -v roundcube.sql |head -n1 |cut -d "_" -f1)
-	if [ -z "$sk_cp_user" ]; then
-		 	sk_cp_user=$(grep "user:" userdata/${main_domain1} | cut -d " " -f2)
-	fi
-	echo "$sk_cp_user" > sk_db_prefix
+
+tput setaf 2
+echo "OK - Gziped File"
+tput sgr0
+echo "Extracting backup..."
+if tar xzf "$cpanel_backup" -C "$tmpdir" ;then
 	tput setaf 2
-	echo "Get user: $sk_cp_user"
+	echo "Backup extracted without errors..."
 	tput sgr0
-	sk_restore_dbs=0
 else
-	sk_restore_dbs=1
-# get real cPanel user if no databases exist
-	sk_cp_user=$(grep "user:" userdata/${main_domain1} | cut -d " " -f2)
-fi
-# So get real user, may be we need it after -- oh yes, not remember where but this save my day march 19 2017 on 0.5
-sk_real_cp_user=$(grep "user:" userdata/${main_domain1} | cut -d " " -f2)
-if /usr/local/hestia/bin/v-list-users | grep -q -w $sk_cp_user ;then
-	echo "User alredy exist on your server, maybe on hestiacp or in your /etc/passwd"
-	echo "**"
-	echo "Grep your /etc/passwd"
-	grep -q -w $sk_cp_user /etc/passwd
-	echo "**"
-	echo "Stop Working, clening..."
-	rm -rf /root/${sk_tmp}
-	exit 21
-else
-	echo "Generate random password for $sk_cp_user and create Hestiacp Account ..."
-	sk_password=$(generate_password)
-	/usr/local/hestia/bin/v-add-user $sk_cp_user $sk_password administrator@${main_domain1} $sk_hestia_package $sk_cp_user $sk_cp_user
-	if [ $? != 0 ]; then
-		tput setaf 2
-		echo "Stop Working... Cant create user...if is fresh install of hestiacp try reboot or reopen session check bugs"
-		tput sgr0
-		rm -rf "/root/${sk_tmp}"
-		exit 4
-		fi
+	echo "Error on backup extraction, check your file, try extract it manually"
+	echo "Remove tmp"
+	rm -rf "$tmpdir"
+	exit 1
 fi
 
-### Start with Databases
+cd $tmpdir/*;
+
+echo "Get prefix..."
+user_prefix=$(cat meta/dbprefix)
+
+sk_importer_in=$(pwd)
+echo "Access tmp directory $sk_importer_in"
+dbprefix=$(cat meta/dbprefix)
+if [ $dbprefix = 1 ]; then
+	echo "Error 255 - I dont like your prefix, I dont want do this job"
+	exit 255
+fi
+main_domain1=$(grep main_domain userdata/main |cut -d " " -f2)
+new_user=$(grep "user:" userdata/${main_domain1} | cut -d " " -f2)
+echo "Get User: $new_user"
+	check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$new_user$" )
+if [ -n "$check_sysuser" ] || [ -e "$HESTIA/data/users/$new_user" ]; then
+	check_result "$E_EXISTS" "user $user exists"
+	echo "User allready exists";
+	exit 2;
+fi
+
+# Create a new user
+tmp_passwd=$(generate_password)
+email=$(cat ./cp/$new_user | grep  CONTACTEMAIL= | cut -f2 -d'=');
+$BIN/v-add-user "$new_user" "$tmp_passwd" "$email" "$hestia_package"
+# Restore user password
+update_user_value "$new_user" 'MD5' "$(cat shadow)"
+$BIN/v-rebuild-user "$new_user"
+
+# Restore databases
 mysql -e "SET GLOBAL max_allowed_packet=1073741824;"
 tput setaf 2
 echo "Start with Databases"
@@ -138,26 +115,35 @@ tput sgr0
 sed -i 's/\\//g' mysql.sql
 sed -i "s/\`/'/g" mysql.sql
 
+grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
+# User and database
+grep "GRANT" mysql.sql |grep -v "USAGE ON"  > u_db
+cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq  > uni_u_db
+
 ## User / Password
 grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
 # User and database
 grep "GRANT" mysql.sql |grep -v "USAGE ON"  > u_db
 cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq  > uni_u_db
-sed -i "s/$sk_dead_prefix //g" user_password_db
+sed -i "s/$user_prefix //g" user_password_db
 # Get database list
-sk_db_list=$(grep -m 1 Database: mysql/*.create | awk '{ print  $5 }')
+db_list=$(grep -m 1 Database: mysql/*.create | awk '{ print  $5 }')
 mysql -e "SHOW DATABASES" > server_dbs
-for sk_dbr in $sk_db_list
+for db in $db_list
 	do
-		grep -w $sk_dbr server_dbs
+		grep -w db server_dbs
 		if [ $? == "1" ]; then
-			echo " Create and restore ${sk_dbr} "
-			mysql < mysql/${sk_dbr}.create
-			mysql ${sk_dbr} < mysql/${sk_dbr}.sql
+			echo " Create and restore ${db} "
+			mysql < mysql/${db}.create
+			sed -i "s/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g" mysql/${db}.sql
+			mysql ${db} < mysql/${db}.sql
 		else
-			echo "Error: Cant restore database $sk_dbr alredy exists in mysql server"
+			echo "Error: Cant restore database $db alredy exists in mysql server"
 		fi
 done
+
+time=$(echo "$time_n_date" |cut -f 1 -d \ )
+date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 cat uni_u_db | while read db userdb
 do
@@ -167,85 +153,96 @@ do
 # if you use default user in your config files to connect with database
 # you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
 # this will cause database duplication in db.conf and will interfer with hestiacp backups
-			if [ "$userdb" == "$user" ] && [ "$userdb" != "$sk_cp_user" ] && [ "$userdb" != "$sk_real_cp_user" ] ; then
-				echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$TIME' DATE='$DATE'" >> /usr/local/hestia/data/users/${sk_cp_user}/db.conf
+			if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ] && [ "$userdb" != "$sk_real_cp_user" ] ; then
+				echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$new_user/db.conf
 			fi
 		done
 done
 
 # Leave hestia restore passwords and create users
 tput setaf 2
-echo "Rebuild databases files for $sk_cp_user"
+echo "Rebuild databases files for $new_user"
 tput sgr0
-/usr/local/hestia/bin/v-rebuild-databases $sk_cp_user
-
+$BIN/v-rebuild-databases $new_user
 ## end mysql
 
-skaddons=$(cat addons |cut -d "=" -f1)
+addon_domains=$(cat addons |cut -d "=" -f1)
 sed -i 's/_/./g; s/=/ /g' addons
 echo "Converting addons domains, subdomains and some other fun"
-cp sds sk_sds
-cp sds2 sk_sds2
-sed -i 's/_/./g' sk_sds
-sed -i 's/public_html/public@html/g; s/_/./g; s/public@html/public_html/g; s/=/ /g; s/$sk_default_sub/@/g' sk_sds2
-cat addons | while read sk_addon_domain sk_addon_sub
-do
-	echo "Converting default subdomain: $sk_addon_sub in domain: $sk_addon_domain"
-	sed -i -e "s/$sk_addon_sub/$sk_addon_domain/g" sk_sds
-	sed -i -e "s/$sk_addon_sub/$sk_addon_domain/g" sk_sds2
-	mv userdata/$sk_addon_sub userdata/${sk_addon_domain}
-done
+cp sds hst_sds
+cp sds2 hst_sds2
+sed -i 's/_/./g' hst_sds
+sed -i 's/public_html/public@html/g; s/_/./g; s/public@html/public_html/g; s/=/ /g' hst_sds2
 
 tput setaf 2
 echo "Start restoring domains"
 tput sgr0
 function get_domain_path() {
-		while read sk_domain path
-	do
-		if [ -e userdata/${sk_domain} ];then
-			/usr/local/hestia/bin/v-add-domain $sk_cp_user $sk_domain
-			echo "Restoring $sk_domain..."
-			rm -f /home/${sk_cp_user}/web/${sk_domain}/public_html/index.html
-			if [ "$sk_debug" != 0 ]; then
-				rsync -av homedir/${path}/ /home/${sk_cp_user}/web/${sk_domain}/public_html 2>&1 |
-    			while read sk_file_dm; do
-       			 	sk_sync=$((sk_sync+1))
-       			 	echo -en "-- $sk_sync restored files\r"
-				done
-			echo " "
-			else
-				rsync homedir/${path}/ /home/${sk_cp_user}/web/${sk_domain}/public_html
-			fi
-			chown $sk_cp_user:$sk_cp_user -R /home/${sk_cp_user}/web/${sk_domain}/public_html
-			chmod 751 /home/${sk_cp_user}/web/${sk_domain}/public_html
-			echo "$sk_domain" >> exclude_path
+	while read cp_domain path; do
+		echo "Import $cp_domain";
+		if [ -e userdata/$cp_domain ]; then
+			$BIN/v-add-domain "$new_user" "$cp_domain"
+			rm -f /home/$new_user/web/$cp_domain/public_html/index.html
+			rm -f /home/$new_user/web/$cp_domain/public_html/robots.txt
+			sync_count=0
+			rsync -av homedir/$path/ /home/$new_user/web/$cp_domain/public_html 2>&1 |
+			while read file_dm; do
+					sync_count=$(($sync_count+1))
+					echo -en "-- $sync_count restored files\r"
+			done
+			chown $new_user:$new_user -R /home/$new_user/web/$cp_domain/public_html
+			chmod 751 /home/$new_user/web/$cp_domain/public_html
 		fi
-done
-
+	done
 }
-get_domain_path < sk_sds2
+get_domain_path < hst_sds2
 
-/usr/local/hestia/bin/v-add-domain $sk_cp_user $main_domain1
+/usr/local/hestia/bin/v-add-domain $new_user $main_domain1
 # need it for restore main domain
 if [ ! -e exclude_path ];then
 	touch exclude_path
 fi
 echo "Restore main domain: $main_domain1"
-rm -f /home/${sk_cp_user}/web/${main_domain1}/public_html/index.html
-if [ "$sk_debug" != 0 ]; then
-	rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/${sk_cp_user}/web/${main_domain1}/public_html 2>&1 |
-    		while read sk_file_dm; do
-       			 sk_sync=$((sk_sync+1))
-       			 echo -en "-- $sk_sync restored files\r"
-			done
-		echo " "
-else
-	rsync --exclude-from='exclude_path' homedir/public_html/ /home/${sk_cp_user}/web/${main_domain1}/public_html 2>&1
-fi
-chown $sk_cp_user:$sk_cp_user -R /home/${sk_cp_user}/web/${main_domain1}/public_html
-chmod 751 /home/${sk_cp_user}/web/${main_domain1}/public_html
-rm -f sk_sds2 sk_sds
+rm -f /home/$new_user/web/$main_domain1/public_html/index.html
+rm -f /home/$new_user/web/$main_domain1/public_html/robots.txt
 
+rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/$new_user/web/$main_domain1/public_html 2>&1 |
+	while read file_dm; do
+		sync_count=$(($sync_count+1))
+		echo -en "-- $sync_count restored files\r"
+	done
+
+
+chown $new_user:$new_user -R /home/$new_user/web/$main_domain1/public_html
+chmod 751 /home/$new_user/web/$main_domain1/public_html
+
+##################
+# mail
+tput setaf 2
+echo "Start Restoring Mails"
+tput sgr0
+cd homedir/mail;
+
+for folder in * ; do
+	if [ -d "$folder" ]; then
+		if [[ "$folder" != "cur"  && "$folder" != "new" && "$folder" != "tmp" ]]; then
+			echo "Domain: $folder"
+
+			for mail_account in $folder/*; do
+				echo "Import mail account: $mail_account@#$folder"
+				# Doesn't really matter but we don't know the unhashed one
+				tmp_pass=$(generate_password)
+				$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
+				mv $folder/$mail_account /home/$new_user/mail/$folder/
+				chown $new_user:mail /home/$new_user/mail/$folder/
+				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
+
+				pass=$(grep "^$mail_account:" ../etc/${folder}/shadow | awk -F  ":" '{print $2}')
+			done
+		fi
+	fi
+done
+exit;
 ##################
 # mail
 tput setaf 2

@@ -15,7 +15,7 @@
       <a href="<?=htmlspecialchars($home_url)?>" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
 
       <!-- Left Menu -->
-      <div class="l-menu u-noselect">
+      <div class="l-menu">
         <!-- Records tab -->
         <div class="l-menu__item <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-list-check panel-icon"></i><?=_('Records');?></a></div>
 
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Right Menu -->
-    <div class="l-profile u-noselect">
+    <div class="l-profile">
       <!-- Logged in as / Usage Statistics Overview -->
       <div class="usage-pill">
         <?php
@@ -59,6 +59,7 @@
           <a title="<?=_('Notifications');?>" class="l-profile__notifications <?php if ($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>">
             <i class="fas fa-bell <?php if ($panel[$user]['NOTIFICATIONS'] == 'yes') echo " animate__animated animate__swing status-icon orange"; ?>"></i>
           </a>
+          <ul class="notification-container u-hidden animate__animated animate__fadeIn"></ul>
         </div>
       <?php } ?>
 
@@ -93,8 +94,6 @@
     </div>
   </div>
 </header>
-
-<ul class="notification-container u-hidden animate__animated animate__fadeIn"></ul>
 
 <div class="l-content">
   <div class="l-center">

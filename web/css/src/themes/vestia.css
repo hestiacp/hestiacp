@@ -36,7 +36,7 @@ strong {
   background-color: #fff;
 }
 
-.l-menu__item a:hover {
+.l-menu__item > a:hover {
   background: #f79b44 !important;
   box-shadow: none !important;
   padding: 12px 10px !important;
@@ -47,7 +47,7 @@ strong {
   text-shadow: none !important;
 }
 
-.l-menu__item a:active {
+.l-menu__item > a:active {
   background: none;
   box-shadow: none !important;
   text-shadow: none !important;

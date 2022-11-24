@@ -4,8 +4,8 @@ var VE = { // Hestia Events object
     navigation: {
         state: {
             active_menu: 1,
-            menu_selector: '.l-stat__col',
-            menu_active_selector: '.l-stat__col--active'
+            menu_selector: '.main-menu-item',
+            menu_active_selector: '.active'
         }
     }, // menu and element navigation functions
     notifications: {},
@@ -254,11 +254,6 @@ VE.navigation.move_focus_left = function(){
 
     if($('.units').hasClass('active')){
         $('.units').removeClass('active');
-        if(VE.navigation.state.active_menu == 0){
-            $('.l-menu').addClass('active');
-        } else {
-            $('.l-stat').addClass('active');
-        }
         index++;
     }
 
@@ -280,11 +275,6 @@ VE.navigation.move_focus_right = function(){
 
     if($('.units').hasClass('active')){
         $('.units').removeClass('active');
-        if(VE.navigation.state.active_menu == 0){
-            $('.l-menu').addClass('active');
-        } else {
-            $('.l-stat').addClass('active');
-        }
         index--;
     }
 
@@ -299,9 +289,8 @@ VE.navigation.move_focus_down = function(){
     var max_index = $('.units .l-unit:not(.header)').length-1;
     var index = parseInt($('.units .l-unit').index($('.units .l-unit.focus')));
 
-    if($('.l-menu').hasClass('active') || $('.l-stat').hasClass('active')){
+    if($('.l-menu').hasClass('active')){
         $('.l-menu').removeClass('active');
-        $('.l-stat').removeClass('active');
         $('.units').addClass('active');
         index--;
 
@@ -325,9 +314,8 @@ VE.navigation.move_focus_up = function(){
     if(index == -1)
         index = 0;
 
-    if($('.l-menu').hasClass('active') || $('.l-stat').hasClass('active')){
+    if($('.l-menu').hasClass('active')){
         $('.l-menu').removeClass('active');
-        $('.l-stat').removeClass('active');
         $('.units').addClass('active');
         index++;
     }
@@ -347,10 +335,9 @@ VE.navigation.switch_menu = function(position){
 
     if(VE.navigation.state.active_menu == 0){
         VE.navigation.state.active_menu = 1;
-        VE.navigation.state.menu_selector = '.l-stat__col';
-        VE.navigation.state.menu_active_selector = '.l-stat__col--active';
+        VE.navigation.state.menu_selector = '.main-menu-item';
+        VE.navigation.state.menu_active_selector = '.active';
         $('.l-menu').removeClass('active');
-        $('.l-stat').addClass('active');
 
         if(position == 'first'){
             $($(VE.navigation.state.menu_selector)[0]).addClass('focus');
@@ -363,7 +350,6 @@ VE.navigation.switch_menu = function(position){
         VE.navigation.state.menu_selector = '.l-menu__item';
         VE.navigation.state.menu_active_selector = '.l-menu__item--active';
         $('.l-menu').addClass('active');
-        $('.l-stat').removeClass('active');
 
         if(position == 'first'){
             $($(VE.navigation.state.menu_selector)[0]).addClass('focus');
@@ -443,9 +429,6 @@ VE.navigation.init = function(){
         VE.navigation.state.menu_selector = '.l-menu__item';
         VE.navigation.state.menu_active_selector = '.l-menu__item--active';
         $('.l-menu').addClass('active');
-        $('.l-stat').removeClass('active');
-    } else {
-        $('.l-stat').addClass('active');
     }
 }
 

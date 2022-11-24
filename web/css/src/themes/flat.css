@@ -4,8 +4,9 @@
     Website:     www.hestiacp.com
 */
 
-body {
-  letter-spacing: 0;
+:root {
+  --alert-box-shadow: none;
+  --alert-text-shadow: none;
 }
 
 b,
@@ -148,11 +149,6 @@ strong {
 
 .ui-dialog {
   box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
-}
-
-.alert {
-  text-shadow: none;
-  box-shadow: none;
 }
 
 .usage-pill {

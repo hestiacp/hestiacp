@@ -1945,7 +1945,7 @@ fi
 
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain admin $servername
+$HESTIA/bin/v-add-web-domain admin $servername $ip
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs

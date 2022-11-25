@@ -4,9 +4,12 @@
     Website:     www.hestiacp.com
 */
 
+@custom-media --viewport-medium (min-width: 768px);
+
 :root {
   --color-text: #cdcdcd;
   --color-background: #282828;
+  --alert-border-color: #212121;
 }
 
 b,
@@ -139,9 +142,8 @@ strong {
   color: #0079cb;
 }
 
-.alert {
-  border-color: #212121;
-}
+/* Alerts
+   ========================================================================== */
 
 .alert-danger {
   background-color: #d13535;
@@ -150,6 +152,9 @@ strong {
     color: #d13535;
   }
 }
+
+/* Cards
+   ========================================================================== */
 
 .card {
   background: #454545;
@@ -165,66 +170,46 @@ strong {
   }
 }
 
-.l-stat {
-  background-color: #282828;
+/* Main menu
+   ========================================================================== */
+
+.main-menu-item-link {
+  &:hover {
+    & .main-menu-item-label {
+      color: #d7d7d7;
+    }
+  }
+
+  &.active {
+    & .main-menu-item-label {
+      color: #c36;
+
+      & .fas {
+        color: #d7d7d7;
+      }
+    }
+  }
+
+  @media (--viewport-medium) {
+    border-bottom-color: #282828;
+
+    &:hover {
+      border-bottom-color: #d7d7d7;
+    }
+
+    &.active {
+      border-bottom-color: #c36;
+    }
+  }
 }
 
-.l-stat__col {
-}
-
-.l-stat__col li {
-  color: #b7b7b7 !important;
-}
-
-.l-stat__col a {
-  border-bottom: 4px solid #282828;
-  background-color: #282828;
-}
-
-.l-stat__col a:hover {
-  border-bottom: 4px solid #d7d7d7;
-}
-
-.l-stat__col a:active,
-.l-stat__col a:focus {
-  border-bottom: 4px solid #d11755;
-}
-
-.l-stat__col--active a {
-  border-bottom: 4px solid #e93b76;
-}
-
-.l-stat.active .l-stat__col.focus a {
-  border-bottom: 4px solid #e93b76;
-}
-
-.l-stat.active .l-stat__col.focus a .l-stat__col-title {
-}
-
-.l-stat__col a:hover .l-stat__col-title {
-  color: #d7d7d7;
-}
-
-.l-stat__col a:active .l-stat__col-title {
-}
-
-.l-stat__col-title {
+.main-menu-item-label {
   font-weight: 500;
   color: #bcbcbc;
-  text-shadow: 0 1px rgb(0 0 0 / 40%);
-}
 
-.l-stat__col--active .l-stat__col-title {
-  color: #ff558f;
-}
-
-.l-stat__col .fas {
-  color: #707070;
-  padding: 4px;
-}
-
-.l-stat__col--active .fas {
-  color: #aaa;
+  & .fas {
+    color: #707070;
+  }
 }
 
 .l-separator {

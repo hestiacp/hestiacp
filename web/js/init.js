@@ -214,7 +214,7 @@ $(document).ready(function(){
               });
 
               shortcut.add("1", function(){
-                var target = $('.l-stat .l-stat__col:nth-of-type(1) a')
+                var target = $('.main-menu .main-menu-item:nth-of-type(1) a')
                 if(target.length != 1){
                   return;
                 }
@@ -232,7 +232,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("2", function(){
-                var target = $('.l-stat .l-stat__col:nth-of-type(2) a')
+                var target = $('.main-menu .main-menu-item:nth-of-type(2) a')
                 if(target.length != 1){
                   return;
                 }
@@ -250,7 +250,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("3", function(){
-                var target = $('.l-stat .l-stat__col:nth-of-type(3) a')
+                var target = $('.main-menu .main-menu-item:nth-of-type(3) a')
                 if(target.length != 1){
                   return;
                 }
@@ -268,7 +268,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("4", function(){
-                var target = $('.l-stat .l-stat__col:nth-of-type(4) a')
+                var target = $('.main-menu .main-menu-item:nth-of-type(4) a')
                 if(target.length != 1){
                   return;
                 }
@@ -286,7 +286,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("5", function(){
-                var target = $('.l-stat .l-stat__col:nth-of-type(5) a')
+                var target = $('.main-menu .main-menu-item:nth-of-type(5) a')
                 if(target.length != 1){
                   return;
                 }
@@ -304,7 +304,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("6", function(){
-                var target = $('.l-stat .l-stat__col:nth-of-type(6) a')
+                var target = $('.main-menu .main-menu-item:nth-of-type(6) a')
                 if(target.length != 1){
                   return;
                 }
@@ -322,7 +322,7 @@ $(document).ready(function(){
               );
 
               shortcut.add("7", function(){
-                var target = $('.l-stat .l-stat__col:nth-of-type(7) a')
+                var target = $('.main-menu .main-menu-item:nth-of-type(7) a')
                 if(target.length != 1){
                   return;
                 }

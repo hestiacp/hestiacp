@@ -4,13 +4,13 @@
     Website:     www.hestiacp.com
 */
 
+@custom-media --viewport-medium (min-width: 768px);
+
 :root {
   --animate-duration: 0s;
   --font-family: "Arial", system-ui;
-}
-
-body {
-  letter-spacing: 0;
+  --alert-box-shadow: none;
+  --alert-text-shadow: none;
 }
 
 b,
@@ -77,24 +77,6 @@ strong {
 .l-unit:hover,
 .units .l-unit:hover {
   box-shadow: none;
-}
-
-.l-stat__col--active .fas,
-.l-stat__col--active .l-stat__col-title {
-  color: #ff6701;
-}
-
-.l-stat__col--active .l-stat__col-title {
-  font-size: 20px !important;
-}
-
-.l-stat__col-title {
-  font-weight: 700;
-  font-size: 14px !important;
-}
-
-.l-stat__col--active a {
-  border-bottom: 4px solid #ff6701;
 }
 
 /* Buttons
@@ -174,11 +156,6 @@ strong {
   box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
 }
 
-.alert {
-  text-shadow: none;
-  box-shadow: none;
-}
-
 .notification-container {
   border: 1px solid #ccc;
   background: #fff;
@@ -219,27 +196,47 @@ strong {
   }
 }
 
+/* Main menu
+   ========================================================================== */
+
+.main-menu-item-link {
+  &:hover {
+    & .main-menu-item-label {
+      color: #ff791f;
+    }
+  }
+
+  &.active {
+    & .main-menu-item-label {
+      color: #ff791f;
+    }
+  }
+
+  & .fas {
+    display: none;
+  }
+
+  @media (--viewport-medium) {
+    text-align: left;
+
+    &:hover {
+      border-bottom-color: #ff791f;
+    }
+
+    &.active {
+      border-bottom-color: #ff791f;
+    }
+  }
+}
+
+.main-menu-item-label {
+  font-size: 14px;
+}
+
 .l-menu__item.l-menu__item--active a {
   color: #ff6701;
   background: none;
   box-shadow: none !important;
-}
-
-.l-stat__col a:hover {
-  border-bottom: 4px solid #ff791f;
-}
-
-.l-stat__col a:hover,
-.l-stat__col a:hover .l-stat__col-title {
-  color: #ff791f;
-}
-
-.l-stat__col a:active {
-  border-bottom: 4px solid #f16100;
-}
-
-.l-stat__col a:active .l-stat__col a:active.l-stat__col-title {
-  color: #ff791f;
 }
 
 .notification-container .unseen .notification-title a,
@@ -266,10 +263,6 @@ strong {
 .form-control:hover,
 .form-select:hover {
   border-color: #e95e00;
-}
-
-.l-stat {
-  text-align: left;
 }
 
 .form-title {
@@ -396,15 +389,6 @@ strong {
 
 .badge.gray {
   border: 1px solid rgb(255 255 255 / 40%) !important;
-}
-
-.lang-el .l-stat__col-title,
-.lang-fr .l-stat__col-title {
-  font-size: 15px !important;
-}
-
-.l-stat__col .fas {
-  display: none !important;
 }
 
 a#btn-back {

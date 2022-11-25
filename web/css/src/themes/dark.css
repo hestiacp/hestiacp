@@ -36,7 +36,7 @@ strong {
   background: linear-gradient(to bottom, rgb(255 255 255 / 15%) 0%, rgb(255 255 255 / 15%) 30%, rgb(255 255 255 / 15%) 95%) !important;
 }
 
-.l-menu__item a {
+.l-menu__item > a {
   color: #e7e7e7;
 
   &:hover {
@@ -51,18 +51,6 @@ strong {
     color: #fff !important;
     text-shadow: 0 -1px 1px rgb(0 0 0 / 50%) !important;
   }
-}
-
-.lang-ar .l-menu__item a {
-  padding: 11px;
-}
-
-.lang-de .l-menu__item a {
-  padding: 11px 12px;
-}
-
-.lang-tw .l-menu__item a {
-  padding: 13px 18px;
 }
 
 .l-profile__logout {

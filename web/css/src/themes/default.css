@@ -66,11 +66,10 @@
   background: linear-gradient(to bottom, rgb(104 145 196 / 100%) 0%, rgb(69 114 181 / 100%) 50%, rgb(65 90 149 / 100%) 100%);
   background-color: #5070a6;
   position: fixed;
-  size: 100% 39px;
+  size: 100% 40px;
   z-index: 900;
   top: 0;
   font-size: 0.8rem;
-  text-shadow: 1px 1px rgb(0 0 0 / 25%);
   box-shadow: 0 4px 10px rgb(100 100 100 / 40%);
   border-bottom: 1px solid #fff;
 }
@@ -108,14 +107,16 @@
 .l-menu__item {
   display: flex;
   align-self: stretch;
-  font-weight: 600;
+  position: relative;
 }
 
-.l-menu__item a {
+.l-menu__item > a {
   color: #f7f7f7;
   display: flex;
   align-items: center;
   position: relative;
+  font-weight: 600;
+  text-shadow: 1px 1px rgb(0 0 0 / 25%);
   padding-left: 10px;
   padding-right: 10px;
   border-left: 1px solid transparent;
@@ -164,7 +165,6 @@
 .l-profile {
   display: flex;
   align-items: center;
-  overflow: hidden;
 }
 
 .l-profile__username,
@@ -208,11 +208,11 @@
 .notification-container {
   background-color: rgb(255 255 255 / 95%);
   box-shadow: 0 3px 20px 0 rgb(0 0 0 / 40%);
-  margin: 0 18px;
-  max-height: 90%;
+  max-height: 500px;
   overflow-y: auto;
-  position: fixed;
-  top: 34px;
+  position: absolute;
+  top: 100%;
+  right: 0;
   width: 390px;
   z-index: 300;
   font-size: 0.8rem;
@@ -566,7 +566,7 @@
   display: flex;
   position: sticky;
   z-index: 2;
-  top: 38px;
+  top: 39px;
   height: 45px;
   justify-content: center;
   background-color: #fff;
@@ -2243,7 +2243,7 @@ body.mobile .l-unit-toolbar__col--right {
 }
 
 .l-content {
-  padding-top: 39px;
+  padding-top: 40px;
 }
 
 .l-content.collapsed .l-sort {

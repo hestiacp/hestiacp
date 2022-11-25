@@ -34,12 +34,12 @@ strong {
   box-shadow: none !important;
 }
 
-.l-menu__item a:hover {
+.l-menu__item > a:hover {
   background: #fff !important;
   box-shadow: none;
 }
 
-.l-menu__item a:active {
+.l-menu__item > a:active {
   background: none;
   box-shadow: none !important;
 }

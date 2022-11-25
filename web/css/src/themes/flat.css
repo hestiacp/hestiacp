@@ -14,42 +14,31 @@ strong {
   font-weight: 600;
 }
 
-.l-header {
+/* Top bar
+   ========================================================================== */
+
+.top-bar {
   box-shadow: none;
   background: #5070a6;
+}
+
+.top-bar-nav-link {
   text-shadow: none;
+
+  &:hover,
+  &:active {
+    background: #fff;
+    box-shadow: none;
+  }
+
+  &.active {
+    background: #fff;
+  }
 }
 
 .table-header {
   box-shadow: none;
   background: #fafafa;
-}
-
-.l-menu__item--active {
-  background-color: #fff;
-}
-
-.l-menu__item.l-menu__item--active a {
-  background: none;
-  box-shadow: none !important;
-}
-
-.l-menu__item > a:hover {
-  background: #fff !important;
-  box-shadow: none;
-}
-
-.l-menu__item > a:active {
-  background: none;
-  box-shadow: none !important;
-}
-
-.l-profile__notifications:hover,
-.l-profile__notifications.updates:hover,
-.l-profile__notifications.active.l-profile__notifications.updates:active {
-  background: white !important;
-  border: 1px solid transparent !important;
-  box-shadow: none !important;
 }
 
 .l-unit:hover {
@@ -113,46 +102,12 @@ strong {
   border-color: #f4301a;
 }
 
-.to-top,
-.to-shortcuts,
-.to-top:hover,
-.to-shortcuts:hover,
-.to-top:active,
-.to-shortcuts:active {
-  box-shadow: none;
-  background: none;
-  background-color: #eee;
-}
-
-.to-top,
-.to-shortcuts {
-  box-shadow: none;
-  background: linear-gradient(to bottom, rgb(250 250 250 / 100%) 0%, rgb(241 241 241 / 100%) 100%);
-}
-
-.to-top:hover,
-.to-shortcuts:hover {
-  color: #6986b7;
-  box-shadow: none;
-  background: linear-gradient(to bottom, rgb(241 248 253 / 100%) 0%, rgb(227 240 251 / 100%) 100%);
-}
-
-.to-top:focus,
-.to-shortcuts:focus {
-  box-shadow: none;
-  background: linear-gradient(to bottom, rgb(210 232 250 / 100%) 0%, rgb(194 224 248 / 100%) 100%);
-}
-
 .ui-dialog .ui-dialog-buttonpane button:nth-of-type(2) {
   box-shadow: none;
 }
 
 .ui-dialog {
   box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
-}
-
-.usage-pill {
-  box-shadow: none;
 }
 
 .badge {
@@ -162,7 +117,6 @@ strong {
 .notification-container {
   box-shadow: none;
   border: 1px solid #ccc;
-  background: #fff;
 }
 
 .context-menu.sort-order {

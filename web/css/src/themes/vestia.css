@@ -18,47 +18,44 @@ strong {
   font-weight: 600;
 }
 
+/* Top bar
+   ========================================================================== */
+
+.top-bar {
+  box-shadow: none;
+  background: #5d5d5d;
+}
+
+.top-bar-nav-link {
+  &:hover,
+  &:active {
+    color: #fff;
+    background: #f79b44;
+    box-shadow: none;
+    text-shadow: none;
+    transition: none;
+  }
+
+  &.active {
+    color: #ff6701;
+    background: #fff;
+  }
+}
+
+.top-bar-usage-inner {
+  color: #fff;
+  border: none;
+  background: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+
 .table-header {
   box-shadow: none;
   background: #fafafa;
   line-height: 1.2rem;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-}
-
-.l-header {
-  box-shadow: none;
-  background: #5d5d5d;
-  text-shadow: 0 1px 1px rgb(0 0 0 / 25%);
-}
-
-.l-menu__item--active {
-  background-color: #fff;
-}
-
-.l-menu__item > a:hover {
-  background: #f79b44 !important;
-  box-shadow: none !important;
-  padding: 12px 10px !important;
-  border-left: 1px solid #f79b44;
-  border-right: 1px solid #f79b44;
-  color: #fff !important;
-  transition: none !important;
-  text-shadow: none !important;
-}
-
-.l-menu__item > a:active {
-  background: none;
-  box-shadow: none !important;
-  text-shadow: none !important;
-}
-
-.l-profile__notifications:hover,
-.l-profile__notifications.updates:hover,
-.l-profile__notifications.active.l-profile__notifications.updates:active {
-  background: #f79b44 !important;
-  border: 1px solid transparent !important;
-  box-shadow: none !important;
 }
 
 .l-unit:hover {
@@ -148,6 +145,12 @@ strong {
   text-shadow: none;
 }
 
+.button-floating {
+  & .fas {
+    display: block;
+  }
+}
+
 .ui-dialog .ui-dialog-buttonpane button {
   box-shadow: none;
 }
@@ -158,7 +161,6 @@ strong {
 
 .notification-container {
   border: 1px solid #ccc;
-  background: #fff;
   border-bottom-left-radius: 2px !important;
   border-bottom-right-radius: 2px !important;
   box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%) !important;
@@ -179,21 +181,6 @@ strong {
 .form-select {
   box-shadow: none;
   border-radius: 0;
-}
-
-.usage-pill {
-  border-radius: 4px;
-  color: #fafafa;
-  line-height: 0.8em;
-  text-shadow: none;
-  padding: 5px;
-  border: none;
-  background: none;
-  box-shadow: none;
-
-  & b {
-    color: #fff;
-  }
 }
 
 /* Main menu
@@ -231,12 +218,6 @@ strong {
 
 .main-menu-item-label {
   font-size: 0.9rem;
-}
-
-.l-menu__item.l-menu__item--active a {
-  color: #ff6701;
-  background: none;
-  box-shadow: none !important;
 }
 
 .notification-container .unseen .notification-title a,
@@ -409,33 +390,6 @@ strong {
   border: 1px solid rgb(255 255 255 / 40%) !important;
 }
 
-.to-shortcuts,
-.to-top,
-.to-shortcuts:active,
-.to-top:active,
-.to-shortcuts:hover,
-.to-top:hover,
-.to-shortcuts:focus,
-.to-top:focus {
-  background: none;
-  background-color: none;
-  border: none;
-  text-shadow: none;
-  box-shadow: none;
-}
-
-.to-shortcuts:hover,
-.to-top:hover {
-  color: #94be00;
-}
-
-.to-shortcuts:focus,
-.to-top:focus,
-.to-shortcuts:active,
-.to-top:active {
-  color: #809c00;
-}
-
 .body-login,
 .body-reset {
   background: #ededed;
@@ -447,17 +401,9 @@ strong {
   border-radius: 0;
 }
 
-.l-logo {
-  height: 24px;
-}
-
 .mail-infoblock {
   border-radius: 0 !important;
   box-shadow: none !important;
-}
-
-.l-menu__item .fas.fa-circle-left {
-  display: inline-block !important;
 }
 
 .helper-container {

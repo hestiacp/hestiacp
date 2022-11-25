@@ -58,6 +58,10 @@ button {
   line-height: inherit;
 }
 
+img {
+  vertical-align: middle;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

@@ -14,12 +14,11 @@
         <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <span>
-          <b>
-            <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-            <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-          </b>
-        </span>
+        <?=_('sort by');?>:
+        <b>
+          <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+          <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+        </b>
       </div>
       <?php if ($read_only !== 'true') {?>
         <form action="/bulk/mail/" method="post" id="objects">
@@ -197,7 +196,7 @@
             </b>
           </div>
           <div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
-              <?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
+              <?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
           </div>
           <div class="clearfix l-unit__stat-col--left text-center compact-3">
             <i class="fas <?=$antivirus_icon;?>"></i>

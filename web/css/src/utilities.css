@@ -35,12 +35,18 @@
   text-align: center !important;
 }
 
-.text-small {
-  font-size: 0.85em !important;
+.u-text-small {
+  font-size: 0.75rem !important;
 }
 
-.text-italic {
+.u-text-italic {
   font-style: italic !important;
+}
+
+.u-truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
 .u-mt15 {

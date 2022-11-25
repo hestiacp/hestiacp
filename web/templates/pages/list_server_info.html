@@ -34,14 +34,14 @@
         <a href="/list/web/" class="l-logo" title="<?=_('Hestia Control Panel');?>"></a>
         <div class="l-menu">
           <div class="l-menu__item"><a href="/list/rrd/" title="<?=_('Back');?>" class="no-hide"><i class="fas fa-circle-left"></i></a></div>
-          <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><i class="fas fa-microchip panel-icon"></i><?=_('CPU');?></a></div>
-          <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><i class="fas fa-memory panel-icon"></i><?=_('RAM');?></a></div>
-          <div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk"><i class="fas fa-hard-drive panel-icon"></i><?=_('Disk');?></a></div>
-          <div class="l-menu__item <?php if(isset($_GET['net'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?net"><i class="fas fa-ethernet panel-icon"></i><?=_('Network');?></a></div>
-          <?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web"><i class="fas fa-earth-europe panel-icon"></i><?=_('Web');?></a></div><?php }?>
-          <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><i class="fas fa-book-atlas panel-icon"></i><?=_('DNS');?></a></div><?php }?>
-          <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-envelopes-bulk panel-icon"></i><?=_('Mail');?></a></div><?php }?>
-          <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database panel-icon"></i><?=_('DB');?></a></div><?php }?>
+          <div class="l-menu__item <?php if(isset($_GET['cpu'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?cpu"><i class="fas fa-microchip"></i><?=_('CPU');?></a></div>
+          <div class="l-menu__item <?php if(isset($_GET['mem'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mem"><i class="fas fa-memory"></i><?=_('RAM');?></a></div>
+          <div class="l-menu__item <?php if(isset($_GET['disk'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?disk"><i class="fas fa-hard-drive"></i><?=_('Disk');?></a></div>
+          <div class="l-menu__item <?php if(isset($_GET['net'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?net"><i class="fas fa-ethernet"></i><?=_('Network');?></a></div>
+          <?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['web'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?web"><i class="fas fa-earth-europe"></i><?=_('Web');?></a></div><?php }?>
+          <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['dns'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?dns"><i class="fas fa-book-atlas"></i><?=_('DNS');?></a></div><?php }?>
+          <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['mail'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?mail"><i class="fas fa-envelopes-bulk"></i><?=_('Mail');?></a></div><?php }?>
+          <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?><div class="l-menu__item <?php if(isset($_GET['db'])) echo 'l-menu__item--active' ?>"><a href="/list/server/?db"><i class="fas fa-database"></i><?=_('DB');?></a></div><?php }?>
         </div>
       </div>
       <div class="l-profile">

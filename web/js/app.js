@@ -968,13 +968,16 @@ String.prototype.trim = function()
 
 set_sticky_class = function() {
     var sort = $('.l-sort');
+    var tableHeader = $('.table-header');
     var sortOffset = sort.offset().top;
     var headerHeight = $('.l-header').outerHeight();
 
     if ($(window).scrollTop() > sortOffset - headerHeight) {
-        sort.addClass('is-active');
+        sort.addClass('active');
+        tableHeader.addClass('active');
     } else {
-        sort.removeClass('is-active');
+        sort.removeClass('active');
+        tableHeader.removeClass('active');
     }
 }
 
@@ -1003,7 +1006,7 @@ function elementHideShow(elementToHideOrShow,trigger){
     el.style.display = el.style.display === 'none' ? 'block' : 'none';
 
     if (typeof trigger !== 'undefined') {
-        trigger.querySelector('.section-toggle-icon').classList.toggle('fa-square-minus');
-        trigger.querySelector('.section-toggle-icon').classList.toggle('fa-square-plus');
+        trigger.querySelector('.js-section-toggle-icon').classList.toggle('fa-square-minus');
+        trigger.querySelector('.js-section-toggle-icon').classList.toggle('fa-square-plus');
     }
 }

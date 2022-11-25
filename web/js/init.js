@@ -1,3 +1,6 @@
+// Replace .no-js class with .js
+document.documentElement.className = document.documentElement.className.replace('no-js', 'js')
+
 $(document).ready(function(){
     if($('.body-login')[0]){
         $('input').first().focus();
@@ -122,7 +125,7 @@ $(document).ready(function(){
               VE.tmp.sort_as_int = $(this).parent('li').attr('sort_as_int');
               VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1;
 
-              $('.l-sort .sort-by span b').html($(this).parent('li').find('.name').html());
+              $('.l-sort .sort-by b').html($(this).parent('li').find('.name').html());
               $('.l-sort .sort-by i').removeClass('fa-arrow-up-a-z fa-arrow-down-a-z');
               $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('fa-arrow-up-a-z') : $('.l-sort .sort-by i').addClass('fa-arrow-down-a-z');
               $('.units .l-unit').sort(function (a, b) {
@@ -578,7 +581,8 @@ $(document).ready(function(){
                 $('#vstobjects .form-control:not([disabled]), #vstobjects .form-select:not([disabled])').first().focus();
               }
 
-              $('.l-profile__notifications').click(function(){
+              $('.l-profile__notifications').click(function(evt){
+                evt.preventDefault();
                 if(!$('.l-profile__notifications').hasClass('active')){
                   VE.notifications.get_list();
                   $('.l-profile__notifications').addClass('active');

@@ -11,7 +11,7 @@
         <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <span><b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b></span>
+        <?=_('sort by');?>: <b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b>
       </div>
       <div class="l-sort-toolbar__search-box">
         <form action="/search/" method="get">

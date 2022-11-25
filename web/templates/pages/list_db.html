@@ -40,12 +40,11 @@
         <li entity="sort-user"><span class="name"><?=_('Username');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <span>
-          <b>
-            <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-            <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-          </b>
-        </span>
+        <?=_('sort by');?>:
+        <b>
+          <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+          <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+        </b>
       </div>
       <?php if ($read_only !== 'true') {?>
         <form action="/bulk/db/" method="post" id="objects">
@@ -170,7 +169,7 @@
             </div>
           </div>
           <!-- END QUICK ACTION TOOLBAR AREA -->
-          <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+          <div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
           <div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TYPE']?></div>
           <div class="clearfix l-unit__stat-col--left text-center wide"><b><?=$data[$key]['DBUSER']?></b></div>
           <div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['HOST']?></b></div>

@@ -171,8 +171,8 @@ strong {
 .context-menu.sort-order {
   box-shadow: none;
   border: 1px solid #ccc;
-  font-size: 0.75rem !important;
-  background: #fff !important;
+  font-size: 0.75rem;
+  background: #fff;
 }
 
 .form-control,
@@ -230,7 +230,7 @@ strong {
 }
 
 .main-menu-item-label {
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .l-menu__item.l-menu__item--active a {
@@ -302,31 +302,53 @@ strong {
   color: #333;
 }
 
-.l-unit-toolbar__buttonstrip .button {
-  border-color: transparent;
-  color: #fff;
-  text-transform: uppercase;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
-  margin-right: 15px;
-  background: #a0c105;
-  background-color: #a0c105;
-}
+.l-unit-toolbar__buttonstrip {
+  & .button {
+    border-color: transparent;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
+    margin-right: 15px;
+    background: #a0c105;
+    background-color: #a0c105;
 
-.l-unit-toolbar__buttonstrip .button:hover {
-  border-color: transparent;
-  color: #fff;
-  background: #a9cc06;
-  background-color: #a9cc06;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
-}
+    &:hover {
+      border-color: transparent;
+      color: #fff;
+      background: #a9cc06;
+      background-color: #a9cc06;
+      text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+    }
+  }
 
-.l-unit-toolbar__buttonstrip .button-danger:hover {
-  color: #f4301a;
-  text-shadow: none;
-}
+  & .button-danger:hover {
+    color: #f4301a;
+    text-shadow: none;
+  }
 
-.l-sort-toolbar .sort-by {
-  font-size: 0.75rem !important;
+  & #btn-back {
+    color: #30659d;
+    background: none;
+    text-shadow: none;
+    text-transform: none;
+    font-size: 0.9rem;
+    border: none;
+
+    &:hover {
+      color: #367ac1;
+      background: none;
+      text-shadow: none;
+      text-transform: none;
+    }
+
+    &:active,
+    &:focus {
+      color: #ff6701;
+      background: none;
+      text-shadow: none;
+      text-transform: none;
+    }
+  }
 }
 
 .l-sort-toolbar .form-control {
@@ -372,10 +394,6 @@ strong {
   color: #b5da0b;
 }
 
-.l-sort-toolbar .sort-by b {
-  font-size: 0.75rem;
-}
-
 .context-menu.sort-order span.active {
   background: none !important;
   font-weight: bold !important;
@@ -389,30 +407,6 @@ strong {
 
 .badge.gray {
   border: 1px solid rgb(255 255 255 / 40%) !important;
-}
-
-a#btn-back {
-  color: #30659d !important;
-  background: none !important;
-  text-shadow: none !important;
-  text-transform: none !important;
-  font-size: 14px !important;
-  border: none !important;
-}
-
-a#btn-back:hover {
-  color: #367ac1 !important;
-  background: none !important;
-  text-shadow: none !important;
-  text-transform: none !important;
-}
-
-a#btn-back:active,
-a#btn-back:focus {
-  color: #ff6701 !important;
-  background: none !important;
-  text-shadow: none !important;
-  text-transform: none !important;
 }
 
 .to-shortcuts,
@@ -462,7 +456,7 @@ a#btn-back:focus {
   box-shadow: none !important;
 }
 
-.l-menu__item i.fas.fa-circle-left {
+.l-menu__item .fas.fa-circle-left {
   display: inline-block !important;
 }
 

@@ -11,12 +11,11 @@
         <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <span>
-          <b>
-            <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-            <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-          </b>
-        </span>
+        <?=_('sort by');?>:
+        <b>
+          <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+          <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+        </b>
       </div>
       <form action="/bulk/package/" method="post" id="objects">
         <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
@@ -112,7 +111,7 @@
             <?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
               <b>&infin;</b>
             <?php else: ?>
-              <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?></span>
+              <b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?></span>
             <?php endif; ?>
           </span>
         </div>
@@ -121,7 +120,7 @@
             <?php if ($data[$key]['BANDWIDTH'] == 'unlimited'){ ?>
               <b>&infin;</b>
             <?php } else {?>
-              <b><?=humanize_usage_size($data[$key]['BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['BANDWIDTH'])?></span>
+              <b><?=humanize_usage_size($data[$key]['BANDWIDTH'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['BANDWIDTH'])?></span>
             <?php } ?>
           </span>
         </div>

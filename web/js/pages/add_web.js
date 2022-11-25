@@ -39,7 +39,7 @@ App.Listeners.WEB.keypress_domain_name = function() {
         window.frp_usr_tmt = setTimeout(function() {
             //var elm = $(evt.target);
             //App.Actions.WEB.update_ftp_username_hint(elm, $(elm).val());
-            var domain = $('.ftp-path-prefix').text(GLOBAL.FTP_USER_PREPATH + '/' + $('#v_domain').val());
+            var domain = $('.js-ftp-path-prefix').text(GLOBAL.FTP_USER_PREPATH + '/' + $('#v_domain').val());
             $('#v-custom-doc-domain-main').text($('#v_domain').val());
             $('#v-custom-doc-domain-main').val($('#v_domain').val());
             App.Actions.WEB.update_custom_doc_root(13, 12);

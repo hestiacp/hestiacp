@@ -13,12 +13,11 @@
         <li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <span>
-          <b>
-            <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-            <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-          </b>
-        </span>
+        <?=_('sort by');?>:
+        <b>
+          <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+          <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+        </b>
       </div>
       <form action="/bulk/user/" method="post" id="objects">
         <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
@@ -164,8 +163,8 @@
           </b>
         </div>
         <div class="clearfix l-unit__stat-col--left text-center super-compact"><?=$data[$key]['IP_OWNED']?></div>
-        <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-        <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
+        <div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+        <div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
         <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_WEB_DOMAINS']?> <?=_('Web Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_WEB_DOMAINS']?></b></span></div>
         <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_DNS_DOMAINS']?> <?=_('DNS Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DNS_DOMAINS']?></b></span></div>
         <div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_MAIL_DOMAINS']?> <?=_('Mail Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_MAIL_DOMAINS']?></b></span></div>

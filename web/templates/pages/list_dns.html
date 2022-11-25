@@ -15,12 +15,11 @@
         <li entity="sort-records"><span class="name"><?=_('Records');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <span>
-          <b>
-            <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-            <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-          </b>
-        </span>
+        <?=_('sort by');?>:
+        <b>
+          <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+          <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+        </b>
       </div>
       <?php if ($read_only !== 'true') {?>
         <form action="/bulk/dns/" method="post" id="objects">

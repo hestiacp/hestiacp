@@ -599,7 +599,7 @@
         <div class="collapse-content">
           <h3 class="section-title" onclick="javascript:elementHideShow('security-system-table',this);">
             <?=_('System');?>
-            <i class="fas fa-square-plus status-icon dim maroon section-toggle-icon"></i>
+            <i class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"></i>
           </h3>
           <div id="security-system-table" style="display: none;">
             <p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
@@ -667,7 +667,7 @@
           <?php if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
             <h3 class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table',this);">
               <?=_('System Protection');?>
-              <i class="fas fa-square-plus status-icon dim maroon section-toggle-icon"></i>
+              <i class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"></i>
             </h3>
             <div id="security-sysadminprotect-table" style="display: none;">
               <p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
@@ -698,7 +698,7 @@
           <?php } ?>
           <h3 class="section-title" onclick="javascript:elementHideShow('security-policies-table',this);">
             <?=_('Policies');?>
-            <i class="fas fa-square-plus status-icon dim maroon section-toggle-icon"></i>
+            <i class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"></i>
           </h3>
           <div id="security-policies-table" style="display: none;">
             <p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">

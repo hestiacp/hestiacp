@@ -17,19 +17,19 @@
       <!-- Left Menu -->
       <div class="l-menu">
         <!-- Records tab -->
-        <div class="l-menu__item <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-list-check panel-icon"></i><?=_('Records');?></a></div>
+        <div class="l-menu__item <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'l-menu__item--active' ?>"><a href="<?=htmlspecialchars($home_url)?>"><i class="fas fa-list-check"></i><?=_('Records');?></a></div>
 
         <!-- File Manager tab -->
         <?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
           <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
               <!-- Hide file manager when impersonating admin-->
             <?php } else { ?>
-              <div class="l-menu__item <?php if($TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open panel-icon"></i><?=_('Files');?></a></div>
+              <div class="l-menu__item <?php if($TAB == 'FM') echo 'l-menu__item--active' ?>"><a href="/fm/"><i class="fas fa-folder-open"></i><?=_('Files');?></a></div>
           <?php } ?>
         <?php } ?>
 
         <!-- Statistics tab-->
-        <div class="l-menu__item <?php if($TAB == 'STATS') echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line panel-icon"></i><?=_('Statistics');?></a></div>
+        <div class="l-menu__item <?php if($TAB == 'STATS') echo 'l-menu__item--active' ?>"><a href="/list/stats/"><i class="fas fa-chart-line"></i><?=_('Statistics');?></a></div>
       </div>
     </div>
 
@@ -56,7 +56,7 @@
         <!-- Do not show notifications panel when impersonating 'admin' user -->
       <?php } else { ?>
         <div class="l-menu__item">
-          <a title="<?=_('Notifications');?>" class="l-profile__notifications <?php if ($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>">
+          <a title="<?=_('Notifications');?>" href="#" class="l-profile__notifications <?php if ($panel[$user]['NOTIFICATIONS'] == 'yes') echo " updates"; ?>">
             <i class="fas fa-bell <?php if ($panel[$user]['NOTIFICATIONS'] == 'yes') echo " animate__animated animate__swing status-icon orange"; ?>"></i>
           </a>
           <ul class="notification-container u-hidden animate__animated animate__fadeIn"></ul>

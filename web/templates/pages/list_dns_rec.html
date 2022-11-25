@@ -17,12 +17,11 @@
         <li entity="sort-type"><span class="name"><?=_('Type');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
       </ul>
       <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <span>
-          <b>
-            <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Record'); } else { $label = _('Date'); } ?>
-            <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-          </b>
-        </span>
+        <?=_('sort by');?>:
+        <b>
+          <?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Record'); } else { $label = _('Date'); } ?>
+          <?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+        </b>
       </div>
       <?php if ($read_only !== 'true') {?>
         <form action="/bulk/dns/" method="post" id="objects">
@@ -59,7 +58,7 @@
       <div class="clearfix l-unit__stat-col--left super-compact">
         <input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onchange="checkedAll('objects');" <?=$display_mode;?>>
       </div>
-      <div class="clearfix l-unit__stat-col--left small"><b><?=_('Record');?></b></div>
+      <div class="clearfix l-unit__stat-col--left"><b><?=_('Record');?></b></div>
       <div class="clearfix l-unit__stat-col--left super-compact text-right"><b>&nbsp;</b></div>
       <div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?=_('Type');?></b></div>
       <div class="clearfix l-unit__stat-col--left compact text-center"><b><?=_('Priority');?></b></div>
@@ -91,7 +90,7 @@
         <div class="clearfix l-unit__stat-col--left super-compact">
           <input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="record[]" value="<?=$data[$key]['ID']?>" <?=$display_mode;?>>
         </div>
-        <div class="clearfix l-unit__stat-col--left small truncate">
+        <div class="clearfix l-unit__stat-col--left u-truncate">
           <b>
           <?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
             <?=substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>

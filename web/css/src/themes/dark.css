@@ -17,69 +17,48 @@ strong {
   color: #cacaca;
 }
 
-.l-header {
+/* Top bar
+   ========================================================================== */
+
+.top-bar {
   background: #454545;
   border-bottom: 1px solid #505050;
-  text-shadow: 1px 1px rgb(0 0 0 / 50%);
   box-shadow: 0 8px 15px rgb(0 0 0 / 25%);
 }
 
-.l-menu__item.l-menu__item--active a {
-  color: #dadada;
-  background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%);
-  text-shadow: 0 1px rgb(0 0 0 / 50%);
-  border-left-color: #353535;
-  border-right-color: #353535;
-}
-
-.l-menu__item.l-menu__item--active:hover {
-  background: linear-gradient(to bottom, rgb(255 255 255 / 15%) 0%, rgb(255 255 255 / 15%) 30%, rgb(255 255 255 / 15%) 95%) !important;
-}
-
-.l-menu__item > a {
-  color: #e7e7e7;
-
+.top-bar-nav-link {
   &:hover {
-    color: #dadada !important;
-    text-shadow: 1px 1px rgb(0 0 0 / 50%) !important;
-    background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
-    box-shadow: none !important;
+    color: #dadada;
+    text-shadow: 1px 1px rgb(0 0 0 / 50%);
+    background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%);
+    box-shadow: none;
   }
 
   &:active {
-    background: linear-gradient(to bottom, rgb(15 15 15 / 70%) 0%, rgb(45 45 45 / 85%) 30%, rgb(50 50 50 / 100%) 95%) !important;
-    color: #fff !important;
-    text-shadow: 0 -1px 1px rgb(0 0 0 / 50%) !important;
+    background: linear-gradient(to bottom, rgb(15 15 15 / 70%) 0%, rgb(45 45 45 / 85%) 30%, rgb(50 50 50 / 100%) 95%);
+    color: #fff;
+    text-shadow: 0 -1px 1px rgb(0 0 0 / 50%);
+  }
+
+  &.active {
+    color: #dadada;
+    background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%);
+    text-shadow: 0 1px rgb(0 0 0 / 50%);
+    border-left-color: #353535;
+    border-right-color: #353535;
   }
 }
 
-.l-profile__logout {
-  color: #e7e7e7 !important;
+.top-bar-nav-link-logout {
+  color: #e7e7e7;
 }
 
-.l-profile__notifications {
-  border-left: 1px solid transparent !important;
-  border-right: 1px solid transparent !important;
-
-  &.active.l-profile__notifications.updates:active {
-    background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
-    color: #046c98 !important;
-    text-shadow: 0 -1px 1px rgb(0 0 0 / 50%) !important;
-    box-shadow: none !important;
-    transition: 0.2s;
-    border-left: 1px solid transparent !important;
-    border-right: 1px solid transparent !important;
-  }
-
-  &:hover,
-  &.updates:hover {
-    text-shadow: 1px 1px rgb(0 0 0 / 50%) !important;
-    background: linear-gradient(to bottom, rgb(15 15 15 / 60%) 0%, rgb(45 45 45 / 75%) 30%, rgb(60 60 60 / 100%) 95%) !important;
-    border: none !important;
-    border-left: 1px solid transparent !important;
-    border-right: 1px solid transparent !important;
-    box-shadow: none !important;
-  }
+.top-bar-usage-inner {
+  color: #909090;
+  box-shadow: inset 0 1px 1px rgb(0 0 0 / 85%), 0 1px 1px rgb(0 0 0 / 20%);
+  background-color: rgb(15 15 15 / 50%);
+  border-color: rgb(120 120 120 / 95%);
+  text-shadow: 0 1px 1px rgb(0 0 0 / 50%);
 }
 
 .notification-container {
@@ -628,48 +607,6 @@ textarea:focus::placeholder {
   border-color: rgb(251 71 51);
 }
 
-.to-shortcuts,
-.to-top {
-  font-weight: 400;
-  color: #eee;
-  border-color: 1px solid #707070;
-  background: rgb(48 48 48);
-  background: linear-gradient(0deg, rgb(48 48 48 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(69 69 69 / 100%) 100%);
-  box-shadow:
-    0 1px 4px rgb(0 0 0 / 20%),
-    inset 0 0 1px rgb(20 20 20 / 100%),
-    inset 0 0 3px rgb(0 0 0 / 50%);
-  text-shadow: 0 1px 1px rgb(0 0 0 / 35%);
-}
-
-.to-shortcuts:hover,
-.to-top:hover {
-  color: #fff;
-  text-shadow: 1px 1px rgb(0 0 0 / 25%);
-  border-color: #0098ff;
-  background: linear-gradient(0deg, rgb(58 58 58 / 100%) 0%, rgb(68 68 68 / 100%) 35%, rgb(79 79 79 / 100%) 100%);
-  background-color: #454545;
-  box-shadow:
-    0 1px 3px rgb(0 0 0 / 35%),
-    inset 0 0 1px rgb(0 0 0 / 100%),
-    inset 0 0 3px rgb(0 0 0 / 65%);
-  transition: 0.2s;
-}
-
-.to-shortcuts:active,
-.to-top:active,
-.to-shortcuts:focus,
-.to-top:focus {
-  border-color: #0066b4;
-  background: linear-gradient(0deg, rgb(69 69 69 / 100%) 0%, rgb(53 53 53 / 100%) 35%, rgb(48 48 48 / 100%) 100%);
-  color: #d4d4d4;
-  text-shadow: 0 -1px 1px rgb(0 0 0 / 55%);
-  box-shadow:
-    0 1px 3px rgb(0 0 0 / 30%),
-    inset 0 0 1px rgb(0 0 0 / 100%),
-    inset -1px -1px 4px rgb(30 30 30 / 40%);
-}
-
 .ui-dialog button.cancel span {
   color: #fff !important;
 }
@@ -812,18 +749,6 @@ textarea:focus::placeholder {
 
 form#vstobjects.suspended {
   background-color: #282828;
-}
-
-.usage-pill {
-  box-shadow: inset 0 1px 1px rgb(0 0 0 / 85%), 0 1px 1px rgb(0 0 0 / 20%);
-  background-color: rgb(15 15 15 / 50%);
-  border: 1px solid rgb(120 120 120 / 95%);
-  text-shadow: 0 1px 1px rgb(0 0 0 / 50%);
-  color: #909090;
-}
-
-.usage-pill b {
-  color: #d8d8d8;
 }
 
 .badge {

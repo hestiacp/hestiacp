@@ -970,7 +970,7 @@ set_sticky_class = function() {
     var sort = $('.l-sort');
     var tableHeader = $('.table-header');
     var sortOffset = sort.offset().top;
-    var headerHeight = $('.l-header').outerHeight();
+    var headerHeight = $('.top-bar').outerHeight();
 
     if ($(window).scrollTop() > sortOffset - headerHeight) {
         sort.addClass('active');

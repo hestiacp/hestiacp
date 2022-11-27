@@ -44,7 +44,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     cron curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved
     e2fslibs e2fsprogs exim4 exim4-daemon-heavy expect fail2ban flex ftp git idn2
     imagemagick libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
-    lsof mc mariadb-client mariadb-common mariadb-server nginx
+    lsof mc mariadb-client mariadb-common mariadb-server mysql-client mysql-common mysql-server nginx
     php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
     php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu phppgadmin
     php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
@@ -66,6 +66,7 @@ help() {
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
   -k, --named             Install Bind          [yes|no]  default: yes
   -m, --mysql             Install MariaDB       [yes|no]  default: yes
+  -M, --mysql-classic     Install MySQL         [yes|no]  default: no
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
@@ -204,6 +205,7 @@ for arg; do
         --proftpd)              args="${args}-j " ;;
         --named)                args="${args}-k " ;;
         --mysql)                args="${args}-m " ;;
+        --mysql-classic)        args="${args}-M " ;;
         --postgresql)           args="${args}-g " ;;
         --exim)                 args="${args}-x " ;;
         --dovecot)              args="${args}-z " ;;
@@ -231,7 +233,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
     case $Option in
         a) apache=$OPTARG ;;            # Apache
         w) phpfpm=$OPTARG ;;            # PHP-FPM
@@ -240,6 +242,7 @@ while getopts "a:w:v:j:k:m:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
         j) proftpd=$OPTARG ;;           # Proftpd
         k) named=$OPTARG ;;             # Named
         m) mysql=$OPTARG ;;             # MariaDB
+        M) mysqlclassic=$OPTARG ;;      # MySQL
         g) postgresql=$OPTARG ;;        # PostgreSQL
         x) exim=$OPTARG ;;              # Exim
         z) dovecot=$OPTARG ;;           # Dovecot
@@ -272,6 +275,7 @@ set_default_value 'vsftpd' 'yes'
 set_default_value 'proftpd' 'no'
 set_default_value 'named' 'yes'
 set_default_value 'mysql' 'yes'
+set_default_value 'mysqlclassic' 'no'
 set_default_value 'postgresql' 'no'
 set_default_value 'exim' 'yes'
 set_default_value 'dovecot' 'yes'
@@ -312,6 +316,9 @@ if [ "$iptables" = 'no' ]; then
 fi
 if [ "$apache" = "no" ]; then
     phpfpm='yes'
+fi
+if [ "$mysql" = 'yes' ] && [ "$mysqlclassic" = 'yes' ]; then
+    mysql='no'
 fi
 
 # Checking root permissions
@@ -543,6 +550,9 @@ echo
 # Database stack
 if [ "$mysql" = 'yes' ]; then
     echo '   - MariaDB Database Server'
+fi
+if [ "$mysqlclassic" = 'yes' ]; then
+    echo '   - MySQL Database Server'
 fi
 if [ "$postgresql" = 'yes' ]; then
     echo '   - PostgreSQL Database Server'
@@ -878,6 +888,13 @@ if [ "$mysql" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/mariadb-server//")
     software=$(echo "$software" | sed -e "s/mariadb-client//")
     software=$(echo "$software" | sed -e "s/mariadb-common//")
+fi
+if [ "$mysqlclassic" = 'no' ]; then
+    software=$(echo "$software" | sed -e "s/mysql-server//")
+    software=$(echo "$software" | sed -e "s/mysql-client//")
+    software=$(echo "$software" | sed -e "s/mysql-common//")
+fi
+if [ "$mysql" = 'no' ] && [ "$mysqlclassic" = 'no' ]; then
     software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
     if [ "$multiphp" = 'yes' ]; then
         for v in "${multiphp_v[@]}"; do
@@ -1174,7 +1191,7 @@ if [ "$phpfpm" = 'yes' ] || [ "$multiphp" = 'yes' ]; then
 fi
 
 # Database stack
-if [ "$mysql" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
     installed_db_types='mysql'
 fi
 
@@ -1536,11 +1553,12 @@ fi
 
 
 #----------------------------------------------------------#
-#                  Configure MariaDB                       #
+#               Configure MariaDB / MySQL                  #
 #----------------------------------------------------------#
 
-if [ "$mysql" = 'yes' ]; then
-    echo "[ * ] Configuring MariaDB database server..."
+if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+    [ "$mysql" = 'yes' ] && mysql_type="MariaDB" || mysql_type="MySQL"
+    echo "[ * ] Configuring $mysql_type database server..."
     mycnf="my-small.cnf"
     if [ $memory -gt 1200000 ]; then
         mycnf="my-medium.cnf"
@@ -1549,28 +1567,43 @@ if [ "$mysql" = 'yes' ]; then
         mycnf="my-large.cnf"
     fi
 
-    # Run mysql_install_db
-    mysql_install_db >> $LOG
+    if [ "$mysql_type" = 'MariaDB' ]; then
+        # Run mysql_install_db
+        mysql_install_db >> $LOG
+    fi
+
     # Remove symbolic link
     rm -f /etc/mysql/my.cnf
     # Configuring MariaDB
     cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
 
+    # Switch MariaDB inclusions to the MySQL
+    if [ "$mysql_type" = 'MySQL' ]; then
+        sed -i '/query_cache_size/d' /etc/mysql/my.cnf
+        sed -i 's|mariadb.conf.d|mysql.conf.d|g' /etc/mysql/my.cnf
+    fi
+
     update-rc.d mysql defaults > /dev/null 2>&1
     systemctl start mysql >> $LOG
-    check_result $? "mariadb start failed"
+    check_result $? "${mysql_type,,} start failed"
 
-    # Securing MariaDB installation
+    # Securing MariaDB/MySQL installation
     mpass=$(gen_pass)
     echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
     chmod 600 /root/.my.cnf
 
-    # Ater root password
+    # Alter root password
     mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
-    # Allow mysql access via socket for startup
-    mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
-    # Disable anonymous users
-    mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
+    if [ "$mysql_type" = 'MariaDB' ]; then
+        # Allow mysql access via socket for startup
+        mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+        # Disable anonymous users
+        mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
+    else
+        mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
+        mysql -e "DELETE FROM mysql.user WHERE User='';"
+        mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+    fi
     # Drop test database
     mysql -e "DROP DATABASE IF EXISTS test"
     mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
@@ -1587,7 +1620,7 @@ fi
 # shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
 source $HESTIA/install/upgrade/upgrade.conf
 
-if [ "$mysql" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
     # Display upgrade information
     echo "[ * ] Installing phpMyAdmin version v$pma_v..."
 
@@ -1855,12 +1888,21 @@ if [ "$fail2ban" = 'yes' ]; then
     check_result $? "fail2ban start failed"
 fi
 
+# Configuring MariaDB/MySQL host
+if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+    $HESTIA/bin/v-add-database-host mysql localhost root $mpass
+fi
+
+# Configuring PostgreSQL host
+if [ "$postgresql" = 'yes' ]; then
+    $HESTIA/bin/v-add-database-host pgsql localhost postgres $ppass
+fi
 
 #----------------------------------------------------------#
 #                       Install Roundcube                  #
 #----------------------------------------------------------#
 # Min requirements Dovecot + Exim + Mysql
-if [ "$mysql" == 'yes' ] && [ "$dovecot" == "yes" ]; then
+if ([ "$mysql" == 'yes' ] || [ "$mysqlclassic" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
     echo "[ * ] Install Roundcube..."
     $HESTIA/bin/v-add-sys-roundcube
     write_config_value "WEBMAIL_ALIAS" "webmail"
@@ -2015,16 +2057,6 @@ if [ "$apache" = 'yes' ] && [ "$nginx"  = 'yes' ] ; then
     sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
     a2enmod remoteip >> $LOG
     systemctl restart apache2
-fi
-
-# Configuring MariaDB host
-if [ "$mysql" = 'yes' ]; then
-    $HESTIA/bin/v-add-database-host mysql localhost root $mpass
-fi
-
-# Configuring PostgreSQL host
-if [ "$postgresql" = 'yes' ]; then
-    $HESTIA/bin/v-add-database-host pgsql localhost postgres $ppass
 fi
 
 # Adding default domain

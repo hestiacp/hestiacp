@@ -790,7 +790,12 @@ rebuild_mysql_database() {
             # mysql >= 5.7
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`" > /dev/null
             mysql_query "CREATE USER IF NOT EXISTS \`$DBUSER\`@localhost" > /dev/null
-            query="UPDATE mysql.user SET authentication_string='$MD5'"
+            # mysql >= 8, with enabled Print identified with as hex feature
+            if [[ "$mysql_ver_sub" -ge 8 && "$MD5" =~ ^0x.* ]]; then
+                query="UPDATE mysql.user SET authentication_string=UNHEX('${MD5:2}')"
+            else
+                query="UPDATE mysql.user SET authentication_string='$MD5'"
+            fi
             query="$query WHERE User='$DBUSER'"
         else
             # mysql < 5.7

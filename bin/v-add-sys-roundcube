@@ -13,6 +13,7 @@
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 # upgrade config file
@@ -135,16 +136,21 @@ if [ "$UPDATE" == "no" ]; then
     chown www-data:www-data $RC_LOG
     chmod 751 $RC_LOG
 
-    if [ ! -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
-        mysql -e "DROP DATABASE IF EXISTS roundcube"
-        mysql -e "DROP USER IF EXISTS roundcube@localhost"
-        mysql -e "CREATE DATABASE roundcube"
-        # Mysql available on system
-        r=$(generate_password)
-        mysql -e "GRANT ALL ON roundcube.*
-         TO roundcube@localhost IDENTIFIED BY '$r'"
-        sed -i "s/%password%/$r/g" $RC_CONFIG_DIR/config.inc.php
-        mysql roundcube < /var/lib/roundcube/SQL/mysql.initial.sql
+    if [ ! -z "$(echo "$DB_SYSTEM" | grep -E 'mysql|pgsql')" ]; then
+        host='localhost'
+        database='roundcube'
+        dbuser="$database"
+        dbpass=$(generate_password)
+        charset='UTF8'
+        sed -i "s/%password%/$dbpass/g" $RC_CONFIG_DIR/config.inc.php
+
+        if [ ! -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
+            add_mysql_database
+            mysql_query "USE $database; $(< /var/lib/roundcube/SQL/mysql.initial.sql)"
+        else
+            add_pgsql_database
+            psql_query "USE $database; $(< /var/lib/roundcube/SQL/postgres.initial.sql)"
+        fi
     fi
 
     # TODO: Add support for PostgreSQL

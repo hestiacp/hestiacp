@@ -291,9 +291,16 @@ add_mysql_database() {
         if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
             if [ "$mysql_ver_sub" -ge 8 ]; then
                 # mysql >= 8
-                md5=$(mysql_query "SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
+
+                # This query will be proceeding with the usage of Print identified with as hex feature
+                md5=$(mysql_query "SET print_identified_with_as_hex=ON; SHOW CREATE USER \`$dbuser\`" 2>/dev/null)
+
                 # echo $md5
-                md5=$(echo "$md5" |grep password |cut -f4 -d \')
+                if [[ "$md5" =~ 0x([^ ]+) ]]; then
+                    md5=$(echo "$md5" |grep password |grep -E -o '0x([^ ]+)')
+                else
+                    md5=$(echo "$md5" |grep password |cut -f4 -d \')
+                fi
                 # echo $md5
             else
                 # mysql < 8
@@ -410,9 +417,16 @@ change_mysql_password() {
           if [ "$mysql_ver_sub" -ge 8 ] || { [ "$mysql_ver_sub" -eq 5 ] && [ "$mysql_ver_sub_sub" -ge 7 ]; } then
               if [ "$mysql_ver_sub" -ge 8 ]; then
                   # mysql >= 8
-                  md5=$(mysql_query "SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
+
+                  # This query will be proceeding with the usage of Print identified with as hex feature
+                  md5=$(mysql_query "SET print_identified_with_as_hex=ON; SHOW CREATE USER \`$DBUSER\`" 2>/dev/null)
+
                   # echo $md5
-                  md5=$(echo "$md5" |grep password |cut -f4 -d \')
+                  if [[ "$md5" =~ 0x([^ ]+) ]]; then
+                      md5=$(echo "$md5" |grep password |grep -E -o '0x([^ ]+)')
+                  else
+                      md5=$(echo "$md5" |grep password |cut -f4 -d \')
+                  fi
                   # echo $md5
               else
                   # mysql < 8

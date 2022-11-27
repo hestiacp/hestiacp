@@ -25,7 +25,7 @@ Features and Services
 * Multiple PHP versions (5.6 - 8.1, 8.0 as default)
 * DNS Server (Bind) with clustering capabilities
 * POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Sieve, Roundcube)
-* MariaDB and/or PostgreSQL databases
+* MariaDB/MySQL and/or PostgreSQL databases
 * Let's Encrypt SSL support with wildcard certificates
 * Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 

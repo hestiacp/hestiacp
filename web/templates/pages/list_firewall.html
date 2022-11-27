@@ -1,7 +1,7 @@
 <!-- Begin toolbar -->
-<div class="l-sort">
-  <div class="l-sort__inner">
-    <div class="l-unit-toolbar__buttonstrip">
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="toolbar-buttons">
       <a class="button button-secondary" id="btn-back" href="/edit/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <a href="/add/firewall/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add Rule');?></a>
       <?php if(!empty($_SESSION['FIREWALL_EXTENSION'])): ?>
@@ -9,27 +9,29 @@
         <a class="button button-secondary" href="/list/firewall/ipset/"><i class="fas fa-list status-icon blue"></i><?=_('list ipset');?></a>
       <?php endif; ?>
     </div>
-    <div class="l-sort-toolbar">
-      <ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
-        <li entity="sort-action"><span class="name"><?=_('Action');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span></li>
-        <li entity="sort-protocol"><span class="name"><?=_('Protocol');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-        <li entity="sort-port"><span class="name"><?=_('Port');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-        <li entity="sort-ip" sort_as_int="1"><span class="name"><?=_('IP address');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-        <li entity="sort-comment"><span class="name"><?=_('Comment');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-      </ul>
-      <div class="sort-by" title="<?=_('Sort items');?>">
-        <?=_('sort by');?>: <b><?=_('Action');?> <i class="fas fa-arrow-up-a-z"></i></b>
+    <div class="toolbar-right">
+      <div class="toolbar-sorting">
+        <ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
+          <li entity="sort-action"><span class="name"><?=_('Action');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span></li>
+          <li entity="sort-protocol"><span class="name"><?=_('Protocol');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+          <li entity="sort-port"><span class="name"><?=_('Port');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+          <li entity="sort-ip" sort_as_int="1"><span class="name"><?=_('IP address');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+          <li entity="sort-comment"><span class="name"><?=_('Comment');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+        </ul>
+        <div class="sort-by" title="<?=_('Sort items');?>">
+          <?=_('sort by');?>: <b><?=_('Action');?> <i class="fas fa-arrow-up-a-z"></i></b>
+        </div>
+        <form action="/bulk/firewall/" method="post" id="objects">
+          <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+          <select class="form-select" name="action">
+            <option value=""><?=_('apply to selected');?></option>
+            <option value="delete"><?=_('delete') ?></option>
+          </select>
+          <button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
       </div>
-      <form action="/bulk/firewall/" method="post" id="objects">
-        <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-        <select class="form-select" name="action">
-          <option value=""><?=_('apply to selected');?></option>
-          <option value="delete"><?=_('delete') ?></option>
-        </select>
-        <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
-          <i class="fas fa-arrow-right"></i>
-        </button>
-      </form>
     </div>
   </div>
 </div>

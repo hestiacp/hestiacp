@@ -1,7 +1,7 @@
 <!-- Begin toolbar -->
-<div class="l-sort">
-  <div class="l-sort__inner">
-    <div class="l-unit-toolbar__buttonstrip">
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="toolbar-buttons">
       <a href="/edit/server/" class="button button-secondary"><i class="fas fa-gear status-icon maroon"></i><?=_('Configure');?></a>
       <a href="/list/rrd/" class="button button-secondary"><i class="fas fa-chart-area status-icon blue"></i><?=_('Graphs');?></a>
       <a href="/list/updates/" class="button button-secondary"><i class="fas fa-arrows-rotate status-icon green"></i><?=_('Updates');?></a>
@@ -19,7 +19,7 @@
         </a>
       </div>
     </div>
-    <div class="l-sort-toolbar">
+    <div class="toolbar-right">
       <form action="/bulk/service/" method="post" id="objects">
         <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
         <select class="form-select" name="action">
@@ -28,7 +28,7 @@
           <option value="start"><?=_('start');?></option>
           <option value="restart"><?=_('restart');?></option>
         </select>
-        <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
+        <button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
           <i class="fas fa-arrow-right"></i>
         </button>
       </form>

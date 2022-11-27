@@ -967,16 +967,16 @@ String.prototype.trim = function()
 }
 
 set_sticky_class = function() {
-    var sort = $('.l-sort');
+    var toolbar = $('.toolbar');
     var tableHeader = $('.table-header');
-    var sortOffset = sort.offset().top;
+    var toolbarOffset = toolbar.offset().top;
     var headerHeight = $('.top-bar').outerHeight();
 
-    if ($(window).scrollTop() > sortOffset - headerHeight) {
-        sort.addClass('active');
+    if ($(window).scrollTop() > toolbarOffset - headerHeight) {
+        toolbar.addClass('active');
         tableHeader.addClass('active');
     } else {
-        sort.removeClass('active');
+        toolbar.removeClass('active');
         tableHeader.removeClass('active');
     }
 }

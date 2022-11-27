@@ -1,7 +1,7 @@
 <!-- Begin toolbar -->
-<div class="l-sort">
-  <div class="l-sort__inner">
-    <div class="l-unit-toolbar__buttonstrip">
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="toolbar-buttons">
       <?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
         <a href="/list/user/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
       <?php } else if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) === 'system')) { ?>
@@ -28,7 +28,7 @@
       <?php }
       } ?>
     </div>
-    <div class="l-unit-toolbar__buttonstrip">
+    <div class="toolbar-buttons">
       <a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrow-rotate-right status-icon green"></i><?=_('Refresh');?></a>
       <?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
         <!-- Hide delete buttons-->

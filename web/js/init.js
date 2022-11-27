@@ -39,13 +39,13 @@ $(document).ready(function(){
 
             $(window).scroll(function(){set_sticky_class()});
 
-            $('.l-sort-toolbar .sort-by').click(function(){
-              $('.context-menu.sort-order').toggle().css({left: $(this).parent().parent().parent().position().left - 0});
+            $('.toolbar-right .sort-by').click(function(){
+              $('.context-menu.sort-order').toggle();
             });
 
             // SEARCH BOX
 
-            $('.l-sort-toolbar__search, .l-sort-toolbar__search-box .js-search-input').hover(function(){
+            $('.toolbar-search .js-search-input').hover(function(){
               clearTimeout(VE.tmp.search_display_interval);
               clearTimeout(VE.tmp.search_hover_interval);
               VE.tmp.search_display_interval = setTimeout(function(){$('.js-search-input').addClass('activated');}, 150);
@@ -112,9 +112,9 @@ $(document).ready(function(){
               VE.tmp.sort_as_int = $(this).parent('li').attr('sort_as_int');
               VE.tmp.sort_direction = $(this).hasClass('up')*1 || -1;
 
-              $('.l-sort .sort-by b').html($(this).parent('li').find('.name').html());
-              $('.l-sort .sort-by i').removeClass('fa-arrow-up-a-z fa-arrow-down-a-z');
-              $(this).hasClass('up') ? $('.l-sort .sort-by i').addClass('fa-arrow-up-a-z') : $('.l-sort .sort-by i').addClass('fa-arrow-down-a-z');
+              $('.toolbar .sort-by b').html($(this).parent('li').find('.name').html());
+              $('.toolbar .sort-by i').removeClass('fa-arrow-up-a-z fa-arrow-down-a-z');
+              $(this).hasClass('up') ? $('.toolbar .sort-by i').addClass('fa-arrow-up-a-z') : $('.toolbar .sort-by i').addClass('fa-arrow-down-a-z');
               $('.units .l-unit').sort(function (a, b) {
                 if(VE.tmp.sort_as_int)
                   return parseInt($(a).attr(VE.tmp.sort_par)) >= parseInt($(b).attr(VE.tmp.sort_par)) ? VE.tmp.sort_direction : VE.tmp.sort_direction * -1;
@@ -622,8 +622,6 @@ $(document).ready(function(){
               loadingAnimationEle.className = "spinner";
               loadingAnimationEle.innerHTML = '<div class="spinner-inner"></div><div class="spinner-mask"></div> <div class="spinner-mask-two"></div>';
 
-              // improve alignment
-              var buttonStrip = this.closest(".l-unit-toolbar__buttonstrip");
               // this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
               $(".button[data-id=vstobjects][data-action=submit]").replaceWith(loadingAnimationEle);
               $(".button").replaceWith('');

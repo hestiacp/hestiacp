@@ -1,0 +1,9 @@
+{
+	"recommendations": [
+		"mrmlnc.vscode-apache",
+		"editorconfig.editorconfig",
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		"bmewburn.vscode-intelephense-client"
+	]
+}

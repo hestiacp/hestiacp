@@ -1,0 +1,33 @@
+.DS_Store
+
+# Minified files
+*.min.css
+*.min.js
+
+# Nginx files (for now)
+**/nginx/
+
+# Web templates (for now)
+web/templates/
+
+# Vendor/packages
+.pnp.*
+.yarn/*
+vendor/
+composer.phar
+composer.json
+composer.lock
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# PNPM, NPM and YARN
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

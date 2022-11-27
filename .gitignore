@@ -5,15 +5,32 @@
 *.bz2
 *.deb
 
-.vscode
+.vs
+.nova
+/.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 .DS_Store
 
 .env
 composer.phar
 test/vendor/
 test/node_modules/
+web/src/vendor/filp
+web/src/vendor/psr
+web/src/vendor/composer/installed.json
 npm-debug.log
 .phpunit.result.cache
-.vs
-.nova
-/.idea/
+
+# Yarn (not zero-installs)
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

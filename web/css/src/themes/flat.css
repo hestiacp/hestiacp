@@ -36,6 +36,10 @@ strong {
   }
 }
 
+.top-bar-usage-inner {
+  text-shadow: none;
+}
+
 .table-header {
   box-shadow: none;
   background: #fafafa;
@@ -70,18 +74,18 @@ strong {
 .button {
   box-shadow: none;
   background: linear-gradient(to bottom, rgb(235 243 249 / 100%) 0%, rgb(223 235 245 / 100%) 100%);
-}
 
-.button:hover {
-  color: #6986b7;
-  box-shadow: none;
-  background: linear-gradient(to bottom, rgb(241 248 253 / 100%) 0%, rgb(227 240 251 / 100%) 100%);
-}
+  &:hover {
+    color: #6986b7;
+    box-shadow: none;
+    background: linear-gradient(to bottom, rgb(241 248 253 / 100%) 0%, rgb(227 240 251 / 100%) 100%);
+  }
 
-.button:active,
-.button:focus {
-  box-shadow: none;
-  background: linear-gradient(to bottom, rgb(210 232 250 / 100%) 0%, rgb(194 224 248 / 100%) 100%);
+  &:active,
+  &:focus {
+    box-shadow: none;
+    background: linear-gradient(to bottom, rgb(210 232 250 / 100%) 0%, rgb(194 224 248 / 100%) 100%);
+  }
 }
 
 .button-secondary {
@@ -102,12 +106,12 @@ strong {
   border-color: #f4301a;
 }
 
-.ui-dialog .ui-dialog-buttonpane button:nth-of-type(2) {
-  box-shadow: none;
-}
-
 .ui-dialog {
   box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
+
+  & .ui-dialog-buttonpane button:nth-of-type(2) {
+    box-shadow: none;
+  }
 }
 
 .badge {

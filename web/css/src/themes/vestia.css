@@ -42,14 +42,6 @@ strong {
   }
 }
 
-.top-bar-usage-inner {
-  color: #fff;
-  border: none;
-  background: none;
-  box-shadow: none;
-  text-shadow: none;
-}
-
 .table-header {
   box-shadow: none;
   background: #fafafa;
@@ -151,12 +143,12 @@ strong {
   }
 }
 
-.ui-dialog .ui-dialog-buttonpane button {
-  box-shadow: none;
-}
-
 .ui-dialog {
   box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
+
+  & .ui-dialog-buttonpane button {
+    box-shadow: none;
+  }
 }
 
 .notification-container {
@@ -432,12 +424,12 @@ li[aria-expanded="true"] a {
   background: #fafafa;
   box-shadow: none;
   color: #444;
-}
 
-.collapse-header:hover {
-  color: #ff791f;
-}
+  &:hover {
+    color: #ff791f;
+  }
 
-.collapse-header .fas {
-  display: none;
+  & .fas {
+    display: none;
+  }
 }

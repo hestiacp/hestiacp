@@ -171,6 +171,9 @@ sort_config_file(){
 
 # Validate hostname according to RFC1178
 validate_hostname () {
+    # remove extra .
+    servername = $(echo "$servername" |sed -e "s/[.]*$//g")
+    servername = $(echo "$domain" |sed -e "s/^[.]*//")
     if [[ $(echo "$servername" | grep -o "\." | wc -l) -gt 1 ]] && [[ ! $servername =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         # Hostname valid
         return 1

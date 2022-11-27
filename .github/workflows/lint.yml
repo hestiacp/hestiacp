@@ -29,11 +29,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          cache: yarn
-          cache-dependency-path: yarn.lock
+          node-version: 16
+
+      - name: Install yarn v3
+        run: corepack enable && corepack prepare yarn@stable --activate
 
       - name: Install Node packages
-        run: yarn install --frozen-lockfile
+        uses: ./.github/actions/yarn-nm-install
 
       - name: Run Prettier
         run: yarn prettier --check .
@@ -48,11 +50,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          cache: yarn
-          cache-dependency-path: yarn.lock
+          node-version: 16
+
+      - name: Install yarn v3
+        run: corepack enable && corepack prepare yarn@stable --activate
 
       - name: Install Node packages
-        run: yarn install --frozen-lockfile
+        uses: ./.github/actions/yarn-nm-install
 
       - name: Run ESLint
         run: yarn eslint web/js/
@@ -67,11 +71,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          cache: yarn
-          cache-dependency-path: yarn.lock
+          node-version: 16
+
+      - name: Install yarn v3
+        run: corepack enable && corepack prepare yarn@stable --activate
 
       - name: Install Node packages
-        run: yarn install --frozen-lockfile
+        uses: ./.github/actions/yarn-nm-install
 
       - name: Run Stylelint
         run: yarn stylelint web/css/src/themes/*.css

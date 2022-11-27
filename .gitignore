@@ -19,7 +19,7 @@
 .env
 composer.phar
 test/vendor/
-test/node_modules/
+**/node_modules/
 web/src/vendor/filp
 web/src/vendor/psr
 web/src/vendor/composer/installed.json

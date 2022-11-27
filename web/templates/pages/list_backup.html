@@ -1,13 +1,13 @@
 <!-- Begin toolbar -->
-<div class="l-sort">
-  <div class="l-sort__inner">
-    <div class="l-unit-toolbar__buttonstrip">
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="toolbar-buttons">
       <?php if ($read_only !== 'true') {?>
         <a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="button button-secondary"><i class="fas fa-circle-plus status-icon green"></i><?=_('Create Backup');?></a>
         <a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus status-icon orange"></i><?=_('backup exclusions');?></a>
       <?php } ?>
     </div>
-    <div class="l-sort-toolbar">
+    <div class="toolbar-right">
       <?php if ($read_only !== 'true') {?>
         <form action="/bulk/backup/" method="post" id="objects">
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
@@ -15,16 +15,16 @@
             <option value=""><?=_('apply to selected');?></option>
             <option value="delete"><?=_('delete') ?></option>
           </select>
-          <button type="submit" class="l-sort-toolbar__filter-apply" value="" title="<?=_('apply to selected');?>">
+          <button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
             <i class="fas fa-arrow-right"></i>
           </button>
         </form>
       <?php } ?>
-      <div class="l-sort-toolbar__search-box">
+      <div class="toolbar-search">
         <form action="/search/" method="get">
           <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
           <input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-          <button type="submit" class="l-sort-toolbar__filter-apply" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
+          <button type="submit" class="toolbar-submit" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
             <i class="fas fa-magnifying-glass"></i>
           </button>
         </form>

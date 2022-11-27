@@ -251,7 +251,7 @@ strong {
   font-size: 1.2rem;
 }
 
-.l-sort-toolbar__filter-apply {
+.toolbar-submit {
   background-color: #cacaca;
   border-radius: 0;
   color: #fff;
@@ -283,7 +283,7 @@ strong {
   color: #333;
 }
 
-.l-unit-toolbar__buttonstrip {
+.toolbar-buttons {
   & .button {
     border-color: transparent;
     color: #fff;
@@ -332,7 +332,7 @@ strong {
   }
 }
 
-.l-sort-toolbar .form-control {
+.toolbar .form-control {
   &:hover {
     border-right-color: #e95e00;
   }

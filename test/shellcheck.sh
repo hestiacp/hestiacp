@@ -38,6 +38,6 @@ for file in $files; do
 done
 echo $err;
 
-if [ $err == 1 ]; then
+if [ $err = 1 ]; then
     exit 1;
 fi

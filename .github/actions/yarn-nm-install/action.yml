@@ -9,11 +9,11 @@
 #   - vs @setup/node: https://github.com/actions/setup-node/issues/325                 #
 ########################################################################################
 
-name: 'Yarn install'
-description: 'Run yarn install with node_modules linker and cache enabled'
+name: "Yarn install"
+description: "Run yarn install with node_modules linker and cache enabled"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Expose yarn config as "$GITHUB_OUTPUT"
       id: yarn-config
@@ -46,8 +46,8 @@ runs:
         yarn install --immutable --inline-builds
       env:
         # CI optimizations. Overrides yarnrc.yml options (or their defaults) in the CI action.
-        YARN_ENABLE_GLOBAL_CACHE: 'false' # Use local cache folder to keep downloaded archives
-        YARN_NM_MODE: 'hardlinks-local' # Hardlinks-(local|global) reduces io / node_modules size
+        YARN_ENABLE_GLOBAL_CACHE: "false" # Use local cache folder to keep downloaded archives
+        YARN_NM_MODE: "hardlinks-local" # Hardlinks-(local|global) reduces io / node_modules size
         YARN_INSTALL_STATE_PATH: .yarn/ci-cache/install-state.gz # Very small speedup when lock does not change
         # Other environment variables
-        HUSKY: '0' # By default do not run HUSKY install
+        HUSKY: "0" # By default do not run HUSKY install

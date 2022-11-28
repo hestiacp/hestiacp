@@ -19,31 +19,31 @@ platform:
   arch: amd64
 
 steps:
-- name: Download submodules
-  image: alpine/git
-  commands:
-  - git submodule update --init --recursive
-- name: Build Hestia package and install
-  commands:
-  - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-- name: Run system / user tests
-  commands:
-  - bats ./test/test.bats
-- name: Run restore tests
-  commands:
-  - bats ./test/restore.bats
-- name: Run config tests
-  commands:
-  - bats ./test/config-tests.bats
+  - name: Download submodules
+    image: alpine/git
+    commands:
+      - git submodule update --init --recursive
+  - name: Build Hestia package and install
+    commands:
+      - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+  - name: Run system / user tests
+    commands:
+      - bats ./test/test.bats
+  - name: Run restore tests
+    commands:
+      - bats ./test/restore.bats
+  - name: Run config tests
+    commands:
+      - bats ./test/config-tests.bats
 
 trigger:
-  event: [ pull_request, push ]
+  event: [pull_request, push]
   ref:
-  - refs/heads/staging/*
-  - refs/heads/beta
-  - refs/heads/release
-  - refs/heads/main
-  - refs/pull/*/head
+    - refs/heads/staging/*
+    - refs/heads/beta
+    - refs/heads/release
+    - refs/heads/main
+    - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -66,35 +66,35 @@ platform:
   arch: amd64
 
 steps:
-- name: Download submodules
-  image: alpine/git
-  commands:
-  - git submodule update --init --recursive
-- name: Build Hestia package install
-  commands:
-  - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-- name: Run system / user tests
-  commands:
-  - bats ./test/test.bats
-- name: Run restore tests
-  commands:
-  - bats ./test/restore.bats
-- name: Run Letsencrypt test against Staging
-  commands:
-  - cp /root/le-env.sh /tmp/hestia-le-env.sh
-  - bats ./test/letsencrypt.bats
-- name: Run config tests
-  commands:
-  - bats ./test/config-tests.bats
+  - name: Download submodules
+    image: alpine/git
+    commands:
+      - git submodule update --init --recursive
+  - name: Build Hestia package install
+    commands:
+      - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+  - name: Run system / user tests
+    commands:
+      - bats ./test/test.bats
+  - name: Run restore tests
+    commands:
+      - bats ./test/restore.bats
+  - name: Run Letsencrypt test against Staging
+    commands:
+      - cp /root/le-env.sh /tmp/hestia-le-env.sh
+      - bats ./test/letsencrypt.bats
+  - name: Run config tests
+    commands:
+      - bats ./test/config-tests.bats
 
 trigger:
-  event: [ pull_request, push ]
+  event: [pull_request, push]
   ref:
-  - refs/heads/staging/*
-  - refs/heads/beta
-  - refs/heads/release
-  - refs/heads/main
-  - refs/pull/*/head
+    - refs/heads/staging/*
+    - refs/heads/beta
+    - refs/heads/release
+    - refs/heads/main
+    - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -109,10 +109,10 @@ steps:
   - name: Build
     image: debian:bullseye
     commands:
-    - ln -snf /etc/localtime && echo CET > /etc/timezone
-    - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild --debug '~localsrc'
-    - mkdir -p ./hestia/
-    - mv /tmp/hestiacp-src/deb/*.deb ./hestia/
+      - ln -snf /etc/localtime && echo CET > /etc/timezone
+      - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild --debug '~localsrc'
+      - mkdir -p ./hestia/
+      - mv /tmp/hestiacp-src/deb/*.deb ./hestia/
   - name: Upload
     image: appleboy/drone-scp
     settings:
@@ -128,4 +128,4 @@ steps:
         - ./hestia/*
 
 trigger:
-    event: [ promote]
+  event: [promote]

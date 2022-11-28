@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace Hestia\Models;
 
 class Model {
+	public function __construct() {
+	}
 
-    public function __construct() {
-
-    }
-
-    public static function all()
-    {
-
-    }
+	public static function all() {
+	}
 }
 
 /**

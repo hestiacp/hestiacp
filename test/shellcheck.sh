@@ -36,8 +36,8 @@ for file in $files; do
        printf "%s: \033[0;32m Success \033[0m\n" "$file"
     fi
 done
+echo $err;
 
-if [ $err == 1 ];
-then
-exit "$err";
+if [ $err == 1 ]; then
+    exit 1;
 fi

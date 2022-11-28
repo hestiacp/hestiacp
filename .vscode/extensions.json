@@ -4,6 +4,8 @@
 		"editorconfig.editorconfig",
 		"dbaeumer.vscode-eslint",
 		"esbenp.prettier-vscode",
-		"bmewburn.vscode-intelephense-client"
+		"bmewburn.vscode-intelephense-client",
+		"william-voyek.vscode-nginx",
+		"timonwong.shellcheck"
 	]
 }

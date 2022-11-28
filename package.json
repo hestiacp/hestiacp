@@ -1,5 +1,6 @@
 {
 	"name": "hestia",
+	"private": true,
 	"version": "1.7.0-alpha",
 	"description": "An open-source Linux web server control panel.",
 	"repository": "https://github.com/hestiacp/hestiacp",
@@ -9,7 +10,7 @@
 		"lint": "prettier --check . && eslint web/js/ && stylelint web/css/src/themes/*.css",
 		"lint-staged": "lint-staged",
 		"format": "prettier --write .",
-		"prepare": "husky install"
+		"postinstall": "husky install"
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^6.2.1",

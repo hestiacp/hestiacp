@@ -40,6 +40,4 @@ for file in $files; do
 done
 echo "$i files checked and $f errors"
 
-if [ $err = 1 ]; then
-    exit 1;
-fi
+exit $err

@@ -11,16 +11,16 @@
 		var ref = {};
 		var customConfig = params;
 		var config = {
-			bgcolor: "#333",
+			bgcolor: '#333',
 			opacity: 0.6,
-			id: "floating-box",
-			className: "floating-box-class",
+			id: 'floating-box',
+			className: 'floating-box-class',
 			zIndex: 5000,
 			beforeStart: function () {},
 			beforeEnd: function () {},
 			afterStart: function () {},
 			close: null,
-			closeClass: "close-floating-layer",
+			closeClass: 'close-floating-layer',
 			outerClose: false,
 			returnParent: jQuery(elm).parent(),
 		};
@@ -34,26 +34,26 @@
 		}
 
 		function start_ovservers() {
-			jQuery(window).bind("scroll.fl", function () {
+			jQuery(window).bind('scroll.fl', function () {
 				setTimeout(function () {
 					reposition();
 				}, 5);
 			});
 
-			jQuery(window).bind("resize.fl", function () {
+			jQuery(window).bind('resize.fl', function () {
 				setTimeout(function () {
 					reposition();
 				}, 5);
 			});
 
-			jQuery(ref.container).bind("click.fl", function (evt) {
+			jQuery(ref.container).bind('click.fl', function (evt) {
 				jQuery(evt.target).hasClass(config.closeClass) ? flayer_destroy() : -1;
-				if (config.outerClose) jQuery(evt.target).hasClass("fl-cloud") ? flayer_destroy() : -1;
+				if (config.outerClose) jQuery(evt.target).hasClass('fl-cloud') ? flayer_destroy() : -1;
 			});
 
 			// todo:
 			config.outerClose
-				? jQuery(window).bind("keypress.fl", function (evt) {
+				? jQuery(window).bind('keypress.fl', function (evt) {
 						evt.keyCode == 27 ? flayer_destroy() : -1;
 				  })
 				: -1;
@@ -66,11 +66,11 @@
 			viewport.height = window.innerHeight ? window.innerHeight : jQuery(window).height(); //jQuery(document.body).height();
 			viewport.width = jQuery(window).width(); //jQuery(document.body).width();
 
-			var had = jQuery("<div>")
-				.attr("id", "truth-is-out-there")
-				.css({ position: "absolute", left: "-50000px" });
-			var dolly = jQuery(elm).clone(true).addClass("dolly");
-			jQuery(had).append(jQuery(dolly).removeClass("u-hidden"));
+			var had = jQuery('<div>')
+				.attr('id', 'truth-is-out-there')
+				.css({ position: 'absolute', left: '-50000px' });
+			var dolly = jQuery(elm).clone(true).addClass('dolly');
+			jQuery(had).append(jQuery(dolly).removeClass('u-hidden'));
 			jQuery(document.body).prepend(had);
 			var dims = { width: jQuery(dolly).width(), height: jQuery(dolly).height() };
 			jQuery(had).remove();
@@ -112,11 +112,11 @@
 
 		function flayer_destroy() {
 			config.beforeEnd(elm);
-			jQuery(window).unbind("scroll.fl");
-			jQuery(window).unbind("resize.fl");
-			jQuery(ref.container).unbind("click.fl");
-			config.outerClose ? jQuery(window).unbind("keypress.fl") : -1;
-			jQuery(config.returnParent).append(jQuery(elm).addClass("u-hidden"));
+			jQuery(window).unbind('scroll.fl');
+			jQuery(window).unbind('resize.fl');
+			jQuery(ref.container).unbind('click.fl');
+			config.outerClose ? jQuery(window).unbind('keypress.fl') : -1;
+			jQuery(config.returnParent).append(jQuery(elm).addClass('u-hidden'));
 			jQuery(ref.container).remove();
 			jQuery.browser.msie && jQuery.browser.version.substr(0, 1) < 7 ? show_selects() : -1;
 
@@ -124,48 +124,48 @@
 		}
 
 		function embed() {
-			ref.container = jQuery("<div>");
-			jQuery(ref.container).addClass(config.className + "-container");
+			ref.container = jQuery('<div>');
+			jQuery(ref.container).addClass(config.className + '-container');
 			jQuery(ref.container)
 				.css({
-					position: "absolute",
-					left: "0",
-					top: "0",
-					display: "none",
+					position: 'absolute',
+					left: '0',
+					top: '0',
+					display: 'none',
 					zIndex: config.zIndex,
 				})
-				.addClass("fl-cloud")
-				.addClass("u-hidden");
+				.addClass('fl-cloud')
+				.addClass('u-hidden');
 
-			ref.overlay = jQuery("<div>").addClass(config.className + "-layer");
+			ref.overlay = jQuery('<div>').addClass(config.className + '-layer');
 			jQuery(ref.overlay)
 				.css({
-					position: "absolute",
+					position: 'absolute',
 					zIndex: config.zIndex,
 					backgroundColor: config.bgcolor,
 					opacity: config.opacity,
 					zoom: 1,
 				})
-				.addClass("fl-cloud");
+				.addClass('fl-cloud');
 
-			ref.content = jQuery("<div>").addClass(config.className);
-			jQuery(ref.content).attr("id", config.id);
+			ref.content = jQuery('<div>').addClass(config.className);
+			jQuery(ref.content).attr('id', config.id);
 			jQuery(ref.content)
 				.css({
-					position: "absolute",
+					position: 'absolute',
 					zIndex: config.zIndex + 1,
 				})
-				.addClass("fl-cloud");
+				.addClass('fl-cloud');
 
-			if (null == config.close || typeof config.close == "undefined") {
-				ref.close = jQuery("<div>").addClass(config.className);
-				jQuery(ref.close).attr("id", config.closeClass);
+			if (null == config.close || typeof config.close == 'undefined') {
+				ref.close = jQuery('<div>').addClass(config.className);
+				jQuery(ref.close).attr('id', config.closeClass);
 				jQuery(ref.close)
 					.css({
-						position: "absolute",
+						position: 'absolute',
 						zIndex: config.zIndex + 1,
-						color: "white",
-						cursor: "pointer",
+						color: 'white',
+						cursor: 'pointer',
 					})
 					.addClass(config.closeClass);
 				//jQuery(ref.close).text('[X]Close');
@@ -206,9 +206,9 @@
 			init();
 			embed();
 			position();
-			jQuery(ref.content).append(jQuery(elm).removeClass("u-hidden"));
+			jQuery(ref.content).append(jQuery(elm).removeClass('u-hidden'));
 			start_ovservers();
-			jQuery(ref.container).removeClass("u-hidden").css({ display: "block" });
+			jQuery(ref.container).removeClass('u-hidden').css({ display: 'block' });
 			config.afterStart(elm);
 		}
 		//

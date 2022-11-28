@@ -2,12 +2,12 @@
 //
 // Updates database username dynamically, showing its prefix
 App.Actions.DB.update_db_username_hint = function (elm, hint) {
-	if (hint.trim() == "") {
-		$(elm).parent().find(".hint").text("");
+	if (hint.trim() == '') {
+		$(elm).parent().find('.hint').text('');
 	}
 	$(elm)
 		.parent()
-		.find(".hint")
+		.find('.hint')
 		.text(GLOBAL.DB_USER_PREFIX + hint);
 };
 
@@ -15,12 +15,12 @@ App.Actions.DB.update_db_username_hint = function (elm, hint) {
 //
 // Updates database name dynamically, showing its prefix
 App.Actions.DB.update_db_databasename_hint = function (elm, hint) {
-	if (hint.trim() == "") {
-		$(elm).parent().find(".hint").text("");
+	if (hint.trim() == '') {
+		$(elm).parent().find('.hint').text('');
 	}
 	$(elm)
 		.parent()
-		.find(".hint")
+		.find('.hint')
 		.text(GLOBAL.DB_DBNAME_PREFIX + hint);
 };
 
@@ -29,11 +29,11 @@ App.Actions.DB.update_db_databasename_hint = function (elm, hint) {
 App.Listeners.DB.keypress_db_username = function () {
 	var ref = $('input[name="v_dbuser"]');
 	var current_val = ref.val();
-	if (current_val.trim() != "") {
+	if (current_val.trim() != '') {
 		App.Actions.DB.update_db_username_hint(ref, current_val);
 	}
 
-	ref.bind("keypress input", function (evt) {
+	ref.bind('keypress input', function (evt) {
 		clearTimeout(window.frp_usr_tmt);
 		window.frp_usr_tmt = setTimeout(function () {
 			var elm = $(evt.target);
@@ -47,11 +47,11 @@ App.Listeners.DB.keypress_db_username = function () {
 App.Listeners.DB.keypress_db_databasename = function () {
 	var ref = $('input[name="v_database"]');
 	var current_val = ref.val();
-	if (current_val.trim() != "") {
+	if (current_val.trim() != '') {
 		App.Actions.DB.update_db_databasename_hint(ref, current_val);
 	}
 
-	ref.bind("keypress input", function (evt) {
+	ref.bind('keypress input', function (evt) {
 		clearTimeout(window.frp_dbn_tmt);
 		window.frp_dbn_tmt = setTimeout(function () {
 			var elm = $(evt.target);
@@ -80,12 +80,12 @@ App.Actions.DB.update_password_meter = function () {
 	if (min_num.test(password)) {
 		score = score + 1;
 	}
-	$(".password-meter").val(score);
+	$('.password-meter').val(score);
 };
 
 App.Listeners.DB.keypress_v_password = function () {
 	var ref = $('input[name="v_password"]');
-	ref.bind("keypress input", function (evt) {
+	ref.bind('keypress input', function (evt) {
 		clearTimeout(window.frp_usr_tmt);
 		window.frp_usr_tmt = setTimeout(function () {
 			var elm = $(evt.target);
@@ -103,6 +103,6 @@ App.Listeners.DB.keypress_db_username();
 App.Listeners.DB.keypress_db_databasename();
 
 applyRandomString = function (min_length = 16) {
-	$("input[name=v_password]").val(randomString2(min_length));
+	$('input[name=v_password]').val(randomString2(min_length));
 	App.Actions.DB.update_password_meter();
 };

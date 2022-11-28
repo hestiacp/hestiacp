@@ -1,5 +1,5 @@
 $.fn.scrollTo = function (target, options, callback) {
-	if (typeof options == "function" && arguments.length == 2) {
+	if (typeof options == 'function' && arguments.length == 2) {
 		callback = options;
 		options = target;
 	}
@@ -8,16 +8,16 @@ $.fn.scrollTo = function (target, options, callback) {
 			scrollTarget: target,
 			offsetTop: 50,
 			duration: 10,
-			easing: "swing",
+			easing: 'swing',
 		},
 		options
 	);
 	return this.each(function () {
 		var scrollPane = $(this);
 		var scrollTarget =
-			typeof settings.scrollTarget == "number" ? settings.scrollTarget : $(settings.scrollTarget);
+			typeof settings.scrollTarget == 'number' ? settings.scrollTarget : $(settings.scrollTarget);
 		var scrollY =
-			typeof scrollTarget == "number"
+			typeof scrollTarget == 'number'
 				? scrollTarget
 				: scrollTarget.offset().top + scrollPane.scrollTop() - parseInt(settings.offsetTop);
 		scrollPane.animate(
@@ -25,7 +25,7 @@ $.fn.scrollTo = function (target, options, callback) {
 			parseInt(settings.duration),
 			settings.easing,
 			function () {
-				if (typeof callback == "function") {
+				if (typeof callback == 'function') {
 					callback.call(this);
 				}
 			}
@@ -55,7 +55,7 @@ var dateFormat = (function () {
 		pad = function (val, len) {
 			val = String(val);
 			len = len || 2;
-			while (val.length < len) val = "0" + val;
+			while (val.length < len) val = '0' + val;
 			return val;
 		};
 
@@ -66,7 +66,7 @@ var dateFormat = (function () {
 		// You can't provide utc if you skip other args (use the "UTC:" mask prefix)
 		if (
 			arguments.length == 1 &&
-			Object.prototype.toString.call(date) == "[object String]" &&
+			Object.prototype.toString.call(date) == '[object String]' &&
 			!/\d/.test(date)
 		) {
 			mask = date;
@@ -75,25 +75,25 @@ var dateFormat = (function () {
 
 		// Passing date through Date applies Date.parse, if necessary
 		date = date ? new Date(date) : new Date();
-		if (isNaN(date)) throw SyntaxError("invalid date");
+		if (isNaN(date)) throw SyntaxError('invalid date');
 
-		mask = String(dF.masks[mask] || mask || dF.masks["default"]);
+		mask = String(dF.masks[mask] || mask || dF.masks['default']);
 
 		// Allow setting the utc argument via the mask
-		if (mask.slice(0, 4) == "UTC:") {
+		if (mask.slice(0, 4) == 'UTC:') {
 			mask = mask.slice(4);
 			utc = true;
 		}
 
-		var _ = utc ? "getUTC" : "get",
-			d = date[_ + "Date"](),
-			D = date[_ + "Day"](),
-			m = date[_ + "Month"](),
-			y = date[_ + "FullYear"](),
-			H = date[_ + "Hours"](),
-			M = date[_ + "Minutes"](),
-			s = date[_ + "Seconds"](),
-			L = date[_ + "Milliseconds"](),
+		var _ = utc ? 'getUTC' : 'get',
+			d = date[_ + 'Date'](),
+			D = date[_ + 'Day'](),
+			m = date[_ + 'Month'](),
+			y = date[_ + 'FullYear'](),
+			H = date[_ + 'Hours'](),
+			M = date[_ + 'Minutes'](),
+			s = date[_ + 'Seconds'](),
+			L = date[_ + 'Milliseconds'](),
 			o = utc ? 0 : date.getTimezoneOffset(),
 			flags = {
 				d: d,
@@ -116,13 +116,13 @@ var dateFormat = (function () {
 				ss: pad(s),
 				l: pad(L, 3),
 				L: pad(L > 99 ? Math.round(L / 10) : L),
-				t: H < 12 ? "a" : "p",
-				tt: H < 12 ? "am" : "pm",
-				T: H < 12 ? "A" : "P",
-				TT: H < 12 ? "AM" : "PM",
-				Z: utc ? "UTC" : (String(date).match(timezone) || [""]).pop().replace(timezoneClip, ""),
-				o: (o > 0 ? "-" : "+") + pad(Math.floor(Math.abs(o) / 60) * 100 + (Math.abs(o) % 60), 4),
-				S: ["th", "st", "nd", "rd"][d % 10 > 3 ? 0 : (((d % 100) - (d % 10) != 10) * d) % 10],
+				t: H < 12 ? 'a' : 'p',
+				tt: H < 12 ? 'am' : 'pm',
+				T: H < 12 ? 'A' : 'P',
+				TT: H < 12 ? 'AM' : 'PM',
+				Z: utc ? 'UTC' : (String(date).match(timezone) || ['']).pop().replace(timezoneClip, ''),
+				o: (o > 0 ? '-' : '+') + pad(Math.floor(Math.abs(o) / 60) * 100 + (Math.abs(o) % 60), 4),
+				S: ['th', 'st', 'nd', 'rd'][d % 10 > 3 ? 0 : (((d % 100) - (d % 10) != 10) * d) % 10],
 			};
 
 		return mask.replace(token, function ($0) {
@@ -133,16 +133,16 @@ var dateFormat = (function () {
 
 // Some common format strings
 dateFormat.masks = {
-	default: "ddd mmm dd yyyy HH:MM:ss",
-	shortDate: "m/d/yy",
-	mediumDate: "mmm d, yyyy",
-	longDate: "mmmm d, yyyy",
-	fullDate: "dddd, mmmm d, yyyy",
-	shortTime: "h:MM TT",
-	mediumTime: "h:MM:ss TT",
-	longTime: "h:MM:ss TT Z",
-	isoDate: "yyyy-mm-dd",
-	isoTime: "HH:MM:ss",
+	default: 'ddd mmm dd yyyy HH:MM:ss',
+	shortDate: 'm/d/yy',
+	mediumDate: 'mmm d, yyyy',
+	longDate: 'mmmm d, yyyy',
+	fullDate: 'dddd, mmmm d, yyyy',
+	shortTime: 'h:MM TT',
+	mediumTime: 'h:MM:ss TT',
+	longTime: 'h:MM:ss TT Z',
+	isoDate: 'yyyy-mm-dd',
+	isoTime: 'HH:MM:ss',
 	isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
 	isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'",
 };
@@ -150,46 +150,46 @@ dateFormat.masks = {
 // Internationalization strings
 dateFormat.i18n = {
 	dayNames: [
-		"Sun",
-		"Mon",
-		"Tue",
-		"Wed",
-		"Thu",
-		"Fri",
-		"Sat",
-		"Sunday",
-		"Monday",
-		"Tuesday",
-		"Wednesday",
-		"Thursday",
-		"Friday",
-		"Saturday",
+		'Sun',
+		'Mon',
+		'Tue',
+		'Wed',
+		'Thu',
+		'Fri',
+		'Sat',
+		'Sunday',
+		'Monday',
+		'Tuesday',
+		'Wednesday',
+		'Thursday',
+		'Friday',
+		'Saturday',
 	],
 	monthNames: [
-		"Jan",
-		"Feb",
-		"Mar",
-		"Apr",
-		"May",
-		"Jun",
-		"Jul",
-		"Aug",
-		"Sep",
-		"Oct",
-		"Nov",
-		"Dec",
-		"January",
-		"February",
-		"March",
-		"April",
-		"May",
-		"June",
-		"July",
-		"August",
-		"September",
-		"October",
-		"November",
-		"December",
+		'Jan',
+		'Feb',
+		'Mar',
+		'Apr',
+		'May',
+		'Jun',
+		'Jul',
+		'Aug',
+		'Sep',
+		'Oct',
+		'Nov',
+		'Dec',
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December',
 	],
 };
 
@@ -239,15 +239,15 @@ Date.prototype.dateFormat = function (format, ignore_offset) {
 };
 
 Date.createNewFormat = function (format) {
-	var funcName = "format" + Date.formatFunctions.count++;
+	var funcName = 'format' + Date.formatFunctions.count++;
 	Date.formatFunctions[format] = funcName;
-	var code = "Date.prototype." + funcName + " = function(){return ";
+	var code = 'Date.prototype.' + funcName + ' = function(){return ';
 	var special = false;
-	var ch = "";
+	var ch = '';
 	for (var i = 0; i < format.length; ++i) {
 		ch = format.charAt(i);
 		// escape character start
-		if (!special && ch == "\\") {
+		if (!special && ch == '\\') {
 			special = true;
 		}
 		// escaped string
@@ -267,69 +267,69 @@ Date.createNewFormat = function (format) {
 			code += Date.getFormatCode(ch);
 		}
 	}
-	eval(code.substring(0, code.length - 3) + ";}");
+	eval(code.substring(0, code.length - 3) + ';}');
 };
 
 Date.getFormatCode = function (character) {
 	switch (character) {
-		case "d":
+		case 'd':
 			return "String.leftPad(this.getDate(), 2, '0') + ";
-		case "D":
-			return "Date.dayNames[this.getDay()].substring(0, 3) + ";
-		case "j":
-			return "this.getDate() + ";
-		case "l":
-			return "Date.dayNames[this.getDay()] + ";
-		case "S":
-			return "this.getSuffix() + ";
-		case "w":
-			return "this.getDay() + ";
-		case "z":
-			return "this.getDayOfYear() + ";
-		case "W":
-			return "this.getWeekOfYear() + ";
-		case "F":
-			return "Date.monthNames[this.getMonth()] + ";
-		case "m":
+		case 'D':
+			return 'Date.dayNames[this.getDay()].substring(0, 3) + ';
+		case 'j':
+			return 'this.getDate() + ';
+		case 'l':
+			return 'Date.dayNames[this.getDay()] + ';
+		case 'S':
+			return 'this.getSuffix() + ';
+		case 'w':
+			return 'this.getDay() + ';
+		case 'z':
+			return 'this.getDayOfYear() + ';
+		case 'W':
+			return 'this.getWeekOfYear() + ';
+		case 'F':
+			return 'Date.monthNames[this.getMonth()] + ';
+		case 'm':
 			return "String.leftPad(this.getMonth() + 1, 2, '0') + ";
-		case "M":
-			return "Date.monthNames[this.getMonth()].substring(0, 3) + ";
-		case "n":
-			return "(this.getMonth() + 1) + ";
-		case "t":
-			return "this.getDaysInMonth() + ";
-		case "L":
-			return "(this.isLeapYear() ? 1 : 0) + ";
-		case "Y":
-			return "this.getFullYear() + ";
-		case "y":
+		case 'M':
+			return 'Date.monthNames[this.getMonth()].substring(0, 3) + ';
+		case 'n':
+			return '(this.getMonth() + 1) + ';
+		case 't':
+			return 'this.getDaysInMonth() + ';
+		case 'L':
+			return '(this.isLeapYear() ? 1 : 0) + ';
+		case 'Y':
+			return 'this.getFullYear() + ';
+		case 'y':
 			return "('' + this.getFullYear()).substring(2, 4) + ";
-		case "a":
+		case 'a':
 			return "(this.getHours() < 12 ? 'am' : 'pm') + ";
-		case "A":
+		case 'A':
 			return "(this.getHours() < 12 ? 'AM' : 'PM') + ";
-		case "g":
-			return "((this.getHours() %12) ? this.getHours() % 12 : 12) + ";
-		case "G":
-			return "this.getHours() + ";
-		case "h":
+		case 'g':
+			return '((this.getHours() %12) ? this.getHours() % 12 : 12) + ';
+		case 'G':
+			return 'this.getHours() + ';
+		case 'h':
 			return "String.leftPad((this.getHours() %12) ? this.getHours() % 12 : 12, 2, '0') + ";
-		case "H":
+		case 'H':
 			return "String.leftPad(this.getHours(), 2, '0') + ";
-		case "i":
+		case 'i':
 			return "String.leftPad(this.getMinutes(), 2, '0') + ";
-		case "s":
+		case 's':
 			return "String.leftPad(this.getSeconds(), 2, '0') + ";
-		case "X":
+		case 'X':
 			return "String.leftPad(this.getMilliseconds(), 3, '0') + ";
-		case "O":
-			return "this.getGMTOffset() + ";
-		case "T":
-			return "this.getTimezone() + ";
-		case "Z":
-			return "(this.getTimezoneOffset() * -60) + ";
-		case "q": // quarter num, Q for name?
-			return "this.getQuarter() + ";
+		case 'O':
+			return 'this.getGMTOffset() + ';
+		case 'T':
+			return 'this.getTimezone() + ';
+		case 'Z':
+			return '(this.getTimezoneOffset() * -60) + ';
+		case 'q': // quarter num, Q for name?
+			return 'this.getQuarter() + ';
 		default:
 			return "'" + String.escape(character) + "' + ";
 	}
@@ -344,31 +344,31 @@ Date.parseDate = function (input, format) {
 };
 
 Date.createParser = function (format) {
-	var funcName = "parse" + Date.parseFunctions.count++;
+	var funcName = 'parse' + Date.parseFunctions.count++;
 	var regexNum = Date.parseRegexes.length;
 	var currentGroup = 1;
 	Date.parseFunctions[format] = funcName;
 
 	var code =
-		"Date." +
+		'Date.' +
 		funcName +
-		" = function(input){\n" +
-		"var y = -1, m = -1, d = -1, h = -1, i = -1, s = -1, ms = -1, z = 0;\n" +
-		"var d = new Date();\n" +
-		"y = d.getFullYear();\n" +
-		"m = d.getMonth();\n" +
-		"d = d.getDate();\n" +
-		"var results = input.match(Date.parseRegexes[" +
+		' = function(input){\n' +
+		'var y = -1, m = -1, d = -1, h = -1, i = -1, s = -1, ms = -1, z = 0;\n' +
+		'var d = new Date();\n' +
+		'y = d.getFullYear();\n' +
+		'm = d.getMonth();\n' +
+		'd = d.getDate();\n' +
+		'var results = input.match(Date.parseRegexes[' +
 		regexNum +
-		"]);\n" +
-		"if (results && results.length > 0) {";
-	var regex = "";
+		']);\n' +
+		'if (results && results.length > 0) {';
+	var regex = '';
 
 	var special = false;
-	var ch = "";
+	var ch = '';
 	for (var i = 0; i < format.length; ++i) {
 		ch = format.charAt(i);
-		if (!special && ch == "\\") {
+		if (!special && ch == '\\') {
 			special = true;
 		} else if (special) {
 			special = false;
@@ -384,130 +384,130 @@ Date.createParser = function (format) {
 	}
 
 	code +=
-		"if (y > 0 && m >= 0 && d > 0 && h >= 0 && i >= 0 && s >= 0 && ms >= 0)\n" +
-		"{return new Date(y, m, d, h, i, s, ms).applyOffset(z);}\n" +
-		"if (y > 0 && m >= 0 && d > 0 && h >= 0 && i >= 0 && s >= 0)\n" +
-		"{return new Date(y, m, d, h, i, s).applyOffset(z);}\n" +
-		"else if (y > 0 && m >= 0 && d > 0 && h >= 0 && i >= 0)\n" +
-		"{return new Date(y, m, d, h, i).applyOffset(z);}\n" +
-		"else if (y > 0 && m >= 0 && d > 0 && h >= 0)\n" +
-		"{return new Date(y, m, d, h).applyOffset(z);}\n" +
-		"else if (y > 0 && m >= 0 && d > 0)\n" +
-		"{return new Date(y, m, d).applyOffset(z);}\n" +
-		"else if (y > 0 && m >= 0)\n" +
-		"{return new Date(y, m).applyOffset(z);}\n" +
-		"else if (y > 0)\n" +
-		"{return new Date(y).applyOffset(z);}\n" +
-		"}return null;}";
+		'if (y > 0 && m >= 0 && d > 0 && h >= 0 && i >= 0 && s >= 0 && ms >= 0)\n' +
+		'{return new Date(y, m, d, h, i, s, ms).applyOffset(z);}\n' +
+		'if (y > 0 && m >= 0 && d > 0 && h >= 0 && i >= 0 && s >= 0)\n' +
+		'{return new Date(y, m, d, h, i, s).applyOffset(z);}\n' +
+		'else if (y > 0 && m >= 0 && d > 0 && h >= 0 && i >= 0)\n' +
+		'{return new Date(y, m, d, h, i).applyOffset(z);}\n' +
+		'else if (y > 0 && m >= 0 && d > 0 && h >= 0)\n' +
+		'{return new Date(y, m, d, h).applyOffset(z);}\n' +
+		'else if (y > 0 && m >= 0 && d > 0)\n' +
+		'{return new Date(y, m, d).applyOffset(z);}\n' +
+		'else if (y > 0 && m >= 0)\n' +
+		'{return new Date(y, m).applyOffset(z);}\n' +
+		'else if (y > 0)\n' +
+		'{return new Date(y).applyOffset(z);}\n' +
+		'}return null;}';
 
-	Date.parseRegexes[regexNum] = new RegExp("^" + regex + "$");
+	Date.parseRegexes[regexNum] = new RegExp('^' + regex + '$');
 	eval(code);
 };
 
 Date.formatCodeToRegex = function (character, currentGroup) {
 	switch (character) {
-		case "D":
-			return { g: 0, c: null, s: "(?:Sun|Mon|Tue|Wed|Thu|Fri|Sat)" };
-		case "j":
-		case "d":
-			return { g: 1, c: "d = parseInt(results[" + currentGroup + "], 10);\n", s: "(\\d{1,2})" };
-		case "l":
-			return { g: 0, c: null, s: "(?:" + Date.dayNames.join("|") + ")" };
-		case "S":
-			return { g: 0, c: null, s: "(?:st|nd|rd|th)" };
-		case "w":
-			return { g: 0, c: null, s: "\\d" };
-		case "z":
-			return { g: 0, c: null, s: "(?:\\d{1,3})" };
-		case "W":
-			return { g: 0, c: null, s: "(?:\\d{2})" };
-		case "F":
+		case 'D':
+			return { g: 0, c: null, s: '(?:Sun|Mon|Tue|Wed|Thu|Fri|Sat)' };
+		case 'j':
+		case 'd':
+			return { g: 1, c: 'd = parseInt(results[' + currentGroup + '], 10);\n', s: '(\\d{1,2})' };
+		case 'l':
+			return { g: 0, c: null, s: '(?:' + Date.dayNames.join('|') + ')' };
+		case 'S':
+			return { g: 0, c: null, s: '(?:st|nd|rd|th)' };
+		case 'w':
+			return { g: 0, c: null, s: '\\d' };
+		case 'z':
+			return { g: 0, c: null, s: '(?:\\d{1,3})' };
+		case 'W':
+			return { g: 0, c: null, s: '(?:\\d{2})' };
+		case 'F':
 			return {
 				g: 1,
-				c: "m = parseInt(Date.monthNumbers[results[" + currentGroup + "].substring(0, 3)], 10);\n",
-				s: "(" + Date.monthNames.join("|") + ")",
+				c: 'm = parseInt(Date.monthNumbers[results[' + currentGroup + '].substring(0, 3)], 10);\n',
+				s: '(' + Date.monthNames.join('|') + ')',
 			};
-		case "M":
+		case 'M':
 			return {
 				g: 1,
-				c: "m = parseInt(Date.monthNumbers[results[" + currentGroup + "]], 10);\n",
-				s: "(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)",
+				c: 'm = parseInt(Date.monthNumbers[results[' + currentGroup + ']], 10);\n',
+				s: '(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)',
 			};
-		case "n":
-		case "m":
-			return { g: 1, c: "m = parseInt(results[" + currentGroup + "], 10) - 1;\n", s: "(\\d{1,2})" };
-		case "t":
-			return { g: 0, c: null, s: "\\d{1,2}" };
-		case "L":
-			return { g: 0, c: null, s: "(?:1|0)" };
-		case "Y":
-			return { g: 1, c: "y = parseInt(results[" + currentGroup + "], 10);\n", s: "(\\d{4})" };
-		case "y":
+		case 'n':
+		case 'm':
+			return { g: 1, c: 'm = parseInt(results[' + currentGroup + '], 10) - 1;\n', s: '(\\d{1,2})' };
+		case 't':
+			return { g: 0, c: null, s: '\\d{1,2}' };
+		case 'L':
+			return { g: 0, c: null, s: '(?:1|0)' };
+		case 'Y':
+			return { g: 1, c: 'y = parseInt(results[' + currentGroup + '], 10);\n', s: '(\\d{4})' };
+		case 'y':
 			return {
 				g: 1,
 				c:
-					"var ty = parseInt(results[" +
+					'var ty = parseInt(results[' +
 					currentGroup +
-					"], 10);\n" +
-					"y = ty > Date.y2kYear ? 1900 + ty : 2000 + ty;\n",
-				s: "(\\d{1,2})",
+					'], 10);\n' +
+					'y = ty > Date.y2kYear ? 1900 + ty : 2000 + ty;\n',
+				s: '(\\d{1,2})',
 			};
-		case "a":
+		case 'a':
 			return {
 				g: 1,
 				c:
-					"if (results[" +
+					'if (results[' +
 					currentGroup +
 					"] == 'am') {\n" +
-					"if (h == 12) { h = 0; }\n" +
-					"} else { if (h < 12) { h += 12; }}",
-				s: "(am|pm)",
+					'if (h == 12) { h = 0; }\n' +
+					'} else { if (h < 12) { h += 12; }}',
+				s: '(am|pm)',
 			};
-		case "A":
+		case 'A':
 			return {
 				g: 1,
 				c:
-					"if (results[" +
+					'if (results[' +
 					currentGroup +
 					"] == 'AM') {\n" +
-					"if (h == 12) { h = 0; }\n" +
-					"} else { if (h < 12) { h += 12; }}",
-				s: "(AM|PM)",
+					'if (h == 12) { h = 0; }\n' +
+					'} else { if (h < 12) { h += 12; }}',
+				s: '(AM|PM)',
 			};
-		case "g":
-		case "G":
-		case "h":
-		case "H":
-			return { g: 1, c: "h = parseInt(results[" + currentGroup + "], 10);\n", s: "(\\d{1,2})" };
-		case "i":
-			return { g: 1, c: "i = parseInt(results[" + currentGroup + "], 10);\n", s: "(\\d{2})" };
-		case "s":
-			return { g: 1, c: "s = parseInt(results[" + currentGroup + "], 10);\n", s: "(\\d{2})" };
-		case "X":
-			return { g: 1, c: "ms = parseInt(results[" + currentGroup + "], 10);\n", s: "(\\d{3})" };
-		case "O":
-		case "P":
+		case 'g':
+		case 'G':
+		case 'h':
+		case 'H':
+			return { g: 1, c: 'h = parseInt(results[' + currentGroup + '], 10);\n', s: '(\\d{1,2})' };
+		case 'i':
+			return { g: 1, c: 'i = parseInt(results[' + currentGroup + '], 10);\n', s: '(\\d{2})' };
+		case 's':
+			return { g: 1, c: 's = parseInt(results[' + currentGroup + '], 10);\n', s: '(\\d{2})' };
+		case 'X':
+			return { g: 1, c: 'ms = parseInt(results[' + currentGroup + '], 10);\n', s: '(\\d{3})' };
+		case 'O':
+		case 'P':
 			return {
 				g: 1,
-				c: "z = Date.parseOffset(results[" + currentGroup + "], 10);\n",
-				s: "(Z|[+-]\\d{2}:?\\d{2})",
+				c: 'z = Date.parseOffset(results[' + currentGroup + '], 10);\n',
+				s: '(Z|[+-]\\d{2}:?\\d{2})',
 			}; // "Z", "+05:00", "+0500" all acceptable.
-		case "T":
-			return { g: 0, c: null, s: "[A-Z]{3}" };
-		case "Z":
-			return { g: 1, c: "s = parseInt(results[" + currentGroup + "], 10);\n", s: "([+-]\\d{1,5})" };
+		case 'T':
+			return { g: 0, c: null, s: '[A-Z]{3}' };
+		case 'Z':
+			return { g: 1, c: 's = parseInt(results[' + currentGroup + '], 10);\n', s: '([+-]\\d{1,5})' };
 		default:
 			return { g: 0, c: null, s: String.escape(character) };
 	}
 };
 
 Date.parseOffset = function (str) {
-	if (str == "Z") {
+	if (str == 'Z') {
 		return 0;
 	} // UTC, no offset.
 	var seconds;
 	seconds = parseInt(str[0] + str[1] + str[2]) * 3600; // e.g., "+05" or "-08"
-	if (str[3] == ":") {
+	if (str[3] == ':') {
 		// "+HH:MM" is preferred iso8601 format ("O")
 		seconds += parseInt(str[4] + str[5]) * 60;
 	} else {
@@ -535,16 +535,16 @@ Date.prototype.applyOffset = function (offset_seconds) {
 
 Date.prototype.getTimezone = function () {
 	return this.toString()
-		.replace(/^.*? ([A-Z]{3}) [0-9]{4}.*$/, "$1")
-		.replace(/^.*?\(([A-Z])[a-z]+ ([A-Z])[a-z]+ ([A-Z])[a-z]+\)$/, "$1$2$3")
-		.replace(/^.*?[0-9]{4} \(([A-Z]{3})\)/, "$1");
+		.replace(/^.*? ([A-Z]{3}) [0-9]{4}.*$/, '$1')
+		.replace(/^.*?\(([A-Z])[a-z]+ ([A-Z])[a-z]+ ([A-Z])[a-z]+\)$/, '$1$2$3')
+		.replace(/^.*?[0-9]{4} \(([A-Z]{3})\)/, '$1');
 };
 
 Date.prototype.getGMTOffset = function () {
 	return (
-		(this.getTimezoneOffset() > 0 ? "-" : "+") +
-		String.leftPad(Math.floor(this.getTimezoneOffset() / 60), 2, "0") +
-		String.leftPad(this.getTimezoneOffset() % 60, 2, "0")
+		(this.getTimezoneOffset() > 0 ? '-' : '+') +
+		String.leftPad(Math.floor(this.getTimezoneOffset() / 60), 2, '0') +
+		String.leftPad(this.getTimezoneOffset() % 60, 2, '0')
 	);
 };
 
@@ -564,7 +564,7 @@ Date.prototype.getWeekOfYear = function () {
 	var jan1 = new Date(this.getFullYear(), 0, 1);
 	var then = 7 - jan1.getDay() + 4;
 	document.write(then);
-	return String.leftPad((now - then) / 7 + 1, 2, "0");
+	return String.leftPad((now - then) / 7 + 1, 2, '0');
 };
 
 Date.prototype.isLeapYear = function () {
@@ -595,26 +595,26 @@ Date.prototype.getSuffix = function () {
 		case 1:
 		case 21:
 		case 31:
-			return "st";
+			return 'st';
 		case 2:
 		case 22:
-			return "nd";
+			return 'nd';
 		case 3:
 		case 23:
-			return "rd";
+			return 'rd';
 		default:
-			return "th";
+			return 'th';
 	}
 };
 
 String.escape = function (string) {
-	return string.replace(/('|\\)/g, "\\$1");
+	return string.replace(/('|\\)/g, '\\$1');
 };
 
 String.leftPad = function (val, size, ch) {
 	var result = new String(val);
 	if (ch == null) {
-		ch = " ";
+		ch = ' ';
 	}
 	while (result.length < size) {
 		result = ch + result;
@@ -625,20 +625,20 @@ String.leftPad = function (val, size, ch) {
 Date.quarterFromMonthNum = [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4];
 Date.daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 Date.monthNames = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December",
+	'January',
+	'February',
+	'March',
+	'April',
+	'May',
+	'June',
+	'July',
+	'August',
+	'September',
+	'October',
+	'November',
+	'December',
 ];
-Date.dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+Date.dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 Date.y2kYear = 50;
 Date.monthNumbers = {
 	Jan: 0,
@@ -655,17 +655,17 @@ Date.monthNumbers = {
 	Dec: 11,
 };
 Date.patterns = {
-	ISO8601LongPattern: "Y\\-m\\-d\\TH\\:i\\:sO",
-	ISO8601ShortPattern: "Y\\-m\\-d",
-	ShortDatePattern: "n/j/Y",
-	LongDatePattern: "l, F d, Y",
-	FullDateTimePattern: "l, F d, Y g:i:s A",
-	MonthDayPattern: "F d",
-	ShortTimePattern: "g:i A",
-	LongTimePattern: "g:i:s A",
-	SortableDateTimePattern: "Y-m-d\\TH:i:s",
-	UniversalSortableDateTimePattern: "Y-m-d H:i:sO",
-	YearMonthPattern: "F, Y",
+	ISO8601LongPattern: 'Y\\-m\\-d\\TH\\:i\\:sO',
+	ISO8601ShortPattern: 'Y\\-m\\-d',
+	ShortDatePattern: 'n/j/Y',
+	LongDatePattern: 'l, F d, Y',
+	FullDateTimePattern: 'l, F d, Y g:i:s A',
+	MonthDayPattern: 'F d',
+	ShortTimePattern: 'g:i A',
+	LongTimePattern: 'g:i:s A',
+	SortableDateTimePattern: 'Y-m-d\\TH:i:s',
+	UniversalSortableDateTimePattern: 'Y-m-d H:i:sO',
+	YearMonthPattern: 'F, Y',
 };
 
 /**
@@ -673,7 +673,7 @@ Date.patterns = {
  * @author: Malishev Dmitry <dima.malishev@gmail.com>
  */
 var _DEBUG = true;
-var _DEBUG_LEVEL = "ALL";
+var _DEBUG_LEVEL = 'ALL';
 // possible levels: ALL, IMPORTANT
 var Error = { FATAL: 1, WARNING: 0, NORMAL: -1 };
 
@@ -681,7 +681,7 @@ var Error = { FATAL: 1, WARNING: 0, NORMAL: -1 };
  * Init debug, grabs console object if accessible, or makes dummy debugger
  */
 var fb =
-	_DEBUG && "undefined" != typeof console
+	_DEBUG && 'undefined' != typeof console
 		? console
 		: {
 				log: function () {},
@@ -704,7 +704,7 @@ var fb =
 		  };
 
 var checked = false;
-var frmname = "";
+var frmname = '';
 
 //
 var App = {
@@ -716,8 +716,8 @@ var App = {
 	Core: {},
 	// CONSTANT VALUES
 	Constants: {
-		UNLIM_VALUE: "unlimited", // overritten in i18n.js.php
-		UNLIM_TRANSLATED_VALUE: "unlimited", // overritten in i18n.js.php
+		UNLIM_VALUE: 'unlimited', // overritten in i18n.js.php
+		UNLIM_TRANSLATED_VALUE: 'unlimited', // overritten in i18n.js.php
 	},
 	// Actions. More widly used funcs
 	Actions: {
@@ -783,16 +783,16 @@ Array.prototype.get = function (key) {
 };
 Array.prototype.finalize = function () {
 	this.shift();
-	this[0] = this[0].join("");
+	this[0] = this[0].join('');
 	return this[0];
 };
 Array.prototype.done = function () {
-	return this.join("");
+	return this.join('');
 };
 
 String.prototype.wrapperize = function (key, ns) {
 	var tpl = App.Templates.get(key, ns);
-	tpl.set(":content", this);
+	tpl.set(':content', this);
 
 	return tpl.finalize();
 };
@@ -806,36 +806,36 @@ App.Ajax.request = function (method, data, callback, onError) {
 	//App.Helpers.setAjaxBusy(method, data);
 	data = data || {};
 
-	var prgs = $(".progress-container");
+	var prgs = $('.progress-container');
 
 	switch (method) {
-		case "cd":
-			prgs.find("title").text("Opening dir");
+		case 'cd':
+			prgs.find('title').text('Opening dir');
 			prgs.show();
 			break;
-		case "delete_files":
-			prgs.find("title").text("Deleting");
+		case 'delete_files':
+			prgs.find('title').text('Deleting');
 			prgs.show();
 			break;
-		case "unpack_item":
-			prgs.find("title").text("Unpacking");
+		case 'unpack_item':
+			prgs.find('title').text('Unpacking');
 			prgs.show();
 			break;
-		case "create_file":
-			prgs.find("title").text("Creating file");
+		case 'create_file':
+			prgs.find('title').text('Creating file');
 			prgs.show();
 			break;
-		case "create_dir":
-			prgs.find("title").text("Creating directory");
+		case 'create_dir':
+			prgs.find('title').text('Creating directory');
 			prgs.show();
 			break;
-		case "rename_file":
-			prgs.find("title").text("Renaming file");
+		case 'rename_file':
+			prgs.find('title').text('Renaming file');
 			prgs.show();
 			break;
-		case "copy_file":
-		case "copy_directory":
-			prgs.find("title").text("Copying files");
+		case 'copy_file':
+		case 'copy_directory':
+			prgs.find('title').text('Copying files');
 			prgs.show();
 			break;
 		default:
@@ -845,11 +845,11 @@ App.Ajax.request = function (method, data, callback, onError) {
 	jQuery.ajax({
 		url: GLOBAL.ajax_url,
 		global: false,
-		type: data.request_method || "GET",
+		type: data.request_method || 'GET',
 		data: jQuery.extend(data, { action: method }),
-		dataType: "text boost",
+		dataType: 'text boost',
 		converters: {
-			"text boost": function (value) {
+			'text boost': function (value) {
 				value = value.trim();
 				return $.parseJSON(value);
 			},
@@ -859,7 +859,7 @@ App.Ajax.request = function (method, data, callback, onError) {
 		error: function (jqXHR, textStatus, errorThrown) {
 			prgs.hide();
 			onError && onError();
-			if ("undefined" != typeof onError) {
+			if ('undefined' != typeof onError) {
 				fb.error(textStatus);
 			}
 		},
@@ -873,7 +873,7 @@ App.Ajax.request = function (method, data, callback, onError) {
 			try {
 				callback && callback(reply);
 			} catch (e) {
-				fb.error("GENERAL ERROR with ajax method: " + data.request_method + " " + e);
+				fb.error('GENERAL ERROR with ajax method: ' + data.request_method + ' ' + e);
 				//App.Helpers.generalError();
 			}
 		},
@@ -894,12 +894,12 @@ jQuery.extend({
 });
 
 App.Core.create_hidden_form = function (action) {
-	var form = jQuery("<form>", {
-		id: "hidden-form",
-		method: "post",
+	var form = jQuery('<form>', {
+		id: 'hidden-form',
+		method: 'post',
 		action: action,
 	});
-	jQuery("body").append(form);
+	jQuery('body').append(form);
 
 	return form;
 };
@@ -910,10 +910,10 @@ App.Core.extend_from_json = function (elm, data, prefix) {
 	var keys = jQuery.keys(data);
 	for (var i = 0, cnt = keys.length; i < cnt; i++) {
 		elm.append(
-			jQuery("<input>", {
+			jQuery('<input>', {
 				name: keys[i],
 				value: data[keys[i]],
-				type: "hidden",
+				type: 'hidden',
 			})
 		);
 	}
@@ -925,22 +925,22 @@ App.Core.flatten_json = function (data, prefix) {
 	var keys = jQuery.keys(data);
 	var result = {};
 
-	prefix || (prefix = "");
+	prefix || (prefix = '');
 
 	if (keys.length) {
 		for (var i = 0, cnt = keys.length; i < cnt; i++) {
 			var value = data[keys[i]];
 			switch (typeof value) {
-				case "function":
+				case 'function':
 					break;
-				case "object":
+				case 'object':
 					result = jQuery.extend(
 						result,
-						App.Core.flatten_json(value, prefix + "[" + keys[i] + "]")
+						App.Core.flatten_json(value, prefix + '[' + keys[i] + ']')
 					);
 					break;
 				default:
-					result[prefix + "[" + keys[i] + "]"] = value;
+					result[prefix + '[' + keys[i] + ']'] = value;
 			}
 		}
 		return result;
@@ -980,12 +980,12 @@ timer.stop = function (msg) {
 
 timer.print = function (msg) {
 	var passed = timer.stop_time - timer.start_time;
-	fb.info(msg || "" + passed / 1000);
+	fb.info(msg || '' + passed / 1000);
 };
 
 String.prototype.trim = function () {
 	var str = this;
-	str = str.replace(/^\s+/, "");
+	str = str.replace(/^\s+/, '');
 	for (var i = str.length - 1; i >= 0; i--) {
 		if (/\S/.test(str.charAt(i))) {
 			str = str.substring(0, i + 1);
@@ -996,45 +996,45 @@ String.prototype.trim = function () {
 };
 
 set_sticky_class = function () {
-	var toolbar = $(".toolbar");
-	var tableHeader = $(".table-header");
+	var toolbar = $('.toolbar');
+	var tableHeader = $('.table-header');
 	var toolbarOffset = toolbar.offset().top;
-	var headerHeight = $(".top-bar").outerHeight();
+	var headerHeight = $('.top-bar').outerHeight();
 
 	if ($(window).scrollTop() > toolbarOffset - headerHeight) {
-		toolbar.addClass("active");
-		tableHeader.addClass("active");
+		toolbar.addClass('active');
+		tableHeader.addClass('active');
 	} else {
-		toolbar.removeClass("active");
-		tableHeader.removeClass("active");
+		toolbar.removeClass('active');
+		tableHeader.removeClass('active');
 	}
 };
 
 function checkedAll(frmname) {
-	if ($("input#toggle-all").prop("checked")) {
-		$(".l-unit:not(.header)").addClass("selected");
-		$(".ch-toggle").prop("checked", true);
-		$(".toggle-all").addClass("clicked-on");
+	if ($('input#toggle-all').prop('checked')) {
+		$('.l-unit:not(.header)').addClass('selected');
+		$('.ch-toggle').prop('checked', true);
+		$('.toggle-all').addClass('clicked-on');
 	} else {
-		$(".l-unit:not(.header)").removeClass("selected");
-		$(".ch-toggle").prop("checked", false);
-		$(".toggle-all").removeClass("clicked-on");
+		$('.l-unit:not(.header)').removeClass('selected');
+		$('.ch-toggle').prop('checked', false);
+		$('.toggle-all').removeClass('clicked-on');
 	}
 }
 
 function doSearch(url) {
-	var url = url || "/search/";
-	var loc = url + "?q=" + $(".js-search-input").val() + "&token=" + $('input[name="token"]').val();
+	var url = url || '/search/';
+	var loc = url + '?q=' + $('.js-search-input').val() + '&token=' + $('input[name="token"]').val();
 	location.href = loc;
 	return false;
 }
 
 function elementHideShow(elementToHideOrShow, trigger) {
 	var el = document.getElementById(elementToHideOrShow);
-	el.style.display = el.style.display === "none" ? "block" : "none";
+	el.style.display = el.style.display === 'none' ? 'block' : 'none';
 
-	if (typeof trigger !== "undefined") {
-		trigger.querySelector(".js-section-toggle-icon").classList.toggle("fa-square-minus");
-		trigger.querySelector(".js-section-toggle-icon").classList.toggle("fa-square-plus");
+	if (typeof trigger !== 'undefined') {
+		trigger.querySelector('.js-section-toggle-icon').classList.toggle('fa-square-minus');
+		trigger.querySelector('.js-section-toggle-icon').classList.toggle('fa-square-plus');
 	}
 }

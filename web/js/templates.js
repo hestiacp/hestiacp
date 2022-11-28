@@ -4,7 +4,7 @@
  */
 App.Templates.html = {
 	WEB: {
-		hint: [""],
+		hint: [''],
 		notification: [
 			'<li class="~!:UNSEEN~!"><span class="unselectable mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
                         <span class="notification-title"><span class="unselectable icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
@@ -16,7 +16,7 @@ App.Templates.html = {
 			'<li class="empty"><span><i class="fas fa-bell-slash status-icon dim" style="font-size: 4rem;"></i><br><br>\
                     ' +
 				App.Constants.NOTIFICATIONS_EMPTY +
-				"</span></li>",
+				'</span></li>',
 		],
 	},
 };
@@ -38,7 +38,7 @@ var Templator = function () {
 			//try{
 			var tpls = App.Templates.html[o];
 			jQuery.each(tpls, function (t) {
-				tpls[t] = tpls[t][0].split("~!");
+				tpls[t] = tpls[t][0].split('~!');
 			});
 			//}catch(e){fb.error('%o %o', o, e);}
 		});
@@ -64,15 +64,15 @@ var Templator = function () {
 		 * Set the indexes
 		 */
 		(Templator.catchIndex = function (key, ref_key, tpl) {
-			"undefined" == typeof App.Templates._indexes[key]
+			'undefined' == typeof App.Templates._indexes[key]
 				? (App.Templates._indexes[key] = {})
 				: false;
-			"undefined" == typeof App.Templates._indexes[key][ref_key]
+			'undefined' == typeof App.Templates._indexes[key][ref_key]
 				? (App.Templates._indexes[key][ref_key] = {})
 				: false;
 
 			jQuery(tpl).each(function (index, o) {
-				if (":" == o.charAt(0)) {
+				if (':' == o.charAt(0)) {
 					App.Templates._indexes[key][ref_key][o.toString()] = index;
 				}
 			});

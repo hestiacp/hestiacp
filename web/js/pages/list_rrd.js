@@ -1,13 +1,13 @@
 // Default max of 3 lines are drawn for memory. Colors need to be update to work better
-colors = ["rgba(255,52,120,0.5)", "rgba(255,52,0,0.5)", "rgba(255,255,120,0.5)"];
+colors = ['rgba(255,52,120,0.5)', 'rgba(255,52,0,0.5)', 'rgba(255,255,120,0.5)'];
 // Other markups are working see https://www.chartjs.org/docs/latest/
 
 //todo make charts reponsive
 $(document).ready(function () {
-	$("canvas").each(function () {
+	$('canvas').each(function () {
 		$.post(
-			"/list/rrd/ajax.php",
-			{ service: $(this).attr("id"), period: $(this).attr("period") },
+			'/list/rrd/ajax.php',
+			{ service: $(this).attr('id'), period: $(this).attr('period') },
 			function (response) {
 				labels = [];
 				//data is stored as start, end time and step between each step
@@ -25,9 +25,9 @@ $(document).ready(function () {
 					datasets.push(dataset);
 				}
 				//draw chart
-				const ctx = document.getElementById(response.service).getContext("2d");
+				const ctx = document.getElementById(response.service).getContext('2d');
 				const myChart = new Chart(ctx, {
-					type: "line",
+					type: 'line',
 					data: {
 						labels: labels,
 						datasets: datasets,
@@ -41,7 +41,7 @@ $(document).ready(function () {
 					},
 				});
 			},
-			"json"
+			'json'
 		);
 	});
 });

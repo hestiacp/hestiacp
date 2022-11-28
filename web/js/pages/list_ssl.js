@@ -1,9 +1,9 @@
 function saveTextToBlob(file, element) {
 	var text = document.getElementById(element).value;
-	var textFileAsBlob = new Blob([text], { type: "text/plain" });
-	var downloadLink = document.createElement("a");
+	var textFileAsBlob = new Blob([text], { type: 'text/plain' });
+	var downloadLink = document.createElement('a');
 	downloadLink.download = file;
-	downloadLink.innerHTML = "Download File";
+	downloadLink.innerHTML = 'Download File';
 	if (window.webkitURL != null) {
 		// Chrome allows the link to be clicked
 		// without actually adding it to the DOM.
@@ -13,7 +13,7 @@ function saveTextToBlob(file, element) {
 		// before it can be clicked.
 		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
 		downloadLink.onclick = destroyClickedElement;
-		downloadLink.style.display = "none";
+		downloadLink.style.display = 'none';
 		document.body.appendChild(downloadLink);
 	}
 

@@ -3,55 +3,13 @@
 <header class="top-bar">
   <div class="l-center top-bar-inner">
 
-    <!-- Logo / Left Menu wrapper -->
+    <!-- Logo / Usage Statistics wrapper -->
     <div class="top-bar-left">
 
       <!-- Logo / Home Button -->
       <a href="<?=htmlspecialchars($home_url)?>" class="top-bar-logo" title="<?=_('Hestia Control Panel');?>">
         <img src="/images/logo-header.svg" alt="<?=_('Hestia Control Panel');?>" width="54" height="29">
       </a>
-
-      <!-- Left Menu -->
-      <nav class="top-bar-nav">
-        <ul class="top-bar-nav-list">
-
-          <!-- Records tab -->
-          <li class="top-bar-nav-item">
-            <a class="top-bar-nav-link <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'active' ?>" href="<?=htmlspecialchars($home_url)?>">
-              <i class="fas fa-list-check"></i>
-              <span class="top-bar-nav-link-label"><?=_('Records');?></span>
-            </a>
-          </li>
-
-          <!-- File Manager tab -->
-          <?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
-            <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
-              <!-- Hide file manager when impersonating admin-->
-            <?php } else { ?>
-              <li class="top-bar-nav-item">
-                <a class="top-bar-nav-link <?php if($TAB == 'FM') echo 'active' ?>" href="/fm/">
-                  <i class="fas fa-folder-open"></i>
-                  <span class="top-bar-nav-link-label"><?=_('Files');?></span>
-                </a>
-              </li>
-            <?php } ?>
-          <?php } ?>
-
-          <!-- Statistics tab-->
-          <li class="top-bar-nav-item">
-            <a class="top-bar-nav-link <?php if($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
-              <i class="fas fa-chart-line"></i>
-              <span class="top-bar-nav-link-label"><?=_('Statistics');?></span>
-            </a>
-          </li>
-
-        </ul>
-      </nav>
-
-    </div>
-
-    <!-- Usage Statistics / Right Menu wrapper -->
-    <div class="top-bar-right">
 
       <!-- Usage Statistics -->
       <div class="top-bar-usage">
@@ -80,9 +38,36 @@
         </div>
       </div>
 
-      <!-- Right Menu -->
+    </div>
+
+    <!-- Menu wrapper -->
+    <div class="top-bar-right">
+
+      <!-- Menu -->
       <nav class="top-bar-nav">
         <ul class="top-bar-nav-list">
+
+          <!-- File Manager -->
+          <?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
+            <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
+              <!-- Hide file manager when impersonating admin-->
+            <?php } else { ?>
+              <li class="top-bar-nav-item">
+                <a title="<?=_('Files');?>" class="top-bar-nav-link <?php if($TAB == 'FM') echo 'active' ?>" href="/fm/">
+                  <i class="fas fa-folder-open"></i>
+                  <span class="u-hidden"><?=_('Files');?></span>
+                </a>
+              </li>
+            <?php } ?>
+          <?php } ?>
+
+          <!-- Statistics -->
+          <li class="top-bar-nav-item">
+            <a title="<?=_('Statistics');?>" class="top-bar-nav-link <?php if($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
+              <i class="fas fa-chart-line"></i>
+              <span class="u-hidden"><?=_('Statistics');?></span>
+            </a>
+          </li>
 
           <!-- Notifications -->
           <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
@@ -131,7 +116,7 @@
             <?php } ?>
           <?php } ?>
 
-          <!-- Help / Documentation-->
+          <!-- Help / Documentation -->
           <li class="top-bar-nav-item">
             <a title="<?=_('Help');?>" class="top-bar-nav-link" href="https://docs.hestiacp.com/" target="_blank" rel="noopener">
               <i class="fas fa-circle-question"></i>

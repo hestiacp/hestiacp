@@ -40,28 +40,28 @@ check_hestia_demo_mode
 # Reading user values
 source $USER_DATA/user.conf
 
-versions=$($BIN/v-list-sys-php plain);
-support=0;
+versions=$($BIN/v-list-sys-php plain)
+support=0
 for v in $versions; do
-  if [ "$v" == "$version" ]; then
-    support=1;
-  fi
+	if [ "$v" == "$version" ]; then
+		support=1
+	fi
 done
 
 if [ "$support" = 0 ]; then
-  echo "Version is currently not supported or does not exist..."
-  exit 2;
+	echo "Version is currently not supported or does not exist..."
+	exit 2
 fi
 
 # Create .bash_aliases is not exsists
 if [ ! -f "$FILE" ]; then
-    touch $FILE
-    chown $user:$user $FILE
+	touch $FILE
+	chown $user:$user $FILE
 fi
 
 if grep -q "alias php='env php$version'" "$FILE"; then
-  echo "PHP CLI Already defined"
-  exit;
+	echo "PHP CLI Already defined"
+	exit
 fi
 
 #----------------------------------------------------------#

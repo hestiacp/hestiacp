@@ -36,9 +36,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-    MAIL_USER=Debian-exim
+	MAIL_USER=Debian-exim
 else
-    MAIL_USER=exim
+	MAIL_USER=exim
 fi
 
 # Additional argument formatting
@@ -56,17 +56,17 @@ is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
-if [ "$($BIN/v-list-mail-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
-    is_domain_new 'mail' "$domain_utf"
+if [ "$($BIN/v-list-mail-domain $user $domain_utf plain | cut -f 1) " != "$domain" ]; then
+	is_domain_new 'mail' "$domain_utf"
 fi
-if [ "$($BIN/v-list-mail-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
-    is_domain_new 'mail' "$domain_idn"
+if [ "$($BIN/v-list-mail-domain $user $domain_idn plain | cut -f 1) " != "$domain" ]; then
+	is_domain_new 'mail' "$domain_idn"
 else
-    is_domain_new 'mail' "$domain"
+	is_domain_new 'mail' "$domain"
 fi
 if [ -z "$(is_ip_format_valid $domain)" ]; then
-    echo "Error: Invalid domain format. IP address detected as input."
-    exit 1
+	echo "Error: Invalid domain format. IP address detected as input."
+	exit 1
 fi
 
 is_package_full 'MAIL_DOMAINS'
@@ -85,10 +85,10 @@ source_conf "$USER_DATA/user.conf"
 # Inherit web domain local ip address
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
 if [ ! -z "$domain_ip" ]; then
-    local_ip=$(get_real_ip "$domain_ip")
-    is_ip_valid "$local_ip" "$user"
+	local_ip=$(get_real_ip "$domain_ip")
+	is_ip_valid "$local_ip" "$user"
 else
-    get_user_ip
+	get_user_ip
 fi
 
 # Generating timestamp
@@ -105,9 +105,9 @@ syshealth_repair_mail_config
 
 # Generating DKIM keys
 if [ "$dkim" = 'yes' ]; then
-    openssl genrsa -out $USER_DATA/mail/$domain.pem $dkim_size &>/dev/null
-    openssl rsa -pubout -in $USER_DATA/mail/$domain.pem \
-        -out $USER_DATA/mail/$domain.pub &>/dev/null
+	openssl genrsa -out $USER_DATA/mail/$domain.pem $dkim_size &> /dev/null
+	openssl rsa -pubout -in $USER_DATA/mail/$domain.pem \
+		-out $USER_DATA/mail/$domain.pub &> /dev/null
 fi
 
 # Set permissions
@@ -116,78 +116,78 @@ chmod 660 $USER_DATA/mail.conf
 
 # Building exim configs
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    mkdir $HOMEDIR/$user/conf/mail/$domain
-    mkdir $HOMEDIR/$user/mail/$domain_idn
-    touch $HOMEDIR/$user/conf/mail/$domain/aliases
-    touch $HOMEDIR/$user/conf/mail/$domain/passwd
-    touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
-    touch $HOMEDIR/$user/conf/mail/$domain/accounts
-    ln -s $HOMEDIR/$user/conf/mail/$domain \
-        /etc/$MAIL_SYSTEM/domains/$domain_idn
+	mkdir $HOMEDIR/$user/conf/mail/$domain
+	mkdir $HOMEDIR/$user/mail/$domain_idn
+	touch $HOMEDIR/$user/conf/mail/$domain/aliases
+	touch $HOMEDIR/$user/conf/mail/$domain/passwd
+	touch $HOMEDIR/$user/conf/mail/$domain/fwd_only
+	touch $HOMEDIR/$user/conf/mail/$domain/accounts
+	ln -s $HOMEDIR/$user/conf/mail/$domain \
+		/etc/$MAIL_SYSTEM/domains/$domain_idn
 
-    # Seeting outgoing ip address
-    if [ -n "$local_ip" ]; then
-        echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
-    fi
+	# Seeting outgoing ip address
+	if [ -n "$local_ip" ]; then
+		echo "$local_ip" > $HOMEDIR/$user/conf/mail/$domain/ip
+	fi
 
-    if [ -n "$ANTISPAM_SYSTEM" ]; then
-        # Adding antispam protection
-        if [ "$antispam" = 'yes' ]; then
-            touch "$HOMEDIR/$user/conf/mail/$domain/antispam"
-        fi
-        if [ "$reject" = 'yes' ]; then
-            touch "$HOMEDIR/$user/conf/mail/$domain/reject_spam"
-        fi
-    fi
+	if [ -n "$ANTISPAM_SYSTEM" ]; then
+		# Adding antispam protection
+		if [ "$antispam" = 'yes' ]; then
+			touch "$HOMEDIR/$user/conf/mail/$domain/antispam"
+		fi
+		if [ "$reject" = 'yes' ]; then
+			touch "$HOMEDIR/$user/conf/mail/$domain/reject_spam"
+		fi
+	fi
 
-    if [ -n "$ANTIVIRUS_SYSTEM" ]; then
-        # Adding antivirus protection
-        if [ "$antivirus" = 'yes' ]; then
-            touch "$HOMEDIR/$user/conf/mail/$domain/antivirus"
-        fi
-    fi
+	if [ -n "$ANTIVIRUS_SYSTEM" ]; then
+		# Adding antivirus protection
+		if [ "$antivirus" = 'yes' ]; then
+			touch "$HOMEDIR/$user/conf/mail/$domain/antivirus"
+		fi
+	fi
 
-    # Adding dkim support
-    if [ "$dkim" = 'yes' ]; then
-        cp -f $USER_DATA/mail/$domain.pem \
-            $HOMEDIR/$user/conf/mail/$domain/dkim.pem
-    fi
+	# Adding dkim support
+	if [ "$dkim" = 'yes' ]; then
+		cp -f $USER_DATA/mail/$domain.pem \
+			$HOMEDIR/$user/conf/mail/$domain/dkim.pem
+	fi
 
-    # Set permission
-    chmod 771 $HOMEDIR/$user/conf/mail/$domain
-    chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
-    chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
-    chmod 770 $HOMEDIR/$user/mail/$domain_idn
+	# Set permission
+	chmod 771 $HOMEDIR/$user/conf/mail/$domain
+	chmod 660 $HOMEDIR/$user/conf/mail/$domain/*
+	chmod 771 /etc/$MAIL_SYSTEM/domains/$domain_idn
+	chmod 770 $HOMEDIR/$user/mail/$domain_idn
 
-    # Set ownership
-    chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
-    if [ "$IMAP_SYSTEM" = 'dovecot' ]; then
-        chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
-    fi
-    chown $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/accounts
-    chown $user:mail $HOMEDIR/$user/mail/$domain_idn
+	# Set ownership
+	chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain
+	if [ "$IMAP_SYSTEM" = 'dovecot' ]; then
+		chown -R dovecot:mail $HOMEDIR/$user/conf/mail/$domain/passwd
+	fi
+	chown $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/accounts
+	chown $user:mail $HOMEDIR/$user/mail/$domain_idn
 fi
 
 # Adding dkim dns records
 if [ -n "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
-    check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
-    if [ "$?" -eq 0 ]; then
-        p=$(cat $USER_DATA/mail/$domain.pub|grep -v ' KEY---'|tr -d '\n')
-        record='_domainkey'
-        policy="\"t=y; o=~;\""
-        $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no' '' 'yes'
+	check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
+	if [ "$?" -eq 0 ]; then
+		p=$(cat $USER_DATA/mail/$domain.pub | grep -v ' KEY---' | tr -d '\n')
+		record='_domainkey'
+		policy="\"t=y; o=~;\""
+		$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no' '' 'yes'
 
-        record='mail._domainkey'
-        selector="\"v=DKIM1\; k=rsa\; p=$p\""
-        $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector" '' '' 'yes' '' 'yes'
-    fi
+		record='mail._domainkey'
+		selector="\"v=DKIM1\; k=rsa\; p=$p\""
+		$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector" '' '' 'yes' '' 'yes'
+	fi
 fi
 
 # Add webmail configuration to mail domain
 if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
-    if [ -n "$IMAP_SYSTEM" ]; then
-        $BIN/v-add-mail-domain-webmail "$user" "$domain" '' 'no'
-    fi
+	if [ -n "$IMAP_SYSTEM" ]; then
+		$BIN/v-add-mail-domain-webmail "$user" "$domain" '' 'no'
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -198,16 +198,16 @@ fi
 increase_user_value "$user" '$U_MAIL_DOMAINS'
 
 if [ "$dkim" = 'yes' ]; then
-    increase_user_value "$user" '$U_MAIL_DKIM'
+	increase_user_value "$user" '$U_MAIL_DKIM'
 fi
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "Added new mail domain ($domain)."

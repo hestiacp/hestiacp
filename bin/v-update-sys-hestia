@@ -39,7 +39,7 @@ check_hestia_demo_mode
 
 # Update repo
 apt-get update -o Dir::Etc::sourcelist="sources.list.d/hestia.list" \
-    -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" -qq
+	-o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0" -qq
 
 # Update hestia package
 apt-get install $package -qq > /dev/null 2>&1

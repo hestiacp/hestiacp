@@ -19,13 +19,13 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 send_email_report() {
-    local mail_service="$1"
-    journalctl --no-pager --reverse --since=-1m --unit "$mail_service" >> "$tmpfile" 2>&1
-    email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
-    email=$(echo "$email" | cut -f 2 -d "'")
-    subj="$(hostname): $mail_service restart failed"
-    cat "$tmpfile" |$SENDMAIL -s "$subj" $email
-    [[ -f "$tmpfile" ]] && rm -f $tmpfile
+	local mail_service="$1"
+	journalctl --no-pager --reverse --since=-1m --unit "$mail_service" >> "$tmpfile" 2>&1
+	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
+	email=$(echo "$email" | cut -f 2 -d "'")
+	subj="$(hostname): $mail_service restart failed"
+	cat "$tmpfile" | $SENDMAIL -s "$subj" $email
+	[[ -f "$tmpfile" ]] && rm -f $tmpfile
 }
 
 #----------------------------------------------------------#
@@ -34,40 +34,40 @@ send_email_report() {
 
 # Exit
 if [ -z "$MAIL_SYSTEM" ] || [ "$MAIL_SYSTEM" = 'remote' ]; then
-    exit
+	exit
 fi
 
 if [ "$1" = "no" ]; then
-    exit
+	exit
 fi
 
 # Schedule restart
 if [ "$1" = 'scheduled' ] || [ -z "$1" -a "$SCHEDULED_RESTART" = 'yes' ]; then
-    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
-    echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
-    exit
+	sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+	echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
+	exit
 fi
 
 tmpfile=$(mktemp)
 # Restart IMAP system if present
 if [ -n "$IMAP_SYSTEM" ]; then
-    $BIN/v-restart-service "$IMAP_SYSTEM" "$1" >> $tmpfile 2>&1
-    if [ $? -ne 0 ]; then
-        send_email_report "$IMAP_SYSTEM"
-        check_result "$E_RESTART" "$IMAP_SYSTEM restart failed"
-    fi
+	$BIN/v-restart-service "$IMAP_SYSTEM" "$1" >> $tmpfile 2>&1
+	if [ $? -ne 0 ]; then
+		send_email_report "$IMAP_SYSTEM"
+		check_result "$E_RESTART" "$IMAP_SYSTEM restart failed"
+	fi
 fi
 
 # Restart mail system
 $BIN/v-restart-service "$MAIL_SYSTEM" "$1" >> $tmpfile 2>&1
 if [ $? -ne 0 ]; then
-    send_email_report "$MAIL_SYSTEM"
-    check_result "$E_RESTART" "$MAIL_SYSTEM restart failed"
+	send_email_report "$MAIL_SYSTEM"
+	check_result "$E_RESTART" "$MAIL_SYSTEM restart failed"
 fi
 
 # Update restart queue
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
-    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+	sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
 fi
 
 #----------------------------------------------------------#

@@ -41,7 +41,7 @@ check_hestia_demo_mode
 
 # Starting delete loop
 for domain in $(search_objects 'dns' 'SRC' "$src" 'DOMAIN'); do
-    $BIN/v-delete-dns-domain "$user" "$domain" 'no'
+	$BIN/v-delete-dns-domain "$user" "$domain" 'no'
 done
 
 #----------------------------------------------------------#
@@ -50,7 +50,7 @@ done
 
 # Restart named
 $BIN/v-restart-dns "$restart"
-check_result $? "Bind restart failed" >/dev/null
+check_result $? "Bind restart failed" > /dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

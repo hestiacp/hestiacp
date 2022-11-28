@@ -26,28 +26,28 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    TO_ESCAPE='\\';
-    msg=$(echo "$msg" |sed -e "s|${TO_ESCAPE}|${TO_ESCAPE}${TO_ESCAPE}|g" -e 's/"/\\"/g' -e "s/%quote%/'/g")
-    echo '{'
-    echo -e "\t\"$account\": {"
-    echo "            \"MSG\": \"$msg\""
-    echo -e "\t}\n}"
+	TO_ESCAPE='\\'
+	msg=$(echo "$msg" | sed -e "s|${TO_ESCAPE}|${TO_ESCAPE}${TO_ESCAPE}|g" -e 's/"/\\"/g' -e "s/%quote%/'/g")
+	echo '{'
+	echo -e "\t\"$account\": {"
+	echo "            \"MSG\": \"$msg\""
+	echo -e "\t}\n}"
 }
 
 # SHELL list function
 shell_list() {
-    echo "$msg"
+	echo "$msg"
 }
 
 # PLAIN list function
 plain_list() {
-    echo "$msg"
+	echo "$msg"
 }
 
 # CSV list function
 csv_list() {
-    echo "MSG"
-    echo "$msg"
+	echo "MSG"
+	echo "$msg"
 }
 
 #----------------------------------------------------------#
@@ -67,16 +67,16 @@ is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 #----------------------------------------------------------#
 
 if [ -e "$USER_DATA/mail/$account@$domain.msg" ]; then
-    msg=$(cat $USER_DATA/mail/$account@$domain.msg |\
-        sed ':a;N;$!ba;s/\n/\\n/g' )
+	msg=$(cat $USER_DATA/mail/$account@$domain.msg \
+		| sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

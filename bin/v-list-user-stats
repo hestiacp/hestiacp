@@ -6,7 +6,6 @@
 #
 # This function for listing user statistics
 
-
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
@@ -23,16 +22,15 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(grep DATE $USER_DATA/stats.log |wc -l)
-    echo "{"
-    while read str; do
-        parse_object_kv_list "$str"
-        echo -n '    "'$DATE'": {
+	IFS=$'\n'
+	i=1
+	objects=$(grep DATE $USER_DATA/stats.log | wc -l)
+	echo "{"
+	while read str; do
+		parse_object_kv_list "$str"
+		echo -n '    "'$DATE'": {
         "TIME": "'$TIME'",
         "PACKAGE": "'$PACKAGE'",
         "IP_OWNED": "'$IP_OWNED'",
@@ -56,67 +54,66 @@ json_list() {
         "U_CRON_JOBS": "'$U_CRON_JOBS'",
         "U_BACKUPS": "'$U_BACKUPS'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done < <(cat $USER_DATA/stats.log)
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < <(cat $USER_DATA/stats.log)
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    echo "DATE   WEB   DNS   MAIL   DB   BACKUPS   IP   DISK   BW"
-    echo "----   ---   ---   ----   --   -------   --   ----   --"
-    while read str; do
-        parse_object_kv_list "$str"
-        if [ -z "$U_USERS" ]; then
-            U_USERS=1
-        fi
-        echo -n "$DATE $U_WEB_DOMAINS $U_DNS_DOMAINS "
-        echo -n "$U_MAIL_DOMAINS $U_DATABASES $U_BACKUPS $IP_OWNED "
-        echo "$U_DISK $U_BANDWIDTH"
-    done < <(cat $USER_DATA/stats.log)
+	IFS=$'\n'
+	echo "DATE   WEB   DNS   MAIL   DB   BACKUPS   IP   DISK   BW"
+	echo "----   ---   ---   ----   --   -------   --   ----   --"
+	while read str; do
+		parse_object_kv_list "$str"
+		if [ -z "$U_USERS" ]; then
+			U_USERS=1
+		fi
+		echo -n "$DATE $U_WEB_DOMAINS $U_DNS_DOMAINS "
+		echo -n "$U_MAIL_DOMAINS $U_DATABASES $U_BACKUPS $IP_OWNED "
+		echo "$U_DISK $U_BANDWIDTH"
+	done < <(cat $USER_DATA/stats.log)
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    while read str; do
-        parse_object_kv_list "$str"
-        echo -ne "$DATE\t$TIME\t$PACKAGE\t$IP_OWNED\t$DISK_QUOTA\t$U_DISK\t"
-        echo -ne "$U_DISK_DIRS\t$U_DISK_WEB\t$U_DISK_MAIL\t$U_DISK_DB\t"
-        echo -ne "$BANDWIDTH\t$U_BANDWIDTH\t$U_WEB_DOMAINS\t$U_WEB_SSL\t"
-        echo -ne "$U_WEB_ALIASES\t$U_DNS_DOMAINS\t$U_DNS_RECORDS\t"
-        echo -ne "$U_MAIL_DOMAINS\t$U_MAIL_DKIM\t$U_MAIL_ACCOUNTS\t"
-        echo -e "$U_DATABASES\t$U_CRON_JOBS\t$U_BACKUPS"
-    done < <(cat $USER_DATA/stats.log)
+	IFS=$'\n'
+	while read str; do
+		parse_object_kv_list "$str"
+		echo -ne "$DATE\t$TIME\t$PACKAGE\t$IP_OWNED\t$DISK_QUOTA\t$U_DISK\t"
+		echo -ne "$U_DISK_DIRS\t$U_DISK_WEB\t$U_DISK_MAIL\t$U_DISK_DB\t"
+		echo -ne "$BANDWIDTH\t$U_BANDWIDTH\t$U_WEB_DOMAINS\t$U_WEB_SSL\t"
+		echo -ne "$U_WEB_ALIASES\t$U_DNS_DOMAINS\t$U_DNS_RECORDS\t"
+		echo -ne "$U_MAIL_DOMAINS\t$U_MAIL_DKIM\t$U_MAIL_ACCOUNTS\t"
+		echo -e "$U_DATABASES\t$U_CRON_JOBS\t$U_BACKUPS"
+	done < <(cat $USER_DATA/stats.log)
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo -n "DATE,TIME,PACKAGE,IP_OWNED,DISK_QUOTA,U_DISK,"
-    echo -n "U_DISK_DIRS,U_DISK_WEB,U_DISK_MAIL,U_DISK_DB,"
-    echo -n "BANDWIDTH,U_BANDWIDTH,U_WEB_DOMAINS,U_WEB_SSL,"
-    echo -n "U_WEB_ALIASES,U_DNS_DOMAINS,U_DNS_RECORDS,"
-    echo -n "U_MAIL_DOMAINS,U_MAIL_DKIM,U_MAIL_ACCOUNTS,"
-    echo "U_DATABASES,U_CRON_JOBS,U_BACKUPS"
+	IFS=$'\n'
+	echo -n "DATE,TIME,PACKAGE,IP_OWNED,DISK_QUOTA,U_DISK,"
+	echo -n "U_DISK_DIRS,U_DISK_WEB,U_DISK_MAIL,U_DISK_DB,"
+	echo -n "BANDWIDTH,U_BANDWIDTH,U_WEB_DOMAINS,U_WEB_SSL,"
+	echo -n "U_WEB_ALIASES,U_DNS_DOMAINS,U_DNS_RECORDS,"
+	echo -n "U_MAIL_DOMAINS,U_MAIL_DKIM,U_MAIL_ACCOUNTS,"
+	echo "U_DATABASES,U_CRON_JOBS,U_BACKUPS"
 
-    while read str; do
-        parse_object_kv_list "$str"
-        echo -n "$DATE,$TIME,$PACKAGE,$IP_OWNED,$DISK_QUOTA,$U_DISK,"
-        echo -n "$U_DISK_DIRS,$U_DISK_WEB,$U_DISK_MAIL,$U_DISK_DB,"
-        echo -n "$BANDWIDTH,$U_BANDWIDTH,$U_WEB_DOMAINS,$U_WEB_SSL,"
-        echo -n "$U_WEB_ALIASES,$U_DNS_DOMAINS,$U_DNS_RECORDS,"
-        echo -n "$U_MAIL_DOMAINS,$U_MAIL_DKIM,$U_MAIL_ACCOUNTS,"
-        echo "$U_DATABASES,$U_CRON_JOBS,$U_BACKUPS"
-    done < <(cat $USER_DATA/stats.log)
+	while read str; do
+		parse_object_kv_list "$str"
+		echo -n "$DATE,$TIME,$PACKAGE,$IP_OWNED,$DISK_QUOTA,$U_DISK,"
+		echo -n "$U_DISK_DIRS,$U_DISK_WEB,$U_DISK_MAIL,$U_DISK_DB,"
+		echo -n "$BANDWIDTH,$U_BANDWIDTH,$U_WEB_DOMAINS,$U_WEB_SSL,"
+		echo -n "$U_WEB_ALIASES,$U_DNS_DOMAINS,$U_DNS_RECORDS,"
+		echo -n "$U_MAIL_DOMAINS,$U_MAIL_DKIM,$U_MAIL_ACCOUNTS,"
+		echo "$U_DATABASES,$U_CRON_JOBS,$U_BACKUPS"
+	done < <(cat $USER_DATA/stats.log)
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -126,7 +123,6 @@ check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -134,21 +130,19 @@ is_object_valid 'user' 'USER' "$user"
 # Ensure statistics are up to date
 $BIN/v-update-user-stats $user
 
-
 # Defining config
 conf="$USER_DATA/stats.log"
 if [ ! -e "$conf" ]; then
-    touch $conf
+	touch $conf
 fi
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -21,22 +21,22 @@
 # SC2046
 
 #set default value for error
-err=0;
+err=0
 shellcheck --version
 
 i=0
 f=0
-files=$(grep -rlE '#!/bin/(bash|sh)' ./ | grep -vE '\.(git|j2$|md$)');
+files=$(grep -rlE '#!/bin/(bash|sh)' ./ | grep -vE '\.(git|j2$|md$)')
 for file in $files; do
-    i=$(($i+1));
-    shellcheck -x "$file" --severity="error"
-    # Only show failed checks
-    if [ $? -gt 0 ]; then
-       f=$(($f+1));
-       echo "Linting: $file"
-       printf "%s: \033[0;31m Fail \033[0m\n" "$file"
-       err=1
-    fi
+	i=$(($i + 1))
+	shellcheck -x "$file" --severity="error"
+	# Only show failed checks
+	if [ $? -gt 0 ]; then
+		f=$(($f + 1))
+		echo "Linting: $file"
+		printf "%s: \033[0;31m Fail \033[0m\n" "$file"
+		err=1
+	fi
 done
 echo "$i files checked and $f errors"
 

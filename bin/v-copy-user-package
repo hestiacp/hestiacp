@@ -38,24 +38,24 @@ is_object_format_valid "$package" "Package"
 is_object_format_valid "$new_package" "New package"
 
 if [ -n "$1" ]; then
-    if [ ! -f "$HESTIA/data/packages/$package.pkg" ]; then
-        echo "Error: package does not exist."
-        exit "$E_NOTEXIST"
-    fi
-    if [ -n "$2" ]; then
-        # Copy package
-        cp -f "$HESTIA/data/packages/$package.pkg" "$HESTIA/data/packages/$new_package.pkg"
-        # Don't leave the .sh file behind
-        if [ -f "$HESTIA/data/packages/$package.sh" ]; then
-            cp $HESTIA/data/packages/$package.sh $HESTIA/data/packages/$new_package.sh
-        fi
-    else
-        echo "Error: new package name not specified."
-        exit "$E_ARGS"
-    fi
+	if [ ! -f "$HESTIA/data/packages/$package.pkg" ]; then
+		echo "Error: package does not exist."
+		exit "$E_NOTEXIST"
+	fi
+	if [ -n "$2" ]; then
+		# Copy package
+		cp -f "$HESTIA/data/packages/$package.pkg" "$HESTIA/data/packages/$new_package.pkg"
+		# Don't leave the .sh file behind
+		if [ -f "$HESTIA/data/packages/$package.sh" ]; then
+			cp $HESTIA/data/packages/$package.sh $HESTIA/data/packages/$new_package.sh
+		fi
+	else
+		echo "Error: new package name not specified."
+		exit "$E_ARGS"
+	fi
 else
-    echo "Error: package name not specified."
-    exit "$E_ARGS"
+	echo "Error: package name not specified."
+	exit "$E_ARGS"
 fi
 
 #----------------------------------------------------------#

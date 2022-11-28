@@ -39,20 +39,18 @@ check_hestia_demo_mode
 
 # Define conf
 case $type in
-    web)    conf="$HESTIA/data/users/*/web.conf" ;;
-    dns)    conf="$HESTIA/data/users/*/dns.conf" ;;
-    mail)   conf="$HESTIA/data/users/*/mail.conf" ;;
-    *)      conf="$HESTIA/data/users/*/*.conf"
+	web) conf="$HESTIA/data/users/*/web.conf" ;;
+	dns) conf="$HESTIA/data/users/*/dns.conf" ;;
+	mail) conf="$HESTIA/data/users/*/mail.conf" ;;
+	*) conf="$HESTIA/data/users/*/*.conf" ;;
 esac
-
 
 owner=$(grep -H "DOMAIN='$domain'" $conf | head -n 1 | cut -f7 -d '/')
 if [ -z "$owner" ]; then
-    exit "$E_NOTEXIST"
+	exit "$E_NOTEXIST"
 fi
 
 echo "$owner"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

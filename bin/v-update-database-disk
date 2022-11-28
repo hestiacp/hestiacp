@@ -34,7 +34,6 @@ is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -44,8 +43,8 @@ get_database_values
 
 # Switching on db type
 case $TYPE in
-    mysql) get_mysql_disk_usage ;;
-    pgsql) get_pgsql_disk_usage ;;
+	mysql) get_mysql_disk_usage ;;
+	pgsql) get_pgsql_disk_usage ;;
 esac
 
 #----------------------------------------------------------#

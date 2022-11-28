@@ -61,7 +61,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ "$record" = "@" ] && [ "$rtype" = "CNAME" ]; then
-    check_result $E_INVALID "CNAME on root is not allowed"
+	check_result $E_INVALID "CNAME on root is not allowed"
 fi
 
 # Make sure the variable for the optional parameter TTL is empty before parsing
@@ -73,39 +73,38 @@ line=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
 parse_object_kv_list "$line"
 
 if [ -z "$rtype" ]; then
-    rtype=$TYPE
+	rtype=$TYPE
 fi
 
 if [ -z "$priority" ]; then
-    priority=$PRIORITY
+	priority=$PRIORITY
 fi
 
 # Null priority for none MX/SRV records
 if [ "$rtype" != 'MX' ] && [ "$rtype" != 'SRV' ]; then
-    priority=''
+	priority=''
 fi
 
 # Add trailing dot at the end of NS/CNAME/MX/PTR/SRV record
 if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
-    trailing_dot=$(echo "$dvalue" | grep "\.$")
-    if [ -z "$trailing_dot" ]; then
-        dvalue="$dvalue."
-    fi
+	trailing_dot=$(echo "$dvalue" | grep "\.$")
+	if [ -z "$trailing_dot" ]; then
+		dvalue="$dvalue."
+	fi
 fi
 
 if [[ $rtype =~ NS|CNAME|MX|PTR|SRV ]]; then
-    dvalue=$(idn2  --quiet  "$dvalue" )
-    record=$(idn2  --quiet  "$record" )
+	dvalue=$(idn2 --quiet "$dvalue")
+	record=$(idn2 --quiet "$record")
 fi
 
 if [ "$rtype" != "CAA" ]; then
-    dvalue=${dvalue//\"/}
+	dvalue=${dvalue//\"/}
 
-    if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
-        dvalue='"'"$dvalue"'"'
-    fi
+	if [ "$rtype" != 'SRV' ] && [[ "$dvalue" =~ [\;[:space:]] ]]; then
+		dvalue='"'"$dvalue"'"'
+	fi
 fi
-
 
 #RTYPE wasn't checked make sure to do it now correctly
 is_format_valid 'user' 'domain' 'id' 'record' 'rtype' 'dvalue'
@@ -115,15 +114,15 @@ is_dns_fqnd "$TYPE" "$dvalue"
 is_dns_nameserver_valid "$domain" "$TYPE" "$dvalue"
 
 if [[ "$RECORD" == "$record" ]] && [[ "$TYPE" == "$rtype" ]] && [[ "$PRIORITY" -eq "$priority" ]] \
-        && [[ "$VALUE" == "$dvalue" ]] && [[ "$SUSPENDED" == 'no' ]] && [[ "$TTL" -eq "$ttl" ]]; then
-    echo "No pending changes in DNS entry."
-    exit "$E_EXISTS"
+	&& [[ "$VALUE" == "$dvalue" ]] && [[ "$SUSPENDED" == 'no' ]] && [[ "$TTL" -eq "$ttl" ]]; then
+	echo "No pending changes in DNS entry."
+	exit "$E_EXISTS"
 fi
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding record
 dns_rec="ID='$id' RECORD='$record' TYPE='$rtype' PRIORITY='$priority'"
@@ -139,17 +138,17 @@ sort_dns_records
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    rebuild_dns_domain_conf
+	rebuild_dns_domain_conf
 fi
 
 # Updating dns-cluster queue
-if [ "$DNS_CLUSTER"  = "yes" ]; then
-    # Check for first sync
-    dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
-    if [ -z "$dlock" ]; then
-        cmd="$BIN/v-add-remote-dns-domain $user $domain records"
-        echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
-    fi
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	# Check for first sync
+	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+	if [ -z "$dlock" ]; then
+		cmd="$BIN/v-add-remote-dns-domain $user $domain records"
+		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -158,7 +157,7 @@ fi
 
 # Restarting named
 $BIN/v-restart-dns "$restart"
-check_result $? "DNS restart failed" >/dev/null
+check_result $? "DNS restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "DNS" "DNS record value changed (Type: $rtype, Record: $record, Value: $dvalue, Domain: $domain)."

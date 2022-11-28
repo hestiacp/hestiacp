@@ -21,8 +21,8 @@ IFS=' ' read -r -a mysql_v <<< $(mysqld -V)
 mysql_v=$(echo "${mysql_v[2]}" | cut -c1-4)
 
 if [ "$mysql_v" = "$mariadb_v" ]; then
-    echo "Version is already up to date, cancelling."
-    exit 0
+	echo "Version is already up to date, cancelling."
+	exit 0
 fi
 
 #Get OS details
@@ -38,17 +38,17 @@ RHOST='apt.hestiacp.com'
 # Installing MariaDB repo
 apt="/etc/apt/sources.list.d/"
 echo "[ * ] MariaDB"
-   echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
-    curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg >/dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
+curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
 
 # Update repository
 echo "Update apt repository..."
-apt update -qq  > /dev/null 2>&1
+apt update -qq > /dev/null 2>&1
 
 # Stop and uninstall mysql server
 echo "Stop and remove old MariaDB server..."
 systemctl stop mysql > /dev/null 2>&1
-apt remove -qq mariadb-server -y  > /dev/null 2>&1
+apt remove -qq mariadb-server -y > /dev/null 2>&1
 
 # Install new version and run upgrader
 echo "Installing new MariaDB Server, start and run upgrade..."

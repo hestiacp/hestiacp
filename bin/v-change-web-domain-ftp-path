@@ -45,15 +45,15 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
-    echo "Error: account $ftp_user doesn't exist"
-    log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit "$E_NOTEXIST"
+	echo "Error: account $ftp_user doesn't exist"
+	log_event "$E_NOTEXIST" "$ARGUMENTS"
+	exit "$E_NOTEXIST"
 fi
 ftp_path_a=$(readlink -f "$HOMEDIR/$user/web/$domain/$ftp_path")
-if [ -z "$(echo $ftp_path_a |grep $HOMEDIR/$user/web/$domain)" ]; then
-    echo "Error: absolute path $ftp_path_a is invalid"
-    log_event "$E_INVALID" "$ARGUMENTS"
-    exit "$E_INVALID"
+if [ -z "$(echo $ftp_path_a | grep $HOMEDIR/$user/web/$domain)" ]; then
+	echo "Error: absolute path $ftp_path_a is invalid"
+	log_event "$E_INVALID" "$ARGUMENTS"
+	exit "$E_INVALID"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -65,9 +65,9 @@ check_hestia_demo_mode
 
 # MKDIR if path doesn't exist
 if [ ! -e "$ftp_path_a" ]; then
-    $BIN/v-add-fs-directory "$user" "$ftp_path_a"
-    chown $user:$user "$ftp_path_a"
-    chmod 751 "$ftp_path_a"
+	$BIN/v-add-fs-directory "$user" "$ftp_path_a"
+	chown $user:$user "$ftp_path_a"
+	chmod 751 "$ftp_path_a"
 fi
 
 # Chaning ftp user path
@@ -81,14 +81,14 @@ sed -i "$str s%$old_path%$ftp_path_a%g" /etc/passwd
 #----------------------------------------------------------#
 
 # Transforming absolute path to relative
-ftp_path_r=$(echo $ftp_path_a |sed "s%$HOMEDIR/$user/web/$domain%%")
+ftp_path_r=$(echo $ftp_path_a | sed "s%$HOMEDIR/$user/web/$domain%%")
 
 # Rebuilding FTP variables
-position=$(echo $FTP_USER |tr ':' '\n' |grep -n '' |grep ":$ftp_user$" |\
-    cut -f 1 -d:)
-ftp_path=$(echo $FTP_PATH |tr ':' '\n' |grep -n '' |\
-    sed -e "s%^$position:.*%$position:$ftp_path_r%" |\
-    cut -f 2 -d :| sed -e ':a;N;$!ba;s/\n/:/g')
+position=$(echo $FTP_USER | tr ':' '\n' | grep -n '' | grep ":$ftp_user$" \
+	| cut -f 1 -d:)
+ftp_path=$(echo $FTP_PATH | tr ':' '\n' | grep -n '' \
+	| sed -e "s%^$position:.*%$position:$ftp_path_r%" \
+	| cut -f 2 -d : | sed -e ':a;N;$!ba;s/\n/:/g')
 
 # Updating config
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_PATH' "$ftp_path"

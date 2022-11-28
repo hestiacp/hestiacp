@@ -25,28 +25,28 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo -e "\t\"$domain\": {"
-    echo "        \"PEM\": \"$pem\","
-    echo "        \"PUB\": \"$pub\","
-    echo -e "\t}\n}"
+	echo '{'
+	echo -e "\t\"$domain\": {"
+	echo "        \"PEM\": \"$pem\","
+	echo "        \"PUB\": \"$pub\","
+	echo -e "\t}\n}"
 }
 
 # SHELL list function
 shell_list() {
-    echo -e "$pem"
-    echo -e "\n$pub"
+	echo -e "$pem"
+	echo -e "\n$pub"
 }
 
 # PLAIN list function
 plain_list() {
-    echo "$pem\t$pub"
+	echo "$pem\t$pub"
 }
 
 # CSV list function
 csv_list() {
-    echo "PEM,PUB"
-    echo "\"$pem\",\"$pub\""
+	echo "PEM,PUB"
+	echo "\"$pem\",\"$pub\""
 }
 
 #----------------------------------------------------------#
@@ -64,19 +64,19 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 
 # Parsing domain keys
 if [ -e "$USER_DATA/mail/$domain.pem" ]; then
-    pem=$(cat $USER_DATA/mail/$domain.pem |sed ':a;N;$!ba;s/\n/\\n/g')
+	pem=$(cat $USER_DATA/mail/$domain.pem | sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 if [ -e "$USER_DATA/mail/$domain.pub" ]; then
-    pub=$(cat $USER_DATA/mail/$domain.pub |sed ':a;N;$!ba;s/\n/\\n/g')
+	pub=$(cat $USER_DATA/mail/$domain.pub | sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

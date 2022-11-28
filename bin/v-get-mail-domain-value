@@ -38,7 +38,7 @@ is_format_valid 'user' 'domain' 'key'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 
-key=$(echo "$key"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
+key=$(echo "$key" | tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -46,7 +46,6 @@ key=$(echo "$key"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 # Print
 get_object_value 'mail' 'DOMAIN' "$domain" "$key"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

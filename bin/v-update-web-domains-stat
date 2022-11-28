@@ -39,10 +39,10 @@ is_object_unsuspended 'user' 'USER' "$user"
 
 # Starting upd loop
 for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
-    get_domain_values 'web'
-    if [ -n "$STATS" ] && [ "$STATS" != 'no' ]; then
-        $BIN/v-update-web-domain-stat "$user" "$domain"
-    fi
+	get_domain_values 'web'
+	if [ -n "$STATS" ] && [ "$STATS" != 'no' ]; then
+		$BIN/v-update-web-domain-stat "$user" "$domain"
+	fi
 done
 
 #----------------------------------------------------------#

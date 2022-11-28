@@ -29,7 +29,7 @@ check_args '1' "$#" 'USER'
 is_format_valid 'user'
 user_str=$(grep "^$user:" /etc/passwd)
 if [ -z "$user_str" ]; then
-    exit
+	exit
 fi
 
 # Get current users and split into array
@@ -39,7 +39,7 @@ IFS=',' read -r -a users <<< "$ssh_users"
 match_string="$ssh_users,"
 # Check if jail exist
 if [[ ! "$match_string" =~ ,$user, ]]; then
-    exit 2
+	exit 2
 fi
 
 # Perform verification if read-only mode is enabled
@@ -51,18 +51,22 @@ check_hestia_demo_mode
 
 # Remove user from array
 for sftp_user in "${users[@]}"; do
-    if [ "$sftp_user" != "$user" ]; then
-        new_users+=($sftp_user)
-    fi
+	if [ "$sftp_user" != "$user" ]; then
+		new_users+=($sftp_user)
+	fi
 done
 
 # Write new user list to config
-users=$(IFS=',';echo "${new_users[*]// /|}";IFS=$' \t\n')
+users=$(
+	IFS=','
+	echo "${new_users[*]// /|}"
+	IFS=$' \t\n'
+)
 sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
 
 # chown permissions back to user:user
 if [ -d "/home/$user" ]; then
-    chown $user:$user /home/$user
+	chown $user:$user /home/$user
 fi
 #----------------------------------------------------------#
 #                       Hestia                             #

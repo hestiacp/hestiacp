@@ -55,9 +55,8 @@ del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
 
 # Checking SSL
 if [ "$SSL" = 'yes' ]; then
-    del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+	del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -69,7 +68,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' ''
 
 # Restart proxy server
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Proxy disabled (Domain: $domain)."

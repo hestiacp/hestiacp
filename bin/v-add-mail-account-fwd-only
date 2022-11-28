@@ -28,9 +28,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-    MAIL_USER=Debian-exim
+	MAIL_USER=Debian-exim
 else
-    MAIL_USER=exim
+	MAIL_USER=exim
 fi
 
 # Additional argument formatting
@@ -53,9 +53,9 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
 if [ -z "$fwd" ]; then
-    echo "Error: forward doesn't exist"
-    log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit "$E_NOTEXIST"
+	echo "Error: forward doesn't exist"
+	log_event "$E_NOTEXIST" "$ARGUMENTS"
+	exit "$E_NOTEXIST"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -67,10 +67,9 @@ check_hestia_demo_mode
 
 # Adding account to fwd_only
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    echo "$account" >> $HOMEDIR/$user/conf/mail/$domain/fwd_only
-    chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/fwd_only
+	echo "$account" >> $HOMEDIR/$user/conf/mail/$domain/fwd_only
+	chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/fwd_only
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -78,7 +77,7 @@ fi
 
 # Updating config
 add_object_key "mail/$domain" 'ACCOUNT' "$account" 'FWD_ONLY' 'MD5'
-update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD_ONLY' "yes"
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD_ONLY' "yes"
 
 # Logging
 $BIN/v-log-action "$user" "Warning" "Mail" "Forward-only flag enabled on mail account $account@$domain."

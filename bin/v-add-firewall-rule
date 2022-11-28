@@ -11,11 +11,11 @@
 #----------------------------------------------------------#
 
 # Argument definition
-action=$(echo $1|tr '[:lower:]' '[:upper:]')
+action=$(echo $1 | tr '[:lower:]' '[:upper:]')
 ip=$2
 port_ext=$3
 protocol=${4-TCP}
-protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
+protocol=$(echo $protocol | tr '[:lower:]' '[:upper:]')
 comment=$5
 rule=$6
 
@@ -29,18 +29,18 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Get next firewall rule id
 get_next_fw_rule() {
-    if [ -z "$rule" ]; then
-        curr_str=$(grep "RULE=" $HESTIA/data/firewall/rules.conf |\
-         cut -f 2 -d \' | sort -n | tail -n1)
-        rule="$((curr_str +1))"
-    fi
+	if [ -z "$rule" ]; then
+		curr_str=$(grep "RULE=" $HESTIA/data/firewall/rules.conf \
+			| cut -f 2 -d \' | sort -n | tail -n1)
+		rule="$((curr_str + 1))"
+	fi
 }
 
 sort_fw_rules() {
-    cat $HESTIA/data/firewall/rules.conf |\
-        sort -n -k 2 -t \' > $HESTIA/data/firewall/rules.conf.tmp
-    mv -f $HESTIA/data/firewall/rules.conf.tmp \
-        $HESTIA/data/firewall/rules.conf
+	cat $HESTIA/data/firewall/rules.conf \
+		| sort -n -k 2 -t \' > $HESTIA/data/firewall/rules.conf.tmp
+	mv -f $HESTIA/data/firewall/rules.conf.tmp \
+		$HESTIA/data/firewall/rules.conf
 }
 
 #----------------------------------------------------------#
@@ -54,14 +54,14 @@ get_next_fw_rule
 is_format_valid 'rule'
 is_object_new '../../data/firewall/rules' 'RULE' "$rule"
 if [ -n "$comment" ]; then
-    is_format_valid 'comment'
+	is_format_valid 'comment'
 fi
 if [[ "$ip" =~ ^ipset: ]]; then
-    ipset_name="${ip#ipset:}"
-    $BIN/v-list-firewall-ipset plain | grep "^$ipset_name\s" >/dev/null
-    check_result $? 'ipset object not found' "$E_NOTEXIST"
+	ipset_name="${ip#ipset:}"
+	$BIN/v-list-firewall-ipset plain | grep "^$ipset_name\s" > /dev/null
+	check_result $? 'ipset object not found' "$E_NOTEXIST"
 else
-    is_format_valid 'ip'
+	is_format_valid 'ip'
 fi
 
 # Perform verification if read-only mode is enabled
@@ -73,8 +73,8 @@ check_hestia_demo_mode
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Concatenating rule
 str="RULE='$rule' ACTION='$action' PROTOCOL='$protocol' PORT='$port_ext'"
@@ -93,14 +93,13 @@ sort_fw_rules
 # Updating system firewall
 $BIN/v-update-firewall
 
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Fix missing port value in log if zero
 if [ -z "$port" ]; then
-    port="0"
+	port="0"
 fi
 
 # Logging

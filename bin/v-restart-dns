@@ -19,19 +19,19 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 send_email_report() {
-    if [ -e '/etc/named.conf' ]; then
-        dns_conf='/etc/named.conf'
-    else
-        dns_conf='/etc/bind/named.conf'
-    fi
-    email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
-    email=$(echo "$email" | cut -f 2 -d "'")
-    tmpfile=$(mktemp)
-    subj="$(hostname): "$DNS_SYSTEM" restart failed"
-    /usr/sbin/named-checkconf "$dns_conf" >> $tmpfile 2>&1
-    service "$DNS_SYSTEM" restart >> $tmpfile 2>&1
-    cat $tmpfile |$SENDMAIL -s "$subj" $email
-    rm -f $tmpfile
+	if [ -e '/etc/named.conf' ]; then
+		dns_conf='/etc/named.conf'
+	else
+		dns_conf='/etc/bind/named.conf'
+	fi
+	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
+	email=$(echo "$email" | cut -f 2 -d "'")
+	tmpfile=$(mktemp)
+	subj="$(hostname): "$DNS_SYSTEM" restart failed"
+	/usr/sbin/named-checkconf "$dns_conf" >> $tmpfile 2>&1
+	service "$DNS_SYSTEM" restart >> $tmpfile 2>&1
+	cat $tmpfile | $SENDMAIL -s "$subj" $email
+	rm -f $tmpfile
 }
 
 #----------------------------------------------------------#
@@ -39,31 +39,31 @@ send_email_report() {
 #----------------------------------------------------------#
 
 # Exit
-if [ -z "$DNS_SYSTEM" ] || [ "$DNS_SYSTEM" = 'remote' ] ; then
-    exit
+if [ -z "$DNS_SYSTEM" ] || [ "$DNS_SYSTEM" = 'remote' ]; then
+	exit
 fi
 
 if [ "$1" = "no" ]; then
-    exit
+	exit
 fi
 
 # Schedule restart
 if [ "$1" = 'scheduled' ] || [ -z "$1" -a "$SCHEDULED_RESTART" = 'yes' ]; then
-    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
-    echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
-    exit
+	sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+	echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
+	exit
 fi
 
 # Restart system
 $BIN/v-restart-service "$DNS_SYSTEM" "$1" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    send_email_report
-    check_result "$E_RESTART" "$DNS_SYSTEM restart failed"
+	send_email_report
+	check_result "$E_RESTART" "$DNS_SYSTEM restart failed"
 fi
 
 # Update restart queue
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
-    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+	sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
 fi
 
 #----------------------------------------------------------#

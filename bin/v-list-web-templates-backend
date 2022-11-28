@@ -23,42 +23,42 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    i=1
-    objects=$(echo "$templates" |wc -w)
-    echo '['
-    for template in $templates; do
-        if [ "$i" -lt "$objects" ]; then
-            echo -e  "\t\"$template\","
-        else
-            echo -e  "\t\"$template\""
-        fi
-        (( ++i))
-    done
-    echo "]"
+	i=1
+	objects=$(echo "$templates" | wc -w)
+	echo '['
+	for template in $templates; do
+		if [ "$i" -lt "$objects" ]; then
+			echo -e "\t\"$template\","
+		else
+			echo -e "\t\"$template\""
+		fi
+		((++i))
+	done
+	echo "]"
 }
 
 # SHELL list function
 shell_list() {
-    echo "TEMPLATE"
-    echo "--------"
-    for template in $templates; do
-        echo "$template"
-    done
+	echo "TEMPLATE"
+	echo "--------"
+	for template in $templates; do
+		echo "$template"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    for template in $templates; do
-        echo "$template"
-    done
+	for template in $templates; do
+		echo "$template"
+	done
 }
 
 # CSV list function
 csv_list() {
-    echo "TEMPLATE"
-    for template in $templates; do
-        echo "$template"
-    done
+	echo "TEMPLATE"
+	for template in $templates; do
+		echo "$template"
+	done
 }
 
 #----------------------------------------------------------#
@@ -67,18 +67,18 @@ csv_list() {
 
 # Parsing backend templates
 if [ -n "$WEB_BACKEND" ]; then
-    templates=$(ls -t $WEBTPL/$WEB_BACKEND |\
-        cut -f1 -d . |\
-        grep -v proxy_ip |\
-        sort -u )
+	templates=$(ls -t $WEBTPL/$WEB_BACKEND \
+		| cut -f1 -d . \
+		| grep -v proxy_ip \
+		| sort -u)
 fi
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

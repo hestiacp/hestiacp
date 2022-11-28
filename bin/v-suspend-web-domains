@@ -42,7 +42,7 @@ check_hestia_demo_mode
 
 # Starting suspend loop
 for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
-    $BIN/v-suspend-web-domain "$user" "$domain" 'no'
+	$BIN/v-suspend-web-domain "$user" "$domain" 'no'
 done
 
 #----------------------------------------------------------#
@@ -51,10 +51,10 @@ done
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

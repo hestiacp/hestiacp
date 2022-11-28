@@ -38,20 +38,19 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Updating notification
-update_object_value 'notifications' 'NID' "$id" '$ACK' 'yes' 2>/dev/null
+update_object_value 'notifications' 'NID' "$id" '$ACK' 'yes' 2> /dev/null
 
 # Checking last notification
 if [ -e "$USER_DATA/notifications.conf" ]; then
-    if [ -z "$(grep NID= $USER_DATA/notifications.conf)" ]; then
-        notice='no'
-    fi
-    if [ -z "$(grep "ACK='no'" $USER_DATA/notifications.conf)" ]; then
-        notice='no'
-    fi
+	if [ -z "$(grep NID= $USER_DATA/notifications.conf)" ]; then
+		notice='no'
+	fi
+	if [ -z "$(grep "ACK='no'" $USER_DATA/notifications.conf)" ]; then
+		notice='no'
+	fi
 else
-    notice='no'
+	notice='no'
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -59,11 +58,11 @@ fi
 
 # Updating notification counter
 if [ "$notice" = 'no' ]; then
-    if [ -z "$(grep NOTIFICATIONS $USER_DATA/user.conf)" ]; then
-        sed -i "s/^TIME/NOTIFICATIONS='no'\nTIME/g" $USER_DATA/user.conf
-    else
-        update_user_value "$user" '$NOTIFICATIONS' "no"
-    fi
+	if [ -z "$(grep NOTIFICATIONS $USER_DATA/user.conf)" ]; then
+		sed -i "s/^TIME/NOTIFICATIONS='no'\nTIME/g" $USER_DATA/user.conf
+	else
+		update_user_value "$user" '$NOTIFICATIONS' "no"
+	fi
 fi
 
 # Logging

@@ -16,7 +16,7 @@ user=$1
 version=${2-2}
 
 if [ -z "$HESTIA" ]; then
-    HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/hestia"
 fi
 
 # Includes
@@ -50,8 +50,8 @@ COMPOSER_DIR="$HOMEDIR/$user/.composer"
 COMPOSER_BIN="$COMPOSER_DIR/composer"
 
 if [ -f "$COMPOSER_BIN" ]; then
-    echo "Composer already available"
-    exit
+	echo "Composer already available"
+	exit
 fi
 
 [ -z "$(readlink -m "$COMPOSER_DIR" | egrep "^$HOMEDIR/$user/")" ] && check_result "$E_FORBIDEN" "Path outside of user homedir (Composer dir)"
@@ -75,8 +75,8 @@ user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-c
 check_result $? "Download composer installer"
 
 if [[ "$signature" != $(sha384sum "$COMPOSER_SETUP_FILE" | cut -f 1 -d " ") ]]; then
-    rm -f "$COMPOSER_SETUP_FILE"
-    check_result "$E_INVALID" "Composer signature does not match"
+	rm -f "$COMPOSER_SETUP_FILE"
+	check_result "$E_INVALID" "Composer signature does not match"
 fi
 
 COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php "$COMPOSER_SETUP_FILE" --quiet "--$version" --install-dir="$COMPOSER_DIR" --filename=composer

@@ -22,13 +22,12 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 is_language_valid() {
-    if [ ! -d "$HESTIA/web/locale/$language" ]; then
-        echo "Error: language file $language doesn't exist"
-        log_event "$E_NOTEXIST $ARGUMENTS"
-        exit "$E_NOTEXIST"
-    fi
+	if [ ! -d "$HESTIA/web/locale/$language" ]; then
+		echo "Error: language file $language doesn't exist"
+		log_event "$E_NOTEXIST $ARGUMENTS"
+		exit "$E_NOTEXIST"
+	fi
 }
 
 #----------------------------------------------------------#
@@ -48,16 +47,16 @@ check_hestia_demo_mode
 
 # Change language
 if [ -z "$(grep LANGUAGE $HESTIA/conf/hestia.conf)" ]; then
-    echo "LANGUAGE='$language'" >> $HESTIA/conf/hestia.conf
+	echo "LANGUAGE='$language'" >> $HESTIA/conf/hestia.conf
 else
-    sed -i "s/LANGUAGE=.*/LANGUAGE='$language'/g" $HESTIA/conf/hestia.conf
+	sed -i "s/LANGUAGE=.*/LANGUAGE='$language'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Update language for all existing users if specified
 if [ "$update_users" = "yes" ]; then
-    for user in $($HESTIA/bin/v-list-sys-users plain); do
-        $BIN/v-change-user-language "$user" "$language"
-    done
+	for user in $($HESTIA/bin/v-list-sys-users plain); do
+		$BIN/v-change-user-language "$user" "$language"
+	done
 fi
 
 #----------------------------------------------------------#

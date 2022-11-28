@@ -12,8 +12,10 @@
 
 # Argument definition
 type=$1
-password=$2; HIDE=2
-hash=$3; HIDE=2
+password=$2
+HIDE=2
+hash=$3
+HIDE=2
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -36,26 +38,25 @@ is_password_valid
 #----------------------------------------------------------#
 
 if [ "$type" = "BCRYPT" ]; then
-    match=$(doveadm pw -s BLF-CRYPT -p "$password" -t $hash | grep "verified");
-    if [ -n "$match" ]; then
-        exit 0;
-    else
-        echo $match;
-        exit 2;
-    fi
+	match=$(doveadm pw -s BLF-CRYPT -p "$password" -t $hash | grep "verified")
+	if [ -n "$match" ]; then
+		exit 0
+	else
+		echo $match
+		exit 2
+	fi
 elif [ "$type" = "ARGONID2" ]; then
-    match=$(doveadm pw -s ARGON2ID -p "$password" -t $hash | grep "verified");
-    if [ -n "$match" ]; then
-        exit 0;
-    else
-        echo $match;
-        exit 2;
-    fi
+	match=$(doveadm pw -s ARGON2ID -p "$password" -t $hash | grep "verified")
+	if [ -n "$match" ]; then
+		exit 0
+	else
+		echo $match
+		exit 2
+	fi
 else
-    echo "unsupported hash type.";
-    exit 2;
+	echo "unsupported hash type."
+	exit 2
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

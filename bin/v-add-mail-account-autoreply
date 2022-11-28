@@ -29,9 +29,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-    MAIL_USER=Debian-exim
+	MAIL_USER=Debian-exim
 else
-    MAIL_USER=exim
+	MAIL_USER=exim
 fi
 
 # Additional argument formatting
@@ -63,10 +63,10 @@ check_hestia_demo_mode
 
 # Adding exim autoreply
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    msg="$HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg"
-    echo -e "$autoreply" > $msg
-    chown $MAIL_USER:mail $msg
-    chmod 660 $msg
+	msg="$HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg"
+	echo -e "$autoreply" > $msg
+	chown $MAIL_USER:mail $msg
+	chmod 660 $msg
 fi
 
 #----------------------------------------------------------#

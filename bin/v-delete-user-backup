@@ -48,33 +48,31 @@ parse_object_kv_list "$line"
 
 deleted=0
 if [[ "$TYPE" =~ "sftp" ]]; then
-    sftp_delete "$backup"
-    deleted=1
+	sftp_delete "$backup"
+	deleted=1
 fi
 if [[ "$TYPE" =~ "ftp" ]] && [ "$deleted" == "0" ]; then
-    ftp_delete "$backup"
+	ftp_delete "$backup"
 fi
 if [[ "$TYPE" =~ "b2" ]]; then
-    b2_delete "$user" "$backup"
+	b2_delete "$user" "$backup"
 fi
 if [[ "$TYPE" =~ "rclone" ]]; then
-    rclone_delete "$backup"
+	rclone_delete "$backup"
 fi
 if [[ "$TYPE" =~ "local" ]]; then
-    rm -f "$backup_folder/$2"
+	rm -f "$backup_folder/$2"
 fi
-
 
 # Deleting backup
 sed -i "/BACKUP='$2' /d" "$USER_DATA/backup.conf"
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Update counter
-U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
+U_BACKUPS=$(grep BACKUP $USER_DATA/backup.conf | wc -l)
 update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 
 # Logging

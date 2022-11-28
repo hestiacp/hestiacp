@@ -24,41 +24,41 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    i=1
-    echo '['
-    for theme in "${available_themes[@]}"; do
-        if [ "$i" -lt "$theme_count" ]; then
-            echo -e  "\t\"$theme\","
-        else
-            echo -e  "\t\"$theme\""
-        fi
-        (( ++i))
-    done
-    echo ']'
+	i=1
+	echo '['
+	for theme in "${available_themes[@]}"; do
+		if [ "$i" -lt "$theme_count" ]; then
+			echo -e "\t\"$theme\","
+		else
+			echo -e "\t\"$theme\""
+		fi
+		((++i))
+	done
+	echo ']'
 }
 
 # SHELL list function
 shell_list() {
-    echo "THEME"
-    echo "-----"
-    for theme in "${available_themes[@]}"; do
-        echo "$theme"
-    done
+	echo "THEME"
+	echo "-----"
+	for theme in "${available_themes[@]}"; do
+		echo "$theme"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    for theme in "${available_themes[@]}"; do
-        echo "$theme"
-    done
+	for theme in "${available_themes[@]}"; do
+		echo "$theme"
+	done
 }
 
 # CSV list function
 csv_list() {
-    echo "THEME"
-    for theme in "${available_themes[@]}"; do
-        echo "$theme"
-    done
+	echo "THEME"
+	for theme in "${available_themes[@]}"; do
+		echo "$theme"
+	done
 }
 
 #----------------------------------------------------------#
@@ -70,12 +70,12 @@ provided_themes=$(ls -v $HESTIA/web/css/themes | grep '\.min.css' | sed 's/\.min
 
 # Parse custom themes
 if [ -d "$HESTIA/web/css/themes/custom" ]; then
-    custom_themes=$(ls -v $HESTIA/web/css/themes/custom/ | grep '\.css' | sed 's/\.css$//')
+	custom_themes=$(ls -v $HESTIA/web/css/themes/custom/ | grep '\.css' | sed 's/\.css$//')
 fi
 
 # Create array with all available themes
 for theme in $provided_themes $custom_themes; do
-    available_themes+=("$theme")
+	available_themes+=("$theme")
 done
 
 # Get count of themes (for proper JSON formatting)
@@ -83,10 +83,10 @@ theme_count="${#available_themes[@]}"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

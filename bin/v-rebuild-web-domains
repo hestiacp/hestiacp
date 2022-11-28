@@ -40,7 +40,7 @@ is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 check_user=$(is_object_unsuspended 'user' 'USER' "$user")
 if [ -n "$check_user" ]; then
-    exit
+	exit
 fi
 
 # Perform verification if read-only mode is enabled
@@ -52,71 +52,71 @@ check_hestia_demo_mode
 
 # Deleting old web configs
 if [ -e "/etc/$WEB_SYSTEM/conf.d/hestia.conf" ]; then
-    sed -i "/.*\/$user\/conf\/web\//d" /etc/$WEB_SYSTEM/conf.d/hestia.conf
+	sed -i "/.*\/$user\/conf\/web\//d" /etc/$WEB_SYSTEM/conf.d/hestia.conf
 fi
 
 if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf" ]; then
-    rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
-    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.conf
+	rm -f $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.conf
+	rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.conf
 fi
 if [ -e "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf" ]; then
-    rm $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
-    rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.ssl.conf
+	rm $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.ssl.conf
+	rm -f /etc/$WEB_SYSTEM/conf.d/domains/$domain.ssl.conf
 fi
 
 # Deleting old proxy configs
 if [ -n "$PROXY_SYSTEM" ]; then
-    if [ -e "/etc/$PROXY_SYSTEM/conf.d/hestia.conf" ]; then
-        sed -i "/.*\/$user\/conf\/web\//d" /etc/$PROXY_SYSTEM/conf.d/hestia.conf
-    fi
+	if [ -e "/etc/$PROXY_SYSTEM/conf.d/hestia.conf" ]; then
+		sed -i "/.*\/$user\/conf\/web\//d" /etc/$PROXY_SYSTEM/conf.d/hestia.conf
+	fi
 
-    if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" ]; then
-        rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf
-        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.conf
-    fi
+	if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf" ]; then
+		rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.conf
+		rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.conf
+	fi
 
-    if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf" ]; then
-        rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf
-        rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.ssl.conf
-    fi
+	if [ -e "$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf" ]; then
+		rm -f $HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.ssl.conf
+		rm -f /etc/$PROXY_SYSTEM/conf.d/domains/$domain.ssl.conf
+	fi
 fi
 
 # Create dummy php-fpm configs if missing
 for php_folder in /etc/php/*; do
-    [ ! -d "${php_folder}/fpm/pool.d/" ] && continue
+	[ ! -d "${php_folder}/fpm/pool.d/" ] && continue
 
-    v_php="$(basename $php_folder)"
-    if [ ! -f "/etc/php/${v_php}/fpm/pool.d/dummy.conf" ]; then
-        cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "/etc/php/${v_php}/fpm/pool.d/"
-        sed -i "s/9999/99${v_php//.}/g" "/etc/php/${v_php}/fpm/pool.d/dummy.conf"
-    fi
+	v_php="$(basename $php_folder)"
+	if [ ! -f "/etc/php/${v_php}/fpm/pool.d/dummy.conf" ]; then
+		cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "/etc/php/${v_php}/fpm/pool.d/"
+		sed -i "s/9999/99${v_php//./}/g" "/etc/php/${v_php}/fpm/pool.d/dummy.conf"
+	fi
 done
 
 # Deleting backend configs
 if [ -n "$WEB_BACKEND" ]; then
-    if [ "$WEB_BACKEND_POOL" = 'user' ]; then
-        prepare_web_backend
-        delete_web_backend
-    else
-        for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
-            template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
-            prepare_web_backend
-            delete_web_backend
-        done
-    fi
+	if [ "$WEB_BACKEND_POOL" = 'user' ]; then
+		prepare_web_backend
+		delete_web_backend
+	else
+		for domain in $($BIN/v-list-web-domains $user plain | cut -f 1); do
+			template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
+			prepare_web_backend
+			delete_web_backend
+		done
+	fi
 fi
 
 # Starting rebuild loop for each web domain
-for domain in $($BIN/v-list-web-domains $user plain |cut -f 1); do
-    if [ -n "$WEB_BACKEND" ]; then
-        template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND');
-        if [ -z "$template" ]; then
-            template="default"
-            update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' 'default'
-        fi
-        $BIN/v-add-web-domain-backend "$user" "$domain" "$template" "$restart"
-    fi
-    rebuild_web_domain_conf
+for domain in $($BIN/v-list-web-domains $user plain | cut -f 1); do
+	if [ -n "$WEB_BACKEND" ]; then
+		template=$(get_object_value 'web' 'DOMAIN' "$domain" '$BACKEND')
+		if [ -z "$template" ]; then
+			template="default"
+			update_object_value 'web' 'DOMAIN' "$domain" '$BACKEND' 'default'
+		fi
+		$BIN/v-add-web-domain-backend "$user" "$domain" "$template" "$restart"
+	fi
+	rebuild_web_domain_conf
 done
 
 #----------------------------------------------------------#
@@ -127,12 +127,12 @@ done
 $BIN/v-update-user-counters "$user"
 
 if [ "$restart" = "yes" ]; then
-    # Restarting web server
-    $BIN/v-restart-web "$restart"
-    check_result $? "Web restart failed" >/dev/null
+	# Restarting web server
+	$BIN/v-restart-web "$restart"
+	check_result $? "Web restart failed" > /dev/null
 
-    $BIN/v-restart-proxy "$restart"
-    check_result $? "Proxy restart failed" >/dev/null
+	$BIN/v-restart-proxy "$restart"
+	check_result $? "Proxy restart failed" > /dev/null
 fi
 
 # Logging

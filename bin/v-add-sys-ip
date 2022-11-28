@@ -48,14 +48,14 @@ is_format_valid 'ip' 'netmask' 'iface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-if [ -n "$ip_name" ] ; then
-    is_format_valid 'ip_name'
+if [ -n "$ip_name" ]; then
+	is_format_valid 'ip_name'
 fi
-if [ -n "$nat_ip" ] ; then
-    is_format_valid 'nat_ip'
+if [ -n "$nat_ip" ]; then
+	is_format_valid 'nat_ip'
 fi
 if [ "$user" != "admin" ]; then
-    ip_status="dedicated"
+	ip_status="dedicated"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -70,51 +70,51 @@ broadcast=$(get_broadcast $ip $netmask)
 
 sys_ip_check=$(/sbin/ip addr | grep "$ip")
 if [ -z "$sys_ip_check" ]; then
-    # Adding sys ip
-    /sbin/ip addr add $ip/$cidr dev $iface \
-        broadcast $broadcast label $iface
+	# Adding sys ip
+	/sbin/ip addr add $ip/$cidr dev $iface \
+		broadcast $broadcast label $iface
 
-    # Check if netplan is in use and generate configuration file
-    if [ ! -z $(which netplan) ]; then
-        if  [ ! -z "$(netplan generate --mapping "$iface" | grep networkd)" ]; then
-            netplan=1
-        else
-            netplan=0
-        fi
-    else
-        netplan=0
-    fi
+	# Check if netplan is in use and generate configuration file
+	if [ ! -z $(which netplan) ]; then
+		if [ ! -z "$(netplan generate --mapping "$iface" | grep networkd)" ]; then
+			netplan=1
+		else
+			netplan=0
+		fi
+	else
+		netplan=0
+	fi
 
-    if [ "$netplan" == "1" ]; then
-        if [ -f "/etc/netplan/60-hestia.yaml" ]; then
-            sys_ip="        - $ip/$cidr"
-        else
-            sys_ip="# Added by hestia, please do not edit the file manually!"
-            sys_ip="$sys_ip\nnetwork:"
-            sys_ip="$sys_ip\n  version: 2"
-            sys_ip="$sys_ip\n  renderer: networkd"
-            sys_ip="$sys_ip\n  ethernets:"
-            sys_ip="$sys_ip\n    $iface:"
-            sys_ip="$sys_ip\n      addresses:"
-            sys_ip="$sys_ip\n        - $ip/$cidr"
-        fi
-        IFS='%'
-        echo -e $sys_ip >> /etc/netplan/60-hestia.yaml
-        unset IFS
-    else
-        sys_ip="\n# Added by Hestia Control Panel"
-        sys_ip="$sys_ip\nauto $iface"
-        sys_ip="$sys_ip\niface $iface inet static"
-        sys_ip="$sys_ip\naddress $ip"
-        sys_ip="$sys_ip\nnetmask $netmask"
-        echo -e $sys_ip >> /etc/network/interfaces
-    fi
+	if [ "$netplan" == "1" ]; then
+		if [ -f "/etc/netplan/60-hestia.yaml" ]; then
+			sys_ip="        - $ip/$cidr"
+		else
+			sys_ip="# Added by hestia, please do not edit the file manually!"
+			sys_ip="$sys_ip\nnetwork:"
+			sys_ip="$sys_ip\n  version: 2"
+			sys_ip="$sys_ip\n  renderer: networkd"
+			sys_ip="$sys_ip\n  ethernets:"
+			sys_ip="$sys_ip\n    $iface:"
+			sys_ip="$sys_ip\n      addresses:"
+			sys_ip="$sys_ip\n        - $ip/$cidr"
+		fi
+		IFS='%'
+		echo -e $sys_ip >> /etc/netplan/60-hestia.yaml
+		unset IFS
+	else
+		sys_ip="\n# Added by Hestia Control Panel"
+		sys_ip="$sys_ip\nauto $iface"
+		sys_ip="$sys_ip\niface $iface inet static"
+		sys_ip="$sys_ip\naddress $ip"
+		sys_ip="$sys_ip\nnetmask $netmask"
+		echo -e $sys_ip >> /etc/network/interfaces
+	fi
 fi
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding hestia ip
 echo "OWNER='$user'
@@ -131,64 +131,64 @@ chmod 660 $HESTIA/data/ips/$ip
 
 # WEB support
 if [ ! -z "$WEB_SYSTEM" ]; then
-    web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
-    rm -f $web_conf
+	web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
+	rm -f $web_conf
 
-    if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
-        if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
-            echo "NameVirtualHost $ip:$WEB_PORT" >  $web_conf
-        fi
-        echo "Listen $ip:$WEB_PORT" >> $web_conf
-        cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> $web_conf
-        sed -i 's/directIP/'$ip'/g' $web_conf
-        sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
+	if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
+		if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
+			echo "NameVirtualHost $ip:$WEB_PORT" > $web_conf
+		fi
+		echo "Listen $ip:$WEB_PORT" >> $web_conf
+		cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> $web_conf
+		sed -i 's/directIP/'$ip'/g' $web_conf
+		sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
 
-    elif [ "$WEB_SYSTEM" = 'nginx' ]; then
-        cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc $web_conf
-        sed -i 's/directIP/'$ip'/g' $web_conf
-    fi
+	elif [ "$WEB_SYSTEM" = 'nginx' ]; then
+		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc $web_conf
+		sed -i 's/directIP/'$ip'/g' $web_conf
+	fi
 
-    if [ "$WEB_SSL" = 'mod_ssl' ]; then
-        if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
-            sed -i "1s/^/NameVirtualHost $ip:$WEB_SSL_PORT\n/" $web_conf
-        fi
-        sed -i "1s/^/Listen $ip:$WEB_SSL_PORT\n/" $web_conf
-        sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' $web_conf
-    fi
+	if [ "$WEB_SSL" = 'mod_ssl' ]; then
+		if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
+			sed -i "1s/^/NameVirtualHost $ip:$WEB_SSL_PORT\n/" $web_conf
+		fi
+		sed -i "1s/^/Listen $ip:$WEB_SSL_PORT\n/" $web_conf
+		sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' $web_conf
+	fi
 fi
 
 # Proxy support
 if [ -n "$PROXY_SYSTEM" ]; then
-    cat $WEBTPL/$PROXY_SYSTEM/proxy_ip.tpl |\
-        sed -e "s/%ip%/$ip/g" \
-            -e "s/%web_port%/$WEB_PORT/g" \
-            -e "s/%proxy_port%/$PROXY_PORT/g" \
-            -e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
-        > /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+	cat $WEBTPL/$PROXY_SYSTEM/proxy_ip.tpl \
+		| sed -e "s/%ip%/$ip/g" \
+			-e "s/%web_port%/$WEB_PORT/g" \
+			-e "s/%proxy_port%/$PROXY_PORT/g" \
+			-e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+			> /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 
-    # mod_extract_forwarded
-    fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
-    if [ -e "$fw_conf" ]; then
-        ips=$(grep 'MEFaccept ' $fw_conf | grep -v '#' | head -n1)
-        sed -i "s/$ips/$ips $ip/g" $fw_conf
-    fi
+	# mod_extract_forwarded
+	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
+	if [ -e "$fw_conf" ]; then
+		ips=$(grep 'MEFaccept ' $fw_conf | grep -v '#' | head -n1)
+		sed -i "s/$ips/$ips $ip/g" $fw_conf
+	fi
 
-    # mod_rpaf
-    rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
-    if [ -e "$rpaf_conf" ]; then
-        rpaf_str=$(grep RPAFproxy_ips $rpaf_conf)
-        [ -z "$rpaf_str" ] && sed -i 's|</IfModule>|RPAFproxy_ips\n</IfModule>|' $rpaf_conf && rpaf_str='RPAFproxy_ips'
-        rpaf_str="$rpaf_str $ip"
-        sed -i "s/.*RPAFproxy_ips.*/$rpaf_str/" $rpaf_conf
-    fi
+	# mod_rpaf
+	rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+	if [ -e "$rpaf_conf" ]; then
+		rpaf_str=$(grep RPAFproxy_ips $rpaf_conf)
+		[ -z "$rpaf_str" ] && sed -i 's|</IfModule>|RPAFproxy_ips\n</IfModule>|' $rpaf_conf && rpaf_str='RPAFproxy_ips'
+		rpaf_str="$rpaf_str $ip"
+		sed -i "s/.*RPAFproxy_ips.*/$rpaf_str/" $rpaf_conf
+	fi
 
-    #mod_remoteip
-    remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
-    if [ -e "$remoteip_conf" ]; then
-        if [ $( grep -ic "$ip" $remoteip_conf ) -eq 0 ]; then
-            sed -i "s/<\/IfModule>/RemoteIPInternalProxy $ip\n<\/IfModule>/g" $remoteip_conf
-        fi
-    fi
+	#mod_remoteip
+	remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+	if [ -e "$remoteip_conf" ]; then
+		if [ $(grep -ic "$ip" $remoteip_conf) -eq 0 ]; then
+			sed -i "s/<\/IfModule>/RemoteIPInternalProxy $ip\n<\/IfModule>/g" $remoteip_conf
+		fi
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -198,31 +198,31 @@ fi
 # Updating user counters
 increase_user_value "$user" '$IP_OWNED'
 if [ "$user" = 'admin' ]; then
-    if [ "$ip_status" = 'shared' ]; then
-        for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
-            increase_user_value "$hestia_user" '$IP_AVAIL'
-        done
-    else
-        increase_user_value 'admin' '$IP_AVAIL'
-    fi
+	if [ "$ip_status" = 'shared' ]; then
+		for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
+			increase_user_value "$hestia_user" '$IP_AVAIL'
+		done
+	else
+		increase_user_value 'admin' '$IP_AVAIL'
+	fi
 else
-    increase_user_value "$user" '$IP_AVAIL'
-    increase_user_value 'admin' '$IP_AVAIL'
+	increase_user_value "$user" '$IP_AVAIL'
+	increase_user_value 'admin' '$IP_AVAIL'
 fi
 
 # Restarting web server
 $BIN/v-restart-web
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
 if [ -n "$PROXY_SYSTEM" ]; then
-    $BIN/v-restart-proxy
-    check_result $? "Proxy restart failed" >/dev/null
+	$BIN/v-restart-proxy
+	check_result $? "Proxy restart failed" > /dev/null
 fi
 
 # Restarting firewall
 if [ -n "$FIREWALL_SYSTEM" ]; then
-    $BIN/v-update-firewall
+	$BIN/v-update-firewall
 fi
 
 # Logging

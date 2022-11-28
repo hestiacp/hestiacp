@@ -34,29 +34,29 @@ check_hestia_demo_mode
 
 ipset_hstobject='../../data/firewall/ipset'
 
-for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME' 2>/dev/null); do
+for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME' 2> /dev/null); do
 
-    ipset_time="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$TIME')"
-    ipset_date="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$DATE')"
-    ipset_au="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$AUTOUPDATE')"
+	ipset_time="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$TIME')"
+	ipset_date="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$DATE')"
+	ipset_au="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$AUTOUPDATE')"
 
-    if [ "$ipset_au" = 'no' ] ; then
-        # load existing ip list files in the kernel but don't auto update them
-        $BIN/v-add-firewall-ipset "$ipset_name"
-        continue
-    fi
+	if [ "$ipset_au" = 'no' ]; then
+		# load existing ip list files in the kernel but don't auto update them
+		$BIN/v-add-firewall-ipset "$ipset_name"
+		continue
+	fi
 
-    last_updated_ts=$(date -d "$ipset_date $ipset_time" +%s)
-    now=$(date +%s)
-    hours_since_update=$(( (now - last_updated_ts) / (60*60) ))
+	last_updated_ts=$(date -d "$ipset_date $ipset_time" +%s)
+	now=$(date +%s)
+	hours_since_update=$(((now - last_updated_ts) / (60 * 60)))
 
-    if [[ "$hours_since_update" -lt 24 ]] && [ "$force" = 'no' ]; then
-        # load existing ip list files in the kernel but don't auto update them
-        $BIN/v-add-firewall-ipset "$ipset_name"
-        continue
-    fi
+	if [[ "$hours_since_update" -lt 24 ]] && [ "$force" = 'no' ]; then
+		# load existing ip list files in the kernel but don't auto update them
+		$BIN/v-add-firewall-ipset "$ipset_name"
+		continue
+	fi
 
-    $BIN/v-add-firewall-ipset "$ipset_name" '' '' '' 'yes'
+	$BIN/v-add-firewall-ipset "$ipset_name" '' '' '' 'yes'
 done
 
 #----------------------------------------------------------#

@@ -48,7 +48,7 @@ if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\
 fi
 
 # Check if php version is supported
-if  [[ ! "$multiphp_v" =~ "$version" ]]; then
+if  [[ ! "$multiphp_v" =~ $version ]]; then
     echo "ERROR: Specified PHP version is not supported or does not exist."
     exit "$E_INVALID";
 fi

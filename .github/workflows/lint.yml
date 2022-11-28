@@ -11,14 +11,13 @@ jobs:
     name: ShellCheck
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Install ShellCheck
-        run: sudo apt-get install -y shellcheck
-
-      - name: Run ShellCheck script
-        run: ./test/shellcheck.sh
+    - name: Run ShellCheck
+      uses: ludeeus/action-shellcheck@6d3f514f44620b9d4488e380339edc0d9bbe2fba
+      with:
+        severity: error
 
   eslint:
     name: ESLint

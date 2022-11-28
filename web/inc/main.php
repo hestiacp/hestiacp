@@ -177,7 +177,7 @@ function render_page($user, $TAB, $page)
     $__pages_js_dir = dirname(__DIR__) . '/js/pages/';
 
     // Header
-    include($__template_dir . 'header.html');
+    include($__template_dir . 'header.php');
 
     // Panel
     $panel = top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
@@ -188,17 +188,17 @@ function render_page($user, $TAB, $page)
     // Policies controller
     @include_once(dirname(__DIR__) . '/inc/policies.php');
     // Body
-    include($__template_dir . 'pages/' . $page . '.html');
+    include($__template_dir . 'pages/' . $page . '.php');
 
     // Including common js files
-    @include_once(dirname(__DIR__) . '/templates/includes/end_js.html');
+    @include_once(dirname(__DIR__) . '/templates/includes/end_js.php');
     // Including page specific js file
     if (file_exists($__pages_js_dir . $page . '.js')) {
         echo '<script src="/js/pages/' . $page . '.js?' . JS_LATEST_UPDATE . '"></script>';
     }
 
     // Footer
-    include($__template_dir . 'footer.html');
+    include($__template_dir . 'footer.php');
 }
 
 // Match $_SESSION['token'] against $_GET['token'] or $_POST['token']
@@ -296,7 +296,7 @@ function top_panel($user, $TAB)
         }
     }
 
-    include(dirname(__FILE__) . '/../templates/includes/panel.html');
+    include(dirname(__FILE__) . '/../templates/includes/panel.php');
     return $panel;
 }
 

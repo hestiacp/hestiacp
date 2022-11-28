@@ -14,7 +14,7 @@ if ($_GET['type'] == 'error') {
     $type = 'error';
 }
 // Header
-include($_SERVER['DOCUMENT_ROOT'].'/templates/pages/list_weblog.html');
+include($_SERVER['DOCUMENT_ROOT'].'/templates/pages/list_weblog.php');
 
 
 

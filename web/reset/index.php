@@ -117,14 +117,14 @@ if ((!empty($_POST['user'])) && (!empty($_POST['code'])) && (!empty($_POST['pass
 }
 
 if (empty($_GET['action'])) {
-    require_once '../templates/header.html';
-    require_once '../templates/pages/login/reset_1.html';
+    require_once '../templates/header.php';
+    require_once '../templates/pages/login/reset_1.php';
 } else {
-    require_once '../templates/header.html';
+    require_once '../templates/header.php';
     if ($_GET['action'] == 'code') {
-        require_once '../templates/pages/login/reset_2.html';
+        require_once '../templates/pages/login/reset_2.php';
     }
     if (($_GET['action'] == 'confirm') && (!empty($_GET['code']))) {
-        require_once '../templates/pages/login/reset_3.html';
+        require_once '../templates/pages/login/reset_3.php';
     }
 }

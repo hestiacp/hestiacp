@@ -3,9 +3,9 @@
 
 <head>
   <!-- Load necessary CSS and JavaScript from source -->
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.html'; ?>
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.html'; ?>
-  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.html'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.php'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.php'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.php'; ?>
   <script src="/js/vendor/jquery.cookie.js?<?=JS_LATEST_UPDATE?>"></script>
   <script src="/js/vendor/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>
   <script src="/js/vendor/jquery.finder.js?<?=JS_LATEST_UPDATE?>"></script>

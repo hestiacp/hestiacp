@@ -326,13 +326,13 @@ if (empty($_SESSION['language'])) {
 $token = bin2hex(random_bytes(16));
 $_SESSION['token'] = $token;
 
-require_once('../templates/header.html');
+require_once('../templates/header.php');
 if (!empty($_SESSION['login']['password'])) {
-    require_once('../templates/pages/login/login_2.html');
+    require_once('../templates/pages/login/login_2.php');
 } elseif (empty($_SESSION['login']['username'])) {
-    require_once('../templates/pages/login/login' . (($_SESSION['LOGIN_STYLE'] != 'old') ? '' : '_a') . '.html');
+    require_once('../templates/pages/login/login' . (($_SESSION['LOGIN_STYLE'] != 'old') ? '' : '_a') . '.php');
 } elseif (empty($_POST['password'])) {
-    require_once('../templates/pages/login/login_1.html');
+    require_once('../templates/pages/login/login_1.php');
 } else {
-    require_once('../templates/pages/login/login' . (($_SESSION['LOGIN_STYLE'] != 'old') ? '' : '_a') . '.html');
+    require_once('../templates/pages/login/login' . (($_SESSION['LOGIN_STYLE'] != 'old') ? '' : '_a') . '.php');
 }

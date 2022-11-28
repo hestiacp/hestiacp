@@ -3,9 +3,9 @@
 
 <head>
 <?php
-  require $_SERVER['HESTIA'] . '/web/templates/includes/title.html';
-  require $_SERVER['HESTIA'] . '/web/templates/includes/css.html';
-  require $_SERVER['HESTIA'] . '/web/templates/includes/top_js.html';
+  require $_SERVER['HESTIA'] . '/web/templates/includes/title.php';
+  require $_SERVER['HESTIA'] . '/web/templates/includes/css.php';
+  require $_SERVER['HESTIA'] . '/web/templates/includes/top_js.php';
 ?>
   <script>
 <?php
@@ -24,5 +24,5 @@
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
 <?php
   if (($_SESSION['DEBUG_MODE']) == "true" ) {
-    require $_SERVER['HESTIA'] . '/web/templates/pages/debug_panel.html';
+    require $_SERVER['HESTIA'] . '/web/templates/pages/debug_panel.php';
   }

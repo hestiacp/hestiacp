@@ -4,8 +4,8 @@
 *.min.css
 *.min.js
 
-# Nginx files (for now)
-**/nginx/
+# Bats seems to break Prettier
+*.bats
 
 # Web templates (for now)
 web/templates/

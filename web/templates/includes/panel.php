@@ -1,57 +1,15 @@
-<div class="hidden" id="token" token="<?=$_SESSION['token']?>"></div>
+<div id="token" token="<?=$_SESSION['token']?>"></div>
 
 <header class="top-bar">
   <div class="l-center top-bar-inner">
 
-    <!-- Logo / Left Menu wrapper -->
+    <!-- Logo / Usage Statistics wrapper -->
     <div class="top-bar-left">
 
       <!-- Logo / Home Button -->
       <a href="<?=htmlspecialchars($home_url)?>" class="top-bar-logo" title="<?=_('Hestia Control Panel');?>">
         <img src="/images/logo-header.svg" alt="<?=_('Hestia Control Panel');?>" width="54" height="29">
       </a>
-
-      <!-- Left Menu -->
-      <nav class="top-bar-nav">
-        <ul class="top-bar-nav-list">
-
-          <!-- Records tab -->
-          <li class="top-bar-nav-item">
-            <a class="top-bar-nav-link <?php if(in_array($TAB, ['WEB', 'DNS', 'MAIL', 'DB', 'BACKUP', 'CRON', 'PACKAGE', 'USER', 'LOG'])) echo 'active' ?>" href="<?=htmlspecialchars($home_url)?>">
-              <i class="fas fa-list-check"></i>
-              <span class="top-bar-nav-link-label"><?=_('Records');?></span>
-            </a>
-          </li>
-
-          <!-- File Manager tab -->
-          <?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
-            <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
-              <!-- Hide file manager when impersonating admin-->
-            <?php } else { ?>
-              <li class="top-bar-nav-item">
-                <a class="top-bar-nav-link <?php if($TAB == 'FM') echo 'active' ?>" href="/fm/">
-                  <i class="fas fa-folder-open"></i>
-                  <span class="top-bar-nav-link-label"><?=_('Files');?></span>
-                </a>
-              </li>
-            <?php } ?>
-          <?php } ?>
-
-          <!-- Statistics tab-->
-          <li class="top-bar-nav-item">
-            <a class="top-bar-nav-link <?php if($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
-              <i class="fas fa-chart-line"></i>
-              <span class="top-bar-nav-link-label"><?=_('Statistics');?></span>
-            </a>
-          </li>
-
-        </ul>
-      </nav>
-
-    </div>
-
-    <!-- Usage Statistics / Right Menu wrapper -->
-    <div class="top-bar-right">
 
       <!-- Usage Statistics -->
       <div class="top-bar-usage">
@@ -80,21 +38,46 @@
         </div>
       </div>
 
-      <!-- Right Menu -->
-      <nav class="top-bar-nav">
-        <ul class="top-bar-nav-list">
+    </div>
 
-          <!-- Notifications -->
-          <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
-            <!-- Do not show notifications panel when impersonating 'admin' user -->
-          <?php } else { ?>
-            <li class="top-bar-nav-item">
-              <a title="<?=_('Notifications');?>" class="top-bar-nav-link js-notifications <?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'updates' ?>" href="#">
-                <i class="fas fa-bell <?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"></i>
-                <span class="u-hidden"><?=_('Notifications');?></span>
-              </a>
-              <ul class="notification-container animate__animated animate__fadeIn u-hidden"></ul>
-            </li>
+    <!-- Notifications / Menu wrapper -->
+    <div class="top-bar-right">
+
+      <!-- Notifications -->
+      <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
+        <!-- Do not show notifications panel when impersonating 'admin' user -->
+      <?php } else { ?>
+        <div class="top-bar-notifications">
+          <button type="button" class="top-bar-nav-link js-notifications" title="<?=_('Notifications');?>">
+            <i class="fas fa-bell <?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"></i>
+            <span class="u-hidden"><?=_('Notifications');?></span>
+          </button>
+          <ul class="notification-container animate__animated animate__fadeIn u-hidden"></ul>
+        </div>
+      <?php } ?>
+
+      <!-- Menu -->
+      <nav class="top-bar-nav">
+
+        <button type="button" class="top-bar-nav-link u-hide-desktop js-toggle-top-bar-menu" title="<?=_('Toggle menu');?>">
+          <i class="fas fa-bars"></i>
+          <span class="u-hidden"><?=_('Toggle menu');?></span>
+        </button>
+
+        <ul class="top-bar-nav-list animate__animated animate__fadeIn">
+
+          <!-- File Manager -->
+          <?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
+            <?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
+              <!-- Hide file manager when impersonating admin-->
+            <?php } else { ?>
+              <li class="top-bar-nav-item">
+                <a title="<?=_('File manager');?>" class="top-bar-nav-link <?php if($TAB == 'FM') echo 'active' ?>" href="/fm/">
+                  <i class="fas fa-folder-open"></i>
+                  <span class="top-bar-nav-link-label"><?=_('File manager');?></span>
+                </a>
+              </li>
+            <?php } ?>
           <?php } ?>
 
           <!-- Server Settings -->
@@ -105,7 +88,7 @@
               <li class="top-bar-nav-item">
                 <a title="<?=_('Server');?>" class="top-bar-nav-link <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
                   <i class="fas fa-gear"></i>
-                  <span class="u-hidden"><?=_('Server');?></span>
+                  <span class="top-bar-nav-link-label"><?=_('Server');?></span>
                 </a>
               </li>
             <?php } ?>
@@ -117,7 +100,7 @@
             <li class="top-bar-nav-item">
               <a title="<?=_('Logs');?>" class="top-bar-nav-link <?php if($TAB == 'LOG') echo 'active' ?>" href="/list/log/">
                 <i class="fas fa-clock-rotate-left"></i>
-                <span class="u-hidden"><?=_('Logs');?></span>
+                <span class="top-bar-nav-link-label"><?=_('Logs');?></span>
               </a>
             </li>
           <?php } else { ?>
@@ -125,17 +108,25 @@
               <li class="top-bar-nav-item">
                 <a title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="top-bar-nav-link" href="/edit/user/?user=<?=$user; ?>&token=<?=$_SESSION['token']?>">
                   <i class="fas fa-circle-user"></i>
-                  <span class="u-hidden"><?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)</span>
+                  <span class="top-bar-nav-link-label"><?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)</span>
                 </a>
               </li>
             <?php } ?>
           <?php } ?>
 
-          <!-- Help / Documentation-->
+          <!-- Statistics -->
+          <li class="top-bar-nav-item">
+            <a title="<?=_('Statistics');?>" class="top-bar-nav-link <?php if($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
+              <i class="fas fa-chart-line"></i>
+              <span class="top-bar-nav-link-label"><?=_('Statistics');?></span>
+            </a>
+          </li>
+
+          <!-- Help / Documentation -->
           <li class="top-bar-nav-item">
             <a title="<?=_('Help');?>" class="top-bar-nav-link" href="https://docs.hestiacp.com/" target="_blank" rel="noopener">
               <i class="fas fa-circle-question"></i>
-              <span class="u-hidden"><?=_('Help');?></span>
+              <span class="top-bar-nav-link-label"><?=_('Help');?></span>
             </a>
           </li>
 
@@ -144,14 +135,14 @@
             <li class="top-bar-nav-item">
               <a title="<?=_('Log out');?> (<?=$user?>)" class="top-bar-nav-link top-bar-nav-link-logout" href="/logout/?token=<?=$_SESSION['token']?>">
                 <i class="fas fa-circle-up"></i>
-                <span class="u-hidden"><?=_('Log out');?> (<?=$user?>)</span>
+                <span class="top-bar-nav-link-label"><?=_('Log out');?> (<?=$user?>)</span>
               </a>
             </li>
           <?php } else { ?>
             <li class="top-bar-nav-item">
               <a title="<?=_('Log out');?>" class="top-bar-nav-link top-bar-nav-link-logout" href="/logout/?token=<?=$_SESSION['token']?>">
                 <i class="fas fa-right-from-bracket"></i>
-                <span class="u-hidden"><?=_('Log out');?></span>
+                <span class="top-bar-nav-link-label"><?=_('Log out');?></span>
               </a>
             </li>
           <?php } ?>

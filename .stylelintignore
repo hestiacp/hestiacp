@@ -1,5 +1,5 @@
 # Minified files
-*.min.js
+*.min.css
 
 # Vendor/packages
 .pnp.*

@@ -26,8 +26,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo '    "'$ip'": {
+	echo '{'
+	echo '    "'$ip'": {
         "OWNER": "'$OWNER'",
         "STATUS": "'$STATUS'",
         "NAME": "'$NAME'",
@@ -39,36 +39,36 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
         }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "IP:             $ip"
-    echo "NETMASK:        $NETMASK"
-    echo "INTERFACE:      $INTERFACE"
-    echo "NAT:            $NAT"
-    echo "OWNER:          $OWNER"
-    echo "STATUS:         $STATUS"
-    echo "NAME:           $NAME"
-    echo "USERS:          $U_SYS_USERS"
-    echo "DOMAINS:        $U_WEB_DOMAINS"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
+	echo "IP:             $ip"
+	echo "NETMASK:        $NETMASK"
+	echo "INTERFACE:      $INTERFACE"
+	echo "NAT:            $NAT"
+	echo "OWNER:          $OWNER"
+	echo "STATUS:         $STATUS"
+	echo "NAME:           $NAME"
+	echo "USERS:          $U_SYS_USERS"
+	echo "DOMAINS:        $U_WEB_DOMAINS"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
-    echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
+	echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
+	echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-    echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
-    echo "NETMASK,NAT,TIME,DATE"
-    echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
-    echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
+	echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
+	echo "NETMASK,NAT,TIME,DATE"
+	echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
+	echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
 }
 
 #----------------------------------------------------------#
@@ -78,7 +78,7 @@ csv_list() {
 check_args '1' "$#" 'IP [FORMAT]'
 is_format_valid 'ip'
 if [ ! -e "$HESTIA/data/ips/$ip" ]; then
-    check_result $E_NOTEXIST "ip $ip doesn't exist"
+	check_result $E_NOTEXIST "ip $ip doesn't exist"
 fi
 
 #----------------------------------------------------------#
@@ -90,10 +90,10 @@ source_conf "$HESTIA/data/ips/$ip"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

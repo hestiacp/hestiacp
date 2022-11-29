@@ -51,12 +51,12 @@ is_object_valid "dns/$domain" 'ID' "$id"
 #                       Action                             #
 #----------------------------------------------------------#
 
-update_object_value "dns/$domain" 'ID' "$id"  '$SUSPENDED' "no"
+update_object_value "dns/$domain" 'ID' "$id" '$SUSPENDED' "no"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    update_domain_serial
-    update_domain_zone
+	update_domain_serial
+	update_domain_zone
 fi
 
 #----------------------------------------------------------#

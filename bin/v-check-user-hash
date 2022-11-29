@@ -12,7 +12,8 @@
 
 # Argument definition
 user=$1
-hash=$2; HIDE=2
+hash=$2
+HIDE=2
 ip46=${3-127.0.0.1}
 
 # Includes
@@ -24,8 +25,8 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -36,9 +37,9 @@ is_format_valid 'user' 'ip46'
 
 # Checking user
 if [ ! -d "$HESTIA/data/users/$user" ] && [ "$user" != 'root' ]; then
-    echo "Error: password missmatch"
-    echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
-    exit 9
+	echo "Error: password missmatch"
+	echo "$date $time $user $ip failed to login" >> $HESTIA/log/auth.log
+	exit 9
 fi
 
 # Checking user hash
@@ -46,9 +47,9 @@ is_hash_valid
 
 # Checking empty hash
 if [[ -z "$hash" ]]; then
-    echo "Error: password missmatch"
-    echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
-    exit 9
+	echo "Error: password missmatch"
+	echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
+	exit 9
 fi
 
 #----------------------------------------------------------#
@@ -58,38 +59,37 @@ fi
 # Parsing user's salt
 shadow=$(grep "^$user:" /etc/shadow | cut -f 2 -d :)
 
-if echo "$shadow" | grep -qE '^\$[0-9a-z]+\$[^\$]+\$'
-then
-    salt=$(echo "$shadow" |cut -f 3 -d \$)
-    method=$(echo "$shadow" |cut -f 2 -d \$)
-    if [ "$method" = "y" ]; then
-        method="yescrypt"
-    elif [ "$method" -eq '1' ]; then
-        method='md5'
-    elif [ "$method" -eq '6' ]; then
-        method='sha-512'
-    else
-        echo "Error: password missmatch"
-        echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
-        exit 9
-    fi
+if echo "$shadow" | grep -qE '^\$[0-9a-z]+\$[^\$]+\$'; then
+	salt=$(echo "$shadow" | cut -f 3 -d \$)
+	method=$(echo "$shadow" | cut -f 2 -d \$)
+	if [ "$method" = "y" ]; then
+		method="yescrypt"
+	elif [ "$method" -eq '1' ]; then
+		method='md5'
+	elif [ "$method" -eq '6' ]; then
+		method='sha-512'
+	else
+		echo "Error: password missmatch"
+		echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
+		exit 9
+	fi
 else
-    salt=${shadow:0:2}
-    method='des'
+	salt=${shadow:0:2}
+	method='des'
 fi
 
 # Checking salt
 if [ -z "$salt" ]; then
-    echo "Error: password missmatch"
-    echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
-    exit 9
+	echo "Error: password missmatch"
+	echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
+	exit 9
 fi
 
 # Comparing hashes
 if [[ "$shadow" != "$hash" ]]; then
-    echo "Error: password missmatch"
-    echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
-    exit 9
+	echo "Error: password missmatch"
+	echo "$date $time $user $ip46 failed to login" >> $HESTIA/log/auth.log
+	exit 9
 fi
 
 #----------------------------------------------------------#

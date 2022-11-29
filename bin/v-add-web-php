@@ -28,7 +28,7 @@ source_conf "$HESTIA/install/upgrade/upgrade.conf"
 check_args '1' "$#" 'VERSION'
 
 if [ -z "$WEB_BACKEND" ]; then
-    echo "Multiple php versions are not supported for modphp"
+	echo "Multiple php versions are not supported for modphp"
 fi
 
 # Set file locations
@@ -36,21 +36,21 @@ php_fpm="/etc/init.d/php$version-fpm"
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
-    echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
-    echo "Example: 7.0, 7.4, 8.0"
-    exit "$E_INVALID";
+	echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
+	echo "Example: 7.0, 7.4, 8.0"
+	exit "$E_INVALID"
 fi
 
 # Check if php version already exists
 if [ -f "$php_fpm" ] && [ -f "$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl" ]; then
-    echo "ERROR: Specified PHP version is already installed."
-    exit "$E_INVALID";
+	echo "ERROR: Specified PHP version is already installed."
+	exit "$E_INVALID"
 fi
 
 # Check if php version is supported
-if  [[ ! "$multiphp_v" =~ "$version" ]]; then
-    echo "ERROR: Specified PHP version is not supported or does not exist."
-    exit "$E_INVALID";
+if [[ ! "$multiphp_v" =~ $version ]]; then
+	echo "ERROR: Specified PHP version is not supported or does not exist."
+	exit "$E_INVALID";
 fi
 
 # Perform verification if read-only mode is enabled
@@ -66,30 +66,30 @@ mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli 
      php$version-pspell php$version-imagick php$version-pgsql php$version-imap php$version-ldap"
 
 # Check is version is 7.1 or below to add mcrypt
-if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
-    mph="$mph php$version-mcrypt"
+if [[ $(echo "$version 7.2" | awk '{print ($1 < $2)}') == 1 ]]; then
+	mph="$mph php$version-mcrypt"
 fi
 
 # Check if version is 8.0 or higher and drop php json.
 if [[ ${version:0:1} == "8" ]]; then
-    mph=$(echo "$mph" | sed -e "s/php$version-json//")
+	mph=$(echo "$mph" | sed -e "s/php$version-json//")
 fi
 
-if ! echo "$DB_SYSTEM" | grep -w 'mysql' >/dev/null; then
-    mph=$(echo "$mph" | sed -e "s/php$version-mysql//")
+if ! echo "$DB_SYSTEM" | grep -w 'mysql' > /dev/null; then
+	mph=$(echo "$mph" | sed -e "s/php$version-mysql//")
 fi
 
-if ! echo "$DB_SYSTEM" | grep -w 'pgsql' >/dev/null; then
-    mph=$(echo "$mph" | sed -e "s/php$version-pgsql//")
+if ! echo "$DB_SYSTEM" | grep -w 'pgsql' > /dev/null; then
+	mph=$(echo "$mph" | sed -e "s/php$version-pgsql//")
 fi
 
 # Install php packages
 if [ -f '/etc/redhat-release' ]; then
-    dnf makecache -q
-    dnf install -q -y $mph > /dev/null 2>&1 &
+	dnf makecache -q
+	dnf install -q -y $mph > /dev/null 2>&1 &
 else
-    apt-get -qq update
-    apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&1 &
+	apt-get -qq update
+	apt-get -y -qq -o Dpkg::Options::="--force-confold" install $mph > /dev/null 2>&1 &
 fi
 BACK_PID=$!
 
@@ -97,9 +97,9 @@ BACK_PID=$!
 echo "Installing PHP-$version, please wait..."
 spinner="/-\|"
 spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-    printf "\b${spinner:spin_i++%${#spinner}:1}"
-    sleep 0.5
+while kill -0 $BACK_PID > /dev/null 2>&1; do
+	printf "\b${spinner:spin_i++%${#spinner}:1}"
+	sleep 0.5
 done
 
 # Do a blank echo to get the \n back
@@ -107,28 +107,28 @@ echo
 
 # Check if installation was successful
 if [ ! -f "$php_fpm" ]; then
-    echo "ERROR: Installation failed, please run the following command manually for debugging:"
-    if [ -f '/etc/redhat-release' ]; then
-        echo "dnf install $mph"
-    else
-        echo "apt-get install $mph"
-    fi
+	echo "ERROR: Installation failed, please run the following command manually for debugging:"
+	if [ -f '/etc/redhat-release' ]; then
+		echo "dnf install $mph"
+	else
+		echo "apt-get install $mph"
+	fi
 fi
 
 # Check if required modules for apache2 are enabled
 if [ "$WEB_SYSTEM" = "apache2" ]; then
-    if ! a2query -q -m proxy_fcgi; then
-        a2enmod -q proxy_fcgi
-    fi
-    if ! a2query -q -m setenvif; then
-        a2enmod -q setenvif
-    fi
-    $BIN/v-restart-web "yes"
+	if ! a2query -q -m proxy_fcgi; then
+		a2enmod -q proxy_fcgi
+	fi
+	if ! a2query -q -m setenvif; then
+		a2enmod -q setenvif
+	fi
+	$BIN/v-restart-web "yes"
 fi
 
 # Configure fpm
 update-rc.d php$version-fpm defaults > /dev/null 2>&1
-v_tpl=${version//.}
+v_tpl=${version//./}
 rm -f /etc/php/$version/fpm/pool.d/*
 cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
 sed -i "s/9999/99$v_tpl/g" /etc/php/$version/fpm/pool.d/dummy.conf
@@ -142,7 +142,7 @@ sed -i "s/max_execution_time = 30/max_execution_time = 60/g" /etc/php/$version/f
 
 # Install backend template
 cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \
-    $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
+	$HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 
 #----------------------------------------------------------#
 #                       Hestia                             #

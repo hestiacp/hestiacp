@@ -12,13 +12,14 @@
 
 # Argument definition
 user=$1
-password=$2; HIDE=2
+password=$2
+HIDE=2
 email=$3
 package=${4-default}
 name=$5
 # Last name has been added for backward compatibility with WHMCS / Blesta VestaCP Plugins
 if [ -n "$6" ]; then
-    name="$name $6";
+	name="$name $6"
 fi
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -28,20 +29,19 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 is_user_free() {
-    # these names may cause issues with MariaDB/MySQL database names and should be reserved:
-    # sudo has been added due to Privilege escalation as sudo group has always sudo permission
-    check_sysuser=$(php -r '$reserved_names=array("aria", "aria_log", "mysql", "mysql_upgrade", "ib", "ib_buffer",
- "ddl", "ddl_recovery", "performance", "sudo"); if(in_array(strtolower($argv[1]), $reserved_names, true)){echo implode(", ", $reserved_names);}' "$user" );
-    if [ -n "$check_sysuser" ]; then
-        check_result "$E_INVALID" "The user name '$user' is reserved and cannot be used. List of reserved names: $check_sysuser"
-        return
-    fi
-    check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$user$" )
-    if [ -n "$check_sysuser" ] || [ -e "$USER_DATA" ]; then
-        check_result "$E_EXISTS" "user $user exists"
-    fi
+	# these names may cause issues with MariaDB/MySQL database names and should be reserved:
+	# sudo has been added due to Privilege escalation as sudo group has always sudo permission
+	check_sysuser=$(php -r '$reserved_names=array("aria", "aria_log", "mysql", "mysql_upgrade", "ib", "ib_buffer",
+ "ddl", "ddl_recovery", "performance", "sudo"); if(in_array(strtolower($argv[1]), $reserved_names, true)){echo implode(", ", $reserved_names);}' "$user")
+	if [ -n "$check_sysuser" ]; then
+		check_result "$E_INVALID" "The user name '$user' is reserved and cannot be used. List of reserved names: $check_sysuser"
+		return
+	fi
+	check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$user$")
+	if [ -n "$check_sysuser" ] || [ -e "$USER_DATA" ]; then
+		check_result "$E_EXISTS" "user $user exists"
+	fi
 }
 
 #----------------------------------------------------------#
@@ -51,7 +51,7 @@ is_user_free() {
 check_args '3' "$#" 'USER PASSWORD EMAIL [PACKAGE] [NAME] '
 is_format_valid 'user' 'email' 'package'
 if [ -n "$name" ]; then
-    is_format_valid 'name'
+	is_format_valid 'name'
 fi
 
 is_user_free "$user"
@@ -66,11 +66,11 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Parsing package data
-pkg_data=$(cat $HESTIA/data/packages/$package.pkg |egrep -v "TIME|DATE")
+pkg_data=$(cat $HESTIA/data/packages/$package.pkg | egrep -v "TIME|DATE")
 
 # Checking shell
 shell_conf=$(echo "$pkg_data" | grep 'SHELL' | cut -f 2 -d \')
-shell=$(grep -w "$shell_conf" /etc/shells |head -n1)
+shell=$(grep -w "$shell_conf" /etc/shells | head -n1)
 
 # Adding user
 /usr/sbin/useradd "$user" -s "$shell" -c "$email" -m -d "$HOMEDIR/$user" -U
@@ -80,23 +80,23 @@ check_result $? "user creation failed" "$E_INVALID"
 echo "$user:$password" | /usr/sbin/chpasswd
 
 if [ $? -ne 0 ]; then
-    # Delete user on failure
-    /usr/sbin/deluser "$user" > /dev/null 2>&1
-    echo "Error: Password not accepted due to PAM restrictions"
-    exit 2
+	# Delete user on failure
+	/usr/sbin/deluser "$user" > /dev/null 2>&1
+	echo "Error: Password not accepted due to PAM restrictions"
+	exit 2
 fi
 
 # Add a general group for normal users created by Hestia
 if [ -z "$(grep ^hestia-users: /etc/group)" ]; then
-    groupadd --system "hestia-users"
+	groupadd --system "hestia-users"
 fi
 
 # Add membership to hestia-users group to non-admin users
 if [ "$user" = "admin" ]; then
-    setfacl -m "g:admin:r-x" "$HOMEDIR/$user"
+	setfacl -m "g:admin:r-x" "$HOMEDIR/$user"
 else
-    usermod -a -G "hestia-users" "$user"
-    setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
+	usermod -a -G "hestia-users" "$user"
+	setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
 fi
 setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
 
@@ -104,105 +104,105 @@ setfacl -m "g:hestia-users:---" "$HOMEDIR/$user"
 mkdir $HOMEDIR/$user/conf
 
 if [ -n "$WEB_SYSTEM" ]; then
-    mkdir $HOMEDIR/$user/conf/web $HOMEDIR/$user/web $HOMEDIR/$user/tmp
-    chmod 751 $HOMEDIR/$user/conf/web
-    chmod 700 $HOMEDIR/$user/tmp
-    chown $user:$user $HOMEDIR/$user/web $HOMEDIR/$user/tmp
+	mkdir $HOMEDIR/$user/conf/web $HOMEDIR/$user/web $HOMEDIR/$user/tmp
+	chmod 751 $HOMEDIR/$user/conf/web
+	chmod 700 $HOMEDIR/$user/tmp
+	chown $user:$user $HOMEDIR/$user/web $HOMEDIR/$user/tmp
 fi
 
 if [ -n "$MAIL_SYSTEM" ]; then
-    mkdir $HOMEDIR/$user/conf/mail $HOMEDIR/$user/mail
-    chmod 751 $HOMEDIR/$user/mail
-    chmod 755 $HOMEDIR/$user/conf/mail
+	mkdir $HOMEDIR/$user/conf/mail $HOMEDIR/$user/mail
+	chmod 751 $HOMEDIR/$user/mail
+	chmod 755 $HOMEDIR/$user/conf/mail
 fi
 
 if [ -n "$DNS_SYSTEM" ]; then
-    if [ "$DNS_SYSTEM" = 'named' ]; then
-        dns_group='named'
-    else
-        dns_group='bind'
-    fi
-    mkdir $HOMEDIR/$user/conf/dns
-    chmod 771 $HOMEDIR/$user/conf/dns
-    chown root:$dns_group $HOMEDIR/$user/conf/dns
+	if [ "$DNS_SYSTEM" = 'named' ]; then
+		dns_group='named'
+	else
+		dns_group='bind'
+	fi
+	mkdir $HOMEDIR/$user/conf/dns
+	chmod 771 $HOMEDIR/$user/conf/dns
+	chown root:$dns_group $HOMEDIR/$user/conf/dns
 fi
 
 # Create default writeable folders
 mkdir $HOMEDIR/$user/.config \
-      $HOMEDIR/$user/.cache \
-      $HOMEDIR/$user/.local \
-      $HOMEDIR/$user/.composer \
-      $HOMEDIR/$user/.vscode-server \
-      $HOMEDIR/$user/.ssh \
-      $HOMEDIR/$user/.npm
+	$HOMEDIR/$user/.cache \
+	$HOMEDIR/$user/.local \
+	$HOMEDIR/$user/.composer \
+	$HOMEDIR/$user/.vscode-server \
+	$HOMEDIR/$user/.ssh \
+	$HOMEDIR/$user/.npm
 
 chown $user:$user \
-      $HOMEDIR/$user/.config \
-      $HOMEDIR/$user/.cache \
-      $HOMEDIR/$user/.local \
-      $HOMEDIR/$user/.composer \
-      $HOMEDIR/$user/.vscode-server \
-      $HOMEDIR/$user/.ssh \
-      $HOMEDIR/$user/.npm
+	$HOMEDIR/$user/.config \
+	$HOMEDIR/$user/.cache \
+	$HOMEDIR/$user/.local \
+	$HOMEDIR/$user/.composer \
+	$HOMEDIR/$user/.vscode-server \
+	$HOMEDIR/$user/.ssh \
+	$HOMEDIR/$user/.npm
 
 # Set permissions
 chmod a+x $HOMEDIR/$user
 chattr +i $HOMEDIR/$user/conf > /dev/null 2>&1
 
 # Adding user dir
-mkdir -p  $USER_DATA/ssl $USER_DATA/dns $USER_DATA/mail
+mkdir -p $USER_DATA/ssl $USER_DATA/dns $USER_DATA/mail
 
 # Creating configuration files and pipes
 touch $USER_DATA/backup.conf \
-    $USER_DATA/history.log \
-    $USER_DATA/stats.log \
-    $USER_DATA/web.conf \
-    $USER_DATA/dns.conf \
-    $USER_DATA/mail.conf \
-    $USER_DATA/db.conf \
-    $USER_DATA/cron.conf
+	$USER_DATA/history.log \
+	$USER_DATA/stats.log \
+	$USER_DATA/web.conf \
+	$USER_DATA/dns.conf \
+	$USER_DATA/mail.conf \
+	$USER_DATA/db.conf \
+	$USER_DATA/cron.conf
 
 chmod 770 $USER_DATA \
-    $USER_DATA/ssl \
-    $USER_DATA/dns \
-    $USER_DATA/mail
+	$USER_DATA/ssl \
+	$USER_DATA/dns \
+	$USER_DATA/mail
 
 chmod 660 $USER_DATA/backup.conf \
-    $USER_DATA/history.log \
-    $USER_DATA/stats.log \
-    $USER_DATA/web.conf \
-    $USER_DATA/dns.conf \
-    $USER_DATA/mail.conf \
-    $USER_DATA/db.conf \
-    $USER_DATA/cron.conf
+	$USER_DATA/history.log \
+	$USER_DATA/stats.log \
+	$USER_DATA/web.conf \
+	$USER_DATA/dns.conf \
+	$USER_DATA/mail.conf \
+	$USER_DATA/db.conf \
+	$USER_DATA/cron.conf
 
 # Updating queue pipes
 echo "$BIN/v-update-user-disk $user" >> $HESTIA/data/queue/disk.pipe
 if [ -n "$WEB_SYSTEM" ]; then
-    echo "$BIN/v-update-web-domains-traff $user" \
-        >> $HESTIA/data/queue/traffic.pipe
-    echo "$BIN/v-update-web-domains-disk $user" >> $HESTIA/data/queue/disk.pipe
+	echo "$BIN/v-update-web-domains-traff $user" \
+		>> $HESTIA/data/queue/traffic.pipe
+	echo "$BIN/v-update-web-domains-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
 if [ -n "$MAIL_SYSTEM" ]; then
-    echo "$BIN/v-update-mail-domains-disk $user" >> $HESTIA/data/queue/disk.pipe
+	echo "$BIN/v-update-mail-domains-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
 
 if [ -n "$DB_SYSTEM" ]; then
-    echo "$BIN/v-update-databases-disk $user" >> $HESTIA/data/queue/disk.pipe
+	echo "$BIN/v-update-databases-disk $user" >> $HESTIA/data/queue/disk.pipe
 fi
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Filling user config
 if [ "$user" != 'admin' ]; then
-    ip_avail=$($BIN/v-list-user-ips admin plain |grep -w shared|wc -l)
-    u_users=0
+	ip_avail=$($BIN/v-list-user-ips admin plain | grep -w shared | wc -l)
+	u_users=0
 else
-    ip_avail=0
-    u_users=1
+	ip_avail=0
+	u_users=1
 fi
 
 echo "NAME='$name'
@@ -257,17 +257,17 @@ chmod 660 $USER_DATA/user.conf
 
 # Updating quota
 if [ "$DISK_QUOTA" = 'yes' ]; then
-    $BIN/v-update-user-quota "$user"
+	$BIN/v-update-user-quota "$user"
 fi
 
 # Updating admin counter
 if [ "$user" != 'admin' ]; then
-    increase_user_value 'admin' '$U_USERS'
+	increase_user_value 'admin' '$U_USERS'
 fi
 
 # Run template trigger
 if [ -x "$HESTIA/data/packages/$package.sh" ]; then
-    $HESTIA/data/packages/$package.sh "$user" "$email" "$name"
+	$HESTIA/data/packages/$package.sh "$user" "$email" "$name"
 fi
 
 # Adding jailed sftp env

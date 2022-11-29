@@ -27,45 +27,45 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 # Check if /install/upgrade/manual/install_awstats_geoip.sh has been applied
-awstats_patch=$(cat  $HESTIA/data/templates/web/awstats/awstats.tpl | grep "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"");
+awstats_patch=$(cat $HESTIA/data/templates/web/awstats/awstats.tpl | grep "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"")
 
 # Update templates
 if [ -d "${WEBTPL}" ]; then
-    rm -rf "${WEBTPL}/skel" 2>/dev/null
-    rm -rf "${WEBTPL}/suspend" 2>/dev/null
-    rm -rf "${WEBTPL}/unassigned" 2>/dev/null
+	rm -rf "${WEBTPL}/skel" 2> /dev/null
+	rm -rf "${WEBTPL}/suspend" 2> /dev/null
+	rm -rf "${WEBTPL}/unassigned" 2> /dev/null
 fi
 
 [ -d "${WEBTPL}/nginx" ] || mkdir -p "${WEBTPL}/nginx"
 
 if [ "$PROXY_SYSTEM" = 'nginx' ] || [ "$WEB_BACKEND" = "php-fpm" ]; then
-    cp -rf "${HESTIA_INSTALL_DIR}/templates/web/nginx" "${WEBTPL}/"
+	cp -rf "${HESTIA_INSTALL_DIR}/templates/web/nginx" "${WEBTPL}/"
 fi
 
-for webtpl_folder in $(ls $HESTIA_INSTALL_DIR/templates/web/* -d 2>/dev/null | egrep -v '/(nginx)$' ); do
-    cp -rf "${webtpl_folder}" "${WEBTPL}/"
+for webtpl_folder in $(ls $HESTIA_INSTALL_DIR/templates/web/* -d 2> /dev/null | egrep -v '/(nginx)$'); do
+	cp -rf "${webtpl_folder}" "${WEBTPL}/"
 done
 # Skeleton, Unassinged and Suspended
-for webtpl_folder in $(ls $HESTIA_COMMON_DIR/templates/web/* -d 2>/dev/null ); do
-    cp -rf "${webtpl_folder}" "${WEBTPL}/"
+for webtpl_folder in $(ls $HESTIA_COMMON_DIR/templates/web/* -d 2> /dev/null); do
+	cp -rf "${webtpl_folder}" "${WEBTPL}/"
 done
 
 versions_list=$(ls -d /etc/php/*)
 for php_ver in $versions_list; do
-    [ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
-    cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl  ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
+	[ ! -d "/etc/php/$php_ver/fpm/pool.d/" ] && continue
+	cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl ${WEBTPL}/php-fpm/PHP-${php_ver/\./_}.tpl
 done
 
 if [ -n "$awstats_patch" ]; then
-    # restore LoadPlugin variable
-    echo "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"" >> $HESTIA/data/templates/web/awstats/awstats.tpl
+	# restore LoadPlugin variable
+	echo "LoadPlugin=\"geoip GEOIP_STANDARD /usr/share/GeoIP/GeoIP.dat\"" >> $HESTIA/data/templates/web/awstats/awstats.tpl
 fi
 
 # Rebuilding web domains
-if [  -z "$skip" ]; then
-    for user in $($BIN/v-list-sys-users plain); do
-        $BIN/v-rebuild-web-domains "$user" "no"
-    done
+if [ -z "$skip" ]; then
+	for user in $($BIN/v-list-sys-users plain); do
+		$BIN/v-rebuild-web-domains "$user" "no"
+	done
 fi
 
 #----------------------------------------------------------#
@@ -74,10 +74,10 @@ fi
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "restart" >/dev/null 2>&1
+check_result $? "restart" > /dev/null 2>&1
 
 $BIN/v-restart-proxy "$restart"
-check_result $? "restart" >/dev/null 2>&1
+check_result $? "restart" > /dev/null 2>&1
 
 $BIN/v-log-action "system" "Info" "Updates" "Default web domain templates updated."
 

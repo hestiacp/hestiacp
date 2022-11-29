@@ -30,27 +30,27 @@ COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
-    echo "ERROR: v-add-sys-dependencies can be run executed only by root user"
-    exit 10
+	echo "ERROR: v-add-sys-dependencies can be run executed only by root user"
+	exit 10
 fi
 
 # Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
 if [ -z "$HESTIA" ]; then
-    HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/hestia"
 fi
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
-    echo "ERROR: Environment variables not present, installation aborted."
-    exit 2
+	echo "ERROR: Environment variables not present, installation aborted."
+	exit 2
 fi
 
 # Ensure that Composer is installed for the user before continuing as it is a dependency of the PHPMailer.
 if [ ! -f "$COMPOSER_BIN" ]; then
-    $BIN/v-add-user-composer "$user"
-    if [ $? -ne 0 ]; then
-        $BIN/v-add-user-notification admin 'Composer installation failed!' '<b>Hestia will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-phpmailer<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
-        exit 1
-    fi
+	$BIN/v-add-user-composer "$user"
+	if [ $? -ne 0 ]; then
+		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>Hestia will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-phpmailer<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+		exit 1
+	fi
 fi
 
 # Perform verification if read-only mode is enabled
@@ -65,24 +65,24 @@ rm --recursive --force ${PM_INSTALL_DIR}/vendor
 mkdir -p ${PM_INSTALL_DIR}/vendor
 chown $user: -R ${PM_INSTALL_DIR}/vendor
 
-openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl);
-if [ -z "$openssl_installed"  ]; then
-    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl)
+if [ -z "$openssl_installed" ]; then
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 else
-    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
 fi
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up
 if [ $? -ne 0 ]; then
-    echo "ERROR: PHPMailer installation failed!"
-    echo "Please report this to our development team:"
-    echo "https://github.com/hestiacp/hestiacp/issues"
-    $BIN/v-add-user-notification admin 'Hestia PHP dependencies installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
-    # Installation failed, clean up files
-    rm --recursive --force ${PM_INSTALL_DIR}/vendor
-    $BIN/v-change-sys-config-value 'USE_SERVER_SMTP' 'n'
-    $BIN/v-log-action "system" "Error" "Plugins" "PHP dependencies installation failed"
-    exit 1
+	echo "ERROR: PHPMailer installation failed!"
+	echo "Please report this to our development team:"
+	echo "https://github.com/hestiacp/hestiacp/issues"
+	$BIN/v-add-user-notification admin 'Hestia PHP dependencies installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+	# Installation failed, clean up files
+	rm --recursive --force ${PM_INSTALL_DIR}/vendor
+	$BIN/v-change-sys-config-value 'USE_SERVER_SMTP' 'n'
+	$BIN/v-log-action "system" "Error" "Plugins" "PHP dependencies installation failed"
+	exit 1
 fi
 
 # Set permissions

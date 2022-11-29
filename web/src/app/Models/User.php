@@ -4,7 +4,5 @@ declare(strict_types=1);
 
 namespace Hestia\Models;
 
-class User extends Model
-{
-
+class User extends Model {
 }

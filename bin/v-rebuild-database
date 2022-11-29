@@ -50,14 +50,14 @@ get_database_values
 
 # Switching on db type
 case $TYPE in
-    mysql) rebuild_mysql_database ;;
-    pgsql) rebuild_pgsql_database ;;
+	mysql) rebuild_mysql_database ;;
+	pgsql) rebuild_pgsql_database ;;
 esac
 
 U_DISK_DB=$((U_DISK_DB + U_DISK))
 U_DATABASES=$((U_DATABASES + 1))
 if [ "$SUSPENDED" = 'yes' ]; then
-    SUSPENDED_DB=$((SUSPENDED_DB + 1))
+	SUSPENDED_DB=$((SUSPENDED_DB + 1))
 fi
 
 update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"

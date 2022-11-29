@@ -19,13 +19,13 @@ restart="$4"
 
 # Additional argument formatting
 if [[ "$domain" =~ [[:upper:]] ]]; then
-    domain=$(echo "$domain" |tr '[:upper:]' '[:lower:]')
+	domain=$(echo "$domain" | tr '[:upper:]' '[:lower:]')
 fi
 if [[ "$domain" =~ ^www\..* ]]; then
-    domain=$(echo "$domain" |sed -e "s/^www.//")
+	domain=$(echo "$domain" | sed -e "s/^www.//")
 fi
 if [[ "$domain" =~ .*\.$ ]]; then
-    domain=$(echo "$domain" |sed -e "s/\.$//")
+	domain=$(echo "$domain" | sed -e "s/\.$//")
 fi
 
 domain_idn=$(idn2 --quiet "$domain")
@@ -64,7 +64,7 @@ is_web_domain_cert_valid
 check_hestia_demo_mode
 
 if [ -n "$restart" ]; then
-    is_format_valid "$restart"
+	is_format_valid "$restart"
 fi
 #----------------------------------------------------------#
 #                       Action                             #
@@ -73,41 +73,41 @@ fi
 # Inherit web domain local ip address
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
 if [ -n "$domain_ip" ]; then
-    local_ip=$(get_real_ip "$domain_ip")
-    is_ip_valid "$local_ip" "$user"
+	local_ip=$(get_real_ip "$domain_ip")
+	is_ip_valid "$local_ip" "$user"
 else
-    get_user_ip
+	get_user_ip
 fi
 
 # Call routine to add SSL configuration to mail domain
 add_mail_ssl_config
 
 if [ "$WEBMAIL" == "roundcube" ]; then
-    WEBMAIL_TEMPLATE="default"
-    if [ -n "$PROXY_SYSTEM" ]; then
-        PROXY_TEMPLATE="default"
-    fi
-    # Add webmail configuration to mail domain
-    WEBMAIL_TEMPLATE="default"
-    if [ "$WEB_SYSTEM" = "nginx" ]; then
-        WEBMAIL_TEMPLATE="web_system"
-    fi
+	WEBMAIL_TEMPLATE="default"
+	if [ -n "$PROXY_SYSTEM" ]; then
+		PROXY_TEMPLATE="default"
+	fi
+	# Add webmail configuration to mail domain
+	WEBMAIL_TEMPLATE="default"
+	if [ "$WEB_SYSTEM" = "nginx" ]; then
+		WEBMAIL_TEMPLATE="web_system"
+	fi
 elif [ "$WEBMAIL" == "rainloop" ]; then
-    WEBMAIL_TEMPLATE="rainloop"
-    if [ -n "$PROXY_SYSTEM" ]; then
-        PROXY_TEMPLATE="default_rainloop"
-    fi
+	WEBMAIL_TEMPLATE="rainloop"
+	if [ -n "$PROXY_SYSTEM" ]; then
+		PROXY_TEMPLATE="default_rainloop"
+	fi
 else
-    WEBMAIL_TEMPLATE="disabled"
-    if [ -n "$PROXY_SYSTEM" ]; then
-        PROXY_TEMPLATE="default_disabled"
-    fi
+	WEBMAIL_TEMPLATE="disabled"
+	if [ -n "$PROXY_SYSTEM" ]; then
+		PROXY_TEMPLATE="default_disabled"
+	fi
 fi
 
 add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.stpl"
 
 if [ -n "$PROXY_SYSTEM" ]; then
-    add_webmail_config "$PROXY_SYSTEM" "${PROXY_TEMPLATE}.stpl"
+	add_webmail_config "$PROXY_SYSTEM" "${PROXY_TEMPLATE}.stpl"
 fi
 
 # Increase value for domain
@@ -122,15 +122,15 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
 
 # Restarting mail server
 $BIN/v-restart-mail "$restart"
-check_result $? "Mail restart failed" >/dev/null
+check_result $? "Mail restart failed" > /dev/null
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "SSL enabled (Domain: $domain)."

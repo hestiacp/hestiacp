@@ -21,15 +21,15 @@ source_conf "$HESTIA/conf/hestia.conf"
 new_timestamp
 
 abort_missmatch() {
-    echo "Error: key missmatch"
-    echo "$date $time api $ip failed to login" >> $HESTIA/log/auth.log
-    exit "$E_PASSWORD"
+	echo "Error: key missmatch"
+	echo "$date $time api $ip failed to login" >> $HESTIA/log/auth.log
+	exit "$E_PASSWORD"
 }
 
 ip=${2-127.0.0.1}
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -52,7 +52,6 @@ maybe_key_path="$(readlink -e "${HESTIA}/data/keys/${key}")"
 
 # Key file must be in the key store
 [[ $maybe_key_path == "${HESTIA}/data/keys/"* ]] || abort_missmatch
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

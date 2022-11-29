@@ -6,7 +6,6 @@
 #
 # This function unsuspends mail domain.
 
-
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
@@ -52,7 +51,7 @@ check_hestia_demo_mode
 
 # Add symbolic link
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    ln -s $HOMEDIR/$user/conf/mail/$domain /etc/$MAIL_SYSTEM/domains/
+	ln -s $HOMEDIR/$user/conf/mail/$domain /etc/$MAIL_SYSTEM/domains/
 fi
 
 #----------------------------------------------------------#
@@ -66,12 +65,12 @@ decrease_user_value "$user" '$SUSPENDED_MAIL'
 
 # Enable webmail access
 if [ -n "$IMAP_SYSTEM" ]; then
-    if [ -n "$WEBMAIL_SYSTEM" ]; then
-        for client in ${WEBMAIL_SYSTEM//,/ };do
-            webmail="$client"
-        done
-        $BIN/v-add-mail-domain-webmail "$user" "$domain" "$webmail" "$restart"
-    fi
+	if [ -n "$WEBMAIL_SYSTEM" ]; then
+		for client in ${WEBMAIL_SYSTEM//,/ }; do
+			webmail="$client"
+		done
+		$BIN/v-add-mail-domain-webmail "$user" "$domain" "$webmail" "$restart"
+	fi
 fi
 # Logging
 $BIN/v-log-action "system" "Info" "Mail" "Unsuspended mail domain (User: $user, Domain: $domain)."

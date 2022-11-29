@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Load necessary CSS and JavaScript from source -->
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.php'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.php'; ?>
+  <?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.php'; ?>
+  <script src="/js/vendor/jquery.cookie.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script src="/js/vendor/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script src="/js/vendor/jquery.finder.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script src="/js/hotkeys.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script src="/js/events.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
+  <script src="/js/i18n.js.php?<?=JS_LATEST_UPDATE?>"></script>
+  <script src="/js/templates.js?<?=JS_LATEST_UPDATE?>"></script>
+  <?php foreach(new DirectoryIterator($_SERVER['HESTIA'].'/web/js/custom_scripts') as $customScript){
+    if($customScript->getExtension() === 'js'){
+      echo '<script src="/js/custom_scripts/'.rawurlencode($customScript->getBasename()).'"></script>';
+    } elseif($customScript->getExtension() === "php"){
+      require_once($customScript->getPathname());
+    }
+   } ?>
+</head>
+
+<body>
+  <header class="top-bar">
+    <div class="l-center top-bar-inner">
+      <div class="top-bar-left">
+        <a href="/list/web/" class="top-bar-logo" title="<?=_('Hestia Control Panel');?>">
+          <img src="/images/logo-header.svg" alt="<?=_('Hestia Control Panel');?>" width="54" height="29">
+        </a>
+        <nav class="top-bar-nav">
+          <ul class="top-bar-nav-list">
+            <li class="top-bar-nav-item">
+              <a class="top-bar-nav-link" href="/list/rrd/" title="<?=_('Back');?>">
+                <i class="fas fa-circle-left"></i>
+                <span class="u-hidden"><?=_('Back');?></span>
+              </a>
+            </li>
+            <li class="top-bar-nav-item">
+              <a class="top-bar-nav-link <?php if(isset($_GET['cpu'])) echo 'active' ?>" href="/list/server/?cpu">
+                <i class="fas fa-microchip"></i>
+                <span class="top-bar-nav-link-label"><?=_('CPU');?></span>
+              </a>
+            </li>
+            <li class="top-bar-nav-item">
+              <a class="top-bar-nav-link <?php if(isset($_GET['mem'])) echo 'active' ?>" href="/list/server/?mem">
+                <i class="fas fa-memory"></i>
+                <span class="top-bar-nav-link-label"><?=_('RAM');?></span>
+              </a>
+            </li>
+            <li class="top-bar-nav-item">
+              <a class="top-bar-nav-link <?php if(isset($_GET['disk'])) echo 'active' ?>" href="/list/server/?disk">
+                <i class="fas fa-hard-drive"></i>
+                <span class="top-bar-nav-link-label"><?=_('Disk');?></span>
+              </a>
+            </li>
+            <li class="top-bar-nav-item">
+              <a class="top-bar-nav-link <?php if(isset($_GET['net'])) echo 'active' ?>" href="/list/server/?net">
+                <i class="fas fa-hard-drive"></i>
+                <span class="top-bar-nav-link-label"><?=_('Network');?></span>
+              </a>
+            </li>
+            <?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?>
+              <li class="top-bar-nav-item">
+                <a class="top-bar-nav-link <?php if(isset($_GET['web'])) echo 'active' ?>" href="/list/server/?web">
+                  <i class="fas fa-earth-europe"></i>
+                  <span class="top-bar-nav-link-label"><?=_('Web');?></span>
+                </a>
+              </li>
+            <?php }?>
+            <?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
+              <li class="top-bar-nav-item">
+                <a class="top-bar-nav-link <?php if(isset($_GET['dns'])) echo 'active' ?>" href="/list/server/?dns">
+                  <i class="fas fa-book-atlas"></i>
+                  <span class="top-bar-nav-link-label"><?=_('DNS');?></span>
+                </a>
+              </li>
+            <?php }?>
+            <?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?>
+              <li class="top-bar-nav-item">
+                <a class="top-bar-nav-link <?php if(isset($_GET['mail'])) echo 'active' ?>" href="/list/server/?mail">
+                  <i class="fas fa-envelopes-bulk"></i>
+                  <span class="top-bar-nav-link-label"><?=_('Mail');?></span>
+                </a>
+              </li>
+            <?php }?>
+            <?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?>
+              <li class="top-bar-nav-item">
+                <a class="top-bar-nav-link <?php if(isset($_GET['db'])) echo 'active' ?>" href="/list/server/?db">
+                  <i class="fas fa-database"></i>
+                  <span class="top-bar-nav-link-label"><?=_('DB');?></span>
+                </a>
+              </li>
+            <?php }?>
+          </ul>
+        </nav>
+      </div>
+      <div class="top-bar-right">
+        <nav class="top-bar-nav">
+          <ul class="top-bar-nav-list">
+            <li class="top-bar-nav-item">
+              <a class="top-bar-nav-link" href="javascript:location.reload();" title="<?=_('Refresh');?>">
+                <i class="fas fa-arrow-rotate-right"></i>
+                <span class="u-hidden"><?=_('Refresh');?></span>
+              </a>
+            </li>
+            <li class="top-bar-nav-item">
+              <a class="top-bar-nav-link top-bar-nav-link-logout" href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?>">
+                <i class="fas fa-right-from-bracket"></i>
+                <span class="u-hidden"><?=_('Log out');?></span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <button type="button" class="button button-secondary button-circle button-floating button-floating-top js-to-top" title="<?=_('Top');?>">
+    <i class="fas fa-arrow-up"></i>
+    <span class="u-hidden"><?=_('Top');?></span>
+  </button>
+
+  <div class="server-info-output">.</div>
+  <div class="l-center">
+    <pre class="console-output animate__animated animate__fadeIn">

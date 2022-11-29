@@ -24,42 +24,42 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '['
-    if [ -z "$check_cron" ]; then
-        echo -e  "\t\"Disabled\","
-    else
-        echo -e  "\t\"Enabled\""
-    fi
-    echo "]"
+	echo '['
+	if [ -z "$check_cron" ]; then
+		echo -e "\t\"Disabled\","
+	else
+		echo -e "\t\"Enabled\""
+	fi
+	echo "]"
 }
 
 # SHELL list function
 shell_list() {
-    echo -n "AUTOUPDATE:     "
-    if [ -z "$check_cron" ]; then
-        echo "Disabled"
-    else
-        echo "Enabled"
-    fi
+	echo -n "AUTOUPDATE:     "
+	if [ -z "$check_cron" ]; then
+		echo "Disabled"
+	else
+		echo "Enabled"
+	fi
 }
 
 # PLAIN list function
 plain_list() {
-    if [ -z "$check_cron" ]; then
-        echo "Disabled"
-    else
-        echo "Enabled"
-    fi
+	if [ -z "$check_cron" ]; then
+		echo "Disabled"
+	else
+		echo "Enabled"
+	fi
 }
 
 # CSV list function
 csv_list() {
-    echo "AUTOUPDATE"
-    if [ -z "$check_cron" ]; then
-        echo "Disabled"
-    else
-        echo "Enabled"
-    fi
+	echo "AUTOUPDATE"
+	if [ -z "$check_cron" ]; then
+		echo "Disabled"
+	else
+		echo "Enabled"
+	fi
 }
 
 #----------------------------------------------------------#
@@ -71,10 +71,10 @@ check_cron=$(grep 'v-update-sys-hestia-all' $USER_DATA/cron.conf)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

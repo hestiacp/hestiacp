@@ -45,18 +45,18 @@ check_hestia_demo_mode
 IFS=$'\n'
 for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
-    # Reset user, password and hash vars
-    clear_dns_cluster_settings
+	# Reset user, password and hash vars
+	clear_dns_cluster_settings
 
-    # Parsing remote host parameters
-    parse_object_kv_list "$cluster"
+	# Parsing remote host parameters
+	parse_object_kv_list "$cluster"
 
-    # Syncing domain
-    cluster_cmd v-delete-dns-domain "$DNS_USER" "$domain" 'yes'
-    rc=$?
-    if [ "$rc" -ne 0 ] && [ $rc -ne 3 ]; then
-        check_result $rc "$HOST connection failed (sync)" "$E_CONNECT"
-    fi
+	# Syncing domain
+	cluster_cmd v-delete-dns-domain "$DNS_USER" "$domain" 'yes'
+	rc=$?
+	if [ "$rc" -ne 0 ] && [ $rc -ne 3 ]; then
+		check_result $rc "$HOST connection failed (sync)" "$E_CONNECT"
+	fi
 
 done
 
@@ -68,7 +68,7 @@ done
 pipe="$HESTIA/data/queue/dns-cluster.pipe"
 str=$(grep -n "$SCRIPT $1 $2$" "$pipe" | cut -f1 -d: | head -n1)
 if [ -n "$str" ]; then
-    sed -i "$str d"  "$pipe"
+	sed -i "$str d" "$pipe"
 fi
 
 exit

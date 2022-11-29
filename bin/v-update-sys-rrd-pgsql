@@ -27,115 +27,133 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Switching on time period
 case $period in
-    daily)   start='-1d'; end='now'; grid='MINUTE:30:HOUR:1:HOUR:4:0:%H:%M';;
-    weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
-    monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
-    yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit "$E_RRD" ;;
+	daily)
+		start='-1d'
+		end='now'
+		grid='MINUTE:30:HOUR:1:HOUR:4:0:%H:%M'
+		;;
+	weekly)
+		start='-7d'
+		end='now'
+		grid='HOUR:8:DAY:1:DAY:1:0:%a %d'
+		;;
+	monthly)
+		start='-1m'
+		end='now'
+		grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d'
+		;;
+	yearly)
+		start='-1y'
+		end='now'
+		grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b'
+		;;
+	*) exit "$E_RRD" ;;
 esac
 
 # Checking directory
 if [ ! -d "$RRD/db" ]; then
-    mkdir $RRD/db
+	mkdir $RRD/db
 fi
 
 # Parsing db hosts
 conf="$HESTIA/conf/pgsql.conf"
-hosts=$(grep HOST $conf |awk '{print $1}' |cut -f 2 -d \')
-check_row=$(echo "$hosts" |wc -l)
+hosts=$(grep HOST $conf | awk '{print $1}' | cut -f 2 -d \')
+check_row=$(echo "$hosts" | wc -l)
 if [ 0 -eq "$check_row" ]; then
-    exit
+	exit
 fi
 
 # Parsing excludes
 for exclude in $(echo ${RRD_PGSQL_EXCLUDE//,/ }); do
-    hosts=$(echo "$hosts" |grep -vw "$exclude" )
+	hosts=$(echo "$hosts" | grep -vw "$exclude")
 done
 
 for host in $hosts; do
-    # Checking database
-    if [ ! -e "$RRD/db/pgsql_$host.rrd" ]; then
-        # Adding database
-        rrdtool create $RRD/db/pgsql_$host.rrd --step $RRD_STEP \
-            DS:A:GAUGE:600:U:U \
-            DS:T:COUNTER:600:U:U \
-            RRA:AVERAGE:0.5:1:600 \
-            RRA:AVERAGE:0.5:6:700 \
-            RRA:AVERAGE:0.5:24:775 \
-            RRA:AVERAGE:0.5:288:797 \
-            RRA:MAX:0.5:1:600 \
-            RRA:MAX:0.5:6:700 \
-            RRA:MAX:0.5:24:775 \
-            RRA:MAX:0.5:288:797
-    fi
+	# Checking database
+	if [ ! -e "$RRD/db/pgsql_$host.rrd" ]; then
+		# Adding database
+		rrdtool create $RRD/db/pgsql_$host.rrd --step $RRD_STEP \
+			DS:A:GAUGE:600:U:U \
+			DS:T:COUNTER:600:U:U \
+			RRA:AVERAGE:0.5:1:600 \
+			RRA:AVERAGE:0.5:6:700 \
+			RRA:AVERAGE:0.5:24:775 \
+			RRA:AVERAGE:0.5:288:797 \
+			RRA:MAX:0.5:1:600 \
+			RRA:MAX:0.5:6:700 \
+			RRA:MAX:0.5:24:775 \
+			RRA:MAX:0.5:288:797
+	fi
 
-    if [ "$period" = 'daily' ]; then
-        # Defining host credentials
-        host_str=$(grep "HOST='$host'" $conf)
-        for key in $host_str; do
-            eval ${key%%=*}=${key#*=}
-        done
+	if [ "$period" = 'daily' ]; then
+		# Defining host credentials
+		host_str=$(grep "HOST='$host'" $conf)
+		for key in $host_str; do
+			eval ${key%%=*}=${key#*=}
+		done
 
-        export PGPASSWORD="$PASSWORD"
-        sql="psql -h $HOST -U $USER"
+		export PGPASSWORD="$PASSWORD"
+		sql="psql -h $HOST -U $USER"
 
-        # Checking empty vars
-        if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
-            echo "Error: config is broken"
-            log_event "$E_PARSING" "$ARGUMENTS"
-            exit "$E_PARSING"
-        fi
+		# Checking empty vars
+		if [ -z $HOST ] || [ -z $USER ] || [ -z $PASSWORD ]; then
+			echo "Error: config is broken"
+			log_event "$E_PARSING" "$ARGUMENTS"
+			exit "$E_PARSING"
+		fi
 
-        # Parsing data
-        q='SELECT SUM(xact_commit + xact_rollback), SUM(numbackends)
+		# Parsing data
+		q='SELECT SUM(xact_commit + xact_rollback), SUM(numbackends)
                 FROM pg_stat_database;'
-        status=$($sql -d postgres -c "$q" 2>/dev/null); code="$?"
-        if [ '0' -ne "$code" ]; then
-            active=0
-            slow=0
-        else
-            active=$(echo "$status"|head -n 3|tail -n 1|awk '{print $3}')
-            trans=$(echo "$status"|head -n 3 |tail -n 1|awk '{print $1}')
-        fi
+		status=$($sql -d postgres -c "$q" 2> /dev/null)
+		code="$?"
+		if [ '0' -ne "$code" ]; then
+			active=0
+			slow=0
+		else
+			active=$(echo "$status" | head -n 3 | tail -n 1 | awk '{print $3}')
+			trans=$(echo "$status" | head -n 3 | tail -n 1 | awk '{print $1}')
+		fi
 
-        # Updating rrd
-        export PGPASSWORD='pgsql'
-        rrdtool update $RRD/db/pgsql_$host.rrd N:$active:$trans
-    fi
+		# Updating rrd
+		export PGPASSWORD='pgsql'
+		rrdtool update $RRD/db/pgsql_$host.rrd N:$active:$trans
+	fi
 
-    # Updating rrd graph
-    rrdtool graph  $RRD/db/$period-pgsql_$host.png \
-        --imgformat PNG \
-        --height="150" \
-        --width="670" \
-        --start "$start" \
-        --end "$end" \
-        --vertical-label "Queries" \
-        --x-grid "$grid" \
-        -c "BACK#ffffff" \
-        -c "SHADEA#ffffff" \
-        -c "SHADEB#ffffff" \
-        -c "FONT#555555" \
-        -c "CANVAS#302c2d" \
-        -c "GRID#666666" \
-        -c "MGRID#AAAAAA" \
-        -c "FRAME#302c2d" \
-        -c "ARROW#FFFFFF" \
-        DEF:a=$RRD/db/pgsql_$host.rrd:A:AVERAGE \
-        DEF:t=$RRD/db/pgsql_$host.rrd:T:AVERAGE \
-        COMMENT:'\r' \
-        LINE1:a#fefda0:"Queries     "\
-        GPRINT:a:'LAST: Current\:''%8.0lf'  \
-        GPRINT:a:'MIN: Min\:''%8.0lf'  \
-        GPRINT:a:'MAX: Max\:''%8.0lf\j'  \
-        LINE2:t#f57900:"Transactions" \
-        GPRINT:t:'LAST:Current\:''%8.0lf' \
-        GPRINT:t:'MIN:Min\:''%8.0lf' \
-        GPRINT:t:'MAX:Max\:''%8.0lf\j'  &>/dev/null; result=$?
+	# Updating rrd graph
+	rrdtool graph $RRD/db/$period-pgsql_$host.png \
+		--imgformat PNG \
+		--height="150" \
+		--width="670" \
+		--start "$start" \
+		--end "$end" \
+		--vertical-label "Queries" \
+		--x-grid "$grid" \
+		-c "BACK#ffffff" \
+		-c "SHADEA#ffffff" \
+		-c "SHADEB#ffffff" \
+		-c "FONT#555555" \
+		-c "CANVAS#302c2d" \
+		-c "GRID#666666" \
+		-c "MGRID#AAAAAA" \
+		-c "FRAME#302c2d" \
+		-c "ARROW#FFFFFF" \
+		DEF:a=$RRD/db/pgsql_$host.rrd:A:AVERAGE \
+		DEF:t=$RRD/db/pgsql_$host.rrd:T:AVERAGE \
+		COMMENT:'\r' \
+		LINE1:a#fefda0:"Queries     " \
+		GPRINT:a:'LAST: Current\:''%8.0lf' \
+		GPRINT:a:'MIN: Min\:''%8.0lf' \
+		GPRINT:a:'MAX: Max\:''%8.0lf\j' \
+		LINE2:t#f57900:"Transactions" \
+		GPRINT:t:'LAST:Current\:''%8.0lf' \
+		GPRINT:t:'MIN:Min\:''%8.0lf' \
+		GPRINT:t:'MAX:Max\:''%8.0lf\j' &> /dev/null
+	result=$?
 
-    if [ "$result" -ne 0 ]; then
-        exit "$E_RRD"
-    fi
+	if [ "$result" -ne 0 ]; then
+		exit "$E_RRD"
+	fi
 
 done
 

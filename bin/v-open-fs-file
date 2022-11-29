@@ -26,29 +26,29 @@ is_object_valid 'user' 'USER' "$user"
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z "$homedir" ]; then
-    echo "Error: user home directory doesn't exist"
-    exit 12
+	echo "Error: user home directory doesn't exist"
+	exit 12
 fi
 
 # Checking path
 if [ -n "$src_file" ]; then
-    rpath=$(readlink -f "$src_file")
-    if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
-        echo "Error: invalid source path $src_file"
-        exit 2
-    fi
+	rpath=$(readlink -f "$src_file")
+	if [ -z "$(echo $rpath | egrep "^/tmp|^$homedir")" ]; then
+		echo "Error: invalid source path $src_file"
+		exit 2
+	fi
 
-    if [ ! -f "$src_file" ]; then
-        echo "Error: file not found $src_file"
-        exit 2
-    fi
+	if [ ! -f "$src_file" ]; then
+		echo "Error: file not found $src_file"
+		exit 2
+	fi
 fi
 
 # Reading file
-user_exec cat "$src_file" 2>/dev/null
+user_exec cat "$src_file" 2> /dev/null
 if [ $? -ne 0 ]; then
-    echo "Error: file $src_file was not opened"
-    exit 3
+	echo "Error: file $src_file was not opened"
+	exit 3
 fi
 
 # Exiting

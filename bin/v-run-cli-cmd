@@ -32,59 +32,59 @@ is_object_valid 'user' 'USER' "$user"
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z "$homedir" ]; then
-    check_result "$E_NOTEXIST" "Error: user home directory doesn't exist"
+	check_result "$E_NOTEXIST" "Error: user home directory doesn't exist"
 fi
 
 if [ "$clicmd" = "composer" ]; then
-    clicmd="$homedir/.composer/composer"
+	clicmd="$homedir/.composer/composer"
 fi
 
 if [ "$clicmd" = "wp" ]; then
-    clicmd="$homedir/.wp-cli/wp"
+	clicmd="$homedir/.wp-cli/wp"
 fi
 
 if [ -z "$(which "$clicmd")" ]; then
-    check_result "$E_NOTEXIST" "Cli command does not exist $clicmd"
+	check_result "$E_NOTEXIST" "Cli command does not exist $clicmd"
 fi
 basecmd="$(basename "$clicmd")"
 
-if [ "$basecmd" != 'ps'         -a \
-     "$basecmd" != 'ls'         -a \
-     "$basecmd" != 'tar'        -a \
-     "$basecmd" != 'zip'        -a \
-     "$basecmd" != 'unzip'      -a \
-     "$basecmd" != 'gzip'       -a \
-     "$basecmd" != 'gunzip'     -a \
-     "$basecmd" != 'mkdir'      -a \
-     "$basecmd" != 'find'       -a \
-     "$basecmd" != 'id'         -a \
-     "$basecmd" != 'grep'       -a \
-     "$basecmd" != 'egrep'      -a \
-     "$basecmd" != 'sed'        -a \
-     "$basecmd" != 'cat'        -a \
-     "$basecmd" != 'php5.6'     -a \
-     "$basecmd" != 'php7.0'     -a \
-     "$basecmd" != 'php7.1'     -a \
-     "$basecmd" != 'php7.2'     -a \
-     "$basecmd" != 'php7.3'     -a \
-     "$basecmd" != 'php7.4'     -a \
-     "$basecmd" != 'php8.0'     -a \
-     "$basecmd" != 'php8.1'     -a \
-     "$basecmd" != 'php'        -a \
-     "$basecmd" != "wp"      -a \
-     "$basecmd" != 'composer' ]; then
-    check_result "$E_FORBIDEN" "Error: Cli command not enabled"
+if [ "$basecmd" != 'ps' -a \
+	"$basecmd" != 'ls' -a \
+	"$basecmd" != 'tar' -a \
+	"$basecmd" != 'zip' -a \
+	"$basecmd" != 'unzip' -a \
+	"$basecmd" != 'gzip' -a \
+	"$basecmd" != 'gunzip' -a \
+	"$basecmd" != 'mkdir' -a \
+	"$basecmd" != 'find' -a \
+	"$basecmd" != 'id' -a \
+	"$basecmd" != 'grep' -a \
+	"$basecmd" != 'egrep' -a \
+	"$basecmd" != 'sed' -a \
+	"$basecmd" != 'cat' -a \
+	"$basecmd" != 'php5.6' -a \
+	"$basecmd" != 'php7.0' -a \
+	"$basecmd" != 'php7.1' -a \
+	"$basecmd" != 'php7.2' -a \
+	"$basecmd" != 'php7.3' -a \
+	"$basecmd" != 'php7.4' -a \
+	"$basecmd" != 'php8.0' -a \
+	"$basecmd" != 'php8.1' -a \
+	"$basecmd" != 'php' -a \
+	"$basecmd" != "wp" -a \
+	"$basecmd" != 'composer' ]; then
+	check_result "$E_FORBIDEN" "Error: Cli command not enabled"
 fi
 
 all_scriptargs=("$@")
-for ((I=3; I <= $# ; I++)); do
-    cmdArgs="$cmdArgs ${all_scriptargs[${I}-1]}"
+for ((I = 3; I <= $#; I++)); do
+	cmdArgs="$cmdArgs ${all_scriptargs[${I} - 1]}"
 done
 
 runuser -u "$user" -- $clicmd $cmdArgs
 if [ $? -ne 0 ]; then
-    echo "Error: cmd exited with errors"
-    exit 3
+	echo "Error: cmd exited with errors"
+	exit 3
 fi
 
 # Logging

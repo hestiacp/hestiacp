@@ -21,41 +21,41 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{'
-    local quote COMMANDS_ARR
-    for api in $HESTIA/data/api/*; do
-        api="$(basename -- "$api")"
-        source_conf $HESTIA/data/api/$api
+	echo '{'
+	local quote COMMANDS_ARR
+	for api in $HESTIA/data/api/*; do
+		api="$(basename -- "$api")"
+		source_conf $HESTIA/data/api/$api
 
-        COMMANDS_ARR='[]'
-        if [[ -n "$COMMANDS" ]]; then
-            COMMANDS_ARR="[\"$(echo "$COMMANDS" | sed -E 's|,|", "|g')\"]"
-        fi
+		COMMANDS_ARR='[]'
+		if [[ -n "$COMMANDS" ]]; then
+			COMMANDS_ARR="[\"$(echo "$COMMANDS" | sed -E 's|,|", "|g')\"]"
+		fi
 
-        echo -en "$quote"
-        echo -n '    "'$api'": {"COMMANDS": '${COMMANDS_ARR}', "ROLE": "'${ROLE}'"}'
-        quote=",\n"
-    done
-    echo -e '\n}'
+		echo -en "$quote"
+		echo -n '    "'$api'": {"COMMANDS": '${COMMANDS_ARR}', "ROLE": "'${ROLE}'"}'
+		quote=",\n"
+	done
+	echo -e '\n}'
 }
 
 # SHELL list function
 shell_list() {
-    list="API\tROLE\tCOMMANDS\n"
-    list+="---\t----\t--------\n"
+	list="API\tROLE\tCOMMANDS\n"
+	list+="---\t----\t--------\n"
 
-    for api in $HESTIA/data/api/*; do
-        api="$(basename -- "$api")"
-        source_conf $HESTIA/data/api/$api
-        list+="${api}\t${ROLE}\t${COMMANDS}\n"
-    done
-    echo -e "$list" | column -t -s "	"
+	for api in $HESTIA/data/api/*; do
+		api="$(basename -- "$api")"
+		source_conf $HESTIA/data/api/$api
+		list+="${api}\t${ROLE}\t${COMMANDS}\n"
+	done
+	echo -e "$list" | column -t -s "	"
 }
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

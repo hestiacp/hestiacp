@@ -19,7 +19,7 @@ chmod +x hst_autocompile.sh
 
 # Execute Hestia Control Panel installer with default dummy options for testing
 if [ -f "/etc/redhat-release" ]; then
-    bash hst-install-$os.sh -f -y no -e admin@test.local -p P@ssw0rd -s hestia-$branch-$os.test.local --with-rpms /tmp/hestiacp-src/rpms
+	bash hst-install-$os.sh -f -y no -e admin@test.local -p P@ssw0rd -s hestia-$branch-$os.test.local --with-rpms /tmp/hestiacp-src/rpms
 else
-    bash hst-install-$os.sh -f -y no -e admin@test.local -p P@ssw0rd -s hestia-$branch-$os.test.local --with-debs /tmp/hestiacp-src/debs
+	bash hst-install-$os.sh -f -y no -e admin@test.local -p P@ssw0rd -s hestia-$branch-$os.test.local --with-debs /tmp/hestiacp-src/debs
 fi

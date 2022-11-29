@@ -41,28 +41,28 @@ is_format_valid 'user' 'ns1' 'ns2'
 
 ns="$ns1,$ns2"
 if [ -n "$ns3" ]; then
-    is_format_valid 'ns3'
-    ns="$ns,$ns3"
+	is_format_valid 'ns3'
+	ns="$ns,$ns3"
 fi
 if [ -n "$ns4" ]; then
-    is_format_valid 'ns4'
-    ns="$ns,$ns4"
+	is_format_valid 'ns4'
+	ns="$ns,$ns4"
 fi
 if [ -n "$ns5" ]; then
-    is_format_valid 'ns5'
-    ns="$ns,$ns5"
+	is_format_valid 'ns5'
+	ns="$ns,$ns5"
 fi
 if [ -n "$ns6" ]; then
-    is_format_valid 'ns6'
-    ns="$ns,$ns6"
+	is_format_valid 'ns6'
+	ns="$ns,$ns6"
 fi
 if [ -n "$ns7" ]; then
-    is_format_valid 'ns7'
-    ns="$ns,$ns7"
+	is_format_valid 'ns7'
+	ns="$ns,$ns7"
 fi
 if [ -n "$ns8" ]; then
-    is_format_valid 'ns8'
-    ns="$ns,$ns8"
+	is_format_valid 'ns8'
+	ns="$ns,$ns8"
 fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"

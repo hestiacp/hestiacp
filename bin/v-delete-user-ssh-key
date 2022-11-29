@@ -38,7 +38,7 @@ AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
 [ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid authorized keys path"
 
 if [ ! -f "$AUTHKEY_FILE" ]; then
-    exit
+	exit
 fi
 
 # Perform verification if read-only mode is enabled

@@ -1,0 +1,139 @@
+<!-- Begin toolbar -->
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <div class="toolbar-buttons">
+      <a class="button button-secondary" id="btn-back" href="/list/mail/?domain=<?=htmlentities(trim($v_domain, "'"))?>&token=<?=$_SESSION['token']?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+    </div>
+    <div class="toolbar-buttons">
+      <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?></a>
+    </div>
+  </div>
+</div>
+<!-- End toolbar -->
+
+<div class="l-center animate__animated animate__fadeIn">
+
+  <form id="vstobjects" name="v_add_mail_acc" method="post">
+    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+    <input type="hidden" name="ok_acc" value="add">
+
+    <div class="form-container form-container-wide">
+      <h1 class="form-title"><?=_('Adding Mail Account');?></h1>
+      <?php show_alert_message($_SESSION);?>
+      <div class="sidebar-container">
+        <div>
+          <div class="u-mb10">
+            <label for="v_domain" class="form-label"><?=_('Domain');?></label>
+            <input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
+            <input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+          </div>
+          <div class="u-mb10">
+            <label for="v_account" class="form-label"><?=_('Account');?></label>
+            <input type="text" class="form-control" name="v_account" id="v_account" value="<?=htmlentities(trim($v_account, "'"))?>">
+          </div>
+          <div class="u-mb10">
+            <label for="v_password" class="form-label">
+              <?=_('Password');?>
+              <a href="javascript:applyRandomString();" title="<?=_('generate');?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
+            </label>
+            <div class="u-pos-relative u-mb10">
+              <input type="text" class="form-control js-password-input" name="v_password" id="v_password">
+              <meter max="4" class="password-meter"></meter>
+            </div>
+          </div>
+          <p class="u-mb10"><?=_('Your password must have at least');?>:</p>
+          <ul class="u-list-bulleted">
+            <li><?=_('8 characters long');?></li>
+            <li><?=_('1 uppercase & 1 lowercase character');?></li>
+            <li><?=_('1 number');?></li>
+          </ul>
+          <div class="u-pt18 u-mb20">
+            <a href="javascript:elementHideShow('advtable');" class="button button-secondary"><?=_('Advanced options');?></a>
+          </div>
+          <div id="advtable" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
+            <div class="u-mb10">
+              <label for="v_quota" class="form-label">
+                <?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+              </label>
+              <div class="u-pos-relative">
+                <input type="text" class="form-control" name="v_quota" id="v_quota" value="<?=htmlentities(trim($v_quota, "'"))?>">
+                <i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+              </div>
+            </div>
+            <div class="u-mb10">
+              <label for="v_aliases" class="form-label">
+                <?=_('Aliases');?> <span class="optional">(<?=_('use local-part');?>)</span>
+              </label>
+              <textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+            </div>
+            <div class="u-mb10">
+              <label for="v_fwd" class="form-label">
+                <?=_('Forward to');?> <span class="optional">(<?=_('one or more email addresses');?>)</span>
+              </label>
+              <textarea class="form-control" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
+              <label for="v_blackhole">
+                <?=_('Discard all mail');?>
+              </label>
+            </div>
+            <div id="id_fwd_for" style="display:<?php if ($v_blackhole == 'yes') {echo 'none';} else {echo 'block';}?> ;">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
+                <label for="v_fwd_for">
+                  <?=_('Do not store forwarded mail');?>
+                </label>
+              </div>
+            </div>
+            <div class="u-mt10 u-mb10">
+              <label for="v_rate" class="form-label">
+                <?=_('Rate limit');?> <span class="optional">(<?=_('Email / hour');?>)</span>
+              </label>
+              <input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+            </div>
+          </div>
+          <div class="u-mt15 u-mb20">
+            <label for="v_send_email" class="form-label">
+              <?=_('Send login credentials to email address') ?>
+            </label>
+            <input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+            <input type="hidden" name="v_credentials" class="js-hidden-credentials">
+          </div>
+        </div>
+        <div>
+          <div class="mail-infoblock">
+            <table>
+              <tr><td colspan="2"><strong><?=strtoupper(_('Common account settings'));?></strong></td><tr>
+              <tr><td><?=_('Username');?>: </td><td><span class="js-account-output">example</span>@<?=htmlentities(trim($v_domain, "'"))?></td></tr>
+              <tr><td><?=_('Password');?>: </td><td><span class="js-password-output"></span></td></tr>
+              <?php if ($_SESSION['WEBMAIL_SYSTEM']) {?><tr><td><?=_('Webmail');?>: </td><td><a href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?></a></td></tr>
+              <?php } ?>
+              <tr><td><?=_('Hostname');?>: </td><td>mail.<?=htmlentities($v_domain)?></td></tr>
+
+              <tr><td colspan="2"><strong><?=strtoupper(_('IMAP settings'));?></strong></td></tr>
+              <tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
+              <tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 993
+              <tr><td><?=_('STARTTLS');?>: </td><td><?=_('Port');?> 143
+              <tr><td><?=_('No encryption');?>: </td><td><?=_('Port');?> 143
+
+              <tr><td colspan="2"><strong><?=strtoupper(_('POP3 settings'));?></strong></td></tr>
+              <tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
+              <tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 995
+              <tr><td><?=_('STARTTLS');?>: </td><td><?=_('Port');?> 110
+              <tr><td><?=_('No encryption');?>: </td><td><?=_('Port');?> 110
+
+              <tr><td colspan="2"><strong><?=strtoupper(_('SMTP settings'));?></strong></td></tr>
+              <tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
+              <tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 465
+              <tr><td><?=_('STARTTLS');?>: </td><td><?=_('Port');?> 587
+              <tr><td><?=_('No encryption');?>: </td><td><?=_('Port');?> 25
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+</div>

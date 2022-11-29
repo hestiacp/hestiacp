@@ -27,8 +27,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '0' "$#" 'USER'
 if [ -n "$user" ]; then
-    is_format_valid 'user'
-    is_object_valid 'user' 'USER' "$user"
+	is_format_valid 'user'
+	is_object_valid 'user' 'USER' "$user"
 fi
 
 #----------------------------------------------------------#
@@ -37,189 +37,189 @@ fi
 
 # Creating user_list
 if [ -z "$user" ]; then
-    user_list=$($HESTIA/bin/v-list-sys-users plain)
+	user_list=$($HESTIA/bin/v-list-sys-users plain)
 else
-    user_list="$user"
+	user_list="$user"
 fi
 
 # Updating user stats
 for user in $user_list; do
-    USER_DATA=$HESTIA/data/users/$user
-    # Cleaning counters
-    SUSPENDED_USERS=0
-    SUSPENDED_WEB=0
-    SUSPENDED_DNS=0
-    SUSPENDED_MAIL=0
-    SUSPENDED_DB=0
-    SUSPENDED_CRON=0
-    IP_AVAIL=0
-    IP_OWNED=0
-    U_USERS=0
-    U_DISK=0
-    U_DISK_DIRS=$(get_user_value '$U_DISK_DIRS')
-    if [ -z "$U_DISK_DIRS" ]; then
-        U_DISK_DIRS=0
-    fi
-    DISK=$((DISK + U_DISK_DIRS))
-    U_DISK_WEB=0
-    U_DISK_MAIL=0
-    U_DISK_DB=0
-    BANDWIDTH=0
-    U_BANDWIDTH=0
-    U_WEB_DOMAINS=0
-    U_WEB_SSL=0
-    U_WEB_ALIASES=0
-    U_DNS_DOMAINS=0
-    U_DNS_RECORDS=0
-    U_MAIL_DOMAINS=0
-    U_MAIL_DKIM=0
-    U_MAIL_ACCOUNTS=0
-    U_DATABASES=0
-    U_CRON_JOBS=0
-    U_BACKUPS=0
+	USER_DATA=$HESTIA/data/users/$user
+	# Cleaning counters
+	SUSPENDED_USERS=0
+	SUSPENDED_WEB=0
+	SUSPENDED_DNS=0
+	SUSPENDED_MAIL=0
+	SUSPENDED_DB=0
+	SUSPENDED_CRON=0
+	IP_AVAIL=0
+	IP_OWNED=0
+	U_USERS=0
+	U_DISK=0
+	U_DISK_DIRS=$(get_user_value '$U_DISK_DIRS')
+	if [ -z "$U_DISK_DIRS" ]; then
+		U_DISK_DIRS=0
+	fi
+	DISK=$((DISK + U_DISK_DIRS))
+	U_DISK_WEB=0
+	U_DISK_MAIL=0
+	U_DISK_DB=0
+	BANDWIDTH=0
+	U_BANDWIDTH=0
+	U_WEB_DOMAINS=0
+	U_WEB_SSL=0
+	U_WEB_ALIASES=0
+	U_DNS_DOMAINS=0
+	U_DNS_RECORDS=0
+	U_MAIL_DOMAINS=0
+	U_MAIL_DKIM=0
+	U_MAIL_ACCOUNTS=0
+	U_DATABASES=0
+	U_CRON_JOBS=0
+	U_BACKUPS=0
 
-    # New IFS
-    IFS=$'\n'
+	# New IFS
+	IFS=$'\n'
 
-    # Checking users
-    if [ "$user" = 'admin' ]; then
-        spnd=$(grep "SUSPENDED='yes'" $HESTIA/data/users/*/user.conf | wc -l)
-        SUSPENDED_USERS=$spnd
-        U_USERS=$($HESTIA/bin/v-list-sys-users plain|wc -l)
-    fi
+	# Checking users
+	if [ "$user" = 'admin' ]; then
+		spnd=$(grep "SUSPENDED='yes'" $HESTIA/data/users/*/user.conf | wc -l)
+		SUSPENDED_USERS=$spnd
+		U_USERS=$($HESTIA/bin/v-list-sys-users plain | wc -l)
+	fi
 
-    ips=$(ls $HESTIA/data/ips);
-    # Checking ip
-    for ip in $ips ;do
-        source $HESTIA/data/ips/$ip
-        if [ "$OWNER" = "$user" ]; then
-            IP_OWNED=$((IP_OWNED + 1))
-            IP_AVAIL=$((IP_AVAIL + 1))
-        fi
-        if [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
-            IP_AVAIL=$((IP_AVAIL + 1))
-        fi
-    done
-    if [ "$user" = 'admin' ]; then
-        IP_AVAIL=$(ls $HESTIA/data/ips | wc -l)
-    fi
+	ips=$(ls $HESTIA/data/ips)
+	# Checking ip
+	for ip in $ips; do
+		source $HESTIA/data/ips/$ip
+		if [ "$OWNER" = "$user" ]; then
+			IP_OWNED=$((IP_OWNED + 1))
+			IP_AVAIL=$((IP_AVAIL + 1))
+		fi
+		if [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
+			IP_AVAIL=$((IP_AVAIL + 1))
+		fi
+	done
+	if [ "$user" = 'admin' ]; then
+		IP_AVAIL=$(ls $HESTIA/data/ips | wc -l)
+	fi
 
-    # Checking web system
-    U_WEB_DOMAINS=0
-    if [ -f $USER_DATA/web.conf ]; then
-        for domain_str in $(cat $USER_DATA/web.conf) ;do
-            parse_object_kv_list "$domain_str"
-            U_DISK_WEB=$((U_DISK_WEB + U_DISK))
-            U_WEB_DOMAINS=$((U_WEB_DOMAINS + 1))
+	# Checking web system
+	U_WEB_DOMAINS=0
+	if [ -f $USER_DATA/web.conf ]; then
+		for domain_str in $(cat $USER_DATA/web.conf); do
+			parse_object_kv_list "$domain_str"
+			U_DISK_WEB=$((U_DISK_WEB + U_DISK))
+			U_WEB_DOMAINS=$((U_WEB_DOMAINS + 1))
 
-            if [ "$SSL" = 'yes' ]; then
-                U_WEB_SSL=$((U_WEB_SSL + 1))
-            fi
-            if [ "$SUSPENDED" = 'yes' ]; then
-                SUSPENDED_WEB=$((SUSPENDED_WEB + 1))
-            fi
-            if [ -n "$ALIAS" ]; then
-                aliases=$(echo "$ALIAS"|tr ',' '\n'| wc -l)
-                U_WEB_ALIASES=$((U_WEB_ALIASES + aliases))
-            fi
-            BANDWIDTH=$((BANDWIDTH + U_BANDWIDTH))
-        done
-        DISK=$((DISK + U_DISK_WEB))
-    fi
+			if [ "$SSL" = 'yes' ]; then
+				U_WEB_SSL=$((U_WEB_SSL + 1))
+			fi
+			if [ "$SUSPENDED" = 'yes' ]; then
+				SUSPENDED_WEB=$((SUSPENDED_WEB + 1))
+			fi
+			if [ -n "$ALIAS" ]; then
+				aliases=$(echo "$ALIAS" | tr ',' '\n' | wc -l)
+				U_WEB_ALIASES=$((U_WEB_ALIASES + aliases))
+			fi
+			BANDWIDTH=$((BANDWIDTH + U_BANDWIDTH))
+		done
+		DISK=$((DISK + U_DISK_WEB))
+	fi
 
-    # Checking dns system
-    if [ -f $USER_DATA/dns.conf ]; then
-        for domain_str in $(cat $USER_DATA/dns.conf); do
-            parse_object_kv_list "$domain_str"
-            U_DNS_DOMAINS=$((U_DNS_DOMAINS + 1))
-            records=$(wc -l $USER_DATA/dns/$DOMAIN.conf| cut -f 1 -d ' ')
-            U_DNS_RECORDS=$((U_DNS_RECORDS + records))
-            if [ "$SUSPENDED" = 'yes' ]; then
-                SUSPENDED_DNS=$((SUSPENDED_DNS + 1))
-            fi
-            update_object_value 'dns' 'DOMAIN' "$DOMAIN" '$RECORDS' "$records"
-        done
-    fi
+	# Checking dns system
+	if [ -f $USER_DATA/dns.conf ]; then
+		for domain_str in $(cat $USER_DATA/dns.conf); do
+			parse_object_kv_list "$domain_str"
+			U_DNS_DOMAINS=$((U_DNS_DOMAINS + 1))
+			records=$(wc -l $USER_DATA/dns/$DOMAIN.conf | cut -f 1 -d ' ')
+			U_DNS_RECORDS=$((U_DNS_RECORDS + records))
+			if [ "$SUSPENDED" = 'yes' ]; then
+				SUSPENDED_DNS=$((SUSPENDED_DNS + 1))
+			fi
+			update_object_value 'dns' 'DOMAIN' "$DOMAIN" '$RECORDS' "$records"
+		done
+	fi
 
-    # Checking mail system
-    if [ -f $USER_DATA/mail.conf ]; then
-        for domain_str in $(cat $USER_DATA/mail.conf); do
-            parse_object_kv_list "$domain_str"
-            U_DISK_MAIL=$((U_DISK_MAIL + U_DISK))
-            U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
-            accounts=$(wc -l $USER_DATA/mail/$DOMAIN.conf| cut -f 1 -d ' ')
-            U_MAIL_ACCOUNTS=$((U_MAIL_ACCOUNTS + accounts))
-            if [ "$DKIM" = 'yes' ]; then
-                U_MAIL_DKIM=$((U_MAIL_DKIM + 1))
-            fi
-            if [ "$SUSPENDED" = 'yes' ]; then
-                SUSPENDED_MAIL=$((SUSPENDED_MAIL + 1))
-            fi
-            update_object_value 'mail' 'DOMAIN' "$DOMAIN" '$ACCOUNTS' "$accounts"
-        done
-        DISK=$((DISK + U_DISK_MAIL))
-    fi
+	# Checking mail system
+	if [ -f $USER_DATA/mail.conf ]; then
+		for domain_str in $(cat $USER_DATA/mail.conf); do
+			parse_object_kv_list "$domain_str"
+			U_DISK_MAIL=$((U_DISK_MAIL + U_DISK))
+			U_MAIL_DOMAINS=$((U_MAIL_DOMAINS + 1))
+			accounts=$(wc -l $USER_DATA/mail/$DOMAIN.conf | cut -f 1 -d ' ')
+			U_MAIL_ACCOUNTS=$((U_MAIL_ACCOUNTS + accounts))
+			if [ "$DKIM" = 'yes' ]; then
+				U_MAIL_DKIM=$((U_MAIL_DKIM + 1))
+			fi
+			if [ "$SUSPENDED" = 'yes' ]; then
+				SUSPENDED_MAIL=$((SUSPENDED_MAIL + 1))
+			fi
+			update_object_value 'mail' 'DOMAIN' "$DOMAIN" '$ACCOUNTS' "$accounts"
+		done
+		DISK=$((DISK + U_DISK_MAIL))
+	fi
 
-    # Checking db system
-    if [ -f $USER_DATA/db.conf ]; then
-        for db_str in $(cat $USER_DATA/db.conf); do
-            parse_object_kv_list "$db_str"
-            U_DISK_DB=$((U_DISK_DB + U_DISK))
-            U_DATABASES=$((U_DATABASES + 1))
-            if [ "$SUSPENDED" = 'yes' ]; then
-                SUSPENDED_DB=$((SUSPENDED_DB + 1))
-            fi
-        done
-        DISK=$((DISK + U_DISK_DB))
-    fi
+	# Checking db system
+	if [ -f $USER_DATA/db.conf ]; then
+		for db_str in $(cat $USER_DATA/db.conf); do
+			parse_object_kv_list "$db_str"
+			U_DISK_DB=$((U_DISK_DB + U_DISK))
+			U_DATABASES=$((U_DATABASES + 1))
+			if [ "$SUSPENDED" = 'yes' ]; then
+				SUSPENDED_DB=$((SUSPENDED_DB + 1))
+			fi
+		done
+		DISK=$((DISK + U_DISK_DB))
+	fi
 
-    # Checking cron system
-    if [ -f $USER_DATA/cron.conf ]; then
-        for cron_str in $(cat $USER_DATA/cron.conf);do
-            parse_object_kv_list "$cron_str"
-            U_CRON_JOBS=$((U_CRON_JOBS + 1))
-            if [ "$SUSPENDED" = 'yes' ]; then
-                SUSPENDED_CRON=$((SUSPENDED_CRON + 1))
-            fi
-        done
-    fi
+	# Checking cron system
+	if [ -f $USER_DATA/cron.conf ]; then
+		for cron_str in $(cat $USER_DATA/cron.conf); do
+			parse_object_kv_list "$cron_str"
+			U_CRON_JOBS=$((U_CRON_JOBS + 1))
+			if [ "$SUSPENDED" = 'yes' ]; then
+				SUSPENDED_CRON=$((SUSPENDED_CRON + 1))
+			fi
+		done
+	fi
 
-    # Checking backup
-    if [ -f $USER_DATA/backup.conf ]; then
-        for backup_str in $(cat $USER_DATA/backup.conf); do
-            U_BACKUPS=$((U_BACKUPS +1))
-        done
-    fi
+	# Checking backup
+	if [ -f $USER_DATA/backup.conf ]; then
+		for backup_str in $(cat $USER_DATA/backup.conf); do
+			U_BACKUPS=$((U_BACKUPS + 1))
+		done
+	fi
 
-    # Update values
-    U_DISK=$DISK
-    U_BANDWIDTH=$BANDWIDTH
-    update_user_value "$user" '$SUSPENDED_USERS' "$SUSPENDED_USERS"
-    update_user_value "$user" '$SUSPENDED_WEB' "$SUSPENDED_WEB"
-    update_user_value "$user" '$SUSPENDED_DNS' "$SUSPENDED_DNS"
-    update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
-    update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
-    update_user_value "$user" '$SUSPENDED_CRON' "$SUSPENDED_CRON"
-    update_user_value "$user" '$IP_AVAIL' "$IP_AVAIL"
-    update_user_value "$user" '$IP_OWNED' "$IP_OWNED"
-    update_user_value "$user" '$U_USERS' "$U_USERS"
-    update_user_value "$user" '$U_DISK' "$U_DISK"
-    update_user_value "$user" '$U_DISK_DIRS' "$U_DISK_DIRS"
-    update_user_value "$user" '$U_DISK_WEB' "$U_DISK_WEB"
-    update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
-    update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
-    update_user_value "$user" '$U_BANDWIDTH' "$U_BANDWIDTH"
-    update_user_value "$user" '$U_WEB_DOMAINS' "$U_WEB_DOMAINS"
-    update_user_value "$user" '$U_WEB_SSL' "$U_WEB_SSL"
-    update_user_value "$user" '$U_WEB_ALIASES' "$U_WEB_ALIASES"
-    update_user_value "$user" '$U_DNS_DOMAINS' "$U_DNS_DOMAINS"
-    update_user_value "$user" '$U_DNS_RECORDS' "$U_DNS_RECORDS"
-    update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
-    update_user_value "$user" '$U_MAIL_DKIM' "$U_MAIL_DKIM"
-    update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
-    update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
-    update_user_value "$user" '$U_CRON_JOBS' "$U_CRON_JOBS"
-    update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
+	# Update values
+	U_DISK=$DISK
+	U_BANDWIDTH=$BANDWIDTH
+	update_user_value "$user" '$SUSPENDED_USERS' "$SUSPENDED_USERS"
+	update_user_value "$user" '$SUSPENDED_WEB' "$SUSPENDED_WEB"
+	update_user_value "$user" '$SUSPENDED_DNS' "$SUSPENDED_DNS"
+	update_user_value "$user" '$SUSPENDED_MAIL' "$SUSPENDED_MAIL"
+	update_user_value "$user" '$SUSPENDED_DB' "$SUSPENDED_DB"
+	update_user_value "$user" '$SUSPENDED_CRON' "$SUSPENDED_CRON"
+	update_user_value "$user" '$IP_AVAIL' "$IP_AVAIL"
+	update_user_value "$user" '$IP_OWNED' "$IP_OWNED"
+	update_user_value "$user" '$U_USERS' "$U_USERS"
+	update_user_value "$user" '$U_DISK' "$U_DISK"
+	update_user_value "$user" '$U_DISK_DIRS' "$U_DISK_DIRS"
+	update_user_value "$user" '$U_DISK_WEB' "$U_DISK_WEB"
+	update_user_value "$user" '$U_DISK_MAIL' "$U_DISK_MAIL"
+	update_user_value "$user" '$U_DISK_DB' "$U_DISK_DB"
+	update_user_value "$user" '$U_BANDWIDTH' "$U_BANDWIDTH"
+	update_user_value "$user" '$U_WEB_DOMAINS' "$U_WEB_DOMAINS"
+	update_user_value "$user" '$U_WEB_SSL' "$U_WEB_SSL"
+	update_user_value "$user" '$U_WEB_ALIASES' "$U_WEB_ALIASES"
+	update_user_value "$user" '$U_DNS_DOMAINS' "$U_DNS_DOMAINS"
+	update_user_value "$user" '$U_DNS_RECORDS' "$U_DNS_RECORDS"
+	update_user_value "$user" '$U_MAIL_DOMAINS' "$U_MAIL_DOMAINS"
+	update_user_value "$user" '$U_MAIL_DKIM' "$U_MAIL_DKIM"
+	update_user_value "$user" '$U_MAIL_ACCOUNTS' "$U_MAIL_ACCOUNTS"
+	update_user_value "$user" '$U_DATABASES' "$U_DATABASES"
+	update_user_value "$user" '$U_CRON_JOBS' "$U_CRON_JOBS"
+	update_user_value "$user" '$U_BACKUPS' "$U_BACKUPS"
 done
 
 #----------------------------------------------------------#

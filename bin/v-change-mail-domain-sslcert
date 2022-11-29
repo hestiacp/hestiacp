@@ -63,7 +63,7 @@ add_mail_ssl_config
 # Restarting mail server
 $BIN/v-restart-mail "$restart"
 
-check_result $? "Mail restart failed" >/dev/null
+check_result $? "Mail restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "SSL certificate changed (Domain: $domain)."

@@ -10,7 +10,6 @@ export default defineConfig({
 	cleanUrls: "with-subfolders",
 
 	head: [
-		["link", { rel: "stylesheet", href: "/styles/fontawesome.min.css" }],
 		["link", { rel: "icon", sizes: "any", href: "/favicon.ico" }],
 		["link", { rel: "icon", type: "image/svg+xml", sizes: "16x16", href: "/logo.svg" }],
 		["link", { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" }],

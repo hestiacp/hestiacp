@@ -568,7 +568,6 @@ $(document).ready(function(){
               }
 
               $('.js-notifications').click(function(evt){
-                evt.preventDefault();
                 if(!$('.js-notifications').hasClass('active')){
                   VE.notifications.get_list();
                   $('.js-notifications').addClass('active');
@@ -578,6 +577,9 @@ $(document).ready(function(){
                 }
               });
 
+              $('.js-toggle-top-bar-menu').click(function(evt){
+                $(this).siblings('.top-bar-nav-list').toggle();
+              });
 
             $('.button').attr('title','ctrl+Enter');
             $('.button.cancel').attr('title','ctrl+Backspace');

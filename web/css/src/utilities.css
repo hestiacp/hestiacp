@@ -146,3 +146,9 @@
   white-space: pre !important;
   line-height: 1.2 !important;
 }
+
+.u-hide-desktop {
+  @media (--viewport-medium) {
+    display: none !important;
+  }
+}

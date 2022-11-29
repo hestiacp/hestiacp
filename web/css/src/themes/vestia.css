@@ -26,6 +26,10 @@ strong {
   background: #5d5d5d;
 }
 
+.top-bar-nav-list {
+  background-color: #5d5d5d;
+}
+
 .top-bar-nav-link {
   &:hover,
   &:active {

@@ -22,6 +22,10 @@ strong {
   background: #5070a6;
 }
 
+.top-bar-usage-inner {
+  text-shadow: none;
+}
+
 .top-bar-nav-link {
   text-shadow: none;
 
@@ -34,10 +38,6 @@ strong {
   &.active {
     background: #fff;
   }
-}
-
-.top-bar-usage-inner {
-  text-shadow: none;
 }
 
 .table-header {

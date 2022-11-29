@@ -1,4 +1,5 @@
 import { defineConfig, type DefaultTheme } from "vitepress";
+import { version } from "../../package.json";
 
 export default defineConfig({
 	lang: "en-US",
@@ -60,7 +61,7 @@ function nav(): DefaultTheme.NavItem[] {
 		{ text: "Forum", link: "https://forum.hestiacp.com/" },
 		{ text: "Donate", link: "/donate.md" },
 		{
-			text: "v1.6.x",
+			text: `v${version}`,
 			items: [
 				{
 					text: "Changelog",

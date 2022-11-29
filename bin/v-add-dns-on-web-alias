@@ -36,7 +36,7 @@ is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ -e "$USER_DATA/dns/$alias.conf" ]; then
-    exit
+	exit
 fi
 
 # Perform verification if read-only mode is enabled
@@ -50,15 +50,15 @@ check_hestia_demo_mode
 log_event "$OK" "$ARGUMENTS"
 
 # Define additional vars
-sub_domain=$(echo "$alias" |awk -F '.' '{print $1}')
-top_domain=$(echo "$alias" |sed -e "s/^$sub_domain.//")
-domain_lvl=$(echo "$alias" |grep -o "\." |wc -l)
+sub_domain=$(echo "$alias" | awk -F '.' '{print $1}')
+top_domain=$(echo "$alias" | sed -e "s/^$sub_domain.//")
+domain_lvl=$(echo "$alias" | grep -o "\." | wc -l)
 
 # Adding second level domain
 if [ "$domain_lvl" -eq 1 ] || [ "${#top_domain}" -le '6' ]; then
-    $BIN/v-add-dns-domain \
-        "$user" "$alias" "$ip" '' '' '' '' '' '' '' '' "$restart" >> /dev/null
-    exit
+	$BIN/v-add-dns-domain \
+		"$user" "$alias" "$ip" '' '' '' '' '' '' '' '' "$restart" >> /dev/null
+	exit
 fi
 
 # Adding top-level domain and then its sub
@@ -66,20 +66,20 @@ $BIN/v-add-dns-domain "$user" "$top_domain" "$ip" '' '' '' '' '' '' '' '' "$rest
 
 # Checking top-level domain
 if [ ! -e "$USER_DATA/dns/$top_domain.conf" ]; then
-    exit
+	exit
 fi
 
 # Checking subdomain record
 if [ "$sub_domain" == '*' ]; then
-    check_record=$(grep -w "RECORD='\*'" $USER_DATA/dns/$top_domain.conf)
+	check_record=$(grep -w "RECORD='\*'" $USER_DATA/dns/$top_domain.conf)
 else
-    check_record=$(grep -w "RECORD='$sub_domain'" $USER_DATA/dns/$top_domain.conf)
+	check_record=$(grep -w "RECORD='$sub_domain'" $USER_DATA/dns/$top_domain.conf)
 fi
 
 # Adding subdomain record
 if [ -z "$check_record" ]; then
-    $BIN/v-add-dns-record \
-        "$user" "$top_domain" "$sub_domain" A "$ip" '' '' "$restart" >> /dev/null
+	$BIN/v-add-dns-record \
+		"$user" "$top_domain" "$sub_domain" A "$ip" '' '' "$restart" >> /dev/null
 fi
 
 #----------------------------------------------------------#

@@ -36,14 +36,14 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ ! -d "$HESTIA/data/access-keys/" ]; then
-  exit "$E_NOTEXIST"
+	exit "$E_NOTEXIST"
 fi
 
 if [[ -e "${HESTIA}/data/access-keys/${access_key_id}" ]]; then
-    source_conf "${HESTIA}/data/access-keys/${access_key_id}"
-    rm "${HESTIA}/data/access-keys/${access_key_id}"
+	source_conf "${HESTIA}/data/access-keys/${access_key_id}"
+	rm "${HESTIA}/data/access-keys/${access_key_id}"
 else
-    exit "$E_NOTEXIST"
+	exit "$E_NOTEXIST"
 fi
 
 #----------------------------------------------------------#

@@ -2,109 +2,124 @@
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
-$TAB = 'FIREWALL';
+$TAB = "FIREWALL";
 
 // Main include
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
-if ($_SESSION['userContext'] != 'admin') {
-    header("Location: /list/user");
-    exit;
+if ($_SESSION["userContext"] != "admin") {
+	header("Location: /list/user");
+	exit();
 }
 
 // Get ipset lists
-exec(HESTIA_CMD."v-list-firewall-ipset 'json'", $output, $return_var);
+exec(HESTIA_CMD . "v-list-firewall-ipset 'json'", $output, $return_var);
 check_return_code($return_var, $output);
-$data = json_decode(implode('', $output), true);
+$data = json_decode(implode("", $output), true);
 unset($output);
 
-$ipset_lists=[];
+$ipset_lists = [];
 foreach ($data as $key => $value) {
-    if (isset($value['SUSPENDED']) && $value['SUSPENDED'] === 'yes') {
-        continue;
-    }
-    if (isset($value['IP_VERSION']) && $value['IP_VERSION'] !== 'v4') {
-        continue;
-    }
-    array_push($ipset_lists, ['name'=>$key]);
+	if (isset($value["SUSPENDED"]) && $value["SUSPENDED"] === "yes") {
+		continue;
+	}
+	if (isset($value["IP_VERSION"]) && $value["IP_VERSION"] !== "v4") {
+		continue;
+	}
+	array_push($ipset_lists, ["name" => $key]);
 }
-$ipset_lists_json=json_encode($ipset_lists);
+$ipset_lists_json = json_encode($ipset_lists);
 
 // Check POST request
-if (!empty($_POST['ok'])) {    // Check token
-    // Check token
-    verify_csrf($_POST);
+if (!empty($_POST["ok"])) {
+	// Check token
+	// Check token
+	verify_csrf($_POST);
 
-    // Check empty fields
-    if (empty($_POST['v_action'])) {
-        $errors[] = _('action');
-    }
-    if (empty($_POST['v_protocol'])) {
-        $errors[] = _('protocol');
-    }
-    if (empty($_POST['v_port']) && strlen($_POST['v_port']) == 0) {
-        $errors[] = _('port');
-    }
-    if (empty($_POST['v_ip'])) {
-        $errors[] = _('ip address');
-    }
-    if (!empty($errors[0])) {
-        foreach ($errors as $i => $error) {
-            if ($i == 0) {
-                $error_msg = $error;
-            } else {
-                $error_msg = $error_msg.", ".$error;
-            }
-        }
-        $_SESSION['error_msg'] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
-    }
+	// Check empty fields
+	if (empty($_POST["v_action"])) {
+		$errors[] = _("action");
+	}
+	if (empty($_POST["v_protocol"])) {
+		$errors[] = _("protocol");
+	}
+	if (empty($_POST["v_port"]) && strlen($_POST["v_port"]) == 0) {
+		$errors[] = _("port");
+	}
+	if (empty($_POST["v_ip"])) {
+		$errors[] = _("ip address");
+	}
+	if (!empty($errors[0])) {
+		foreach ($errors as $i => $error) {
+			if ($i == 0) {
+				$error_msg = $error;
+			} else {
+				$error_msg = $error_msg . ", " . $error;
+			}
+		}
+		$_SESSION["error_msg"] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
+	}
 
-    // Protect input
-    $v_action = quoteshellarg($_POST['v_action']);
-    $v_protocol = quoteshellarg($_POST['v_protocol']);
-    $v_port = str_replace(" ", ",", $_POST['v_port']);
-    $v_port = preg_replace('/\,+/', ',', $v_port);
-    $v_port = trim($v_port, ",");
-    $v_port = quoteshellarg($v_port);
-    $v_ip = quoteshellarg($_POST['v_ip']);
-    $v_comment = quoteshellarg($_POST['v_comment']);
+	// Protect input
+	$v_action = quoteshellarg($_POST["v_action"]);
+	$v_protocol = quoteshellarg($_POST["v_protocol"]);
+	$v_port = str_replace(" ", ",", $_POST["v_port"]);
+	$v_port = preg_replace("/\,+/", ",", $v_port);
+	$v_port = trim($v_port, ",");
+	$v_port = quoteshellarg($v_port);
+	$v_ip = quoteshellarg($_POST["v_ip"]);
+	$v_comment = quoteshellarg($_POST["v_comment"]);
 
-    // Add firewall rule
-    if (empty($_SESSION['error_msg'])) {
-        exec(HESTIA_CMD."v-add-firewall-rule ".$v_action." ".$v_ip." ".$v_port." ".$v_protocol." ".$v_comment, $output, $return_var);
-        check_return_code($return_var, $output);
-        unset($output);
-    }
+	// Add firewall rule
+	if (empty($_SESSION["error_msg"])) {
+		exec(
+			HESTIA_CMD .
+				"v-add-firewall-rule " .
+				$v_action .
+				" " .
+				$v_ip .
+				" " .
+				$v_port .
+				" " .
+				$v_protocol .
+				" " .
+				$v_comment,
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		unset($output);
+	}
 
-    // Flush field values on success
-    if (empty($_SESSION['error_msg'])) {
-        $_SESSION['ok_msg'] = _('RULE_CREATED_OK');
-        unset($v_port);
-        unset($v_ip);
-        unset($v_comment);
-    }
+	// Flush field values on success
+	if (empty($_SESSION["error_msg"])) {
+		$_SESSION["ok_msg"] = _("RULE_CREATED_OK");
+		unset($v_port);
+		unset($v_ip);
+		unset($v_comment);
+	}
 }
 
 if (empty($v_action)) {
-    $v_action = '';
+	$v_action = "";
 }
 if (empty($v_protocol)) {
-    $v_protocol = '';
+	$v_protocol = "";
 }
 if (empty($v_port)) {
-    $v_port = '';
+	$v_port = "";
 }
 if (empty($v_ip)) {
-    $v_ip = '';
+	$v_ip = "";
 }
 if (empty($v_comment)) {
-    $v_comment = '';
+	$v_comment = "";
 }
 
 // Render
-render_page($user, $TAB, 'add_firewall');
+render_page($user, $TAB, "add_firewall");
 
 // Flush session messages
-unset($_SESSION['error_msg']);
-unset($_SESSION['ok_msg']);
+unset($_SESSION["error_msg"]);
+unset($_SESSION["ok_msg"]);

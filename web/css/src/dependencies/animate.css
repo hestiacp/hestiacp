@@ -3,74 +3,74 @@
  */
 
 :root {
-  --animate-duration: 1s;
-  --animate-delay: 1s;
-  --animate-repeat: 1;
+	--animate-duration: 1s;
+	--animate-delay: 1s;
+	--animate-repeat: 1;
 }
 
 .animate__animated {
-  animation-duration: 1s;
-  animation-duration: var(--animate-duration);
-  animation-fill-mode: both;
+	animation-duration: 1s;
+	animation-duration: var(--animate-duration);
+	animation-fill-mode: both;
 
-  &.animate__delay-1s {
-    animation-delay: 1s;
-    animation-delay: var(--animate-delay);
-  }
+	&.animate__delay-1s {
+		animation-delay: 1s;
+		animation-delay: var(--animate-delay);
+	}
 }
 
 .animate__fadeIn {
-  animation-name: fadeIn;
+	animation-name: fadeIn;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
+	from {
+		opacity: 0;
+	}
 
-  to {
-    opacity: 1;
-  }
+	to {
+		opacity: 1;
+	}
 }
 
 .animate__zoomIn {
-  animation-name: zoomIn;
+	animation-name: zoomIn;
 }
 
 @keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale3d(0.3, 0.3, 0.3);
-  }
+	from {
+		opacity: 0;
+		transform: scale3d(0.3, 0.3, 0.3);
+	}
 
-  50% {
-    opacity: 1;
-  }
+	50% {
+		opacity: 1;
+	}
 }
 
 .animate__swing {
-  transform-origin: top center;
-  animation-name: swing;
+	transform-origin: top center;
+	animation-name: swing;
 }
 
 @keyframes swing {
-  20% {
-    transform: rotate3d(0, 0, 1, 15deg);
-  }
+	20% {
+		transform: rotate3d(0, 0, 1, 15deg);
+	}
 
-  40% {
-    transform: rotate3d(0, 0, 1, -10deg);
-  }
+	40% {
+		transform: rotate3d(0, 0, 1, -10deg);
+	}
 
-  60% {
-    transform: rotate3d(0, 0, 1, 5deg);
-  }
+	60% {
+		transform: rotate3d(0, 0, 1, 5deg);
+	}
 
-  80% {
-    transform: rotate3d(0, 0, 1, -5deg);
-  }
+	80% {
+		transform: rotate3d(0, 0, 1, -5deg);
+	}
 
-  to {
-    transform: rotate3d(0, 0, 1, 0deg);
-  }
+	to {
+		transform: rotate3d(0, 0, 1, 0deg);
+	}
 }

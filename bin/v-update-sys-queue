@@ -34,25 +34,25 @@ check_args '1' "$#" 'QUEUE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-b_task=$(ps auxf |grep -v "grep" |grep "$HESTIA/bin/v-update-sys-queue backup")
-b_task=$(echo "$b_task" |grep -v sudo |wc -l)
-d_task=$(ps auxf |grep -v "grep" |grep "$HESTIA/bin/v-update-sys-queue dns")
-d_task=$(echo "$d_task" |grep -v sudo |wc -l)
+b_task=$(ps auxf | grep -v "grep" | grep "$HESTIA/bin/v-update-sys-queue backup")
+b_task=$(echo "$b_task" | grep -v sudo | wc -l)
+d_task=$(ps auxf | grep -v "grep" | grep "$HESTIA/bin/v-update-sys-queue dns")
+d_task=$(echo "$d_task" | grep -v sudo | wc -l)
 if [ "$b_task" -gt 2 ] || [ "$d_task" -gt 2 ]; then
-    exit
+	exit
 fi
 
 # Defining pipe functions
 case $queue in
-    restart)        bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
-    webstats)       bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
-    backup)         bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
-    disk)           bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
-    daily)          bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
-    traffic)        bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1;;
-    dns-cluster)    bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
-    letsencrypt)    bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
-    *)              check_args '1' '0' 'QUEUE' ;;
+	restart) bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+	webstats) bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+	backup) bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+	disk) bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+	daily) bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+	traffic) bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+	dns-cluster) bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+	letsencrypt) bash $HESTIA/data/queue/$queue.pipe > /dev/null 2>&1 ;;
+	*) check_args '1' '0' 'QUEUE' ;;
 esac
 
 #----------------------------------------------------------#

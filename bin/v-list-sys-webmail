@@ -24,42 +24,42 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    i=1
-    objects=$(echo -e "${WEBMAIL_SYSTEM//,/\\n}" |wc -l)
-    echo '['
-    for client in ${WEBMAIL_SYSTEM//,/ };do
-        if [ "$i" -ne "$objects" ]; then
-            echo -e  "\t\"$client\","
-        else
-            echo -e  "\t\"$client\""
-        fi
-        (( ++i))
-    done
-    echo ']'
+	i=1
+	objects=$(echo -e "${WEBMAIL_SYSTEM//,/\\n}" | wc -l)
+	echo '['
+	for client in ${WEBMAIL_SYSTEM//,/ }; do
+		if [ "$i" -ne "$objects" ]; then
+			echo -e "\t\"$client\","
+		else
+			echo -e "\t\"$client\""
+		fi
+		((++i))
+	done
+	echo ']'
 }
 
 # SHELL list function
 shell_list() {
-    echo "Webmail Client"
-    echo "--------"
-    for client in ${WEBMAIL_SYSTEM//,/ };do
-        echo "$client"
-    done
+	echo "Webmail Client"
+	echo "--------"
+	for client in ${WEBMAIL_SYSTEM//,/ }; do
+		echo "$client"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    for client in ${WEBMAIL_SYSTEM//,/ };do
-        echo "$client"
-    done
+	for client in ${WEBMAIL_SYSTEM//,/ }; do
+		echo "$client"
+	done
 }
 
 # CSV list function
 csv_list() {
-    echo "CLIENT"
-    for client in ${WEBMAIL_SYSTEM//,/ };do
-        echo "$client"
-    done
+	echo "CLIENT"
+	for client in ${WEBMAIL_SYSTEM//,/ }; do
+		echo "$client"
+	done
 }
 
 #----------------------------------------------------------#
@@ -68,10 +68,10 @@ csv_list() {
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

@@ -45,7 +45,7 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 is_object_value_empty 'web' 'DOMAIN' "$domain" '$PROXY'
 if [ -z $template ]; then
-    template=$(get_user_value '$PROXY_TEMPLATE')
+	template=$(get_user_value '$PROXY_TEMPLATE')
 fi
 is_proxy_template_valid $template
 
@@ -67,7 +67,7 @@ add_web_config "$PROXY_SYSTEM" "$template.tpl"
 
 # Adding proxy for ssl
 if [ "$SSL" = 'yes' ]; then
-    add_web_config "$PROXY_SYSTEM" "$template.stpl"
+	add_web_config "$PROXY_SYSTEM" "$template.stpl"
 fi
 
 #----------------------------------------------------------#
@@ -80,7 +80,7 @@ update_object_value 'web' 'DOMAIN' "$domain" '$PROXY_EXT' "$extentions"
 
 # Restarting web server
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 $BIN/v-log-action "$user" "Info" "Web" "Proxy enabled (Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"

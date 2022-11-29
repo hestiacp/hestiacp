@@ -43,15 +43,13 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-
-
 # Check if proxy is active
 if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    rm "$HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect"
-    rm "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
+	rm "$HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect"
+	rm "$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
 else
-     echo "Non supported please use .htaccess instead"
-     exit 2;
+	echo "Non supported please use .htaccess instead"
+	exit 2
 fi
 
 #----------------------------------------------------------#
@@ -62,10 +60,10 @@ update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' ""
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' ""
 
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Domain redirection disabled (Domain: $domain)."

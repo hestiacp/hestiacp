@@ -22,26 +22,26 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 # Ensure that quota kernel modules are installed
-kernel_module_check=$(find /lib/modules/`uname -r` -type f -name '*quota_v*.ko*' | egrep '.*' && [ $? -eq 0 ])
+kernel_module_check=$(find /lib/modules/$(uname -r) -type f -name '*quota_v*.ko*' | egrep '.*' && [ $? -eq 0 ])
 if [ -z "$kernel_module_check" ]; then
-    # Install kernel modules for quota support.
-    # Requires reboot to activate updated kernel.
-    echo "Installing required kernel modules for quota support..."
-    reboot_req="Y"
-    apt-get -qq install linux-image-extra-virtual -y
-    check_result $? "kernel module installation failed" "$E_UPDATE"
+	# Install kernel modules for quota support.
+	# Requires reboot to activate updated kernel.
+	echo "Installing required kernel modules for quota support..."
+	reboot_req="Y"
+	apt-get -qq install linux-image-extra-virtual -y
+	check_result $? "kernel module installation failed" "$E_UPDATE"
 fi
 
 # Checking quota package
-quota=$(which --skip-alias --skip-functions quota 2>/dev/null)
+quota=$(which --skip-alias --skip-functions quota 2> /dev/null)
 if [ $? -ne 0 ]; then
-    if [ -f "/etc/redhat-release" ]; then
-        dnf -y install quota >/dev/null 2>&1
-    else
-        export DEBIAN_FRONTEND=noninteractive
-        apt-get -y install quota >/dev/null 2>&1
-    fi
-    check_result $? "quota package installation failed" "$E_UPDATE"
+	if [ -f "/etc/redhat-release" ]; then
+		dnf -y install quota > /dev/null 2>&1
+	else
+		export DEBIAN_FRONTEND=noninteractive
+		apt-get -y install quota > /dev/null 2>&1
+	fi
+	check_result $? "quota package installation failed" "$E_UPDATE"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -57,15 +57,15 @@ lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut
 opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
 fnd='usrquota\|grpquota\|usrjquota=aquota.user\|grpjquota=aquota.group\|jqfmt=vfsv0'
 if [ $(echo $opt | tr ',' '\n' | grep -x $fnd | wc -l) -ne 5 ]; then
-    old=$(echo $(echo $opt | tr ',' '\n' | grep -v 'usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt=') | tr ' ' ',')
-    new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
-    sed -i "$lnr s/$opt/$old,$new/" /etc/fstab
-    mount -o remount "$mnt"
+	old=$(echo $(echo $opt | tr ',' '\n' | grep -v 'usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt=') | tr ' ' ',')
+	new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
+	sed -i "$lnr s/$opt/$old,$new/" /etc/fstab
+	mount -o remount "$mnt"
 fi
 
 # Adding v2 group and user quota index
 if [ ! -e "$mnt/aquota.user" ] || [ ! -e "$mnt/aquota.group" ]; then
-    quotacheck -avcugm >/dev/null 2>&1
+	quotacheck -avcugm > /dev/null 2>&1
 fi
 
 # Adding quotacheck on reboot
@@ -78,20 +78,20 @@ chmod a+x /etc/cron.daily/quotacheck
 
 # Enabling group and user quota
 if [ -n "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ]; then
-    quotaon -v $mnt
-    check_result $? "quota can't be enabled in $mnt" "$E_DISK"
+	quotaon -v $mnt
+	check_result $? "quota can't be enabled in $mnt" "$E_DISK"
 fi
 
 # Updating hestia.conf value
 if [ -z "$(grep DISK_QUOTA $HESTIA/conf/hestia.conf)" ]; then
-    echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
+	echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
 else
-    sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='yes'/g" $HESTIA/conf/hestia.conf
+	sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='yes'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Rebuilding user quota
 for user in $($HESTIA/bin/v-list-sys-users plain); do
-    $BIN/v-update-user-quota "$user"
+	$BIN/v-update-user-quota "$user"
 done
 
 #----------------------------------------------------------#

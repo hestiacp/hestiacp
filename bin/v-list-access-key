@@ -22,12 +22,12 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    local PERMISSIONS_ARR='[]'
-    if [[ -n "$PERMISSIONS" ]]; then
-        PERMISSIONS_ARR="[\"$(echo "$PERMISSIONS" | sed -E 's|,|", "|g')\"]"
-    fi
+	local PERMISSIONS_ARR='[]'
+	if [[ -n "$PERMISSIONS" ]]; then
+		PERMISSIONS_ARR="[\"$(echo "$PERMISSIONS" | sed -E 's|,|", "|g')\"]"
+	fi
 
-    echo '{
+	echo '{
     "ACCESS_KEY_ID": "'$access_key_id'",
     "SECRET_ACCESS_KEY": "'$SECRET_ACCESS_KEY'",
     "USER": "'$USER'",
@@ -40,19 +40,18 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "ACCESS_KEY_ID:      $access_key_id"
-    echo "SECRET_ACCESS_KEY:  $SECRET_ACCESS_KEY"
-    echo "USER:               $USER"
-    echo "PERMISSIONS:        $PERMISSIONS"
-    echo "COMMENT:            $COMMENT"
-    echo "TIME:               $TIME"
-    echo "DATE:               $DATE"
+	echo "ACCESS_KEY_ID:      $access_key_id"
+	echo "SECRET_ACCESS_KEY:  $SECRET_ACCESS_KEY"
+	echo "USER:               $USER"
+	echo "PERMISSIONS:        $PERMISSIONS"
+	echo "COMMENT:            $COMMENT"
+	echo "TIME:               $TIME"
+	echo "DATE:               $DATE"
 }
 
-plain_list(){
-    echo $access_key_id:$SECRET_ACCESS_KEY
+plain_list() {
+	echo $access_key_id:$SECRET_ACCESS_KEY
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -77,11 +76,10 @@ source_conf "${HESTIA}/data/access-keys/${access_key_id}"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    shell)  shell_list ;;
-    plain)  plain_list;;
+	json) json_list ;;
+	shell) shell_list ;;
+	plain) plain_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

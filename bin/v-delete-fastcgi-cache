@@ -46,20 +46,20 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Remove FastCGI cache configuration
 if [ -f "$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf" ]; then
-    rm -rf $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
+	rm -rf $HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.fastcgi_cache.conf
 fi
 
 conf='/etc/nginx/conf.d/fastcgi_cache_pool.conf'
 if [ -f "$conf" ]; then
-    sed -i "/ keys_zone=$domain/d" $conf
-    if [ ! -s "$conf" ]; then
-        rm -rf $conf
-    fi
+	sed -i "/ keys_zone=$domain/d" $conf
+	if [ ! -s "$conf" ]; then
+		rm -rf $conf
+	fi
 fi
 
 # Delete FastCGI cache folder
 if [ -d "/var/cache/nginx/micro/$domain" ]; then
-    rm -rf /var/cache/nginx/micro/$domain
+	rm -rf /var/cache/nginx/micro/$domain
 fi
 
 #----------------------------------------------------------#
@@ -67,10 +67,10 @@ fi
 #----------------------------------------------------------#
 
 if [ -z "$FASTCGI_CACHE" ]; then
-add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
+	add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_CACHE' 'ALIAS'
 fi
 if [ -z "$FASTCGI_DURATION" ]; then
-add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_DURATION' 'ALIAS'
+	add_object_key "web" 'DOMAIN' "$domain" 'FASTCGI_DURATION' 'ALIAS'
 fi
 
 # Set FastCGI cache flag to disabled
@@ -79,8 +79,8 @@ update_object_value 'web' 'DOMAIN' "$domain" '$FASTCGI_DURATION' '0s'
 
 # Restart web server
 if [ -n "$restart" ]; then
-    $BIN/v-restart-web "$restart"
-    check_result $? "Web server restart failed" > /dev/null
+	$BIN/v-restart-web "$restart"
+	check_result $? "Web server restart failed" > /dev/null
 fi
 
 # Logging

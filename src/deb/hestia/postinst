@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
-    exit
+	exit
 fi
 
 ###############################################################
@@ -44,7 +44,7 @@ upgrade_init_logging
 
 # Check if preinstall hook exists
 if [ -e "/etc/hestiacp/hooks/pre_install.sh" ]; then
-/etc/hestiacp/hooks/pre_install.sh
+	/etc/hestiacp/hooks/pre_install.sh
 fi
 
 # Set up console display and welcome message
@@ -111,7 +111,7 @@ upgrade_send_notification_to_email
 upgrade_send_log_to_email
 
 if [ -e "/etc/hestiacp/hooks/post_install.sh" ]; then
-    /etc/hestiacp/hooks/post_install.sh
+	/etc/hestiacp/hooks/post_install.sh
 fi
 
 exit 0

@@ -40,27 +40,27 @@ check_hestia_demo_mode
 IFS=$'\n'
 
 if [ -z $host ]; then
-    hosts=$(cat "$HESTIA/conf/dns-cluster.conf")
+	hosts=$(cat "$HESTIA/conf/dns-cluster.conf")
 else
-    hosts=$(grep "HOST='$host'" "$HESTIA/conf/dns-cluster.conf")
+	hosts=$(grep "HOST='$host'" "$HESTIA/conf/dns-cluster.conf")
 fi
 
 # Starting cluster loop
 for cluster in $hosts; do
 
-    # Reset user, password and hash vars
-    clear_dns_cluster_settings
+	# Reset user, password and hash vars
+	clear_dns_cluster_settings
 
-    # Parsing remote host parameters
-    parse_object_kv_list "$cluster"
+	# Parsing remote host parameters
+	parse_object_kv_list "$cluster"
 
-    # Deleting source records
-    cluster_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME 'no'
-    check_result $? "$HOST connection failed (cleanup)" "$E_CONNECT"
+	# Deleting source records
+	cluster_cmd v-delete-dns-domains-src $DNS_USER $HOSTNAME 'no'
+	check_result $? "$HOST connection failed (cleanup)" "$E_CONNECT"
 
-    # Rebuilding dns zones
-    cluster_cmd v-rebuild-dns-domains $DNS_USER 'yes'
-    check_result $? "$HOST connection failed (rebuild)" "$E_CONNECT"
+	# Rebuilding dns zones
+	cluster_cmd v-rebuild-dns-domains $DNS_USER 'yes'
+	check_result $? "$HOST connection failed (rebuild)" "$E_CONNECT"
 
 done
 
@@ -72,7 +72,7 @@ done
 pipe="$HESTIA/data/queue/dns-cluster.pipe"
 str=$(grep -n "$SCRIPT $1 $2$" $pipe | cut -f1 -d: | head -n1)
 if [ -n "$str" ]; then
-    sed -i "$str d"  $pipe
+	sed -i "$str d" $pipe
 fi
 
 exit

@@ -40,7 +40,7 @@ check_hestia_demo_mode
 
 # Starting unsuspend loop
 for domain in $(search_objects 'dns' 'SUSPENDED' "yes" 'DOMAIN'); do
-    $BIN/v-unsuspend-dns-domain "$user" "$domain" "$restart"
+	$BIN/v-unsuspend-dns-domain "$user" "$domain" "$restart"
 done
 
 #----------------------------------------------------------#

@@ -26,40 +26,36 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 json_list() {
-  jq -ncR '[inputs]' <<< "$zones"
+	jq -ncR '[inputs]' <<< "$zones"
 }
 
 shell_list() {
-  IFS=$'\n'
-  echo "Timezone"
-  echo "--------"
-  for zone in $zones; do
-    echo $zone;
-  done
+	IFS=$'\n'
+	echo "Timezone"
+	echo "--------"
+	for zone in $zones; do
+		echo $zone
+	done
 }
 
 plain_list() {
-  IFS=$'\n'
-  for zone in $zones; do
-    echo $zone;
-  done
+	IFS=$'\n'
+	for zone in $zones; do
+		echo $zone
+	done
 }
-
 
 zones=$(cd /usr/share/zoneinfo/posix && find * -type f -or -type l | sort)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	shell) shell_list | column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-
 
 exit

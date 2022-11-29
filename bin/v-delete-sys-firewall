@@ -23,7 +23,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 if [ -z "$FIREWALL_SYSTEM" ]; then
-    exit
+	exit
 fi
 
 # Perform verification if read-only mode is enabled

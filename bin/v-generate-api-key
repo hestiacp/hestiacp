@@ -19,7 +19,8 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 keygen() {
-    < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c 32; echo;
+	tr < /dev/urandom -dc _A-Z-a-z-0-9 | head -c 32
+	echo
 }
 HASH=$(keygen)
 
@@ -31,15 +32,15 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ ! -d "$HESTIA/data/keys/" ]; then
-    mkdir -p $HESTIA/data/keys/
-    chown admin:root $HESTIA/data/keys/
-    chmod 750 $HESTIA/data/keys/
+	mkdir -p $HESTIA/data/keys/
+	chown admin:root $HESTIA/data/keys/
+	chmod 750 $HESTIA/data/keys/
 fi
 
-if [[ -e "$HESTIA/data/keys/$HASH" ]] ; then
-    while [[ -e "$HESTIA/data/keys/$HASH" ]] ; do
-        HASH=$(keygen)
-    done
+if [[ -e "$HESTIA/data/keys/$HASH" ]]; then
+	while [[ -e "$HESTIA/data/keys/$HASH" ]]; do
+		HASH=$(keygen)
+	done
 fi
 
 touch $HESTIA/data/keys/$HASH

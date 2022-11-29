@@ -53,7 +53,7 @@ check_hestia_demo_mode
 
 # Deleting exim autoreply message
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    rm -f $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
+	rm -f $HOMEDIR/$user/conf/mail/$domain/autoreply.$account.msg
 fi
 
 #----------------------------------------------------------#
@@ -64,7 +64,7 @@ fi
 rm -f $USER_DATA/mail/$domain/$account@$domain.msg
 
 # Update config
-update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$AUTOREPLY' 'no'
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$AUTOREPLY' 'no'
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "Mail account auto-reply removed (User: $account@$domain)."

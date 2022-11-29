@@ -15,7 +15,7 @@
 user=$1
 domain=$2
 aliases=$3
-mail=${4// }
+mail=${4// /}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -31,36 +31,36 @@ source_conf "$HESTIA/conf/hestia.conf"
 LE_API='https://acme-v02.api.letsencrypt.org'
 
 if [[ "$LE_STAGING" = 'yes' ]]; then
-    LE_API='https://acme-staging-v02.api.letsencrypt.org'
+	LE_API='https://acme-staging-v02.api.letsencrypt.org'
 fi
 
 # encode base64
 encode_base64() {
-    cat |base64 |tr '+/' '-_' |tr -d '\r\n='
+	cat | base64 | tr '+/' '-_' | tr -d '\r\n='
 }
 
 # Let's Encrypt v2 curl function
 query_le_v2() {
-    protected='{"nonce": "'$3'",'
-    protected=''$protected' "url": "'$1'",'
-    protected=''$protected' "alg": "RS256", "kid": "'$KID'"}'
-    content="Content-Type: application/jose+json"
+	protected='{"nonce": "'$3'",'
+	protected=''$protected' "url": "'$1'",'
+	protected=''$protected' "alg": "RS256", "kid": "'$KID'"}'
+	content="Content-Type: application/jose+json"
 
-    payload_=$(echo -n "$2" |encode_base64)
-    protected_=$(echo -n "$protected" |encode_base64)
-    signature_=$(printf "%s" "$protected_.$payload_" |\
-        openssl dgst -sha256 -binary -sign $USER_DATA/ssl/user.key |\
-        encode_base64)
+	payload_=$(echo -n "$2" | encode_base64)
+	protected_=$(echo -n "$protected" | encode_base64)
+	signature_=$(printf "%s" "$protected_.$payload_" \
+		| openssl dgst -sha256 -binary -sign $USER_DATA/ssl/user.key \
+		| encode_base64)
 
-    post_data='{"protected":"'"$protected_"'",'
-    post_data=$post_data'"payload":"'"$payload_"'",'
-    post_data=$post_data'"signature":"'"$signature_"'"}'
+	post_data='{"protected":"'"$protected_"'",'
+	post_data=$post_data'"payload":"'"$payload_"'",'
+	post_data=$post_data'"signature":"'"$signature_"'"}'
 
-    # Save http response to file passed as "$4" arg or print to stdout if not provided
-    # http response headers are always sent to stdout
-    local save_to_file=${4:-"/dev/stdout"}
-    curl --location --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
-    debug_log "API call" "exit status: $?"
+	# Save http response to file passed as "$4" arg or print to stdout if not provided
+	# http response headers are always sent to stdout
+	local save_to_file=${4:-"/dev/stdout"}
+	curl --location --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
+	debug_log "API call" "exit status: $?"
 }
 
 #----------------------------------------------------------#
@@ -72,41 +72,39 @@ is_format_valid 'user' 'domain' 'aliases'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ -n "$mail" ]; then
-    is_boolean_format_valid "$mail" 'mail'
+	is_boolean_format_valid "$mail" 'mail'
 fi
 
 # Set DNS CAA record retrieval commands
 if [ -n "$DNS_SYSTEM" ]; then
-    dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-    caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "CAA" | grep -i "letsencrypt.org" | cut -d' ' -f1 )
+	dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
+	caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "CAA" | grep -i "letsencrypt.org" | cut -d' ' -f1)
 fi
 
 if [ -z "$mail" ] || [ "$mail" = 'no' ]; then
-    mail=''
-    is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-    is_object_valid 'web' 'DOMAIN' "$domain"
-    is_object_unsuspended 'web' 'DOMAIN' "$domain"
-    get_domain_values 'web'
-    # check if alias is the letsencrypt wildcard domain, if not, make the normal checks
-    if [[ "$aliases" != "*.$domain" ]]; then
-        for alias in $(echo "$aliases" |tr ',' '\n' |sort -u); do
-            check_alias="$(echo $ALIAS |tr ',' '\n' |grep ^$alias$)"
-            if [ -z "$check_alias" ]; then
-                check_result "$E_NOTEXIST" "domain alias $alias doesn't exist"
-            fi
-        done
-    fi;
+	mail=''
+	is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
+	is_object_valid 'web' 'DOMAIN' "$domain"
+	is_object_unsuspended 'web' 'DOMAIN' "$domain"
+	get_domain_values 'web'
+	# check if alias is the letsencrypt wildcard domain, if not, make the normal checks
+	if [[ "$aliases" != "*.$domain" ]]; then
+		for alias in $(echo "$aliases" | tr ',' '\n' | sort -u); do
+			check_alias="$(echo $ALIAS | tr ',' '\n' | grep ^$alias$)"
+			if [ -z "$check_alias" ]; then
+				check_result "$E_NOTEXIST" "domain alias $alias doesn't exist"
+			fi
+		done
+	fi
 else
-    is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
-    is_object_valid 'mail' 'DOMAIN' "$domain"
-    is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+	is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
+	is_object_valid 'mail' 'DOMAIN' "$domain"
+	is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 fi
-
-
 
 # Dump debug info
 debug_log() {
-    echo -e "\n==[${1}]==\n${2}\n" >> "$log_file"
+	echo -e "\n==[${1}]==\n${2}\n" >> "$log_file"
 }
 
 # Perform verification if read-only mode is enabled
@@ -118,25 +116,25 @@ check_hestia_demo_mode
 
 # Generate correct variables for mail domain SSL certificates
 if [ -n "$mail" ]; then
-    root_domain=$domain
-    domain="mail.$root_domain"
-    webmail=$(get_object_value "mail" "DOMAIN" "$root_domain" '$WEBMAIL');
-    if [ -n "$webmail" ]; then
-        aliases="$WEBMAIL_ALIAS.$root_domain"
-    fi
+	root_domain=$domain
+	domain="mail.$root_domain"
+	webmail=$(get_object_value "mail" "DOMAIN" "$root_domain" '$WEBMAIL')
+	if [ -n "$webmail" ]; then
+		aliases="$WEBMAIL_ALIAS.$root_domain"
+	fi
 else
-    parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+	parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-    domain_redirect="$REDIRECT"
-    if [[ -n "$domain_redirect"  ]] ; then
-        domain_redirect_code="$REDIRECT_CODE"
-        $BIN/v-delete-web-domain-redirect $user $domain
-    fi
+	domain_redirect="$REDIRECT"
+	if [[ -n "$domain_redirect" ]]; then
+		domain_redirect_code="$REDIRECT_CODE"
+		$BIN/v-delete-web-domain-redirect $user $domain
+	fi
 
-    domain_forcessl="$SSL_FORCE"
-    if [[ "$domain_forcessl" == 'yes' ]] ; then
-        $BIN/v-delete-web-domain-ssl-force $user $domain
-    fi
+	domain_forcessl="$SSL_FORCE"
+	if [[ "$domain_forcessl" == 'yes' ]]; then
+		$BIN/v-delete-web-domain-ssl-force $user $domain
+	fi
 fi
 
 log_file="/var/log/hestia/LE-${user}-${domain}.log"
@@ -153,11 +151,11 @@ domain: ${domain}
 
 # Registering LetsEncrypt user account
 $BIN/v-add-letsencrypt-user $user
-if [ "$?" -ne 0  ]; then
-    touch $HESTIA/data/queue/letsencrypt.pipe
-    sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
-    send_notice "LETSENCRYPT" "Account registration failed ($user)"
-    check_result "$E_CONNECT" "LE account registration ($user)" > /dev/null
+if [ "$?" -ne 0 ]; then
+	touch $HESTIA/data/queue/letsencrypt.pipe
+	sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
+	send_notice "LETSENCRYPT" "Account registration failed ($user)"
+	check_result "$E_CONNECT" "LE account registration ($user)" > /dev/null
 fi
 
 # Parsing LetsEncrypt account data
@@ -165,13 +163,13 @@ source $USER_DATA/ssl/le.conf
 
 # Checking wildcard alias
 if [ "$aliases" = "*.$domain" ]; then
-    wildcard='yes'
-    proto="dns-01"
-    if [ ! -e "$HESTIA/data/users/$user/dns/$domain.conf" ]; then
-        check_result "$E_NOTEXIST" "DNS domain $domain doesn't exist"
-    fi
+	wildcard='yes'
+	proto="dns-01"
+	if [ ! -e "$HESTIA/data/users/$user/dns/$domain.conf" ]; then
+		check_result "$E_NOTEXIST" "DNS domain $domain doesn't exist"
+	fi
 else
-    proto="http-01"
+	proto="http-01"
 fi
 
 echo -e "
@@ -182,285 +180,285 @@ echo -e "
 
 # Check if dns records exist for requested domain/aliases
 if [ "$proto" = "http-01" ]; then
-    for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
-        if [[ "$identifier" = *[![:ascii:]]* ]]; then
-            identifier=$(idn2 --quiet $identifier)
-        fi
-        if ! nslookup "${identifier}" > /dev/null 2>&1 ; then
-            # Attempt against Cloudflare DNS
-            if ! nslookup "${identifier}" 1.1.1.1 > /dev/null 2>&1 ; then
-                check_result "$E_NOTEXIST" "DNS record for $identifier doesn't exist"
-            fi
-        fi
-    done
+	for identifier in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
+		if [[ "$identifier" = *[![:ascii:]]* ]]; then
+			identifier=$(idn2 --quiet $identifier)
+		fi
+		if ! nslookup "${identifier}" > /dev/null 2>&1; then
+			# Attempt against Cloudflare DNS
+			if ! nslookup "${identifier}" 1.1.1.1 > /dev/null 2>&1; then
+				check_result "$E_NOTEXIST" "DNS record for $identifier doesn't exist"
+			fi
+		fi
+	done
 fi
 
 # Ensure DNS CAA record exists for Let's Encrypt before requesting certificate
 if [ -n "$DNS_SYSTEM" ]; then
-    # Check for DNS zone
-    if [ "$dns_domain" = "$domain" ]; then
-        # Replace DNS domain CAA records with Let's Encrypt values
-        if [ -z "$caa_record" ]; then
-            $BIN/v-add-dns-record "$user" "$domain" '@' 'CAA' '0 issue "letsencrypt.org"'
-        else
-            $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
-            $BIN/v-add-dns-record "$user" "$domain" '@' 'CAA' '0 issue "letsencrypt.org"'
-        fi
-    fi
+	# Check for DNS zone
+	if [ "$dns_domain" = "$domain" ]; then
+		# Replace DNS domain CAA records with Let's Encrypt values
+		if [ -z "$caa_record" ]; then
+			$BIN/v-add-dns-record "$user" "$domain" '@' 'CAA' '0 issue "letsencrypt.org"'
+		else
+			$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+			$BIN/v-add-dns-record "$user" "$domain" '@' 'CAA' '0 issue "letsencrypt.org"'
+		fi
+	fi
 fi
 
 # Requesting nonce / STEP 1
 answer=$(curl -s -I "$LE_API/directory")
-nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
-status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
 debug_log "Step 1" "- status: ${status}\n- nonce: ${nonce}\n- answer: ${answer}"
 
 if [[ "$status" -ne 200 ]]; then
-    # Delete DNS CAA record
-    if [ -n "$DNS_SYSTEM" ]; then
-        if [ "$dns_domain" = "$domain" ]; then
-            if [ -n "$caa_record" ]; then
-                $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
-            fi
-        fi
-    fi
-    check_result "$E_CONNECT" "Let's Encrypt nonce request status $status ($domain)"
+	# Delete DNS CAA record
+	if [ -n "$DNS_SYSTEM" ]; then
+		if [ "$dns_domain" = "$domain" ]; then
+			if [ -n "$caa_record" ]; then
+				$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+			fi
+		fi
+	fi
+	check_result "$E_CONNECT" "Let's Encrypt nonce request status $status ($domain)"
 fi
 
 # Placing new order / STEP 2
 url="$LE_API/acme/new-order"
 payload='{"identifiers":['
-for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
-    if [[ "$identifier" = *[![:ascii:]]* ]]; then
-        identifier=$(idn2 --quiet $identifier)
-    fi
-    payload=$payload'{"type":"dns","value":"'$identifier'"},'
+for identifier in $(echo $domain,$aliases | tr ',' '\n' | sort -u); do
+	if [[ "$identifier" = *[![:ascii:]]* ]]; then
+		identifier=$(idn2 --quiet $identifier)
+	fi
+	payload=$payload'{"type":"dns","value":"'$identifier'"},'
 done
-payload=$(echo "$payload"|sed "s/,$//")
+payload=$(echo "$payload" | sed "s/,$//")
 payload=$payload']}'
 answer=$(query_le_v2 "$url" "$payload" "$nonce")
-nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
-authz=$(echo "$answer" |grep "acme/authz" |cut -f2 -d '"')
-finalize=$(echo "$answer" |grep 'finalize":' |cut -f4 -d '"')
-status=$(echo "$answer" |grep HTTP/ |tail -n1 |cut -f2 -d ' ')
+nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+authz=$(echo "$answer" | grep "acme/authz" | cut -f2 -d '"')
+finalize=$(echo "$answer" | grep 'finalize":' | cut -f4 -d '"')
+status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f2 -d ' ')
 
 debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}"
 
 if [[ "$status" -ne 201 ]]; then
-    # Delete DNS CAA record
-    if [ -n "$DNS_SYSTEM" ]; then
-        if [ "$dns_domain" = "$domain" ]; then
-            if [ -n "$caa_record" ]; then
-                $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
-            fi
-        fi
-    fi
-    check_result $E_CONNECT "Let's Encrypt new auth status $status ($domain)"
+	# Delete DNS CAA record
+	if [ -n "$DNS_SYSTEM" ]; then
+		if [ "$dns_domain" = "$domain" ]; then
+			if [ -n "$caa_record" ]; then
+				$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+			fi
+		fi
+	fi
+	check_result $E_CONNECT "Let's Encrypt new auth status $status ($domain)"
 fi
 
 # Requesting authorization token / STEP 3
 for auth in $authz; do
-    payload=''
-    answer=$(query_le_v2 "$auth" "$payload" "$nonce")
-    url=$(echo "$answer" |grep -A3 $proto |grep -m1 url |cut -f 4 -d \")
-    token=$(echo "$answer" |grep -A3 $proto |grep token |cut -f 4 -d \")
-    nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
-    status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+	payload=''
+	answer=$(query_le_v2 "$auth" "$payload" "$nonce")
+	url=$(echo "$answer" | grep -A3 $proto | grep -m1 url | cut -f 4 -d \")
+	token=$(echo "$answer" | grep -A3 $proto | grep token | cut -f 4 -d \")
+	nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
-    debug_log "Step 3" "- status: ${status}\n- nonce: ${nonce}\n- url: ${url}\n- token: ${token}\n- answer: ${answer}"
+	debug_log "Step 3" "- status: ${status}\n- nonce: ${nonce}\n- url: ${url}\n- token: ${token}\n- answer: ${answer}"
 
-    if [[ "$status" -ne 200 ]]; then
-        # Delete DNS CAA record
-        if [ -n "$DNS_SYSTEM" ]; then
-            dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-            caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+	if [[ "$status" -ne 200 ]]; then
+		# Delete DNS CAA record
+		if [ -n "$DNS_SYSTEM" ]; then
+			dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
+			caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
 
-            if [ "$dns_domain" = "$domain" ]; then
-                if [ -n "$caa_record" ]; then
-                    $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
-                fi
-            fi
-        fi
-        check_result "$E_CONNECT" "Let's Encrypt acme/authz bad status $status ($domain)"
-    fi
+			if [ "$dns_domain" = "$domain" ]; then
+				if [ -n "$caa_record" ]; then
+					$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+				fi
+			fi
+		fi
+		check_result "$E_CONNECT" "Let's Encrypt acme/authz bad status $status ($domain)"
+	fi
 
-    # Accepting challenge / STEP 4
-    if [ "$wildcard" = 'yes'  ]; then
-        record=$(printf "%s" "$token.$THUMB" |\
-            openssl dgst -sha256 -binary |encode_base64)
-        old_records=$($BIN/v-list-dns-records "$user" "$domain" plain|grep 'TXT')
-        old_records=$(echo "$old_records" |grep _acme-challenge |cut -f 1)
-        for old_record in $old_records; do
-            $BIN/v-delete-dns-record "$user" "$domain" "$old_record"
-        done
-        $BIN/v-add-dns-record "$user" "$domain" "_acme-challenge" "TXT" "$record"
-        check_result $? "DNS _acme-challenge record wasn't created ($domain)"
-    else
-        if [ -z "$mail" ]; then
-            if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
-                conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_letsencrypt"
-                sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_letsencrypt"
-                echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
-                    > $conf
-                echo '    default_type text/plain;' >> $conf
-                echo '    return 200 "$1.'$THUMB'";' >> $conf
-                echo '}' >> $conf
-                if [ ! -e "$sconf" ]; then
-                    ln -s "$conf" "$sconf"
-                fi
-                if [ -n "$PROXY_SYSTEM" ]; then
-                    $BIN/v-restart-proxy
-                    check_result $? "Proxy restart failed" > /dev/null
-                fi
-            else
-                # Get root directory from configuration
-                domain_config="$HOMEDIR/$user/conf/web/$domain"
-                if [ -f "$domain_config/apache2.conf" ]; then
-                    well_known="$(cat $domain_config/apache2.conf | egrep \
-                                '^\s+DocumentRoot'| awk '{split($0, a, " "); \
+	# Accepting challenge / STEP 4
+	if [ "$wildcard" = 'yes' ]; then
+		record=$(printf "%s" "$token.$THUMB" \
+			| openssl dgst -sha256 -binary | encode_base64)
+		old_records=$($BIN/v-list-dns-records "$user" "$domain" plain | grep 'TXT')
+		old_records=$(echo "$old_records" | grep _acme-challenge | cut -f 1)
+		for old_record in $old_records; do
+			$BIN/v-delete-dns-record "$user" "$domain" "$old_record"
+		done
+		$BIN/v-add-dns-record "$user" "$domain" "_acme-challenge" "TXT" "$record"
+		check_result $? "DNS _acme-challenge record wasn't created ($domain)"
+	else
+		if [ -z "$mail" ]; then
+			if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
+				conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_letsencrypt"
+				sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_letsencrypt"
+				echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
+					> $conf
+				echo '    default_type text/plain;' >> $conf
+				echo '    return 200 "$1.'$THUMB'";' >> $conf
+				echo '}' >> $conf
+				if [ ! -e "$sconf" ]; then
+					ln -s "$conf" "$sconf"
+				fi
+				if [ -n "$PROXY_SYSTEM" ]; then
+					$BIN/v-restart-proxy
+					check_result $? "Proxy restart failed" > /dev/null
+				fi
+			else
+				# Get root directory from configuration
+				domain_config="$HOMEDIR/$user/conf/web/$domain"
+				if [ -f "$domain_config/apache2.conf" ]; then
+					well_known="$(cat $domain_config/apache2.conf | egrep \
+						'^\s+DocumentRoot' | awk '{split($0, a, " "); \
                                 print a[2]}')/.well-known"
-                else
-                    well_known="$(cat $domain_config/nginx.conf | egrep '^\s+root'| \
-                                awk '{split($0, a, " "); print a[2]}' | \
-                                sed 's/;$//')/.well-known"
-                fi
-                acme_challenge="$well_known/acme-challenge"
-                mkdir -p $acme_challenge
-                echo "$token.$THUMB" > $acme_challenge/$token
-                chown -R $user:$user $well_known
-            fi
-        else
-            if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
-                conf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.conf_letsencrypt"
-                sconf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.ssl.conf_letsencrypt"
-                echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
-                    > $conf
-                echo '    default_type text/plain;' >> $conf
-                echo '    return 200 "$1.'$THUMB'";' >> $conf
-                echo '}' >> $conf
-                if [ ! -e "$sconf" ]; then
-                    ln -s "$conf" "$sconf"
-                fi
-                if [ -n "$PROXY_SYSTEM" ]; then
-                    $BIN/v-restart-proxy
-                    check_result $? "Proxy restart failed" > /dev/null
-                fi
-            else
-                get_object_value 'mail' 'DOMAIN' "$root_domain" "WEBMAIL"
-                if [ -n "$WEBMAIL" ]; then
-                    well_known="/var/lib/$WEBMAIL/.well-known"
-                    acme_challenge="$well_known/acme-challenge"
-                    mkdir -p $acme_challenge
-                    echo "$token.$THUMB" > $acme_challenge/$token
-                    chown -R $user:$user $well_known
-                fi
-            fi
-        fi
-        if [ "$WEB_SYSTEM" = 'nginx' ]; then
-            $BIN/v-restart-web
-            check_result $? "Web restart failed" > /dev/null
-        fi
-    fi
+				else
+					well_known="$(cat $domain_config/nginx.conf | egrep '^\s+root' \
+						| awk '{split($0, a, " "); print a[2]}' \
+						| sed 's/;$//')/.well-known"
+				fi
+				acme_challenge="$well_known/acme-challenge"
+				mkdir -p $acme_challenge
+				echo "$token.$THUMB" > $acme_challenge/$token
+				chown -R $user:$user $well_known
+			fi
+		else
+			if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
+				conf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.conf_letsencrypt"
+				sconf="$HOMEDIR/$user/conf/mail/$root_domain/nginx.ssl.conf_letsencrypt"
+				echo 'location ~ "^/\.well-known/acme-challenge/([-_A-Za-z0-9]+)$" {' \
+					> $conf
+				echo '    default_type text/plain;' >> $conf
+				echo '    return 200 "$1.'$THUMB'";' >> $conf
+				echo '}' >> $conf
+				if [ ! -e "$sconf" ]; then
+					ln -s "$conf" "$sconf"
+				fi
+				if [ -n "$PROXY_SYSTEM" ]; then
+					$BIN/v-restart-proxy
+					check_result $? "Proxy restart failed" > /dev/null
+				fi
+			else
+				get_object_value 'mail' 'DOMAIN' "$root_domain" "WEBMAIL"
+				if [ -n "$WEBMAIL" ]; then
+					well_known="/var/lib/$WEBMAIL/.well-known"
+					acme_challenge="$well_known/acme-challenge"
+					mkdir -p $acme_challenge
+					echo "$token.$THUMB" > $acme_challenge/$token
+					chown -R $user:$user $well_known
+				fi
+			fi
+		fi
+		if [ "$WEB_SYSTEM" = 'nginx' ]; then
+			$BIN/v-restart-web
+			check_result $? "Web restart failed" > /dev/null
+		fi
+	fi
 
-    if [ "$DNS_CLUSTER" = "yes" ]; then
-        $BIN/v-update-sys-queue dns-cluster
-    fi
+	if [ "$DNS_CLUSTER" = "yes" ]; then
+		$BIN/v-update-sys-queue dns-cluster
+	fi
 
-    # Requesting ACME validation / STEP 5
-    validation_check=$(echo "$answer" |grep '"valid"')
-    if [[ -n "$validation_check" ]]; then
-        validation='valid'
-    else
-        validation='pending'
-        sleep 5
-    fi
+	# Requesting ACME validation / STEP 5
+	validation_check=$(echo "$answer" | grep '"valid"')
+	if [[ -n "$validation_check" ]]; then
+		validation='valid'
+	else
+		validation='pending'
+		sleep 5
+	fi
 
-    # Doing pol check on status
-    i=1
-    while [ "$validation" = 'pending' ]; do
-        payload='{}'
-        answer=$(query_le_v2 "$url" "$payload" "$nonce")
-        validation=$(echo "$answer"|grep -A1 $proto |tail -n1|cut -f4 -d \")
-        nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
-        status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
-        details=$(echo "$answer"| grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
+	# Doing pol check on status
+	i=1
+	while [ "$validation" = 'pending' ]; do
+		payload='{}'
+		answer=$(query_le_v2 "$url" "$payload" "$nonce")
+		validation=$(echo "$answer" | grep -A1 $proto | tail -n1 | cut -f4 -d \")
+		nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+		status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+		details=$(echo "$answer" | grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
 
-        debug_log "Step 5" "- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
+		debug_log "Step 5" "- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
 
-        if [[ "$status" -ne 200 ]]; then
-            # Delete DNS CAA record
-            if [ -n "$DNS_SYSTEM" ]; then
-                dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-                caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+		if [[ "$status" -ne 200 ]]; then
+			# Delete DNS CAA record
+			if [ -n "$DNS_SYSTEM" ]; then
+				dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
+				caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
 
-                if [ "$dns_domain" = "$domain" ]; then
-                    if [ -n "$caa_record" ]; then
-                        $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
-                    fi
-                fi
-            fi
-            # Download debug info from LE server
-            result=$(wget -qO- $url)
-            debug_log "Debug information Step 5"  "$result"
-            details=$(echo $result | jq '.error.detail' )
-            error_code=$(echo $result | jq '.error.status' )
+				if [ "$dns_domain" = "$domain" ]; then
+					if [ -n "$caa_record" ]; then
+						$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+					fi
+				fi
+			fi
+			# Download debug info from LE server
+			result=$(wget -qO- $url)
+			debug_log "Debug information Step 5" "$result"
+			details=$(echo $result | jq '.error.detail')
+			error_code=$(echo $result | jq '.error.status')
 
-            debug_log "Abort Step 5" "=> Wrong status"
-            check_result "$E_CONNECT" "Let's Encrypt validation status $status ($domain). Details: $error_code:$details"
-        fi
+			debug_log "Abort Step 5" "=> Wrong status"
+			check_result "$E_CONNECT" "Let's Encrypt validation status $status ($domain). Details: $error_code:$details"
+		fi
 
-        i=$((i + 1))
-        if [ "$i" -gt 10 ]; then
-            # Delete DNS CAA record
-            if [ -n "$DNS_SYSTEM" ]; then
-                dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-                caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+		i=$((i + 1))
+		if [ "$i" -gt 10 ]; then
+			# Delete DNS CAA record
+			if [ -n "$DNS_SYSTEM" ]; then
+				dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
+				caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
 
-                if [ "$dns_domain" = "$domain" ]; then
-                    if [ -n "$caa_record" ]; then
-                        $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
-                    fi
-                fi
-            fi
-            debug_log "Abort Step 5" "=> Too many validation retries"
-            check_result "$E_CONNECT" "Let's Encrypt domain validation timeout ($domain)"
-        fi
-        sleep $((i*2))
-    done
-    if [ "$validation" = 'invalid' ]; then
-        # Delete DNS CAA record
-        if [ -n "$DNS_SYSTEM" ]; then
-            dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-            caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+				if [ "$dns_domain" = "$domain" ]; then
+					if [ -n "$caa_record" ]; then
+						$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+					fi
+				fi
+			fi
+			debug_log "Abort Step 5" "=> Too many validation retries"
+			check_result "$E_CONNECT" "Let's Encrypt domain validation timeout ($domain)"
+		fi
+		sleep $((i * 2))
+	done
+	if [ "$validation" = 'invalid' ]; then
+		# Delete DNS CAA record
+		if [ -n "$DNS_SYSTEM" ]; then
+			dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
+			caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
 
-            if [ "$dns_domain" = "$domain" ]; then
-                if [ -n "$caa_record" ]; then
-                    $BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
-                fi
-            fi
-        fi
-        check_result "$E_CONNECT" "Let's Encrypt domain verification failed ($domain)"
-    fi
+			if [ "$dns_domain" = "$domain" ]; then
+				if [ -n "$caa_record" ]; then
+					$BIN/v-delete-dns-record "$user" "$domain" "$caa_record"
+				fi
+			fi
+		fi
+		check_result "$E_CONNECT" "Let's Encrypt domain verification failed ($domain)"
+	fi
 done
 
 # Generating new ssl certificate
-ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "info@$domain" "US" "California"\
-    "San Francisco" "Hestia" "IT" "$aliases" |tail -n1 |awk '{print $2}')
+ssl_dir=$($BIN/v-generate-ssl-cert "$domain" "info@$domain" "US" "California" \
+	"San Francisco" "Hestia" "IT" "$aliases" | tail -n1 | awk '{print $2}')
 
 # Sending CSR to finalize order / STEP 6
-csr=$(openssl req -in $ssl_dir/$domain.csr -outform DER |encode_base64)
+csr=$(openssl req -in $ssl_dir/$domain.csr -outform DER | encode_base64)
 payload='{"csr":"'$csr'"}'
 answer=$(query_le_v2 "$finalize" "$payload" "$nonce")
-nonce=$(echo "$answer" |grep -i nonce |cut -f2 -d \ |tr -d '\r\n')
-status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
-certificate=$(echo "$answer"|grep 'certificate":' |cut -f4 -d '"')
+nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+certificate=$(echo "$answer" | grep 'certificate":' | cut -f4 -d '"')
 
 debug_log "Step 6" "- status: ${status}\n- nonce: ${nonce}\n- payload: ${payload}\n- certificate: ${certificate}\n- answer: ${answer}"
 
 if [[ "$status" -ne 200 ]]; then
-    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
-    check_result "$E_CONNECT" "Let's Encrypt finalize bad status $status ($domain)"
+	[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
+	check_result "$E_CONNECT" "Let's Encrypt finalize bad status $status ($domain)"
 fi
 
 # Downloading signed certificate / STEP 7
@@ -469,124 +467,123 @@ retry=0
 
 while [[ $status != 200 && $retry -lt 3 ]]; do
 
-    answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
-    status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+	answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
+	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
-    debug_log "Step 7" "- status: ${status}\n- retry: ${retry}\n- answer: ${answer}"
+	debug_log "Step 7" "- status: ${status}\n- retry: ${retry}\n- answer: ${answer}"
 
-    if [[ $status != 200 ]]; then
-        retry=$((retry + 1))
-        sleep $((retry * 2))    # Sleep for 2s, 4s, 6s, 8s
-    fi
+	if [[ $status != 200 ]]; then
+		retry=$((retry + 1))
+		sleep $((retry * 2)) # Sleep for 2s, 4s, 6s, 8s
+	fi
 
 done
 
 # Fallback on depreciated download method for certs (unauthenticated GET)
 if [[ $status != 200 ]]; then
-    answer=$(curl  --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
-    status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
+	answer=$(curl --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
+	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
-    debug_log "Step 7 - Fallback" "- status: ${status}\n- answer: ${answer}"
+	debug_log "Step 7 - Fallback" "- status: ${status}\n- answer: ${answer}"
 fi
 
 debug_log "CERT DIR" "$(ls -las "$ssl_dir/")"
 debug_log "CERT PEM" "$(cat "$ssl_dir/$domain.pem")"
 
-
 if [[ "$status" -ne 200 ]]; then
-    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
-    check_result "$E_NOTEXIST" "Let's Encrypt downloading signed cert failed status:$status ($domain)"
+	[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
+	check_result "$E_NOTEXIST" "Let's Encrypt downloading signed cert failed status:$status ($domain)"
 fi
 
 # Splitting up downloaded pem
-crt_end=$(grep -n 'END CERTIFICATE' $ssl_dir/$domain.pem |head -n1 |cut -f1 -d:)
+crt_end=$(grep -n 'END CERTIFICATE' $ssl_dir/$domain.pem | head -n1 | cut -f1 -d:)
 head -n $crt_end $ssl_dir/$domain.pem > $ssl_dir/$domain.crt
 
-pem_lines=$(wc -l $ssl_dir/$domain.pem |cut -f 1 -d ' ')
-ca_end=$(grep -n  'BEGIN CERTIFICATE' $ssl_dir/$domain.pem |tail -n1 |cut -f 1 -d :)
-ca_end=$(( pem_lines - crt_end + 1 ))
+pem_lines=$(wc -l $ssl_dir/$domain.pem | cut -f 1 -d ' ')
+ca_end=$(grep -n 'BEGIN CERTIFICATE' $ssl_dir/$domain.pem | tail -n1 | cut -f 1 -d :)
+ca_end=$((pem_lines - crt_end + 1))
 tail -n $ca_end $ssl_dir/$domain.pem > $ssl_dir/$domain.ca
 
 debug_log "CERT CRT" "$(cat "$ssl_dir/$domain.crt")"
 debug_log "CERT CA-1" "$(cat "$ssl_dir/$domain.ca")"
 # Temporary fix for double "END CERTIFICATE"
 if [[ $(head -n 1 $ssl_dir/$domain.ca) = "-----END CERTIFICATE-----" ]]; then
-    sed -i '1,2d' $ssl_dir/$domain.ca
+	sed -i '1,2d' $ssl_dir/$domain.ca
 fi
 debug_log "CERT CA-2" "$(cat "$ssl_dir/$domain.ca")"
 
 # Rename certs for mail
 if [ -n "$mail" ]; then
-    mv $ssl_dir/$domain.ca $ssl_dir/$root_domain.ca
-    mv $ssl_dir/$domain.crt $ssl_dir/$root_domain.crt
-    mv $ssl_dir/$domain.csr $ssl_dir/$root_domain.csr
-    mv $ssl_dir/$domain.key $ssl_dir/$root_domain.key
-    mv $ssl_dir/$domain.pem $ssl_dir/$root_domain.pem
+	mv $ssl_dir/$domain.ca $ssl_dir/$root_domain.ca
+	mv $ssl_dir/$domain.crt $ssl_dir/$root_domain.crt
+	mv $ssl_dir/$domain.csr $ssl_dir/$root_domain.csr
+	mv $ssl_dir/$domain.key $ssl_dir/$root_domain.key
+	mv $ssl_dir/$domain.pem $ssl_dir/$root_domain.pem
 fi
 
 # Adding SSL
 if [ -z "$mail" ]; then
-    ssl_home="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME')"
-    ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
-    if [ "$ssl_enabled" = "yes" ]; then
-        $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "updatessl"
-    else
-        $BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl"
-    fi
- else
- # TODO replace with v-update-mail-domain-ssl if ssl is enabled
-    ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
-    if [ "$ssl_enabled" = "yes" ]; then
-        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl"
-    else
-        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl"
-    fi
+	ssl_home="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME')"
+	ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
+	if [ "$ssl_enabled" = "yes" ]; then
+		$BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "updatessl"
+	else
+		$BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl"
+	fi
+else
+	# TODO replace with v-update-mail-domain-ssl if ssl is enabled
+	ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
+	if [ "$ssl_enabled" = "yes" ]; then
+		$BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl"
+	else
+		$BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl"
+	fi
 fi
 
 if [ "$?" -ne '0' ]; then
-    [ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
-    touch $HESTIA/data/queue/letsencrypt.pipe
-    sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
-    send_notice 'LETSENCRYPT' "$domain certificate installation failed ($domain)"
-    check_result $? "SSL install" > /dev/null
+	[ -d "$ssl_dir" ] && rm -rf "$ssl_dir"
+	touch $HESTIA/data/queue/letsencrypt.pipe
+	sed -i "/ $domain /d" $HESTIA/data/queue/letsencrypt.pipe
+	send_notice 'LETSENCRYPT' "$domain certificate installation failed ($domain)"
+	check_result $? "SSL install" > /dev/null
 fi
 
 # Adding LE autorenew cronjob
 if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
-    min=$(generate_password '012345' '2')
-    hour=$(generate_password '1234567' '1')
-    cmd="sudo $BIN/v-update-letsencrypt-ssl"
-    $BIN/v-add-cron-job admin "$min" "$hour" '*' '*' '*' "$cmd" > /dev/null
+	min=$(generate_password '012345' '2')
+	hour=$(generate_password '1234567' '1')
+	cmd="sudo $BIN/v-update-letsencrypt-ssl"
+	$BIN/v-add-cron-job admin "$min" "$hour" '*' '*' '*' "$cmd" > /dev/null
 fi
 
 # Updating letsencrypt key
 if [ -z "$mail" ]; then
-    if [ -z "$LETSENCRYPT" ]; then
-        add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
-        add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
-    fi
-    update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
-    update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+	if [ -z "$LETSENCRYPT" ]; then
+		add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT' 'FTP_USER'
+		add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
+	fi
+	update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'yes'
+	update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "0"
 
-    if [[ "$domain_forcessl" == 'yes' ]] ; then
-        $BIN/v-add-web-domain-ssl-force $user $domain
-    fi
-    if [[ -n "$domain_redirect" ]] ; then
-        $BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
-    fi
+	if [[ "$domain_forcessl" == 'yes' ]]; then
+		$BIN/v-add-web-domain-ssl-force $user $domain
+	fi
+	if [[ -n "$domain_redirect" ]]; then
+		$BIN/v-add-web-domain-redirect $user $domain $domain_redirect $domain_redirect_code
+	fi
 
 else
-    if [ -z "$LETSENCRYPT" ]; then
-        add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT'
-        add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
-    fi
-    update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
-    update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
+	if [ -z "$LETSENCRYPT" ]; then
+		add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT'
+		add_object_key "mail" 'DOMAIN' "$root_domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
+	fi
+	update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT' 'yes'
+	update_object_value 'mail' 'DOMAIN' "$root_domain" '$LETSENCRYPT_FAIL_COUNT' "0"
 fi
 
 # Remove challenge folder if exist
 if [ -n "$well_known" ]; then
-    rm -fr $well_known
+	rm -fr $well_known
 fi
 
 # Remove temporary SSL folder

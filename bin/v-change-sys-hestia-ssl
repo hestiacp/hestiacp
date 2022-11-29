@@ -40,20 +40,20 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Checking new certificate
-certificate=$(cat $ssl_dir/$domain.crt |grep -n END)
-certificate_count=$(echo "$certificate" |wc -l)
+certificate=$(cat $ssl_dir/$domain.crt | grep -n END)
+certificate_count=$(echo "$certificate" | wc -l)
 if [ "$certificate_count" -gt 1 ]; then
-    crt_end=$(echo "$certificate" |head -n1 |cut -f 1 -d :)
-    crt_lines=$(wc -l $ssl_dir/$domain.crt |cut -f1 -d ' ')
-    pem_begin=$((crt_lines - crt_end))
-    mv $ssl_dir/$domain.crt $ssl_dir/$domain.crt_full
-    head -n $crt_end $ssl_dir/$domain.crt_full > $ssl_dir/$domain.crt
-    tail -n $pem_begin $ssl_dir/$domain.crt_full > $ssl_dir/$domain.ca
-    is_web_domain_cert_valid
-    mv -f $ssl_dir/$domain.crt_full $ssl_dir/$domain.crt
-    rm -f $ssl_dir/$domain.ca
+	crt_end=$(echo "$certificate" | head -n1 | cut -f 1 -d :)
+	crt_lines=$(wc -l $ssl_dir/$domain.crt | cut -f1 -d ' ')
+	pem_begin=$((crt_lines - crt_end))
+	mv $ssl_dir/$domain.crt $ssl_dir/$domain.crt_full
+	head -n $crt_end $ssl_dir/$domain.crt_full > $ssl_dir/$domain.crt
+	tail -n $pem_begin $ssl_dir/$domain.crt_full > $ssl_dir/$domain.ca
+	is_web_domain_cert_valid
+	mv -f $ssl_dir/$domain.crt_full $ssl_dir/$domain.crt
+	rm -f $ssl_dir/$domain.ca
 else
-    is_web_domain_cert_valid
+	is_web_domain_cert_valid
 fi
 
 # Adding new certificate
@@ -66,8 +66,8 @@ cp -f $ssl_dir/certificate.key $HESTIA/ssl/certificate.key
 
 # Restarting web server
 if [ "$restart" != 'no' ]; then
-    kill -HUP $(cat /var/run/hestia-nginx.pid)
-    $BIN/v-restart-mail "$restart"
+	kill -HUP $(cat /var/run/hestia-nginx.pid)
+	$BIN/v-restart-mail "$restart"
 fi
 
 # Logging

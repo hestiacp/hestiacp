@@ -68,15 +68,15 @@ cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
 cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key
 cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.pem
 if [ -e "$ssl_dir/$domain.ca" ]; then
-    cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
-    echo >> $USER_DATA/ssl/$domain.pem
-    cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
+	cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
+	echo >> $USER_DATA/ssl/$domain.pem
+	cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
 fi
 chmod 660 $USER_DATA/ssl/$domain.*
 
 # Ensure SSL directory exists
 if [ ! -d "$HOMEDIR/$user/conf/web/$domain/ssl" ]; then
-    mkdir -p $HOMEDIR/$user/conf/web/$domain/ssl/
+	mkdir -p $HOMEDIR/$user/conf/web/$domain/ssl/
 fi
 
 # Adding certificate to user dir
@@ -84,12 +84,12 @@ cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
 cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
 cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
+	cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
 fi
 
 if [ "$SSL_FORCE" == "yes" ]; then
-    # Enabling SSL redirection on demand
-    $BIN/v-add-web-domain-ssl-force "$user" "$domain"
+	# Enabling SSL redirection on demand
+	$BIN/v-add-web-domain-ssl-force "$user" "$domain"
 fi
 # Parsing domain values
 get_domain_values 'web'
@@ -104,7 +104,7 @@ add_web_config "$WEB_SYSTEM" "$TPL.stpl"
 
 # Checking proxy config
 if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
-    add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+	add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
 
 #----------------------------------------------------------#
@@ -120,20 +120,20 @@ update_object_value 'web' 'DOMAIN' "$domain" '$SSL' "yes"
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 if [ -n "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then
-    hostname=$(hostname -f)
-    if [ "$hostname" = "$domain" ]; then
-        $BIN/v-update-host-certificate "$user" "$domain"
-    fi
+	hostname=$(hostname -f)
+	if [ "$hostname" = "$domain" ]; then
+		$BIN/v-update-host-certificate "$user" "$domain"
+	fi
 fi
 
 if [ -n "$UPDATE_SSL_SCRIPT" ]; then
-    eval "$UPDATE_SSL_SCRIPT $user $domain"
+	eval "$UPDATE_SSL_SCRIPT $user $domain"
 fi
 
 # Logging

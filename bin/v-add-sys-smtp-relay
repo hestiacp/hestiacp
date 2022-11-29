@@ -46,7 +46,7 @@ change_sys_value 'SMTP_RELAY_HOST' "$host"
 change_sys_value 'SMTP_RELAY_PORT' "$port"
 change_sys_value 'SMTP_RELAY_USER' "$username"
 
-cat >/etc/exim4/smtp_relay.conf << EOL
+cat > /etc/exim4/smtp_relay.conf << EOL
 host:$host
 port:$port
 user:$username

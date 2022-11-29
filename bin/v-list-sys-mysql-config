@@ -23,10 +23,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    str=$(echo "$config"|egrep "$keys"|\
-        sed -e "s/[ ]*=/=/" -e "s/=[ ]*/=\'/" -e "s/$/'/")
-    parse_object_kv_list "$str"
-    echo '{
+	str=$(echo "$config" | egrep "$keys" \
+		| sed -e "s/[ ]*=/=/" -e "s/=[ ]*/=\'/" -e "s/$/'/")
+	parse_object_kv_list "$str"
+	echo '{
     "CONFIG": {
         "max_user_connections": "'$max_user_connections'",
         "max_connections": "'$max_connections'",
@@ -40,21 +40,21 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "$config" |egrep "$keys" |tr '=' ' '
-    echo "config_path $config_path"
+	echo "$config" | egrep "$keys" | tr '=' ' '
+	echo "config_path $config_path"
 }
 
 # PLAIN list function
 plain_list() {
-    echo "$config" |egrep "$keys" |tr '=' ' '
-    echo "config_path $config_path"
+	echo "$config" | egrep "$keys" | tr '=' ' '
+	echo "config_path $config_path"
 }
 
 # CSV list function
 csv_list() {
-    echo "$keys" |sed "s/|/,/g"
-    echo "$config" |egrep "$keys" |tr '=' ' ' |awk '{print $2}' |tr '\n' ','
-    echo
+	echo "$keys" | sed "s/|/,/g"
+	echo "$config" | egrep "$keys" | tr '=' ' ' | awk '{print $2}' | tr '\n' ','
+	echo
 }
 
 #----------------------------------------------------------#
@@ -69,16 +69,15 @@ keys="max_user_connections|max_connections|wait_timeout|interactive_timeout"
 keys="${keys}|max_allowed_packet"
 
 # Reading config
-config=$(cat $config_path|grep -v "^;")
+config=$(cat $config_path | grep -v "^;")
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

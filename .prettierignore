@@ -4,6 +4,9 @@
 *.min.css
 *.min.js
 
+# Husky
+.husky/_/
+
 # Bats seems to break Prettier
 *.bats
 

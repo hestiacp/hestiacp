@@ -148,7 +148,7 @@
 }
 
 .u-hide-desktop {
-  @media (--viewport-medium) {
-    display: none !important;
-  }
+	@media (--viewport-medium) {
+		display: none !important;
+	}
 }

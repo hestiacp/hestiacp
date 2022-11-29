@@ -27,7 +27,7 @@ strong {
 }
 
 .top-bar-nav-list {
-  background-color: #5d5d5d;
+	background-color: #5d5d5d;
 }
 
 .top-bar-nav-link {
@@ -148,11 +148,11 @@ strong {
 }
 
 .ui-dialog {
-  box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
+	box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
 
-  & .ui-dialog-buttonpane button {
-    box-shadow: none;
-  }
+	& .ui-dialog-buttonpane button {
+		box-shadow: none;
+	}
 }
 
 .notification-container {
@@ -425,15 +425,15 @@ li[aria-expanded="true"] a {
    ========================================================================== */
 
 .collapse-header {
-  background: #fafafa;
-  box-shadow: none;
-  color: #444;
+	background: #fafafa;
+	box-shadow: none;
+	color: #444;
 
-  &:hover {
-    color: #ff791f;
-  }
+	&:hover {
+		color: #ff791f;
+	}
 
-  & .fas {
-    display: none;
-  }
+	& .fas {
+		display: none;
+	}
 }

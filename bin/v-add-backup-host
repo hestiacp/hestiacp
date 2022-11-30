@@ -285,21 +285,21 @@ if [ "$type" = 'b2' ]; then
 fi
 
 if [ "$type" = 'rclone' ]; then
-    curl -s https://rclone.org/install.sh | bash /dev/null > /dev/null 2>&1
-    # Verify account exists
-    if [ ! -z "$(cat /root/.config/rclone/rclone.conf | grep "\[$host\]")" ]; then
-        echo "test" > /tmp/hestia-backup.txt
-        # Try to upload a single file
-        if [ -z "$path" ]; then
-            rclone copy /tmp/hestia-backup.txt $host:/hestia-backup.txt
-            rclone delete $host:/hestia-backup.txt
-        else
-            rclone copy /tmp/hestia-backup.txt $host:$path/hestia-backup.txt
-            rclone delete $host:$path/hestia-backup.txt
-        fi
-    else
-        check_result "$E_CONNECT" "Rclone config does not exits"
-    fi
+	curl -s https://rclone.org/install.sh | bash /dev/null > /dev/null 2>&1
+	# Verify account exists
+	if [ ! -z "$(cat /root/.config/rclone/rclone.conf | grep "\[$host\]")" ]; then
+		echo "test" > /tmp/hestia-backup.txt
+		# Try to upload a single file
+		if [ -z "$path" ]; then
+			rclone copy /tmp/hestia-backup.txt $host:/hestia-backup.txt
+			rclone delete $host:/hestia-backup.txt
+		else
+			rclone copy /tmp/hestia-backup.txt $host:$path/hestia-backup.txt
+			rclone delete $host:$path/hestia-backup.txt
+		fi
+	else
+		check_result "$E_CONNECT" "Rclone config does not exits"
+	fi
 fi
 
 # Adding backup host

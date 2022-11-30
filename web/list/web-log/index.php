@@ -23,4 +23,4 @@ if ($return_var == 0) {
 		echo htmlentities($file) . "\n";
 	}
 }
-echo "    </pre>\n</body>\n</html>\n";
+echo "</pre>\n</body>\n</html>\n";

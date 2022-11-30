@@ -39,8 +39,8 @@ class LaravelSetup extends BaseSetup {
 
 		$htaccess_rewrite = '
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^(.*)$ public/$1 [L]
+		RewriteEngine On
+		RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>';
 
 		$tmp_configpath = $this->saveTempFile($htaccess_rewrite);

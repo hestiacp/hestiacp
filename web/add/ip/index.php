@@ -69,7 +69,7 @@ if (!empty($_POST["ok"])) {
 				$v_netmask .
 				" " .
 				$v_interface .
-				"  " .
+				" " .
 				$v_owner .
 				" " .
 				quoteshellarg($ip_status) .

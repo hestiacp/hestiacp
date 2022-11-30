@@ -19,8 +19,8 @@ class WordpressSetup extends BaseSetup {
 	protected $config = [
 		"form" => [
 			//'protocol' => [
-			//    'type' => 'select',
-			//    'options' => ['http','https'],
+			//  'type' => 'select',
+			//  'options' => ['http','https'],
 			//],
 
 			"site_name" => ["type" => "text", "value" => "WordPress Blog"],

@@ -331,7 +331,7 @@ if (!empty($_POST["ok_acc"])) {
 		);
 		check_return_code($return_var, $output);
 		unset($output);
-		//disable  any input in v_fwd
+		//disable any input in v_fwd
 		$_POST["v_fwd"] = "";
 	}
 	// Add Forwarders

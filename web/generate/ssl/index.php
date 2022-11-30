@@ -99,7 +99,7 @@ exec(
 		$v_locality .
 		" " .
 		$v_org .
-		" IT  " .
+		" IT " .
 		$v_aliases .
 		" json",
 	$output,

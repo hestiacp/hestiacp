@@ -37,8 +37,8 @@ class SymfonySetup extends BaseSetup {
 
 		$htaccess_rewrite = '
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteRule ^(.*)$ public/$1 [L]
+		RewriteEngine On
+		RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>';
 
 		$this->appcontext->runComposer(

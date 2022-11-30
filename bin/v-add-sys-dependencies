@@ -48,7 +48,7 @@ fi
 if [ ! -f "$COMPOSER_BIN" ]; then
 	$BIN/v-add-user-composer "$user"
 	if [ $? -ne 0 ]; then
-		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>Hestia will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-phpmailer<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>Hestia will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-dependencies<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
 		exit 1
 	fi
 fi

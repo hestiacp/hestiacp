@@ -494,41 +494,41 @@ google_download() {
 
 # BackBlaze B2 backup function
 b2_backup() {
-    # Defining backblaze b2 settings
-    source_conf "$HESTIA/conf/b2.backup.conf"
+	# Defining backblaze b2 settings
+	source_conf "$HESTIA/conf/b2.backup.conf"
 
-    # Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
-    b2 clear-account > /dev/null 2>&1
-    b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
+	# Recreate backblaze auth file ~/.b2_account_info (for situation when key was changed in b2.backup.conf)
+	b2 clear-account > /dev/null 2>&1
+	b2 authorize-account $B2_KEYID $B2_KEY > /dev/null 2>&1
 
-    # Uploading backup archive
-    echo -e "$(date "+%F %T") Upload to B2: $user/$user.$backup_new_date.tar"
-    if [ "$localbackup" = 'yes' ]; then
-        cd $BACKUP
-        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
-    else
-        cd $tmpdir
-        tar -cf $BACKUP/$user.$backup_new_date.tar .
-        cd $BACKUP/
-        b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
-        rc=$?
-        rm -f $user.$backup_new_date.tar
-        if [ "$rc" -ne 0 ]; then
-            check_result "$E_CONNECT" "b2 failed to upload $user.$backup_new_date.tar"
-        fi
-    fi
+	# Uploading backup archive
+	echo -e "$(date "+%F %T") Upload to B2: $user/$user.$backup_new_date.tar"
+	if [ "$localbackup" = 'yes' ]; then
+		cd $BACKUP
+		b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+	else
+		cd $tmpdir
+		tar -cf $BACKUP/$user.$backup_new_date.tar .
+		cd $BACKUP/
+		b2 upload-file $BUCKET $user.$backup_new_date.tar $user/$user.$backup_new_date.tar > /dev/null 2>&1
+		rc=$?
+		rm -f $user.$backup_new_date.tar
+		if [ "$rc" -ne 0 ]; then
+			check_result "$E_CONNECT" "b2 failed to upload $user.$backup_new_date.tar"
+		fi
+	fi
 
-    # Checking retention
-    backup_list=$(b2 ls --long $BUCKET $user | cut -f 1 -d ' ' 2>/dev/null)
-    backups_count=$(echo "$backup_list" |wc -l)
-    if [ "$backups_count" -ge "$BACKUPS" ]; then
-        backups_rm_number=$(($backups_count - $BACKUPS))
-        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
-            backup_file_name=$(b2 get-file-info $backup | grep fileName | cut -f 4 -d '"' 2>/dev/null)
-            echo -e "$(date "+%F %T") Rotated b2 backup: $backup_file_name"
-            b2 delete-file-version $backup > /dev/null 2>&1
-        done
-    fi
+	# Checking retention
+	backup_list=$(b2 ls --long $BUCKET $user | cut -f 1 -d ' ' 2> /dev/null)
+	backups_count=$(echo "$backup_list" | wc -l)
+	if [ "$backups_count" -ge "$BACKUPS" ]; then
+		backups_rm_number=$(($backups_count - $BACKUPS))
+		for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
+			backup_file_name=$(b2 get-file-info $backup | grep fileName | cut -f 4 -d '"' 2> /dev/null)
+			echo -e "$(date "+%F %T") Rotated b2 backup: $backup_file_name"
+			b2 delete-file-version $backup > /dev/null 2>&1
+		done
+	fi
 
 }
 
@@ -557,50 +557,50 @@ b2_delete() {
 	b2 delete-file-version $1/$2 > /dev/null 2>&1
 }
 
-rclone_backup(){
-    # Define rclone config
-    source_conf "$HESTIA/conf/rclone.backup.conf"
-    echo -e "$(date "+%F %T") Upload With Rclone: $user.$backup_new_date.tar"
-    if [ "$localbackup" != 'yes' ]; then
-        cd $tmpdir
-        tar -cf $BACKUP/$user.$backup_new_date.tar .
-    fi
-    cd $BACKUP/
+rclone_backup() {
+	# Define rclone config
+	source_conf "$HESTIA/conf/rclone.backup.conf"
+	echo -e "$(date "+%F %T") Upload With Rclone: $user.$backup_new_date.tar"
+	if [ "$localbackup" != 'yes' ]; then
+		cd $tmpdir
+		tar -cf $BACKUP/$user.$backup_new_date.tar .
+	fi
+	cd $BACKUP/
 
-    if [ -z "$BPATH" ]; then
-        rclone copy -v $user.$backup_new_date.tar $HOST
-        if [ "$?" -ne 0 ]; then
-            check_result "$E_CONNECT" "Unable to upload backup"
-        fi
+	if [ -z "$BPATH" ]; then
+		rclone copy -v $user.$backup_new_date.tar $HOST
+		if [ "$?" -ne 0 ]; then
+			check_result "$E_CONNECT" "Unable to upload backup"
+		fi
 
-        backup_list=$(rclone lsf $HOST | cut -d' ' -f1 |grep "^$user\.");
-        backups_count=$(echo "$backup_list" |wc -l)
-        backups_rm_number=$((backups_count - BACKUPS))
-        if [ "$backups_count" -ge "$BACKUPS" ]; then
-        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
-            echo "Delete file: $backup"
-            rclone deletefile $HOST:/$backup
-        done
-        fi
-    else
-        rclone copy -v $user.$backup_new_date.tar $HOST:$BPATH
-        if [ "$?" -ne 0 ]; then
-            check_result "$E_CONNECT" "Unable to upload backup"
-        fi
+		backup_list=$(rclone lsf $HOST | cut -d' ' -f1 | grep "^$user\.")
+		backups_count=$(echo "$backup_list" | wc -l)
+		backups_rm_number=$((backups_count - BACKUPS))
+		if [ "$backups_count" -ge "$BACKUPS" ]; then
+			for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
+				echo "Delete file: $backup"
+				rclone deletefile $HOST:/$backup
+			done
+		fi
+	else
+		rclone copy -v $user.$backup_new_date.tar $HOST:$BPATH
+		if [ "$?" -ne 0 ]; then
+			check_result "$E_CONNECT" "Unable to upload backup"
+		fi
 
-        backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 |grep "^$user\.");
-        backups_count=$(echo "$backup_list" |wc -l)
-        backups_rm_number=$(($backups_count - $BACKUPS))
-        if [ "$backups_count" -ge "$BACKUPS" ]; then
-        for backup in $(echo "$backup_list" |head -n $backups_rm_number); do
-            echo "Delete file: $backup"
-            rclone deletefile $HOST:$BPATH/$backup
-        done
-        fi
-    fi
-    if [ "$localbackup" != 'yes' ]; then
-        rm -f $user.$backup_new_date.tar
-    fi
+		backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 | grep "^$user\.")
+		backups_count=$(echo "$backup_list" | wc -l)
+		backups_rm_number=$(($backups_count - $BACKUPS))
+		if [ "$backups_count" -ge "$BACKUPS" ]; then
+			for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
+				echo "Delete file: $backup"
+				rclone deletefile $HOST:$BPATH/$backup
+			done
+		fi
+	fi
+	if [ "$localbackup" != 'yes' ]; then
+		rm -f $user.$backup_new_date.tar
+	fi
 
 }
 
@@ -616,12 +616,12 @@ rclone_delete() {
 
 rclone_download() {
 
-    # Defining rclone b2 settings
-    source_conf "$HESTIA/conf/rclone.backup.conf"
-    cd $BACKUP
-    if [ -z "$BPATH" ]; then
-        rclone copy -v $HOST:/$1 ./
-    else
-        rclone copy -v $HOST:$BPATH/$1 ./
-    fi
+	# Defining rclone b2 settings
+	source_conf "$HESTIA/conf/rclone.backup.conf"
+	cd $BACKUP
+	if [ -z "$BPATH" ]; then
+		rclone copy -v $HOST:/$1 ./
+	else
+		rclone copy -v $HOST:$BPATH/$1 ./
+	fi
 }

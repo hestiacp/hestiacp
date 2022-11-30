@@ -31,12 +31,18 @@
 				<a href="/list/web/" class="top-bar-logo" title="<?=_('Hestia Control Panel');?>">
 					<img src="/images/logo-header.svg" alt="<?=_('Hestia Control Panel');?>" width="54" height="29">
 				</a>
+			</div>
+			<div class="top-bar-right">
 				<nav class="top-bar-nav">
-					<ul class="top-bar-nav-list">
+					<button type="button" class="top-bar-nav-link u-hide-tablet js-toggle-top-bar-menu" title="<?=_('Toggle menu');?>">
+						<i class="fas fa-bars"></i>
+						<span class="u-hidden"><?=_('Toggle menu');?></span>
+					</button>
+					<ul class="top-bar-nav-list animate__animated animate__fadeIn">
 						<li class="top-bar-nav-item">
 							<a class="top-bar-nav-link" href="/list/rrd/" title="<?=_('Back');?>">
 								<i class="fas fa-circle-left"></i>
-								<span class="u-hidden"><?=_('Back');?></span>
+								<span class="top-bar-nav-link-label"><?=_('Back');?></span>
 							</a>
 						</li>
 						<li class="top-bar-nav-item">
@@ -95,12 +101,6 @@
 								</a>
 							</li>
 						<?php }?>
-					</ul>
-				</nav>
-			</div>
-			<div class="top-bar-right">
-				<nav class="top-bar-nav">
-					<ul class="top-bar-nav-list">
 						<li class="top-bar-nav-item">
 							<a class="top-bar-nav-link" href="javascript:location.reload();" title="<?=_('Refresh');?>">
 								<i class="fas fa-arrow-rotate-right"></i>

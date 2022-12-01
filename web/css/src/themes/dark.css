@@ -72,11 +72,11 @@ strong {
 	}
 }
 
-.top-bar-nav-list {
+.top-bar-menu-list {
 	background-color: #454545;
 }
 
-.top-bar-nav-link {
+.top-bar-menu-link {
 	&:hover {
 		color: #dadada;
 		text-shadow: 1px 1px rgb(0 0 0 / 50%);
@@ -114,7 +114,7 @@ strong {
 	}
 }
 
-.top-bar-nav-link-logout {
+.top-bar-menu-link-logout {
 	color: #e7e7e7;
 }
 
@@ -184,10 +184,6 @@ strong {
 	& .fas {
 		color: #707070;
 	}
-}
-
-.l-separator {
-	border-top: 1px solid #454545;
 }
 
 .toolbar {
@@ -1019,6 +1015,10 @@ li[aria-expanded="true"] a {
 .body-stats .units:hover .l-unit:hover b,
 .body-stats .units:hover .l-unit:hover strong {
 	color: #fff !important;
+}
+
+.app-footer {
+	border-color: #454545;
 }
 
 /* Collapse component

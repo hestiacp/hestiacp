@@ -1273,9 +1273,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001400, caniuse-lite@npm:^1.0.30001426":
-  version: 1.0.30001435
-  resolution: "caniuse-lite@npm:1.0.30001435"
-  checksum: ec88b9c37f66095e26ddb8b43110e9564ebccb6de77e495b8e8b9d64fdbfe37f7762be8fd2578c3ecc181a183a159578c9bd8e9b90eb15b44b78e8a6d0e92530
+  version: 1.0.30001436
+  resolution: "caniuse-lite@npm:1.0.30001436"
+  checksum: 7928ac7d93741a81b3005ca4623b133e7d790828be70b26ee55e4860facc59bc344f4092e20034981070a4714f70814c8be4929be4b22728031784f267f69099
   languageName: node
   linkType: hard
 
@@ -2176,9 +2176,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.0.1, eslint@npm:^8.28.0":
-  version: 8.28.0
-  resolution: "eslint@npm:8.28.0"
+"eslint@npm:^8.0.1, eslint@npm:^8.29.0":
+  version: 8.29.0
+  resolution: "eslint@npm:8.29.0"
   dependencies:
     "@eslint/eslintrc": ^1.3.3
     "@humanwhocodes/config-array": ^0.11.6
@@ -2221,7 +2221,7 @@ __metadata:
     text-table: ^0.2.0
   bin:
     eslint: bin/eslint.js
-  checksum: 1b793486b2ec80f0602d75fff7116f7c39a3286f523608a999eead9bec4154a06841785d2b4fb87f8292a94cf85778c1dbfaec727772a09c4d604fdb9ff0809a
+  checksum: e05204b05907b82d910983995cb946e0ba62ca514eb2b6791c43f623333b143564a2eee0139909d31c10935c21877d815b1f76dd674a59cb91c471064325c4ab
   languageName: node
   linkType: hard
 
@@ -2341,11 +2341,11 @@ __metadata:
   linkType: hard
 
 "fastq@npm:^1.6.0":
-  version: 1.13.0
-  resolution: "fastq@npm:1.13.0"
+  version: 1.14.0
+  resolution: "fastq@npm:1.14.0"
   dependencies:
     reusify: ^1.0.4
-  checksum: 32cf15c29afe622af187d12fc9cd93e160a0cb7c31a3bb6ace86b7dea3b28e7b72acde89c882663f307b2184e14782c6c664fa315973c03626c7d4bff070bb0b
+  checksum: da2c05ec1446ef77b8ba2b76619c90d483404f5087e71e77469fbee797280a1f4ef26a63be15b2377198bc20d09fdf25c7d6e1e492a1e568a29dfdd9bcb7538c
   languageName: node
   linkType: hard
 
@@ -2683,7 +2683,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.45.0
     "@typescript-eslint/parser": ^5.45.0
     cssnano: ^5.1.14
-    eslint: ^8.28.0
+    eslint: ^8.29.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-editorconfig: ^4.0.2
     husky: ^8.0.2
@@ -2691,14 +2691,14 @@ __metadata:
     normalize.css: ^8.0.1
     postcss: ^8.4.19
     postcss-cli: ^10.1.0
-    postcss-import: ^15.0.0
+    postcss-import: ^15.0.1
     postcss-preset-env: ^7.8.3
     postcss-size: ^4.0.1
     prettier: ^2.8.0
     prettier-plugin-nginx: ^1.0.2
     prettier-plugin-sh: ^0.12.8
     prettier-plugin-sql: ^0.12.1
-    stylelint: ^14.15.0
+    stylelint: ^14.16.0
     stylelint-config-prettier: ^9.0.4
     stylelint-config-standard: ^29.0.0
     typescript: ^4.9.3
@@ -2792,7 +2792,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:^5.2.0":
+"ignore@npm:^5.2.0, ignore@npm:^5.2.1":
   version: 5.2.1
   resolution: "ignore@npm:5.2.1"
   checksum: 7251d00cba49fe88c4f3565fadeb4aa726ba38294a9a79ffed542edc47bafd989d4b2ccf65700c5b1b26a1e91dfc7218fb23017937c79216025d5caeec0ee9d5
@@ -4196,16 +4196,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-import@npm:^15.0.0":
-  version: 15.0.0
-  resolution: "postcss-import@npm:15.0.0"
+"postcss-import@npm:^15.0.1":
+  version: 15.0.1
+  resolution: "postcss-import@npm:15.0.1"
   dependencies:
     postcss-value-parser: ^4.0.0
     read-cache: ^1.0.0
     resolve: ^1.1.7
   peerDependencies:
     postcss: ^8.0.0
-  checksum: e5048072514f33520348c0c5aaedb5db92da72188e72a7367c26a8d851b9cf92e56aeda30d9c7b4ed1a34f84a58959da1b4b27b4aa23d41fc0ce36efe00bf1d1
+  checksum: c673a0247525b3ad9f29d40605866968f2d2525cd107f287171c3baad496385618419d0e0565a792eefb7192311d54d40b2837409cfe2451371a7ef1d0da5125
   languageName: node
   linkType: hard
 
@@ -4649,7 +4649,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-selector-parser@npm:^6.0.10, postcss-selector-parser@npm:^6.0.4, postcss-selector-parser@npm:^6.0.5, postcss-selector-parser@npm:^6.0.9":
+"postcss-selector-parser@npm:^6.0.10, postcss-selector-parser@npm:^6.0.11, postcss-selector-parser@npm:^6.0.4, postcss-selector-parser@npm:^6.0.5, postcss-selector-parser@npm:^6.0.9":
   version: 6.0.11
   resolution: "postcss-selector-parser@npm:6.0.11"
   dependencies:
@@ -5423,9 +5423,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylelint@npm:^14.15.0":
-  version: 14.15.0
-  resolution: "stylelint@npm:14.15.0"
+"stylelint@npm:^14.16.0":
+  version: 14.16.0
+  resolution: "stylelint@npm:14.16.0"
   dependencies:
     "@csstools/selector-specificity": ^2.0.2
     balanced-match: ^2.0.0
@@ -5440,7 +5440,7 @@ __metadata:
     globby: ^11.1.0
     globjoin: ^0.1.4
     html-tags: ^3.2.0
-    ignore: ^5.2.0
+    ignore: ^5.2.1
     import-lazy: ^4.0.0
     imurmurhash: ^0.1.4
     is-plain-object: ^5.0.0
@@ -5454,7 +5454,7 @@ __metadata:
     postcss-media-query-parser: ^0.2.3
     postcss-resolve-nested-selector: ^0.1.1
     postcss-safe-parser: ^6.0.0
-    postcss-selector-parser: ^6.0.10
+    postcss-selector-parser: ^6.0.11
     postcss-value-parser: ^4.2.0
     resolve-from: ^5.0.0
     string-width: ^4.2.3
@@ -5467,7 +5467,7 @@ __metadata:
     write-file-atomic: ^4.0.2
   bin:
     stylelint: bin/stylelint.js
-  checksum: a3b4593a35a2303987305ca5147ea31e92a47e1994d393be8d1a07a6dc8720b9eee1fed62aafaca618cd8f06e0b3ca601af4fa6618967f1f359ea36ade4c2550
+  checksum: 3b8d003aa0756cd8101e06be08a621fe4a2627c962d5ee471a231e71132ea90468f34f12f7bf8ba1e6c9857f55ac2d5c1b63f7a6e5c4ed667b1826925e0fd267
   languageName: node
   linkType: hard
 

@@ -7,4 +7,4 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/inc/i18n.php";
 
 App.Constants.UNLIM_TRANSLATED_VALUE = '<?= _("unlimited") ?>';
 App.Constants.NOTIFICATIONS_EMPTY    = '<?= _("no notifications") ?>';
-App.Constants.NOTIFICATIONS_DELETE_ALL = '<?= _("Delete notifications") ?>';
+App.Constants.NOTIFICATIONS_DELETE_ALL = '<?= _("Delete all notifications") ?>';

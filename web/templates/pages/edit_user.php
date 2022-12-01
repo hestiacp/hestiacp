@@ -2,7 +2,9 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/user/">
+				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+			</a>
 			<?php
 				if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look'])) && ($_SESSION['user'] !== $v_username)) {
 					$ssh_key_url = "/list/key/?user=".htmlentities($user_plain)."&token=".$_SESSION['token']."";
@@ -14,21 +16,29 @@
 					$keys_url = "/list/access-key/";
 				}
 			?>
-			<a href="<?=$ssh_key_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Manage SSH keys');?>"><i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys');?></a>
+			<a href="<?=$ssh_key_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Manage SSH keys');?>">
+				<i class="fas fa-key status-icon orange"></i><?=_('Manage SSH keys');?>
+			</a>
 			<?php if (($_SESSION['userContext'] == 'admin') || ($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no')) {?>
-				<a href="<?=$log_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Logs');?>"><i class="fas fa-clock-rotate-left status-icon maroon"></i><?=_('Logs');?></a>
+				<a href="<?=$log_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Logs');?>">
+					<i class="fas fa-clock-rotate-left status-icon maroon"></i><?=_('Logs');?>
+				</a>
 			<?php } ?>
 			<?php
 				$api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
 				if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
-				<a href="<?=$keys_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Access Keys');?>"><i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?></a>
+				<a href="<?=$keys_url; ?>" class="button button-secondary" id="btn-create" title="<?=_('Access Keys');?>">
+					<i class="fas fa-key status-icon purple"></i><?=_('Access Keys');?>
+				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
 				<!-- Do not show delete button for currently logged in user-->
 			<?} else {?>
-				<a href="/login/?loginas=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-create" title="<?=_('login as');?>"><i class="fas fa-right-to-bracket status-icon maroon"></i><?=_('login as');?></a>
+				<a href="/login/?loginas=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-create" title="<?=_('login as');?>">
+					<i class="fas fa-right-to-bracket status-icon maroon"></i><?=_('login as');?>
+				</a>
 				<a class="data-controls do_delete button button-secondary button-danger">
 					<i class="do_delete fas fa-circle-xmark status-icon red"></i>
 					<?=_('Delete');?>
@@ -38,13 +48,15 @@
 					</div>
 				</a>
 			<?php } ?>
-			<a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-floppy-disk status-icon purple"></i> <?=_('Save');?></a>
+			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+				<i class="fas fa-floppy-disk status-icon purple"></i> <?=_('Save');?>
+			</a>
 		</div>
 	</div>
 </div>
 <!-- End toolbar -->
 
-<div class="l-center animate__animated animate__fadeIn">
+<div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" method="post" name="v_edit_user" class="<?=$v_status?>">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">

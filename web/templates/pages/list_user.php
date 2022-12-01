@@ -55,7 +55,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 
 	<!-- Table header -->
 	<div class="table-header">
@@ -178,13 +178,12 @@
 	<?php } ?>
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center">
+<footer class="app-footer">
+	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
 				<?php printf(ngettext('%d user account', '%d user accounts', $i),$i); ?>
 			</div>
 		</div>
 	</div>
-</div>
+</footer>

@@ -997,6 +997,9 @@ String.prototype.trim = function () {
 
 set_sticky_class = function () {
 	var toolbar = $('.toolbar');
+	if (!toolbar.length) {
+		return;
+	}
 	var tableHeader = $('.table-header');
 	var toolbarOffset = toolbar.offset().top;
 	var headerHeight = $('.top-bar').outerHeight();

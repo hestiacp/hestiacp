@@ -54,7 +54,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
@@ -137,9 +137,8 @@
 
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center">
+<footer class="app-footer">
+	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right total clearfix">
 				<?php printf(ngettext('%d DNS record', '%d DNS records', $i),$i); ?>
@@ -148,4 +147,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+</footer>

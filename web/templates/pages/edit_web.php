@@ -2,7 +2,9 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/web/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/web/">
+				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "u-hidden"; }?>" id="v-clear-cache">
@@ -13,13 +15,15 @@
 					<i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App');?>
 				</a>
 			<?php } ?>
-			<a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?></a>
+			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+			</a>
 		</div>
 	</div>
 </div>
 <!-- End toolbar -->
 
-<div class="l-center animate__animated animate__fadeIn">
+<div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_edit_web" method="post" class="<?=$v_status?>">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">

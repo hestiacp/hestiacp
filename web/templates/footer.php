@@ -1,4 +1,4 @@
-	</div>
+	</main>
 <?php
 	if (($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes')) {
 		if ($_SESSION['UPDATE_AVAILABLE'] === 'yes') {

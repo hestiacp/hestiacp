@@ -46,11 +46,11 @@ strong {
 	}
 }
 
-.top-bar-nav-list {
+.top-bar-menu-list {
 	background-color: #5d5d5d;
 }
 
-.top-bar-nav-link {
+.top-bar-menu-link {
 	&:hover,
 	&:active {
 		color: #fff;
@@ -284,7 +284,6 @@ strong {
 		color: #fff;
 		text-transform: uppercase;
 		text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
-		margin-right: 15px;
 		background: #a0c105;
 		background-color: #a0c105;
 

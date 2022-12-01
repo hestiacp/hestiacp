@@ -13,7 +13,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('SSH_ID');?></b></div>
@@ -58,13 +58,12 @@
 	<?php } ?>
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center">
+<footer class="app-footer">
+	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
 				<?php printf(ngettext('%d SSH Key', '%d SSH Keys', $i),$i); ?>
 			</div>
 		</div>
 	</div>
-</div>
+</footer>

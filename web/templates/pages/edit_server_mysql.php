@@ -1,67 +1,67 @@
 <!-- Begin toolbar -->
 <div class="toolbar">
-  <div class="toolbar-inner">
-    <div class="toolbar-buttons">
-      <a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-    </div>
-    <div class="toolbar-buttons">
-      <a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?></a>
-    </div>
-  </div>
+	<div class="toolbar-inner">
+		<div class="toolbar-buttons">
+			<a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+		</div>
+		<div class="toolbar-buttons">
+			<a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?></a>
+		</div>
+	</div>
 </div>
 <!-- End toolbar -->
 
 <div class="l-center animate__animated animate__fadeIn">
 
-  <form id="vstobjects" name="v_configure_server" method="post">
-    <input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-    <input type="hidden" name="save" value="save">
+	<form id="vstobjects" name="v_configure_server" method="post">
+		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="save" value="save">
 
-    <div class="form-container">
-      <h1 class="form-title"><?=_('Configuring Server');?>: <?=$v_service_name;?></h1>
-      <?php show_alert_message($_SESSION);?>
-      <div id="basic-options">
-        <div class="u-mb10">
-          <label for="v_max_connections" class="form-label">max_connections</label>
-          <input type="text" class="form-control" regexp="max_connections" prev_value="<?=htmlentities($v_max_connections)?>" name="v_max_connections" id="v_max_connections" value="<?=htmlentities($v_max_connections)?>">
-        </div>
-        <div class="u-mb10">
-          <label for="v_max_user_connections" class="form-label">max_user_connections</label>
-          <input type="text" class="form-control" regexp="max_user_connections" prev_value="<?=htmlentities($v_max_user_connections)?>" name="v_max_user_connections" id="v_max_user_connections" value="<?=htmlentities($v_max_user_connections)?>">
-        </div>
-        <div class="u-mb10">
-          <label for="v_wait_timeout" class="form-label">wait_timeout</label>
-          <input type="text" class="form-control" regexp="wait_timeout" prev_value="<?=htmlentities($v_wait_timeout)?>" name="v_wait_timeout" id="v_wait_timeout" value="<?=htmlentities($v_wait_timeout)?>">
-        </div>
-        <div class="u-mb10">
-          <label for="v_interactive_timeout" class="form-label">interactive_timeout</label>
-          <input type="text" class="form-control" regexp="interactive_timeout" prev_value="<?=htmlentities($v_interactive_timeout)?>" name="v_interactive_timeout" id="v_interactive_timeout" value="<?=htmlentities($v_interactive_timeout)?>">
-        </div>
-        <div class="u-mb20">
-          <label for="v_display_errors" class="form-label">max_allowed_packet</label>
-          <input type="text" class="form-control" regexp="max_allowed_packet" prev_value="<?=htmlentities($v_max_allowed_packet)?>" name="v_display_errors" id="v_display_errors" value="<?=htmlentities($v_max_allowed_packet)?>">
-        </div>
-        <div class="u-mb20">
-          <a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Advanced options');?></a>
-        </div>
-      </div>
-      <div id="advanced-options" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
-        <div class="u-mb20">
-          <a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Basic options');?></a>
-        </div>
-        <div class="u-mb20">
-          <label for="v_config" class="form-label"><?=$v_config_path;?></label>
-          <textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
-          <label for="v_restart">
-            <?=_('restart');?>
-          </label>
-        </div>
-      </div>
-    </div>
+		<div class="form-container">
+			<h1 class="form-title"><?=_('Configuring Server');?>: <?=$v_service_name;?></h1>
+			<?php show_alert_message($_SESSION);?>
+			<div id="basic-options">
+				<div class="u-mb10">
+					<label for="v_max_connections" class="form-label">max_connections</label>
+					<input type="text" class="form-control" regexp="max_connections" prev_value="<?=htmlentities($v_max_connections)?>" name="v_max_connections" id="v_max_connections" value="<?=htmlentities($v_max_connections)?>">
+				</div>
+				<div class="u-mb10">
+					<label for="v_max_user_connections" class="form-label">max_user_connections</label>
+					<input type="text" class="form-control" regexp="max_user_connections" prev_value="<?=htmlentities($v_max_user_connections)?>" name="v_max_user_connections" id="v_max_user_connections" value="<?=htmlentities($v_max_user_connections)?>">
+				</div>
+				<div class="u-mb10">
+					<label for="v_wait_timeout" class="form-label">wait_timeout</label>
+					<input type="text" class="form-control" regexp="wait_timeout" prev_value="<?=htmlentities($v_wait_timeout)?>" name="v_wait_timeout" id="v_wait_timeout" value="<?=htmlentities($v_wait_timeout)?>">
+				</div>
+				<div class="u-mb10">
+					<label for="v_interactive_timeout" class="form-label">interactive_timeout</label>
+					<input type="text" class="form-control" regexp="interactive_timeout" prev_value="<?=htmlentities($v_interactive_timeout)?>" name="v_interactive_timeout" id="v_interactive_timeout" value="<?=htmlentities($v_interactive_timeout)?>">
+				</div>
+				<div class="u-mb20">
+					<label for="v_display_errors" class="form-label">max_allowed_packet</label>
+					<input type="text" class="form-control" regexp="max_allowed_packet" prev_value="<?=htmlentities($v_max_allowed_packet)?>" name="v_display_errors" id="v_display_errors" value="<?=htmlentities($v_max_allowed_packet)?>">
+				</div>
+				<div class="u-mb20">
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Advanced options');?></a>
+				</div>
+			</div>
+			<div id="advanced-options" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
+				<div class="u-mb20">
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Basic options');?></a>
+				</div>
+				<div class="u-mb20">
+					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
+					<textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
+					<label for="v_restart">
+						<?=_('restart');?>
+					</label>
+				</div>
+			</div>
+		</div>
 
-  </form>
+	</form>
 
 </div>

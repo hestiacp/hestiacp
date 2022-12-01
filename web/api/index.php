@@ -5,7 +5,7 @@ try {
 	require_once "../inc/vendor/autoload.php";
 } catch (Throwable $ex) {
 	$errstr =
-		"Unable able to load required libraries. Please run v-add-sys-phpmailer in command line. Error: " .
+		"Unable to load required libraries. Please run v-add-sys-dependencies in command line. Error: " .
 		$ex->getMessage();
 	trigger_error($errstr);
 	echo $errstr;

@@ -10,7 +10,7 @@ try {
 	require_once "vendor/autoload.php";
 } catch (Throwable $ex) {
 	$errstr =
-		"Unable able to load required libraries. Please run v-add-sys-phpmailer in command line. Error: " .
+		"Unable to load required libraries. Please run v-add-sys-dependencies in command line. Error: " .
 		$ex->getMessage();
 	trigger_error($errstr);
 	echo $errstr;
@@ -66,7 +66,7 @@ if (!isset($_SESSION["user_combined_ip"])) {
 }
 
 // Checking user to use session from the same IP he has been logged in
-if ($_SESSION["user_combined_ip"] != $user_combined_ip) {
+if ($_SESSION["user_combined_ip"] != $user_combined_ip && isset($_SESSION["user"])) {
 	$v_user = quoteshellarg($_SESSION["user"]);
 	$v_session_id = quoteshellarg($_SESSION["token"]);
 	exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);

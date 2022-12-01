@@ -147,8 +147,14 @@
 	line-height: 1.2 !important;
 }
 
-.u-hide-desktop {
+.u-hide-tablet {
 	@media (--viewport-medium) {
+		display: none !important;
+	}
+}
+
+.u-hide-desktop {
+	@media (--viewport-large) {
 		display: none !important;
 	}
 }

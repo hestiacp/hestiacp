@@ -249,12 +249,12 @@ class HestiaApp {
 	}
 
 	/*
-        Return highest available supported php version
-        Eg: Package requires: 7.3 or 7.4 and system has 8.0 and 7.4 it will return 7.4
-            Package requires: 8.0 or 8.1 and system has 8.0 and 7.4 it will return 8.0
-            Package requires: 7.4 or 8.0 and system has 8.0 and 7.4 it will return 8.0
-            If package isn't supported by the available php version false will returned
-    */
+		Return highest available supported php version
+		Eg: Package requires: 7.3 or 7.4 and system has 8.0 and 7.4 it will return 7.4
+				Package requires: 8.0 or 8.1 and system has 8.0 and 7.4 it will return 8.0
+				Package requires: 7.4 or 8.0 and system has 8.0 and 7.4 it will return 8.0
+				If package isn't supported by the available php version false will returned
+		*/
 	public function getSupportedPHP($support) {
 		$versions = $this->listSuportedPHP();
 		$supported = false;

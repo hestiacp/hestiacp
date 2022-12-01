@@ -1,4 +1,5 @@
 # Minified files
+web/css/src/dependencies
 *.min.css
 
 # Vendor/packages

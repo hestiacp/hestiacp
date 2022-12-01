@@ -1,52 +1,51 @@
 <?php
 function Keyboard_Shortcut($num, $name, $keys) {
 	$return =
-		'    <tr>
-        <td colspan="2"><br><br><br><a name="' .
+		'<tr><td colspan="2"><br><br><br><a name="' .
 		$num .
 		'">' .
 		$num .
 		". " .
 		$name .
 		'</a><br><br></td>
-    </tr>
+		</tr>
 ';
 	foreach ($keys as $key => $text) {
 		$return .=
-			'    <tr>
-        <td class=\'shortcut\'><span class="kbd">' .
+			'<tr>
+				<td class=\'shortcut\'><span class="kbd">' .
 			str_replace(
 				["^", "#"],
 				['Ctrl</span> + <span class="kbd">', 'Shift</span> + <span class="kbd">'],
 				$key,
 			) .
 			'</span></td>
-        <td>' .
+				<td>' .
 			$text .
 			'</td>
-    </tr>
+		</tr>
 ';
 	}
 	return $return;
 } ?>
 <style>
-table span.kbd {
-    background: #fafafa none repeat scroll 0 0;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    line-height: 1.8em;
-    margin: 0;
-    padding: 0 3px 1px;
-    vertical-align: baseline;
-    white-space: nowrap;
-}
-h2 {
-    color: #ffcc00;
-}
-body {
-    background: #777;
-    font-family: Arial;
-}
+	table span.kbd {
+		background: #fafafa none repeat scroll 0 0;
+		border: 1px solid #aaa;
+		border-radius: 4px;
+		line-height: 1.8em;
+		margin: 0;
+		padding: 0 3px 1px;
+		vertical-align: baseline;
+		white-space: nowrap;
+	}
+	h2 {
+		color: #ffcc00;
+	}
+	body {
+		background: #777;
+		font-family: Arial;
+	}
 </style>
 <title>Hestia Keyboard Shortcuts</title>
 <h2>Keyboard Shortcuts</h2>

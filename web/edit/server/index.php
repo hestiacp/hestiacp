@@ -518,7 +518,7 @@ if (!empty($_POST["save"])) {
 					$_SESSION["PHPMYADMIN_KEY"] != "";
 				}
 			} elseif ($_POST["v_phpmyadmin_key"] == "no" && $_SESSION["PHPMYADMIN_KEY"] != "") {
-				exec(HESTIA_CMD . "v-delete-sys-pma-sso  quiet", $output, $return_var);
+				exec(HESTIA_CMD . "v-delete-sys-pma-sso quiet", $output, $return_var);
 				check_return_code($return_var, $output);
 				unset($output);
 				if (empty($_SESSION["error_msg"])) {
@@ -819,11 +819,11 @@ if (!empty($_POST["save"])) {
 		}
 		if ($_POST["v_backup_dir"] != $v_backup_dir) {
 			/*
-            See #1655
-            exec (HESTIA_CMD."v-change-sys-config-value BACKUP ".quoteshellarg($_POST['v_backup_dir']), $output, $return_var);
-            check_return_code($return_var,$output);
-            unset($output);
-            */
+				See #1655
+				exec (HESTIA_CMD."v-change-sys-config-value BACKUP ".quoteshellarg($_POST['v_backup_dir']), $output, $return_var);
+				check_return_code($return_var,$output);
+				unset($output);
+				*/
 			if (empty($_SESSION["error_msg"])) {
 				$v_backup_dir = $_POST["v_backup_dir"];
 			}

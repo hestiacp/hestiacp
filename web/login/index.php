@@ -390,7 +390,7 @@ function authenticate_user($user, $password, $twofa = "") {
 		unset($_POST);
 		unset($_GET);
 		unset($_SESSION);
-		// Delete old session and  start a new one
+		// Delete old session and start a new one
 		session_write_close();
 		session_unset();
 		session_destroy();

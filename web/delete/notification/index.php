@@ -8,7 +8,15 @@ verify_csrf($_GET);
 
 if ($_GET["delete"] == 1) {
 	$v_id = quoteshellarg((int) $_GET["notification_id"]);
-	exec(HESTIA_CMD . "v-delete-user-notification " . $user . " " . $v_id, $output, $return_var);
+	if (empty($v_id)) {
+		exec(HESTIA_CMD . "v-delete-user-notification " . $user . " all", $output, $return_var);
+	} else {
+		exec(
+			HESTIA_CMD . "v-delete-user-notification " . $user . " " . $v_id,
+			$output,
+			$return_var,
+		);
+	}
 	check_return_code($return_var, $output);
 	unset($output);
 } else {

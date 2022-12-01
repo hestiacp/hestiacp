@@ -6,6 +6,16 @@
 	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.php'; ?>
 	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.php'; ?>
 	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.php'; ?>
+	<script>
+		<?php
+			// GLOBAL SETTINGS
+		?>
+		var GLOBAL = {};
+		GLOBAL.FTP_USER_PREFIX = '';
+		GLOBAL.DB_USER_PREFIX = '';
+		GLOBAL.DB_DBNAME_PREFIX = '';
+		GLOBAL.AJAX_URL = '';
+	</script>
 	<script src="/js/vendor/jquery.cookie.js?<?=JS_LATEST_UPDATE?>"></script>
 	<script src="/js/vendor/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>
 	<script src="/js/vendor/jquery.finder.js?<?=JS_LATEST_UPDATE?>"></script>

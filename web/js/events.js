@@ -413,20 +413,23 @@ VE.notifications.delete = function (id) {
 			'&token=' +
 			$('#token').attr('token'),
 	});
-	$('#notification-' + id).fadeOut();
-	if ($('.top-bar-notification-item:visible').length == 0) {
+
+	if ($('.top-bar-notification-item:visible').length == 1) {
 		$('.js-notifications .status-icon').removeClass('status-icon');
 		$('.js-notifications').removeClass('active').removeClass('updates');
+		$('.js-mark-all-notifications').parent().fadeOut();
 	}
+	$('#notification-' + id).fadeOut();
 };
 
 VE.notifications.delete_all = function () {
 	$.ajax({
 		url: '/delete/notification/?delete=1&token=' + $('#token').attr('token'),
 	});
-	$('.top-bar-notification-item.unseen').removeClass('unseen');
+	$('.top-bar-notification-item').fadeOut();
 	$('.js-notifications .status-icon').removeClass('status-icon');
 	$('.js-notifications').removeClass('updates');
+	$('.js-mark-all-notifications').parent().fadeOut();
 };
 
 VE.navigation.shortcut = function (elm) {

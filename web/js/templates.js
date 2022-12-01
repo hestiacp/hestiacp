@@ -28,7 +28,7 @@ App.Templates.html = {
 			'<li>\
 				<a href="#" class="top-bar-notification-mark-all js-mark-all-notifications">\
 					<i class="fas fa-check"></i>' +
-				App.Constants.NOTIFICATIONS_MARK_ALL +
+				App.Constants.NOTIFICATIONS_DELETE_ALL +
 				'</a>\
 			</li>',
 		],

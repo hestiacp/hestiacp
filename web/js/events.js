@@ -380,11 +380,6 @@ VE.notifications.get_list = function () {
 			acc.push(tpl.finalize());
 		});
 
-		if (Object.keys(data).length > 2) {
-			var tpl = Tpl.get('notification_mark_all', 'WEB');
-			acc.push(tpl.finalize());
-		}
-
 		if (!Object.keys(data).length) {
 			var tpl = Tpl.get('notification_empty', 'WEB');
 			acc.push(tpl.finalize());

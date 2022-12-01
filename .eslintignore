@@ -1,3 +1,11 @@
+# Minified files
+*.min.js
+
+# Vendor/packages
 .pnp.*
 .yarn/*
-web/js/vendor/
+**/node_modules/
+**/vendor/
+
+# vitepress
+**/.vitepress/dist/

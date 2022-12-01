@@ -1,4 +1,8 @@
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
 # Minified files
 *.min.css
@@ -16,10 +20,14 @@ web/templates/
 # Vendor/packages
 .pnp.*
 .yarn/*
-vendor/
-composer.phar
-composer.json
-composer.lock
+**/node_modules/
+**/vendor/
+**/composer.phar
+**/composer.json
+**/composer.lock
+
+# vitepress build output
+**/.vitepress/dist/
 
 # Logs
 logs

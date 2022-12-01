@@ -37,7 +37,7 @@ check_args '1' "$#" 'USER [RESTART]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 if [ "$user" = 'admin' ]; then
-    exit
+	exit
 fi
 
 # Perform verification if read-only mode is enabled
@@ -49,30 +49,30 @@ check_hestia_demo_mode
 
 # Deleting web domains
 if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-web-domains "$user" "$restart"
-    $BIN/v-delete-web-domains "$user" "$restart"
-    check_result "$?" "web domain deletion failed"
+	$BIN/v-unsuspend-web-domains "$user" "$restart"
+	$BIN/v-delete-web-domains "$user" "$restart"
+	check_result "$?" "web domain deletion failed"
 fi
 
 # Deleting dns domains
 if [ -n "$DNS_SYSTEM" ] && [ "$DNS_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-dns-domains "$user" "$restart"
-    $BIN/v-delete-dns-domains "$user" "$restart"
-    check_result "$?" "dns domain deletion failed"
+	$BIN/v-unsuspend-dns-domains "$user" "$restart"
+	$BIN/v-delete-dns-domains "$user" "$restart"
+	check_result "$?" "dns domain deletion failed"
 fi
 
 # Deleting mail domains
 if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-mail-domains "$user"
-    $BIN/v-delete-mail-domains "$user"
-    check_result "$?" "mail domain deletion failed"
+	$BIN/v-unsuspend-mail-domains "$user"
+	$BIN/v-delete-mail-domains "$user"
+	check_result "$?" "mail domain deletion failed"
 fi
 
 # Deleting databases
 if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-    $BIN/v-unsuspend-databases "$user"
-    $BIN/v-delete-databases "$user"
-    check_result "$?" "database deletion failed"
+	$BIN/v-unsuspend-databases "$user"
+	$BIN/v-delete-databases "$user"
+	check_result "$?" "database deletion failed"
 fi
 
 # Unsuspend user just in case
@@ -92,13 +92,13 @@ $BIN/v-delete-user-sftp-jail "$user"
 # Deleting system user
 /usr/sbin/userdel -f "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    sed -i "/^$user:/d" /etc/passwd
-    sed -i "/^$user:/d" /etc/shadow
+	sed -i "/^$user:/d" /etc/passwd
+	sed -i "/^$user:/d" /etc/shadow
 fi
 
 /usr/sbin/groupdel "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    sed -i "/^$user:/d" /etc/group
+	sed -i "/^$user:/d" /etc/group
 fi
 
 # Deleting user directories
@@ -111,7 +111,7 @@ rm -rf $USER_DATA
 
 # Updating admin counter
 if [ "$user" != 'admin' ]; then
-    decrease_user_value 'admin' '$U_USERS'
+	decrease_user_value 'admin' '$U_USERS'
 fi
 
 #----------------------------------------------------------#

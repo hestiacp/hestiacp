@@ -27,57 +27,57 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Checking db system
 if [ -z "$DB_SYSTEM" ]; then
-    exit
+	exit
 fi
 
 # Checking supported database systems
-for db in $(echo $DB_SYSTEM| tr ',' '\n'); do
-    OLD_IFS="$IFS"
-    IFS=$'\n'
+for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
+	OLD_IFS="$IFS"
+	IFS=$'\n'
 
-    # Checking database config
-    if [ -e "$HESTIA/conf/$db.conf" ]; then
+	# Checking database config
+	if [ -e "$HESTIA/conf/$db.conf" ]; then
 
-        # Checking server status
-        for host_str in $(cat $HESTIA/conf/$db.conf); do
-            parse_object_kv_list "$host_str"
+		# Checking server status
+		for host_str in $(cat $HESTIA/conf/$db.conf); do
+			parse_object_kv_list "$host_str"
 
-            # Checking MySQL
-            if [ "$db" = 'mysql' ]; then
-                mycnf="$HESTIA/conf/.mysql.$HOST"
-                if [ ! -e "$mycnf" ]; then
-                    echo "[client]">$mycnf
-                    echo "host='$HOST'" >> $mycnf
-                    echo "user='$USER'" >> $mycnf
-                    echo "password='$PASSWORD'" >> $mycnf
-                    chmod 600 $mycnf
-                else
-                    mypw=$(grep password $mycnf|cut -f 2 -d \')
-                    if [ "$mypw" != "$PASSWORD" ]; then
-                        echo "[client]">$mycnf
-                        echo "host='$HOST'" >> $mycnf
-                        echo "user='$USER'" >> $mycnf
-                        echo "password='$PASSWORD'" >> $mycnf
-                        chmod 660 $mycnf
-                    fi
-                fi
-                echo "MySQL $HOST status"
-                mysqladmin --defaults-file=$mycnf status |sed -e "s/  /\n/g"
-                echo
-                mysqladmin --defaults-file=$mycnf processlist
-                echo -en "\n-------------------------------------"
-                echo -en  "-------------------------------------\n\n"
-            fi
+			# Checking MySQL
+			if [ "$db" = 'mysql' ]; then
+				mycnf="$HESTIA/conf/.mysql.$HOST"
+				if [ ! -e "$mycnf" ]; then
+					echo "[client]" > $mycnf
+					echo "host='$HOST'" >> $mycnf
+					echo "user='$USER'" >> $mycnf
+					echo "password='$PASSWORD'" >> $mycnf
+					chmod 600 $mycnf
+				else
+					mypw=$(grep password $mycnf | cut -f 2 -d \')
+					if [ "$mypw" != "$PASSWORD" ]; then
+						echo "[client]" > $mycnf
+						echo "host='$HOST'" >> $mycnf
+						echo "user='$USER'" >> $mycnf
+						echo "password='$PASSWORD'" >> $mycnf
+						chmod 660 $mycnf
+					fi
+				fi
+				echo "MySQL $HOST status"
+				mysqladmin --defaults-file=$mycnf status | sed -e "s/  /\n/g"
+				echo
+				mysqladmin --defaults-file=$mycnf processlist
+				echo -en "\n-------------------------------------"
+				echo -en "-------------------------------------\n\n"
+			fi
 
-            # Checking PostgreSQL
-            if [ "$db" = 'pgsql' ] && [ ! -z "$(which psql)" ]; then
-                echo "PostgreSQL $HOST status"
-                export PGPASSWORD="$PASSWORD"
-                psql -h $HOST -U $USER -c "SELECT * FROM pg_stat_activity"
-            fi
-        done
-    fi
-    IFS="$OLD_IFS"
+			# Checking PostgreSQL
+			if [ "$db" = 'pgsql' ] && [ ! -z "$(which psql)" ]; then
+				echo "PostgreSQL $HOST status"
+				export PGPASSWORD="$PASSWORD"
+				psql -h $HOST -U $USER -c "SELECT * FROM pg_stat_activity"
+			fi
+		done
+	fi
+	IFS="$OLD_IFS"
 done
 
 #----------------------------------------------------------#

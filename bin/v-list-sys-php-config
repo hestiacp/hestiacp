@@ -23,9 +23,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    parse_object_kv_list $(echo "$config"|egrep "$keys"|\
-        sed -e "s/[ ]*=/=/" -e "s/=[ ]*/=\'/" -e "s/$/'/")
-    echo '{
+	parse_object_kv_list $(echo "$config" | egrep "$keys" \
+		| sed -e "s/[ ]*=/=/" -e "s/=[ ]*/=\'/" -e "s/$/'/")
+	echo '{
     "CONFIG": {
         "memory_limit": "'$memory_limit'",
         "max_execution_time": "'$max_execution_time'",
@@ -41,21 +41,21 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "$config" |egrep "$keys" |tr -d '='
-    echo "config_path $config_path"
+	echo "$config" | egrep "$keys" | tr -d '='
+	echo "config_path $config_path"
 }
 
 # PLAIN list function
 plain_list() {
-    echo "$config" |egrep "$keys" |tr -d '='
-    echo "config_path $config_path"
+	echo "$config" | egrep "$keys" | tr -d '='
+	echo "config_path $config_path"
 }
 
 # CSV list function
 csv_list() {
-    echo "$keys" |sed "s/ |/,/g"
-    echo "$config" |egrep "$keys" |tr -d '=' |awk '{print $2}' |tr '\n' ','
-    echo
+	echo "$keys" | sed "s/ |/,/g"
+	echo "$config" | egrep "$keys" | tr -d '=' | awk '{print $2}' | tr '\n' ','
+	echo
 }
 
 #----------------------------------------------------------#
@@ -64,14 +64,14 @@ csv_list() {
 
 # Defining config path
 config_path=$(find /etc/php* -name php.ini)
-config_count=$(echo "$config_path" |wc -l)
-if [ "$config_count" -gt 1  ]; then
-    multiphp_versions=$(ls -d /etc/php/*/fpm/pool.d 2>/dev/null |wc -l)
-    if [ "$WEB_BACKEND" = 'php-fpm' ] || [ "$multiphp_versions" -gt 0 ] ; then
-        config_path=$(echo "$config_path"| grep fpm)
-    else
-        config_path=$(echo "$config_path"| grep apache)
-    fi
+config_count=$(echo "$config_path" | wc -l)
+if [ "$config_count" -gt 1 ]; then
+	multiphp_versions=$(ls -d /etc/php/*/fpm/pool.d 2> /dev/null | wc -l)
+	if [ "$WEB_BACKEND" = 'php-fpm' ] || [ "$multiphp_versions" -gt 0 ]; then
+		config_path=$(echo "$config_path" | grep fpm)
+	else
+		config_path=$(echo "$config_path" | grep apache)
+	fi
 fi
 
 # Defining keys
@@ -80,14 +80,14 @@ keys="$keys |upload_max_filesize |post_max_size"
 keys="$keys |display_errors |error_reporting "
 
 # Reading config
-config=$(cat $config_path|grep -v "^;")
+config=$(cat $config_path | grep -v "^;")
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

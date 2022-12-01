@@ -6,7 +6,7 @@
 #######                      Place additional commands below.                   #######
 #######################################################################################
 
-exim_version=$(exim4 --version |  head -1 | awk  '{print $3}' | cut -f -2 -d .);
+exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
 if [ "$exim_version" = "4.94" ]; then
 	echo "[ ! ] Fixing issue with Exim 4.94 (#2087 - Unable send email)..."
 	if [ -f "/etc/exim4/exim4.conf.template" ]; then

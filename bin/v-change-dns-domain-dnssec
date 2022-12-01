@@ -45,7 +45,7 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
 
 if [ -n "$status" ]; then
-    is_boolean_format_valid "$status" 'status'
+	is_boolean_format_valid "$status" 'status'
 fi
 
 # Perform verification if read-only mode is enabled
@@ -56,7 +56,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ -f "$HESTIA/data/queue/dns-cluster.pipe" ]; then
-    bash $HESTIA/data/queue/dns-cluster.pipe
+	bash $HESTIA/data/queue/dns-cluster.pipe
 fi
 
 syshealth_repair_dns_config
@@ -69,21 +69,21 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$DNSSEC' "$status"
 rebuild_dns_domain_conf
 
 if [ $status = "no" ]; then
-    update_object_value 'dns' 'DOMAIN' "$domain" '$KEY' ""
-    # Delete existing keys
-    rm -fr  $HOMEDIR/$user/conf/dns/$domain.db.*
-    rm -fr /var/cache/bind/K$domain_idn.*
-    rm -fr $USER_DATA/keys/K$domain_idn.*
+	update_object_value 'dns' 'DOMAIN' "$domain" '$KEY' ""
+	# Delete existing keys
+	rm -fr $HOMEDIR/$user/conf/dns/$domain.db.*
+	rm -fr /var/cache/bind/K$domain_idn.*
+	rm -fr $USER_DATA/keys/K$domain_idn.*
 fi
 
 # Updating dns-cluster queue
-if [ "$DNS_CLUSTER"  = "yes" ]; then
-    # Check for first sync
-    dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
-    if [ -z "$dlock" ]; then
-        cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
-        echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
-    fi
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	# Check for first sync
+	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+	if [ -z "$dlock" ]; then
+		cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
+		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+	fi
 fi
 
 #----------------------------------------------------------#

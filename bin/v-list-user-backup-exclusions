@@ -6,7 +6,6 @@
 #
 # This function for obtaining the backup exclusion list
 
-
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
@@ -25,129 +24,129 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    set -f
-    i=1
-    echo '{'
-    echo '    "WEB": {'
-    objects=$(echo "${WEB//,/ }" |wc -w)
-    for object in $(echo "${WEB//,/ }"); do
-        j=1
-        object_keys=$(echo ${object//:/ } |wc -w)
-        for key in $(echo "${object/:/ }"); do
-            if [ "$j" -eq 1 ]; then
-                echo -n "        \"${key}\": "
-                if [ "$object_keys" -eq 1 ]; then
-                    echo -n '""'
-                fi
-            else
-                echo -n "\"${key//:/,}\""
-            fi
-            ((j++))
-        done
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done
-    echo '    },'
-    i=1
-    echo '    "MAIL": {'
-    objects=$(echo "${MAIL//,/ }" |wc -w)
-    for object in $(echo "${MAIL//,/ }"); do
-        j=1
-        object_keys=$(echo ${object//:/ } |wc -w)
-        for key in $(echo "${object/:/ }"); do
-            if [ "$j" -eq 1 ]; then
-                echo -n "        \"$key\": "
-                if [ "$object_keys" -eq 1 ]; then
-                    echo -n '""'
-                fi
-            else
-                echo -n "\"${key//:/,}\""
-            fi
-            ((j++))
-        done
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done
-    echo '    },'
-    i=1
-    echo '    "DB": {'
-    objects=$(echo "${DB//,/ }" |wc -w)
-    for object in $(echo "${DB//,/ }"); do
-        j=1
-        object_keys=$(echo ${object//:/ } |wc -w)
-        for key in $(echo "${object/:/ }"); do
-            if [ "$j" -eq 1 ]; then
-                echo -n "        \"$key\": "
-                if [ "$object_keys" -eq 1 ]; then
-                    echo -n '""'
-                fi
-            else
-                echo -n "\"${key//:/,}\""
-            fi
-            ((j++))
-        done
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done
-    echo '    },'
-    i=1
-    echo '    "USER": {'
-    objects=$(echo "${USER//,/ }" |wc -w)
-    for object in $(echo "${USER//,/ }"); do
-        j=1
-        object_keys=$(echo ${object//:/ } |wc -w)
-        for key in $(echo "${object/:/ }"); do
-            if [ "$j" -eq 1 ]; then
-                echo -n "        \"$key\": "
-                if [ "$object_keys" -eq 1 ]; then
-                    echo -n '""'
-                fi
-            else
-                echo -n "\"${key//:/,}\""
-            fi
-            ((j++))
-        done
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done
-    echo '    }'
-    echo '}'
+	set -f
+	i=1
+	echo '{'
+	echo '    "WEB": {'
+	objects=$(echo "${WEB//,/ }" | wc -w)
+	for object in $(echo "${WEB//,/ }"); do
+		j=1
+		object_keys=$(echo ${object//:/ } | wc -w)
+		for key in $(echo "${object/:/ }"); do
+			if [ "$j" -eq 1 ]; then
+				echo -n "        \"${key}\": "
+				if [ "$object_keys" -eq 1 ]; then
+					echo -n '""'
+				fi
+			else
+				echo -n "\"${key//:/,}\""
+			fi
+			((j++))
+		done
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '    },'
+	i=1
+	echo '    "MAIL": {'
+	objects=$(echo "${MAIL//,/ }" | wc -w)
+	for object in $(echo "${MAIL//,/ }"); do
+		j=1
+		object_keys=$(echo ${object//:/ } | wc -w)
+		for key in $(echo "${object/:/ }"); do
+			if [ "$j" -eq 1 ]; then
+				echo -n "        \"$key\": "
+				if [ "$object_keys" -eq 1 ]; then
+					echo -n '""'
+				fi
+			else
+				echo -n "\"${key//:/,}\""
+			fi
+			((j++))
+		done
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '    },'
+	i=1
+	echo '    "DB": {'
+	objects=$(echo "${DB//,/ }" | wc -w)
+	for object in $(echo "${DB//,/ }"); do
+		j=1
+		object_keys=$(echo ${object//:/ } | wc -w)
+		for key in $(echo "${object/:/ }"); do
+			if [ "$j" -eq 1 ]; then
+				echo -n "        \"$key\": "
+				if [ "$object_keys" -eq 1 ]; then
+					echo -n '""'
+				fi
+			else
+				echo -n "\"${key//:/,}\""
+			fi
+			((j++))
+		done
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '    },'
+	i=1
+	echo '    "USER": {'
+	objects=$(echo "${USER//,/ }" | wc -w)
+	for object in $(echo "${USER//,/ }"); do
+		j=1
+		object_keys=$(echo ${object//:/ } | wc -w)
+		for key in $(echo "${object/:/ }"); do
+			if [ "$j" -eq 1 ]; then
+				echo -n "        \"$key\": "
+				if [ "$object_keys" -eq 1 ]; then
+					echo -n '""'
+				fi
+			else
+				echo -n "\"${key//:/,}\""
+			fi
+			((j++))
+		done
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '    }'
+	echo '}'
 
 }
 
 # SHELL list function
 shell_list() {
-    echo "WEB:            $WEB"
-    echo "MAIL:           $MAIL"
-    echo "DB:             $DB"
-    echo "USER DIRS:      $USER"
+	echo "WEB:            $WEB"
+	echo "MAIL:           $MAIL"
+	echo "DB:             $DB"
+	echo "USER DIRS:      $USER"
 }
 
 # PLAIN list function
 plain_list() {
-    echo  "$WEB\t$MAIL\t$DB\t$USER"
+	echo "$WEB\t$MAIL\t$DB\t$USER"
 }
 
 # CSV list function
 csv_list() {
-    echo "WEB,MAIL,DB,USER"
-    echo "\"$WEB\",\"$MAIL\",\"$DB\",\"$USER\""
+	echo "WEB,MAIL,DB,USER"
+	echo "\"$WEB\",\"$MAIL\",\"$DB\",\"$USER\""
 }
 
 #----------------------------------------------------------#
@@ -170,15 +169,15 @@ USER=''
 
 # Parsing backup exclusion list
 if [ -e "$USER_DATA/backup-excludes.conf" ]; then
-    source_conf "$USER_DATA/backup-excludes.conf"
+	source_conf "$USER_DATA/backup-excludes.conf"
 fi
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

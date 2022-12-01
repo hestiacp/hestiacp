@@ -51,95 +51,93 @@ get_domain_values 'web'
 # Checking config
 config="$HOMEDIR/$user/conf/web/$domain/$STATS.conf"
 if [ ! -e "$config" ]; then
-    check_result $E_NOTEXISTS "$config doesn't exist"
+	check_result $E_NOTEXISTS "$config doesn't exist"
 fi
 
 # Checking statistics directory
 dir="$HOMEDIR/$user/web/$domain/stats"
 if [ ! -e "$dir" ]; then
-    mkdir -p $dir
+	mkdir -p $dir
 fi
 
 # Defining functions
 build_awstats() {
-    if [ -d "/etc/sysconfig" ]; then
-        awstats="/usr/share/awstats/wwwroot/cgi-bin/awstats.pl"
-        wwwroot="/usr/share/awstats/wwwroot"
-        if [  ! -e "$awstats" ]; then
-            awstats="/var/www/awstats/awstats.pl"
-            wwwroot="/var/www/awstats"
-        fi
-    else
-        awstats="/usr/lib/cgi-bin/awstats.pl"
-        wwwroot="/usr/share/awstats"
-    fi
-    opts="-config=$domain_idn -staticlinks -update -output"
-    month=$(date "+%Y-%m")
-    output='alldomains allhosts lasthosts unknownip allrobots lastrobots
+	if [ -d "/etc/sysconfig" ]; then
+		awstats="/usr/share/awstats/wwwroot/cgi-bin/awstats.pl"
+		wwwroot="/usr/share/awstats/wwwroot"
+		if [ ! -e "$awstats" ]; then
+			awstats="/var/www/awstats/awstats.pl"
+			wwwroot="/var/www/awstats"
+		fi
+	else
+		awstats="/usr/lib/cgi-bin/awstats.pl"
+		wwwroot="/usr/share/awstats"
+	fi
+	opts="-config=$domain_idn -staticlinks -update -output"
+	month=$(date "+%Y-%m")
+	output='alldomains allhosts lasthosts unknownip allrobots lastrobots
         urldetail urlentry urlexit osdetail browserdetail unknownbrowser
         unknownos refererse refererpages keyphrases keywords errors404'
 
-    # Checking statistics directory
-    if [ ! -e "$dir/$month" ]; then
-        mkdir -p $dir/$month
-    fi
+	# Checking statistics directory
+	if [ ! -e "$dir/$month" ]; then
+		mkdir -p $dir/$month
+	fi
 
-    # Logo check
-    if [ ! -e "$dir/logo.svg" ]; then
-        cp -r $HESTIA/web/images/logo.svg $dir/
-    fi
+	# Logo check
+	if [ ! -e "$dir/logo.svg" ]; then
+		cp -r $HESTIA/web/images/logo.svg $dir/
+	fi
 
-    # Icon directory check
-    if [ ! -e "$dir/icon" ]; then
-        cp -r $wwwroot/icon $dir/
-    fi
+	# Icon directory check
+	if [ ! -e "$dir/icon" ]; then
+		cp -r $wwwroot/icon $dir/
+	fi
 
-    # Creating main awstats page
-    $awstats $opts | sed "s%awstats.$domain.%%g" > $dir/$month/index.html
+	# Creating main awstats page
+	$awstats $opts | sed "s%awstats.$domain.%%g" > $dir/$month/index.html
 
-    # Creating suplemental awstats pages
-    for format in $output; do
-        $awstats $opts=$format |\
-            sed "s%awstats.$domain.%%g" > $dir/$month/$format.html
-    done
+	# Creating suplemental awstats pages
+	for format in $output; do
+		$awstats $opts=$format \
+			| sed "s%awstats.$domain.%%g" > $dir/$month/$format.html
+	done
 
-    # Creating index page
-    cat $WEBTPL/awstats/index.tpl | sed "s/%month%/$month/g" >\
-        $dir/index.html
+	# Creating index page
+	cat $WEBTPL/awstats/index.tpl | sed "s/%month%/$month/g" > $dir/index.html
 
-    # Creating navigation page
-    months=$(find $dir -type d | sed -e "s%$dir/%%g" -e "s%$dir%%g" |\
-        grep -v icon | sort -r )
-    for link in $months; do
-        year=$(echo $link |cut -f 1 -d \-)
-        month=$(echo $link |cut -f 2 -d \-| sed -e "s/^0//")
-        case "$month" in
-            1) month='January';;
-            2) month='February';;
-            3) month='March';;
-            4) month='April';;
-            5) month='May';;
-            6) month='June';;
-            7) month='July';;
-            8) month='August';;
-            9) month='September';;
-            10) month='October';;
-            11) month='November';;
-            12) month='December';;
-        esac
-        select_m="$select_m<option value=$link>$month $year<\/option>\n"
-    done
-    cat $WEBTPL/awstats/nav.tpl | sed "s/%select_month%/$select_m/" >\
-        $dir/nav.html
+	# Creating navigation page
+	months=$(find $dir -type d | sed -e "s%$dir/%%g" -e "s%$dir%%g" \
+		| grep -v icon | sort -r)
+	for link in $months; do
+		year=$(echo $link | cut -f 1 -d \-)
+		month=$(echo $link | cut -f 2 -d \- | sed -e "s/^0//")
+		case "$month" in
+			1) month='January' ;;
+			2) month='February' ;;
+			3) month='March' ;;
+			4) month='April' ;;
+			5) month='May' ;;
+			6) month='June' ;;
+			7) month='July' ;;
+			8) month='August' ;;
+			9) month='September' ;;
+			10) month='October' ;;
+			11) month='November' ;;
+			12) month='December' ;;
+		esac
+		select_m="$select_m<option value=$link>$month $year<\/option>\n"
+	done
+	cat $WEBTPL/awstats/nav.tpl | sed "s/%select_month%/$select_m/" > $dir/nav.html
 }
 
 # Switching on statistics type
 case $STATS in
-    awstats) build_awstats ;;
+	awstats) build_awstats ;;
 esac
 
 # Chown
-groups=$(groups "$user"| cut -f 3 -d ' ')
+groups=$(groups "$user" | cut -f 3 -d ' ')
 chown -R $user:$groups "$dir"
 
 #----------------------------------------------------------#

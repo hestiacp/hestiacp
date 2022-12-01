@@ -23,55 +23,55 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(echo "$keys" |wc -l)
-    echo "{"
-        for str in $keys; do
-        KEY=$(echo $str | awk '{print $(NF-2)}')
-        ID=$(echo $str | awk '{print $(NF-1)}')
-        echo -n '    "'$ID'": {
+	IFS=$'\n'
+	i=1
+	objects=$(echo "$keys" | wc -l)
+	echo "{"
+	for str in $keys; do
+		KEY=$(echo $str | awk '{print $(NF-2)}')
+		ID=$(echo $str | awk '{print $(NF-1)}')
+		echo -n '    "'$ID'": {
         "ID": "'$ID'",
         "KEY": "'$KEY'"
         }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        fi
-        ((i++))
-        done
-        echo "}"
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		fi
+		((i++))
+	done
+	echo "}"
 }
 
 shell_list() {
-    IFS=$'\n'
-    echo "ID~KEY"
-    echo "----~----~---"
-    for str in $keys; do
-        KEY=$(echo $str | awk '{print $(NF-2)}')
-        ID=$(echo $str | awk '{print $(NF-1)}')
-        echo "$ID~$KEY"
-        done
+	IFS=$'\n'
+	echo "ID~KEY"
+	echo "----~----~---"
+	for str in $keys; do
+		KEY=$(echo $str | awk '{print $(NF-2)}')
+		ID=$(echo $str | awk '{print $(NF-1)}')
+		echo "$ID~$KEY"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    for str in $keys; do
-        KEY=$(echo $str | awk '{print $(NF-2)}')
-        ID=$(echo $str | awk '{print $(NF-1)}')
-        echo -e "$ID\t$KEY"
-    done
+	IFS=$'\n'
+	for str in $keys; do
+		KEY=$(echo $str | awk '{print $(NF-2)}')
+		ID=$(echo $str | awk '{print $(NF-1)}')
+		echo -e "$ID\t$KEY"
+	done
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo "ID,KEY"
-    for str in $keys; do
-        KEY=$(echo $str | awk '{print $(NF-2)}')
-        ID=$(echo $str | awk '{print $(NF-1)}')
-        echo "\"$ID\",\"$KEY\""
-    done
+	IFS=$'\n'
+	echo "ID,KEY"
+	for str in $keys; do
+		KEY=$(echo $str | awk '{print $(NF-2)}')
+		ID=$(echo $str | awk '{print $(NF-1)}')
+		echo "\"$ID\",\"$KEY\""
+	done
 }
 
 #----------------------------------------------------------#
@@ -92,28 +92,25 @@ AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
 
 #check if file exsists
 if [ ! -f "$AUTHKEY_FILE" ]; then
-    exit
+	exit
 fi
 
 first_loop=1
 while read l; do
-    sshkey=$([[ -n $l && ${l###} = $l ]] && ssh-keygen -l -f <(echo $l));
-    if [ -n "$sshkey" ]
-    then
-        (( $first_loop )) && keys="$sshkey"  || keys="$keys"$'\n'"$sshkey"
-        unset first_loop
-    fi
+	sshkey=$([[ -n $l && ${l###} = $l ]] && ssh-keygen -l -f <(echo $l))
+	if [ -n "$sshkey" ]; then
+		(($first_loop)) && keys="$sshkey" || keys="$keys"$'\n'"$sshkey"
+		unset first_loop
+	fi
 done < "$AUTHKEY_FILE"
-
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

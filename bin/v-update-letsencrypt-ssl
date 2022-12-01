@@ -32,129 +32,129 @@ lecounter=0
 max_LE_failures=30
 days_valid_setting=31
 if [ "$LE_STAGING" = "yes" ]; then
-    # Overwrite setting to allow testing for renewal to be done easier
-    days_valid_setting=181
+	# Overwrite setting to allow testing for renewal to be done easier
+	days_valid_setting=181
 fi
 
 # Checking user certificates
 for user in $($HESTIA/bin/v-list-sys-users plain); do
-    USER_DATA=$HESTIA/data/users/$user
+	USER_DATA=$HESTIA/data/users/$user
 
-    for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
-        # Clear any keys related to web domains
-        sanitize_config_file "web"
-        domain_suspended="$(get_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED')"
-        if [ "$domain_suspended" = "yes" ]; then
-            continue
-        fi
+	for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
+		# Clear any keys related to web domains
+		sanitize_config_file "web"
+		domain_suspended="$(get_object_value 'web' 'DOMAIN' "$domain" '$SUSPENDED')"
+		if [ "$domain_suspended" = "yes" ]; then
+			continue
+		fi
 
-        fail_counter="$(get_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT')"
-        if [[ "$fail_counter" -gt "$max_LE_failures" ]]; then
-            continue
-        fi
+		fail_counter="$(get_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT')"
+		if [[ "$fail_counter" -gt "$max_LE_failures" ]]; then
+			continue
+		fi
 
-        crt_data=$(openssl x509 -text -in $USER_DATA/ssl/$domain.crt)
-        not_after=$(echo "$crt_data" |grep "Not After" |cut -f 2,3,4 -d :)
-        expiration=$(date -d "$not_after" +%s)
-        now=$(date +%s)
-        seconds_valid=$((expiration - now))
-        days_valid=$((seconds_valid / 86400))
-        if [[ "$days_valid" -lt "$days_valid_setting" ]]; then
-            if [ $lecounter -gt 0 ]; then
-                sleep 10
-            fi
-            ((lecounter++))
-            aliases=$(echo "$crt_data" |grep DNS:)
-            aliases=$(echo "$aliases" |sed -e "s/DNS://g" -e "s/,//g")
-            aliases=$(echo "$aliases" |tr ' ' '\n' |sed "/^$/d")
-            aliases=$(echo "$aliases" |egrep -v "^$domain,?$")
-            aliases=$(echo "$aliases" |sed -e ':a;N;$!ba;s/\n/,/g')
+		crt_data=$(openssl x509 -text -in $USER_DATA/ssl/$domain.crt)
+		not_after=$(echo "$crt_data" | grep "Not After" | cut -f 2,3,4 -d :)
+		expiration=$(date -d "$not_after" +%s)
+		now=$(date +%s)
+		seconds_valid=$((expiration - now))
+		days_valid=$((seconds_valid / 86400))
+		if [[ "$days_valid" -lt "$days_valid_setting" ]]; then
+			if [ $lecounter -gt 0 ]; then
+				sleep 10
+			fi
+			((lecounter++))
+			aliases=$(echo "$crt_data" | grep DNS:)
+			aliases=$(echo "$aliases" | sed -e "s/DNS://g" -e "s/,//g")
+			aliases=$(echo "$aliases" | tr ' ' '\n' | sed "/^$/d")
+			aliases=$(echo "$aliases" | egrep -v "^$domain,?$")
+			aliases=$(echo "$aliases" | sed -e ':a;N;$!ba;s/\n/,/g')
 
-            # Parsing domain
-            parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
+			# Parsing domain
+			parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-            # Split aliases into array
-            IFS=',' read -r -a ALIASES <<< "$ALIAS"
+			# Split aliases into array
+			IFS=',' read -r -a ALIASES <<< "$ALIAS"
 
-            # Unset f_aliases
-            f_aliases=''
+			# Unset f_aliases
+			f_aliases=''
 
-            # Loop through all crt aliases
-            for alias in ${aliases//,/ } ; do
-                # Validate if the alias still exists in web.conf
-                if [[ ",$ALIAS," =~ ",$alias," ]]; then
-                    f_aliases+="$alias,"
-                fi
-            done
+			# Loop through all crt aliases
+			for alias in ${aliases//,/ }; do
+				# Validate if the alias still exists in web.conf
+				if [[ ",$ALIAS," =~ ,$alias, ]]; then
+					f_aliases+="$alias,"
+				fi
+			done
 
-            # Remove leading comma
-            if [[ ${f_aliases: -1} = ',' ]] ; then f_aliases=${f_aliases::-1}; fi
+			# Remove leading comma
+			if [[ ${f_aliases: -1} = ',' ]]; then f_aliases=${f_aliases::-1}; fi
 
-            # Write the filtered alias list to the default var
-            aliases=$f_aliases
+			# Write the filtered alias list to the default var
+			aliases=$f_aliases
 
-            msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "$aliases")
-            if [ $? -ne 0 ]; then
-                echo "$msg"
-                log_event "$E_INVALID" "$domain $msg"
-                $BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
-                if [ -z "$fail_counter" ]; then
-                    add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
-                fi
-                ((fail_counter++))
-                update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
-            else
-                $BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
-            fi
+			msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "$aliases")
+			if [ $? -ne 0 ]; then
+				echo "$msg"
+				log_event "$E_INVALID" "$domain $msg"
+				$BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
+				if [ -z "$fail_counter" ]; then
+					add_object_key "web" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
+				fi
+				((fail_counter++))
+				update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
+			else
+				$BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
+			fi
 
-            if [ -n "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then
-                hostname=$(hostname -f)
-                if [ "$hostname" = "$domain" ]; then
-                    $BIN/v-update-host-certificate "$user" "$domain"
-                fi
-            fi
+			if [ -n "$UPDATE_HOSTNAME_SSL" ] && [ "$UPDATE_HOSTNAME_SSL" = "yes" ]; then
+				hostname=$(hostname -f)
+				if [ "$hostname" = "$domain" ]; then
+					$BIN/v-update-host-certificate "$user" "$domain"
+				fi
+			fi
 
-        fi
-    done
+		fi
+	done
 
-    for domain in $(search_objects 'mail' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
+	for domain in $(search_objects 'mail' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
 
-        domain_suspended="$(get_object_value 'mail' 'DOMAIN' "$domain" '$SUSPENDED')"
-        if [ "$domain_suspended" = "yes" ]; then
-            continue
-        fi
+		domain_suspended="$(get_object_value 'mail' 'DOMAIN' "$domain" '$SUSPENDED')"
+		if [ "$domain_suspended" = "yes" ]; then
+			continue
+		fi
 
-        fail_counter="$(get_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT')"
-        if [[ "$fail_counter" -gt "$max_LE_failures" ]]; then
-            continue
-        fi
+		fail_counter="$(get_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT')"
+		if [[ "$fail_counter" -gt "$max_LE_failures" ]]; then
+			continue
+		fi
 
-        crt_data=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
-        not_after=$(echo "$crt_data" |grep "Not After" |cut -f 2,3,4 -d :)
-        expiration=$(date -d "$not_after" +%s)
-        now=$(date +%s)
-        seconds_valid=$((expiration - now))
-        days_valid=$((seconds_valid / 86400))
-        if [[ "$days_valid" -lt 31 ]]; then
-            if [ $lecounter -gt 0 ]; then
-                sleep 10
-            fi
-            ((lecounter++))
-            msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "" "yes")
-            if [ $? -ne 0 ]; then
-                echo "$msg"
-                $BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
-                log_event "$E_INVALID" "$domain $msg"
-                if [ -z "$fail_counter" ]; then
-                    add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
-                fi
-                ((fail_counter++))
-                update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
-            else
-                $BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
-            fi
-        fi
-    done
+		crt_data=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
+		not_after=$(echo "$crt_data" | grep "Not After" | cut -f 2,3,4 -d :)
+		expiration=$(date -d "$not_after" +%s)
+		now=$(date +%s)
+		seconds_valid=$((expiration - now))
+		days_valid=$((seconds_valid / 86400))
+		if [[ "$days_valid" -lt 31 ]]; then
+			if [ $lecounter -gt 0 ]; then
+				sleep 10
+			fi
+			((lecounter++))
+			msg=$($BIN/v-add-letsencrypt-domain "$user" "$domain" "" "yes")
+			if [ $? -ne 0 ]; then
+				echo "$msg"
+				$BIN/v-log-action "$user" "Error" "Web" "Let's Encrypt SSL certificate update failed (Domain: $domain)."
+				log_event "$E_INVALID" "$domain $msg"
+				if [ -z "$fail_counter" ]; then
+					add_object_key "mail" 'DOMAIN' "$domain" 'LETSENCRYPT_FAIL_COUNT' 'LETSENCRYPT'
+				fi
+				((fail_counter++))
+				update_object_value 'mail' 'DOMAIN' "$domain" '$LETSENCRYPT_FAIL_COUNT' "$fail_counter"
+			else
+				$BIN/v-log-action "$user" "Info" "Web" "Let's Encrypt SSL certificate renewed (Domain: $domain)."
+			fi
+		fi
+	done
 
 done
 
@@ -163,9 +163,8 @@ $HESTIA/bin/v-restart-web yes
 $HESTIA/bin/v-restart-mail yes
 
 if [ -n "$PROXY_SYSTEM" ]; then
-    $HESTIA/bin/v-restart-proxy yes
+	$HESTIA/bin/v-restart-proxy yes
 fi
-
 
 #----------------------------------------------------------#
 #                        Hestia                            #

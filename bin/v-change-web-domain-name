@@ -48,7 +48,7 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 check_new_domain=$(grep "DOMAIN='$new_domain'" $HESTIA/data/users/*/web.conf)
 if [ -n "$check_new_domain" ]; then
-    check_result "$E_EXISTS" "$new_domain already exists"
+	check_result "$E_EXISTS" "$new_domain already exists"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -63,15 +63,15 @@ get_domain_values 'web'
 
 # Changing domain in web.conf
 sed -i "s/DOMAIN='$domain'/DOMAIN='$new_domain'/" $USER_DATA/web.conf
-new_alias=$(echo "$ALIAS,$domain" |\
-    sed -e "s/,/\n/g"|\
-    sed -e "s/^$new_domain$//g"|\
-    sed -e "/^$/d"|\
-    sed -e ':a;N;$!ba;s/\n/,/g')
+new_alias=$(echo "$ALIAS,$domain" \
+	| sed -e "s/,/\n/g" \
+	| sed -e "s/^$new_domain$//g" \
+	| sed -e "/^$/d" \
+	| sed -e ':a;N;$!ba;s/\n/,/g')
 
 # Updating domain alias
 if [ "$ALIAS" != "$new_alias" ]; then
-    sed -i "s/ALIAS='$ALIAS'/ALIAS='$new_alias'/" $USER_DATA/web.conf
+	sed -i "s/ALIAS='$ALIAS'/ALIAS='$new_alias'/" $USER_DATA/web.conf
 fi
 
 # Moving document root and domain logs
@@ -84,36 +84,36 @@ rm -f "$HOMEDIR/$user/web/$new_domain/logs/$domain.*"
 
 # Updating domain certificates
 if [ -e "$USER_DATA/ssl/$domain.crt" ]; then
-    cd $USER_DATA/ssl
-    mv $USER_DATA/ssl/$domain.crt $USER_DATA/ssl/$new_domain.crt
-    mv $USER_DATA/ssl/$domain.ca $USER_DATA/ssl/$new_domain.ca
-    mv $USER_DATA/ssl/$domain.pem $USER_DATA/ssl/$new_domain.pem
-    mv $USER_DATA/ssl/$domain.key $USER_DATA/ssl/$new_domain.key
-    rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
+	cd $USER_DATA/ssl
+	mv $USER_DATA/ssl/$domain.crt $USER_DATA/ssl/$new_domain.crt
+	mv $USER_DATA/ssl/$domain.ca $USER_DATA/ssl/$new_domain.ca
+	mv $USER_DATA/ssl/$domain.pem $USER_DATA/ssl/$new_domain.pem
+	mv $USER_DATA/ssl/$domain.key $USER_DATA/ssl/$new_domain.key
+	rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
 fi
 
 # Deleting vhost configuration
 del_web_config "$WEB_SYSTEM" "$TPL.tpl"
 # Deleting SSL configuration and certificates
 if [ "$SSL" = 'yes' ]; then
-    del_web_config "$WEB_SYSTEM" "$TPL.stpl"
+	del_web_config "$WEB_SYSTEM" "$TPL.stpl"
 fi
 
 # Deleting proxy
 if [ -n "$PROXY_SYSTEM" ]; then
-    del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
-    if [ "$SSL" = 'yes' ]; then
-        del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
-    fi
-    if [ -e "/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf" ]; then
-        sed -i "/=$domain:/d" /etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf
-    fi
+	del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+	if [ "$SSL" = 'yes' ]; then
+		del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+	fi
+	if [ -e "/etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf" ]; then
+		sed -i "/=$domain:/d" /etc/$PROXY_SYSTEM/conf.d/01_caching_pool.conf
+	fi
 fi
 
 # Delete backend
 if [ -n "$BACKEND" ]; then
-    prepare_web_backend
-    delete_web_backend
+	prepare_web_backend
+	delete_web_backend
 fi
 
 #----------------------------------------------------------#

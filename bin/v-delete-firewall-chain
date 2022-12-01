@@ -45,18 +45,18 @@ heal_iptables_links
 # Deleting chain
 chains=$HESTIA/data/firewall/chains.conf
 banlist=$HESTIA/data/firewall/banlist.conf
-chain_param=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
+chain_param=$(grep "CHAIN='$chain'" $chains 2> /dev/null)
 if [ -n "$chain_param" ]; then
-    parse_object_kv_list "$chain_param"
-    sed -i "/CHAIN='$chain'/d" $chains
-    sed -i "/CHAIN='$chain'/d" $banlist
-    $iptables -D INPUT -p $PROTOCOL \
-        --dport $PORT -j fail2ban-$CHAIN 2>/dev/null
+	parse_object_kv_list "$chain_param"
+	sed -i "/CHAIN='$chain'/d" $chains
+	sed -i "/CHAIN='$chain'/d" $banlist
+	$iptables -D INPUT -p $PROTOCOL \
+		--dport $PORT -j fail2ban-$CHAIN 2> /dev/null
 fi
 
 # Deleting iptables chain
-$iptables -F fail2ban-$CHAIN 2>/dev/null
-$iptables -X fail2ban-$CHAIN 2>/dev/null
+$iptables -F fail2ban-$CHAIN 2> /dev/null
+$iptables -X fail2ban-$CHAIN 2> /dev/null
 
 # Changing permissions
 chmod 660 $chains

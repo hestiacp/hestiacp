@@ -5,20 +5,20 @@
 
 version=$1
 if [ ! -x "$(command -v php)" ]; then
-    echo "PHP is not installed. Aborting."
-    exit 1
+	echo "PHP is not installed. Aborting."
+	exit 1
 fi
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
-    echo "The PHP version format is invalid, it should look like [0-9].[0-9]."
-    echo "Example:  7.0, 7.4"
-    exit
+	echo "The PHP version format is invalid, it should look like [0-9].[0-9]."
+	echo "Example:  7.0, 7.4"
+	exit
 fi
 
 if [ ! -f /etc/php/$version/fpm/pool.d/dummy.conf ]; then
-    echo "PHP versions doesn't exists"
-    exit;
+	echo "PHP versions doesn't exists"
+	exit
 fi
 
 rm -f /etc/php/*/fpm/pool.d/www.conf

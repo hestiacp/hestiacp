@@ -35,9 +35,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ "$API_ALLOWED_IP" != "" ]; then
-    $BIN/v-change-sys-config-value 'API_ALLOWED_IP' "$API_ALLOWED_IP,$ip46"
+	$BIN/v-change-sys-config-value 'API_ALLOWED_IP' "$API_ALLOWED_IP,$ip46"
 else
-    $BIN/v-change-sys-config-value 'API_ALLOWED_IP' "$ip46"
+	$BIN/v-change-sys-config-value 'API_ALLOWED_IP' "$ip46"
 fi
 
 #----------------------------------------------------------#

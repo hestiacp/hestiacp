@@ -29,24 +29,24 @@ check_hestia_demo_mode
 mysqlrepair --all-databases --check --auto-repair > /dev/null 2>&1
 
 if [ -z "$BACKUP_SYSTEM" ]; then
-    exit
+	exit
 fi
 for user in $($HESTIA/bin/v-list-sys-users plain); do
-    check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
-    log=$HESTIA/log/backup.log
-    if [ ! -f "$HESTIA/data/users/$user/user.conf" ]; then
-        continue;
-    fi
-    check_backup_conditions
-    check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
-    log=$HESTIA/log/backup.log
-    if [ -n "$check_suspend" ]; then
-        echo -e "================================" >> $log
-        echo -e "$user" >> $log
-        echo -e "--------------------------------\n" >> $log
-        nice -n 19 ionice -c2 -n7 $BIN/v-backup-user $user >> $log 2>&1
-        echo -e "\n--------------------------------\n\n" >> $log
-    fi
+	check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
+	log=$HESTIA/log/backup.log
+	if [ ! -f "$HESTIA/data/users/$user/user.conf" ]; then
+		continue
+	fi
+	check_backup_conditions
+	check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
+	log=$HESTIA/log/backup.log
+	if [ -n "$check_suspend" ]; then
+		echo -e "================================" >> $log
+		echo -e "$user" >> $log
+		echo -e "--------------------------------\n" >> $log
+		nice -n 19 ionice -c2 -n7 $BIN/v-backup-user $user >> $log 2>&1
+		echo -e "\n--------------------------------\n\n" >> $log
+	fi
 done
 
 #----------------------------------------------------------#

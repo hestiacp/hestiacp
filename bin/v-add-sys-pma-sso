@@ -32,28 +32,28 @@ check_hestia_demo_mode
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
-    echo "Error: Script can be run executed only by root"
-    exit 10
+	echo "Error: Script can be run executed only by root"
+	exit 10
 fi
 
-if [ -n "$PHPMYADMIN_KEY" ] && [ "$PHPMYADMIN_KEY" != "" ] ; then
-    echo "Error: SSO has been installed before to reenable it please run v-delete-sys-pma-sso first"
-    exit 1;
+if [ -n "$PHPMYADMIN_KEY" ] && [ "$PHPMYADMIN_KEY" != "" ]; then
+	echo "Error: SSO has been installed before to reenable it please run v-delete-sys-pma-sso first"
+	exit 1
 fi
 
 if [ -f "/usr/share/phpmyadmin/hestia-sso.php" ]; then
-    echo "Error: hestia-sso.php is already installed"
-    exit 2
+	echo "Error: hestia-sso.php is already installed"
+	exit 2
 fi
 
 if [ -f "/usr/local/hesta/web/api/index.php" ]; then
-    echo "Error: API script not installed"
-    exit 2
+	echo "Error: API script not installed"
+	exit 2
 fi
 
 if [ "API_SYSTEM" = "0" ]; then
-    echo "Error: API is not enabled"
-    exit 2
+	echo "Error: API is not enabled"
+	exit 2
 fi
 
 #----------------------------------------------------------#
@@ -61,8 +61,8 @@ fi
 #----------------------------------------------------------#
 
 # Generate the keys to secure everything
-phpmyadminkey=$(generate_password);
-apikey=$($BIN/v-add-access-key 'admin' 'phpmyadmin-sso' 'phpMyAdmin' 'plain');
+phpmyadminkey=$(generate_password)
+apikey=$($BIN/v-add-access-key 'admin' 'phpmyadmin-sso' 'phpMyAdmin' 'plain')
 
 # copy config dir to /usr/share/phpmyadmin/
 cp -f $HESTIA_INSTALL_DIR/phpmyadmin/hestia-sso.php $PMA_INSTALL/hestia-sso.php
@@ -89,18 +89,18 @@ if(isset(\$_GET['hestia_token']) || isset(\$_COOKIE['SignonSession'])){
 ?>" >> $PMA_CONFIG/hestia-sso.inc.php
 
 file=$(cat $PMA_CONFIG/config.inc.php)
-if ! [[  "$file" =~ hestia-sso.inc.php ]]; then
-    if [[ $file =~ "//Add Hestia SSO code here" ]]; then
-        sed -i "s|//Add Hestia SSO code here|//Add Hestia SSO code here\n     include ('$PMA_CONFIG/hestia-sso.inc.php');|g" $PMA_CONFIG/config.inc.php
-    else
-        echo "include ('$PMA_CONFIG/hestia-sso.inc.php');" >> $PMA_CONFIG/config.inc.php
-    fi
+if ! [[ "$file" =~ hestia-sso.inc.php ]]; then
+	if [[ $file =~ "//Add Hestia SSO code here" ]]; then
+		sed -i "s|//Add Hestia SSO code here|//Add Hestia SSO code here\n     include ('$PMA_CONFIG/hestia-sso.inc.php');|g" $PMA_CONFIG/config.inc.php
+	else
+		echo "include ('$PMA_CONFIG/hestia-sso.inc.php');" >> $PMA_CONFIG/config.inc.php
+	fi
 fi
 
 $BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' "$phpmyadminkey"
 
-if [  -z "$(echo $API_ALLOWED_IP | grep 127.0.0.1)"  ]; then
-    $BIN/v-add-sys-api-ip "127.0.0.1"
+if [ -z "$(echo $API_ALLOWED_IP | grep 127.0.0.1)" ]; then
+	$BIN/v-add-sys-api-ip "127.0.0.1"
 fi
 
 #----------------------------------------------------------#
@@ -108,7 +108,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$MODE" != "quiet" ]; then
-    echo "PMA Hestia-SSO plugin has been succesfully installed"
+	echo "PMA Hestia-SSO plugin has been succesfully installed"
 fi
 $BIN/v-log-action "system" "Info" "Plugins" "phpMyAdmin Single Sign-On has been enabled."
 log_event "$OK" "$ARGUMENTS"

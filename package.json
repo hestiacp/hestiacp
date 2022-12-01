@@ -1,0 +1,41 @@
+{
+	"name": "hestia",
+	"private": true,
+	"version": "1.7.0-alpha",
+	"description": "An open-source Linux web server control panel.",
+	"repository": "https://github.com/hestiacp/hestiacp",
+	"license": "GPL-3.0-or-later",
+	"scripts": {
+		"build": "postcss web/css/src/themes/*.css --dir web/css/themes --ext .min.css",
+		"lint": "prettier --check . && eslint web/js/ && stylelint web/css/src/**/*.css",
+		"lint-staged": "lint-staged",
+		"format": "prettier --write .",
+		"postinstall": "husky install"
+	},
+	"packageManager": "yarn@3.3.0",
+	"dependencies": {
+		"@fortawesome/fontawesome-free": "^6.2.1",
+		"normalize.css": "^8.0.1"
+	},
+	"devDependencies": {
+		"@prettier/plugin-php": "^0.19.2",
+		"cssnano": "^5.1.14",
+		"eslint": "^8.28.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-editorconfig": "^4.0.2",
+		"husky": "^8.0.2",
+		"lint-staged": "^13.0.4",
+		"postcss": "^8.4.19",
+		"postcss-cli": "^10.0.0",
+		"postcss-import": "^15.0.0",
+		"postcss-preset-env": "^7.8.3",
+		"postcss-size": "^4.0.1",
+		"prettier": "^2.8.0",
+		"prettier-plugin-nginx": "^1.0.2",
+		"prettier-plugin-sh": "^0.12.8",
+		"prettier-plugin-sql": "^0.12.1",
+		"stylelint": "^14.15.0",
+		"stylelint-config-prettier": "^9.0.4",
+		"stylelint-config-standard": "^29.0.0"
+	}
+}

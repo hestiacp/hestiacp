@@ -1737,7 +1737,7 @@ function check_ip_not_banned(){
   assert_success
   refute_output
 
-  #validate_database pgsql $pgdatabase $pgdbuser "1234ABCD"
+  # validate_database pgsql $pgdatabase $pgdbuser "1234ABCD"
 }
 
 @test "PGSQL: Add Database (Duplicate)" {

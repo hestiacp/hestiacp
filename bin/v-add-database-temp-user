@@ -20,7 +20,7 @@ host=$4
 ttl=$5
 
 if [ "$ttl" == '' ]; then
-    ttl=60
+	ttl=60
 fi
 
 # Includes
@@ -58,17 +58,17 @@ check_hestia_demo_mode
 get_database_values
 
 #generate password and unique user
-dbpass=$(generate_password);
-dbuser="hestia_sso_$(generate_password)";
+dbpass=$(generate_password)
+dbuser="hestia_sso_$(generate_password)"
 
 add_mysql_database_temp_user
 if [ $? -ne 0 ]; then
-    echo "Error: Unable to create temp user"
-    exit 2
-fi;
+	echo "Error: Unable to create temp user"
+	exit 2
+fi
 
 if [[ "$ttl" -gt 0 ]]; then
-    echo "$BIN/v-delete-database-temp-user $user $database $dbuser mysql $host" | at "now +${ttl} minute" > /dev/null 2>&1
+	echo "$BIN/v-delete-database-temp-user $user $database $dbuser mysql $host" | at "now +${ttl} minute" > /dev/null 2>&1
 fi
 echo '{
     "login": {

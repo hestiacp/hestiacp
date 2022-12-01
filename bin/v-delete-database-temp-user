@@ -42,8 +42,8 @@ is_object_unsuspended 'db' 'DB' "$database"
 get_next_dbhost
 
 if [[ $dbuser != *"hestia_sso"* ]]; then
-    echo "DBUSER is invalid SSO user"
-    exit "$E_INVALID";
+	echo "DBUSER is invalid SSO user"
+	exit "$E_INVALID"
 fi
 
 # Perform verification if read-only mode is enabled

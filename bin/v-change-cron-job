@@ -50,8 +50,8 @@ check_hestia_demo_mode
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Concatenating cron string
 command=$(echo $command | sed -e "s/'/%quote%/g")
@@ -76,7 +76,7 @@ sync_cron_jobs
 
 # Restarting crond
 $BIN/v-restart-cron
-check_result $? "Cron restart failed" >/dev/null
+check_result $? "Cron restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job updated (Job: $job, Command: $command)."

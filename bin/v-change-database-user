@@ -14,7 +14,8 @@
 user=$1
 database=$2
 dbuser="$user"_"$3"
-password=$4; HIDE=4
+password=$4
+HIDE=4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -52,7 +53,7 @@ check_hestia_demo_mode
 # Compare old and new user
 old_dbuser=$(get_object_value 'db' 'DB' "$database" '$DBUSER')
 if [ "$old_dbuser" = "$dbuser" ]; then
-    exit
+	exit
 fi
 
 # Set new dbuser
@@ -63,37 +64,37 @@ get_database_values
 
 #Fix issue #1084 with "Upper case not allowed with PGSQL"
 if [ "$TYPE" = "pgsql" ]; then
-   dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]');
-   exclude="-"
-    if [[ "$dbuser" =~ $exclude ]]; then
-        check_result "$E_INVALID" "invalid database user format"
-    fi
+	dbuser=$(echo $dbuser | tr '[:upper:]' '[:lower:]')
+	exclude="-"
+	if [[ "$dbuser" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid database user format"
+	fi
 fi
 
 # Rebuild database
 case $TYPE in
-    mysql) rebuild_mysql_database ;;
-    pgsql) rebuild_pgsql_database ;;
+	mysql) rebuild_mysql_database ;;
+	pgsql) rebuild_pgsql_database ;;
 esac
 
 # Change password
 if [ -n "$dbpass" ]; then
-    case $TYPE in
-        mysql) change_mysql_password ;;
-        pgsql) change_pgsql_password ;;
-    esac
+	case $TYPE in
+		mysql) change_mysql_password ;;
+		pgsql) change_pgsql_password ;;
+	esac
 
-    # Update config value
-    update_object_value 'db' 'DB' "$database" '$MD5' "$md5"
+	# Update config value
+	update_object_value 'db' 'DB' "$database" '$MD5' "$md5"
 fi
 
 # Remove old user
 check_old_dbuser=$(grep "DBUSER='$old_dbuser'" $USER_DATA/db.conf)
 if [ -z "$check_old_dbuser" ]; then
-    case $TYPE in
-        mysql) delete_mysql_user ;;
-        pgsql) delete_pgsql_user ;;
-    esac
+	case $TYPE in
+		mysql) delete_mysql_user ;;
+		pgsql) delete_pgsql_user ;;
+	esac
 fi
 
 #----------------------------------------------------------#

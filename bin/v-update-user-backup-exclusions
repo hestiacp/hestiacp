@@ -23,16 +23,16 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 is_file_available() {
-    if [ ! -e "$vfile" ]; then
-        check_result "$E_NOTEXIST" "file $vfile doesn't exist"
-    fi
+	if [ ! -e "$vfile" ]; then
+		check_result "$E_NOTEXIST" "file $vfile doesn't exist"
+	fi
 }
 
 is_file_valid() {
-    exclude="[!|#|$|^|&|(|)|{|}|<|>|?|\|\"|;|%|\`]"
-    if [[ "$(cat $vfile)" =~ $exclude ]]; then
-        check_result "$E_INVALID" "invalid characters in the exlusion list"
-    fi
+	exclude="[!|#|$|^|&|(|)|{|}|<|>|?|\|\"|;|%|\`]"
+	if [[ "$(cat $vfile)" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid characters in the exlusion list"
+	fi
 }
 
 #----------------------------------------------------------#

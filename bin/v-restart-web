@@ -18,25 +18,25 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-date=$(date +"%Y-%m-%d %H:%M:%S");
+date=$(date +"%Y-%m-%d %H:%M:%S")
 
 send_email_report() {
-    email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
-    email=$(echo "$email" | cut -f 2 -d "'")
-    tmpfile=$(mktemp)
-    subj="$(hostname): $WEB_SYSTEM restart failed"
-    if [ "$WEB_SYSTEM" = "apache2" ]; then
-        apache2ctl configtest >> "$tmpfile" 2>&1
-    else
-        service $WEB_SYSTEM configtest >> "$tmpfile" 2>&1
-    fi
-    service "$WEB_SYSTEM" restart >> "$tmpfile" 2>&1
-    cat "$tmpfile" |$SENDMAIL -s "$subj"  "$email"
-    if [ "$DEBUG_MODE" = "true" ]; then
-        echo "[ $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
-        cat $tmpfile >> /var/log/hestia/debug.log 2>&1
-    fi
-    rm -f $tmpfile
+	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
+	email=$(echo "$email" | cut -f 2 -d "'")
+	tmpfile=$(mktemp)
+	subj="$(hostname): $WEB_SYSTEM restart failed"
+	if [ "$WEB_SYSTEM" = "apache2" ]; then
+		apache2ctl configtest >> "$tmpfile" 2>&1
+	else
+		service $WEB_SYSTEM configtest >> "$tmpfile" 2>&1
+	fi
+	service "$WEB_SYSTEM" restart >> "$tmpfile" 2>&1
+	cat "$tmpfile" | $SENDMAIL -s "$subj" "$email"
+	if [ "$DEBUG_MODE" = "true" ]; then
+		echo "[ $date | $WEB_SYSTEM | WEB ]" >> /var/log/hestia/debug.log 2>&1
+		cat $tmpfile >> /var/log/hestia/debug.log 2>&1
+	fi
+	rm -f $tmpfile
 }
 
 #----------------------------------------------------------#
@@ -45,65 +45,65 @@ send_email_report() {
 
 # Exit
 if [ -z "$WEB_SYSTEM" ] || [ "$WEB_SYSTEM" = 'remote' ]; then
-    exit
+	exit
 fi
 
 if [ "$1" = "no" ]; then
-    exit
+	exit
 fi
 
 restart=$1
 # Schedule restart
 if [ "$1" = 'scheduled' ] || [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
-    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
-    echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
-    exit
+	sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+	echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
+	exit
 fi
 
 if [ "$1" = "updatessl" ]; then
-    sed -i "/\/$SCRIPT ssl/d" $HESTIA/data/queue/restart.pipe
-    echo "$BIN/$SCRIPT ssl" >> $HESTIA/data/queue/restart.pipe
-    exit
+	sed -i "/\/$SCRIPT ssl/d" $HESTIA/data/queue/restart.pipe
+	echo "$BIN/$SCRIPT ssl" >> $HESTIA/data/queue/restart.pipe
+	exit
 fi
 
 if [ $WEB_SYSTEM = 'nginx' ]; then
-    if [ "$1" = "ssl" ]; then
-        restart="ssl"
-    fi
-    if [ "$DEBUG_MODE" = "true" ]; then
-        echo "[  $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
-        service $WEB_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
-    else
-        service $WEB_SYSTEM configtest > /dev/null 2>&1
-    fi
-    if [ $? -ne 0 ]; then
-        send_email_report
-        check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
-    fi
+	if [ "$1" = "ssl" ]; then
+		restart="ssl"
+	fi
+	if [ "$DEBUG_MODE" = "true" ]; then
+		echo "[  $date | $WEB_SYSTEM | WEB ]" >> /var/log/hestia/debug.log 2>&1
+		service $WEB_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
+	else
+		service $WEB_SYSTEM configtest > /dev/null 2>&1
+	fi
+	if [ $? -ne 0 ]; then
+		send_email_report
+		check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
+	fi
 elif [ $WEB_SYSTEM = 'apache2' ]; then
-    if [ "$DEBUG_MODE" = "true" ]; then
-        echo "[  $date | $WEB_SYSTEM | WEB ]"  >> /var/log/hestia/debug.log 2>&1
-        apache2ctl configtest >> /var/log/hestia/debug.log 2>&1
-    else
-        apache2ctl configtest > /dev/null 2>&1
-    fi
-    if [ $? -ne 0 ]; then
-        send_email_report
-        check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
-    fi
+	if [ "$DEBUG_MODE" = "true" ]; then
+		echo "[  $date | $WEB_SYSTEM | WEB ]" >> /var/log/hestia/debug.log 2>&1
+		apache2ctl configtest >> /var/log/hestia/debug.log 2>&1
+	else
+		apache2ctl configtest > /dev/null 2>&1
+	fi
+	if [ $? -ne 0 ]; then
+		send_email_report
+		check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
+	fi
 fi
 
 $BIN/v-restart-service "$WEB_SYSTEM" "$restart"
 
 if [ $? -ne 0 ]; then
-    send_email_report
-    check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
+	send_email_report
+	check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
 fi
 
 # Update restart queue
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
-    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
-    sed -i "/\/$SCRIPT ssl/d" $HESTIA/data/queue/restart.pipe
+	sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+	sed -i "/\/$SCRIPT ssl/d" $HESTIA/data/queue/restart.pipe
 fi
 
 #----------------------------------------------------------#

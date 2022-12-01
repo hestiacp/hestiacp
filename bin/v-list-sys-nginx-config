@@ -23,8 +23,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    parse_object_kv_list $(echo "$config" |egrep "$keys" |tr -d ';'| awk '{print $1"="$2}')
-    echo '{
+	parse_object_kv_list $(echo "$config" | egrep "$keys" | tr -d ';' | awk '{print $1"="$2}')
+	echo '{
     "CONFIG": {
         "worker_processes": "'$worker_processes'",
         "worker_connections": "'$worker_connections'",
@@ -43,21 +43,21 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "$config" |egrep "$keys" |tr -d ';'
-    echo "config_path    $config_path"
+	echo "$config" | egrep "$keys" | tr -d ';'
+	echo "config_path    $config_path"
 }
 
 # PLAIN list function
 plain_list() {
-    echo "$config" |egrep "$keys" |tr -d ';'
-    echo "config_path $config_path"
+	echo "$config" | egrep "$keys" | tr -d ';'
+	echo "config_path $config_path"
 }
 
 # CSV list function
 csv_list() {
-    echo "$keys" |sed "s/ |/,/g"
-    echo "$config" |egrep "$keys" |awk '{print $2}' |tr -d ';' |tr '\n' ','
-    echo
+	echo "$keys" | sed "s/ |/,/g"
+	echo "$config" | egrep "$keys" | awk '{print $2}' | tr -d ';' | tr '\n' ','
+	echo
 }
 
 #----------------------------------------------------------#
@@ -73,16 +73,15 @@ keys="$keys |proxy_connect_timeout |proxy_send_timeout"
 keys="$keys |proxy_read_timeout |client_max_body_size"
 keys="$keys |gzip |gzip_comp_level |charset "
 
-
 # Reading nginx config
 config=$(cat $config_path)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

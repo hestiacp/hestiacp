@@ -49,7 +49,7 @@ home_dir="$HOMEDIR/$user/web/$domain/"
 
 # Checking home directory exist
 if [ -e "$home_dir" ]; then
-    disk_usage=$(nice -n 19 du -shm $home_dir | cut -f 1 )
+	disk_usage=$(nice -n 19 du -shm $home_dir | cut -f 1)
 fi
 
 #----------------------------------------------------------#

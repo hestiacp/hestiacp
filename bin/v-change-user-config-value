@@ -42,8 +42,8 @@ check_hestia_demo_mode
 # Set theme value
 check_ckey=$(grep "^${key^^}" $USER_DATA/user.conf)
 if [ -z "$check_ckey" ]; then
-    # Rebuild user configuration to repair missing value
-    $BIN/v-rebuild-user "$user"
+	# Rebuild user configuration to repair missing value
+	$BIN/v-rebuild-user "$user"
 fi
 update_user_value "$user" "${key^^}" "$value"
 

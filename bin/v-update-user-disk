@@ -37,11 +37,9 @@ is_object_valid 'user' 'USER' "$user"
 OLDIFS=$IFS
 IFS=$(echo -en "\n\b")
 
-
 #Starting update disk space excluding web, mail, conf directory
 disk_usage='0'
-disk_usage=$(du -shm $HOMEDIR/$user --exclude $HOMEDIR/$user/web --exclude $HOMEDIR/$user/mail --exclude $HOMEDIR/$user/conf |cut -f 1 )
-
+disk_usage=$(du -shm $HOMEDIR/$user --exclude $HOMEDIR/$user/web --exclude $HOMEDIR/$user/mail --exclude $HOMEDIR/$user/conf | cut -f 1)
 
 # Restoring old IFS
 IFS=$OLDIFS

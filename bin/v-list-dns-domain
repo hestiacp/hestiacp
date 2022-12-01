@@ -25,8 +25,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo '    "'$DOMAIN'": {
+	echo '{'
+	echo '    "'$DOMAIN'": {
         "IP": "'$IP'",
         "TPL": "'$TPL'",
         "TTL": "'$TTL'",
@@ -40,37 +40,36 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "DOMAIN:         $DOMAIN"
-    echo "IP:             $IP"
-    echo "TEMPLATE:       $TPL"
-    echo "TTL:            $TTL"
-    echo "EXP:            $EXP"
-    echo "SOA:            $SOA"
-    echo "SERIAL:         $SERIAL"
-    echo "DNSSEC:         $DNSSEC"
-    echo "RECORDS:        $RECORDS"
-    echo "SUSPENDED:      $SUSPENDED"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
+	echo "DOMAIN:         $DOMAIN"
+	echo "IP:             $IP"
+	echo "TEMPLATE:       $TPL"
+	echo "TTL:            $TTL"
+	echo "EXP:            $EXP"
+	echo "SOA:            $SOA"
+	echo "SERIAL:         $SERIAL"
+	echo "DNSSEC:         $DNSSEC"
+	echo "RECORDS:        $RECORDS"
+	echo "SUSPENDED:      $SUSPENDED"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
 }
-
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$DOMAIN\t$IP\t$TPL\t$TTL\t$EXP\t$SOA\t$SERIAL\t$DNSSEC\t$RECORDS\t"
-    echo -e "$SUSPENDED\t$TIME\t$DATE"
+	echo -ne "$DOMAIN\t$IP\t$TPL\t$TTL\t$EXP\t$SOA\t$SERIAL\t$DNSSEC\t$RECORDS\t"
+	echo -e "$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-    echo "DOMAIN,IP,TPL,TTL,EXP,SOA,SERIAL,DNSSEC,RECORDS,SUSPENDED,TIME,DATE"
-    echo -n "$DOMAIN,$IP,$TPL,$TTL,$EXP,$SOA,$SERIAL,$DNSSEC,$RECORDS,$SUSPENDED,"
-    echo "$TIME,$DATE"
+	echo "DOMAIN,IP,TPL,TTL,EXP,SOA,SERIAL,DNSSEC,RECORDS,SUSPENDED,TIME,DATE"
+	echo -n "$DOMAIN,$IP,$TPL,$TTL,$EXP,$SOA,$SERIAL,$DNSSEC,$RECORDS,$SUSPENDED,"
+	echo "$TIME,$DATE"
 }
 
 #----------------------------------------------------------#
@@ -91,10 +90,10 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

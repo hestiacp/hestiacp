@@ -24,77 +24,77 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(echo "$logs" |wc -l)
-    echo "{"
-    for str in $logs; do
-        ID=$(echo "$str" |cut -f 2 -d \')
-        DATE=$(echo "$str" |cut -f 4 -d \')
-        TIME=$(echo "$str" |cut -f 6 -d \')
-        LEVEL=$(echo "$str" |cut -f 8 -d \')
-        CATEGORY=$(echo "$str" |cut -f 10 -d \')
-        MESSAGE=$(echo "$str" |cut -f 12 -d \')
-        MESSAGE=${MESSAGE//\"/\\\"}
-        echo -n '    "'$ID'": {
+	IFS=$'\n'
+	i=1
+	objects=$(echo "$logs" | wc -l)
+	echo "{"
+	for str in $logs; do
+		ID=$(echo "$str" | cut -f 2 -d \')
+		DATE=$(echo "$str" | cut -f 4 -d \')
+		TIME=$(echo "$str" | cut -f 6 -d \')
+		LEVEL=$(echo "$str" | cut -f 8 -d \')
+		CATEGORY=$(echo "$str" | cut -f 10 -d \')
+		MESSAGE=$(echo "$str" | cut -f 12 -d \')
+		MESSAGE=${MESSAGE//\"/\\\"}
+		echo -n '    "'$ID'": {
         "DATE": "'$DATE'",
         "TIME": "'$TIME'",
         "LEVEL": "'$LEVEL'",
         "CATEGORY": "'$CATEGORY'",
         "MESSAGE": "'$MESSAGE'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '}'
 }
 
 shell_list() {
-    IFS=$'\n'
-    echo "ID~DATE~TIME~LEVEL~CATEGORY~MESSAGE"
-    echo "----~----~----~-----~--------~-------"
-    for str in $logs; do
-        ID=$(echo "$str" |cut -f 2 -d \')
-        DATE=$(echo "$str" |cut -f 4 -d \')
-        TIME=$(echo "$str" |cut -f 6 -d \')
-        LEVEL=$(echo "$str" |cut -f 8 -d \')
-        CATEGORY=$(echo "$str" |cut -f 10 -d \')
-        MESSAGE=$(echo "$str" |cut -f 12 -d \')
-        echo "$ID~$DATE~$TIME~$LEVEL~$CATEGORY~$MESSAGE"
-    done
+	IFS=$'\n'
+	echo "ID~DATE~TIME~LEVEL~CATEGORY~MESSAGE"
+	echo "----~----~----~-----~--------~-------"
+	for str in $logs; do
+		ID=$(echo "$str" | cut -f 2 -d \')
+		DATE=$(echo "$str" | cut -f 4 -d \')
+		TIME=$(echo "$str" | cut -f 6 -d \')
+		LEVEL=$(echo "$str" | cut -f 8 -d \')
+		CATEGORY=$(echo "$str" | cut -f 10 -d \')
+		MESSAGE=$(echo "$str" | cut -f 12 -d \')
+		echo "$ID~$DATE~$TIME~$LEVEL~$CATEGORY~$MESSAGE"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    for str in $logs; do
-        ID=$(echo "$str" |cut -f 2 -d \')
-        DATE=$(echo "$str" |cut -f 4 -d \')
-        TIME=$(echo "$str" |cut -f 6 -d \')
-        LEVEL=$(echo "$str" |cut -f 8 -d \')
-        CATEGORY=$(echo "$str" |cut -f 10 -d \')
-        MESSAGE=$(echo "$str" |cut -f 12 -d \')
-        echo -e "$ID\t$DATE\t$TIME\t$LEVEL\t$CATEGORY\t$MESSAGE"
-    done
+	IFS=$'\n'
+	for str in $logs; do
+		ID=$(echo "$str" | cut -f 2 -d \')
+		DATE=$(echo "$str" | cut -f 4 -d \')
+		TIME=$(echo "$str" | cut -f 6 -d \')
+		LEVEL=$(echo "$str" | cut -f 8 -d \')
+		CATEGORY=$(echo "$str" | cut -f 10 -d \')
+		MESSAGE=$(echo "$str" | cut -f 12 -d \')
+		echo -e "$ID\t$DATE\t$TIME\t$LEVEL\t$CATEGORY\t$MESSAGE"
+	done
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo "ID,MESSAGE,TIME,DATE"
-    for str in $logs; do
-        ID=$(echo "$str" |cut -f 2 -d \')
-        DATE=$(echo "$str" |cut -f 4 -d \')
-        TIME=$(echo "$str" |cut -f 6 -d \')
-        LEVEL=$(echo "$str" |cut -f 8 -d \')
-        CATEGORY=$(echo "$str" |cut -f 10 -d \')
-        MESSAGE=$(echo "$str" |cut -f 12 -d \')
-        echo "$ID,\"$DATE\",\"$TIME",\"$LEVEL\",\"$CATEGORY\",\"$MESSAGE""
-    done
+	IFS=$'\n'
+	echo "ID,MESSAGE,TIME,DATE"
+	for str in $logs; do
+		ID=$(echo "$str" | cut -f 2 -d \')
+		DATE=$(echo "$str" | cut -f 4 -d \')
+		TIME=$(echo "$str" | cut -f 6 -d \')
+		LEVEL=$(echo "$str" | cut -f 8 -d \')
+		CATEGORY=$(echo "$str" | cut -f 10 -d \')
+		MESSAGE=$(echo "$str" | cut -f 12 -d \')
+		echo "$ID,\"$DATE\",\"$TIME",\"$LEVEL\",\"$CATEGORY\",\"$MESSAGE""
+	done
 }
 
 #----------------------------------------------------------#
@@ -104,7 +104,7 @@ csv_list() {
 check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 if [ "$user" != "system" ]; then
-    is_object_valid 'user' 'USER' "$user"
+	is_object_valid 'user' 'USER' "$user"
 fi
 
 #----------------------------------------------------------#
@@ -113,17 +113,17 @@ fi
 
 # Parsing history log
 if [ "$user" = "system" ]; then
-    log_file="$HESTIA/data/users/admin/system.log"
+	log_file="$HESTIA/data/users/admin/system.log"
 else
-    log_file="$USER_DATA/history.log"
+	log_file="$USER_DATA/history.log"
 fi
-logs=$(tail -n 300 $log_file 2>/dev/null)
+logs=$(tail -n 300 $log_file 2> /dev/null)
 
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t -s '~';;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '~' ;;
 esac
 
 #----------------------------------------------------------#

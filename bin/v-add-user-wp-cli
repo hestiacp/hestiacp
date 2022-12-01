@@ -14,7 +14,7 @@
 user=$1
 
 if [ -z "$HESTIA" ]; then
-    HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/hestia"
 fi
 
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -44,8 +44,8 @@ WPCLI_DIR="/home/$user/.wp-cli"
 WPCLI_BIN="$WPCLI_DIR/wp"
 
 if [ -f "$WPCLI_DIR" ]; then
-    echo "WP-CLI already available"
-    exit
+	echo "WP-CLI already available"
+	exit
 fi
 
 [ -z "$(readlink -m "$WPCLI_DIR" | egrep "^$HOMEDIR/$user/")" ] && check_result "$E_FORBIDEN" "Path outside of user homedir (WP Cli dir)"

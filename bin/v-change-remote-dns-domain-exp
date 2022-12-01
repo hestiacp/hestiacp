@@ -44,28 +44,28 @@ check_hestia_demo_mode
 IFS=$'\n'
 for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 
-    # Reset user, password and hash vars
-    clear_dns_cluster_settings
+	# Reset user, password and hash vars
+	clear_dns_cluster_settings
 
-    # Parsing remote host parameters
-    parse_object_kv_list "$cluster"
+	# Parsing remote host parameters
+	parse_object_kv_list "$cluster"
 
-    # Syncing domain
-    str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
-    if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
-        str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g");
-        ip=$($BIN/v-list-sys-ips plain | cut -f1);
-        str=$(echo "$str" | sed "s/MASTER='*'/MASTER='$ip'/g");
+	# Syncing domain
+	str=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+	if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+		str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g")
+		ip=$($BIN/v-list-sys-ips plain | cut -f1)
+		str=$(echo "$str" | sed "s/MASTER='*'/MASTER='$ip'/g")
 
-        # Syncing domain data
-        cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
-        check_result $? "$HOST connection failed" "$E_CONNECT"
+		# Syncing domain data
+		cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
+		check_result $? "$HOST connection failed" "$E_CONNECT"
 
-        rndc notify $domain  > /dev/null 2>&1
-    else
-        cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" 'no'
-        check_result $? "$HOST connection failed (exp insert)" "$E_CONNECT"
-    fi
+		rndc notify $domain > /dev/null 2>&1
+	else
+		cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" 'no'
+		check_result $? "$HOST connection failed (exp insert)" "$E_CONNECT"
+	fi
 
 done
 
@@ -77,7 +77,7 @@ done
 pipe="$HESTIA/data/queue/dns-cluster.pipe"
 str=$(grep -n "$SCRIPT $1 $2 $3$" $pipe | cut -f1 -d: | head -n1)
 if [ -n "$str" ]; then
-    sed -i "$str d"  $pipe
+	sed -i "$str d" $pipe
 fi
 
 exit

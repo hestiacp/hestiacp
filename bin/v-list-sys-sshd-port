@@ -18,42 +18,42 @@ format=${1-shell}
 source $HESTIA/func/main.sh
 
 json_list() {
-    sh_counter=$(echo "$ports" | wc -l)
-    i=1
-    echo '['
-    for port in $ports; do
-        if [ "$i" -lt "$sh_counter" ]; then
-            echo -e  "\t\"$port\","
-        else
-            echo -e  "\t\"$port\""
-        fi
-        (( ++i))
-    done
-    echo "]"
+	sh_counter=$(echo "$ports" | wc -l)
+	i=1
+	echo '['
+	for port in $ports; do
+		if [ "$i" -lt "$sh_counter" ]; then
+			echo -e "\t\"$port\","
+		else
+			echo -e "\t\"$port\""
+		fi
+		((++i))
+	done
+	echo "]"
 }
 
 # SHELL list function
 shell_list() {
-    echo "PORT"
-    echo "-----"
-    for port in $ports; do
-        echo "$port"
-    done
+	echo "PORT"
+	echo "-----"
+	for port in $ports; do
+		echo "$port"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    for port in $ports; do
-        echo "$port"
-    done
+	for port in $ports; do
+		echo "$port"
+	done
 }
 
 # CSV list function
 csv_list() {
-    echo "PORT"
-    for port in $ports; do
-        echo "$port"
-    done
+	echo "PORT"
+	for port in $ports; do
+		echo "$port"
+	done
 }
 
 #----------------------------------------------------------#
@@ -63,17 +63,17 @@ csv_list() {
 version=$(lsb_release -s -r)
 
 if [[ "$version" = 9 || "$version" = 10 ]]; then
-    ports=$(sshd -T -C "user=root" | grep '^port'| cut -d ' ' -f2);
+	ports=$(sshd -T -C "user=root" | grep '^port' | cut -d ' ' -f2)
 else
-    ports=$(sshd -T | grep '^port'| cut -d ' ' -f2);
+	ports=$(sshd -T | grep '^port' | cut -d ' ' -f2)
 fi
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

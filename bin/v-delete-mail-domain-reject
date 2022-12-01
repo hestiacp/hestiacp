@@ -7,7 +7,6 @@
 #
 # The function disable spamassasin for incoming emails.
 
-
 #----------------------------------------------------------#
 #                    Variable&Function                     #
 #----------------------------------------------------------#
@@ -31,7 +30,6 @@ format_domain
 format_domain_idn
 # TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -48,17 +46,15 @@ is_object_value_exist 'mail' 'DOMAIN' "$domain" '$REJECT'
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Delete antispam flag
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    # Reject spam > 10 when enabled
-    rm -f $HOMEDIR/$user/conf/mail/$domain/reject_spam
+	# Reject spam > 10 when enabled
+	rm -f $HOMEDIR/$user/conf/mail/$domain/reject_spam
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

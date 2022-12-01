@@ -24,27 +24,27 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
 
 if [ "$PORT" != "8083" ]; then
-    # Update F2B chains config
-    if [ -f "$HESTIA/data/firewall/chains.conf" ]; then
-        # Update value in chains.conf
-        sed -i "s/PORT='8083'/PORT='$PORT'/g" $HESTIA/data/firewall/chains.conf
-    fi
+	# Update F2B chains config
+	if [ -f "$HESTIA/data/firewall/chains.conf" ]; then
+		# Update value in chains.conf
+		sed -i "s/PORT='8083'/PORT='$PORT'/g" $HESTIA/data/firewall/chains.conf
+	fi
 
-    # Restart services
-    if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
-        $HESTIA/bin/v-stop-firewall
-        $HESTIA/bin/v-update-firewall
+	# Restart services
+	if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
+		$HESTIA/bin/v-stop-firewall
+		$HESTIA/bin/v-update-firewall
 
-    fi
+	fi
 fi
 
 # Fix Roundcube logdir permission
 if [ -d "/var/log/roundcube" ]; then
-    chown www-data:www-data /var/log/roundcube
+	chown www-data:www-data /var/log/roundcube
 fi
 
 # Fix bug in nginx.conf for proxy cache
 if [ -d "/etc/nginx/nginx.conf" ]; then
-    echo "[ ! ] Fixed an issue with proxy cache and redirects"
-    sed -i 's/proxy_cache_key "$host$request_uri $cookie_user";/proxy_cache_key "$scheme$request_method$host$request_uri";/g' /etc/nginx/nginx.conf
+	echo "[ ! ] Fixed an issue with proxy cache and redirects"
+	sed -i 's/proxy_cache_key "$host$request_uri $cookie_user";/proxy_cache_key "$scheme$request_method$host$request_uri";/g' /etc/nginx/nginx.conf
 fi

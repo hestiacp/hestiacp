@@ -39,15 +39,15 @@ source $USER_DATA/user.conf
 
 # Check if 2FA is enabled
 if [ -z "$TWOFA" ]; then
-    echo "Error: Two-factor authentication is not enabled."
-    exit "$E_NOTEXIST"
+	echo "Error: Two-factor authentication is not enabled."
+	exit "$E_NOTEXIST"
 fi
 
 # Check if token is valid
 result=$($HESTIA/php/bin/php $HESTIA/web/inc/2fa/check.php "$TWOFA" "$token")
 if [ "$result" != "ok" ]; then
-    echo "Error: Authentication token mismatch."
-    exit 9
+	echo "Error: Authentication token mismatch."
+	exit 9
 fi
 
 #----------------------------------------------------------#

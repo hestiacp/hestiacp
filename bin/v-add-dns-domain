@@ -56,25 +56,25 @@ is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
-if [ "$($BIN/v-list-dns-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
-    is_domain_new 'dns' "$domain_utf"
+if [ "$($BIN/v-list-dns-domain $user $domain_utf plain | cut -f 1) " != "$domain" ]; then
+	is_domain_new 'dns' "$domain_utf"
 fi
-if [ "$($BIN/v-list-dns-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
-    is_domain_new 'dns' "$domain_idn"
+if [ "$($BIN/v-list-dns-domain $user $domain_idn plain | cut -f 1) " != "$domain" ]; then
+	is_domain_new 'dns' "$domain_idn"
 else
-    is_domain_new 'dns' "$domain"
+	is_domain_new 'dns' "$domain"
 fi
 if [ -z "$(is_ip_format_valid $domain)" ]; then
-    echo "Error: Invalid domain format. IP address detected as input."
-    exit 1
+	echo "Error: Invalid domain format. IP address detected as input."
+	exit 1
 fi
 
 if [ -n "$restart" ]; then
-    is_format_valid 'restart'
+	is_format_valid 'restart'
 fi
 
 if [ -n "$dnssec" ]; then
-    is_boolean_format_valid "$dnssec" 'dnssec'
+	is_boolean_format_valid "$dnssec" 'dnssec'
 fi
 
 is_package_full 'DNS_DOMAINS'
@@ -84,36 +84,36 @@ is_dns_template_valid "$template"
 is_base_domain_owner "$domain"
 
 if [ -n "$ns1" ]; then
-    ns1=$(echo $4 |sed -e 's/\.*$//g' -e 's/^\.*//g')
-    is_format_valid 'ns1'
+	ns1=$(echo $4 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	is_format_valid 'ns1'
 fi
 if [ -n "$ns2" ]; then
-    ns2=$(echo $5 |sed -e 's/\.*$//g' -e 's/^\.*//g')
-    is_format_valid 'ns2'
+	ns2=$(echo $5 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	is_format_valid 'ns2'
 fi
 if [ -n "$ns3" ]; then
-    ns3=$(echo $6 |sed -e 's/\.*$//g' -e 's/^\.*//g')
-    is_format_valid 'ns3'
+	ns3=$(echo $6 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	is_format_valid 'ns3'
 fi
 if [ -n "$ns4" ]; then
-    ns4=$(echo $7 |sed -e 's/\.*$//g' -e 's/^\.*//g')
-    is_format_valid 'ns4'
+	ns4=$(echo $7 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	is_format_valid 'ns4'
 fi
 if [ -n "$ns5" ]; then
-    ns5=$(echo $8 |sed -e 's/\.*$//g' -e 's/^\.*//g')
-    is_format_valid 'ns5'
+	ns5=$(echo $8 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	is_format_valid 'ns5'
 fi
 if [ -n "$ns6" ]; then
-    ns6=$(echo $9 |sed -e 's/\.*$//g' -e 's/^\.*//g')
-    is_format_valid 'ns6'
+	ns6=$(echo $9 | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	is_format_valid 'ns6'
 fi
 if [ -n "$ns7" ]; then
-    ns7=$(echo ${10} |sed -e 's/\.*$//g' -e 's/^\.*//g')
-    is_format_valid 'ns7'
+	ns7=$(echo ${10} | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	is_format_valid 'ns7'
 fi
 if [ -n "$ns8" ]; then
-    ns8=$(echo ${11} |sed -e 's/\.*$//g' -e 's/^\.*//g')
-    is_format_valid 'ns8'
+	ns8=$(echo ${11} | sed -e 's/\.*$//g' -e 's/^\.*//g')
+	is_format_valid 'ns8'
 fi
 
 # Perform verification if read-only mode is enabled
@@ -125,12 +125,12 @@ check_hestia_demo_mode
 
 # Defining NS variables
 if [ -z $ns2 ]; then
-    i=1
-    ns=$(get_user_value '$NS')
-    for nameserver in ${ns//,/ };do
-        eval ns$i=$nameserver
-        (( ++i))
-    done
+	i=1
+	ns=$(get_user_value '$NS')
+	for nameserver in ${ns//,/ }; do
+		eval ns$i=$nameserver
+		((++i))
+	done
 fi
 soa="$ns1"
 exp=$(date +%F -d "+ 1 year")
@@ -142,50 +142,50 @@ template_data=$(cat "$DNSTPL/$template.tpl")
 
 # Deleting unused nameservers
 if [ -z "$ns3" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns3%)
+	template_data=$(echo "$template_data" | grep -v %ns3%)
 fi
 if [ -z "$ns4" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns4%)
+	template_data=$(echo "$template_data" | grep -v %ns4%)
 fi
 if [ -z "$ns5" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns5%)
+	template_data=$(echo "$template_data" | grep -v %ns5%)
 fi
 if [ -z "$ns6" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns6%)
+	template_data=$(echo "$template_data" | grep -v %ns6%)
 fi
 if [ -z "$ns7" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns7%)
+	template_data=$(echo "$template_data" | grep -v %ns7%)
 fi
 if [ -z "$ns8" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns8%)
+	template_data=$(echo "$template_data" | grep -v %ns8%)
 fi
 if [ -z "$dnssec" ]; then
-    dnssec="no"
+	dnssec="no"
 fi
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding dns zone to the user config
-echo "$template_data" |\
-    sed -e "s/%ip%/$ip/g" \
-        -e "s/%domain_idn%/$domain_idn/g" \
-        -e "s/%domain%/$domain/g" \
-        -e "s/%ns1%/$ns1/g" \
-        -e "s/%ns2%/$ns2/g" \
-        -e "s/%ns3%/$ns3/g" \
-        -e "s/%ns4%/$ns4/g" \
-        -e "s/%ns5%/$ns5/g" \
-        -e "s/%ns6%/$ns6/g" \
-        -e "s/%ns7%/$ns7/g" \
-        -e "s/%ns8%/$ns8/g" \
-        -e "s/%time%/$time/g" \
-        -e "s/%date%/$date/g" > $USER_DATA/dns/$domain.conf
+echo "$template_data" \
+	| sed -e "s/%ip%/$ip/g" \
+		-e "s/%domain_idn%/$domain_idn/g" \
+		-e "s/%domain%/$domain/g" \
+		-e "s/%ns1%/$ns1/g" \
+		-e "s/%ns2%/$ns2/g" \
+		-e "s/%ns3%/$ns3/g" \
+		-e "s/%ns4%/$ns4/g" \
+		-e "s/%ns5%/$ns5/g" \
+		-e "s/%ns6%/$ns6/g" \
+		-e "s/%ns7%/$ns7/g" \
+		-e "s/%ns8%/$ns8/g" \
+		-e "s/%time%/$time/g" \
+		-e "s/%date%/$date/g" > $USER_DATA/dns/$domain.conf
 
 chmod 660 $USER_DATA/dns/$domain.conf
-records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
+records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')"
 
 # Adding dns.conf record
 dns_rec="DOMAIN='$domain' IP='$ip' TPL='$template' TTL='$ttl' EXP='$exp'"
@@ -198,9 +198,9 @@ chmod 660 $USER_DATA/dns.conf
 rebuild_dns_domain_conf
 
 # Updating dns-cluster queue
-if [ "$DNS_CLUSTER"  = "yes" ]; then
-    cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
-    echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
+	echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi
 
 #----------------------------------------------------------#

@@ -40,7 +40,7 @@ var Templator = function () {
 			jQuery.each(tpls, function (t) {
 				tpls[t] = tpls[t][0].split('~!');
 			});
-			//}catch(e){fb.error('%o %o', o, e);}
+			//}catch(e){console.error('%o %o', o, e);}
 		});
 	}),
 		/**

@@ -3,7 +3,7 @@
 		try {
 			jQuery(this).flayer.close();
 		} catch (e) {
-			fb.error(e);
+			console.error(e);
 		}
 	};
 	jQuery.fn.flayer = function (params) {

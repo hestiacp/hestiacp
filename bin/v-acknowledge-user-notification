@@ -27,7 +27,11 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER NOTIFICATION'
-is_format_valid 'user' 'id'
+if [ "$id" = "all" ]; then
+	is_format_valid 'user'
+else
+	is_format_valid 'user' 'id'
+fi
 is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
@@ -38,18 +42,24 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Updating notification
-update_object_value 'notifications' 'NID' "$id" '$ACK' 'yes' 2> /dev/null
-
-# Checking last notification
-if [ -e "$USER_DATA/notifications.conf" ]; then
-	if [ -z "$(grep NID= $USER_DATA/notifications.conf)" ]; then
-		notice='no'
-	fi
-	if [ -z "$(grep "ACK='no'" $USER_DATA/notifications.conf)" ]; then
-		notice='no'
-	fi
+if [ "$id" = 'all' ]; then
+	for id in $(v-list-user-notifications admin plain | cut -f1); do
+		update_object_value 'notifications' 'NID' "$id" '$ACK' 'yes' 2> /dev/null
+	done
 else
-	notice='no'
+	update_object_value 'notifications' 'NID' "$id" '$ACK' 'yes' 2> /dev/null
+
+	# Checking last notification
+	if [ -e "$USER_DATA/notifications.conf" ]; then
+		if [ -z "$(grep NID= $USER_DATA/notifications.conf)" ]; then
+			notice='no'
+		fi
+		if [ -z "$(grep "ACK='no'" $USER_DATA/notifications.conf)" ]; then
+			notice='no'
+		fi
+	else
+		notice='no'
+	fi
 fi
 
 #----------------------------------------------------------#

@@ -6,17 +6,31 @@ App.Templates.html = {
 	WEB: {
 		hint: [''],
 		notification: [
-			'<li class="~!:UNSEEN~!"><span class="unselectable mark-seen" id="notification-~!:ID~!">&nbsp;</span>\
-                        <span class="notification-title"><span class="unselectable icon ~!:TYPE~!">&nbsp;</span>~!:TOPIC~!</span>\
-                        ~!:NOTICE~!\
-                        <b><span class="time">~!:TIME~! ~!:DATE~!</span></b>\
-                    </li>',
+			'<li class="top-bar-notification-item ~!:UNSEEN~!" id="notification-~!:ID~!">\
+				<div class="top-bar-notification-header">\
+					<p class="top-bar-notification-title">~!:TOPIC~!</p>\
+					<a href="#" class="top-bar-notification-delete js-delete-notification">\
+						<i class="fas fa-xmark"></i>\
+					</a>\
+				</div>\
+				~!:NOTICE~!\
+				<p class="top-bar-notification-timestamp">~!:TIME~! ~!:DATE~!</p>\
+			</li>',
 		],
 		notification_empty: [
-			'<li class="empty"><span><i class="fas fa-bell-slash status-icon dim" style="font-size: 4rem;"></i><br><br>\
-                    ' +
+			'<li class="top-bar-notification-item empty">\
+				<i class="fas fa-bell-slash status-icon dim"></i><p>' +
 				App.Constants.NOTIFICATIONS_EMPTY +
-				'</span></li>',
+				'</p>\
+			</li>',
+		],
+		notification_mark_all: [
+			'<li>\
+				<a href="#" class="top-bar-notification-mark-all js-mark-all-notifications">\
+					<i class="fas fa-check"></i>' +
+				App.Constants.NOTIFICATIONS_DELETE_ALL +
+				'</a>\
+			</li>',
 		],
 	},
 };

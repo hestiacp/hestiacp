@@ -385,18 +385,27 @@ VE.notifications.get_list = function () {
 			acc.push(tpl.finalize());
 		}
 
-		$('.notification-container').html(acc.done()).removeClass('u-hidden');
+		if (Object.keys(data).length > 2) {
+			var tpl = Tpl.get('notification_mark_all', 'WEB');
+			acc.push(tpl.finalize());
+		}
 
-		$('.notification-container .mark-seen').click(function (event) {
-			VE.notifications.delete($(event.target).attr('id').replace('notification-', ''));
+		$('.top-bar-notifications-list').html(acc.done()).removeClass('u-hidden');
+
+		$('.js-delete-notification').click(function (event) {
+			event.preventDefault();
+			var notificationId = $(this).closest('.top-bar-notification-item').attr('id');
+			VE.notifications.delete(notificationId.replace('notification-', ''));
+		});
+
+		$('.js-mark-all-notifications').click(function (event) {
+			event.preventDefault();
+			VE.notifications.delete_all();
 		});
 	});
 };
 
 VE.notifications.delete = function (id) {
-	$('#notification-' + id)
-		.parent('li')
-		.hide();
 	$.ajax({
 		url:
 			'/delete/notification/?delete=1&notification_id=' +
@@ -404,10 +413,23 @@ VE.notifications.delete = function (id) {
 			'&token=' +
 			$('#token').attr('token'),
 	});
-	if ($('.notification-container li:visible').length == 0) {
+
+	if ($('.top-bar-notification-item:visible').length == 1) {
 		$('.js-notifications .status-icon').removeClass('status-icon');
-		$('.js-notifications').removeClass('updates').removeClass('active');
+		$('.js-notifications').removeClass('active').removeClass('updates');
+		$('.js-mark-all-notifications').parent().fadeOut();
 	}
+	$('#notification-' + id).fadeOut();
+};
+
+VE.notifications.delete_all = function () {
+	$.ajax({
+		url: '/delete/notification/?delete=1&token=' + $('#token').attr('token'),
+	});
+	$('.top-bar-notification-item').fadeOut();
+	$('.js-notifications .status-icon').removeClass('status-icon');
+	$('.js-notifications').removeClass('updates');
+	$('.js-mark-all-notifications').parent().fadeOut();
 };
 
 VE.navigation.shortcut = function (elm) {

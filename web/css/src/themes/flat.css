@@ -26,6 +26,11 @@ strong {
 	text-shadow: none;
 }
 
+.top-bar-notifications-list {
+	box-shadow: none;
+	border: 1px solid #ccc;
+}
+
 .top-bar-nav-link {
 	text-shadow: none;
 
@@ -124,11 +129,6 @@ strong {
 
 .badge {
 	box-shadow: none;
-}
-
-.notification-container {
-	box-shadow: none;
-	border: 1px solid #ccc;
 }
 
 .context-menu.sort-order {

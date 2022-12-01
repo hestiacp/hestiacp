@@ -45,13 +45,30 @@ is_mysql_host_alive() {
 
 	chmod 600 $mycnf
 	mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > /dev/null 2>&1
-	rm $mycnf
-
 	if [ "$?" -ne '0' ]; then
 		echo "Error: MySQL connection to $host failed"
+		rm $mycnf
 		log_event "$E_CONNECT" "$ARGUMENTS"
 		exit "$E_CONNECT"
 	fi
+
+	grants=$(mysql --defaults-file=$mycnf -e 'SHOW GRANTS FOR CURRENT_USER();')
+	if [ "$?" -ne '0' ]; then
+		echo "Error: MySQL connection to $host failed"
+		rm $mycnf
+		log_event "$E_CONNECT" "$ARGUMENTS"
+		exit "$E_CONNECT"
+	fi
+
+	# Check allow to grant user
+	check_grants=$(echo $grants | grep "WITH GRANT OPTION")
+	if [ -z "$check_grants" ]; then
+		echo "Error: MySQL connection to $host failed. Unable to grant other users"
+		rm $mycnf
+		log_event "$E_CONNECT" "$ARGUMENTS"
+		exit "$E_CONNECT"
+	fi
+	rm $mycnf
 }
 
 is_pgsql_host_alive() {

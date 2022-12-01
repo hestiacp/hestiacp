@@ -390,6 +390,11 @@ VE.notifications.get_list = function () {
 			acc.push(tpl.finalize());
 		}
 
+		if (Object.keys(data).length > 2) {
+			var tpl = Tpl.get('notification_mark_all', 'WEB');
+			acc.push(tpl.finalize());
+		}
+
 		$('.top-bar-notifications-list').html(acc.done()).removeClass('u-hidden');
 
 		$('.js-delete-notification').click(function (event) {
@@ -413,7 +418,7 @@ VE.notifications.delete = function (id) {
 			'&token=' +
 			$('#token').attr('token'),
 	});
-	$('#notification-' + id).hide();
+	$('#notification-' + id).fadeOut();
 	if ($('.top-bar-notification-item:visible').length == 0) {
 		$('.js-notifications .status-icon').removeClass('status-icon');
 		$('.js-notifications').removeClass('active').removeClass('updates');

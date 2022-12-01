@@ -684,7 +684,7 @@ $(document).ready(function () {
 		//close notification popup
 		if (
 			!$(evt.target).hasClass('js-notifications') &&
-			$(evt.target).parents('ul.top-bar-notifications-list').length == 0
+			$(evt.target).parents('.top-bar-notifications-list').length == 0
 		) {
 			$('.top-bar-notifications-list').addClass('u-hidden');
 			$('.js-notifications').removeClass('active');

@@ -90,8 +90,9 @@ mysql_connect() {
 mysql_query() {
 	sql_tmp=$(mktemp)
 	echo "$1" > $sql_tmp
-	mysql --defaults-file=$mycnf < "$sql_tmp" 2> /dev/null
+	return_code=$?
 	rm -f "$sql_tmp"
+	return $return_code
 }
 
 mysql_dump() {
@@ -258,7 +259,8 @@ add_mysql_database() {
 	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
 	query="CREATE DATABASE \`$database\` CHARACTER SET $charset"
-	mysql_query "$query" > /dev/null
+	mysql_query "$query"
+	check_result $? "Unable to create database $database"
 
 	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
 		query="CREATE USER \`$dbuser\`@\`%\`
@@ -458,7 +460,8 @@ delete_mysql_database() {
 	mysql_connect $HOST
 
 	query="DROP DATABASE \`$database\`"
-	mysql_query "$query" > /dev/null
+	mysql_query "$query"
+	check_result $? "Unable to drop  $database"
 
 	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
 	mysql_query "$query" > /dev/null

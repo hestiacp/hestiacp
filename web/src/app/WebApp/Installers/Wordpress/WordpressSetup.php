@@ -8,7 +8,7 @@ use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class WordpressSetup extends BaseSetup {
 	protected $appInfo = [
-		"name" => "Wordpress",
+		"name" => "WordPress",
 		"group" => "cms",
 		"enabled" => true,
 		"version" => "latest",

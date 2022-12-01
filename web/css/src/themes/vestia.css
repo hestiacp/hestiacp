@@ -33,14 +33,10 @@ strong {
 	box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%);
 }
 
-.top-bar-notification-item {
-	line-height: 1.1rem;
-
-	&.unseen {
-		& .top-bar-notification-title,
-		& .top-bar-notification-title a {
-			color: #111;
-		}
+.top-bar-notification-item.unseen {
+	& .top-bar-notification-title,
+	& .top-bar-notification-title a {
+		color: #111;
 	}
 }
 

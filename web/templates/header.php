@@ -20,7 +20,3 @@
 </head>
 
 <body class="body-<?=strtolower($TAB)?> lang-<?=$_SESSION['language']?>">
-<?php
-	if (($_SESSION['DEBUG_MODE']) == "true" ) {
-		require $_SERVER['HESTIA'] . '/web/templates/pages/debug_panel.php';
-	}

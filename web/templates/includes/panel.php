@@ -59,7 +59,7 @@
 			<!-- Menu -->
 			<nav class="top-bar-nav">
 
-				<button type="button" class="top-bar-nav-link u-hide-desktop js-toggle-top-bar-menu" title="<?=_('Toggle menu');?>">
+				<button type="button" class="top-bar-nav-link u-hide-tablet js-toggle-top-bar-menu" title="<?=_('Toggle menu');?>">
 					<i class="fas fa-bars"></i>
 					<span class="u-hidden"><?=_('Toggle menu');?></span>
 				</button>
@@ -74,7 +74,7 @@
 							<li class="top-bar-nav-item">
 								<a title="<?=_('File manager');?>" class="top-bar-nav-link <?php if($TAB == 'FM') echo 'active' ?>" href="/fm/">
 									<i class="fas fa-folder-open"></i>
-									<span class="top-bar-nav-link-label"><?=_('File manager');?></span>
+									<span class="top-bar-nav-link-label u-hide-desktop"><?=_('File manager');?></span>
 								</a>
 							</li>
 						<?php } ?>
@@ -88,7 +88,7 @@
 							<li class="top-bar-nav-item">
 								<a title="<?=_('Server');?>" class="top-bar-nav-link <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
 									<i class="fas fa-gear"></i>
-									<span class="top-bar-nav-link-label"><?=_('Server');?></span>
+									<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Server');?></span>
 								</a>
 							</li>
 						<?php } ?>
@@ -100,7 +100,7 @@
 						<li class="top-bar-nav-item">
 							<a title="<?=_('Logs');?>" class="top-bar-nav-link <?php if($TAB == 'LOG') echo 'active' ?>" href="/list/log/">
 								<i class="fas fa-clock-rotate-left"></i>
-								<span class="top-bar-nav-link-label"><?=_('Logs');?></span>
+								<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Logs');?></span>
 							</a>
 						</li>
 					<?php } else { ?>
@@ -108,7 +108,7 @@
 							<li class="top-bar-nav-item">
 								<a title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="top-bar-nav-link" href="/edit/user/?user=<?=$user; ?>&token=<?=$_SESSION['token']?>">
 									<i class="fas fa-circle-user"></i>
-									<span class="top-bar-nav-link-label"><?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)</span>
+									<span class="top-bar-nav-link-label u-hide-desktop"><?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)</span>
 								</a>
 							</li>
 						<?php } ?>
@@ -118,7 +118,7 @@
 					<li class="top-bar-nav-item">
 						<a title="<?=_('Statistics');?>" class="top-bar-nav-link <?php if($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
 							<i class="fas fa-chart-line"></i>
-							<span class="top-bar-nav-link-label"><?=_('Statistics');?></span>
+							<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Statistics');?></span>
 						</a>
 					</li>
 
@@ -126,7 +126,7 @@
 					<li class="top-bar-nav-item">
 						<a title="<?=_('Help');?>" class="top-bar-nav-link" href="https://docs.hestiacp.com/" target="_blank" rel="noopener">
 							<i class="fas fa-circle-question"></i>
-							<span class="top-bar-nav-link-label"><?=_('Help');?></span>
+							<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Help');?></span>
 						</a>
 					</li>
 
@@ -135,14 +135,14 @@
 						<li class="top-bar-nav-item">
 							<a title="<?=_('Log out');?> (<?=$user?>)" class="top-bar-nav-link top-bar-nav-link-logout" href="/logout/?token=<?=$_SESSION['token']?>">
 								<i class="fas fa-circle-up"></i>
-								<span class="top-bar-nav-link-label"><?=_('Log out');?> (<?=$user?>)</span>
+								<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Log out');?> (<?=$user?>)</span>
 							</a>
 						</li>
 					<?php } else { ?>
 						<li class="top-bar-nav-item">
 							<a title="<?=_('Log out');?>" class="top-bar-nav-link top-bar-nav-link-logout" href="/logout/?token=<?=$_SESSION['token']?>">
 								<i class="fas fa-right-from-bracket"></i>
-								<span class="top-bar-nav-link-label"><?=_('Log out');?></span>
+								<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Log out');?></span>
 							</a>
 						</li>
 					<?php } ?>
@@ -196,7 +196,7 @@
 										<?=_('domains');?>: <span><?=$panel[$user]['U_WEB_DOMAINS']?> / <?=$panel[$user]['WEB_DOMAINS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['WEB_DOMAINS']?> (<?=$panel[$user]['SUSPENDED_WEB']?>)</span>
 									</li>
 									<li>
-										<?=_('aliases');?>: <span><?=$panel[$user]['U_WEB_ALIASES']?> / <?=$panel[$user]['WEB_ALIASES']=='unlimited' || $panel[$user]['WEB_DOMAINS']=='unlimited'	? "<b>∞</b>" : $panel[$user]['WEB_ALIASES'] * $panel[$user]['WEB_DOMAINS']?></span>
+										<?=_('aliases');?>: <span><?=$panel[$user]['U_WEB_ALIASES']?> / <?=$panel[$user]['WEB_ALIASES']=='unlimited' || $panel[$user]['WEB_DOMAINS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['WEB_ALIASES'] * $panel[$user]['WEB_DOMAINS']?></span>
 									</li>
 								</ul>
 							</a>

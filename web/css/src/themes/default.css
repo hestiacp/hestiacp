@@ -85,12 +85,11 @@
 
 .top-bar-left {
 	display: flex;
-	align-items: center;
 }
 
 .top-bar-logo {
-	display: block;
-	width: 54px;
+	display: flex;
+	align-items: center;
 	margin-right: 30px;
 }
 
@@ -98,7 +97,8 @@
 	display: none;
 
 	@media (--viewport-small) {
-		display: block;
+		display: flex;
+		align-items: center;
 	}
 }
 
@@ -228,6 +228,10 @@
 
 	@media (--viewport-medium) {
 		display: none;
+	}
+
+	@media (--viewport-large) {
+		display: inline;
 	}
 }
 

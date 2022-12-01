@@ -663,14 +663,14 @@ $(document).ready(function () {
 		}
 	);
 
-	document.querySelector('.shortcuts-close').addEventListener('click', function () {
+	$('.shortcuts-close').on('click', function () {
 		var shortcutsDialog = document.querySelector('.shortcuts');
 		if (shortcutsDialog.open) {
 			shortcutsDialog.close();
 		}
 	});
 
-	document.querySelector('.js-shortcuts').addEventListener('click', function () {
+	$('.js-shortcuts').on('click', function () {
 		event.preventDefault();
 		var shortcutsDialog = document.querySelector('.shortcuts');
 		if (shortcutsDialog.open) {

@@ -80,4 +80,4 @@ jobs:
         uses: ./.github/actions/yarn-nm-install
 
       - name: Run Stylelint
-        run: yarn stylelint web/css/src/themes/*.css
+        run: yarn stylelint web/css/src/**/*.css

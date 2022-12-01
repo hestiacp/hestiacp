@@ -7,11 +7,12 @@
 	"license": "GPL-3.0-or-later",
 	"scripts": {
 		"build": "postcss web/css/src/themes/*.css --dir web/css/themes --ext .min.css",
-		"lint": "prettier --check . && eslint web/js/ && stylelint web/css/src/themes/*.css",
+		"lint": "prettier --check . && eslint web/js/ && stylelint web/css/src/**/*.css",
 		"lint-staged": "lint-staged",
 		"format": "prettier --write .",
 		"postinstall": "husky install"
 	},
+	"packageManager": "yarn@3.3.0",
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^6.2.1",
 		"normalize.css": "^8.0.1"

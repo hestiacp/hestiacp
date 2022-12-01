@@ -1,43 +1,40 @@
-applyRandomString = function (min_length = 16) {
-	$('input[name=v_password]').val(randomString2(min_length));
+function applyRandomString(min_length = 16) {
+	document.querySelector('input[name=v_password]').value = randomString2(min_length);
 	App.Actions.WEB.update_password_meter();
+}
+
+App.Actions.WEB.update_password_meter = () => {
+	/**
+	 * @type string
+	 */
+	const password = document.querySelector('input[name=v_password]').value;
+
+	const validations = [
+		password.length >= 8, // Min length of 8
+		password.search(/[a-z]/) > -1, // Contains 1 lowercase letter
+		password.search(/[A-Z]/) > -1, // Contains 1 uppercase letter
+		password.search(/[0-9]/) > -1, // Contains 1 number
+	];
+	const strength = validations.reduce((acc, cur) => acc + cur, 0);
+
+	document.querySelector('.password-meter').value = strength;
 };
 
-App.Actions.WEB.update_password_meter = function () {
-	var password = $('input[name="v_password"]').val();
-	var min_small = new RegExp(/^(?=.*[a-z]).+$/);
-	var min_cap = new RegExp(/^(?=.*[A-Z]).+$/);
-	var min_num = new RegExp(/^(?=.*\d).+$/);
-	var min_length = 8;
-	var score = 0;
-	if (password.length >= min_length) {
-		score = score + 1;
-	}
-	if (min_small.test(password)) {
-		score = score + 1;
-	}
-	if (min_cap.test(password)) {
-		score = score + 1;
-	}
-	if (min_num.test(password)) {
-		score = score + 1;
-	}
-	$('.password-meter').val(score);
-};
-
-App.Listeners.WEB.keypress_v_password = function () {
-	var ref = $('input[name="v_password"]');
-	ref.bind('keypress input', function (evt) {
+App.Listeners.WEB.keypress_v_password = () => {
+	const updateTimeout = (evt) => {
 		clearTimeout(window.frp_usr_tmt);
-		window.frp_usr_tmt = setTimeout(function () {
-			var elm = $(evt.target);
-			App.Actions.WEB.update_password_meter(elm, $(elm).val());
+		window.frp_usr_tmt = setTimeout(() => {
+			App.Actions.WEB.update_password_meter(evt.target, evt.target.value);
 		}, 100);
-	});
+	};
+
+	const passwordInput = document.querySelector('input[name="v_password"]');
+	passwordInput.addEventListener('keypress', updateTimeout);
+	passwordInput.addEventListener('input', updateTimeout);
 };
 App.Listeners.WEB.keypress_v_password();
 
-$(document).ready(function () {
+(function () {
 	$('.js-add-ns-button').click(function () {
 		var n = $('input[name^=v_ns]').length;
 		if (n < 8) {
@@ -63,4 +60,4 @@ $(document).ready(function () {
 	$('input[name^=v_ns]').each(function (i, ns) {
 		i < 2 ? $(ns).parent().find('span').hide() : $(ns).parent().find('span').show();
 	});
-});
+})();

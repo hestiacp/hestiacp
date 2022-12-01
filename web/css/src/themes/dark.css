@@ -30,6 +30,48 @@ strong {
 	color: #909090;
 }
 
+.top-bar-notifications-list {
+	background-color: rgb(50 50 50 / 99%);
+	border: 1px solid #404040;
+}
+
+.top-bar-notification-item {
+	text-shadow: 0 1px rgb(0 0 0 / 50%);
+	color: #dadada;
+	border-bottom: 1px solid #282828;
+
+	&.empty {
+		& .fas {
+			color: #dadada;
+		}
+	}
+
+	&.unseen {
+		& .top-bar-notification-title,
+		& .top-bar-notification-title a {
+			color: #fff;
+		}
+	}
+
+	& a {
+		color: #4fabe9;
+
+		&:hover {
+			color: #09f;
+		}
+
+		&:active {
+			color: #0079cb;
+		}
+	}
+}
+
+.top-bar-notification-delete {
+	& .fas {
+		color: #ff3478;
+	}
+}
+
 .top-bar-nav-list {
 	background-color: #454545;
 }
@@ -74,50 +116,6 @@ strong {
 
 .top-bar-nav-link-logout {
 	color: #e7e7e7;
-}
-
-.notification-container {
-	background-color: rgb(50 50 50 / 99%);
-	text-shadow: 0 1px rgb(0 0 0 / 50%);
-	color: #dadada;
-	border: 1px solid #404040;
-}
-
-.notification-container .empty {
-	color: #dadada;
-}
-
-.notification-container .empty .status-icon {
-	color: #dadada;
-}
-
-.notification-container .unseen {
-	color: #dadada;
-}
-
-.notification-container li {
-	border-bottom: 1px solid #282828;
-}
-
-.notification-container .mark-seen {
-	background-color: #ff3478;
-}
-
-.notification-container .unseen .notification-title,
-.notification-container .unseen .notification-title a {
-	color: #fff !important;
-}
-
-.notification-container a {
-	color: #4fabe9;
-}
-
-.notification-container a:hover {
-	color: #09f;
-}
-
-.notification-container a:active {
-	color: #0079cb;
 }
 
 /* Alerts

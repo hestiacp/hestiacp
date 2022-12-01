@@ -684,9 +684,9 @@ $(document).ready(function () {
 		//close notification popup
 		if (
 			!$(evt.target).hasClass('js-notifications') &&
-			$(evt.target).parents('ul.notification-container').length == 0
+			$(evt.target).parents('ul.top-bar-notifications-list').length == 0
 		) {
-			$('.notification-container').addClass('u-hidden');
+			$('.top-bar-notifications-list').addClass('u-hidden');
 			$('.js-notifications').removeClass('active');
 		}
 	});
@@ -703,7 +703,7 @@ $(document).ready(function () {
 			VE.notifications.get_list();
 			$('.js-notifications').addClass('active');
 		} else {
-			$('.notification-container').addClass('u-hidden');
+			$('.top-bar-notifications-list').addClass('u-hidden');
 			$('.js-notifications').removeClass('active');
 		}
 	});

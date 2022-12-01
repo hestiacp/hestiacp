@@ -37,6 +37,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+# TODO: Delete all if id is "all"
+
 # Deleting notification
 sed -i "/NID='$id' /d" $USER_DATA/notifications.conf 2> /dev/null
 

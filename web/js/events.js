@@ -380,23 +380,32 @@ VE.notifications.get_list = function () {
 			acc.push(tpl.finalize());
 		});
 
+		if (Object.keys(data).length > 2) {
+			var tpl = Tpl.get('notification_mark_all', 'WEB');
+			acc.push(tpl.finalize());
+		}
+
 		if (!Object.keys(data).length) {
 			var tpl = Tpl.get('notification_empty', 'WEB');
 			acc.push(tpl.finalize());
 		}
 
-		$('.notification-container').html(acc.done()).removeClass('u-hidden');
+		$('.top-bar-notifications-list').html(acc.done()).removeClass('u-hidden');
 
-		$('.notification-container .mark-seen').click(function (event) {
-			VE.notifications.delete($(event.target).attr('id').replace('notification-', ''));
+		$('.js-delete-notification').click(function (event) {
+			event.preventDefault();
+			var notificationId = $(this).closest('.top-bar-notification-item').attr('id');
+			VE.notifications.delete(notificationId.replace('notification-', ''));
+		});
+
+		$('.js-mark-all-notifications').click(function (event) {
+			event.preventDefault();
+			VE.notifications.delete_all();
 		});
 	});
 };
 
 VE.notifications.delete = function (id) {
-	$('#notification-' + id)
-		.parent('li')
-		.hide();
 	$.ajax({
 		url:
 			'/delete/notification/?delete=1&notification_id=' +
@@ -404,10 +413,20 @@ VE.notifications.delete = function (id) {
 			'&token=' +
 			$('#token').attr('token'),
 	});
-	if ($('.notification-container li:visible').length == 0) {
+	$('#notification-' + id).hide();
+	if ($('.top-bar-notification-item:visible').length == 0) {
 		$('.js-notifications .status-icon').removeClass('status-icon');
-		$('.js-notifications').removeClass('updates').removeClass('active');
+		$('.js-notifications').removeClass('active').removeClass('updates');
 	}
+};
+
+VE.notifications.delete_all = function () {
+	$.ajax({
+		url: '/delete/notification/?delete=1&token=' + $('#token').attr('token'),
+	});
+	$('.top-bar-notification-item.unseen').removeClass('unseen');
+	$('.js-notifications .status-icon').removeClass('status-icon');
+	$('.js-notifications').removeClass('updates');
 };
 
 VE.navigation.shortcut = function (elm) {

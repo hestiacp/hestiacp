@@ -83,7 +83,7 @@ function set_sticky_class() {
 
 	const isActive = window.scrollY > toolbarOffset - headerHeight;
 	toolbar.classList.toggle('active', isActive);
-	tableHeader.forEach((el) => el.classList.toggle('active', isActive));
+	tableHeader.classList.toggle('active', isActive);
 }
 
 function checkedAll() {

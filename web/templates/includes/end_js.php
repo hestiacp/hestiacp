@@ -2,7 +2,7 @@
 <script src="/js/vendor/jquery.cookie.js?<?=JS_LATEST_UPDATE?>"></script>
 <script src="/js/vendor/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>
 <script src="/js/vendor/jquery.finder.js?<?=JS_LATEST_UPDATE?>"></script>
-<script src="/js/hotkeys.js?<?=JS_LATEST_UPDATE?>"></script>
+<script src="/js/shortcuts.js?<?=JS_LATEST_UPDATE?>"></script>
 <script src="/js/events.js?<?=JS_LATEST_UPDATE?>"></script>
 <script src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
 <script src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>

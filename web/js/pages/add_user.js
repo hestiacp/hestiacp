@@ -14,7 +14,7 @@ $(function () {
 });
 
 applyRandomString = function (min_length = 16) {
-	$('input[name=v_password]').val(randomString2(min_length));
+	$('input[name=v_password]').val(randomString(min_length));
 	App.Actions.WEB.update_password_meter();
 };
 

@@ -103,7 +103,7 @@ class Shortcuts {
 	}
 }
 
-(function () {
+document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.js-shortcuts').forEach((el) => {
 		el.addEventListener('click', (evt) => {
 			evt.preventDefault();
@@ -433,4 +433,4 @@ class Shortcuts {
 			},
 			{ propagate: true }
 		);
-})();
+});

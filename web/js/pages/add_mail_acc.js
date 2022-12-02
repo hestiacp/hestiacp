@@ -119,7 +119,7 @@ App.Listeners.MAIL_ACC.keypress_v_password = function () {
 App.Listeners.MAIL_ACC.keypress_v_password();
 
 applyRandomString = function (min_length = 16) {
-	var randomString = randomString2(min_length);
+	var randomString = randomString(min_length);
 	$('input[name=v_password]').val(randomString);
 	if ($('input[name=v_password]').attr('type') == 'text')
 		$('.js-password-output').text(randomString);

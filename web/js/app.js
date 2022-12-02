@@ -17,7 +17,6 @@ const App = {
 	},
 	// Utilities
 	Helpers: {},
-	i18n: {},
 	Listeners: {
 		DB: {},
 		WEB: {},
@@ -25,28 +24,17 @@ const App = {
 		MAIL_ACC: {},
 	},
 	Templates: {
-		Templator: null,
-		Tpl: {},
-		_indexes: {},
+		notification:
+			'<li class=":UNSEEN"><span class="unselectable mark-seen" id="notification-:ID">&nbsp;</span>\
+				<span class="notification-title"><span class="unselectable icon :TYPE">&nbsp;</span>:TOPIC</span>\
+				:NOTICE\
+				<b><span class="time">:TIME :DATE</span></b>\
+			</li>',
+		notification_empty:
+			'<li class="empty"><span><i class="fas fa-bell-slash status-icon dim" style="font-size: 4rem;"></i><br><br>' +
+			App.Constants.NOTIFICATIONS_EMPTY +
+			'</span></li>',
 	},
-};
-
-// Internals
-Array.prototype.set = function (key, value) {
-	const index = this[0][key];
-	this[1][index] = value;
-};
-Array.prototype.get = function (key) {
-	const index = this[0][key];
-	return this[1][index];
-};
-Array.prototype.finalize = function () {
-	this.shift();
-	this[0] = this[0].join('');
-	return this[0];
-};
-Array.prototype.done = function () {
-	return this.join('');
 };
 
 App.Core.flatten_json = function (data, prefix) {
@@ -74,7 +62,7 @@ App.Core.flatten_json = function (data, prefix) {
 	return result;
 };
 
-function set_sticky_class() {
+function setStickyClass() {
 	const toolbar = document.querySelector('.toolbar');
 	const tableHeader = document.querySelector('.table-header');
 	const toolbarOffset =
@@ -112,5 +100,70 @@ function elementHideShow(elementToHideOrShow, trigger) {
 	if (typeof trigger !== 'undefined') {
 		trigger.querySelector('.js-section-toggle-icon').classList.toggle('fa-square-minus');
 		trigger.querySelector('.js-section-toggle-icon').classList.toggle('fa-square-plus');
+	}
+}
+
+/**
+ * generates a random string using a cryptographically secure rng,
+ * and ensuring it contains at least 1 lowercase, 1 uppercase, and 1 number.
+ *
+ * @param {int} [length=16]
+ * @throws {Error} if length is too small to create a "sufficiently secure" string
+ * @returns {string}
+ */
+function randomString(length = 16) {
+	const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+	const secure_rng = (min, max) => {
+		if (min < 0 || min > 0xffff) {
+			throw new Error(
+				'minimum supported number is 0, this generator can only make numbers between 0-65535 inclusive.'
+			);
+		}
+		if (max > 0xffff || max < 0) {
+			throw new Error(
+				'max supported number is 65535, this generator can only make numbers between 0-65535 inclusive.'
+			);
+		}
+		if (min > max) {
+			throw new Error('dude min>max wtf');
+		}
+		// micro-optimization
+		const randArr = max > 255 ? new Uint16Array(1) : new Uint8Array(1);
+		let ret;
+		let attempts = 0;
+		// eslint-disable-next-line no-constant-condition
+		while (true) {
+			crypto.getRandomValues(randArr);
+			ret = randArr[0];
+			if (ret >= min && ret <= max) {
+				return ret;
+			}
+			++attempts;
+			if (attempts > 1000000) {
+				// should basically never happen with max 0xFFFF/Uint16Array.
+				throw new Error('tried a million times, something is wrong');
+			}
+		}
+	};
+
+	let attempts = 0;
+	const minimumStrengthRegex = new RegExp(
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/
+	);
+	const randmax = chars.length - 1;
+	// eslint-disable-next-line no-constant-condition
+	while (true) {
+		let ret = '';
+		for (let i = 0; i < length; ++i) {
+			ret += chars[secure_rng(0, randmax)];
+		}
+		if (minimumStrengthRegex.test(ret)) {
+			return ret;
+		}
+		++attempts;
+		if (attempts > 1000000) {
+			throw new Error('tried a million times, something is wrong');
+		}
 	}
 }

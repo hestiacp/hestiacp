@@ -14,7 +14,6 @@
 	<script src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
 	<script src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
 	<script src="/js/i18n.js.php?<?=JS_LATEST_UPDATE?>"></script>
-	<script src="/js/templates.js?<?=JS_LATEST_UPDATE?>"></script>
 	<?php foreach(new DirectoryIterator($_SERVER['HESTIA'].'/web/js/custom_scripts') as $customScript){
 		if($customScript->getExtension() === 'js'){
 			echo '<script src="/js/custom_scripts/'.rawurlencode($customScript->getBasename()).'"></script>';

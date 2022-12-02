@@ -1,5 +1,5 @@
 function applyRandomString(min_length = 16) {
-	document.querySelector('input[name=v_password]').value = randomString2(min_length);
+	document.querySelector('input[name=v_password]').value = randomString(min_length);
 	App.Actions.WEB.update_password_meter();
 }
 

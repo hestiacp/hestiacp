@@ -98,7 +98,7 @@ $(function () {
 });
 
 function WEBrandom() {
-	document.v_add_web.v_stats_password.value = randomString2(16);
+	document.v_add_web.v_stats_password.value = randomString(16);
 }
 
 $('#vstobjects').on('submit', function (evt) {

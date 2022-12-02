@@ -297,11 +297,11 @@ $(function () {
 });
 
 function WEBrandom() {
-	document.v_edit_web.v_stats_password.value = randomString2(16);
+	document.v_edit_web.v_stats_password.value = randomString(16);
 }
 
 function FTPrandom(elm) {
-	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(randomString2(16));
+	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(randomString(16));
 	App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
 }
 

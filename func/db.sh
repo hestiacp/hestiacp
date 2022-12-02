@@ -462,7 +462,6 @@ delete_mysql_database() {
 
 	query="DROP DATABASE \`$database\`"
 	mysql_query "$query"
-	check_result $? "Unable to drop  $database"
 
 	query="REVOKE ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
 	mysql_query "$query" > /dev/null

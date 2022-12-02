@@ -84,7 +84,7 @@ After setting up Hestia in a VM you can now make changes to the source code in `
 The following are example instructions for making a change to Hestia's UI and testing it locally.
 
 ::: info
-Please ensure you have Yarn v3 installed and are using Node.js v16 or higher.
+Please ensure you have [Yarn](https://yarnpkg.com) v3 installed and are using [Node.js](https://nodejs.org/en/) v16 or higher.
 :::
 
 1. At the root of the project on your local machine, install Node dependencies

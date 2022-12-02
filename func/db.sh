@@ -90,6 +90,7 @@ mysql_connect() {
 mysql_query() {
 	sql_tmp=$(mktemp)
 	echo "$1" > $sql_tmp
+	mysql --defaults-file=$mycnf < "$sql_tmp" 2> /dev/null
 	return_code=$?
 	rm -f "$sql_tmp"
 	return $return_code

@@ -50,15 +50,6 @@ App.Listeners.MAIL_ACC.init = function () {
 	});
 };
 
-App.Helpers.isUnlimitedValue = function (value) {
-	var value = value.trim();
-	if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
-		return true;
-	}
-
-	return false;
-};
-
 App.Listeners.MAIL_ACC.init();
 App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
 

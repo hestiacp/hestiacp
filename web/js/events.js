@@ -1,5 +1,4 @@
 const VE = {
-	// core functions
 	core: {
 		/**
 		 * Main method that invokes further event processing
@@ -7,11 +6,10 @@ const VE = {
 		 * @param event_type (eg: click, mouseover etc..)
 		 */
 		register: (root, event_type) => {
-			var root = !root ? 'body' : root; // if elm is not passed just bind events to body DOM Element
-			var event_type = !event_type ? 'click' : event_type; // set event type to "click" by default
+			root = !root ? 'body' : root; // if elm is not passed just bind events to body DOM Element
+			event_type = !event_type ? 'click' : event_type; // set event type to "click" by default
 			$(root).bind(event_type, (evt) => {
-				var elm = $(evt.target);
-				VE.core.dispatch(evt, elm, event_type); // dispatch captured event
+				VE.core.dispatch(evt, $(evt.target), event_type); // dispatch captured event
 			});
 		},
 		/**
@@ -29,7 +27,7 @@ const VE = {
 				);
 			}
 			// get class of element
-			var classes = $(elm).attr('class');
+			const classes = $(elm).attr('class');
 			// if no classes are attached, then just stop any further processings
 			if (!classes) {
 				return; // no classes assigned
@@ -40,7 +38,6 @@ const VE = {
 			});
 		},
 	},
-	// menu and element navigation functions
 	navigation: {
 		state: {
 			active_menu: 1,
@@ -55,8 +52,8 @@ const VE = {
 		 * @param custom_config Custom configuration parameters passed to dialog initialization (optional)
 		 */
 		createConfirmationDialog: (elm, dialog_title, confirmed_location_url, custom_config) => {
-			var custom_config = !custom_config ? {} : custom_config;
-			var config = {
+			custom_config = custom_config ?? {};
+			const default_config = {
 				modal: true,
 				//autoOpen: true,
 				resizable: false,
@@ -74,14 +71,14 @@ const VE = {
 					},
 				},
 				create: function () {
-					var buttonGroup = $(this).closest('.ui-dialog').find('.ui-dialog-buttonset');
+					const buttonGroup = $(this).closest('.ui-dialog').find('.ui-dialog-buttonset');
 					buttonGroup.find('button:first').addClass('button submit');
 					buttonGroup.find('button:last').addClass('button button-secondary cancel');
 				},
 			};
 
-			var reference_copied = $(elm[0]).clone();
-			config = $.extend(config, custom_config);
+			const reference_copied = $(elm[0]).clone();
+			const config = { ...default_config, ...custom_config };
 			$(reference_copied).dialog(config);
 		},
 		enter_focused: () => {
@@ -96,7 +93,7 @@ const VE = {
 			}
 		},
 		move_focus_left: () => {
-			var index = parseInt(
+			let index = parseInt(
 				$(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector + '.focus'))
 			);
 			if (index == -1)
@@ -118,8 +115,8 @@ const VE = {
 			}
 		},
 		move_focus_right: () => {
-			var max_index = $(VE.navigation.state.menu_selector).length - 1;
-			var index = parseInt(
+			const max_index = $(VE.navigation.state.menu_selector).length - 1;
+			let index = parseInt(
 				$(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector + '.focus'))
 			);
 			if (index == -1)
@@ -141,8 +138,8 @@ const VE = {
 			}
 		},
 		move_focus_down: () => {
-			var max_index = $('.units .l-unit:not(.header)').length - 1;
-			var index = parseInt($('.units .l-unit').index($('.units .l-unit.focus')));
+			const max_index = $('.units .l-unit:not(.header)').length - 1;
+			let index = parseInt($('.units .l-unit').index($('.units .l-unit.focus')));
 
 			if (index < max_index) {
 				$('.units .l-unit.focus').removeClass('focus');
@@ -152,7 +149,7 @@ const VE = {
 			}
 		},
 		move_focus_up: () => {
-			var index = parseInt($('.units .l-unit:not(.header)').index($('.units .l-unit.focus')));
+			let index = parseInt($('.units .l-unit:not(.header)').index($('.units .l-unit.focus')));
 
 			if (index == -1) index = 0;
 
@@ -174,120 +171,125 @@ const VE = {
 				if (position == 'first') {
 					$($(VE.navigation.state.menu_selector)[0]).addClass('focus');
 				} else {
-					var max_index = $(VE.navigation.state.menu_selector).length - 1;
+					const max_index = $(VE.navigation.state.menu_selector).length - 1;
 					$($(VE.navigation.state.menu_selector)[max_index]).addClass('focus');
 				}
 			}
 		},
 		shortcut: (elm) => {
-			var action = elm.attr('key-action');
+			/** @type {'js' | 'href'} */
+			const action = elm.attr('key-action');
 
-			if (action == 'js') {
-				var e = elm.find('.data-controls');
-				VE.core.dispatch(true, e, 'click');
-			}
-			if (action == 'href') {
-				location.href = elm.find('a').attr('href');
+			switch (action) {
+				case 'js':
+					VE.core.dispatch(true, elm.find('.data-controls'), 'click');
+					break;
+
+				case 'href':
+					location.href = elm.find('a').attr('href');
+					break;
+
+				default:
+					break;
 			}
 		},
 	},
 	notifications: {
-		get_list: () => {
-			/// TODO get notifications only once
-			$.ajax({
-				url: '/list/notifications/?ajax=1&token=' + $('#token').attr('token'),
-				dataType: 'json',
-			}).done((data) => {
-				var acc = [];
-
-				$.each(data, (i, elm) => {
-					/** @type string */
-					const tpl = App.Templates.notification
-						.replace(':UNSEEN', elm.ACK ? 'unseen' : '')
-						.replace(':ID', elm.ID)
-						.replace(':TYPE', elm.TYPE)
-						.replace(':TOPIC', elm.TOPIC)
-						.replace(':NOTICE', elm.NOTICE)
-						.replace(':TIME', elm.TIME)
-						.replace(':DATE', elm.DATE);
-					acc.push(tpl);
-				});
-
-				if (!Object.keys(data).length) {
-					/** @type string */
-					const tpl = App.Templates.notification_empty;
-					acc.push(tpl);
-				}
-
-				$('.notification-container').html(acc.done()).removeClass('u-hidden');
-
-				$('.notification-container .mark-seen').click((event) => {
-					VE.notifications.delete($(event.target).attr('id').replace('notification-', ''));
-				});
-			});
-		},
-		delete: (id) => {
-			$('#notification-' + id)
-				.parent('li')
-				.hide();
-			$.ajax({
-				url:
-					'/delete/notification/?delete=1&notification_id=' +
-					id +
-					'&token=' +
-					$('#token').attr('token'),
-			});
-			if ($('.notification-container li:visible').length == 0) {
-				$('.js-notifications .status-icon').removeClass('status-icon');
-				$('.js-notifications').removeClass('updates').removeClass('active');
+		get_list: async () => {
+			const token = document.querySelector('#token').getAttribute('token');
+			const response = await fetch(`/list/notifications/?ajax=1&token=${token}`, {});
+			if (!response.ok) {
+				throw new Error('An error occured while fetching notifications.');
 			}
+
+			const data = await response.clone().json();
+
+			const notifications = Object.entries(data).reduce(
+				(acc, [id, notification]) =>
+					acc +
+					App.Templates.notification
+						.replace(':UNSEEN', notification.ACK ? 'unseen' : '')
+						.replace(':ID', notification.ID)
+						.replace(':TYPE', notification.TYPE)
+						.replace(':TOPIC', notification.TOPIC)
+						.replace(':NOTICE', notification.NOTICE)
+						.replace(':TIME', notification.TIME)
+						.replace(':DATE', notification.DATE),
+				''
+			);
+
+			if (!Object.keys(data).length) {
+				/** @type string */
+				const tpl = App.Templates.notification_empty;
+				acc.push(tpl);
+			}
+
+			const notificationContainer = document.querySelector('.notification-container');
+			notificationContainer.innerHTML = notifications;
+			notificationContainer.classList.remove('u-hidden');
+
+			notificationContainer.querySelectorAll('.mark-seen').forEach((el) => {
+				el.addEventListener('click', async (evt) => {
+					const token = document.querySelector('#token').getAttribute('token');
+					const id = evt.target.getAttribute('id');
+					document.querySelector(`#${id}`).parentElement.style.display = 'none';
+
+					await fetch(
+						`/delete/notification/?delete=1&notification_id=${id.replace(
+							'notification-',
+							''
+						)}&token=${token}`
+					);
+
+					if (document.querySelectorAll('.notification-container li:visible').length == 0) {
+						document.querySelectorAll('.js-notifications').forEach((el) => {
+							el.classList.remove('status-icon', 'updates', 'active');
+						});
+					}
+				});
+			});
 		},
 	},
-	// events callback functions
 	callbacks: {
 		click: {
 			do_suspend: (evt, elm) => {
-				var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				var url = $('input[name="suspend_url"]', ref).val();
-				var dialog_elm = ref.find('.js-confirm-dialog-suspend');
+				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+				const url = $('input[name="suspend_url"]', ref).val();
+				const dialog_elm = ref.find('.js-confirm-dialog-suspend');
 				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 			},
 			do_unsuspend: (evt, elm) => {
-				var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				var url = $('input[name="unsuspend_url"]', ref).val();
-				var dialog_elm = ref.find('.js-confirm-dialog-suspend');
+				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+				const url = $('input[name="unsuspend_url"]', ref).val();
+				const dialog_elm = ref.find('.js-confirm-dialog-suspend');
 				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 			},
 			do_delete: (evt, elm) => {
-				var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				var url = $('input[name="delete_url"]', ref).val();
-				var dialog_elm = ref.find('.js-confirm-dialog-delete');
+				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+				const url = $('input[name="delete_url"]', ref).val();
+				const dialog_elm = ref.find('.js-confirm-dialog-delete');
 				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 			},
 			do_servicerestart: (evt, elm) => {
-				var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				var url = $('input[name="servicerestart_url"]', ref).val();
-				var dialog_elm = ref.find('.js-confirm-dialog-servicerestart');
+				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+				const url = $('input[name="servicerestart_url"]', ref).val();
+				const dialog_elm = ref.find('.js-confirm-dialog-servicerestart');
 				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 			},
 			do_servicestop: (evt, elm) => {
-				var ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				var url = $('input[name="servicestop_url"]', ref).val();
-				var dialog_elm = ref.find('.js-confirm-dialog-servicestop');
+				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+				const url = $('input[name="servicestop_url"]', ref).val();
+				const dialog_elm = ref.find('.js-confirm-dialog-servicestop');
 				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
 			},
 		},
-		mouseover: {},
-		mouseout: {},
-		keypress: {},
 	},
-	// simple handy methods
 	helpers: {
 		warn: (msg) => {
 			alert('WARNING: ' + msg);
 		},
 		extendPasswordFields: () => {
-			var references = ['.js-password-input'];
+			const references = ['.js-password-input'];
 
 			$(document).ready(() => {
 				$(references).each((i, ref) => {
@@ -296,46 +298,42 @@ const VE = {
 			});
 		},
 		initAdditionalPasswordFieldElements: (ref) => {
-			var enabled = $.cookie('hide_passwords') == '1' ? true : false;
+			const enabled = $.cookie('hide_passwords') == '1' ? true : false;
 			if (enabled) {
-				VE.helpers.hidePasswordFieldText(ref);
+				$.cookie('hide_passwords', '1', { expires: 365, path: '/' });
+				$(ref).prop('type', 'password');
 			}
 
 			$(ref).prop('autocomplete', 'off');
 
-			var enabled_html = enabled ? '' : 'show-passwords-enabled-action';
-			var html =
+			const html =
 				'<span class="toggle-password"><i class="toggle-psw-visibility-icon fas fa-eye-slash ' +
-				enabled_html +
-				'" onclick="VE.helpers.toggleHiddenPasswordText(\'' +
-				ref +
-				'\', this)"></i></span>';
+				enabled
+					? ''
+					: 'show-passwords-enabled-action' +
+					  '" onclick="VE.helpers.toggleHiddenPasswordText(\'' +
+					  ref +
+					  '\', this)"></i></span>';
 			$(ref).after(html);
-		},
-		hidePasswordFieldText: (ref) => {
-			$.cookie('hide_passwords', '1', { expires: 365, path: '/' });
-			$(ref).prop('type', 'password');
-		},
-		revealPasswordFieldText: (ref) => {
-			$.cookie('hide_passwords', '0', { expires: 365, path: '/' });
-			$(ref).prop('type', 'text');
 		},
 		toggleHiddenPasswordText: (ref, triggering_elm) => {
 			$(triggering_elm).toggleClass('show-passwords-enabled-action');
 
 			if ($(ref).prop('type') == 'text') {
-				VE.helpers.hidePasswordFieldText(ref);
+				$.cookie('hide_passwords', '1', { expires: 365, path: '/' });
+				$(ref).prop('type', 'password');
 			} else {
-				VE.helpers.revealPasswordFieldText(ref);
+				$.cookie('hide_passwords', '0', { expires: 365, path: '/' });
+				$(ref).prop('type', 'text');
 			}
 		},
 	},
 	tmp: {
 		sort_par: 'sort-name',
 		sort_direction: -1,
-		sort_as_int: 0,
-		form_changed: 0,
-		search_activated: 0,
+		sort_as_int: false,
+		form_changed: false,
+		search_activated: false,
 		search_display_interval: 0,
 		search_hover_interval: 0,
 	},

@@ -50,15 +50,6 @@ App.Listeners.PACKAGE.init = function () {
 	});
 };
 
-App.Helpers.isUnlimitedValue = function (value) {
-	var value = value.trim();
-	if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
-		return true;
-	}
-
-	return false;
-};
-
 //
 // Page entry point
 // Trigger listeners

@@ -59,11 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	);
 
 	$('.js-search-input').focus(() => {
-		VE.tmp.search_activated = 1;
+		VE.tmp.search_activated = true;
 		clearTimeout(VE.tmp.search_hover_interval);
 	});
 	$('.js-search-input').blur(() => {
-		VE.tmp.search_activated = 0;
+		VE.tmp.search_activated = false;
 		clearTimeout(VE.tmp.search_hover_interval);
 		VE.tmp.search_hover_interval = setTimeout(() => {
 			if (!$('.js-search-input').val().length) {
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		.querySelectorAll('#vstobjects input, #vstobjects select, #vstobjects textarea')
 		.forEach((el) => {
 			el.addEventListener('change', () => {
-				VE.tmp.form_changed = 1;
+				VE.tmp.form_changed = true;
 			});
 		});
 
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		$('.sort-order span').removeClass('active');
 		$(this).addClass('active');
 		VE.tmp.sort_par = $(this).parent('li').attr('entity');
-		VE.tmp.sort_as_int = $(this).parent('li').attr('sort_as_int');
+		VE.tmp.sort_as_int = !!$(this).parent('li').attr('sort_as_int');
 		VE.tmp.sort_direction = $(this).hasClass('up') * 1 || -1;
 
 		$('.toolbar .sort-by b').html($(this).parent('li').find('.name').html());

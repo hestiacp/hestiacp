@@ -1,7 +1,4 @@
 const App = {
-	// Main namespases for page specific functions
-	// Core namespaces
-	Core: {},
 	// CONSTANT VALUES
 	Constants: {
 		UNLIM_VALUE: 'unlimited', // overritten in i18n.js.php
@@ -16,7 +13,16 @@ const App = {
 		MAIL: {},
 	},
 	// Utilities
-	Helpers: {},
+	Helpers: {
+		isUnlimitedValue: (value) => {
+			var value = value.trim();
+			if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
+				return true;
+			}
+
+			return false;
+		},
+	},
 	Listeners: {
 		DB: {},
 		WEB: {},
@@ -35,31 +41,6 @@ const App = {
 			App.Constants.NOTIFICATIONS_EMPTY +
 			'</span></li>',
 	},
-};
-
-App.Core.flatten_json = function (data, prefix) {
-	const keys = Object.keys(data);
-	let result = {};
-
-	prefix || (prefix = '');
-
-	if (!keys.length) {
-		return false;
-	}
-
-	for (let i = 0, cnt = keys.length; i < cnt; i++) {
-		const value = data[keys[i]];
-		switch (typeof value) {
-			case 'function':
-				break;
-			case 'object':
-				result = { ...result, ...App.Core.flatten_json(value, prefix + '[' + keys[i] + ']') };
-				break;
-			default:
-				result[prefix + '[' + keys[i] + ']'] = value;
-		}
-	}
-	return result;
 };
 
 function setStickyClass() {

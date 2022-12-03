@@ -43,8 +43,8 @@ class Shortcuts {
 		const func = (evt) => {
 			if (options.disabledInInput) {
 				// Don't enable shortcut keys in input, textarea, select fields
-				const element = evt.target.nodeType == 3 ? evt.target.parentNode : evt.target;
-				if (['INPUT', 'TEXTAREA', 'SELECTBOX'].includes(element.tagName)) {
+				const element = evt.target.nodeType === 3 ? evt.target.parentNode : evt.target;
+				if (['input', 'textarea', 'selectbox'].includes(element.tagName.toLowerCase())) {
 					return;
 				}
 			}
@@ -127,20 +127,28 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	new Shortcuts()
-		.register({ key: 'A' }, (_evt) => {
-			const createButton = document.querySelector('.button#btn-create');
-			if (!createButton) {
-				return;
-			}
-			location.href = createButton.href;
-		})
-		.register({ key: 'A', ctrlKey: true, shiftKey: true }, (_evt) => {
-			const checked = document.querySelector('.l-unit .ch-toggle:eq(0)').checked;
-			document
-				.querySelectorAll('.l-unit')
-				.forEach((el) => el.classList.toggle('selected'), !checked);
-			document.querySelectorAll('.l-unit .ch-toggle').forEach((el) => (el.checked = !checked));
-		})
+		.register(
+			{ key: 'A' },
+			(_evt) => {
+				const createButton = document.querySelector('.button#btn-create');
+				if (!createButton) {
+					return;
+				}
+				location.href = createButton.href;
+			},
+			{ disabledInInput: true }
+		)
+		.register(
+			{ key: 'A', ctrlKey: true, shiftKey: true },
+			(_evt) => {
+				const checked = document.querySelector('.l-unit .ch-toggle:eq(0)').checked;
+				document
+					.querySelectorAll('.l-unit')
+					.forEach((el) => el.classList.toggle('selected'), !checked);
+				document.querySelectorAll('.l-unit .ch-toggle').forEach((el) => (el.checked = !checked));
+			},
+			{ disabledInInput: true }
+		)
 		.register({ code: 'Enter', ctrlKey: true }, (_evt) => {
 			document.querySelector('form#vstobjects').submit();
 		})

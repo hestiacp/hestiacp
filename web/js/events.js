@@ -194,62 +194,6 @@ const VE = {
 			}
 		},
 	},
-	notifications: {
-		get_list: async () => {
-			const token = document.querySelector('#token').getAttribute('token');
-			const response = await fetch(`/list/notifications/?ajax=1&token=${token}`, {});
-			if (!response.ok) {
-				throw new Error('An error occured while fetching notifications.');
-			}
-
-			const data = await response.clone().json();
-
-			const notifications = Object.entries(data).reduce(
-				(acc, [id, notification]) =>
-					acc +
-					App.Templates.notification
-						.replace(':UNSEEN', notification.ACK ? 'unseen' : '')
-						.replace(':ID', notification.ID)
-						.replace(':TYPE', notification.TYPE)
-						.replace(':TOPIC', notification.TOPIC)
-						.replace(':NOTICE', notification.NOTICE)
-						.replace(':TIME', notification.TIME)
-						.replace(':DATE', notification.DATE),
-				''
-			);
-
-			if (!Object.keys(data).length) {
-				/** @type string */
-				const tpl = App.Templates.notification_empty;
-				acc.push(tpl);
-			}
-
-			const notificationContainer = document.querySelector('.notification-container');
-			notificationContainer.innerHTML = notifications;
-			notificationContainer.classList.remove('u-hidden');
-
-			notificationContainer.querySelectorAll('.mark-seen').forEach((el) => {
-				el.addEventListener('click', async (evt) => {
-					const token = document.querySelector('#token').getAttribute('token');
-					const id = evt.target.getAttribute('id');
-					document.querySelector(`#${id}`).parentElement.style.display = 'none';
-
-					await fetch(
-						`/delete/notification/?delete=1&notification_id=${id.replace(
-							'notification-',
-							''
-						)}&token=${token}`
-					);
-
-					if (document.querySelectorAll('.notification-container li:visible').length == 0) {
-						document.querySelectorAll('.js-notifications').forEach((el) => {
-							el.classList.remove('status-icon', 'updates', 'active');
-						});
-					}
-				});
-			});
-		},
-	},
 	callbacks: {
 		click: {
 			do_suspend: (evt, elm) => {

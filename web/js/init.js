@@ -161,22 +161,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// focusing on the first input at form
 	if (location.href.indexOf('lead=') == -1 && !$('.ui-dialog').is(':visible')) {
-		document
-			.querySelector(
-				'#vstobjects .form-control:not([disabled]), #vstobjects .form-select:not([disabled])'
-			)
-			.focus();
+		const input = document.querySelector(
+			'#vstobjects .form-control:not([disabled]),\
+			#vstobjects .form-select:not([disabled])'
+		);
+		if (input) {
+			input.focus();
+		}
 	}
 
-	$('.js-notifications').click((_evt) => {
-		if (!$('.js-notifications').hasClass('active')) {
-			VE.notifications.get_list();
-			$('.js-notifications').addClass('active');
-		} else {
-			$('.notification-container').addClass('u-hidden');
-			$('.js-notifications').removeClass('active');
-		}
-	});
+	document.querySelector('.js-notifications').addEventListener('click', toggleNotifications);
 
 	$('.js-toggle-top-bar-menu').click((_evt) => {
 		$(this).siblings('.top-bar-nav-list').toggle();

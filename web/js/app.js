@@ -1,35 +1,34 @@
-const App = {
+class AppClass {
 	// CONSTANT VALUES
-	Constants: {
+	Constants = {
 		UNLIM_VALUE: 'unlimited', // overritten in i18n.js.php
 		UNLIM_TRANSLATED_VALUE: 'unlimited', // overritten in i18n.js.php
-	},
+	};
+
 	// Actions. More widly used funcs
-	Actions: {
+	Actions = {
 		DB: {},
 		WEB: {},
 		PACKAGE: {},
 		MAIL_ACC: {},
 		MAIL: {},
-	},
-	// Utilities
-	Helpers: {
-		isUnlimitedValue: (value) => {
-			var value = value.trim();
-			if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
-				return true;
-			}
+	};
 
-			return false;
-		},
-	},
-	Listeners: {
+	// Utilities
+	Helpers = {
+		isUnlimitedValue: (value) =>
+			value.trim() == App.Constants.UNLIM_VALUE ||
+			value.trim() == App.Constants.UNLIM_TRANSLATED_VALUE,
+	};
+
+	Listeners = {
 		DB: {},
 		WEB: {},
 		PACKAGE: {},
 		MAIL_ACC: {},
-	},
-	Templates: {
+	};
+
+	Templates = {
 		notification:
 			'<li class=":UNSEEN"><span class="unselectable mark-seen" id="notification-:ID">&nbsp;</span>\
 				<span class="notification-title"><span class="unselectable icon :TYPE">&nbsp;</span>:TOPIC</span>\
@@ -38,10 +37,12 @@ const App = {
 			</li>',
 		notification_empty:
 			'<li class="empty"><span><i class="fas fa-bell-slash status-icon dim" style="font-size: 4rem;"></i><br><br>' +
-			App.Constants.NOTIFICATIONS_EMPTY +
+			this.Constants.NOTIFICATIONS_EMPTY +
 			'</span></li>',
-	},
-};
+	};
+}
+
+const App = new AppClass();
 
 function setStickyClass() {
 	const toolbar = document.querySelector('.toolbar');
@@ -52,7 +53,9 @@ function setStickyClass() {
 
 	const isActive = window.scrollY > toolbarOffset - headerHeight;
 	toolbar.classList.toggle('active', isActive);
-	tableHeader.classList.toggle('active', isActive);
+	if (tableHeader) {
+		tableHeader.classList.toggle('active', isActive);
+	}
 }
 
 function checkedAll() {
@@ -147,4 +150,68 @@ function randomString(length = 16) {
 			throw new Error('tried a million times, something is wrong');
 		}
 	}
+}
+
+/**
+ * @param {MouseEvent} _evt
+ */
+async function toggleNotifications(_evt) {
+	const notificationContainer = document.querySelector('.notification-container');
+	const notificationButton = document.querySelector('.js-notifications');
+	const isActive = notificationButton.classList.contains('active');
+
+	notificationContainer.classList.toggle('u-hidden', isActive);
+	notificationButton.classList.toggle('active', !isActive);
+	if (isActive) {
+		return;
+	}
+
+	const token = document.querySelector('#token').getAttribute('token');
+	const response = await fetch(`/list/notifications/?ajax=1&token=${token}`, {});
+	if (!response.ok) {
+		throw new Error('An error occured while fetching notifications.');
+	}
+
+	const data = await response.clone().json();
+
+	const notifications = Object.entries(data).reduce(
+		(acc, [_id, notification]) =>
+			acc +
+			App.Templates.notification
+				.replace(':UNSEEN', notification.ACK ? 'unseen' : '')
+				.replace(':ID', notification.ID)
+				.replace(':TYPE', notification.TYPE)
+				.replace(':TOPIC', notification.TOPIC)
+				.replace(':NOTICE', notification.NOTICE)
+				.replace(':TIME', notification.TIME)
+				.replace(':DATE', notification.DATE),
+		''
+	);
+
+	if (!Object.keys(data).length) {
+		/** @type string */
+		const tpl = App.Templates.notification_empty;
+		acc.push(tpl);
+	}
+
+	notificationContainer.innerHTML = notifications;
+
+	notificationContainer.querySelectorAll('.mark-seen').forEach((el) => {
+		el.addEventListener('click', async (evt) => {
+			const token = document.querySelector('#token').getAttribute('token');
+			const id = evt.target.getAttribute('id');
+			document.querySelector(`#${id}`).parentElement.style.display = 'none';
+
+			await fetch(
+				`/delete/notification/?delete=1&notification_id=${id.replace(
+					'notification-',
+					''
+				)}&token=${token}`
+			);
+
+			if (document.querySelectorAll('.notification-container li:visible').length == 0) {
+				notificationButton.classList.remove('status-icon', 'updates', 'active');
+			}
+		});
+	});
 }

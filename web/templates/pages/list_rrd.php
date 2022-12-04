@@ -15,7 +15,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center animate__animated animate__fadeIn">
+<div class="container animate__animated animate__fadeIn">
 	<div class="form-container form-container-wide">
 		<!-- Begin graph list item loop -->
 		<?php foreach ($data as $key => $value) { ?>
@@ -33,7 +33,6 @@
 	</div>
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center"></div>
-</div>
+<footer class="app-footer">
+	<div class="container"></div>
+</footer>

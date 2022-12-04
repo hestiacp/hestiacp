@@ -54,7 +54,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
@@ -95,13 +95,12 @@
 	<?php } ?>
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center">
+<footer class="app-footer">
+	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
 				<?php printf(ngettext('%d log record', '%d log records', $i),$i); ?>
 			</div>
 		</div>
 	</div>
-</div>
+</footer>

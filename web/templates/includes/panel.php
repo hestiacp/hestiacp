@@ -1,164 +1,164 @@
 <div id="token" token="<?=$_SESSION['token']?>"></div>
 
-<header class="top-bar">
-	<div class="l-center top-bar-inner">
+<header class="app-header">
 
-		<!-- Logo / Usage Statistics wrapper -->
-		<div class="top-bar-left">
+	<div class="top-bar">
+		<div class="container top-bar-inner">
 
-			<!-- Logo / Home Button -->
-			<a href="<?=htmlspecialchars($home_url)?>" class="top-bar-logo" title="<?=_('Hestia Control Panel');?>">
-				<img src="/images/logo-header.svg" alt="<?=_('Hestia Control Panel');?>" width="54" height="29">
-			</a>
+			<!-- Logo / Usage Statistics wrapper -->
+			<div class="top-bar-left">
 
-			<!-- Usage Statistics -->
-			<div class="top-bar-usage">
-				<?php
-					if (isset($_SESSION['look'])) {
-						$user_icon = 'fa-binoculars';
-					} else if ($_SESSION['userContext'] === 'admin') {
-						$user_icon = 'fa-user-tie';
-					} else {
-						$user_icon = 'fa-user';
-					}
-				?>
-				<div class="top-bar-usage-inner">
-					<span class="top-bar-usage-item">
-						<i class="fas <?=$user_icon;?>" title="<?=_('Logged in as');?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i>
-						<b><?=htmlspecialchars($user)?></b>
-					</span>
-					<span class="top-bar-usage-item">
-						<i class="fas fa-hard-drive" title="<?=_('Disk');?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>
-						<b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>
-					</span>
-					<span class="top-bar-usage-item">
-						<i class="fas fa-right-left" title="<?=_('Bandwidth');?>: <?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>"></i>
-						<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
-					</span>
+				<!-- Logo / Home Button -->
+				<a href="<?=htmlspecialchars($home_url)?>" class="top-bar-logo" title="<?=_('Hestia Control Panel');?>">
+					<img src="/images/logo-header.svg" alt="<?=_('Hestia Control Panel');?>" width="54" height="29">
+				</a>
+
+				<!-- Usage Statistics -->
+				<div class="top-bar-usage">
+					<?php
+						if (isset($_SESSION['look'])) {
+							$user_icon = 'fa-binoculars';
+						} else if ($_SESSION['userContext'] === 'admin') {
+							$user_icon = 'fa-user-tie';
+						} else {
+							$user_icon = 'fa-user';
+						}
+					?>
+					<div class="top-bar-usage-inner">
+						<span class="top-bar-usage-item">
+							<i class="fas <?=$user_icon;?>" title="<?=_('Logged in as');?>: <?=htmlspecialchars($panel[$user]['NAME'])?>"></i>
+							<b><?=htmlspecialchars($user)?></b>
+						</span>
+						<span class="top-bar-usage-item">
+							<i class="fas fa-hard-drive" title="<?=_('Disk');?>: <?=humanize_usage_size($panel[$user]['U_DISK'])?> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>"></i>
+							<b><?=humanize_usage_size($panel[$user]['U_DISK'])?></b> <?=humanize_usage_measure($panel[$user]['U_DISK'])?>
+						</span>
+						<span class="top-bar-usage-item">
+							<i class="fas fa-right-left" title="<?=_('Bandwidth');?>: <?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>"></i>
+							<b><?=humanize_usage_size($panel[$user]['U_BANDWIDTH'])?></b> <?=humanize_usage_measure($panel[$user]['U_BANDWIDTH'])?>
+						</span>
+					</div>
 				</div>
+
+			</div>
+
+			<!-- Notifications / Menu wrapper -->
+			<div class="top-bar-right">
+
+				<!-- Notifications -->
+				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
+					<!-- Do not show notifications panel when impersonating 'admin' user -->
+				<?php } else { ?>
+					<div class="top-bar-notifications">
+						<button type="button" class="top-bar-menu-link js-notifications" title="<?=_('Notifications');?>">
+							<i class="fas fa-bell <?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"></i>
+							<span class="u-hidden"><?=_('Notifications');?></span>
+						</button>
+						<ul class="top-bar-notifications-list animate__animated animate__fadeIn u-hidden"></ul>
+					</div>
+				<?php } ?>
+
+				<!-- Menu -->
+				<nav class="top-bar-menu">
+
+					<button type="button" class="top-bar-menu-link u-hide-tablet js-toggle-top-bar-menu" title="<?=_('Toggle menu');?>">
+						<i class="fas fa-bars"></i>
+						<span class="u-hidden"><?=_('Toggle menu');?></span>
+					</button>
+
+					<ul class="top-bar-menu-list animate__animated animate__fadeIn">
+
+						<!-- File Manager -->
+						<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
+							<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
+								<!-- Hide file manager when impersonating admin-->
+							<?php } else { ?>
+								<li class="top-bar-menu-item">
+									<a title="<?=_('File manager');?>" class="top-bar-menu-link <?php if($TAB == 'FM') echo 'active' ?>" href="/fm/">
+										<i class="fas fa-folder-open"></i>
+										<span class="top-bar-menu-link-label u-hide-desktop"><?=_('File manager');?></span>
+									</a>
+								</li>
+							<?php } ?>
+						<?php } ?>
+
+						<!-- Server Settings -->
+						<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') || ($_SESSION['user'] === 'admin')) {?>
+							<?php if (($_SESSION['userContext'] === 'admin') && (!empty($_SESSION['look']))) {?>
+								<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
+							<?php } else { ?>
+								<li class="top-bar-menu-item">
+									<a title="<?=_('Server');?>" class="top-bar-menu-link <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
+										<i class="fas fa-gear"></i>
+										<span class="top-bar-menu-link-label u-hide-desktop"><?=_('Server');?></span>
+									</a>
+								</li>
+							<?php } ?>
+						<?php } ?>
+
+						<!-- Edit User -->
+						<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
+							<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
+							<li class="top-bar-menu-item">
+								<a title="<?=_('Logs');?>" class="top-bar-menu-link <?php if($TAB == 'LOG') echo 'active' ?>" href="/list/log/">
+									<i class="fas fa-clock-rotate-left"></i>
+									<span class="top-bar-menu-link-label u-hide-desktop"><?=_('Logs');?></span>
+								</a>
+							</li>
+						<?php } else { ?>
+							<?php if ($panel[$user]['SUSPENDED'] === 'no') {?>
+								<li class="top-bar-menu-item">
+									<a title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="top-bar-menu-link" href="/edit/user/?user=<?=$user; ?>&token=<?=$_SESSION['token']?>">
+										<i class="fas fa-circle-user"></i>
+										<span class="top-bar-menu-link-label u-hide-desktop"><?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)</span>
+									</a>
+								</li>
+							<?php } ?>
+						<?php } ?>
+
+						<!-- Statistics -->
+						<li class="top-bar-menu-item">
+							<a title="<?=_('Statistics');?>" class="top-bar-menu-link <?php if($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
+								<i class="fas fa-chart-line"></i>
+								<span class="top-bar-menu-link-label u-hide-desktop"><?=_('Statistics');?></span>
+							</a>
+						</li>
+
+						<!-- Help / Documentation -->
+						<li class="top-bar-menu-item">
+							<a title="<?=_('Help');?>" class="top-bar-menu-link" href="https://docs.hestiacp.com/" target="_blank" rel="noopener">
+								<i class="fas fa-circle-question"></i>
+								<span class="top-bar-menu-link-label u-hide-desktop"><?=_('Help');?></span>
+							</a>
+						</li>
+
+						<!-- Logout -->
+						<?php if (isset($_SESSION['look']) && (!empty($_SESSION['look']))) { ?>
+							<li class="top-bar-menu-item">
+								<a title="<?=_('Log out');?> (<?=$user?>)" class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?=$_SESSION['token']?>">
+									<i class="fas fa-circle-up"></i>
+									<span class="top-bar-menu-link-label u-hide-desktop"><?=_('Log out');?> (<?=$user?>)</span>
+								</a>
+							</li>
+						<?php } else { ?>
+							<li class="top-bar-menu-item">
+								<a title="<?=_('Log out');?>" class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?=$_SESSION['token']?>">
+									<i class="fas fa-right-from-bracket"></i>
+									<span class="top-bar-menu-link-label u-hide-desktop"><?=_('Log out');?></span>
+								</a>
+							</li>
+						<?php } ?>
+
+					</ul>
+				</nav>
+
 			</div>
 
 		</div>
-
-		<!-- Notifications / Menu wrapper -->
-		<div class="top-bar-right">
-
-			<!-- Notifications -->
-			<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
-				<!-- Do not show notifications panel when impersonating 'admin' user -->
-			<?php } else { ?>
-				<div class="top-bar-notifications">
-					<button type="button" class="top-bar-nav-link js-notifications" title="<?=_('Notifications');?>">
-						<i class="fas fa-bell <?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"></i>
-						<span class="u-hidden"><?=_('Notifications');?></span>
-					</button>
-					<ul class="top-bar-notifications-list animate__animated animate__fadeIn u-hidden"></ul>
-				</div>
-			<?php } ?>
-
-			<!-- Menu -->
-			<nav class="top-bar-nav">
-
-				<button type="button" class="top-bar-nav-link u-hide-tablet js-toggle-top-bar-menu" title="<?=_('Toggle menu');?>">
-					<i class="fas fa-bars"></i>
-					<span class="u-hidden"><?=_('Toggle menu');?></span>
-				</button>
-
-				<ul class="top-bar-nav-list animate__animated animate__fadeIn">
-
-					<!-- File Manager -->
-					<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
-						<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] == 'yes'))) {?>
-							<!-- Hide file manager when impersonating admin-->
-						<?php } else { ?>
-							<li class="top-bar-nav-item">
-								<a title="<?=_('File manager');?>" class="top-bar-nav-link <?php if($TAB == 'FM') echo 'active' ?>" href="/fm/">
-									<i class="fas fa-folder-open"></i>
-									<span class="top-bar-nav-link-label u-hide-desktop"><?=_('File manager');?></span>
-								</a>
-							</li>
-						<?php } ?>
-					<?php } ?>
-
-					<!-- Server Settings -->
-					<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes') || ($_SESSION['user'] === 'admin')) {?>
-						<?php if (($_SESSION['userContext'] === 'admin') && (!empty($_SESSION['look']))) {?>
-							<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
-						<?php } else { ?>
-							<li class="top-bar-nav-item">
-								<a title="<?=_('Server');?>" class="top-bar-nav-link <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
-									<i class="fas fa-gear"></i>
-									<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Server');?></span>
-								</a>
-							</li>
-						<?php } ?>
-					<?php } ?>
-
-					<!-- Edit User -->
-					<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
-						<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
-						<li class="top-bar-nav-item">
-							<a title="<?=_('Logs');?>" class="top-bar-nav-link <?php if($TAB == 'LOG') echo 'active' ?>" href="/list/log/">
-								<i class="fas fa-clock-rotate-left"></i>
-								<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Logs');?></span>
-							</a>
-						</li>
-					<?php } else { ?>
-						<?php if ($panel[$user]['SUSPENDED'] === 'no') {?>
-							<li class="top-bar-nav-item">
-								<a title="<?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)" class="top-bar-nav-link" href="/edit/user/?user=<?=$user; ?>&token=<?=$_SESSION['token']?>">
-									<i class="fas fa-circle-user"></i>
-									<span class="top-bar-nav-link-label u-hide-desktop"><?=htmlspecialchars($user)?> (<?=htmlspecialchars($panel[$user]['NAME'])?>)</span>
-								</a>
-							</li>
-						<?php } ?>
-					<?php } ?>
-
-					<!-- Statistics -->
-					<li class="top-bar-nav-item">
-						<a title="<?=_('Statistics');?>" class="top-bar-nav-link <?php if($TAB == 'STATS') echo 'active' ?>" href="/list/stats/">
-							<i class="fas fa-chart-line"></i>
-							<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Statistics');?></span>
-						</a>
-					</li>
-
-					<!-- Help / Documentation -->
-					<li class="top-bar-nav-item">
-						<a title="<?=_('Help');?>" class="top-bar-nav-link" href="https://docs.hestiacp.com/" target="_blank" rel="noopener">
-							<i class="fas fa-circle-question"></i>
-							<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Help');?></span>
-						</a>
-					</li>
-
-					<!-- Logout -->
-					<?php if (isset($_SESSION['look']) && (!empty($_SESSION['look']))) { ?>
-						<li class="top-bar-nav-item">
-							<a title="<?=_('Log out');?> (<?=$user?>)" class="top-bar-nav-link top-bar-nav-link-logout" href="/logout/?token=<?=$_SESSION['token']?>">
-								<i class="fas fa-circle-up"></i>
-								<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Log out');?> (<?=$user?>)</span>
-							</a>
-						</li>
-					<?php } else { ?>
-						<li class="top-bar-nav-item">
-							<a title="<?=_('Log out');?>" class="top-bar-nav-link top-bar-nav-link-logout" href="/logout/?token=<?=$_SESSION['token']?>">
-								<i class="fas fa-right-from-bracket"></i>
-								<span class="top-bar-nav-link-label u-hide-desktop"><?=_('Log out');?></span>
-							</a>
-						</li>
-					<?php } ?>
-
-				</ul>
-			</nav>
-
-		</div>
-
 	</div>
-</header>
 
-<div class="l-content">
-	<div class="l-center">
-
-		<nav class="main-menu">
+	<nav class="main-menu">
+		<div class="container">
 			<ul class="main-menu-list">
 
 				<!-- Users tab -->
@@ -291,6 +291,9 @@
 				<?php } ?>
 
 			</ul>
-		</nav>
+		</div>
+	</nav>
 
-	</div>
+</header>
+
+<main class="app-content">

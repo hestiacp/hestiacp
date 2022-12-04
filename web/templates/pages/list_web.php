@@ -3,7 +3,9 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== 'true') {?>
-				<a href="/add/web/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add Web Domain');?></a>
+				<a href="/add/web/" class="button button-secondary" id="btn-create">
+					<i class="fas fa-circle-plus status-icon green"></i><?=_('Add Web Domain');?>
+				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -54,7 +56,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 
 	<!-- Table header -->
 	<div class="header table-header">
@@ -239,13 +241,12 @@
 	</div>
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center">
+<footer class="app-footer">
+	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
 				<?php printf(ngettext('%d web domain', '%d web domains', $i),$i); ?>
 			</div>
 		</div>
 	</div>
-</div>
+</footer>

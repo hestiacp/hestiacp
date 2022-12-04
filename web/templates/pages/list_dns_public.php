@@ -3,7 +3,9 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== 'true') {?>
-				<a href="/add/dns/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add DNS Domain');?></a>
+				<a href="/add/dns/" class="button button-secondary" id="btn-create">
+					<i class="fas fa-circle-plus status-icon green"></i><?=_('Add DNS Domain');?>
+				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -54,7 +56,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">

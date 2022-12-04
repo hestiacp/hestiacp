@@ -3,19 +3,25 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
-				<a class="button button-secondary" id="btn-back" href="/list/key/?user=<?=htmlentities($_GET['user']);?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+				<a class="button button-secondary" id="btn-back" href="/list/key/?user=<?=htmlentities($_GET['user']);?>">
+					<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				</a>
 			<?php } else { ?>
-				<a class="button button-secondary" id="btn-back" href="/list/key/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+				<a class="button button-secondary" id="btn-back" href="/list/key/">
+					<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?></a>
+			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+			</a>
 		</div>
 	</div>
 </div>
 <!-- End toolbar -->
 
-<div class="l-center animate__animated animate__fadeIn">
+<div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_add_key" method="post">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">

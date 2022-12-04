@@ -66,6 +66,43 @@ strong {
 	}
 }
 
+/* Main menu
+   ========================================================================== */
+
+.main-menu-item-link {
+	&:hover {
+		& .main-menu-item-label {
+			color: #ff791f;
+		}
+	}
+
+	&.active {
+		& .main-menu-item-label {
+			color: #ff791f;
+		}
+	}
+
+	& .fas {
+		display: none;
+	}
+
+	@media (--viewport-medium) {
+		text-align: left;
+
+		&:hover {
+			border-bottom-color: #ff791f;
+		}
+
+		&.active {
+			border-bottom-color: #ff791f;
+		}
+	}
+}
+
+.main-menu-item-label {
+	font-size: 0.9rem;
+}
+
 .table-header {
 	box-shadow: none;
 	background: #fafafa;
@@ -186,43 +223,6 @@ strong {
 .form-select {
 	box-shadow: none;
 	border-radius: 0;
-}
-
-/* Main menu
-   ========================================================================== */
-
-.main-menu-item-link {
-	&:hover {
-		& .main-menu-item-label {
-			color: #ff791f;
-		}
-	}
-
-	&.active {
-		& .main-menu-item-label {
-			color: #ff791f;
-		}
-	}
-
-	& .fas {
-		display: none;
-	}
-
-	@media (--viewport-medium) {
-		text-align: left;
-
-		&:hover {
-			border-bottom-color: #ff791f;
-		}
-
-		&.active {
-			border-bottom-color: #ff791f;
-		}
-	}
-}
-
-.main-menu-item-label {
-	font-size: 0.9rem;
 }
 
 .form-control:focus {

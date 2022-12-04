@@ -696,6 +696,21 @@ $(document).ready(function () {
 		$(this).siblings('.top-bar-menu-list').toggle();
 	});
 
+	$('.js-toggle-main-menu').click(function (evt) {
+		var $mainMenuList = $('.main-menu-list');
+		var $toggleLabel = $('.main-menu-toggle-label');
+		var openLabel = $toggleLabel.data('open-label');
+		var closeLabel = $toggleLabel.data('close-label');
+
+		$mainMenuList.slideToggle(200, function () {
+			if ($mainMenuList.is(':visible')) {
+				$toggleLabel.text(closeLabel);
+			} else {
+				$toggleLabel.text(openLabel);
+			}
+		});
+	});
+
 	$('.button.cancel').attr('title', 'ctrl+Backspace');
 
 	VE.core.register();

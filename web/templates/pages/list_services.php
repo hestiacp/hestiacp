@@ -28,7 +28,7 @@
 					<option value="start"><?=_('start');?></option>
 					<option value="restart"><?=_('restart');?></option>
 				</select>
-				<button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+				<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>

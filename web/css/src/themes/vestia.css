@@ -4,7 +4,7 @@
     Website:     www.hestiacp.com
 */
 
-@custom-media --viewport-medium (min-width: 768px);
+@import url("../media_queries");
 
 :root {
 	--animate-duration: 0s;
@@ -212,11 +212,23 @@ strong {
 	}
 }
 
-.context-menu.sort-order {
+.toolbar-sorting-menu {
 	box-shadow: none;
-	border: 1px solid #ccc;
-	font-size: 0.75rem;
-	background: #fff;
+	border-color: #ccc;
+	background-color: #fff;
+
+	& span {
+		&:hover {
+			color: #ff6701;
+			background: none;
+		}
+
+		&.active {
+			background: none;
+			font-weight: bold;
+			color: #444;
+		}
+	}
 }
 
 .form-control,
@@ -246,7 +258,7 @@ strong {
 	font-size: 1.2rem;
 }
 
-.toolbar-submit {
+.toolbar-input-submit {
 	background-color: #cacaca;
 	border-radius: 0;
 	color: #fff;
@@ -369,17 +381,6 @@ strong {
 	color: #b5da0b;
 }
 
-.context-menu.sort-order span.active {
-	background: none !important;
-	font-weight: bold !important;
-	color: #444 !important;
-}
-
-.context-menu.sort-order span:hover {
-	color: #ff6701 !important;
-	background: none !important;
-}
-
 .badge.gray {
 	border: 1px solid rgb(255 255 255 / 40%) !important;
 }
@@ -389,10 +390,27 @@ strong {
 	background: #ededed;
 }
 
+/* Login box
+   ========================================================================== */
+
 .login {
-	background-color: rgb(255 255 255 / 100%);
-	box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
-	border-radius: 0;
+	& .form-label {
+		color: #4b4b4b;
+	}
+
+	@media (--viewport-small) {
+		background-color: rgb(255 255 255 / 100%);
+		box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
+		border-radius: 0;
+	}
+}
+
+.login-title {
+	color: #4b4b4b;
+}
+
+.login-label-link {
+	color: #326b9b;
 }
 
 .mail-infoblock {

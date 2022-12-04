@@ -33,8 +33,9 @@ $(document).ready(function () {
 		set_sticky_class();
 	});
 
-	$('.toolbar-right .sort-by').click(function () {
-		$('.context-menu.sort-order').toggle();
+	$('.toolbar-sorting-toggle').click(function (evt) {
+		evt.preventDefault();
+		$('.toolbar-sorting-menu').toggleClass('u-hidden');
 	});
 
 	// SEARCH BOX
@@ -100,21 +101,21 @@ $(document).ready(function () {
 		VE.tmp.form_changed = 1;
 	});
 
-	$('.sort-order span').click(function () {
-		$('.context-menu.sort-order').toggle();
+	$('.toolbar-sorting-menu span').click(function () {
+		$('.toolbar-sorting-menu').toggleClass('u-hidden');
 		if ($(this).hasClass('active')) return;
 
-		$('.sort-order span').removeClass('active');
+		$('.toolbar-sorting-menu span').removeClass('active');
 		$(this).addClass('active');
 		VE.tmp.sort_par = $(this).parent('li').attr('entity');
 		VE.tmp.sort_as_int = $(this).parent('li').attr('sort_as_int');
 		VE.tmp.sort_direction = $(this).hasClass('up') * 1 || -1;
 
-		$('.toolbar .sort-by b').html($(this).parent('li').find('.name').html());
-		$('.toolbar .sort-by i').removeClass('fa-arrow-up-a-z fa-arrow-down-a-z');
+		$('.toolbar-sorting-toggle b').html($(this).parent('li').find('.name').html());
+		$('.toolbar-sorting-toggle .fas').removeClass('fa-arrow-up-a-z fa-arrow-down-a-z');
 		$(this).hasClass('up')
-			? $('.toolbar .sort-by i').addClass('fa-arrow-up-a-z')
-			: $('.toolbar .sort-by i').addClass('fa-arrow-down-a-z');
+			? $('.toolbar-sorting-toggle .fas').addClass('fa-arrow-up-a-z')
+			: $('.toolbar-sorting-toggle .fas').addClass('fa-arrow-down-a-z');
 		$('.units .l-unit')
 			.sort(function (a, b) {
 				if (VE.tmp.sort_as_int)
@@ -717,13 +718,8 @@ $(document).ready(function () {
 	if (location.href.search(/list/) != -1) {
 		var shift_select_ref = $('body').finderSelect({
 			children: '.l-unit',
-			onFinish: function (evt) {
-				if (
-					$('.app-content').find('.l-unit.selected').length ==
-					$('.app-content').find('.l-unit').length
-				) {
-					$('.toggle-all').addClass('clicked-on');
-				}
+			onFinish: function () {
+				// do nothing
 			},
 			toggleAllHook: function () {
 				if ($('.l-unit').length == $('.ch-toggle:checked').length) {

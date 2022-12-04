@@ -7,7 +7,10 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
+				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
+					<?=_('sort by');?>: <b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b>
+				</a>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-ip"><span class="name"><?=_('ip');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-netmask"><span class="name"><?=_('Netmask');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
@@ -15,9 +18,6 @@
 					<li entity="sort-domains" sort_as_int="1"><span class="name"><?=_('Domains');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-owner"><span class="name"><?=_('Owner');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<div class="sort-by" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>: <b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b>
-				</div>
 				<form action="/bulk/ip/" method="post" id="objects">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
@@ -25,7 +25,7 @@
 						<option value="reread IP"><?=_('reread IP');?></option>
 						<option value="delete"><?=_('delete');?></option>
 					</select>
-					<button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>

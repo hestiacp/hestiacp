@@ -1,3 +1,4 @@
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="/js/vendor/jquery-3.6.1.min.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/vendor/jquery.cookie.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/vendor/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>

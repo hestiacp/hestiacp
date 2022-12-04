@@ -2124,11 +2124,6 @@
 	white-space: nowrap;
 }
 
-#v_password {
-	white-space: inherit;
-	word-break: break-word;
-}
-
 .additional-info {
 	margin-top: 12px;
 	width: 400px;

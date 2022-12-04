@@ -1,23 +1,36 @@
-# [Hestia Control Panel](https://www.hestiacp.com/)
+<h1 align="center"><a href="https://www.hestiacp.com/">Hestia Control Panel</a></h1>
 
 ![Hestia screenshot](https://hestiacp.com/img/screen_HestiaServer-dark.png)
 
-**Latest stable release:** Version 1.6.11 | [View Changelog](https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md) | [![Build Status](https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main)](https://drone.hestiacp.com/hestiacp/hestiacp) <br>
+<h2 align="center">Lightweight and powerful control panel for the modern web.</h2>
 
-**Web:** [www.hestiacp.com](https://www.hestiacp.com/)<br>
-**Documentation:** [docs.hestiacp.com](https://docs.hestiacp.com/)<br>
-**Forums:** [forum.hestiacp.com](https://forum.hestiacp.com/)<br>
-**Discord:** [Join the discussion](https://discord.gg/nXRUZch)<br />
-<br>
+<p align="center"><strong>Latest stable release:</strong> Version 1.6.11 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+
+<p align="center">
+	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
+	<a href="https://docs.hestiacp.com/">Documentation</a> |
+	<a href="https://forum.hestiacp.com/">Forum</a> |
+	<a href="https://discord.gg/nXRUZch">Discord</a>
+	<br/><br/>
+	<a href="https://drone.hestiacp.com/hestiacp/hestiacp">
+		<img src="https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main" alt="Drone Status"/>
+	</a>
+	<a href="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml">
+		<img src="https://github.com/hestiacp/hestiacp/actions/workflows/lint.yml/badge.svg" alt="Lint Status"/>
+	</a>
+</p>
+
+## **Welcome!**
+
+Hestia Control Panel is designed to provide administrators an easy to use web and command line interface, enabling them to quickly deploy and manage web domains, mail accounts, DNS zones, and databases from one central dashboard without the hassle of manually deploying and configuring individual components or services.
+
+## Donate
+
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ST87LQH2CHGLA)<br /><br />
 Bitcoin : bc1q48jt5wg5jaj8g9zy7c3j03cv57j2m2u5anlutu<br>
 Ethereum : 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 Binance: bnb1l4ywvw5ejfmsgjdcx8jn5lxj7zsun8ktfu7rh8<br>
 Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
-
-## **Welcome!**
-
-Hestia Control Panel is designed to provide administrators an easy to use web and command line interface, enabling them to quickly deploy and manage web domains, mail accounts, DNS zones, and databases from one central dashboard without the hassle of manually deploying and configuring individual components or services.
 
 ## Features and Services
 

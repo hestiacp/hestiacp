@@ -5,22 +5,7 @@
 	<!-- Load necessary CSS and JavaScript from source -->
 	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.php'; ?>
 	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.php'; ?>
-	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/top_js.php'; ?>
-	<script src="/js/vendor/jquery.cookie.js?<?=JS_LATEST_UPDATE?>"></script>
-	<script src="/js/vendor/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>
-	<script src="/js/vendor/jquery.finder.js?<?=JS_LATEST_UPDATE?>"></script>
-	<script src="/js/shortcuts.js?<?=JS_LATEST_UPDATE?>"></script>
-	<script src="/js/events.js?<?=JS_LATEST_UPDATE?>"></script>
-	<script src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
-	<script src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
-	<script src="/js/i18n.js.php?<?=JS_LATEST_UPDATE?>"></script>
-	<?php foreach(new DirectoryIterator($_SERVER['HESTIA'].'/web/js/custom_scripts') as $customScript){
-		if($customScript->getExtension() === 'js'){
-			echo '<script src="/js/custom_scripts/'.rawurlencode($customScript->getBasename()).'"></script>';
-		} elseif($customScript->getExtension() === "php"){
-			require_once($customScript->getPathname());
-		}
-	 } ?>
+	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/js.php'; ?>
 </head>
 
 <body>

@@ -178,6 +178,11 @@ function render_page($user, $TAB, $page) {
 	// Header
 	include $__template_dir . "header.php";
 
+	// Including page specific js file
+	if (file_exists($__pages_js_dir . $page . ".js")) {
+		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
+	}
+
 	// Panel
 	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
 	// Extract global variables
@@ -186,15 +191,9 @@ function render_page($user, $TAB, $page) {
 
 	// Policies controller
 	@include_once dirname(__DIR__) . "/inc/policies.php";
+
 	// Body
 	include $__template_dir . "pages/" . $page . ".php";
-
-	// Including common js files
-	@include_once dirname(__DIR__) . "/templates/includes/end_js.php";
-	// Including page specific js file
-	if (file_exists($__pages_js_dir . $page . ".js")) {
-		echo '<script src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
-	}
 
 	// Footer
 	include $__template_dir . "footer.php";

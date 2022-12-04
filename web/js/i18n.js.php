@@ -5,5 +5,5 @@ session_start();
 require_once $_SERVER["DOCUMENT_ROOT"] . "/inc/i18n.php";
 ?>
 
-App.Constants.UNLIM_TRANSLATED_VALUE = '<?= _("unlimited") ?>';
-App.Constants.NOTIFICATIONS_EMPTY = '<?= _("no notifications") ?>';
+App.setConstant('UNLIM_TRANSLATED_VALUE', '<?= _("unlimited") ?>');
+App.setConstant('NOTIFICATIONS_EMPTY', '<?= _("no notifications") ?>');

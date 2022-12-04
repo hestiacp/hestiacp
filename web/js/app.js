@@ -3,7 +3,12 @@ class AppClass {
 	Constants = {
 		UNLIM_VALUE: 'unlimited', // overritten in i18n.js.php
 		UNLIM_TRANSLATED_VALUE: 'unlimited', // overritten in i18n.js.php
+		NOTIFICATIONS_EMPTY: 'no notifications', // overritten in i18n.js.php
 	};
+
+	setConstant(key, value) {
+		this.Constants[key] = value;
+	}
 
 	// Actions. More widly used funcs
 	Actions = {
@@ -204,7 +209,9 @@ async function toggleNotifications(_evt) {
 			await fetch(`/delete/notification/?delete=1&notification_id=${id}&token=${token}`);
 
 			if (document.querySelectorAll('.notification-container > li').length == 0) {
-				notificationButton.classList.remove('status-icon', 'updates', 'active');
+				notificationContainer.classList.add('u-hidden');
+				notificationButton.classList.remove('active', 'updates');
+				notificationButton.querySelector('.status-icon').classList.remove('status-icon');
 			}
 		});
 	});

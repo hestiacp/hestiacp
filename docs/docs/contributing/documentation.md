@@ -4,12 +4,13 @@ The documentation is built using [VitePress](https://vitepress.vuejs.org). There
 
 ## Requirements
 
-- Node.js 16 or higher with [pnpm installed](https://pnpm.io/installation);
+- Node.js 16 or higher
+- [Yarn](https://yarnpkg.com/getting-started/install) package manager
 - A code editor with Vue and Markdown support. We suggest [Visual Studio Code](https://code.visualstudio.com).
 
 ## Viewing your changes locally
 
 1. Open the project folder in your terminal.
-2. If the dependencies are not installed yet, install them by running `pnpm i`.
-3. Run `pnpm dev`.
+2. If the dependencies are not installed yet, install them by running `yarn install`.
+3. Run `yarn docs:dev`.
 4. Navigate to `http://localhost:5173` in your browser.

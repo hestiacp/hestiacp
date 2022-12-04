@@ -22,8 +22,8 @@ class AppClass {
 	// Utilities
 	Helpers = {
 		isUnlimitedValue: (value) =>
-			value.trim() == App.Constants.UNLIM_VALUE ||
-			value.trim() == App.Constants.UNLIM_TRANSLATED_VALUE,
+			value.trim() == this.Constants.UNLIM_VALUE ||
+			value.trim() == this.Constants.UNLIM_TRANSLATED_VALUE,
 	};
 
 	Listeners = {
@@ -42,9 +42,9 @@ class AppClass {
 				<b><span class="time">:TIME :DATE</span></b>\
 			</li>',
 		notification_empty:
-			'<li class="empty"><span><i class="fas fa-bell-slash status-icon dim" style="font-size: 4rem;"></i><br><br>' +
-			this.Constants.NOTIFICATIONS_EMPTY +
-			'</span></li>',
+			'<li class="empty"><span><i class="fas fa-bell-slash status-icon dim" style="font-size: 4rem;"></i><br><br>\
+			:MESSAGE\
+			</span></li>',
 	};
 }
 
@@ -195,7 +195,10 @@ async function toggleNotifications(_evt) {
 	);
 
 	if (!Object.keys(data).length) {
-		notifications = App.Templates.notification_empty;
+		notifications = App.Templates.notification_empty.replaceAll(
+			':MESSAGE',
+			App.Constants.NOTIFICATIONS_EMPTY
+		);
 	}
 
 	notificationContainer.innerHTML = notifications;

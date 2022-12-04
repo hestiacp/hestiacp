@@ -13,6 +13,7 @@
 		"lint": "prettier --check . && eslint web/js/ && stylelint web/css/src/**/*.css && markdownlint *.md docs/**/*.md",
 		"lint-staged": "lint-staged",
 		"format": "prettier --write .",
+		"preinstall": "npx only-allow yarn",
 		"postinstall": "husky install"
 	},
 	"packageManager": "yarn@3.3.0",

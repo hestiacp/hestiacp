@@ -118,34 +118,28 @@ strong {
 	color: #e7e7e7;
 }
 
-/* Alerts
+/* Main menu
    ========================================================================== */
 
-.alert-danger {
-	background-color: #d13535;
+.main-menu-toggle {
+	&:hover {
+		& .main-menu-toggle-label {
+			color: #d7d7d7;
+		}
+	}
 
 	& .fas {
-		color: #d13535;
+		color: #d7d7d7;
 	}
 }
 
-/* Cards
-   ========================================================================== */
-
-.card {
-	background: #454545;
-	color: #fafafa;
-	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
-	border-color: #606060;
-	box-shadow: 0 1px 4px rgb(0 0 0 / 20%), inset 0 0 60px rgb(0 0 0 / 25%);
+.main-menu-toggle-label {
+	color: #bcbcbc;
 }
 
-.card-title {
-	color: #fafafa;
+.main-menu-list {
+	border-top-color: #454545;
 }
-
-/* Main menu
-   ========================================================================== */
 
 .main-menu-item-link {
 	&:hover {
@@ -184,6 +178,32 @@ strong {
 	& .fas {
 		color: #707070;
 	}
+}
+
+/* Alerts
+   ========================================================================== */
+
+.alert-danger {
+	background-color: #d13535;
+
+	& .fas {
+		color: #d13535;
+	}
+}
+
+/* Cards
+   ========================================================================== */
+
+.card {
+	background: #454545;
+	color: #fafafa;
+	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
+	border-color: #606060;
+	box-shadow: 0 1px 4px rgb(0 0 0 / 20%), inset 0 0 60px rgb(0 0 0 / 25%);
+}
+
+.card-title {
+	color: #fafafa;
 }
 
 .toolbar {

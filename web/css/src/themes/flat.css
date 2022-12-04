@@ -131,10 +131,10 @@ strong {
 	box-shadow: none;
 }
 
-.context-menu.sort-order {
+.toolbar-sorting-menu {
 	box-shadow: none;
-	border: 1px solid #ccc;
-	background: #fff !important;
+	border-color: #ccc;
+	background-color: #fff;
 }
 
 .body-login,

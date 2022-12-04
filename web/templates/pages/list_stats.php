@@ -26,7 +26,7 @@
 							}
 						?>
 					</select>
-					<button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
@@ -35,7 +35,7 @@
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-submit" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
+					<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" title="<?=_('Search');?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>

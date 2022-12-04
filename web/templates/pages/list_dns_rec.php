@@ -10,20 +10,20 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
+				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
+					<?=_('sort by');?>:
+					<b>
+						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Record'); } else { $label = _('Date'); } ?>
+						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+					</b>
+				</a>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-value"><span class="name"><?=_('IP or Value');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-record"><span class="name"><?=_('Record');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-ttl" sort_as_int="1"><span class="name"><?=_('TTL');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-type"><span class="name"><?=_('Type');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<div class="sort-by" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>:
-					<b>
-						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Record'); } else { $label = _('Date'); } ?>
-						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-					</b>
-				</div>
 				<?php if ($read_only !== 'true') {?>
 					<form action="/bulk/dns/" method="post" id="objects">
 						<input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>">
@@ -34,7 +34,7 @@
 							<option value="unsuspend"><?=_('unsuspend');?></option>
 							<option value="delete"><?=_('delete');?></option>
 						</select>
-						<button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+						<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>
@@ -44,7 +44,7 @@
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-submit" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
+					<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" title="<?=_('Search');?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>

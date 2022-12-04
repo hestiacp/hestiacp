@@ -7,18 +7,18 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
+				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
+					<?=_('sort by');?>: <b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b>
+				</a>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<div class="sort-by" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>: <b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b>
-				</div>
 				<div class="toolbar-search">
 					<form action="/search/" method="get">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" title="<?=_('Search');?>">
-						<button type="submit" class="toolbar-submit" onclick="return doSearch('/search/')" value="" title="<?=_('Search');?>">
+						<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" title="<?=_('Search');?>">
 							<i class="fas fa-magnifying-glass"></i>
 						</button>
 					</form>

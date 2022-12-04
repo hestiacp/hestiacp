@@ -12,7 +12,7 @@
 					<option value=""><?=_('apply to selected');?></option>
 					<option value="delete"><?=_('delete') ?></option>
 				</select>
-				<button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+				<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>

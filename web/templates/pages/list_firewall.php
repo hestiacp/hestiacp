@@ -11,23 +11,23 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
+				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
+					<?=_('sort by');?>: <b><?=_('Action');?> <i class="fas fa-arrow-up-a-z"></i></b>
+				</a>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-action"><span class="name"><?=_('Action');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-protocol"><span class="name"><?=_('Protocol');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-port"><span class="name"><?=_('Port');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-ip" sort_as_int="1"><span class="name"><?=_('IP address');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-comment"><span class="name"><?=_('Comment');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<div class="sort-by" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>: <b><?=_('Action');?> <i class="fas fa-arrow-up-a-z"></i></b>
-				</div>
 				<form action="/bulk/firewall/" method="post" id="objects">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
 						<option value=""><?=_('apply to selected');?></option>
 						<option value="delete"><?=_('delete') ?></option>
 					</select>
-					<button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>

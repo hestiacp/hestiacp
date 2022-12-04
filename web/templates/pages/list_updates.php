@@ -20,7 +20,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
@@ -73,6 +73,6 @@
 
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-</div>
+<footer class="app-footer">
+	<div class="container"></div>
+</footer>

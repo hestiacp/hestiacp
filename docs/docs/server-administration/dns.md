@@ -159,4 +159,4 @@ When trying to add a DNS server for a cluster I get the following error:
 Error: api connection to slave.domain.tld failed
 ```
 
-By default, API access has been disabled for non-local IP addresses. Please add your IP address to the **Allowed IP adresses for API** field in the server settings.
+By default, API access has been disabled for non-local IP addresses. Please add your IP address to the **Allowed IP addresses for API** field in the server settings.

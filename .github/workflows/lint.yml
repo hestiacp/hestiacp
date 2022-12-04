@@ -19,6 +19,18 @@ jobs:
         with:
           severity: error
 
+  markdownlint:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run markdownlint
+        uses: avto-dev/markdown-lint@v1
+        with:
+          args: "*.md docs/**/*.md"
+
   prettier:
     name: Prettier
     runs-on: ubuntu-latest

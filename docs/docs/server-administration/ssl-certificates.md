@@ -21,20 +21,20 @@ Due to changes in the code, the error message has been changed. The following li
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `rateLimited` | The rate limit of the maximum requests have been passed. Please check [https://crt.sh](https://crt.sh) to see how many active certificates you have. |
 
-### Let’s Encrypt validation status 400.
+### Let’s Encrypt validation status 400
 
 When requesting an SSL certificate, you may encounter the following error:
 
-```
+```bash
 Error: Let’s Encrypt validation status 400. Details: Unable to update challenge :: authorisation must be pending
 ```
 
 This could mean multiple things:
 
-1.  Cloudflare’s proxy is enabled and the **SSL/TLS** setting is set to **Full (strict)**.
-2.  Nginx or Apache is not reloading correctly.
-3.  IPv6 is setup. Disable IPv6 in DNS.
-4.  There is an issue with a template.
+1. Cloudflare’s proxy is enabled and the **SSL/TLS** setting is set to **Full (strict)**.
+2. Nginx or Apache is not reloading correctly.
+3. IPv6 is setup. Disable IPv6 in DNS.
+4. There is an issue with a template.
 
 In the future we hope to improve debugging, but currently the easiest way to debug this issue is to navigate to `/var/log/hestia/` and inspect the desired log file (`LE-{user}-{domain}.log`), which should appear after requesting a certificate.
 
@@ -84,15 +84,15 @@ Once the test is completed, it will show an error or a success message, containi
 
 Yes, you are able to use Let’s Encrypt certificates with Cloudflare’s proxy, however you need to follow some special steps:
 
-1.  Disable Cloudflare’s proxy for the desired domain.
-2.  Wait at least 5 minutes, for DNS caches to expire.
-3.  Request the certificate via the control panel or use the CLI command.
-4.  Reenable the proxy.
-5.  In the **SSL/TLS** tab, switch over to **Full (strict)**.
+1. Disable Cloudflare’s proxy for the desired domain.
+2. Wait at least 5 minutes, for DNS caches to expire.
+3. Request the certificate via the control panel or use the CLI command.
+4. Reenable the proxy.
+5. In the **SSL/TLS** tab, switch over to **Full (strict)**.
 
 ## Can I use a Cloudflare Origin CA SSL Certificate?
 
-1.  Create an Origin CA certificate by [following these steps](https://developers.cloudflare.com/ssl/origin-configuration/origin-ca#1-create-an-origin-ca-certificate).
-2.  Once generated, enter your SSL keys in the **Edit Web Domain** page.
-3.  In the **SSL Certificate Authority / Intermediate** box, enter [this certificate](https://developers.cloudflare.com/ssl/static/origin_ca_rsa_root.pem).
-4.  In Cloudflare’s **SSL/TLS** tab, switch over to **Full (strict)**.
+1. Create an Origin CA certificate by [following these steps](https://developers.cloudflare.com/ssl/origin-configuration/origin-ca#1-create-an-origin-ca-certificate).
+2. Once generated, enter your SSL keys in the **Edit Web Domain** page.
+3. In the **SSL Certificate Authority / Intermediate** box, enter [this certificate](https://developers.cloudflare.com/ssl/static/origin_ca_rsa_root.pem).
+4. In Cloudflare’s **SSL/TLS** tab, switch over to **Full (strict)**.

@@ -13,7 +13,7 @@
 					<option value=""><?=_('apply to selected');?></option>
 					<option value="restore"><?=_('restore') ?></option>
 				</select>
-				<button type="submit" class="toolbar-submit" value="">
+				<button type="submit" class="toolbar-input-submit">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>
@@ -21,7 +21,7 @@
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>">
-					<button type="submit" class="toolbar-submit" onclick="return doSearch('/search/')" value=""><i class="fas fa-magnifying-glass"></i></button>
+					<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" value=""><i class="fas fa-magnifying-glass"></i></button>
 				</form>
 			</div>
 		</div>
@@ -29,7 +29,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
@@ -237,9 +237,8 @@
 	<?php }} ?>
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center">
+<footer class="app-footer">
+	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right total clearfix">
 				<?php printf(ngettext('%d item', '%d items', $i),$i); ?>
@@ -248,4 +247,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+</footer>

@@ -23,7 +23,7 @@ With that, good luck hacking us ;)
 
 ## Qualifying Vulnerabilities
 
-### Vulnerabilities we really care about!
+### Vulnerabilities we really care about
 
 - Remote command execution
 - Code/SQL Injection

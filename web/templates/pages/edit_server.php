@@ -2,20 +2,28 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-			<a href="/list/ip/" class="button button-secondary"><i class="fas fa-ethernet status-icon blue"></i><?=_('IP');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/server/">
+				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+			</a>
+			<a href="/list/ip/" class="button button-secondary">
+				<i class="fas fa-ethernet status-icon blue"></i><?=_('IP');?>
+			</a>
 			<?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?>
-				<a href="/list/firewall/" class="button button-secondary"><i class="fas fa-shield-halved status-icon red"></i><?=_('Firewall');?></a>
+				<a href="/list/firewall/" class="button button-secondary">
+					<i class="fas fa-shield-halved status-icon red"></i><?=_('Firewall');?>
+				</a>
 			<?php }?>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?></a>
+			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+			</a>
 		</div>
 	</div>
 </div>
 <!-- End toolbar -->
 
-<div class="l-center animate__animated animate__fadeIn">
+<div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_configure_server" method="post">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">

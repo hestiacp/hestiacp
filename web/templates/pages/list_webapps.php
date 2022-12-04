@@ -2,7 +2,9 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/web/?domain=<?=htmlentities($v_domain)?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a class="button button-secondary" id="btn-back" href="/edit/web/?domain=<?=htmlentities($v_domain)?>">
+				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+			</a>
 		</div>
 		<div class="toolbar-buttons">
 		</div>
@@ -10,7 +12,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center animate__animated animate__fadeIn">
+<div class="container animate__animated animate__fadeIn">
 
 	<div class="form-container form-container-wide">
 		<h1 class="form-title"><?=_('Quick Install App');?></h1>

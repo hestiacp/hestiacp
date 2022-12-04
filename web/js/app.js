@@ -997,6 +997,9 @@ String.prototype.trim = function () {
 
 set_sticky_class = function () {
 	var toolbar = $('.toolbar');
+	if (!toolbar.length) {
+		return;
+	}
 	var tableHeader = $('.table-header');
 	var toolbarOffset = toolbar.offset().top;
 	var headerHeight = $('.top-bar').outerHeight();
@@ -1011,14 +1014,12 @@ set_sticky_class = function () {
 };
 
 function checkedAll(frmname) {
-	if ($('input#toggle-all').prop('checked')) {
+	if ($('#toggle-all').prop('checked')) {
 		$('.l-unit:not(.header)').addClass('selected');
 		$('.ch-toggle').prop('checked', true);
-		$('.toggle-all').addClass('clicked-on');
 	} else {
 		$('.l-unit:not(.header)').removeClass('selected');
 		$('.ch-toggle').prop('checked', false);
-		$('.toggle-all').removeClass('clicked-on');
 	}
 }
 

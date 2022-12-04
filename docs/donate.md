@@ -1,5 +1,4 @@
 ---
-title: Donate
 aside: false
 lastUpdated: false
 ---

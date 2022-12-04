@@ -1,4 +1,4 @@
-## Hestia Control Panel - Contribution Guidelines
+# Hestia Control Panel - Contribution Guidelines
 
 ## Ways to contribute
 
@@ -38,7 +38,7 @@ The first step is to create a fork of the `hestiacp/hestiacp` repository under y
 
 Once you've created your fork, clone the repository to your computer and make sure that you've checked out the `main` branch. **Always** create a new topic branch for your work.
 
-### Branch naming convention:
+### Branch naming convention
 
 - **Prefix:** `topic/` (such as **fix**, **feature**, **refactor**, etc.)
 - **ID**: `888` (GitHub Issue ID if an issue exists)
@@ -64,7 +64,7 @@ To aid other developers and keep the project's commit history clean, please **sq
 
 All pull requests must include a brief but descriptive title, and a detailed description of the changes that you've made. **Only include commits that are related to your feature, bug fix, or patch in your pull request!**
 
-## Thank you!
+## Thank you
 
 We appreciate **all** contributions no matter what size; your feedback and input directly shapes the future of Hestia Control Panel and we could not do it without your support.
 

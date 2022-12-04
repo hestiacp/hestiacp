@@ -8,19 +8,19 @@ and HestiaCP.
 1. Create a user backup on the old server.
 
    ```bash
-   $ v-backup-user username
+   v-backup-user username
    ```
 
 2. Copy the generated tarball to the new server and place it in `/backup`.
 
    ```bash
-   $ scp /backup/username.2020.01.01-00-00.tar root@host.domain.tld:/backup/
+   scp /backup/username.2020.01.01-00-00.tar root@host.domain.tld:/backup/
    ```
 
 3. Restore the backup on the new server. You can restore to a different user by changing the username in the command.
 
    ```bash
-   $ v-restore-user username username.2020.01.01-00-00.tar
+   v-restore-user username username.2020.01.01-00-00.tar
    ```
 
 User accounts that do not exist will be created.
@@ -122,6 +122,7 @@ For security reasons, symlinks are not allowed. To change the default backup fol
 1. Make sure backup folder is currently set to `/backup`.
 2. If it has something in it, delete it and recreate it. You can use an FTP client or type `mkdir /backup` in the console.
 3. Mount the desired folder to `/backup`, using `mount`:
+
    ```bash
    mount --bind /path/to/new/backup/folder /backup
    ```
@@ -130,9 +131,11 @@ For a permanent fix you should add a record to `fstab`, so this folder would mou
 
 1. Open `/etc/fstab`.
 2. Add the following line to the end:
+
    ```bash
    /path/to/new/backup/folder /backup none defaults,bind 0 0
    ```
+
 3. Save the file.
 
 ## How to extract .zstd file

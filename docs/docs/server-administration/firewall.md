@@ -20,7 +20,7 @@ You can also use the [v-add-firewall-rule](../reference/cli.md#v-add-firewall-ru
 
 ## How do I setup an IPSet blacklist or whitelist?
 
-IPSet are large lists of IP adresses or subnets. They can be used for blacklists and whitelists.
+IPSet are large lists of IP addresses or subnets. They can be used for blacklists and whitelists.
 
 1. Navigate to the server settings by clicking the <i class="fas fa-fw fa-cog"><span class="visually-hidden">Server</span></i> icon in the top right.
 2. Click the **<i class="fas fa-fw fa-shield-alt"></i> Firewall** button.

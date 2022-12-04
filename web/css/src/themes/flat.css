@@ -4,9 +4,7 @@
     Website:     www.hestiacp.com
 */
 
-@custom-media --viewport-small (min-width: 480px);
-@custom-media --viewport-medium (min-width: 768px);
-@custom-media --viewport-large (min-width: 1024px);
+@import url("../media_queries");
 
 :root {
 	--alert-box-shadow: none;

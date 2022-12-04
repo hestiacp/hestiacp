@@ -4,13 +4,10 @@
 @import url("@fortawesome/fontawesome-free/css/solid");
 @import url("../dependencies/animate");
 @import url("../dependencies/jquery-ui");
+@import url("../media_queries");
 @import url("../fonts");
 @import url("../base");
 @import url("../utilities");
-
-@custom-media --viewport-small (min-width: 480px);
-@custom-media --viewport-medium (min-width: 768px);
-@custom-media --viewport-large (min-width: 1024px);
 
 :root {
 	--animate-duration: 300ms;

@@ -10,8 +10,7 @@
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Force refresh
-force=${1:-no}
+refresh=${1:-no}
 
 # Includes
 source /etc/profile.d/hestia.sh
@@ -26,7 +25,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-is_boolean_format_valid "$force" 'bool (yes/no)'
+is_refresh_ipset_format_valid "$refresh" 'Refresh IP lists (load/yes/no)'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -40,8 +39,9 @@ for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME
 	ipset_date="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$DATE')"
 	ipset_au="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ipset_name" '$AUTOUPDATE')"
 
-	if [ "$ipset_au" = 'no' ]; then
-		# load existing ip list files in the kernel but don't auto update them
+	if [ "$ipset_au" = 'no' ] || [ "$refresh" = 'load' ]; then
+		# Load existing ip list files in the kernel but don't auto update them
+		# The "load" refresh option is only used by hestia-iptables systemd service
 		$BIN/v-add-firewall-ipset "$ipset_name"
 		continue
 	fi
@@ -50,8 +50,8 @@ for ipset_name in $(search_objects "$ipset_hstobject" 'SUSPENDED' 'no' 'LISTNAME
 	now=$(date +%s)
 	hours_since_update=$(((now - last_updated_ts) / (60 * 60)))
 
-	if [[ "$hours_since_update" -lt 24 ]] && [ "$force" = 'no' ]; then
-		# load existing ip list files in the kernel but don't auto update them
+	if [[ "$hours_since_update" -lt 24 ]] && [ "$refresh" = 'no' ]; then
+		# Load existing ip list files in the kernel but don't auto update them
 		$BIN/v-add-firewall-ipset "$ipset_name"
 		continue
 	fi

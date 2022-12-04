@@ -859,6 +859,13 @@ is_boolean_format_valid() {
 	fi
 }
 
+# Refresh IPset format validator
+is_refresh_ipset_format_valid() {
+	if [ "$1" != 'load' ] && [ "$1" != 'yes' ] && [ "$1" != 'no' ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
 # Common format validator
 is_common_format_valid() {
 	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`| ]"

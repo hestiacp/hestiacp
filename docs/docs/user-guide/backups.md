@@ -42,7 +42,7 @@ In the box labeled **Web Domains**, enter each domain you want to exclude, one p
 
 To exclude a specific folder from a domain use the following syntax:
 
-```
+```bash
 domain.tld:public_html/wp-content/uploads:public_html/cache
 ```
 
@@ -56,7 +56,7 @@ In the box labeled **Mail Domains**, enter each domain you want to exclude, one 
 
 To exclude only one or multiple mail account use the following syntax:
 
-```
+```bash
 domain.tld:info:support
 ```
 

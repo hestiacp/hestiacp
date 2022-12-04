@@ -4,7 +4,7 @@
 #
 # example: v-list-sys-ips
 #
-# This function for obtaining the list of system ip adresses.
+# This function for obtaining the list of system ip addresses.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

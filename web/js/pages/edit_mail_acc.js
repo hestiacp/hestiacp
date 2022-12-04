@@ -1,7 +1,7 @@
 App.Actions.MAIL_ACC.enable_unlimited = function (elm, source_elm) {
 	$(elm).data('checked', true);
 	$(elm).data('prev_value', $(elm).val()); // save prev value in order to restore if needed
-	$(elm).val(App.Constants.UNLIM_TRANSLATED_VALUE);
+	$(elm).val(GLOBAL.UNLIM_TRANSLATED_VALUE);
 	$(elm).attr('disabled', true);
 	$(source_elm).css('opacity', '1');
 };

@@ -148,8 +148,3 @@
 	</form>
 
 </div>
-
-<script>
-	GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
-	GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
-</script>

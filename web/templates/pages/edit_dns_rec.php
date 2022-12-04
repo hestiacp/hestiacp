@@ -83,7 +83,3 @@
 	</form>
 
 </div>
-
-<script>
-	GLOBAL.DNS_REC_PREFIX = "<?=htmlentities($_GET['domain']); ?>";
-</script>

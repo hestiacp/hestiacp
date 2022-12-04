@@ -7,13 +7,15 @@
 <script defer src="/js/events.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
-<script defer src="/js/i18n.js.php?<?=JS_LATEST_UPDATE?>"></script>
 <script>
-	var GLOBAL = {};
-	GLOBAL.FTP_USER_PREFIX = '';
-	GLOBAL.DB_USER_PREFIX = '';
-	GLOBAL.DB_DBNAME_PREFIX = '';
-	GLOBAL.AJAX_URL = '';
+	const GLOBAL = {
+		FTP_USER_PREFIX: '<?= $user_plain; ?>_';
+		DB_USER_PREFIX: '<?= $user_plain; ?>_';
+		DB_DBNAME_PREFIX: '<?= $user_plain; ?>_';
+		UNLIM_VALUE: 'unlimited',
+		UNLIM_TRANSLATED_VALUE: '<?= _("unlimited") ?>',
+		NOTIFICATIONS_EMPTY: '<?= _("no notifications") ?>',
+	};
 </script>
 <?php foreach(new DirectoryIterator($_SERVER['HESTIA'].'/web/js/custom_scripts') as $customScript){
 	if($customScript->getExtension() === 'js'){

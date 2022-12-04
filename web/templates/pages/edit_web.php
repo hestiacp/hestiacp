@@ -478,7 +478,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	GLOBAL.FTP_USER_PREFIX = "<?=$user_plain.'_';?>";
-</script>

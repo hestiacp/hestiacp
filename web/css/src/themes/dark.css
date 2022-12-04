@@ -4,7 +4,9 @@
     Website:     www.hestiacp.com
 */
 
+@custom-media --viewport-small (min-width: 480px);
 @custom-media --viewport-medium (min-width: 768px);
+@custom-media --viewport-large (min-width: 1024px);
 
 :root {
 	--color-text: #cdcdcd;
@@ -739,27 +741,36 @@ textarea:focus::placeholder {
 	background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%);
 }
 
+/* Login box
+   ========================================================================== */
+
 .login {
-	background-color: #282828;
-	box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(0 0 0 / 25%);
+	& .error {
+		color: #f864fa;
+	}
+
+	@media (--viewport-small) {
+		background-color: #282828;
+		box-shadow: 0 8px 25px rgb(0 0 0 / 30%), inset 0 0 2px rgb(0 0 0 / 25%);
+
+		& .form-label {
+			color: #fff;
+		}
+	}
 }
 
 .login-title {
 	color: #fff;
 }
 
-.login .error {
-	color: #f864fa;
-}
-
-.login .label-link {
+.login-label-link {
 	color: #eee;
 	text-transform: initial;
 	font-weight: 400;
-}
 
-.login .label-link:hover {
-	color: #ff3478;
+	&:hover {
+		color: #ff3478;
+	}
 }
 
 .form-title {

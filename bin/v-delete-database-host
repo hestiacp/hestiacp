@@ -45,6 +45,9 @@ check_hestia_demo_mode
 
 # Deleting server
 sed -i "/HOST='$host' /d" "$HESTIA/conf/$type.conf"
+# Delete RRD database
+rm -fr $HESTIA'/web/rrd/db/'$type'_'$host'.rrd'
+rm -fr $HESTIA'/web/rrd/db/'*-$type'_'$host'.*'
 
 #----------------------------------------------------------#
 #                       Hestia                             #

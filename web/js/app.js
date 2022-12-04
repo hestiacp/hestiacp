@@ -30,7 +30,8 @@ class AppClass {
 
 	Templates = {
 		notification:
-			'<li class=":UNSEEN"><span class="unselectable mark-seen" id="notification-:ID">&nbsp;</span>\
+			'<li id="notification-:ID" class=":UNSEEN">\
+				<span class="unselectable mark-seen" data-id=":ID">&nbsp;</span>\
 				<span class="notification-title"><span class="unselectable icon :TYPE">&nbsp;</span>:TOPIC</span>\
 				:NOTICE\
 				<b><span class="time">:TIME :DATE</span></b>\
@@ -174,24 +175,22 @@ async function toggleNotifications(_evt) {
 
 	const data = await response.clone().json();
 
-	const notifications = Object.entries(data).reduce(
+	let notifications = Object.entries(data).reduce(
 		(acc, [_id, notification]) =>
 			acc +
 			App.Templates.notification
-				.replace(':UNSEEN', notification.ACK ? 'unseen' : '')
-				.replace(':ID', notification.ID)
-				.replace(':TYPE', notification.TYPE)
-				.replace(':TOPIC', notification.TOPIC)
-				.replace(':NOTICE', notification.NOTICE)
-				.replace(':TIME', notification.TIME)
-				.replace(':DATE', notification.DATE),
+				.replaceAll(':UNSEEN', notification.ACK ? 'unseen' : '')
+				.replaceAll(':ID', notification.ID)
+				.replaceAll(':TYPE', notification.TYPE)
+				.replaceAll(':TOPIC', notification.TOPIC)
+				.replaceAll(':NOTICE', notification.NOTICE)
+				.replaceAll(':TIME', notification.TIME)
+				.replaceAll(':DATE', notification.DATE),
 		''
 	);
 
 	if (!Object.keys(data).length) {
-		/** @type string */
-		const tpl = App.Templates.notification_empty;
-		acc.push(tpl);
+		notifications = App.Templates.notification_empty;
 	}
 
 	notificationContainer.innerHTML = notifications;
@@ -199,17 +198,12 @@ async function toggleNotifications(_evt) {
 	notificationContainer.querySelectorAll('.mark-seen').forEach((el) => {
 		el.addEventListener('click', async (evt) => {
 			const token = document.querySelector('#token').getAttribute('token');
-			const id = evt.target.getAttribute('id');
-			document.querySelector(`#${id}`).parentElement.style.display = 'none';
+			const id = evt.target.dataset.id;
+			notificationContainer.removeChild(document.querySelector(`#notification-${id}`));
 
-			await fetch(
-				`/delete/notification/?delete=1&notification_id=${id.replace(
-					'notification-',
-					''
-				)}&token=${token}`
-			);
+			await fetch(`/delete/notification/?delete=1&notification_id=${id}&token=${token}`);
 
-			if (document.querySelectorAll('.notification-container li:visible').length == 0) {
+			if (document.querySelectorAll('.notification-container > li').length == 0) {
 				notificationButton.classList.remove('status-icon', 'updates', 'active');
 			}
 		});

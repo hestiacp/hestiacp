@@ -276,7 +276,7 @@
 }
 
 .top-bar-menu-list {
-	display: none;
+	display: block;
 	background-color: #4673b6;
 	box-shadow: 0 3px 20px 0 rgb(0 0 0 / 40%);
 	position: absolute;
@@ -415,7 +415,7 @@
 }
 
 .main-menu-list {
-	display: none;
+	display: block;
 	border-top: 1px solid #ddd;
 
 	@media (--viewport-small) {

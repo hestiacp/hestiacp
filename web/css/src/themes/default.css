@@ -1814,15 +1814,6 @@
 	}
 }
 
-.lets-encrypt-note {
-	color: #89a40a !important;
-	font-style: italic;
-	font-weight: normal !important;
-	height: 30px;
-	padding-top: 10px;
-	vertical-align: top;
-}
-
 .toggle-password {
 	color: #aaa;
 	z-index: 1;

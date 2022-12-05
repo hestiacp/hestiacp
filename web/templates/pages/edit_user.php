@@ -58,7 +58,17 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" method="post" name="v_edit_user" class="<?=$v_status?>">
+	<form
+		id="vstobjects"
+		method="post"
+		name="v_edit_user"
+		class="<?=$v_status?>"
+		x-data="{
+			loginDisabled: <?= $v_login_disabled === "yes" ? 'true' : 'false' ?>,
+			useIpAllowList: <?= $v_login_use_iplist === "yes" ? 'true' : 'false' ?>,
+			showAdvanced: false,
+		}"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="save" value="save">
 
@@ -103,13 +113,13 @@
 				</ul>
 				<?php if ($_SESSION['userContext'] === 'admin') {?>
 					<div class="form-check">
-						<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('password-options');elementHideShow('password-options-ip');" <?php if ($v_login_disabled === "yes") echo 'checked' ?>>
+						<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" x-bind:checked="loginDisabled" x-on:click="loginDisabled = !loginDisabled">
 						<label for="v_login_disabled">
 							<?=_('Do not allow user to log in to Control Panel');?>
 						</label>
 					</div>
 				<?php } ?>
-				<div id="password-options" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: block;'; }?>">
+				<div id="password-options" x-show="loginDisabled">
 					<div class="form-check u-mt15">
 						<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo 'checked' ?>>
 						<label for="v_twofa">
@@ -122,15 +132,15 @@
 						<div><img class="qr-code" src="<?=htmlentities($v_qrcode); ?>" alt=""></div>
 					<?php } ?>
 				</div>
-				<div id="password-options-ip" style="<?php if ($v_login_disabled === 'yes') { echo 'display: none;'; } else { echo 'display: block;'; }?>">
+				<div id="password-options-ip" x-show="loginDisabled">
 					<div class="form-check">
-						<input class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist" onclick="javascript:elementHideShow('ip-allowlist')" <?php if ($v_login_use_iplist === "yes") echo 'checked' ?>>
+						<input class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist" x-bind:checked="useIpAllowList" x-on:click="useIpAllowList = !useIpAllowList">
 						<label for="v_login_use_iplist">
 							<?=_('Use IP address allow list for login attempts');?>
 						</label>
 					</div>
 				</div>
-				<div id="ip-allowlist" class="u-mt10" style="<?php if ($v_login_use_iplist === 'yes') { echo 'display: block;'; } else { echo 'display: none;'; } ?>">
+				<div id="ip-allowlist" class="u-mt10" x-show="useIpAllowList">
 					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>" placeholder="<?=_('Example: 127.0.0.1,192.168.1.100');?>">
 				</div>
 			</div>
@@ -209,9 +219,9 @@
 					</select>
 				</div>
 				<div class="u-mb20">
-					<a href="javascript:elementHideShow('advanced-opts');" class="button button-secondary"><?=_('Advanced options');?></a>
+					<a href="#" x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?=_('Advanced options');?></a>
 				</div>
-				<div id="advanced-opts" style="display: none;">
+				<div id="advanced-opts" x-show="showAdvanced">
 					<div class="u-mb10">
 						<label for="v_shell" class="form-label"><?=_('SSH Access');?></label>
 						<select class="form-select" name="v_shell" id="v_shell">

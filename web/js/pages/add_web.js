@@ -58,13 +58,11 @@ App.Actions.WEB.toggle_letsencrypt = function (elm) {
 			'#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]'
 		).attr('disabled', 'disabled');
 		$('#generate-csr').hide();
-		$('.lets-encrypt-note').show();
 	} else {
 		$(
 			'#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]'
 		).removeAttr('disabled');
 		$('#generate-csr').show();
-		$('.lets-encrypt-note').hide();
 	}
 };
 

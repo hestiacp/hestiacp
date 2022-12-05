@@ -181,38 +181,6 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function (elm) {
 	}
 };
 
-App.Actions.WEB.toggle_ssl = function () {
-	elementHideShow('ssltable');
-	if (
-		$('#ssl_crt').val().length > 0 ||
-		$('#ssl_hsts').prop('checked') ||
-		$('#letsencrypt').prop('checked')
-	) {
-		return false;
-	}
-	$('#v_ssl_forcessl').prop('checked', true);
-};
-
-App.Actions.WEB.toggle_letsencrypt = function (elm) {
-	if ($(elm).prop('checked')) {
-		$('#ssl-details').hide();
-		$(
-			'#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]'
-		).attr('disabled', 'disabled');
-		$('#generate-csr').hide();
-		if (!$('.lets-encrypt-note').hasClass('enabled')) {
-			$('.lets-encrypt-note').show();
-		}
-	} else {
-		$(
-			'#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]'
-		).removeAttr('disabled');
-		$('#generate-csr').show();
-		$('#ssl-details').show();
-		$('.lets-encrypt-note').hide();
-	}
-};
-
 App.Actions.WEB.randomPasswordGenerated = function (elm) {
 	return App.Actions.WEB.passwordChanged(elm);
 };

@@ -163,12 +163,12 @@ document.addEventListener('alpine:init', () => {
 		toggle() {
 			this.open = !this.open;
 			if (!this.initialized) {
-				this.initialized = true;
 				this.list();
 			}
 		},
 		async list() {
 			const res = await fetch(`/list/notifications/?ajax=1&token=${token}`);
+			this.initialized = true;
 			if (!res.ok) {
 				throw new Error('An error occured while listing notifications.');
 			}

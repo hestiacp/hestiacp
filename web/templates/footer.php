@@ -3,11 +3,11 @@
 	if (($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes')) {
 		if ($_SESSION['UPDATE_AVAILABLE'] === 'yes') {
 ?>
-	<div class="footer-banner updates" id="banner" x-data="{ open: false }>
+	<div class="footer-banner updates" id="banner" x-show="open" x-data="{ open: false }">
 		<div>
 			<b>New updates are available!</b> To upgrade your server now, run <span style="font-family:'Courier New', Courier, monospace">apt update && apt upgrade</span> from a shell session.
 		</div>
-		<div style="margin-top: 4px;"></div><a href="#" x-on:click="open = !open">Hide</a></div>
+		<div style="margin-top: 4px;"></div><a href="#" x-on:click="open = false">Hide</a></div>
 	</div>
 <?php
 		}

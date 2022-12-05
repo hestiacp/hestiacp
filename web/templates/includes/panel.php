@@ -214,13 +214,13 @@
 		</div>
 	</div>
 
-	<nav class="main-menu" x-data="{ open }">
+	<nav class="main-menu" x-data="{ open: false }">
 		<div class="container">
 			<button type="button" class="main-menu-toggle" x-on:click="open = !open">
 				<i class="fas fa-bars"></i>
 				<span
 					class="main-menu-toggle-label"
-					x-text="open ? <?=_('Collapse main menu');?> : <?=_('Expand main menu');?>"
+					x-text="open ? '<?=_('Collapse main menu');?>' : '<?=_('Expand main menu');?>'"
 				>
 				</span>
 			</button>

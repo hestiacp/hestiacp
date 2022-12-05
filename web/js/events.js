@@ -276,10 +276,6 @@ const VE = {
 		sort_par: 'sort-name',
 		sort_direction: -1,
 		sort_as_int: false,
-		form_changed: false,
-		search_activated: false,
-		search_display_interval: 0,
-		search_hover_interval: 0,
 	},
 };
 

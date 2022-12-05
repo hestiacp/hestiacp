@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		.register({ code: 'Backspace', ctrlKey: true }, (_evt) => {
 			const redirect = document.querySelector('a.button#btn-back').href;
 
-			if (VE.tmp.form_changed && redirect) {
+			if (Alpine.store('form').dirty && redirect) {
 				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', redirect);
 			} else if (document.querySelector('form#vstobjects .button.cancel')) {
 				location.href = $('form#vstobjects input.cancel')
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (!target) {
 					return;
 				}
-				if (VE.tmp.form_changed) {
+				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
 				} else {
 					location.href = target.href;
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (!target) {
 					return;
 				}
-				if (VE.tmp.form_changed) {
+				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
 				} else {
 					location.href = target.href;
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (!target) {
 					return;
 				}
-				if (VE.tmp.form_changed) {
+				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
 				} else {
 					location.href = target.href;
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (!target) {
 					return;
 				}
-				if (VE.tmp.form_changed) {
+				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
 				} else {
 					location.href = target.href;
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (!target) {
 					return;
 				}
-				if (VE.tmp.form_changed) {
+				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
 				} else {
 					location.href = target.href;
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (!target) {
 					return;
 				}
-				if (VE.tmp.form_changed) {
+				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
 				} else {
 					location.href = target.href;
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				if (!target) {
 					return;
 				}
-				if (VE.tmp.form_changed) {
+				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
 				} else {
 					location.href = target.href;
@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					document.querySelector('form#vstobjects').submit();
 				}
 
-				if (VE.tmp.form_changed) {
+				if (Alpine.store('form').dirty) {
 					if (!$('.ui-dialog').is(':visible')) {
 						VE.helpers.createConfirmationDialog(
 							$('.js-confirm-dialog-redirect')[0],

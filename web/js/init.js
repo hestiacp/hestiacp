@@ -74,14 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	// SORTING
-	document
-		.querySelectorAll('#vstobjects input, #vstobjects select, #vstobjects textarea')
-		.forEach((el) => {
-			el.addEventListener('change', () => {
-				VE.tmp.form_changed = true;
-			});
-		});
-
 	$('.toolbar-sorting-menu span').click(function () {
 		$('.toolbar-sorting-menu').toggleClass('u-hidden');
 		if ($(this).hasClass('active')) return;

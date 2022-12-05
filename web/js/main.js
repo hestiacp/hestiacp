@@ -1,6 +1,20 @@
 document.addEventListener('alpine:init', () => {
 	const token = document.querySelector('#token').getAttribute('token');
 
+	Alpine.store('form', {
+		dirty: false,
+		makeDirty() {
+			this.dirty = true;
+		},
+	});
+	document
+		.querySelectorAll('#vstobjects input, #vstobjects select, #vstobjects textarea')
+		.forEach((el) => {
+			el.addEventListener('change', () => {
+				Alpine.store('form').makeDirty();
+			});
+		});
+
 	Alpine.data('notifications', () => ({
 		initialized: false,
 		open: false,

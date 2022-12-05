@@ -161,17 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		return false;
 	});
 
-	$(document).click((evt) => {
-		//close notification popup
-		if (
-			!$(evt.target).hasClass('js-notifications') &&
-			$(evt.target).parents('.top-bar-notifications-list').length == 0
-		) {
-			$('.top-bar-notifications-list').addClass('u-hidden');
-			$('.js-notifications').removeClass('active');
-		}
-	});
-
 	// focusing on the first input at form
 	if (location.href.indexOf('lead=') == -1 && !$('.ui-dialog').is(':visible')) {
 		const input = document.querySelector(
@@ -182,8 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			input.focus();
 		}
 	}
-
-	document.querySelector('.js-notifications').addEventListener('click', toggleNotifications);
 
 	$('.js-toggle-top-bar-menu').click(function (evt) {
 		$(this).siblings('.top-bar-menu-list').toggle();

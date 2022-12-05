@@ -20,29 +20,6 @@ class AppClass {
 		PACKAGE: {},
 		MAIL_ACC: {},
 	};
-
-	Templates = {
-		notification: `<li class="top-bar-notification-item :UNSEEN" id="notification-:ID">\
-			<div class="top-bar-notification-header">\
-				<p class="top-bar-notification-title">:TOPIC</p>\
-				<a href="#" class="top-bar-notification-delete js-delete-notification">\
-					<i class="fas fa-xmark"></i>\
-				</a>\
-			</div>\
-			:NOTICE\
-			<p class="top-bar-notification-timestamp">:TIME :DATE</p>\
-		</li>`,
-		notification_empty: `<li class="top-bar-notification-item empty">\
-			<i class="fas fa-bell-slash status-icon dim"></i>\
-			<p>${GLOBAL.NOTIFICATIONS_EMPTY}</p>\
-		</li>`,
-		notification_mark_all: `<li>\
-			<a href="#" class="top-bar-notification-mark-all js-mark-all-notifications">\
-				<i class="fas fa-check"></i>
-				${GLOBAL.NOTIFICATIONS_DELETE_ALL}
-			</a>\
-		</li>`,
-	};
 }
 
 const App = new AppClass();
@@ -152,86 +129,5 @@ function randomString(length = 16) {
 		if (attempts > 1000000) {
 			throw new Error('tried a million times, something is wrong');
 		}
-	}
-}
-
-/**
- * @param {MouseEvent} _evt
- */
-async function toggleNotifications(_evt) {
-	const notificationContainer = document.querySelector('.top-bar-notifications-list');
-	const notificationButton = document.querySelector('.js-notifications');
-	const isActive = notificationButton.classList.contains('active');
-
-	notificationContainer.classList.toggle('u-hidden', isActive);
-	notificationButton.classList.toggle('active', !isActive);
-	if (isActive) {
-		return;
-	}
-
-	const token = document.querySelector('#token').getAttribute('token');
-	const response = await fetch(`/list/notifications/?ajax=1&token=${token}`, {});
-	if (!response.ok) {
-		throw new Error('An error occured while fetching notifications.');
-	}
-
-	const data = await response.clone().json();
-
-	let notifications = Object.entries(data).reduce(
-		(acc, [_id, notification]) =>
-			acc +
-			App.Templates.notification
-				.replaceAll(':UNSEEN', notification.ACK ? 'unseen' : '')
-				.replaceAll(':ID', notification.ID)
-				.replaceAll(':TYPE', notification.TYPE)
-				.replaceAll(':TOPIC', notification.TOPIC)
-				.replaceAll(':NOTICE', notification.NOTICE)
-				.replaceAll(':TIME', notification.TIME)
-				.replaceAll(':DATE', notification.DATE),
-		''
-	);
-
-	if (!Object.keys(data).length) {
-		notifications = App.Templates.notification_empty;
-	}
-
-	if (Object.keys(data).length > 2) {
-		notifications += App.Templates.notification_mark_all;
-	}
-
-	notificationContainer.innerHTML = notifications;
-
-	notificationContainer.querySelectorAll('.js-delete-notification').forEach((el) => {
-		el.addEventListener('click', async (evt) => {
-			const token = document.querySelector('#token').getAttribute('token');
-			const id = evt.target
-				.closest('.top-bar-notification-item')
-				.getAttribute('id')
-				.replace('notification-', '');
-			await fetch(`/delete/notification/?delete=1&notification_id=${id}&token=${token}`);
-
-			if (document.querySelectorAll('.top-bar-notification-item').length == 1) {
-				notificationButton.classList.remove('active', 'updates');
-				notificationButton.querySelector('.status-icon').classList.remove('status-icon');
-				notificationContainer.querySelector('.js-mark-all-notifications').parentNode.remove();
-			}
-			document.querySelector(`#notification-${id}`).remove();
-		});
-	});
-
-	if (Object.keys(data).length > 2) {
-		notificationContainer
-			.querySelector('.js-mark-all-notifications')
-			.addEventListener('click', async (evt) => {
-				const token = document.querySelector('#token').getAttribute('token');
-				await fetch(`/delete/notification/?delete=1&token=${token}`);
-
-				notificationButton.querySelector('.status-icon').classList.remove('status-icon');
-				notificationContainer
-					.querySelectorAll('.top-bar-notification-item')
-					.forEach((el) => el.remove());
-				notificationButton.classList.remove('active', 'updates');
-				evt.target.parentNode.remove();
-			});
 	}
 }

@@ -49,12 +49,66 @@
 				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
 					<!-- Do not show notifications panel when impersonating 'admin' user -->
 				<?php } else { ?>
-					<div class="top-bar-notifications">
-						<button type="button" class="top-bar-menu-link js-notifications" title="<?=_('Notifications');?>">
-							<i class="fas fa-bell <?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"></i>
+					<div class="top-bar-notifications" x-data="notifications">
+						<button
+							@click="toggle"
+							class="top-bar-menu-link"
+							:class="open && 'active'"
+							type="button"
+							title="<?=_('Notifications');?>"
+						>
+							<i
+								class="fas fa-bell
+								<?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"
+							></i>
 							<span class="u-hidden"><?=_('Notifications');?></span>
 						</button>
-						<ul class="top-bar-notifications-list animate__animated animate__fadeIn u-hidden"></ul>
+						<ul
+							class="top-bar-notifications-list animate__animated animate__fadeIn"
+							:class="open || 'u-hidden'"
+						>
+							<template x-for="notification in items" :key="notification.ID">
+								<li
+									class="top-bar-notification-item"
+									:class="notification.ACK && 'unseen'"
+									:id="`notification-${notification.ID}`"
+									x-text="notification.NOTICE"
+								>
+									<div class="top-bar-notification-header">
+										<p class="top-bar-notification-title" x-text="notification.TOPIC"></p>
+										<a
+											@click="delete(notification.ID)"
+											href="#"
+											class="top-bar-notification-delete"
+										>
+											<i class="fas fa-xmark"></i>
+										</a>
+									</div>
+									<p
+										class="top-bar-notification-timestamp"
+										x-text="`${notification.TIME} ${notification.DATE}`"
+									></p>
+								</li>
+							</template>
+							<template x-if="items.length == 0">
+								<li class="top-bar-notification-item empty">
+									<i class="fas fa-bell-slash status-icon dim"></i>
+									<p><?= _("no notifications") ?></p>
+								</li>
+							</template>
+							<template x-if="items.length > 2">
+								<li>
+									<a
+										@click="deleteAll()"
+										href="#"
+										class="top-bar-notification-mark-all"
+									>
+										<i class="fas fa-check"></i>
+										<?= _("Delete notifications") ?>
+									</a>
+								</li>
+							</template>
+						</ul>
 					</div>
 				<?php } ?>
 

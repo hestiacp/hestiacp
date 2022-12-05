@@ -26,12 +26,12 @@ const Cookies = {
 	 * @returns {string} The value of the cookie, decoded with JSON.parse(...).
 	 */
 	read(name) {
-		return JSON.parse(
-			document.cookie
-				.split('; ')
-				.find((row) => row.startsWith(`${name}=`))
-				?.split('=')[1]
-		);
+		const value = document.cookie
+			.split('; ')
+			.find((row) => row.startsWith(`${name}=`))
+			?.split('=')[1];
+
+		return value ? JSON.parse(value) : undefined;
 	},
 
 	/**

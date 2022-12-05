@@ -51,12 +51,6 @@ function checkedAll() {
 		.forEach((el) => el.classList.toggle('clicked-on', toggleAll));
 }
 
-function doSearch(url) {
-	const searchQuery = document.querySelector('.js-search-input').value;
-	const searchToken = document.querySelector('input[name="token"]').value;
-	location.href = `${url || '/search'}?q=${searchQuery}&token=${searchToken}`;
-}
-
 function elementHideShow(elementToHideOrShow, trigger) {
 	const el = document.querySelector(`#${elementToHideOrShow}`);
 	el.style.display = el.style.display === 'none' ? 'block' : 'none';

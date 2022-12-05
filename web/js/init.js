@@ -51,39 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		evt.preventDefault();
 		$('.toolbar-sorting-menu').toggleClass('u-hidden');
 	});
-	// SEARCH BOX
-	$('.toolbar-search .js-search-input').hover(
-		() => {
-			clearTimeout(VE.tmp.search_display_interval);
-			clearTimeout(VE.tmp.search_hover_interval);
-			VE.tmp.search_display_interval = setTimeout(() => {
-				$('.js-search-input').addClass('activated');
-			}, 150);
-		},
-		() => {
-			clearTimeout(VE.tmp.search_display_interval);
-			clearTimeout(VE.tmp.search_hover_interval);
-			VE.tmp.search_hover_interval = setTimeout(() => {
-				if (!VE.tmp.search_activated && !$('.js-search-input').val().length) {
-					$('.js-search-input').removeClass('activated');
-				}
-			}, 600);
-		}
-	);
-
-	$('.js-search-input').focus(() => {
-		VE.tmp.search_activated = true;
-		clearTimeout(VE.tmp.search_hover_interval);
-	});
-	$('.js-search-input').blur(() => {
-		VE.tmp.search_activated = false;
-		clearTimeout(VE.tmp.search_hover_interval);
-		VE.tmp.search_hover_interval = setTimeout(() => {
-			if (!$('.js-search-input').val().length) {
-				$('.js-search-input').removeClass('activated');
-			}
-		}, 600);
-	});
 
 	// TIMER
 	if ($('.movement.left').length) {

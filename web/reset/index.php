@@ -29,7 +29,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 		unset($output);
 		exec(HESTIA_CMD . "v-get-user-value " . $v_user . " RKEYEXP", $output, $return_var);
 		$rkeyexp = json_decode(implode("", $output), true);
-		if ($rkeyexp === null || $rkeyexp < time() - 900) {
+		if ($rkeyexp === null || $rkeyexp < time() - 1) {
 			if ($email == $data[$user]["CONTACT"]) {
 				$rkey = substr(password_hash("", PASSWORD_DEFAULT), 8, 12);
 				$hash = password_hash($rkey, PASSWORD_DEFAULT);
@@ -49,6 +49,16 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 				$to = $data[$user]["CONTACT"];
 				$subject = sprintf(_("MAIL_RESET_SUBJECT"), date("Y-m-d H:i:s"));
 				$hostname = get_hostname();
+				if ($hostname . ":" . $_SERVER["SERVER_PORT"] == $_SERVER["HTTP_HOST"]) {
+					$check = true;
+					$hostname_email = $hostname;
+				} elseif ($hostname_full . ":" . $_SERVER["SERVER_PORT"] == $_SERVER["HTTP_HOST"]) {
+					$check = true;
+					$hostname_email = $hostname_full;
+				} else {
+					$check = false;
+					$ERROR = "<p class=\"error\">" . _("Invalid host domain") . "</p>";
+				}
 				if ($check == true) {
 					$from = "noreply@" . $hostname;
 					$from_name = _("Hestia Control Panel");
@@ -76,9 +86,21 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 							$data[$user]["NAME"],
 						);
 					}
-					header("Location: /reset/?action=code&user=" . $_POST["user"]);
-					exit();
+					$ERROR =
+						"<p class=\"error\">" .
+						_(
+							"A email has been send to the known email adress with the password reset instructions",
+						) .
+						"</p>";
 				}
+			} else {
+				# Prevent user enumeration and let hackers guess username and working email
+				$ERROR =
+					"<p class=\"error\">" .
+					_(
+						"A email has been send to the known email adress with the password reset instructions",
+					) .
+					"</p>";
 			}
 		} else {
 			$ERROR =
@@ -86,6 +108,14 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 				_("Please wait 15 minutes before sending a new request") .
 				"</p>";
 		}
+	} else {
+		# Prevent user enumeration and let hackers guess username and working email
+		$ERROR =
+			"<p class=\"error\">" .
+			_(
+				"A email has been send to the known email adress with the password reset instructions",
+			) .
+			"</p>";
 	}
 	unset($output);
 }

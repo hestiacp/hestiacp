@@ -89,7 +89,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					$ERROR =
 						"<p class=\"error\">" .
 						_(
-							"A email has been send to the known email adress with the password reset instructions",
+							"Password reset instructions have been sent to the email address associated with this account.",
 						) .
 						"</p>";
 				}
@@ -98,7 +98,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 				$ERROR =
 					"<p class=\"error\">" .
 					_(
-						"A email has been send to the known email adress with the password reset instructions",
+						"Password reset instructions have been sent to the email address associated with this account.",
 					) .
 					"</p>";
 			}
@@ -113,7 +113,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 		$ERROR =
 			"<p class=\"error\">" .
 			_(
-				"A email has been send to the known email adress with the password reset instructions",
+				"Password reset instructions have been sent to the email address associated with this account.",
 			) .
 			"</p>";
 	}

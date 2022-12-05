@@ -1,13 +1,30 @@
 <script defer src="/js/main.js?<?=JS_LATEST_UPDATE?>"></script>
+<script defer src="/js/shortcuts.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script defer src="/js/vendor/jquery-3.6.1.min.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/vendor/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/vendor/chart.min.js?<?=JS_LATEST_UPDATE?>"></script>
-<script defer src="/js/shortcuts.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/events.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
 <script>
+	// TODO: REMOVE
+	const App = {
+		Actions: {
+			DB: {},
+			WEB: {},
+			PACKAGE: {},
+			MAIL_ACC: {},
+			MAIL: {},
+		},
+		Listeners: {
+			DB: {},
+			WEB: {},
+			PACKAGE: {},
+			MAIL_ACC: {},
+		}
+	}
+
 	document.documentElement.classList.replace('no-js', 'js');
 	document.addEventListener('alpine:init', () => {
 		Alpine.store('globals', {

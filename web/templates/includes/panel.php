@@ -68,7 +68,7 @@
 						</button>
 						<ul
 							class="top-bar-notifications-list animate__animated animate__fadeIn"
-							x-bind:class="open || 'u-hidden'"
+							x-show="open"
 						>
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
@@ -123,7 +123,7 @@
 						<span class="u-hidden"><?=_('Toggle menu');?></span>
 					</button>
 
-					<ul class="top-bar-menu-list animate__animated animate__fadeIn" x-bind:class="open || 'u-hidden'">
+					<ul class="top-bar-menu-list animate__animated animate__fadeIn" x-show="open">
 
 						<!-- File Manager -->
 						<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
@@ -224,7 +224,7 @@
 				>
 				</span>
 			</button>
-			<ul class="main-menu-list" x-bind:class="open || 'u-hidden'">
+			<ul class="main-menu-list" x-show="open">
 
 				<!-- Users tab -->
 				<?php if (($_SESSION['userContext'] == 'admin') && (empty($_SESSION['look']))) {?>

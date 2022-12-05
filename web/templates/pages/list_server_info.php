@@ -23,7 +23,7 @@
 							<i class="fas fa-bars"></i>
 							<span class="u-hidden"><?=_('Toggle menu');?></span>
 						</button>
-						<ul class="top-bar-menu-list animate__animated animate__fadeIn" x-bind:class="open || 'u-hidden'">
+						<ul class="top-bar-menu-list animate__animated animate__fadeIn" x-show="open">
 							<li class="top-bar-menu-item">
 								<a class="top-bar-menu-link" href="/list/rrd/" title="<?=_('Back');?>">
 									<i class="fas fa-circle-left"></i>

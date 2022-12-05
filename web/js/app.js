@@ -219,17 +219,19 @@ async function toggleNotifications(_evt) {
 		});
 	});
 
-	notificationContainer
-		.querySelector('.js-mark-all-notifications')
-		.addEventListener('click', async (evt) => {
-			const token = document.querySelector('#token').getAttribute('token');
-			await fetch(`/delete/notification/?delete=1&token=${token}`);
+	if (Object.keys(data).length > 2) {
+		notificationContainer
+			.querySelector('.js-mark-all-notifications')
+			.addEventListener('click', async (evt) => {
+				const token = document.querySelector('#token').getAttribute('token');
+				await fetch(`/delete/notification/?delete=1&token=${token}`);
 
-			notificationButton.querySelector('.status-icon').classList.remove('status-icon');
-			notificationContainer
-				.querySelectorAll('.top-bar-notification-item')
-				.forEach((el) => el.remove());
-			notificationButton.classList.remove('active', 'updates');
-			evt.target.parentNode.remove();
-		});
+				notificationButton.querySelector('.status-icon').classList.remove('status-icon');
+				notificationContainer
+					.querySelectorAll('.top-bar-notification-item')
+					.forEach((el) => el.remove());
+				notificationButton.classList.remove('active', 'updates');
+				evt.target.parentNode.remove();
+			});
+	}
 }

@@ -155,8 +155,6 @@ document.addEventListener('alpine:init', () => {
 			});
 		});
 
-	Alpine.store('shortcuts', false);
-
 	// Notifications data
 	Alpine.data('notifications', () => ({
 		initialized: false,

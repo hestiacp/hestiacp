@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	});
 
-	document
-		.querySelector('.button[data-id=vstobjects][data-action=submit]')
-		.addEventListener('click', (evt) => {
+	const submitLoader = document.querySelector('.button[data-id=vstobjects][data-action=submit]');
+	if (submitLoader) {
+		submitLoader.addEventListener('click', (evt) => {
 			const loaderElement = document.createElement('div');
 			loaderElement.classList.add('spinner');
 			loaderElement.innerHTML =
@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			evt.preventDefault();
 			document.querySelector('#vstobjects').submit();
 		});
+	}
 
 	document.querySelectorAll('.toolbar-right .sort-by').forEach((el) => {
 		el.addEventListener('click', () => $('.context-menu.sort-order').toggle());

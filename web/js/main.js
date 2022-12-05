@@ -130,12 +130,15 @@ document.addEventListener('alpine:init', () => {
 	});
 
 	// Select all helper
-	document.querySelector('#toggle-all').addEventListener('change', (evt) => {
-		document.querySelectorAll('.ch-toggle').forEach((el) => (el.checked = evt.target.checked));
-		document
-			.querySelectorAll('.l-unit')
-			.forEach((el) => el.classList.toggle('selected', evt.target.checked));
-	});
+	const toggleAll = document.querySelector('#toggle-all');
+	if (toggleAll) {
+		toggleAll.addEventListener('change', (evt) => {
+			document.querySelectorAll('.ch-toggle').forEach((el) => (el.checked = evt.target.checked));
+			document
+				.querySelectorAll('.l-unit')
+				.forEach((el) => el.classList.toggle('selected', evt.target.checked));
+		});
+	}
 
 	// Form state
 	Alpine.store('form', {

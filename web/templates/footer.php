@@ -17,10 +17,15 @@
 		<p><?=_('LEAVE_PAGE_CONFIRMATION')?></p>
 	</div>
 
-	<dialog class="shortcuts animate__animated animate__fadeIn">
+	<dialog class="shortcuts animate__animated animate__fadeIn" x-ref="shortcuts">
 		<div class="shortcuts-header">
 			<div class="shortcuts-title"><?=_('Shortcuts')?></div>
-			<div class="shortcuts-close"><i class="fas fa-xmark"></i></div>
+			<div
+				x-on:click="$refs.shortcuts.open && $refs.shorcuts.close()"
+				class="shortcuts-close"
+			>
+				<i class="fas fa-xmark"></i>
+			</div>
 		</div>
 		<div class="shortcuts-inner">
 			<ul class="shortcuts-list">
@@ -46,11 +51,22 @@
 		</div>
 	</dialog>
 
-	<button type="button" class="button button-secondary button-circle button-floating button-floating-shortcuts js-shortcuts" title="<?=_('Shortcuts');?>">
+	<button
+		x-on:click="$refs.shortcuts.open ? $refs.shorcuts.close() : $refs.shortcuts.showModal()"
+		type="button"
+		class="button button-secondary button-circle button-floating button-floating-shortcuts"
+		title="<?=_('Shortcuts');?>"
+	>
 		<i class="fas fa-keyboard"></i>
 		<span class="u-hidden"><?=_('Shortcuts');?></span>
 	</button>
-	<button type="button" class="button button-secondary button-circle button-floating button-floating-top js-to-top" title="<?=_('Top');?>">
+	<button
+		x-on:click="location.href += '#top'"
+		x-on:click="location.href += '#top'"
+		type="button"
+		class="button button-secondary button-circle button-floating button-floating-top "
+		title="<?=_('Top');?>"
+	>
 		<i class="fas fa-arrow-up"></i>
 		<span class="u-hidden"><?=_('Top');?></span>
 	</button>

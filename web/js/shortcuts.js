@@ -103,342 +103,318 @@ class Shortcuts {
 	}
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-	document.querySelectorAll('.js-shortcuts').forEach((el) => {
-		el.addEventListener('click', (evt) => {
-			evt.preventDefault();
+new Shortcuts()
+	.register(
+		{ key: 'A' },
+		(_evt) => {
+			const createButton = document.querySelector('.button#btn-create');
+			if (!createButton) {
+				return;
+			}
+			location.href = createButton.href;
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'A', ctrlKey: true, shiftKey: true },
+		(_evt) => {
+			const checked = document.querySelector('.l-unit .ch-toggle:eq(0)').checked;
+			document
+				.querySelectorAll('.l-unit')
+				.forEach((el) => el.classList.toggle('selected'), !checked);
+			document.querySelectorAll('.l-unit .ch-toggle').forEach((el) => (el.checked = !checked));
+		},
+		{ disabledInInput: true }
+	)
+	.register({ code: 'Enter', ctrlKey: true }, (_evt) => {
+		document.querySelector('form#vstobjects').submit();
+	})
+	.register({ code: 'Backspace', ctrlKey: true }, (_evt) => {
+		const redirect = document.querySelector('a.button#btn-back').href;
+
+		if (Alpine.store('form').dirty && redirect) {
+			VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', redirect);
+		} else if (document.querySelector('form#vstobjects .button.cancel')) {
+			location.href = $('form#vstobjects input.cancel')
+				.attr('onclick')
+				.replace("location.href='", '')
+				.replace("'", '');
+		} else if (redirect) {
+			location.href = redirect;
+		}
+	})
+	.register(
+		{ key: 'F' },
+		(_evt) => {
+			const searchBox = document.querySelector('.js-search-input');
+			searchBox.classList.toggle('activated', true);
+			searchBox.focus();
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Digit1' },
+		(_evt) => {
+			const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(1) a');
+			if (!target) {
+				return;
+			}
+			if (Alpine.store('form').dirty) {
+				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+			} else {
+				location.href = target.href;
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Digit2' },
+		(_evt) => {
+			const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(2) a');
+			if (!target) {
+				return;
+			}
+			if (Alpine.store('form').dirty) {
+				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+			} else {
+				location.href = target.href;
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Digit3' },
+		(_evt) => {
+			const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(3) a');
+			if (!target) {
+				return;
+			}
+			if (Alpine.store('form').dirty) {
+				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+			} else {
+				location.href = target.href;
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Digit4' },
+		(_evt) => {
+			const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(4) a');
+			if (!target) {
+				return;
+			}
+			if (Alpine.store('form').dirty) {
+				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+			} else {
+				location.href = target.href;
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Digit5' },
+		(_evt) => {
+			const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(5) a');
+			if (!target) {
+				return;
+			}
+			if (Alpine.store('form').dirty) {
+				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+			} else {
+				location.href = target.href;
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Digit6' },
+		(_evt) => {
+			const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(6) a');
+			if (!target) {
+				return;
+			}
+			if (Alpine.store('form').dirty) {
+				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+			} else {
+				location.href = target.href;
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Digit7' },
+		(_evt) => {
+			const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(7) a');
+			if (!target) {
+				return;
+			}
+			if (Alpine.store('form').dirty) {
+				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+			} else {
+				location.href = target.href;
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'H' },
+		(_evt) => {
 			const shortcutsDialog = document.querySelector('.shortcuts');
 			if (shortcutsDialog.open) {
 				shortcutsDialog.close();
 			} else {
 				shortcutsDialog.showModal();
 			}
-		});
-	});
-
-	document.querySelectorAll('.shortcuts-close').forEach((el) => {
-		el.addEventListener('click', (evt) => {
-			evt.preventDefault();
-			const shortcutsDialog = document.querySelector('.shortcuts');
-			if (shortcutsDialog.open) {
-				shortcutsDialog.close();
+		},
+		{ disabledInInput: true }
+	)
+	.register({ code: 'Escape' }, (_evt) => {
+		const shortcutsDialog = document.querySelector('.shortcuts');
+		if (shortcutsDialog.open) {
+			shortcutsDialog.close();
+		}
+		document.querySelectorAll('input, checkbox, textarea, select').forEach((el) => el.blur());
+	})
+	.register(
+		{ code: 'ArrowLeft' },
+		(_evt) => {
+			VE.navigation.move_focus_left();
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'ArrowRight' },
+		(_evt) => {
+			VE.navigation.move_focus_right();
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'ArrowDown' },
+		(_evt) => {
+			VE.navigation.move_focus_down();
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'ArrowUp' },
+		(_evt) => {
+			VE.navigation.move_focus_up();
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'L' },
+		(_evt) => {
+			const el = $('.units.active .l-unit.focus .shortcut-l');
+			if (el.length) {
+				VE.navigation.shortcut(el);
 			}
-		});
-	});
-
-	new Shortcuts()
-		.register(
-			{ key: 'A' },
-			(_evt) => {
-				const createButton = document.querySelector('.button#btn-create');
-				if (!createButton) {
-					return;
-				}
-				location.href = createButton.href;
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'A', ctrlKey: true, shiftKey: true },
-			(_evt) => {
-				const checked = document.querySelector('.l-unit .ch-toggle:eq(0)').checked;
-				document
-					.querySelectorAll('.l-unit')
-					.forEach((el) => el.classList.toggle('selected'), !checked);
-				document.querySelectorAll('.l-unit .ch-toggle').forEach((el) => (el.checked = !checked));
-			},
-			{ disabledInInput: true }
-		)
-		.register({ code: 'Enter', ctrlKey: true }, (_evt) => {
-			document.querySelector('form#vstobjects').submit();
-		})
-		.register({ code: 'Backspace', ctrlKey: true }, (_evt) => {
-			const redirect = document.querySelector('a.button#btn-back').href;
-
-			if (Alpine.store('form').dirty && redirect) {
-				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', redirect);
-			} else if (document.querySelector('form#vstobjects .button.cancel')) {
-				location.href = $('form#vstobjects input.cancel')
-					.attr('onclick')
-					.replace("location.href='", '')
-					.replace("'", '');
-			} else if (redirect) {
-				location.href = redirect;
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'S' },
+		(_evt) => {
+			const el = $('.units.active .l-unit.focus .shortcut-s');
+			if (el.length) {
+				VE.navigation.shortcut(el);
 			}
-		})
-		.register(
-			{ key: 'F' },
-			(_evt) => {
-				const searchBox = document.querySelector('.js-search-input');
-				searchBox.classList.toggle('activated', true);
-				searchBox.focus();
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Digit1' },
-			(_evt) => {
-				const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(1) a');
-				if (!target) {
-					return;
-				}
-				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
-				} else {
-					location.href = target.href;
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Digit2' },
-			(_evt) => {
-				const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(2) a');
-				if (!target) {
-					return;
-				}
-				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
-				} else {
-					location.href = target.href;
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Digit3' },
-			(_evt) => {
-				const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(3) a');
-				if (!target) {
-					return;
-				}
-				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
-				} else {
-					location.href = target.href;
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Digit4' },
-			(_evt) => {
-				const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(4) a');
-				if (!target) {
-					return;
-				}
-				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
-				} else {
-					location.href = target.href;
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Digit5' },
-			(_evt) => {
-				const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(5) a');
-				if (!target) {
-					return;
-				}
-				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
-				} else {
-					location.href = target.href;
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Digit6' },
-			(_evt) => {
-				const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(6) a');
-				if (!target) {
-					return;
-				}
-				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
-				} else {
-					location.href = target.href;
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Digit7' },
-			(_evt) => {
-				const target = document.querySelector('.main-menu .main-menu-item:nth-of-type(7) a');
-				if (!target) {
-					return;
-				}
-				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
-				} else {
-					location.href = target.href;
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'H' },
-			(_evt) => {
-				const shortcutsDialog = document.querySelector('.shortcuts');
-				if (shortcutsDialog.open) {
-					shortcutsDialog.close();
-				} else {
-					shortcutsDialog.showModal();
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register({ code: 'Escape' }, (_evt) => {
-			const shortcutsDialog = document.querySelector('.shortcuts');
-			if (shortcutsDialog.open) {
-				shortcutsDialog.close();
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'W' },
+		(_evt) => {
+			const el = $('.units.active .l-unit.focus .shortcut-w');
+			if (el.length) {
+				VE.navigation.shortcut(el);
 			}
-			document.querySelectorAll('input, checkbox, textarea, select').forEach((el) => el.blur());
-		})
-		.register(
-			{ code: 'ArrowLeft' },
-			(_evt) => {
-				VE.navigation.move_focus_left();
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'ArrowRight' },
-			(_evt) => {
-				VE.navigation.move_focus_right();
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'ArrowDown' },
-			(_evt) => {
-				VE.navigation.move_focus_down();
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'ArrowUp' },
-			(_evt) => {
-				VE.navigation.move_focus_up();
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'L' },
-			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-l');
-				if (el.length) {
-					VE.navigation.shortcut(el);
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'S' },
-			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-s');
-				if (el.length) {
-					VE.navigation.shortcut(el);
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'W' },
-			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-w');
-				if (el.length) {
-					VE.navigation.shortcut(el);
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'D' },
-			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-d');
-				if (el.length) {
-					VE.navigation.shortcut(el);
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'R' },
-			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-r');
-				if (el.length) {
-					VE.navigation.shortcut(el);
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'N' },
-			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-n');
-				if (el.length) {
-					VE.navigation.shortcut(el);
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ key: 'U' },
-			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-u');
-				if (el.length) {
-					VE.navigation.shortcut(el);
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Delete' },
-			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-delete');
-				if (el.length) {
-					VE.navigation.shortcut(el);
-				}
-			},
-			{ disabledInInput: true }
-		)
-		.register(
-			{ code: 'Enter' },
-			(evt) => {
-				if (evt.target.tagName == 'INPUT' && evt.target.form.id == 'vstobjects') {
-					document.querySelector('form#vstobjects').submit();
-				}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'D' },
+		(_evt) => {
+			const el = $('.units.active .l-unit.focus .shortcut-d');
+			if (el.length) {
+				VE.navigation.shortcut(el);
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'R' },
+		(_evt) => {
+			const el = $('.units.active .l-unit.focus .shortcut-r');
+			if (el.length) {
+				VE.navigation.shortcut(el);
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'N' },
+		(_evt) => {
+			const el = $('.units.active .l-unit.focus .shortcut-n');
+			if (el.length) {
+				VE.navigation.shortcut(el);
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ key: 'U' },
+		(_evt) => {
+			const el = $('.units.active .l-unit.focus .shortcut-u');
+			if (el.length) {
+				VE.navigation.shortcut(el);
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Delete' },
+		(_evt) => {
+			const el = $('.units.active .l-unit.focus .shortcut-delete');
+			if (el.length) {
+				VE.navigation.shortcut(el);
+			}
+		},
+		{ disabledInInput: true }
+	)
+	.register(
+		{ code: 'Enter' },
+		(evt) => {
+			if (evt.target.tagName == 'INPUT' && evt.target.form.id == 'vstobjects') {
+				document.querySelector('form#vstobjects').submit();
+			}
 
-				if (Alpine.store('form').dirty) {
-					if (!$('.ui-dialog').is(':visible')) {
-						VE.helpers.createConfirmationDialog(
-							$('.js-confirm-dialog-redirect')[0],
-							'',
-							document.querySelector(`${VE.navigation.state.menu_selector}.focus a`).href
-						);
+			if (Alpine.store('form').dirty) {
+				if (!$('.ui-dialog').is(':visible')) {
+					VE.helpers.createConfirmationDialog(
+						$('.js-confirm-dialog-redirect')[0],
+						'',
+						document.querySelector(`${VE.navigation.state.menu_selector}.focus a`).href
+					);
+				} else {
+					// if dialog is opened - submitting confirm box by "enter" shortcut
+					document.querySelector('.ui-dialog button.submit').click();
+				}
+			} else {
+				if (!$('.ui-dialog').is(':visible')) {
+					const el = $('.units.active .l-unit.focus .shortcut-enter');
+					if (el.length) {
+						VE.navigation.shortcut(el);
 					} else {
-						// if dialog is opened - submitting confirm box by "enter" shortcut
-						document.querySelector('.ui-dialog button.submit').click();
+						VE.navigation.enter_focused();
 					}
 				} else {
-					if (!$('.ui-dialog').is(':visible')) {
-						const el = $('.units.active .l-unit.focus .shortcut-enter');
-						if (el.length) {
-							VE.navigation.shortcut(el);
-						} else {
-							VE.navigation.enter_focused();
-						}
-					} else {
-						// if dialog is opened - submitting confirm box by "enter" shortcut
-						document.querySelector('.ui-dialog button.submit').click();
-					}
+					// if dialog is opened - submitting confirm box by "enter" shortcut
+					document.querySelector('.ui-dialog button.submit').click();
 				}
-			},
-			{ propagate: true }
-		);
-});
+			}
+		},
+		{ propagate: true }
+	);

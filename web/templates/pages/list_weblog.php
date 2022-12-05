@@ -79,7 +79,12 @@
 		</div>
 	</header>
 
-	<button type="button" class="button button-secondary button-circle button-floating button-floating-top js-to-top" title="<?=_('Top');?>">
+	<button
+		x-on:click="location.href += '#top'"
+		type="button"
+		class="button button-secondary button-circle button-floating button-floating-top "
+		title="<?=_('Top');?>"
+	>
 		<i class="fas fa-arrow-up"></i>
 		<span class="u-hidden"><?=_('Top');?></span>
 	</button>

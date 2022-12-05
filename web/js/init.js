@@ -49,10 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		})
 		.trigger('change');
 
-	$('.js-to-top').on('click', () => {
-		$('html, body').animate({ scrollTop: 0 }, 'normal');
-	});
-
 	$('.button').on('click', function (evt) {
 		var action = $(this).data('action');
 		var id = $(this).data('id');

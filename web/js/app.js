@@ -22,16 +22,26 @@ class AppClass {
 	};
 
 	Templates = {
-		notification:
-			'<li id="notification-:ID" class=":UNSEEN">\
-				<span class="unselectable mark-seen" data-id=":ID">&nbsp;</span>\
-				<span class="notification-title"><span class="unselectable icon :TYPE">&nbsp;</span>:TOPIC</span>\
-				:NOTICE\
-				<b><span class="time">:TIME :DATE</span></b>\
-			</li>',
-		notification_empty: `<li class="empty"><span><i class="fas fa-bell-slash status-icon dim" style="font-size: 4rem;"></i><br><br>\
-			${GLOBAL.NOTIFICATIONS_EMPTY}\
-			</span></li>`,
+		notification: `<li class="top-bar-notification-item :UNSEEN" id="notification-:ID">\
+			<div class="top-bar-notification-header">\
+				<p class="top-bar-notification-title">:TOPIC</p>\
+				<a href="#" class="top-bar-notification-delete js-delete-notification">\
+					<i class="fas fa-xmark"></i>\
+				</a>\
+			</div>\
+			:NOTICE\
+			<p class="top-bar-notification-timestamp">:TIME :DATE</p>\
+		</li>`,
+		notification_empty: `<li class="top-bar-notification-item empty">\
+			<i class="fas fa-bell-slash status-icon dim"></i>\
+			<p>${GLOBAL.NOTIFICATIONS_EMPTY}</p>\
+		</li>`,
+		notification_mark_all: `<li>\
+			<a href="#" class="top-bar-notification-mark-all js-mark-all-notifications">\
+				<i class="fas fa-check"></i>
+				${GLOBAL.NOTIFICATIONS_DELETE_ALL}
+			</a>\
+		</li>`,
 	};
 }
 
@@ -149,7 +159,7 @@ function randomString(length = 16) {
  * @param {MouseEvent} _evt
  */
 async function toggleNotifications(_evt) {
-	const notificationContainer = document.querySelector('.notification-container');
+	const notificationContainer = document.querySelector('.top-bar-notifications-list');
 	const notificationButton = document.querySelector('.js-notifications');
 	const isActive = notificationButton.classList.contains('active');
 
@@ -185,21 +195,41 @@ async function toggleNotifications(_evt) {
 		notifications = App.Templates.notification_empty;
 	}
 
+	if (Object.keys(data).length > 2) {
+		notifications += App.Templates.notification_mark_all;
+	}
+
 	notificationContainer.innerHTML = notifications;
 
-	notificationContainer.querySelectorAll('.mark-seen').forEach((el) => {
+	notificationContainer.querySelectorAll('.js-delete-notification').forEach((el) => {
 		el.addEventListener('click', async (evt) => {
 			const token = document.querySelector('#token').getAttribute('token');
-			const id = evt.target.dataset.id;
-			notificationContainer.removeChild(document.querySelector(`#notification-${id}`));
-
+			const id = evt.target
+				.closest('.top-bar-notification-item')
+				.getAttribute('id')
+				.replace('notification-', '');
 			await fetch(`/delete/notification/?delete=1&notification_id=${id}&token=${token}`);
 
-			if (document.querySelectorAll('.notification-container > li').length == 0) {
-				notificationContainer.classList.add('u-hidden');
+			if (document.querySelectorAll('.top-bar-notification-item').length == 1) {
 				notificationButton.classList.remove('active', 'updates');
 				notificationButton.querySelector('.status-icon').classList.remove('status-icon');
+				notificationContainer.querySelector('.js-mark-all-notifications').parentNode.remove();
 			}
+			document.querySelector(`#notification-${id}`).remove();
 		});
 	});
+
+	notificationContainer
+		.querySelector('.js-mark-all-notifications')
+		.addEventListener('click', async (evt) => {
+			const token = document.querySelector('#token').getAttribute('token');
+			await fetch(`/delete/notification/?delete=1&token=${token}`);
+
+			notificationButton.querySelector('.status-icon').classList.remove('status-icon');
+			notificationContainer
+				.querySelectorAll('.top-bar-notification-item')
+				.forEach((el) => el.remove());
+			notificationButton.classList.remove('active', 'updates');
+			evt.target.parentNode.remove();
+		});
 }

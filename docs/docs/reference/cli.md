@@ -778,7 +778,7 @@ v-add-user-composer user [version]
 ```
 
 This function adds support for composer (php dependency manager)
-Homepage: https://getcomposer.org/
+Homepage: <https://getcomposer.org/>
 
 ## v-add-user-notification
 
@@ -1037,7 +1037,7 @@ v-add-web-domain-stats admin example.com awstats
 ```
 
 This function is used for enabling log analyser system to a domain. For viewing
-the domain statistics use http://domain.tld/vstats/ link. Access this page
+the domain statistics use <http://domain.tld/vstats/> link. Access this page
 is not protected by default. If you want to secure it with passwords you
 should use v-add-web-domain_stat_auth script.
 
@@ -4059,7 +4059,7 @@ list system ips
 
 **Options**: `[FORMAT]`
 
-This function for obtaining the list of system ip adresses.
+This function for obtaining the list of system ip addresses.
 
 ## v-list-sys-languages
 
@@ -5066,7 +5066,7 @@ v-search-command web
 This function searches for available Hestia Control Panel commands
 and returns results based on the specified criteria.
 Originally developed for VestaCP by Federico Krum
-https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command
+<https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command>
 
 ## v-search-domain-owner
 

@@ -334,7 +334,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
   - Update zlib to 1.2.12
   - Update PCRE to 10.40
 - Update hestia-php to 8.1.7
-- Updated phpMyAdmin to 5.2.0 (https://www.phpmyadmin.net/files/5.2.0/)
+- Updated phpMyAdmin to 5.2.0 (<https://www.phpmyadmin.net/files/5.2.0/>)
 - Update Filegator to 7.8.1
 - Update PHPmailer to 6.6.2
 - Update composer dependencies
@@ -347,7 +347,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Dependencies
 
-- Update phpMyAdmin to 5.1.4 (https://www.phpmyadmin.net/files/5.1.4/) (#2529)
+- Update phpMyAdmin to 5.1.4 (<https://www.phpmyadmin.net/files/5.1.4/>) (#2529)
 
 ## [1.5.14] - Service release
 
@@ -402,8 +402,8 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 ### Dependencies
 
-- Update PHPMailer to 6.6.0 (https://github.com/PHPMailer/PHPMailer/releases/tag/v6.6.0)
-- Update Filegator to 7.7.2 (https://github.com/filegator/filegator/releases/tag/v7.7.2)
+- Update PHPMailer to 6.6.0 (<https://github.com/PHPMailer/PHPMailer/releases/tag/v6.6.0>)
+- Update Filegator to 7.7.2 (<https://github.com/filegator/filegator/releases/tag/v7.7.2>)
 
 ## [1.5.8] - Service release
 
@@ -421,11 +421,11 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 - Fixed an issue where users were being redirected to login page when visiting /reset/ endpoint #2401
 - Fixed an issue where deleting sftp jail did not revert back permissions of said user. #2143
 - Fixed an issue where "REDIRECT" variable wasn't cleared correctly causing other sites to redirect to the domain after v-update-letsencrypt-ssl
-- Changed repository url MariaDB for new installs to https://wdlm.mariadb.com/repo/mariadb-server
+- Changed repository url MariaDB for new installs to <https://wdlm.mariadb.com/repo/mariadb-server>
 
 ### Dependencies
 
-- Update phpMyAdmin to 5.1.3 (https://github.com/phpmyadmin/phpmyadmin/releases/tag/RELEASE_5_1_3)
+- Update phpMyAdmin to 5.1.3 (<https://github.com/phpmyadmin/phpmyadmin/releases/tag/RELEASE_5_1_3>)
 
 ## [1.5.7] - Service release
 
@@ -435,13 +435,13 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 
 If you have to following error
 
-```
+```bash
 The following signatures couldn't be verified because the public key is not available: NO_PUBKEY A189E93654F0B0E5
 ```
 
 Follow the following instructions
 
-```
+```bash
 rm /usr/share/keyrings/hestia-keyring.gpg
 mkdir /root/.gnupg/
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5
@@ -454,7 +454,7 @@ After that run apt update && apt upgrade
 ### Bugfixes
 
 - Fixed an issue with the installer. system.pkg didn't allow for a Web alias #2381
-- Fixed an issue with upgrade script causing command to to be executed (https://forum.hestiacp.com/t/upgrading-to-1-5-5-error-line/5449/3)
+- Fixed an issue with upgrade script causing command to to be executed (<https://forum.hestiacp.com/t/upgrading-to-1-5-5-error-line/5449/3>)
 
 ## [1.5.5] - Service release
 
@@ -462,8 +462,8 @@ After that run apt update && apt upgrade
 
 - Improve default php-fpm.conf files. (#2318, #2343)
 - Notify user when a suspended user tries to login (#2310, #2345)
-- Allow setting default web install templates for Quick install (#2344) (https://github.com/hestiacp/hestia-quick-install)
-- Improve security how apt keys are downloaded #2299 (https://blog.cloudflare.com/dont-use-apt-key/)
+- Allow setting default web install templates for Quick install (#2344) (<https://github.com/hestiacp/hestia-quick-install>)
+- Improve security how apt keys are downloaded #2299 (<https://blog.cloudflare.com/dont-use-apt-key/>)
 - Allow users to set system php version in Web GUI (#2357)
 - Added a link to the firewall in list services (#2371) @fra81
 
@@ -487,9 +487,9 @@ After that run apt update && apt upgrade
 
 ### Dependencies
 
-- Update PHPmyadmin to 5.1.2 (https://www.phpmyadmin.net/files/5.1.2/)
-- Update Filegator to 7.7.1 (https://github.com/filegator/filegator/releases/tag/v7.7.1)
-- Update B2CLI to 3.2.0 (https://github.com/Backblaze/B2_Command_Line_Tool/releases/tag/v3.2.0) (#2349) @ptrinh
+- Update PHPmyadmin to 5.1.2 (<https://www.phpmyadmin.net/files/5.1.2/>)
+- Update Filegator to 7.7.1 (<https://github.com/filegator/filegator/releases/tag/v7.7.1>)
+- Update B2CLI to 3.2.0 (<https://github.com/Backblaze/B2_Command_Line_Tool/releases/tag/v3.2.0>) (#2349) @ptrinh
 
 ## [1.5.4] - Service release
 
@@ -628,7 +628,7 @@ After that run apt update && apt upgrade
 
 ### Dependencies
 
-- Update Roundcube to 1.5.0 https://roundcube.net/news/2021/10/18/roundcube-1.5.0-released
+- Update Roundcube to 1.5.0 <https://roundcube.net/news/2021/10/18/roundcube-1.5.0-released>
 - Update jQuery UI to the last version [CVE-2021-41182](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-41182)
 
 ## [1.4.17] - Service release
@@ -834,7 +834,7 @@ After that run apt update && apt upgrade
 
 - Improve the calculated disk size of a new backup estimated by excluding the exclude folders, mail accounts and database in backups (#1616) @Myself5
 - Improve v-update-firewall / v-stop-firewall to make it self healing (#1892) @myrevery
-- Update phpMyAdmin version to 1.5.1 (See https://www.phpmyadmin.net/news/2021/6/4/phpmyadmin-511-released/)
+- Update phpMyAdmin version to 1.5.1 (See <https://www.phpmyadmin.net/news/2021/6/4/phpmyadmin-511-released/>)
 - Fixed a bug after rebuilding mail with Exim4 and suspended domains (#1886)
 - Fixed "Allowed IP addresses for API" field with strange behaviour #1866
 - Fixed an issue where the "Saved confirmation" was not set due to a redirect #1879
@@ -854,14 +854,14 @@ After that run apt update && apt upgrade
 
 - **NOTE:** During the 1.4.1 / 1.4.0 release we have introduced a bug for Ubuntu 20.04 and 18.04 users with multiple network ports on the server. This release will solve the problems caused by this bug! If you are unable to download the Hestia packages via apt. Run the following command via CLI or SSH as root
 
-```
-    iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+```bash
+iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 ```
 
 Then run the update via
 
-```
-    apt update && apt upgrade
+```bash
+apt update && apt upgrade
 ```
 
 ### Bugfixes
@@ -887,7 +887,7 @@ Then run the update via
 
 - **NOTE:** Ubuntu 16.04 (Xenial) is no longer supported as it has reached EOL (end-of-life) status.
 - **NOTE:** Apache in "standalone" mode is no longer actively supported and has been removed from installer options. Nginx (Proxy) + Apache2 will remain supported.
-- **NOTE:** Custom "quick installer apps" will not work anymore due to changes in how we handle quick installer apps. Minimal changes to the Quick installer apps are required! Please check https://github.com/hestiacp/hestia-quick-install for how to migrate!
+- **NOTE:** Custom "quick installer apps" will not work anymore due to changes in how we handle quick installer apps. Minimal changes to the Quick installer apps are required! Please check <https://github.com/hestiacp/hestia-quick-install> for how to migrate!
 - **NOTE:** Manual upgrade scripts are available to update Roundcube, Rainloop and PHPmyadmin to the last version they can be found in /usr/local/hestia/install/upgrade/manual/
 
 ### Features
@@ -987,7 +987,7 @@ Then run the update via
 
 ### Bugfixes
 
-- Updated APT repository key for PHP from packages.sury.org (https://forum.hestiacp.com/t/apt-upgrade-failed-gpg-error-packages-sury-org)
+- Updated APT repository key for PHP from packages.sury.org (<https://forum.hestiacp.com/t/apt-upgrade-failed-gpg-error-packages-sury-org>)
 - Updated phpMyAdmin to v5.1.0.
 
 ## [1.3.4] - Service Release
@@ -1306,7 +1306,7 @@ Then run the update via
 - Fixed wrong quotes used for default keys folder location in v-generate-api-key backend script.
 - Fixed permissions to allow access for FTP users created in web domains under admin account.
 - Check if user home directory exists before setting permissions on SFTP fail2ban jail.
-- Fixed several reported security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
+- Fixed several reported security issues, thanks to Andrea Cardaci (<https://cardaci.xyz/>)
 - Security fix: Command line arguments arguments were glob expanded when written to log file.
 - Ensure that SFTP accounts remain configured in sshd when removing web domains/
 - Improved security by ensuring that file operations in user home folder will be executed as the real user.
@@ -1359,7 +1359,7 @@ Then run the update via
 
 ### Bugfixes
 
-- Fixed several security issues, thanks to Andrea Cardaci (https://cardaci.xyz/)
+- Fixed several security issues, thanks to Andrea Cardaci (<https://cardaci.xyz/>)
 - Rework Let's Encrypt ACME staging to use hestia conform standard.
 - Fixed if condition, use nginx for Let's Encrypt ACME request if present.
 
@@ -1422,7 +1422,6 @@ Then run the update via
 
 -
 
-[current]: https://github.com/hestiacp/hestiacp
 [1.0.4]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.4
 [1.0.3]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.3
 [1.0.1]: https://github.com/hestiacp/hestiacp/releases/tag/1.0.1

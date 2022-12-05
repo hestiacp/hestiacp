@@ -7,21 +7,21 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<ul class="context-menu sort-order animate__animated animate__fadeIn" style="display:none;">
+				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
+					<?=_('sort by');?>: <b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b>
+				</a>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-key"><span class="name"><?=_('Access Key');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-comment"><span class="name"><?=_('Comment');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<div class="sort-by" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>: <b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b>
-				</div>
 				<form action="/bulk/access-key/" method="post" id="objects">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
 						<option value=""><?=_('apply to selected');?></option>
 						<option value="delete"><?=_('delete');?></option>
 					</select>
-					<button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
@@ -32,7 +32,7 @@
 <!-- End toolbar -->
 
 
-<div class="l-center units">
+<div class="container units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
@@ -97,13 +97,12 @@
 	<?php } ?>
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center">
+<footer class="app-footer">
+	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
 				<?php printf(ngettext('%d Access Key', '%d Access Keys', $i),$i); ?>
 			</div>
 		</div>
 	</div>
-</div>
+</footer>

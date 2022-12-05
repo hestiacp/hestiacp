@@ -4,7 +4,7 @@
     Website:     www.hestiacp.com
 */
 
-@custom-media --viewport-medium (min-width: 768px);
+@import url("../media_queries");
 
 :root {
 	--animate-duration: 0s;
@@ -26,11 +26,31 @@ strong {
 	background: #5d5d5d;
 }
 
-.top-bar-nav-list {
+.top-bar-notifications-list {
+	border: 1px solid #ccc;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%);
+}
+
+.top-bar-notification-item.unseen {
+	& .top-bar-notification-title,
+	& .top-bar-notification-title a {
+		color: #111;
+	}
+}
+
+.top-bar-notification-delete {
+	& .fas {
+		color: #ff6701;
+	}
+}
+
+.top-bar-menu-list {
 	background-color: #5d5d5d;
 }
 
-.top-bar-nav-link {
+.top-bar-menu-link {
 	&:hover,
 	&:active {
 		color: #fff;
@@ -44,6 +64,43 @@ strong {
 		color: #ff6701;
 		background: #fff;
 	}
+}
+
+/* Main menu
+   ========================================================================== */
+
+.main-menu-item-link {
+	&:hover {
+		& .main-menu-item-label {
+			color: #ff791f;
+		}
+	}
+
+	&.active {
+		& .main-menu-item-label {
+			color: #ff791f;
+		}
+	}
+
+	& .fas {
+		display: none;
+	}
+
+	@media (--viewport-medium) {
+		text-align: left;
+
+		&:hover {
+			border-bottom-color: #ff791f;
+		}
+
+		&.active {
+			border-bottom-color: #ff791f;
+		}
+	}
+}
+
+.main-menu-item-label {
+	font-size: 0.9rem;
 }
 
 .table-header {
@@ -155,75 +212,29 @@ strong {
 	}
 }
 
-.notification-container {
-	border: 1px solid #ccc;
-	border-bottom-left-radius: 2px !important;
-	border-bottom-right-radius: 2px !important;
-	box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%) !important;
-
-	& li {
-		line-height: 1.1rem;
-	}
-}
-
-.context-menu.sort-order {
+.toolbar-sorting-menu {
 	box-shadow: none;
-	border: 1px solid #ccc;
-	font-size: 0.75rem;
-	background: #fff;
+	border-color: #ccc;
+	background-color: #fff;
+
+	& span {
+		&:hover {
+			color: #ff6701;
+			background: none;
+		}
+
+		&.active {
+			background: none;
+			font-weight: bold;
+			color: #444;
+		}
+	}
 }
 
 .form-control,
 .form-select {
 	box-shadow: none;
 	border-radius: 0;
-}
-
-/* Main menu
-   ========================================================================== */
-
-.main-menu-item-link {
-	&:hover {
-		& .main-menu-item-label {
-			color: #ff791f;
-		}
-	}
-
-	&.active {
-		& .main-menu-item-label {
-			color: #ff791f;
-		}
-	}
-
-	& .fas {
-		display: none;
-	}
-
-	@media (--viewport-medium) {
-		text-align: left;
-
-		&:hover {
-			border-bottom-color: #ff791f;
-		}
-
-		&.active {
-			border-bottom-color: #ff791f;
-		}
-	}
-}
-
-.main-menu-item-label {
-	font-size: 0.9rem;
-}
-
-.notification-container .unseen .notification-title a,
-.notification-container .unseen .notification-title {
-	color: #111;
-}
-
-.notification-container .mark-seen {
-	background-color: #ff6701;
-	border: 1px solid #f16100;
 }
 
 .form-control:focus {
@@ -247,7 +258,7 @@ strong {
 	font-size: 1.2rem;
 }
 
-.toolbar-submit {
+.toolbar-input-submit {
 	background-color: #cacaca;
 	border-radius: 0;
 	color: #fff;
@@ -285,7 +296,6 @@ strong {
 		color: #fff;
 		text-transform: uppercase;
 		text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
-		margin-right: 15px;
 		background: #a0c105;
 		background-color: #a0c105;
 
@@ -371,17 +381,6 @@ strong {
 	color: #b5da0b;
 }
 
-.context-menu.sort-order span.active {
-	background: none !important;
-	font-weight: bold !important;
-	color: #444 !important;
-}
-
-.context-menu.sort-order span:hover {
-	color: #ff6701 !important;
-	background: none !important;
-}
-
 .badge.gray {
 	border: 1px solid rgb(255 255 255 / 40%) !important;
 }
@@ -391,10 +390,27 @@ strong {
 	background: #ededed;
 }
 
+/* Login box
+   ========================================================================== */
+
 .login {
-	background-color: rgb(255 255 255 / 100%);
-	box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
-	border-radius: 0;
+	& .form-label {
+		color: #4b4b4b;
+	}
+
+	@media (--viewport-small) {
+		background-color: rgb(255 255 255 / 100%);
+		box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
+		border-radius: 0;
+	}
+}
+
+.login-title {
+	color: #4b4b4b;
+}
+
+.login-label-link {
+	color: #326b9b;
 }
 
 .mail-infoblock {

@@ -21,7 +21,7 @@ if (!empty($_POST['ok'])) {
 </div>
 <!-- End toolbar -->
 
-<div class="l-center animate__animated animate__fadeIn">
+<div class="container animate__animated animate__fadeIn">
 	<form id="vstobjects">
 
 		<div class="form-container">

@@ -16,6 +16,7 @@
 		UNLIM_VALUE: 'unlimited',
 		UNLIM_TRANSLATED_VALUE: '<?= _("unlimited") ?>',
 		NOTIFICATIONS_EMPTY: '<?= _("no notifications") ?>',
+		NOTIFICATIONS_DELETE_ALL: '<?= _("Delete notifications") ?>',
 	};
 </script>
 <?php foreach(new DirectoryIterator($_SERVER['HESTIA'].'/web/js/custom_scripts') as $customScript){

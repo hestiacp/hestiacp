@@ -176,7 +176,6 @@
 
                         var ref = $(e.target);
                         if (ref.parents('.l-unit').hasClass('selected')/* && $('.l-unit.selected').length == 1*/) {
-                            $('.toggle-all').removeClass('clicked-on');
                             f.t.toggleClick(p,c,o);
                             o.onFinish(e);
                             return;
@@ -582,13 +581,11 @@
         unHAll: function(p,o) {
             f.h.off(p.find(o.children), o);
             f.t.update(p, o);
-            $('.toggle-all').removeClass('clicked-on');
         },
         hAll: function(p,o) {
             f.h.on(p.find(o.children), o);
             f.t.update(p, o);
             o.toggleAllHook && o.toggleAllHook();
-            $('.toggle-all').addClass('clicked-on');
         },
         unHExist: function(bool,el,o) {
             if(bool) {

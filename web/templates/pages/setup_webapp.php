@@ -2,7 +2,9 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/add/webapp/?domain=<?=htmlentities($v_domain);?>"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a class="button button-secondary" id="btn-back" href="/add/webapp/?domain=<?=htmlentities($v_domain);?>">
+				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<?php
@@ -14,13 +16,15 @@
 					}
 				}
 			?>
-			<a href="#" class="button" data-action="submit" data-id="vstobjects"><i class="fas fa-floppy-disk status-icon purple"></i> <?=_('Install');?></a>
+			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Install');?>
+			</a>
 		</div>
 	</div>
 </div>
 <!-- End toolbar -->
 
-<div class="l-center animate__animated animate__fadeIn">
+<div class="container animate__animated animate__fadeIn">
 
 	<?php if( !empty($WebappInstaller->getOptions())): ?>
 		<form id="vstobjects" method="POST" name="v_setup_webapp">

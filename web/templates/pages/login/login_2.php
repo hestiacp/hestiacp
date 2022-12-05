@@ -12,7 +12,7 @@
 		<div class="u-mb20">
 			<label for="twofa" class="form-label u-side-by-side">
 				<?=_('2FA Token');?>
-				<a class="label-link" href="/reset2fa/">
+				<a class="login-label-link" href="/reset2fa/">
 					<?=_('Forgot token');?>
 				</a>
 			</label>

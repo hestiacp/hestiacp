@@ -28,7 +28,7 @@
 					<option value="start"><?=_('start');?></option>
 					<option value="restart"><?=_('restart');?></option>
 				</select>
-				<button type="submit" class="toolbar-submit" value="" title="<?=_('apply to selected');?>">
+				<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>
@@ -37,7 +37,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="l-center units">
+<div class="container units">
 
 	<div>
 		<div class="l-unit__col l-unit__col--right server-info">
@@ -167,12 +167,11 @@
 	<?php } ?>
 </div>
 
-<div id="vstobjects">
-	<div class="l-separator"></div>
-	<div class="l-center">
+<footer class="app-footer">
+	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--left clearfix"></div>
 			<div class="l-unit__col l-unit__col--right"></div>
 		</div>
 	</div>
-</div>
+</footer>

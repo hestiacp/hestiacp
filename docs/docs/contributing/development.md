@@ -2,15 +2,15 @@
 
 Hestia is an open-source project, and we welcome contributions from the community. Please read the [contributing guidelines](https://github.com/hestiacp/hestiacp/blob/main/CONTRIBUTING.md) for additional information.
 
-Hestia is designed to run on a web server. To develop Hestia locally, we recommend using a virtual machine.
+Hestia is designed to be installed on a web server. To develop Hestia on your local machine, a virtual machine is recommend.
 
 ::: warning
 Development builds are unstable. If you encounter a bug please [report it via GitHub](https://github.com/hestiacp/hestiacp/issues/new/choose) or [submit a Pull request](https://github.com/hestiacp/hestiacp/pulls).
 :::
 
-## Running Hestia in a virtual machine
+## Creating a virtual machine for development
 
-Here are example instructions for running Hestia for development in a virtual machine.
+These are example instructions for creating a virtual machine running Hestia for development.
 
 These instructions use [Multipass](https://multipass.run/) to create the VM. Feel free to adapt the commands for any virtualization software you prefer.
 
@@ -69,13 +69,15 @@ These instructions use [Multipass](https://multipass.run/) to create the VM. Fee
    multipass list
    ```
 
-1. Visit the VM's IP address in your browser using the default Hestia port, bypass any SSL warnings and login with `admin`/`password123`
+1. Visit the VM's IP address in your browser using the default Hestia port and login with `admin`/`password123`
+
+   _(bypass any SSL errors you see when loading the page)_
 
    ```bash
    e.g. https://192.168.64.15:8083
    ```
 
-You now have Hestia running in a virtual machine. The following section will cover how to make changes to Hestia and test them locally.
+Hestia is now running in a virtual machine. If you'd like to make changes to the source code and test them, please continue to the next section.
 
 ## Making changes to Hestia
 

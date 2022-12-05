@@ -112,33 +112,85 @@
 					</div>
 				</div>
 				<div>
-					<div class="mail-infoblock">
-						<table>
-							<tr><td colspan="2"><strong><?=strtoupper(_('Common account settings'));?></strong></td><tr>
-							<tr><td><?=_('Username');?>: </td><td><span class="js-account-output"></span>@<?=htmlentities(trim($v_domain, "'"))?></td></tr>
-							<tr><td><?=_('Password');?>: </td><td><span class="js-password-output"></span></td></tr>
-							<?php if ($_SESSION['WEBMAIL_SYSTEM']) {?><tr><td><?=_('Webmail');?>: </td><td><a href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?></a></td></tr>
+					<div class="panel js-mail-info">
+						<h2 class="u-text-H3 u-mb10"><?=_('Common account settings');?></h2>
+						<ul class="values-list u-mb20">
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('Username');?></span>
+								<span class="values-list-value"><span class="js-account-output"></span>@<?=htmlentities(trim($v_domain, "'"))?></span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('Password');?></span>
+								<span class="values-list-value"><span class="js-password-output"></span></span>
+							</li>
+							<?php if ($_SESSION['WEBMAIL_SYSTEM']) {?>
+								<li class="values-list-item">
+									<span class="values-list-label"><?=_('Webmail');?></span>
+									<span class="values-list-value"><a href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?></a></span>
+								</li>
 							<?php } ?>
-							<tr><td><?=_('Hostname');?>: </td><td>mail.<?=htmlentities($v_domain)?></td></tr>
-
-							<tr><td colspan="2"><strong><?=strtoupper(_('IMAP settings'));?></strong></td></tr>
-							<tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
-							<tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 993
-							<tr><td><?=_('STARTTLS');?>: </td><td><?=_('Port');?> 143
-							<tr><td><?=_('No encryption');?>: </td><td><?=_('Port');?> 143
-
-							<tr><td colspan="2"><strong><?=strtoupper(_('POP3 settings'));?></strong></td></tr>
-							<tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
-							<tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 995
-							<tr><td><?=_('STARTTLS');?>: </td><td><?=_('Port');?> 110
-							<tr><td><?=_('No encryption');?>: </td><td><?=_('Port');?> 110
-
-							<tr><td colspan="2"><strong><?=strtoupper(_('SMTP settings'));?></strong></td></tr>
-							<tr><td><?=_('Authentication');?>: </td><td> <?=_('Normal password');?></td></tr>
-							<tr><td><?=_('SSL/TLS');?>: </td><td><?=_('Port');?> 465
-							<tr><td><?=_('STARTTLS');?>: </td><td><?=_('Port');?> 587
-							<tr><td><?=_('No encryption');?>: </td><td><?=_('Port');?> 25
-						</table>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('Hostname');?></span>
+								<span class="values-list-value">mail.<?=htmlentities($v_domain)?></span>
+							</li>
+						</ul>
+						<h2 class="u-text-H3 u-mb10"><?=_('IMAP settings');?></h2>
+						<ul class="values-list u-mb20">
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('Authentication');?></span>
+								<span class="values-list-value"><?=_('Normal password');?></span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('SSL/TLS');?></span>
+								<span class="values-list-value"><?=_('Port');?> 993</span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('STARTTLS');?></span>
+								<span class="values-list-value"><?=_('Port');?> 143</span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('No encryption');?></span>
+								<span class="values-list-value"><?=_('Port');?> 143</span>
+							</li>
+						</ul>
+						<h2 class="u-text-H3 u-mb10"><?=_('POP3 settings');?></h2>
+						<ul class="values-list u-mb20">
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('Authentication');?></span>
+								<span class="values-list-value"><?=_('Normal password');?></span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('SSL/TLS');?></span>
+								<span class="values-list-value"><?=_('Port');?> 995</span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('STARTTLS');?></span>
+								<span class="values-list-value"><?=_('Port');?> 110</span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('No encryption');?></span>
+								<span class="values-list-value"><?=_('Port');?> 110</span>
+							</li>
+						</ul>
+						<h2 class="u-text-H3 u-mb10"><?=_('SMTP settings');?></h2>
+						<ul class="values-list">
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('Authentication');?></span>
+								<span class="values-list-value"><?=_('Normal password');?></span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('SSL/TLS');?></span>
+								<span class="values-list-value"><?=_('Port');?> 465</span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('STARTTLS');?></span>
+								<span class="values-list-value"><?=_('Port');?> 587</span>
+							</li>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('No encryption');?></span>
+								<span class="values-list-value"><?=_('Port');?> 25</span>
+							</li>
+						</ul>
 					</div>
 				</div>
 			</div>

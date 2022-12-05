@@ -28,9 +28,7 @@
 # Composer
 composer.phar
 test/vendor/
-web/src/vendor/filp
-web/src/vendor/psr
-web/src/vendor/composer/installed.json
+web/src/vendor/*
 .phpunit.result.cache
 
 # vitepress build output
@@ -51,3 +49,15 @@ npm-debug.log
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# development
+data
+conf
+log
+logs
+php
+nginx
+ssl
+web/fm
+web/inc/vendor
+web/rrd

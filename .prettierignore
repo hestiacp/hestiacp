@@ -11,6 +11,9 @@
 # Husky
 .husky/_/
 
+# Exclude bats submodules if present
+/test/test_helper/*
+
 # Bats seems to break Prettier
 *.bats
 

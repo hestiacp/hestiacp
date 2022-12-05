@@ -9,7 +9,8 @@ document.addEventListener('alpine:init', () => {
 		notifications: [],
 		toggle() {
 			this.open = !this.open;
-			if (this.open) {
+			if (!this.initialized) {
+				this.initialized = true;
 				this.list();
 			}
 		},
@@ -19,7 +20,6 @@ document.addEventListener('alpine:init', () => {
 				throw new Error('An error occured while listing notifications.');
 			}
 			const data = await response.clone().json();
-			this.initialized = true;
 
 			this.notifications = Object.entries(data).reduce(
 				(acc, [_id, notification]) => [...acc, notification],

@@ -14,7 +14,7 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(GLOBAL.FTP_USER_PREFIX + hint);
+		.text(Alpine.store('globals').FTP_USER_PREFIX + hint);
 };
 
 App.Listeners.WEB.keypress_ftp_username = function () {
@@ -43,7 +43,7 @@ App.Listeners.WEB.keypress_domain_name = function () {
 			//var elm = $(evt.target);
 			//App.Actions.WEB.update_ftp_username_hint(elm, $(elm).val());
 			var domain = $('.js-ftp-path-prefix').text(
-				GLOBAL.FTP_USER_PREPATH + '/' + $('#v_domain').val()
+				Alpine.store('globals').FTP_USER_PREPATH + '/' + $('#v_domain').val()
 			);
 			$('#v-custom-doc-domain-main').text($('#v_domain').val());
 			$('#v-custom-doc-domain-main').val($('#v_domain').val());

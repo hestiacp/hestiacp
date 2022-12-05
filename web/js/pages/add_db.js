@@ -8,7 +8,7 @@ App.Actions.DB.update_db_username_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(GLOBAL.DB_USER_PREFIX + hint);
+		.text(Alpine.store('globals').DB_USER_PREFIX + hint);
 };
 
 //
@@ -21,7 +21,7 @@ App.Actions.DB.update_db_databasename_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(GLOBAL.DB_DBNAME_PREFIX + hint);
+		.text(Alpine.store('globals').DB_DBNAME_PREFIX + hint);
 };
 
 //

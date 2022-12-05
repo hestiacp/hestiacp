@@ -47,7 +47,7 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(GLOBAL.FTP_USER_PREFIX + hint);
+		.text(Alpine.store('globals').FTP_USER_PREFIX + hint);
 };
 
 App.Listeners.WEB.keypress_ftp_username = function () {

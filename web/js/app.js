@@ -8,12 +8,6 @@ class AppClass {
 		MAIL: {},
 	};
 
-	// Utilities
-	Helpers = {
-		isUnlimitedValue: (value) =>
-			value.trim() == GLOBAL.UNLIM_VALUE || value.trim() == GLOBAL.UNLIM_TRANSLATED_VALUE,
-	};
-
 	Listeners = {
 		DB: {},
 		WEB: {},

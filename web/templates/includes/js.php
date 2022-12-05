@@ -10,15 +10,20 @@
 <script defer src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
 <script>
-	const GLOBAL = {
-		FTP_USER_PREFIX: '<?= $user_plain; ?>_',
-		DB_USER_PREFIX: '<?= $user_plain; ?>_',
-		DB_DBNAME_PREFIX: '<?= $user_plain; ?>_',
-		UNLIM_VALUE: 'unlimited',
-		UNLIM_TRANSLATED_VALUE: '<?= _("unlimited") ?>',
-		NOTIFICATIONS_EMPTY: '<?= _("no notifications") ?>',
-		NOTIFICATIONS_DELETE_ALL: '<?= _("Delete notifications") ?>',
-	};
+	document.addEventListener('alpine:init', () => {
+		Alpine.store('globals', {
+			FTP_USER_PREFIX: '<?= $user_plain; ?>_',
+			DB_USER_PREFIX: '<?= $user_plain; ?>_',
+			DB_DBNAME_PREFIX: '<?= $user_plain; ?>_',
+			UNLIM_VALUE: 'unlimited',
+			UNLIM_TRANSLATED_VALUE: '<?= _("unlimited") ?>',
+			NOTIFICATIONS_EMPTY: '<?= _("no notifications") ?>',
+			NOTIFICATIONS_DELETE_ALL: '<?= _("Delete notifications") ?>',
+			isUnlimitedValue(value) {
+				return value.trim() == this.UNLIM_VALUE || value.trim() == this.UNLIM_TRANSLATED_VALUE;
+			}
+		});
+	})
 </script>
 <?php foreach(new DirectoryIterator($_SERVER['HESTIA'].'/web/js/custom_scripts') as $customScript){
 	if($customScript->getExtension() === 'js'){

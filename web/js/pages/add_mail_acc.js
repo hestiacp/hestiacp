@@ -1,7 +1,7 @@
 App.Actions.MAIL_ACC.enable_unlimited = function (elm, source_elm) {
 	$(elm).data('checked', true);
 	$(elm).data('prev_value', $(elm).val()); // save prev value in order to restore if needed
-	$(elm).val(GLOBAL.UNLIM_TRANSLATED_VALUE);
+	$(elm).val(Alpine.store('globals').UNLIM_TRANSLATED_VALUE);
 	$(elm).attr('disabled', true);
 	$(source_elm).css('opacity', '1');
 };
@@ -11,11 +11,11 @@ App.Actions.MAIL_ACC.disable_unlimited = function (elm, source_elm) {
 	if ($(elm).data('prev_value') && $(elm).data('prev_value').trim() != '') {
 		var prev_value = $(elm).data('prev_value').trim();
 		$(elm).val(prev_value);
-		if (App.Helpers.isUnlimitedValue(prev_value)) {
+		if (Alpine.store('globals').isUnlimitedValue(prev_value)) {
 			$(elm).val('0');
 		}
 	} else {
-		if (App.Helpers.isUnlimitedValue($(elm).val())) {
+		if (Alpine.store('globals').isUnlimitedValue($(elm).val())) {
 			$(elm).val('0');
 		}
 	}
@@ -40,7 +40,7 @@ App.Listeners.MAIL_ACC.checkbox_unlimited_feature = function () {
 App.Listeners.MAIL_ACC.init = function () {
 	$('.unlim-trigger').each(function (i, elm) {
 		var ref = $(elm).prev('.form-control');
-		if (App.Helpers.isUnlimitedValue($(ref).val())) {
+		if (Alpine.store('globals').isUnlimitedValue($(ref).val())) {
 			App.Actions.MAIL_ACC.enable_unlimited(ref, elm);
 		} else {
 			$(ref).data('prev_value', $(ref).val());
@@ -67,8 +67,8 @@ $('#v_blackhole').on('click', function (evt) {
 $('form[name="v_quota"]').on('submit', function (evt) {
 	$('input:disabled').each(function (i, elm) {
 		$(elm).attr('disabled', false);
-		if (App.Helpers.isUnlimitedValue($(elm).val())) {
-			$(elm).val(GLOBAL.UNLIM_VALUE);
+		if (Alpine.store('globals').isUnlimitedValue($(elm).val())) {
+			$(elm).val(Alpine.store('globals').UNLIM_VALUE);
 		}
 	});
 });

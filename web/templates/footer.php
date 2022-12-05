@@ -17,11 +17,11 @@
 		<p><?=_('LEAVE_PAGE_CONFIRMATION')?></p>
 	</div>
 
-	<dialog class="shortcuts animate__animated animate__fadeIn" x-ref="shortcuts">
+	<dialog class="shortcuts animate__animated animate__fadeIn" x-bind:open="$store.shortcuts">
 		<div class="shortcuts-header">
 			<div class="shortcuts-title"><?=_('Shortcuts')?></div>
 			<div
-				x-on:click="$refs.shortcuts.open && $refs.shorcuts.close()"
+				x-on:click="$store.shortcuts = false"
 				class="shortcuts-close"
 			>
 				<i class="fas fa-xmark"></i>
@@ -52,7 +52,7 @@
 	</dialog>
 
 	<button
-		x-on:click="$refs.shortcuts.open ? $refs.shorcuts.close() : $refs.shortcuts.showModal()"
+		x-on:click="$store.shortcuts = !$store.shortcuts"
 		type="button"
 		class="button button-secondary button-circle button-floating button-floating-shortcuts"
 		title="<?=_('Shortcuts');?>"
@@ -60,16 +60,14 @@
 		<i class="fas fa-keyboard"></i>
 		<span class="u-hidden"><?=_('Shortcuts');?></span>
 	</button>
-	<button
-		x-on:click="location.href += '#top'"
-		x-on:click="location.href += '#top'"
-		type="button"
+	<a
+		href="#top"
 		class="button button-secondary button-circle button-floating button-floating-top "
 		title="<?=_('Top');?>"
 	>
 		<i class="fas fa-arrow-up"></i>
 		<span class="u-hidden"><?=_('Top');?></span>
-	</button>
+	</a>
 
 <?php
 	if (!empty($_SESSION['error_msg'])):

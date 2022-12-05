@@ -50,15 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		})
 		.trigger('change');
 
-	$('.button').on('click', function (evt) {
-		var action = $(this).data('action');
-		var id = $(this).data('id');
-		if (action == 'submit' && document.getElementById(id)) {
-			evt.preventDefault();
-			$(document.getElementById(id)).submit();
-		}
-	});
-
 	$('.toolbar-sorting-toggle').click(function (evt) {
 		evt.preventDefault();
 		$('.toolbar-sorting-menu').toggleClass('u-hidden');

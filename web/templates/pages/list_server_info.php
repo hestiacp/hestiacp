@@ -105,14 +105,14 @@
 		</div>
 	</header>
 
-	<button
-		type="button"
-		class="button button-secondary button-circle button-floating button-floating-top"
+	<a
+		href="#top"
+		class="button button-secondary button-circle button-floating button-floating-top "
 		title="<?=_('Top');?>"
 	>
 		<i class="fas fa-arrow-up"></i>
 		<span class="u-hidden"><?=_('Top');?></span>
-	</button>
+	</a>
 
 	<div class="server-info-output">.</div>
 	<div class="container">

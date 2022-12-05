@@ -79,15 +79,14 @@
 		</div>
 	</header>
 
-	<button
-		x-on:click="location.href += '#top'"
-		type="button"
+	<a
+		href="#top"
 		class="button button-secondary button-circle button-floating button-floating-top "
 		title="<?=_('Top');?>"
 	>
 		<i class="fas fa-arrow-up"></i>
 		<span class="u-hidden"><?=_('Top');?></span>
-	</button>
+	</a>
 
 	<div class="container" style="padding-top: 80px;"><?=sprintf(_('Last 70 lines of %s.%s.log'),htmlentities($_GET['domain']),htmlentities($type)) ;?></div>
 	<pre class="container console-output">

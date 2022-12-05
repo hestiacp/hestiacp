@@ -58,9 +58,10 @@
 							title="<?=_('Notifications');?>"
 						>
 							<i
-								class="fas fa-bell
-								<?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"
-								:class="{ 'status-icon': notifications.length != 0, 'fas fa-bell': true }"
+								:class="{
+									'animate__animated animate__swing status-icon orange': (!initialized && <?= $panel[$user]['NOTIFICATIONS'] == 'yes' ? 'true': 'false' ?>) || notifications.length != 0,
+									'fas fa-bell': true
+								}"
 							></i>
 							<span class="u-hidden"><?=_('Notifications');?></span>
 						</button>
@@ -91,13 +92,13 @@
 									></p>
 								</li>
 							</template>
-							<template x-if="notifications.length == 0">
+							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
 									<i class="fas fa-bell-slash status-icon dim"></i>
 									<p><?= _("no notifications") ?></p>
 								</li>
 							</template>
-							<template x-if="notifications.length > 2">
+							<template x-if="initialized && notifications.length > 2">
 								<li>
 									<a
 										@click="deleteAll()"

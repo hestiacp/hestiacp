@@ -4,6 +4,7 @@ function getToken() {
 
 document.addEventListener('alpine:init', () => {
 	Alpine.data('notifications', () => ({
+		initialized: false,
 		open: false,
 		notifications: [],
 		toggle() {
@@ -18,6 +19,7 @@ document.addEventListener('alpine:init', () => {
 				throw new Error('An error occured while listing notifications.');
 			}
 			const data = await response.clone().json();
+			this.initialized = true;
 
 			this.notifications = Object.entries(data).reduce(
 				(acc, [_id, notification]) => [...acc, notification],

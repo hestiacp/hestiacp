@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.button').forEach((el) => {
 		el.addEventListener('click', (evt) => {
 			const action = evt.target.dataset.action;
-			const form = document.querySelector(`#${id}`);
+			const form = document.querySelector(`#${evt.target.dataset.id}`);
 			if (action == 'submit' && form) {
 				evt.preventDefault();
 				form.submit();

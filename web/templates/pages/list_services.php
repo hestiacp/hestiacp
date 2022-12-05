@@ -20,7 +20,7 @@
 			</div>
 		</div>
 		<div class="toolbar-right">
-			<form action="/bulk/service/" method="post" id="objects">
+			<form action="/bulk/service/" method="post" x-bind="BulkEdit">
 				<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 				<select class="form-select" name="action">
 					<option value=""><?=_('apply to selected');?></option>

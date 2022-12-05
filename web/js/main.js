@@ -140,6 +140,25 @@ document.addEventListener('alpine:init', () => {
 		});
 	}
 
+	// Bulk edit forms
+	Alpine.bind('BulkEdit', () => ({
+		/** @param {SubmitEvent} evt */
+		'@submit'(evt) {
+			evt.preventDefault();
+			document.querySelectorAll('.ch-toggle').forEach((el) => {
+				if (el.checked) {
+					const input = document.createElement('input');
+					input.type = 'hidden';
+					input.name = el.name;
+					input.value = el.value;
+					evt.target.appendChild(input);
+				}
+			});
+
+			evt.target.submit();
+		},
+	}));
+
 	// Form state
 	Alpine.store('form', {
 		dirty: false,

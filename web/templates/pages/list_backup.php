@@ -9,7 +9,7 @@
 		</div>
 		<div class="toolbar-right">
 			<?php if ($read_only !== 'true') {?>
-				<form action="/bulk/backup/" method="post" id="objects">
+				<form action="/bulk/backup/" method="post" x-bind="BulkEdit">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
 						<option value=""><?=_('apply to selected');?></option>

@@ -116,14 +116,14 @@
 				<?php } ?>
 
 				<!-- Menu -->
-				<nav class="top-bar-menu">
+				<nav class="top-bar-menu" x-data="{ open: false }">
 
-					<button type="button" class="top-bar-menu-link u-hide-tablet js-toggle-top-bar-menu" title="<?=_('Toggle menu');?>">
+					<button type="button" class="top-bar-menu-link u-hide-tablet" x-on:click="open = !open" title="<?=_('Toggle menu');?>">
 						<i class="fas fa-bars"></i>
 						<span class="u-hidden"><?=_('Toggle menu');?></span>
 					</button>
 
-					<ul class="top-bar-menu-list animate__animated animate__fadeIn">
+					<ul class="top-bar-menu-list animate__animated animate__fadeIn" x-bind:class="open || u-hidden">
 
 						<!-- File Manager -->
 						<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
@@ -214,15 +214,17 @@
 		</div>
 	</div>
 
-	<nav class="main-menu">
+	<nav class="main-menu" x-data="{ open }">
 		<div class="container">
-			<button type="button" class="main-menu-toggle js-toggle-main-menu">
+			<button type="button" class="main-menu-toggle" x-on:click="open = !open">
 				<i class="fas fa-bars"></i>
-				<span class="main-menu-toggle-label" data-open-label="<?=_('Expand main menu');?>" data-close-label="<?=_('Collapse main menu');?>">
-					<?=_('Expand main menu');?>
+				<span
+					class="main-menu-toggle-label"
+					x-text="open ? <?=_('Collapse main menu');?> : <?=_('Expand main menu');?>"
+				>
 				</span>
 			</button>
-			<ul class="main-menu-list">
+			<ul class="main-menu-list" x-bind:class="open || u-hidden">
 
 				<!-- Users tab -->
 				<?php if (($_SESSION['userContext'] == 'admin') && (empty($_SESSION['look']))) {?>

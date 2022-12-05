@@ -1,5 +1,3 @@
-document.documentElement.classList.replace('no-js', 'js');
-
 document.addEventListener('DOMContentLoaded', () => {
 	if (document.querySelector('.body-login')) {
 		document.querySelector('input').focus();
@@ -150,36 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	$('.button.cancel').attr('title', 'ctrl+Backspace');
 
 	VE.core.register();
-	if (location.href.search(/list/) != -1) {
-		$('body').finderSelect({
-			children: '.l-unit',
-			onFinish: function () {
-				// do nothing
-			},
-			toggleAllHook: () => {
-				if ($('.l-unit').length == $('.ch-toggle:checked').length) {
-					$('.l-unit.selected').removeClass('selected');
-					$('.ch-toggle').prop('checked', false);
-					$('#toggle-all').prop('checked', false);
-				} else {
-					$('.ch-toggle').prop('checked', true);
-					$('#toggle-all').prop('checked', true);
-				}
-			},
-		});
-
-		$('table').on('mousedown', 'td', (evt) => {
-			if (evt.ctrlKey) {
-				evt.preventDefault();
-			}
-		});
-	}
-
-	//
-	$('form#objects').on('submit', (_evt) => {
-		$('.l-unit').find('.ch-toggle').prop('checked', false);
-		$('.l-unit.selected').find('.ch-toggle').prop('checked', true);
-	});
 
 	document
 		.querySelector('.button[data-id=vstobjects][data-action=submit]')

@@ -1,3 +1,49 @@
+const Cookies = {
+	/**
+	 * Creates a cookie.
+	 *
+	 * @param {string} name The name of the cookie.
+	 * @param {any} value The value to assign the cookie. It will be JSON encoded using JSON.stringify(...).
+	 * @param {number} days The number of days in which the cookie will expire. If none is provided,
+	 * it will create a session cookie.
+	 */
+	set(name, value, days = null) {
+		let expires = '';
+		if (days && !isNaN(days)) {
+			const date = new Date();
+			date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+			expires = `; expires=${date.toUTCString()}`;
+		}
+
+		document.cookie =
+			`${name}=${JSON.stringify(value)}` + expires + '; path="/"; SameSite=None; Secure';
+	},
+
+	/**
+	 * Reads a cookie.
+	 *
+	 * @param {string} name The name of the cookie.
+	 * @returns {string} The value of the cookie, decoded with JSON.parse(...).
+	 */
+	read(name) {
+		return JSON.parse(
+			document.cookie
+				.split('; ')
+				.find((row) => row.startsWith(`${name}=`))
+				?.split('=')[1]
+		);
+	},
+
+	/**
+	 * Removes a cookie.
+	 *
+	 * @param {string} name The name of the cookie.
+	 */
+	remove(name) {
+		this.set(name, '', -1);
+	},
+};
+
 /**
  * generates a random string using a cryptographically secure rng,
  * and ensuring it contains at least 1 lowercase, 1 uppercase, and 1 number.

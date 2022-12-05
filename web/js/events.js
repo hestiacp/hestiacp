@@ -242,9 +242,9 @@ const VE = {
 			});
 		},
 		initAdditionalPasswordFieldElements: (ref) => {
-			const enabled = $.cookie('hide_passwords') == '1' ? true : false;
+			const enabled = Cookies.read('hide_passwords') == 1 ? true : false;
 			if (enabled) {
-				$.cookie('hide_passwords', '1', { expires: 365, path: '/' });
+				Cookies.set('hide_passwords', 1, 365);
 				$(ref).prop('type', 'password');
 			}
 
@@ -264,10 +264,10 @@ const VE = {
 			$(triggering_elm).toggleClass('show-passwords-enabled-action');
 
 			if ($(ref).prop('type') == 'text') {
-				$.cookie('hide_passwords', '1', { expires: 365, path: '/' });
+				Cookies.set('hide_passwords', 1, 365);
 				$(ref).prop('type', 'password');
 			} else {
-				$.cookie('hide_passwords', '0', { expires: 365, path: '/' });
+				Cookies.set('hide_passwords', 0, 365);
 				$(ref).prop('type', 'text');
 			}
 		},

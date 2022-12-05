@@ -173,7 +173,7 @@ document.addEventListener('alpine:init', () => {
 				throw new Error('An error occured while listing notifications.');
 			}
 
-			this.notifications = Object.entries(res.json()).reduce(
+			this.notifications = Object.entries(await res.json()).reduce(
 				(acc, [_id, notification]) => [...acc, notification],
 				[]
 			);

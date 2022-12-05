@@ -64,7 +64,7 @@
 			<h2 class="section-title" x-on:click="showWebOptions = !showWebOptions">
 				<?=_('Web');?>
 				<i
-					class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showWebOptions ? 'fa-square-minus' : 'fa-square-plus'"
 				></i>
 			</h2>
@@ -142,7 +142,7 @@
 			<h2 class="section-title" x-on:click="showDnsOptions = !showDnsOptions">
 				<?=_('DNS');?>
 				<i
-					class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showDnsOptions ? 'fa-square-minus' : 'fa-square-plus'"
 				></i>
 			</h2>
@@ -233,7 +233,7 @@
 			<h2 class="section-title" x-on:click="showMailOptions = !showMailOptions">
 				<?=_('Mail');?>
 				<i
-					class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showMailOptions ? 'fa-square-minus' : 'fa-square-plus'"
 				></i>
 			</h2>
@@ -264,7 +264,7 @@
 			<h2 class="section-title" x-on:click="showDatabaseOptions = !showDatabaseOptions">
 				<?=_('Databases');?>
 				<i
-					class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
 				></i>
 			</h2>
@@ -280,7 +280,7 @@
 			<h2 class="section-title" x-on:click="showSystemOptions = !showSystemOptions">
 				<?=_('System');?>
 				<i
-					class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
 				></i>
 			</h2>

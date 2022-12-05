@@ -114,6 +114,7 @@ function randomString(length = 16) {
 document.addEventListener('alpine:init', () => {
 	const token = document.querySelector('#token').getAttribute('token');
 
+	// Sticky class helper
 	window.addEventListener('scroll', () => {
 		const toolbar = document.querySelector('.toolbar');
 		const tableHeader = document.querySelector('.table-header');

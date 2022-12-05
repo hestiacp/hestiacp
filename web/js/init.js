@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+	// Refactored
 	if (document.querySelector('.body-login')) {
 		document.querySelector('input').focus();
 	}
@@ -6,18 +7,37 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('.button').forEach((el) => {
 		el.addEventListener('click', (evt) => {
 			const action = evt.target.dataset.action;
-			const id = evt.target.dataset.id;
-			if (action == 'submit' && document.querySelector(`#${id}`)) {
+			const form = document.querySelector(`#${id}`);
+			if (action == 'submit' && form) {
 				evt.preventDefault();
-				document.querySelector(`#${id}`).submit();
+				form.submit();
 			}
 		});
 	});
+
+	document
+		.querySelector('.button[data-id=vstobjects][data-action=submit]')
+		.addEventListener('click', (evt) => {
+			const loaderElement = document.createElement('div');
+			loaderElement.classList.add('spinner');
+			loaderElement.innerHTML =
+				'<div class="spinner-inner"></div><div class="spinner-mask"></div><div class="spinner-mask-two"></div>';
+
+			// this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
+			document
+				.querySelector('.button[data-id=vstobjects][data-action=submit]')
+				.replaceWith(loaderElement);
+			document.querySelector('.button').replaceWith('');
+			// workaround a render bug on Safari (loading icon doesn't render without this)
+			evt.preventDefault();
+			document.querySelector('#vstobjects').submit();
+		});
 
 	document.querySelectorAll('.toolbar-right .sort-by').forEach((el) => {
 		el.addEventListener('click', () => $('.context-menu.sort-order').toggle());
 	});
 
+	// TODO
 	$('.submenu-select-dropdown').each(() => {
 		$(this).wrap("<span class='submenu-select-wrapper'></span>");
 		$(this).after("<span class='holder'></span>");
@@ -148,22 +168,4 @@ document.addEventListener('DOMContentLoaded', () => {
 	$('.button.cancel').attr('title', 'ctrl+Backspace');
 
 	VE.core.register();
-
-	document
-		.querySelector('.button[data-id=vstobjects][data-action=submit]')
-		.addEventListener('click', (evt) => {
-			const loaderElement = document.createElement('div');
-			loaderElement.classList.add('spinner');
-			loaderElement.innerHTML =
-				'<div class="spinner-inner"></div><div class="spinner-mask"></div><div class="spinner-mask-two"></div>';
-
-			// this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
-			document
-				.querySelector('.button[data-id=vstobjects][data-action=submit]')
-				.replaceWith(loaderElement);
-			document.querySelector('.button').replaceWith('');
-			// workaround a render bug on Safari (loading icon doesn't render without this)
-			evt.preventDefault();
-			document.querySelector('#vstobjects').submit();
-		});
 });

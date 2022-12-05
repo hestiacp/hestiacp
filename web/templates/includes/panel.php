@@ -60,6 +60,7 @@
 							<i
 								class="fas fa-bell
 								<?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"
+								:class="{ 'status-icon': notifications.length != 0, 'fas fa-bell': true }"
 							></i>
 							<span class="u-hidden"><?=_('Notifications');?></span>
 						</button>

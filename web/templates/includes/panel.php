@@ -46,19 +46,20 @@
 			<div class="top-bar-right">
 
 				<!-- Notifications -->
-				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
-					<!-- Do not show notifications panel when impersonating 'admin' user -->
-				<?php } else { ?>
+				<?php
+				$impersonatingAdmin = ($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'));
+				// Do not show notifications panel when impersonating 'admin' user
+				if (!$impersonatingAdmin) { ?>
 					<div class="top-bar-notifications" x-data="notifications">
 						<button
-							@click="toggle"
+							x-on:click="toggle"
+							x-bind:class="open && 'active'"
 							class="top-bar-menu-link"
-							:class="open && 'active'"
 							type="button"
 							title="<?=_('Notifications');?>"
 						>
 							<i
-								:class="{
+								x-bind:class="{
 									'animate__animated animate__swing status-icon orange': (!initialized && <?= $panel[$user]['NOTIFICATIONS'] == 'yes' ? 'true': 'false' ?>) || notifications.length != 0,
 									'fas fa-bell': true
 								}"
@@ -67,18 +68,24 @@
 						</button>
 						<ul
 							class="top-bar-notifications-list animate__animated animate__fadeIn"
-							:class="open || 'u-hidden'"
+							x-bind:class="open || 'u-hidden'"
 						>
+							<template x-if="initialized && notifications.length == 0">
+								<li class="top-bar-notification-item empty">
+									<i class="fas fa-bell-slash status-icon dim"></i>
+									<p><?= _("no notifications") ?></p>
+								</li>
+							</template>
 							<template x-for="notification in notifications" :key="notification.ID">
 								<li
 									class="top-bar-notification-item"
-									:class="notification.ACK && 'unseen'"
-									:id="`notification-${notification.ID}`"
+									x-bind:class="notification.ACK && 'unseen'"
+									x-bind:id="`notification-${notification.ID}`"
 								>
 									<div class="top-bar-notification-header">
 										<p class="top-bar-notification-title" x-text="notification.TOPIC"></p>
 										<a
-											@click="delete(notification.ID)"
+											x-on:click="await delete(notification.ID)"
 											href="#"
 											class="top-bar-notification-delete"
 										>
@@ -92,16 +99,10 @@
 									></p>
 								</li>
 							</template>
-							<template x-if="initialized && notifications.length == 0">
-								<li class="top-bar-notification-item empty">
-									<i class="fas fa-bell-slash status-icon dim"></i>
-									<p><?= _("no notifications") ?></p>
-								</li>
-							</template>
 							<template x-if="initialized && notifications.length > 2">
 								<li>
 									<a
-										@click="deleteAll()"
+										x-on:click="await deleteAll()"
 										href="#"
 										class="top-bar-notification-mark-all"
 									>

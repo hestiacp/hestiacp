@@ -52,7 +52,7 @@
 				if (!$impersonatingAdmin) { ?>
 					<div class="top-bar-notifications" x-data="notifications">
 						<button
-							x-on:click="toggle"
+							x-on:click="toggle()"
 							x-bind:class="open && 'active'"
 							class="top-bar-menu-link"
 							type="button"
@@ -85,7 +85,7 @@
 									<div class="top-bar-notification-header">
 										<p class="top-bar-notification-title" x-text="notification.TOPIC"></p>
 										<a
-											x-on:click="await delete(notification.ID)"
+											x-on:click="remove(notification.ID)"
 											href="#"
 											class="top-bar-notification-delete"
 										>
@@ -102,7 +102,7 @@
 							<template x-if="initialized && notifications.length > 2">
 								<li>
 									<a
-										x-on:click="await deleteAll()"
+										x-on:click="removeAll()"
 										href="#"
 										class="top-bar-notification-mark-all"
 									>

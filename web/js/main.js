@@ -1,8 +1,6 @@
-function getToken() {
-	return document.querySelector('#token').getAttribute('token');
-}
-
 document.addEventListener('alpine:init', () => {
+	const token = document.querySelector('#token').getAttribute('token');
+
 	Alpine.data('notifications', () => ({
 		initialized: false,
 		open: false,
@@ -15,27 +13,26 @@ document.addEventListener('alpine:init', () => {
 			}
 		},
 		async list() {
-			const response = await fetch(`/list/notifications/?ajax=1&token=${getToken()}`);
-			if (!response.ok) {
+			const res = await fetch(`/list/notifications/?ajax=1&token=${token}`);
+			if (!res.ok) {
 				throw new Error('An error occured while listing notifications.');
 			}
-			const data = await response.clone().json();
 
-			this.notifications = Object.entries(data).reduce(
+			this.notifications = Object.entries(res.json()).reduce(
 				(acc, [_id, notification]) => [...acc, notification],
 				[]
 			);
 		},
-		async delete(id) {
-			await fetch(`/delete/notification/?delete=1&notification_id=${id}&token=${getToken()}`);
+		async remove(id) {
+			await fetch(`/delete/notification/?delete=1&notification_id=${id}&token=${token}`);
 
 			this.notifications = this.notifications.filter((notification) => notification.ID != id);
 			if (this.notifications.length == 0) {
 				this.open = false;
 			}
 		},
-		async deleteAll() {
-			await fetch(`/delete/notification/?delete=1&token=${getToken()}`);
+		async removeAll() {
+			await fetch(`/delete/notification/?delete=1&token=${token}`);
 
 			this.notifications = [];
 			this.open = false;

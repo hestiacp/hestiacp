@@ -20,7 +20,7 @@ document.addEventListener('alpine:init', () => {
 			const data = await response.clone().json();
 
 			this.items = Object.entries(data).reduce(
-				(acc, [_id, notification]) => acc.push(notification),
+				(acc, [_id, notification]) => [...acc, notification],
 				[]
 			);
 		},

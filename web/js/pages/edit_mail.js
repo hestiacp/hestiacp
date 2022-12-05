@@ -22,11 +22,6 @@ $(function () {
 	App.Actions.MAIL.toggle_letsencrypt($('input[name=v_letsencrypt]'));
 });
 
-function elementHideShow(elementToHideOrShow) {
-	var el = document.getElementById(elementToHideOrShow);
-	el.style.display = el.style.display === 'none' ? 'block' : 'none';
-}
-
 $('#vstobjects').on('submit', function (evt) {
 	$('input[disabled]').each(function (i, elm) {
 		var copy_elm = $(elm).clone(true);

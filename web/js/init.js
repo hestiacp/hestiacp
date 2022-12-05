@@ -5,9 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.querySelector('input').focus();
 	}
 
-	window.addEventListener('scroll', setStickyClass);
-	setStickyClass();
-
 	document.querySelectorAll('.button').forEach((el) => {
 		el.addEventListener('click', (evt) => {
 			const action = evt.target.dataset.action;

@@ -1,6 +1,96 @@
+/**
+ * generates a random string using a cryptographically secure rng,
+ * and ensuring it contains at least 1 lowercase, 1 uppercase, and 1 number.
+ *
+ * @param {int} [length=16]
+ * @throws {Error} if length is too small to create a "sufficiently secure" string
+ * @returns {string}
+ */
+function randomString(length = 16) {
+	const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+	const rng = (min, max) => {
+		if (min < 0 || min > 0xffff) {
+			throw new Error(
+				'minimum supported number is 0, this generator can only make numbers between 0-65535 inclusive.'
+			);
+		}
+		if (max > 0xffff || max < 0) {
+			throw new Error(
+				'max supported number is 65535, this generator can only make numbers between 0-65535 inclusive.'
+			);
+		}
+		if (min > max) {
+			throw new Error('dude min>max wtf');
+		}
+		// micro-optimization
+		const randArr = max > 255 ? new Uint16Array(1) : new Uint8Array(1);
+		let result;
+		let attempts = 0;
+
+		// eslint-disable-next-line no-constant-condition
+		while (true) {
+			crypto.getRandomValues(randArr);
+			result = randArr[0];
+			if (result >= min && result <= max) {
+				return result;
+			}
+			++attempts;
+			if (attempts > 1000000) {
+				// should basically never happen with max 0xFFFF/Uint16Array.
+				throw new Error('tried a million times, something is wrong');
+			}
+		}
+	};
+
+	let attempts = 0;
+	const minimumStrengthRegex = new RegExp(
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/
+	);
+	const randmax = chars.length - 1;
+
+	// eslint-disable-next-line no-constant-condition
+	while (true) {
+		let result = '';
+		for (let i = 0; i < length; ++i) {
+			result += chars[rng(0, randmax)];
+		}
+		if (minimumStrengthRegex.test(result)) {
+			return result;
+		}
+		++attempts;
+		if (attempts > 1000000) {
+			throw new Error('tried a million times, something is wrong');
+		}
+	}
+}
+
 document.addEventListener('alpine:init', () => {
 	const token = document.querySelector('#token').getAttribute('token');
 
+	window.addEventListener('scroll', () => {
+		const toolbar = document.querySelector('.toolbar');
+		const tableHeader = document.querySelector('.table-header');
+		const toolbarOffset =
+			toolbar.getBoundingClientRect().top + (window.scrollY - document.documentElement.clientTop);
+		const headerHeight = document.querySelector('.top-bar').offsetHeight;
+		const isActive = window.scrollY > toolbarOffset - headerHeight;
+
+		toolbar.classList.toggle('active', isActive);
+		if (tableHeader) {
+			tableHeader.classList.toggle('active', isActive);
+		}
+	});
+
+	// Select all helper
+	document.querySelector('#toggle-all').addEventListener('change', (evt) => {
+		document.querySelectorAll('.ch-toggle').forEach((el) => (el.checked = evt.target.checked));
+		document
+			.querySelectorAll('.l-unit')
+			.forEach((el) => el.classList.toggle('selected', evt.target.checked));
+	});
+
+	// Form state
 	Alpine.store('form', {
 		dirty: false,
 		makeDirty() {
@@ -15,6 +105,7 @@ document.addEventListener('alpine:init', () => {
 			});
 		});
 
+	// Notifications data
 	Alpine.data('notifications', () => ({
 		initialized: false,
 		open: false,

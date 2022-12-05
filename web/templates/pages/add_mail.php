@@ -17,7 +17,7 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_mail" method="post">
+	<form id="vstobjects" name="v_add_mail" method="post" x-data="{ hasSmtpRelay: <?= $v_smtp_relay == 'true' ? true : false ?> }">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="ok" value="Add">
 
@@ -86,12 +86,12 @@
 					</label>
 				</div>
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo 'checked'; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+					<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" x-bind:checked="hasSmtpRelay" x-on:click="hasSmtpRelay = !hasSmtpRelay">
 					<label for="v_smtp_relay">
 						<?=_('SMTP Relay');?>
 					</label>
 				</div>
-				<div id="smtp_relay_table" class="u-pl30" style="display:<?php if ($v_smtp_relay == 'true'){echo 'block';} else {echo 'none';}?> ;">
+				<div id="smtp_relay_table" class="u-pl30" x-show="hasSmtpRelay">
 					<div class="u-mb10">
 						<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
 						<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">

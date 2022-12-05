@@ -17,7 +17,7 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_user" method="post">
+	<form id="vstobjects" name="v_add_user" method="post" x-data="{ sendWelcomeMail: <?= $v_login_disabled == "yes" ? "true" : "false" ?> }">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="ok" value="Add">
 
@@ -53,12 +53,12 @@
 				<li><?=_('1 number');?></li>
 			</ul>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('send-welcome');" <?php if ($v_login_disabled == "yes") echo 'checked' ?>>
+				<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" x-bind:checked="sendWelcomeMail" x-on:click="sendWelcomeMail != sendWelcomeMail">
 				<label for="v_login_disabled">
 					<?=_('Do not allow user to log in to Control Panel');?>
 				</label>
 			</div>
-			<div id="send-welcome">
+			<div id="send-welcome" x-show="sendWelcomeMail">
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_email_notice" id="v_email_notify" tabindex="5">
 					<label for="v_email_notify">

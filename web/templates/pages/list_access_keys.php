@@ -37,7 +37,7 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onchange="checkedAll('objects');">
+					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-6"><b><?=_('Access Key');?></b></div>
 				<div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>

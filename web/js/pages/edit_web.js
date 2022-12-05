@@ -181,7 +181,7 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function (elm) {
 	}
 };
 
-App.Actions.WEB.toggle_ssl = function (elm) {
+App.Actions.WEB.toggle_ssl = function () {
 	elementHideShow('ssltable');
 	if (
 		$('#ssl_crt').val().length > 0 ||
@@ -303,13 +303,6 @@ function WEBrandom() {
 function FTPrandom(elm) {
 	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(randomString(16));
 	App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
-}
-
-function elementHideShow(element) {
-	if (document.getElementById(element)) {
-		var el = document.getElementById(element);
-		el.style.display = el.style.display === 'none' ? 'block' : 'none';
-	}
 }
 
 $('.v-redirect-custom-value').change(function () {

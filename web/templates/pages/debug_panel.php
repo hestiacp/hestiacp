@@ -1,8 +1,8 @@
-<div class="debug-panel">
-	<a class="debug-panel-toggle" href="javascript:elementHideShow('debug-panel-content')">
+<div class="debug-panel" x-data="{ open: false }">
+	<a class="debug-panel-toggle" x-on:click="open = !open">
 		<?= _("Toggle Debug Panel") ?>
 	</a>
-	<div id="debug-panel-content" class="debug-panel-content animate__animated animate__fadeIn" style="display:none;">
+	<div id="debug-panel-content" class="debug-panel-content animate__animated animate__fadeIn" x-show="open">
 		<?php
 			echo "<h3 class=\"u-mb10\">Server Variables</h3>";
 			foreach ($_SERVER as $key => $val) {

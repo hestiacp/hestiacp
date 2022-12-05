@@ -147,7 +147,7 @@
 				</div>
 			</div>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo 'checked' ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);">
+				<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo 'checked' ?> onclick="javascript:App.Actions.WEB.toggle_ssl();">
 				<label for="v_ssl">
 					<?=_('SSL Support');?>
 				</label>

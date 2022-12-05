@@ -17,7 +17,7 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_mail_acc" method="post">
+	<form id="vstobjects" name="v_add_mail_acc" method="post" x-data="{ showAdvanced: <?= empty($v_adv) ? 'false' : 'true' ?> }">
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="ok_acc" value="add">
 
@@ -52,9 +52,9 @@
 						<li><?=_('1 number');?></li>
 					</ul>
 					<div class="u-pt18 u-mb20">
-						<a href="javascript:elementHideShow('advtable');" class="button button-secondary"><?=_('Advanced options');?></a>
+						<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?=_('Advanced options');?></a>
 					</div>
-					<div id="advtable" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
+					<div id="advtable" x-show="showAdvanced">
 						<div class="u-mb10">
 							<label for="v_quota" class="form-label">
 								<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>

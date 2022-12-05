@@ -67,12 +67,11 @@
 							class="top-bar-notifications-list animate__animated animate__fadeIn"
 							:class="open || 'u-hidden'"
 						>
-							<template x-for="notification in items" :key="notification.ID">
+							<template x-for="notification in notifications" :key="notification.ID">
 								<li
 									class="top-bar-notification-item"
 									:class="notification.ACK && 'unseen'"
 									:id="`notification-${notification.ID}`"
-									x-text="notification.NOTICE"
 								>
 									<div class="top-bar-notification-header">
 										<p class="top-bar-notification-title" x-text="notification.TOPIC"></p>
@@ -84,19 +83,20 @@
 											<i class="fas fa-xmark"></i>
 										</a>
 									</div>
+									<div x-html="notification.NOTICE"></div>
 									<p
 										class="top-bar-notification-timestamp"
 										x-text="`${notification.TIME} ${notification.DATE}`"
 									></p>
 								</li>
 							</template>
-							<template x-if="items.length == 0">
+							<template x-if="notifications.length == 0">
 								<li class="top-bar-notification-item empty">
 									<i class="fas fa-bell-slash status-icon dim"></i>
 									<p><?= _("no notifications") ?></p>
 								</li>
 							</template>
-							<template x-if="items.length > 2">
+							<template x-if="notifications.length > 2">
 								<li>
 									<a
 										@click="deleteAll()"

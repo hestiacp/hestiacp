@@ -6,7 +6,7 @@
 			<a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left status-icon green"></i><?=_('Restore All');?></a>
 		</div>
 		<div class="toolbar-right">
-			<form action="/bulk/restore/" method="post" x-bind="BulkEdit">
+			<form x-bind="BulkEdit" action="/bulk/restore/" method="post">
 				<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 				<input type="hidden" name="backup" value="<?=htmlentities($_GET['backup']); ?>">
 				<select class="form-select" name="action">

@@ -25,7 +25,7 @@
 					<li entity="sort-records"><span class="name"><?=_('Records');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') {?>
-					<form action="/bulk/dns/" method="post" x-bind="BulkEdit">
+					<form x-bind="BulkEdit" action="/bulk/dns/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 						<select class="form-select" name="action">
 							<option value=""><?=_('apply to selected');?></option>

@@ -17,7 +17,14 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_ip" method="post" x-data="{ showUserTable: <?= empty($v_dedicated) ? 'false' : 'true' ?> }">
+	<form
+		x-data="{
+			showUserTable: <?= empty($v_dedicated) ? 'false' : 'true' ?>
+		}"
+		id="vstobjects"
+		name="v_add_ip"
+		method="post"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="ok" value="Add">
 
@@ -45,12 +52,12 @@
 				</select>
 			</div>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_shared" id="v_shared" x-bind:checked="showUserTable" x-on:click="showUserTable = !showUserTable">
+				<input x-bind:checked="showUserTable" x-on:click="showUserTable = !showUserTable" class="form-check-input" type="checkbox" name="v_shared" id="v_shared">
 				<label for="v_shared">
 					<?=_('Shared');?>
 				</label>
 			</div>
-			<div id="usrtable" x-show="showUserTable">
+			<div x-cloak x-show="showUserTable" id="usrtable">
 				<div class="u-mb10">
 					<label for="v_owner" class="form-label"><?=_('Assigned user');?></label>
 					<select class="form-select" name="v_owner" id="v_owner">

@@ -17,7 +17,14 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_db" method="post" x-data="{ showAdvanced: <?= empty($v_adv) ? 'false' : 'true' ?> }">
+	<form
+		x-data="{
+			showAdvanced: <?= empty($v_adv) ? 'false' : 'true' ?>
+		}"
+		id="vstobjects"
+		name="v_add_db"
+		method="post"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="ok" value="Add">
 
@@ -90,7 +97,7 @@
 				<div class="u-mb20">
 					<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?=_('Advanced options');?></a>
 				</div>
-				<div id="advanced-opts" x-show="showAdvanced">
+				<div x-cloak x-show="showAdvanced" id="advanced-opts">
 					<div class="u-mb10">
 						<label for="v_host" class="form-label"><?=_('Host');?></label>
 						<select class="form-select" name="v_host" id="v_host">

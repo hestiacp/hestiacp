@@ -17,7 +17,15 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_edit_mail_acc" method="post" class="<?=$v_status?>" v-data="{ hasAutoReply: <?= $v_autoreply == 'yes' ? 'true' : 'false' ?> }">
+	<form
+		x-data="{
+			hasAutoReply: <?= $v_autoreply == 'yes' ? 'true' : 'false' ?>
+		}"
+		id="vstobjects"
+		name="v_edit_mail_acc"
+		method="post"
+		class="<?=$v_status?>"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="save" value="save">
 
@@ -85,12 +93,12 @@
 						</div>
 					</div>
 					<div class="form-check u-mb10">
-						<input class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply" x-bind:checked="hasAutoReply" x-on:click="hasAutoReply = !hasAutoReply">
+						<input x-bind:checked="hasAutoReply" x-on:click="hasAutoReply = !hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">
 						<label for="v_autoreply">
 							<?=_('Autoreply');?>
 						</label>
 					</div>
-					<div id="autoreplytable" x-show="hasAutoReply">
+					<div x-cloak x-show="hasAutoReply" id="autoreplytable">
 						<div class="u-mb10">
 							<label for="v_autoreply_message" class="form-label"><?=_('Message');?></label>
 							<textarea class="form-control" name="v_autoreply_message" id="v_autoreply_message"><?=htmlentities(trim($v_autoreply_message, "'"))?></textarea>

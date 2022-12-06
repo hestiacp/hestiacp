@@ -25,7 +25,7 @@
 					<li entity="sort-ip" sort_as_int="1"><span class="name"><?=_('IP address');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') {?>
-					<form action="/bulk/web/" method="post" x-bind="BulkEdit">
+					<form x-bind="BulkEdit" action="/bulk/web/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<select class="form-select" name="action">
 							<option value=""><?=_('apply to selected');?></option>

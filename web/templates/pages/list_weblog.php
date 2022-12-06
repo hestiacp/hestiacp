@@ -18,12 +18,12 @@
 					</a>
 				</div>
 				<div class="top-bar-right">
-					<nav class="top-bar-menu" x-data="{ open: false }">
-						<button type="button" class="top-bar-menu-link u-hide-tablet" x-on:click="open = !open" title="<?=_('Toggle menu');?>">
+					<nav x-data="{ open: false }" class="top-bar-menu">
+						<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?=_('Toggle menu');?>">
 							<i class="fas fa-bars"></i>
 							<span class="u-hidden"><?=_('Toggle menu');?></span>
 						</button>
-						<ul class="top-bar-menu-list animate__animated animate__fadeIn" x-show="open">
+						<ul x-cloak x-show="open" class="top-bar-menu-list animate__animated animate__fadeIn">
 							<li class="top-bar-menu-item">
 								<a class="top-bar-menu-link" href="/list/web/">
 									<i class="fas fa-circle-left"></i>

@@ -28,7 +28,7 @@
 					<li entity="sort-quota" sort_as_int="1"><span class="name"><?=_('Quota');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') { ?>
-					<form action="/bulk/mail/" method="post" x-bind="BulkEdit">
+					<form x-bind="BulkEdit" action="/bulk/mail/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<input type="hidden" value="<?=htmlspecialchars($_GET['domain']); ?>" name="domain">
 						<select class="form-select" name="action">

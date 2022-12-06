@@ -3,7 +3,7 @@
 	if (($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes')) {
 		if ($_SESSION['UPDATE_AVAILABLE'] === 'yes') {
 ?>
-	<div class="footer-banner updates" id="banner" x-show="open" x-data="{ open: false }">
+	<div x-data="{ open: false }" x-cloak x-show="open" class="footer-banner updates" id="banner">
 		<div>
 			<b>New updates are available!</b> To upgrade your server now, run <span style="font-family:'Courier New', Courier, monospace">apt update && apt upgrade</span> from a shell session.
 		</div>
@@ -53,7 +53,7 @@
 		</dialog>
 
 		<button
-			x-data x-on:click="$refs.dialog.showModal()"
+			x-on:click="$refs.dialog.showModal()"
 			type="button"
 			class="button button-secondary button-circle button-floating button-floating-shortcuts"
 			title="<?=_('Shortcuts');?>"

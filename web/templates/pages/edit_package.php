@@ -18,10 +18,6 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form
-		id="vstobjects"
-		name="v_edit_package"
-		method="post"
-		class="<?=$v_status?>"
 		x-data="{
 			showWebOptions: false,
 			showDnsOptions: false,
@@ -29,6 +25,10 @@
 			showDatabaseOptions: false,
 			showSystemOptions: false,
 		}"
+		id="vstobjects"
+		name="v_edit_package"
+		method="post"
+		class="<?=$v_status?>"
 	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="save" value="save">
@@ -63,14 +63,14 @@
 				<label for="v_backups" class="form-label"><?=_('Backups');?></label>
 				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
 			</div>
-			<h2 class="section-title" x-on:click="showWebOptions = !showWebOptions">
+			<h2 x-on:click="showWebOptions = !showWebOptions" class="section-title">
 				<?=_('Web');?>
 				<i
-					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showWebOptions ? 'fa-square-minus' : 'fa-square-plus'"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 				></i>
 			</h2>
-			<div id="web-options" x-show="showWebOptions">
+			<div x-cloak x-show="showWebOptions" id="web-options">
 				<div class="u-mt15 u-mb10">
 					<label for="v_web_domains" class="form-label"><?=_('Web Domains');?></label>
 					<div class="u-pos-relative">
@@ -140,14 +140,14 @@
 					</div>
 				<?=""; }?>
 			</div>
-			<h2 class="section-title" x-on:click="showDnsOptions = !showDnsOptions">
+			<h2 x-on:click="showDnsOptions = !showDnsOptions" class="section-title">
 				<?=_('DNS');?>
 				<i
-					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showDnsOptions ? 'fa-square-minus' : 'fa-square-plus'"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 				></i>
 			</h2>
-			<div id="dns-options" x-show="showDnsOptions">
+			<div x-cloak x-show="showDnsOptions" id="dns-options">
 				<div class="u-mt15 u-mb10">
 					<label for="v_dns_template" class="form-label">
 						<?=_('DNS Template') . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
@@ -234,14 +234,14 @@
 					</div>
 				<?php } ?>
 			</div>
-			<h2 class="section-title" x-on:click="showMailOptions = !showMailOptions">
+			<h2 x-on:click="showMailOptions = !showMailOptions" class="section-title">
 				<?=_('Mail');?>
 				<i
-					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showMailOptions ? 'fa-square-minus' : 'fa-square-plus'"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 				></i>
 			</h2>
-			<div id="mail-options" x-show="showMailOptions">
+			<div x-cloak x-show="showMailOptions" id="mail-options">
 				<div class="u-mt15 u-mb10">
 					<label for="v_mail_domains" class="form-label"><?=_('Mail Domains');?></label>
 					<div class="u-pos-relative">
@@ -265,14 +265,14 @@
 					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?=htmlentities(trim($v_ratelimit, "'"))?>">
 				</div>
 			</div>
-			<h2 class="section-title" x-on:click="showDatabaseOptions = !showDatabaseOptions">
+			<h2 x-on:click="showDatabaseOptions = !showDatabaseOptions" class="section-title">
 				<?=_('Databases');?>
 				<i
-					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 				></i>
 			</h2>
-			<div id="database-options" x-show="showDatabaseOptions">
+			<div x-cloak x-show="showDatabaseOptions" id="database-options">
 				<div class="u-mt15 u-mb10">
 					<label for="v_databases" class="form-label"><?=_('Databases');?></label>
 					<div class="u-pos-relative">
@@ -281,14 +281,14 @@
 					</div>
 				</div>
 			</div>
-			<h2 class="section-title" x-on:click="showSystemOptions = !showSystemOptions">
+			<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
 				<?=_('System');?>
 				<i
-					class="fas status-icon dim maroon js-section-toggle-icon"
 					x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
+					class="fas status-icon dim maroon js-section-toggle-icon"
 				></i>
 			</h2>
-			<div id="system-options" x-show="showSystemOptions">
+			<div x-cloak x-show="showSystemOptions" id="system-options">
 				<div class="u-mt15 u-mb10">
 					<label for="v_cron_jobs" class="form-label"><?=_('Cron Jobs');?></label>
 					<div class="u-pos-relative">

@@ -50,7 +50,7 @@
 				$impersonatingAdmin = ($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'));
 				// Do not show notifications panel when impersonating 'admin' user
 				if (!$impersonatingAdmin) { ?>
-					<div class="top-bar-notifications" x-data="notifications">
+					<div x-data="notifications" class="top-bar-notifications">
 						<button
 							x-on:click="toggle()"
 							x-bind:class="open && 'active'"
@@ -67,8 +67,9 @@
 							<span class="u-hidden"><?=_('Notifications');?></span>
 						</button>
 						<ul
-							class="top-bar-notifications-list animate__animated animate__fadeIn"
+							x-cloak
 							x-show="open"
+							class="top-bar-notifications-list animate__animated animate__fadeIn"
 						>
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
@@ -78,12 +79,12 @@
 							</template>
 							<template x-for="notification in notifications" :key="notification.ID">
 								<li
-									class="top-bar-notification-item"
-									x-bind:class="notification.ACK && 'unseen'"
 									x-bind:id="`notification-${notification.ID}`"
+									x-bind:class="notification.ACK && 'unseen'"
+									class="top-bar-notification-item"
 								>
 									<div class="top-bar-notification-header">
-										<p class="top-bar-notification-title" x-text="notification.TOPIC"></p>
+										<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
 										<a
 											x-on:click="remove(notification.ID)"
 											href="#"
@@ -94,8 +95,8 @@
 									</div>
 									<div x-html="notification.NOTICE"></div>
 									<p
-										class="top-bar-notification-timestamp"
 										x-text="`${notification.TIME} ${notification.DATE}`"
+										class="top-bar-notification-timestamp"
 									></p>
 								</li>
 							</template>
@@ -116,14 +117,14 @@
 				<?php } ?>
 
 				<!-- Menu -->
-				<nav class="top-bar-menu" x-data="{ open: false }">
+				<nav x-data="{ open: false }" class="top-bar-menu">
 
-					<button type="button" class="top-bar-menu-link u-hide-tablet" x-on:click="open = !open" title="<?=_('Toggle menu');?>">
+					<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?=_('Toggle menu');?>">
 						<i class="fas fa-bars"></i>
 						<span class="u-hidden"><?=_('Toggle menu');?></span>
 					</button>
 
-					<ul class="top-bar-menu-list animate__animated animate__fadeIn" x-show="open">
+					<ul x-cloak x-show="open" class="top-bar-menu-list animate__animated animate__fadeIn">
 
 						<!-- File Manager -->
 						<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
@@ -214,17 +215,17 @@
 		</div>
 	</div>
 
-	<nav class="main-menu" x-data="{ open: false }">
+	<nav x-data="{ open: false }" class="main-menu">
 		<div class="container">
-			<button type="button" class="main-menu-toggle" x-on:click="open = !open">
+			<button x-on:click="open = !open" type="button" class="main-menu-toggle">
 				<i class="fas fa-bars"></i>
 				<span
-					class="main-menu-toggle-label"
 					x-text="open ? '<?=_('Collapse main menu');?>' : '<?=_('Expand main menu');?>'"
+					class="main-menu-toggle-label"
 				>
 				</span>
 			</button>
-			<ul class="main-menu-list" x-show="open">
+			<ul x-cloak x-show="open" class="main-menu-list">
 
 				<!-- Users tab -->
 				<?php if (($_SESSION['userContext'] == 'admin') && (empty($_SESSION['look']))) {?>

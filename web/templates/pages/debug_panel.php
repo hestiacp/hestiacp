@@ -1,8 +1,8 @@
-<div class="debug-panel" x-data="{ open: false }">
-	<a class="debug-panel-toggle" x-on:click="open = !open">
+<div x-data="{ open: false }" class="debug-panel">
+	<a x-on:click="open = !open" class="debug-panel-toggle">
 		<?= _("Toggle Debug Panel") ?>
 	</a>
-	<div id="debug-panel-content" class="debug-panel-content animate__animated animate__fadeIn" x-show="open">
+	<div x-cloak x-show="open" id="debug-panel-content" class="debug-panel-content animate__animated animate__fadeIn">
 		<?php
 			echo "<h3 class=\"u-mb10\">Server Variables</h3>";
 			foreach ($_SERVER as $key => $val) {

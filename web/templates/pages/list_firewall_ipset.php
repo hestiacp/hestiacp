@@ -6,7 +6,7 @@
 			<a href="/add/firewall/ipset/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add IP list');?></a>
 		</div>
 		<div class="toolbar-right">
-			<form action="/bulk/firewall/ipset/" method="post" x-bind="BulkEdit">
+			<form x-bind="BulkEdit" action="/bulk/firewall/ipset/" method="post">
 				<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 				<select class="form-select" name="action">
 					<option value=""><?=_('apply to selected');?></option>

@@ -18,15 +18,15 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form
-		id="vstobjects"
-		name="v_edit_mail"
-		method="post"
-		class="<?=$v_status?>"
 		x-data="{
 			sslEnabled: <?= $v_ssl == 'yes' ? 'true' : 'false' ?>,
 			letsEncryptEnabled: <?= $v_letsencrypt == 'yes' ? 'true' : 'false' ?>,
 			hasSmtpRelay: <?= $v_smtp_relay == 'true' ? 'true' : 'false' ?>
 		}"
+		id="vstobjects"
+		name="v_edit_mail"
+		method="post"
+		class="<?=$v_status?>"
 	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="save" value="save">
@@ -94,14 +94,14 @@
 				</label>
 			</div>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" x-bind:checked="sslEnabled" x-on:click="sslEnabled = !sslEnabled">
+				<input x-bind:checked="sslEnabled" x-on:click="sslEnabled = !sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
 				<label for="v_ssl">
 					<?=_('SSL Support');?>
 				</label>
 			</div>
-			<div id="ssltable" class="u-pl30" x-show="sslEnabled">
+			<div x-cloak x-show="sslEnabled" id="ssltable" class="u-pl30">
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt" x-bind:checked="letsEncryptEnabled" x-on:click="letsEncryptEnabled = !letsEncryptEnabled">
+					<input x-bind:checked="letsEncryptEnabled" x-on:click="letsEncryptEnabled = !letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
 					<label for="v_letsencrypt">
 						<?=_('Lets Encrypt Support');?>
 					</label>
@@ -113,23 +113,23 @@
 						<p><?=sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias); ?></p>
 					</div>
 				</div>
-				<div id="ssl-details" x-show="letsEncryptEnabled">
+				<div x-cloak x-show="letsEncryptEnabled" id="ssl-details">
 					<div class="u-mb10">
 						<label for="v_ssl_crt" class="form-label">
 							<?=_('SSL Certificate');?>
-							<span id="generate-csr" x-show="!letsEncryptEnabled" > / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
+							<span x-cloak x-show="!letsEncryptEnabled" id="generate-csr" > / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?=_('Generate CSR');?></a></span>
 						</label>
-						<textarea class="form-control u-min-height100 u-console"  x-bind:disabled="!letsEncryptEnabled" name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+						<textarea x-bind:disabled="!letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
 					</div>
 					<div class="u-mb10">
 						<label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
-						<textarea class="form-control u-min-height100 u-console"  x-bind:disabled="!letsEncryptEnabled" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+						<textarea x-bind:disabled="!letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_ca" class="form-label">
 							<?=_('SSL Certificate Authority / Intermediate');?> <span class="optional">(<?=_('optional');?>)</span>
 						</label>
-						<textarea class="form-control u-min-height100 u-console"  x-bind:disabled="!letsEncryptEnabled" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+						<textarea x-bind:disabled="!letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
 					</div>
 				</div>
 				<?php if ($v_ssl != 'no' ) { ?>
@@ -196,12 +196,12 @@
 				<? } // if ssl is enabled ?>
 			</div>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" x-bind:checked="hasSmtpRelay" x-on:click="hasSmtpRelay = !hasSmtpRelay">
+				<input x-bind:checked="hasSmtpRelay" x-on:click="hasSmtpRelay = !hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
 				<label for="v_smtp_relay">
 					<?=_('SMTP Relay');?>
 				</label>
 			</div>
-			<div id="smtp_relay_table" class="u-pl30" x-show="hasSmtpRelay">
+			<div x-cloak x-show="hasSmtpRelay" id="smtp_relay_table" class="u-pl30">
 				<div class="u-mb10">
 					<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
 					<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">

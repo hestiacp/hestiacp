@@ -15,7 +15,7 @@
 					<li entity="sort-key"><span class="name"><?=_('Access Key');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-comment"><span class="name"><?=_('Comment');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<form action="/bulk/access-key/" method="post" x-bind="BulkEdit">
+				<form x-bind="BulkEdit" action="/bulk/access-key/" method="post">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
 						<option value=""><?=_('apply to selected');?></option>

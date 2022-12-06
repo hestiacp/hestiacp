@@ -18,7 +18,7 @@
 					<li entity="sort-domains" sort_as_int="1"><span class="name"><?=_('Domains');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-owner"><span class="name"><?=_('Owner');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<form action="/bulk/ip/" method="post" x-bind="BulkEdit">
+				<form x-bind="BulkEdit" action="/bulk/ip/" method="post">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
 						<option value=""><?=_('apply to selected');?></option>

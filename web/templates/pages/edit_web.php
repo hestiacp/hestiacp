@@ -168,7 +168,7 @@
 					<?=_('SSL Support');?>
 				</label>
 			</div>
-			<div id="ssltable" class="u-pl30" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;">
+			<div x-cloak x-show="sslEnabled" id="ssltable" class="u-pl30">
 				<div class="form-check u-mb10">
 					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt">
 					<label for="letsencrypt">

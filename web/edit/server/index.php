@@ -65,14 +65,15 @@ $backend_templates = json_decode(implode('', $output), true);
 unset($output);
 
 $v_php_versions = [
-     'php-5.6',
-     'php-7.0',
-     'php-7.1',
-     'php-7.2',
-     'php-7.3',
-     'php-7.4',
-     'php-8.0',
-     'php-8.1',
+	"php-5.6",
+	"php-7.0",
+	"php-7.1",
+	"php-7.2",
+	"php-7.3",
+	"php-7.4",
+	"php-8.0",
+	"php-8.1",
+	"php-8.2",
 ];
 sort($v_php_versions);
 

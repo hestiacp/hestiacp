@@ -51,37 +51,37 @@ else
 fi
 
 for service in $service_list; do
-
-    if [ "$service" = "iptables" ]; then
-        # Run the restart rules for iptables firewall
-        $BIN/v-stop-firewall
-        $BIN/v-update-firewall
-    elif [ "$restart" = "ssl" ] && [ "$service" = "nginx" ]; then
-        service $service upgrade >> $log 2>&1
-    elif [ -z "$restart" -o "$restart" = "no" ] && [ \
-            "$service" = "nginx" -o     \
-            "$service" = "apache2" -o   \
-            "$service" = "exim4" -o     \
-            "$service" = "dovecot" -o   \
-            "$service" = "bind9" -o     \
-            "$service" = "named" -o     \
-            "$service" = "vsftpd" -o    \
-            "$service" = "php5.6-fpm" -o \
-            "$service" = "php7.0-fpm" -o \
-            "$service" = "php7.1-fpm" -o \
-            "$service" = "php7.2-fpm" -o \
-            "$service" = "php7.3-fpm" -o \
-            "$service" = "php7.4-fpm" -o \
-            "$service" = "php8.0-fpm" -o \
-            "$service" = "php8.1-fpm" -o \
-            "$service" = "proftpd" -o    \
-            "$service" = "ssh" -o       \
-            "$service" = "fail2ban" ]; then
-        systemctl reload-or-restart "$service" > /dev/null 2>&1
-    else
-        systemctl reset-failed "$service" >> $log 2>&1
-        systemctl restart "$service" >> $log 2>&1
-    fi
+	if [ "$service" = "iptables" ]; then
+		# Run the restart rules for iptables firewall
+		$BIN/v-stop-firewall
+		$BIN/v-update-firewall
+	elif [ "$restart" = "ssl" ] && [ "$service" = "nginx" ]; then
+		service $service upgrade >> $log 2>&1
+	elif [ -z "$restart" -o "$restart" = "no" ] && [ \
+		"$service" = "nginx" -o \
+		"$service" = "apache2" -o \
+		"$service" = "exim4" -o \
+		"$service" = "dovecot" -o \
+		"$service" = "bind9" -o \
+		"$service" = "named" -o \
+		"$service" = "vsftpd" -o \
+		"$service" = "php5.6-fpm" -o \
+		"$service" = "php7.0-fpm" -o \
+		"$service" = "php7.1-fpm" -o \
+		"$service" = "php7.2-fpm" -o \
+		"$service" = "php7.3-fpm" -o \
+		"$service" = "php7.4-fpm" -o \
+		"$service" = "php8.0-fpm" -o \
+		"$service" = "php8.1-fpm" -o \
+        "$service" = "php8.2-fpm" -o \
+		"$service" = "proftpd" -o \
+		"$service" = "ssh" -o \
+		"$service" = "fail2ban" ]; then
+		systemctl reload-or-restart "$service" > /dev/null 2>&1
+	else
+		systemctl reset-failed "$service" >> $log 2>&1
+		systemctl restart "$service" >> $log 2>&1
+	fi
 
     # Check the result of the service restart and report whether it failed.
     if [ $? -ne 0 ]; then

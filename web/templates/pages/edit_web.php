@@ -206,13 +206,13 @@
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
 					</div>
 				</div>
-				<?php if ($v_ssl != 'no' ) { ?>
+				<?php if ($v_ssl != 'no') { ?>
 					<ul class="values-list">
 						<li class="values-list-item">
 							<span class="values-list-label"><?=_('SUBJECT');?></span>
 							<span class="values-list-value"><?=$v_ssl_subject?></span>
 						</li>
-						<?php if ($v_ssl_aliases){?>
+						<?php if ($v_ssl_aliases) {?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?=_('ALIASES');?></span>
 								<span class="values-list-value"><?=$v_ssl_aliases?></span>
@@ -262,7 +262,7 @@
 							<td><a x-on:click="showCertificates = !showCertificates" href="#" class="generate"><?=_('Show Certificate');?></a></td>
 						</tr>
 					</table>
-				<? } // if ssl is enabled ?>
+				<?php } ?>
 			</div>
 			<div class="u-mt15 u-mb20">
 				<a x-on:click="showAdvanced = !showAdvanced" href="#" class="button button-secondary"><?=_('Advanced options');?></a>
@@ -291,7 +291,7 @@
 							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
 							<label for="v_nginx_cache_check">
 								<?=_('Enable FastCGI Cache');?>
-								<a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank">
+								<a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank" class="u-ml5">
 									<i class="fas fa-circle-question"></i>
 								</a>
 							</label>

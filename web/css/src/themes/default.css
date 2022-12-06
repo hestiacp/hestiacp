@@ -79,14 +79,15 @@
 	box-shadow: 0 4px 10px rgb(100 100 100 / 40%);
 	border-bottom: 1px solid #fff;
 	position: fixed;
-	width: 100%;
+	display: flex;
+	size: 100% 40px;
 	z-index: 2;
 	top: 0;
 }
 
 .top-bar-inner {
 	display: flex;
-	height: 40px;
+	flex-grow: 1;
 	padding-left: 20px;
 	padding-right: 20px;
 	justify-content: space-between;
@@ -652,7 +653,6 @@
 	background-color: #f5f5f5;
 	border: 1px solid #d3d3d3;
 	box-shadow: 0 1px 4px rgb(0 0 0 / 20%);
-	color: #353535;
 	border-radius: 4px;
 	margin-bottom: 20px;
 
@@ -660,7 +660,7 @@
 		margin-bottom: 0;
 	}
 
-	&.disable {
+	&.disabled {
 		color: #b6b6b6;
 
 		& .card-thumb {
@@ -668,17 +668,6 @@
 			opacity: 0.3;
 		}
 	}
-}
-
-.card-details {
-	padding: 10px;
-	border-top: 1px solid #e6e6e6;
-	text-align: center;
-}
-
-.card-title {
-	font-size: 1rem;
-	font-weight: 600;
 }
 
 .card-thumb {
@@ -693,6 +682,18 @@
 		max-width: 100%;
 		max-height: 100%;
 	}
+}
+
+.card-content {
+	padding: 10px;
+	color: #353535;
+	border-top: 1px solid #e6e6e6;
+	text-align: center;
+}
+
+.card-title {
+	font-size: 1rem;
+	font-weight: 600;
 }
 
 /* Toolbar
@@ -1313,18 +1314,18 @@
 		box-shadow: none !important;
 		background: none !important;
 	}
-}
 
-.l-unit__stats table {
-	table-layout: fixed;
-	margin-top: -54px;
-	margin-left: -20px;
-}
+	& table {
+		table-layout: fixed;
+		margin-top: -54px;
+		margin-left: -20px;
+	}
 
-.l-unit__stats td {
-	height: 32px;
-	padding-bottom: 4px;
-	vertical-align: middle;
+	& td {
+		height: 32px;
+		padding-bottom: 4px;
+		vertical-align: middle;
+	}
 }
 
 .body-stats .l-unit__stat-col--left {
@@ -1539,6 +1540,9 @@
 	padding-right: 4px;
 }
 
+/* Spinner
+   ========================================================================== */
+
 .spinner {
 	-webkit-mask-box-image: radial-gradient(
 		center,
@@ -1666,10 +1670,6 @@
 	100% {
 		opacity: 1;
 	}
-}
-
-.paused div {
-	animation-play-state: paused;
 }
 
 /* Forms
@@ -1814,10 +1814,6 @@
 .form-control:disabled:hover,
 .form-select:disabled:hover {
 	border-color: #cfcfcf;
-}
-
-#advanced-options .u-console {
-	min-height: 600px;
 }
 
 .generate {

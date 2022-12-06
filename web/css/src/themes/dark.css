@@ -208,15 +208,14 @@ strong {
    ========================================================================== */
 
 .card {
-	background: #454545;
-	color: #fafafa;
-	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
+	background-color: #454545;
 	border-color: #606060;
 	box-shadow: 0 1px 4px rgb(0 0 0 / 20%), inset 0 0 60px rgb(0 0 0 / 25%);
 }
 
-.card-title {
+.card-content {
 	color: #fafafa;
+	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
 }
 
 /* Toolbar

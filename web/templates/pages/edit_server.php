@@ -157,22 +157,31 @@
 				<div class="collapse-content">
 					<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
 						<p>
-							<?=_('Proxy Server');?>: <span class="optional"><?=$_SESSION['PROXY_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a></span>
+							<?=_('Proxy Server');?>: <span class="u-ml5"><?=$_SESSION['PROXY_SYSTEM']; ?></span>
+							<a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/" class="u-ml5">
+								<i class="fas fa-pencil status-icon orange"></i>
+							</a>
 						</p>
 					<?php } ?>
 					<?php if (!empty($_SESSION['WEB_SYSTEM'])) { ?>
 						<p>
-							<?=_('Web Server');?>: <span class="optional"><?=$_SESSION['WEB_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a></span>
+							<?=_('Web Server');?>: <span class="u-ml5"><?=$_SESSION['WEB_SYSTEM']; ?></span>
+							<a href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/" class="u-ml5">
+								<i class="fas fa-pencil status-icon orange"></i>
+							</a>
 						</p>
 					<?php } ?>
 					<?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
 						<p>
-							<?=_('Backend Server');?>: <span class="optional"><?=$_SESSION['WEB_BACKEND']; ?> <a href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a></span>
+							<?=_('Backend Server');?>: <span class="u-ml5"><?=$_SESSION['WEB_BACKEND']; ?></span>
+							<a href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/" class="u-ml5">
+								<i class="fas fa-pencil status-icon orange"></i>
+							</a>
 						</p>
 					<?php } ?>
 					<?php if (!empty($_SESSION['WEB_BACKEND_POOL'])) { ?>
 						<p>
-							<?=_('Backend Pool Mode');?>: <span class="optional"><?=$_SESSION['WEB_BACKEND_POOL']; ?></span>
+							<?=_('Backend Pool Mode');?>: <span class="u-ml5"><?=$_SESSION['WEB_BACKEND_POOL']; ?></span>
 						</p>
 					<?php } ?>
 					<?php if(count($v_php_versions)): ?>
@@ -234,10 +243,13 @@
 					</summary>
 					<div class="collapse-content">
 						<p>
-							<?=_('DNS Server');?>: <span class="optional"><?=$_SESSION['DNS_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a></span>
+							<?=_('DNS Server');?>: <span class="u-ml5"><?=$_SESSION['DNS_SYSTEM']; ?></span>
+							<a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/" class="u-ml5">
+								<i class="fas fa-pencil status-icon orange"></i>
+							</a>
 						</p>
 						<p>
-							<?=_('DNS Cluster');?>: <span class="optional"><?php if ($v_dns_cluster == 'yes') { echo _('Yes'); } else { echo _('No'); } ?></span>
+							<?=_('DNS Cluster');?>: <span class="u-ml5"><?php if ($v_dns_cluster == 'yes') { echo _('Yes'); } else { echo _('No'); } ?></span>
 						</p>
 						<?php if ($v_dns_cluster == 'yes') {
 							$i = 0;
@@ -261,16 +273,25 @@
 					</summary>
 					<div class="collapse-content">
 						<p>
-							<?=_('Mail Server');?>: <span class="optional"><?=$_SESSION['MAIL_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a></span>
+							<?=_('Mail Server');?>: <span class="u-ml5"><?=$_SESSION['MAIL_SYSTEM']; ?></span>
+							<a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/" class="u-ml5">
+								<i class="fas fa-pencil status-icon orange"></i>
+							</a>
 						</p>
 						<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
 							<p>
-								<?=_('Antivirus');?>: <span class="optional"><?=$_SESSION['ANTIVIRUS_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a></span>
+								<?=_('Antivirus');?>: <span class="u-ml5"><?=$_SESSION['ANTIVIRUS_SYSTEM']; ?></span>
+								<a href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/" class="u-ml5">
+									<i class="fas fa-pencil status-icon orange"></i>
+								</a>
 							</p>
 						<?php } ?>
 						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
 							<p>
-								<?=_('AntiSpam');?>: <span class="optional"><?=$_SESSION['ANTISPAM_SYSTEM']; ?> <a href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a></span>
+								<?=_('AntiSpam');?>: <span class="u-ml5"><?=$_SESSION['ANTISPAM_SYSTEM']; ?></span>
+								<a href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/" class="u-ml5">
+									<i class="fas fa-pencil status-icon orange"></i>
+								</a>
 							</p>
 						<?php } ?>
 						<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
@@ -320,7 +341,7 @@
 					<div class="collapse-content">
 						<div class="u-mb10">
 							<label for="v_mysql" class="form-label">
-								<?=_('MySQL Support');?> <a href="/edit/server/mysql/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a>
+								<?=_('MySQL Support');?> <a href="/edit/server/mysql/" class="u-ml5"><i class="fas fa-pencil status-icon orange"></i></a>
 							</label>
 							<select class="form-select" name="v_mysql" id="v_mysql" disabled>
 								<option value="no"><?=_('No');?></option>
@@ -377,7 +398,7 @@
 						<?php if ($v_pgsql == 'yes') { ?>
 							<div class="u-mb10">
 								<label for="v_pgsql" class="form-label">
-									<?=_('PostgreSQL Support');?> <a href="/edit/server/postgresql/"><i class="fas fa-pencil status-icon orange icon-pad-right"></i></a>
+									<?=_('PostgreSQL Support');?> <a href="/edit/server/postgresql/" class="u-ml5"><i class="fas fa-pencil status-icon orange"></i></a>
 								</label>
 								<select class="form-select" name="v_pgsql" id="v_pgsql" disabled>
 									<option value="no"><?=_('No');?></option>
@@ -434,7 +455,10 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_backup_mode" class="form-label">
-							<?=_('Compression');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-difference-between-zstd-and-gzip"><i class="fas fa-circle-question"></i></a>
+							<?=_('Compression');?>
+							<a target="_blank" class="u-ml5" href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-difference-between-zstd-and-gzip">
+								<i class="fas fa-circle-question"></i>
+							</a>
 						</label>
 						<select class="form-select" name="v_backup_mode" id="v_backup_mode">
 							<option value="gzip" <?php if($v_backup_mode != 'zstd') echo 'selected' ?>>gzip</option>
@@ -443,7 +467,10 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_backup_gzip" class="form-label">
-							<?=_('Compression level');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-optimal-compression-ratio"><i class="fas fa-circle-question"></i></a>
+							<?=_('Compression level');?>
+							<a target="_blank" class="u-ml5" href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-optimal-compression-ratio">
+								<i class="fas fa-circle-question"></i>
+							</a>
 						</label>
 						<select class="form-select" name="v_backup_gzip" id="v_backup_gzip">
 							<?php for ($level = 1; $level < 20; $level++) { ?>
@@ -453,7 +480,10 @@
 					</div>
 					<div class="u-mb20">
 						<label for="v_backup_dir" class="form-label">
-							<?=_('Directory');?> <a target="_blank" href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"><i class="fas fa-circle-question"></i></a>
+							<?=_('Directory');?>
+							<a target="_blank" class="u-ml5" href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder">
+								<i class="fas fa-circle-question"></i>
+							</a>
 						</label>
 						<input type="text" class="form-control" name="v_backup_dir" id="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
 					</div>
@@ -466,7 +496,10 @@
 					<div x-cloak x-show="remoteBackupEnabled" id="remote_backup" class="u-pl30 u-mt20">
 						<div class="u-mb10">
 							<label for="backup_type" class="form-label">
-								<?=_('Protocol');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"><i class="fas fa-circle-question"></i></a>
+								<?=_('Protocol');?>
+								<a target="_blank" class="u-ml5" href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported">
+									<i class="fas fa-circle-question"></i>
+								</a>
 							</label>
 							<select class="form-select" name="v_backup_type" id="backup_type">
 								<option value='ftp'><?=_('ftp');?></option>
@@ -549,7 +582,7 @@
 							<span class="values-list-label"><?=_('SUBJECT');?></span>
 							<span class="values-list-value"><?=$v_ssl_subject?></span>
 						</li>
-						<?php if ($v_ssl_aliases){?>
+						<?php if ($v_ssl_aliases) {?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?=_('Aliases');?></span>
 								<span class="values-list-value"><?=$v_ssl_aliases?></span>

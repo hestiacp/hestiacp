@@ -5,7 +5,6 @@
 <script defer src="/js/vendor/jquery-ui.min.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/vendor/chart.min.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/events.js?<?=JS_LATEST_UPDATE?>"></script>
-<script defer src="/js/app.js?<?=JS_LATEST_UPDATE?>"></script>
 <script defer src="/js/init.js?<?=JS_LATEST_UPDATE?>"></script>
 <script>
 	// TODO: REMOVE
@@ -48,4 +47,3 @@
 		require_once($customScript->getPathname());
 	}
  } ?>
-

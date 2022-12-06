@@ -28,7 +28,7 @@ logpath  = /var/log/dovecot.log
 enabled  = false
 filter   = mysqld-auth
 action   = hestia[name=DB]
-logpath  = /var/log/mysql.log
+logpath  = /var/log/mysql/error.log
 maxretry = 5
 
 [hestia-iptables]

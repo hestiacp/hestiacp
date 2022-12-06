@@ -113,7 +113,7 @@
 				</ul>
 				<?php if ($_SESSION['userContext'] === 'admin') {?>
 					<div class="form-check">
-						<input x-bind:checked="loginDisabled" x-on:click="loginDisabled = !loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
+						<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
 						<label for="v_login_disabled">
 							<?=_('Do not allow user to log in to Control Panel');?>
 						</label>
@@ -134,7 +134,7 @@
 				</div>
 				<div x-cloak x-show="loginDisabled" id="password-options-ip">
 					<div class="form-check">
-						<input x-bind:checked="useIpAllowList" x-on:click="useIpAllowList = !useIpAllowList" class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist">
+						<input x-model="useIpAllowList" class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist">
 						<label for="v_login_use_iplist">
 							<?=_('Use IP address allow list for login attempts');?>
 						</label>

@@ -93,7 +93,7 @@
 						</div>
 					</div>
 					<div class="form-check u-mb10">
-						<input x-bind:checked="hasAutoReply" x-on:click="hasAutoReply = !hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">
+						<input x-model="hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">
 						<label for="v_autoreply">
 							<?=_('Autoreply');?>
 						</label>

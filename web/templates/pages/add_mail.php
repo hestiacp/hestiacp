@@ -93,7 +93,7 @@
 					</label>
 				</div>
 				<div class="form-check u-mb10">
-					<input x-bind:checked="hasSmtpRelay" x-on:click="hasSmtpRelay = !hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
+					<input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
 					<label for="v_smtp_relay">
 						<?=_('SMTP Relay');?>
 					</label>

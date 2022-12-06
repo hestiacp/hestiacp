@@ -94,14 +94,14 @@
 				</label>
 			</div>
 			<div class="form-check u-mb10">
-				<input x-bind:checked="sslEnabled" x-on:click="sslEnabled = !sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
+				<input x-model="sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
 				<label for="v_ssl">
 					<?=_('SSL Support');?>
 				</label>
 			</div>
 			<div x-cloak x-show="sslEnabled" id="ssltable" class="u-pl30">
 				<div class="form-check u-mb10">
-					<input x-bind:checked="letsEncryptEnabled" x-on:click="letsEncryptEnabled = !letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
+					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
 					<label for="v_letsencrypt">
 						<?=_('Lets Encrypt Support');?>
 					</label>
@@ -196,7 +196,7 @@
 				<? } // if ssl is enabled ?>
 			</div>
 			<div class="form-check u-mb10">
-				<input x-bind:checked="hasSmtpRelay" x-on:click="hasSmtpRelay = !hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
+				<input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
 				<label for="v_smtp_relay">
 					<?=_('SMTP Relay');?>
 				</label>

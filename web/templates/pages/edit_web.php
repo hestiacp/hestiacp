@@ -95,7 +95,7 @@
 			</div>
 			<div class="stats-auth u-mb10" style="<?php if ($v_stats == 'none') { ?>display:none<?php } ?>">
 				<div class="form-check">
-					<input x-bind:checked="statsAuthEnabled" x-on:click="statsAuthEnabled = !statsAuthEnabled" class="form-check-input" type="checkbox" name="v_stats_auth" id="v_stats_auth">
+					<input x-model="statsAuthEnabled" class="form-check-input" type="checkbox" name="v_stats_auth" id="v_stats_auth">
 					<label for="v_stats_auth">
 						<?=_('Statistics Authorization');?>
 					</label>
@@ -120,7 +120,7 @@
 				</div>
 			</div>
 			<div class="form-check u-mb10">
-				<input x-bind:checked="redirectEnabled" x-on:click="redirectEnabled = !redirectEnabled" class="form-check-input" type="checkbox" name="v-redirect-checkbox" id="v-redirect-checkbox">
+				<input x-model="redirectEnabled" class="form-check-input" type="checkbox" name="v-redirect-checkbox" id="v-redirect-checkbox">
 				<label for="v-redirect-checkbox">
 					<?=_('Enable domain redirection');?>
 				</label>
@@ -163,14 +163,14 @@
 				</div>
 			</div>
 			<div class="form-check u-mb10">
-				<input x-bind:checked="sslEnabled" x-on:click="sslEnabled = !sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
+				<input x-model="sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
 				<label for="v_ssl">
 					<?=_('SSL Support');?>
 				</label>
 			</div>
 			<div id="ssltable" class="u-pl30" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;">
 				<div class="form-check u-mb10">
-					<input x-bind:checked="letsEncryptEnabled" x-on:click="letsEncryptEnabled = !letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt">
+					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt">
 					<label for="letsencrypt">
 						<?=_('Lets Encrypt Support');?>
 					</label>
@@ -296,7 +296,7 @@
 					</div>
 					<?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
 						<div class="form-check u-mb10">
-							<input x-bind:checked="nginxCacheEnabled" x-on:click="nginxCacheEnabled = !nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
+							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
 							<label for="v_nginx_cache_check">
 								<?=_('Enable FastCGI Cache');?>
 								<a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank">
@@ -338,7 +338,7 @@
 					<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
 						<div style="display: none;">
 							<div class="form-check u-mb10">
-								<input x-bind:checked="proxySupportEnabled" x-on:click="proxySupportEnabled = !proxySupportEnabled" class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy">
+								<input x-model="proxySupportEnabled" class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy">
 								<label for="v_proxy">
 									<?=_('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
 								</label>
@@ -371,7 +371,7 @@
 					<?php } ?>
 				<?php } ?>
 				<div class="form-check u-mb10">
-					<input x-bind:checked="customDocumentRootEnabled" x-on:click="customDocumentRootEnabled = !customDocumentRootEnabled" class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check">
+					<input x-model="customDocumentRootEnabled" class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check">
 					<label for="v_custom_doc_root_check">
 						<?=_('Custom document root');?>
 					</label>

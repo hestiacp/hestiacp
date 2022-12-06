@@ -52,7 +52,7 @@
 				</select>
 			</div>
 			<div class="form-check u-mb10">
-				<input x-bind:checked="showUserTable" x-on:click="showUserTable = !showUserTable" class="form-check-input" type="checkbox" name="v_shared" id="v_shared">
+				<input x-model="showUserTable" class="form-check-input" type="checkbox" name="v_shared" id="v_shared">
 				<label for="v_shared">
 					<?=_('Shared');?>
 				</label>

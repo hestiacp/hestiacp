@@ -282,7 +282,7 @@
 							</div>
 						<?php } ?>
 						<div class="form-check u-mt20">
-							<input x-bind:checked="hasSmtpRelay" x-on:click="hasSmtpRelay = !hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
+							<input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
 							<label for="v_smtp_relay">
 								<?=_('Global SMTP Relay');?>
 							</label>
@@ -458,7 +458,7 @@
 						<input type="text" class="form-control" name="v_backup_dir" id="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
 					</div>
 					<div class="form-check">
-						<input x-bind:checked="remoteBackupEnabled" x-on:click="remoteBackupEnabled = !remoteBackupEnabled" class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv">
+						<input x-model="remoteBackupEnabled" class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv">
 						<label for="v_backup_remote_adv">
 							<?=_('Remote backup');?>
 						</label>

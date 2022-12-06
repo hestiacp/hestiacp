@@ -7,6 +7,7 @@
 @import url("../media_queries");
 
 :root {
+	/* Alerts */
 	--alert-box-shadow: none;
 	--alert-text-shadow: none;
 }
@@ -70,6 +71,13 @@ strong {
 	box-shadow: none;
 }
 
+.badge {
+	box-shadow: none;
+}
+
+/* Forms
+   ========================================================================== */
+
 .form-control,
 .form-select {
 	box-shadow: none;
@@ -121,6 +129,9 @@ strong {
 	border-color: #f4301a;
 }
 
+/* Modals
+   ========================================================================== */
+
 .ui-dialog {
 	box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
 
@@ -129,9 +140,8 @@ strong {
 	}
 }
 
-.badge {
-	box-shadow: none;
-}
+/* Toolbar
+   ========================================================================== */
 
 .toolbar-sorting-menu {
 	box-shadow: none;
@@ -139,13 +149,13 @@ strong {
 	background-color: #fff;
 }
 
+/* Login
+   ========================================================================== */
+
 .body-login,
 .body-reset {
 	background: #5f7eb3;
 }
-
-/* Login box
-   ========================================================================== */
 
 .login {
 	@media (--viewport-small) {

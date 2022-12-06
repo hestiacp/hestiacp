@@ -194,7 +194,7 @@ else
 		echo "[Service]" >> $sd_unit
 		echo "Type=oneshot" >> $sd_unit
 		echo "RemainAfterExit=yes" >> $sd_unit
-		echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset" >> $sd_unit
+		echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset load" >> $sd_unit
 		if [ "$iptablesversion" = "v1.6" ]; then
 			echo "ExecStart=/sbin/iptables-restore /etc/iptables.rules" >> $sd_unit
 		else
@@ -203,9 +203,9 @@ else
 		echo "" >> $sd_unit
 		echo "[Install]" >> $sd_unit
 		echo "WantedBy=multi-user.target" >> $sd_unit
-		systemctl daemon-reload
+		systemctl -q daemon-reload
 	fi
-	systemctl is-enabled hestia-iptables > /dev/null 2>&1 || systemctl enable hestia-iptables > /dev/null 2>&1
+	systemctl -q is-enabled hestia-iptables 2> /dev/null || systemctl -q enable hestia-iptables
 fi
 
 #----------------------------------------------------------#

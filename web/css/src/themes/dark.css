@@ -8,8 +8,13 @@
 
 :root {
 	--color-text: #cdcdcd;
+	--color-text-link: #52b9ff;
+	--color-text-link-hover: #ff3478;
 	--color-background: #282828;
 	--alert-border-color: #212121;
+
+	/* Alerts */
+	--alert-danger-color: #d13535;
 }
 
 b,
@@ -180,14 +185,22 @@ strong {
 	}
 }
 
-/* Alerts
+/* Inline alerts
    ========================================================================== */
 
-.alert-danger {
-	background-color: #d13535;
+.inline-danger {
+	color: #f33;
+}
 
-	& .fas {
-		color: #d13535;
+.inline-success {
+	color: #53ba55;
+
+	& a {
+		color: #fff;
+
+		&:hover {
+			color: #ff3478;
+		}
 	}
 }
 
@@ -205,6 +218,9 @@ strong {
 .card-title {
 	color: #fafafa;
 }
+
+/* Toolbar
+   ========================================================================== */
 
 .toolbar {
 	border-color: #454545;
@@ -463,22 +479,11 @@ strong {
 	color: #fff;
 }
 
-/* form styles */
+/* Forms
+   ========================================================================== */
 
-.inline-danger {
-	color: #f33;
-}
-
-.inline-success {
-	color: #53ba55;
-
-	& a {
-		color: #fff;
-
-		&:hover {
-			color: #ff3478;
-		}
-	}
+.form-title {
+	color: #e8e8e8;
 }
 
 .form-label,
@@ -693,50 +698,13 @@ textarea:focus::placeholder {
 .optional {
 }
 
-.mail-infoblock {
-	color: #fff;
-	border: 1px solid #606060;
-	box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
-	background-color: #454545;
-}
-
-.mail-infoblock:hover {
-}
-
-.mail-infoblock td {
-	color: #dadada;
-}
-
-.mail-infoblock td:first-child {
-}
-
-.mail-infoblock div {
-}
-
-.mail-infoblock a {
-	color: #52b9ff;
-
-	&:hover {
-		color: #ff3478;
-	}
-}
-
-.additional-info {
-}
-
-.additional-info td {
-}
-
-.additional-info td.details {
-}
-
 .body-login,
 .body-reset {
 	background: #303030;
 	background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%);
 }
 
-/* Login box
+/* Login
    ========================================================================== */
 
 .login {
@@ -766,10 +734,6 @@ textarea:focus::placeholder {
 	&:hover {
 		color: #ff3478;
 	}
-}
-
-.form-title {
-	color: #e8e8e8;
 }
 
 .section-title {
@@ -923,22 +887,15 @@ form#vstobjects.suspended {
 	text-shadow: 0 !important;
 }
 
+/* Modals
+   ========================================================================== */
+
 .ui-dialog .ui-dialog-buttonpane {
 	border-top: 1px solid #404040;
 }
 
 .ui-dialog .ui-dialog-buttonpane button {
 	box-shadow: 0 1px 4px rgb(0 0 0 / 10%), inset 0 0 1px #000, inset 0 0 3px rgb(0 0 0 / 50%);
-}
-
-.shortcuts {
-	background: rgb(30 30 30 / 95%);
-	border: 1px solid rgb(255 255 255 / 25%);
-	box-shadow: 0 0 20px rgb(0 0 0 / 50%);
-}
-
-.shortcuts-header {
-	border-bottom: 1px solid #353535;
 }
 
 .ui-dialog {
@@ -954,6 +911,23 @@ form#vstobjects.suspended {
 .ui-dialog .ui-dialog-title {
 	color: #f12569;
 	font-weight: 600;
+}
+
+.ui-widget-header a {
+	color: #cacaca !important;
+}
+
+/* Shortcuts panel
+   ========================================================================== */
+
+.shortcuts {
+	background: rgb(30 30 30 / 95%);
+	border: 1px solid rgb(255 255 255 / 25%);
+	box-shadow: 0 0 20px rgb(0 0 0 / 50%);
+}
+
+.shortcuts-header {
+	border-bottom: 1px solid #353535;
 }
 
 .helper-container {
@@ -999,14 +973,6 @@ li[aria-expanded="true"] a {
 	color: #707070;
 }
 
-.ui-widget-header a {
-	color: #cacaca !important;
-}
-
-.debug-panel-content {
-	background-color: #282828;
-}
-
 .body-rrd .units .l-unit {
 	background-color: #282828 !important;
 	border-left: 1px solid transparent !important;
@@ -1047,6 +1013,15 @@ li[aria-expanded="true"] a {
 	border-color: #454545;
 }
 
+/* Panel component
+   ========================================================================== */
+
+.panel {
+	background-color: #454545;
+	border-color: #606060;
+	box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
+}
+
 /* Collapse component
    ========================================================================== */
 
@@ -1056,4 +1031,11 @@ li[aria-expanded="true"] a {
 	text-shadow: 0 1px rgb(0 0 0 / 40%);
 	box-shadow: inset 0 0 2px rgb(0 0 0 / 50%), 0 2px 6px rgb(0 0 0 / 40%);
 	color: #fff;
+}
+
+/* Debug panel
+   ========================================================================== */
+
+.debug-panel-content {
+	background-color: #282828;
 }

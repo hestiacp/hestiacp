@@ -111,7 +111,7 @@ applyRandomString = function (min_length = 16) {
 };
 
 generate_mail_credentials = function () {
-	var div = $('.mail-infoblock').clone();
+	var div = $('.js-mail-info').clone();
 	div.find('#mail_configuration').remove();
 	var pass = div.find('.js-password-output').text();
 	if (pass == '') div.find('.js-password-output').text(' ');

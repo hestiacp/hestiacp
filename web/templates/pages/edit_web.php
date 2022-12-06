@@ -207,24 +207,16 @@
 					</div>
 				</div>
 				<?php if ($v_ssl != 'no' ) { ?>
-					<table class="additional-info">
-						<tr>
-							<td>
-								<b><?=_('SUBJECT');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_subject?>
-							</td>
-						</tr>
+					<ul class="values-list">
+						<li class="values-list-item">
+							<span class="values-list-label"><?=_('SUBJECT');?></span>
+							<span class="values-list-value"><?=$v_ssl_subject?></span>
+						</li>
 						<?php if ($v_ssl_aliases){?>
-						<tr>
-							<td>
-								<b><?=_('ALIASES');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_aliases?>
-							</td>
-						</tr>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('ALIASES');?></span>
+								<span class="values-list-value"><?=$v_ssl_aliases?></span>
+							</li>
 						<?php } ?>
 						<tr>
 							<td>

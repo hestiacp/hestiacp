@@ -5,15 +5,14 @@ namespace Hestia\WebApp\Installers\Wordpress;
 use Hestia\System\Util;
 use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
-class WordpressSetup extends BaseSetup
-{
-    protected $appInfo = [
-        'name' => 'Wordpress',
-        'group' => 'cms',
-        'enabled' => true,
-        'version' => 'latest',
-        'thumbnail' => 'wp-thumb.png'
-    ];
+class WordpressSetup extends BaseSetup {
+	protected $appInfo = [
+		"name" => "WordPress",
+		"group" => "cms",
+		"enabled" => true,
+		"version" => "latest",
+		"thumbnail" => "wp-thumb.png",
+	];
 
     protected $appname = 'wordpress';
     protected $config = [

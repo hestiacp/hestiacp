@@ -35,11 +35,11 @@
 		<div class="cards">
 			<!-- List available web apps -->
 			<?php foreach($v_web_apps as $webapp):?>
-				<div class="card <?=($webapp['enabled'] ? '' : 'disable');?>">
+				<div class="card <?=($webapp['enabled'] ? '' : 'disabled');?>">
 					<div class="card-thumb">
 						<img src="/src/app/WebApp/Installers/<?=$webapp['name'];?>/<?=$webapp['thumbnail'];?>" alt="<?=$webapp['name'];?>">
 					</div>
-					<div class="card-details">
+					<div class="card-content">
 						<p class="card-title"><?=$webapp['name'];?></p>
 						<p class="u-mb10"><?=_('version');?>: <?=$webapp['version'];?></p>
 						<a href="/add/webapp/?app=<?=$webapp['name'];?>&domain=<?=htmlentities($v_domain)?>" class="button"><?=_('Setup');?></a>

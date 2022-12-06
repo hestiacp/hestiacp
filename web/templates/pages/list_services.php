@@ -6,7 +6,7 @@
 			<a href="/list/rrd/" class="button button-secondary"><i class="fas fa-chart-area status-icon blue"></i><?=_('Graphs');?></a>
 			<a href="/list/updates/" class="button button-secondary"><i class="fas fa-arrows-rotate status-icon green"></i><?=_('Updates');?></a>
 			<?php if (!empty($_SESSION['FIREWALL_SYSTEM']) && $_SESSION['FIREWALL_SYSTEM'] == "iptables" ) {?>
-			<a href="/list/firewall/" class="button button-secondary"><i class="fas fa-shield-halved status-icon red"></i><?=_('Firewall');?></a>
+				<a href="/list/firewall/" class="button button-secondary"><i class="fas fa-shield-halved status-icon red"></i><?=_('Firewall');?></a>
 			<?php }?>
 			<a href="/list/log/?user=system&token=<?=$_SESSION['token']?>" class="button button-secondary"><i class="fas fa-binoculars status-icon orange"></i><?=_('Logs');?></a>
 			<div class="actions-panel" key-action="js">
@@ -56,7 +56,8 @@
 									<?php if ($sys['sysinfo']['RELEASE'] == 'release') { ?>
 										<i class="fas fa-cube icon-large status-icon" title="<?=_('Production release');?>"></i>
 									<?php } ?>
-									&nbsp;v<?=$sys['sysinfo']['HESTIA']?></div>
+									&nbsp;v<?=$sys['sysinfo']['HESTIA']?>
+								</div>
 							</div>
 						</td>
 						<td>

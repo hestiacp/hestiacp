@@ -39,7 +39,7 @@
 				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 				<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 			</div>
-			<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
+			<?php if($_SESSION['WEBMAIL_SYSTEM']) {?>
 				<div class="u-mb10">
 					<label for="v_webmail" class="form-label"><?=_('Webmail Client');?></label>
 					<select class="form-select" name="v_webmail" id="v_webmail" tabindex="6">
@@ -132,16 +132,16 @@
 						<textarea x-bind:disabled="!letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
 					</div>
 				</div>
-				<?php if ($v_ssl != 'no' ) { ?>
+				<?php if ($v_ssl != 'no') {?>
 					<ul class="values-list">
 						<li class="values-list-item">
 							<span class="values-list-label"><?=_('SUBJECT');?></span>
 							<span class="values-list-value"><?=htmlentities($v_ssl_subject);?></span>
 						</li>
-						<?php if ($v_ssl_aliases){?>
+						<?php if ($v_ssl_aliases) {?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?=_('Aliases');?></span>
-								<span class="values-list-value"><?=htmlentities($v_ssl_aliases)?></span>
+								<span class="values-list-value"><?=htmlentities($v_ssl_aliases);?></span>
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
@@ -165,7 +165,7 @@
 							<span class="values-list-value"><?=htmlentities($v_ssl_issuer)?></span>
 						</li>
 					</ul>
-				<? } // if ssl is enabled ?>
+				<?php } ?>
 			</div>
 			<div class="form-check u-mb10">
 				<input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">

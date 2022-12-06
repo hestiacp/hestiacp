@@ -55,7 +55,7 @@
 				</div>
 				<div class="u-mb20">
 					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
-					<textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
+					<textarea class="form-control u-min-height600 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
 				</div>
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>

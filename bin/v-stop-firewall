@@ -28,8 +28,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-#is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -83,7 +81,7 @@ else
 		echo "[Service]" >> $sd_unit
 		echo "Type=oneshot" >> $sd_unit
 		echo "RemainAfterExit=yes" >> $sd_unit
-		echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset" >> $sd_unit
+		echo "ExecStartPre=-${HESTIA}/bin/v-update-firewall-ipset load" >> $sd_unit
 		if [ "$iptablesversion" = "v1.6" ]; then
 			echo "ExecStart=/sbin/iptables-restore /etc/iptables.rules" >> $sd_unit
 		else
@@ -92,12 +90,12 @@ else
 		echo "" >> $sd_unit
 		echo "[Install]" >> $sd_unit
 		echo "WantedBy=multi-user.target" >> $sd_unit
-		systemctl daemon-reload
+		systemctl -q daemon-reload
 	fi
-	systemctl is-enabled hestia-iptables > /dev/null 2>&1 && systemctl disable hestia-iptables > /dev/null 2>&1
+	systemctl -q is-enabled hestia-iptables 2> /dev/null && systemctl -q disable hestia-iptables
 	if [ -z "$FIREWALL_SYSTEM" ]; then
 		rm -f $sd_unit
-		systemctl daemon-reload
+		systemctl -q daemon-reload
 	fi
 fi
 

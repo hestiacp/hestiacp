@@ -51,7 +51,6 @@ else
 fi
 
 for service in $service_list; do
-
 	if [ "$service" = "iptables" ]; then
 		# Run the restart rules for iptables firewall
 		$BIN/v-stop-firewall
@@ -74,6 +73,7 @@ for service in $service_list; do
 		"$service" = "php7.4-fpm" -o \
 		"$service" = "php8.0-fpm" -o \
 		"$service" = "php8.1-fpm" -o \
+    "$service" = "php8.2-fpm" -o \
 		"$service" = "proftpd" -o \
 		"$service" = "ssh" -o \
 		"$service" = "fail2ban" ]; then

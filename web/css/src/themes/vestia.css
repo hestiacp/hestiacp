@@ -9,6 +9,10 @@
 :root {
 	--animate-duration: 0s;
 	--font-family: "Arial", system-ui;
+	--color-text-link: #444;
+	--color-text-link-hover: #ff791f;
+
+	/* Alerts */
 	--alert-box-shadow: none;
 	--alert-text-shadow: none;
 }
@@ -204,11 +208,43 @@ strong {
 	}
 }
 
+/* Modals
+   ========================================================================== */
+
 .ui-dialog {
 	box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
 
 	& .ui-dialog-buttonpane button {
 		box-shadow: none;
+	}
+}
+
+.ui-widget,
+.ui-dialog,
+.ui-dialog .ui-dialog-title {
+	font-family: var(--font-family);
+}
+
+.ui-dialog .ui-dialog-title {
+	color: #111;
+}
+
+.ui-dialog .ui-dialog-content {
+	color: #333;
+}
+
+/* Toolbar
+   ========================================================================== */
+
+.toolbar {
+	& .form-control {
+		&:hover {
+			border-right-color: #e95e00;
+		}
+
+		&:focus {
+			border-right-color: #e95e00;
+		}
 	}
 }
 
@@ -231,33 +267,6 @@ strong {
 	}
 }
 
-.form-control,
-.form-select {
-	box-shadow: none;
-	border-radius: 0;
-}
-
-.form-control:focus {
-	border-color: #ff6701;
-	background-color: #fff4ed;
-	color: #333;
-}
-
-.form-select:focus {
-	border-color: #ff6701;
-	color: #333;
-}
-
-.form-control:hover,
-.form-select:hover {
-	border-color: #e95e00;
-}
-
-.form-title {
-	font-weight: 600;
-	font-size: 1.2rem;
-}
-
 .toolbar-input-submit {
 	background-color: #cacaca;
 	border-radius: 0;
@@ -274,20 +283,6 @@ strong {
 		text-shadow: none;
 		color: #a9cc06;
 	}
-}
-
-.ui-widget,
-.ui-dialog,
-.ui-dialog .ui-dialog-title {
-	font-family: var(--font-family);
-}
-
-.ui-dialog .ui-dialog-title {
-	color: #111;
-}
-
-.ui-dialog .ui-dialog-content {
-	color: #333;
 }
 
 .toolbar-buttons {
@@ -338,14 +333,40 @@ strong {
 	}
 }
 
-.toolbar .form-control {
-	&:hover {
-		border-right-color: #e95e00;
-	}
+/* Forms
+   ========================================================================== */
 
-	&:focus {
-		border-right-color: #e95e00;
-	}
+.form-title {
+	font-weight: 600;
+}
+
+.form-control,
+.form-select {
+	box-shadow: none;
+	border-radius: 0;
+}
+
+.form-control:focus {
+	border-color: #ff6701;
+	background-color: #fff4ed;
+	color: #333;
+}
+
+.form-select:focus {
+	border-color: #ff6701;
+	color: #333;
+}
+
+.form-control:hover,
+.form-select:hover {
+	border-color: #e95e00;
+}
+
+.password-meter {
+	border-radius: 0;
+	box-shadow: none;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 .l-unit__name {
@@ -359,16 +380,12 @@ strong {
 	border-radius: 4px !important;
 }
 
-.password-meter {
-	border-radius: 0;
-	box-shadow: none;
-	margin-left: 0;
-	margin-right: 0;
-}
-
 .server-info-data {
 	line-height: 1rem !important;
 }
+
+/* Shortcuts panel
+   ========================================================================== */
 
 .shortcuts {
 	border-color: #111;
@@ -385,37 +402,12 @@ strong {
 	border: 1px solid rgb(255 255 255 / 40%) !important;
 }
 
-.body-login,
-.body-reset {
-	background: #ededed;
-}
-
-/* Login box
+/* Panel component
    ========================================================================== */
 
-.login {
-	& .form-label {
-		color: #4b4b4b;
-	}
-
-	@media (--viewport-small) {
-		background-color: rgb(255 255 255 / 100%);
-		box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
-		border-radius: 0;
-	}
-}
-
-.login-title {
-	color: #4b4b4b;
-}
-
-.login-label-link {
-	color: #326b9b;
-}
-
-.mail-infoblock {
-	border-radius: 0 !important;
-	box-shadow: none !important;
+.panel {
+	box-shadow: none;
+	border-radius: 0;
 }
 
 .helper-container {
@@ -435,6 +427,34 @@ li[aria-expanded="true"] a {
 
 .cron-helper-tabs a:active {
 	color: #e95e00;
+}
+
+/* Login
+   ========================================================================== */
+
+.body-login,
+.body-reset {
+	background: #ededed;
+}
+
+.login {
+	& .form-label {
+		color: #4b4b4b;
+	}
+
+	@media (--viewport-small) {
+		background-color: rgb(255 255 255 / 100%);
+		box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
+		border-radius: 0;
+	}
+}
+
+.login-title {
+	color: #4b4b4b;
+}
+
+.login-label-link {
+	color: #326b9b;
 }
 
 /* Collapse component

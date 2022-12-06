@@ -191,69 +191,41 @@
 					</div>
 				</div>
 				<?php if ($v_ssl != 'no' ) { ?>
-					<table class="additional-info">
-						<tr>
-							<td>
-								<b><?=_('SUBJECT');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_subject?>
-							</td>
-						</tr>
+					<ul class="values-list">
+						<li class="values-list-item">
+							<span class="values-list-label"><?=_('SUBJECT');?></span>
+							<span class="values-list-value"><?=$v_ssl_subject?></span>
+						</li>
 						<?php if ($v_ssl_aliases){?>
-						<tr>
-							<td>
-								<b><?=_('ALIASES');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_aliases?>
-							</td>
-						</tr>
+							<li class="values-list-item">
+								<span class="values-list-label"><?=_('ALIASES');?></span>
+								<span class="values-list-value"><?=$v_ssl_aliases?></span>
+							</li>
 						<?php } ?>
-						<tr>
-							<td>
-								<b><?=_('NOT_BEFORE');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_not_before?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b><?=_('NOT_AFTER');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_not_after?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b><?=_('SIGNATURE');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_signature?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b><?=_('PUB_KEY');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_pub_key?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b><?=_('ISSUER');?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_issuer?>
-							</td>
-						</tr>
-						<tr id="letsinfo" style="display:<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ) { echo 'block';} else {echo 'none';} ?>">
-							<td><a href="#" onclick="elementHideShow('ssl-details'); return false;" class="generate"><?=_('Show Certificate');?></a></td>
-						</tr>
-					</table>
+						<li class="values-list-item">
+							<span class="values-list-label"><?=_('NOT_BEFORE');?></span>
+							<span class="values-list-value"><?=$v_ssl_not_before?></span>
+						</li>
+						<li class="values-list-item">
+							<span class="values-list-label"><?=_('NOT_AFTER');?></span>
+							<span class="values-list-value"><?=$v_ssl_not_after?></span>
+						</li>
+						<li class="values-list-item">
+							<span class="values-list-label"><?=_('SIGNATURE');?></span>
+							<span class="values-list-value"><?=$v_ssl_signature?></span>
+						</li>
+						<li class="values-list-item">
+							<span class="values-list-label"><?=_('PUB_KEY');?></span>
+							<span class="values-list-value"><?=$v_ssl_pub_key?></span>
+						</li>
+						<li class="values-list-item">
+							<span class="values-list-label"><?=_('ISSUER');?></span>
+							<span class="values-list-value"><?=$v_ssl_issuer?></span>
+						</li>
+					</ul>
+					<div id="letsinfo" style="display:<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ) { echo 'block';} else {echo 'none';} ?>">
+						<a href="#" onclick="elementHideShow('ssl-details'); return false;" class="generate"><?=_('Show Certificate');?></a>
+					</div>
 				<? } // if ssl is enabled ?>
 			</div>
 			<div class="u-mt15 u-mb20">

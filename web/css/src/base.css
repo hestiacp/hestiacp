@@ -36,16 +36,42 @@ body {
 }
 
 a {
-	color: var(--color-text);
+	color: var(--color-text-link);
 	text-decoration: none;
+
+	&:hover {
+		color: var(--color-text-link-hover);
+	}
 }
 
-h1,
-h2,
-h3,
 p,
 pre {
 	margin: 0;
+}
+
+h1,
+.u-text-H1,
+h2,
+.u-text-H2,
+h3,
+.u-text-H3 {
+	font-weight: 500;
+	margin: 0;
+}
+
+h1,
+.u-text-H1 {
+	font-size: 1.4rem;
+}
+
+h2,
+.u-text-H2 {
+	font-size: 1.2rem;
+}
+
+h3,
+.u-text-H3 {
+	font-size: 1rem;
 }
 
 ol,

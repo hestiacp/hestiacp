@@ -522,13 +522,14 @@ b2_backup() {
 	backup_list=$(b2 ls --long $BUCKET $user | cut -f 1 -d ' ' 2> /dev/null)
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then
-		backups_rm_number=$((backups_count - BACKUPS))
+		backups_rm_number=$(($backups_count - $BACKUPS))
 		for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
 			backup_file_name=$(b2 get-file-info $backup | grep fileName | cut -f 4 -d '"' 2> /dev/null)
 			echo -e "$(date "+%F %T") Rotated b2 backup: $backup_file_name"
 			b2 delete-file-version $backup > /dev/null 2>&1
 		done
 	fi
+
 }
 
 b2_download() {
@@ -589,7 +590,7 @@ rclone_backup() {
 
 		backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 | grep "^$user\.")
 		backups_count=$(echo "$backup_list" | wc -l)
-		backups_rm_number=$((backups_count - BACKUPS))
+		backups_rm_number=$(($backups_count - $BACKUPS))
 		if [ "$backups_count" -ge "$BACKUPS" ]; then
 			for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
 				echo "Delete file: $backup"
@@ -597,6 +598,10 @@ rclone_backup() {
 			done
 		fi
 	fi
+	if [ "$localbackup" != 'yes' ]; then
+		rm -f $user.$backup_new_date.tar
+	fi
+
 }
 
 rclone_delete() {
@@ -610,6 +615,7 @@ rclone_delete() {
 }
 
 rclone_download() {
+
 	# Defining rclone b2 settings
 	source_conf "$HESTIA/conf/rclone.backup.conf"
 	cd $BACKUP

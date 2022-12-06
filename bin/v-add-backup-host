@@ -291,10 +291,10 @@ if [ "$type" = 'rclone' ]; then
 		echo "test" > /tmp/hestia-backup.txt
 		# Try to upload a single file
 		if [ -z "$path" ]; then
-			rclone copy /tmp/hestia-backup $host:/hestia-backup.txt
+			rclone copy /tmp/hestia-backup.txt $host:/hestia-backup.txt
 			rclone delete $host:/hestia-backup.txt
 		else
-			rclone copy /tmp/hestia-backup $host:$path/hestia-backup.txt
+			rclone copy /tmp/hestia-backup.txt $host:$path/hestia-backup.txt
 			rclone delete $host:$path/hestia-backup.txt
 		fi
 	else

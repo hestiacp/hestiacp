@@ -17,6 +17,9 @@
 # Bats seems to break Prettier
 *.bats
 
+# Exclude bats submodules if present
+/test/test_helper/*
+
 # Web templates (for now)
 web/templates/
 

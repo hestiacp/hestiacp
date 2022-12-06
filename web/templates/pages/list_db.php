@@ -16,18 +16,24 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== 'true') {?>
-				<a href="/add/db/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add Database');?></a>
+				<a href="/add/db/" class="button button-secondary" id="btn-create">
+					<i class="fas fa-circle-plus status-icon green"></i><?=_('Add Database');?>
+				</a>
 				<?php if (($_SESSION['DB_SYSTEM'] === 'mysql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
-					<a class="button button-secondary <?=(ipUsed() ? 'button-suspended':'');?>" href="<?=$db_myadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpMyAdmin</a>
+					<a class="button button-secondary <?=(ipUsed() ? 'button-suspended':'');?>" href="<?=$db_myadmin_link; ?>" target="_blank">
+						<i class="fas fa-database status-icon orange"></i>phpMyAdmin
+					</a>
 				<?php } ?>
 				<?php if (($_SESSION['DB_SYSTEM'] === 'pgsql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
-					<a class="button button-secondary <?=(ipUsed() ? 'button-suspended':'');?>" href="<?=$db_pgadmin_link; ?>" target="_blank"><i class="fas fa-database status-icon orange"></i>phpPgAdmin</a>
+					<a class="button button-secondary <?=(ipUsed() ? 'button-suspended':'');?>" href="<?=$db_pgadmin_link; ?>" target="_blank">
+						<i class="fas fa-database status-icon orange"></i>phpPgAdmin
+					</a>
 				<?php } ?>
-				<?php if(ipUsed()){
-				?>
-				<a target="_blank" href="https://docs.hestiacp.com/admin_docs/database.html#why-i-can-t-use-http-ip-phpmyadmin"><i class="fas fa-circle-question"></i></a>
-				<?
-				}?>
+				<?php if (ipUsed()) {?>
+					<a target="_blank" href="https://docs.hestiacp.com/admin_docs/database.html#why-i-can-t-use-http-ip-phpmyadmin">
+						<i class="fas fa-circle-question"></i>
+					</a>
+				<?php } ?>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">

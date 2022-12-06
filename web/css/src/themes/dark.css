@@ -960,16 +960,8 @@ li[aria-expanded="true"] a {
 	color: #dadada;
 }
 
-.server-info-name {
-	color: #fafafa !important;
-}
-
-.server-info-output {
+.server-console-output {
 	background: #282828;
-}
-
-.icon-server-info {
-	color: #707070;
 }
 
 .body-rrd .units .l-unit {
@@ -1010,6 +1002,17 @@ li[aria-expanded="true"] a {
 
 .app-footer {
 	border-color: #454545;
+}
+
+/* Server summary component
+   ========================================================================== */
+
+.server-summary-icon {
+	color: #707070;
+}
+
+.server-summary-title {
+	color: #fafafa;
 }
 
 /* Panel component

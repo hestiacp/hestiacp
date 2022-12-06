@@ -25,32 +25,32 @@ fields="\$NAME \$VERSION \$ARCH \$UPDATED \$DESCR \$TIME \$DATE"
 
 # Check details of installed .deb package function
 check_installed_deb() {
-    dpkg_data=$(dpkg-query -s $1)
-    pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/$1.list)
-    ARCH=$(echo "$dpkg_data"|grep Architecture | cut -f 2 -d ' ')
-    VERSION=$(echo "$dpkg_data"|grep ^Version |cut -f 2 -d ' ')
-    DATE=$(date -d @$pkg_date +"%F")
-    TIME=$(date -d @$pkg_date +"%T")
+	dpkg_data=$(dpkg-query -s $1)
+	pkg_date=$(stat -c "%Y" /var/lib/dpkg/info/$1.list)
+	ARCH=$(echo "$dpkg_data" | grep Architecture | cut -f 2 -d ' ')
+	VERSION=$(echo "$dpkg_data" | grep ^Version | cut -f 2 -d ' ')
+	DATE=$(date -d @$pkg_date +"%F")
+	TIME=$(date -d @$pkg_date +"%T")
 }
 
 # Check details of installed .rpm package function
 check_installed_rpm() {
-    rpm_data=$(rpm -qi $1)
-    ARCH=$(echo "$rpm_data"|grep Architecture |cut -f 2 -d ' ')
-    VERSION=$(echo "$rpm_data"|grep Version |cut -f 2 -d ':' | xargs)
-    DATE=$(echo "$rpm_data"| grep "Build Date"| awk '{print $5 " " $6 " " $7}')
-    TIME=$(echo "$rpm_data"| grep "Build Date"| awk '{print $8 " " $9 " " $10}')
+	rpm_data=$(rpm -qi $1)
+	ARCH=$(echo "$rpm_data" | grep Architecture | cut -f 2 -d ' ')
+	VERSION=$(echo "$rpm_data" | grep Version | cut -f 2 -d ':' | xargs)
+	DATE=$(echo "$rpm_data" | grep "Build Date" | awk '{print $5 " " $6 " " $7}')
+	TIME=$(echo "$rpm_data" | grep "Build Date" | awk '{print $8 " " $9 " " $10}')
 }
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(echo -e "$data" |grep NAME |wc -l)
-    echo "{"
-    for str in $(echo -e "$data"); do
-        parse_object_kv_list "$str"
-        echo -n '    "'$NAME'": {
+	IFS=$'\n'
+	i=1
+	objects=$(echo -e "$data" | grep NAME | wc -l)
+	echo "{"
+	for str in $(echo -e "$data"); do
+		parse_object_kv_list "$str"
+		echo -n '    "'$NAME'": {
         "VERSION": "'$VERSION'",
         "ARCH": "'$ARCH'",
         "UPDATED": "'$UPDATED'",
@@ -58,25 +58,25 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    echo "PKG   VER   ARCH   UPDT   DATE"
-    echo "---   ---   ----   ----   ----"
-    for str in $(echo -e "$data"); do
-        parse_object_kv_list "$str"
-        echo "$NAME $VERSION $ARCH $UPDATED $DATE"
-    done
+	IFS=$'\n'
+	echo "PKG   VER   ARCH   UPDT   DATE"
+	echo "---   ---   ----   ----   ----"
+	for str in $(echo -e "$data"); do
+		parse_object_kv_list "$str"
+		echo "$NAME $VERSION $ARCH $UPDATED $DATE"
+	done
 }
 
 #----------------------------------------------------------#
@@ -85,25 +85,25 @@ shell_list() {
 
 # Checking official latest version
 if [ -f '/etc/redhat-release' ]; then
-    hestia_v=$(dnf list hestia | grep hestia | awk '{print $2}' | cut -f 1 -d '-')
-    nginx_v=$(dnf list hestia-nginx | grep hestia-nginx | awk '{print $2}' | cut -f 1 -d '-')
-    php_v=$(dnf list hestia-php | grep hestia-php | awk '{print $2}' | cut -f 1 -d '-')
+	hestia_v=$(dnf list hestia | grep hestia | awk '{print $2}' | cut -f 1 -d '-')
+	nginx_v=$(dnf list hestia-nginx | grep hestia-nginx | awk '{print $2}' | cut -f 1 -d '-')
+	php_v=$(dnf list hestia-php | grep hestia-php | awk '{print $2}' | cut -f 1 -d '-')
 else
-    hestia_v=$(apt-cache policy hestia | grep Candidate | cut -d ':' -f 2 | xargs)
-    nginx_v=$(apt-cache policy hestia-nginx | grep Candidate | cut -d ':' -f 2 | xargs)
-    php_v=$(apt-cache policy hestia-php | grep Candidate | cut -d ':' -f 2 | xargs)
+	hestia_v=$(apt-cache policy hestia | grep Candidate | cut -d ':' -f 2 | xargs)
+	nginx_v=$(apt-cache policy hestia-nginx | grep Candidate | cut -d ':' -f 2 | xargs)
+	php_v=$(apt-cache policy hestia-php | grep Candidate | cut -d ':' -f 2 | xargs)
 fi
 
 # Checking installed hestia version
 if [ -f '/etc/redhat-release' ]; then
-    check_installed_rpm hestia
+	check_installed_rpm hestia
 else
-    check_installed_deb hestia
+	check_installed_deb hestia
 fi
 
 UPDATED='yes'
 if [ -n "$hesta_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
-    UPDATED='no'
+	UPDATED='no'
 fi
 
 data="NAME='hestia' VERSION='$VERSION' ARCH='$ARCH'"
@@ -111,14 +111,14 @@ data="$data UPDATED='$UPDATED' DESCR='core package' TIME='$TIME' DATE='$DATE'"
 
 # Checking installed hestia-php version
 if [ -f '/etc/redhat-release' ]; then
-    check_installed_rpm hestia-php
+	check_installed_rpm hestia-php
 else
-    check_installed_deb hestia-php
+	check_installed_deb hestia-php
 fi
 
 UPDATED='yes'
 if [ -n "$php_v" ] && [ "$php_v" \> "$VERSION" ]; then
-    UPDATED='no'
+	UPDATED='no'
 fi
 
 data="$data\nNAME='hestia-php' VERSION='$VERSION'"
@@ -127,14 +127,14 @@ data="$data TIME='$TIME' DATE='$DATE'"
 
 # Checking installed hestia-nginx version
 if [ -f '/etc/redhat-release' ]; then
-    check_installed_rpm hestia-nginx
+	check_installed_rpm hestia-nginx
 else
-    check_installed_deb hestia-nginx
+	check_installed_deb hestia-nginx
 fi
 
 UPDATED='yes'
 if [ -n "$nginx_v" ] && [ "$nginx_v" \> "$VERSION" ]; then
-    UPDATED='no'
+	UPDATED='no'
 fi
 
 data="$data\nNAME='hestia-nginx' VERSION='$VERSION'"
@@ -143,10 +143,10 @@ data="$data TIME='$TIME' DATE='$DATE'"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

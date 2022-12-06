@@ -23,8 +23,8 @@ MODE=$1
 user="admin"
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
-FM_FILE="filegator_v${fm_v}.zip"
-FM_URL="https://github.com/filegator/filegator/releases/download/v${fm_v}/${FM_FILE}"
+FM_FILE="filegator_latest"
+FM_URL="https://github.com/filegator/static/raw/master/builds/filegator_latest.zip"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#
@@ -33,27 +33,27 @@ COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
-    echo "ERROR: v-add-sys-filemanager can be run executed only by root user"
-    exit 10
+	echo "ERROR: v-add-sys-filemanager can be run executed only by root user"
+	exit 10
 fi
 
 # Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
 if [ -z "$HESTIA" ]; then
-    HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/hestia"
 fi
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
-    echo "ERROR: Environment variables not present, installation aborted."
-    exit 2
+	echo "ERROR: Environment variables not present, installation aborted."
+	exit 2
 fi
 
 # Ensure that Composer is installed for the user before continuing as it is a dependency of the File Manager.
 if [ ! -f "$COMPOSER_BIN" ]; then
-    $BIN/v-add-user-composer "$user"
-    if [ $? -ne 0 ]; then
-        $BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-filemanager<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
-        exit 1
-    fi
+	$BIN/v-add-user-composer "$user"
+	if [ $? -ne 0 ]; then
+		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-filemanager<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+		exit 1
+	fi
 fi
 
 # Perform verification if read-only mode is enabled
@@ -63,40 +63,40 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl);
+openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl)
 
 rm --recursive --force "$FM_INSTALL_DIR"
 mkdir -p "$FM_INSTALL_DIR"
 cd "$FM_INSTALL_DIR"
 
-[ ! -f "${FM_INSTALL_DIR}/${FM_FILE}" ] && wget "$FM_URL" --quiet -O "${FM_INSTALL_DIR}/${FM_FILE}"
+[ ! -f "${FM_INSTALL_DIR}/${FM_FILE}" ] && wget "$FM_URL" --quiet -O "${FM_INSTALL_DIR}/${FM_FILE}.zip"
 
-unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}"
+unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}.zip"
 mv --force ${FM_INSTALL_DIR}/filegator/* "${FM_INSTALL_DIR}"
-rm --recursive --force ${FM_INSTALL_DIR}/filegator
+rm --recursive --force ${FM_INSTALL_DIR}/${FM_FILE}
 [[ -f "${FM_INSTALL_DIR}/${FM_FILE}" ]] && rm "${FM_INSTALL_DIR}/${FM_FILE}"
 
 cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"
 
 chown $user: -R "${FM_INSTALL_DIR}"
 
-if [ -z "$openssl_installed"  ]; then 
-    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+if [ -z "$openssl_installed" ]; then
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 else
-    COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
 fi
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up
 if [ $? -ne 0 ]; then
-    echo "ERROR: File Manager installation failed!"
-    echo "Please report this to our development team:"
-    echo "https://github.com/hestiacp/hestiacp/issues"
-    $BIN/v-add-user-notification admin 'File Manager installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
-    # Installation failed, clean up files
-    rm --recursive --force ${FM_INSTALL_DIR}
-    $BIN/v-change-sys-config-value 'FILE_MANAGER' 'false'
-    $BIN/v-log-action "system" "Error" "Plugins" "File Manager installation failed (Version: $fm_v)."
-    exit 1
+	echo "ERROR: File Manager installation failed!"
+	echo "Please report this to our development team:"
+	echo "https://github.com/hestiacp/hestiacp/issues"
+	$BIN/v-add-user-notification admin 'File Manager installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+	# Installation failed, clean up files
+	rm --recursive --force ${FM_INSTALL_DIR}
+	$BIN/v-change-sys-config-value 'FILE_MANAGER' 'false'
+	$BIN/v-log-action "system" "Error" "Plugins" "File Manager installation failed (Version: $fm_v)."
+	exit 1
 fi
 
 # Add configuration file

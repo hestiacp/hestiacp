@@ -27,7 +27,11 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'USER NOTIFICATION'
-is_format_valid 'user' 'id'
+if [ "$id" = "all" ]; then
+	is_format_valid 'user'
+else
+	is_format_valid 'user' 'id'
+fi
 is_object_valid 'user' 'USER' "$user"
 
 # Perform verification if read-only mode is enabled
@@ -37,33 +41,36 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting notification
-sed -i "/NID='$id' /d" $USER_DATA/notifications.conf 2>/dev/null
-
-# Checking last notification
-if [ -e "$USER_DATA/notifications.conf" ]; then
-    if [ -z "$(grep NID= $USER_DATA/notifications.conf)" ]; then
-        notice='no'
-    fi
-    if [ -z "$(grep "ACK='no'" $USER_DATA/notifications.conf)" ]; then
-        notice='no'
-    fi
+if [ "$id" = "all" ]; then
+	notice='no'
+	rm $USER_DATA/notifications.conf
+	touch $USER_DATA/notifications.conf
 else
-    notice='no'
+	# Deleting notification
+	sed -i "/NID='$id' /d" $USER_DATA/notifications.conf 2> /dev/null
+	# Checking last notification
+	if [ -e "$USER_DATA/notifications.conf" ]; then
+		if [ -z "$(grep NID= $USER_DATA/notifications.conf)" ]; then
+			notice='no'
+		fi
+		if [ -z "$(grep "ACK='no'" $USER_DATA/notifications.conf)" ]; then
+			notice='no'
+		fi
+	else
+		notice='no'
+	fi
 fi
-
-
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating notification counter
 if [ "$notice" = 'no' ]; then
-    if [ -z "$(grep NOTIFICATIONS $USER_DATA/user.conf)" ]; then
-        sed -i "s/^TIME/NOTIFICATIONS='no'\nTIME/g" $USER_DATA/user.conf
-    else
-        update_user_value "$user" '$NOTIFICATIONS' "no"
-    fi
+	if [ -z "$(grep NOTIFICATIONS $USER_DATA/user.conf)" ]; then
+		sed -i "s/^TIME/NOTIFICATIONS='no'\nTIME/g" $USER_DATA/user.conf
+	else
+		update_user_value "$user" '$NOTIFICATIONS' "no"
+	fi
 fi
 
 # Logging

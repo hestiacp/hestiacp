@@ -39,7 +39,7 @@ server {
     location /error/ {
         alias /var/www/document_errors/;
     }
-	
+
     location @fallback {
         proxy_pass http://%ip%:%web_port%;
     }

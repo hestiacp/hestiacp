@@ -30,7 +30,7 @@ is_format_valid 'user'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 if [ -z "$MAIL_SYSTEM" ] || [ "$MAIL_SYSTEM" = 'remote' ]; then
-    exit
+	exit
 fi
 
 #----------------------------------------------------------#
@@ -39,18 +39,18 @@ fi
 
 # Starting loop
 for domain in $($BIN/v-list-mail-domains $user plain | cut -f 1); do
-    dom_disk=0
-    for account in $($BIN/v-list-mail-accounts $user $domain plain | cut -f 1); do
-        home_dir=$HOMEDIR/$user/mail/$domain/$account
-        if [ -e "$home_dir" ]; then
-            udisk=$(nice -n 19 du -shm $home_dir | cut -f 1 )
-        else
-            udisk=0
-        fi
-        update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$U_DISK' "$udisk"
-        dom_disk=$((dom_disk + udisk))
-    done
-    update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_disk"
+	dom_disk=0
+	for account in $($BIN/v-list-mail-accounts $user $domain plain | cut -f 1); do
+		home_dir=$HOMEDIR/$user/mail/$domain/$account
+		if [ -e "$home_dir" ]; then
+			udisk=$(nice -n 19 du -shm $home_dir | cut -f 1)
+		else
+			udisk=0
+		fi
+		update_object_value "mail/$domain" 'ACCOUNT' "$account" '$U_DISK' "$udisk"
+		dom_disk=$((dom_disk + udisk))
+	done
+	update_object_value 'mail' 'DOMAIN' "$domain" '$U_DISK' "$dom_disk"
 done
 
 recalc_user_disk_usage

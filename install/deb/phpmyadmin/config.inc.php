@@ -13,25 +13,24 @@ declare(strict_types=1);
  * This is needed for cookie based authentication to encrypt password in
  * cookie. Needs to be 32 chars long.
  */
-$cfg['blowfish_secret'] = '%blowfish_secret%'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
+$cfg["blowfish_secret"] = "%blowfish_secret%"; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */
 
 /**
  * Directories for saving/loading files from server
  */
-$cfg['UploadDir'] = '';
-$cfg['SaveDir'] = '';
+$cfg["UploadDir"] = "";
+$cfg["SaveDir"] = "";
 
 /**
  * You can find more configuration options in the documentation
  * in the doc/ folder or at <https://docs.phpmyadmin.net/>.
  */
 
- //start with 1 other wise it doesn't work
- $i = 1;
- foreach (glob('/etc/phpmyadmin/conf.d/*.php') as $filename)
- {
-     include($filename);
-     /*Don't remove / alter code here below this will add SSO support for all servers*/ 
-     //Add Hestia SSO code here
-     $i++;
- }
+//start with 1 other wise it doesn't work
+$i = 1;
+foreach (glob("/etc/phpmyadmin/conf.d/*.php") as $filename) {
+	include $filename;
+	/*Don't remove / alter code here below this will add SSO support for all servers*/
+	//Add Hestia SSO code here
+	$i++;
+}

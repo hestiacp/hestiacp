@@ -49,8 +49,8 @@ suspended=$SUSPENDED
 
 # Switching on db type
 case $TYPE in
-    mysql) delete_mysql_database ;;
-    pgsql) delete_pgsql_database ;;
+	mysql) delete_mysql_database ;;
+	pgsql) delete_pgsql_database ;;
 esac
 
 #----------------------------------------------------------#
@@ -66,9 +66,9 @@ decrease_user_value "$user" '$U_DATABASES'
 
 # Check if is suspended to decrease the suspended value
 if [ -n "$suspended" ]; then
-    if [ "$suspended" == "yes" ]; then
-        decrease_user_value "$user" '$SUSPENDED_DB'
-    fi
+	if [ "$suspended" == "yes" ]; then
+		decrease_user_value "$user" '$SUSPENDED_DB'
+	fi
 fi
 
 # Logging

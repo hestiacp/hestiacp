@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list mail status
-# options: 
+# options:
 #
-# example: v-list-sys-mail-status 
+# example: v-list-sys-mail-status
 #
 # This function lists mail server status
 
@@ -29,25 +29,25 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Checking mail system
 if [ -z "$MAIL_SYSTEM" ]; then
-    exit
+	exit
 fi
 
 # Displaying exim queue status
 echo "Exim queue status"
 exim -bp
 echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+echo -en "-------------------------------------\n\n"
 
 # Displaying exim stats
 if [ -e "/var/log/exim4/mainlog" ]; then
-    eximstats /var/log/exim4/mainlog 2>/dev/null
+	eximstats /var/log/exim4/mainlog 2> /dev/null
 else
-    eximstats /var/log/exim/main.log 2>/dev/null
+	eximstats /var/log/exim/main.log 2> /dev/null
 fi
 
 if [ $? -ne 0 ]; then
-    echo "[Exim4] No valid log lines read"
-    exit 0;
+	echo "[Exim4] No valid log lines read"
+	exit 0
 fi
 
 #----------------------------------------------------------#

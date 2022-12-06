@@ -44,40 +44,40 @@ IPSET_PATH="$HESTIA/data/firewall/ipset"
 
 # Ensure ipset is installed
 if [ -z "$IPSET_BIN" ]; then
-    if [ -f '/etc/redhat-release' ]; then
-        dnf install -q -y ipset > /dev/null
-    else
-        apt-get --quiet --yes install ipset > /dev/null
-    fi
-    check_result $? "Installing ipset package"
+	if [ -f '/etc/redhat-release' ]; then
+		dnf install -q -y ipset > /dev/null
+	else
+		apt-get --quiet --yes install ipset > /dev/null
+	fi
+	check_result $? "Installing ipset package"
 
-    IPSET_BIN="$(which ipset)"
-    check_result $? "ipset binary not found"
+	IPSET_BIN="$(which ipset)"
+	check_result $? "ipset binary not found"
 fi
 
 # Ensure ipset configuration path and master file exist before attempting to parse
 mkdir -p "$IPSET_PATH"
-if [ ! -f "$HESTIA/data/firewall/ipset.conf" ]; then 
-    touch $HESTIA/data/firewall/ipset.conf
+if [ ! -f "$HESTIA/data/firewall/ipset.conf" ]; then
+	touch $HESTIA/data/firewall/ipset.conf
 fi
 
 if [ -z "$data_source" ]; then
-    if [ ! -f "${IPSET_PATH}.conf" ] || [[ ! $(grep "LISTNAME='$ip_name'" "${IPSET_PATH}.conf") ]]; then
-        check_args '2' "$#" 'NAME SOURCE [IPVERSION] [AUTOUPDATE] [FORCE]'
-    fi
+	if [ ! -f "${IPSET_PATH}.conf" ] || [[ ! $(grep "LISTNAME='$ip_name'" "${IPSET_PATH}.conf") ]]; then
+		check_args '2' "$#" 'NAME SOURCE [IPVERSION] [AUTOUPDATE] [FORCE]'
+	fi
 
-    data_source="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$SOURCE')"
-    ip_version="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$IP_VERSION')"
+	data_source="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$SOURCE')"
+	ip_version="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$IP_VERSION')"
 else
-    is_object_new "$ipset_hstobject" 'LISTNAME' "$ip_name"
+	is_object_new "$ipset_hstobject" 'LISTNAME' "$ip_name"
 fi
 
 if [ "$ip_version" != "v4" ] && [ "$ip_version" != "v6" ]; then
-    check_result "$E_INVALID" "invalid ip version, valid: (v4|v6)"
+	check_result "$E_INVALID" "invalid ip version, valid: (v4|v6)"
 fi
 
 if ! echo "$data_source" | egrep -q '^(https?|script|file):'; then
-    check_result "$E_INVALID" "invalid ipset source, valid: (http[s]://|script:|file:)"
+	check_result "$E_INVALID" "invalid ipset source, valid: (http[s]://|script:|file:)"
 fi
 
 IPSET_FILE="${ip_name}.${ip_version}"
@@ -90,54 +90,54 @@ IPSET_MIN_SIZE=10
 # Generate ip lists file if missing or when forced
 if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
 
-    iplist_tempfile=$(mktemp)
+	iplist_tempfile=$(mktemp)
 
-    if [[ "$data_source" =~ ^https?:// ]]; then
+	if [[ "$data_source" =~ ^https?:// ]]; then
 
-        wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet "$data_source" -O "$iplist_tempfile"
-        check_result $? "Downloading ip list"
+		wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet "$data_source" -O "$iplist_tempfile"
+		check_result $? "Downloading ip list"
 
-        # Advanced: execute script with the same basename for aditional pre-processing
-        # ex: 
-        if [ -x "${IPSET_PATH}/${IPSET_FILE}.sh" ]; then 
-            preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
-            check_result $? "Preprocessing script failed (${IPSET_FILE}.sh)"
-            [[ "$preprocess_output" ]] && echo "$preprocess_output" > "$iplist_tempfile"
-        fi
+		# Advanced: execute script with the same basename for aditional pre-processing
+		# ex:
+		if [ -x "${IPSET_PATH}/${IPSET_FILE}.sh" ]; then
+			preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
+			check_result $? "Preprocessing script failed (${IPSET_FILE}.sh)"
+			[[ "$preprocess_output" ]] && echo "$preprocess_output" > "$iplist_tempfile"
+		fi
 
-    elif [[ "$data_source" =~ ^script:/ ]]; then
+	elif [[ "$data_source" =~ ^script:/ ]]; then
 
-        # Generate the ip list file trough a external script
-        # ex: compiling a ip list from multiple sources on demand
+		# Generate the ip list file trough a external script
+		# ex: compiling a ip list from multiple sources on demand
 
-        if [ -x "${data_source#script:}" ]; then
+		if [ -x "${data_source#script:}" ]; then
 
-            setpriv --clear-groups --reuid nobody --regid nogroup -- ${data_source#script:} "$ip_name" > "$iplist_tempfile"
-            check_result $? "Running custom ip list update script"
+			setpriv --clear-groups --reuid nobody --regid nogroup -- ${data_source#script:} "$ip_name" > "$iplist_tempfile"
+			check_result $? "Running custom ip list update script"
 
-        fi
+		fi
 
-    elif [[ "$data_source" =~ ^file:/ ]]; then
+	elif [[ "$data_source" =~ ^file:/ ]]; then
 
-        # Use a external ip-list file managed by other apps
-        # ex: Using a ip list that is continously updated
+		# Use a external ip-list file managed by other apps
+		# ex: Using a ip list that is continously updated
 
-        [ -f "${data_source#file:}" ] && cp -f "${data_source#file:}" "$iplist_tempfile"
+		[ -f "${data_source#file:}" ] && cp -f "${data_source#file:}" "$iplist_tempfile"
 
-    fi
+	fi
 
-    # Cleanup ip list
-    sed -r -i -e 's/[;#].*$//' -e 's/[ \t]*$//' -e '/^$/d' "$iplist_tempfile"
-    if [[ $ip_version == 'v4' ]]; then
-        sed -i -r -n -e '/^((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])/p' "$iplist_tempfile"
-    elif [[ $ip_version == 'v6' ]]; then
-        sed -i -r -n -e '/^([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}/p' "$iplist_tempfile"
-    fi
+	# Cleanup ip list
+	sed -r -i -e 's/[;#].*$//' -e 's/[ \t]*$//' -e '/^$/d' "$iplist_tempfile"
+	if [[ $ip_version == 'v4' ]]; then
+		sed -i -r -n -e '/^((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])/p' "$iplist_tempfile"
+	elif [[ $ip_version == 'v6' ]]; then
+		sed -i -r -n -e '/^([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}/p' "$iplist_tempfile"
+	fi
 
-    # Validate iplist file size
-    iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
-    [[ "$iplist_size" -le "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "iplist file too small (<${IPSET_MIN_SIZE}), ignoring"
-    mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
+	# Validate iplist file size
+	iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
+	[[ "$iplist_size" -le "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "iplist file too small (<${IPSET_MIN_SIZE}), ignoring"
+	mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
 
 fi
 
@@ -150,31 +150,30 @@ $IPSET_BIN -quiet destroy "${ip_name}-tmp"
 $IPSET_BIN create "${ip_name}-tmp" -exist hash:net family $inet_ver maxelem 1048576
 $IPSET_BIN flush "${ip_name}-tmp"
 
-sed -rn -e '/^#|^$/d'  -e "s/^(.*)/add ${ip_name}-tmp \\1/p" "${IPSET_PATH}/${IPSET_FILE}.iplist" | $IPSET_BIN -quiet restore
+sed -rn -e '/^#|^$/d' -e "s/^(.*)/add ${ip_name}-tmp \\1/p" "${IPSET_PATH}/${IPSET_FILE}.iplist" | $IPSET_BIN -quiet restore
 check_result $? "Populating ipset table"
 
 $IPSET_BIN swap "${ip_name}-tmp" "${ip_name}"
 $IPSET_BIN -quiet destroy "${ip_name}-tmp"
 
-
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 if [ ! -f "${IPSET_PATH}.conf" ] || [ -z "$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$LISTNAME')" ]; then
 
-    # Concatenating rule
-    str="LISTNAME='$ip_name' IP_VERSION='$ip_version' SOURCE='$data_source'"
-    str="$str AUTOUPDATE='$autoupdate' SUSPENDED='no'"
-    str="$str TIME='$time' DATE='$date'"
-    echo "$str" >> $HESTIA/data/firewall/ipset.conf
+	# Concatenating rule
+	str="LISTNAME='$ip_name' IP_VERSION='$ip_version' SOURCE='$data_source'"
+	str="$str AUTOUPDATE='$autoupdate' SUSPENDED='no'"
+	str="$str TIME='$time' DATE='$date'"
+	echo "$str" >> $HESTIA/data/firewall/ipset.conf
 
 elif [ "$force" = "yes" ]; then
 
-    # update iplist last regen time
-    update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$TIME' "$time"
-    update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$DATE' "$date"
+	# update iplist last regen time
+	update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$TIME' "$time"
+	update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$DATE' "$date"
 
 fi
 
@@ -184,8 +183,8 @@ chmod 660 "${IPSET_PATH}/${IPSET_FILE}.iplist"
 
 # Install ipset daily cron updater
 if ! grep --silent --no-messages "v-update-firewall-ipset" $HESTIA/data/queue/daily.pipe; then
-    cmd="$BIN/v-update-firewall-ipset yes"
-    echo "$cmd" >> $HESTIA/data/queue/daily.pipe
+	cmd="$BIN/v-update-firewall-ipset yes"
+	echo "$cmd" >> $HESTIA/data/queue/daily.pipe
 fi
 
 #----------------------------------------------------------#

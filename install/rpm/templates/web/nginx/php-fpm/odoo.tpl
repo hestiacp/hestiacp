@@ -6,9 +6,9 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
-    
+
     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
     proxy_redirect          off;
 
@@ -34,7 +34,7 @@ server {
     location /longpolling {
         proxy_pass http://127.0.0.1:8072;
     }
-    
+
     location ~* /web/static/ {
         proxy_cache_valid 200 60m;
         proxy_buffering on;

@@ -6,7 +6,6 @@
 #
 # This function checks and delete a fpm php version if not used by any domain.
 
-
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
@@ -29,7 +28,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_args '1' "$#" 'VERSION'
 
 if [ -z "$WEB_BACKEND" ]; then
-    echo "Multiple php versions are not supported for modphp"
+	echo "Multiple php versions are not supported for modphp"
 fi
 
 # Set file locations
@@ -37,19 +36,19 @@ php_fpm="/etc/init.d/php$version-fpm"
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
-    echo "The PHP version format is invalid, it should look like [0-9].[0-9]."
-    echo "Example:  7.0, 7.4"
-    exit
+	echo "The PHP version format is invalid, it should look like [0-9].[0-9]."
+	echo "Example:  7.0, 7.4"
+	exit
 fi
 
 # Remove backend template
 [ -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 
 # Check if php version exists
-version_check=$($HESTIA/bin/v-list-sys-php plain | grep "$version");
-if [ -z "$version_check" ] ; then
-    echo "ERROR: Specified PHP version is not installed."
-    exit "$E_INVALID";
+version_check=$($HESTIA/bin/v-list-sys-php plain | grep "$version")
+if [ -z "$version_check" ]; then
+	echo "ERROR: Specified PHP version is not installed."
+	exit "$E_INVALID"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -64,17 +63,17 @@ mph="php$version-common php$version-mbstring php$version-bcmath php$version-cli 
  php$version-soap php$version-xml php$version-zip php$version-mbstring
  php$version-json php$version-bz2 php$version-pspell php$version-imagick php$version-pgsql
  php$version-imap php$version-ldap"
- 
+
 # Check is version is 7.1 or below to add mcrypt
-if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
-    mph="$mph php$version-mcrypt"
+if [[ $(echo "$version 7.2" | awk '{print ($1 < $2)}') == 1 ]]; then
+	mph="$mph php$version-mcrypt"
 fi
 
 # Purge php packages
 if [ -f '/etc/redhat-release' ]; then
-    dnf remove -y $mph > /dev/null 2>&1 &
+	dnf remove -y $mph > /dev/null 2>&1 &
 else
-    apt-get -y purge $mph > /dev/null 2>&1 &
+	apt-get -y purge $mph > /dev/null 2>&1 &
 fi
 BACK_PID=$!
 
@@ -82,9 +81,9 @@ BACK_PID=$!
 echo "Removing PHP-$version, please wait..."
 spinner="/-\|"
 spin_i=1
-while kill -0 $BACK_PID > /dev/null 2>&1 ; do
-    printf "\b${spinner:spin_i++%${#spinner}:1}"
-    sleep 0.5
+while kill -0 $BACK_PID > /dev/null 2>&1; do
+	printf "\b${spinner:spin_i++%${#spinner}:1}"
+	sleep 0.5
 done
 
 # Do a blank echo to get the \n back
@@ -92,27 +91,27 @@ echo
 
 # Check if installation was successfully
 if [ -f "$php_fpm" ]; then
-    echo "ERROR: Uninstallation failed, please run the following command manually for debugging:"
-    if [ -f '/etc/redhat-release' ]; then
-        echo "dnf remove $mph"
-    else
-        echo "apt-get purge $mph"
-    fi
-    exit 1; 
+	echo "ERROR: Uninstallation failed, please run the following command manually for debugging:"
+	if [ -f '/etc/redhat-release' ]; then
+		echo "dnf remove $mph"
+	else
+		echo "apt-get purge $mph"
+	fi
+	exit 1
 fi
 
 # Cleanup php folder
 [[ -d /etc/php/$version ]] && rm -rf "/etc/php/$version"
 
 if [ "$WEB_BACKEND" = "php-fpm" ]; then
-    conf=$(find /etc/php* -name www.conf)
-    # Check if www.conf exists
-    if [ -z  "$conf" ]; then
-        # If not grab the "last php version
-        last=$($BIN/v-list-sys-php "shell" | tail -n1);
-        cp -f $HESTIA/install/deb/php-fpm/www.conf /etc/php/$last/fpm/pool.d/www.conf
-        $BIN/v-restart-web-backend
-    fi
+	conf=$(find /etc/php* -name www.conf)
+	# Check if www.conf exists
+	if [ -z "$conf" ]; then
+		# If not grab the "last php version
+		last=$($BIN/v-list-sys-php "shell" | tail -n1)
+		cp -f $HESTIA/install/deb/php-fpm/www.conf /etc/php/$last/fpm/pool.d/www.conf
+		$BIN/v-restart-web-backend
+	fi
 fi
 
 #----------------------------------------------------------#

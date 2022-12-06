@@ -28,7 +28,7 @@ function setup() {
         echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
         echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
     fi
-    
+
     source /tmp/hestia-test-env.sh
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
@@ -43,21 +43,21 @@ function validate_web_domain() {
     local webproof=$3
     local webpath=${4}
     local valwebpath=${5}
-    
+
     refute [ -z "$user" ]
     refute [ -z "$domain" ]
     refute [ -z "$webproof" ]
-    
+
     source $HESTIA/func/ip.sh
-    
+
     run v-list-web-domain $user $domain
     assert_success
-    
+
     USER_DATA=$HESTIA/data/users/$user
     local domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
     SSL=$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')
     domain_ip=$(get_real_ip "$domain_ip")
-    
+
     if [ -z $valwebpath ]; then
         if [ ! -z $webpath ]; then
             domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
@@ -72,12 +72,12 @@ function validate_web_domain() {
     run curl --location --silent --show-error --insecure --resolve "${domain}:80:${domain_ip}" "http://${domain}/${webpath}"
     assert_success
     assert_output --partial "$webproof"
-    
+
     # Test HTTPS
     if [ "$SSL" = "yes" ]; then
         run v-list-web-domain-ssl $user $domain
         assert_success
-    
+
         run curl --location --silent --show-error --insecure --resolve "${domain}:443:${domain_ip}" "https://${domain}/${webpath}"
         assert_success
         assert_output --partial "$webproof"
@@ -107,7 +107,7 @@ function validate_web_domain() {
 #    user: hestia131
 #    web:
 #      - test.hestia.com (+SSL self-signed)
-#        FTP Account 
+#        FTP Account
 #        Awstats enabled
 #    dns:
 #      - test.hestia.com
@@ -122,7 +122,7 @@ function validate_web_domain() {
 #    db:
 #      - hestia170_db
 #    cron:
-#      - 1: /bin/true 
+#      - 1: /bin/true
 #  Vesta 0.9.8-23 archive contains:
 #    user: vesta09823
 #    web:
@@ -280,16 +280,16 @@ function validate_web_domain() {
         assert_success
         refute_output
     fi
-    
+
     mkdir -p /backup
-    
+
     local archive_name="hestia170.2022-08-23"
     run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
     assert_success
-    
+
     run v-restore-user $userbk "${archive_name}.tar"
     assert_success
-    
+
     rm "/backup/${archive_name}.tar"
 }
 
@@ -318,31 +318,31 @@ function validate_web_domain() {
 
 @test "Restore[3]: From Hestia [DNS]" {
     local domain="test.hestia.com"
-    
+
     run v-list-dns-domain $userbk $domain
     assert_success
-    
+
     run nslookup $domain 127.0.0.1
     assert_success
 }
 
 @test "Restore[3]: From Hestia [MAIL]" {
     local domain="test.hestia.com"
-    
+
     run v-list-mail-domain $userbk $domain
     assert_success
 }
 
 @test "Restore[3]: From Hestia [MAIL-Account]" {
     local domain="test.hestia.com"
-    
+
     run v-list-mail-account $userbk $domain testaccount
     assert_success
     # Check if alias is created
     assert_file_contains /etc/exim4/domains/$domain/aliases "testaccount@$domain"
     # Check if expected rate limits are set
     assert_file_contains /etc/exim4/domains/$domain/limits "testaccount@$domain:20"
-    assert_file_contains /etc/exim4/domains/$domain/limits "support@$domain:10"  
+    assert_file_contains /etc/exim4/domains/$domain/limits "support@$domain:10"
 }
 
 @test "Restore[3]: From Hestia [DB]" {
@@ -375,14 +375,14 @@ function validate_web_domain() {
     fi
 
     mkdir -p /backup
-    
+
     local archive_name="hestia170.2022-08-23"
     run wget --quiet --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache "https://hestiacp.com/testing/data/${archive_name}.tar" -O "/backup/${archive_name}.tar"
     assert_success
-    
+
     run v-restore-user $userbk "${archive_name}.tar"
     assert_success
-    
+
     rm "/backup/${archive_name}.tar"
 }
 
@@ -411,31 +411,31 @@ function validate_web_domain() {
 
 @test "Restore[4]: From Hestia [DNS]" {
     local domain="test.hestia.com"
-    
+
     run v-list-dns-domain $userbk $domain
     assert_success
-    
+
     run nslookup $domain 127.0.0.1
     assert_success
 }
 
 @test "Restore[4]: From Hestia [MAIL]" {
     local domain="test.hestia.com"
-    
+
     run v-list-mail-domain $userbk $domain
     assert_success
 }
 
 @test "Restore[4]: From Hestia [MAIL-Account]" {
     local domain="test.hestia.com"
-    
+
     run v-list-mail-account $userbk $domain testaccount
     assert_success
     # Check if alias is created
     assert_file_contains /etc/exim4/domains/$domain/aliases "testaccount@$domain"
     # Check if expected rate limits are set
     assert_file_contains /etc/exim4/domains/$domain/limits "testaccount@$domain:20"
-    assert_file_contains /etc/exim4/domains/$domain/limits "support@$domain:10"  
+    assert_file_contains /etc/exim4/domains/$domain/limits "support@$domain:10"
 }
 
 @test "Restore[4]: From Hestia [DB]" {

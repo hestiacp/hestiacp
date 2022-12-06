@@ -19,13 +19,13 @@ source $HESTIA/func/main.sh
 #----------------------------------------------------------#
 
 if [ "$mode" = "restore" ]; then
-    syshealth_restore_system_config
+	syshealth_restore_system_config
 fi
 
 if [ "$mode" = "repair" ]; then
-    # load config file
-    source_conf "$HESTIA/conf/hestia.conf"
-    syshealth_repair_system_config
+	# load config file
+	source_conf "$HESTIA/conf/hestia.conf"
+	syshealth_repair_system_config
 fi
 
 #----------------------------------------------------------#

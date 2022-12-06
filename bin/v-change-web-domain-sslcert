@@ -65,8 +65,8 @@ cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.crt
 cp -f $ssl_dir/$domain.key $USER_DATA/ssl/$domain.key
 cp -f $ssl_dir/$domain.crt $USER_DATA/ssl/$domain.pem
 if [ -e "$ssl_dir/$domain.ca" ]; then
-    cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
-    cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
+	cp -f $ssl_dir/$domain.ca $USER_DATA/ssl/$domain.ca
+	cat $USER_DATA/ssl/$domain.ca >> $USER_DATA/ssl/$domain.pem
 fi
 
 # Adding new certificate to user dir
@@ -74,7 +74,7 @@ cp -f $USER_DATA/ssl/$domain.crt $HOMEDIR/$user/conf/web/$domain/ssl/$domain.crt
 cp -f $USER_DATA/ssl/$domain.key $HOMEDIR/$user/conf/web/$domain/ssl/$domain.key
 cp -f $USER_DATA/ssl/$domain.pem $HOMEDIR/$user/conf/web/$domain/ssl/$domain.pem
 if [ -e "$USER_DATA/ssl/$domain.ca" ]; then
-    cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
+	cp -f $USER_DATA/ssl/$domain.ca $HOMEDIR/$user/conf/web/$domain/ssl/$domain.ca
 fi
 
 #----------------------------------------------------------#
@@ -83,10 +83,10 @@ fi
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "SSL certificate changed (Domain: $domain)."

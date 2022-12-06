@@ -4,7 +4,7 @@
 #
 # example: v-update-sys-rrd
 #
-# This function is wrapper for all rrd functions. It updates all 
+# This function is wrapper for all rrd functions. It updates all
 # v-update-sys-rrd_* at once.
 
 #----------------------------------------------------------#
@@ -21,7 +21,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Checking rrddir
 if [ ! -d "$RRD" ]; then
-    mkdir -p $RRD
+	mkdir -p $RRD
 fi
 
 #----------------------------------------------------------#
@@ -30,101 +30,101 @@ fi
 
 # Checking daily period
 if [ -e "$RRD/daily.rrd" ]; then
-    mtime=$(stat -c "%Y" $RRD/daily.rrd)
-    ctime=$(date +%s)
-    dtime=$((ctime - mtime))
-    # Update every 5 minute
-    if [ "$dtime" -gt '290' ]; then
-        touch $RRD/daily.rrd
-        periods="$periods daily"
-    fi
+	mtime=$(stat -c "%Y" $RRD/daily.rrd)
+	ctime=$(date +%s)
+	dtime=$((ctime - mtime))
+	# Update every 5 minute
+	if [ "$dtime" -gt '290' ]; then
+		touch $RRD/daily.rrd
+		periods="$periods daily"
+	fi
 else
-    touch $RRD/daily.rrd
-    periods="$periods daily"
+	touch $RRD/daily.rrd
+	periods="$periods daily"
 fi
 
 # Checking weekly period
 if [ -e "$RRD/weekly.rrd" ]; then
-    mtime=$(stat -c "%Y" $RRD/weekly.rrd)
-    ctime=$(date +%s)
-    dtime=$((ctime - mtime))
-    # Update every hour
-    if [ "$dtime" -gt '3590' ]; then
-        touch $RRD/weekly.rrd
-        periods="$periods weekly"
-    fi
+	mtime=$(stat -c "%Y" $RRD/weekly.rrd)
+	ctime=$(date +%s)
+	dtime=$((ctime - mtime))
+	# Update every hour
+	if [ "$dtime" -gt '3590' ]; then
+		touch $RRD/weekly.rrd
+		periods="$periods weekly"
+	fi
 else
-    touch $RRD/weekly.rrd
-    periods="$periods weekly"
+	touch $RRD/weekly.rrd
+	periods="$periods weekly"
 fi
 
 # Checking monthly period
 if [ -e "$RRD/monthly.rrd" ]; then
-    mtime=$(stat -c "%Y" $RRD/monthly.rrd)
-    ctime=$(date +%s)
-    dtime=$((ctime - mtime))
-    # Update every 6 hours
-    if [ "$dtime" -gt '21590' ]; then
-        touch $RRD/monthly.rrd
-        periods="$periods monthly"
-    fi
+	mtime=$(stat -c "%Y" $RRD/monthly.rrd)
+	ctime=$(date +%s)
+	dtime=$((ctime - mtime))
+	# Update every 6 hours
+	if [ "$dtime" -gt '21590' ]; then
+		touch $RRD/monthly.rrd
+		periods="$periods monthly"
+	fi
 else
-    touch $RRD/monthly.rrd
-    periods="$periods monthly"
+	touch $RRD/monthly.rrd
+	periods="$periods monthly"
 fi
 
 # Checking yearly period
 if [ -e "$RRD/yearly.rrd" ]; then
-    mtime=$(stat -c "%Y" $RRD/yearly.rrd)
-    ctime=$(date +%s)
-    dtime=$((ctime - mtime))
-    # Update every 12 hours
-    if [ "$dtime" -gt '43190' ]; then
-        touch $RRD/yearly.rrd
-        periods="$periods yearly"
-    fi
+	mtime=$(stat -c "%Y" $RRD/yearly.rrd)
+	ctime=$(date +%s)
+	dtime=$((ctime - mtime))
+	# Update every 12 hours
+	if [ "$dtime" -gt '43190' ]; then
+		touch $RRD/yearly.rrd
+		periods="$periods yearly"
+	fi
 else
-    touch $RRD/yearly.rrd
-    periods="$periods yearly"
+	touch $RRD/yearly.rrd
+	periods="$periods yearly"
 fi
 
 # Updateing system stats
 for period in $periods; do
 
-    $BIN/v-update-sys-rrd-la "$period" >/dev/null 2>&1
-    $BIN/v-update-sys-rrd-net "$period" >/dev/null 2>&1
-    $BIN/v-update-sys-rrd-mem "$period" >/dev/null 2>&1
-    $BIN/v-update-sys-rrd-ssh "$period" >/dev/null 2>&1
+	$BIN/v-update-sys-rrd-la "$period" > /dev/null 2>&1
+	$BIN/v-update-sys-rrd-net "$period" > /dev/null 2>&1
+	$BIN/v-update-sys-rrd-mem "$period" > /dev/null 2>&1
+	$BIN/v-update-sys-rrd-ssh "$period" > /dev/null 2>&1
 
-    # Updating web stats
-    if [ -n "$WEB_SYSTEM" ]; then
-        $BIN/v-update-sys-rrd-$WEB_SYSTEM "$period" >/dev/null 2>&1
-    fi
+	# Updating web stats
+	if [ -n "$WEB_SYSTEM" ]; then
+		$BIN/v-update-sys-rrd-$WEB_SYSTEM "$period" > /dev/null 2>&1
+	fi
 
-    if [ -n "$PROXY_SYSTEM" ]; then
-        $BIN/v-update-sys-rrd-$PROXY_SYSTEM "$period" >/dev/null 2>&1
-    fi
+	if [ -n "$PROXY_SYSTEM" ]; then
+		$BIN/v-update-sys-rrd-$PROXY_SYSTEM "$period" > /dev/null 2>&1
+	fi
 
-    # Updating mail stats
-    if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
-        $BIN/v-update-sys-rrd-mail "$period" >/dev/null 2>&1
-    fi
+	# Updating mail stats
+	if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL_SYSTEM" != 'no' ]; then
+		$BIN/v-update-sys-rrd-mail "$period" > /dev/null 2>&1
+	fi
 
-    # Updating ftp stats
-    if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
-        $BIN/v-update-sys-rrd-ftp "$period" >/dev/null 2>&1
-    fi
+	# Updating ftp stats
+	if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" != 'no' ]; then
+		$BIN/v-update-sys-rrd-ftp "$period" > /dev/null 2>&1
+	fi
 
-    # Updating db stats
-    if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
-        for type in ${DB_SYSTEM//,/ }; do
-            # Switching on db type
-            case $type in
-                mysql) $BIN/v-update-sys-rrd-mysql "$period" >/dev/null 2>&1 ;;
-                pgsql) $BIN/v-update-sys-rrd-pgsql "$period" >/dev/null 2>&1 ;;
-            esac
-        done
-    fi
+	# Updating db stats
+	if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'no' ]; then
+		for type in ${DB_SYSTEM//,/ }; do
+			# Switching on db type
+			case $type in
+				mysql) $BIN/v-update-sys-rrd-mysql "$period" > /dev/null 2>&1 ;;
+				pgsql) $BIN/v-update-sys-rrd-pgsql "$period" > /dev/null 2>&1 ;;
+			esac
+		done
+	fi
 done
 
 #----------------------------------------------------------#

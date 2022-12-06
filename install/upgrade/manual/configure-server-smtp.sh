@@ -20,14 +20,13 @@ source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
-function setupFiles
-{
+function setupFiles {
 	echo "Use SMTP account for server communication (Y/n): "
 	read use_smtp_prompt
 
 	use_smtp="${use_smtp_prompt:-y}"
 	use_smtp="${use_smtp,,}"
-	if [ "${use_smtp}" == "y" ] ; then
+	if [ "${use_smtp}" == "y" ]; then
 		use_smtp=true
 
 		echo "Enter SMTP Host:"
@@ -58,12 +57,12 @@ function setupFiles
 	read correct_validation
 	correct="${correct_validation:-n}"
 	correct="${correct,,}"
-	if [ "${correct}" != "y" ] ; then
+	if [ "${correct}" != "y" ]; then
 		echo "Not Proceeding. Restart or Quit (r/Q)?"
 		read restart_quit_prompt
 		restart_quit="${restart_quit_prompt:-q}"
 		restart_quit="${restart_quit,,}"
-		if [ "${restart_quit}" == "r" ] ; then
+		if [ "${restart_quit}" == "r" ]; then
 			clear
 			setupFiles
 		else

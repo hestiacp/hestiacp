@@ -6,7 +6,6 @@
 #
 # This function for obtaining updated webmail templates from Hestia package.
 
-
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
@@ -43,12 +42,12 @@ fi
 #----------------------------------------------------------#
 
 if [ -n "$restart" ] || [ "$restart" == "yes" ]; then
-    # Restarting web server
-    $BIN/v-restart-web "$restart"
-    check_result $? "restart" >/dev/null 2>&1
-    
-    $BIN/v-restart-proxy "$restart"
-    check_result $? "restart" >/dev/null 2>&1
+	# Restarting web server
+	$BIN/v-restart-web "$restart"
+	check_result $? "restart" > /dev/null 2>&1
+
+	$BIN/v-restart-proxy "$restart"
+	check_result $? "restart" > /dev/null 2>&1
 fi
 $BIN/v-log-action "system" "Info" "Updates" "Default mail domain templates updated."
 exit

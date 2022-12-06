@@ -56,8 +56,8 @@ check_hestia_demo_mode
 
 # Adding exim alias
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    str="$malias@$domain_idn:$account@$domain_idn"
-    echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+	str="$malias@$domain_idn:$account@$domain_idn"
+	echo "$str" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 
 #----------------------------------------------------------#
@@ -67,11 +67,11 @@ fi
 # Adding hestia alias
 aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
 if [ -z "$aliases" ]; then
-    aliases="$malias"
+	aliases="$malias"
 else
-    aliases="$aliases,$malias"
+	aliases="$aliases,$malias"
 fi
-update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS' "$aliases"
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "Added alias $malias to mail account $account@$domain."

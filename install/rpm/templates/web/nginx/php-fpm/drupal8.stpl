@@ -41,7 +41,7 @@ server {
     location ~ ^/sites/[^/]+/files/.*\.php$ {
         deny all;
     }
-    
+
     location / {
         try_files $uri /index.php?$query_string;
     }
@@ -49,7 +49,7 @@ server {
     location ~ /vendor/.*\.php$ {
         deny all;
         return 404;
-    }        
+    }
 
     location ~ ^/sites/.*/files/styles/ {
         try_files $uri @rewrite;
@@ -64,7 +64,7 @@ server {
         expires max;
         log_not_found off;
     }
-    
+
     location ~ '\.php$|^/update.php' {
         fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;

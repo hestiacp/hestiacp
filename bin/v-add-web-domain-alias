@@ -41,7 +41,7 @@ format_aliases
 #----------------------------------------------------------#
 
 if [ -z "$aliases" ]; then
-    check_result "$E_INVALID" "Invalid alias format: empty"
+	check_result "$E_INVALID" "Invalid alias format: empty"
 fi
 
 check_args '3' "$#" 'USER DOMAIN ALIASES [RESTART]'
@@ -66,9 +66,9 @@ get_domain_values 'web'
 # Preparing domain values for the template substitution
 local_ip=$(get_real_ip $IP)
 if [ -z "$ALIAS" ]; then
-    ALIAS="$aliases"
+	ALIAS="$aliases"
 else
-    ALIAS="$ALIAS,$aliases"
+	ALIAS="$ALIAS,$aliases"
 fi
 prepare_web_domain_values
 
@@ -78,18 +78,18 @@ is_package_full 'WEB_ALIASES'
 del_web_config "$WEB_SYSTEM" "$TPL.tpl"
 add_web_config "$WEB_SYSTEM" "$TPL.tpl"
 if [ "$SSL" = 'yes' ]; then
-    del_web_config "$WEB_SYSTEM" "$TPL.stpl"
-    add_web_config "$WEB_SYSTEM" "$TPL.stpl"
+	del_web_config "$WEB_SYSTEM" "$TPL.stpl"
+	add_web_config "$WEB_SYSTEM" "$TPL.stpl"
 fi
 
 # Rebuilding proxy configuration
-if [ -n  "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
-    del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
-    add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
-    if [ "$SSL" = 'yes' ]; then
-        del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
-        add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
-    fi
+if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
+	del_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+	add_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+	if [ "$SSL" = 'yes' ]; then
+		del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+		add_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -102,11 +102,11 @@ increase_user_value "$user" '$U_WEB_ALIASES'
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 $BIN/v-log-action "$user" "Info" "Web" "Added new web domain alias (Alias: $aliases, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"

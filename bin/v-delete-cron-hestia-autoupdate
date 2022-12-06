@@ -36,10 +36,10 @@ check_hestia_demo_mode
 
 # Deleting job
 if [ -n "$check_cron_apt" ]; then
-    job=$(echo $check_cron_apt|tr ' ' "\n"|grep JOB|cut -f 2 -d "'")
+	job=$(echo $check_cron_apt | tr ' ' "\n" | grep JOB | cut -f 2 -d "'")
 fi
 if [ -n "$check_cron_git" ]; then
-    job=$(echo $check_cron_git|tr ' ' "\n"|grep JOB|cut -f 2 -d "'")
+	job=$(echo $check_cron_git | tr ' ' "\n" | grep JOB | cut -f 2 -d "'")
 fi
 
 sed -i "/JOB='$job' /d" $USER_DATA/cron.conf
@@ -59,7 +59,7 @@ decrease_user_value "$user" '$U_CRON_JOBS'
 
 # Restarting crond
 $BIN/v-restart-cron
-check_result $? "Cron restart failed" >/dev/null
+check_result $? "Cron restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "system" "Warning" "System" "Automatic updates disabled."

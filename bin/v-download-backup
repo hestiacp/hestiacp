@@ -6,7 +6,6 @@
 #
 # This function download back-up from remote server
 
-
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
@@ -17,7 +16,7 @@ backup=$2
 
 # Define backup dir
 if [ -z "$BACKUP" ]; then
-    BACKUP=/backup
+	BACKUP=/backup
 fi
 
 # Includes
@@ -53,39 +52,47 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Checking available disk space
-disk_usage=$(df $BACKUP |tail -n1 |tr ' ' '\n' |grep % |cut -f 1 -d %)
+disk_usage=$(df $BACKUP | tail -n1 | tr ' ' '\n' | grep % | cut -f 1 -d %)
 if [ "$disk_usage" -ge "$BACKUP_DISK_LIMIT" ]; then
-    echo "Error: Not enough disk space" |$SENDMAIL -s "$subj" $email $notify
-    sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
-    check_result $E_DISK "Not enough disk space"
+	echo "Error: Not enough disk space" | $SENDMAIL -s "$subj" $email $notify
+	sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+	check_result $E_DISK "Not enough disk space"
 fi
 
 # Checking local backup
 if [ ! -e "$BACKUP/$backup" ]; then
-    if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
-        google_download "$backup"
-        downloaded='yes'
-    fi
-    if [[ "$BACKUP_SYSTEM" =~ "sftp" ]] && [ -z "$downloaded" ]; then
-        sftp_download "$backup"
-        downloaded='yes'
-    fi
-    if [[ "$BACKUP_SYSTEM" =~ "ftp" ]] && [ -z "$downloaded" ]; then
-        ftp_download "$backup"
-        downloaded='yes'
-    fi
-    if [ -z "$downloaded" ]; then
-        subj="Download of $backup failed for $user"
-        $BIN/v-add-user-notification $user "$subj" "<b>Unable to retrieve backup file from remote server.</b><br><b>Error:</b> $backup file doesn't exist in '${BACKUP}' directory."
-        sed -i "/v-download-backup $user /d" $HESTIA/data/queue/backup.pipe
-        check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
-    else
-        if [ -e "$BACKUP/$backup" ]; then
-        chmod 0640 $BACKUP/$backup
-        chown admin:admin $BACKUP/$backup
-        echo "rm $BACKUP/$backup" | at now + 1 day
-        fi
-    fi
+	if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
+		google_download "$backup"
+		downloaded='yes'
+	fi
+	if [[ "$BACKUP_SYSTEM" =~ "sftp" ]] && [ -z "$downloaded" ]; then
+		sftp_download "$backup"
+		downloaded='yes'
+	fi
+	if [[ "$BACKUP_SYSTEM" =~ "ftp" ]] && [ -z "$downloaded" ]; then
+		ftp_download "$backup"
+		downloaded='yes'
+	fi
+	if [[ "$BACKUP_SYSTEM" =~ "rclone" ]] && [ -z "$downloaded" ]; then
+		rclone_download "$backup"
+		downloaded='yes'
+	fi
+	if [[ "$BACKUP_SYSTEM" =~ "b2" ]] && [ -z "$downloaded" ]; then
+		b2_download "$backup"
+		downloaded='yes'
+	fi
+	if [ -z "$downloaded" ]; then
+		subj="Download of $backup failed for $user"
+		$BIN/v-add-user-notification $user "$subj" "<b>Unable to retrieve backup file from remote server.</b><br><b>Error:</b> $backup file doesn't exist in '${BACKUP}' directory."
+		sed -i "/v-download-backup $user /d" $HESTIA/data/queue/backup.pipe
+		check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
+	else
+		if [ -e "$BACKUP/$backup" ]; then
+			chmod 0640 $BACKUP/$backup
+			chown admin:admin $BACKUP/$backup
+			echo "rm $BACKUP/$backup" | at now + 1 day
+		fi
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -94,11 +101,11 @@ fi
 
 # Send notification
 if [ -e "$BACKUP/$backup" ]; then
-    cd $BACKUP
-    subj="Download of $backup completed for $user"
-    email=$(get_user_value '$CONTACT')
-    echo "Backup file $backup was retrieved from the remote server and will be available to download for 12 hours." | $SENDMAIL -s "$subj" "$email" "$notify"
-    $BIN/v-add-user-notification "$user" "$subj" "Backup file <b>$backup</b> was retrieved from the remote server and will be available to download for <b>12 hours</b>."
+	cd $BACKUP
+	subj="Download of $backup completed for $user"
+	email=$(get_user_value '$CONTACT')
+	echo "Backup file $backup was retrieved from the remote server and will be available to download for 12 hours." | $SENDMAIL -s "$subj" "$email" "$notify"
+	$BIN/v-add-user-notification "$user" "$subj" "Backup file <b>$backup</b> was retrieved from the remote server and will be available to download for <b>12 hours</b>."
 fi
 
 # Cleaning restore queue

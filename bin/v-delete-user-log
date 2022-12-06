@@ -2,7 +2,7 @@
 # info: Delete log file for user
 # options: USER
 #
-# example: v-delete-user-log user 
+# example: v-delete-user-log user
 #
 # This function for deleting a users log file
 
@@ -31,7 +31,7 @@ check_hestia_demo_mode
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
 if [ "$user" != "system" ]; then
-    is_object_valid 'user' 'USER' "$user"
+	is_object_valid 'user' 'USER' "$user"
 fi
 
 #----------------------------------------------------------#
@@ -40,22 +40,22 @@ fi
 
 # Set correct path for log file (system or user)
 if [ "$user" = "system" ]; then
-    log_file="$HESTIA/data/users/admin/system.log"
+	log_file="$HESTIA/data/users/admin/system.log"
 else
-    log_file="$HESTIA/data/users/$user/history.log"
+	log_file="$HESTIA/data/users/$user/history.log"
 fi
 
 # Verify log file exists before deleting to prevent errors
 if [ -f "$log_file" ]; then
-    rm -f "$log_file"
-    # Add event to user and system logs specifying that the log history was cleared
-    if [ "$user" = "system" ]; then
-        $BIN/v-log-action "system" "Warning" "Security" "System log history deleted."
-    else
-        $BIN/v-log-action "system" "Warning" "Security" "User action log deleted (User: $user)."
-        $BIN/v-log-action "$user" "Info" "Security" "Log entries deleted."
-    fi
-    log_event "$OK" "$ARGUMENTS"
+	rm -f "$log_file"
+	# Add event to user and system logs specifying that the log history was cleared
+	if [ "$user" = "system" ]; then
+		$BIN/v-log-action "system" "Warning" "Security" "System log history deleted."
+	else
+		$BIN/v-log-action "system" "Warning" "Security" "User action log deleted (User: $user)."
+		$BIN/v-log-action "$user" "Info" "Security" "Log entries deleted."
+	fi
+	log_event "$OK" "$ARGUMENTS"
 fi
 
 exit

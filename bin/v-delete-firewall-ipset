@@ -42,28 +42,28 @@ check_hestia_demo_mode
 
 # Install ipset package if missing
 if [ -z "$IPSET_BIN" ]; then
-    if [ -f '/etc/redhat-release' ]; then
-        dnf install -q -y ipset > /dev/null
-    else
-        apt-get --quiet --yes install ipset > /dev/null
-    fi
-    check_result $? "Installing ipset package"
+	if [ -f '/etc/redhat-release' ]; then
+		dnf install -q -y ipset > /dev/null
+	else
+		apt-get --quiet --yes install ipset > /dev/null
+	fi
+	check_result $? "Installing ipset package"
 
-    IPSET_BIN="$(which ipset)"
-    check_result $? "ipset binary not found"
+	IPSET_BIN="$(which ipset)"
+	check_result $? "ipset binary not found"
 fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if $IPSET_BIN --quiet list "${ip_name}-tmp" >/dev/null; then
-    $IPSET_BIN --quiet destroy "${ip_name}-tmp"
+if $IPSET_BIN --quiet list "${ip_name}-tmp" > /dev/null; then
+	$IPSET_BIN --quiet destroy "${ip_name}-tmp"
 fi
 
-if $IPSET_BIN --quiet list "${ip_name}" >/dev/null; then
-    $IPSET_BIN --quiet destroy "${ip_name}"
-    check_result $? "ipset ${ip_name} still used by iptables. Cannot remove"
+if $IPSET_BIN --quiet list "${ip_name}" > /dev/null; then
+	$IPSET_BIN --quiet destroy "${ip_name}"
+	check_result $? "ipset ${ip_name} still used by iptables. Cannot remove"
 fi
 
 sed -i "/LISTNAME='$ip_name'/d" "${IPSET_PATH}.conf"

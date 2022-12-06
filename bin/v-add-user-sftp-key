@@ -39,36 +39,36 @@ PRVKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key"
 PUBKEY_FILE="$HOMEDIR/$user/.ssh/hst-filemanager-key.pub"
 AUTHKEY_FILE="$HOMEDIR/$user/.ssh/authorized_keys"
 
-[ -z "$(readlink -f "$PRVKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid private key file path"
-[ -z "$(readlink -f "$PUBKEY_FILE"  | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid public key file path"
+[ -z "$(readlink -f "$PRVKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid private key file path"
+[ -z "$(readlink -f "$PUBKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid public key file path"
 [ -z "$(readlink -f "$AUTHKEY_FILE" | egrep "^$HOMEDIR/$user/.ssh/")" ] && check_result "$E_FORBIDEN" "Invalid authorized keys path"
 
 if [ ! -f "${PRVKEY_FILE}" ]; then
-    ssh-keygen -q -b 1024 -t rsa -f "${PRVKEY_FILE}" -N ""
-    rm "${PUBKEY_FILE}"
-    new_privkey=true
+	ssh-keygen -q -b 1024 -t rsa -f "${PRVKEY_FILE}" -N ""
+	rm "${PUBKEY_FILE}"
+	new_privkey=true
 fi
 
 if [ ! -f "${AUTHKEY_FILE}" ] || [ "$new_privkey" = true ]; then
-    pubkey_str="$(ssh-keygen -y -f ${PRVKEY_FILE})"
-    pubkey_desc="filemanager.ssh.key"
+	pubkey_str="$(ssh-keygen -y -f ${PRVKEY_FILE})"
+	pubkey_desc="filemanager.ssh.key"
 
-    if grep --quiet --no-messages -F "$pubkey_desc" "${AUTHKEY_FILE}"; then
-        sed -i "/filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
-    fi
+	if grep --quiet --no-messages -F "$pubkey_desc" "${AUTHKEY_FILE}"; then
+		sed -i "/filemanager\.ssh\.key\$/d" "${AUTHKEY_FILE}"
+	fi
 
-    # make sure authorized_keys is ending with EOL
-    [ -f "${AUTHKEY_FILE}" ] && sed -i '$a\' "${AUTHKEY_FILE}"
+	# make sure authorized_keys is ending with EOL
+	[ -f "${AUTHKEY_FILE}" ] && sed -i '$a\' "${AUTHKEY_FILE}"
 
-    expire=0
-    if [[ "$ttl" -gt 0 ]]; then
-        expire=$(date +%s -d "+${ttl} min")
-        echo "rm ${PRVKEY_FILE}" | at "now +${ttl} minute" > /dev/null 2>&1
-    fi
-    echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${expire} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
+	expire=0
+	if [[ "$ttl" -gt 0 ]]; then
+		expire=$(date +%s -d "+${ttl} min")
+		echo "rm ${PRVKEY_FILE}" | at "now +${ttl} minute" > /dev/null 2>&1
+	fi
+	echo "from=\"127.0.0.1\",command=\"internal-sftp\",restrict ${pubkey_str} TS:${expire} ${pubkey_desc}" >> "${AUTHKEY_FILE}"
 fi
 
-# 
+#
 chown ${user}: "${AUTHKEY_FILE}"
 chown admin: "${PRVKEY_FILE}"
 

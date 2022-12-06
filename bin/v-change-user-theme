@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: updates user role
-# options: USER ROLE
+# info: updates user theme
+# options: USER THEME
 #
-# example: v-change-user-theme user theme
+# example:   v-change-user-theme admin dark
+# example:   v-change-user-theme peter vestia
 #
 # Changes web UI display theme for specified user.
 
@@ -33,11 +34,11 @@ is_object_valid 'user' 'USER' "$user"
 
 is_object_unsuspended 'user' 'USER' "$user"
 
-themes=$($HESTIA/bin/v-list-sys-themes plain);
+themes=$($HESTIA/bin/v-list-sys-themes plain)
 
-if ! echo "$themes" | grep -q -x "$theme" ; then
-    echo "Theme does not exists"
-    exit "$E_NOTEXIST";
+if ! echo "$themes" | grep -q -x "$theme"; then
+	echo "Theme does not exists"
+	exit "$E_NOTEXIST"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -50,8 +51,8 @@ check_hestia_demo_mode
 # Set theme value
 check_ckey=$(grep "THEME" $USER_DATA/user.conf)
 if [ -z "$check_ckey" ]; then
-    # Rebuild user configuration to repair missing value
-    $BIN/v-rebuild-user "$user"
+	# Rebuild user configuration to repair missing value
+	$BIN/v-rebuild-user "$user"
 fi
 update_user_value "$user" '$THEME' "$theme"
 

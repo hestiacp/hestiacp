@@ -34,11 +34,11 @@ is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 owner=$($BIN/v-search-domain-owner "$domain")
 if [ -z "$owner" ]; then
-    check_result "$E_NOTEXIST" "domain $domain doesn't exist"
+	check_result "$E_NOTEXIST" "domain $domain doesn't exist"
 fi
 if [ "$owner" = "$user" ]; then
-    echo "ERROR: $domain is already owned by $user."
-    exit
+	echo "ERROR: $domain is already owned by $user."
+	exit
 fi
 
 # Perform verification if read-only mode is enabled
@@ -53,255 +53,255 @@ echo "Moving $domain from $owner to $user, please wait..."
 # WEB domain
 web_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/web.conf)
 if [ -n "$web_data" ]; then
-    echo "[*] Moving web domain..."
-    $BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
-    parse_object_kv_list "$web_data"
-    
-    if [ -n "$CUSTOM_DOCROOT" ]; then 
-        if [ -z $(echo $CUSTOM_DOCROOT | grep -i "/home/$owner/web/$domain") ]; then
-            docdomain=$(echo "$CUSTOM_DOCROOT" | cut -d'/' -f5)
-            $BIN/v-list-web-domain $user $docdomain > /dev/null
-            if [ "$?" != 0 ]; then
-                echo "Error: Target domain doesn't belong to the new user";
-                exit $E_NOTEXIST;
-            fi
-            new_docroot=$(echo $CUSTOM_DOCROOT | sed "s/\/home\/$owner/\/home\/$user/");
-            new_php_docroot=$(echo $CUSTOM_PHPROOT | sed "s/\/home\/$owner/\/home\/$user/");
-            
-        else
-            new_docroot=$(echo $CUSTOM_DOCROOT | sed "s/\/home\/$owner/\/home\/$user/");
-            new_php_docroot=$(echo $CUSTOM_PHPROOT | sed "s/\/home\/$owner/\/home\/$user/");
-        fi
-    fi
+	echo "[*] Moving web domain..."
+	$BIN/v-suspend-web-domain "$owner" "$domain" >> /dev/null 2>&1
+	parse_object_kv_list "$web_data"
 
-    if [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
-        echo "[*] IP dedicated to $owner select new ip adress..."
-        get_user_ip
-    fi 
-    old_ip=$IP;
-    new_ip=$ip; 
-    echo $ip;
-    
-    # Change IP
-    if [ -n "$ip" ]; then
-        web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
-    fi
-    if [ -n "$new_docroot" ]; then
-        web_data=$(echo "$web_data" | sed "s|CUSTOM_DOCROOT='$CUSTOM_DOCROOT'|CUSTOM_DOCROOT='$new_docroot'|")
-        web_data=$(echo "$web_data" | sed "s|CUSTOM_PHPROOT='$CUSTOM_PHPROOT'|CUSTOM_PHPROOT='$new_php_docroot'|")
-    fi
-    web_data=$(echo "$web_data" | sed "s/SUSPENDED='no'/SUSPENDED='yes'/")
-    
-    # Check SSL
-    if [ "$SSL" = 'yes' ]; then
-        ssl_crt=$HESTIA/data/users/$owner/ssl/$domain.crt
-        ssl_key=$HESTIA/data/users/$owner/ssl/$domain.key
-        ssl_ca=$HESTIA/data/users/$owner/ssl/$domain.ca
-        ssl_pem=$HESTIA/data/users/$owner/ssl/$domain.pem
-        mv $ssl_crt $HESTIA/data/users/$user/ssl/
-        mv $ssl_key $HESTIA/data/users/$user/ssl/
-        mv $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
-        mv $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
-        rm -f $HOMEDIR/$owner/conf/web/ssl.$domain.*
-    fi
+	if [ -n "$CUSTOM_DOCROOT" ]; then
+		if [ -z $(echo $CUSTOM_DOCROOT | grep -i "/home/$owner/web/$domain") ]; then
+			docdomain=$(echo "$CUSTOM_DOCROOT" | cut -d'/' -f5)
+			$BIN/v-list-web-domain $user $docdomain > /dev/null
+			if [ "$?" != 0 ]; then
+				echo "Error: Target domain doesn't belong to the new user"
+				exit $E_NOTEXIST
+			fi
+			new_docroot=$(echo $CUSTOM_DOCROOT | sed "s/\/home\/$owner/\/home\/$user/")
+			new_php_docroot=$(echo $CUSTOM_PHPROOT | sed "s/\/home\/$owner/\/home\/$user/")
 
-    # Check ftp user account
-    if [ -n "$FTP_USER" ]; then
-        /usr/sbin/userdel -f  "$FTP_USER" >> /dev/null 2>&1
-        old_str="FTP_USER='$FTP_USER'"
-        new_str=$(echo "$old_str" | sed "s/${owner}_/${user}_/")
-        web_data=$(echo "$web_data" | sed "s/$old_str/$new_str/")
-    fi
+		else
+			new_docroot=$(echo $CUSTOM_DOCROOT | sed "s/\/home\/$owner/\/home\/$user/")
+			new_php_docroot=$(echo $CUSTOM_PHPROOT | sed "s/\/home\/$owner/\/home\/$user/")
+		fi
+	fi
 
-    # Move config
-    sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/web.conf
-    echo "$web_data" >> $HESTIA/data/users/$user/web.conf
+	if [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
+		echo "[*] IP dedicated to $owner select new ip adress..."
+		get_user_ip
+	fi
+	old_ip=$IP
+	new_ip=$ip
+	echo $ip
 
-    # Move data
-    mv $HOMEDIR/$owner/web/$domain $HOMEDIR/$user/web/
+	# Change IP
+	if [ -n "$ip" ]; then
+		web_data=$(echo "$web_data" | sed "s/IP='$IP'/IP='$ip'/")
+	fi
+	if [ -n "$new_docroot" ]; then
+		web_data=$(echo "$web_data" | sed "s|CUSTOM_DOCROOT='$CUSTOM_DOCROOT'|CUSTOM_DOCROOT='$new_docroot'|")
+		web_data=$(echo "$web_data" | sed "s|CUSTOM_PHPROOT='$CUSTOM_PHPROOT'|CUSTOM_PHPROOT='$new_php_docroot'|")
+	fi
+	web_data=$(echo "$web_data" | sed "s/SUSPENDED='no'/SUSPENDED='yes'/")
 
-    # Change ownership
-    find "$HOMEDIR/$user/web/$domain" -user "$owner" \
-        -exec chown -h $user:$user {} \;
+	# Check SSL
+	if [ "$SSL" = 'yes' ]; then
+		ssl_crt=$HESTIA/data/users/$owner/ssl/$domain.crt
+		ssl_key=$HESTIA/data/users/$owner/ssl/$domain.key
+		ssl_ca=$HESTIA/data/users/$owner/ssl/$domain.ca
+		ssl_pem=$HESTIA/data/users/$owner/ssl/$domain.pem
+		mv $ssl_crt $HESTIA/data/users/$user/ssl/
+		mv $ssl_key $HESTIA/data/users/$user/ssl/
+		mv $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
+		mv $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
+		rm -f $HOMEDIR/$owner/conf/web/ssl.$domain.*
+	fi
 
-    # Rebuild config
-    $BIN/v-unsuspend-web-domain "$user" "$domain" no >> /dev/null 2>&1
-    $BIN/v-rebuild-web-domains "$owner" no
-    $BIN/v-rebuild-web-domains "$user"
+	# Check ftp user account
+	if [ -n "$FTP_USER" ]; then
+		/usr/sbin/userdel -f "$FTP_USER" >> /dev/null 2>&1
+		old_str="FTP_USER='$FTP_USER'"
+		new_str=$(echo "$old_str" | sed "s/${owner}_/${user}_/")
+		web_data=$(echo "$web_data" | sed "s/$old_str/$new_str/")
+	fi
 
-    # Cleanup old config
-    rm -rf "$HOMEDIR/$owner/conf/web/$domain/"
+	# Move config
+	sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/web.conf
+	echo "$web_data" >> $HESTIA/data/users/$user/web.conf
+
+	# Move data
+	mv $HOMEDIR/$owner/web/$domain $HOMEDIR/$user/web/
+
+	# Change ownership
+	find "$HOMEDIR/$user/web/$domain" -user "$owner" \
+		-exec chown -h $user:$user {} \;
+
+	# Rebuild config
+	$BIN/v-unsuspend-web-domain "$user" "$domain" no >> /dev/null 2>&1
+	$BIN/v-rebuild-web-domains "$owner" no
+	$BIN/v-rebuild-web-domains "$user"
+
+	# Cleanup old config
+	rm -rf "$HOMEDIR/$owner/conf/web/$domain/"
 fi
 
 # DNS domain
 dns_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/dns.conf)
 if [ -n "$dns_data" ]; then
-    echo "[*] Moving DNS zone and records..."
-    parse_object_kv_list "$dns_data"
+	echo "[*] Moving DNS zone and records..."
+	parse_object_kv_list "$dns_data"
 
-    # Change IP
-    if [ -n "$ip" ]; then
-        dns_data=$(echo "$dns_data" | sed "s/IP='$IP'/IP='$ip'/")
-        sed -i "s/$IP/$ip/g" $HESTIA/data/users/$owner/dns/$domain.conf
-    fi
+	# Change IP
+	if [ -n "$ip" ]; then
+		dns_data=$(echo "$dns_data" | sed "s/IP='$IP'/IP='$ip'/")
+		sed -i "s/$IP/$ip/g" $HESTIA/data/users/$owner/dns/$domain.conf
+	fi
 
-    # Move config
-    sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/dns.conf
-    echo "$dns_data" >> $HESTIA/data/users/$user/dns.conf
+	# Move config
+	sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/dns.conf
+	echo "$dns_data" >> $HESTIA/data/users/$user/dns.conf
 
-    # Move dns records
-    mv $HESTIA/data/users/$owner/dns/$domain.conf \
-        $HESTIA/data/users/$user/dns/
+	# Move dns records
+	mv $HESTIA/data/users/$owner/dns/$domain.conf \
+		$HESTIA/data/users/$user/dns/
 
-    # Rebuild config
-    $BIN/v-unsuspend-dns-domain "$user" "$domain" no >> /dev/null 2>&1
-    $BIN/v-rebuild-dns-domains "$owner" no
-    $BIN/v-rebuild-dns-domains "$user"
+	# Rebuild config
+	$BIN/v-unsuspend-dns-domain "$user" "$domain" no >> /dev/null 2>&1
+	$BIN/v-rebuild-dns-domains "$owner" no
+	$BIN/v-rebuild-dns-domains "$user"
 
-    # Cleanup old config
-    rm -f $HOMEDIR/$owner/conf/dns/$domain.db
+	# Cleanup old config
+	rm -f $HOMEDIR/$owner/conf/dns/$domain.db
 
-    # Resync dns cluster
-    if [ -n "$DNS_CLUSTER" ]; then
-        $BIN/v-sync-dns-cluster
-    fi
+	# Resync dns cluster
+	if [ "$DNS_CLUSTER" = "yes" ]; then
+		$BIN/v-sync-dns-cluster
+	fi
 fi
 
 # MAIL domain
 mail_data=$(grep "DOMAIN='$domain'" $HESTIA/data/users/$owner/mail.conf)
 if [ -n "$mail_data" ]; then
-    $BIN/v-suspend-mail-domain "$owner" "$domain" >> /dev/null 2>&1
-    echo "[*] Moving mail domain and accounts..."
+	$BIN/v-suspend-mail-domain "$owner" "$domain" >> /dev/null 2>&1
+	echo "[*] Moving mail domain and accounts..."
 
-    parse_object_kv_list "$mail_data"
+	parse_object_kv_list "$mail_data"
 
-    # Ensure mail configuration directory exists for receiving user
-    if [ ! -e "$HOMEDIR/$user/conf/mail/$domain/" ]; then
-        mkdir -p $HOMEDIR/$user/conf/mail/$domain/
-    fi
+	# Ensure mail configuration directory exists for receiving user
+	if [ ! -e "$HOMEDIR/$user/conf/mail/$domain/" ]; then
+		mkdir -p $HOMEDIR/$user/conf/mail/$domain/
+	fi
 
-    # Move config
-    sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/mail.conf
-    mail_data=$(echo "$mail_data" | sed "s/SUSPENDED='no'/SUSPENDED='yes'/")
-    echo "$mail_data" >> $HESTIA/data/users/$user/mail.conf
-    mv -f $HESTIA/data/users/$owner/mail/$domain.conf \
-        $HESTIA/data/users/$user/mail/
+	# Move config
+	sed -i "/DOMAIN='$domain'/d" $HESTIA/data/users/$owner/mail.conf
+	mail_data=$(echo "$mail_data" | sed "s/SUSPENDED='no'/SUSPENDED='yes'/")
+	echo "$mail_data" >> $HESTIA/data/users/$user/mail.conf
+	mv -f $HESTIA/data/users/$owner/mail/$domain.conf \
+		$HESTIA/data/users/$user/mail/
 
-    # Move DKIM
-    if [ -e "$HESTIA/data/users/$owner/mail/$domain.pem" ]; then
-        mv -f $HESTIA/data/users/$owner/mail/$domain.pem \
-            $HESTIA/data/users/$user/mail/
-        mv -f $HESTIA/data/users/$owner/mail/$domain.pub \
-            $HESTIA/data/users/$user/mail/
-    fi
-    
-    # Move SSL certificates
-    if [ "$SSL" = 'yes' ]; then
-         # Ensure that SSL directory exists and move certificates
-        mkdir -p $HESTIA/data/users/$user/ssl/
-        mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
-        
-        ssl_crt=$HESTIA/data/users/$owner/ssl/mail.$domain.crt
-        ssl_key=$HESTIA/data/users/$owner/ssl/mail.$domain.key
-        ssl_ca=$HESTIA/data/users/$owner/ssl/mail.$domain.ca
-        ssl_pem=$HESTIA/data/users/$owner/ssl/mail.$domain.pem
-        mv $ssl_crt $HESTIA/data/users/$user/ssl/
-        mv $ssl_key $HESTIA/data/users/$user/ssl/
-        mv $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
-        mv $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1     
-        
-        # Add certificate to user home directory
-        cp -f $HESTIA/data/users/$user/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
-        cp -f $HESTIA/data/users/$user/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
-        cp -f $HESTIA/data/users/$user/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
-        if [ -e "$HESTIA/data/users/$user/ssl/mail.$domain.ca" ]; then
-            cp -f $HESTIA/data/users/$user/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
-        fi
+	# Move DKIM
+	if [ -e "$HESTIA/data/users/$owner/mail/$domain.pem" ]; then
+		mv -f $HESTIA/data/users/$owner/mail/$domain.pem \
+			$HESTIA/data/users/$user/mail/
+		mv -f $HESTIA/data/users/$owner/mail/$domain.pub \
+			$HESTIA/data/users/$user/mail/
+	fi
 
-        # Add domain SSL configuration to dovecot
-        if [ -f "/etc/dovecot/conf.d/domains/$domain.conf" ]; then
-            rm -f /etc/dovecot/conf.d/domains/$domain.conf
-        fi
-        
-        echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
-        echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
-        echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
-        echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
-        echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+	# Move SSL certificates
+	if [ "$SSL" = 'yes' ]; then
+		# Ensure that SSL directory exists and move certificates
+		mkdir -p $HESTIA/data/users/$user/ssl/
+		mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
 
-        # Add domain SSL configuration to exim4
-        # Cleanup symlinks
-        find /usr/local/hestia/ssl/mail -xtype l -delete
+		ssl_crt=$HESTIA/data/users/$owner/ssl/mail.$domain.crt
+		ssl_key=$HESTIA/data/users/$owner/ssl/mail.$domain.key
+		ssl_ca=$HESTIA/data/users/$owner/ssl/mail.$domain.ca
+		ssl_pem=$HESTIA/data/users/$owner/ssl/mail.$domain.pem
+		mv $ssl_crt $HESTIA/data/users/$user/ssl/
+		mv $ssl_key $HESTIA/data/users/$user/ssl/
+		mv $ssl_ca $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
+		mv $ssl_pem $HESTIA/data/users/$user/ssl/ >> /dev/null 2>&1
 
-        ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
-        ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+		# Add certificate to user home directory
+		cp -f $HESTIA/data/users/$user/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+		cp -f $HESTIA/data/users/$user/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+		cp -f $HESTIA/data/users/$user/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+		if [ -e "$HESTIA/data/users/$user/ssl/mail.$domain.ca" ]; then
+			cp -f $HESTIA/data/users/$user/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
+		fi
 
-        # Set correct permissions on certificates
-        chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
-        chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
-        chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
-        chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
-        chmod -R 0644 /usr/local/hestia/ssl/mail/*
-        chown -h $user:mail /usr/local/hestia/ssl/mail/*
-    fi
+		# Add domain SSL configuration to dovecot
+		if [ -f "/etc/dovecot/conf.d/domains/$domain.conf" ]; then
+			rm -f /etc/dovecot/conf.d/domains/$domain.conf
+		fi
 
-    # Move data
-    mv $HOMEDIR/$owner/mail/$domain $HOMEDIR/$user/mail/
+		echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+		echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
 
-    # Change ownership
-    find $HOMEDIR/$user/mail/$domain -user $owner \
-        -exec chown -h $user {} \;
+		# Add domain SSL configuration to exim4
+		# Cleanup symlinks
+		find /usr/local/hestia/ssl/mail -xtype l -delete
 
-    # Checking exim username for later chowning
-    exim_user="exim";
-    check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
-    if [ "$check_exim_username" -eq 1 ]; then
-        exim_user="Debian-exim"
-    fi
-    # Chowning mail conf files to exim user
-    if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then
-        find $HOMEDIR/$user/conf/mail/$domain -user root \
-            -exec chown $exim_user {} \;
-    fi
+		ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
+		ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
 
-    # Remove old mail directory from original owner
-    if [ -e "$HOMEDIR/$owner/mail/$domain" ]; then
-        rm -rf "$HOMEDIR/$owner/mail/$domain"
-    fi
+		# Set correct permissions on certificates
+		chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
+		chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
+		chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
+		chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
+		chmod -R 0644 /usr/local/hestia/ssl/mail/*
+		chown -h $user:mail /usr/local/hestia/ssl/mail/*
+	fi
 
-    # Remove old mail configuration directory from original owner
-    if [ -e "$HOMEDIR/$owner/conf/mail/$domain" ]; then
-        rm -rf "$HOMEDIR/$owner/conf/mail/$domain"
-    fi
-    if [ -e "$HESTIA/data/users/$owner/mail/$domain.conf" ]; then
-        rm -f "$HESTIA/data/users/$owner/mail/$domain.conf"
-    fi
+	# Move data
+	mv $HOMEDIR/$owner/mail/$domain $HOMEDIR/$user/mail/
 
-    # Rebuild config
-    $BIN/v-unsuspend-mail-domain "$user" "$domain" no
-    $BIN/v-rebuild-mail-domains "$owner" no
-    $BIN/v-rebuild-mail-domains "$user"
+	# Change ownership
+	find $HOMEDIR/$user/mail/$domain -user $owner \
+		-exec chown -h $user {} \;
+
+	# Checking exim username for later chowning
+	exim_user="exim"
+	check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
+	if [ "$check_exim_username" -eq 1 ]; then
+		exim_user="Debian-exim"
+	fi
+	# Chowning mail conf files to exim user
+	if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then
+		find $HOMEDIR/$user/conf/mail/$domain -user root \
+			-exec chown $exim_user {} \;
+	fi
+
+	# Remove old mail directory from original owner
+	if [ -e "$HOMEDIR/$owner/mail/$domain" ]; then
+		rm -rf "$HOMEDIR/$owner/mail/$domain"
+	fi
+
+	# Remove old mail configuration directory from original owner
+	if [ -e "$HOMEDIR/$owner/conf/mail/$domain" ]; then
+		rm -rf "$HOMEDIR/$owner/conf/mail/$domain"
+	fi
+	if [ -e "$HESTIA/data/users/$owner/mail/$domain.conf" ]; then
+		rm -f "$HESTIA/data/users/$owner/mail/$domain.conf"
+	fi
+
+	# Rebuild config
+	$BIN/v-unsuspend-mail-domain "$user" "$domain" no
+	$BIN/v-rebuild-mail-domains "$owner" no
+	$BIN/v-rebuild-mail-domains "$user"
 fi
 
 # Update counters
 $BIN/v-update-user-counters "$owner"
 $BIN/v-update-user-counters "$user"
 
-# Mail domains currently don't have the IP variable set see #2306 
+# Mail domains currently don't have the IP variable set see #2306
 if [ -n "$old_ip" ]; then
-    # Recalculate ip usage 
-    if [ -n "$ip" ]; then
-        decrease_ip_value $old_ip $owner
-        increase_ip_value $new_ip 
-    else
-        # recalculate ip 
-        decrease_ip_value $old_ip $owner
-        increase_ip_value $old_ip 
-    fi
+	# Recalculate ip usage
+	if [ -n "$ip" ]; then
+		decrease_ip_value $old_ip $owner
+		increase_ip_value $new_ip
+	else
+		# recalculate ip
+		decrease_ip_value $old_ip $owner
+		increase_ip_value $old_ip
+	fi
 fi
 # Send notification to panel
 if [ -n "$web_data" ] || [ -n "$dns_data" ] || [ -n "$mail_data" ]; then
-    $HESTIA/bin/v-add-user-notification "$user" "$domain has been added to your account" ''
+	$HESTIA/bin/v-add-user-notification "$user" "$domain has been added to your account" ''
 fi
 
 #----------------------------------------------------------#

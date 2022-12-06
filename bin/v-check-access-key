@@ -31,43 +31,43 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_hestia_demo_mode
 
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # JSON list function
 json_list() {
-    echo -n '{"USER": "'$user'"';
+	echo -n '{"USER": "'$user'"'
 
-    if [[ -n "$user_arg_pos" ]]; then
-        echo -n ', "USER_ARG_POSITION": '$user_arg_pos''
-    fi
+	if [[ -n "$user_arg_pos" ]]; then
+		echo -n ', "USER_ARG_POSITION": '$user_arg_pos''
+	fi
 
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "USER:               $user"
-    if [[ -n "$user_arg_pos" ]]; then
-        echo "USER_ARG_POSITION:  $user_arg_pos"
-    fi
+	echo "USER:               $user"
+	if [[ -n "$user_arg_pos" ]]; then
+		echo "USER_ARG_POSITION:  $user_arg_pos"
+	fi
 }
 
 # Callback to intercept invalid result validation
 abort_missmatch() {
-    echo "Error: $2"
-    echo "$date $time ${access_key_id:-api} $ip failed to login" >> $HESTIA/log/auth.log
+	echo "Error: $2"
+	echo "$date $time ${access_key_id:-api} $ip failed to login" >> $HESTIA/log/auth.log
 
-    # Add a log for user
-    if [[ "$1" == "$E_PASSWORD" && -n "$user" ]]; then
-        log_history "[$ip] $access_key_id $2" "Error" "$user" "API"
-    fi
+	# Add a log for user
+	if [[ "$1" == "$E_PASSWORD" && -n "$user" ]]; then
+		log_history "[$ip] $access_key_id $2" "Error" "$user" "API"
+	fi
 
-    if [[ "$1" == "$E_FORBIDEN" ]]; then
-        exit "$1"
-    fi
+	if [[ "$1" == "$E_FORBIDEN" ]]; then
+		exit "$1"
+	fi
 
-    exit "$E_PASSWORD"
+	exit "$E_PASSWORD"
 }
 
 #----------------------------------------------------------#
@@ -99,8 +99,8 @@ CHECK_RESULT_CALLBACK=""
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

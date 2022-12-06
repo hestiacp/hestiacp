@@ -15,7 +15,7 @@ chain=$(echo $1 | tr '[:lower:]' '[:upper:]')
 port=$2
 port_ext=$2
 protocol=${4-TCP}
-protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
+protocol=$(echo $protocol | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path to iptables
 iptables="/sbin/iptables"
@@ -33,7 +33,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Get hestia port by reading nginx.conf
 hestiaport=$(grep 'listen' $HESTIA/nginx/conf/nginx.conf | awk '{print $2}' | sed "s|;||")
 if [ -z "$hestiaport" ]; then
-    hestiaport=8083
+	hestiaport=8083
 fi
 
 #----------------------------------------------------------#
@@ -56,42 +56,64 @@ heal_iptables_links
 
 # Checking known chains
 case $chain in
-    SSH)        # Get ssh port by reading ssh config file.
-                sshport=$(grep '^Port ' /etc/ssh/sshd_config | head -1 | cut -d ' ' -f 2)
-                if [ -z "$sshport" ]; then
-                    sshport=22
-                fi
-                port=$sshport; 
-                protocol=TCP ;;
-    FTP)        port=21; protocol=TCP  ;;
-    MAIL)       port='25,465,587,110,995,143,993'; protocol=TCP  ;;
-    DNS)        port=53; protocol=UDP  ;;
-    WEB)        port='80,443'; protocol=TCP  ;;
-    DB)         port='3306,5432'; protocol=TCP  ;;
-    HESTIA)     port=$hestiaport; protocol=TCP  ;;
-    RECIDIVE)   port='1:65535'; protocol=TCP  ;;
-    *)          check_args '2' "$#" 'CHAIN PORT' ;;
+	SSH) # Get ssh port by reading ssh config file.
+		sshport=$(grep '^Port ' /etc/ssh/sshd_config | head -1 | cut -d ' ' -f 2)
+		if [ -z "$sshport" ]; then
+			sshport=22
+		fi
+		port=$sshport
+		protocol=TCP
+		;;
+	FTP)
+		port=21
+		protocol=TCP
+		;;
+	MAIL)
+		port='25,465,587,110,995,143,993'
+		protocol=TCP
+		;;
+	DNS)
+		port=53
+		protocol=UDP
+		;;
+	WEB)
+		port='80,443'
+		protocol=TCP
+		;;
+	DB)
+		port='3306,5432'
+		protocol=TCP
+		;;
+	HESTIA)
+		port=$hestiaport
+		protocol=TCP
+		;;
+	RECIDIVE)
+		port='1:65535'
+		protocol=TCP
+		;;
+	*) check_args '2' "$#" 'CHAIN PORT' ;;
 esac
 
 # Adding chain
-$iptables -N fail2ban-$chain 2>/dev/null
+$iptables -N fail2ban-$chain 2> /dev/null
 if [ $? -eq 0 ]; then
-    $iptables -A fail2ban-$chain -j RETURN
+	$iptables -A fail2ban-$chain -j RETURN
 
-    # Adding multiport module
-    if [[ "$port" =~ ,|-|: ]] ; then
-        port_str="-m multiport --dports $port"
-    else
-        port_str="--dport $port"
-    fi
-    $iptables -I INPUT -p $protocol $port_str -j fail2ban-$chain
+	# Adding multiport module
+	if [[ "$port" =~ ,|-|: ]]; then
+		port_str="-m multiport --dports $port"
+	else
+		port_str="--dport $port"
+	fi
+	$iptables -I INPUT -p $protocol $port_str -j fail2ban-$chain
 fi
 
 # Preserving chain
 chains=$HESTIA/data/firewall/chains.conf
-check_chain=$(grep "CHAIN='$chain'" $chains 2>/dev/null)
+check_chain=$(grep "CHAIN='$chain'" $chains 2> /dev/null)
 if [ -z "$check_chain" ]; then
-    echo "CHAIN='$chain' PORT='$port' PROTOCOL='$protocol'" >> $chains
+	echo "CHAIN='$chain' PORT='$port' PROTOCOL='$protocol'" >> $chains
 fi
 
 # Changing permissions

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Purge nginx cache
-# options: USER DOMAINå
+# options: USER DOMAIN
 #
 # example: v-purge-nginx-cache user domain.tld
 #
@@ -44,17 +44,17 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-conf=$(grep "DOMAIN='$domain'" "$USER_DATA/web.conf");
+conf=$(grep "DOMAIN='$domain'" "$USER_DATA/web.conf")
 parse_object_kv_list "$conf"
 
 # Purge nginx FastCGI cache
 if [ -d "/var/cache/nginx/micro/$domain" ]; then
-    rm -rf /var/cache/nginx/micro/$domain
+	rm -rf /var/cache/nginx/micro/$domain/*
 fi
 
 # Purge nginx proxy cache
 if [ -d "/var/cache/nginx/$domain" ]; then
-    rm -rf /var/cache/nginx/$domain
+	rm -rf /var/cache/nginx/$domain/*
 fi
 
 #----------------------------------------------------------#
@@ -63,8 +63,12 @@ fi
 
 # Restart services if requested
 if [ "$restart" != "no" ]; then
-    $BIN/v-restart-web "$restart"
-    check_result $? "Web restart failed" > /dev/null
+	$BIN/v-restart-web "$restart"
+	check_result $? "Web restart failed" > /dev/null
+
+	$BIN/v-restart-proxy "$restart"
+	check_result $? "Proxy restart failed" > /dev/null
+
 fi
 
 # Logging

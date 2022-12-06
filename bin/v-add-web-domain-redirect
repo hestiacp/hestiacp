@@ -2,14 +2,14 @@
 # info: Adding force redirect to domain
 # options: USER DOMAIN REDIRECT HTTPCODE [RESTART]
 #
-# example: v-add-web-domain-redirect user domain.tld domain.tld 
-# example: v-add-web-domain-redirect user domain.tld www.domain.tld 
-# example: v-add-web-domain-redirect user domain.tld shop.domain.tld  
+# example: v-add-web-domain-redirect user domain.tld domain.tld
+# example: v-add-web-domain-redirect user domain.tld www.domain.tld
+# example: v-add-web-domain-redirect user domain.tld shop.domain.tld
 # example: v-add-web-domain-redirect user domain.tld different-domain.com
 # example: v-add-web-domain-redirect user domain.tld shop.different-domain.com
 # example: v-add-web-domain-redirect user domain.tld different-domain.com 302
 #
-# Function creates a forced redirect to a domain 
+# Function creates a forced redirect to a domain
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -42,18 +42,23 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
+idn_redirect=$(idn2 --quiet $3)
+if [ $? == 0 ]; then
+	redirect=$idn_redirect
+fi
+
 if [[ "$3" =~ http://|https:// ]]; then
-    scheme=1
-    isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "$3")
-    if  [ -z "$isValidUrl" ]; then
-        check_result $E_INVALID "Invalid redirect"
-    fi
+	scheme=1
+	isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "$redirect")
+	if [ -z "$isValidUrl" ]; then
+		check_result $E_INVALID "Invalid redirect"
+	fi
 else
-    isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "http://$3")
-    if  [ -z "$isValidUrl" ]; then
-        check_result $E_INVALID "Invalid redirect"
-    fi
-fi 
+	isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "http://$redirect")
+	if [ -z "$isValidUrl" ]; then
+		check_result $E_INVALID "Invalid redirect"
+	fi
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -64,28 +69,28 @@ check_hestia_demo_mode
 
 # Check if proxy is active
 if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
-    conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect"
-    sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
+	conf="$HOMEDIR/$user/conf/web/$domain/nginx.conf_redirect"
+	sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
 fi
 # Insert redirect commands
 if [ -n "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
-    if [ "$scheme" = 1 ]; then
-        echo "   return $code $redirect\$request_uri;" > $conf        
-        if [ ! -e "$sconf" ]; then
-            ln -s "$conf" "$sconf"
-        fi
-    else
-        echo "if (\$host != \"$redirect\") {" > $conf
-        echo "   return $code \$scheme://$redirect\$request_uri;" >> $conf
-        echo "}" >> $conf
-        
-        if [ ! -e "$sconf" ]; then
-            ln -s "$conf" "$sconf"
-        fi
-    fi
+	if [ "$scheme" = 1 ]; then
+		echo "   return $code $redirect\$request_uri;" > $conf
+		if [ ! -e "$sconf" ]; then
+			ln -s "$conf" "$sconf"
+		fi
+	else
+		echo "if (\$host != \"$redirect\") {" > $conf
+		echo "   return $code \$scheme://$redirect\$request_uri;" >> $conf
+		echo "}" >> $conf
+
+		if [ ! -e "$sconf" ]; then
+			ln -s "$conf" "$sconf"
+		fi
+	fi
 else
-    echo "Non supported please use .htaccess instead" 
-    exit 2;
+	echo "Non supported please use .htaccess instead"
+	exit 2
 fi
 
 #----------------------------------------------------------#
@@ -94,8 +99,8 @@ fi
 
 # Update object keys
 if [ -z "$REDIRECT" ]; then
-    add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT' 'U_DISK'
-    add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT_CODE' 'U_DISK'
+	add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT' 'U_DISK'
+	add_object_key "web" 'DOMAIN' "$domain" 'REDIRECT_CODE' 'U_DISK'
 fi
 
 # Update values for domain
@@ -103,12 +108,12 @@ update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT' "$redirect"
 update_object_value 'web' 'DOMAIN' "$domain" '$REDIRECT_CODE' "$code"
 
 if [ "$restart" = "yes" ]; then
-    # Restarting web server
-    $BIN/v-restart-web "$restart"
-    check_result $? "Web restart failed" >/dev/null
-    
-    $BIN/v-restart-proxy "$restart"
-    check_result $? "Proxy restart failed" >/dev/null
+	# Restarting web server
+	$BIN/v-restart-web "$restart"
+	check_result $? "Web restart failed" > /dev/null
+
+	$BIN/v-restart-proxy "$restart"
+	check_result $? "Proxy restart failed" > /dev/null
 fi
 
 # Logging

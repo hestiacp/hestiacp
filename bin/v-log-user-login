@@ -15,10 +15,9 @@ user_agent=$5
 authlog="${6-no}"
 reason="${7}"
 
-
 active="yes"
 if [ "$status" = "failed" ]; then
-    active="no"
+	active="no"
 fi
 
 # Includes
@@ -40,16 +39,15 @@ format_no_quotes "$user_agent" "USER_AGENT"
 is_common_format_valid "$authlog" "AUTHLOG"
 format_no_quotes "$reason" "REASON"
 
-
 is_object_valid 'user' 'USER' "$user"
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 if [ ! -f "$USER_DATA/auth.log" ]; then
-    touch "$USER_DATA/auth.log"
+	touch "$USER_DATA/auth.log"
 fi
 
 #----------------------------------------------------------#
@@ -59,7 +57,7 @@ fi
 echo "DATE='$date' TIME='$time' IP='$ip' ACTION='login' STATUS='$status' USER_AGENT='$user_agent' SESSION='$session_id' ACTIVE='$active'" >> "$USER_DATA/auth.log"
 
 if [ "$authlog" = "yes" ]; then
-    echo "$date $time $user $ip failed to login ($reason)" >> "$HESTIA/log/auth.log"    
+	echo "$date $time $user $ip failed to login ($reason)" >> "$HESTIA/log/auth.log"
 fi
 
 #----------------------------------------------------------#

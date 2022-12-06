@@ -22,18 +22,17 @@ check_args '1' "$#" 'VERSION'
 
 # Verify php version format
 if [[ ! $version =~ ^[0-9]\.[0-9]+ ]]; then
-    echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
-    echo "Example: 7.0, 7.4, 8.0"
-    exit "$E_INVALID";
+	echo "The specified PHP version format is invalid, it should look like [0-9].[0-9]."
+	echo "Example: 7.0, 7.4, 8.0"
+	exit "$E_INVALID"
 fi
 
 # Check if php version exists
-version_check=$($HESTIA/bin/v-list-sys-php plain | grep "$version");
-if [ -z "$version_check" ] ; then
-    echo "ERROR: Specified PHP version is not installed."
-    exit "$E_INVALID";
+version_check=$($HESTIA/bin/v-list-sys-php plain | grep "$version")
+if [ -z "$version_check" ]; then
+	echo "ERROR: Specified PHP version is not installed."
+	exit "$E_INVALID"
 fi
-
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -45,21 +44,18 @@ check_hestia_demo_mode
 # Set file locations
 php_fpm="/etc/init.d/php$version-fpm"
 
-
 rm -f /etc/php/*/fpm/pool.d/www.conf
 cp -f $HESTIA/install/deb/php-fpm/www.conf /etc/php/$version/fpm/pool.d/www.conf
 
 for user in $($HESTIA/bin/v-list-sys-users plain); do
-    $BIN/v-rebuild-web-domains "$user" 'no' >/dev/null 2>&1
-    $BIN/v-rebuild-mail-domains "$user" 'no' >/dev/null 2>&1
-done;
+	$BIN/v-rebuild-web-domains "$user" 'no' > /dev/null 2>&1
+	$BIN/v-rebuild-mail-domains "$user" 'no' > /dev/null 2>&1
+done
 
 # restart
 $HESTIA/bin/v-restart-web-backend
 $HESTIA/bin/v-restart-web
 $HESTIA/bin/v-restart-proxy
-
-
 
 update-alternatives --set php /usr/bin/php$version
 

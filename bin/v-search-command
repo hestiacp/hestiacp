@@ -25,9 +25,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 if [ $# -eq 0 ]; then
-    echo "ERROR: No search arguments specified."
-    echo "Usage: v-search-command ARG1 [ARG2] [ARG...]"
-    exit 1
+	echo "ERROR: No search arguments specified."
+	echo "Usage: v-search-command ARG1 [ARG2] [ARG...]"
+	exit 1
 fi
 
 # Perform verification if read-only mode is enabled
@@ -37,23 +37,22 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-SearchResults=`ls -a $HESTIA/bin/ | sort`
-TotalItems=`ls -a $HESTIA/bin/ | sort | wc -l`
-
+SearchResults=$(ls -a $HESTIA/bin/ | sort)
+TotalItems=$(ls -a $HESTIA/bin/ | sort | wc -l)
 
 for i; do
-    SearchResults=`echo $SearchResults | tr " " "\n" | grep $i`
-    FoundItems=`echo $SearchResults | tr " " "\n" | grep $i | wc -l`
+	SearchResults=$(echo $SearchResults | tr " " "\n" | grep $i)
+	FoundItems=$(echo $SearchResults | tr " " "\n" | grep $i | wc -l)
 done
 
 if [ -z "$SearchResults" ]; then
-    echo "No available commands were found matching the specified criteria."
-    echo "There are a total of $TotalItems commands available."
+	echo "No available commands were found matching the specified criteria."
+	echo "There are a total of $TotalItems commands available."
 else
-    echo "Command Search Results"
-    echo "================================="
-    echo $SearchResults | tr " " "\n"
-    echo "================================="
-    echo "Found $FoundItems matching items in $TotalItems commands."
+	echo "Command Search Results"
+	echo "================================="
+	echo $SearchResults | tr " " "\n"
+	echo "================================="
+	echo "Found $FoundItems matching items in $TotalItems commands."
 fi
 exit

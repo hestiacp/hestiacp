@@ -26,11 +26,11 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'TYPE [HOST]'
-types=$(echo "$BACKUP_SYSTEM" |sed "s/,/\n/g" |grep "^$type$")
+types=$(echo "$BACKUP_SYSTEM" | sed "s/,/\n/g" | grep "^$type$")
 if [ -z "$types" ]; then
-    echo "Error: invalid backup type"
-    log_event "$E_INVALID" "$ARGUMENTS"
-    exit "$E_INVALID"
+	echo "Error: invalid backup type"
+	log_event "$E_INVALID" "$ARGUMENTS"
+	exit "$E_INVALID"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -48,11 +48,11 @@ rm -f $HESTIA/conf/$type.backup.conf
 #----------------------------------------------------------#
 
 # Updating hestia.conf
-bckp=$(echo "$BACKUP_SYSTEM" |\
-    sed "s/,/\n/g"|\
-    sed "s/^$type$//" |\
-    sed "/^$/d"|\
-    sed ':a;N;$!ba;s/\n/,/g')
+bckp=$(echo "$BACKUP_SYSTEM" \
+	| sed "s/,/\n/g" \
+	| sed "s/^$type$//" \
+	| sed "/^$/d" \
+	| sed ':a;N;$!ba;s/\n/,/g')
 sed -i "s/BACKUP_SYSTEM=.*/BACKUP_SYSTEM='$bckp'/g" $HESTIA/conf/hestia.conf
 
 # Logging

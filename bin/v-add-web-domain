@@ -20,7 +20,7 @@ user=$1
 domain=$2
 domain_idn=$2
 ip=$3
-restart=$4      # will be moved to the end soon
+restart=$4 # will be moved to the end soon
 aliases=$5
 proxy_ext=$6
 
@@ -53,24 +53,24 @@ check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
 is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_package_full 'WEB_DOMAINS' 
+is_package_full 'WEB_DOMAINS'
 
-if [ "$aliases" != "none" ]; then 
-    ALIAS="$aliases"
-    is_package_full 'WEB_ALIASES' 
+if [ "$aliases" != "none" ]; then
+	ALIAS="$aliases"
+	is_package_full 'WEB_ALIASES'
 fi
 
-if [ "$($BIN/v-list-web-domain $user $domain_utf plain |cut -f 1) " != "$domain" ]; then
-    is_domain_new 'web' "$domain_utf,$aliases"
+if [ "$($BIN/v-list-web-domain $user $domain_utf plain | cut -f 1) " != "$domain" ]; then
+	is_domain_new 'web' "$domain_utf,$aliases"
 fi
-if [ "$($BIN/v-list-web-domain $user $domain_idn plain |cut -f 1) " != "$domain" ]; then
-    is_domain_new 'web' "$domain_idn,$aliases"
+if [ "$($BIN/v-list-web-domain $user $domain_idn plain | cut -f 1) " != "$domain" ]; then
+	is_domain_new 'web' "$domain_idn,$aliases"
 else
-    is_domain_new 'web' "$domain,$aliases"
+	is_domain_new 'web' "$domain,$aliases"
 fi
 if [ -z "$(is_ip_format_valid $domain)" ]; then
-    echo "Error: Invalid domain format. IP address detected as input." 
-    exit 1
+	echo "Error: Invalid domain format. IP address detected as input."
+	exit 1
 fi
 
 is_dir_symlink "$HOMEDIR/$user/web"
@@ -79,9 +79,9 @@ is_dir_symlink "$HOMEDIR/$user/web/$domain"
 is_base_domain_owner "$domain,$aliases"
 
 if [ -n "$ip" ]; then
-    is_ip_valid "$ip" "$user"
+	is_ip_valid "$ip" "$user"
 else
-    get_user_ip
+	get_user_ip
 fi
 
 # Perform verification if read-only mode is enabled
@@ -107,15 +107,15 @@ $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/logs"
 
 # Creating domain logs
 touch /var/log/$WEB_SYSTEM/domains/$domain.bytes \
-      /var/log/$WEB_SYSTEM/domains/$domain.log \
-      /var/log/$WEB_SYSTEM/domains/$domain.error.log
+	/var/log/$WEB_SYSTEM/domains/$domain.log \
+	/var/log/$WEB_SYSTEM/domains/$domain.error.log
 ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.*log \
-    $HOMEDIR/$user/web/$domain/logs/
+	$HOMEDIR/$user/web/$domain/logs/
 
 # Adding domain skeleton
-user_exec cp -r $WEBTPL/skel/* "$HOMEDIR/$user/web/$domain/" >/dev/null 2>&1
+user_exec cp -r $WEBTPL/skel/* "$HOMEDIR/$user/web/$domain/" > /dev/null 2>&1
 for file in $(find "$HOMEDIR/$user/web/$domain/" -type f); do
-    sed -i "s/%domain%/$domain/g" $file
+	sed -i "s/%domain%/$domain/g" $file
 done
 
 # Changing file owner & permission
@@ -130,49 +130,54 @@ chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
 
 # Adding PHP-FPM backend
 if [ -n "$WEB_BACKEND" ]; then
-    if [ -z "$BACKEND_TEMPLATE" ]; then
-        BACKEND_TEMPLATE='default'
-        if [ -z "$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)" ]; then
-            sed -i "s/^DNS_TEMPL/BACKEND_TEMPLATE='default'\nDNS_TEMPL/g" \
-                $USER_DATA/user.conf
-        else
-            update_user_value "$user" '$BACKEND_TEMPLATE' "default"
-        fi
-    fi
-    export BACKEND="$BACKEND_TEMPLATE"
-    $BIN/v-add-web-domain-backend "$user" "$domain" "$BACKEND_TEMPLATE" "$restart"
-    check_result $? "Backend error" >/dev/null
+	if [ -z "$BACKEND_TEMPLATE" ]; then
+		BACKEND_TEMPLATE='default'
+		if [ -z "$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)" ]; then
+			sed -i "s/^DNS_TEMPL/BACKEND_TEMPLATE='default'\nDNS_TEMPL/g" \
+				$USER_DATA/user.conf
+		else
+			update_user_value "$user" '$BACKEND_TEMPLATE' "default"
+		fi
+	fi
+	export BACKEND="$BACKEND_TEMPLATE"
+	$BIN/v-add-web-domain-backend "$user" "$domain" "$BACKEND_TEMPLATE" "$restart"
+	check_result $? "Backend error" > /dev/null
 fi
 
 # Preparing domain aliases
 if [ "$aliases" = 'none' ]; then
-    ALIAS=''
+	ALIAS=''
 else
-    ALIAS="www.$domain"
-    if [ -z "$aliases" ]; then
-        # Check and skip www alias for subdomains.
-        IFS='.' read -r -a domain_elements <<< "$domain"
-        if [ "${#domain_elements[@]}" -gt 2 ]; then
-            ALIAS=""
-        else
-            ALIAS="www.$domain"
-        fi
-    else
-        ALIAS="$aliases"
-    fi
+	ALIAS="www.$domain"
+	if [ -z "$aliases" ]; then
+		# Check and skip www alias for subdomains.
+		IFS='.' read -r -a domain_elements <<< "$domain"
+		if [ "${#domain_elements[@]}" -gt 2 ]; then
+			is_valid_2_part_extension $domain
+			if [ $? -ne 0 ]; then
+				ALIAS=""
+			else
+				ALIAS="www.$domain"
+			fi
+		else
+			ALIAS="www.$domain"
+		fi
+	else
+		ALIAS="$aliases"
+	fi
 
-    ip_alias=$(get_ip_alias "$domain")
-    if [ -n "$ip_alias" ]; then
-        ALIAS="$ALIAS,$ip_alias"
-    fi
+	ip_alias=$(get_ip_alias "$domain")
+	if [ -n "$ip_alias" ]; then
+		ALIAS="$ALIAS,$ip_alias"
+	fi
 fi
 
 # Preparing domain variables
 prepare_web_domain_values
 
-if [ -z "$WEB_TEMPLATE" ]; then 
-    WEB_TEMPLATE='default'
-    update_user_value "$user" '$WEB_TEMPLATE' "default"
+if [ -z "$WEB_TEMPLATE" ]; then
+	WEB_TEMPLATE='default'
+	update_user_value "$user" '$WEB_TEMPLATE' "default"
 fi
 
 # Adding web server config
@@ -180,18 +185,18 @@ add_web_config "$WEB_SYSTEM" "$WEB_TEMPLATE.tpl"
 
 # Adding proxy config
 if [ -n "$PROXY_SYSTEM" ]; then
-    PROXY_EXT="$proxy_ext"
-    if [ -z "$proxy_ext" ]; then
-        PROXY_EXT="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
-        PROXY_EXT="$PROXY_EXT,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp"
-        PROXY_EXT="$PROXY_EXT,rtf,js,mp3,avi,mpeg,flv,html,htm"
-    fi
-    if [ -z "$PROXY_TEMPLATE" ]; then 
-        PROXY_TEMPLATE='default'
-        update_user_value "$user" '$PROXY_TEMPLATE' "default"
-    fi
-    
-    add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl" 
+	PROXY_EXT="$proxy_ext"
+	if [ -z "$proxy_ext" ]; then
+		PROXY_EXT="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
+		PROXY_EXT="$PROXY_EXT,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp"
+		PROXY_EXT="$PROXY_EXT,rtf,js,mp3,avi,mpeg,flv,html,htm"
+	fi
+	if [ -z "$PROXY_TEMPLATE" ]; then
+		PROXY_TEMPLATE='default'
+		update_user_value "$user" '$PROXY_TEMPLATE' "default"
+	fi
+
+	add_web_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl"
 fi
 
 #----------------------------------------------------------#
@@ -205,8 +210,8 @@ increase_user_value "$user" '$U_WEB_ALIASES' "$alias_number"
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding domain in web.conf
 echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE'\
@@ -219,11 +224,11 @@ syshealth_repair_web_config
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Added new web domain (Name: $domain)."

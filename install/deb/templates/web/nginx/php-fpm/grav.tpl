@@ -12,14 +12,14 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
         location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
         expires     max;
-        fastcgi_hide_header "Set-Cookie"; 
+        fastcgi_hide_header "Set-Cookie";
         }
 
         location ~ [^/]\.php(/|$) {
@@ -27,7 +27,7 @@ server {
             if (!-f $document_root$fastcgi_script_name) {
                 return  404;
             }
-        
+
             fastcgi_pass    %backend_lsnr%;
             fastcgi_index   index.php;
             include         /etc/nginx/fastcgi_params;
@@ -36,14 +36,14 @@ server {
     location /error/ {
     alias   %home%/%user%/web/%domain%/document_errors/;
     }
-    
+
     location ~* /(\.git|cache|bin|logs|backup|tests)/.*$ { return 403; }
     location ~* /(system|vendor)/.*\.(txt|xml|md|html|yaml|yml|php|pl|py|cgi|twig|sh|bat)$ { return 403; }
     location ~* /user/.*\.(txt|md|yaml|yml|php|pl|py|cgi|twig|sh|bat)$ { return 403; }
     location ~ /(LICENSE\.txt|composer\.lock|composer\.json|nginx\.conf|web\.config|htaccess\.txt|\.htaccess) { return 403; }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

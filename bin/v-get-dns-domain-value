@@ -38,7 +38,7 @@ is_format_valid 'user' 'domain' 'key'
 is_object_valid 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 
-key=$(echo "$key"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
+key=$(echo "$key" | tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -54,4 +54,4 @@ get_object_value 'dns' 'DOMAIN' "$domain" "$key"
 # Logging
 log_event "$OK" "$ARGUMENTS"
 
-exit 
+exit

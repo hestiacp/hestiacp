@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # phpmyadmin-fixer
 #
 # Fixes for phpmyadmin (configuration storage and some extended features)
@@ -16,7 +16,7 @@ PASS=$(gen_pass)
 pmapath1="/etc/phpmyadmin/config.inc.php"
 pmapath2="/usr/share/phpmyadmin/config.sample.inc.php"
 
-#delete old and paste new value 
+#delete old and paste new value
 sed -i '/pmadb/d' $pmapath1
 sed -i '/controluser/d' $pmapath1
 sed -i '/bookmarktable/d' $pmapath1
@@ -122,20 +122,20 @@ PMADB=phpmyadmin
 PMAUSER=pma
 
 #DROP USER and TABLE
-mysql -uroot <<MYSQL_PMA1
+mysql -uroot << MYSQL_PMA1
 DROP USER '$PMAUSER'@'localhost';
 DROP DATABASE $PMADB;
 FLUSH PRIVILEGES;
 MYSQL_PMA1
 
 #CREATE PMA USER
-mysql -uroot <<MYSQL_PMA2
+mysql -uroot << MYSQL_PMA2
 CREATE USER '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 CREATE DATABASE $PMADB;
 MYSQL_PMA2
 
 #GRANT PMA USE SOME RIGHTS
-mysql -uroot <<MYSQL_PMA3
+mysql -uroot << MYSQL_PMA3
 USE $PMADB;
 GRANT USAGE ON $PMADB.* TO '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 GRANT ALL PRIVILEGES ON $PMADB.* TO '$PMAUSER'@'localhost';

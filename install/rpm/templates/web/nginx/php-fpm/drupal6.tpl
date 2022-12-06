@@ -6,7 +6,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location = /favicon.ico {
@@ -44,11 +44,11 @@ server {
     location @rewrite {
         rewrite ^/(.*)$ /index.php?q=$1;
     }
-    
+
     location ~ /vendor/.*\.php$ {
         deny all;
         return 404;
-    }    
+    }
 
     location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
         try_files $uri @rewrite;
@@ -59,11 +59,11 @@ server {
     location ~ ^/sites/.*/files/imagecache/ {
         try_files $uri @rewrite;
     }
-        
+
     location ~ '\.php$|^/update.php' {
         fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_pass %backend_lsnr%;             
+        fastcgi_pass %backend_lsnr%;
         include /etc/nginx/fastcgi_params;
     }
 

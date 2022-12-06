@@ -17,9 +17,9 @@
     CustomLog /var/log/%web_system%/domains/%domain%.bytes bytes
     CustomLog /var/log/%web_system%/domains/%domain%.log combined
     ErrorLog /var/log/%web_system%/domains/%domain%.error.log
-        
+
     IncludeOptional %home%/%user%/conf/web/%domain%/forcessl.apache2.conf*
-    
+
     <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes +ExecCGI

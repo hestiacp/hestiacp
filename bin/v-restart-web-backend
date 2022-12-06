@@ -23,11 +23,11 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 send_email_report() {
-    email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
-    email=$(echo "$email" | cut -f 2 -d "'")
-    subj="$(hostname): $WEB_BACKEND restart failed"
-    cat $tmpfile |$SENDMAIL -s "$subj" $email
-    [[ -f "$tmpfile" ]] && rm -f $tmpfile
+	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
+	email=$(echo "$email" | cut -f 2 -d "'")
+	subj="$(hostname): $WEB_BACKEND restart failed"
+	cat $tmpfile | $SENDMAIL -s "$subj" $email
+	[[ -f "$tmpfile" ]] && rm -f $tmpfile
 }
 
 #----------------------------------------------------------#
@@ -36,49 +36,49 @@ send_email_report() {
 
 # Exit
 if [ -z "$WEB_BACKEND" ] || [ "$WEB_BACKEND" = 'remote' ]; then
-    exit
+	exit
 fi
 
 if [ "$1" = "no" ]; then
-    exit
+	exit
 fi
 
 # Schedule restart
 if [ "$1" = 'scheduled' ] || [ -z "$1" ] && [ "$SCHEDULED_RESTART" = 'yes' ]; then
-    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
-    echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
-    exit
+	sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+	echo "$BIN/$SCRIPT now" >> $HESTIA/data/queue/restart.pipe
+	exit
 fi
 
 tmpfile=$(mktemp)
 
 if [ -z "$version" ]; then
-    # Substitute php-fpm service name formats
-    for version in $($BIN/v-list-sys-php plain); do
-        v_php="php$version-fpm"
-        if [ ! -f "/etc/php/${version}/fpm/pool.d/dummy.conf" ]; then
-            cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "/etc/php/${version}/fpm/pool.d/"
-            sed -i "s/9999/99${version//.}/g" "/etc/php/${version}/fpm/pool.d/dummy.conf"
-        fi
-    
-        $BIN/v-restart-service "$v_php" "$restart" 
-        if [ $? -ne 0 ]; then
-            send_email_report
-            check_result "$E_RESTART" "$v_php restart failed"
-        fi
-    done
+	# Substitute php-fpm service name formats
+	for version in $($BIN/v-list-sys-php plain); do
+		v_php="php$version-fpm"
+		if [ ! -f "/etc/php/${version}/fpm/pool.d/dummy.conf" ]; then
+			cp -f "$HESTIA_INSTALL_DIR/php-fpm/dummy.conf" "/etc/php/${version}/fpm/pool.d/"
+			sed -i "s/9999/99${version//./}/g" "/etc/php/${version}/fpm/pool.d/dummy.conf"
+		fi
+
+		$BIN/v-restart-service "$v_php" "$restart"
+		if [ $? -ne 0 ]; then
+			send_email_report
+			check_result "$E_RESTART" "$v_php restart failed"
+		fi
+	done
 else
-    v_php="php$version-fpm"
-    $BIN/v-restart-service "$v_php" "$restart" 
-    if [ $? -ne 0 ]; then
-        send_email_report
-        check_result "$E_RESTART" "$v_php restart failed"
-    fi
+	v_php="php$version-fpm"
+	$BIN/v-restart-service "$v_php" "$restart"
+	if [ $? -ne 0 ]; then
+		send_email_report
+		check_result "$E_RESTART" "$v_php restart failed"
+	fi
 fi
 
 # Update restart queue
 if [ -e "$HESTIA/data/queue/restart.pipe" ]; then
-    sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
+	sed -i "/\/$SCRIPT now/d" $HESTIA/data/queue/restart.pipe
 fi
 
 #----------------------------------------------------------#

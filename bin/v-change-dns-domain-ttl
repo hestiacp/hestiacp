@@ -24,6 +24,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -56,18 +58,17 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$TTL' "$ttl"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    update_domain_serial
-    update_domain_zone
+	rebuild_dns_domain_conf
 fi
 
 # Updating dns-cluster queue
-if [ -n "$DNS_CLUSTER" ]; then
-    # Check for first sync
-    dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
-    if [ -z "$dlock" ]; then
-        cmd="$BIN/v-change-remote-dns-domain-ttl $user $domain $ttl"
-        echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
-    fi
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	# Check for first sync
+	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+	if [ -z "$dlock" ]; then
+		cmd="$BIN/v-change-remote-dns-domain-ttl $user $domain $ttl"
+		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -76,7 +77,7 @@ fi
 
 # Restarting named
 $BIN/v-restart-dns "$restart"
-check_result $? "DNS restart failed" >/dev/null
+check_result $? "DNS restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "DNS" "TTL for DNS domain changed (TTL: $ttl, Domain: $domain)."

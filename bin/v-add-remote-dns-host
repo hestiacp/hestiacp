@@ -3,7 +3,7 @@
 # options: HOST PORT USER PASSWORD [TYPE] [DNS_USER]
 #
 # example: v-add-remote-dns-host slave.your_host.com 8083 admin your_passw0rd
-# 
+#
 # example: v-add-remote-dns-host slave.your_host.com 8083 api_key ''
 #
 # This function adds remote dns server to the dns cluster.
@@ -23,7 +23,8 @@ user=$3
 USER=$user
 hash=$user
 HASH=$user
-password=$4; HIDE=4
+password=$4
+HIDE=4
 PASSWORD=$password
 type=${5}
 TYPE="$type"
@@ -45,17 +46,17 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 if [ -z "$type" ]; then
-    type='api'
-    TYPE="$type"
+	type='api'
+	TYPE="$type"
 fi
 
 args_usage='HOST PORT USER [PASSWORD] [TYPE] [DNS_USER]'
 check_args '3' "$#" "$args_usage"
 is_format_valid 'host' 'port' 'dns_user'
 if [ -z "$password" ]; then
-    is_format_valid 'hash'
+	is_format_valid 'hash'
 else
-    is_format_valid 'user'
+	is_format_valid 'user'
 fi
 is_type_valid "api ssh" "$type"
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
@@ -72,38 +73,45 @@ check_hestia_demo_mode
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 if [ -z "$password" ]; then
-    # Concatentating dns host string
-    str="HOST='$host' PORT='$port' HASH='$hash'"
-    str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
-    str="$str TIME='$time' DATE='$date'"
+	# Concatentating dns host string
+	str="HOST='$host' PORT='$port' HASH='$hash'"
+	str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
+	str="$str TIME='$time' DATE='$date'"
 else
-    # Concatentating dns host string
-    str="HOST='$host' PORT='$port' USER='$user' PASSWORD='$password'"
-    str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
-    str="$str TIME='$time' DATE='$date'"
-fi    
+	# Concatentating dns host string
+	str="HOST='$host' PORT='$port' USER='$user' PASSWORD='$password'"
+	str="$str DNS_USER='$dns_user' TYPE='$type' SUSPENDED='no'"
+	str="$str TIME='$time' DATE='$date'"
+fi
 
 # Adding host to dns-cluster.conf
 echo "$str" >> $HESTIA/conf/dns-cluster.conf
 chmod 660 $HESTIA/conf/dns-cluster.conf
 
 # Enabling DNS_CLUSTER
-if [ -z "$(grep DNS_CLUSTER $HESTIA/conf/hestia.conf)" ]; then
-    sed -i "s/^STATS_/DNS_CLUSTER='yes'\nSTATS_/g" $HESTIA/conf/hestia.conf
+if [ -z "$(grep DNS_CLUSTER= $HESTIA/conf/hestia.conf)" ]; then
+	sed -i "s/^STATS_/DNS_CLUSTER='yes'\nSTATS_/g" $HESTIA/conf/hestia.conf
 else
-    sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $HESTIA/conf/hestia.conf
+	sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $HESTIA/conf/hestia.conf
 fi
 
 # Enabling remote dns-cluster queue
 cluster_cmd v-add-cron-restart-job
 check_result $? "$HOST connection failed" "$E_CONNECT"
 
+# Loop trough domains to generate new serial
+for dns_user in $($BIN/v-list-sys-users plain); do
+	for dns_domain in $($BIN/v-list-dns-domains $dns_user plain | cut -f1); do
+		$BIN/v-rebuild-dns-domain $dns_user $dns_domain "no" "yes"
+	done
+done
+
 # Syncing all domains
-$BIN/v-sync-dns-cluster "$host"
+$BIN/v-sync-dns-cluster
 check_result $? "$HOST sync failed" "$E_CONNECT"
 
 #----------------------------------------------------------#
@@ -114,7 +122,7 @@ check_result $? "$HOST sync failed" "$E_CONNECT"
 cmd="sudo $HESTIA/bin/v-update-sys-queue dns-cluster"
 check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
 if [ -z "$check_cron" ] && [ ! -z "$CRON_SYSTEM" ]; then
-    $BIN/v-add-cron-job admin '*/5' '*' '*' '*' '*' "$cmd"
+	$BIN/v-add-cron-job admin '*/5' '*' '*' '*' '*' "$cmd"
 fi
 
 # Logging

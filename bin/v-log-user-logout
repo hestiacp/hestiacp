@@ -28,7 +28,7 @@ is_common_format_valid "$session_id" "Session ID"
 is_object_valid 'user' 'USER' "$user"
 
 if [ ! -f "$USER_DATA/auth.log" ]; then
-    touch "$USER_DATA/auth.log"
+	touch "$USER_DATA/auth.log"
 fi
 
 #----------------------------------------------------------#

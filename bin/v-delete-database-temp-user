@@ -5,7 +5,7 @@
 # example: v-add-database-temp-user wordress hestia_sso_user mysql
 #
 # Revokes "temp user" access to a database and removes the user
-# To be used in combination with v-add-database-temp-user 
+# To be used in combination with v-add-database-temp-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -42,8 +42,8 @@ is_object_unsuspended 'db' 'DB' "$database"
 get_next_dbhost
 
 if [[ $dbuser != *"hestia_sso"* ]]; then
-    echo "DBUSER is invalid SSO user"
-    exit "$E_INVALID";
+	echo "DBUSER is invalid SSO user"
+	exit "$E_INVALID"
 fi
 
 # Perform verification if read-only mode is enabled

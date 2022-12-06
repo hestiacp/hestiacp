@@ -35,7 +35,7 @@ server {
     }
 
     location ~ /\.(?!well-known\/|file) {
-       deny all; 
+       deny all;
        return 404;
     }
 

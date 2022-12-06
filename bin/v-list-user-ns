@@ -24,42 +24,42 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    i=1
-    objects=$(echo -e "${ns//,/\\n}" |wc -l)
-    echo '['
-    for nameserver in ${ns//,/ };do
-        if [ "$i" -ne "$objects" ]; then
-            echo -e  "\t\"$nameserver\","
-        else
-            echo -e  "\t\"$nameserver\""
-        fi
-        (( ++i))
-    done
-    echo ']'
+	i=1
+	objects=$(echo -e "${ns//,/\\n}" | wc -l)
+	echo '['
+	for nameserver in ${ns//,/ }; do
+		if [ "$i" -ne "$objects" ]; then
+			echo -e "\t\"$nameserver\","
+		else
+			echo -e "\t\"$nameserver\""
+		fi
+		((++i))
+	done
+	echo ']'
 }
 
 # SHELL list function
 shell_list() {
-    echo "NS"
-    echo "--"
-    for nameserver in ${ns//,/ };do
-        echo "$nameserver"
-    done
+	echo "NS"
+	echo "--"
+	for nameserver in ${ns//,/ }; do
+		echo "$nameserver"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    for nameserver in ${ns//,/ };do
-        echo "$nameserver"
-    done
+	for nameserver in ${ns//,/ }; do
+		echo "$nameserver"
+	done
 }
 
 # CSV list function
 csv_list() {
-    echo "NAMESERVER"
-    for nameserver in ${ns//,/ };do
-        echo "$nameserver"
-    done
+	echo "NAMESERVER"
+	for nameserver in ${ns//,/ }; do
+		echo "$nameserver"
+	done
 }
 
 #----------------------------------------------------------#
@@ -75,14 +75,14 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Parsing name servers
-ns=$(grep "^NS='" "$USER_DATA/user.conf" |cut -f 2 -d \')
+ns=$(grep "^NS='" "$USER_DATA/user.conf" | cut -f 2 -d \')
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system network status
-# options: 
+# options:
 #
 # example: v-list-sys-network-status
 #
@@ -11,14 +11,14 @@
 #----------------------------------------------------------#
 
 # Displaying network stats
-ss -s 
+ss -s
 echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+echo -en "-------------------------------------\n\n"
 
 # Displaying network usage
 lsof -itcp -n -P
 echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+echo -en "-------------------------------------\n\n"
 
 # Displaying network interfaces
 ip addr list

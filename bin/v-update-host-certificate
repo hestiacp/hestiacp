@@ -11,9 +11,9 @@
 #----------------------------------------------------------#
 
 whoami=$(whoami)
-if [ "$whoami" != "root" ] && [ "$whoami" != "admin" ] ; then
-    echo "Error: this script must be run as root or admin.";
-    exit 1;
+if [ "$whoami" != "root" ] && [ "$whoami" != "admin" ]; then
+	echo "Error: this script must be run as root or admin."
+	exit 1
 fi
 
 # Argument definition
@@ -45,8 +45,8 @@ is_object_valid 'web' 'DOMAIN' "$hostname"
 is_object_unsuspended 'web' 'DOMAIN' "$hostname"
 
 if [ ! -f "/home/$user/conf/web/$hostname/ssl/$hostname.pem" ]; then
-    echo "Error: domain $hostname does not have an SSL certificate.";
-    exit 1;
+	echo "Error: domain $hostname does not have an SSL certificate."
+	exit 1
 fi
 
 # Perform verification if read-only mode is enabled
@@ -62,21 +62,21 @@ cp /home/$user/conf/web/$hostname/ssl/$hostname.key $HESTIA/ssl/certificate.key
 
 # Enable fallback support for mail domains that do not support SSL
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    # Checking exim username for later chowning
-    exim_user="exim";
-    check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
-    if [ "$check_exim_username" -eq 1 ]; then
-        exim_user="Debian-exim"
-    fi
+	# Checking exim username for later chowning
+	exim_user="exim"
+	check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
+	if [ "$check_exim_username" -eq 1 ]; then
+		exim_user="Debian-exim"
+	fi
 
-    # Assign exim permissions to certificate
-    chown $exim_user:mail $HESTIA/ssl/certificate.crt
-    chown $exim_user:mail $HESTIA/ssl/certificate.key
+	# Assign exim permissions to certificate
+	chown $exim_user:mail $HESTIA/ssl/certificate.crt
+	chown $exim_user:mail $HESTIA/ssl/certificate.key
 fi
 
 # Add UPDATE_HOSTNAME_SSL if not exist
 if [ -z "$UPDATE_HOSTNAME_SSL" ]; then
-    echo "UPDATE_HOSTNAME_SSL='yes'" >> "$HESTIA/conf/hestia.conf"
+	echo "UPDATE_HOSTNAME_SSL='yes'" >> "$HESTIA/conf/hestia.conf"
 fi
 
 # Restart services
@@ -92,4 +92,4 @@ $BIN/v-restart-service "hestia"
 $BIN/v-log-action "system" "Info" "System" "System SSL certificate updated (Host: $hostname)."
 log_event "$OK" "$ARGUMENTS"
 
-exit 0;
+exit 0

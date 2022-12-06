@@ -4,14 +4,14 @@
     Alias / /var/lib/roundcube/
     Alias /error/ %home%/%user%/web/%root_domain%/document_errors/
     #SuexecUserGroup %user% %group%
-    
+
     SSLEngine on
     SSLVerifyClient none
     SSLCertificateFile         %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.crt
     SSLCertificateKeyFile      %home%/%user%/conf/mail/%root_domain%/ssl/%root_domain%.key
 
     IncludeOptional %home%/%user%/conf/mail/%root_domain%/apache2.forcessl.conf*
-    
+
     <Directory "/usr/share/tinymce/www/">
       Options Indexes MultiViews FollowSymLinks
       AllowOverride None

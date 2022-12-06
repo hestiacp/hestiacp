@@ -53,7 +53,7 @@ sync_cron_jobs
 
 # Restarting crond
 $BIN/v-restart-cron "$restart"
-check_result $? "Cron restart failed" >/dev/null
+check_result $? "Cron restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "system" "Info" "Cron Jobs" "Cron job suspended (Job: $job)."

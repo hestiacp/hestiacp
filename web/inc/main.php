@@ -6,461 +6,459 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
-
 try {
-    require_once 'vendor/autoload.php';
+	require_once "vendor/autoload.php";
 } catch (Throwable $ex) {
-    $errstr = 'Unable able to load required libraries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
-    trigger_error($errstr);
-    echo $errstr;
-    exit(1);
+	$errstr =
+		"Unable to load required libraries. Please run v-add-sys-dependencies in command line. Error: " .
+		$ex->getMessage();
+	trigger_error($errstr);
+	echo $errstr;
+	exit(1);
 }
 
-define('HESTIA_DIR_BIN', '/usr/local/hestia/bin/');
-define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
-define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,3);"'));
+define("HESTIA_DIR_BIN", "/usr/local/hestia/bin/");
+define("HESTIA_CMD", "/usr/bin/sudo /usr/local/hestia/bin/");
+define("DEFAULT_PHP_VERSION", "php-" . exec('php -r "echo substr(phpversion(),0,3);"'));
 
 // Load Hestia Config directly
 load_hestia_config();
-require_once(dirname(__FILE__) . '/prevent_csrf.php');
-require_once(dirname(__FILE__) . '/helpers.php');
+require_once dirname(__FILE__) . "/prevent_csrf.php";
+require_once dirname(__FILE__) . "/helpers.php";
 
-function destroy_sessions()
-{
-    unset($_SESSION);
-    session_unset();
-    session_destroy();
-    session_start();
+function destroy_sessions() {
+	unset($_SESSION);
+	session_unset();
+	session_destroy();
+	session_start();
 }
 
 $i = 0;
 
 // Saving user IPs to the session for preventing session hijacking
-$user_combined_ip = '';
-if (isset($_SERVER['REMOTE_ADDR'])) {
-    $user_combined_ip = $_SERVER['REMOTE_ADDR'];
+$user_combined_ip = "";
+if (isset($_SERVER["REMOTE_ADDR"])) {
+	$user_combined_ip = $_SERVER["REMOTE_ADDR"];
 }
-if (isset($_SERVER['HTTP_CLIENT_IP'])) {
-    $user_combined_ip .= '|' . $_SERVER['HTTP_CLIENT_IP'];
+if (isset($_SERVER["HTTP_CLIENT_IP"])) {
+	$user_combined_ip .= "|" . $_SERVER["HTTP_CLIENT_IP"];
 }
-if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    $user_combined_ip .= '|' . $_SERVER['HTTP_X_FORWARDED_FOR'];
+if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+	$user_combined_ip .= "|" . $_SERVER["HTTP_X_FORWARDED_FOR"];
 }
-if (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
-    $user_combined_ip .= '|' . $_SERVER['HTTP_FORWARDED_FOR'];
+if (isset($_SERVER["HTTP_FORWARDED_FOR"])) {
+	$user_combined_ip .= "|" . $_SERVER["HTTP_FORWARDED_FOR"];
 }
-if (isset($_SERVER['HTTP_X_FORWARDED'])) {
-    $user_combined_ip .= '|' . $_SERVER['HTTP_X_FORWARDED'];
+if (isset($_SERVER["HTTP_X_FORWARDED"])) {
+	$user_combined_ip .= "|" . $_SERVER["HTTP_X_FORWARDED"];
 }
-if (isset($_SERVER['HTTP_FORWARDED'])) {
-    $user_combined_ip .= '|' . $_SERVER['HTTP_FORWARDED'];
+if (isset($_SERVER["HTTP_FORWARDED"])) {
+	$user_combined_ip .= "|" . $_SERVER["HTTP_FORWARDED"];
 }
-if (isset($_SERVER['HTTP_CF_CONNECTING_IP'])) {
-    if (!empty($_SERVER['HTTP_CF_CONNECTING_IP'])) {
-        $user_combined_ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-    }
+if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+	if (!empty($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+		$user_combined_ip = $_SERVER["HTTP_CF_CONNECTING_IP"];
+	}
 }
 
-if (!isset($_SESSION['user_combined_ip'])) {
-    $_SESSION['user_combined_ip'] = $user_combined_ip;
+if (!isset($_SESSION["user_combined_ip"])) {
+	$_SESSION["user_combined_ip"] = $user_combined_ip;
 }
 
 // Checking user to use session from the same IP he has been logged in
-if ($_SESSION['user_combined_ip'] != $user_combined_ip) {
-    $v_user = quoteshellarg($_SESSION['user']);
-    $v_session_id = quoteshellarg($_SESSION['token']);
-    exec(HESTIA_CMD . 'v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
-    destroy_sessions();
-    header('Location: /login/');
-    exit;
+if ($_SESSION["user_combined_ip"] != $user_combined_ip && isset($_SESSION["user"])) {
+	$v_user = quoteshellarg($_SESSION["user"]);
+	$v_session_id = quoteshellarg($_SESSION["token"]);
+	exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
+	destroy_sessions();
+	header("Location: /login/");
+	exit();
 }
 
-
 // Check system settings
-if ((!isset($_SESSION['VERSION'])) && (!defined('NO_AUTH_REQUIRED'))) {
-    destroy_sessions();
-    header('Location: /login/');
-    exit;
+if (!isset($_SESSION["VERSION"]) && !defined("NO_AUTH_REQUIRED")) {
+	destroy_sessions();
+	header("Location: /login/");
+	exit();
 }
 
 // Check user session
-if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
-    destroy_sessions();
-    header('Location: /login/');
-    exit;
+if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
+	destroy_sessions();
+	header("Location: /login/");
+	exit();
 }
 
 // Generate CSRF Token
-if (isset($_SESSION['user'])) {
-    if (!isset($_SESSION['token'])) {
-        $token = bin2hex(random_bytes(16));
-        $_SESSION['token'] = $token;
-    }
+if (isset($_SESSION["user"])) {
+	if (!isset($_SESSION["token"])) {
+		$token = bin2hex(random_bytes(16));
+		$_SESSION["token"] = $token;
+	}
 }
 
-if ($_SESSION['RELEASE_BRANCH'] == 'release' && $_SESSION['DEBUG_MODE'] == 'false') {
-    define('JS_LATEST_UPDATE', 'v=' . $_SESSION['VERSION']);
+if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {
+	define("JS_LATEST_UPDATE", "v=" . $_SESSION["VERSION"]);
 } else {
-    define('JS_LATEST_UPDATE', 'r=' . time());
+	define("JS_LATEST_UPDATE", "r=" . time());
 }
 
-if (!defined('NO_AUTH_REQUIRED')) {
-    if (empty($_SESSION['LAST_ACTIVITY']) || empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])) {
-        destroy_sessions();
-        header('Location: /login/');
-    } elseif ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
-        $v_user = quoteshellarg($_SESSION['user']);
-        $v_session_id = quoteshellarg($_SESSION['token']);
-        exec(HESTIA_CMD . 'v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
-        destroy_sessions();
-        header('Location: /login/');
-        exit;
-    } else {
-        $_SESSION['LAST_ACTIVITY'] = time();
-    }
+if (!defined("NO_AUTH_REQUIRED")) {
+	if (empty($_SESSION["LAST_ACTIVITY"]) || empty($_SESSION["INACTIVE_SESSION_TIMEOUT"])) {
+		destroy_sessions();
+		header("Location: /login/");
+	} elseif ($_SESSION["INACTIVE_SESSION_TIMEOUT"] * 60 + $_SESSION["LAST_ACTIVITY"] < time()) {
+		$v_user = quoteshellarg($_SESSION["user"]);
+		$v_session_id = quoteshellarg($_SESSION["token"]);
+		exec(
+			HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id,
+			$output,
+			$return_var,
+		);
+		destroy_sessions();
+		header("Location: /login/");
+		exit();
+	} else {
+		$_SESSION["LAST_ACTIVITY"] = time();
+	}
 }
 
-function ipUsed(){
-    list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-    if(filter_var($http_host, FILTER_VALIDATE_IP)){
-        return true;
-    }else{
-        return false;
-    }
+function ipUsed() {
+	[$http_host, $port] = explode(":", $_SERVER["HTTP_HOST"] . ":");
+	if (filter_var($http_host, FILTER_VALIDATE_IP)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-if (isset($_SESSION['user'])) {
-    $user = quoteshellarg($_SESSION['user']);
-    $user_plain = htmlentities($_SESSION['user']);
+if (isset($_SESSION["user"])) {
+	$user = quoteshellarg($_SESSION["user"]);
+	$user_plain = htmlentities($_SESSION["user"]);
 }
 
-if (isset($_SESSION['look']) && $_SESSION['look']  != '' && ($_SESSION['userContext'] === 'admin')) {
-    $user = quoteshellarg($_SESSION['look']);
-    $user_plain = htmlentities($_SESSION['look']);
+if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContext"] === "admin") {
+	$user = quoteshellarg($_SESSION["look"]);
+	$user_plain = htmlentities($_SESSION["look"]);
 }
 
-require_once(dirname(__FILE__) . '/i18n.php');
+require_once dirname(__FILE__) . "/i18n.php";
 
-function check_error($return_var)
-{
-    if ($return_var > 0) {
-        header('Location: /error/');
-        exit;
-    }
+function check_error($return_var) {
+	if ($return_var > 0) {
+		header("Location: /error/");
+		exit();
+	}
 }
 
-function check_return_code($return_var, $output)
-{
-    if ($return_var != 0) {
-        $error = implode('<br>', $output);
-        if (empty($error)) {
-            $error = sprintf(_('Error code:'), $return_var);
-        }
-        $_SESSION['error_msg'] = $error;
-    }
+function check_return_code($return_var, $output) {
+	if ($return_var != 0) {
+		$error = implode("<br>", $output);
+		if (empty($error)) {
+			$error = sprintf(_("Error code:"), $return_var);
+		}
+		$_SESSION["error_msg"] = $error;
+	}
 }
-function check_return_code_redirect($return_var, $output, $location)
-{
-    if ($return_var != 0) {
-        $error = implode('<br>', $output);
-        if (empty($error)) {
-            $error = sprintf(_('Error code:'), $return_var);
-        }
-        $_SESSION['error_msg'] = $error;
-        header("Location:".$location);
-    }
+function check_return_code_redirect($return_var, $output, $location) {
+	if ($return_var != 0) {
+		$error = implode("<br>", $output);
+		if (empty($error)) {
+			$error = sprintf(_("Error code:"), $return_var);
+		}
+		$_SESSION["error_msg"] = $error;
+		header("Location:" . $location);
+	}
 }
 
-function render_page($user, $TAB, $page)
-{
-    $__template_dir = dirname(__DIR__) . '/templates/';
-    $__pages_js_dir = dirname(__DIR__) . '/js/pages/';
+function render_page($user, $TAB, $page) {
+	$__template_dir = dirname(__DIR__) . "/templates/";
+	$__pages_js_dir = dirname(__DIR__) . "/js/pages/";
 
-    // Header
-    include($__template_dir . 'header.html');
+	// Header
+	include $__template_dir . "header.php";
 
-    // Panel
-    $panel = top_panel(empty($_SESSION['look']) ? $_SESSION['user'] : $_SESSION['look'], $TAB);
-    // Extract global variables
-    // I think those variables should be passed via arguments
-    extract($GLOBALS, EXTR_SKIP);
+	// Panel
+	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
+	// Extract global variables
+	// I think those variables should be passed via arguments
+	extract($GLOBALS, EXTR_SKIP);
 
-    // Policies controller
-    @include_once(dirname(__DIR__) . '/inc/policies.php');
-    // Body
-    include($__template_dir . 'pages/' . $page . '.html');
+	// Policies controller
+	@include_once dirname(__DIR__) . "/inc/policies.php";
+	// Body
+	include $__template_dir . "pages/" . $page . ".php";
 
-    // Including common js files
-    @include_once(dirname(__DIR__) . '/templates/includes/end_js.html');
-    // Including page specific js file
-    if (file_exists($__pages_js_dir . $page . '.js')) {
-        echo '<script src="/js/pages/' . $page . '.js?' . JS_LATEST_UPDATE . '"></script>';
-    }
+	// Including common js files
+	@include_once dirname(__DIR__) . "/templates/includes/end_js.php";
+	// Including page specific js file
+	if (file_exists($__pages_js_dir . $page . ".js")) {
+		echo '<script src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
+	}
 
-    // Footer
-    include($__template_dir . 'footer.html');
+	// Footer
+	include $__template_dir . "footer.php";
 }
 
 // Match $_SESSION['token'] against $_GET['token'] or $_POST['token']
 // Usage: verify_csrf($_POST) or verify_csrf($_GET); Use verify_csrf($_POST,true) to return on failure instead of redirect
-function verify_csrf($method, $return = false)
-{
-    if ($method['token'] !== $_SESSION['token'] || empty($method['token']) || empty($_SESSION['token'])) {
-        if ($return === true) {
-            return false;
-        } else {
-            header('Location: /login/');
-            die();
-        }
-    } else {
-        return true;
-    }
+function verify_csrf($method, $return = false) {
+	if (
+		$method["token"] !== $_SESSION["token"] ||
+		empty($method["token"]) ||
+		empty($_SESSION["token"])
+	) {
+		if ($return === true) {
+			return false;
+		} else {
+			header("Location: /login/");
+			die();
+		}
+	} else {
+		return true;
+	}
 }
 
-function show_error_panel($data)
-{
-    $msg_id = '';
-    $msg_icon = '';
-    $msg_text = '';
-    if (!empty($data['error_msg'])) {
-        $msg_icon = 'fa-exclamation-circle status-icon red';
-        $msg_text = htmlentities($data['error_msg']);
-        $msg_id = 'vst-error';
-    } else {
-        if (!empty($data['ok_msg'])) {
-            $msg_icon = 'fa-check-circle status-icon green';
-            $msg_text = $data['ok_msg'];
-            $msg_id = 'vst-ok';
-        }
-    } ?>
-<span class="<?=$msg_id; ?>"> <i class="fas <?=$msg_icon; ?>"></i> <?=$msg_text; ?></span>
-<?php
+function show_alert_message($data) {
+	if (!empty($data["error_msg"]) || !empty($data["ok_msg"])) {
+		if (!empty($data["error_msg"])) {
+			$msg_icon = "fa-circle-exclamation status-icon red";
+			$msg_text = htmlentities($data["error_msg"]);
+			$msg_class = "inline-danger";
+		} else {
+			$msg_icon = "fa-circle-check status-icon green";
+			$msg_text = $data["ok_msg"];
+			$msg_class = "inline-success";
+		}
+		echo '<p class="' .
+			$msg_class .
+			' u-mb20"><i class="fas ' .
+			$msg_icon .
+			'"></i> ' .
+			$msg_text .
+			"</p>";
+	}
 }
 
-function top_panel($user, $TAB)
-{
-    $command = HESTIA_CMD . 'v-list-user ' . $user . " 'json'";
-    exec($command, $output, $return_var);
-    if ($return_var > 0) {
-        destroy_sessions();
-        $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
-        header('Location: /login/');
-        exit;
-    }
-    $panel = json_decode(implode('', $output), true);
-    unset($output);
+function top_panel($user, $TAB) {
+	$command = HESTIA_CMD . "v-list-user " . $user . " 'json'";
+	exec($command, $output, $return_var);
+	if ($return_var > 0) {
+		destroy_sessions();
+		$_SESSION["error_msg"] = _("You have been logged out. Please log in again.");
+		header("Location: /login/");
+		exit();
+	}
+	$panel = json_decode(implode("", $output), true);
+	unset($output);
 
-    // Log out active sessions for suspended users
-    if (($panel[$user]['SUSPENDED'] === 'yes') && ($_SESSION['POLICY_USER_VIEW_SUSPENDED'] !== 'yes')) {
-        if (empty($_SESSION['look'])) {
-            destroy_sessions();
-            $_SESSION['error_msg'] = _('You have been logged out. Please log in again.');
-            header('Location: /login/');
-        }
-    }
+	// Log out active sessions for suspended users
+	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
+		if (empty($_SESSION["look"])) {
+			destroy_sessions();
+			$_SESSION["error_msg"] = _("You have been logged out. Please log in again.");
+			header("Location: /login/");
+		}
+	}
 
-    // Reset user permissions if changed while logged in
-    if (($panel[$user]['ROLE']) !== ($_SESSION['userContext']) && (!isset($_SESSION['look']))) {
-        unset($_SESSION['userContext']);
-        $_SESSION['userContext'] = $panel[$user]['ROLE'];
-    }
+	// Reset user permissions if changed while logged in
+	if ($panel[$user]["ROLE"] !== $_SESSION["userContext"] && !isset($_SESSION["look"])) {
+		unset($_SESSION["userContext"]);
+		$_SESSION["userContext"] = $panel[$user]["ROLE"];
+	}
 
-    // Load user's selected theme and do not change it when impersonting user
-    if ((isset($panel[$user]['THEME'])) && (!isset($_SESSION['look']))) {
-        $_SESSION['userTheme'] = $panel[$user]['THEME'];
-    }
+	// Load user's selected theme and do not change it when impersonting user
+	if (isset($panel[$user]["THEME"]) && !isset($_SESSION["look"])) {
+		$_SESSION["userTheme"] = $panel[$user]["THEME"];
+	}
 
-    // Unset userTheme override variable if POLICY_USER_CHANGE_THEME is set to no
-    if ($_SESSION['POLICY_USER_CHANGE_THEME'] === 'no') {
-        unset($_SESSION['userTheme']);
-    }
+	// Unset userTheme override variable if POLICY_USER_CHANGE_THEME is set to no
+	if ($_SESSION["POLICY_USER_CHANGE_THEME"] === "no") {
+		unset($_SESSION["userTheme"]);
+	}
 
-    // Set preferred sort order
-    if (!isset($_SESSION['look'])) {
-        $_SESSION['userSortOrder'] = $panel[$user]['PREF_UI_SORT'];
-    }
+	// Set preferred sort order
+	if (!isset($_SESSION["look"])) {
+		$_SESSION["userSortOrder"] = $panel[$user]["PREF_UI_SORT"];
+	}
 
-    // Set home location URLs
-    if (($_SESSION['userContext'] === 'admin') && (empty($_SESSION['look']))) {
-        // Display users list for administrators unless they are impersonating a user account
-        $home_url = '/list/user/';
-    } else {
-        // Set home location URL based on available package features from account
-        if ($panel[$user]['WEB_DOMAINS'] != '0') {
-            $home_url = '/list/web/';
-        } elseif ($panel[$user]['DNS_DOMAINS'] != '0') {
-            $home_url = '/list/dns/';
-        } elseif ($panel[$user]['MAIL_DOMAINS'] != '0') {
-            $home_url = '/list/mail/';
-        } elseif ($panel[$user]['DATABASES'] != '0') {
-            $home_url = '/list/db/';
-        } elseif ($panel[$user]['CRON_JOBS'] != '0') {
-            $home_url = '/list/cron/';
-        } elseif ($panel[$user]['BACKUPS'] != '0') {
-            $home_url = '/list/backups/';
-        }
-    }
+	// Set home location URLs
+	if ($_SESSION["userContext"] === "admin" && empty($_SESSION["look"])) {
+		// Display users list for administrators unless they are impersonating a user account
+		$home_url = "/list/user/";
+	} else {
+		// Set home location URL based on available package features from account
+		if ($panel[$user]["WEB_DOMAINS"] != "0") {
+			$home_url = "/list/web/";
+		} elseif ($panel[$user]["DNS_DOMAINS"] != "0") {
+			$home_url = "/list/dns/";
+		} elseif ($panel[$user]["MAIL_DOMAINS"] != "0") {
+			$home_url = "/list/mail/";
+		} elseif ($panel[$user]["DATABASES"] != "0") {
+			$home_url = "/list/db/";
+		} elseif ($panel[$user]["CRON_JOBS"] != "0") {
+			$home_url = "/list/cron/";
+		} elseif ($panel[$user]["BACKUPS"] != "0") {
+			$home_url = "/list/backups/";
+		}
+	}
 
-    include(dirname(__FILE__) . '/../templates/includes/panel.html');
-    return $panel;
+	include dirname(__FILE__) . "/../templates/includes/panel.php";
+	return $panel;
 }
 
-function translate_date($date)
-{
-    $date = new DateTime($date);
-    return $date -> format('d').' '. _($date -> format('M')).' '.$date -> format('Y');
+function translate_date($date) {
+	$date = new DateTime($date);
+	return $date->format("d") . " " . _($date->format("M")) . " " . $date->format("Y");
 }
 
-function humanize_time($usage)
-{
-    if ($usage > 60) {
-        $usage = $usage / 60;
-        if ($usage > 24) {
-            $usage = $usage / 24;
-            $usage = number_format($usage);
-            return sprintf(ngettext('%d day', '%d days', $usage), $usage);
-        } else {
-            $usage = round($usage);
-            return sprintf(ngettext('%d hour', '%d hours', $usage), $usage);
-        }
-    } else {
-        $usage = round($usage);
-        return sprintf(ngettext('%d minute', '%d minutes', $usage), $usage);
-    }
+function humanize_time($usage) {
+	if ($usage > 60) {
+		$usage = $usage / 60;
+		if ($usage > 24) {
+			$usage = $usage / 24;
+			$usage = number_format($usage);
+			return sprintf(ngettext("%d day", "%d days", $usage), $usage);
+		} else {
+			$usage = round($usage);
+			return sprintf(ngettext("%d hour", "%d hours", $usage), $usage);
+		}
+	} else {
+		$usage = round($usage);
+		return sprintf(ngettext("%d minute", "%d minutes", $usage), $usage);
+	}
 }
 
-function humanize_usage_size($usage)
-{
-    if ($usage == 'unlimited') {
-        return '∞';
-    }
-    if ($usage > 1024) {
-        $usage = $usage / 1024;
-        if ($usage > 1024) {
-            $usage = $usage / 1024 ;
-            if ($usage > 1024) {
-                $usage = $usage / 1024 ;
-                $usage = number_format($usage, 2);
-            } else {
-                $usage = number_format($usage, 2);
-            }
-        } else {
-            $usage = number_format($usage, 2);
-        }
-    }
-    return $usage;
+function humanize_usage_size($usage) {
+	if ($usage == "unlimited") {
+		return "∞";
+	}
+	if ($usage > 1024) {
+		$usage = $usage / 1024;
+		if ($usage > 1024) {
+			$usage = $usage / 1024;
+			if ($usage > 1024) {
+				$usage = $usage / 1024;
+				$usage = number_format($usage, 2);
+			} else {
+				$usage = number_format($usage, 2);
+			}
+		} else {
+			$usage = number_format($usage, 2);
+		}
+	}
+	return $usage;
 }
 
-function humanize_usage_measure($usage)
-{
-    if ($usage == 'unlimited') {
-        return 'mb';
-    }
+function humanize_usage_measure($usage) {
+	if ($usage == "unlimited") {
+		return "mb";
+	}
 
-    $measure = 'kb';
-    if ($usage > 1024) {
-        $usage = $usage / 1024;
-        if ($usage > 1024) {
-            $usage = $usage / 1024 ;
-            $measure = ($usage > 1024) ? 'pb' : 'tb';
-        } else {
-            $measure = 'gb';
-        }
-    } else {
-        $measure = 'mb';
-    }
-    return $measure;
+	$measure = "kb";
+	if ($usage > 1024) {
+		$usage = $usage / 1024;
+		if ($usage > 1024) {
+			$usage = $usage / 1024;
+			$measure = $usage > 1024 ? "pb" : "tb";
+		} else {
+			$measure = "gb";
+		}
+	} else {
+		$measure = "mb";
+	}
+	return $measure;
 }
 
-function get_percentage($used, $total)
-{
-    if ($total = "unlimited") {
-        //return 0 if unlimited
-        return 0;
-    }
-    if (!isset($total)) {
-        $total = 0;
-    }
-    if (!isset($used)) {
-        $used = 0;
-    }
-    if ($total == 0) {
-        $percent = 0;
-    } else {
-        $percent = $used / $total;
-        $percent = $percent * 100;
-        $percent = number_format($percent, 0, '', '');
-        if ($percent < 0) {
-            $percent = 0;
-        } elseif ($percent > 100) {
-            $percent = 100;
-        }
-    }
-    return $percent;
+function get_percentage($used, $total) {
+	if ($total = "unlimited") {
+		//return 0 if unlimited
+		return 0;
+	}
+	if (!isset($total)) {
+		$total = 0;
+	}
+	if (!isset($used)) {
+		$used = 0;
+	}
+	if ($total == 0) {
+		$percent = 0;
+	} else {
+		$percent = $used / $total;
+		$percent = $percent * 100;
+		$percent = number_format($percent, 0, "", "");
+		if ($percent < 0) {
+			$percent = 0;
+		} elseif ($percent > 100) {
+			$percent = 100;
+		}
+	}
+	return $percent;
 }
 
-function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = '')
-{
-    $mail = new PHPMailer();
+function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = "") {
+	$mail = new PHPMailer();
 
-    if (isset($_SESSION['USE_SERVER_SMTP']) && $_SESSION['USE_SERVER_SMTP'] == "true") {
-        if(!empty($_SESSION['SERVER_SMTP_ADDR']) && $_SESSION['SERVER_SMTP_ADDR'] != ''){
-            if(filter_var($_SESSION['SERVER_SMTP_ADDR'], FILTER_VALIDATE_EMAIL)){
-                $from = $_SESSION['SERVER_SMTP_ADDR'];
-            }
-        }
+	if (isset($_SESSION["USE_SERVER_SMTP"]) && $_SESSION["USE_SERVER_SMTP"] == "true") {
+		if (!empty($_SESSION["SERVER_SMTP_ADDR"]) && $_SESSION["SERVER_SMTP_ADDR"] != "") {
+			if (filter_var($_SESSION["SERVER_SMTP_ADDR"], FILTER_VALIDATE_EMAIL)) {
+				$from = $_SESSION["SERVER_SMTP_ADDR"];
+			}
+		}
 
-        $mail->IsSMTP();
-        $mail->Mailer = "smtp";
-        $mail->SMTPDebug  = 0;
-        $mail->SMTPAuth   = true;
-        $mail->SMTPSecure = $_SESSION['SERVER_SMTP_SECURITY'];
-        $mail->Port       = $_SESSION['SERVER_SMTP_PORT'];
-        $mail->Host       = $_SESSION['SERVER_SMTP_HOST'];
-        $mail->Username   = $_SESSION['SERVER_SMTP_USER'];
-        $mail->Password   = $_SESSION['SERVER_SMTP_PASSWD'];
-    }
+		$mail->IsSMTP();
+		$mail->Mailer = "smtp";
+		$mail->SMTPDebug = 0;
+		$mail->SMTPAuth = true;
+		$mail->SMTPSecure = $_SESSION["SERVER_SMTP_SECURITY"];
+		$mail->Port = $_SESSION["SERVER_SMTP_PORT"];
+		$mail->Host = $_SESSION["SERVER_SMTP_HOST"];
+		$mail->Username = $_SESSION["SERVER_SMTP_USER"];
+		$mail->Password = $_SESSION["SERVER_SMTP_PASSWD"];
+	}
 
-    $mail->IsHTML(true);
-    $mail->ClearReplyTos();
-    if (empty($to_name)) {
-        $mail->AddAddress($to);
-    } else {
-        $mail->AddAddress($to, $to_name);
-    }
-    $mail->SetFrom($from, $from_name);
+	$mail->IsHTML(true);
+	$mail->ClearReplyTos();
+	if (empty($to_name)) {
+		$mail->AddAddress($to);
+	} else {
+		$mail->AddAddress($to, $to_name);
+	}
+	$mail->SetFrom($from, $from_name);
 
-    $mail->CharSet = "utf-8";
-    $mail->Subject = $subject;
-    $content = $mailtext;
-    $content = nl2br($content);
-    $mail->MsgHTML($content);
-    $mail->Send();
+	$mail->CharSet = "utf-8";
+	$mail->Subject = $subject;
+	$content = $mailtext;
+	$content = nl2br($content);
+	$mail->MsgHTML($content);
+	$mail->Send();
 }
 
-function list_timezones()
-{
-    foreach (['AKST', 'AKDT', 'PST', 'PDT', 'MST', 'MDT', 'CST', 'CDT', 'EST', 'EDT', 'AST', 'ADT'] as $timezone) {
-        $tz = new DateTimeZone($timezone);
-        $timezone_offsets[$timezone] = $tz->getOffset(new DateTime());
-    }
+function list_timezones() {
+	foreach (
+		["AKST", "AKDT", "PST", "PDT", "MST", "MDT", "CST", "CDT", "EST", "EDT", "AST", "ADT"]
+		as $timezone
+	) {
+		$tz = new DateTimeZone($timezone);
+		$timezone_offsets[$timezone] = $tz->getOffset(new DateTime());
+	}
 
-    foreach (DateTimeZone::listIdentifiers() as $timezone) {
-        $tz = new DateTimeZone($timezone);
-        $timezone_offsets[$timezone] = $tz->getOffset(new DateTime());
-    }
+	foreach (DateTimeZone::listIdentifiers() as $timezone) {
+		$tz = new DateTimeZone($timezone);
+		$timezone_offsets[$timezone] = $tz->getOffset(new DateTime());
+	}
 
-    foreach ($timezone_offsets as $timezone => $offset) {
-        $offset_prefix = $offset < 0 ? '-' : '+';
-        $offset_formatted = gmdate('H:i', abs($offset));
-        $pretty_offset = "UTC${offset_prefix}${offset_formatted}";
-        $c = new DateTime(gmdate('Y-M-d H:i:s'), new DateTimeZone('UTC'));
-        $c->setTimezone(new DateTimeZone($timezone));
-        $current_time = $c->format('H:i:s');
-        $timezone_list[$timezone] = "$timezone [ $current_time ] ${pretty_offset}";
-        #$timezone_list[$timezone] = "$timezone ${pretty_offset}";
-    }
-    return $timezone_list;
+	foreach ($timezone_offsets as $timezone => $offset) {
+		$offset_prefix = $offset < 0 ? "-" : "+";
+		$offset_formatted = gmdate("H:i", abs($offset));
+		$pretty_offset = "UTC${offset_prefix}${offset_formatted}";
+		$c = new DateTime(gmdate("Y-M-d H:i:s"), new DateTimeZone("UTC"));
+		$c->setTimezone(new DateTimeZone($timezone));
+		$current_time = $c->format("H:i:s");
+		$timezone_list[$timezone] = "$timezone [ $current_time ] ${pretty_offset}";
+		#$timezone_list[$timezone] = "$timezone ${pretty_offset}";
+	}
+	return $timezone_list;
 }
 
 /**
@@ -477,27 +475,25 @@ function list_timezones()
  *
  * @return string
  */
-function is_it_mysql_or_mariadb()
-{
-    exec(HESTIA_CMD . 'v-list-sys-services json', $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    unset($output);
-    $mysqltype = 'mysql';
-    if (isset($data['mariadb'])) {
-        $mysqltype = 'mariadb';
-    }
-    return $mysqltype;
+function is_it_mysql_or_mariadb() {
+	exec(HESTIA_CMD . "v-list-sys-services json", $output, $return_var);
+	$data = json_decode(implode("", $output), true);
+	unset($output);
+	$mysqltype = "mysql";
+	if (isset($data["mariadb"])) {
+		$mysqltype = "mariadb";
+	}
+	return $mysqltype;
 }
 
-function load_hestia_config()
-{
-    // Check system configuration
-    exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
-    $data = json_decode(implode('', $output), true);
-    $sys_arr = $data['config'];
-    foreach ($sys_arr as $key => $value) {
-        $_SESSION[$key] = $value;
-    }
+function load_hestia_config() {
+	// Check system configuration
+	exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
+	$data = json_decode(implode("", $output), true);
+	$sys_arr = $data["config"];
+	foreach ($sys_arr as $key => $value) {
+		$_SESSION[$key] = $value;
+	}
 }
 
 /**
@@ -505,32 +501,34 @@ function load_hestia_config()
  *
  * @return array
  */
-function backendtpl_with_webdomains()
-{
-    exec(HESTIA_CMD . 'v-list-users json', $output, $return_var);
-    $users = json_decode(implode('', $output), true);
-    unset($output);
+function backendtpl_with_webdomains() {
+	exec(HESTIA_CMD . "v-list-users json", $output, $return_var);
+	$users = json_decode(implode("", $output), true);
+	unset($output);
 
-    $backend_list=[];
-    foreach ($users as $user => $user_details) {
-        exec(HESTIA_CMD . 'v-list-web-domains '. quoteshellarg($user) . ' json', $output, $return_var);
-        $domains = json_decode(implode('', $output), true);
-        unset($output);
-        foreach ($domains as $domain => $domain_details) {
-            if (!empty($domain_details['BACKEND'])) {
-                $backend = $domain_details['BACKEND'];
-                $backend_list[$backend][$user][] = $domain;
-            }
-        }
-    }
-    return $backend_list;
+	$backend_list = [];
+	foreach ($users as $user => $user_details) {
+		exec(
+			HESTIA_CMD . "v-list-web-domains " . quoteshellarg($user) . " json",
+			$output,
+			$return_var,
+		);
+		$domains = json_decode(implode("", $output), true);
+		unset($output);
+		foreach ($domains as $domain => $domain_details) {
+			if (!empty($domain_details["BACKEND"])) {
+				$backend = $domain_details["BACKEND"];
+				$backend_list[$backend][$user][] = $domain;
+			}
+		}
+	}
+	return $backend_list;
 }
 /**
  * Check if password is valid
  *
  * @return int; 1 / 0
  */
-function validate_password($password)
-{
-    return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(.){8,}$/', $password);
+function validate_password($password) {
+	return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(.){8,}$/', $password);
 }

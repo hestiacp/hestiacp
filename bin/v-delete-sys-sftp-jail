@@ -2,7 +2,7 @@
 # info: delete system sftp jail
 # options: NONE
 #
-# example: v-delete-sys-sftp-jail 
+# example: v-delete-sys-sftp-jail
 #
 # This function disables sftp jailed environment
 
@@ -31,48 +31,47 @@ check_hestia_demo_mode
 
 # Checking sshd directives
 config='/etc/ssh/sshd_config'
-sftp_n=$(grep -n "Subsystem.*sftp" $config |grep -v internal |grep ":#")
+sftp_n=$(grep -n "Subsystem.*sftp" $config | grep -v internal | grep ":#")
 sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
-date=$("date +%s");
+date=$("date +%s")
 # Backing up config
 cp $config $config.bak-$(date +%s)
 
 # Enabling normal sftp
 if [ -n "$sftp_n" ]; then
-    fline=$(echo "$sftp_n" |cut -f 1 -d :)
-    sed -i "${fline}s/#Subsystem/Subsystem sftp/" $config
-    restart='yes'
+	fline=$(echo "$sftp_n" | cut -f 1 -d :)
+	sed -i "${fline}s/#Subsystem/Subsystem sftp/" $config
+	restart='yes'
 fi
 
 # Disabling jailed sftp
 if [ -n "$sftp_i" ]; then
-    fline=$(echo "$sftp_i" |cut -f 1 -d :)
-    lline=$((fline + 5))
-    sed -i "${fline},${lline}d" $config
-    restart='yes'
+	fline=$(echo "$sftp_i" | cut -f 1 -d :)
+	lline=$((fline + 5))
+	sed -i "${fline},${lline}d" $config
+	restart='yes'
 fi
 
 # Validating opensshd config
 if [ "$restart" = 'yes' ]; then
-    subj="OpenSSH restart failed"
-    email=$(grep CONTACT $HESTIA/data/users/admin/user.conf |cut -f 2 -d \')
-    /usr/sbin/sshd -t >/dev/null 2>&1
-    if [ "$?" -ne 0 ]; then
-        mail_text="OpenSSH can not be restarted. Please check config:
+	subj="OpenSSH restart failed"
+	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f 2 -d \')
+	/usr/sbin/sshd -t > /dev/null 2>&1
+	if [ "$?" -ne 0 ]; then
+		mail_text="OpenSSH can not be restarted. Please check config:
             \n\n$(/usr/sbin/sshd -t)"
-        echo -e "$mail_text" |$SENDMAIL -s "$subj" "$email"
-    else
-        service ssh restart >/dev/null 2>&1
-        service sshd restart >/dev/null 2>&1
-    fi
+		echo -e "$mail_text" | $SENDMAIL -s "$subj" "$email"
+	else
+		service ssh restart > /dev/null 2>&1
+		service sshd restart > /dev/null 2>&1
+	fi
 fi
 
 # Remove v-add-sys-sftp-jail to startup
 if [ ! -e "/etc/cron.d/hestia-sftp" ]; then
-    rm -f /etc/cron.d/hestia-sftp
+	rm -f /etc/cron.d/hestia-sftp
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

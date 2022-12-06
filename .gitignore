@@ -1,3 +1,4 @@
+# Packages
 *.tar
 *.zip
 *.gzip
@@ -5,15 +6,48 @@
 *.bz2
 *.deb
 
-.vscode
+# Editors
+.vs/
+.nova/
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
 .env
+
+# Composer
 composer.phar
 test/vendor/
-test/node_modules/
-npm-debug.log
+web/src/vendor/filp
+web/src/vendor/psr
+web/src/vendor/composer/installed.json
 .phpunit.result.cache
-.vs
-.nova
-/.idea/
+
+# vitepress build output
+**/.vitepress/dist/
+
+# Node
+**/node_modules/
+npm-debug.log
+
+# Yarn Integrity file
+.yarn-integrity
+
+# yarn v2+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

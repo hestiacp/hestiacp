@@ -1,0 +1,156 @@
+/*
+ * Some parts of jQuery UI v1.13.2
+ */
+
+/* Dialog */
+.ui-dialog {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 0.2em;
+	outline: 0;
+}
+.ui-dialog .ui-dialog-titlebar {
+	padding: 0.4em 1em;
+	position: relative;
+}
+.ui-dialog .ui-dialog-title {
+	float: left;
+	margin: 0.1em 0;
+	white-space: nowrap;
+	width: 90%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+	position: absolute;
+	right: 0.3em;
+	top: 50%;
+	width: 20px;
+	margin: -10px 0 0 0;
+	padding: 1px;
+	height: 20px;
+}
+.ui-dialog .ui-dialog-content {
+	position: relative;
+	border: 0;
+	padding: 0.5em 1em;
+	background: none;
+	overflow: auto;
+}
+.ui-dialog .ui-dialog-buttonpane {
+	text-align: left;
+	border-width: 1px 0 0 0;
+	background-image: none;
+	margin-top: 0.5em;
+	padding: 0.3em 1em 0.5em 0.4em;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+	float: right;
+}
+.ui-dialog .ui-dialog-buttonpane button {
+	margin: 0.5em 0.4em 0.5em 0;
+	cursor: pointer;
+}
+.ui-dialog .ui-resizable-n {
+	height: 2px;
+	top: 0;
+}
+.ui-dialog .ui-resizable-e {
+	width: 2px;
+	right: 0;
+}
+.ui-dialog .ui-resizable-s {
+	height: 2px;
+	bottom: 0;
+}
+.ui-dialog .ui-resizable-w {
+	width: 2px;
+	left: 0;
+}
+.ui-dialog .ui-resizable-se,
+.ui-dialog .ui-resizable-sw,
+.ui-dialog .ui-resizable-ne,
+.ui-dialog .ui-resizable-nw {
+	width: 7px;
+	height: 7px;
+}
+.ui-dialog .ui-resizable-se {
+	right: 0;
+	bottom: 0;
+}
+.ui-dialog .ui-resizable-sw {
+	left: 0;
+	bottom: 0;
+}
+.ui-dialog .ui-resizable-ne {
+	right: 0;
+	top: 0;
+}
+.ui-dialog .ui-resizable-nw {
+	left: 0;
+	top: 0;
+}
+
+/* Tabs */
+.ui-tabs {
+	position: relative; /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+	padding: 0.2em;
+}
+.ui-tabs .ui-tabs-nav {
+	margin: 0;
+	padding: 0.2em 0.2em 0;
+}
+.ui-tabs .ui-tabs-nav li {
+	list-style: none;
+	float: left;
+	position: relative;
+	top: 0;
+	margin: 1px 0.2em 0 0;
+	border-bottom-width: 0;
+	padding: 0;
+	white-space: nowrap;
+}
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+	float: left;
+	padding: 0.5em 1em;
+	text-decoration: none;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+	margin-bottom: -1px;
+	padding-bottom: 1px;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-state-disabled .ui-tabs-anchor,
+.ui-tabs .ui-tabs-nav li.ui-tabs-loading .ui-tabs-anchor {
+	cursor: text;
+}
+.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-active .ui-tabs-anchor {
+	cursor: pointer;
+}
+.ui-tabs .ui-tabs-panel {
+	display: block;
+	border-width: 0;
+	padding: 1em 1.4em;
+	background: none;
+}
+
+/* Layout helpers */
+.ui-helper-clearfix:before,
+.ui-helper-clearfix:after {
+	content: "";
+	display: table;
+	border-collapse: collapse;
+}
+.ui-helper-clearfix:after {
+	clear: both;
+}
+
+/* Overlays */
+.ui-widget-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}

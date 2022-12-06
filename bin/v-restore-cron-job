@@ -3,7 +3,7 @@
 # options: USER BACKUP DOMAIN [NOTIFY]
 #
 # example: v-restore-cron-job USER BACKUP CRON [NOTIFY]
-# 
+#
 # This function allows the user to restore a single cron job
 # from a backup archive.
 

@@ -6,7 +6,6 @@
 #
 # This function for obtaining the letsencrypt key thumbprint
 
-
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
@@ -25,36 +24,36 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo '    "'$user'": {
+	echo '{'
+	echo '    "'$user'": {
         "EMAIL": "'$EMAIL'",
         "EXPONENT": "'$EXPONENT'",
         "MODULUS": "'$MODULUS'",
         "THUMB": "'$THUMB'",
         "KID": "'$KID'"
     }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "USER:           $user"
-    echo "EMAIL:          $EMAIL"
-    echo "THUMB:          $THUMB"
-    echo "EXPONENT:       $EXPONENT"
-    echo "MODULUS:        $MODULUS"
-    echo "KID:            $KID"
+	echo "USER:           $user"
+	echo "EMAIL:          $EMAIL"
+	echo "THUMB:          $THUMB"
+	echo "EXPONENT:       $EXPONENT"
+	echo "MODULUS:        $MODULUS"
+	echo "KID:            $KID"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -e "$user\t$EMAIL\t$EXPONENT\t$MODULUS\t$THUMB\t$KID"
+	echo -e "$user\t$EMAIL\t$EXPONENT\t$MODULUS\t$THUMB\t$KID"
 }
 
 # CSV list function
 csv_list() {
-    echo "USER,EMAIL,EXPONENT,MODULUS,THUMB,KID"
-    echo "$user,$EMAIL,$EXPONENT,$MODULUS,$THUMB,$KID"
+	echo "USER,EMAIL,EXPONENT,MODULUS,THUMB,KID"
+	echo "$user,$EMAIL,$EXPONENT,$MODULUS,$THUMB,$KID"
 }
 
 #----------------------------------------------------------#
@@ -65,7 +64,7 @@ check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 if [ ! -e "$USER_DATA/ssl/le.conf" ]; then
-    check_result "$E_NOTEXIST" "LetsEncrypt user account doesn't exist"
+	check_result "$E_NOTEXIST" "LetsEncrypt user account doesn't exist"
 fi
 
 #----------------------------------------------------------#
@@ -77,10 +76,10 @@ source_conf "$USER_DATA/ssl/le.conf"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

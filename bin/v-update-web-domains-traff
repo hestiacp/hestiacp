@@ -37,35 +37,35 @@ is_object_valid 'user' 'USER' "$user" "$user"
 #----------------------------------------------------------#
 
 for domain in $(search_objects 'web' 'SUSPENDED' "no" 'DOMAIN'); do
-    # Reset BW counter on the start of the month
-    if [ "$(date +%d)" = '01' ]; then
-        update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' '0'
-    fi
+	# Reset BW counter on the start of the month
+	if [ "$(date +%d)" = '01' ]; then
+		update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' '0'
+	fi
 
-    log_file="/var/log/$WEB_SYSTEM/domains/$domain.bytes"
-    bytes=0
+	log_file="/var/log/$WEB_SYSTEM/domains/$domain.bytes"
+	bytes=0
 
-    # Parsing log
-    while read line; do
-        if  [[ "$line" =~ ^[0-9]+$ ]]; then
-            line=${line#0}
-            if [ -n "$line" ]; then
-                bytes=$(($bytes + $line))
-            fi
-        fi
-    done < $log_file
+	# Parsing log
+	while read line; do
+		if [[ "$line" =~ ^[0-9]+$ ]]; then
+			line=${line#0}
+			if [ -n "$line" ]; then
+				bytes=$(($bytes + $line))
+			fi
+		fi
+	done < $log_file
 
-    # Converting to Mb
-    mb=$(echo "$bytes / 1024 / 1024"|bc)
+	# Converting to Mb
+	mb=$(echo "$bytes / 1024 / 1024" | bc)
 
-    # Nulling log
-    echo > $log_file
+	# Nulling log
+	echo > $log_file
 
-    get_domain_values 'web'
-    bandwidth=$((U_BANDWIDTH + mb))
+	get_domain_values 'web'
+	bandwidth=$((U_BANDWIDTH + mb))
 
-    # Updating bandwidth value in config
-    update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' "$bandwidth"
+	# Updating bandwidth value in config
+	update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' "$bandwidth"
 
 done
 

@@ -1,0 +1,65 @@
+	</main>
+<?php
+	if (($_SESSION['userContext'] === 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_SERVICES'] !== 'yes')) {
+		if ($_SESSION['UPDATE_AVAILABLE'] === 'yes') {
+?>
+			<div class="footer-banner updates" id="banner">
+				<div>
+					<b>New updates are available!</b> To upgrade your server now, run <span style="font-family:'Courier New', Courier, monospace">apt update && apt upgrade</span> from a shell session.
+				</div>
+				<div style="margin-top: 4px;"></div><a href="javascript:elementHideShow('banner');">Hide</a></div>
+			</div>
+<?php
+		}
+	}
+?>
+	<div title="<?=_('Confirmation');?>" class="dialog js-confirm-dialog-redirect">
+		<p><?=_('LEAVE_PAGE_CONFIRMATION')?></p>
+	</div>
+
+	<dialog class="shortcuts animate__animated animate__fadeIn">
+		<div class="shortcuts-header">
+			<div class="shortcuts-title"><?=_('Shortcuts')?></div>
+			<div class="shortcuts-close"><i class="fas fa-xmark"></i></div>
+		</div>
+		<div class="shortcuts-inner">
+			<ul class="shortcuts-list">
+				<li><span class="key">a</span><?=_('Add New object')?></li>
+				<li><span class="key">Ctrl + Enter</span><?=_('Save Form')?></li>
+				<li class="u-mb20"><span class="key">Ctrl + Backspace</span><?=_('Cancel saving form')?></li>
+				<li><span class="key">1</span><?=_('Go to WEB list')?></li>
+				<li><span class="key">2</span><?=_('Go to DNS list')?></li>
+				<li><span class="key">3</span><?=_('Go to MAIL list')?></li>
+				<li><span class="key">4</span><?=_('Go to DB list')?></li>
+				<li><span class="key">5</span><?=_('Go to CRON list')?></li>
+				<li><span class="key">6</span><?=_('Go to BACKUP list')?></li>
+			</ul>
+			<ul class="shortcuts-list">
+				<li class="u-mb20"><span class="key">f</span><?=_('Focus on search')?></li>
+				<li class="u-mb20"><span class="key">h</span><?=_('Display/Close shortcuts')?></li>
+				<li><span class="key bigger">&larr;</span><?=_('Move backward through top menu')?></li>
+				<li><span class="key bigger">&rarr;</span><?=_('Move forward through top menu')?></li>
+				<li class="u-mb20"><span class="key">Enter</span><?=_('Enter focused element')?></li>
+				<li><span class="key bigger">&uarr;</span><?=_('Move up through elements list')?></li>
+				<li><span class="key bigger">&darr;</span><?=_('Move down through elements list')?></li>
+			</ul>
+		</div>
+	</dialog>
+
+	<button type="button" class="button button-secondary button-circle button-floating button-floating-shortcuts js-shortcuts" title="<?=_('Shortcuts');?>">
+		<i class="fas fa-keyboard"></i>
+		<span class="u-hidden"><?=_('Shortcuts');?></span>
+	</button>
+	<button type="button" class="button button-secondary button-circle button-floating button-floating-top js-to-top" title="<?=_('Top');?>">
+		<i class="fas fa-arrow-up"></i>
+		<span class="u-hidden"><?=_('Top');?></span>
+	</button>
+
+	<?php
+		if (($_SESSION['DEBUG_MODE']) == "true") {
+			require $_SERVER['HESTIA'] . '/web/templates/pages/debug_panel.php';
+		}
+	?>
+
+</body>
+</html>

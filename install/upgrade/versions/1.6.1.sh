@@ -22,30 +22,30 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 # Fix exim rate limit send issue
-if [ "$MAIL_SYSTEM" = "exim4" ]; then 
-    acl=$(cat /etc/exim4/exim4.conf.template | grep '${extract{1}{:}{${lookup{$sender_address_local_part@$sender_address_domain}')
-    if [ ! -z "$acl" ]; then
-        echo "[ * ] Fixed an issue with rate limits and alias mail addresses"
-        sed -i 's/${extract{1}{:}{${lookup{$sender_address_local_part@$sender_address_domain}/${extract{1}{:}{${lookup{$authenticated_id}/' /etc/exim4/exim4.conf.template
-    fi
-    spamscore=$(cat /etc/exim4/exim4.conf.template | grep 'SPAM_REJECT_SCORE =')
-    if [ -z "$spamscore" ]; then
-        echo "[ * ] Fixed an issue reject spam not working properly."
-        sed -i '/SPAM_SCORE = .*/a SPAM_REJECT_SCORE = 100' /etc/exim4/exim4.conf.template
-        sed -i '/          set acl_m1    = yes/a    warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}\n          set acl_m3    = yes' /etc/exim4/exim4.conf.template
-    fi
-    
+if [ "$MAIL_SYSTEM" = "exim4" ]; then
+	acl=$(cat /etc/exim4/exim4.conf.template | grep '${extract{1}{:}{${lookup{$sender_address_local_part@$sender_address_domain}')
+	if [ ! -z "$acl" ]; then
+		echo "[ * ] Fixed an issue with rate limits and alias mail addresses"
+		sed -i 's/${extract{1}{:}{${lookup{$sender_address_local_part@$sender_address_domain}/${extract{1}{:}{${lookup{$authenticated_id}/' /etc/exim4/exim4.conf.template
+	fi
+	spamscore=$(cat /etc/exim4/exim4.conf.template | grep 'SPAM_REJECT_SCORE =')
+	if [ -z "$spamscore" ]; then
+		echo "[ * ] Fixed an issue reject spam not working properly."
+		sed -i '/SPAM_SCORE = .*/a SPAM_REJECT_SCORE = 100' /etc/exim4/exim4.conf.template
+		sed -i '/          set acl_m1    = yes/a    warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}\n          set acl_m3    = yes' /etc/exim4/exim4.conf.template
+	fi
+
 fi
 
 # With setup from installer
 if [ -f "/etc/apt/sources.list.d/hestia-beta.list" ]; then
-    echo "[ ! ] Change to stable release!"
-    rm /etc/apt/sources.list.d/hestia-beta.list
-    sed -i 's/#//g' /etc/apt/sources.list.d/hestia.list
+	echo "[ ! ] Change to stable release!"
+	rm /etc/apt/sources.list.d/hestia-beta.list
+	sed -i 's/#//g' /etc/apt/sources.list.d/hestia.list
 fi
-check=$(cat /etc/apt/sources.list.d/hestia.list | grep "beta.hestiacp.com");
-if [ ! -z "$check" ]; then 
-    echo "[ ! ] Change to stable release!"
-    sed -i '/beta.hestiacp.com/d' /etc/apt/sources.list.d/hestia.list
-    sed -i 's/#//g' /etc/apt/sources.list.d/hestia.list
+check=$(cat /etc/apt/sources.list.d/hestia.list | grep "beta.hestiacp.com")
+if [ ! -z "$check" ]; then
+	echo "[ ! ] Change to stable release!"
+	sed -i '/beta.hestiacp.com/d' /etc/apt/sources.list.d/hestia.list
+	sed -i 's/#//g' /etc/apt/sources.list.d/hestia.list
 fi

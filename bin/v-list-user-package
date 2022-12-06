@@ -22,8 +22,8 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 # JSON list function
 json_list() {
-    echo '{'
-    echo '    "'$PACKAGE'": {
+	echo '{'
+	echo '    "'$PACKAGE'": {
         "WEB_TEMPLATE": "'$WEB_TEMPLATE'",
         "BACKEND_TEMPLATE": "'$BACKEND_TEMPLATE'",
         "PROXY_TEMPLATE": "'$PROXY_TEMPLATE'",
@@ -45,54 +45,53 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "PACKAGE:          $PACKAGE"
-    echo "WEB TEMPLATE:     $WEB_TEMPLATE"
-    echo "BACKEND TEMPLATE: $BACKEND_TEMPLATE"
-    echo "PROXY TEMPLATE:   $PROXY_TEMPLATE"
-    echo "DNS TEMPLATE:     $DNS_TEMPLATE"
-    echo "WEB DOMAINS:      $WEB_DOMAINS"
-    echo "WEB ALIASES:      $WEB_ALIASES"
-    echo "DNS DOMAINS:      $DNS_DOMAINS"
-    echo "DNS RECORDS:      $DNS_RECORDS"
-    echo "MAIL DOMAINS:     $MAIL_DOMAINS"
-    echo "MAIL ACCOUNTS:    $MAIL_ACCOUNTS"
-    echo "RATE_LIMIT:       $RATE_LIMIT"
-    echo "DATABASES:        $DATABASES"
-    echo "CRON JOBS:        $CRON_JOBS"
-    echo "DISK QUOTA:       $DISK_QUOTA"
-    echo "BANDWIDTH:        $BANDWIDTH"
-    echo "NS:               $NS"
-    echo "SHELL:            $SHELL"
-    echo "BACKUPS:          $BACKUPS"
-    echo "TIME:             $TIME"
-    echo "DATE:             $DATE"
+	echo "PACKAGE:          $PACKAGE"
+	echo "WEB TEMPLATE:     $WEB_TEMPLATE"
+	echo "BACKEND TEMPLATE: $BACKEND_TEMPLATE"
+	echo "PROXY TEMPLATE:   $PROXY_TEMPLATE"
+	echo "DNS TEMPLATE:     $DNS_TEMPLATE"
+	echo "WEB DOMAINS:      $WEB_DOMAINS"
+	echo "WEB ALIASES:      $WEB_ALIASES"
+	echo "DNS DOMAINS:      $DNS_DOMAINS"
+	echo "DNS RECORDS:      $DNS_RECORDS"
+	echo "MAIL DOMAINS:     $MAIL_DOMAINS"
+	echo "MAIL ACCOUNTS:    $MAIL_ACCOUNTS"
+	echo "RATE_LIMIT:       $RATE_LIMIT"
+	echo "DATABASES:        $DATABASES"
+	echo "CRON JOBS:        $CRON_JOBS"
+	echo "DISK QUOTA:       $DISK_QUOTA"
+	echo "BANDWIDTH:        $BANDWIDTH"
+	echo "NS:               $NS"
+	echo "SHELL:            $SHELL"
+	echo "BACKUPS:          $BACKUPS"
+	echo "TIME:             $TIME"
+	echo "DATE:             $DATE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$PACKAGE\t$WEB_TEMPLATE\t$BACKEND_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
-    echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
-    echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$RATE_LIMIT\t$DATABASES\t$CRON_JOBS\t"
-    echo -e "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t$TIME\t$DATE"
+	echo -ne "$PACKAGE\t$WEB_TEMPLATE\t$BACKEND_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
+	echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
+	echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$RATE_LIMIT\t$DATABASES\t$CRON_JOBS\t"
+	echo -e "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-    echo -n "PACKAGE,WEB_TEMPLATE,BACKEND_TEMPLATE,PROXY_TEMPLATE,DNS_TEMPLATE,"
-    echo -n "WEB_DOMAINS,WEB_ALIASES,DNS_DOMAINS,DNS_RECORDS,"
-    echo -n "MAIL_DOMAINS,MAIL_ACCOUNTS,RATE_LIMIT,DATABASES,CRON_JOBS,"
-    echo "DISK_QUOTA,BANDWIDTH,NS,SHELL,BACKUPS,TIME,DATE"
-    echo -n "$PACKAGE,$WEB_TEMPLATE,$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
-    echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
-    echo -n "$MAIL_DOMAINS,$MAIL_ACCOUNTS,$RATE_LIMIT,$DATABASES,$CRON_JOBS,"
-    echo "$DISK_QUOTA,$BANDWIDTH,\"$NS\",$SHELL,$BACKUPS,$TIME,$DATE"
+	echo -n "PACKAGE,WEB_TEMPLATE,BACKEND_TEMPLATE,PROXY_TEMPLATE,DNS_TEMPLATE,"
+	echo -n "WEB_DOMAINS,WEB_ALIASES,DNS_DOMAINS,DNS_RECORDS,"
+	echo -n "MAIL_DOMAINS,MAIL_ACCOUNTS,RATE_LIMIT,DATABASES,CRON_JOBS,"
+	echo "DISK_QUOTA,BANDWIDTH,NS,SHELL,BACKUPS,TIME,DATE"
+	echo -n "$PACKAGE,$WEB_TEMPLATE,$BACKEND_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
+	echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
+	echo -n "$MAIL_DOMAINS,$MAIL_ACCOUNTS,$RATE_LIMIT,$DATABASES,$CRON_JOBS,"
+	echo "$DISK_QUOTA,$BANDWIDTH,\"$NS\",$SHELL,$BACKUPS,$TIME,$DATE"
 }
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -101,8 +100,7 @@ csv_list() {
 # Checking args
 check_args '1' "$#" 'PACKAGE [FORMAT]'
 is_format_valid 'package'
-is_package_valid 
-
+is_package_valid
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -113,12 +111,11 @@ source_conf "$HESTIA/data/packages/$PACKAGE.pkg"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

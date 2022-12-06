@@ -14,7 +14,7 @@
 user=$1
 domain=$2
 ip=$3
-restart="${4-yes}"
+restart=$4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -31,8 +31,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 check_args '2' "$#" 'USER DOMAIN [IP] [RESTART]'
 is_format_valid 'user' 'domain' 'restart'
-if [ -n "$ip" ] ; then
-    is_format_valid 'ip'
+if [ -n "$ip" ]; then
+	is_format_valid 'ip'
 fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -46,28 +46,28 @@ check_hestia_demo_mode
 
 # Get ip if it wasn't defined
 if [ -z "$ip" ]; then
-    get_user_ip
-    if [ -z "$ip" ]; then
-        check_result "$E_NOTEXIST" "no available IP address"
-    fi
+	get_user_ip
+	if [ -z "$ip" ]; then
+		check_result "$E_NOTEXIST" "no available IP address"
+	fi
 fi
 
 # Working on web domain
 if [ -n "$WEB_SYSTEM" ]; then
-    $BIN/v-add-web-domain "$user" "$domain" "$ip" 'no'
-    check_result $? "can't add web domain" >/dev/null
+	$BIN/v-add-web-domain "$user" "$domain" "$ip" 'no'
+	check_result $? "can't add web domain" > /dev/null
 fi
 
 # Working on DNS domain
 if [ -n "$DNS_SYSTEM" ]; then
-    $BIN/v-add-dns-domain "$user" "$domain" "$ip" "" "" "" "" "" "" "" "" "no"
-    check_result $? "can't add dns domain" >/dev/null
+	$BIN/v-add-dns-domain "$user" "$domain" "$ip" "" "" "" "" "" "" "" "" "no"
+	check_result $? "can't add dns domain" > /dev/null
 fi
 
 # Working on mail domain
 if [ -n "$MAIL_SYSTEM" ]; then
-    $BIN/v-add-mail-domain $user $domain
-    check_result $? "can't add mail domain" >/dev/null
+	$BIN/v-add-mail-domain $user $domain 'no'
+	check_result $? "can't add mail domain" > /dev/null
 fi
 
 # Restarting services

@@ -4,7 +4,7 @@
 #
 # example: v-delete-web-domain-allow-users admin admin.com
 #
-# Enable the rule check for Enforce subdomain ownership for a specific domain. 
+# Enable the rule check for Enforce subdomain ownership for a specific domain.
 # Enforce subdomain ownership setting in /edit/server/ set to no will always overwrite this behaviour
 # eg: admin adds admin.com
 # user can create user.admin.com
@@ -30,7 +30,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
-
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -58,7 +57,7 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 #----------------------------------------------------------#
 
 if [ -z "$ALLOW_USERS" ]; then
-add_object_key "web" 'DOMAIN' "$domain" 'ALLOW_USERS' 'TIME'
+	add_object_key "web" 'DOMAIN' "$domain" 'ALLOW_USERS' 'TIME'
 fi
 
 # Adding new alias

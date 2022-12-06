@@ -12,9 +12,9 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
-    
+
     location = /favicon.ico {
         log_not_found off;
         access_log off;
@@ -25,7 +25,7 @@ server {
         log_not_found off;
         access_log off;
     }
-	
+
 	set $path_info "";
 
     location ~ /include {
@@ -63,7 +63,7 @@ server {
 
     location ~ \.php$ {
         fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
- 
+
         fastcgi_param  PATH_INFO        $path_info;
         fastcgi_pass    %backend_lsnr%;
 		fastcgi_index   index.php;
@@ -75,8 +75,8 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

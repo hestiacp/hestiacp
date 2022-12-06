@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list disk information
-# options: 
+# options:
 #
 # example: v-list-sys-disk-status
 #
@@ -13,17 +13,17 @@
 # Displaying disk usage
 df -h
 echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+echo -en "-------------------------------------\n\n"
 
 # Displaying inodes usage
 df -ih
 echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
- 
+echo -en "-------------------------------------\n\n"
+
 # Displaying I/O usage
 iostat -m
 echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+echo -en "-------------------------------------\n\n"
 
 # Displaying disk information
 fdisk -l

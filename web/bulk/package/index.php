@@ -3,30 +3,32 @@ use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
-include($_SERVER['DOCUMENT_ROOT']."/inc/main.php");
+include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check token
 verify_csrf($_POST);
 
-$package = $_POST['package'];
-$action = $_POST['action'];
+$package = $_POST["package"];
+$action = $_POST["action"];
 
-if ($_SESSION['userContext'] === 'admin') {
-    switch ($action) {
-        case 'delete': $cmd='v-delete-user-package';
-            break;
-        default: header("Location: /list/package/"); exit;
-    }
+if ($_SESSION["userContext"] === "admin") {
+	switch ($action) {
+		case "delete":
+			$cmd = "v-delete-user-package";
+			break;
+		default:
+			header("Location: /list/package/");
+			exit();
+	}
 } else {
-    header("Location: /list/package/");
-    exit;
+	header("Location: /list/package/");
+	exit();
 }
 
 foreach ($package as $value) {
-    $value = quoteshellarg($value);
-    exec(HESTIA_CMD.$cmd." ".$value, $output, $return_var);
-    $restart = 'yes';
+	$value = quoteshellarg($value);
+	exec(HESTIA_CMD . $cmd . " " . $value, $output, $return_var);
+	$restart = "yes";
 }
-
 
 header("Location: /list/package/");

@@ -25,7 +25,7 @@
 					<li entity="sort-records"><span class="name"><?=_('Records');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') {?>
-					<form action="/bulk/dns/" method="post" id="objects">
+					<form x-bind="BulkEdit" action="/bulk/dns/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 						<select class="form-select" name="action">
 							<option value=""><?=_('apply to selected');?></option>
@@ -46,7 +46,7 @@
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" title="<?=_('Search');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>

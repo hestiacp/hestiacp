@@ -18,7 +18,7 @@
 					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<form action="/bulk/package/" method="post" id="objects">
+				<form x-bind="BulkEdit" action="/bulk/package/" method="post">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
 						<option value=""><?=_('apply to selected');?></option>
@@ -38,7 +38,7 @@
 	<div class="table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onchange="checkedAll('objects');">
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>">
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-2"><b><?=_('Package');?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 text-right"><b>&nbsp;</b></div>

@@ -47,7 +47,7 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(GLOBAL.FTP_USER_PREFIX + hint);
+		.text(Alpine.store('globals').FTP_USER_PREFIX + hint);
 };
 
 App.Listeners.WEB.keypress_ftp_username = function () {
@@ -181,38 +181,6 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function (elm) {
 	}
 };
 
-App.Actions.WEB.toggle_ssl = function (elm) {
-	elementHideShow('ssltable');
-	if (
-		$('#ssl_crt').val().length > 0 ||
-		$('#ssl_hsts').prop('checked') ||
-		$('#letsencrypt').prop('checked')
-	) {
-		return false;
-	}
-	$('#v_ssl_forcessl').prop('checked', true);
-};
-
-App.Actions.WEB.toggle_letsencrypt = function (elm) {
-	if ($(elm).prop('checked')) {
-		$('#ssl-details').hide();
-		$(
-			'#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]'
-		).attr('disabled', 'disabled');
-		$('#generate-csr').hide();
-		if (!$('.lets-encrypt-note').hasClass('enabled')) {
-			$('.lets-encrypt-note').show();
-		}
-	} else {
-		$(
-			'#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]'
-		).removeAttr('disabled');
-		$('#generate-csr').show();
-		$('#ssl-details').show();
-		$('.lets-encrypt-note').hide();
-	}
-};
-
 App.Actions.WEB.randomPasswordGenerated = function (elm) {
 	return App.Actions.WEB.passwordChanged(elm);
 };
@@ -297,19 +265,12 @@ $(function () {
 });
 
 function WEBrandom() {
-	document.v_edit_web.v_stats_password.value = randomString2(16);
+	document.v_edit_web.v_stats_password.value = randomString(16);
 }
 
 function FTPrandom(elm) {
-	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(randomString2(16));
+	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(randomString(16));
 	App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
-}
-
-function elementHideShow(element) {
-	if (document.getElementById(element)) {
-		var el = document.getElementById(element);
-		el.style.display = el.style.display === 'none' ? 'block' : 'none';
-	}
 }
 
 $('.v-redirect-custom-value').change(function () {

@@ -7,9 +7,9 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+			<button class="button" type="submit" form="vstobjects">
 				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
-			</a>
+			</button>
 		</div>
 	</div>
 </div>
@@ -17,7 +17,14 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_edit_ip" method="post">
+	<form
+		x-data="{
+			showUserTable: <?= empty($v_dedicated) ? 'false' : 'true' ?>
+		}"
+		id="vstobjects"
+		name="v_edit_ip"
+		method="post"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="save" value="save">
 
@@ -38,12 +45,12 @@
 				<input type="text" class="form-control" name="v_interface" id="v_interface" value="<?=htmlentities(trim($v_interface, "'"))?>" disabled>
 			</div>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_shared" id="v_shared" <?php if (empty($v_dedicated)) echo 'checked' ?> onclick="javascript:elementHideShow('usrtable');">
+				<input x-model="showUserTable" class="form-check-input" type="checkbox" name="v_shared" id="v_shared">
 				<label for="v_shared">
 					<?=_('Shared');?>
 				</label>
 			</div>
-			<div id="usrtable" style="display:<?php if (empty($v_dedicated)) { echo 'none';} else {echo 'block';}?> ;">
+			<div x-cloak x-show="showUserTable" id="usrtable">
 				<div class="u-mb10">
 					<label for="v_owner" class="form-label"><?=_('Assigned user');?></label>
 					<select class="form-select" name="v_owner" id="v_owner">

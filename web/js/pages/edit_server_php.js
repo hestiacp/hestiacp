@@ -1,10 +1,10 @@
 function toggleOptions() {
 	if ($('#advanced-options').is(':visible')) {
-		$.removeCookie('advanced');
+		Cookies.remove('advanced');
 		$('#advanced-options').hide();
 		$('#basic-options').show();
 	} else {
-		$.cookie('advanced', 1);
+		Cookies.set('advanced', 1);
 		$('#advanced-options').show();
 		$('#basic-options').hide();
 
@@ -35,7 +35,7 @@ $('#vstobjects').submit(function () {
 });
 
 $(document).ready(function () {
-	if ($.cookie('advanced')) {
+	if (Cookies.read('advanced')) {
 		toggleOptions();
 	}
 });

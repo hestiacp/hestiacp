@@ -8,7 +8,7 @@
 		</div>
 		<div class="toolbar-right">
 			<?php if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>
-				<form action="/list/stats/" method="get" id="objects">
+				<form x-bind="BulkEdit" action="/list/stats/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="user">
 						<option value=""><?=_('show per user');?></option>
@@ -35,7 +35,7 @@
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" title="<?=_('Search');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>

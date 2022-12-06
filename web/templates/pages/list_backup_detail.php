@@ -6,7 +6,7 @@
 			<a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left status-icon green"></i><?=_('Restore All');?></a>
 		</div>
 		<div class="toolbar-right">
-			<form action="/bulk/restore/" method="post" id="objects">
+			<form x-bind="BulkEdit" action="/bulk/restore/" method="post">
 				<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 				<input type="hidden" name="backup" value="<?=htmlentities($_GET['backup']); ?>">
 				<select class="form-select" name="action">
@@ -21,7 +21,7 @@
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>">
-					<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" value=""><i class="fas fa-magnifying-glass"></i></button>
+					<button type="submit" class="toolbar-input-submit" value=""><i class="fas fa-magnifying-glass"></i></button>
 				</form>
 			</div>
 		</div>
@@ -34,7 +34,7 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" onchange="checkedAll('objects');">
+					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4"><b><?=_('Type');?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-7"><b><?=_('Details');?></b></div>

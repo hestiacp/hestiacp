@@ -13,7 +13,7 @@ App.Actions.DB.update_dns_record_hint = function (elm, hint) {
 	}
 
 	// dont show prefix if domain name = rec value
-	if (hint == GLOBAL.DNS_REC_PREFIX + '.') {
+	if (hint == Alpine.store('globals').DNS_REC_PREFIX + '.') {
 		hint = '';
 	}
 
@@ -25,7 +25,7 @@ App.Actions.DB.update_dns_record_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(hint + GLOBAL.DNS_REC_PREFIX);
+		.text(hint + Alpine.store('globals').DNS_REC_PREFIX);
 };
 
 //

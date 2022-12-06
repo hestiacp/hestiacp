@@ -7,9 +7,9 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+			<button class="button" type="submit" form="vstobjects">
 				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
-			</a>
+			</button>
 		</div>
 	</div>
 </div>
@@ -86,7 +86,3 @@
 	</form>
 
 </div>
-
-<script>
-	GLOBAL.DNS_REC_PREFIX = "<?=htmlentities($_GET['domain']); ?>";
-</script>

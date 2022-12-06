@@ -15,9 +15,9 @@
 					<i class="fas fa-magic status-icon blue"></i> <?=_('Quick Install App');?>
 				</a>
 			<?php } ?>
-			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+			<button class="button" type="submit" form="vstobjects">
 				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
-			</a>
+			</button>
 		</div>
 	</div>
 </div>
@@ -25,7 +25,23 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_edit_web" method="post" class="<?=$v_status?>">
+	<form
+		x-data="{
+			statsAuthEnabled: <?= !empty($v_stats_user) ? 'true' : 'false' ?>,
+			redirectEnabled: <?= !empty($v_redirect) ? 'true' : 'false' ?>,
+			sslEnabled: <?= $v_ssl == 'yes' ? 'true' : 'false' ?>,
+			letsEncryptEnabled: <?= $v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ? 'true' : 'false' ?>,
+			showCertificates: <?= $v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ? 'false' : 'true' ?>,
+			showAdvanced: false,
+			nginxCacheEnabled: <?= $v_nginx_cache == 'yes' ? 'true' : 'false' ?>,
+			proxySupportEnabled: <?= !empty($v_proxy) ? 'true' : 'false' ?>,
+			customDocumentRootEnabled: <?= !empty($v_custom_doc_root) ? 'true' : 'false' ?>
+		}"
+		id="vstobjects"
+		name="v_edit_web"
+		method="post"
+		class="<?=$v_status?>"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="save" value="save">
 
@@ -79,7 +95,7 @@
 			</div>
 			<div class="stats-auth u-mb10" style="<?php if ($v_stats == 'none') { ?>display:none<?php } ?>">
 				<div class="form-check">
-					<input class="form-check-input" type="checkbox" name="v_stats_auth" id="v_stats_auth" <?php if (!empty($v_stats_user)) echo 'checked' ?> onclick="javascript:elementHideShow('statstable');">
+					<input x-model="statsAuthEnabled" class="form-check-input" type="checkbox" name="v_stats_auth" id="v_stats_auth">
 					<label for="v_stats_auth">
 						<?=_('Statistics Authorization');?>
 					</label>
@@ -87,7 +103,7 @@
 			</div>
 			<div class="stats-auth">
 				<div class="u-pl30">
-					<div id="statstable" name="v-add-web-domain-stats-user" style="display:<?php if (empty($v_stats_user)) { echo 'none';} else {echo 'block';}?> ;">
+					<div x-cloak x-show="statsAuthEnabled" id="statstable" name="v-add-web-domain-stats-user">
 						<div class="u-mb10">
 							<label for="v_stats_user" class="form-label"><?=_('Username');?></label>
 							<input type="text" class="form-control" name="v_stats_user" id="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
@@ -104,12 +120,12 @@
 				</div>
 			</div>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v-redirect-checkbox" id="v-redirect-checkbox" <?php if (!empty($v_redirect)) echo 'checked' ?> onclick="javascript:elementHideShow('v_redirect');">
+				<input x-model="redirectEnabled" class="form-check-input" type="checkbox" name="v-redirect-checkbox" id="v-redirect-checkbox">
 				<label for="v-redirect-checkbox">
 					<?=_('Enable domain redirection');?>
 				</label>
 			</div>
-			<div id="v_redirect" class="u-pl30 u-mb10" style="display:<?php if (empty($v_redirect)) { echo 'none';} else {echo 'block';}?> ;">
+			<div x-cloak x-show="redirectEnabled" id="v_redirect" class="u-pl30 u-mb10">
 				<div class="form-check">
 					<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
 					<label for="v-redirect-radio-1">
@@ -147,20 +163,20 @@
 				</div>
 			</div>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl" <?php if ($v_ssl == 'yes') echo 'checked' ?> onclick="javascript:App.Actions.WEB.toggle_ssl(this);">
+				<input x-model="sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
 				<label for="v_ssl">
 					<?=_('SSL Support');?>
 				</label>
 			</div>
 			<div id="ssltable" class="u-pl30" style="display:<?php if ($v_ssl == 'no' ) { echo 'none';} else {echo 'block';}?> ;">
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt" <?php if($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') echo 'checked' ?> onclick="elementHideShow('letsinfo');App.Actions.WEB.toggle_letsencrypt(this)">
+					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt">
 					<label for="letsencrypt">
 						<?=_('Lets Encrypt Support');?>
 					</label>
 				</div>
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo 'checked' ?> onclick="">
+					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo 'checked' ?>>
 					<label for="v_ssl_forcessl">
 						<?=_('Force SSL/HTTPS');?>
 					</label>
@@ -171,7 +187,7 @@
 						<?=_('Enable SSL HSTS');?>
 					</label>
 				</div>
-				<div id="ssl-details" style="<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') { echo 'display: none;'; } ?>">
+				<div x-cloak x-show="showCertificates" id="ssl-details">
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?=_('SSL Certificate');?>
@@ -202,36 +218,56 @@
 								<span class="values-list-value"><?=$v_ssl_aliases?></span>
 							</li>
 						<?php } ?>
-						<li class="values-list-item">
-							<span class="values-list-label"><?=_('NOT_BEFORE');?></span>
-							<span class="values-list-value"><?=$v_ssl_not_before?></span>
-						</li>
-						<li class="values-list-item">
-							<span class="values-list-label"><?=_('NOT_AFTER');?></span>
-							<span class="values-list-value"><?=$v_ssl_not_after?></span>
-						</li>
-						<li class="values-list-item">
-							<span class="values-list-label"><?=_('SIGNATURE');?></span>
-							<span class="values-list-value"><?=$v_ssl_signature?></span>
-						</li>
-						<li class="values-list-item">
-							<span class="values-list-label"><?=_('PUB_KEY');?></span>
-							<span class="values-list-value"><?=$v_ssl_pub_key?></span>
-						</li>
-						<li class="values-list-item">
-							<span class="values-list-label"><?=_('ISSUER');?></span>
-							<span class="values-list-value"><?=$v_ssl_issuer?></span>
-						</li>
-					</ul>
-					<div id="letsinfo" style="display:<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ) { echo 'block';} else {echo 'none';} ?>">
-						<a href="#" onclick="elementHideShow('ssl-details'); return false;" class="generate"><?=_('Show Certificate');?></a>
-					</div>
+						<tr>
+							<td>
+								<b><?=_('NOT_BEFORE');?>:</b>
+							</td>
+							<td class="details">
+								<?=$v_ssl_not_before?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b><?=_('NOT_AFTER');?>:</b>
+							</td>
+							<td class="details">
+								<?=$v_ssl_not_after?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b><?=_('SIGNATURE');?>:</b>
+							</td>
+							<td class="details">
+								<?=$v_ssl_signature?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b><?=_('PUB_KEY');?>:</b>
+							</td>
+							<td class="details">
+								<?=$v_ssl_pub_key?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b><?=_('ISSUER');?>:</b>
+							</td>
+							<td class="details">
+								<?=$v_ssl_issuer?>
+							</td>
+						</tr>
+						<tr x-cloak x-show="letsEncryptEnabled" id="letsinfo">
+							<td><a x-on:click="showCertificates = !showCertificates" href="#" class="generate"><?=_('Show Certificate');?></a></td>
+						</tr>
+					</table>
 				<? } // if ssl is enabled ?>
 			</div>
 			<div class="u-mt15 u-mb20">
-				<a href="javascript:elementHideShow('advanced-opts');" class="button button-secondary"><?=_('Advanced options');?></a>
+				<a x-on:click="showAdvanced = !showAdvanced" href="#" class="button button-secondary"><?=_('Advanced options');?></a>
 			</div>
-			<div id="advanced-opts" style="display: none;">
+			<div x-cloak x-show="showAdvanced" id="advanced-opts">
 				<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] === 'yes')) { ?>
 					<div class="u-mb10">
 						<label for="v_template" class="form-label">
@@ -252,7 +288,7 @@
 					</div>
 					<?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
 						<div class="form-check u-mb10">
-							<input class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check" <?php if ($v_nginx_cache == 'yes') echo 'checked' ?> onclick="javascript:elementHideShow('v_nginx_duration');">
+							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
 							<label for="v_nginx_cache_check">
 								<?=_('Enable FastCGI Cache');?>
 								<a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank">
@@ -260,7 +296,7 @@
 								</a>
 							</label>
 						</div>
-						<div id="v_nginx_duration" class="u-pl30" style="display:<?php if ($v_nginx_cache != 'yes' ) { echo 'none';} else {echo 'block';}?> ;">
+						<div x-cloak x-show="nginxCacheEnabled" id="v_nginx_duration" class="u-pl30">
 							<div class="u-mb10">
 								<label for="v_nginx_cache_duration" class="form-label">
 									<?=_('Cache Duration');?> <span class="optional"><?=_('For example: 30s, 10m or 1d');?>
@@ -294,13 +330,13 @@
 					<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
 						<div style="display: none;">
 							<div class="form-check u-mb10">
-								<input class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy" <?php if (!empty($v_proxy)) echo 'checked' ?> onclick="javascript:elementHideShow('proxytable');">
+								<input x-model="proxySupportEnabled" class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy">
 								<label for="v_proxy">
 									<?=_('Proxy Support') . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
 								</label>
 							</div>
 						</div>
-						<div id="proxytable" style="display:<?php if (empty($v_proxy)) { echo 'none';} else {echo 'block';}?> ;">
+						<div x-cloak x-show="proxySupportEnabled" id="proxytable">
 							<div class="u-mb10">
 								<label for="v_proxy_template" class="form-label"><?=_('Proxy Template');?></label>
 								<select class="form-select" name="v_proxy_template" id="v_proxy_template">
@@ -327,12 +363,12 @@
 					<?php } ?>
 				<?php } ?>
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check" <?php if (!empty($v_custom_doc_root)) echo 'checked' ?> onclick="javascript:elementHideShow('v_custom_doc_root');">
+					<input x-model="customDocumentRootEnabled" class="form-check-input" type="checkbox" name="v_custom_doc_root_check" id="v_custom_doc_root_check">
 					<label for="v_custom_doc_root_check">
 						<?=_('Custom document root');?>
 					</label>
 				</div>
-				<div id="v_custom_doc_root" class="u-pl30" style="display:<?php if (empty($v_custom_doc_root)) { echo 'none';} else {echo 'block';}?> ;">
+				<div x-cloak x-show="customDocumentRootEnabled" id="v_custom_doc_root" class="u-pl30">
 					<div class="u-mb10">
 						<label for="v-custom-doc-domain" class="form-label"><?=_('Point to');?></label>
 						<input type="hidden" name="v-custom-doc-root_prepath" value="<?=$v_custom_doc_root_prepath;?>">
@@ -454,7 +490,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	GLOBAL.FTP_USER_PREFIX = "<?=$user_plain.'_';?>";
-</script>

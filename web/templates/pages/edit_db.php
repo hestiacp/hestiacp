@@ -7,9 +7,9 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+			<button class="button" type="submit" form="vstobjects">
 				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
-			</a>
+			</button>
 		</div>
 	</div>
 </div>
@@ -70,9 +70,3 @@
 	</form>
 
 </div>
-
-<?php if ($v_type == 'pgsql'){ $user_plain=strtolower($user_plain); } ?>
-<script>
-	GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
-	GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
-</script>

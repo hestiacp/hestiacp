@@ -6,7 +6,7 @@
 			<a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Ban IP Address');?></a>
 		</div>
 		<div class="toolbar-right">
-			<form action="/bulk/firewall/banlist/" method="post" id="objects">
+			<form x-bind="BulkEdit" action="/bulk/firewall/banlist/" method="post">
 				<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 				<select class="form-select" name="action">
 					<option value=""><?=_('apply to selected');?></option>
@@ -25,7 +25,7 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onchange="checkedAll('objects');">
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>">
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('IP address');?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>

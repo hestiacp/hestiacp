@@ -46,27 +46,85 @@
 			<div class="top-bar-right">
 
 				<!-- Notifications -->
-				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'))) {?>
-					<!-- Do not show notifications panel when impersonating 'admin' user -->
-				<?php } else { ?>
-					<div class="top-bar-notifications">
-						<button type="button" class="top-bar-menu-link js-notifications" title="<?=_('Notifications');?>">
-							<i class="fas fa-bell <?php if($panel[$user]['NOTIFICATIONS'] == 'yes') echo 'animate__animated animate__swing status-icon orange' ?>"></i>
+				<?php
+				$impersonatingAdmin = ($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'));
+				// Do not show notifications panel when impersonating 'admin' user
+				if (!$impersonatingAdmin) { ?>
+					<div x-data="notifications" class="top-bar-notifications">
+						<button
+							x-on:click="toggle()"
+							x-bind:class="open && 'active'"
+							class="top-bar-menu-link"
+							type="button"
+							title="<?=_('Notifications');?>"
+						>
+							<i
+								x-bind:class="{
+									'animate__animated animate__swing status-icon orange': (!initialized && <?= $panel[$user]['NOTIFICATIONS'] == 'yes' ? 'true': 'false' ?>) || notifications.length != 0,
+									'fas fa-bell': true
+								}"
+							></i>
 							<span class="u-hidden"><?=_('Notifications');?></span>
 						</button>
-						<ul class="top-bar-notifications-list animate__animated animate__fadeIn u-hidden"></ul>
+						<ul
+							x-cloak
+							x-show="open"
+							class="top-bar-notifications-list animate__animated animate__fadeIn"
+						>
+							<template x-if="initialized && notifications.length == 0">
+								<li class="top-bar-notification-item empty">
+									<i class="fas fa-bell-slash status-icon dim"></i>
+									<p><?= _("no notifications") ?></p>
+								</li>
+							</template>
+							<template x-for="notification in notifications" :key="notification.ID">
+								<li
+									x-bind:id="`notification-${notification.ID}`"
+									x-bind:class="notification.ACK && 'unseen'"
+									class="top-bar-notification-item"
+								>
+									<div class="top-bar-notification-header">
+										<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
+										<a
+											x-on:click="remove(notification.ID)"
+											href="#"
+											class="top-bar-notification-delete"
+										>
+											<i class="fas fa-xmark"></i>
+										</a>
+									</div>
+									<div x-html="notification.NOTICE"></div>
+									<p
+										x-text="`${notification.TIME} ${notification.DATE}`"
+										class="top-bar-notification-timestamp"
+									></p>
+								</li>
+							</template>
+							<template x-if="initialized && notifications.length > 2">
+								<li>
+									<a
+										x-on:click="removeAll()"
+										href="#"
+										class="top-bar-notification-mark-all"
+									>
+										<i class="fas fa-check"></i>
+										<?= _("Delete notifications") ?>
+									</a>
+								</li>
+							</template>
+						</ul>
 					</div>
 				<?php } ?>
 
 				<!-- Menu -->
-				<nav class="top-bar-menu">
+				<nav x-data="{ open: false }" class="top-bar-menu">
 
-					<button type="button" class="top-bar-menu-link u-hide-tablet js-toggle-top-bar-menu" title="<?=_('Toggle menu');?>">
+					<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?=_('Toggle menu');?>">
 						<i class="fas fa-bars"></i>
 						<span class="u-hidden"><?=_('Toggle menu');?></span>
 					</button>
 
-					<ul class="top-bar-menu-list animate__animated animate__fadeIn">
+					<ul x-cloak x-show="open" class="top-bar-menu-list animate__animated animate__fadeIn">
 
 						<!-- File Manager -->
 						<?php if ((isset($_SESSION['FILE_MANAGER'])) && (!empty($_SESSION['FILE_MANAGER'])) && ($_SESSION['FILE_MANAGER'] == "true")) {?>
@@ -157,15 +215,17 @@
 		</div>
 	</div>
 
-	<nav class="main-menu">
+	<nav x-data="{ open: false }" class="main-menu">
 		<div class="container">
-			<button type="button" class="main-menu-toggle js-toggle-main-menu">
+			<button x-on:click="open = !open" type="button" class="main-menu-toggle">
 				<i class="fas fa-bars"></i>
-				<span class="main-menu-toggle-label" data-open-label="<?=_('Expand main menu');?>" data-close-label="<?=_('Collapse main menu');?>">
-					<?=_('Expand main menu');?>
+				<span
+					x-text="open ? '<?=_('Collapse main menu');?>' : '<?=_('Expand main menu');?>'"
+					class="main-menu-toggle-label"
+				>
 				</span>
 			</button>
-			<ul class="main-menu-list">
+			<ul x-cloak x-show="open" class="main-menu-list">
 
 				<!-- Users tab -->
 				<?php if (($_SESSION['userContext'] == 'admin') && (empty($_SESSION['look']))) {?>

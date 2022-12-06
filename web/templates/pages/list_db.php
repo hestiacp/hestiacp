@@ -48,7 +48,7 @@
 					<li entity="sort-user"><span class="name"><?=_('Username');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') {?>
-					<form action="/bulk/db/" method="post" id="objects">
+					<form x-bind="BulkEdit" action="/bulk/db/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<select class="form-select" name="action">
 							<option value=""><?=_('apply to selected');?></option>
@@ -69,7 +69,7 @@
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" title="<?=_('Search');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -83,7 +83,7 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onchange="checkedAll('objects');" <?=$display_mode;?>>
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
 			<div class="clearfix l-unit__stat-col--left text-right compact-3"><b>&nbsp;</b></div>

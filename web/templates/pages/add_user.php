@@ -7,9 +7,9 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+			<button class="button" type="submit" form="vstobjects">
 				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
-			</a>
+			</button>
 		</div>
 	</div>
 </div>
@@ -17,7 +17,14 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_user" method="post">
+	<form
+		x-data="{
+			sendWelcomeMail: <?= $v_login_disabled == "yes" ? "true" : "false" ?>
+		}"
+		id="vstobjects"
+		name="v_add_user"
+		method="post"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="ok" value="Add">
 
@@ -53,12 +60,12 @@
 				<li><?=_('1 number');?></li>
 			</ul>
 			<div class="form-check u-mb10">
-				<input class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled" onclick="javascript:elementHideShow('send-welcome');" <?php if ($v_login_disabled == "yes") echo 'checked' ?>>
+				<input x-model="sendWelcomeMail" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
 				<label for="v_login_disabled">
 					<?=_('Do not allow user to log in to Control Panel');?>
 				</label>
 			</div>
-			<div id="send-welcome">
+			<div x-cloak x-show="sendWelcomeMail" id="send-welcome">
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_email_notice" id="v_email_notify" tabindex="5">
 					<label for="v_email_notify">

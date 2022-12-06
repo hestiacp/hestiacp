@@ -15,9 +15,9 @@
 			<?php }?>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+			<button class="button" type="submit" form="vstobjects">
 				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
-			</a>
+			</button>
 		</div>
 	</div>
 </div>
@@ -25,7 +25,15 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_configure_server" method="post">
+	<form
+		x-data="{
+			hasSmtpRelay: <?= $v_smtp_relay == 'true' ? 'true' : 'false' ?>,
+			remoteBackupEnabled: <?= !empty($v_backup_remote_adv) ? 'true' : 'false' ?>
+		}"
+		id="vstobjects"
+		name="v_configure_server"
+		method="post"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="save" value="save">
 
@@ -274,12 +282,12 @@
 							</div>
 						<?php } ?>
 						<div class="form-check u-mt20">
-							<input class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay" <?php if ($v_smtp_relay == 'true') echo 'checked'; ?> onclick="javascript:elementHideShow('smtp_relay_table');">
+							<input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
 							<label for="v_smtp_relay">
 								<?=_('Global SMTP Relay');?>
 							</label>
 						</div>
-						<div id="smtp_relay_table" class="u-pl30 u-mt20" style="display:<?php if ($v_smtp_relay == 'true') {echo 'block';} else {echo 'none';}?> ;">
+						<div x-cloak x-show="hasSmtpRelay" id="smtp_relay_table" class="u-pl30 u-mt20">
 							<div class="u-mb10">
 								<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
 								<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
@@ -450,12 +458,12 @@
 						<input type="text" class="form-control" name="v_backup_dir" id="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
 					</div>
 					<div class="form-check">
-						<input class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv" <?php if (!empty($v_backup_remote_adv)) echo 'checked' ?> onclick="javascript:elementHideShow('remote_backup');">
+						<input x-model="remoteBackupEnabled" class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv">
 						<label for="v_backup_remote_adv">
 							<?=_('Remote backup');?>
 						</label>
 					</div>
-					<div id="remote_backup" class="u-pl30 u-mt20" style="display:<?php if (empty($v_backup_remote_adv)) echo 'none';?> ;">
+					<div x-cloak x-show="remoteBackupEnabled" id="remote_backup" class="u-pl30 u-mt20">
 						<div class="u-mb10">
 							<label for="backup_type" class="form-label">
 								<?=_('Protocol');?> <a target="_blank" href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"><i class="fas fa-circle-question"></i></a>
@@ -572,16 +580,26 @@
 			</details>
 
 			<!-- Security tab -->
-			<details class="collapse u-mb10">
+			<details
+				x-data="{
+					showSystemOptions: false,
+					showProtectionOptions: false,
+					showPolicyOptions: false,
+				}"
+				class="collapse u-mb10"
+			>
 				<summary class="collapse-header">
 					<i class="fas fa-key u-mr15"></i><?=_('Security');?>
 				</summary>
 				<div class="collapse-content">
-					<h3 class="section-title" onclick="javascript:elementHideShow('security-system-table',this);">
+					<h3 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
 						<?=_('System');?>
-						<i class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"></i>
+						<i
+							x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
+							class="fas status-icon dim maroon js-section-toggle-icon"
+						></i>
 					</h3>
-					<div id="security-system-table" style="display: none;">
+					<div x-cloak x-show="showSystemOptions" id="security-system-table">
 						<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
 							<?=_('API');?>
 						</p>
@@ -645,11 +663,14 @@
 						</div>
 					</div>
 					<?php if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
-						<h3 class="section-title" onclick="javascript:elementHideShow('security-sysadminprotect-table',this);">
+						<h3 x-on:click="showProtectionOptions = !showProtectionOptions" class="section-title">
 							<?=_('System Protection');?>
-							<i class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"></i>
+							<i
+								x-bind:class="showProtectionOptions ? 'fa-square-minus' : 'fa-square-plus'"
+								class="fas status-icon dim maroon js-section-toggle-icon"
+							></i>
 						</h3>
-						<div id="security-sysadminprotect-table" style="display: none;">
+						<div x-cloak x-show="showProtectionOptions" id="security-sysadminprotect-table">
 							<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
 								<?=_('System Administrator account');?>
 							</p>
@@ -676,11 +697,14 @@
 							</div>
 						</div>
 					<?php } ?>
-					<h3 class="section-title" onclick="javascript:elementHideShow('security-policies-table',this);">
+					<h3 x-on:click="showPolicyOptions = !showPolicyOptions" class="section-title">
 						<?=_('Policies');?>
-						<i class="fas fa-square-plus status-icon dim maroon js-section-toggle-icon"></i>
+						<i
+							x-bind:class="showPolicyOptions ? 'fa-square-minus' : 'fa-square-plus'"
+							class="fas status-icon dim maroon js-section-toggle-icon"
+						></i>
 					</h3>
-					<div id="security-policies-table" style="display: none;">
+					<div x-cloak x-show="showPolicyOptions" id="security-policies-table">
 						<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
 							<?=_('Users');?>
 						</p>

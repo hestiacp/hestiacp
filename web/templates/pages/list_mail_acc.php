@@ -28,7 +28,7 @@
 					<li entity="sort-quota" sort_as_int="1"><span class="name"><?=_('Quota');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') { ?>
-					<form action="/bulk/mail/" method="post" id="objects">
+					<form x-bind="BulkEdit" action="/bulk/mail/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<input type="hidden" value="<?=htmlspecialchars($_GET['domain']); ?>" name="domain">
 						<select class="form-select" name="action">
@@ -47,7 +47,7 @@
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" onclick="return doSearch('/search/')" title="<?=_('Search');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -62,7 +62,7 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" onchange="checkedAll('objects');" <?=$display_mode;?>>
+					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" <?=$display_mode;?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
 				<div class="clearfix l-unit__stat-col--left text-right compact-4"><b>&nbsp;</b></div>

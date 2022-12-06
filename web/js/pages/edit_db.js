@@ -8,7 +8,7 @@ App.Actions.DB.update_db_username_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(GLOBAL.DB_USER_PREFIX + hint);
+		.text(Alpine.store('globals').DB_USER_PREFIX + hint);
 };
 
 //
@@ -21,7 +21,7 @@ App.Actions.DB.update_db_databasename_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(GLOBAL.DB_DBNAME_PREFIX + hint);
+		.text(Alpine.store('globals').DB_DBNAME_PREFIX + hint);
 };
 
 //
@@ -47,8 +47,11 @@ App.Listeners.DB.keypress_db_username = function () {
 App.Listeners.DB.keypress_db_databasename = function () {
 	var ref = $('input[name="v_database"]');
 	var current_val = ref.val();
-	if (current_val.indexOf(GLOBAL.DB_DBNAME_PREFIX) == 0) {
-		current_val = current_val.slice(GLOBAL.DB_DBNAME_PREFIX.length, current_val.length);
+	if (current_val.indexOf(Alpine.store('globals').DB_DBNAME_PREFIX) == 0) {
+		current_val = current_val.slice(
+			Alpine.store('globals').DB_DBNAME_PREFIX.length,
+			current_val.length
+		);
 		ref.val(current_val);
 	}
 	if (current_val.trim() != '') {
@@ -107,6 +110,6 @@ App.Listeners.DB.keypress_db_username();
 App.Listeners.DB.keypress_db_databasename();
 
 applyRandomString = function (min_length = 16) {
-	$('input[name=v_password]').val(randomString2(min_length));
+	$('input[name=v_password]').val(randomString(min_length));
 	App.Actions.DB.update_password_meter();
 };

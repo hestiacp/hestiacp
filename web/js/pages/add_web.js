@@ -14,7 +14,7 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 	$(elm)
 		.parent()
 		.find('.hint')
-		.text(GLOBAL.FTP_USER_PREFIX + hint);
+		.text(Alpine.store('globals').FTP_USER_PREFIX + hint);
 };
 
 App.Listeners.WEB.keypress_ftp_username = function () {
@@ -43,7 +43,7 @@ App.Listeners.WEB.keypress_domain_name = function () {
 			//var elm = $(evt.target);
 			//App.Actions.WEB.update_ftp_username_hint(elm, $(elm).val());
 			var domain = $('.js-ftp-path-prefix').text(
-				GLOBAL.FTP_USER_PREPATH + '/' + $('#v_domain').val()
+				Alpine.store('globals').FTP_USER_PREPATH + '/' + $('#v_domain').val()
 			);
 			$('#v-custom-doc-domain-main').text($('#v_domain').val());
 			$('#v-custom-doc-domain-main').val($('#v_domain').val());
@@ -58,13 +58,11 @@ App.Actions.WEB.toggle_letsencrypt = function (elm) {
 			'#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]'
 		).attr('disabled', 'disabled');
 		$('#generate-csr').hide();
-		$('.lets-encrypt-note').show();
 	} else {
 		$(
 			'#ssltable textarea[name=v_ssl_crt],#ssltable textarea[name=v_ssl_key], #ssltable textarea[name=v_ssl_ca]'
 		).removeAttr('disabled');
 		$('#generate-csr').show();
-		$('.lets-encrypt-note').hide();
 	}
 };
 
@@ -98,7 +96,7 @@ $(function () {
 });
 
 function WEBrandom() {
-	document.v_add_web.v_stats_password.value = randomString2(16);
+	document.v_add_web.v_stats_password.value = randomString(16);
 }
 
 $('#vstobjects').on('submit', function (evt) {

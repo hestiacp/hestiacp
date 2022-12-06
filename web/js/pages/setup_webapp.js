@@ -1,4 +1,3 @@
-applyRandomStringToTarget = function (target, min_length = 16) {
-	var elm = document.getElementById(target);
-	$(elm).val(randomString2(min_length));
-};
+function applyRandomStringToTarget(target, min_length = 16) {
+	document.querySelector(`#${target}`).value = randomString(min_length);
+}

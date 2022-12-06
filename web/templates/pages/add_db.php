@@ -7,9 +7,9 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="#" class="button" data-action="submit" data-id="vstobjects">
+			<button class="button" type="submit" form="vstobjects">
 				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
-			</a>
+			</button>
 		</div>
 	</div>
 </div>
@@ -17,7 +17,14 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_db" method="post">
+	<form
+		x-data="{
+			showAdvanced: <?= empty($v_adv) ? 'false' : 'true' ?>
+		}"
+		id="vstobjects"
+		name="v_add_db"
+		method="post"
+	>
 		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 		<input type="hidden" name="ok" value="Add">
 
@@ -88,9 +95,9 @@
 					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?=htmlentities(trim($v_db_email, "'"))?>">
 				</div>
 				<div class="u-mb20">
-					<a href="javascript:elementHideShow('advanced-opts');" class="button button-secondary"><?=_('Advanced options');?></a>
+					<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?=_('Advanced options');?></a>
 				</div>
-				<div id="advanced-opts" style="display: none;">
+				<div x-cloak x-show="showAdvanced" id="advanced-opts">
 					<div class="u-mb10">
 						<label for="v_host" class="form-label"><?=_('Host');?></label>
 						<select class="form-select" name="v_host" id="v_host">
@@ -152,8 +159,3 @@
 	</form>
 
 </div>
-
-<script>
-	GLOBAL.DB_USER_PREFIX = "<?=$user_plain;?>_";
-	GLOBAL.DB_DBNAME_PREFIX = "<?=$user_plain;?>_";
-</script>

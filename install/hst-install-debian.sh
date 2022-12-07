@@ -47,7 +47,7 @@ software="nginx apache2 apache2-utils apache2-suexec-custom
   php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
   awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
   clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved
-  net-tools mariadb-client mariadb-common mariadb-server mysql-client mysql-common mysql-server postgresql
+  net-tools mariadb-client mariadb-common mariadb-server mysql-client mysql-common mysql-server postgresql-13
   postgresql-contrib phppgadmin mc flex whois git idn2 unzip zip sudo bc ftp lsof
   rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban
   dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx

@@ -73,14 +73,11 @@
 									</tr>
 									<tr>
 										<td>
-											<select class="vst-list" name="v_timezone">
+											<select class="vst-list" name="v_timezone">	
 												<?php
 													foreach ($v_timezones as $key => $value) {
 														echo "\t\t\t\t<option value=\"".$key."\"";
-														if ((!empty($v_timezone)) && ( $key == $v_timezone)){
-															echo ' selected' ;
-														}
-														if($key == "UTC" && $v_timezone == "Etc/UTC"){
+														if ((!empty($value)) && ( $value == $v_timezone)){
 															echo ' selected' ;
 														}
 														echo ">".$value."</option>\n";

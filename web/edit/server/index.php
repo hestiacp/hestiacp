@@ -306,7 +306,7 @@ if (!empty($_POST['save'])) {
     if (empty($_SESSION['error_msg'])) {
         if (!empty($_POST['v_timezone'])) {
             if ($v_timezone != $_POST['v_timezone']) {
-                exec(HESTIA_CMD."v-change-sys-timezone ".quoteshellarg($_POST['v_timezone']), $output, $return_var);
+                exec(HESTIA_CMD."v-change-sys-timezone ".escapeshellarg($_POST['v_timezone']), $output, $return_var);
                 check_return_code($return_var, $output);
                 $v_timezone = $_POST['v_timezone'];
                 unset($output);

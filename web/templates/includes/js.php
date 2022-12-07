@@ -33,7 +33,7 @@
 			UNLIM_VALUE: 'unlimited',
 			UNLIM_TRANSLATED_VALUE: '<?= _("unlimited") ?>',
 			NOTIFICATIONS_EMPTY: '<?= _("no notifications") ?>',
-			NOTIFICATIONS_DELETE_ALL: '<?= _("Delete notifications") ?>',
+			NOTIFICATIONS_DELETE_ALL: '<?= _("Delete all notifications") ?>',
 			isUnlimitedValue(value) {
 				return value.trim() == this.UNLIM_VALUE || value.trim() == this.UNLIM_TRANSLATED_VALUE;
 			}

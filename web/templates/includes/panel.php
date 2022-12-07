@@ -108,7 +108,7 @@
 										class="top-bar-notification-mark-all"
 									>
 										<i class="fas fa-check"></i>
-										<?= _("Delete notifications") ?>
+										<?= _("Delete all notifications") ?>
 									</a>
 								</li>
 							</template>

@@ -42,9 +42,9 @@
 			</div>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -141,7 +141,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right total clearfix">
-				<?php printf(ngettext('%d DNS record', '%d DNS records', $i),$i); ?>
+				<?php printf(ngettext("%d DNS record", "%d DNS records", $i), $i); ?>
 			</div>
 			<div class="l-unit__col l-unit__col--right back clearfix">
 			</div>

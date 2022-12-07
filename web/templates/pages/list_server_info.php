@@ -3,9 +3,9 @@
 
 <head>
 	<!-- Load necessary CSS and JavaScript from source -->
-	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.php'; ?>
-	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.php'; ?>
-	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/js.php'; ?>
+	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/title.php"; ?>
+	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/css.php"; ?>
+	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/js.php"; ?>
 </head>
 
 <body>
@@ -108,10 +108,10 @@
 	<a
 		href="#top"
 		class="button button-secondary button-circle button-floating button-floating-top "
-		title="<?=_('Top');?>"
+		title="<?= _("Top") ?>"
 	>
 		<i class="fas fa-arrow-up"></i>
-		<span class="u-hidden"><?=_('Top');?></span>
+		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
 
 	<div class="server-console-output">.</div>

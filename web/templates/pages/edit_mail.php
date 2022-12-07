@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/mail/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -170,24 +170,24 @@
 			<div class="form-check u-mb10">
 				<input x-model="hasSmtpRelay" class="form-check-input" type="checkbox" name="v_smtp_relay" id="v_smtp_relay">
 				<label for="v_smtp_relay">
-					<?=_('SMTP Relay');?>
+					<?= _("SMTP Relay") ?>
 				</label>
 			</div>
 			<div x-cloak x-show="hasSmtpRelay" id="smtp_relay_table" class="u-pl30">
 				<div class="u-mb10">
-					<label for="v_smtp_relay_host" class="form-label"><?=_('Host');?></label>
-					<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+					<label for="v_smtp_relay_host" class="form-label"><?= _("Host") ?></label>
+					<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?= htmlentities(trim($v_smtp_relay_host, "'")) ?>">
 				</div>
 				<div class="u-mb10">
-					<label for="v_smtp_relay_port" class="form-label"><?=_('Port');?></label>
-					<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+					<label for="v_smtp_relay_port" class="form-label"><?= _("Port") ?></label>
+					<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?= htmlentities(trim($v_smtp_relay_port, "'")) ?>">
 				</div>
 				<div class="u-mb10">
-					<label for="v_smtp_relay_user" class="form-label"><?=_('Username');?></label>
-					<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+					<label for="v_smtp_relay_user" class="form-label"><?= _("Username") ?></label>
+					<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?= htmlentities(trim($v_smtp_relay_user, "'")) ?>">
 				</div>
 				<div class="u-mb10">
-					<label for="v_smtp_relay_pass" class="form-label"><?=_('Password');?></label>
+					<label for="v_smtp_relay_pass" class="form-label"><?= _("Password") ?></label>
 					<input type="text" class="form-control" name="v_smtp_relay_pass" id="v_smtp_relay_pass">
 				</div>
 			</div>

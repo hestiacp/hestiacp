@@ -87,11 +87,11 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center compact-5"><?=$data[$key]['NETMASK']?></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['INTERFACE']?></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_($data[$key]['STATUS'])?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['U_WEB_DOMAINS']?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['OWNER']?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center compact-5"><?= $data[$key]["NETMASK"] ?></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><?= $data[$key]["INTERFACE"] ?></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _($data[$key]["STATUS"]) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $data[$key]["OWNER"] ?></b></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -101,7 +101,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d IP address', '%d IP addresses', $i),$i); ?>
+				<?php printf(ngettext("%d IP address", "%d IP addresses", $i), $i); ?>
 			</div>
 		</div>
 	</div>

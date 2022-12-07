@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/firewall/ipset/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -97,7 +97,7 @@
 
 		// Blacklist
 		var newEl = document.createElement("option");
-		newEl.text = "<?=_('BLACKLIST') ?>";
+		newEl.text = "<?= _("BLACKLIST") ?>";
 		newEl.disabled = true;
 		targetElement.appendChild(newEl);
 
@@ -110,7 +110,7 @@
 
 		// IPVERSE
 		var newEl = document.createElement("option");
-		newEl.text = "<?=_('IPVERSE') ?>";
+		newEl.text = "<?= _("IPVERSE") ?>";
 		newEl.disabled = true;
 		targetElement.appendChild(newEl);
 

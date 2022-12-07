@@ -105,15 +105,15 @@
 				<div class="u-pl30">
 					<div x-cloak x-show="statsAuthEnabled" id="statstable" name="v-add-web-domain-stats-user">
 						<div class="u-mb10">
-							<label for="v_stats_user" class="form-label"><?=_('Username');?></label>
-							<input type="text" class="form-control" name="v_stats_user" id="v_stats_user" value="<?=htmlentities(trim($v_stats_user, "'"))?>">
+							<label for="v_stats_user" class="form-label"><?= _("Username") ?></label>
+							<input type="text" class="form-control" name="v_stats_user" id="v_stats_user" value="<?= htmlentities(trim($v_stats_user, "'")) ?>">
 						</div>
 						<div class="u-mb20">
 							<label for="v_password" class="form-label">
-								<?=_('Password');?> / <a href="javascript:WEBrandom();" class="generate"><?=_('generate');?></a>
+								<?= _("Password") ?> / <a href="javascript:WEBrandom();" class="generate"><?= _("generate") ?></a>
 							</label>
 							<div class="u-pos-relative">
-								<input type="text" class="form-control js-password-input" name="v_stats_password" id="v_password" value="<?=trim($v_stats_password, "'")?>">
+								<input type="text" class="form-control js-password-input" name="v_stats_password" id="v_password" value="<?= trim($v_stats_password, "'") ?>">
 							</div>
 						</div>
 					</div>
@@ -460,32 +460,32 @@
 <div id="templates" class="u-hidden">
 	<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
 		<div class="u-mb10">
-			<?=_('FTP') ?> #<span class="ftp-user-number"></span> <a class="additional-control delete" onclick="App.Actions.WEB.remove_ftp_user(this)"><?=_('delete');?></a>
+			<?= _("FTP") ?> #<span class="ftp-user-number"></span> <a class="additional-control delete" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
 			<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
 			<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_user]" class="form-label">
-				<?=_('Username');?><br>
-				<span style="color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
+				<?= _("Username") ?><br>
+				<span style="color:#777;"><?= sprintf(_("Prefix %s will be added to username automatically"), $user_plain . "_") ?></span>
 			</label>
 			<input type="text" class="form-control v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
 			<small class="hint"></small>
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_password]" class="form-label">
-				<?=_('Password');?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="generate"><?=_('generate');?></a>
+				<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="generate"><?= _("generate") ?></a>
 			</label>
 			<input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
 		</div>
 		<div class="u-pl30 u-mb10">
-			<label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?=_('Path');?></label>
+			<label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?= _("Path") ?></label>
 			<input type="hidden" name="v_ftp_pre_path" value="">
 			<input type="text" class="form-control js-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" id="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-			<span class="hint-prefix js-ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path_new_user, "'"))?></span><span class="hint js-ftp-path-hint"></span>
+			<span class="hint-prefix js-ftp-path-prefix"><?= htmlentities(trim($v_ftp_pre_path_new_user, "'")) ?></span><span class="hint js-ftp-path-hint"></span>
 		</div>
 		<div class="u-pl30 u-mb10">
-			<label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?=_('Send FTP credentials to email');?></label>
+			<label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?= _("Send FTP credentials to email") ?></label>
 			<input type="email" class="form-control js-email-alert-on-psw" name="v_ftp_user[%INDEX%][v_ftp_email]" id="v_ftp_user[%INDEX%][v_ftp_email]" value="">
 		</div>
 	</div>

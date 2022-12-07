@@ -3,42 +3,42 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a href="/edit/server/" class="button button-secondary">
-				<i class="fas fa-gear status-icon maroon"></i><?=_('Configure');?>
+				<i class="fas fa-gear status-icon maroon"></i><?= _("Configure") ?>
 			</a>
 			<a href="/list/rrd/" class="button button-secondary">
-				<i class="fas fa-chart-area status-icon blue"></i><?=_('Graphs');?>
+				<i class="fas fa-chart-area status-icon blue"></i><?= _("Graphs") ?>
 			</a>
 			<a href="/list/updates/" class="button button-secondary">
-				<i class="fas fa-arrows-rotate status-icon green"></i><?=_('Updates');?>
+				<i class="fas fa-arrows-rotate status-icon green"></i><?= _("Updates") ?>
 			</a>
-			<?php if (!empty($_SESSION['FIREWALL_SYSTEM']) && $_SESSION['FIREWALL_SYSTEM'] == "iptables" ) {?>
+			<?php if (!empty($_SESSION["FIREWALL_SYSTEM"]) && $_SESSION["FIREWALL_SYSTEM"] == "iptables") { ?>
 				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved status-icon red"></i><?=_('Firewall');?>
+					<i class="fas fa-shield-halved status-icon red"></i><?= _("Firewall") ?>
 				</a>
-			<?php }?>
-			<a href="/list/log/?user=system&token=<?=$_SESSION['token']?>" class="button button-secondary">
-				<i class="fas fa-binoculars status-icon orange"></i><?=_('Logs');?>
+			<?php } ?>
+			<a href="/list/log/?user=system&token=<?= $_SESSION["token"] ?>" class="button button-secondary">
+				<i class="fas fa-binoculars status-icon orange"></i><?= _("Logs") ?>
 			</a>
 			<div class="actions-panel" key-action="js">
 				<a class="data-controls do_servicerestart button button-secondary button-danger">
-					<i class="do_servicerestart fas fa-arrow-rotate-left status-icon red"></i><?=_('Restart');?>
-					<input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?=$sys['sysinfo']['HOSTNAME'] ?>&token=<?=$_SESSION['token']?>&system_reset_token=<?=time(); ?>">
-					<div class="dialog js-confirm-dialog-servicerestart" title="<?=_('Confirmation');?>">
-						<p><?=sprintf(_('RESTART_CONFIRMATION'), 'Server');?></p>
+					<i class="do_servicerestart fas fa-arrow-rotate-left status-icon red"></i><?= _("Restart") ?>
+					<input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>">
+					<div class="dialog js-confirm-dialog-servicerestart" title="<?= _("Confirmation") ?>">
+						<p><?= sprintf(_("RESTART_CONFIRMATION"), "Server") ?></p>
 					</div>
 				</a>
 			</div>
 		</div>
 		<div class="toolbar-right">
 			<form x-bind="BulkEdit" action="/bulk/service/" method="post">
-				<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<select class="form-select" name="action">
-					<option value=""><?=_('apply to selected');?></option>
-					<option value="stop"><?=_('stop');?></option>
-					<option value="start"><?=_('start');?></option>
-					<option value="restart"><?=_('restart');?></option>
+					<option value=""><?= _("apply to selected") ?></option>
+					<option value="stop"><?= _("stop") ?></option>
+					<option value="start"><?= _("start") ?></option>
+					<option value="restart"><?= _("restart") ?></option>
 				</select>
-				<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
+				<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>
@@ -54,36 +54,36 @@
 			<i class="fas fa-server"></i>
 		</div>
 		<div class="server-summary-content">
-			<h1 class="server-summary-title"><?=$sys['sysinfo']['HOSTNAME']?></h1>
+			<h1 class="server-summary-title"><?= $sys["sysinfo"]["HOSTNAME"] ?></h1>
 			<ul class="server-summary-list">
 				<li class="server-summary-item">
-					<span class="server-summary-list-label"><?=_('Hestia Control Panel');?></span>
+					<span class="server-summary-list-label"><?= _("Hestia Control Panel") ?></span>
 					<span class="server-summary-list-value">
-						<?php if ($sys['sysinfo']['RELEASE'] != 'release') { ?>
-							<i class="fas fa-flask icon-large status-icon red" title="<?=$sys['sysinfo']['RELEASE'];?>"></i>
+						<?php if ($sys["sysinfo"]["RELEASE"] != "release") { ?>
+							<i class="fas fa-flask icon-large status-icon red" title="<?= $sys["sysinfo"]["RELEASE"] ?>"></i>
 						<?php } ?>
-						<?php if ($sys['sysinfo']['RELEASE'] == 'release') { ?>
-							<i class="fas fa-cube icon-large status-icon" title="<?=_('Production release');?>"></i>
+						<?php if ($sys["sysinfo"]["RELEASE"] == "release") { ?>
+							<i class="fas fa-cube icon-large status-icon" title="<?= _("Production release") ?>"></i>
 						<?php } ?>
-						&nbsp;v<?=$sys['sysinfo']['HESTIA']?>
+						&nbsp;v<?= $sys["sysinfo"]["HESTIA"] ?>
 					</span>
 				</li>
 				<li class="server-summary-item">
-					<span class="server-summary-list-label"><?=_('Operating System');?></span>
+					<span class="server-summary-list-label"><?= _("Operating System") ?></span>
 					<span class="server-summary-list-value">
-						<?=$sys['sysinfo']['OS']?> <?=$sys['sysinfo']['VERSION']?> (<?=$sys['sysinfo']['ARCH']?>)
+						<?= $sys["sysinfo"]["OS"] ?> <?= $sys["sysinfo"]["VERSION"] ?> (<?= $sys["sysinfo"]["ARCH"] ?>)
 					</span>
 				</li>
 				<li class="server-summary-item">
-					<span class="server-summary-list-label"><?=_('Load Average');?></span>
+					<span class="server-summary-list-label"><?= _("Load Average") ?></span>
 					<span class="server-summary-list-value">
-						<?=$sys['sysinfo']['LOADAVERAGE']?>
+						<?= $sys["sysinfo"]["LOADAVERAGE"] ?>
 					</span>
 				</li>
 				<li class="server-summary-item">
-					<span class="server-summary-list-label"><?=_('Uptime');?></span>
+					<span class="server-summary-list-label"><?= _("Uptime") ?></span>
 					<span class="server-summary-list-value">
-						<?=humanize_time($sys['sysinfo']['UPTIME'])?>
+						<?= humanize_time($sys["sysinfo"]["UPTIME"]) ?>
 					</span>
 				</li>
 			</ul>

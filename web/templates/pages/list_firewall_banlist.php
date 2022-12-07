@@ -2,17 +2,17 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-			<a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Ban IP Address');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Ban IP Address") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<form x-bind="BulkEdit" action="/bulk/firewall/banlist/" method="post">
-				<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<select class="form-select" name="action">
-					<option value=""><?=_('apply to selected');?></option>
-					<option value="delete"><?=_('delete') ?></option>
+					<option value=""><?= _("apply to selected") ?></option>
+					<option value="delete"><?= _("delete") ?></option>
 				</select>
-				<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
+				<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>

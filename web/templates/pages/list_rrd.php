@@ -21,12 +21,12 @@
 		<?php foreach ($data as $key => $value) { ?>
 			<div class="u-mb20">
 				<h2 class="l-unit__name separate">
-					<?=_($data[$key]['TITLE'])?>
+					<?= _($data[$key]["TITLE"]) ?>
 				</h2>
-				<?php if($data[$key]['TYPE'] != 'net'){?>
-				<canvas id="<?=$data[$key]['RRD'];?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period);?>"></canvas>
-				<?php }else{?>
-				<canvas id="net_<?=$data[$key]['RRD'];?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period);?>"></canvas>
+				<?php if ($data[$key]["TYPE"] != "net") { ?>
+				<canvas id="<?= $data[$key]["RRD"] ?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period); ?>"></canvas>
+				<?php } else { ?>
+				<canvas id="net_<?= $data[$key]["RRD"] ?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period); ?>"></canvas>
 				<?php } ?>
 			</div>
 		<?php } ?>

@@ -2,16 +2,16 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-			<a href="/schedule/restore/?token=<?=$_SESSION['token']?>&backup=<?=htmlentities($_GET['backup'])?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left status-icon green"></i><?=_('Restore All');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left status-icon green"></i><?= _("Restore All") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<form x-bind="BulkEdit" action="/bulk/restore/" method="post">
-				<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-				<input type="hidden" name="backup" value="<?=htmlentities($_GET['backup']); ?>">
+				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+				<input type="hidden" name="backup" value="<?= htmlentities($_GET["backup"]) ?>">
 				<select class="form-select" name="action">
-					<option value=""><?=_('apply to selected');?></option>
-					<option value="restore"><?=_('restore') ?></option>
+					<option value=""><?= _("apply to selected") ?></option>
+					<option value="restore"><?= _("restore") ?></option>
 				</select>
 				<button type="submit" class="toolbar-input-submit">
 					<i class="fas fa-arrow-right"></i>
@@ -19,7 +19,7 @@
 			</form>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>">
 					<button type="submit" class="toolbar-input-submit" value=""><i class="fas fa-magnifying-glass"></i></button>
 				</form>
@@ -174,26 +174,24 @@
 	<?php }} ?>
 
 	<!-- List Cron Jobs -->
-	<?php
-		if (!empty($data[$backup]['CRON'])) {
-			if (!empty($key)) {
-		?>
+	<?php if (!empty($data[$backup]["CRON"])) {
+ 	if (!empty($key)) { ?>
 		<div class="l-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check5<?=$i?>" class="ch-toggle" type="checkbox" name="check" value="<?=$key?>">
+					<input id="check5<?= $i ?>" class="ch-toggle" type="checkbox" name="check" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('Cron Records');?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Cron Records") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
-					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?='cron '._('records');?></b></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?= "cron " . _("records") ?></b></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
-								<a href="/schedule/restore/?backup=<?=$backup?>&type=cron&object=records&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
+								<a href="/schedule/restore/?backup=<?= $backup ?>&type=cron&object=records&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
 								</a>
 							</div>

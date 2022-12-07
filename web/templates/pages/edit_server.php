@@ -3,20 +3,20 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/server/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet status-icon blue"></i><?=_('IP');?>
+				<i class="fas fa-ethernet status-icon blue"></i><?= _("IP") ?>
 			</a>
-			<?php if ((isset($_SESSION['FIREWALL_SYSTEM'])) && (!empty($_SESSION['FIREWALL_SYSTEM']))) {?>
+			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
 				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved status-icon red"></i><?=_('Firewall');?>
+					<i class="fas fa-shield-halved status-icon red"></i><?= _("Firewall") ?>
 				</a>
-			<?php }?>
+			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -563,50 +563,50 @@
 			<!-- SSL tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-lock u-mr15"></i><?=_('SSL');?>
+					<i class="fas fa-lock u-mr15"></i><?= _("SSL") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb20">
 						<label for="v_ssl_crt" class="form-label">
-							<?=_('SSL Certificate');?>
-							<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities(trim($v_hostname,'"'));?>"><?=_('Generate CSR');?></a></span>
+							<?= _("SSL Certificate") ?>
+							<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?= htmlentities(trim($v_hostname, '"')) ?>"><?= _("Generate CSR") ?></a></span>
 						</label>
-						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
-						<label for="v_ssl_key" class="form-label"><?=_('SSL Key');?></label>
-						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+						<label for="v_ssl_key" class="form-label"><?= _("SSL Key") ?></label>
+						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<ul class="values-list">
 						<li class="values-list-item">
-							<span class="values-list-label"><?=_('SUBJECT');?></span>
-							<span class="values-list-value"><?=$v_ssl_subject?></span>
+							<span class="values-list-label"><?= _("SUBJECT") ?></span>
+							<span class="values-list-value"><?= $v_ssl_subject ?></span>
 						</li>
-						<?php if ($v_ssl_aliases) {?>
+						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
-								<span class="values-list-label"><?=_('Aliases');?></span>
-								<span class="values-list-value"><?=$v_ssl_aliases?></span>
+								<span class="values-list-label"><?= _("Aliases") ?></span>
+								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
-							<span class="values-list-label"><?=_('NOT_BEFORE');?></span>
-							<span class="values-list-value"><?=$v_ssl_not_before?></span>
+							<span class="values-list-label"><?= _("NOT_BEFORE") ?></span>
+							<span class="values-list-value"><?= $v_ssl_not_before ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?=_('NOT_AFTER');?></span>
-							<span class="values-list-value"><?=$v_ssl_not_after?></span>
+							<span class="values-list-label"><?= _("NOT_AFTER") ?></span>
+							<span class="values-list-value"><?= $v_ssl_not_after ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?=_('SIGNATURE');?></span>
-							<span class="values-list-value"><?=$v_ssl_signature?></span>
+							<span class="values-list-label"><?= _("SIGNATURE") ?></span>
+							<span class="values-list-value"><?= $v_ssl_signature ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?=_('PUB_KEY');?></span>
-							<span class="values-list-value"><?=$v_ssl_pub_key?></span>
+							<span class="values-list-label"><?= _("PUB_KEY") ?></span>
+							<span class="values-list-value"><?= $v_ssl_pub_key ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?=_('ISSUER');?></span>
-							<span class="values-list-value"><?=$v_ssl_issuer?></span>
+							<span class="values-list-label"><?= _("ISSUER") ?></span>
+							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 					</ul>
 				</div>
@@ -622,11 +622,11 @@
 				class="collapse u-mb10"
 			>
 				<summary class="collapse-header">
-					<i class="fas fa-key u-mr15"></i><?=_('Security');?>
+					<i class="fas fa-key u-mr15"></i><?= _("Security") ?>
 				</summary>
 				<div class="collapse-content">
 					<h3 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
-						<?=_('System');?>
+						<?= _("System") ?>
 						<i
 							x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
 							class="fas status-icon dim maroon js-section-toggle-icon"

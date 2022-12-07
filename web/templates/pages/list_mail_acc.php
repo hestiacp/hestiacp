@@ -45,9 +45,9 @@
 			</div>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -179,16 +179,16 @@
 					<!-- END QUICK ACTION TOOLBAR AREA -->
 				</div>
 
-				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="u-text-small"><?=_(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _(humanize_usage_size($data[$key]["QUOTA"])) ?></b> <span class="u-text-small"><?= _(humanize_usage_measure($data[$key]["QUOTA"])) ?></span></div>
 				<div class="clearfix l-unit__stat-col--left text-center">
-					<i class="fas <?=$alias_icon;?>"></i>
+					<i class="fas <?= $alias_icon ?>"></i>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center">
-					<i class="fas <?=$fwd_icon;?>"></i>
+					<i class="fas <?= $fwd_icon ?>"></i>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center">
-					<i class="fas <?=$autoreply_icon;?>"></i>
+					<i class="fas <?= $autoreply_icon ?>"></i>
 				</div>
 			</div>
 		</div>
@@ -199,7 +199,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d mail account', '%d mail accounts', $i),$i); ?>
+				<?php printf(ngettext("%d mail account", "%d mail accounts", $i), $i); ?>
 			</div>
 			<div class="l-unit__col l-unit__col--right back clearfix">
 			</div>

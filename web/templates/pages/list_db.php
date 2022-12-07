@@ -1,35 +1,35 @@
 <?php
-	list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
-	$db_myadmin_link = "//".$http_host."/phpmyadmin/";
-	$db_pgadmin_link = "//".$http_host."/phppgadmin/";
+[$http_host, $port] = explode(":", $_SERVER["HTTP_HOST"] . ":");
+$db_myadmin_link = "//" . $http_host . "/phpmyadmin/";
+$db_pgadmin_link = "//" . $http_host . "/phppgadmin/";
 
-	if (!empty($_SESSION['DB_PMA_ALIAS'])) {
-		$db_myadmin_link = "//".$http_host."/".$_SESSION['DB_PMA_ALIAS']."/";
-	}
-	if (!empty($_SESSION['DB_PGA_ALIAS'])) {
-		$db_pgadmin_link = "//".$http_host."/".$_SESSION['DB_PGA_ALIAS']."/";
-	}
+if (!empty($_SESSION["DB_PMA_ALIAS"])) {
+	$db_myadmin_link = "//" . $http_host . "/" . $_SESSION["DB_PMA_ALIAS"] . "/";
+}
+if (!empty($_SESSION["DB_PGA_ALIAS"])) {
+	$db_pgadmin_link = "//" . $http_host . "/" . $_SESSION["DB_PGA_ALIAS"] . "/";
+}
 ?>
 
 <!-- Begin toolbar -->
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== 'true') {?>
+			<?php if ($read_only !== "true") { ?>
 				<a href="/add/db/" class="button button-secondary" id="btn-create">
-					<i class="fas fa-circle-plus status-icon green"></i><?=_('Add Database');?>
+					<i class="fas fa-circle-plus status-icon green"></i><?= _("Add Database") ?>
 				</a>
-				<?php if (($_SESSION['DB_SYSTEM'] === 'mysql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
-					<a class="button button-secondary <?=(ipUsed() ? 'button-suspended':'');?>" href="<?=$db_myadmin_link; ?>" target="_blank">
+				<?php if ($_SESSION["DB_SYSTEM"] === "mysql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
+					<a class="button button-secondary <?= ipUsed() ? "button-suspended" : "" ?>" href="<?= $db_myadmin_link ?>" target="_blank">
 						<i class="fas fa-database status-icon orange"></i>phpMyAdmin
 					</a>
 				<?php } ?>
-				<?php if (($_SESSION['DB_SYSTEM'] === 'pgsql') || ($_SESSION['DB_SYSTEM'] === 'mysql,pgsql') || ($_SESSION['DB_SYSTEM'] === 'pgsql,mysql')) {?>
-					<a class="button button-secondary <?=(ipUsed() ? 'button-suspended':'');?>" href="<?=$db_pgadmin_link; ?>" target="_blank">
+				<?php if ($_SESSION["DB_SYSTEM"] === "pgsql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
+					<a class="button button-secondary <?= ipUsed() ? "button-suspended" : "" ?>" href="<?= $db_pgadmin_link ?>" target="_blank">
 						<i class="fas fa-database status-icon orange"></i>phpPgAdmin
 					</a>
 				<?php } ?>
-				<?php if (ipUsed()) {?>
+				<?php if (ipUsed()) { ?>
 					<a target="_blank" href="https://docs.hestiacp.com/admin_docs/database.html#why-i-can-t-use-http-ip-phpmyadmin">
 						<i class="fas fa-circle-question"></i>
 					</a>
@@ -73,9 +73,9 @@
 			</div>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -177,11 +177,11 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-					<div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TYPE']?></div>
-					<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=$data[$key]['DBUSER']?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['HOST']?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['CHARSET']?></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span></div>
+					<div class="clearfix l-unit__stat-col--left text-center compact"><?= $data[$key]["TYPE"] ?></div>
+					<div class="clearfix l-unit__stat-col--left text-center wide"><b><?= $data[$key]["DBUSER"] ?></b></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?= $data[$key]["HOST"] ?></b></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><?= $data[$key]["CHARSET"] ?></div>
 				</div>
 			</div>
 		</div>
@@ -192,7 +192,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d SQL database', '%d SQL databases', $i),$i); ?>
+				<?php printf(ngettext("%d SQL database", "%d SQL databases", $i), $i); ?>
 			</div>
 		</div>
 	</div>

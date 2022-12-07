@@ -44,9 +44,9 @@
 			</div>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>" />
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -60,31 +60,31 @@
 
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?=_('DNSKEY record');?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]['RECORD'];?>"></b></div>
+		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("DNSKEY record") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>"></b></div>
 	</div>
 </div>
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?=_('DS record');?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]['DS'];?>"></b></div>
+		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("DS record") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>"></b></div>
 	</div>
 </div>
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?=_('Public key');?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]['KEY'];?>"></b></div>
+		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("Public key") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>"></b></div>
 	</div>
 </div>
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?=_('Key Tag / Flag');?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag;?>"></b></div>
+		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
 	</div>
 </div>
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?=_('Algorithm');?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm;?>"></b></div>
+		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm; ?>"></b></div>
 	</div>
 </div>

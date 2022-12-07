@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/package/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -28,43 +28,43 @@
 		id="vstobjects"
 		name="v_edit_package"
 		method="post"
-		class="<?=$v_status?>"
+		class="<?= $v_status ?>"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?=_('Editing Package');?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<h1 class="form-title"><?= _("Editing Package") ?></h1>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
-				<label for="v_package_new" class="form-label"><?=_('Package Name');?></label>
-				<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?=htmlentities(trim($v_package_new, "'"))?>">
-				<input type="hidden" name="v_package" value="<?=htmlentities(trim($v_package, "'"))?>">
+				<label for="v_package_new" class="form-label"><?= _("Package Name") ?></label>
+				<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?= htmlentities(trim($v_package_new, "'")) ?>">
+				<input type="hidden" name="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_disk_quota" class="form-label">
-					<?=_('Quota');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+					<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?=htmlentities(trim($v_disk_quota, "'"))?>">
-					<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
+					<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_bandwidth" class="form-label">
-					<?=_('Bandwidth');?> <span class="optional">(<?=_('in megabytes');?>)</span>
+					<?= _("Bandwidth") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?=htmlentities(trim($v_bandwidth, "'"))?>">
-					<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">
+					<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 				</div>
 			</div>
 			<div class="u-mb10">
-				<label for="v_backups" class="form-label"><?=_('Backups');?></label>
-				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
+				<label for="v_backups" class="form-label"><?= _("Backups") ?></label>
+				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= htmlentities(trim($v_backups, "'")) ?>">
 			</div>
 			<h2 x-on:click="showWebOptions = !showWebOptions" class="section-title">
-				<?=_('Web');?>
+				<?= _("Web") ?>
 				<i
 					x-bind:class="showWebOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas status-icon dim maroon js-section-toggle-icon"
@@ -243,30 +243,30 @@
 			</h2>
 			<div x-cloak x-show="showMailOptions" id="mail-options">
 				<div class="u-mt15 u-mb10">
-					<label for="v_mail_domains" class="form-label"><?=_('Mail Domains');?></label>
+					<label for="v_mail_domains" class="form-label"><?= _("Mail Domains") ?></label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?=htmlentities(trim($v_mail_domains, "'"))?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+						<input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?= htmlentities(trim($v_mail_domains, "'")) ?>">
+						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
 				<div class="u-mb10">
 					<label for="v_mail_accounts" class="form-label">
-						<?=_('Mail Accounts');?> <span class="optional">(<?=_('per domain');?>)</span>
+						<?= _("Mail Accounts") ?> <span class="optional">(<?= _("per domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
+						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
 				<div class="u-mb10">
 					<label for="v_ratelimit" class="form-label">
-						<?=_('Rate limit');?> <span class="optional">(<?=_('per account / hour');?>)</span>
+						<?= _("Rate limit") ?> <span class="optional">(<?= _("per account / hour") ?>)</span>
 					</label>
-					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?=htmlentities(trim($v_ratelimit, "'"))?>">
+					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
 				</div>
 			</div>
 			<h2 x-on:click="showDatabaseOptions = !showDatabaseOptions" class="section-title">
-				<?=_('Databases');?>
+				<?= _("Databases") ?>
 				<i
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas status-icon dim maroon js-section-toggle-icon"
@@ -274,15 +274,15 @@
 			</h2>
 			<div x-cloak x-show="showDatabaseOptions" id="database-options">
 				<div class="u-mt15 u-mb10">
-					<label for="v_databases" class="form-label"><?=_('Databases');?></label>
+					<label for="v_databases" class="form-label"><?= _("Databases") ?></label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_databases" id="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+						<input type="text" class="form-control" name="v_databases" id="v_databases" value="<?= htmlentities(trim($v_databases, "'")) ?>">
+						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
 			</div>
 			<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
-				<?=_('System');?>
+				<?= _("System") ?>
 				<i
 					x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas status-icon dim maroon js-section-toggle-icon"

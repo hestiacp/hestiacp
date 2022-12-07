@@ -3,15 +3,15 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/server/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/edit/server/php/" class="button button-secondary">
-				<i class="fas fa-pencil status-icon orange"></i> <?=_('Configure');?> PHP
+				<i class="fas fa-pencil status-icon orange"></i> <?= _("Configure") ?> PHP
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>

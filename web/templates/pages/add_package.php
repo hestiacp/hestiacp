@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/package/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -239,30 +239,30 @@
 			</h2>
 			<div x-cloak x-show="showMailOptions" id="mail-options">
 				<div class="u-mt15 u-mb10">
-					<label for="v_mail_domains" class="form-label"><?=_('Mail Domains');?></label>
+					<label for="v_mail_domains" class="form-label"><?= _("Mail Domains") ?></label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?=htmlentities(trim($v_mail_domains, "'"))?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+						<input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?= htmlentities(trim($v_mail_domains, "'")) ?>">
+						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
 				<div class="u-mb10">
 					<label for="v_mail_accounts" class="form-label">
-						<?=_('Mail Accounts');?> <span class="optional">(<?=_('per domain');?>)</span>
+						<?= _("Mail Accounts") ?> <span class="optional">(<?= _("per domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?=htmlentities(trim($v_mail_accounts, "'"))?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
+						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
 				<div class="u-mb10">
 					<label for="v_ratelimit" class="form-label">
-						<?=_('Rate limit');?> <span class="optional">(<?=_('per account / hour');?>)</span>
+						<?= _("Rate limit") ?> <span class="optional">(<?= _("per account / hour") ?>)</span>
 					</label>
-					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?=htmlentities(trim($v_ratelimit, "'"))?>">
+					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
 				</div>
 			</div>
 			<h2 x-on:click="showDatabaseOptions = !showDatabaseOptions" class="section-title">
-				<?=_('Databases');?>
+				<?= _("Databases") ?>
 				<i
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas status-icon dim maroon js-section-toggle-icon"
@@ -270,15 +270,15 @@
 			</h2>
 			<div x-cloak x-show="showDatabaseOptions" id="database-options">
 				<div class="u-mt15 u-mb10">
-					<label for="v_databases" class="form-label"><?=_('Databases');?></label>
+					<label for="v_databases" class="form-label"><?= _("Databases") ?></label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_databases" id="v_databases" value="<?=htmlentities(trim($v_databases, "'"))?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?=_('Unlimited');?>"></i>
+						<input type="text" class="form-control" name="v_databases" id="v_databases" value="<?= htmlentities(trim($v_databases, "'")) ?>">
+						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
 			</div>
 			<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
-				<?=_('System');?>
+				<?= _("System") ?>
 				<i
 					x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas status-icon dim maroon js-section-toggle-icon"

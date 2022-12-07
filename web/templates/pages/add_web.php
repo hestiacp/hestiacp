@@ -3,13 +3,13 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/web/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
+			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
 				<button class="button" type="submit" form="vstobjects">
-					<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+					<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 				</button>
 			<?php } ?>
 		</div>

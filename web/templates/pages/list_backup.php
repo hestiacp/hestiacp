@@ -2,29 +2,29 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== 'true') {?>
-				<a href="/schedule/backup/?token=<?=$_SESSION['token']?>" class="button button-secondary"><i class="fas fa-circle-plus status-icon green"></i><?=_('Create Backup');?></a>
-				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus status-icon orange"></i><?=_('backup exclusions');?></a>
+			<?php if ($read_only !== "true") { ?>
+				<a href="/schedule/backup/?token=<?= $_SESSION["token"] ?>" class="button button-secondary"><i class="fas fa-circle-plus status-icon green"></i><?= _("Create Backup") ?></a>
+				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus status-icon orange"></i><?= _("backup exclusions") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
-			<?php if ($read_only !== 'true') {?>
+			<?php if ($read_only !== "true") { ?>
 				<form x-bind="BulkEdit" action="/bulk/backup/" method="post">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
-						<option value=""><?=_('apply to selected');?></option>
-						<option value="delete"><?=_('delete') ?></option>
+						<option value=""><?= _("apply to selected") ?></option>
+						<option value="delete"><?= _("delete") ?></option>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
 			<?php } ?>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -110,10 +110,10 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=translate_date($data[$key]['DATE'])?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['SIZE'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['SIZE'])?></span></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['TYPE']?></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><?=humanize_time($data[$key]['RUNTIME'])?></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?= translate_date($data[$key]["DATE"]) ?></b></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><b><?= humanize_usage_size($data[$key]["SIZE"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["SIZE"]) ?></span></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><?= $data[$key]["TYPE"] ?></div>
+					<div class="clearfix l-unit__stat-col--left text-center"><?= humanize_time($data[$key]["RUNTIME"]) ?></div>
 				</div>
 			</div>
 		</div>
@@ -124,7 +124,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d backup', '%d backups', $i),$i); ?>
+				<?php printf(ngettext("%d backup", "%d backups", $i), $i); ?>
 			</div>
 		</div>
 	</div>

@@ -102,108 +102,108 @@
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left text-center compact">
-					<?php if ($data[$key]['SHELL'] == 'nologin'){ ?>
-						<i class="fas fa-circle-minus status-icon large" title="<?=_('SSH Access');?>: <?=$data[$key]['SHELL']?>"> </i>
-					<?php } else {?>
+					<?php if ($data[$key]["SHELL"] == "nologin") { ?>
+						<i class="fas fa-circle-minus status-icon large" title="<?= _("SSH Access") ?>: <?= $data[$key]["SHELL"] ?>"> </i>
+					<?php } else { ?>
 						<i class="fas fa-circle-check status-icon green large"></i>
 					<?php } ?>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center compact">
-					<span title="<?=_('Quota');?>: <?=humanize_usage_size($data[$key]['DISK_QUOTA'])?> <?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?>">
-						<?php if (preg_match('/[a-z]/i', $data[$key]['DISK_QUOTA'])): ?>
+					<span title="<?= _("Quota") ?>: <?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?> <?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>">
+						<?php if (preg_match("/[a-z]/i", $data[$key]["DISK_QUOTA"])): ?>
 							<b>&infin;</b>
 						<?php else: ?>
-							<b><?=humanize_usage_size($data[$key]['DISK_QUOTA'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['DISK_QUOTA'])?></span>
+							<b><?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?></span>
 						<?php endif; ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center compact">
-					<span title="<?=_('Bandwidth');?>: <?=humanize_usage_size($data[$key]['BANDWIDTH'])?> <?=humanize_usage_measure($data[$key]['BANDWIDTH'])?>">
-						<?php if ($data[$key]['BANDWIDTH'] == 'unlimited'){ ?>
+					<span title="<?= _("Bandwidth") ?>: <?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?> <?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>">
+						<?php if ($data[$key]["BANDWIDTH"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=humanize_usage_size($data[$key]['BANDWIDTH'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['BANDWIDTH'])?></span>
+						<?php } else { ?>
+							<b><?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?></span>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('Web Domains');?>: <?=$data[$key]['WEB_DOMAINS']?>">
-						<?php if ($data[$key]['WEB_DOMAINS'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("Web Domains") ?>: <?= $data[$key]["WEB_DOMAINS"] ?>">
+						<?php if ($data[$key]["WEB_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['WEB_DOMAINS']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["WEB_DOMAINS"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('Web Aliases');?>: <?=$data[$key]['WEB_ALIASES']?>">
-						<?php if ($data[$key]['WEB_ALIASES'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("Web Aliases") ?>: <?= $data[$key]["WEB_ALIASES"] ?>">
+						<?php if ($data[$key]["WEB_ALIASES"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['WEB_ALIASES']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["WEB_ALIASES"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('DNS Domains');?>: <?=$data[$key]['DNS_DOMAINS']?>">
-						<?php if ($data[$key]['DNS_DOMAINS'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("DNS Domains") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
+						<?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['DNS_DOMAINS']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["DNS_DOMAINS"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('DNS Records');?>: <?=$data[$key]['DNS_RECORDS']?>">
-						<?php if ($data[$key]['DNS_RECORDS'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
+						<?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['DNS_RECORDS']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["DNS_RECORDS"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('Mail Domains');?>: <?=$data[$key]['MAIL_DOMAINS']?>">
-						<?php if ($data[$key]['MAIL_DOMAINS'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
+						<?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['MAIL_DOMAINS']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["MAIL_DOMAINS"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('Mail Accounts');?>: <?=$data[$key]['MAIL_ACCOUNTS']?>">
-						<?php if ($data[$key]['MAIL_ACCOUNTS'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
+						<?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['MAIL_ACCOUNTS']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["MAIL_ACCOUNTS"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('Databases');?>: <?=$data[$key]['DATABASES']?>">
-						<?php if ($data[$key]['DATABASES'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("Databases") ?>: <?= $data[$key]["DATABASES"] ?>">
+						<?php if ($data[$key]["DATABASES"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['DATABASES']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["DATABASES"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('Cron Jobs');?>: <?=$data[$key]['CRON_JOBS']?>">
-						<?php if ($data[$key]['CRON_JOBS'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("Cron Jobs") ?>: <?= $data[$key]["CRON_JOBS"] ?>">
+						<?php if ($data[$key]["CRON_JOBS"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['CRON_JOBS']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["CRON_JOBS"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?=_('Backups');?>: <?=$data[$key]['BACKUPS']?>">
-						<?php if ($data[$key]['BACKUPS'] == 'unlimited'){ ?>
+					<span class="jump-top badge gray raised" title="<?= _("Backups") ?>: <?= $data[$key]["BACKUPS"] ?>">
+						<?php if ($data[$key]["BACKUPS"] == "unlimited") { ?>
 							<b>&infin;</b>
-						<?php } else {?>
-							<b><?=$data[$key]['BACKUPS']?></b>
+						<?php } else { ?>
+							<b><?= $data[$key]["BACKUPS"] ?></b>
 						<?php } ?>
 					</span>
 				</div>
@@ -216,7 +216,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d package', '%d packages', $i),$i); ?>
+				<?php printf(ngettext("%d package", "%d packages", $i), $i); ?>
 			</div>
 		</div>
 	</div>

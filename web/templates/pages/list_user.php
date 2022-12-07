@@ -157,22 +157,22 @@
 				<!-- END QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left text-center">
 					<b>
-						<?php if ($data[$key]['PACKAGE'] === 'default' ){?>
-							<?=$data[$key]['PACKAGE']?>
+						<?php if ($data[$key]["PACKAGE"] === "default") { ?>
+							<?= $data[$key]["PACKAGE"] ?>
 						<?php } else { ?>
-							<a href="/edit/package/?package=<?=$data[$key]['PACKAGE']?>&token=<?=$_SESSION['token']?>" title="<?=_('Edit Package');?>"><?=$data[$key]['PACKAGE']?></a>
+							<a href="/edit/package/?package=<?= $data[$key]["PACKAGE"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Package") ?>"><?= $data[$key]["PACKAGE"] ?></a>
 						<?php } ?>
 					</b>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact"><?=$data[$key]['IP_OWNED']?></div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_WEB_DOMAINS']?> <?=_('Web Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_WEB_DOMAINS']?></b></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_DNS_DOMAINS']?> <?=_('DNS Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DNS_DOMAINS']?></b></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_MAIL_DOMAINS']?> <?=_('Mail Domains');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_MAIL_DOMAINS']?></b></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_DATABASES']?> <?=_('Databases');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_DATABASES']?></b></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_CRON_JOBS']?> <?=_('Cron Jobs');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_CRON_JOBS']?></b></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?=$data[$key]['U_BACKUPS']?> <?=_('Backups');?>"><span class="jump-top badge gray raised"><b><?=$data[$key]['U_BACKUPS']?></b></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center super-compact"><?= $data[$key]["IP_OWNED"] ?></div>
+				<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?= $data[$key]["U_WEB_DOMAINS"] ?> <?= _("Web Domains") ?>"><span class="jump-top badge gray raised"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?= $data[$key]["U_DNS_DOMAINS"] ?> <?= _("DNS Domains") ?>"><span class="jump-top badge gray raised"><b><?= $data[$key]["U_DNS_DOMAINS"] ?></b></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?= $data[$key]["U_MAIL_DOMAINS"] ?> <?= _("Mail Domains") ?>"><span class="jump-top badge gray raised"><b><?= $data[$key]["U_MAIL_DOMAINS"] ?></b></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?= $data[$key]["U_DATABASES"] ?> <?= _("Databases") ?>"><span class="jump-top badge gray raised"><b><?= $data[$key]["U_DATABASES"] ?></b></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?= $data[$key]["U_CRON_JOBS"] ?> <?= _("Cron Jobs") ?>"><span class="jump-top badge gray raised"><b><?= $data[$key]["U_CRON_JOBS"] ?></b></span></div>
+				<div class="clearfix l-unit__stat-col--left text-center super-compact" title="<?= $data[$key]["U_BACKUPS"] ?> <?= _("Backups") ?>"><span class="jump-top badge gray raised"><b><?= $data[$key]["U_BACKUPS"] ?></b></span></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -182,7 +182,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d user account', '%d user accounts', $i),$i); ?>
+				<?php printf(ngettext("%d user account", "%d user accounts", $i), $i); ?>
 			</div>
 		</div>
 	</div>

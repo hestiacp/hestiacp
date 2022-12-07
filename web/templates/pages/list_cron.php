@@ -43,9 +43,9 @@
 			</div>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -134,11 +134,11 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['MIN']?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['HOUR']?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['DAY']?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['MONTH']?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?=$data[$key]['WDAY']?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["MIN"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["HOUR"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["DAY"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["MONTH"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["WDAY"] ?></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -148,7 +148,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d cron job', '%d cron jobs', $i),$i); ?>
+				<?php printf(ngettext("%d cron job", "%d cron jobs", $i), $i); ?>
 			</div>
 		</div>
 	</div>

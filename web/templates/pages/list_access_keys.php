@@ -77,11 +77,11 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
+								<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
-									<input type="hidden" name="delete_url" value="/delete/access-key/?key=<?=$key?>&token=<?=$_SESSION['token']?>">
-									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
-										<p><?=sprintf(_('DELETE_ACCESS_KEY_CONFIRMATION'),$key)?></p>
+									<input type="hidden" name="delete_url" value="/delete/access-key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
+									<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
+										<p><?= sprintf(_("DELETE_ACCESS_KEY_CONFIRMATION"), $key) ?></p>
 									</div>
 								</a>
 							</div>
@@ -89,9 +89,9 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center wide-2"><b><?=_($key_comment)?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$key_date?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$key_time?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center wide-2"><b><?= _($key_comment) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $key_date ?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $key_time ?></b></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -101,7 +101,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d Access Key', '%d Access Keys', $i),$i); ?>
+				<?php printf(ngettext("%d Access Key", "%d Access Keys", $i), $i); ?>
 			</div>
 		</div>
 	</div>

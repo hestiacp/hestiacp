@@ -2,28 +2,28 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && (htmlentities($_GET['user']) !== 'admin')) { ?>
-				<a href="/list/log/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && htmlentities($_GET["user"]) !== "admin") { ?>
+				<a href="/list/log/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
 			<?php } else { ?>
-				<a href="/list/log/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+				<a href="/list/log/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrow-rotate-right status-icon green"></i><?=_('Refresh');?></a>
-			<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrow-rotate-right status-icon green"></i><?= _("Refresh") ?></a>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes") { ?>
 				<!-- Hide delete buttons-->
 			<?php } else { ?>
-				<?php if (($_SESSION['userContext'] === 'admin') || (($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no'))) {?>
+				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_DELETE_LOGS"] !== "no")) { ?>
 					<div class="actions-panel" key-action="js">
 						<a class="data-controls do_delete button button-secondary button-danger">
-							<i class="do_delete fas fa-circle-xmark status-icon red"></i><?=_('Delete');?>
-							<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user']))) {?>
-								<input type="hidden" name="delete_url" value="/delete/log/auth/?user=<?=htmlentities($_GET['user']);?>&token=<?=$_SESSION['token']?>">
+							<i class="do_delete fas fa-circle-xmark status-icon red"></i><?= _("Delete") ?>
+							<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
+								<input type="hidden" name="delete_url" value="/delete/log/auth/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>">
 							<?php } else { ?>
-								<input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?=$_SESSION['token']?>">
+								<input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?= $_SESSION["token"] ?>">
 							<?php } ?>
-							<div class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
-								<p><?=_('DELETE_LOGS_CONFIRMATION');?></p>
+							<div class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
+								<p><?= _("DELETE_LOGS_CONFIRMATION") ?></p>
 							</div>
 						</a>
 					</div>
@@ -86,7 +86,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit_col l-unit_col--right clearfix">
-				<?php printf(ngettext('%d log record', '%d log records', $i),$i); ?>
+				<?php printf(ngettext("%d log record", "%d log records", $i), $i); ?>
 			</div>
 		</div>
 	</div>

@@ -148,7 +148,7 @@
 						}
 					?>
 					<div class="u-pt18 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
-						<span class="js-add-ns-button additional-control add"><?=_('Add one more Name Server');?></span>
+						<span class="js-add-ns-button additional-control add"><?= _("Add one more Name Server") ?></span>
 					</div>
 				</div>
 			<?php } ?>

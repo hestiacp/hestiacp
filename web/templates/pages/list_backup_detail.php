@@ -36,9 +36,9 @@
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4"><b><?=_('Type');?></b></div>
-				<div class="clearfix l-unit__stat-col--left wide-7"><b><?=_('Details');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-right compact-4"><b><?=_('Restore');?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact-4"><b><?= _("Type") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("Details") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-right compact-4"><b><?= _("Restore") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -57,7 +57,7 @@
 					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" name="web[]" value="<?=$key?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('Web domain');?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Web domain") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
@@ -66,7 +66,7 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
-								<a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
+								<a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim icon-pad-right"></i>
 								</a>
 							</div>
@@ -89,7 +89,7 @@
 					<input id="check2<?=$i?>" class="ch-toggle" type="checkbox" name="mail[]" value="<?=$key?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('Mail domain');?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Mail domain") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
@@ -98,7 +98,7 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
-								<a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
+								<a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
 								</a>
 							</div>
@@ -121,7 +121,7 @@
 					<input id="check3<?=$i?>" class="ch-toggle" type="checkbox" name="dns[]" value="<?=$key?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('DNS domain');?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("DNS domain") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
@@ -130,7 +130,7 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
-								<a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
+								<a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
 								</a>
 							</div>
@@ -153,7 +153,7 @@
 					<input id="check4<?=$i?>" class="ch-toggle" type="checkbox" name="db[]" value="<?=$key?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('Database');?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Database") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
@@ -162,7 +162,7 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
-								<a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
+								<a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
 								</a>
 							</div>
@@ -214,7 +214,7 @@
 					<input id="check6<?=$i?>" class="ch-toggle" type="checkbox" name="udir[]" value="<?=$key?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?=_('user dir');?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("user dir") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
@@ -223,7 +223,7 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
-								<a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Restore');?>">
+								<a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
 								</a>
 							</div>

@@ -22,7 +22,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?=_('Configuring Server');?>: PHP</h1>
+			<h1 class="form-title"><?= _("Configuring Server") ?>: PHP</h1>
 			<?php show_alert_message($_SESSION);?>
 			<div id="basic-options">
 				<div class="u-mb10">
@@ -54,12 +54,12 @@
 					<input type="text" class="form-control" regexp="upload_max_filesize" prev_value="<?=htmlentities($v_upload_max_filesize)?>" name="v_upload_max_filesize" id="v_upload_max_filesize" value="<?=htmlentities($v_upload_max_filesize)?>">
 				</div>
 				<div class="u-mb20">
-					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Advanced options');?></a>
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Advanced options") ?></a>
 				</div>
 			</div>
 			<div id="advanced-options" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 				<div class="u-mb20">
-					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Basic options');?></a>
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Basic options") ?></a>
 				</div>
 				<div class="u-mb20">
 					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
@@ -68,7 +68,7 @@
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 					<label for="v_restart">
-						<?=_('restart');?>
+						<?= _("restart") ?>
 					</label>
 				</div>
 			</div>

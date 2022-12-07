@@ -38,34 +38,34 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>:
+				<a href="#" class="toolbar-sorting-toggle" title="<?= _("Sort items") ?>">
+					<?= _("sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</a>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-charset"><span class="name"><?=_('Charset');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-server"><span class="name"><?=_('Host');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-user"><span class="name"><?=_('Username');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-charset"><span class="name"><?= _("Charset") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-disk" sort_as_int="1"><span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-server"><span class="name"><?= _("Host") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-user"><span class="name"><?= _("Username") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') {?>
 					<form x-bind="BulkEdit" action="/bulk/db/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<select class="form-select" name="action">
-							<option value=""><?=_('apply to selected');?></option>
+							<option value=""><?= _("apply to selected") ?></option>
 							<?php if ($_SESSION['userContext'] === 'admin') {?>
-								<option value="rebuild"><?=_('rebuild');?></option>
-								<option value="suspend"><?=_('suspend');?></option>
-								<option value="unsuspend"><?=_('unsuspend');?></option>
+								<option value="rebuild"><?= _("rebuild") ?></option>
+								<option value="suspend"><?= _("suspend") ?></option>
+								<option value="unsuspend"><?= _("unsuspend") ?></option>
 							<?php } ?>
-							<option value="delete"><?=_('delete');?></option>
+							<option value="delete"><?= _("delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>
@@ -89,15 +89,15 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" <?=$display_mode;?>>
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left text-right compact-3"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Disk');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Type');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=_('Username');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Hostname');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Charset');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Disk") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= _("Type") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center wide"><b><?= _("Username") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Hostname") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Charset") ?></b></div>
 		</div>
 	</div>
 
@@ -131,13 +131,13 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="database[]" value="<?=$key?>" <?=$display_mode;?>>
+						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="database[]" value="<?=$key?>" <?=$display_mode;?>>
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-3 truncate">
 						<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
 							<b><?=$key?></b>
 						<?php } else { ?>
-							<b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database');?>: <?=$key?>"><?=$key?></a></b>
+							<b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Database") ?>: <?=$key?>"><?=$key?></a></b>
 						<?php } ?>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
@@ -149,25 +149,25 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 									&nbsp;
 								<?php } else { ?>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Database');?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Database") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
 									<?php } ?>
 									<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?=_('phpMyAdmin');?>"><i class="fas fa-right-to-bracket status-icon orange status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?= _("phpMyAdmin") ?>"><i class="fas fa-right-to-bracket status-icon orange status-icon dim"></i></a></div>
 									<?php } ?>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 										<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
 											<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
 											<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>">
-											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?=_('Confirmation');?>">
+											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 												<p><?=sprintf($spnd_confirmation,$key)?></p>
 											</div>
 										</a>
 									</div>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-										<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
+										<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
 											<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 											<input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>">
-											<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
+											<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 												<p><?=sprintf(_('DELETE_DATABASE_CONFIRMATION'),$key)?></p>
 											</div>
 										</a>

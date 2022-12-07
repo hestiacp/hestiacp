@@ -41,14 +41,14 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>">
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-1"><b><?=_('Action');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Action") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Comment');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Protocol');?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=_('Port');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('IP address');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Comment") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Protocol") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?= _("Port") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("IP address") ?></b></div>
 		</div>
 	</div>
 
@@ -74,11 +74,11 @@
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="rule[]" value="<?=$key?>">
+						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="rule[]" value="<?=$key?>">
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-1">
 						<b>
-							<a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Firewall Rule');?>">
+							<a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Firewall Rule") ?>">
 							<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
 								<?php if ($data[$key]['ACTION'] == 'DROP') { ?>
 									<i class="fas fa-circle-minus status-icon red icon-pad-right"></i> <?=_($data[$key]['ACTION'])?>
@@ -99,21 +99,21 @@
 					<div class="clearfix l-unit__stat-col--left compact-2 text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix" style="padding-right: 10px;">
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Firewall Rule');?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Firewall Rule") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
 										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
 										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>">
-										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?=_('Confirmation');?>">
+										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf($spnd_confirmation,$key)?></p>
 										</div>
 									</a>
 								</div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
+									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
 										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>">
-										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
+										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf(_('DELETE_RULE_CONFIRMATION'),$key)?></p>
 										</div>
 									</a>

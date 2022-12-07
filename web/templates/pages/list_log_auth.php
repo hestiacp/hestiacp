@@ -38,12 +38,12 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left text-center">
-				<b><?=_('Status');?></b>
+				<b><?= _("Status") ?></b>
 			</div>
-			<div class="clearfix l-unit__stat-col--left"><b><?=_('Date');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-2"><b><?=_('Time');?></b></div>
-			<div class="clearfix l-unit__stat-col--left"><b><?=_('IP address');?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-7"><b><?=_('Browser');?></b></div>
+			<div class="clearfix l-unit__stat-col--left"><b><?= _("Date") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-2"><b><?= _("Time") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left"><b><?= _("IP address") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("Browser") ?></b></div>
 		</div>
 	</div>
 

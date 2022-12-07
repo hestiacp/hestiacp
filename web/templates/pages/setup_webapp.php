@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/add/webapp/?domain=<?=htmlentities($v_domain);?>">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
@@ -17,7 +17,7 @@
 				}
 			?>
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -36,8 +36,8 @@
 				<?php if( !$WebappInstaller->isDomainRootClean()): ?>
 					<div class="alert alert-info alert-with-icon" role="alert">
 						<i class="fas fa-info"></i>
-						<p class="u-mb10"><?=_('Data loss warning!');?></p>
-						<p class="u-mb10"><?=_('Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.');?></p>
+						<p class="u-mb10"><?= _("Data loss warning!") ?></p>
+						<p class="u-mb10"><?= _("Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.") ?></p>
 						<p><?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?></p>
 					</div>
 				<?php endif; ?>
@@ -68,7 +68,7 @@
 							<?php if($f_type != 'boolean'): ?>
 								<label for="<?=$f_name?>" class="form-label">
 									<?=$f_label?>
-									<?php if ($f_type === 'password'):?> / <a href="javascript:applyRandomStringToTarget('<?=$f_name?>');" class="generate"><?=_('generate');?></a> <?php endif?>
+									<?php if ($f_type === 'password'):?> / <a href="javascript:applyRandomStringToTarget('<?=$f_name?>');" class="generate"><?= _("generate") ?></a> <?php endif?>
 								</label>
 							<?php endif; ?>
 							<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>

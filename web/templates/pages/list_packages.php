@@ -2,29 +2,29 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-			<a href="/add/package/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add Package');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a href="/add/package/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add Package") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>:
+				<a href="#" class="toolbar-sorting-toggle" title="<?= _("Sort items") ?>">
+					<?= _("sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</a>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<form x-bind="BulkEdit" action="/bulk/package/" method="post">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
-						<option value=""><?=_('apply to selected');?></option>
-						<option value="delete"><?=_('delete');?></option>
+						<option value=""><?= _("apply to selected") ?></option>
+						<option value="delete"><?= _("delete") ?></option>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
@@ -38,22 +38,22 @@
 	<div class="table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>">
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-2"><b><?=_('Package');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Package") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-terminal" title="<?=_('Shell');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hard-drive" title="<?=_('Quota');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-right-left" title="<?=_('Bandwidth');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-earth-americas" title="<?=_('Web Domains');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link" title="<?=_('Web Aliases');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-book-atlas" title="<?=_('DNS Domains');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe" title="<?=_('DNS Records');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?=_('Mail Domains');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox" title="<?=_('Mail Accounts');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?=_('Databases');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?=_('Cron Jobs');?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-zipper" title="<?=_('Backups');?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-terminal" title="<?= _("Shell") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hard-drive" title="<?= _("Quota") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link" title="<?= _("Web Aliases") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Domains") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe" title="<?= _("DNS Records") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox" title="<?= _("Mail Accounts") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?= _("Databases") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?= _("Cron Jobs") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-zipper" title="<?= _("Backups") ?>"></i></b></div>
 		</div>
 	</div>
 
@@ -67,12 +67,12 @@
 			sort-bandwidth="<?=$data[$key]['BANDWIDTH']?>" sort-disk="<?=$data[$key]['DISK_QUOTA']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="user[]" value="<?=$key?>">
+					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="user[]" value="<?=$key?>">
 				</div>
 				<?php if ($key == 'system'){ ?>
 					<div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><?=$key?></b></div>
 				<?php } else {?>
-					<div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package');?>: <?=$key?>"><?=$key?></a></b></div>
+					<div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>: <?=$key?>"><?=$key?></a></b></div>
 				<?php } ?>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left text-right compact-3">
@@ -81,17 +81,17 @@
 							<?php if (($key == 'system')) { ?>
 								<!-- Restrict editing system package -->
 							<?php } else {?>
-								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Package');?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
 							<?php } ?>
-							<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Copy');?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
+							<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Copy") ?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
 							<?php if ($key == 'system') { ?>
 								<!-- Restrict deleting system package -->
 							<?php } else {?>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('Delete');?>">
+									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("Delete") ?>">
 										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>">
-										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
+										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf(_('DELETE_PACKAGE_CONFIRMATION'),$key)?></p>
 										</div>
 									</a>

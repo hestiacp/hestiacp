@@ -25,13 +25,13 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>">
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('IP address');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP address") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?=_('Date');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?=_('Time');?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide text-center"><b><?=_('Comment');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?= _("Date") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?= _("Time") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide text-center"><b><?= _("Comment") ?></b></div>
 		</div>
 	</div>
 
@@ -44,7 +44,7 @@
 		<div class="l-unit animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="ipchain[]" value="<?=$ip . ':' . $value['CHAIN'] ?>">
+					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="ipchain[]" value="<?=$ip . ':' . $value['CHAIN'] ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=$ip?></b></div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
@@ -55,7 +55,7 @@
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete">
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?=$ip?>&chain=<?=$value['CHAIN']?>&token=<?=$_SESSION['token']?>">
-									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
+									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 										<p><?=sprintf(_('DELETE_IP_CONFIRMATION'),$key)?></p>
 									</div>
 								</a>

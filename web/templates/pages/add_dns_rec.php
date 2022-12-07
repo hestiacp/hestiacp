@@ -22,20 +22,20 @@
 		<input type="hidden" name="ok_rec" value="add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?=_('Adding DNS Record');?></h1>
+			<h1 class="form-title"><?= _("Adding DNS Record") ?></h1>
 			<?php show_alert_message($_SESSION);?>
 			<div class="u-mb10">
-				<label for="v_domain" class="form-label"><?=_('Domain');?></label>
+				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
 				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
 				<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_rec" class="form-label"><?=_('Record');?></label>
+				<label for="v_rec" class="form-label"><?= _("Record") ?></label>
 				<input type="text" class="form-control" name="v_rec" id="v_rec" value="<?=htmlentities(trim($v_rec, "'"))?>">
 				<small class="hint"></small>
 			</div>
 			<div class="u-mb10">
-				<label for="v_type" class="form-label"><?=_('Type');?></label>
+				<label for="v_type" class="form-label"><?= _("Type") ?></label>
 				<select class="form-select" name="v_type" id="v_type">
 					<option value="A" <?php if ($v_type == 'A') echo "selected"; ?>>A</option>
 					<option value="AAAA" <?php if ($v_type == 'AAAA') echo "selected"; ?>>AAAA</option>
@@ -55,7 +55,7 @@
 				</select>
 			</div>
 			<div class="u-mb10">
-				<label for="v_val" class="form-label"><?=_('IP or Value');?></label>
+				<label for="v_val" class="form-label"><?= _("IP or Value") ?></label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 						<option value="">&nbsp;</option>
@@ -71,13 +71,13 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_priority" class="form-label">
-					<?=_('Priority');?> <span class="optional">(<?=_('optional');?>)</span>
+					<?= _("Priority") ?> <span class="optional">(<?= _("optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_priority" id="v_priority" value="<?=htmlentities(trim($v_priority, "'"))?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_ttl" class="form-label">
-					<?=_('TTL');?> <span class="optional">(<?=_('optional');?>)</span>
+					<?= _("TTL") ?> <span class="optional">(<?= _("optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
 			</div>

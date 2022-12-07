@@ -22,15 +22,15 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?=_('Adding Firewall Ipset List');?></h1>
+			<h1 class="form-title"><?= _("Adding Firewall Ipset List") ?></h1>
 			<?php show_alert_message($_SESSION);?>
 			<div class="u-mb10">
-				<label for="v_ipname" class="form-label"><?=_('Ip List Name') ?></label>
+				<label for="v_ipname" class="form-label"><?= _("Ip List Name") ?></label>
 				<input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?=htmlentities(trim($v_ipname, "'"))?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_datasource" class="form-label">
-					<?=_('Data Source') ?> <span class="optional">(<?=_('url, script or file');?>)</span>
+					<?= _("Data Source") ?> <span class="optional">(<?= _("url, script or file") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
@@ -40,17 +40,17 @@
 				</div>
 			</div>
 			<div class="u-mb10">
-				<label for="v_ipver" class="form-label"><?=_('Ip Version') ?></label>
+				<label for="v_ipver" class="form-label"><?= _("Ip Version") ?></label>
 				<select class="form-select" name="v_ipver" id="v_ipver">
-					<option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>><?=_('ip v4');?></option>
-					<option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>><?=_('ip v6');?></option>
+					<option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>><?= _("ip v4") ?></option>
+					<option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>><?= _("ip v6") ?></option>
 				</select>
 			</div>
 			<div class="u-mb10">
-				<label for="v_autoupdate" class="form-label"><?=_('Autoupdate') ?></label>
+				<label for="v_autoupdate" class="form-label"><?= _("Autoupdate") ?></label>
 				<select class="form-select" name="v_autoupdate" id="v_autoupdate">
-					<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?=_('yes');?></option>
-					<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?=_('no');?></option>
+					<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?= _("yes") ?></option>
+					<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?= _("no") ?></option>
 				</select>
 			</div>
 		</div>

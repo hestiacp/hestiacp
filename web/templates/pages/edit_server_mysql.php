@@ -22,7 +22,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?=_('Configuring Server');?>: <?=$v_service_name;?></h1>
+			<h1 class="form-title"><?= _("Configuring Server") ?>: <?=$v_service_name;?></h1>
 			<?php show_alert_message($_SESSION);?>
 			<div id="basic-options">
 				<div class="u-mb10">
@@ -46,12 +46,12 @@
 					<input type="text" class="form-control" regexp="max_allowed_packet" prev_value="<?=htmlentities($v_max_allowed_packet)?>" name="v_display_errors" id="v_display_errors" value="<?=htmlentities($v_max_allowed_packet)?>">
 				</div>
 				<div class="u-mb20">
-					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Advanced options');?></a>
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Advanced options") ?></a>
 				</div>
 			</div>
 			<div id="advanced-options" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 				<div class="u-mb20">
-					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Basic options');?></a>
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Basic options") ?></a>
 				</div>
 				<div class="u-mb20">
 					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
@@ -60,7 +60,7 @@
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 					<label for="v_restart">
-						<?=_('restart');?>
+						<?= _("restart") ?>
 					</label>
 				</div>
 			</div>

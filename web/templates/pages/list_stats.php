@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>
-				<a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars status-icon lightblue"></i><?=_('Overall Statistics');?></a>
+				<a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars status-icon lightblue"></i><?= _("Overall Statistics") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -11,7 +11,7 @@
 				<form x-bind="BulkEdit" action="/list/stats/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="user">
-						<option value=""><?=_('show per user');?></option>
+						<option value=""><?= _("show per user") ?></option>
 						<?php
 							foreach ($users as $key => $value) {
 								if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value === 'admin')) {
@@ -26,7 +26,7 @@
 							}
 						?>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
@@ -34,8 +34,8 @@
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -66,7 +66,7 @@
 				<div class="l-unit__col l-unit__col--right">
 					<div class="l-unit__name separate">
 						<?php $date = new DateTime($key);
-						echo _($date -> format('M')) .' '.$date -> format('Y');?>
+						echo _($date -> format('M')) .' '.$date -> format('Y') ?>
 					</div>
 					<div class="l-unit__stats">
 						<table>

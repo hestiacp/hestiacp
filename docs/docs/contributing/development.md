@@ -118,6 +118,11 @@ Please ensure you have [Yarn](https://yarnpkg.com) v3 installed and are using [N
 
 1. Reload the page in your browser to see your changes
 
+::: info
+A backup is created each time the Hestia build script is run. If you run this a lot it can fill up your VM's disk space.
+You can delete the backups by running `rm -rf /root/hst_backups` as root user on the VM.
+:::
+
 Please refer to the [contributing guidelines](https://github.com/hestiacp/hestiacp/blob/main/CONTRIBUTING.md) for more details on submitting code changes for review.
 
 ### Building packages

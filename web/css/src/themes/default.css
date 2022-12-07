@@ -2240,6 +2240,79 @@
 .values-list-value {
 }
 
+/* Server summary component
+   ========================================================================== */
+
+.server-summary {
+	padding: 20px;
+
+	@media (--viewport-medium) {
+		display: flex;
+	}
+}
+
+.server-summary-icon {
+	text-align: center;
+	margin-bottom: 10px;
+
+	& .fas {
+		font-size: 4.6rem;
+	}
+
+	@media (--viewport-medium) {
+		margin-top: 8px;
+		margin-bottom: 0;
+	}
+}
+
+.server-summary-content {
+	text-align: center;
+
+	@media (--viewport-medium) {
+		text-align: left;
+		flex-grow: 1;
+		margin-left: 30px;
+	}
+
+	@media (--viewport-large) {
+		margin-left: 40px;
+	}
+}
+
+.server-summary-title {
+	color: #414141;
+	margin-bottom: 10px;
+
+	@media (--viewport-medium) {
+		font-size: 1.7rem;
+		margin-bottom: 0;
+	}
+}
+
+.server-summary-list {
+	@media (--viewport-medium) {
+		display: flex;
+		justify-content: space-between;
+	}
+}
+
+.server-summary-item {
+	@media (--viewport-large) {
+		min-width: 200px;
+	}
+}
+
+.server-summary-list-label {
+	font-weight: 600;
+
+	@media (--viewport-medium) {
+		display: block;
+	}
+}
+
+.server-summary-list-value {
+}
+
 /* Panel component
    ========================================================================== */
 
@@ -2716,32 +2789,10 @@ li[aria-expanded="true"] a {
 	}
 }
 
-.server-info-data {
-	margin-left: 100px;
-	margin-top: -20px;
-
-	& table {
-		width: auto;
-	}
-}
-
-.server-info-name {
-	margin-top: 8px;
-	margin-bottom: 22px;
-	font-weight: 400;
-}
-
-.server-info-output {
+.server-console-output {
 	color: #c36;
 	padding: 10px 0 20px 20px;
 	background: #fff;
-}
-
-.icon-server-info {
-	font-size: 4.6rem;
-	float: left;
-	margin-right: 32px;
-	margin-left: 2px;
 }
 
 .userlist-email {

@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
 			<?php
 				if($autoupdate == 'Enabled') {
 					$btn_url = '/delete/cron/autoupdate/?token='.$_SESSION['token'].'';
@@ -25,12 +25,12 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact center">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>">
+					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide"><b><?=_('Package');?></b></div>
-				<div class="clearfix l-unit__stat-col--left wide-5"><b><?=_('Description');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center wide"><b><?=_('Version');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Status');?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide"><b><?= _("Package") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Description") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center wide"><b><?= _("Version") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Status") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -57,7 +57,7 @@
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact center">
-						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="pkg[]" value="<?=$key?>">
+						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="pkg[]" value="<?=$key?>">
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide"><b><?=$key?></b></div>
 					<div class="clearfix l-unit__stat-col--left wide-5"><?=_($data[$key]['DESCR'])?></div>

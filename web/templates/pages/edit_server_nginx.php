@@ -3,15 +3,15 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/server/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/edit/server/php/" class="button button-secondary">
-				<i class="fas fa-pencil status-icon orange"></i> <?=_('Configure');?> PHP
+				<i class="fas fa-pencil status-icon orange"></i> <?= _("Configure") ?> PHP
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -25,7 +25,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?=_('Configuring Server');?>: <?=$v_service_name;?></h1>
+			<h1 class="form-title"><?= _("Configuring Server") ?>: <?=$v_service_name;?></h1>
 			<?php show_alert_message($_SESSION);?>
 			<div id="basic-options">
 				<div class="u-mb10">
@@ -69,12 +69,12 @@
 					<input type="text" class="form-control" regexp="charset" prev_value="<?=htmlentities($v_charset)?>" name="v_charset" id="v_charset" value="<?=htmlentities($v_charset)?>">
 				</div>
 				<div class="u-mb20">
-					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Advanced options');?></a>
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Advanced options") ?></a>
 				</div>
 			</div>
 			<div id="advanced-options" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 				<div class="u-mb20">
-					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Basic options');?></a>
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Basic options") ?></a>
 				</div>
 				<div class="u-mb20">
 					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
@@ -83,7 +83,7 @@
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 					<label for="v_restart">
-						<?=_('restart');?>
+						<?= _("restart") ?>
 					</label>
 				</div>
 			</div>

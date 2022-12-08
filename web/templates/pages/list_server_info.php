@@ -3,9 +3,9 @@
 
 <head>
 	<!-- Load necessary CSS and JavaScript from source -->
-	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/title.php'; ?>
-	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/css.php'; ?>
-	<?php require ''.$_SERVER['HESTIA'].'/web/templates/includes/js.php'; ?>
+	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/title.php"; ?>
+	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/css.php"; ?>
+	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/js.php"; ?>
 </head>
 
 <body>
@@ -13,52 +13,52 @@
 		<div class="top-bar">
 			<div class="container top-bar-inner">
 				<div class="top-bar-left">
-					<a href="/list/web/" class="top-bar-logo" title="<?=_('Hestia Control Panel');?>">
-						<img src="/images/logo-header.svg" alt="<?=_('Hestia Control Panel');?>" width="54" height="29">
+					<a href="/" class="top-bar-logo" title="<?= _("Hestia Control Panel") ?>">
+						<img src="/images/logo-header.svg" alt="<?= _("Hestia Control Panel") ?>" width="54" height="29">
 					</a>
 				</div>
 				<div class="top-bar-right">
 					<nav x-data="{ open: false }" class="top-bar-menu">
-						<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?=_('Toggle menu');?>">
+						<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?= _("Toggle menu") ?>">
 							<i class="fas fa-bars"></i>
-							<span class="u-hidden"><?=_('Toggle menu');?></span>
+							<span class="u-hidden"><?= _("Toggle menu") ?></span>
 						</button>
 						<ul x-cloak x-show="open" class="top-bar-menu-list animate__animated animate__fadeIn">
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="/list/rrd/" title="<?=_('Back');?>">
+								<a class="top-bar-menu-link" href="/list/rrd/" title="<?= _("Back") ?>">
 									<i class="fas fa-circle-left"></i>
-									<span class="top-bar-menu-link-label"><?=_('Back');?></span>
+									<span class="top-bar-menu-link-label"><?= _("Back") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
 								<a class="top-bar-menu-link <?php if(isset($_GET['cpu'])) echo 'active' ?>" href="/list/server/?cpu">
 									<i class="fas fa-microchip"></i>
-									<span class="top-bar-menu-link-label"><?=_('CPU');?></span>
+									<span class="top-bar-menu-link-label"><?= _("CPU") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
 								<a class="top-bar-menu-link <?php if(isset($_GET['mem'])) echo 'active' ?>" href="/list/server/?mem">
 									<i class="fas fa-memory"></i>
-									<span class="top-bar-menu-link-label"><?=_('RAM');?></span>
+									<span class="top-bar-menu-link-label"><?= _("RAM") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
 								<a class="top-bar-menu-link <?php if(isset($_GET['disk'])) echo 'active' ?>" href="/list/server/?disk">
 									<i class="fas fa-hard-drive"></i>
-									<span class="top-bar-menu-link-label"><?=_('Disk');?></span>
+									<span class="top-bar-menu-link-label"><?= _("Disk") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
 								<a class="top-bar-menu-link <?php if(isset($_GET['net'])) echo 'active' ?>" href="/list/server/?net">
 									<i class="fas fa-hard-drive"></i>
-									<span class="top-bar-menu-link-label"><?=_('Network');?></span>
+									<span class="top-bar-menu-link-label"><?= _("Network") ?></span>
 								</a>
 							</li>
 							<?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?>
 								<li class="top-bar-menu-item">
 									<a class="top-bar-menu-link <?php if(isset($_GET['web'])) echo 'active' ?>" href="/list/server/?web">
 										<i class="fas fa-earth-europe"></i>
-										<span class="top-bar-menu-link-label"><?=_('Web');?></span>
+										<span class="top-bar-menu-link-label"><?= _("Web") ?></span>
 									</a>
 								</li>
 							<?php }?>
@@ -66,7 +66,7 @@
 								<li class="top-bar-menu-item">
 									<a class="top-bar-menu-link <?php if(isset($_GET['dns'])) echo 'active' ?>" href="/list/server/?dns">
 										<i class="fas fa-book-atlas"></i>
-										<span class="top-bar-menu-link-label"><?=_('DNS');?></span>
+										<span class="top-bar-menu-link-label"><?= _("DNS") ?></span>
 									</a>
 								</li>
 							<?php }?>
@@ -74,7 +74,7 @@
 								<li class="top-bar-menu-item">
 									<a class="top-bar-menu-link <?php if(isset($_GET['mail'])) echo 'active' ?>" href="/list/server/?mail">
 										<i class="fas fa-envelopes-bulk"></i>
-										<span class="top-bar-menu-link-label"><?=_('Mail');?></span>
+										<span class="top-bar-menu-link-label"><?= _("Mail") ?></span>
 									</a>
 								</li>
 							<?php }?>
@@ -82,20 +82,20 @@
 								<li class="top-bar-menu-item">
 									<a class="top-bar-menu-link <?php if(isset($_GET['db'])) echo 'active' ?>" href="/list/server/?db">
 										<i class="fas fa-database"></i>
-										<span class="top-bar-menu-link-label"><?=_('DB');?></span>
+										<span class="top-bar-menu-link-label"><?= _("DB") ?></span>
 									</a>
 								</li>
 							<?php }?>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="javascript:location.reload();" title="<?=_('Refresh');?>">
+								<a class="top-bar-menu-link" href="javascript:location.reload();" title="<?= _("Refresh") ?>">
 									<i class="fas fa-arrow-rotate-right"></i>
-									<span class="u-hidden"><?=_('Refresh');?></span>
+									<span class="u-hidden"><?= _("Refresh") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?=$_SESSION['token']?>" title="<?=_('Log out');?>">
+								<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?=$_SESSION['token']?>" title="<?= _("Log out") ?>">
 									<i class="fas fa-right-from-bracket"></i>
-									<span class="u-hidden"><?=_('Log out');?></span>
+									<span class="u-hidden"><?= _("Log out") ?></span>
 								</a>
 							</li>
 						</ul>
@@ -108,10 +108,10 @@
 	<a
 		href="#top"
 		class="button button-secondary button-circle button-floating button-floating-top "
-		title="<?=_('Top');?>"
+		title="<?= _("Top") ?>"
 	>
 		<i class="fas fa-arrow-up"></i>
-		<span class="u-hidden"><?=_('Top');?></span>
+		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
 
 	<div class="server-console-output">.</div>

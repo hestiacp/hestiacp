@@ -161,7 +161,7 @@
 	border-top: none;
 
 	@media (--viewport-small) {
-		width: 320px;
+		width: 330px;
 	}
 
 	@media (--viewport-medium) {

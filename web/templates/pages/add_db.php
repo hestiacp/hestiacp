@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/db/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -19,41 +19,41 @@
 
 	<form
 		x-data="{
-			showAdvanced: <?= empty($v_adv) ? 'false' : 'true' ?>
+			showAdvanced: <?= empty($v_adv) ? "false" : "true" ?>
 		}"
 		id="vstobjects"
 		name="v_add_db"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?=_('Adding database');?></h1>
-			<?php show_alert_message($_SESSION);?>
-			<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
+			<h1 class="form-title"><?= _("Adding database") ?></h1>
+			<?php show_alert_message($_SESSION); ?>
+			<?php if ($user_plain == "admin" && $_GET["accept"] !== "true") { ?>
 				<div class="alert alert-danger alert-with-icon" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?=_('Avoid adding web domains on admin account');?></p>
+					<p><?= _("Avoid adding web domains on admin account") ?></p>
 				</div>
 			<?php } ?>
-			<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
+			<?php if ($user_plain == "admin" && empty($_GET["accept"])) { ?>
 				<div class="u-side-by-side u-pt18">
-					<a href="/add/user/" class="button u-width-full u-mr10"><?=_('Add User');?></a>
-					<a href="/add/db/?accept=true" class="button button-danger u-width-full u-ml10"><?=_('Continue');?></a>
+					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
+					<a href="/add/db/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
 				</div>
 			<?php } ?>
-			<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
+			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
 				<p class="hint u-mb20">
-					<?=sprintf(_('Prefix %s will be automatically added to database name and database user'),'<b>'.$user_plain.'_</b>');?>
+					<?= sprintf(_("Prefix %s will be automatically added to database name and database user"), "<b>" . $user_plain . "_</b>") ?>
 				</p>
 				<div class="u-mb10">
-					<label for="v_database" class="form-label"><?=_('Database');?></label>
-					<input type="text" class="form-control" name="v_database" id="v_database" value="<?=htmlentities(trim($v_database, "'"))?>">
+					<label for="v_database" class="form-label"><?= _("Database") ?></label>
+					<input type="text" class="form-control" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
-					<label for="v_type" class="form-label"><?=_('Type');?></label>
+					<label for="v_type" class="form-label"><?= _("Type") ?></label>
 					<select class="form-select" name="v_type" id="v_type">
 						<?php
 							foreach ($db_types as $key => $value) {
@@ -66,40 +66,40 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_dbuser" class="form-label u-side-by-side">
-						<?=_('Username');?>
-						<em><small>(<?=sprintf(_('maximum characters length, including prefix'), 32);?>)</small></em>
+						<?= _("Username") ?>
+						<em><small>(<?= sprintf(_("maximum characters length, including prefix"), 32) ?>)</small></em>
 					</label>
-					<input type="text" class="form-control" name="v_dbuser" id="v_dbuser" value="<?=htmlentities(trim($v_dbuser, "'"))?>">
+					<input type="text" class="form-control" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
 					<label for="v_password" class="form-label">
-						<?=_('Password');?>
-						<a href="javascript:applyRandomString();" title="<?=_('generate');?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
+						<?= _("Password") ?>
+						<a href="javascript:applyRandomString();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
 					</label>
 					<div class="u-pos-relative u-mb10">
 						<input type="text" class="form-control js-password-input" name="v_password" id="v_password">
 						<meter max="4" class="password-meter"></meter>
 					</div>
 				</div>
-				<p class="u-mb10"><?=_('Your password must have at least');?>:</p>
+				<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
 				<ul class="u-list-bulleted u-mb10">
-					<li><?=_('8 characters long');?></li>
-					<li><?=_('1 uppercase & 1 lowercase character');?></li>
-					<li><?=_('1 number');?></li>
+					<li><?= _("8 characters long") ?></li>
+					<li><?= _("1 uppercase & 1 lowercase character") ?></li>
+					<li><?= _("1 number") ?></li>
 				</ul>
 				<div class="u-mb20">
 					<label for="v_db_email" class="form-label">
-						<?=_('Send login credentials to email address') ?>
+						<?= _("Send login credentials to email address") ?>
 					</label>
-					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?=htmlentities(trim($v_db_email, "'"))?>">
+					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= htmlentities(trim($v_db_email, "'")) ?>">
 				</div>
 				<div class="u-mb20">
-					<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?=_('Advanced options');?></a>
+					<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?= _("Advanced options") ?></a>
 				</div>
 				<div x-cloak x-show="showAdvanced" id="advanced-opts">
 					<div class="u-mb10">
-						<label for="v_host" class="form-label"><?=_('Host');?></label>
+						<label for="v_host" class="form-label"><?= _("Host") ?></label>
 						<select class="form-select" name="v_host" id="v_host">
 							<?php
 								foreach ($db_hosts as $value) {
@@ -111,7 +111,7 @@
 						</select>
 					</div>
 					<div class="u-mb10">
-						<label for="v_charset" class="form-label"><?=_('Charset');?></label>
+						<label for="v_charset" class="form-label"><?= _("Charset") ?></label>
 						<select class="form-select" name="v_charset" id="v_charset">
 							<option value=big5 <?php if ((!empty($v_charset)) && ( $v_charset == 'big5')) echo 'selected';?>>big5</option>
 							<option value=dec8 <?php if ((!empty($v_charset)) && ( $v_charset == 'dec8')) echo 'selected';?>>dec8</option>

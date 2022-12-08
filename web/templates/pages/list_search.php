@@ -2,23 +2,23 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="javascript:window.history.back();" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrows-rotate status-icon green"></i> <?=_('Refresh');?></a>
+			<a href="javascript:window.history.back();" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrows-rotate status-icon green"></i> <?= _("Refresh") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>: <b><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></b>
+				<a href="#" class="toolbar-sorting-toggle" title="<?= _("Sort items") ?>">
+					<?= _("sort by") ?>: <b><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></b>
 				</a>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<div class="toolbar-search">
 					<form action="/search/" method="get">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-						<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" title="<?=_('Search');?>">
-						<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+						<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" title="<?= _("Search") ?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 							<i class="fas fa-magnifying-glass"></i>
 						</button>
 					</form>
@@ -35,12 +35,12 @@
 			<div class="clearfix l-unit__stat-col--left super-compact">
 				&nbsp;
 			</div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?=_('Status');?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-5"><b><?=_('Search Results');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?= _("Status") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Search Results") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Date');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Owner');?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Type');?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Date") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Owner") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Type") ?></b></div>
 		</div>
 	</div>
 
@@ -145,7 +145,7 @@
 						<?php if (!($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes' && $value['USER'] !== 'admin')){
 						if ($_SESSION['userContext'] === 'admin'){
 						?>
-							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$value['USER']?>"><i class="fas fa-right-to-bracket status-icon green status-icon dim icon-large"></i></a>
+							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$value['USER']?>"><i class="fas fa-right-to-bracket status-icon green status-icon dim icon-large"></i></a>
 						<?php
 						}
 						}

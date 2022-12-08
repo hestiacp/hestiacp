@@ -2,39 +2,39 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
 			<?php if ($read_only !== 'true') {?>
-				<a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i> <?=_('Add Record');?></a>
-				<a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil status-icon blue"></i> <?=_('Editing DNS Domain');?></a>
+				<a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i> <?= _("Add Record") ?></a>
+				<a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil status-icon blue"></i> <?= _("Editing DNS Domain") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>:
+				<a href="#" class="toolbar-sorting-toggle" title="<?= _("Sort items") ?>">
+					<?= _("sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Record'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</a>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-value"><span class="name"><?=_('IP or Value');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-record"><span class="name"><?=_('Record');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-ttl" sort_as_int="1"><span class="name"><?=_('TTL');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-type"><span class="name"><?=_('Type');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-value"><span class="name"><?= _("IP or Value") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-record"><span class="name"><?= _("Record") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-ttl" sort_as_int="1"><span class="name"><?= _("TTL") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-type"><span class="name"><?= _("Type") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') {?>
 					<form x-bind="BulkEdit" action="/bulk/dns/" method="post">
 						<input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<select class="form-select" name="action">
-							<option value=""><?=_('apply to selected');?></option>
-							<option value="suspend"><?=_('suspend');?></option>
-							<option value="unsuspend"><?=_('unsuspend');?></option>
-							<option value="delete"><?=_('delete');?></option>
+							<option value=""><?= _("apply to selected") ?></option>
+							<option value="suspend"><?= _("suspend") ?></option>
+							<option value="unsuspend"><?= _("unsuspend") ?></option>
+							<option value="delete"><?= _("delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>
@@ -42,9 +42,9 @@
 			</div>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -58,15 +58,15 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" <?=$display_mode;?>>
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
-			<div class="clearfix l-unit__stat-col--left"><b><?=_('Record');?></b></div>
+			<div class="clearfix l-unit__stat-col--left"><b><?= _("Record") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left super-compact text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?=_('Type');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?=_('Priority');?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?=_('TTL');?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?= _("Type") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?= _("Priority") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?= _("TTL") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-6"><b><?=_('IP or Value');?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("IP or Value") ?></b></div>
 		</div>
 	</div>
 
@@ -90,14 +90,14 @@
 			v_unit_id="<?=htmlentities($key);?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-record="<?=$data[$key]['RECORD']?>" sort-type="<?=$data[$key]['TYPE']?>" sort-ttl="<?=$data[$key]['TTL']?>" sort-value="<?=$data[$key]['VALUE']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="record[]" value="<?=$data[$key]['ID']?>" <?=$display_mode;?>>
+					<input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="record[]" value="<?=$data[$key]['ID']?>" <?=$display_mode;?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-truncate">
 					<b>
 					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
 						<?=substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
 					<?php } else { ?>
-						<a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record').': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a>
+						<a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") . ': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a>
 					<?php } ?>
 					</b>
 				</div>
@@ -110,13 +110,13 @@
 							&nbsp;
 						<?php } else { ?>
 							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing DNS Record');?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
 							<?php } ?>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
+								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
 									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>">
-									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
+									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 										<p><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
 									</div>
 								</a>
@@ -130,7 +130,7 @@
 			<div class="clearfix l-unit__stat-col--left compact text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
 			<div class="clearfix l-unit__stat-col--left compact text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
 			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8');?></div>
+			<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8') ?></div>
 		</div>
 	</div>
 <?php } ?>
@@ -141,7 +141,7 @@
 	<div class="container">
 		<div class="l-unit-ft">
 			<div class="l-unit__col l-unit__col--right total clearfix">
-				<?php printf(ngettext('%d DNS record', '%d DNS records', $i),$i); ?>
+				<?php printf(ngettext("%d DNS record", "%d DNS records", $i), $i); ?>
 			</div>
 			<div class="l-unit__col l-unit__col--right back clearfix">
 			</div>

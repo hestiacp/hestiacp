@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/cron/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -20,11 +20,11 @@
 	<div class="helper-container">
 		<div id="tabs" class="cron-helper-tabs">
 			<ul>
-				<li><a href="#tabs-1"><?=_('Minutes');?></a></li>
-				<li><a href="#tabs-2"><?=_('Hourly');?></a></li>
-				<li><a href="#tabs-3"><?=_('Daily');?></a></li>
-				<li><a href="#tabs-4"><?=_('Weekly');?></a></li>
-				<li><a href="#tabs-5"><?=_('Monthly');?></a></li>
+				<li><a href="#tabs-1"><?= _("Minutes") ?></a></li>
+				<li><a href="#tabs-2"><?= _("Hourly") ?></a></li>
+				<li><a href="#tabs-3"><?= _("Daily") ?></a></li>
+				<li><a href="#tabs-4"><?= _("Weekly") ?></a></li>
+				<li><a href="#tabs-5"><?= _("Monthly") ?></a></li>
 			</ul>
 			<div id="tabs-1">
 				<form>
@@ -33,19 +33,19 @@
 					<input type="hidden" name="h_month" value="*">
 					<input type="hidden" name="h_wday" value="*">
 					<div class="u-mt10 u-mb20">
-						<label for="h_min_1" class="form-label first"><?=_('Run Command');?>:</label>
+						<label for="h_min_1" class="form-label first"><?= _("Run Command") ?>:</label>
 						<select class="form-select" name="h_min" id="h_min_1">
-							<option value="*" selected="selected"><?=_('every minute');?></option>
-							<option value="*/2"><?=_('every two minutes');?></option>
-							<option value="*/5"><?=_('every');?> 5</option>
-							<option value="*/10"><?=_('every');?> 10</option>
-							<option value="*/15"><?=_('every');?> 15</option>
-							<option value="*/30"><?=_('every');?> 30</option>
+							<option value="*" selected="selected"><?= _("every minute") ?></option>
+							<option value="*/2"><?= _("every two minutes") ?></option>
+							<option value="*/5"><?= _("every") ?> 5</option>
+							<option value="*/10"><?= _("every") ?> 10</option>
+							<option value="*/15"><?= _("every") ?> 15</option>
+							<option value="*/30"><?= _("every") ?> 30</option>
 						</select>
 					</div>
 					<div class="u-pt10">
 						<button type="submit" class="button button-secondary">
-							<?=_('generate');?>
+							<?= _("generate") ?>
 						</button>
 					</div>
 				</form>
@@ -57,16 +57,16 @@
 					<input type="hidden" name="h_month" value="*">
 					<input type="hidden" name="h_wday" value="*">
 					<div class="u-mt10 u-mb10">
-						<label for="h_hour_2" class="form-label first"><?=_('Run Command');?>:</label>
+						<label for="h_hour_2" class="form-label first"><?= _("Run Command") ?>:</label>
 						<select class="form-select" name="h_hour" id="h_hour_2">
-							<option value="*" selected="selected"><?=_('every hour');?></option>
-							<option value="*/2"><?=_('every two hours');?></option>
-							<option value="*/6"><?=_('every');?> 6</option>
-							<option value="*/12"><?=_('every');?> 12</option>
+							<option value="*" selected="selected"><?= _("every hour") ?></option>
+							<option value="*/2"><?= _("every two hours") ?></option>
+							<option value="*/6"><?= _("every") ?> 6</option>
+							<option value="*/12"><?= _("every") ?> 12</option>
 						</select>
 					</div>
 					<div class="u-mb20">
-						<label for="h_min_2" class="form-label first"><?=_('Minute');?>:</label>
+						<label for="h_min_2" class="form-label first"><?= _("Minute") ?>:</label>
 						<select class="form-select" name="h_min" id="h_min_2" style="width:70px;">
 							<option value="0" selected="selected">00</option>
 							<option value="15">15</option>
@@ -76,7 +76,7 @@
 					</div>
 					<div class="u-pt10">
 						<button type="submit" class="button button-secondary">
-							<?=_('generate');?>
+							<?= _("generate") ?>
 						</button>
 					</div>
 				</form>
@@ -87,19 +87,19 @@
 					<input type="hidden" name="h_month" value="*">
 					<input type="hidden" name="h_wday" value="*">
 					<div class="u-mt10 u-mb10">
-						<label for="h_day_3" class="form-label first"><?=_('Run Command');?>:</label>
+						<label for="h_day_3" class="form-label first"><?= _("Run Command") ?>:</label>
 						<select class="form-select" name="h_day" id="h_day_3">
-							<option value="*" selected="selected"><?=_('every day');?></option>
-							<option value="1-31/2"><?=_('every odd day');?></option>
-							<option value="*/2"><?=_('every even day');?></option>
-							<option value="*/3"><?=_('every');?> 3</option>
-							<option value="*/5"><?=_('every');?> 5</option>
-							<option value="*/10"><?=_('every');?> 10</option>
-							<option value="*/15"><?=_('every');?> 15</option>
+							<option value="*" selected="selected"><?= _("every day") ?></option>
+							<option value="1-31/2"><?= _("every odd day") ?></option>
+							<option value="*/2"><?= _("every even day") ?></option>
+							<option value="*/3"><?= _("every") ?> 3</option>
+							<option value="*/5"><?= _("every") ?> 5</option>
+							<option value="*/10"><?= _("every") ?> 10</option>
+							<option value="*/15"><?= _("every") ?> 15</option>
 						</select>
 					</div>
 					<div class="u-mb20">
-						<label for="h_hour_3" class="form-label first"><?=_('Hour');?>:</label>
+						<label for="h_hour_3" class="form-label first"><?= _("Hour") ?>:</label>
 						<select class="form-select" name="h_hour" id="h_hour_3" style="width:70px;">
 							<option value="0">00</option>
 							<option value="1">01</option>
@@ -126,7 +126,7 @@
 							<option value="22">22</option>
 							<option value="23">23</option>
 						</select>
-						<label for="h_min_3" class="form-label"><?=_('Minute');?>:</label>
+						<label for="h_min_3" class="form-label"><?= _("Minute") ?>:</label>
 						<select class="form-select" name="h_min" id="h_min_3" style="width:70px;">
 							<option value="0" selected="selected">00</option>
 							<option value="1">01</option>
@@ -146,7 +146,7 @@
 					</div>
 					<div class="u-pt10">
 						<button type="submit" class="button button-secondary">
-							<?=_('generate');?>
+							<?= _("generate") ?>
 						</button>
 					</div>
 				</form>
@@ -157,22 +157,22 @@
 					<input type="hidden" name="h_month" value="*">
 					<input type="hidden" name="h_day" value="*">
 					<div class="u-mt10 u-mb10">
-						<label for="h_wday_4" class="form-label first"><?=_('Run Command');?>:</label>
+						<label for="h_wday_4" class="form-label first"><?= _("Run Command") ?>:</label>
 						<select class="form-select" name="h_wday" id="h_wday_4">
-							<option value="*" selected="selected"><?=_('every day');?></option>
-							<option value="1,2,3,4,5"><?=_('weekdays (5 days)');?></option>
-							<option value="0,6"><?=_('weekend (2 days)');?></option>
-							<option value="1"><?=_('Monday');?></option>
-							<option value="2"><?=_('Tuesday');?></option>
-							<option value="3"><?=_('Wednesday');?></option>
-							<option value="4"><?=_('Thursday');?></option>
-							<option value="5"><?=_('Friday');?></option>
-							<option value="6"><?=_('Saturday');?></option>
-							<option value="0"><?=_('Sunday');?></option>
+							<option value="*" selected="selected"><?= _("every day") ?></option>
+							<option value="1,2,3,4,5"><?= _("weekdays (5 days)") ?></option>
+							<option value="0,6"><?= _("weekend (2 days)") ?></option>
+							<option value="1"><?= _("Monday") ?></option>
+							<option value="2"><?= _("Tuesday") ?></option>
+							<option value="3"><?= _("Wednesday") ?></option>
+							<option value="4"><?= _("Thursday") ?></option>
+							<option value="5"><?= _("Friday") ?></option>
+							<option value="6"><?= _("Saturday") ?></option>
+							<option value="0"><?= _("Sunday") ?></option>
 						</select>
 					</div>
 					<div class="u-mb20">
-						<label for="h_hour_4" class="form-label first"><?=_('Hour');?>:</label>
+						<label for="h_hour_4" class="form-label first"><?= _("Hour") ?>:</label>
 						<select class="form-select" name="h_hour" id="h_hour_4" style="width:70px;">
 							<option value="0">00</option>
 							<option value="1">01</option>
@@ -199,7 +199,7 @@
 							<option value="22">22</option>
 							<option value="23">23</option>
 						</select>
-						<label for="h_min_4" class="form-label"><?=_('Minute');?>:</label>
+						<label for="h_min_4" class="form-label"><?= _("Minute") ?>:</label>
 						<select class="form-select" name="h_min" id="h_min_4" style="width:70px;">
 							<option value="0" selected="selected">00</option>
 							<option value="1">01</option>
@@ -219,7 +219,7 @@
 					</div>
 					<div class="u-pt10">
 						<button type="submit" class="button button-secondary">
-							<?=_('generate');?>
+							<?= _("generate") ?>
 						</button>
 					</div>
 				</form>
@@ -229,29 +229,29 @@
 				<form>
 					<input type="hidden" name="h_wday" value="*">
 					<div class="u-mt10 u-mb10">
-						<label for="h_month_5" class="form-label first"><?=_('Run Command');?>:</label>
+						<label for="h_month_5" class="form-label first"><?= _("Run Command") ?>:</label>
 						<select class="form-select" name="h_month" id="h_month_5">
-							<option value="*" selected="selected"><?=_('every month');?></option>
-							<option value="1-11/2"><?=_('every odd month');?></option>
-							<option value="*/2"><?=_('every even month');?></option>
-							<option value="*/3"><?=_('every');?> 3</option>
-							<option value="*/6"><?=_('every');?> 6</option>
-							<option value="1"><?=_('Jan');?></option>
-							<option value="2"><?=_('Feb');?></option>
-							<option value="3"><?=_('Mar');?></option>
-							<option value="4"><?=_('Apr');?></option>
-							<option value="5"><?=_('May');?></option>
-							<option value="6"><?=_('Jun');?></option>
-							<option value="7"><?=_('Jul');?></option>
-							<option value="8"><?=_('Aug');?></option>
-							<option value="9"><?=_('Sep');?></option>
-							<option value="10"><?=_('Oct');?></option>
-							<option value="11"><?=_('Nov');?></option>
-							<option value="12"><?=_('Dec');?></option>
+							<option value="*" selected="selected"><?= _("every month") ?></option>
+							<option value="1-11/2"><?= _("every odd month") ?></option>
+							<option value="*/2"><?= _("every even month") ?></option>
+							<option value="*/3"><?= _("every") ?> 3</option>
+							<option value="*/6"><?= _("every") ?> 6</option>
+							<option value="1"><?= _("Jan") ?></option>
+							<option value="2"><?= _("Feb") ?></option>
+							<option value="3"><?= _("Mar") ?></option>
+							<option value="4"><?= _("Apr") ?></option>
+							<option value="5"><?= _("May") ?></option>
+							<option value="6"><?= _("Jun") ?></option>
+							<option value="7"><?= _("Jul") ?></option>
+							<option value="8"><?= _("Aug") ?></option>
+							<option value="9"><?= _("Sep") ?></option>
+							<option value="10"><?= _("Oct") ?></option>
+							<option value="11"><?= _("Nov") ?></option>
+							<option value="12"><?= _("Dec") ?></option>
 						</select>
 					</div>
 					<div class="u-mb20">
-						<label for="h_day_5" class="form-label first"><?=_('Date');?>:</label>
+						<label for="h_day_5" class="form-label first"><?= _("Date") ?>:</label>
 						<select class="form-select" name="h_day" id="h_day_5" style="width:70px;">
 							<option value="1" selected="selected">1</option>
 							<option value="2">2</option>
@@ -285,7 +285,7 @@
 							<option value="30">30</option>
 							<option value="31">31</option>
 						</select>
-						<label for="h_hour_5" class="form-label"><?=_('Hour');?>:</label>
+						<label for="h_hour_5" class="form-label"><?= _("Hour") ?>:</label>
 						<select class="form-select" name="h_hour" id="h_hour_5" style="width:70px;">
 							<option value="0">00</option>
 							<option value="1">01</option>
@@ -312,7 +312,7 @@
 							<option value="22">22</option>
 							<option value="23">23</option>
 						</select>
-						<label for="h_min_5" class="form-label"><?=_('Minute');?>:</label>
+						<label for="h_min_5" class="form-label"><?= _("Minute") ?>:</label>
 						<select class="form-select" name="h_min" id="h_min_5" style="width:70px;">
 							<option value="0" selected="selected">00</option>
 							<option value="1">01</option>
@@ -332,7 +332,7 @@
 					</div>
 					<div class="u-pt10">
 						<button type="submit" class="button button-secondary">
-							<?=_('generate');?>
+							<?= _("generate") ?>
 						</button>
 					</div>
 				</form>
@@ -340,36 +340,36 @@
 		</div>
 	</div>
 
-	<form id="vstobjects" name="v_edit_cron" method="post" class="<?=$v_status?>">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+	<form id="vstobjects" name="v_edit_cron" method="post" class="<?= $v_status ?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?=_('Editing Cron Job');?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<h1 class="form-title"><?= _("Editing Cron Job") ?></h1>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
-				<label for="v_cmd" class="form-label"><?=_('Command');?></label>
-				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?=htmlentities(trim($v_cmd, "'"))?>">
+				<label for="v_cmd" class="form-label"><?= _("Command") ?></label>
+				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= htmlentities(trim($v_cmd, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_min" class="form-label"><?=_('Minute');?></label>
-				<input type="text" class="form-control" name="v_min" id="v_min" style="width:220px;" value="<?=htmlentities(trim($v_min, "'"))?>">
+				<label for="v_min" class="form-label"><?= _("Minute") ?></label>
+				<input type="text" class="form-control" name="v_min" id="v_min" style="width:220px;" value="<?= htmlentities(trim($v_min, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_hour" class="form-label"><?=_('Hour');?></label>
-				<input type="text" class="form-control" name="v_hour" id="v_hour" style="width:220px;" value="<?=htmlentities(trim($v_hour, "'"))?>">
+				<label for="v_hour" class="form-label"><?= _("Hour") ?></label>
+				<input type="text" class="form-control" name="v_hour" id="v_hour" style="width:220px;" value="<?= htmlentities(trim($v_hour, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_day" class="form-label"><?=_('Day');?></label>
-				<input type="text" class="form-control" name="v_day" id="v_day" style="width:220px;" value="<?=htmlentities(trim($v_day, "'"))?>">
+				<label for="v_day" class="form-label"><?= _("Day") ?></label>
+				<input type="text" class="form-control" name="v_day" id="v_day" style="width:220px;" value="<?= htmlentities(trim($v_day, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_month" class="form-label"><?=_('Month');?></label>
-				<input type="text" class="form-control" name="v_month" id="v_month" style="width:220px;" value="<?=htmlentities(trim($v_month, "'"))?>">
+				<label for="v_month" class="form-label"><?= _("Month") ?></label>
+				<input type="text" class="form-control" name="v_month" id="v_month" style="width:220px;" value="<?= htmlentities(trim($v_month, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_wday" class="form-label"><?=_('Day of week');?></label>
-				<input type="text" class="form-control" name="v_wday" id="v_wday" style="width:220px;" value="<?=htmlentities(trim($v_wday, "'"))?>">
+				<label for="v_wday" class="form-label"><?= _("Day of week") ?></label>
+				<input type="text" class="form-control" name="v_wday" id="v_wday" style="width:220px;" value="<?= htmlentities(trim($v_wday, "'")) ?>">
 			</div>
 		</div>
 

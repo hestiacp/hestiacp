@@ -32,7 +32,7 @@
 			<h1 class="form-title"><?= _("Adding database") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($user_plain == "admin" && $_GET["accept"] !== "true") { ?>
-				<div class="alert alert-danger alert-with-icon" role="alert">
+				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
 					<p><?= _("Avoid adding web domains on admin account") ?></p>
 				</div>

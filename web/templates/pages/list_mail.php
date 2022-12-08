@@ -60,13 +60,13 @@
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-right compact-5"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?= _("Accounts") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?= _("Disk") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?= _("Antivirus") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?= _("AntiSpam") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?= _("DKIM") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?= _("SSL") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-right compact-5"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b><?= _("Accounts") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b><?= _("Disk") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("Antivirus") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("AntiSpam") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("DKIM") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("SSL") ?></b></div>
 		</div>
 	</div>
 
@@ -142,7 +142,7 @@
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("mail accounts") ?>: <?=$key?>"><?=$key?></a></b></div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left text-right compact-5">
+					<div class="clearfix l-unit__stat-col--left u-text-right compact-5">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix">
 								<?php if ($read_only === 'true') {?>
@@ -186,7 +186,7 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b>
 							<?php
 								if ($data[$key]['ACCOUNTS']) {
 									$mail_accounts = htmlentities($data[$key]['ACCOUNTS']);
@@ -197,19 +197,19 @@
 							<span><?=$mail_accounts;?></span>
 						</b>
 					</div>
-					<div class="clearfix l-unit__stat-col--left text-center compact-2"><b>
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b>
 							<?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span>
 					</div>
-					<div class="clearfix l-unit__stat-col--left text-center compact-3">
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-3">
 						<i class="fas <?=$antivirus_icon;?>"></i>
 					</div>
-					<div class="clearfix l-unit__stat-col--left text-center compact-3">
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-3">
 						<i class="fas <?=$antispam_icon;?>"></i>
 					</div>
-					<div class="clearfix l-unit__stat-col--left text-center compact-3">
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-3">
 						<i class="fas <?=$dkim_icon;?>"></i>
 					</div>
-					<div class="clearfix l-unit__stat-col--left text-center compact-3">
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-3">
 						<i class="fas <?=$ssl_icon;?>"></i>
 					</div>
 				</div>

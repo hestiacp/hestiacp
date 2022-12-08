@@ -18,12 +18,12 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_configure_server" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Configuring Server") ?>: PHP</h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div id="basic-options">
 				<div class="u-mb10">
 					<label for="v_max_execution_time" class="form-label">max_execution_time</label>
@@ -35,7 +35,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_memory_limit" class="form-label">memory_limit</label>
-					<input type="text" class="form-control" regexp="memory_limit" prev_value="<?=htmlentities($v_memory_limit)?>" name="v_memory_limit" id="v_memory_limit" value="<?=htmlentities($v_memory_limit)?>">
+					<input type="text" class="form-control" regexp="memory_limit" prev_value="<?= htmlentities($v_memory_limit) ?>" name="v_memory_limit" id="v_memory_limit" value="<?= htmlentities($v_memory_limit) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_error_reporting" class="form-label">error_reporting</label>
@@ -62,8 +62,8 @@
 					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Basic options") ?></a>
 				</div>
 				<div class="u-mb20">
-					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
-					<textarea class="form-control u-min-height600 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
+					<label for="v_config" class="form-label"><?= $v_config_path ?></label>
+					<textarea class="form-control u-min-height600 u-allow-resize u-console" name="v_config" id="v_config"><?= $v_config ?></textarea>
 				</div>
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>

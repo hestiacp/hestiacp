@@ -41,19 +41,19 @@
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Package") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-terminal" title="<?= _("Shell") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-hard-drive" title="<?= _("Quota") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-link" title="<?= _("Web Aliases") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Domains") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-globe" title="<?= _("DNS Records") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-inbox" title="<?= _("Mail Accounts") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-database" title="<?= _("Databases") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-clock" title="<?= _("Cron Jobs") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center super-compact"><b><i class="fas fa-file-zipper" title="<?= _("Backups") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><i class="fas fa-terminal" title="<?= _("Shell") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><i class="fas fa-hard-drive" title="<?= _("Quota") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-link" title="<?= _("Web Aliases") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Domains") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-globe" title="<?= _("DNS Records") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-inbox" title="<?= _("Mail Accounts") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-database" title="<?= _("Databases") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-clock" title="<?= _("Cron Jobs") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-file-zipper" title="<?= _("Backups") ?>"></i></b></div>
 		</div>
 	</div>
 
@@ -75,7 +75,7 @@
 					<div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>: <?=$key?>"><?=$key?></a></b></div>
 				<?php } ?>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-right compact-3">
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<?php if (($key == 'system')) { ?>
@@ -101,14 +101,14 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center compact">
 					<?php if ($data[$key]["SHELL"] == "nologin") { ?>
 						<i class="fas fa-circle-minus status-icon large" title="<?= _("SSH Access") ?>: <?= $data[$key]["SHELL"] ?>"> </i>
 					<?php } else { ?>
 						<i class="fas fa-circle-check status-icon green large"></i>
 					<?php } ?>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center compact">
 					<span title="<?= _("Quota") ?>: <?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?> <?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>">
 						<?php if (preg_match("/[a-z]/i", $data[$key]["DISK_QUOTA"])): ?>
 							<b>&infin;</b>
@@ -117,7 +117,7 @@
 						<?php endif; ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center compact">
 					<span title="<?= _("Bandwidth") ?>: <?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?> <?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>">
 						<?php if ($data[$key]["BANDWIDTH"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -126,7 +126,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("Web Domains") ?>: <?= $data[$key]["WEB_DOMAINS"] ?>">
 						<?php if ($data[$key]["WEB_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -135,7 +135,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("Web Aliases") ?>: <?= $data[$key]["WEB_ALIASES"] ?>">
 						<?php if ($data[$key]["WEB_ALIASES"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -144,7 +144,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("DNS Domains") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
 						<?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -153,7 +153,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
 						<?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -162,7 +162,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
 						<?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -171,7 +171,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
 						<?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -180,7 +180,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("Databases") ?>: <?= $data[$key]["DATABASES"] ?>">
 						<?php if ($data[$key]["DATABASES"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -189,7 +189,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("Cron Jobs") ?>: <?= $data[$key]["CRON_JOBS"] ?>">
 						<?php if ($data[$key]["CRON_JOBS"] == "unlimited") { ?>
 							<b>&infin;</b>
@@ -198,7 +198,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center super-compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
 					<span class="jump-top badge gray raised" title="<?= _("Backups") ?>: <?= $data[$key]["BACKUPS"] ?>">
 						<?php if ($data[$key]["BACKUPS"] == "unlimited") { ?>
 							<b>&infin;</b>

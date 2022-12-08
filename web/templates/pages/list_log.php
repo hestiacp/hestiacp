@@ -58,7 +58,7 @@
 
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact text-center">&nbsp;</div>
+			<div class="clearfix l-unit__stat-col--left super-compact u-text-center">&nbsp;</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("Date") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-2"><b><?= _("Time") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("Category") ?></b></div>
@@ -83,7 +83,7 @@
 		?>
 		<div class="l-unit header animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact text-center">
+				<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
 					<i class="fas <?=$level_icon;?>"></i>
 				</div>
 				<div class="clearfix l-unit__stat-col--left"><b><?=translate_date($data[$key]['DATE'])?></b></div>

@@ -18,12 +18,12 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_add_ip" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Adding Firewall Rule") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_action" class="form-label"><?= _("Action") ?></label>
 				<select class="form-select" name="v_action" id="v_action">
@@ -43,7 +43,7 @@
 				<label for="v_port" class="form-label">
 					<?= _("Port") ?> <span class="optional">(<?= _("Ranges and Lists are acceptable") ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_port" id="v_port" value="<?=htmlentities(trim($v_port, "'"))?>" placeholder="<?= _("All ports: 0, Range: 80-82, List: 80,443,8080,8443") ?>">
+				<input type="text" class="form-control" name="v_port" id="v_port" value="<?= htmlentities(trim($v_port, "'")) ?>" placeholder="<?= _("All ports: 0, Range: 80-82, List: 80,443,8080,8443") ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_ip" class="form-label">
@@ -53,14 +53,14 @@
 					<select class="form-select" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
 						<option value="">&nbsp;</option>
 					</select>
-					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_comment" class="form-label">
 					<?= _("Comment") ?> <span class="optional">(<?= _("optional") ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_comment" id="v_comment" maxlength="255" value="<?=htmlentities(trim($v_comment, "'"))?>">
+				<input type="text" class="form-control" name="v_comment" id="v_comment" maxlength="255" value="<?= htmlentities(trim($v_comment, "'")) ?>">
 			</div>
 		</div>
 

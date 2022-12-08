@@ -18,12 +18,12 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_configure_server" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Configuring Server") ?>: <?=$v_service_name;?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<h1 class="form-title"><?= _("Configuring Server") ?>: <?= $v_service_name ?></h1>
+			<?php show_alert_message($_SESSION); ?>
 			<div id="basic-options">
 				<div class="u-mb10">
 					<label for="v_max_connections" class="form-label">max_connections</label>
@@ -35,7 +35,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_wait_timeout" class="form-label">wait_timeout</label>
-					<input type="text" class="form-control" regexp="wait_timeout" prev_value="<?=htmlentities($v_wait_timeout)?>" name="v_wait_timeout" id="v_wait_timeout" value="<?=htmlentities($v_wait_timeout)?>">
+					<input type="text" class="form-control" regexp="wait_timeout" prev_value="<?= htmlentities($v_wait_timeout) ?>" name="v_wait_timeout" id="v_wait_timeout" value="<?= htmlentities($v_wait_timeout) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_interactive_timeout" class="form-label">interactive_timeout</label>
@@ -54,8 +54,8 @@
 					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Basic options") ?></a>
 				</div>
 				<div class="u-mb20">
-					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
-					<textarea class="form-control u-min-height600 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
+					<label for="v_config" class="form-label"><?= $v_config_path ?></label>
+					<textarea class="form-control u-min-height600 u-allow-resize u-console" name="v_config" id="v_config"><?= $v_config ?></textarea>
 				</div>
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>

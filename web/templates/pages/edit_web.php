@@ -10,8 +10,8 @@
 			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "u-hidden"; }?>" id="v-clear-cache">
 				<i class="fas fa-trash status-icon red"></i><?= _("Purge Nginx Cache") ?>
 			</a>
-			<?php if ($_SESSION['PLUGIN_APP_INSTALLER'] !== 'false') {?>
-				<a href="/add/webapp/?domain=<?=htmlentities($v_domain);?>" class="button button-secondary">
+			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
+				<a href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>" class="button button-secondary">
 					<i class="fas fa-magic status-icon blue"></i> <?= _("Quick Install App") ?>
 				</a>
 			<?php } ?>
@@ -27,39 +27,39 @@
 
 	<form
 		x-data="{
-			statsAuthEnabled: <?= !empty($v_stats_user) ? 'true' : 'false' ?>,
-			redirectEnabled: <?= !empty($v_redirect) ? 'true' : 'false' ?>,
-			sslEnabled: <?= $v_ssl == 'yes' ? 'true' : 'false' ?>,
-			letsEncryptEnabled: <?= $v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ? 'true' : 'false' ?>,
-			showCertificates: <?= $v_letsencrypt == 'yes' || $v_letsencrypt == 'on' ? 'false' : 'true' ?>,
+			statsAuthEnabled: <?= !empty($v_stats_user) ? "true" : "false" ?>,
+			redirectEnabled: <?= !empty($v_redirect) ? "true" : "false" ?>,
+			sslEnabled: <?= $v_ssl == "yes" ? "true" : "false" ?>,
+			letsEncryptEnabled: <?= $v_letsencrypt == "yes" || $v_letsencrypt == "on" ? "true" : "false" ?>,
+			showCertificates: <?= $v_letsencrypt == "yes" || $v_letsencrypt == "on" ? "false" : "true" ?>,
 			showAdvanced: false,
-			nginxCacheEnabled: <?= $v_nginx_cache == 'yes' ? 'true' : 'false' ?>,
-			proxySupportEnabled: <?= !empty($v_proxy) ? 'true' : 'false' ?>,
-			customDocumentRootEnabled: <?= !empty($v_custom_doc_root) ? 'true' : 'false' ?>
+			nginxCacheEnabled: <?= $v_nginx_cache == "yes" ? "true" : "false" ?>,
+			proxySupportEnabled: <?= !empty($v_proxy) ? "true" : "false" ?>,
+			customDocumentRootEnabled: <?= !empty($v_custom_doc_root) ? "true" : "false" ?>
 		}"
 		id="vstobjects"
 		name="v_edit_web"
 		method="post"
-		class="<?=$v_status?>"
+		class="<?= $v_status ?>"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Editing Domain") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
-				<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
+				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_aliases" class="form-label"><?= _("Aliases") ?></label>
-				<textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+				<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
 			</div>
-			<?php if ($v_letsencrypt == 'yes' || $v_letsencrypt == 'on') {?>
+			<?php if ($v_letsencrypt == "yes" || $v_letsencrypt == "on") { ?>
 				<div class="u-mb10">
-					<div class="alert alert-info alert-with-icon" role="alert">
+					<div class="alert alert-info" role="alert">
 						<i class="fas fa-exclamation"></i>
 						<p><?= _("Lets Encrypt will obtain a new SSL certificate if web domain aliases are changed.") ?></p>
 					</div>
@@ -191,77 +191,57 @@
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
-							<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?=htmlentities($v_domain)?>"><?= _("Generate CSR") ?></a></span>
+							<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate CSR") ?></a></span>
 						</label>
-						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?=htmlentities(trim($v_ssl_crt, "'"))?></textarea>
+						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb10">
 						<label for="v_ssl_key" class="form-label"><?= _("SSL Key") ?></label>
-						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?=htmlentities(trim($v_ssl_key, "'"))?></textarea>
+						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_ca" class="form-label">
 							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("optional") ?>)</span>
 						</label>
-						<textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?=htmlentities(trim($v_ssl_ca, "'"))?></textarea>
+						<textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
 					</div>
 				</div>
-				<?php if ($v_ssl != 'no') { ?>
+				<?php if ($v_ssl != "no") { ?>
 					<ul class="values-list">
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("SUBJECT") ?></span>
-							<span class="values-list-value"><?=$v_ssl_subject?></span>
+							<span class="values-list-value"><?= $v_ssl_subject ?></span>
 						</li>
-						<?php if ($v_ssl_aliases) {?>
+						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("ALIASES") ?></span>
-								<span class="values-list-value"><?=$v_ssl_aliases?></span>
+								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
 							</li>
 						<?php } ?>
-						<tr>
-							<td>
-								<b><?= _("NOT_BEFORE") ?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_not_before?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b><?= _("NOT_AFTER") ?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_not_after?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b><?= _("SIGNATURE") ?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_signature?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b><?= _("PUB_KEY") ?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_pub_key?>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<b><?= _("ISSUER") ?>:</b>
-							</td>
-							<td class="details">
-								<?=$v_ssl_issuer?>
-							</td>
-						</tr>
-						<tr x-cloak x-show="letsEncryptEnabled" id="letsinfo">
-							<td><a x-on:click="showCertificates = !showCertificates" href="#" class="generate"><?= _("Show Certificate") ?></a></td>
-						</tr>
-					</table>
+						<li class="values-list-item">
+							<span class="values-list-label"><?= _("NOT_BEFORE") ?></span>
+							<span class="values-list-value"><?= $v_ssl_not_before ?></span>
+						</li>
+						<li class="values-list-item">
+							<span class="values-list-label"><?= _("NOT_AFTER") ?></span>
+							<span class="values-list-value"><?= $v_ssl_not_after ?></span>
+						</li>
+						<li class="values-list-item">
+							<span class="values-list-label"><?= _("SIGNATURE") ?></span>
+							<span class="values-list-value"><?= $v_ssl_signature ?></span>
+						</li>
+						<li class="values-list-item">
+							<span class="values-list-label"><?= _("PUB_KEY") ?></span>
+							<span class="values-list-value"><?= $v_ssl_pub_key ?></span>
+						</li>
+						<li class="values-list-item">
+							<span class="values-list-label"><?= _("ISSUER") ?></span>
+							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
+						</li>
+						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
+							<a x-on:click="showCertificates = !showCertificates" href="#" class="generate"><?= _("Show Certificate") ?></a>
+						</p>
+					</ul>
 				<?php } ?>
 			</div>
 			<div class="u-mt15 u-mb20">
@@ -371,25 +351,25 @@
 				<div x-cloak x-show="customDocumentRootEnabled" id="v_custom_doc_root" class="u-pl30">
 					<div class="u-mb10">
 						<label for="v-custom-doc-domain" class="form-label"><?= _("Point to") ?></label>
-						<input type="hidden" name="v-custom-doc-root_prepath" value="<?=$v_custom_doc_root_prepath;?>">
+						<input type="hidden" name="v-custom-doc-root_prepath" value="<?= $v_custom_doc_root_prepath ?>">
 						<select class="form-select" name="v-custom-doc-domain" id="v-custom-doc-domain">
 							<?php foreach ($user_domains as $domain): ?>
-							<option value="<?=htmlentities($domain);?>"
-								<?=($v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain))?' selected="selected" ':''; ?>>
-								<?=htmlentities($domain);?>
+							<option value="<?= htmlentities($domain) ?>"
+								<?= $v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain) ? ' selected="selected" ' : "" ?>>
+								<?= htmlentities($domain) ?>
 							</option>
 							<?php endforeach; ?>
 						</select>
 					</div>
 					<div class="u-mb10">
 						<label for="v-custom-doc-folder" class="form-label">
-							<?php print( _('Directory'));?> <span class="optional">(<?= _("optional") ?>)</span>
+							<?php print _("Directory"); ?> <span class="optional">(<?= _("optional") ?>)</span>
 						</label>
-						<input type="text" class="form-control" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?=htmlentities(trim($v_custom_doc_folder, "'"))?>">
+						<input type="text" class="form-control" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= htmlentities(trim($v_custom_doc_folder, "'")) ?>">
 						<small class="custom_docroot_hint"></small>
 					</div>
 				</div>
-				<?php if (in_array($_SESSION['FTP_SYSTEM'], array('vsftpd', 'proftpd'))) { ?>
+				<?php if (in_array($_SESSION["FTP_SYSTEM"], ["vsftpd", "proftpd"])) { ?>
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp_user)) echo 'checked' ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)">
 						<label for="v_ftp">

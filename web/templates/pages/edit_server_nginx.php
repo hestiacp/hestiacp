@@ -21,12 +21,12 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_configure_server" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Configuring Server") ?>: <?=$v_service_name;?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<h1 class="form-title"><?= _("Configuring Server") ?>: <?= $v_service_name ?></h1>
+			<?php show_alert_message($_SESSION); ?>
 			<div id="basic-options">
 				<div class="u-mb10">
 					<label for="v_worker_processes" class="form-label">worker_processes</label>
@@ -58,7 +58,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_gzip" class="form-label">gzip</label>
-					<input type="text" class="form-control" regexp="gzip" prev_value="<?=htmlentities($v_gzip)?>" name="v_gzip" id="v_gzip" value="<?=htmlentities($v_gzip)?>">
+					<input type="text" class="form-control" regexp="gzip" prev_value="<?= htmlentities($v_gzip) ?>" name="v_gzip" id="v_gzip" value="<?= htmlentities($v_gzip) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_gzip_comp_level" class="form-label">gzip_comp_level</label>
@@ -66,7 +66,7 @@
 				</div>
 				<div class="u-mb20">
 					<label for="v_charset" class="form-label">charset</label>
-					<input type="text" class="form-control" regexp="charset" prev_value="<?=htmlentities($v_charset)?>" name="v_charset" id="v_charset" value="<?=htmlentities($v_charset)?>">
+					<input type="text" class="form-control" regexp="charset" prev_value="<?= htmlentities($v_charset) ?>" name="v_charset" id="v_charset" value="<?= htmlentities($v_charset) ?>">
 				</div>
 				<div class="u-mb20">
 					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Advanced options") ?></a>
@@ -77,8 +77,8 @@
 					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Basic options") ?></a>
 				</div>
 				<div class="u-mb20">
-					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
-					<textarea class="form-control u-min-height600 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
+					<label for="v_config" class="form-label"><?= $v_config_path ?></label>
+					<textarea class="form-control u-min-height600 u-allow-resize u-console" name="v_config" id="v_config"><?= $v_config ?></textarea>
 				</div>
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>

@@ -19,8 +19,8 @@
 			<a href="<?=$ssh_key_url; ?>" class="button button-secondary" id="btn-create" title="<?= _("Manage SSH keys") ?>">
 				<i class="fas fa-key status-icon orange"></i><?= _("Manage SSH keys") ?>
 			</a>
-			<?php if (($_SESSION['userContext'] == 'admin') || ($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_VIEW_LOGS'] !== 'no')) {?>
-				<a href="<?=$log_url; ?>" class="button button-secondary" id="btn-create" title="<?= _("Logs") ?>">
+			<?php if ($_SESSION["userContext"] == "admin" || ($_SESSION["userContext"] !== "admin" && $_SESSION["POLICY_USER_VIEW_LOGS"] !== "no")) { ?>
+				<a href="<?= $log_url ?>" class="button button-secondary" id="btn-create" title="<?= _("Logs") ?>">
 					<i class="fas fa-clock-rotate-left status-icon maroon"></i><?= _("Logs") ?>
 				</a>
 			<?php } ?>
@@ -33,18 +33,18 @@
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<?php if (($_SESSION['user'] == $v_username) || (isset($_SESSION['look']))) {?>
+			<?php if ($_SESSION["user"] == $v_username || isset($_SESSION["look"])) { ?>
 				<!-- Do not show delete button for currently logged in user-->
 			<?} else {?>
-				<a href="/login/?loginas=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-create" title="<?= _("login as") ?>">
+				<a href="/login/?loginas=<?= htmlentities($v_username) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary" id="btn-create" title="<?= _("login as") ?>">
 					<i class="fas fa-right-to-bracket status-icon maroon"></i><?= _("login as") ?>
 				</a>
 				<a class="data-controls do_delete button button-secondary button-danger">
 					<i class="do_delete fas fa-circle-xmark status-icon red"></i>
 					<?= _("Delete") ?>
-					<input type="hidden" name="delete_url" value="/delete/user/?user=<?=htmlentities($v_username)?>&token=<?=$_SESSION['token']?>">
+					<input type="hidden" name="delete_url" value="/delete/user/?user=<?= htmlentities($v_username) ?>&token=<?= $_SESSION["token"] ?>">
 					<div class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-						<p><?=sprintf(_('DELETE_USER_CONFIRMATION'),htmlentities($v_username))?></p>
+						<p><?= sprintf(_("DELETE_USER_CONFIRMATION"), htmlentities($v_username)) ?></p>
 					</div>
 				</a>
 			<?php } ?>
@@ -60,25 +60,25 @@
 
 	<form
 		x-data="{
-			loginDisabled: <?= $v_login_disabled === "yes" ? 'true' : 'false' ?>,
-			useIpAllowList: <?= $v_login_use_iplist === "yes" ? 'true' : 'false' ?>,
+			loginDisabled: <?= $v_login_disabled === "yes" ? "true" : "false" ?>,
+			useIpAllowList: <?= $v_login_use_iplist === "yes" ? "true" : "false" ?>,
 			showAdvanced: false,
 		}"
 		id="vstobjects"
 		method="post"
 		name="v_edit_user"
-		class="<?=$v_status?>"
+		class="<?= $v_status ?>"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Editing User") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_user" class="form-label"><?= _("Username") ?></label>
-				<input type="text" class="form-control" name="v_user" id="v_user" value="<?=htmlentities(trim($v_username, "'"))?>" disabled>
-				<input type="hidden" name="v_username" value="<?=htmlentities(trim($v_username, "'"))?>">
+				<input type="text" class="form-control" name="v_user" id="v_user" value="<?= htmlentities(trim($v_username, "'")) ?>" disabled>
+				<input type="hidden" name="v_username" value="<?= htmlentities(trim($v_username, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_name" class="form-label"><?= _("Contact") ?></label>
@@ -100,7 +100,7 @@
 					<a href="javascript:applyRandomString();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
 				</label>
 				<div class="u-pos-relative u-mb10">
-					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?=htmlentities(trim($v_password, "'"))?>">
+					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>">
 					<meter max="4" class="password-meter"></meter>
 				</div>
 			</div>
@@ -111,7 +111,7 @@
 					<li><?= _("1 uppercase & 1 lowercase character") ?></li>
 					<li><?= _("1 number") ?></li>
 				</ul>
-				<?php if ($_SESSION['userContext'] === 'admin') {?>
+				<?php if ($_SESSION["userContext"] === "admin") { ?>
 					<div class="form-check">
 						<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
 						<label for="v_login_disabled">
@@ -127,9 +127,9 @@
 						</label>
 					</div>
 					<?php if (!empty($v_twofa)) { ?>
-						<p class="u-mb10"><?= _("2FA Reset Code:") . ' '.$v_twofa; ?></p>
+						<p class="u-mb10"><?= _("2FA Reset Code:") . " " . $v_twofa ?></p>
 						<p class="u-mb10"><?= _("Please scan the code below in your 2FA application:") ?></p>
-						<div><img class="qr-code" src="<?=htmlentities($v_qrcode); ?>" alt=""></div>
+						<div><img class="qr-code" src="<?= htmlentities($v_qrcode) ?>" alt=""></div>
 					<?php } ?>
 				</div>
 				<div x-cloak x-show="loginDisabled" id="password-options-ip">
@@ -141,7 +141,7 @@
 					</div>
 				</div>
 				<div x-cloak x-show="useIpAllowList" id="ip-allowlist" class="u-mt10">
-					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?=htmlentities(trim($v_login_allowed_ips, "'"))?>" placeholder="<?= _("Example: 127.0.0.1,192.168.1.100") ?>">
+					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= htmlentities(trim($v_login_allowed_ips, "'")) ?>" placeholder="<?= _("Example: 127.0.0.1,192.168.1.100") ?>">
 				</div>
 			</div>
 			<div class="u-mb10">
@@ -162,10 +162,10 @@
 					?>
 				</select>
 			</div>
-			<?php if ($v_username == 'admin') {?>
+			<?php if ($v_username == "admin") { ?>
 				<!-- Hide option to change 'admin' user's role-->
 			<?php } else { ?>
-				<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] != $v_username)) {?>
+				<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] != $v_username) { ?>
 					<div class="u-mb10">
 						<label for="v_role" class="form-label"><?= _("Role") ?></label>
 						<select class="form-select" name="v_role" id="v_role">
@@ -176,7 +176,7 @@
 					</div>
 				<?php } ?>
 			<?php } ?>
-			<?php if ($_SESSION['POLICY_USER_CHANGE_THEME'] !== 'no') {?>
+			<?php if ($_SESSION["POLICY_USER_CHANGE_THEME"] !== "no") { ?>
 			<div class="u-mb10">
 				<label for="v_user_theme" class="form-label"><?= _("Theme") ?></label>
 				<select class="form-select" name="v_user_theme" id="v_user_theme">

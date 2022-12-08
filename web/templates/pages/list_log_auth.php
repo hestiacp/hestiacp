@@ -37,7 +37,7 @@
 <div class="container units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left text-center">
+			<div class="clearfix l-unit__stat-col--left u-text-center">
 				<b><?= _("Status") ?></b>
 			</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("Date") ?></b></div>
@@ -69,7 +69,7 @@
 		?>
 		<div class="l-unit header animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left text-center">
+				<div class="clearfix l-unit__stat-col--left u-text-center">
 					<i class="fas <?=$status_icon;?> icon-pad-right" title="<?=$status_title;?>"></i>
 				</div>
 				<div class="clearfix l-unit__stat-col--left"><b><?=translate_date($data[$key]['DATE'])?></b></div>

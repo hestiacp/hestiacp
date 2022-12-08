@@ -18,17 +18,17 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_add_ip" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Adding IP Address to Banlist") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_ip" class="form-label">
 					<?= _("IP address") ?> <span class="optional">(<?= _("CIDR format is supported") ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?=htmlentities(trim($v_ip, "'"))?>">
+				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_chain" class="form-label"><?= _("Banlist") ?></label>

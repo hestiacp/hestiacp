@@ -99,11 +99,11 @@
 				</div>
 
 				<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Service") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-right compact-2">&nbsp;</div>
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-2">&nbsp;</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Description") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Uptime") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("CPU") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Memory") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Uptime") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("CPU") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Memory") ?></b></div>
 			</div>
 		</div>
 
@@ -142,7 +142,7 @@
 						<i class="fas <?=$state_icon;?> icon-pad-right"></i>
 						<b><a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>: <?=$key?>"><?=$key?></a></b>
 					</div>
-					<div class="clearfix l-unit__stat-col--left text-center compact-2">
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-2">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href">
 								<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>"><i class="fas fa-pencil status-icon orange status-icon dim icon-large"></i></a>
@@ -168,9 +168,9 @@
 						</div>
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-3"><?=_($data[$key]['SYSTEM'])?></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_time($data[$key]['RTIME'])?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=$cpu?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['MEM']?> <?= _("mb") ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=humanize_time($data[$key]['RTIME'])?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$cpu?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['MEM']?> <?= _("mb") ?></b></div>
 				</div>
 			</div>
 		<?php } ?>

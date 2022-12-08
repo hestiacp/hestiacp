@@ -7,7 +7,7 @@
 			<?= _("Forgot Password") ?>
 		</h1>
 		<?php if (isset($ERROR)) echo $ERROR ?>
-		<p style="padding: 12px 0 0 2px;">
+		<p class="inline-success u-mb10">
 			<?= _("RESET_CODE_SENT") ?>
 		</p>
 		<div class="u-mb20">

@@ -19,28 +19,28 @@
 
 	<form
 		x-data="{
-			showAdvanced: <?= empty($v_adv) ? 'false' : 'true' ?>
+			showAdvanced: <?= empty($v_adv) ? "false" : "true" ?>
 		}"
 		id="vstobjects"
 		name="v_add_mail_acc"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok_acc" value="add">
 
 		<div class="form-container form-container-wide">
 			<h1 class="form-title"><?= _("Adding Mail Account") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="sidebar-container">
 				<div>
 					<div class="u-mb10">
 						<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-						<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>" disabled>
-						<input type="hidden" name="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+						<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
+						<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_account" class="form-label"><?= _("Account") ?></label>
-						<input type="text" class="form-control" name="v_account" id="v_account" value="<?=htmlentities(trim($v_account, "'"))?>">
+						<input type="text" class="form-control" name="v_account" id="v_account" value="<?= htmlentities(trim($v_account, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_password" class="form-label">
@@ -67,7 +67,7 @@
 								<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
 							</label>
 							<div class="u-pos-relative">
-								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?=htmlentities(trim($v_quota, "'"))?>">
+								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= htmlentities(trim($v_quota, "'")) ?>">
 								<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 							</div>
 						</div>
@@ -75,7 +75,7 @@
 							<label for="v_aliases" class="form-label">
 								<?= _("Aliases") ?> <span class="optional">(<?= _("use local-part") ?>)</span>
 							</label>
-							<textarea class="form-control" name="v_aliases" id="v_aliases"><?=htmlentities(trim($v_aliases, "'"))?></textarea>
+							<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
 						</div>
 						<div class="u-mb10">
 							<label for="v_fwd" class="form-label">
@@ -108,7 +108,7 @@
 						<label for="v_send_email" class="form-label">
 							<?= _("Send login credentials to email address") ?>
 						</label>
-						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?=htmlentities(trim($v_send_email, "'"))?>">
+						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= htmlentities(trim($v_send_email, "'")) ?>">
 						<input type="hidden" name="v_credentials" class="js-hidden-credentials">
 					</div>
 				</div>
@@ -118,21 +118,21 @@
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Username") ?></span>
-								<span class="values-list-value"><span class="js-account-output"></span>@<?=htmlentities(trim($v_domain, "'"))?></span>
+								<span class="values-list-value"><span class="js-account-output"></span>@<?= htmlentities(trim($v_domain, "'")) ?></span>
 							</li>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Password") ?></span>
 								<span class="values-list-value"><span class="js-password-output"></span></span>
 							</li>
-							<?php if ($_SESSION['WEBMAIL_SYSTEM']) {?>
+							<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 								<li class="values-list-item">
 									<span class="values-list-label"><?= _("Webmail") ?></span>
-									<span class="values-list-value"><a href="http://<?=htmlentities($v_webmail_alias)?>" target="_blank">http://<?=htmlentities($v_webmail_alias)?></a></span>
+									<span class="values-list-value"><a href="http://<?= htmlentities($v_webmail_alias) ?>" target="_blank">http://<?= htmlentities($v_webmail_alias) ?></a></span>
 								</li>
 							<?php } ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Hostname") ?></span>
-								<span class="values-list-value">mail.<?=htmlentities($v_domain)?></span>
+								<span class="values-list-value">mail.<?= htmlentities($v_domain) ?></span>
 							</li>
 						</ul>
 						<h2 class="u-text-H3 u-mb10"><?= _("IMAP settings") ?></h2>

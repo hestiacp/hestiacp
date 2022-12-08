@@ -569,12 +569,6 @@ textarea:focus::placeholder {
 	color: #909090;
 }
 
-.toggle-psw-visibility-icon {
-}
-
-.show-passwords-enabled-action {
-}
-
 .hint {
 	color: #a2a2a2;
 }

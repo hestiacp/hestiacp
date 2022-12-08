@@ -61,9 +61,9 @@
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="/edit/user/" title="<?=htmlentities($user)?>">
+								<a class="top-bar-menu-link" href="/edit/user/" title="<?= htmlentities($user) ?>">
 									<i class="fas fa-circle-user"></i>
-									<span class="u-hidden"><?=htmlentities($user)?></span>
+									<span class="u-hidden"><?= htmlentities($user) ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">

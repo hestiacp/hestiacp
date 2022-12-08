@@ -29,22 +29,22 @@
 		name="v_add_package"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Adding Package") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package" class="form-label"><?= _("Package Name") ?></label>
-				<input type="text" class="form-control" name="v_package" id="v_package" value="<?=htmlentities(trim($v_package, "'"))?>">
+				<input type="text" class="form-control" name="v_package" id="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_disk_quota" class="form-label">
 					<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?=htmlentities(trim($v_disk_quota, "'"))?>">
+					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
 					<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 				</div>
 			</div>
@@ -53,13 +53,13 @@
 					<?= _("Bandwidth") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?=htmlentities(trim($v_bandwidth, "'"))?>">
+					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">
 					<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_backups" class="form-label"><?= _("Backups") ?></label>
-				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?=htmlentities(trim($v_backups, "'"))?>">
+				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= htmlentities(trim($v_backups, "'")) ?>">
 			</div>
 			<h2 x-on:click="showWebOptions = !showWebOptions" class="section-title">
 				<?= _("Web") ?>
@@ -72,7 +72,7 @@
 				<div class="u-mt15 u-mb10">
 					<label for="v_web_domains" class="form-label"><?= _("Web Domains") ?></label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_web_domains" id="v_web_domains" value="<?=htmlentities(trim($v_web_domains, "'"))?>">
+						<input type="text" class="form-control" name="v_web_domains" id="v_web_domains" value="<?= htmlentities(trim($v_web_domains, "'")) ?>">
 						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
@@ -81,13 +81,13 @@
 						<?= _("Web Aliases") ?> <span class="optional">(<?= _("per domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?=htmlentities(trim($v_web_aliases, "'"))?>">
+						<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?= htmlentities(trim($v_web_aliases, "'")) ?>">
 						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
 				<div class="u-mb10">
 					<label for="v_web_template" class="form-label">
-						<?= _("Web Template") . " <span class='optional'> " .strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+						<?= _("Web Template") . " <span class='optional'> " . strtoupper($_SESSION["WEB_SYSTEM"]) . "</span>" ?>
 					</label>
 					<select class="form-select" name="v_web_template" id="v_web_template">
 						<?php
@@ -149,7 +149,7 @@
 			<div x-cloak x-show="showDnsOptions" id="dns-options">
 				<div class="u-mt15 u-mb10">
 					<label for="v_dns_template" class="form-label">
-						<?= _("DNS Template") . "<span class='optional'>" .strtoupper($_SESSION['DNS_SYSTEM']) . "</span>";?>
+						<?= _("DNS Template") . "<span class='optional'>" . strtoupper($_SESSION["DNS_SYSTEM"]) . "</span>" ?>
 					</label>
 					<select class="form-select" name="v_dns_template" id="v_dns_template">
 						<?php
@@ -166,7 +166,7 @@
 				<div class="u-mb10">
 					<label for="v_dns_domains" class="form-label"><?= _("DNS domains") ?></label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?=htmlentities(trim($v_dns_domains, "'"))?>">
+						<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?= htmlentities(trim($v_dns_domains, "'")) ?>">
 						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
@@ -175,17 +175,17 @@
 						<?= _("DNS records") ?> <span class="optional">(<?= _("per domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?=htmlentities(trim($v_dns_records, "'"))?>">
+						<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
 						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>
-				<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
+				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
 					<p class="form-label u-mb10"><?= _("Name servers") ?></p>
 					<div class="u-mb5">
-						<input type="text" class="form-control" name="v_ns1" value="<?=htmlentities(trim($v_ns1, "'"))?>">
+						<input type="text" class="form-control" name="v_ns1" value="<?= htmlentities(trim($v_ns1, "'")) ?>">
 					</div>
 					<div class="u-mb5">
-						<input type="text" class="form-control" name="v_ns2" value="<?=htmlentities(trim($v_ns2, "'"))?>">
+						<input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
 					</div>
 					<?php
 						if($v_ns3) {
@@ -288,7 +288,7 @@
 				<div class="u-mt15 u-mb10">
 					<label for="v_cron_jobs" class="form-label"><?= _("Cron Jobs") ?></label>
 					<div class="u-pos-relative">
-						<input type="text" class="form-control" name="v_cron_jobs" id="v_cron_jobs" value="<?=htmlentities(trim($v_cron_jobs, "'"))?>">
+						<input type="text" class="form-control" name="v_cron_jobs" id="v_cron_jobs" value="<?= htmlentities(trim($v_cron_jobs, "'")) ?>">
 						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
 					</div>
 				</div>

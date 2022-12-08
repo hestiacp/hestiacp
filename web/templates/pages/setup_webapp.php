@@ -26,19 +26,21 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<?php if( !empty($WebappInstaller->getOptions())): ?>
+	<?php if (!empty($WebappInstaller->getOptions())): ?>
 		<form id="vstobjects" method="POST" name="v_setup_webapp">
-			<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+			<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 			<input type="hidden" name="ok" value="true">
 
 			<div class="form-container">
-				<h1 class="form-title"><?=sprintf(_('Install %s'),$WebappInstaller -> info()['name'])?></h1>
-				<?php if( !$WebappInstaller->isDomainRootClean()): ?>
-					<div class="alert alert-info alert-with-icon" role="alert">
+				<h1 class="form-title"><?= sprintf(_("Install %s"), $WebappInstaller->info()["name"]) ?></h1>
+				<?php if (!$WebappInstaller->isDomainRootClean()): ?>
+					<div class="alert alert-info" role="alert">
 						<i class="fas fa-info"></i>
-						<p class="u-mb10"><?= _("Data loss warning!") ?></p>
-						<p class="u-mb10"><?= _("Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.") ?></p>
-						<p><?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?></p>
+						<div>
+							<p class="u-mb10"><?= _("Data loss warning!") ?></p>
+							<p class="u-mb10"><?= _("Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.") ?></p>
+							<p><?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?></p>
+						</div>
 					</div>
 				<?php endif; ?>
 				<div class="u-mt20">
@@ -47,16 +49,16 @@
 							$f_name = $WebappInstaller->formNs() . '_' . $form_name;
 							$f_type = $form_control;
 							$f_value = '';
-							if(isset($form_control['label'])){
+							if (isset($form_control['label'])) {
 								$f_label = htmlentities($form_control['label']);
-							}else{
+							} else {
 								$f_label = ucwords(str_replace(['.','_'], ' ', $form_name));
 							}
 							$f_placeholder = '';
 							if (is_array($form_control)) {
-									$f_type = (!empty($form_control['type']))?$form_control['type']:'text';
-									$f_value = (!empty($form_control['value']))?$form_control['value']:'';
-									$f_placeholder = (!empty($form_control['placeholder']))?$form_control['placeholder']:'';
+								$f_type = (!empty($form_control['type']))?$form_control['type']:'text';
+								$f_value = (!empty($form_control['value']))?$form_control['value']:'';
+								$f_placeholder = (!empty($form_control['placeholder']))?$form_control['placeholder']:'';
 							}
 
 							$f_value = htmlentities($f_value);

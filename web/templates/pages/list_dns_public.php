@@ -60,31 +60,31 @@
 
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("DNSKEY record") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DNSKEY record") ?></b></div>
 		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>"></b></div>
 	</div>
 </div>
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("DS record") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DS record") ?></b></div>
 		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>"></b></div>
 	</div>
 </div>
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("Public key") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Public key") ?></b></div>
 		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>"></b></div>
 	</div>
 </div>
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
 		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
 	</div>
 </div>
 <div class="l-unit animate__animated animate__fadeIn">
 	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
+		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
 		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm; ?>"></b></div>
 	</div>
 </div>

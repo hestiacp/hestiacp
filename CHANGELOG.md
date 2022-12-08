@@ -24,6 +24,10 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with unsuspend database user permissions (remote) #3011 #3046
 - Fixed an issue with v-add-domain and package doesn't allow mail / web or DNS domains
 
+### Dependencies
+
+- Update PHPmailer to 6.7.1
+
 ## [1.6.11] - Service release 
 
 ### Important

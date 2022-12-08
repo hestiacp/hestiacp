@@ -70,6 +70,11 @@ if [[ `echo "$version 7.2" | awk '{print ($1 < $2)}'` == 1 ]]; then
     mph="$mph php$version-mcrypt"
 fi
 
+# Temp fix php8.2-imagick for https://github.com/oerdnj/deb.sury.org/issues/1840
+if [ $version = "8.2" ]; then
+    mph=$(echo "$mph" | sed -e "s/php$version-imagick//")
+fi
+
 # Check if version is 8.0 or higher and drop php json.
 if [[ ${version:0:1} == "8" ]]; then
     mph=$(echo "$mph" | sed -e "s/php$version-json//")

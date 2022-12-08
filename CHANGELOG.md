@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.13] - Service release
+
+### Bugfixes
+
+- Fix issue with php8.2-imagick not availble
+- Fixed an issue with Letsnecrypt and no mail features enabled (#2930 #2931)
+
 ## [1.6.12] - Service release
 
 ### Features 

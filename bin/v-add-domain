@@ -14,7 +14,7 @@
 user=$1
 domain=$2
 ip=$3
-restart="${4-yes}"
+restart=$4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -54,20 +54,33 @@ fi
 
 # Working on web domain
 if [ -n "$WEB_SYSTEM" ]; then
-    $BIN/v-add-web-domain "$user" "$domain" "$ip" 'no'
-    check_result $? "can't add web domain" >/dev/null
+	check1=$(is_package_full 'WEB_DOMAINS')
+	if [ $? -eq 0 ]; then
+		$BIN/v-add-web-domain "$user" "$domain" "$ip" 'no'
+		check_result $? "can't add web domain"
+	fi
 fi
 
 # Working on DNS domain
 if [ -n "$DNS_SYSTEM" ]; then
-    $BIN/v-add-dns-domain "$user" "$domain" "$ip" "" "" "" "" "" "" "" "" "no"
-    check_result $? "can't add dns domain" >/dev/null
+	check2=$(is_package_full 'DNS_DOMAINS')
+	if [ $? -eq 0 ]; then
+		$BIN/v-add-dns-domain "$user" "$domain" "$ip" "" "" "" "" "" "" "" "" "no"
+		check_result $? "can't add dns domain"
+	fi
 fi
 
 # Working on mail domain
 if [ -n "$MAIL_SYSTEM" ]; then
-    $BIN/v-add-mail-domain $user $domain
-    check_result $? "can't add mail domain" >/dev/null
+	check3=$(is_package_full 'MAIL_DOMAINS')
+	if [ $? -eq 0 ]; then
+		$BIN/v-add-mail-domain $user $domain 'no'
+		check_result $? "can't add mail domain"
+	fi
+fi
+
+if [[ "$check1" != '' && "$check2" != '' && "$check3" != '' ]]; then
+	check_result 8 "Package limit reached"
 fi
 
 # Restarting services

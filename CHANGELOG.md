@@ -1,11 +1,30 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.6.12] - Service release
+
+### Features 
+
+- Add support for PHP 8.2
+
+### Bugfixes
+
+- Fixed an issue with Europe/Kyiv not existing in Debian / Ubuntu causing issues with saving (#3031 #2971)
+- Fixed an issue with v-backup-user loop when the user is unable to create a temp folder or not enough space (#2923 #3019)
+- Fixed an issue with restarting with via api (#1236 #30230)
+- Fixed an issue with *.co.uk and similar domains that does not create a www alias (#1750 and #3030)
+- Fixed an issue with enabling mysqld-iptables (#3035 @Krzysiek86 @neto373)
+- Add an alias for composer in bash_aliases (#3070 @madito)
+- Fix issues with multiple ips and hostname in installers (#3068)
+- Fixed an issue with Nginx + Apache2 settup and clearing proxy cache (#3060)
+- Update Wordpress to avoid caching of Wordpress Rest API (#3069 @niktest)
+- Fixed an issue with firewall and IPset tables shorter then 10 records (#3110 @myrevery)
+
 ## [1.6.11] - Service release 
 
 ### Important
 
-A bug in v-update-sys-hestia caused auto update to be not working. Please run: ` apt update && apt upgrade `
+- A bug in v-update-sys-hestia caused auto update to be not working. Please run: ` apt update && apt upgrade `
 
 ### Security
 

@@ -259,13 +259,19 @@
 							</td>
 						</tr>
 						<tr x-cloak x-show="letsEncryptEnabled" id="letsinfo">
-							<td><a x-on:click="showCertificates = !showCertificates" href="#" class="generate"><?= _("Show Certificate") ?></a></td>
+							<td>
+								<button x-on:click="showCertificates = !showCertificates" class="generate">
+									<?= _("Show Certificate") ?>
+								</button>
+							</td>
 						</tr>
 					</table>
 				<?php } ?>
 			</div>
 			<div class="u-mt15 u-mb20">
-				<a x-on:click="showAdvanced = !showAdvanced" href="#" class="button button-secondary"><?= _("Advanced options") ?></a>
+				<button x-on:click="showAdvanced = !showAdvanced" class="button button-secondary">
+					<?= _("Advanced options") ?>
+				</button>
 			</div>
 			<div x-cloak x-show="showAdvanced" id="advanced-opts">
 				<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] === 'yes')) { ?>

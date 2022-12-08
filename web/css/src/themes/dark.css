@@ -552,12 +552,10 @@ strong {
 
 	&:hover {
 		background-color: #ff3478;
-		border-color: #ff3478;
 	}
 
 	&:active {
 		background-color: #be1f54;
-		border-color: #be1f54;
 	}
 }
 

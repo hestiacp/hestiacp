@@ -250,8 +250,10 @@
 
 .top-bar-notification-delete {
 	display: none;
+	border: 0;
 	padding-left: 5px;
 	padding-right: 5px;
+	background: none;
 
 	& .fas {
 		color: #c36;
@@ -266,10 +268,15 @@
 .top-bar-notification-mark-all {
 	display: block;
 	text-align: center;
+	border: 0;
 	padding: 10px 15px;
+	width: 100%;
+	background: none;
+	color: var(--color-text-link);
 
 	&:hover {
 		background-color: rgb(0 0 0 / 5%);
+		color: var(--color-text-link-hover);
 	}
 
 	& .fas {
@@ -810,7 +817,9 @@
 .toolbar-sorting-toggle {
 	color: var(--color-text);
 	display: block;
+	border: 0;
 	padding-bottom: 5px;
+	background: none;
 	text-transform: uppercase;
 
 	&:hover {
@@ -1821,17 +1830,17 @@
 	text-decoration: underline;
 	cursor: pointer;
 	margin-left: -3px;
+	border: 0;
 	padding: 0 3px;
+	background: none;
 
 	&:hover {
 		background-color: #c36;
-		border-color: #c36;
 		color: #fff;
 	}
 
 	&:active {
 		background-color: #f7d616;
-		border-color: #f7d616;
 	}
 }
 

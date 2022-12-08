@@ -85,13 +85,12 @@
 								>
 									<div class="top-bar-notification-header">
 										<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
-										<a
+										<button
 											x-on:click="remove(notification.ID)"
-											href="#"
 											class="top-bar-notification-delete"
 										>
 											<i class="fas fa-xmark"></i>
-										</a>
+										</button>
 									</div>
 									<div x-html="notification.NOTICE"></div>
 									<p
@@ -102,14 +101,13 @@
 							</template>
 							<template x-if="initialized && notifications.length > 2">
 								<li>
-									<a
+									<button
 										x-on:click="removeAll()"
-										href="#"
 										class="top-bar-notification-mark-all"
 									>
 										<i class="fas fa-check"></i>
 										<?= _("Delete all notifications") ?>
-									</a>
+									</button>
 								</li>
 							</template>
 						</ul>

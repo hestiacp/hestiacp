@@ -219,7 +219,9 @@
 					</select>
 				</div>
 				<div class="u-mb20">
-					<a x-on:click="showAdvanced = !showAdvanced"href="#" class="button button-secondary"><?= _("Advanced options") ?></a>
+					<button x-on:click="showAdvanced = !showAdvanced" class="button button-secondary">
+						<?= _("Advanced options") ?>
+					</button>
 				</div>
 				<div x-cloak x-show="showAdvanced" id="advanced-opts">
 					<div class="u-mb10">

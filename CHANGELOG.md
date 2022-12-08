@@ -19,6 +19,10 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with Nginx + Apache2 settup and clearing proxy cache (#3060)
 - Update Wordpress to avoid caching of Wordpress Rest API (#3069 @niktest)
 - Fixed an issue with firewall and IPset tables shorter then 10 records (#3110 @myrevery)
+- Delete rrd database on deleting database host
+- Fixed an issue where a user was unable to change database user #3051
+- Fixed an issue with unsuspend database user permissions (remote) #3011 #3046
+- Fixed an issue with v-add-domain and package doesn't allow mail / web or DNS domains
 
 ## [1.6.11] - Service release 
 

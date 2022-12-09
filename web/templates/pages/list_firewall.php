@@ -44,11 +44,11 @@
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Action") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Comment") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Protocol") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?= _("Port") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("IP address") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Protocol") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3 u-text-center"><b><?= _("Port") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IP address") ?></b></div>
 		</div>
 	</div>
 
@@ -96,7 +96,7 @@
 						</b>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left compact-2 text-right">
+					<div class="clearfix l-unit__stat-col--left compact-2 u-text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix" style="padding-right: 10px;">
 								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Firewall Rule") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
@@ -123,9 +123,9 @@
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
 					<div class="clearfix l-unit__stat-col--left wide-3"><b><?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><?=_($data[$key]['PROTOCOL'])?></div>
-					<div class="clearfix l-unit__stat-col--left wide-3 text-center"><b><?=$data[$key]['PORT']?></b></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['IP']?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=_($data[$key]['PROTOCOL'])?></div>
+					<div class="clearfix l-unit__stat-col--left wide-3 u-text-center"><b><?=$data[$key]['PORT']?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['IP']?></div>
 				</div>
 			</div>
 		</div>

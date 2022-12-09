@@ -61,13 +61,13 @@
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= _("Records_DNS") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Template") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= _("TTL") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("SOA") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?= _("DNSSEC") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Expiration Date") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Records_DNS") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Template") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("TTL") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("SOA") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("DNSSEC") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Expiration Date") ?></b></div>
 		</div>
 	</div>
 
@@ -104,7 +104,7 @@
 					<?=empty($data[$key]['SRC'])? '' : '<br>⇢ <span style="font-size:11px;">' . htmlspecialchars($data[$key]['SRC'], ENT_QUOTES) . '</span>'; ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-right">
+				<div class="clearfix l-unit__stat-col--left u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<?php if ($read_only === 'true') {?>
@@ -141,16 +141,16 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center compact">
 					<?php if ($data[$key]['RECORDS']) echo '<span>'.$data[$key]['RECORDS'].'</span>';?>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['TPL']?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TTL']?></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['SOA']?></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact-3">
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['TPL']?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><?=$data[$key]['TTL']?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['SOA']?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-3">
 					<i class="fas <?=$dnssec_icon;?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['EXP']?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['EXP']?></b></div>
 			</div>
 		</div>
 	<?php } ?>

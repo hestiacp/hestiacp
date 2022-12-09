@@ -38,7 +38,7 @@
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4"><b><?= _("Type") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("Details") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-right compact-4"><b><?= _("Restore") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-4"><b><?= _("Restore") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -62,7 +62,7 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
@@ -94,7 +94,7 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
@@ -126,7 +126,7 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
@@ -158,7 +158,7 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
@@ -187,7 +187,7 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?= "cron " . _("records") ?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
@@ -219,7 +219,7 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">

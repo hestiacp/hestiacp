@@ -61,10 +61,10 @@
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("Record") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left super-compact text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?= _("Type") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?= _("Priority") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?= _("TTL") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left super-compact u-text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center" style="padding-left: 32px;"><b><?= _("Type") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center"><b><?= _("Priority") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center"><b><?= _("TTL") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("IP or Value") ?></b></div>
 		</div>
@@ -102,7 +102,7 @@
 					</b>
 				</div>
 			<!-- START QUICK ACTION TOOLBAR AREA -->
-			<div class="clearfix l-unit__stat-col--left super-compact text-right">
+			<div class="clearfix l-unit__stat-col--left super-compact u-text-right">
 				<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 					<div class="actions-panel clearfix">
 						<?php if ($read_only === 'true') {?>
@@ -126,9 +126,9 @@
 				</div>
 			</div>
 			<!-- END QUICK ACTION TOOLBAR AREA -->
-			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?=$data[$key]['TYPE']?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center" style="padding-left: 32px;"><b><?=$data[$key]['TYPE']?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
 			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8') ?></div>
 		</div>

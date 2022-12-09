@@ -43,12 +43,12 @@
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP Address") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact-5"><b><?= _("Netmask") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Interface") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Status") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Domains") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Owner") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Netmask") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Interface") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Status") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Domains") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Owner") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -70,7 +70,7 @@
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing IP Address") ?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact text-right">
+				<div class="clearfix l-unit__stat-col--left compact u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing IP Address") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
@@ -87,11 +87,11 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center compact-5"><?= $data[$key]["NETMASK"] ?></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><?= $data[$key]["INTERFACE"] ?></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _($data[$key]["STATUS"]) ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $data[$key]["OWNER"] ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><?= $data[$key]["NETMASK"] ?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><?= $data[$key]["INTERFACE"] ?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _($data[$key]["STATUS"]) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["OWNER"] ?></b></div>
 			</div>
 		</div>
 	<?php } ?>

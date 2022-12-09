@@ -40,10 +40,10 @@
 					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("Access Key") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left text-center wide-2"><b><?= _("Comment") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Date") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Time") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center wide-2"><b><?= _("Comment") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Date") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Time") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -73,7 +73,7 @@
 				</div>
 
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact text-right">
+				<div class="clearfix l-unit__stat-col--left compact u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
@@ -89,9 +89,9 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center wide-2"><b><?= _($key_comment) ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $key_date ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $key_time ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center wide-2"><b><?= _($key_comment) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $key_date ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $key_time ?></b></div>
 			</div>
 		</div>
 	<?php } ?>

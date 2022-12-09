@@ -27,11 +27,11 @@
 	user-select: none !important;
 }
 
-.text-right {
+.u-text-right {
 	text-align: right !important;
 }
 
-.text-center {
+.u-text-center {
 	text-align: center !important;
 }
 
@@ -47,6 +47,10 @@
 	overflow: hidden !important;
 	text-overflow: ellipsis !important;
 	white-space: nowrap !important;
+}
+
+.u-opacity-50 {
+	opacity: 0.5 !important;
 }
 
 .u-mt15 {

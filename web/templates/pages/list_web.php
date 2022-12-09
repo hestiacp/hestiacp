@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== 'true') {?>
+			<?php if ($read_only !== "true") { ?>
 				<a href="/add/web/" class="button button-secondary" id="btn-create">
 					<i class="fas fa-circle-plus status-icon green"></i><?= _("Add Web Domain") ?>
 				</a>
@@ -65,12 +65,12 @@
 				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("Name") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-4 text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("IP address") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Disk") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= _("Bandwidth") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("SSL") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= _("Statistics") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IP address") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Disk") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Bandwidth") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("SSL") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Statistics") ?></b></div>
 		</div>
 	</div>
 
@@ -188,7 +188,7 @@
 						</b>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+					<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix">
 								<?php if (!empty($data[$key]['STATS'])) { ?>
@@ -226,13 +226,13 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
-					<div class="clearfix l-unit__stat-col--left text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-					<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
-					<div class="clearfix l-unit__stat-col--left text-center">
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center">
 						<i class="fas <?=$icon_ssl;?>"></i>
 					</div>
-					<div class="clearfix l-unit__stat-col--left text-center compact">
+					<div class="clearfix l-unit__stat-col--left u-text-center compact">
 						<i class="fas <?=$icon_webstats;?>"></i>
 					</div>
 				</div>

@@ -14,7 +14,7 @@
 
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact text-center">&nbsp;</div>
+			<div class="clearfix l-unit__stat-col--left super-compact u-text-center">&nbsp;</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("Category") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Status") ?></b></div>
@@ -24,7 +24,7 @@
 	<!-- Start of item element-->
 	<div class="l-unit header animate__animated animate__fadeIn">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact text-center">
+			<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
 				<i class="fas fa-gear status-icon blue"></i>
 			</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("System") ?></b></div>

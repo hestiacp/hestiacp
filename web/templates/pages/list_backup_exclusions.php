@@ -25,7 +25,7 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
 			<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Type") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Value") ?></b></div>
 		</div>
 	</div>
@@ -37,7 +37,7 @@
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
 					<div class="clearfix l-unit__stat-col--left wide-1"><b><?= $key ?></b></div>
-					<div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
+					<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
 					<div class="clearfix l-unit__stat-col--left wide-3">
 						<?php
 							if (empty($value)) echo _('no exclusions');

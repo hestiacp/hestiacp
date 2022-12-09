@@ -19,36 +19,36 @@
 
 	<form
 		x-data="{
-			hasSmtpRelay: <?= $v_smtp_relay == 'true' ? true : false ?>
+			hasSmtpRelay: <?= $v_smtp_relay == "true" ? true : false ?>
 		}"
 		id="vstobjects"
 		name="v_add_mail"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Adding Mail Domain") ?></h1>
-			<?php show_alert_message($_SESSION);?>
-			<?php if (($user_plain == 'admin') && (($_GET['accept'] !== "true"))) {?>
-				<div class="alert alert-danger alert-with-icon" role="alert">
+			<?php show_alert_message($_SESSION); ?>
+			<?php if ($user_plain == "admin" && $_GET["accept"] !== "true") { ?>
+				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
 					<p><?= _("Avoid adding web domains on admin account") ?></p>
 				</div>
 			<?php } ?>
-			<?php if (($user_plain == 'admin') && (empty($_GET['accept']))) {?>
+			<?php if ($user_plain == "admin" && empty($_GET["accept"])) { ?>
 				<div class="u-side-by-side u-pt18">
 					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
 					<a href="/add/mail/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
 				</div>
 			<?php } ?>
-			<?php if (($user_plain == 'admin') && (($_GET['accept'] === "true")) || ($user_plain !== "admin")) {?>
+			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
 				<div class="u-mb20">
 					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?=htmlentities(trim($v_domain, "'"))?>">
+					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 				</div>
-				<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
+				<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 					<div class="u-mb20">
 						<label for="v_webmail" class="form-label"><?= _("Webmail Client") ?></label>
 						<select class="form-select" name="v_webmail" id="v_webmail" tabindex="6">
@@ -64,7 +64,7 @@
 						</select>
 					</div>
 				<?php } ?>
-				<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
+				<?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo 'checked'; ?>>
 						<label for="v_antispam">
@@ -101,15 +101,15 @@
 				<div x-cloak x-show="hasSmtpRelay" id="smtp_relay_table" class="u-pl30">
 					<div class="u-mb10">
 						<label for="v_smtp_relay_host" class="form-label"><?= _("Host") ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+						<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?= htmlentities(trim($v_smtp_relay_host, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_smtp_relay_port" class="form-label"><?= _("Port") ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+						<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?= htmlentities(trim($v_smtp_relay_port, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_smtp_relay_user" class="form-label"><?= _("Username") ?></label>
-						<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+						<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?= htmlentities(trim($v_smtp_relay_user, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_smtp_relay_pass" class="form-label"><?= _("Password") ?></label>

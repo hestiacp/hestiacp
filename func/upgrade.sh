@@ -58,57 +58,57 @@ upgrade_health_check() {
 }
 
 upgrade_welcome_message() {
-    echo
-    echo '                  _   _           _   _        ____ ____                      '
-    echo '                 | | | | ___  ___| |_(_) __ _ / ___|  _ \                     '
-    echo '                 | |_| |/ _ \/ __| __| |/ _` | |   | |_) |                    '
-    echo '                 |  _  |  __/\__ \ |_| | (_| | |___|  __/                     '
-    echo '                 |_| |_|\___||___/\__|_|\__,_|\____|_|                        '
-    echo "                                                                              "
-    echo "                    Hestia Control Panel Software Update                      "
-    echo "                               Version: ${DISPLAY_VER}                         "
-    if [[ "$new_version" =~ "beta" ]]; then
-        echo "                                BETA RELEASE                               "
-    fi
-    if [[ "$new_version" =~ "alpha" ]]; then
-        echo "                            DEVELOPMENT SNAPSHOT                           "
-        echo "                      NOT INTENDED FOR PRODUCTION USE                      "
-        echo "                            USE AT YOUR OWN RISK                           "
-    fi
-    echo
-    echo "=============================================================================="
-    echo
-    echo "[ ! ] IMPORTANT INFORMATION:                                                  "
-    echo
-    echo "Default configuration files and templates may be modified or replaced         "
-    echo "during the upgrade process. You may restore these files from:                 "
-    echo ""
-    echo "Backup directory: $HESTIA_BACKUP/                                             "
-    echo "Installation log: $LOG                                                        "
+	echo
+	echo '                  _   _           _   _        ____ ____                      '
+	echo '                 | | | | ___  ___| |_(_) __ _ / ___|  _ \                     '
+	echo '                 | |_| |/ _ \/ __| __| |/ _` | |   | |_) |                    '
+	echo '                 |  _  |  __/\__ \ |_| | (_| | |___|  __/                     '
+	echo '                 |_| |_|\___||___/\__|_|\__,_|\____|_|                        '
+	echo "                                                                              "
+	echo "                    Hestia Control Panel Software Update                      "
+	echo "                               Version: ${DISPLAY_VER}"
+	if [[ "$new_version" =~ "beta" ]]; then
+		echo "                                BETA RELEASE                                 "
+	fi
+	if [[ "$new_version" =~ "alpha" ]]; then
+		echo "                            DEVELOPMENT SNAPSHOT                             "
+		echo "                      NOT INTENDED FOR PRODUCTION USE                        "
+		echo "                            USE AT YOUR OWN RISK                             "
+	fi
+	echo
+	echo "============================================================================="
+	echo
+	echo "[ ! ] IMPORTANT INFORMATION:                                                 "
+	echo
+	echo "Default configuration files and templates may be modified or replaced        "
+	echo "during the upgrade process. You may restore these files from:                "
+	echo ""
+	echo "Backup directory: $HESTIA_BACKUP/"
+	echo "Installation log: $LOG"
 }
 
 upgrade_welcome_message_log() {
-    echo "=============================================================================="
-    echo "Hestia Control Panel Software Update Log"
-    echo "=============================================================================="
-    echo
-    echo "OPERATING SYSTEM:      $OS_TYPE ($OS_VERSION)"
-    echo "CURRENT VERSION:       $VERSION"
-    echo "NEW VERSION:           $new_version"
-    echo "RELEASE BRANCH:        $RELEASE_BRANCH"
-    if [[ "$new_version" =~ "alpha" ]]; then
-        echo "BUILD TYPE:            Development snapshot"
-    elif [[ "$new_version" =~ "beta" ]]; then
-        echo "BUILD TYPE:            Beta release"
-    else
-        echo "BUILD TYPE:            Production release"
-    fi
-    echo 
-    echo "INSTALLER OPTIONS:"
-    echo "============================================================================="
-    echo "Send email notification on upgrade complete:      $UPGRADE_SEND_EMAIL"
-    echo "Send installed log output to admin email:         $UPGRADE_SEND_EMAIL_LOG"
-    echo 
+	echo "============================================================================="
+	echo "Hestia Control Panel Software Update Log"
+	echo "============================================================================="
+	echo
+	echo "OPERATING SYSTEM:      $OS_TYPE ($OS_VERSION)"
+	echo "CURRENT VERSION:       $VERSION"
+	echo "NEW VERSION:           $new_version"
+	echo "RELEASE BRANCH:        $RELEASE_BRANCH"
+	if [[ "$new_version" =~ "alpha" ]]; then
+		echo "BUILD TYPE:            Development snapshot"
+	elif [[ "$new_version" =~ "beta" ]]; then
+		echo "BUILD TYPE:            Beta release"
+	else
+		echo "BUILD TYPE:            Production release"
+	fi
+	echo
+	echo "INSTALLER OPTIONS:"
+	echo "============================================================================="
+	echo "Send email notification on upgrade complete:      $UPGRADE_SEND_EMAIL"
+	echo "Send installed log output to admin email:         $UPGRADE_SEND_EMAIL_LOG"
+	echo
 }
 
 upgrade_step_message() {
@@ -275,40 +275,8 @@ upgrade_init_backup() {
     # Hestia Control Panel configuration files
     mkdir -p $HESTIA_BACKUP/conf/hestia/
 
-    # System services (apache2, nginx, bind9, vsftpd, etc).
-    if [ -n "$WEB_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$WEB_SYSTEM/
-    fi
-    if [ -n "$IMAP_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$IMAP_SYSTEM/
-    fi
-    if [ -n "$MAIL_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$MAIL_SYSTEM/
-    fi
-    if [ -n "$DNS_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$DNS_SYSTEM/
-    fi
-    if [ -n "$PROXY_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
-    fi
-    if [ -n "$DB_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$DB_SYSTEM/
-    fi
-    if [ -n "$FTP_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$FTP_SYSTEM/
-    fi
-    if [ -n "$FIREWALL_SYSTEM" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
-    fi
-    if [ -n "$FIREWALL_EXTENSION" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
-    fi
-    if [ -e "/etc/ssh/sshd_config" ]; then
-        mkdir -p $HESTIA_BACKUP/conf/ssh/
-    fi
-
-    # Hosting Packages
-    mkdir -p $HESTIA_BACKUP/packages/
+	# Hosting Packages
+	mkdir -p $HESTIA_BACKUP/packages/
 
     # Domain template files
     mkdir -p $HESTIA_BACKUP/templates/
@@ -458,41 +426,48 @@ upgrade_start_backup() {
             cp -f /etc/$FTP_SYSTEM.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
         fi
 
-        if [ "$FTP_SYSTEM" = "proftpd" ]; then
-            cp -f /etc/proftpd/proftpd.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
-        fi
-    fi
-    if [ -n "$FIREWALL_EXTENSION" ]; then
-        if [ "$DEBUG_MODE" = "true" ]; then
-            echo "      ---- $FIREWALL_EXTENSION"
-        fi
-        cp -f /etc/$FIREWALL_EXTENSION/*.conf $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
-        cp -f /etc/$FIREWALL_EXTENSION/*.local $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
-    fi
-    if [ -e "/etc/ssh/sshd_config" ]; then
-        if [ "$DEBUG_MODE" = "true" ]; then
-            echo "      ---- sshd"
-        fi
-        cp -fr /etc/ssh/* $HESTIA_BACKUP/conf/ssh/
-    fi
-    if [ -d "/etc/roundcube" ]; then
-        if [ "$DEBUG_MODE" = "true" ]; then
-            echo "      ---- Roundcube"
-        fi
-        cp -fr /etc/roundcube/* $HESTIA_BACKUP/conf/roundcube
-    fi
-    if [ -d "/etc/rainloop" ]; then
-        if [ "$DEBUG_MODE" = "true" ]; then
-            echo "      ---- Rainloop"
-        fi
-        cp -fr /etc/rainloop/* $HESTIA_BACKUP/conf/rainloop
-    fi
-    if [ -d "/etc/phpmyadmin" ]; then
-        if [ "$DEBUG_MODE" = "true" ]; then
-            echo "      ---- phpMyAdmin"
-        fi
-        cp -fr /etc/phpmyadmin/* $HESTIA_BACKUP/conf/phpmyadmin
-    fi
+		if [ "$FTP_SYSTEM" = "proftpd" ]; then
+			cp -f /etc/proftpd/proftpd.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
+		fi
+	fi
+	if [ -n "$FIREWALL_SYSTEM" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- $FIREWALL_SYSTEM"
+		fi
+		[ -e "/etc/sysconfig/iptables" ] && cp -f /etc/sysconfig/iptables $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
+		[ -e "/etc/iptables.rules" ] && cp -f /etc/iptables.rules $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
+	fi
+	if [ -n "$FIREWALL_EXTENSION" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- $FIREWALL_EXTENSION"
+		fi
+		cp -f /etc/$FIREWALL_EXTENSION/*.conf $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
+		cp -f /etc/$FIREWALL_EXTENSION/*.local $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
+	fi
+	if [ -e "/etc/ssh/sshd_config" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- sshd"
+		fi
+		cp -fr /etc/ssh/* $HESTIA_BACKUP/conf/ssh/
+	fi
+	if [ -d "/etc/roundcube" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- Roundcube"
+		fi
+		cp -fr /etc/roundcube/* $HESTIA_BACKUP/conf/roundcube
+	fi
+	if [ -d "/etc/rainloop" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- Rainloop"
+		fi
+		cp -fr /etc/rainloop/* $HESTIA_BACKUP/conf/rainloop
+	fi
+	if [ -d "/etc/phpmyadmin" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- phpMyAdmin"
+		fi
+		cp -fr /etc/phpmyadmin/* $HESTIA_BACKUP/conf/phpmyadmin
+	fi
 }
 
 upgrade_refresh_config() {
@@ -600,13 +575,11 @@ upgrade_phpmyadmin() {
             # Set config and log directory
             sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
-            # Create temporary folder and change permissions
-            if [ ! -d /usr/share/phpmyadmin/tmp ]; then
-                mkdir /usr/share/phpmyadmin/tmp
-                chown root:www-data /usr/share/phpmyadmin/tmp
-                chmod 770 /usr/share/phpmyadmin/tmp
-                
-            fi
+			# Create temporary folder and change permissions
+			if [ ! -d /usr/share/phpmyadmin/tmp ]; then
+				mkdir /usr/share/phpmyadmin/tmp
+				chown root:www-data /usr/share/phpmyadmin/tmp
+				chmod 0770 /usr/share/phpmyadmin/tmp
 
             if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
                 chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php

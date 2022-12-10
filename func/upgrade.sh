@@ -66,31 +66,31 @@ upgrade_welcome_message() {
 	echo '                 |_| |_|\___||___/\__|_|\__,_|\____|_|                        '
 	echo "                                                                              "
 	echo "                    Hestia Control Panel Software Update                      "
-	echo "                               Version: ${DISPLAY_VER}                         "
+	echo "                               Version: ${DISPLAY_VER}"
 	if [[ "$new_version" =~ "beta" ]]; then
-		echo "                                BETA RELEASE                               "
+		echo "                                BETA RELEASE                                 "
 	fi
 	if [[ "$new_version" =~ "alpha" ]]; then
-		echo "                            DEVELOPMENT SNAPSHOT                           "
-		echo "                      NOT INTENDED FOR PRODUCTION USE                      "
-		echo "                            USE AT YOUR OWN RISK                           "
+		echo "                            DEVELOPMENT SNAPSHOT                             "
+		echo "                      NOT INTENDED FOR PRODUCTION USE                        "
+		echo "                            USE AT YOUR OWN RISK                             "
 	fi
 	echo
-	echo "=============================================================================="
+	echo "============================================================================="
 	echo
-	echo "[ ! ] IMPORTANT INFORMATION:                                                  "
+	echo "[ ! ] IMPORTANT INFORMATION:                                                 "
 	echo
-	echo "Default configuration files and templates may be modified or replaced         "
-	echo "during the upgrade process. You may restore these files from:                 "
+	echo "Default configuration files and templates may be modified or replaced        "
+	echo "during the upgrade process. You may restore these files from:                "
 	echo ""
-	echo "Backup directory: $HESTIA_BACKUP/                                             "
-	echo "Installation log: $LOG                                                        "
+	echo "Backup directory: $HESTIA_BACKUP/"
+	echo "Installation log: $LOG"
 }
 
 upgrade_welcome_message_log() {
-	echo "=============================================================================="
+	echo "============================================================================="
 	echo "Hestia Control Panel Software Update Log"
-	echo "=============================================================================="
+	echo "============================================================================="
 	echo
 	echo "OPERATING SYSTEM:      $OS_TYPE ($OS_VERSION)"
 	echo "CURRENT VERSION:       $VERSION"
@@ -274,38 +274,6 @@ upgrade_init_backup() {
 	# Hestia Control Panel configuration files
 	mkdir -p $HESTIA_BACKUP/conf/hestia/
 
-	# System services (apache2, nginx, bind9, vsftpd, etc).
-	if [ -n "$WEB_SYSTEM" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$WEB_SYSTEM/
-	fi
-	if [ -n "$IMAP_SYSTEM" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$IMAP_SYSTEM/
-	fi
-	if [ -n "$MAIL_SYSTEM" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$MAIL_SYSTEM/
-	fi
-	if [ -n "$DNS_SYSTEM" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$DNS_SYSTEM/
-	fi
-	if [ -n "$PROXY_SYSTEM" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$PROXY_SYSTEM/
-	fi
-	if [ -n "$DB_SYSTEM" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$DB_SYSTEM/
-	fi
-	if [ -n "$FTP_SYSTEM" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$FTP_SYSTEM/
-	fi
-	if [ -n "$FIREWALL_SYSTEM" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
-	fi
-	if [ -n "$FIREWALL_EXTENSION" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/$FIREWALL_EXTENSION/
-	fi
-	if [ -e "/etc/ssh/sshd_config" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/ssh/
-	fi
-
 	# Hosting Packages
 	mkdir -p $HESTIA_BACKUP/packages/
 
@@ -461,6 +429,13 @@ upgrade_start_backup() {
 			cp -f /etc/proftpd/proftpd.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
 		fi
 	fi
+	if [ -n "$FIREWALL_SYSTEM" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- $FIREWALL_SYSTEM"
+		fi
+		[ -e "/etc/sysconfig/iptables" ] && cp -f /etc/sysconfig/iptables $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
+		[ -e "/etc/iptables.rules" ] && cp -f /etc/iptables.rules $HESTIA_BACKUP/conf/$FIREWALL_SYSTEM/
+	fi
 	if [ -n "$FIREWALL_EXTENSION" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
 			echo "      ---- $FIREWALL_EXTENSION"
@@ -601,7 +576,7 @@ upgrade_phpmyadmin() {
 			if [ ! -d /usr/share/phpmyadmin/tmp ]; then
 				mkdir /usr/share/phpmyadmin/tmp
 				chown root:www-data /usr/share/phpmyadmin/tmp
-				chmod 770 /usr/share/phpmyadmin/tmp
+				chmod 0770 /usr/share/phpmyadmin/tmp
 
 			fi
 

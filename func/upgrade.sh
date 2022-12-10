@@ -580,6 +580,7 @@ upgrade_phpmyadmin() {
 				mkdir /usr/share/phpmyadmin/tmp
 				chown root:www-data /usr/share/phpmyadmin/tmp
 				chmod 0770 /usr/share/phpmyadmin/tmp
+            fi
 
             if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
                 chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php

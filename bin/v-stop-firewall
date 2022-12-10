@@ -10,7 +10,7 @@
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Defining absolute path for iptables and modprobe
+# Defining absolute path for iptables
 iptables="/sbin/iptables"
 
 # Includes

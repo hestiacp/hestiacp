@@ -70,7 +70,7 @@
 							<?php if($f_type != 'boolean'): ?>
 								<label for="<?=$f_name?>" class="form-label">
 									<?=$f_label?>
-									<?php if ($f_type === 'password'):?> / <a href="javascript:applyRandomStringToTarget('<?=$f_name?>');" class="generate"><?= _("generate") ?></a> <?php endif?>
+									<?php if ($f_type === 'password'):?> / <a href="javascript:applyRandomStringToTarget('<?=$f_name?>');" class="form-link"><?= _("generate") ?></a> <?php endif?>
 								</label>
 							<?php endif; ?>
 							<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>

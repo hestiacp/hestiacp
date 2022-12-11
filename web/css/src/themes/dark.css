@@ -204,20 +204,6 @@ strong {
 	}
 }
 
-/* Cards
-   ========================================================================== */
-
-.card {
-	background-color: #454545;
-	border-color: #606060;
-	box-shadow: 0 1px 4px rgb(0 0 0 / 20%), inset 0 0 60px rgb(0 0 0 / 25%);
-}
-
-.card-content {
-	color: #fafafa;
-	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
-}
-
 /* Toolbar
    ========================================================================== */
 
@@ -343,6 +329,20 @@ strong {
 	&:hover {
 		color: #ff3478;
 	}
+}
+
+/* Cards
+   ========================================================================== */
+
+.card {
+	background-color: #454545;
+	border-color: #606060;
+	box-shadow: 0 1px 4px rgb(0 0 0 / 20%), inset 0 0 60px rgb(0 0 0 / 25%);
+}
+
+.card-content {
+	color: #fafafa;
+	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
 }
 
 .l-unit {
@@ -559,14 +559,6 @@ strong {
 		background-color: #be1f54;
 		border-color: #be1f54;
 	}
-}
-
-textarea::placeholder {
-	color: #bbb;
-}
-
-textarea:focus::placeholder {
-	color: #909090;
 }
 
 .hint {

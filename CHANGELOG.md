@@ -18,6 +18,20 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
+## [1.6.14] - Service release
+
+## Bugfixes
+
+- Improve firewall rules cleanup #3135 @myrevery
+- Reverted changes to v-add-web-php as php8.2-imagick is now availble
+- Fixed an issue with editing timezone in when editing a server (#3127)
+- Fixed an issue with hostname during install
+- Fixed an issue with WordPress installer not working properly (#3129)
+
+### Dependencies
+
+- Update MediaWiki to 1.39.0
+
 ## [1.6.13] - Service release
 
 ### Bugfixes

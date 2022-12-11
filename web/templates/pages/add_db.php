@@ -75,7 +75,7 @@
 				<div class="u-mb10">
 					<label for="v_password" class="form-label">
 						<?= _("Password") ?>
-						<a href="javascript:applyRandomString();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
+						<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
 					</label>
 					<div class="u-pos-relative u-mb10">
 						<input type="text" class="form-control js-password-input" name="v_password" id="v_password">

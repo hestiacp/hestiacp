@@ -10,9 +10,8 @@
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Defining absolute path for iptables and modprobe
+# Defining absolute path for iptables
 iptables="/sbin/iptables"
-modprobe="/sbin/modprobe"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -39,7 +38,7 @@ check_hestia_demo_mode
 heal_iptables_links
 
 # Creating temporary file
-tmp=$(mktemp)
+tmp="$(mktemp)"
 
 # Flushing INPUT chain
 echo "$iptables -P INPUT ACCEPT" >> $tmp
@@ -49,12 +48,11 @@ echo "$iptables -F INPUT" >> $tmp
 echo "$iptables -X hestia" >> $tmp
 
 # Deleting custom chains
-chains=$(cat $HESTIA/data/firewall/chains.conf 2>/dev/null)
 IFS=$'\n'
-for chain in $chains; do
-    parse_object_kv_list "$chain"
-    echo "$iptables -F fail2ban-$CHAIN" >> $tmp
-    echo "$iptables -X fail2ban-$CHAIN" >> $tmp
+for chain in $(cat $HESTIA/data/firewall/chains.conf 2> /dev/null); do
+	parse_object_kv_list "$chain"
+	echo "$iptables -F fail2ban-$CHAIN" >> $tmp
+	echo "$iptables -X fail2ban-$CHAIN" >> $tmp
 done
 
 # Applying rules
@@ -63,12 +61,12 @@ bash $tmp 2>/dev/null
 # Deleting temporary file
 rm -f $tmp
 
-# Saving rules to the master iptables file
+# Clean up and saving rules to the master iptables file
 if [ -d "/etc/sysconfig" ]; then
-    /sbin/iptables-save > /etc/sysconfig/iptables
+	/sbin/iptables-save | sed -e 's/[[0-9]\+:[0-9]\+]/[0:0]/g' -e '/^-A fail2ban-[A-Z]\+ -s .\+$/d' > /etc/sysconfig/iptables
 else
-	/sbin/iptables-save > /etc/iptables.rules
-	iptablesversion=$(iptables --version | head -1 | awk '{print $2}' | cut -f -2 -d .)
+	/sbin/iptables-save | sed -e 's/[[0-9]\+:[0-9]\+]/[0:0]/g' -e '/^-A fail2ban-[A-Z]\+ -s .\+$/d' > /etc/iptables.rules
+	iptablesversion="$(iptables --version | head -1 | awk '{print $2}' | cut -f -2 -d .)"
 	sd_unit="/lib/systemd/system/hestia-iptables.service"
 	if [ ! -e "$sd_unit" ]; then
 		echo "[Unit]" >> $sd_unit

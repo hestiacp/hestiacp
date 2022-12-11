@@ -1,15 +1,15 @@
 	</main>
 <?php if (
 	$_SESSION["userContext"] === "admin" &&
-	$_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes"
-) { ?>
-	<?php if ($_SESSION["UPDATE_AVAILABLE"] === "yes") { ?>
-		<p x-data="{ open: true }" x-cloak x-show="open" class="updates-banner">
-			<strong>New updates are available!</strong> To upgrade your server now, run
-			<code>apt update && apt upgrade</code> from a shell session.
-			(<a href="#" x-on:click="open = false"><strong>hide</strong></a>)
-		</p>
-	<?php } ?>
+	$_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" &&
+	$_SESSION["UPDATE_AVAILABLE"] === "yes"
+) {
+?>
+	<p x-data="{ open: true }" x-cloak x-show="open" class="updates-banner">
+		<strong>New updates are available!</strong> To upgrade your server now, run
+		<code>apt update && apt upgrade</code> from a shell session.
+		(<a href="#" x-on:click="open = false"><strong>hide</strong></a>)
+	</p>
 <?php } ?>
 	<div title="<?= _("Confirmation") ?>" class="dialog js-confirm-dialog-redirect">
 		<p><?= _("LEAVE_PAGE_CONFIRMATION") ?></p>

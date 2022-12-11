@@ -109,12 +109,12 @@ App.Listeners.MAIL_ACC.keypress_v_password = function () {
 
 App.Listeners.MAIL_ACC.keypress_v_password();
 
-applyRandomString = function (min_length = 16) {
-	var randomString = randomString(min_length);
-	$('input[name=v_password]').val(randomString);
+applyRandomPassword = function (min_length = 16) {
+	var randomPassword = randomString(min_length);
+	$('input[name=v_password]').val(randomPassword);
 	if ($('input[name=v_password]').attr('type') == 'text')
-		$('.js-password-output').text(randomString);
-	else $('.js-password-output').text(Array(randomString.length + 1).join('*'));
+		$('.js-password-output').text(randomPassword);
+	else $('.js-password-output').text(Array(randomPassword.length + 1).join('*'));
 	App.Actions.MAIL_ACC.update_password_meter();
 	generate_mail_credentials();
 };

@@ -119,7 +119,7 @@
 					<div class="u-mb10">
 						<label for="v_ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
-							<span x-cloak x-show="!letsEncryptEnabled" id="generate-csr" > / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate CSR") ?></a></span>
+							<span x-cloak x-show="!letsEncryptEnabled" id="generate-csr" > / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate CSR") ?></a></span>
 						</label>
 						<textarea x-bind:disabled="!letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>

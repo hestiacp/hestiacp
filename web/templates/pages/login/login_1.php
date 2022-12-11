@@ -13,7 +13,7 @@
 			<label for="password" class="form-label u-side-by-side">
 				<?= _("Password") ?>
 				<?php if ($_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] !== "no") { ?>
-					<a class="login-label-link" href="/reset/">
+					<a class="login-form-link" href="/reset/">
 						<?= _("forgot password") ?>
 					</a>
 				<?php } ?>

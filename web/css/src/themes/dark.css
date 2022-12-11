@@ -546,23 +546,35 @@ strong {
 	}
 }
 
-.generate {
-	color: #29a9ff;
-	border-radius: 4px;
+.form-link {
+	color: #09f;
 
 	&:hover {
+		background-color: #3b9de8;
+	}
+
+	&:active {
+		background-color: #54a6e5;
+	}
+}
+
+.form-link-danger {
+	&:hover {
 		background-color: #ff3478;
-		border-color: #ff3478;
 	}
 
 	&:active {
 		background-color: #be1f54;
-		border-color: #be1f54;
 	}
 }
 
 .hint {
 	color: #a2a2a2;
+}
+
+.section-title {
+	color: #d4d4d4;
+	border-bottom-color: #484848;
 }
 
 /* Buttons
@@ -582,37 +594,37 @@ strong {
 	);
 	box-shadow: 0 1px 4px rgb(0 0 0 / 20%), inset 0 0 1px rgb(20 20 20 / 100%),
 		inset 0 0 3px rgb(0 0 0 / 50%);
-}
 
-.button:hover {
-	color: #fff;
-	text-shadow: 1px 1px rgb(0 0 0 / 25%);
-	border-color: #0098ff;
-	background: linear-gradient(
-		0deg,
-		rgb(58 58 58 / 100%) 0%,
-		rgb(68 68 68 / 100%) 35%,
-		rgb(79 79 79 / 100%) 100%
-	);
-	background-color: #454545;
-	box-shadow: 0 1px 3px rgb(0 0 0 / 35%), inset 0 0 1px rgb(0 0 0 / 100%),
-		inset 0 0 3px rgb(0 0 0 / 65%);
-	transition: 0.2s;
-}
+	&:hover {
+		color: #fff;
+		text-shadow: 1px 1px rgb(0 0 0 / 25%);
+		border-color: #0098ff;
+		background: linear-gradient(
+			0deg,
+			rgb(58 58 58 / 100%) 0%,
+			rgb(68 68 68 / 100%) 35%,
+			rgb(79 79 79 / 100%) 100%
+		);
+		background-color: #454545;
+		box-shadow: 0 1px 3px rgb(0 0 0 / 35%), inset 0 0 1px rgb(0 0 0 / 100%),
+			inset 0 0 3px rgb(0 0 0 / 65%);
+		transition: 0.2s;
+	}
 
-.button:active,
-.button:focus {
-	color: #d4d4d4;
-	text-shadow: 0 -1px 1px rgb(0 0 0 / 55%);
-	border-color: #0066b4;
-	background: linear-gradient(
-		0deg,
-		rgb(69 69 69 / 100%) 0%,
-		rgb(53 53 53 / 100%) 35%,
-		rgb(48 48 48 / 100%) 100%
-	);
-	box-shadow: 0 1px 3px rgb(0 0 0 / 30%), inset 0 0 1px rgb(0 0 0 / 100%),
-		inset -1px -1px 4px rgb(30 30 30 / 40%);
+	&:active,
+	&:focus {
+		color: #d4d4d4;
+		text-shadow: 0 -1px 1px rgb(0 0 0 / 55%);
+		border-color: #0066b4;
+		background: linear-gradient(
+			0deg,
+			rgb(69 69 69 / 100%) 0%,
+			rgb(53 53 53 / 100%) 35%,
+			rgb(48 48 48 / 100%) 100%
+		);
+		box-shadow: 0 1px 3px rgb(0 0 0 / 30%), inset 0 0 1px rgb(0 0 0 / 100%),
+			inset -1px -1px 4px rgb(30 30 30 / 40%);
+	}
 }
 
 .button-secondary {
@@ -624,73 +636,45 @@ strong {
 		rgb(53 53 53 / 100%) 100%,
 		rgb(69 69 69 / 100%) 100%
 	);
+
+	&:hover {
+		background-color: #343434;
+		background: linear-gradient(
+			0deg,
+			rgb(48 48 48 / 100%) 0%,
+			rgb(53 53 53 / 100%) 100%,
+			rgb(69 69 69 / 100%) 100%
+		);
+	}
 }
 
-.button-secondary:hover {
-	background-color: #343434;
-	background: linear-gradient(
-		0deg,
-		rgb(48 48 48 / 100%) 0%,
-		rgb(53 53 53 / 100%) 100%,
-		rgb(69 69 69 / 100%) 100%
-	);
+.button-danger {
+	&:hover {
+		background: rgb(133 0 0);
+		background: linear-gradient(0deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%);
+		color: #fff;
+		text-shadow: 0 1px rgb(0 0 0 / 45%);
+		border-color: rgb(170 0 0);
+	}
+
+	&:active,
+	&:focus {
+		background: rgb(133 0 0);
+		background: linear-gradient(180deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%);
+		color: #4d0000;
+		text-shadow: 0 -1px 1px rgb(255 255 255 / 30%);
+		border-color: rgb(251 71 51);
+	}
 }
 
-.button-danger:hover {
-	background: rgb(133 0 0);
-	background: linear-gradient(0deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%);
-	color: #fff;
-	text-shadow: 0 1px rgb(0 0 0 / 45%);
-	border-color: rgb(170 0 0);
-}
-
-.button-danger:active,
-.button-danger:focus {
-	background: rgb(133 0 0);
-	background: linear-gradient(180deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%);
-	color: #4d0000;
-	text-shadow: 0 -1px 1px rgb(255 255 255 / 30%);
-	border-color: rgb(251 71 51);
-}
-
-.ui-dialog button.cancel span {
-	color: #fff !important;
-}
-
-.additional-control {
-	color: #09f;
-}
-
-.additional-control:hover {
-	background-color: #ff3478;
-	border-color: #ff3478;
-}
-
-.additional-control:active {
-}
-
-.additional-control.delete:hover,
-.additional-control.delete:active,
-.additional-control.add:hover {
-}
-
-.additional-control.add:active {
-}
-
-.unlim-trigger {
-}
-
-.optional {
-}
+/* Login
+   ========================================================================== */
 
 .body-login,
 .body-reset {
 	background: #303030;
 	background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%);
 }
-
-/* Login
-   ========================================================================== */
 
 .login {
 	& .error {
@@ -711,7 +695,7 @@ strong {
 	color: #fff;
 }
 
-.login-label-link {
+.login-form-link {
 	color: #eee;
 	text-transform: initial;
 	font-weight: 400;
@@ -719,11 +703,6 @@ strong {
 	&:hover {
 		color: #ff3478;
 	}
-}
-
-.section-title {
-	color: #d4d4d4;
-	border-bottom-color: #484848;
 }
 
 .qr-code {

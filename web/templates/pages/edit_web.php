@@ -110,7 +110,7 @@
 						</div>
 						<div class="u-mb20">
 							<label for="v_password" class="form-label">
-								<?= _("Password") ?> / <a href="javascript:WEBrandom();" class="generate"><?= _("generate") ?></a>
+								<?= _("Password") ?> / <a href="javascript:WEBrandom();" class="form-link"><?= _("generate") ?></a>
 							</label>
 							<div class="u-pos-relative">
 								<input type="text" class="form-control js-password-input" name="v_stats_password" id="v_password" value="<?= trim($v_stats_password, "'") ?>">
@@ -191,7 +191,7 @@
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
-							<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate CSR") ?></a></span>
+							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate CSR") ?></a></span>
 						</label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
@@ -239,7 +239,7 @@
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
-							<a x-on:click="showCertificates = !showCertificates" href="#" class="generate"><?= _("Show Certificate") ?></a>
+							<a x-on:click="showCertificates = !showCertificates" href="#" class="form-link"><?= _("Show Certificate") ?></a>
 						</p>
 					</ul>
 				<?php } ?>
@@ -387,7 +387,8 @@
 						?>
 						<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;">
 							<div class="u-mb10">
-								<?= _("FTP") ?> #<span class="ftp-user-number"><?=$i + 1; ?></span> <a class="additional-control delete" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
+								<?= _("FTP") ?> #<span class="ftp-user-number"><?=$i + 1; ?></span>
+								<a class="form-link form-link-danger" href="#" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
 								<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
 								<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
 							</div>
@@ -403,7 +404,7 @@
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?=$i ?>][v_ftp_password]" class="form-label">
-									<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="generate"><?= _("generate") ?></a>
+									<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("generate") ?></a>
 								</label>
 								<input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[<?=$i ?>][v_ftp_password]" id="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
 							</div>
@@ -426,7 +427,7 @@
 
 					<div class="js-add-new-ftp-user-button" style="<?=!empty($v_ftp_user) ? '' : 'display:none;' ?>">
 						<div class="u-pt18 v-add-new-user">
-							<a class="additional-control add" onclick="App.Actions.WEB.add_ftp_user_form()"><?= _("Add one more FTP Account") ?></a>
+							<a class="form-link" onclick="App.Actions.WEB.add_ftp_user_form()"><?= _("Add one more FTP Account") ?></a>
 						</div>
 					</div>
 				<?php } ?>
@@ -440,7 +441,8 @@
 <div id="templates" class="u-hidden">
 	<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
 		<div class="u-mb10">
-			<?= _("FTP") ?> #<span class="ftp-user-number"></span> <a class="additional-control delete" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
+			<?= _("FTP") ?> #<span class="ftp-user-number"></span>
+			<a class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
 			<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
 			<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
 		</div>
@@ -454,7 +456,7 @@
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_password]" class="form-label">
-				<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="generate"><?= _("generate") ?></a>
+				<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("generate") ?></a>
 			</label>
 			<input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
 		</div>

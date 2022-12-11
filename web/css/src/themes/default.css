@@ -1815,22 +1815,34 @@
 	border-color: #cfcfcf;
 }
 
-.generate {
+.form-link {
 	color: #326b9b;
-	text-decoration: underline;
 	cursor: pointer;
+	text-decoration: underline;
+	font-weight: 600;
+	border-radius: 4px;
 	margin-left: -3px;
-	padding: 0 3px;
+	padding-left: 3px;
+	padding-right: 3px;
 
 	&:hover {
-		background-color: #c36;
-		border-color: #c36;
+		text-decoration: none;
 		color: #fff;
+		background-color: #3b9de8;
+	}
+
+	&:active {
+		background-color: #54a6e5;
+	}
+}
+
+.form-link-danger {
+	&:hover {
+		background-color: #c36;
 	}
 
 	&:active {
 		background-color: #f7d616;
-		border-color: #f7d616;
 	}
 }
 
@@ -1877,6 +1889,21 @@
 	}
 }
 
+.unlim-trigger {
+	cursor: pointer;
+	position: absolute;
+	top: 13px;
+	right: 12px;
+	z-index: 1;
+	font-size: 0.8rem;
+}
+
+.optional {
+	font-size: 0.8rem;
+	margin-left: 6px;
+	font-weight: normal;
+}
+
 .hint {
 	color: #777;
 	font-size: 0.8rem;
@@ -1887,6 +1914,19 @@
 .hint-prefix {
 	color: #555;
 	font-size: 0.8rem;
+}
+
+.section-title {
+	display: flex;
+	color: #4b4b4b;
+	cursor: pointer;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 1.05rem;
+	font-weight: 600;
+	padding-top: 28px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #ccc;
 }
 
 /* Modals
@@ -2128,53 +2168,6 @@
 	right: 110px;
 }
 
-.additional-control {
-	color: #326b9b;
-	border-bottom: 0 solid #326b9b;
-	font-size: 0.8rem;
-	cursor: pointer;
-	text-transform: uppercase;
-	font-weight: 600;
-	padding: 2px 2px 0;
-	text-decoration: none;
-
-	&:hover {
-		background-color: #c36;
-		border-color: #c36;
-		color: #fff;
-	}
-
-	&:active {
-		color: #fff;
-		background-color: #aaa;
-	}
-}
-
-.additional-control.add:hover {
-	background-color: #3b9de8;
-	border-color: #3b9de8;
-}
-
-.additional-control.add:active {
-	background-color: #54a6e5;
-	border-color: #54a6e5;
-}
-
-.unlim-trigger {
-	cursor: pointer;
-	position: absolute;
-	top: 13px;
-	right: 12px;
-	z-index: 1;
-	font-size: 0.8rem;
-}
-
-.optional {
-	font-size: 0.8rem;
-	margin-left: 6px;
-	font-weight: normal;
-}
-
 /* Values List component
    ========================================================================== */
 
@@ -2349,7 +2342,7 @@
 	}
 }
 
-.login-label-link {
+.login-form-link {
 	color: #fff;
 	text-transform: uppercase;
 
@@ -2360,19 +2353,6 @@
 			color: #0077c6;
 		}
 	}
-}
-
-.section-title {
-	display: flex;
-	color: #4b4b4b;
-	cursor: pointer;
-	justify-content: space-between;
-	align-items: center;
-	font-size: 1.05rem;
-	font-weight: 600;
-	padding-top: 28px;
-	padding-bottom: 12px;
-	border-bottom: 1px solid #ccc;
 }
 
 .qr-code {

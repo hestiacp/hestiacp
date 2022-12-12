@@ -127,7 +127,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("Web Domains") ?>: <?= $data[$key]["WEB_DOMAINS"] ?>">
+					<span class="badge" title="<?= _("Web Domains") ?>: <?= $data[$key]["WEB_DOMAINS"] ?>">
 						<?php if ($data[$key]["WEB_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>
@@ -136,7 +136,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("Web Aliases") ?>: <?= $data[$key]["WEB_ALIASES"] ?>">
+					<span class="badge" title="<?= _("Web Aliases") ?>: <?= $data[$key]["WEB_ALIASES"] ?>">
 						<?php if ($data[$key]["WEB_ALIASES"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>
@@ -145,7 +145,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("DNS Domains") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
+					<span class="badge" title="<?= _("DNS Domains") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
 						<?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>
@@ -154,7 +154,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
+					<span class="badge" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
 						<?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>
@@ -163,7 +163,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
+					<span class="badge" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
 						<?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>
@@ -172,7 +172,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
+					<span class="badge" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
 						<?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>
@@ -181,7 +181,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("Databases") ?>: <?= $data[$key]["DATABASES"] ?>">
+					<span class="badge" title="<?= _("Databases") ?>: <?= $data[$key]["DATABASES"] ?>">
 						<?php if ($data[$key]["DATABASES"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>
@@ -190,7 +190,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("Cron Jobs") ?>: <?= $data[$key]["CRON_JOBS"] ?>">
+					<span class="badge" title="<?= _("Cron Jobs") ?>: <?= $data[$key]["CRON_JOBS"] ?>">
 						<?php if ($data[$key]["CRON_JOBS"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>
@@ -199,7 +199,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="jump-top badge gray raised" title="<?= _("Backups") ?>: <?= $data[$key]["BACKUPS"] ?>">
+					<span class="badge" title="<?= _("Backups") ?>: <?= $data[$key]["BACKUPS"] ?>">
 						<?php if ($data[$key]["BACKUPS"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>

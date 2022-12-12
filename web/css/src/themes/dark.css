@@ -739,56 +739,22 @@ form#vstobjects.suspended {
 	background-color: #282828;
 }
 
+/* Badge component
+   ========================================================================== */
+
 .badge {
+	color: #dadada;
+	border-color: #212121;
 	box-shadow: 0 1px 2px rgb(70 70 70 / 50%), inset 0 2px 2px rgb(0 0 0 / 65%);
-	text-shadow: 0 1px 2px rgb(0 0 0 / 50%);
-	border: 1px solid #212121 !important;
-}
-
-.badge.large {
-}
-
-.badge.raised {
-	background: radial-gradient(ellipse at center, rgb(40 40 40 / 20%) 0%, rgb(80 80 80 / 5%) 100%);
+	text-shadow: 0 1px rgb(0 0 0 / 70%);
+	background-color: #252525;
 }
 
 .l-unit--suspended .badge {
-	background: #303030 !important;
-	color: #808080 !important;
-	text-shadow: 0 -1px rgb(0 0 0 / 40%) !important;
-	box-shadow: 0 1px 2px rgb(25 25 25 / 30%) !important;
-}
-
-.badge.gray {
-	border: 1px solid #181818;
-	background-color: #252525;
-	color: #dadada;
-	text-shadow: 0 1px rgb(0 0 0 / 70%) !important;
-}
-
-.badge.blue {
-}
-
-.badge.purple {
-}
-
-.badge.teal {
-}
-
-.badge.maroon {
-	background-color: #ff3478;
-}
-
-.badge.red {
-}
-
-.badge.orange {
-}
-
-.badge.green {
-}
-
-.badge.lightblue {
+	background-color: #303030;
+	color: #808080;
+	text-shadow: 0 -1px rgb(0 0 0 / 40%);
+	box-shadow: 0 1px 2px rgb(25 25 25 / 30%);
 }
 
 .status-icon.large {

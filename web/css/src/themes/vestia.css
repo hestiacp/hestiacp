@@ -373,11 +373,13 @@ strong {
 	letter-spacing: 0 !important;
 }
 
+/* Badge component
+   ========================================================================== */
+
 .badge {
-	border: none !important;
-	background-color: none !important;
-	box-shadow: none !important;
-	border-radius: 4px !important;
+	border: none;
+	box-shadow: none;
+	border-radius: 4px;
 }
 
 /* Shortcuts panel
@@ -406,14 +408,14 @@ strong {
 	border-radius: 0;
 }
 
-.helper-container {
-	margin-top: 197px;
+.cron-helper-container {
+	margin-top: 201px;
 	border-radius: 0;
 	box-shadow: none;
 }
 
 .cron-helper-tabs .ui-tabs-selected a,
-li[aria-expanded="true"] a {
+.ui-tabs-tab[aria-expanded="true"] a {
 	color: #ff6701;
 }
 

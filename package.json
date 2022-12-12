@@ -23,8 +23,8 @@
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.19.2",
-		"@typescript-eslint/eslint-plugin": "^5.46.0",
-		"@typescript-eslint/parser": "^5.46.0",
+		"@typescript-eslint/eslint-plugin": "^5.46.1",
+		"@typescript-eslint/parser": "^5.46.1",
 		"cssnano": "^5.1.14",
 		"eslint": "^8.29.0",
 		"eslint-config-prettier": "^8.5.0",
@@ -32,7 +32,7 @@
 		"husky": "^8.0.2",
 		"lint-staged": "^13.1.0",
 		"markdownlint-cli2": "^0.5.1",
-		"postcss": "^8.4.19",
+		"postcss": "^8.4.20",
 		"postcss-cli": "^10.1.0",
 		"postcss-import": "^15.1.0",
 		"postcss-preset-env": "^7.8.3",
@@ -45,7 +45,7 @@
 		"stylelint-config-prettier": "^9.0.4",
 		"stylelint-config-standard": "^29.0.0",
 		"typescript": "^4.9.4",
-		"vitepress": "1.0.0-alpha.30",
+		"vitepress": "1.0.0-alpha.31",
 		"vue": "^3.2.45"
 	}
 }

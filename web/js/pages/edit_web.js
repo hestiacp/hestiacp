@@ -22,6 +22,7 @@ App.Listeners.DB.keypress_custom_folder = function () {
 App.Listeners.DB.change_custom_doc = function () {
 	var ref = $('select[name="v-custom-doc-domain"]');
 	var current_rec = ref.val();
+
 	ref.bind('change select', function (evt) {
 		clearTimeout(window.frp_usr_tmt);
 		window.frp_usr_tmt = setTimeout(function () {
@@ -254,7 +255,7 @@ $(function () {
 		}
 	});
 
-	$('#vstobjects').on('submit', function (evt) {
+	document.getElementById('vstobjects').addEventListener('submit', function () {
 		$('input[disabled]').each(function (i, elm) {
 			var copy_elm = $(elm).clone(true);
 			$(copy_elm).attr('type', 'hidden');

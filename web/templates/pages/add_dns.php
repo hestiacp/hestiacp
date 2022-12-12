@@ -83,7 +83,9 @@
 					</div>
 				<?php } ?>
 				<div class="u-mb20 u-mt20">
-					<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?= _("Advanced options") ?></a>
+					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
+						<?= _("Advanced options") ?>
+					</button>
 				</div>
 				<div x-cloak  x-show="showAdvanced" id="advtable">
 					<div class="form-check u-mb10">

@@ -185,25 +185,6 @@ strong {
 	}
 }
 
-/* Inline alerts
-   ========================================================================== */
-
-.inline-danger {
-	color: #f33;
-}
-
-.inline-success {
-	color: #53ba55;
-
-	& a {
-		color: #fff;
-
-		&:hover {
-			color: #ff3478;
-		}
-	}
-}
-
 /* Toolbar
    ========================================================================== */
 
@@ -960,6 +941,25 @@ form#vstobjects.suspended {
 	text-shadow: 0 1px rgb(0 0 0 / 40%);
 	box-shadow: inset 0 0 2px rgb(0 0 0 / 50%), 0 2px 6px rgb(0 0 0 / 40%);
 	color: #fff;
+}
+
+/* Inline alerts
+   ========================================================================== */
+
+.inline-danger {
+	color: #f33;
+}
+
+.inline-success {
+	color: #53ba55;
+
+	& a {
+		color: #fff;
+
+		&:hover {
+			color: #ff3478;
+		}
+	}
 }
 
 /* Debug panel

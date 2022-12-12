@@ -245,9 +245,11 @@
 				<?php } ?>
 			</div>
 			<div class="u-mt15 u-mb20">
-				<a x-on:click="showAdvanced = !showAdvanced" href="#" class="button button-secondary"><?= _("Advanced options") ?></a>
+				<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
+					<?= _("Advanced options") ?>
+				</button>
 			</div>
-			<div x-cloak x-show="showAdvanced" id="advanced-opts">
+			<div x-cloak x-show="showAdvanced">
 				<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] === 'yes')) { ?>
 					<div class="u-mb10">
 						<label for="v_template" class="form-label">

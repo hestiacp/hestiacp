@@ -54,7 +54,7 @@ App.Listeners.MAIL_ACC.init = function () {
 // Trigger listeners
 App.Listeners.MAIL_ACC.init();
 App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
-$('#v_blackhole').on('click', function (evt) {
+$('#v_blackhole').on('click', function () {
 	if ($('#v_blackhole').is(':checked')) {
 		$('#v_fwd').prop('disabled', true);
 		$('#v_fwd_for').prop('checked', true);
@@ -64,7 +64,7 @@ $('#v_blackhole').on('click', function (evt) {
 		$('#id_fwd_for').show();
 	}
 });
-$('form[name="v_quota"]').on('submit', function (evt) {
+$('form[name="v_quota"]').on('submit', function () {
 	$('input:disabled').each(function (i, elm) {
 		$(elm).attr('disabled', false);
 		if (Alpine.store('globals').isUnlimitedValue($(elm).val())) {
@@ -122,7 +122,6 @@ applyRandomPassword = function (min_length = 16) {
 generate_mail_credentials = function () {
 	var div = $('.js-mail-info').clone();
 	div.find('#mail_configuration').remove();
-	var pass = $('.js-password-output').text();
 	var output = div.text();
 	output = output.replace(/(?:\r\n|\r|\n|\t)/g, '|');
 	output = output.replace(/ {2}/g, '');

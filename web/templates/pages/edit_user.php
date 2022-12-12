@@ -219,9 +219,11 @@
 					</select>
 				</div>
 				<div class="u-mb20">
-					<a x-on:click="showAdvanced = !showAdvanced"href="#" class="button button-secondary"><?= _("Advanced options") ?></a>
+					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
+						<?= _("Advanced options") ?>
+					</button>
 				</div>
-				<div x-cloak x-show="showAdvanced" id="advanced-opts">
+				<div x-cloak x-show="showAdvanced">
 					<div class="u-mb10">
 						<label for="v_shell" class="form-label"><?= _("SSH Access") ?></label>
 						<select class="form-select" name="v_shell" id="v_shell">

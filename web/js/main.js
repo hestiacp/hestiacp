@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Cookies = {
 	/**
 	 * Creates a cookie.
@@ -52,6 +53,7 @@ const Cookies = {
  * @throws {Error} if length is too small to create a "sufficiently secure" string
  * @returns {string}
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function randomString(length = 16) {
 	const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 

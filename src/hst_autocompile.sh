@@ -564,7 +564,7 @@ if [ "$PHP_B" = true ]; then
 
 		# Build the package
 		echo Building PHP DEB
-		[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb --build $BUILD_DIR_HESTIAPHP $DEB_DIR
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
 		dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
 	fi
 

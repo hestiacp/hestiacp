@@ -95,9 +95,11 @@
 					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= htmlentities(trim($v_db_email, "'")) ?>">
 				</div>
 				<div class="u-mb20">
-					<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?= _("Advanced options") ?></a>
+					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
+						<?= _("Advanced options") ?>
+					</button>
 				</div>
-				<div x-cloak x-show="showAdvanced" id="advanced-opts">
+				<div x-cloak x-show="showAdvanced">
 					<div class="u-mb10">
 						<label for="v_host" class="form-label"><?= _("Host") ?></label>
 						<select class="form-select" name="v_host" id="v_host">

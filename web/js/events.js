@@ -44,43 +44,6 @@ const VE = {
 			menu_selector: '.main-menu-item',
 			menu_active_selector: '.active',
 		},
-		/**
-		 * Create dialog box on the fly
-		 * @param elm Element which contains the dialog contents
-		 * @param dialog_title
-		 * @param confirmed_location_url URL that will be redirected to if user hit "OK"
-		 * @param custom_config Custom configuration parameters passed to dialog initialization (optional)
-		 */
-		createConfirmationDialog: (elm, dialog_title, confirmed_location_url, custom_config) => {
-			custom_config = custom_config ?? {};
-			const default_config = {
-				modal: true,
-				//autoOpen: true,
-				resizable: false,
-				width: 360,
-				title: dialog_title,
-				close: function () {
-					$(this).dialog('destroy');
-				},
-				buttons: {
-					OK: function (event, ui) {
-						location.href = confirmed_location_url;
-					},
-					Cancel: function () {
-						$(this).dialog('close');
-					},
-				},
-				create: function () {
-					const buttonGroup = $(this).closest('.ui-dialog').find('.ui-dialog-buttonset');
-					buttonGroup.find('button:first').addClass('button submit');
-					buttonGroup.find('button:last').addClass('button button-secondary cancel');
-				},
-			};
-
-			const reference_copied = $(elm[0]).clone();
-			const config = { ...default_config, ...custom_config };
-			$(reference_copied).dialog(config);
-		},
 		enter_focused: () => {
 			if ($('.units').hasClass('active')) {
 				location.href = $(
@@ -229,6 +192,43 @@ const VE = {
 		},
 	},
 	helpers: {
+		/**
+		 * Create dialog box on the fly
+		 * @param elm Element which contains the dialog contents
+		 * @param dialog_title
+		 * @param confirmed_location_url URL that will be redirected to if user hit "OK"
+		 * @param custom_config Custom configuration parameters passed to dialog initialization (optional)
+		 */
+		createConfirmationDialog: (elm, dialog_title, confirmed_location_url, custom_config) => {
+			custom_config = custom_config ?? {};
+			const default_config = {
+				modal: true,
+				//autoOpen: true,
+				resizable: false,
+				width: 360,
+				title: dialog_title,
+				close: function () {
+					$(this).dialog('destroy');
+				},
+				buttons: {
+					OK: function () {
+						location.href = confirmed_location_url;
+					},
+					Cancel: function () {
+						$(this).dialog('close');
+					},
+				},
+				create: function () {
+					const buttonGroup = $(this).closest('.ui-dialog').find('.ui-dialog-buttonset');
+					buttonGroup.find('button:first').addClass('button submit');
+					buttonGroup.find('button:last').addClass('button button-secondary cancel');
+				},
+			};
+
+			const reference_copied = $(elm[0]).clone();
+			const config = { ...default_config, ...custom_config };
+			$(reference_copied).dialog(config);
+		},
 		warn: (msg) => {
 			alert('WARNING: ' + msg);
 		},

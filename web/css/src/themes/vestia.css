@@ -133,6 +133,10 @@ strong {
 	box-shadow: none;
 }
 
+.l-unit__name {
+	letter-spacing: 0 !important;
+}
+
 /* Buttons
    ========================================================================== */
 
@@ -369,15 +373,11 @@ strong {
 	margin-right: 0;
 }
 
-.l-unit__name {
-	letter-spacing: 0 !important;
-}
-
 /* Badge component
    ========================================================================== */
 
 .badge {
-	border: none;
+	border-color: #eaeaea;
 	box-shadow: none;
 	border-radius: 4px;
 }
@@ -394,10 +394,6 @@ strong {
 .shortcuts-title,
 .shortcuts .key {
 	color: #b5da0b;
-}
-
-.badge.gray {
-	border: 1px solid rgb(255 255 255 / 40%) !important;
 }
 
 /* Panel component

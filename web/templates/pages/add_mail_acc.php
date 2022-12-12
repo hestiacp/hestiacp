@@ -59,7 +59,9 @@
 						<li><?= _("1 number") ?></li>
 					</ul>
 					<div class="u-pt18 u-mb20">
-						<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?= _("Advanced options") ?></a>
+						<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
+							<?= _("Advanced options") ?>
+						</button>
 					</div>
 					<div x-cloak x-show="showAdvanced" id="advtable">
 						<div class="u-mb10">

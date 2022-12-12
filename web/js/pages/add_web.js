@@ -37,11 +37,9 @@ App.Listeners.WEB.keypress_ftp_username = function () {
 };
 
 App.Listeners.WEB.keypress_domain_name = function () {
-	$('#v_domain').bind('keypress input', function (evt) {
+	$('#v_domain').bind('keypress input', function () {
 		clearTimeout(window.frp_usr_tmt);
 		window.frp_usr_tmt = setTimeout(function () {
-			//var elm = $(evt.target);
-			//App.Actions.WEB.update_ftp_username_hint(elm, $(elm).val());
 			var domain = $('.js-ftp-path-prefix').text(
 				Alpine.store('globals').FTP_USER_PREPATH + '/' + $('#v_domain').val()
 			);
@@ -99,7 +97,7 @@ function WEBrandom() {
 	document.v_add_web.v_stats_password.value = randomString(16);
 }
 
-$('#vstobjects').on('submit', function (evt) {
+document.getElementById('vstobjects').addEventListener('submit', function () {
 	$('input[disabled]').each(function (i, elm) {
 		$(elm).removeAttr('disabled');
 	});

@@ -1,7 +1,7 @@
-function applyRandomPassword(min_length = 16) {
-	document.querySelector('input[name=v_password]').value = randomString(min_length);
+applyRandomPassword = function (min_length = 16) {
+	$('input[name=v_password]').val(randomString(min_length));
 	App.Actions.WEB.update_password_meter();
-}
+};
 
 App.Actions.WEB.update_password_meter = () => {
 	/**

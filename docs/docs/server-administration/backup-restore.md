@@ -90,13 +90,13 @@ If using public and private keys (recommended):
 v-add-backup-host 'sftp' 'remote.ftp-host.ltd' 'backup-user' '/root/id_rsa' '/path-backups/' 'port'
 ```
 
-## How to setup rclone
+## How to setup Rclone
 
 ::: tip
 Initial configuration can only be done via CLI. After that, you can update the settings via the web panel.
 :::
 
-First, download [rclone](https://rclone.org/downloads/). The easiest method is to run this command:
+First, [download Rclone](https://rclone.org/downloads/). The easiest method is to run this command:
 
 ```bash
 sudo -v

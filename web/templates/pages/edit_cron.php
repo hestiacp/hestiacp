@@ -17,7 +17,7 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<div class="helper-container">
+	<div class="cron-helper-container">
 		<div id="tabs" class="cron-helper-tabs">
 			<ul>
 				<li><a href="#tabs-1"><?= _("Minutes") ?></a></li>

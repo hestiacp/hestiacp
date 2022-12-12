@@ -860,14 +860,10 @@ form#vstobjects.suspended {
 	border-bottom: 1px solid #353535;
 }
 
-.helper-container {
+.cron-helper-container {
 	box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
 	border: 1px solid #606060;
 	background-color: #454545;
-}
-
-.context-helper:active {
-	color: #ff3478;
 }
 
 .cron-helper-tabs a {
@@ -883,7 +879,7 @@ form#vstobjects.suspended {
 }
 
 .cron-helper-tabs .ui-tabs-selected a,
-li[aria-expanded="true"] a {
+.ui-tabs-tab[aria-expanded="true"] a {
 	color: #ff3478 !important;
 }
 

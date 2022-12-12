@@ -2510,7 +2510,7 @@ form#vstobjects.suspended {
 	text-shadow: 0 !important;
 }
 
-.helper-container {
+.cron-helper-container {
 	float: right;
 	margin-bottom: -450px;
 	margin-top: 202px;
@@ -2526,81 +2526,46 @@ form#vstobjects.suspended {
 	}
 }
 
-.context-helper {
-	text-transform: uppercase;
-	color: #777;
-	font-size: 0.8rem;
-	cursor: pointer;
-	font-weight: 600;
-	float: right;
-
-	&:hover {
-		color: #3b9de8;
-	}
-
-	&:active {
-		color: #c36;
-	}
-}
-
 .cron-helper-tabs {
 	border: none !important;
 	font-family: Exo, system-ui !important;
-}
 
-.cron-helper-tabs a {
-	color: #777;
-	font-weight: 600;
-	line-height: 30px;
-	padding: 0 12px;
-	text-transform: uppercase;
-}
+	& a {
+		color: #777;
+		font-weight: 600;
+		line-height: 30px;
+		padding: 0 12px;
+		text-transform: uppercase;
 
-.cron-helper-tabs a:hover {
-	color: #c36;
-}
+		&:hover {
+			color: #c36;
+		}
 
-.cron-helper-tabs a:active {
-	color: #3b9de8;
+		&:active {
+			color: #3b9de8;
+		}
+	}
+
+	& .form-label {
+		padding-right: 15px;
+		padding-left: 25px;
+
+		&.first {
+			display: inline-block;
+			width: 120px;
+			padding-left: 0;
+		}
+	}
+
+	& .form-select {
+		display: inline-block;
+		width: 384px;
+	}
 }
 
 .cron-helper-tabs .ui-tabs-selected a,
-li[aria-expanded="true"] a {
+.ui-tabs-tab[aria-expanded="true"] a {
 	color: #c36;
-}
-
-.cron-helper-tabs .form-label {
-	padding-right: 15px;
-	padding-left: 25px;
-}
-
-.cron-helper-tabs .form-label.first {
-	display: inline-block;
-	width: 120px;
-	padding-left: 0;
-}
-
-.cron-helper-tabs .form-select {
-	display: inline-block;
-	width: 384px;
-}
-
-.context-helper-close {
-	cursor: pointer;
-	float: right;
-	size: 46px 32px;
-	padding-top: 11px;
-	filter: contrast(50%);
-
-	&:hover {
-		background-color: #aaa;
-		filter: none;
-	}
-
-	&:active {
-		background-color: #999;
-		filter: none;
-	}
 }
 
 .server-console-output {

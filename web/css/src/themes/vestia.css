@@ -408,14 +408,14 @@ strong {
 	border-radius: 0;
 }
 
-.helper-container {
-	margin-top: 197px;
+.cron-helper-container {
+	margin-top: 201px;
 	border-radius: 0;
 	box-shadow: none;
 }
 
 .cron-helper-tabs .ui-tabs-selected a,
-li[aria-expanded="true"] a {
+.ui-tabs-tab[aria-expanded="true"] a {
 	color: #ff6701;
 }
 

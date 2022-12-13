@@ -73,19 +73,15 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php
-					if ( $i == 0) {
-						echo _('There are currently no banned IP addresses.');
-					} else {
-						printf(ngettext('%d banned IP address', '%d banned IP addresses', $i),$i);
-					}
-				?>
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php
+				if ( $i == 0) {
+					echo _('There are currently no banned IP addresses.');
+				} else {
+					printf(ngettext('%d banned IP address', '%d banned IP addresses', $i),$i);
+				}
+			?>
+		</p>
 	</div>
 </footer>

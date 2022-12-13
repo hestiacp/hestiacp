@@ -36,9 +36,4 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right"></div>
-		</div>
-	</div>
 </footer>

@@ -28,6 +28,7 @@ $dist_config["frontend_config"]["editable"] = [
 	".example",
 	".htaccess",
 	".twig",
+	".tpl"
 ];
 $dist_config["frontend_config"]["guest_redirection"] = "/login/";
 $dist_config["frontend_config"]["upload_max_size"] = 1024 * 1024 * 1024;

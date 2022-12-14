@@ -196,13 +196,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext("%d mail account", "%d mail accounts", $i), $i); ?>
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d mail account", "%d mail accounts", $i), $i); ?>
+		</p>
 	</div>
 </footer>

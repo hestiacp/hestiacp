@@ -250,6 +250,8 @@
 
 .top-bar-notification-delete {
 	display: none;
+	background-color: transparent;
+	border: 0;
 	padding-left: 5px;
 	padding-right: 5px;
 
@@ -263,8 +265,12 @@
 	}
 }
 
-.top-bar-notification-mark-all {
+.top-bar-notification-delete-all {
 	display: block;
+	background-color: transparent;
+	border: 0;
+	color: inherit;
+	width: 100%;
 	text-align: center;
 	padding: 10px 15px;
 
@@ -1011,11 +1017,6 @@
 	border-bottom: none;
 }
 
-.l-unit-ft {
-	color: #7c7c7c;
-	padding: 0 0 0 15px;
-}
-
 .l-unit:hover .l-unit-toolbar__col--right {
 	display: block;
 }
@@ -1130,10 +1131,6 @@
 
 .l-unit__col--right.total {
 	padding-left: 16px;
-}
-
-.l-unit__col--right.back {
-	padding-left: 78px;
 }
 
 .l-unit__suspended {
@@ -2475,10 +2472,21 @@ form#vstobjects.suspended {
 }
 
 .app-footer {
+	color: #7c7c7c;
 	border-top: 1px solid #ddd;
 	font-size: 0.8rem;
-	padding-top: 30px;
-	padding-bottom: 30px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+
+	@media (--viewport-medium) {
+		padding-top: 40px;
+		padding-bottom: 40px;
+	}
+}
+
+.app-footer-inner {
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 /* Collapse component

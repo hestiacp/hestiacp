@@ -83,11 +83,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit_col l-unit_col--right clearfix">
-				<?php printf(ngettext("%d log record", "%d log records", $i), $i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d log record", "%d log records", $i), $i); ?>
+		</p>
 	</div>
 </footer>

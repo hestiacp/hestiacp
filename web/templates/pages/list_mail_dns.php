@@ -113,12 +113,4 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
-	</div>
 </footer>

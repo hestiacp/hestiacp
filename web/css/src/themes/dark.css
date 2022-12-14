@@ -375,10 +375,6 @@ strong {
 .units > div:last-child {
 }
 
-.l-unit-ft {
-	color: #cdcdcd;
-}
-
 .l-unit:hover .l-unit-toolbar__col--right {
 }
 
@@ -909,6 +905,7 @@ form#vstobjects.suspended {
 }
 
 .app-footer {
+	color: #cdcdcd;
 	border-color: #454545;
 }
 

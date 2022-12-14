@@ -74,5 +74,4 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container"></div>
 </footer>

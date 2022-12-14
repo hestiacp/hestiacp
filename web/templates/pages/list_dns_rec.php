@@ -138,13 +138,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right total clearfix">
-				<?php printf(ngettext("%d DNS record", "%d DNS records", $i), $i); ?>
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d DNS record", "%d DNS records", $i), $i); ?>
+		</p>
 	</div>
 </footer>

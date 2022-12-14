@@ -34,7 +34,7 @@ export default defineConfig({
 		outline: [2, 3],
 
 		editLink: {
-			pattern: "https://github.com/hestiacp/hestiacp-docs/edit/main/docs/:path",
+			pattern: "https://github.com/hestiacp/hestiacp/edit/main/docs/docs/:path",
 			text: "Edit this page on GitHub",
 		},
 

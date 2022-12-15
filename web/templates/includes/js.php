@@ -1,7 +1,7 @@
 <script defer src="/js/main.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/shortcuts.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/alpine-3.10.5.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/vendor/jquery-3.6.1.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/vendor/jquery-3.6.2.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/jquery-ui.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/chart.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/events.js?<?= JS_LATEST_UPDATE ?>"></script>

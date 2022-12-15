@@ -2,10 +2,10 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 			<?php if ($read_only !== 'true') {?>
-				<a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i> <?= _("Add Record") ?></a>
-				<a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil status-icon blue"></i> <?= _("Editing DNS Domain") ?></a>
+				<a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i> <?= _("Add Record") ?></a>
+				<a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil icon-blue"></i> <?= _("Editing DNS Domain") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -110,11 +110,11 @@
 							&nbsp;
 						<?php } else { ?>
 							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>">
 									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 										<p><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>

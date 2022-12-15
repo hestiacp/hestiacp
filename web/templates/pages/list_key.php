@@ -2,11 +2,11 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/user/?token=<?= $_SESSION["token"] ?>"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/edit/user/?token=<?= $_SESSION["token"] ?>"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 						<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-						<a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add SSH Key") ?></a>
+						<a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?></a>
 						<?php } else { ?>
-			<a href="/add/key/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add SSH Key") ?></a>
+			<a href="/add/key/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?></a>
 						<?php } ?>
 		</div>
 	</div>
@@ -38,7 +38,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 									<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
 										<input type="hidden" name="delete_url" value="/delete/key/?user=<?=htmlentities($_GET['user']);?>&key=<?=$key?>&token=<?=$_SESSION['token']?>">
 									<?php } else { ?>

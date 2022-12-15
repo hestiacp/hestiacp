@@ -13,7 +13,7 @@ if (!empty($_POST["ok"])) { ?>
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/access-key/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 	</div>

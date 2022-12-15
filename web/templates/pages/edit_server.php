@@ -3,20 +3,20 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/server/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet status-icon blue"></i><?= _("IP") ?>
+				<i class="fas fa-ethernet icon-blue"></i><?= _("IP") ?>
 			</a>
 			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
 				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved status-icon red"></i><?= _("Firewall") ?>
+					<i class="fas fa-shield-halved icon-red"></i><?= _("Firewall") ?>
 				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -159,7 +159,7 @@
 						<p>
 							<?= _("Proxy Server") ?>: <span class="u-ml5"><?= $_SESSION["PROXY_SYSTEM"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 					<?php } ?>
@@ -167,7 +167,7 @@
 						<p>
 							<?= _("Web Server") ?>: <span class="u-ml5"><?= $_SESSION["WEB_SYSTEM"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 					<?php } ?>
@@ -175,7 +175,7 @@
 						<p>
 							<?= _("Backend Server") ?>: <span class="u-ml5"><?= $_SESSION["WEB_BACKEND"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 					<?php } ?>
@@ -245,7 +245,7 @@
 						<p>
 							<?= _("DNS Server") ?>: <span class="u-ml5"><?= $_SESSION["DNS_SYSTEM"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 						<p>
@@ -275,14 +275,14 @@
 						<p>
 							<?= _("Mail Server") ?>: <span class="u-ml5"><?= $_SESSION["MAIL_SYSTEM"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 						<?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
 							<p>
 								<?= _("Antivirus") ?>: <span class="u-ml5"><?= $_SESSION["ANTIVIRUS_SYSTEM"] ?></span>
 								<a href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/" class="u-ml5">
-									<i class="fas fa-pencil status-icon orange"></i>
+									<i class="fas fa-pencil icon-orange"></i>
 								</a>
 							</p>
 						<?php } ?>
@@ -290,7 +290,7 @@
 							<p>
 								<?= _("AntiSpam") ?>: <span class="u-ml5"><?= $_SESSION["ANTISPAM_SYSTEM"] ?></span>
 								<a href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/" class="u-ml5">
-									<i class="fas fa-pencil status-icon orange"></i>
+									<i class="fas fa-pencil icon-orange"></i>
 								</a>
 							</p>
 						<?php } ?>
@@ -341,7 +341,7 @@
 					<div class="collapse-content">
 						<div class="u-mb10">
 							<label for="v_mysql" class="form-label">
-								<?= _("MySQL Support") ?> <a href="/edit/server/mysql/" class="u-ml5"><i class="fas fa-pencil status-icon orange"></i></a>
+								<?= _("MySQL Support") ?> <a href="/edit/server/mysql/" class="u-ml5"><i class="fas fa-pencil icon-orange"></i></a>
 							</label>
 							<select class="form-select" name="v_mysql" id="v_mysql" disabled>
 								<option value="no"><?= _("No") ?></option>
@@ -398,7 +398,7 @@
 						<?php if ($v_pgsql == 'yes') { ?>
 							<div class="u-mb10">
 								<label for="v_pgsql" class="form-label">
-									<?= _("PostgreSQL Support") ?> <a href="/edit/server/postgresql/" class="u-ml5"><i class="fas fa-pencil status-icon orange"></i></a>
+									<?= _("PostgreSQL Support") ?> <a href="/edit/server/postgresql/" class="u-ml5"><i class="fas fa-pencil icon-orange"></i></a>
 								</label>
 								<select class="form-select" name="v_pgsql" id="v_pgsql" disabled>
 									<option value="no"><?= _("No") ?></option>
@@ -629,7 +629,7 @@
 						<?= _("System") ?>
 						<i
 							x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas status-icon dim maroon js-section-toggle-icon"
+							class="fas icon-dim icon-maroon js-section-toggle-icon"
 						></i>
 					</h2>
 					<div x-cloak x-show="showSystemOptions" id="security-system-table">
@@ -700,7 +700,7 @@
 							<?= _("System Protection") ?>
 							<i
 								x-bind:class="showProtectionOptions ? 'fa-square-minus' : 'fa-square-plus'"
-								class="fas status-icon dim maroon js-section-toggle-icon"
+								class="fas icon-dim icon-maroon js-section-toggle-icon"
 							></i>
 						</h2>
 						<div x-cloak x-show="showProtectionOptions" id="security-sysadminprotect-table">
@@ -734,7 +734,7 @@
 						<?= _("Policies") ?>
 						<i
 							x-bind:class="showPolicyOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas status-icon dim maroon js-section-toggle-icon"
+							class="fas icon-dim icon-maroon js-section-toggle-icon"
 						></i>
 					</h2>
 					<div x-cloak x-show="showPolicyOptions" id="security-policies-table">

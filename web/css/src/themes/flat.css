@@ -48,6 +48,15 @@ strong {
 	}
 }
 
+/* Toolbar
+   ========================================================================== */
+
+.toolbar-sorting-menu {
+	box-shadow: none;
+	border-color: #ccc;
+	background-color: #fff;
+}
+
 .table-header {
 	box-shadow: none;
 	background: #fafafa;
@@ -75,6 +84,14 @@ strong {
    ========================================================================== */
 
 .badge {
+	box-shadow: none;
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse-header {
+	background: #fafafa;
 	box-shadow: none;
 }
 
@@ -119,17 +136,19 @@ strong {
 	background: linear-gradient(to bottom, rgb(250 250 250 / 100%) 0%, rgb(241 241 241 / 100%) 100%);
 }
 
-.button-danger:hover {
-	background: #fcd3cf;
-	color: #f4301a;
-	border-color: #f27e71;
-}
+.button-danger {
+	&:hover {
+		background: #fcd3cf;
+		color: #f4301a;
+		border-color: #f27e71;
+	}
 
-.button-danger:active,
-.button-danger:focus {
-	background: #a91200;
-	color: #fff;
-	border-color: #f4301a;
+	&:active,
+	:focus {
+		background: #a91200;
+		color: #fff;
+		border-color: #f4301a;
+	}
 }
 
 /* Modals
@@ -141,15 +160,6 @@ strong {
 	& .ui-dialog-buttonpane button:nth-of-type(2) {
 		box-shadow: none;
 	}
-}
-
-/* Toolbar
-   ========================================================================== */
-
-.toolbar-sorting-menu {
-	box-shadow: none;
-	border-color: #ccc;
-	background-color: #fff;
 }
 
 /* Login
@@ -165,12 +175,4 @@ strong {
 		background-color: rgb(255 255 255 / 80%);
 		box-shadow: 0 2px 10px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255 / 100%);
 	}
-}
-
-/* Collapse component
-   ========================================================================== */
-
-.collapse-header {
-	background: #fafafa;
-	box-shadow: none;
 }

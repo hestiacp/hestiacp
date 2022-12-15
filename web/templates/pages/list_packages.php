@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
-			<a href="/add/package/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add Package") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a href="/add/package/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Package") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -81,15 +81,15 @@
 							<?php if (($key == 'system')) { ?>
 								<!-- Restrict editing system package -->
 							<?php } else {?>
-								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
-							<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Copy") ?>"><i class="fas fa-clone status-icon teal status-icon dim"></i></a></div>
+							<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Copy") ?>"><i class="fas fa-clone icon-teal icon-dim"></i></a></div>
 							<?php if ($key == 'system') { ?>
 								<!-- Restrict deleting system package -->
 							<?php } else {?>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("Delete") ?>">
-										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+										<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>">
 										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf(_('DELETE_PACKAGE_CONFIRMATION'),$key)?></p>
@@ -103,9 +103,9 @@
 				<!-- END QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left u-text-center compact">
 					<?php if ($data[$key]["SHELL"] == "nologin") { ?>
-						<i class="fas fa-circle-minus status-icon large" title="<?= _("SSH Access") ?>: <?= $data[$key]["SHELL"] ?>"> </i>
+						<i class="fas fa-circle-minus icon-large" title="<?= _("SSH Access") ?>: <?= $data[$key]["SHELL"] ?>"> </i>
 					<?php } else { ?>
-						<i class="fas fa-circle-check status-icon green large"></i>
+						<i class="fas fa-circle-check icon-green icon-large"></i>
 					<?php } ?>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center compact">

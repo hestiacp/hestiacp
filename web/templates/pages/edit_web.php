@@ -3,20 +3,20 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/web/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "u-hidden"; }?>" id="v-clear-cache">
-				<i class="fas fa-trash status-icon red"></i><?= _("Purge Nginx Cache") ?>
+				<i class="fas fa-trash icon-red"></i><?= _("Purge Nginx Cache") ?>
 			</a>
 			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
 				<a href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>" class="button button-secondary">
-					<i class="fas fa-magic status-icon blue"></i> <?= _("Quick Install App") ?>
+					<i class="fas fa-magic icon-blue"></i> <?= _("Quick Install App") ?>
 				</a>
 			<?php } ?>
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>

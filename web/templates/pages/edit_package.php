@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/package/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -67,7 +67,7 @@
 				<?= _("Web") ?>
 				<i
 					x-bind:class="showWebOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas status-icon dim maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon js-section-toggle-icon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showWebOptions" id="web-options">
@@ -144,7 +144,7 @@
 				<?= _("DNS") ?>
 				<i
 					x-bind:class="showDnsOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas status-icon dim maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon js-section-toggle-icon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showDnsOptions" id="dns-options">
@@ -195,37 +195,37 @@
 						if($v_ns3) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 							</div>';
 						}
 						if($v_ns4) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 							</div>';
 						}
 						if($v_ns5) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 							</div>';
 						}
 						if($v_ns6) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 							</div>';
 						}
 						if($v_ns7) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 							</div>';
 						}
 						if($v_ns8) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+								<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 							</div>';
 						}
 					?>
@@ -238,7 +238,7 @@
 				<?= _("Mail") ?>
 				<i
 					x-bind:class="showMailOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas status-icon dim maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon js-section-toggle-icon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showMailOptions" id="mail-options">
@@ -269,7 +269,7 @@
 				<?= _("Databases") ?>
 				<i
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas status-icon dim maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon js-section-toggle-icon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showDatabaseOptions" id="database-options">
@@ -285,7 +285,7 @@
 				<?= _("System") ?>
 				<i
 					x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas status-icon dim maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon js-section-toggle-icon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showSystemOptions" id="system-options">

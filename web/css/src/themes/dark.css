@@ -326,6 +326,37 @@ strong {
 	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
 }
 
+/* Server summary component
+   ========================================================================== */
+
+.server-summary-icon {
+	color: #707070;
+}
+
+.server-summary-title {
+	color: #fafafa;
+}
+
+/* Panel component
+		========================================================================== */
+
+.panel {
+	background-color: #454545;
+	border-color: #606060;
+	box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
+}
+
+/* Collapse component
+		========================================================================== */
+
+.collapse-header {
+	background: #454545;
+	border-color: #505050;
+	text-shadow: 0 1px rgb(0 0 0 / 40%);
+	box-shadow: inset 0 0 2px rgb(0 0 0 / 50%), 0 2px 6px rgb(0 0 0 / 40%);
+	color: #fff;
+}
+
 .l-unit {
 	color: #dadada;
 }
@@ -734,64 +765,57 @@ form#vstobjects.suspended {
 	box-shadow: 0 1px 2px rgb(25 25 25 / 30%);
 }
 
-.status-icon.large {
-}
+/* Icon component
+   ========================================================================== */
 
-.status-icon.yellow,
-.status-icon.yellow:hover {
-	color: #f3e72c;
-}
-
-.status-icon.teal,
-.status-icon.teal:hover {
-	color: #3cc;
-}
-
-.status-icon.purple,
-.status-icon.purple:hover {
+.icon-purple {
 	color: #c364ff;
+
+	&:hover {
+		color: #c364ff;
+	}
 }
 
-.status-icon.maroon,
-.status-icon.maroon:hover {
+.icon-maroon {
 	color: #ff3478;
+
+	&:hover {
+		color: #ff3478;
+	}
 }
 
-.status-icon.red,
-.status-icon.red:hover {
-}
-
-.status-icon.green,
-.status-icon.green:hover {
+.icon-green {
 	color: #37cf39;
+
+	&:hover {
+		color: #37cf39;
+	}
 }
 
-.status-icon.orange,
-.status-icon.orange:hover {
-}
-
-.status-icon.lightblue,
-.status-icon.lightblue:hover {
-}
-
-.status-icon.highlight,
-.status-icon.highlight:hover {
-	color: #dadada;
-}
-
-.status-icon.blue,
-.status-icon.blue:hover {
+.icon-blue {
 	color: #0092f4;
+
+	&:hover {
+		color: #0092f4;
+	}
 }
 
-.status-icon.dim {
+.icon-highlight {
+	color: #dadada;
+
+	&:hover {
+		color: #dadada;
+	}
+}
+
+.icon-dim {
 	color: #808080;
 	text-shadow: 1px 1px rgb(0 0 0 / 30%);
 }
 
-.l-unit--suspended .status-icon.dim {
-	color: #808080 !important;
-	text-shadow: 0 !important;
+.l-unit--suspended .icon-dim {
+	color: #808080;
+	text-shadow: 0;
 }
 
 /* Modals
@@ -907,37 +931,6 @@ form#vstobjects.suspended {
 .app-footer {
 	color: #cdcdcd;
 	border-color: #454545;
-}
-
-/* Server summary component
-   ========================================================================== */
-
-.server-summary-icon {
-	color: #707070;
-}
-
-.server-summary-title {
-	color: #fafafa;
-}
-
-/* Panel component
-   ========================================================================== */
-
-.panel {
-	background-color: #454545;
-	border-color: #606060;
-	box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
-}
-
-/* Collapse component
-   ========================================================================== */
-
-.collapse-header {
-	background: #454545;
-	border-color: #505050;
-	text-shadow: 0 1px rgb(0 0 0 / 40%);
-	box-shadow: inset 0 0 2px rgb(0 0 0 / 50%), 0 2px 6px rgb(0 0 0 / 40%);
-	color: #fff;
 }
 
 /* Inline alerts

@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/mail/?domain=<?= htmlentities(trim($v_domain, "'")) ?>&token=<?= $_SESSION["token"] ?>">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -43,7 +43,7 @@
 					<div class="u-mb10">
 						<label for="v_password" class="form-label">
 							<?= _("Password") ?>
-							<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
+							<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
 						</label>
 						<div class="u-pos-relative u-mb10">
 							<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>">

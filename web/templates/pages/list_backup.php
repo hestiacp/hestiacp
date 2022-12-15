@@ -3,8 +3,8 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/schedule/backup/?token=<?= $_SESSION["token"] ?>" class="button button-secondary"><i class="fas fa-circle-plus status-icon green"></i><?= _("Create Backup") ?></a>
-				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus status-icon orange"></i><?= _("backup exclusions") ?></a>
+				<a href="/schedule/backup/?token=<?= $_SESSION["token"] ?>" class="button button-secondary"><i class="fas fa-circle-plus icon-green"></i><?= _("Create Backup") ?></a>
+				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus icon-orange"></i><?= _("backup exclusions") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -92,12 +92,12 @@
 									<!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
 									&nbsp;
 								<?php } else { ?>
-									<div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("download") ?>"><i class="fas fa-file-arrow-down status-icon lightblue status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("download") ?>"><i class="fas fa-file-arrow-down icon-lightblue icon-dim"></i></a></div>
 									<?php if ($read_only !== 'true') {?>
-										<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
 										<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 											<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-												<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+												<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 												<input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>">
 												<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 													<p><?=sprintf(_('DELETE_BACKUP_CONFIRMATION'),$key)?></p>

@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/edit/web/?domain=<?= htmlentities($v_domain) ?>">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
@@ -18,12 +18,12 @@
 		<h1 class="form-title"><?= _("Quick Install App") ?></h1>
 		<?php
 			if (!empty($_SESSION['error_msg'])) {
-				$msg_icon = 'fa-circle-exclamation status-icon red';
+				$msg_icon = 'fa-circle-exclamation icon-red';
 				$msg_text = htmlentities($_SESSION['error_msg']);
 				$msg_class = 'inline-danger';
 			} else {
 				if (!empty($_SESSION['ok_msg'])) {
-					$msg_icon = 'fa-circle-check status-icon green';
+					$msg_icon = 'fa-circle-check icon-green';
 					$msg_text = $_SESSION['ok_msg'];
 					$msg_class = 'inline-success';
 				}

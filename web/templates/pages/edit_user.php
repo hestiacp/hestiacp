@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/user/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<?php
 				if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look'])) && ($_SESSION['user'] !== $v_username)) {
@@ -17,18 +17,18 @@
 				}
 			?>
 			<a href="<?=$ssh_key_url; ?>" class="button button-secondary" id="btn-create" title="<?= _("Manage SSH keys") ?>">
-				<i class="fas fa-key status-icon orange"></i><?= _("Manage SSH keys") ?>
+				<i class="fas fa-key icon-orange"></i><?= _("Manage SSH keys") ?>
 			</a>
 			<?php if ($_SESSION["userContext"] == "admin" || ($_SESSION["userContext"] !== "admin" && $_SESSION["POLICY_USER_VIEW_LOGS"] !== "no")) { ?>
 				<a href="<?= $log_url ?>" class="button button-secondary" id="btn-create" title="<?= _("Logs") ?>">
-					<i class="fas fa-clock-rotate-left status-icon maroon"></i><?= _("Logs") ?>
+					<i class="fas fa-clock-rotate-left icon-maroon"></i><?= _("Logs") ?>
 				</a>
 			<?php } ?>
 			<?php
 				$api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
 				if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
 				<a href="<?=$keys_url; ?>" class="button button-secondary" id="btn-create" title="<?= _("Access Keys") ?>">
-					<i class="fas fa-key status-icon purple"></i><?= _("Access Keys") ?>
+					<i class="fas fa-key icon-purple"></i><?= _("Access Keys") ?>
 				</a>
 			<?php } ?>
 		</div>
@@ -37,10 +37,10 @@
 				<!-- Do not show delete button for currently logged in user-->
 			<?} else {?>
 				<a href="/login/?loginas=<?= htmlentities($v_username) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary" id="btn-create" title="<?= _("login as") ?>">
-					<i class="fas fa-right-to-bracket status-icon maroon"></i><?= _("login as") ?>
+					<i class="fas fa-right-to-bracket icon-maroon"></i><?= _("login as") ?>
 				</a>
 				<a class="data-controls do_delete button button-secondary button-danger">
-					<i class="do_delete fas fa-circle-xmark status-icon red"></i>
+					<i class="do_delete fas fa-circle-xmark icon-red"></i>
 					<?= _("Delete") ?>
 					<input type="hidden" name="delete_url" value="/delete/user/?user=<?= htmlentities($v_username) ?>&token=<?= $_SESSION["token"] ?>">
 					<div class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
@@ -49,7 +49,7 @@
 				</a>
 			<?php } ?>
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -97,7 +97,7 @@
 			<div class="u-mb10">
 				<label for="v_password" class="form-label">
 					<?= _("Password") ?>
-					<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
+					<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
 				</label>
 				<div class="u-pos-relative u-mb10">
 					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>">
@@ -270,37 +270,37 @@
 							if($v_ns3) {
 								echo '<div class="u-side-by-side u-mb5">
 									<input type="text" class="form-control" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 								</div>';
 							}
 							if($v_ns4) {
 								echo '<div class="u-side-by-side u-mb5">
 									<input type="text" class="form-control" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 								</div>';
 							}
 							if($v_ns5) {
 								echo '<div class="u-side-by-side u-mb5">
 									<input type="text" class="form-control" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 								</div>';
 							}
 							if($v_ns6) {
 								echo '<div class="u-side-by-side u-mb5">
 									<input type="text" class="form-control" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 								</div>';
 							}
 							if($v_ns7) {
 								echo '<div class="u-side-by-side u-mb5">
 									<input type="text" class="form-control" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 								</div>';
 							}
 							if($v_ns8) {
 								echo '<div class="u-side-by-side u-mb5">
 									<input type="text" class="form-control" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash status-icon dim red"></i></span>
+									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
 								</div>';
 							}
 						?>

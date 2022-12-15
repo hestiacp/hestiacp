@@ -2,15 +2,15 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 			<?php
 				if($autoupdate == 'Enabled') {
 					$btn_url = '/delete/cron/autoupdate/?token='.$_SESSION['token'].'';
-					$btn_icon = 'fa-toggle-on status-icon green';
+					$btn_icon = 'fa-toggle-on icon-green';
 					$btn_label = _('Disable automatic updates');
 				} else {
 					$btn_url = '/add/cron/autoupdate/?token='.$_SESSION['token'].'';
-					$btn_icon = 'fa-toggle-off status-icon red';
+					$btn_icon = 'fa-toggle-off icon-red';
 					$btn_label = _('Enable automatic updates');
 				}
 			?>
@@ -64,7 +64,7 @@
 					<div class="clearfix l-unit__stat-col--left u-text-center wide"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
 					<div class="clearfix l-unit__stat-col--left u-text-center">
 						<?php if ($data[$key]['UPDATED'] == 'no') { echo '<i class="fas fa-triangle-exclamation" style="color: orange;"></i>'; } ?>
-						<?php if ($data[$key]['UPDATED'] == 'yes') { echo '<i class="fas fa-circle-check status-icon green"></i>'; } ?>
+						<?php if ($data[$key]['UPDATED'] == 'yes') { echo '<i class="fas fa-circle-check icon-green"></i>'; } ?>
 					</div>
 				</div>
 			</div>

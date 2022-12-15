@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/add/user/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add User") ?></a>
-			<a href="/list/package/" class="button button-secondary"><i class="fas fa-box-open status-icon orange"></i><?= _("Packages") ?></a>
+			<a href="/add/user/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add User") ?></a>
+			<a href="/list/package/" class="button button-secondary"><i class="fas fa-box-open icon-orange"></i><?= _("Packages") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -115,15 +115,15 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<?php if ($key == $user_plain) { ?>
-								<i class="fas fa-user-check status-icon status-icon dim icon-large" title="<?=$key?> (<?=$data[$key]['NAME']?>)"></i>
+								<i class="fas fa-user-check icon-dim" title="<?=$key?> (<?=$data[$key]['NAME']?>)"></i>
 							<?php } else { ?>
-								<a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$key?>"><i class="fas fa-right-to-bracket status-icon green status-icon dim icon-large"></i></a>
+								<a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$key?>"><i class="fas fa-right-to-bracket icon-green icon-dim"></i></a>
 							<?php } ?>
 							<?php if (($_SESSION['userContext'] === 'admin') && ($key == 'admin') && ($_SESSION['user'] != 'admin')) { ?>
 								<!-- Hide edit button from admin user when logged in with another admin user -->
 								&nbsp;
 							<?php } else { ?>
-								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<?php if ($key == 'admin') { ?>
 								<!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->
@@ -133,7 +133,7 @@
 								<?php } else { ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+										<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
 										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>">
 										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf($spnd_confirmation,$key)?></p>
@@ -142,7 +142,7 @@
 								</div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+										<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>">
 										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf(_('DELETE_USER_CONFIRMATION'),$key)?></p>

@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/user/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
-			<a href="/add/access-key/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add Access Key") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/edit/user/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a href="/add/access-key/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Access Key") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -78,7 +78,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/access-key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
 									<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 										<p><?= sprintf(_("DELETE_ACCESS_KEY_CONFIRMATION"), $key) ?></p>

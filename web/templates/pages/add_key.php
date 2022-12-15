@@ -4,17 +4,17 @@
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
 				<a class="button button-secondary" id="btn-back" href="/list/key/?user=<?= htmlentities($_GET["user"]) ?>">
-					<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 				</a>
 			<?php } else { ?>
 				<a class="button button-secondary" id="btn-back" href="/list/key/">
-					<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>

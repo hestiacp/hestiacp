@@ -107,6 +107,106 @@ strong {
 	font-size: 0.9rem;
 }
 
+/* Toolbar
+   ========================================================================== */
+
+.toolbar {
+	& .form-control {
+		&:hover {
+			border-right-color: #e95e00;
+		}
+
+		&:focus {
+			border-right-color: #e95e00;
+		}
+	}
+}
+
+.toolbar-sorting-menu {
+	box-shadow: none;
+	border-color: #ccc;
+	background-color: #fff;
+
+	& span {
+		&:hover {
+			color: #ff6701;
+			background: none;
+		}
+
+		&.active {
+			background: none;
+			font-weight: bold;
+			color: #444;
+		}
+	}
+}
+
+.toolbar-input-submit {
+	background-color: #cacaca;
+	border-radius: 0;
+	color: #fff;
+	text-shadow: 0 1px 2px rgb(0 0 0 / 35%);
+
+	&:hover {
+		color: #777;
+		background-color: #cacaca;
+		text-shadow: 0 1px 2px rgb(255 255 255 / 45%);
+	}
+
+	&:active {
+		text-shadow: none;
+		color: #a9cc06;
+	}
+}
+
+.toolbar-buttons {
+	& .button {
+		border-color: transparent;
+		color: #fff;
+		text-transform: uppercase;
+		text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
+		background: #a0c105;
+		background-color: #a0c105;
+
+		&:hover {
+			border-color: transparent;
+			color: #fff;
+			background: #a9cc06;
+			background-color: #a9cc06;
+			text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+		}
+	}
+
+	& .button-danger:hover {
+		color: #f4301a;
+		text-shadow: none;
+	}
+
+	& #btn-back {
+		color: #30659d;
+		background: none;
+		text-shadow: none;
+		text-transform: none;
+		font-size: 0.9rem;
+		border: none;
+
+		&:hover {
+			color: #367ac1;
+			background: none;
+			text-shadow: none;
+			text-transform: none;
+		}
+
+		&:active,
+		&:focus {
+			color: #ff6701;
+			background: none;
+			text-shadow: none;
+			text-transform: none;
+		}
+	}
+}
+
 .table-header {
 	box-shadow: none;
 	background: #fafafa;
@@ -237,106 +337,6 @@ strong {
 	color: #333;
 }
 
-/* Toolbar
-   ========================================================================== */
-
-.toolbar {
-	& .form-control {
-		&:hover {
-			border-right-color: #e95e00;
-		}
-
-		&:focus {
-			border-right-color: #e95e00;
-		}
-	}
-}
-
-.toolbar-sorting-menu {
-	box-shadow: none;
-	border-color: #ccc;
-	background-color: #fff;
-
-	& span {
-		&:hover {
-			color: #ff6701;
-			background: none;
-		}
-
-		&.active {
-			background: none;
-			font-weight: bold;
-			color: #444;
-		}
-	}
-}
-
-.toolbar-input-submit {
-	background-color: #cacaca;
-	border-radius: 0;
-	color: #fff;
-	text-shadow: 0 1px 2px rgb(0 0 0 / 35%);
-
-	&:hover {
-		color: #777;
-		background-color: #cacaca;
-		text-shadow: 0 1px 2px rgb(255 255 255 / 45%);
-	}
-
-	&:active {
-		text-shadow: none;
-		color: #a9cc06;
-	}
-}
-
-.toolbar-buttons {
-	& .button {
-		border-color: transparent;
-		color: #fff;
-		text-transform: uppercase;
-		text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
-		background: #a0c105;
-		background-color: #a0c105;
-
-		&:hover {
-			border-color: transparent;
-			color: #fff;
-			background: #a9cc06;
-			background-color: #a9cc06;
-			text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
-		}
-	}
-
-	& .button-danger:hover {
-		color: #f4301a;
-		text-shadow: none;
-	}
-
-	& #btn-back {
-		color: #30659d;
-		background: none;
-		text-shadow: none;
-		text-transform: none;
-		font-size: 0.9rem;
-		border: none;
-
-		&:hover {
-			color: #367ac1;
-			background: none;
-			text-shadow: none;
-			text-transform: none;
-		}
-
-		&:active,
-		&:focus {
-			color: #ff6701;
-			background: none;
-			text-shadow: none;
-			text-transform: none;
-		}
-	}
-}
-
 /* Forms
    ========================================================================== */
 
@@ -348,6 +348,10 @@ strong {
 .form-select {
 	box-shadow: none;
 	border-radius: 0;
+
+	&:hover {
+		border-color: #e95e00;
+	}
 }
 
 .form-control:focus {
@@ -359,11 +363,6 @@ strong {
 .form-select:focus {
 	border-color: #ff6701;
 	color: #333;
-}
-
-.form-control:hover,
-.form-select:hover {
-	border-color: #e95e00;
 }
 
 .password-meter {
@@ -402,6 +401,23 @@ strong {
 .panel {
 	box-shadow: none;
 	border-radius: 0;
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse-header {
+	background: #fafafa;
+	box-shadow: none;
+	color: #444;
+
+	&:hover {
+		color: #ff791f;
+	}
+
+	& .fas {
+		display: none;
+	}
 }
 
 .cron-helper-container {
@@ -449,21 +465,4 @@ strong {
 
 .login-form-link {
 	color: #326b9b;
-}
-
-/* Collapse component
-   ========================================================================== */
-
-.collapse-header {
-	background: #fafafa;
-	box-shadow: none;
-	color: #444;
-
-	&:hover {
-		color: #ff791f;
-	}
-
-	& .fas {
-		display: none;
-	}
 }

@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) { ?>
-				<a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars status-icon lightblue"></i><?= _("Overall Statistics") ?></a>
+				<a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars icon-lightblue"></i><?= _("Overall Statistics") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -61,7 +61,7 @@
 					</div>
 				</div>
 				<div class="l-unit__col l-unit__col--left clearfix">
-					<i class="fas fa-chart-bar status-icon dim" style="font-size: 3em;margin-left: 20px;margin-top: 10px;"></i>
+					<i class="fas fa-chart-bar icon-dim" style="font-size: 3em;margin-left: 20px;margin-top: 10px;"></i>
 				</div>
 				<div class="l-unit__col l-unit__col--right">
 					<div class="l-unit__name separate">
@@ -75,7 +75,7 @@
 									<div class="l-unit__stat-cols clearfix">
 										<div class="l-unit__stat-cols clearfix graph">
 											<div class="l-unit__stat-col l-unit__stat-col--left">
-												<i class="fas fa-right-left status-icon dim large icon-pad-right" title="<?= _("Bandwidth") ?>"></i><b><?= _("Bandwidth") ?></b>
+												<i class="fas fa-right-left icon-dim icon-large icon-pad-right" title="<?= _("Bandwidth") ?>"></i><b><?= _("Bandwidth") ?></b>
 											</div>
 											<div class="l-unit__stat-col l-unit__stat-col--right u-text-right">
 												<b><?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?></b> <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
@@ -133,7 +133,7 @@
 							<tr>
 								<td>
 									<div class="l-unit__stat-cols clearfix graph">
-										<div class="l-unit__stat-col l-unit__stat-col--left"><i class="fas fa-hard-drive status-icon dim large icon-pad-right" title="<?= _("Disk") ?>"></i><b><?= _("Disk") ?></b></div>
+										<div class="l-unit__stat-col l-unit__stat-col--left"><i class="fas fa-hard-drive icon-dim icon-large icon-pad-right" title="<?= _("Disk") ?>"></i><b><?= _("Disk") ?></b></div>
 										<div class="l-unit__stat-col l-unit__stat-col--right u-text-right">
 											<b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
 										</div>

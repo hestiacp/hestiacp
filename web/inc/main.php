@@ -219,23 +219,27 @@ function verify_csrf($method, $return = false) {
 }
 
 function show_alert_message($data) {
-	if (!empty($data["error_msg"]) || !empty($data["ok_msg"])) {
-		if (!empty($data["error_msg"])) {
-			$msg_icon = "fa-circle-exclamation icon-red";
-			$msg_text = htmlentities($data["error_msg"]);
-			$msg_class = "inline-danger";
-		} else {
-			$msg_icon = "fa-circle-check icon-green";
-			$msg_text = $data["ok_msg"];
-			$msg_class = "inline-success";
-		}
-		echo '<p class="' .
-			$msg_class .
-			' u-mb20"><i class="fas ' .
-			$msg_icon .
-			'"></i> ' .
-			$msg_text .
-			"</p>";
+	$msgIcon = "";
+	$msgText = "";
+	$msgClass = "";
+
+	if (!empty($data["error_msg"])) {
+		$msgIcon = "fa-circle-exclamation";
+		$msgText = htmlentities($data["error_msg"]);
+		$msgClass = "inline-alert-danger";
+	} elseif (!empty($data["ok_msg"])) {
+		$msgIcon = "fa-circle-check";
+		$msgText = $data["ok_msg"];
+		$msgClass = "inline-alert-success";
+	}
+
+	if (!empty($msgText)) {
+		printf(
+			'<p class="inline-alert %s u-mb20"><i class="fas %s"></i> %s</p>',
+			$msgClass,
+			$msgIcon,
+			$msgText,
+		);
 	}
 }
 

@@ -89,6 +89,7 @@
 											x-on:click="remove(notification.ID)"
 											type="button"
 											class="top-bar-notification-delete"
+											title="<?= _("Delete notification") ?>"
 										>
 											<i class="fas fa-xmark"></i>
 										</button>

@@ -16,22 +16,7 @@
 
 	<div class="form-container form-container-wide">
 		<h1 class="form-title"><?= _("Quick Install App") ?></h1>
-		<?php
-			if (!empty($_SESSION['error_msg'])) {
-				$msg_icon = 'fa-circle-exclamation icon-red';
-				$msg_text = htmlentities($_SESSION['error_msg']);
-				$msg_class = 'inline-danger';
-			} else {
-				if (!empty($_SESSION['ok_msg'])) {
-					$msg_icon = 'fa-circle-check icon-green';
-					$msg_text = $_SESSION['ok_msg'];
-					$msg_class = 'inline-success';
-				}
-			}
-			if(!empty($msg_class)){
-		?>
-		<p class="<?=$msg_class;?> u-mb20"><i class="fas <?=$msg_icon;?>"></i> <?=$msg_text;?></p>
-		<?php }; ?>
+		<?php show_alert_message($_SESSION); ?>
 		<div class="cards">
 			<!-- List available web apps -->
 			<?php foreach($v_web_apps as $webapp):?>
@@ -42,7 +27,9 @@
 					<div class="card-content">
 						<p class="card-title"><?=$webapp['name'];?></p>
 						<p class="u-mb10"><?= _("version") ?>: <?=$webapp['version'];?></p>
-						<a href="/add/webapp/?app=<?=$webapp['name'];?>&domain=<?=htmlentities($v_domain)?>" class="button"><?= _("Setup") ?></a>
+						<a class="button" href="/add/webapp/?app=<?=$webapp['name'];?>&domain=<?=htmlentities($v_domain)?>">
+							<?= _("Setup") ?>
+						</a>
 					</div>
 				</div>
 			<?php endforeach; ?>

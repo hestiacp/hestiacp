@@ -19,7 +19,7 @@
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<form x-bind="BulkEdit" action="/bulk/package/" method="post">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("apply to selected") ?></option>
 						<option value="delete"><?= _("delete") ?></option>

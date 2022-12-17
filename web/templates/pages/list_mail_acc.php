@@ -1,15 +1,17 @@
 <?php
-	$v_webmail_alias = "webmail";
-	if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_ALIAS'];
+$v_webmail_alias = "webmail";
+if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
+	$v_webmail_alias = $_SESSION["WEBMAIL_ALIAS"];
+}
 ?>
 <!-- Begin toolbar -->
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<?php if ($read_only !== 'true') { ?>
-				<a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Account") ?></a>
-				<a href="/edit/mail/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil icon-blue"></i><?= _("Editing Mail Domain") ?></a>
+			<?php if ($read_only !== "true") { ?>
+				<a href="/add/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Account") ?></a>
+				<a href="/edit/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil icon-blue"></i><?= _("Editing Mail Domain") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -27,10 +29,10 @@
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-quota" sort_as_int="1"><span class="name"><?= _("Quota") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<?php if ($read_only !== 'true') { ?>
+				<?php if ($read_only !== "true") { ?>
 					<form x-bind="BulkEdit" action="/bulk/mail/" method="post">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-						<input type="hidden" value="<?=htmlspecialchars($_GET['domain']); ?>" name="domain">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+						<input type="hidden" value="<?= htmlspecialchars($_GET["domain"]) ?>" name="domain">
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>
 							<option value="suspend"><?= _("suspend") ?></option>
@@ -62,7 +64,7 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-right compact-4"><b>&nbsp;</b></div>

@@ -24,12 +24,12 @@
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-ip" sort_as_int="1"><span class="name"><?= _("IP address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<?php if ($read_only !== 'true') {?>
+				<?php if ($read_only !== "true") { ?>
 					<form x-bind="BulkEdit" action="/bulk/web/" method="post">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>
-							<?php if ($_SESSION['userContext'] === 'admin') {?>
+							<?php if ($_SESSION["userContext"] === "admin") { ?>
 								<option value="rebuild"><?= _("rebuild") ?></option>
 							<?php } ?>
 							<option value="suspend"><?= _("suspend") ?></option>
@@ -62,7 +62,7 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>

@@ -295,15 +295,15 @@
 				<div class="u-mb10">
 					<label for="v_shell" class="form-label"><?= _("SSH Access") ?></label>
 					<select class="form-select" name="v_shell" id="v_shell">
-						<?php
-							foreach ($shells as $key => $value) {
-								echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
-								if ((!empty($v_shell)) && ( $value == trim($v_shell,"''"))){
-									echo ' selected' ;
-								}
-								echo ">".htmlentities($value)."</option>\n";
-							}
-						?>
+						<?php foreach ($shells as $key => $value): ?>
+							<option value="<?= htmlentities($value) ?>"
+								<?php if ((!empty($v_shell)) && ($value == trim($v_shell,"''"))): ?>
+									selected
+								<?php endif; ?>
+							>
+								<?= htmlentities($value) ?>
+							</option>
+						<?php endforeach; ?>
 					</select>
 				</div>
 			</div>

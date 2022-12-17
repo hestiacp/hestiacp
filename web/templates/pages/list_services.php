@@ -139,7 +139,7 @@
 						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="service[]" value="<?=$key?>">
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-2">
-						<i class="fas <?=$state_icon;?> icon-pad-right"></i>
+						<i class="fas <?=$state_icon;?> u-mr5"></i>
 						<b><a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>: <?=$key?>"><?=$key?></a></b>
 					</div>
 					<div class="clearfix l-unit__stat-col--left u-text-center compact-2">

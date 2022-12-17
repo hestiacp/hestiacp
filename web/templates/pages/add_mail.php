@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
+			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -19,7 +19,7 @@
 
 	<form
 		x-data="{
-			hasSmtpRelay: <?= $v_smtp_relay == "true" ? true : false ?>
+			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>
 		}"
 		id="vstobjects"
 		name="v_add_mail"

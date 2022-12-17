@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
+			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -301,7 +301,7 @@
 					<select class="form-select" name="v_shell" id="v_shell">
 						<?php foreach ($shells as $key => $value): ?>
 							<option value="<?= htmlentities($value) ?>"
-								<?php if ((!empty($v_shell)) && ($value == trim($v_shell,"''"))): ?>
+								<?php if (!empty($v_shell) && $value == trim($v_shell, "''")): ?>
 									selected
 								<?php endif; ?>
 							>

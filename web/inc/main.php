@@ -235,11 +235,17 @@ function show_alert_message($data) {
 
 	if (!empty($msgText)) {
 		printf(
-			'<p class="inline-alert %s u-mb20"><i class="fas %s"></i> %s</p>',
+			'<div class="inline-alert %s u-mb20" role="alert"><i class="fas %s"></i><p>%s</p></div>',
 			$msgClass,
 			$msgIcon,
 			$msgText,
 		);
+	}
+}
+
+function show_error_message($error) {
+	if (isset($error)) {
+		echo $error;
 	}
 }
 

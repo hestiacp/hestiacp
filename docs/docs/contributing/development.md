@@ -15,7 +15,7 @@ These are example instructions for creating a virtual machine running Hestia for
 These instructions use [Multipass](https://multipass.run/) to create the VM. Feel free to adapt the commands for any virtualization software you prefer.
 
 ::: warning
-Sometimes during this process, the mapping between the source code directory on your local machine to the directory in the VM can be lost. If this happens simply unmount and remount e.g.
+Sometimes the mapping between the source code directory on your local machine to the directory in the VM can be lost. If this happens simply unmount and remount e.g.
 
 ```bash
 multipass unmount hestia-dev

@@ -15,7 +15,7 @@
 					<i class="fas fa-magic icon-blue"></i> <?= _("Quick Install App") ?>
 				</a>
 			<?php } ?>
-			<button class="button" type="submit" form="vstobjects">
+			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -93,7 +93,7 @@
 					?>
 				</select>
 			</div>
-			<div class="stats-auth u-mb10" style="<?php if ($v_stats == 'none') { ?>display:none<?php } ?>">
+			<div class="stats-auth u-mb10" style="<?php if ($v_stats == "none") { ?>display:none<?php } ?>">
 				<div class="form-check">
 					<input x-model="statsAuthEnabled" class="form-check-input" type="checkbox" name="v_stats_auth" id="v_stats_auth">
 					<label for="v_stats_auth">
@@ -129,13 +129,13 @@
 				<div class="form-check">
 					<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
 					<label for="v-redirect-radio-1">
-						<?=sprintf(_('Redirect visitors to %s'),"www.".htmlentities($v_domain));?>
+						<?= sprintf(_("Redirect visitors to %s"), "www." . htmlentities($v_domain)) ?>
 					</label>
 				</div>
 				<div class="form-check">
 					<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo 'checked';?> >
 					<label for="v-redirect-radio-2">
-						<?=sprintf(_('Redirect visitors to %s'),htmlentities($v_domain));?>
+						<?= sprintf(_("Redirect visitors to %s"), htmlentities($v_domain)) ?>
 					</label>
 				</div>
 				<div class="form-check">
@@ -147,15 +147,15 @@
 				<div id="custom_redirect" class="u-pl30" style="display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
 					<div class="u-mt15 u-mb10">
 						<label for="v-redirect-custom" class="form-label"><?= _("Target domain or URL") ?></label>
-						<input type="text" class="form-control" name="v-redirect-custom" id="v-redirect-custom" value="<?=$v_redirect_custom;?>">
+						<input type="text" class="form-control" name="v-redirect-custom" id="v-redirect-custom" value="<?= $v_redirect_custom ?>">
 					</div>
 					<div class="u-mb20">
 						<label for="v-redirect-code" class="form-label"><?= _("Status code") ?>:</label>
 						<select class="form-select" name="v-redirect-code" id="v-redirect-code">
 							<?php foreach ($redirect_code_options as $status_code): ?>
-							<option value="<?=$status_code;?>"
-								<?=($v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code))?' selected="selected" ':''; ?>>
-								<?=$status_code;?>
+							<option value="<?= $status_code ?>"
+								<?= $v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code) ? ' selected="selected" ' : "" ?>>
+								<?= $status_code ?>
 							</option>
 							<?php endforeach; ?>
 						</select>
@@ -250,10 +250,10 @@
 				</button>
 			</div>
 			<div x-cloak x-show="showAdvanced">
-				<?php if (($_SESSION['userContext'] === 'admin') || ($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_EDIT_WEB_TEMPLATES'] === 'yes')) { ?>
+				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_WEB_TEMPLATES"] === "yes")) { ?>
 					<div class="u-mb10">
 						<label for="v_template" class="form-label">
-							<?= _("Web Template") . "<span class='optional'>" . strtoupper($_SESSION['WEB_SYSTEM']) . "</span>";?>
+							<?= _("Web Template") . "<span class='optional'>" . strtoupper($_SESSION["WEB_SYSTEM"]) . "</span>" ?>
 						</label>
 						<select class="form-select" name="v_template" id="v_template">
 							<?php
@@ -268,7 +268,7 @@
 							?>
 						</select>
 					</div>
-					<?php if($_SESSION['WEB_SYSTEM'] == 'nginx'){?>
+					<?php if ($_SESSION["WEB_SYSTEM"] == "nginx") { ?>
 						<div class="form-check u-mb10">
 							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
 							<label for="v_nginx_cache_check">
@@ -283,14 +283,14 @@
 								<label for="v_nginx_cache_duration" class="form-label">
 									<?= _("Cache Duration") ?> <span class="optional"><?= _("For example: 30s, 10m or 1d") ?>
 								</label>
-								<input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?=htmlentities(trim($v_nginx_cache_duration, "'"))?>">
+								<input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?= htmlentities(trim($v_nginx_cache_duration, "'")) ?>">
 							</div>
 						</div>
 					<?php } ?>
-					<?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
+					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<div class="u-mb10">
 							<label for="v_backend_template" class="form-label">
-								<?= _("Backend Template") . " <span class='optional'>" . strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+								<?= _("Backend Template") . " <span class='optional'>" . strtoupper($_SESSION["WEB_BACKEND"]) . "</span>" ?>
 							</label>
 							<select class="form-select" name="v_backend_template" id="v_backend_template">
 								<?php
@@ -308,13 +308,13 @@
 								?>
 							</select>
 						</div>
-					<?php }?>
-					<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
+					<?php } ?>
+					<?php if (!empty($_SESSION["PROXY_SYSTEM"])) { ?>
 						<div style="display: none;">
 							<div class="form-check u-mb10">
 								<input x-model="proxySupportEnabled" class="form-check-input" type="checkbox" name="v_proxy" id="v_proxy">
 								<label for="v_proxy">
-									<?= _("Proxy Support") . "<span class='optional'>" . strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
+									<?= _("Proxy Support") . "<span class='optional'>" . strtoupper($_SESSION["PROXY_SYSTEM"]) . "</span>" ?>
 								</label>
 							</div>
 						</div>

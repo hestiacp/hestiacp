@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
+			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -65,7 +65,7 @@
 				</label>
 				<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 			</div>
-			<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) {?>
+			<?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ($v_antispam == 'yes') echo 'checked'; ?>>
 					<label for="v_antispam">
@@ -79,7 +79,7 @@
 					</label>
 				</div>
 			<?php } ?>
-			<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
+			<?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ($v_antivirus == 'yes') echo 'checked'; ?>>
 					<label for="v_antivirus">

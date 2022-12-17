@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
+			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -344,7 +344,7 @@
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
-		<div class="form-container">
+		<div class="form-container form-container-wide">
 			<h1 class="form-title"><?= _("Adding Cron Job") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">

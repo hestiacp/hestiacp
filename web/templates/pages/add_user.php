@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
+			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -122,7 +122,7 @@
 				<label for="v_notify" class="form-label">
 					<?= _("Send login credentials to email address") ?>
 				</label>
-				<input type="email" class="form-control" name="v_notify" id="v_notify" value="<?=htmlentities(trim($v_notify, "'"))?>" tabindex="8">
+				<input type="email" class="form-control" name="v_notify" id="v_notify" value="<?= htmlentities(trim($v_notify, "'")) ?>" tabindex="8">
 			</div>
 		</div>
 

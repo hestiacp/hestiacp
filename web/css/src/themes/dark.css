@@ -15,6 +15,12 @@
 
 	/* Alerts */
 	--alert-danger-color: #d13535;
+
+	/* Icons */
+	--icon-color-purple: #c364ff;
+	--icon-color-maroon: #ff3478;
+	--icon-color-green: #37cf39;
+	--icon-color-blue: #0092f4;
 }
 
 b,
@@ -753,38 +759,6 @@ form#vstobjects.suspended {
 /* Icon component
    ========================================================================== */
 
-.icon-purple {
-	color: #c364ff;
-
-	&:hover {
-		color: #c364ff;
-	}
-}
-
-.icon-maroon {
-	color: #ff3478;
-
-	&:hover {
-		color: #ff3478;
-	}
-}
-
-.icon-green {
-	color: #37cf39;
-
-	&:hover {
-		color: #37cf39;
-	}
-}
-
-.icon-blue {
-	color: #0092f4;
-
-	&:hover {
-		color: #0092f4;
-	}
-}
-
 .icon-highlight {
 	color: #dadada;
 
@@ -800,7 +774,6 @@ form#vstobjects.suspended {
 
 .l-unit--suspended .icon-dim {
 	color: #808080;
-	text-shadow: 0;
 }
 
 /* Modals

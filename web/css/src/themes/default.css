@@ -25,6 +25,16 @@
 	--alert-info-color: #618ecc;
 	--alert-danger-color: #ec6c6c;
 	--alert-success-color: #5ea64c;
+
+	/* Icons */
+	--icon-color-teal: #3cc;
+	--icon-color-purple: #8e2fca;
+	--icon-color-maroon: #c36;
+	--icon-color-red: #f33;
+	--icon-color-green: #53ba55;
+	--icon-color-orange: #ffc043;
+	--icon-color-blue: #326b9b;
+	--icon-color-lightblue: #6eb6f0;
 }
 
 .check-label {
@@ -1202,10 +1212,6 @@
 }
 
 .body-stats .l-unit__stat-col--left {
-	width: 130px;
-}
-
-.l-unit__stat-col.l-unit__stat-col--left.icon-pad-right {
 	width: 180px;
 }
 
@@ -1374,10 +1380,6 @@
 
 .l-unit__col:hover .actions-panel .fas {
 	display: inline-block;
-}
-
-.icon-pad-right {
-	margin-right: 6px;
 }
 
 .l-unit__stat-cols {
@@ -2349,66 +2351,66 @@ form#vstobjects.suspended {
 }
 
 .icon-teal {
-	color: #3cc;
+	color: var(--icon-color-teal);
 
 	&:hover {
-		color: #3cc;
+		color: var(--icon-color-teal);
 	}
 }
 
 .icon-purple {
-	color: #8e2fca;
+	color: var(--icon-color-purple);
 
 	&:hover {
-		color: #8e2fca;
+		color: var(--icon-color-purple);
 	}
 }
 
 .icon-maroon {
-	color: #c36;
+	color: var(--icon-color-maroon);
 
 	&:hover {
-		color: #c36;
+		color: var(--icon-color-maroon);
 	}
 }
 
 .icon-red {
-	color: #f33;
+	color: var(--icon-color-red);
 
 	&:hover {
-		color: #f33;
+		color: var(--icon-color-red);
 	}
 }
 
 .icon-green {
-	color: #53ba55;
+	color: var(--icon-color-green);
 
 	&:hover {
-		color: #53ba55;
+		color: var(--icon-color-green);
 	}
 }
 
 .icon-orange {
-	color: #ffc043;
+	color: var(--icon-color-orange);
 
 	&:hover {
-		color: #ffc043;
-	}
-}
-
-.icon-lightblue {
-	color: #6eb6f0;
-
-	&:hover {
-		color: #6eb6f0;
+		color: var(--icon-color-orange);
 	}
 }
 
 .icon-blue {
-	color: #326b9b;
+	color: var(--icon-color-blue);
 
 	&:hover {
-		color: #326b9b;
+		color: var(--icon-color-blue);
+	}
+}
+
+.icon-lightblue {
+	color: var(--icon-color-lightblue);
+
+	&:hover {
+		color: var(--icon-color-lightblue);
 	}
 }
 
@@ -2427,7 +2429,6 @@ form#vstobjects.suspended {
 
 .l-unit--suspended .icon-dim {
 	color: #c0c0c0;
-	text-shadow: 0;
 }
 
 .cron-helper-container {

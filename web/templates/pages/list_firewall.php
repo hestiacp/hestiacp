@@ -79,19 +79,13 @@
 					<div class="clearfix l-unit__stat-col--left wide-1">
 						<b>
 							<a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Firewall Rule") ?>">
-							<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
-								<?php if ($data[$key]['ACTION'] == 'DROP') { ?>
-									<i class="fas fa-circle-minus icon-red icon-pad-right"></i> <?=_($data[$key]['ACTION'])?>
-								<?php } else {?>
-									<i class="fas fa-circle-check icon-green icon-pad-right"></i> <?=_($data[$key]['ACTION'])?>
-								<?php } ?>
-							<?php } else {?>
-								<?php if ($data[$key]['ACTION'] == 'DROP') { ?>
-									<i class="fas fa-circle-minus icon-pad-right" style=""></i> <?=_($data[$key]['ACTION'])?>
-								<?php } else {?>
-									<i class="fas fa-circle-check icon-pad-right"></i> <?=_($data[$key]['ACTION'])?>
-								<?php } ?>
-							<?php } ?>
+								<?php
+									$suspended = $data[$key]["SUSPENDED"] == "no";
+									$action = $data[$key]["ACTION"];
+									$iconClass = $action == "DROP" ? "fa-circle-minus" : "fa-circle-check";
+									$colorClass = $action == "DROP" ? "icon-red" : "icon-green";
+								?>
+								<i class="fas <?= $iconClass ?> u-mr5 <?= $suspended ? $colorClass : "" ?>"></i> <?= _($action) ?>
 							</a>
 						</b>
 					</div>

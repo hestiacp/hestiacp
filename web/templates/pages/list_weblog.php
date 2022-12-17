@@ -67,7 +67,7 @@
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?=$_SESSION['token']?>" title="<?= _("Log out") ?>">
+								<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?= $_SESSION["token"] ?>" title="<?= _("Log out") ?>">
 									<i class="fas fa-right-from-bracket"></i>
 									<span class="u-hidden"><?= _("Log out") ?></span>
 								</a>

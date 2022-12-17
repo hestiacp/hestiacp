@@ -67,7 +67,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left icon-green icon-dim icon-pad-right"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim u-mr5"></i>
 								</a>
 							</div>
 						</div>

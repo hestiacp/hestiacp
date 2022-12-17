@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/add/webapp/?domain=<?=htmlentities($v_domain);?>">
+			<a class="button button-secondary" id="btn-back" href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -39,12 +39,12 @@
 						<div>
 							<p class="u-mb10"><?= _("Data loss warning!") ?></p>
 							<p class="u-mb10"><?= _("Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.") ?></p>
-							<p><?php echo sprintf(_('Please make sure ~/web/%s/public_html is empty!'),$v_domain);?></p>
+							<p><?php echo sprintf(_("Please make sure ~/web/%s/public_html is empty!"), $v_domain); ?></p>
 						</div>
 					</div>
 				<?php endif; ?>
 				<div class="u-mt20">
-					<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control):?>
+					<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control): ?>
 						<?php
 							$f_name = $WebappInstaller->formNs() . '_' . $form_name;
 							$f_type = $form_control;
@@ -67,10 +67,10 @@
 							$f_placeholder = htmlentities($f_placeholder);
 						?>
 						<div class="u-mb10">
-							<?php if($f_type != 'boolean'): ?>
-								<label for="<?=$f_name?>" class="form-label">
-									<?=$f_label?>
-									<?php if ($f_type === 'password'):?> / <a href="javascript:applyRandomStringToTarget('<?=$f_name?>');" class="form-link"><?= _("generate") ?></a> <?php endif?>
+							<?php if ($f_type != "boolean"): ?>
+								<label for="<?= $f_name ?>" class="form-label">
+									<?= $f_label ?>
+									<?php if ($f_type === "password"): ?> / <a href="javascript:applyRandomStringToTarget('<?= $f_name ?>');" class="form-link"><?= _("generate") ?></a> <?php endif; ?>
 								</label>
 							<?php endif; ?>
 							<?php if (in_array($f_type, ['select']) && count($form_control['options']) ):?>
@@ -84,19 +84,19 @@
 										<option value="<?=$key?>" <?=$selected?>><?=htmlentities($option)?></option>
 									<?php }; ?>
 								</select>
-							<?php elseif (in_array($f_type, ['boolean'])):?>
+							<?php elseif (in_array($f_type, ["boolean"])): ?>
 								<div class="form-check">
-									<?php $checked = (!empty($f_value))?'checked':''?>
-									<input class="form-check-input" type="checkbox" name="<?=$f_name?>" id="<?=$f_name?>" <?=$checked?> value="true">
-									<label for="<?=$f_name?>"><?=$f_label?></label>
+									<?php $checked = !empty($f_value) ? "checked" : ""; ?>
+									<input class="form-check-input" type="checkbox" name="<?= $f_name ?>" id="<?= $f_name ?>" <?= $checked ?> value="true">
+									<label for="<?= $f_name ?>"><?= $f_label ?></label>
 								</div>
-							<?php else:?>
-								<input type="text" class="form-control" name="<?=$f_name?>" id="<?=$f_name?>" placeholder="<?=$f_placeholder?>" value="<?=$f_value?>">
+							<?php else: ?>
+								<input type="text" class="form-control" name="<?= $f_name ?>" id="<?= $f_name ?>" placeholder="<?= $f_placeholder ?>" value="<?= $f_value ?>">
 							<?php endif; ?>
 						</div>
 					<?php endforeach; ?>
 				</div>
 			</div>
 		</form>
-	<?php endif ?>
+	<?php endif; ?>
 </div>

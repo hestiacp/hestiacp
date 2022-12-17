@@ -41,10 +41,14 @@
 	})
 </script>
 
-<?php foreach (new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts") as $customScript) {
-	if ($customScript->getExtension() === "js") {
-		echo '<script defer src="/js/custom_scripts/' . rawurlencode($customScript->getBasename()) . '"></script>';
-	} elseif ($customScript->getExtension() === "php") {
+<?php
+$customScriptDirectory = new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts");
+foreach ($customScriptDirectory as $customScript) {
+	$extension = $customScript->getExtension();
+	if ($extension === "js") {
+		$customScriptPath = "/js/custom_scripts/" . rawurlencode($customScript->getBasename());
+		echo '<script defer src="' . $customScriptPath . '"></script>';
+	} elseif ($extension === "php") {
 		require_once $customScript->getPathname();
 	}
 } ?>

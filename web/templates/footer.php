@@ -72,6 +72,7 @@
 <?php if (!empty($_SESSION["error_msg"])): ?>
 	<div>
 		<script>
+			// TODO: This is broken, $ is not defined
 			$(function() {
 				$('#dialog:ui-dialog').dialog('destroy');
 				$('#dialog-message').dialog({

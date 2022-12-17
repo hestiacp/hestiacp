@@ -8,7 +8,7 @@
 
 :root {
 	--color-text: #cdcdcd;
-	--color-text-link: #52b9ff;
+	--color-text-link: #4fabe9;
 	--color-text-link-hover: #ff3478;
 	--color-background: #282828;
 	--alert-border-color: #212121;
@@ -51,23 +51,8 @@ strong {
 		}
 	}
 
-	&.unseen {
-		& .top-bar-notification-title,
-		& .top-bar-notification-title a {
-			color: #fff;
-		}
-	}
-
-	& a {
-		color: #4fabe9;
-
-		&:hover {
-			color: #09f;
-		}
-
-		&:active {
-			color: #0079cb;
-		}
+	&.unseen .top-bar-notification-title {
+		color: #fff;
 	}
 }
 
@@ -936,13 +921,7 @@ form#vstobjects.suspended {
 /* Inline alerts
    ========================================================================== */
 
-.inline-danger {
-	color: #f33;
-}
-
-.inline-success {
-	color: #53ba55;
-
+.inline-alert-success {
 	& a {
 		color: #fff;
 

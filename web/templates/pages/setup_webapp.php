@@ -9,10 +9,10 @@
 		<div class="toolbar-buttons">
 			<?php
 				if (!empty($_SESSION['error_msg'])) {
-					echo "<p class=\"inline-danger\"> → ".htmlentities($_SESSION['error_msg'])."</p>";
+					echo "<p class=\"inline-alert inline-alert-danger\"> → ".htmlentities($_SESSION['error_msg'])."</p>";
 				} else {
 					if (!empty($_SESSION['ok_msg'])) {
-						echo "<p class=\"inline-success\"> → ".$_SESSION['ok_msg']."</p>";
+						echo "<p class=\"inline-alert inline-alert-success\"> → ".$_SESSION['ok_msg']."</p>";
 					}
 				}
 			?>

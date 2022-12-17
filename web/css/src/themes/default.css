@@ -194,15 +194,6 @@
 	&.unseen {
 		& .top-bar-notification-title {
 			color: #c36;
-
-			& a {
-				color: #c36;
-
-				&:hover,
-				&:active {
-					color: #e83b75;
-				}
-			}
 		}
 
 		& .top-bar-notification-delete {
@@ -211,16 +202,7 @@
 	}
 
 	& a {
-		color: #1a4492;
 		font-weight: 600;
-
-		&:hover {
-			color: #4a87fb;
-		}
-
-		&:active {
-			color: #1a4492;
-		}
 	}
 }
 
@@ -823,8 +805,7 @@
 		display: flex;
 		align-items: center;
 
-		& .inline-success,
-		& .inline-danger {
+		& .inline-alert {
 			margin-right: 20px;
 		}
 
@@ -2334,27 +2315,6 @@ form#vstobjects.suspended {
 	padding-bottom: 30px;
 }
 
-#tooltip {
-	background-color: #3b9de8;
-	border-radius: 15px;
-	bottom: 6px;
-	color: #fff;
-	font-size: 0.8rem;
-	font-weight: 600;
-	height: 26px;
-	left: 12px;
-	letter-spacing: 0;
-	line-height: 25px;
-	margin-left: 12px;
-	margin-top: 7px;
-	padding: 3px 14px 3px 27px;
-	position: absolute;
-	text-transform: uppercase;
-	white-space: nowrap;
-	word-break: keep-all;
-	z-index: -1;
-}
-
 /* Badge component
    ========================================================================== */
 
@@ -2375,10 +2335,10 @@ form#vstobjects.suspended {
 }
 
 .l-unit--suspended .badge {
-	background: #eaeaea !important;
-	color: #c0c0c0 !important;
-	text-shadow: 0 -1px #fafafa !important;
-	box-shadow: 0 1px 2px rgb(120 120 120 / 30%) !important;
+	background: #eaeaea;
+	color: #c0c0c0;
+	text-shadow: 0 -1px #fafafa;
+	box-shadow: 0 1px 2px rgb(120 120 120 / 30%);
 }
 
 /* Icon component
@@ -2633,26 +2593,22 @@ form#vstobjects.suspended {
 /* Inline alerts
 		========================================================================== */
 
-.inline-danger {
-	color: #f33;
+.inline-alert {
+	display: flex;
 	font-weight: 600;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 
 	& .fas {
-		margin-right: 3px;
+		margin-top: 4px;
+		margin-right: 6px;
 	}
 }
 
-.inline-success {
-	color: #53ba55;
-	font-weight: 600;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+.inline-alert-danger {
+	color: #f33;
+}
 
-	& .fas {
-		margin-right: 3px;
-	}
+.inline-alert-success {
+	color: #53ba55;
 
 	& a {
 		color: #326b9b;

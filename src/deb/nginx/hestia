@@ -16,12 +16,12 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 NGINX_DAEMON=/usr/local/hestia/nginx/sbin/hestia-nginx
 NGINX_NAME=hestia-nginx
 NGINX_DESC=hestia-nginx
-NGINX_PID=/var/run/hestia-nginx.pid
+NGINX_PID=/run/hestia-nginx.pid
 
 PHP_DAEMON=/usr/local/hestia/php/sbin/hestia-php
 PHP_NAME=hestia-php
 PHP_DESC=hestia-php
-PHP_PID=/var/run/hestia-php.pid
+PHP_PID=/run/hestia-php.pid
 PHP_CONF=/usr/local/hestia/php/etc/php-fpm.conf
 
 set -e

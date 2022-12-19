@@ -7,7 +7,7 @@ socket=/var/lib/mysql/mysql.sock
 
 [mysqld]
 user=mysql
-#pid-file=/var/run/mysqld/mysqld.pid
+#pid-file=/run/mysqld/mysqld.pid
 socket=/var/lib/mysql/mysql.sock
 port=3306
 basedir=/usr

@@ -38,9 +38,6 @@ class rcube_hestia_password {
 				CURLOPT_USERAGENT => "PHP Script", // ???
 				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_SSL_VERIFYHOST => false,
-				CURLOPT_FORBID_REUSE => true,
-				CURLOPT_FRESH_CONNECT => true,
-				CURLOPT_HTTPHEADER => ["Connection: close"],
 			])
 		) {
 			// should never happen

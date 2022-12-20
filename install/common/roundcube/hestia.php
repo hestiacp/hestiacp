@@ -48,7 +48,6 @@ class rcube_hestia_password {
 			throw new Exception("curl_exec() failed: " . curl_error($ch));
 		}
 		curl_close($ch);
-		file_put_contents("/tmp/roundcube.log", "test ok\n", LOCK_EX);
 		if (strpos($result, "ok") && !strpos($result, "error")) {
 			return PASSWORD_SUCCESS;
 		} else {

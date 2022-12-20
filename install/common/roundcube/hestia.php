@@ -35,7 +35,7 @@ class rcube_hestia_password {
 				CURLOPT_HEADER => true,
 				CURLOPT_POST => true,
 				CURLOPT_POSTFIELDS => http_build_query($postvars),
-				CURLOPT_USERAGENT => "PHP Script", // ???
+				CURLOPT_USERAGENT => "Hestia Control Panel Password Driver",
 				CURLOPT_SSL_VERIFYPEER => false,
 				CURLOPT_SSL_VERIFYHOST => false,
 			])

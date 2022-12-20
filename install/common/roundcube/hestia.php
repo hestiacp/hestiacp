@@ -6,68 +6,57 @@
  * @version 1.0
  * @author HestiaCP <info@hestiacp.com>
  */
-class rcube_hestia_password {
-	function save($curpass, $passwd) {
-		$rcmail = rcmail::get_instance();
-		$hestia_host = $rcmail->config->get("password_hestia_host");
+class rcube_hestia_password
+{
+    public function save($curpass, $passwd)
+    {
+        $rcmail = rcmail::get_instance();
+        $hestia_host = $rcmail->config->get("password_hestia_host");
 
-		if (empty($hestia_host)) {
-			$hestia_host = "localhost";
-		}
+        if (empty($hestia_host)) {
+            $hestia_host = "localhost";
+        }
 
-		$hestia_port = $rcmail->config->get("password_hestia_port");
-		if (empty($hestia_port)) {
-			$hestia_port = "8083";
-		}
+        $hestia_port = $rcmail->config->get("password_hestia_port");
+        if (empty($hestia_port)) {
+            $hestia_port = "8083";
+        }
 
-		$postvars = [
-			"email" => $_SESSION["username"],
-			"password" => $curpass,
-			"new" => $passwd,
-		];
-
-		$postdata = http_build_query($postvars);
-
-		$send = "POST /reset/mail/ HTTP/1.1" . PHP_EOL;
-		$send .= "Host: " . $hestia_host . PHP_EOL;
-		$send .= "User-Agent: PHP Script" . PHP_EOL;
-		$send .= "Content-length: " . strlen($postdata) . PHP_EOL;
-		$send .= "Content-type: application/x-www-form-urlencoded" . PHP_EOL;
-		$send .= "Connection: close" . PHP_EOL;
-		$send .= PHP_EOL;
-		$send .= $postdata . PHP_EOL . PHP_EOL;
-
-		//$fp = fsockopen('ssl://' . $hestia_host, $hestia_port);
-		$errno = "";
-		$errstr = "";
-		$context = stream_context_create();
-
-		$result = stream_context_set_option($context, "ssl", "verify_peer", false);
-		$result = stream_context_set_option($context, "ssl", "verify_peer_name", false);
-		$result = stream_context_set_option($context, "ssl", "verify_host", false);
-		$result = stream_context_set_option($context, "ssl", "allow_self_signed", true);
-
-		$fp = stream_socket_client(
-			"ssl://" . $hestia_host . ":" . $hestia_port,
-			$errno,
-			$errstr,
-			60,
-			STREAM_CLIENT_CONNECT,
-			$context,
-		);
-		fputs($fp, $send);
-		$result = fread($fp, 2048);
-		fclose($fp);
-
-		$fp = fopen("/tmp/roundcube.log", "w");
-		fwrite($fp, "test ok");
-		fwrite($fp, "\n");
-		fclose($fp);
-
-		if (strpos($result, "ok") && !strpos($result, "error")) {
-			return PASSWORD_SUCCESS;
-		} else {
-			return PASSWORD_ERROR;
-		}
-	}
+        $postvars = [
+            "email" => $_SESSION["username"],
+            "password" => $curpass,
+            "new" => $passwd,
+        ];
+        $url = "https://{$hestia_host}:{$hestia_port}/reset/mail/";
+        $ch = curl_init();
+        if (false === curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HEADER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query($postvars),
+            CURLOPT_USERAGENT => 'PHP Script', // ???
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_FORBID_REUSE => true,
+            CURLOPT_FRESH_CONNECT => true,
+            CURLOPT_HTTPHEADER => [
+                'Connection: close',
+            ],
+        ])) {
+            // should never happen
+            throw new Exception('curl_setopt_array() failed: ' . curl_error($ch));
+        }
+        $result = curl_exec($ch);
+        if (curl_errno($ch) !== CURLE_OK) {
+            throw new Exception('curl_exec() failed: ' . curl_error($ch));
+        }
+        curl_close($ch);
+        file_put_contents("/tmp/roundcube.log", "test ok\n", LOCK_EX);
+        if (strpos($result, "ok") && !strpos($result, "error")) {
+            return PASSWORD_SUCCESS;
+        } else {
+            return PASSWORD_ERROR;
+        }
+    }
 }

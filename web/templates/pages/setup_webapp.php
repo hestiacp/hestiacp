@@ -7,16 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<?php
-				if (!empty($_SESSION['error_msg'])) {
-					echo "<p class=\"inline-alert inline-alert-danger\"> → ".htmlentities($_SESSION['error_msg'])."</p>";
-				} else {
-					if (!empty($_SESSION['ok_msg'])) {
-						echo "<p class=\"inline-alert inline-alert-success\"> → ".$_SESSION['ok_msg']."</p>";
-					}
-				}
-			?>
-			<button class="button" type="submit" form="vstobjects">
+			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -33,6 +24,7 @@
 
 			<div class="form-container">
 				<h1 class="form-title"><?= sprintf(_("Install %s"), $WebappInstaller->info()["name"]) ?></h1>
+				<?php show_alert_message($_SESSION); ?>
 				<?php if (!$WebappInstaller->isDomainRootClean()): ?>
 					<div class="alert alert-info" role="alert">
 						<i class="fas fa-info"></i>

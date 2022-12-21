@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
+			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -104,7 +104,7 @@
 				<?php if (!empty($_SESSION['WEB_BACKEND'])) { echo ""; ?>
 					<div class="u-mb10">
 						<label for="v_backend_template" class="form-label">
-							<?= _("Backend Template") . "<span class='optional'>" .strtoupper($_SESSION['WEB_BACKEND']) . "</span>";?>
+							<?= _("Backend Template") . "<span class='optional'>" . strtoupper($_SESSION["WEB_BACKEND"]) . "</span>" ?>
 						</label>
 						<select class="form-select" name="v_backend_template" id="v_backend_template">
 							<?php
@@ -123,7 +123,7 @@
 				<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { echo ""; ?>
 					<div class="u-mb10">
 						<label for="v_proxy_template" class="form-label">
-							<?= _("Proxy Template") . "<span class='optional'>" .strtoupper($_SESSION['PROXY_SYSTEM']) . "</span>";?>
+							<?= _("Proxy Template") . "<span class='optional'>" . strtoupper($_SESSION["PROXY_SYSTEM"]) . "</span>" ?>
 						</label>
 						<select class="form-select" name="v_proxy_template" id="v_proxy_template">
 							<?php
@@ -297,7 +297,7 @@
 					<select class="form-select" name="v_shell" id="v_shell">
 						<?php foreach ($shells as $key => $value): ?>
 							<option value="<?= htmlentities($value) ?>"
-								<?php if ((!empty($v_shell)) && ($value == trim($v_shell,"''"))): ?>
+								<?php if (!empty($v_shell) && $value == trim($v_shell, "''")): ?>
 									selected
 								<?php endif; ?>
 							>

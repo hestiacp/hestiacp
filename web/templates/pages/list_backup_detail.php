@@ -34,7 +34,7 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
+					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4"><b><?= _("Type") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("Details") ?></b></div>

@@ -64,7 +64,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-right compact-4"><b>&nbsp;</b></div>

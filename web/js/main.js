@@ -130,7 +130,7 @@ document.addEventListener('alpine:init', () => {
 	});
 
 	// Select all helper
-	const toggleAll = document.querySelector('#toggle-all');
+	const toggleAll = document.querySelector('.js-toggle-all');
 	if (toggleAll) {
 		toggleAll.addEventListener('change', (evt) => {
 			document.querySelectorAll('.ch-toggle').forEach((el) => (el.checked = evt.target.checked));

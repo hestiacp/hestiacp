@@ -147,9 +147,9 @@
 								<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
 							<?php } else { ?>
 								<li class="top-bar-menu-item">
-									<a title="<?= _("Server") ?>" class="top-bar-menu-link <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
+									<a title="<?= _("Server settings") ?>" class="top-bar-menu-link <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
 										<i class="fas fa-gear"></i>
-										<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Server") ?></span>
+										<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Server settings") ?></span>
 									</a>
 								</li>
 							<?php } ?>

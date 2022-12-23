@@ -59,7 +59,7 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Command") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>

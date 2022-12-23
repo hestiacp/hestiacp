@@ -224,7 +224,6 @@ strong {
 .toolbar-sorting-menu {
 	background-color: rgb(40 40 40 / 95%);
 	box-shadow: 0 2px 16px 0 rgb(20 20 20 / 65%);
-	border-radius: 4px;
 	border-color: rgb(90 90 90 / 100%);
 
 	& li {
@@ -386,21 +385,6 @@ strong {
 
 .units.active .l-unit.focus {
 	background-color: #353535;
-}
-
-.units.active .l-unit.focus .l-unit__name {
-}
-
-.units.active .l-unit.focus .l-unit-toolbar__col--right {
-}
-
-.units > div:last-child {
-}
-
-.l-unit:hover .l-unit-toolbar__col--right {
-}
-
-.l-unit--blue {
 }
 
 .l-unit--suspended {
@@ -734,7 +718,7 @@ strong {
 	color: #dadada;
 }
 
-form#vstobjects.suspended {
+#vstobjects.suspended {
 	background-color: #282828;
 }
 
@@ -803,7 +787,7 @@ form#vstobjects.suspended {
 }
 
 .ui-widget-header a {
-	color: #cacaca !important;
+	color: #cacaca;
 }
 
 /* Shortcuts panel
@@ -819,41 +803,30 @@ form#vstobjects.suspended {
 	border-bottom: 1px solid #353535;
 }
 
-.cron-helper-container {
+.cron-helper-panel {
 	box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
-	border: 1px solid #606060;
+	border-color: #606060;
 	background-color: #454545;
-}
 
-.cron-helper-tabs a {
-	color: #cacaca;
-}
+	& .ui-tabs-tab a {
+		color: #cacaca;
 
-.cron-helper-tabs a:hover {
-	color: #ff3478 !important;
-}
+		&:hover {
+			color: #ff3478;
+		}
 
-.cron-helper-tabs a:active {
-	color: #3b9de8 !important;
-}
+		&:active {
+			color: #3b9de8;
+		}
+	}
 
-.cron-helper-tabs .ui-tabs-selected a,
-.ui-tabs-tab[aria-expanded="true"] a {
-	color: #ff3478 !important;
-}
-
-.cron-helper-tabs p {
-	color: #dadada;
+	& .ui-tabs-tab[aria-expanded="true"] a {
+		color: #ff3478;
+	}
 }
 
 .server-console-output {
 	background: #282828;
-}
-
-.body-rrd .units .l-unit {
-	background-color: #282828 !important;
-	border-left: 1px solid transparent !important;
-	border-right: 1px solid transparent !important;
 }
 
 .l-percent {
@@ -870,10 +843,10 @@ form#vstobjects.suspended {
 }
 
 .body-stats .units .l-unit {
-	background-color: #282828 !important;
-	border-bottom: 1px solid #404040 !important;
-	border-left: 1px solid #282828 !important;
-	border-right: 1px solid #282828 !important;
+	background-color: #282828;
+	border-bottom: 1px solid #404040;
+	border-left: 1px solid #282828;
+	border-right: 1px solid #282828;
 }
 
 .body-stats .units:hover .l-unit:hover {
@@ -885,6 +858,9 @@ form#vstobjects.suspended {
 .body-stats .units:hover .l-unit:hover strong {
 	color: #fff !important;
 }
+
+/* App footer
+   ========================================================================== */
 
 .app-footer {
 	color: #cdcdcd;

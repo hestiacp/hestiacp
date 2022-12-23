@@ -32,7 +32,7 @@
 		<div class="form-container form-container-wide">
 			<h1 class="form-title"><?= _("Editing Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<div class="sidebar-container">
+			<div class="sidebar-right-container">
 				<div>
 					<div class="u-mb10">
 						<label for="v_email" class="form-label"><?= _("Account") ?></label>

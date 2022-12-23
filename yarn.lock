@@ -1596,6 +1596,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"connect-history-api-fallback@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "connect-history-api-fallback@npm:1.6.0"
+  checksum: 804ca2be28c999032ecd37a9f71405e5d7b7a4b3defcebbe41077bb8c5a0a150d7b59f51dcc33b2de30bc7e217a31d10f8cfad27e8e74c2fc7655eeba82d6e7e
+  languageName: node
+  linkType: hard
+
 "console-control-strings@npm:^1.1.0":
   version: 1.1.0
   resolution: "console-control-strings@npm:1.1.0"
@@ -2723,6 +2730,7 @@ __metadata:
     stylelint-config-prettier: ^9.0.4
     stylelint-config-standard: ^29.0.0
     typescript: ^4.9.4
+    vite-plugin-rewrite-all: ^1.0.1
     vitepress: 1.0.0-alpha.33
     vue: ^3.2.45
   languageName: unknown
@@ -5892,6 +5900,17 @@ __metadata:
     spdx-correct: ^3.0.0
     spdx-expression-parse: ^3.0.0
   checksum: 35703ac889d419cf2aceef63daeadbe4e77227c39ab6287eeb6c1b36a746b364f50ba22e88591f5d017bc54685d8137bc2d328d0a896e4d3fd22093c0f32a9ad
+  languageName: node
+  linkType: hard
+
+"vite-plugin-rewrite-all@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "vite-plugin-rewrite-all@npm:1.0.1"
+  dependencies:
+    connect-history-api-fallback: ^1.6.0
+  peerDependencies:
+    vite: ^2.0.0 || ^3.0.0 || ^4.0.0
+  checksum: 9a22e51e80fc14d58d32556208c26740baf3f02eae2d0a5f356ddc1ea478bd2f56803cc17e77261ffad33d27301017ba03736143446685c03bb0f076eef2fdd0
   languageName: node
   linkType: hard
 

@@ -1,4 +1,5 @@
 import { defineConfig, type DefaultTheme } from "vitepress";
+import pluginRewriteAll from "vite-plugin-rewrite-all";
 import { version } from "../../package.json";
 
 export default defineConfig({
@@ -8,6 +9,8 @@ export default defineConfig({
 
 	lastUpdated: true,
 	cleanUrls: "with-subfolders",
+
+	plugins: [pluginRewriteAll()],
 
 	head: [
 		["link", { rel: "icon", sizes: "any", href: "/favicon.ico" }],

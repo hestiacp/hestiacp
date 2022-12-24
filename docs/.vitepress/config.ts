@@ -7,7 +7,7 @@ export default defineConfig({
 	description: "Open-source web server control panel.",
 
 	lastUpdated: true,
-	cleanUrls: "true",
+	cleanUrls: "disabled",
 
 	head: [
 		["link", { rel: "icon", sizes: "any", href: "/favicon.ico" }],

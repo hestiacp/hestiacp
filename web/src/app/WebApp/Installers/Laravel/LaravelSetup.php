@@ -26,7 +26,7 @@ class LaravelSetup extends BaseSetup {
 				"template" => "laravel",
 			],
 			"php" => [
-				"supported" => ["8.0", "8.1"],
+				"supported" => ["8.0", "8.1", "8.2"],
 			],
 		],
 	];

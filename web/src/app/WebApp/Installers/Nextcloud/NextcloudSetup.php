@@ -29,7 +29,7 @@ class NextcloudSetup extends BaseSetup {
 				"template" => "owncloud",
 			],
 			"php" => [
-				"supported" => ["7.3", "7.4", "8.0", "8.1"],
+				"supported" => ["7.4", "8.0", "8.1"],
 			],
 		],
 	];

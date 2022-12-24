@@ -1,6 +1,6 @@
 # Best Practices
 
-Managing a server is not easy. Here are a couple of best practices you should try to adhere to while managing your Hestia server.
+Managing a server is not easy. Here are some best practices you should try to adhere to while managing your Hestia server.
 
 ## Use a regular user
 

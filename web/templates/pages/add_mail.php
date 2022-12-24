@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/mail/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+			<button type="submit" class="button" form="vstobjects">
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -19,7 +19,7 @@
 
 	<form
 		x-data="{
-			hasSmtpRelay: <?= $v_smtp_relay == "true" ? true : false ?>
+			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>
 		}"
 		id="vstobjects"
 		name="v_add_mail"

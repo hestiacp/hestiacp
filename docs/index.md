@@ -25,7 +25,7 @@ hero:
 features:
   - icon: 🚀
     title: Fast & easy to learn
-    details: Hestia is made with ease of use in mind. Creating a user or a website is as easy as clicking a button and filling up a couple of fields, while advanced features are easily accessible.
+    details: Hestia is made with ease of use in mind. Creating a user or a website is as easy as clicking a button and filling out a couple of fields, while advanced features are easily accessible.
     link: /docs/introduction/getting-started
     linkText: Documentation
   - icon: ❤️
@@ -40,7 +40,7 @@ features:
     linkText: Help develop Hestia
   - icon: 🤝
     title: Supported by the community
-    details: Hestia has a great support community, join the forum or the Discord server! To keep the project running, we rely on donations, which can be done via PayPal or cryptocurrency.
+    details: Hestia has a great support community - join the forum or the Discord server! To keep the project running, we rely on donations, which can be made via PayPal or cryptocurrency.
     link: /donate
     linkText: Donate
 ---

@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="javascript:window.history.back();" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
-			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrows-rotate status-icon green"></i> <?= _("Refresh") ?></a>
+			<a href="javascript:window.history.back();" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrows-rotate icon-green"></i> <?= _("Refresh") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -16,7 +16,7 @@
 				</ul>
 				<div class="toolbar-search">
 					<form action="/search/" method="get">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" title="<?= _("Search") ?>">
 						<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 							<i class="fas fa-magnifying-glass"></i>
@@ -94,15 +94,15 @@
 								$icon = 'fa-clock';
 						}
 					?>
-					<i class="fa <?=$icon;?> status-icon dim"></i>
+					<i class="fa <?=$icon;?> icon-dim"></i>
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-2 u-text-center">
 					<b>
 						<?php if ($status === 'active') {?>
-							<i class="fas fa-circle-check status-icon green"></i>
+							<i class="fas fa-circle-check icon-green"></i>
 						<?php	} ?>
 						<?php if ($status === 'suspended') {?>
-							<i class="fas fa-triangle-exclamation status-icon orange"></i>
+							<i class="fas fa-triangle-exclamation icon-orange"></i>
 						<?php	} ?>
 					</b>
 				</div>
@@ -145,7 +145,7 @@
 						<?php if (!($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes' && $value['USER'] !== 'admin')){
 						if ($_SESSION['userContext'] === 'admin'){
 						?>
-							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$value['USER']?>"><i class="fas fa-right-to-bracket status-icon green status-icon dim icon-large"></i></a>
+							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$value['USER']?>"><i class="fas fa-right-to-bracket icon-green icon-dim"></i></a>
 						<?php
 						}
 						}
@@ -158,11 +158,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d object', '%d objects', $i),$i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext('%d object', '%d objects', $i),$i); ?>
+		</p>
 	</div>
 </footer>

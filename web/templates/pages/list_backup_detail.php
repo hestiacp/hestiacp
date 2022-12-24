@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
-			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left status-icon green"></i><?= _("Restore All") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<form x-bind="BulkEdit" action="/bulk/restore/" method="post">
@@ -67,7 +67,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim icon-pad-right"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim u-mr5"></i>
 								</a>
 							</div>
 						</div>
@@ -99,7 +99,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -131,7 +131,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -163,7 +163,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -192,7 +192,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?= $backup ?>&type=cron&object=records&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -224,7 +224,7 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -236,13 +236,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right total clearfix">
-				<?php printf(ngettext('%d item', '%d items', $i),$i); ?>
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext('%d item', '%d items', $i),$i); ?>
+		</p>
 	</div>
 </footer>

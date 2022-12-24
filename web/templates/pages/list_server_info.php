@@ -61,7 +61,7 @@
 										<span class="top-bar-menu-link-label"><?= _("Web") ?></span>
 									</a>
 								</li>
-							<?php }?>
+							<?php } ?>
 							<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
 								<li class="top-bar-menu-item">
 									<a class="top-bar-menu-link <?php if(isset($_GET['dns'])) echo 'active' ?>" href="/list/server/?dns">
@@ -69,7 +69,7 @@
 										<span class="top-bar-menu-link-label"><?= _("DNS") ?></span>
 									</a>
 								</li>
-							<?php }?>
+							<?php } ?>
 							<?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?>
 								<li class="top-bar-menu-item">
 									<a class="top-bar-menu-link <?php if(isset($_GET['mail'])) echo 'active' ?>" href="/list/server/?mail">
@@ -77,7 +77,7 @@
 										<span class="top-bar-menu-link-label"><?= _("Mail") ?></span>
 									</a>
 								</li>
-							<?php }?>
+							<?php } ?>
 							<?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?>
 								<li class="top-bar-menu-item">
 									<a class="top-bar-menu-link <?php if(isset($_GET['db'])) echo 'active' ?>" href="/list/server/?db">
@@ -85,7 +85,7 @@
 										<span class="top-bar-menu-link-label"><?= _("DB") ?></span>
 									</a>
 								</li>
-							<?php }?>
+							<?php } ?>
 							<li class="top-bar-menu-item">
 								<a class="top-bar-menu-link" href="javascript:location.reload();" title="<?= _("Refresh") ?>">
 									<i class="fas fa-arrow-rotate-right"></i>

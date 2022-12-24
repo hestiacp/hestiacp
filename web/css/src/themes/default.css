@@ -25,6 +25,16 @@
 	--alert-info-color: #618ecc;
 	--alert-danger-color: #ec6c6c;
 	--alert-success-color: #5ea64c;
+
+	/* Icons */
+	--icon-color-teal: #3cc;
+	--icon-color-purple: #8e2fca;
+	--icon-color-maroon: #c36;
+	--icon-color-red: #f33;
+	--icon-color-green: #53ba55;
+	--icon-color-orange: #ffc043;
+	--icon-color-blue: #326b9b;
+	--icon-color-lightblue: #6eb6f0;
 }
 
 .check-label {
@@ -194,15 +204,6 @@
 	&.unseen {
 		& .top-bar-notification-title {
 			color: #c36;
-
-			& a {
-				color: #c36;
-
-				&:hover,
-				&:active {
-					color: #e83b75;
-				}
-			}
 		}
 
 		& .top-bar-notification-delete {
@@ -211,16 +212,7 @@
 	}
 
 	& a {
-		color: #1a4492;
 		font-weight: 600;
-
-		&:hover {
-			color: #4a87fb;
-		}
-
-		&:active {
-			color: #1a4492;
-		}
 	}
 }
 
@@ -250,6 +242,8 @@
 
 .top-bar-notification-delete {
 	display: none;
+	background-color: transparent;
+	border: 0;
 	padding-left: 5px;
 	padding-right: 5px;
 
@@ -263,8 +257,12 @@
 	}
 }
 
-.top-bar-notification-mark-all {
+.top-bar-notification-delete-all {
 	display: block;
+	background-color: transparent;
+	border: 0;
+	color: inherit;
+	width: 100%;
 	text-align: center;
 	padding: 10px 15px;
 
@@ -817,8 +815,7 @@
 		display: flex;
 		align-items: center;
 
-		& .inline-success,
-		& .inline-danger {
+		& .inline-alert {
 			margin-right: 20px;
 		}
 
@@ -1011,11 +1008,6 @@
 	border-bottom: none;
 }
 
-.l-unit-ft {
-	color: #7c7c7c;
-	padding: 0 0 0 15px;
-}
-
 .l-unit:hover .l-unit-toolbar__col--right {
 	display: block;
 }
@@ -1027,10 +1019,10 @@
 .l-unit--suspended {
 	background-color: #eaeaea !important;
 	color: #c0c0c0;
-}
 
-.l-unit--suspended a {
-	color: #c0c0c0 !important;
+	& a {
+		color: #c0c0c0 !important;
+	}
 }
 
 .units .l-unit.l-unit--outdated {
@@ -1132,10 +1124,6 @@
 	padding-left: 16px;
 }
 
-.l-unit__col--right.back {
-	padding-left: 78px;
-}
-
 .l-unit__suspended {
 	display: none;
 	font-size: 0.8rem;
@@ -1224,10 +1212,6 @@
 }
 
 .body-stats .l-unit__stat-col--left {
-	width: 130px;
-}
-
-.l-unit__stat-col.l-unit__stat-col--left.icon-pad-right {
 	width: 180px;
 }
 
@@ -1396,10 +1380,6 @@
 
 .l-unit__col:hover .actions-panel .fas {
 	display: inline-block;
-}
-
-.icon-pad-right {
-	margin-right: 6px;
 }
 
 .l-unit__stat-cols {
@@ -2041,6 +2021,55 @@
 	border-radius: 4px;
 }
 
+/* Collapse component
+   ========================================================================== */
+
+.collapse {
+}
+
+.collapse[open] .collapse-header::after {
+	transform: rotate(180deg);
+}
+
+.collapse-header {
+	background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
+	border: 1px solid #ddd;
+	text-shadow: 0 1px rgb(255 255 255 / 95%);
+	box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%),
+		0 4px 6px rgb(190 190 190 / 40%);
+	font-weight: 600;
+	color: #30659d;
+	cursor: pointer;
+	position: relative;
+	padding: 8px 18px;
+
+	&:hover {
+		color: #ff3478;
+	}
+
+	&::after {
+		content: "";
+		display: block;
+		background-image: url("/images/arrow.svg");
+		background-size: 22px auto;
+		background-repeat: no-repeat;
+		background-position: center;
+		size: 22px 100%;
+		position: absolute;
+		top: 0;
+		right: 15px;
+	}
+}
+
+.collapse-content {
+	box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
+	padding: 20px 20px 10px;
+
+	@media (--viewport-medium) {
+		padding: 20px 50px 10px;
+	}
+}
+
 /* Login
    ========================================================================== */
 
@@ -2288,27 +2317,6 @@ form#vstobjects.suspended {
 	padding-bottom: 30px;
 }
 
-#tooltip {
-	background-color: #3b9de8;
-	border-radius: 15px;
-	bottom: 6px;
-	color: #fff;
-	font-size: 0.8rem;
-	font-weight: 600;
-	height: 26px;
-	left: 12px;
-	letter-spacing: 0;
-	line-height: 25px;
-	margin-left: 12px;
-	margin-top: 7px;
-	padding: 3px 14px 3px 27px;
-	position: absolute;
-	text-transform: uppercase;
-	white-space: nowrap;
-	word-break: keep-all;
-	z-index: -1;
-}
-
 /* Badge component
    ========================================================================== */
 
@@ -2329,74 +2337,98 @@ form#vstobjects.suspended {
 }
 
 .l-unit--suspended .badge {
-	background: #eaeaea !important;
-	color: #c0c0c0 !important;
-	text-shadow: 0 -1px #fafafa !important;
-	box-shadow: 0 1px 2px rgb(120 120 120 / 30%) !important;
+	background: #eaeaea;
+	color: #c0c0c0;
+	text-shadow: 0 -1px #fafafa;
+	box-shadow: 0 1px 2px rgb(120 120 120 / 30%);
 }
 
-.status-icon.large {
+/* Icon component
+   ========================================================================== */
+
+.icon-large {
 	font-size: 1rem;
 }
 
-.status-icon.yellow,
-.status-icon.yellow:hover {
-	color: #f3e72c;
+.icon-teal {
+	color: var(--icon-color-teal);
+
+	&:hover {
+		color: var(--icon-color-teal);
+	}
 }
 
-.status-icon.teal,
-.status-icon.teal:hover {
-	color: #3cc;
+.icon-purple {
+	color: var(--icon-color-purple);
+
+	&:hover {
+		color: var(--icon-color-purple);
+	}
 }
 
-.status-icon.purple,
-.status-icon.purple:hover {
-	color: #8e2fca;
+.icon-maroon {
+	color: var(--icon-color-maroon);
+
+	&:hover {
+		color: var(--icon-color-maroon);
+	}
 }
 
-.status-icon.maroon,
-.status-icon.maroon:hover {
-	color: #c36;
+.icon-red {
+	color: var(--icon-color-red);
+
+	&:hover {
+		color: var(--icon-color-red);
+	}
 }
 
-.status-icon.red,
-.status-icon.red:hover {
-	color: #f33;
+.icon-green {
+	color: var(--icon-color-green);
+
+	&:hover {
+		color: var(--icon-color-green);
+	}
 }
 
-.status-icon.green,
-.status-icon.green:hover {
-	color: #53ba55;
+.icon-orange {
+	color: var(--icon-color-orange);
+
+	&:hover {
+		color: var(--icon-color-orange);
+	}
 }
 
-.status-icon.orange,
-.status-icon.orange:hover {
-	color: #ffc043;
+.icon-blue {
+	color: var(--icon-color-blue);
+
+	&:hover {
+		color: var(--icon-color-blue);
+	}
 }
 
-.status-icon.lightblue,
-.status-icon.lightblue:hover {
-	color: #6eb6f0;
+.icon-lightblue {
+	color: var(--icon-color-lightblue);
+
+	&:hover {
+		color: var(--icon-color-lightblue);
+	}
 }
 
-.status-icon.highlight,
-.status-icon.highlight:hover {
+.icon-highlight {
 	color: #323232;
+
+	&:hover {
+		color: #323232;
+	}
 }
 
-.status-icon.blue,
-.status-icon.blue:hover {
-	color: #326b9b;
-}
-
-.status-icon.dim {
+.icon-dim {
 	color: #ddd;
 	text-shadow: 1px 1px rgb(255 255 255 / 30%);
 }
 
-.l-unit--suspended .status-icon.dim {
-	color: #c0c0c0 !important;
-	text-shadow: 0 !important;
+.l-unit--suspended .icon-dim {
+	color: #c0c0c0;
 }
 
 .cron-helper-container {
@@ -2475,59 +2507,21 @@ form#vstobjects.suspended {
 }
 
 .app-footer {
+	color: #7c7c7c;
 	border-top: 1px solid #ddd;
 	font-size: 0.8rem;
-	padding-top: 30px;
-	padding-bottom: 30px;
-}
-
-/* Collapse component
-   ========================================================================== */
-
-.collapse {
-}
-
-.collapse[open] .collapse-header::after {
-	transform: rotate(180deg);
-}
-
-.collapse-header {
-	background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
-	border: 1px solid #ddd;
-	text-shadow: 0 1px rgb(255 255 255 / 95%);
-	box-shadow: inset 0 0 1px rgb(255 255 255 / 100%), inset 0 0 4px rgb(255 255 255 / 80%),
-		0 4px 6px rgb(190 190 190 / 40%);
-	font-weight: 600;
-	color: #30659d;
-	cursor: pointer;
-	position: relative;
-	padding: 8px 18px;
-
-	&:hover {
-		color: #ff3478;
-	}
-
-	&::after {
-		content: "";
-		display: block;
-		background-image: url("/images/arrow.svg");
-		background-size: 22px auto;
-		background-repeat: no-repeat;
-		background-position: center;
-		size: 22px 100%;
-		position: absolute;
-		top: 0;
-		right: 15px;
-	}
-}
-
-.collapse-content {
-	box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
-	padding: 20px 20px 10px;
+	padding-top: 20px;
+	padding-bottom: 20px;
 
 	@media (--viewport-medium) {
-		padding: 20px 50px 10px;
+		padding-top: 40px;
+		padding-bottom: 40px;
 	}
+}
+
+.app-footer-inner {
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 /* Alerts
@@ -2600,26 +2594,22 @@ form#vstobjects.suspended {
 /* Inline alerts
 		========================================================================== */
 
-.inline-danger {
-	color: #f33;
+.inline-alert {
+	display: flex;
 	font-weight: 600;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 
 	& .fas {
-		margin-right: 3px;
+		margin-top: 4px;
+		margin-right: 6px;
 	}
 }
 
-.inline-success {
-	color: #53ba55;
-	font-weight: 600;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+.inline-alert-danger {
+	color: #f33;
+}
 
-	& .fas {
-		margin-right: 3px;
-	}
+.inline-alert-success {
+	color: #53ba55;
 
 	& a {
 		color: #326b9b;

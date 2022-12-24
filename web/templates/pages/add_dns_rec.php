@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/dns/?domain=<?= htmlentities(trim($v_domain, "'")) ?>&token=<?= $_SESSION["token"] ?>">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+			<button type="submit" class="button" form="vstobjects">
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -66,20 +66,20 @@
 							}
 						?>
 					</select>
-					<input type="text" class="form-control list-editor" name="v_val" id="v_val" value="<?=htmlentities(trim($v_val, "'"))?>">
+					<input type="text" class="form-control list-editor" name="v_val" id="v_val" value="<?= htmlentities(trim($v_val, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_priority" class="form-label">
 					<?= _("Priority") ?> <span class="optional">(<?= _("optional") ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_priority" id="v_priority" value="<?=htmlentities(trim($v_priority, "'"))?>">
+				<input type="text" class="form-control" name="v_priority" id="v_priority" value="<?= htmlentities(trim($v_priority, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_ttl" class="form-label">
 					<?= _("TTL") ?> <span class="optional">(<?= _("optional") ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?=htmlentities(trim($v_ttl, "'"))?>">
+				<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?= htmlentities(trim($v_ttl, "'")) ?>">
 			</div>
 		</div>
 

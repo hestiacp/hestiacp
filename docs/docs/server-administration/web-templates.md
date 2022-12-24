@@ -104,7 +104,7 @@ FastCGI cache works best for sites get a lot of request and where the pages don�
 
 ### Why does software package x and y not work with FastCGI cache
 
-As we have over 20 different templates and we don’t use them all, we have decided to stop releasing new ones the future and hope the community helps improving the templates by [submitting a Pull request](https://github.com/hestiacp/hestiacp/pulls).
+As we have over 20 different templates and we don’t use them all, we have decided to stop releasing new ones the future and hope the community helps improving the templates by [submitting a Pull Request](https://github.com/hestiacp/hestiacp/pulls).
 
 If you want to add support to a certain template, follow the instructions below.
 

@@ -4,7 +4,7 @@
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
 				<a href="/add/web/" class="button button-secondary" id="btn-create">
-					<i class="fas fa-circle-plus status-icon green"></i><?= _("Add Web Domain") ?>
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Web Domain") ?>
 				</a>
 			<?php } ?>
 		</div>
@@ -24,12 +24,12 @@
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-ip" sort_as_int="1"><span class="name"><?= _("IP address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<?php if ($read_only !== 'true') {?>
+				<?php if ($read_only !== "true") { ?>
 					<form x-bind="BulkEdit" action="/bulk/web/" method="post">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>
-							<?php if ($_SESSION['userContext'] === 'admin') {?>
+							<?php if ($_SESSION["userContext"] === "admin") { ?>
 								<option value="rebuild"><?= _("rebuild") ?></option>
 							<?php } ?>
 							<option value="suspend"><?= _("suspend") ?></option>
@@ -62,7 +62,7 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
@@ -150,15 +150,15 @@
 					}
 				} else {
 					if ($data[$key]['SSL'] == 'no') {
-						$icon_ssl = 'fas fa-circle-xmark status-icon red';
+						$icon_ssl = 'fas fa-circle-xmark icon-red';
 					}
 					if ($data[$key]['SSL'] == 'yes') {
-						$icon_ssl = 'fas fa-circle-check status-icon green';
+						$icon_ssl = 'fas fa-circle-check icon-green';
 					}
 					if ($web_stats == 'no') {
-						$icon_webstats = 'fas fa-circle-xmark status-icon red';
+						$icon_webstats = 'fas fa-circle-xmark icon-red';
 					} else {
-						$icon_webstats = 'fas fa-circle-check status-icon green';
+						$icon_webstats = 'fas fa-circle-check icon-green';
 					}
 				}
 			?>
@@ -192,20 +192,20 @@
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix">
 								<?php if (!empty($data[$key]['STATS'])) { ?>
-									<div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/" rel="noopener" target="_blank" rel="noopener" title="<?= _("Statistics") ?>"><i class="fas fa-chart-bar status-icon maroon status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__logs shortcut-w" key-action="href"><a href="http://<?=$key?>/vstats/" rel="noopener" target="_blank" rel="noopener" title="<?= _("Statistics") ?>"><i class="fas fa-chart-bar icon-maroon icon-dim"></i></a></div>
 								<?php } ?>
-									<div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" rel="noopener" target="_blank"><i class="fas fa-square-up-right status-icon lightblue status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__view" key-action="href"><a href="http://<?=$key?>/" rel="noopener" target="_blank"><i class="fas fa-square-up-right icon-lightblue icon-dim"></i></a></div>
 								<?php if ($read_only === 'true') {?>
 									<!-- Restrict ability to edit, delete, or suspend web domains when impersonating the 'admin' account -->
 									&nbsp;
 								<?php } else { ?>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Domain") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 									<?php } ?>
-									<div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?=$key?>&type=access#" title="<?= _("AccessLog") ?>"><i class="fas fa-binoculars status-icon purple status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__logs shortcut-l" key-action="href"><a href="/list/web-log/?domain=<?=$key?>&type=access#" title="<?= _("AccessLog") ?>"><i class="fas fa-binoculars icon-purple icon-dim"></i></a></div>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 										<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-											<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+											<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
 											<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>">
 											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 												<p><?=sprintf($spnd_confirmation,$key)?></p>
@@ -214,7 +214,7 @@
 									</div>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 										<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-											<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+											<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 											<input type="hidden" name="delete_url" value="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>">
 											<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 												<p><?=sprintf(_('DELETE_DOMAIN_CONFIRMATION'),$key)?></p>
@@ -242,11 +242,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext("%d web domain", "%d web domains", $i), $i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d web domain", "%d web domains", $i), $i); ?>
+		</p>
 	</div>
 </footer>

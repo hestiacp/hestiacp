@@ -60,7 +60,7 @@
 						>
 							<i
 								x-bind:class="{
-									'animate__animated animate__swing status-icon orange': (!initialized && <?= $panel[$user]["NOTIFICATIONS"] == "yes" ? "true" : "false" ?>) || notifications.length != 0,
+									'animate__animated animate__swing icon-orange': (!initialized && <?= $panel[$user]["NOTIFICATIONS"] == "yes" ? "true" : "false" ?>) || notifications.length != 0,
 									'fas fa-bell': true
 								}"
 							></i>
@@ -73,7 +73,7 @@
 						>
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
-									<i class="fas fa-bell-slash status-icon dim"></i>
+									<i class="fas fa-bell-slash icon-dim"></i>
 									<p><?= _("no notifications") ?></p>
 								</li>
 							</template>
@@ -85,13 +85,14 @@
 								>
 									<div class="top-bar-notification-header">
 										<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
-										<a
+										<button
 											x-on:click="remove(notification.ID)"
-											href="#"
+											type="button"
 											class="top-bar-notification-delete"
+											title="<?= _("Delete notification") ?>"
 										>
 											<i class="fas fa-xmark"></i>
-										</a>
+										</button>
 									</div>
 									<div x-html="notification.NOTICE"></div>
 									<p
@@ -102,14 +103,14 @@
 							</template>
 							<template x-if="initialized && notifications.length > 2">
 								<li>
-									<a
+									<button
 										x-on:click="removeAll()"
-										href="#"
-										class="top-bar-notification-mark-all"
+										type="button"
+										class="top-bar-notification-delete-all"
 									>
 										<i class="fas fa-check"></i>
 										<?= _("Delete all notifications") ?>
-									</a>
+									</button>
 								</li>
 							</template>
 						</ul>

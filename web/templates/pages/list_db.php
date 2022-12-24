@@ -17,16 +17,16 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
 				<a href="/add/db/" class="button button-secondary" id="btn-create">
-					<i class="fas fa-circle-plus status-icon green"></i><?= _("Add Database") ?>
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Database") ?>
 				</a>
 				<?php if ($_SESSION["DB_SYSTEM"] === "mysql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
 					<a class="button button-secondary <?= ipUsed() ? "button-suspended" : "" ?>" href="<?= $db_myadmin_link ?>" target="_blank">
-						<i class="fas fa-database status-icon orange"></i>phpMyAdmin
+						<i class="fas fa-database icon-orange"></i>phpMyAdmin
 					</a>
 				<?php } ?>
 				<?php if ($_SESSION["DB_SYSTEM"] === "pgsql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>
 					<a class="button button-secondary <?= ipUsed() ? "button-suspended" : "" ?>" href="<?= $db_pgadmin_link ?>" target="_blank">
-						<i class="fas fa-database status-icon orange"></i>phpPgAdmin
+						<i class="fas fa-database icon-orange"></i>phpPgAdmin
 					</a>
 				<?php } ?>
 				<?php if (ipUsed()) { ?>
@@ -149,14 +149,14 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 									&nbsp;
 								<?php } else { ?>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Database") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Database") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 									<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?= _("phpMyAdmin") ?>"><i class="fas fa-right-to-bracket status-icon orange status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?= _("phpMyAdmin") ?>"><i class="fas fa-right-to-bracket icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 										<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-											<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+											<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
 											<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>">
 											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 												<p><?=sprintf($spnd_confirmation,$key)?></p>
@@ -165,7 +165,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 									</div>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 										<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-											<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+											<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 											<input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>">
 											<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 												<p><?=sprintf(_('DELETE_DATABASE_CONFIRMATION'),$key)?></p>
@@ -189,11 +189,9 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext("%d SQL database", "%d SQL databases", $i), $i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d SQL database", "%d SQL databases", $i), $i); ?>
+		</p>
 	</div>
 </footer>

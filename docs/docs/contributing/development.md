@@ -5,7 +5,7 @@ Hestia is an open-source project, and we welcome contributions from the communit
 Hestia is designed to be installed on a web server. To develop Hestia on your local machine, a virtual machine is recommend.
 
 ::: warning
-Development builds are unstable. If you encounter a bug please [report it via GitHub](https://github.com/hestiacp/hestiacp/issues/new/choose) or [submit a Pull request](https://github.com/hestiacp/hestiacp/pulls).
+Development builds are unstable. If you encounter a bug please [report it via GitHub](https://github.com/hestiacp/hestiacp/issues/new/choose) or [submit a Pull Request](https://github.com/hestiacp/hestiacp/pulls).
 :::
 
 ## Creating a virtual machine for development
@@ -13,6 +13,16 @@ Development builds are unstable. If you encounter a bug please [report it via Gi
 These are example instructions for creating a virtual machine running Hestia for development.
 
 These instructions use [Multipass](https://multipass.run/) to create the VM. Feel free to adapt the commands for any virtualization software you prefer.
+
+::: warning
+Sometimes the mapping between the source code directory on your local machine to the directory in the VM can be lost. If this happens simply unmount and remount e.g.
+
+```bash
+multipass unmount hestia-dev
+multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
+```
+
+:::
 
 1. [Install Multipass](https://multipass.run/install) for your OS.
 
@@ -22,10 +32,10 @@ These instructions use [Multipass](https://multipass.run/) to create the VM. Fee
    git clone https://github.com/YourUsername/hestiacp.git $HOME/projects
    ```
 
-1. Create an Ubuntu VM with at least 2G of memory
+1. Create an Ubuntu VM with at least 2G of memory and 15G of disk space
 
    ```bash
-   multipass launch --name hestia-dev --mem 2G
+   multipass launch --name hestia-dev --mem 2G --disk 15G
    ```
 
 1. Map your cloned repository to the VM's home directory
@@ -37,7 +47,7 @@ These instructions use [Multipass](https://multipass.run/) to create the VM. Fee
 1. SSH into the VM as root and install some required packages
 
    ```bash
-   multipass exec hestiacp-dev -- sudo bash
+   multipass exec hestia-dev -- sudo bash
    sudo apt update && sudo apt install -y jq libjq1
    ```
 
@@ -54,7 +64,7 @@ These instructions use [Multipass](https://multipass.run/) to create the VM. Fee
 
    ```bash
    cd ../install
-   bash hst-install.sh -D /tmp/hestiacp-src/deb/ --interactive no --email admin@example.com --password password123 --hostname demo.hestiacp.com -f
+   bash hst-install-ubuntu.sh -D /tmp/hestiacp-src/deb/ --interactive no --email admin@example.com --password password123 --hostname demo.hestiacp.com -f
    ```
 
 1. Reboot VM (and exit SSH session)

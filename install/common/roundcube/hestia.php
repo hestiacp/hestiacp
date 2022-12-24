@@ -7,7 +7,7 @@
  * @author HestiaCP <info@hestiacp.com>
  */
 class rcube_hestia_password {
-	function save($curpass, $passwd) {
+	public function save($curpass, $passwd) {
 		$rcmail = rcmail::get_instance();
 		$hestia_host = $rcmail->config->get("password_hestia_host");
 
@@ -25,45 +25,29 @@ class rcube_hestia_password {
 			"password" => $curpass,
 			"new" => $passwd,
 		];
-
-		$postdata = http_build_query($postvars);
-
-		$send = "POST /reset/mail/ HTTP/1.1" . PHP_EOL;
-		$send .= "Host: " . $hestia_host . PHP_EOL;
-		$send .= "User-Agent: PHP Script" . PHP_EOL;
-		$send .= "Content-length: " . strlen($postdata) . PHP_EOL;
-		$send .= "Content-type: application/x-www-form-urlencoded" . PHP_EOL;
-		$send .= "Connection: close" . PHP_EOL;
-		$send .= PHP_EOL;
-		$send .= $postdata . PHP_EOL . PHP_EOL;
-
-		//$fp = fsockopen('ssl://' . $hestia_host, $hestia_port);
-		$errno = "";
-		$errstr = "";
-		$context = stream_context_create();
-
-		$result = stream_context_set_option($context, "ssl", "verify_peer", false);
-		$result = stream_context_set_option($context, "ssl", "verify_peer_name", false);
-		$result = stream_context_set_option($context, "ssl", "verify_host", false);
-		$result = stream_context_set_option($context, "ssl", "allow_self_signed", true);
-
-		$fp = stream_socket_client(
-			"ssl://" . $hestia_host . ":" . $hestia_port,
-			$errno,
-			$errstr,
-			60,
-			STREAM_CLIENT_CONNECT,
-			$context,
-		);
-		fputs($fp, $send);
-		$result = fread($fp, 2048);
-		fclose($fp);
-
-		$fp = fopen("/tmp/roundcube.log", "w");
-		fwrite($fp, "test ok");
-		fwrite($fp, "\n");
-		fclose($fp);
-
+		$url = "https://{$hestia_host}:{$hestia_port}/reset/mail/";
+		$ch = curl_init();
+		if (
+			false ===
+			curl_setopt_array($ch, [
+				CURLOPT_URL => $url,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_HEADER => true,
+				CURLOPT_POST => true,
+				CURLOPT_POSTFIELDS => http_build_query($postvars),
+				CURLOPT_USERAGENT => "Hestia Control Panel Password Driver",
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_SSL_VERIFYHOST => false,
+			])
+		) {
+			// should never happen
+			throw new Exception("curl_setopt_array() failed: " . curl_error($ch));
+		}
+		$result = curl_exec($ch);
+		if (curl_errno($ch) !== CURLE_OK) {
+			throw new Exception("curl_exec() failed: " . curl_error($ch));
+		}
+		curl_close($ch);
 		if (strpos($result, "ok") && !strpos($result, "error")) {
 			return PASSWORD_SUCCESS;
 		} else {

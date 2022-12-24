@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== 'true') {?>
-				<a href="/add/mail/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add Mail Domain") ?></a>
+			<?php if ($read_only !== "true") { ?>
+				<a href="/add/mail/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Domain") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -57,7 +57,7 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-right compact-5"><b>&nbsp;</b></div>
@@ -108,24 +108,24 @@
 				$spnd_icon = 'fa-pause';
 				$spnd_confirmation = _('SUSPEND_DOMAIN_CONFIRMATION');
 				if ($data[$key]['ANTIVIRUS'] == 'no') {
-					$antivirus_icon = 'fa-circle-xmark status-icon red';
+					$antivirus_icon = 'fa-circle-xmark icon-red';
 				} else {
-					$antivirus_icon = 'fa-circle-check status-icon green';
+					$antivirus_icon = 'fa-circle-check icon-green';
 				}
 				if ($data[$key]['ANTISPAM'] == 'no') {
-					$antispam_icon = 'fa-circle-xmark status-icon red';
+					$antispam_icon = 'fa-circle-xmark icon-red';
 				} else {
-					$antispam_icon = 'fa-circle-check status-icon green';
+					$antispam_icon = 'fa-circle-check icon-green';
 				}
 				if ($data[$key]['DKIM'] == 'no') {
-					$dkim_icon = 'fa-circle-xmark status-icon red';
+					$dkim_icon = 'fa-circle-xmark icon-red';
 				} else {
-					$dkim_icon = 'fa-circle-check status-icon green';
+					$dkim_icon = 'fa-circle-check icon-green';
 				}
 				if ($data[$key]['SSL'] == 'no') {
-					$ssl_icon = 'fa-circle-xmark status-icon red';
+					$ssl_icon = 'fa-circle-xmark icon-red';
 				} else {
-					$ssl_icon = 'fa-circle-check status-icon green';
+					$ssl_icon = 'fa-circle-check icon-green';
 				}
 			}
 			if (empty($data[$key]['CATCHALL'])) {
@@ -147,25 +147,25 @@
 							<div class="actions-panel clearfix">
 								<?php if ($read_only === 'true') {?>
 									<!-- Restrict ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
-									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("mail accounts") ?>"><i class="fas fa-users status-icon blue status-icon dim"></i></a></div>
-									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records mail") ?>"><i class="fas fa-book-atlas status-icon blue status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("mail accounts") ?>"><i class="fas fa-users icon-blue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records mail") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
 									<?php } ?>
 								<?php } else { ?>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Add Mail Account") ?>"><i class="fas fa-circle-plus status-icon green status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Add Mail Account") ?>"><i class="fas fa-circle-plus icon-green icon-dim"></i></a></div>
 										<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 											<?php if (!empty($data[$key]['WEBMAIL'])) {?>
-												<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane status-icon lightblue status-icon dim"></i></a></div>
+												<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
 											<?php } ?>
 										<?php } ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Domain") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 									<?php } ?>
-									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-book-atlas status-icon blue status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 										<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-											<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+											<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
 											<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>">
 											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 												<p><?=sprintf($spnd_confirmation,$key)?></p>
@@ -174,7 +174,7 @@
 									</div>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 										<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-											<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+											<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 											<input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>">
 											<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 												<p><?=sprintf(_('DELETE_DOMAIN_CONFIRMATION'),$key)?></p>
@@ -219,11 +219,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d mail domain', '%d mail domains', $i),$i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext('%d mail domain', '%d mail domains', $i),$i); ?>
+		</p>
 	</div>
 </footer>

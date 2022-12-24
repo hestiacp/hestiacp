@@ -7,7 +7,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 		</div>
 		<div class="toolbar-right">
 		</div>
@@ -113,12 +113,4 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
-	</div>
 </footer>

@@ -7,7 +7,7 @@
 			<h1 class="login-title">
 				<?= _("2FA Reset successfully") ?>
 			</h1>
-			<?php if (isset($ERROR)) echo $ERROR ?>
+			<?php show_error_message($ERROR); ?>
 			<div class="u-mt20">
 				<button type="button" class="button button-secondary" onclick="location.href='/login/'">
 					<?= _("Log in") ?>
@@ -20,7 +20,7 @@
 			<h1 class="login-title">
 				<?= _("Reset 2FA") ?>
 			</div>
-			<?php if (isset($ERROR)) echo $ERROR ?>
+			<?php show_error_message($ERROR); ?>
 			<div class="u-mb10">
 				<label for="user" class="form-label"><?= _("Username") ?></label>
 				<input type="text" class="form-control" name="user" id="user">

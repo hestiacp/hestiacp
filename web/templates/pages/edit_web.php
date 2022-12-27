@@ -392,7 +392,7 @@
 						<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;">
 							<div class="u-mb10">
 								<?= _("FTP") ?> #<span class="ftp-user-number"><?=$i + 1; ?></span>
-								<a class="form-link form-link-danger" href="#" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
+								<button class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></button>
 								<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
 								<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
 							</div>

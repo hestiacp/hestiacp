@@ -2,9 +2,9 @@
 
 ![Hestia screenshot](https://hestiacp.com/img/screen_HestiaServer-dark.png)
 
-<h2 align="center">Lightweight and powerful control panel for the modern web.</h2>
+<h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.6.11 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.6.14 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |

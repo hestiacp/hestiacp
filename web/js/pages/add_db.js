@@ -102,7 +102,7 @@ App.Listeners.DB.keypress_v_password();
 App.Listeners.DB.keypress_db_username();
 App.Listeners.DB.keypress_db_databasename();
 
-applyRandomString = function (min_length = 16) {
+applyRandomPassword = function (min_length = 16) {
 	$('input[name=v_password]').val(randomString(min_length));
 	App.Actions.DB.update_password_meter();
 };

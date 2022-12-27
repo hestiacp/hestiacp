@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/server/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?=_('Save');?>
+			<button type="submit" class="button" form="vstobjects">
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -18,12 +18,12 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_configure_server" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?=_('Configuring Server');?>: PHP</h1>
-			<?php show_alert_message($_SESSION);?>
+			<h1 class="form-title"><?= _("Configuring Server") ?>: PHP</h1>
+			<?php show_alert_message($_SESSION); ?>
 			<div id="basic-options">
 				<div class="u-mb10">
 					<label for="v_max_execution_time" class="form-label">max_execution_time</label>
@@ -35,7 +35,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_memory_limit" class="form-label">memory_limit</label>
-					<input type="text" class="form-control" regexp="memory_limit" prev_value="<?=htmlentities($v_memory_limit)?>" name="v_memory_limit" id="v_memory_limit" value="<?=htmlentities($v_memory_limit)?>">
+					<input type="text" class="form-control" regexp="memory_limit" prev_value="<?= htmlentities($v_memory_limit) ?>" name="v_memory_limit" id="v_memory_limit" value="<?= htmlentities($v_memory_limit) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_error_reporting" class="form-label">error_reporting</label>
@@ -54,21 +54,21 @@
 					<input type="text" class="form-control" regexp="upload_max_filesize" prev_value="<?=htmlentities($v_upload_max_filesize)?>" name="v_upload_max_filesize" id="v_upload_max_filesize" value="<?=htmlentities($v_upload_max_filesize)?>">
 				</div>
 				<div class="u-mb20">
-					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Advanced options');?></a>
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Advanced options") ?></a>
 				</div>
 			</div>
 			<div id="advanced-options" style="display:<?php if (empty($v_adv)) echo 'none';?> ;">
 				<div class="u-mb20">
-					<a href="javascript:toggleOptions();" class="button button-secondary"><?=_('Basic options');?></a>
+					<a href="javascript:toggleOptions();" class="button button-secondary"><?= _("Basic options") ?></a>
 				</div>
 				<div class="u-mb20">
-					<label for="v_config" class="form-label"><?=$v_config_path;?></label>
-					<textarea class="form-control u-min-height300 u-allow-resize u-console" name="v_config" id="v_config"><?=$v_config;?></textarea>
+					<label for="v_config" class="form-label"><?= $v_config_path ?></label>
+					<textarea class="form-control u-min-height600 u-allow-resize u-console" name="v_config" id="v_config"><?= $v_config ?></textarea>
 				</div>
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 					<label for="v_restart">
-						<?=_('restart');?>
+						<?= _("restart") ?>
 					</label>
 				</div>
 			</div>

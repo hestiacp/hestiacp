@@ -11,10 +11,6 @@
 	clear: both;
 }
 
-.jump-top {
-	margin-top: -60px !important;
-}
-
 .u-block {
 	display: block !important;
 }
@@ -27,11 +23,11 @@
 	user-select: none !important;
 }
 
-.text-right {
+.u-text-right {
 	text-align: right !important;
 }
 
-.text-center {
+.u-text-center {
 	text-align: center !important;
 }
 
@@ -47,6 +43,10 @@
 	overflow: hidden !important;
 	text-overflow: ellipsis !important;
 	white-space: nowrap !important;
+}
+
+.u-opacity-50 {
+	opacity: 0.5 !important;
 }
 
 .u-mt15 {
@@ -67,6 +67,10 @@
 
 .u-ml10 {
 	margin-left: 10px !important;
+}
+
+.u-mr5 {
+	margin-right: 5px !important;
 }
 
 .u-mr10 {
@@ -123,6 +127,10 @@
 
 .u-min-height300 {
 	min-height: 300px !important;
+}
+
+.u-min-height600 {
+	min-height: 600px !important;
 }
 
 .u-side-by-side {

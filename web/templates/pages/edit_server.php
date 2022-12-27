@@ -3,23 +3,23 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a href="/list/server/" class="button button-secondary" id="btn-back">
-				<i class="fas fa-arrow-left status-icon blue"></i>
+				<i class="fas fa-arrow-left icon-blue"></i>
 				<?= _("Back") ?>
 			</a>
 			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet status-icon blue"></i>
+				<i class="fas fa-ethernet icon-blue"></i>
 				<?= _("IP") ?>
 			</a>
 			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
 				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved status-icon red"></i>
+					<i class="fas fa-shield-halved icon-red"></i>
 					<?= _("Firewall") ?>
 				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i>
+			<button type="submit" class="button" form="vstobjects">
+				<i class="fas fa-floppy-disk icon-purple"></i>
 				<?= _("Save") ?>
 			</button>
 		</div>
@@ -145,12 +145,16 @@
 				<div class="collapse-content">
 					<p class="u-mb10">
 						<?= _("Version") ?>:
-						<span class="optional"><?= $_SESSION["VERSION"] ?></span>
+						<span class="optional">
+							<?= $_SESSION["VERSION"] ?>
+						</span>
 					</p>
 					<?php if ($_SESSION["RELEASE_BRANCH"] !== "release") { ?>
 						<p class="u-mb10">
 							<?= _("Release") ?>:
-							<span class="optional"><?= $_SESSION["RELEASE_BRANCH"] ?></span>
+							<span class="optional">
+								<?= $_SESSION["RELEASE_BRANCH"] ?>
+							</span>
 						</p>
 					<?php } ?>
 					<p class="u-mb5">
@@ -222,40 +226,40 @@
 					<?php if (!empty($_SESSION["PROXY_SYSTEM"])) { ?>
 						<p>
 							<?= _("Proxy Server") ?>:
-							<span class="optional">
+							<span class="u-ml5">
 								<?= $_SESSION["PROXY_SYSTEM"] ?>
-								<a href="/edit/server/<?= $_SESSION["PROXY_SYSTEM"] ?>/">
-									<i class="fas fa-pencil status-icon orange u-ml5"></i>
-								</a>
 							</span>
+							<a href="/edit/server/<?= $_SESSION["PROXY_SYSTEM"] ?>/" class="u-ml5">
+								<i class="fas fa-pencil icon-orange"></i>
+							</a>
 						</p>
 					<?php } ?>
 					<?php if (!empty($_SESSION["WEB_SYSTEM"])) { ?>
 						<p>
 							<?= _("Web Server") ?>:
-							<span class="optional">
+							<span class="u-ml5">
 								<?= $_SESSION["WEB_SYSTEM"] ?>
-								<a href="/edit/server/<?= $_SESSION["WEB_SYSTEM"] ?>/">
-									<i class="fas fa-pencil status-icon orange u-ml5"></i>
-								</a>
 							</span>
+							<a href="/edit/server/<?= $_SESSION["WEB_SYSTEM"] ?>/" class="u-ml5">
+								<i class="fas fa-pencil icon-orange"></i>
+							</a>
 						</p>
 					<?php } ?>
 					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<p>
 							<?= _("Backend Server") ?>:
-							<span class="optional">
+							<span class="u-ml5">
 								<?= $_SESSION["WEB_BACKEND"] ?>
-								<a href="/edit/server/<?= $_SESSION["WEB_BACKEND"] ?>/">
-									<i class="fas fa-pencil status-icon orange u-ml5"></i>
-								</a>
 							</span>
+							<a href="/edit/server/<? echo $_SESSION["WEB_BACKEND"] ?>/" class="u-ml5">
+								<i class="fas fa-pencil icon-orange"></i>
+							</a>
 						</p>
 					<?php } ?>
 					<?php if (!empty($_SESSION["WEB_BACKEND_POOL"])) { ?>
 						<p>
 							<?= _("Backend Pool Mode") ?>:
-							<span class="optional">
+							<span class="u-ml5">
 								<?= $_SESSION["WEB_BACKEND_POOL"] ?>
 							</span>
 						</p>
@@ -265,7 +269,7 @@
 							<p class="u-mb10">
 								<?= _("Enabled multi PHP versions") ?>
 							</p>
-							<div class="alert alert-info alert-with-icon u-mb10" role="alert">
+							<div class="alert alert-info u-mb10" role="alert">
 								<i class="fas fa-info"></i>
 								<p><?= _("Please wait while php is installed or removed") ?></p>
 							</div>
@@ -329,16 +333,16 @@
 					<div class="collapse-content">
 						<p>
 							<?= _("DNS Server") ?>:
-							<span class="optional">
+							<span class="u-ml5">
 								<?= $_SESSION["DNS_SYSTEM"] ?>
-								<a href="/edit/server/<?= $_SESSION["DNS_SYSTEM"] ?>/">
-									<i class="fas fa-pencil status-icon orange u-ml5"></i>
-								</a>
 							</span>
+							<a href="/edit/server/<? echo $_SESSION["DNS_SYSTEM"] ?>/" class="u-ml5">
+								<i class="fas fa-pencil icon-orange"></i>
+							</a>
 						</p>
 						<p>
 							<?= _("DNS Cluster") ?>:
-							<span class="optional">
+							<span class="u-ml5">
 								<?= $v_dns_cluster == "yes" ? _("Yes") : _("No") ?>
 							</span>
 						</p>
@@ -375,33 +379,33 @@
 					<div class="collapse-content">
 						<p>
 							<?= _("Mail Server") ?>:
-							<span class="optional">
+							<span class="u-ml5">
 								<?= $_SESSION["MAIL_SYSTEM"] ?>
-								<a href="/edit/server/<?= $_SESSION["MAIL_SYSTEM"] ?>/">
-									<i class="fas fa-pencil status-icon orange u-ml5"></i>
-								</a>
 							</span>
+							<a href="/edit/server/<? echo $_SESSION["MAIL_SYSTEM"] ?>/" class="u-ml5">
+								<i class="fas fa-pencil icon-orange"></i>
+							</a>
 						</p>
 						<?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
 							<p>
 								<?= _("Antivirus") ?>:
-								<span class="optional">
+								<span class="u-ml5">
 									<?= $_SESSION["ANTIVIRUS_SYSTEM"] ?>
-									<a href="/edit/server/<?= $_SESSION["ANTIVIRUS_SYSTEM"] ?>/">
-										<i class="fas fa-pencil status-icon orange u-ml5"></i>
-									</a>
 								</span>
+								<a href="/edit/server/<? echo $_SESSION["ANTIVIRUS_SYSTEM"] ?>/" class="u-ml5">
+									<i class="fas fa-pencil icon-orange"></i>
+								</a>
 							</p>
 						<?php } ?>
 						<?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
 							<p>
 								<?= _("AntiSpam") ?>:
-								<span class="optional">
+								<span class="u-ml5">
 									<?= $_SESSION["ANTISPAM_SYSTEM"] ?>
-									<a href="/edit/server/<?= $_SESSION["ANTISPAM_SYSTEM"] ?>/">
-										<i class="fas fa-pencil status-icon orange u-ml5"></i>
-									</a>
 								</span>
+								<a href="/edit/server/<?= $_SESSION["ANTISPAM_SYSTEM"] ?>/" class="u-ml5">
+									<i class="fas fa-pencil icon-orange"></i>
+								</a>
 							</p>
 						<?php } ?>
 						<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
@@ -416,7 +420,6 @@
 									class="form-control"
 									name="v_webmail_alias"
 									id="v_webmail_alias"
-									value="<?= $_SESSION["WEBMAIL_ALIAS"] ?>"
 								>
 							</div>
 						<?php } ?>
@@ -502,11 +505,11 @@
 						<div class="u-mb10">
 							<p>
 								<?= _("MySQL Support") ?>:
-								<span class="optional">
+								<span class="u-ml5">
 									<?= $v_mysql == "yes" ? _("Yes") : _("No") ?>
 								</span>
-								<a href="/edit/server/mysql/">
-									<i class="fas fa-pencil status-icon orange u-ml5"></i>
+								<a href="/edit/server/mysql/" class="u-ml5">
+									<i class="fas fa-pencil icon-orange"></i>
 								</a>
 							</p>
 						</div>
@@ -558,7 +561,7 @@
 							<div class="u-pl30">
 								<div class="u-mb10">
 									<label for="v_mysql_host" class="form-label">
-										<?= _("Host"). " #" . $i ?>
+										<?= _("Host") . " #" . $i ?>
 									</label>
 									<input
 										type="text"
@@ -615,11 +618,11 @@
 							<div class="u-mb10">
 								<p>
 									<?= _("PostgreSQL Support") ?>:
-									<span class="optional">
+									<span class="u-ml5">
 										<?= $v_pgsql == "yes" ? _("Yes") : _("No") ?>
 									</span>
-									<a href="/edit/server/postgresql/">
-										<i class="fas fa-pencil status-icon orange u-ml5"></i>
+									<a href="/edit/server/postgresql/" class="u-ml5">
+										<i class="fas fa-pencil icon-orange"></i>
 									</a>
 								</p>
 							</div>
@@ -637,7 +640,7 @@
 							?>
 							<div class="u-pl30">
 								<div class="u-mb10">
-									<label for="v_pgsql_host" class="form-label"><?= _("Host"). " #".$i ?></label>
+									<label for="v_pgsql_host" class="form-label"><?= _("Host") . " #" . $i ?></label>
 									<input type="text" class="form-control" name="v_pgsql_host" id="v_pgsql_host" value="<?= $value["HOST"] ?>" disabled>
 								</div>
 								<div class="u-mb10">
@@ -684,6 +687,7 @@
 							<a
 								href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-difference-between-zstd-and-gzip"
 								target="_blank"
+								class="u-ml5"
 							>
 								<i class="fas fa-circle-question"></i>
 							</a>
@@ -703,6 +707,7 @@
 							<a
 								href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-optimal-compression-ratio"
 								target="_blank"
+								class="u-ml5"
 							>
 								<i class="fas fa-circle-question"></i>
 							</a>
@@ -725,6 +730,7 @@
 							<a
 								href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"
 								target="_blank"
+								class="u-ml5"
 							>
 								<i class="fas fa-circle-question"></i>
 							</a>
@@ -757,6 +763,7 @@
 								<a
 									href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"
 									target="_blank"
+									class="u-ml5"
 								>
 									<i class="fas fa-circle-question"></i>
 								</a>
@@ -845,7 +852,7 @@
 								>
 							</div>
 						</div>
-						<div x-cloak x-show="backupType == "b2'">
+						<div x-cloak x-show="backupType == 'b2'">
 							<div class="u-mb10">
 								<label for="v_backup_bucket" class="form-label">
 									<?= _("Bucket") ?>
@@ -883,7 +890,7 @@
 								>
 							</div>
 						</div>
-						<div x-cloak x-show="backupType == "rclone'">
+						<div x-cloak x-show="backupType == 'rclone'">
 							<div class="u-mb10">
 								<label for="v_rclone_host" class="form-label">
 									<?= _("Host") ?>
@@ -926,7 +933,7 @@
 							<span id="generate-csr">
 								/
 								<a
-									class="generate"
+									class="form-link"
 									href="/generate/ssl/?domain=<?= htmlentities(trim($v_hostname,'"')) ?>"
 									target="_blank"
 								>
@@ -996,17 +1003,17 @@
 					<?= _("Security") ?>
 				</summary>
 				<div class="collapse-content">
-					<h3 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
+					<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
 						<?= _("System") ?>
 						<i
 							x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas status-icon dim maroon js-section-toggle-icon"
+							class="fas icon-dim icon-maroon js-section-toggle-icon"
 						></i>
-					</h3>
+					</h2>
 					<div x-cloak x-show="showSystemOptions">
-						<p class="u-pt18" style="font-size: 1rem; padding-bottom: 12px;">
+						<h3 class="u-mt20 u-mb10">
 							<?= _("API") ?>
-						</p>
+						</h3>
 						<div class="u-mb10">
 							<label for="v_api_system" class="form-label">
 								<?= _("Enable API access") ?>
@@ -1051,9 +1058,9 @@
 								</textarea>
 							</div>
 						</div>
-						<p class="u-pt18" style="font-size: 1rem; padding-bottom: 12px;">
+						<h3 class="u-mt20 u-mb10">
 							<?= _("Login") ?>
-						</p>
+						</h3>
 						<div class="u-mb10">
 							<label for="v_login_style" class="form-label">
 								<?= _("Login screen style") ?>
@@ -1122,17 +1129,17 @@
 					</div>
 
 					<?php if (($_SESSION["userContext"] === "admin") && ($_SESSION["user"] === "admin")) { ?>
-						<h3 x-on:click="showProtectionOptions = !showProtectionOptions" class="section-title">
+						<h2 x-on:click="showProtectionOptions = !showProtectionOptions" class="section-title">
 							<?= _("System Protection") ?>
 							<i
 								x-bind:class="showProtectionOptions ? 'fa-square-minus' : 'fa-square-plus'"
-								class="fas status-icon dim maroon js-section-toggle-icon"
+								class="fas icon-dim icon-maroon js-section-toggle-icon"
 							></i>
-						</h3>
+						</h2>
 						<div x-cloak x-show="showProtectionOptions">
-							<p class="u-pt18" style="font-size: 1rem; padding-bottom: 12px;">
+							<h3 class="u-mt20 u-mb10">
 								<?= _("System Administrator account") ?>
-							</p>
+							</h3>
 							<div class="u-mb10">
 								<label for="v_policy_system_protected_admin" class="form-label">
 									<?= _("Restrict access to read-only for other administrators") ?>
@@ -1186,18 +1193,17 @@
 							</div>
 						</div>
 					<?php } ?>
-
-					<h3 x-on:click="showPolicyOptions = !showPolicyOptions" class="section-title">
+					<h2 x-on:click="showPolicyOptions = !showPolicyOptions" class="section-title">
 						<?= _("Policies") ?>
 						<i
 							x-bind:class="showPolicyOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas status-icon dim maroon js-section-toggle-icon"
+							class="fas icon-dim icon-maroon js-section-toggle-icon"
 						></i>
-					</h3>
+					</h2>
 					<div x-cloak x-show="showPolicyOptions">
-						<p class="u-pt18" style="font-size: 1rem; padding-bottom: 12px;">
+						<h3 class="u-mt20 u-mb10">
 							<?= _("Users") ?>
-						</p>
+						</h3>
 						<?php if ($_SESSION["POLICY_SYSTEM_ENABLE_BACON"] === "true") { ?>
 							<div class="u-mb10">
 								<label for="v_policy_user_view_suspended" class="form-label">
@@ -1299,9 +1305,9 @@
 								</option>
 							</select>
 						</div>
-						<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
+						<h3 class="u-mt20 u-mb10">
 							<?= _("Domains") ?>
-						</p>
+						</h3>
 						<div class="u-mb10">
 							<label for="v_enforce_subdomain_ownership" class="form-label">
 								<?= _("Enforce subdomain ownership") ?>

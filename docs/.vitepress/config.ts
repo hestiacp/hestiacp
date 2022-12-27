@@ -7,7 +7,7 @@ export default defineConfig({
 	description: "Open-source web server control panel.",
 
 	lastUpdated: true,
-	cleanUrls: "with-subfolders",
+	cleanUrls: "disabled",
 
 	head: [
 		["link", { rel: "icon", sizes: "any", href: "/favicon.ico" }],
@@ -34,7 +34,7 @@ export default defineConfig({
 		outline: [2, 3],
 
 		editLink: {
-			pattern: "https://github.com/hestiacp/hestiacp-docs/edit/main/docs/:path",
+			pattern: "https://github.com/hestiacp/hestiacp/edit/main/docs/:path",
 			text: "Edit this page on GitHub",
 		},
 

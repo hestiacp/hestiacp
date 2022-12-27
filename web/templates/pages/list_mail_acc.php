@@ -1,43 +1,45 @@
 <?php
-	$v_webmail_alias = "webmail";
-	if (!empty($_SESSION['WEBMAIL_ALIAS'])) $v_webmail_alias = $_SESSION['WEBMAIL_ALIAS'];
+$v_webmail_alias = "webmail";
+if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
+	$v_webmail_alias = $_SESSION["WEBMAIL_ALIAS"];
+}
 ?>
 <!-- Begin toolbar -->
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left status-icon blue"></i><?=_('Back');?></a>
-			<?php if ($read_only !== 'true') { ?>
-				<a href="/add/mail/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?=_('Add Mail Account');?></a>
-				<a href="/edit/mail/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil status-icon blue"></i><?=_('Editing Mail Domain');?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<?php if ($read_only !== "true") { ?>
+				<a href="/add/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Account") ?></a>
+				<a href="/edit/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil icon-blue"></i><?= _("Editing Mail Domain") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<a href="#" class="toolbar-sorting-toggle" title="<?=_('Sort items');?>">
-					<?=_('sort by');?>:
+				<a href="#" class="toolbar-sorting-toggle" title="<?= _("Sort items") ?>">
+					<?= _("sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</a>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?=_('Date');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-disk" sort_as_int="1"><span class="name"><?=_('Disk');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?=_('Name');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-quota" sort_as_int="1"><span class="name"><?=_('Quota');?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-disk" sort_as_int="1"><span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-quota" sort_as_int="1"><span class="name"><?= _("Quota") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<?php if ($read_only !== 'true') { ?>
+				<?php if ($read_only !== "true") { ?>
 					<form x-bind="BulkEdit" action="/bulk/mail/" method="post">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-						<input type="hidden" value="<?=htmlspecialchars($_GET['domain']); ?>" name="domain">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+						<input type="hidden" value="<?= htmlspecialchars($_GET["domain"]) ?>" name="domain">
 						<select class="form-select" name="action">
-							<option value=""><?=_('apply to selected');?></option>
-							<option value="suspend"><?=_('suspend');?></option>
-							<option value="unsuspend"><?=_('unsuspend');?></option>
-							<option value="delete"><?=_('delete');?></option>
+							<option value=""><?= _("apply to selected") ?></option>
+							<option value="suspend"><?= _("suspend") ?></option>
+							<option value="unsuspend"><?= _("unsuspend") ?></option>
+							<option value="delete"><?= _("delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?=_('apply to selected');?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>
@@ -45,9 +47,9 @@
 			</div>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?=_('Search');?>">
-					<button type="submit" class="toolbar-input-submit" title="<?=_('Search');?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 						<i class="fas fa-magnifying-glass"></i>
 					</button>
 				</form>
@@ -62,15 +64,15 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?=_('Select all');?>" <?=$display_mode;?>>
+					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?=_('Name');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-right compact-4"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=_('Disk');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Quota');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Aliases');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Forwarding');?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_('Autoreply');?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-4"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Disk") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Quota") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Aliases") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Forwarding") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Autoreply") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -107,17 +109,17 @@
 				if ($data[$key]['ALIAS'] == '') {
 					$alias_icon = 'fa-circle-minus';
 				} else {
-					$alias_icon = 'fa-circle-check status-icon green';
+					$alias_icon = 'fa-circle-check icon-green';
 				}
 				if ($data[$key]['FWD'] == '') {
 					$fwd_icon = 'fa-circle-minus';
 				} else {
-					$fwd_icon = 'fa-circle-check status-icon green';
+					$fwd_icon = 'fa-circle-check icon-green';
 				}
 				if ($data[$key]['AUTOREPLY'] == 'no') {
 					$autoreply_icon = 'fa-circle-minus';
 				} else {
-					$autoreply_icon = 'fa-circle-check status-icon green';
+					$autoreply_icon = 'fa-circle-check icon-green';
 				}
 			}
 		?>
@@ -126,17 +128,17 @@
 			sort-quota="<?=$data[$key]['QUOTA']?>" >
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?=_('Select');?>" name="account[]" value="<?=$key?>" <?=$display_mode;?>>
+					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="account[]" value="<?=$key?>" <?=$display_mode;?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 truncate">
 					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
 						<b><?=$key."@".htmlentities($_GET['domain']);?></b>
 					<?php } else { ?>
-						<b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account');?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".htmlentities($_GET['domain']);?></a></b>
+						<b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Account") ?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".htmlentities($_GET['domain']);?></a></b>
 					<?php } ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-right compact-4">
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-4">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<?php if ($read_only === 'true') { ?>
@@ -144,31 +146,31 @@
 								<?php if ($data[$key]['SUSPENDED'] == 'yes') { ?>
 									&nbsp;
 								<?php } else { ?>
-									<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?=_('open webmail');?>"><i class="fas fa-envelope-open-text status-icon maroon status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
 								<?php } ?>
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
 									<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 										<?php if (!empty($data[$key]['WEBMAIL'])) { ?>
-											<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?=_('open webmail');?>"><i class="fas fa-envelope-open-text status-icon maroon status-icon dim"></i></a></div>
+											<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
 										<?php } ?>
 									<?php } ?>
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing Mail Account');?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Account") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<?php } ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+										<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
 										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>">
-										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?=_('Confirmation');?>">
+										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf($spnd_confirmation,$key)?></p>
 										</div>
 									</a>
 								</div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?=_('delete');?>">
-										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
+										<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>">
-										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?=_('Confirmation');?>">
+										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'),$key)?></p>
 										</div>
 									</a>
@@ -179,16 +181,16 @@
 					<!-- END QUICK ACTION TOOLBAR AREA -->
 				</div>
 
-				<div class="clearfix l-unit__stat-col--left text-center compact"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=_(humanize_usage_size($data[$key]['QUOTA'])) ?></b> <span class="u-text-small"><?=_(humanize_usage_measure($data[$key]['QUOTA'])) ?></span></div>
-				<div class="clearfix l-unit__stat-col--left text-center">
-					<i class="fas <?=$alias_icon;?>"></i>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _(humanize_usage_size($data[$key]["QUOTA"])) ?></b> <span class="u-text-small"><?= _(humanize_usage_measure($data[$key]["QUOTA"])) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center">
+					<i class="fas <?= $alias_icon ?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center">
-					<i class="fas <?=$fwd_icon;?>"></i>
+				<div class="clearfix l-unit__stat-col--left u-text-center">
+					<i class="fas <?= $fwd_icon ?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center">
-					<i class="fas <?=$autoreply_icon;?>"></i>
+				<div class="clearfix l-unit__stat-col--left u-text-center">
+					<i class="fas <?= $autoreply_icon ?>"></i>
 				</div>
 			</div>
 		</div>
@@ -196,13 +198,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d mail account', '%d mail accounts', $i),$i); ?>
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d mail account", "%d mail accounts", $i), $i); ?>
+		</p>
 	</div>
 </footer>

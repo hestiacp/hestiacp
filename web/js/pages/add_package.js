@@ -55,7 +55,7 @@ App.Listeners.PACKAGE.init = function () {
 // Trigger listeners
 App.Listeners.PACKAGE.init();
 App.Listeners.PACKAGE.checkbox_unlimited_feature();
-$('form[name="v_add_package"]').on('submit', function (evt) {
+$('form[name="v_add_package"]').on('submit', function () {
 	$('input:disabled').each(function (i, elm) {
 		$(elm).attr('disabled', false);
 		if (Alpine.store('globals').isUnlimitedValue($(elm).val())) {
@@ -65,7 +65,7 @@ $('form[name="v_add_package"]').on('submit', function (evt) {
 });
 
 $(document).ready(function () {
-	$('.js-add-ns-button').click(function () {
+	$('.js-add-ns').click(function () {
 		var n = $('input[name^=v_ns]').length;
 		if (n < 8) {
 			var t = $($('input[name=v_ns1]').parents('div')[0]).clone(true, true);

@@ -419,23 +419,23 @@ strong {
 	}
 }
 
-.cron-helper-container {
-	margin-top: 201px;
+.cron-helper-panel {
 	border-radius: 0;
 	box-shadow: none;
-}
 
-.cron-helper-tabs .ui-tabs-selected a,
-.ui-tabs-tab[aria-expanded="true"] a {
-	color: #ff6701;
-}
+	& .ui-tabs-tab a {
+		&:hover {
+			color: #f79b44;
+		}
 
-.cron-helper-tabs a:hover {
-	color: #f79b44;
-}
+		&:active {
+			color: #e95e00;
+		}
+	}
 
-.cron-helper-tabs a:active {
-	color: #e95e00;
+	& .ui-tabs-tab[aria-expanded="true"] a {
+		color: #ff6701;
+	}
 }
 
 /* Login

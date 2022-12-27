@@ -192,16 +192,13 @@ App.Actions.WEB.passwordChanged = function (elm) {
 		var inp_name = ref.find('.v-ftp-user-is-new').prop('name');
 		inp_name = inp_name.replace('is_new', 'v_ftp_email');
 		ref.find('div:last').after(
-			'<div class="u-pl30 u-mb10">\
-                                      <label for="' +
-				inp_name +
-				'" class="form-label">Send FTP credentials to email</label>\
-                                      <input type="email" class="form-control js-email-alert-on-psw" value="" name="' +
-				inp_name +
-				'" id="' +
-				inp_name +
-				'">\
-                                   </div>'
+			`<div class="u-pl30 u-mb10">
+				<label for="${inp_name}" class="form-label">
+					Send FTP credentials to email
+				</label>
+				<input type="email" class="form-control js-email-alert-on-psw"
+					value="" name="${inp_name}" id="${inp_name}">
+			</div>`
 		);
 	}
 };

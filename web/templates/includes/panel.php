@@ -87,6 +87,7 @@
 										<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
 										<button
 											x-on:click="remove(notification.ID)"
+											type="button"
 											class="top-bar-notification-delete"
 											title="<?= _("Delete notification") ?>"
 										>
@@ -104,6 +105,7 @@
 								<li>
 									<button
 										x-on:click="removeAll()"
+										type="button"
 										class="top-bar-notification-delete-all"
 									>
 										<i class="fas fa-check"></i>

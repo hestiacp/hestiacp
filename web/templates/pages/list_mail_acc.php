@@ -16,7 +16,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
 					<?= _("sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>

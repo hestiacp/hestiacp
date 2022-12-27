@@ -219,7 +219,7 @@
 					</select>
 				</div>
 				<div class="u-mb20">
-					<button x-on:click="showAdvanced = !showAdvanced" class="button button-secondary">
+					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
 						<?= _("Advanced options") ?>
 					</button>
 				</div>

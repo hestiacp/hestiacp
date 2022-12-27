@@ -239,7 +239,7 @@
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
-							<button x-on:click="showCertificates = !showCertificates" class="form-link">
+							<button x-on:click="showCertificates = !showCertificates" type="button" class="form-link">
 								<?= _("Show Certificate") ?>
 							</button>
 						</p>
@@ -247,7 +247,7 @@
 				<?php } ?>
 			</div>
 			<div class="u-mt15 u-mb20">
-				<button x-on:click="showAdvanced = !showAdvanced" class="button button-secondary">
+				<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
 					<?= _("Advanced options") ?>
 				</button>
 			</div>
@@ -392,7 +392,7 @@
 						<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;">
 							<div class="u-mb10">
 								<?= _("FTP") ?> #<span class="ftp-user-number"><?=$i + 1; ?></span>
-								<button class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></button>
+								<button type="button" class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></button>
 								<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
 								<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
 							</div>

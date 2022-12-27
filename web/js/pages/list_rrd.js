@@ -2,7 +2,7 @@
 colors = ['rgba(255,52,120,0.5)', 'rgba(255,52,0,0.5)', 'rgba(255,255,120,0.5)'];
 // Other markups are working see https://www.chartjs.org/docs/latest/
 
-// todo make charts reponsive
+// todo make charts responsive
 (function () {
 	document.querySelectorAll('canvas').forEach(async (el) => {
 		const response = await fetch('/list/rrd/ajax.php', {

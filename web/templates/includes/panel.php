@@ -60,7 +60,7 @@
 						>
 							<i
 								x-bind:class="{
-									'animate__animated animate__swing status-icon orange': (!initialized && <?= $panel[$user]["NOTIFICATIONS"] == "yes" ? "true" : "false" ?>) || notifications.length != 0,
+									'animate__animated animate__swing icon-orange': (!initialized && <?= $panel[$user]["NOTIFICATIONS"] == "yes" ? "true" : "false" ?>) || notifications.length != 0,
 									'fas fa-bell': true
 								}"
 							></i>
@@ -73,7 +73,7 @@
 						>
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
-									<i class="fas fa-bell-slash status-icon dim"></i>
+									<i class="fas fa-bell-slash icon-dim"></i>
 									<p><?= _("no notifications") ?></p>
 								</li>
 							</template>
@@ -88,6 +88,7 @@
 										<button
 											x-on:click="remove(notification.ID)"
 											class="top-bar-notification-delete"
+											title="<?= _("Delete notification") ?>"
 										>
 											<i class="fas fa-xmark"></i>
 										</button>
@@ -103,7 +104,7 @@
 								<li>
 									<button
 										x-on:click="removeAll()"
-										class="top-bar-notification-mark-all"
+										class="top-bar-notification-delete-all"
 									>
 										<i class="fas fa-check"></i>
 										<?= _("Delete all notifications") ?>
@@ -144,9 +145,9 @@
 								<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
 							<?php } else { ?>
 								<li class="top-bar-menu-item">
-									<a title="<?= _("Server") ?>" class="top-bar-menu-link <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
+									<a title="<?= _("Server settings") ?>" class="top-bar-menu-link <?php if(in_array($TAB, ['SERVER', 'IP', 'RRD', 'FIREWALL'])) echo 'active' ?>" href="/list/server/">
 										<i class="fas fa-gear"></i>
-										<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Server") ?></span>
+										<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Server settings") ?></span>
 									</a>
 								</li>
 							<?php } ?>

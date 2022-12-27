@@ -1,7 +1,7 @@
-function applyRandomString(min_length = 16) {
-	document.querySelector('input[name=v_password]').value = randomString(min_length);
+applyRandomPassword = function (min_length = 16) {
+	$('input[name=v_password]').val(randomString(min_length));
 	App.Actions.WEB.update_password_meter();
-}
+};
 
 App.Actions.WEB.update_password_meter = () => {
 	/**
@@ -35,7 +35,7 @@ App.Listeners.WEB.keypress_v_password = () => {
 App.Listeners.WEB.keypress_v_password();
 
 (function () {
-	$('.js-add-ns-button').click(function () {
+	$('.js-add-ns').click(function () {
 		var n = $('input[name^=v_ns]').length;
 		if (n < 8) {
 			var t = $($('input[name=v_ns1]').parents('div')[0]).clone(true, true);

@@ -144,7 +144,6 @@ document.addEventListener('alpine:init', () => {
 			{ key: 'F' },
 			(_evt) => {
 				const searchBox = document.querySelector('.js-search-input');
-				searchBox.classList.toggle('activated', true);
 				searchBox.focus();
 			},
 			{ disabledInInput: true }

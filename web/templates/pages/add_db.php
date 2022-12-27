@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/db/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+			<button type="submit" class="button" form="vstobjects">
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -32,7 +32,7 @@
 			<h1 class="form-title"><?= _("Adding database") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($user_plain == "admin" && $_GET["accept"] !== "true") { ?>
-				<div class="alert alert-danger alert-with-icon" role="alert">
+				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
 					<p><?= _("Avoid adding web domains on admin account") ?></p>
 				</div>
@@ -75,7 +75,7 @@
 				<div class="u-mb10">
 					<label for="v_password" class="form-label">
 						<?= _("Password") ?>
-						<a href="javascript:applyRandomString();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
+						<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
 					</label>
 					<div class="u-pos-relative u-mb10">
 						<input type="text" class="form-control js-password-input" name="v_password" id="v_password">
@@ -95,9 +95,11 @@
 					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= htmlentities(trim($v_db_email, "'")) ?>">
 				</div>
 				<div class="u-mb20">
-					<a x-on:click="showAdvanced = !showAdvanced" class="button button-secondary"><?= _("Advanced options") ?></a>
+					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
+						<?= _("Advanced options") ?>
+					</button>
 				</div>
-				<div x-cloak x-show="showAdvanced" id="advanced-opts">
+				<div x-cloak x-show="showAdvanced">
 					<div class="u-mb10">
 						<label for="v_host" class="form-label"><?= _("Host") ?></label>
 						<select class="form-select" name="v_host" id="v_host">

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Hestia Control Panel upgrade script for target version 1.6.15
+
+#######################################################################################
+#######                      Place additional commands below.                   #######
+#######################################################################################
+####### Pass through information to the end user in case of a issue or problem  #######
+#######                                                                         #######
+####### Use add_upgrade_message "My message here" to include a message          #######
+####### in the upgrade notification email. Example:                             #######
+#######                                                                         #######
+####### add_upgrade_message "My message here"                                   #######
+#######                                                                         #######
+####### You can use \n within the string to create new lines.                   #######
+#######################################################################################
+
+upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'no'
+upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'no'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'no'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'no'
+upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
+grep 'v-change-user-password' $HESTIA/data/api/billing
+if [ $? -ne 0 ]; then
+	sed -i "s/v-make-tmp-file'/v-make-tmp-file,v-change-user-password'/g" $HESTIA/data/api/billing
+fi

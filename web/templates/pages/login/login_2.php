@@ -8,11 +8,11 @@
 		<h1 class="login-title">
 			<?= _("2 Factor Authentication") ?>
 		</h1>
-		<?php if (isset($ERROR)) echo $ERROR ?>
+		<?php show_error_message($ERROR); ?>
 		<div class="u-mb20">
 			<label for="twofa" class="form-label u-side-by-side">
 				<?= _("2FA Token") ?>
-				<a class="login-label-link" href="/reset2fa/">
+				<a class="login-form-link" href="/reset2fa/">
 					<?= _("Forgot token") ?>
 				</a>
 			</label>

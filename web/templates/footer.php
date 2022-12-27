@@ -1,20 +1,15 @@
 	</main>
 <?php if (
 	$_SESSION["userContext"] === "admin" &&
-	$_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes"
-) { ?>
-	<?php if ($_SESSION["UPDATE_AVAILABLE"] === "yes") { ?>
-		<div x-data="{ open: false }" x-cloak x-show="open" class="footer-banner updates" id="banner">
-			<div>
-				<b>New updates are available!</b> To upgrade your server now, run <span style="font-family:'Courier New', Courier, monospace">apt update && apt upgrade</span> from a shell session.
-			</div>
-			<div style="margin-top: 4px;">
-				<button x-on:click="open = false" class="button button-secondary">
-					Hide
-				</button>
-			</div>
-		</div>
-	<?php } ?>
+	$_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" &&
+	$_SESSION["UPDATE_AVAILABLE"] === "yes"
+) {
+?>
+	<p x-data="{ open: true }" x-cloak x-show="open" class="updates-banner">
+		<strong>New updates are available!</strong> To upgrade your server now, run
+		<code>apt update && apt upgrade</code> from a shell session.
+		(<a href="#" x-on:click="open = false"><strong>hide</strong></a>)
+	</p>
 <?php } ?>
 	<div title="<?= _("Confirmation") ?>" class="dialog js-confirm-dialog-redirect">
 		<p><?= _("LEAVE_PAGE_CONFIRMATION") ?></p>
@@ -77,6 +72,7 @@
 <?php if (!empty($_SESSION["error_msg"])): ?>
 	<div>
 		<script>
+			// TODO: This is broken, $ is not defined
 			$(function() {
 				$('#dialog:ui-dialog').dialog('destroy');
 				$('#dialog-message').dialog({

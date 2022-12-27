@@ -1,7 +1,7 @@
 <script defer src="/js/main.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/shortcuts.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/alpine-3.10.5.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/vendor/jquery-3.6.1.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/vendor/jquery-3.6.3.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/jquery-ui.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/chart.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/events.js?<?= JS_LATEST_UPDATE ?>"></script>
@@ -41,10 +41,14 @@
 	})
 </script>
 
-<?php foreach (new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts") as $customScript) {
-	if ($customScript->getExtension() === "js") {
-		echo '<script defer src="/js/custom_scripts/' . rawurlencode($customScript->getBasename()) . '"></script>';
-	} elseif ($customScript->getExtension() === "php") {
+<?php
+$customScriptDirectory = new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts");
+foreach ($customScriptDirectory as $customScript) {
+	$extension = $customScript->getExtension();
+	if ($extension === "js") {
+		$customScriptPath = "/js/custom_scripts/" . rawurlencode($customScript->getBasename());
+		echo '<script defer src="' . $customScriptPath . '"></script>';
+	} elseif ($extension === "php") {
 		require_once $customScript->getPathname();
 	}
 } ?>

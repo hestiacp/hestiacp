@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
-			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left status-icon green"></i><?= _("Restore All") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<form x-bind="BulkEdit" action="/bulk/restore/" method="post">
@@ -34,11 +34,11 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all">
+					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4"><b><?= _("Type") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("Details") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-right compact-4"><b><?= _("Restore") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-4"><b><?= _("Restore") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -62,12 +62,12 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=web&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim icon-pad-right"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim u-mr5"></i>
 								</a>
 							</div>
 						</div>
@@ -94,12 +94,12 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=mail&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -126,12 +126,12 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=dns&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -158,12 +158,12 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=db&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -187,12 +187,12 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?= "cron " . _("records") ?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?= $backup ?>&type=cron&object=records&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -219,12 +219,12 @@
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$key?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-4 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
 								<a href="/schedule/restore/?backup=<?=$backup?>&type=udir&object=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>">
-									<i class="fas fa-arrow-rotate-left status-icon green status-icon dim"></i>
+									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
 							</div>
 						</div>
@@ -236,13 +236,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right total clearfix">
-				<?php printf(ngettext('%d item', '%d items', $i),$i); ?>
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext('%d item', '%d items', $i),$i); ?>
+		</p>
 	</div>
 </footer>

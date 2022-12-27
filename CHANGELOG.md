@@ -18,6 +18,54 @@ All notable changes to this project will be documented in this file.
 
 ### Dependencies
 
+## [1.6.14] - Service release
+
+## Bugfixes
+
+- Improve firewall rules cleanup #3135 @myrevery
+- Reverted changes to v-add-web-php as php8.2-imagick is now availble
+- Fixed an issue with editing timezone in when editing a server (#3127)
+- Fixed an issue with hostname during install
+- Fixed an issue with WordPress installer not working properly (#3129)
+
+### Dependencies
+
+- Update MediaWiki to 1.39.0
+
+## [1.6.13] - Service release
+
+### Bugfixes
+
+- Fix issue with php8.2-imagick not availble
+- Fixed an issue with Letsnecrypt and no mail features enabled (#2930 #2931)
+
+## [1.6.12] - Service release
+
+### Features
+
+- Add support for PHP 8.2
+
+### Bugfixes
+
+- Fixed an issue with Europe/Kyiv not existing in Debian / Ubuntu causing issues with saving (#3031 #2971)
+- Fixed an issue with v-backup-user loop when the user is unable to create a temp folder or not enough space (#2923 #3019)
+- Fixed an issue with restarting with via api (#1236 #30230)
+- Fixed an issue with \*.co.uk and similar domains that does not create a www alias (#1750 and #3030)
+- Fixed an issue with enabling mysqld-iptables (#3035 @Krzysiek86 @neto737)
+- Add an alias for composer in bash_aliases (#3070 @madito)
+- Fix issues with multiple ips and hostname in installers (#3068)
+- Fixed an issue with Nginx + Apache2 settup and clearing proxy cache (#3060)
+- Update WordPress to avoid caching of WordPress Rest API (#3069 @niktest)
+- Fixed an issue with firewall and IPset tables shorter then 10 records (#3110 @myrevery)
+- Delete rrd database on deleting database host
+- Fixed an issue where a user was unable to change database user #3051
+- Fixed an issue with unsuspend database user permissions (remote) #3011 #3046
+- Fixed an issue with v-add-domain and package doesn't allow mail / web or DNS domains
+
+### Dependencies
+
+- Update PHPmailer to 6.7.1
+
 ## [1.6.11] - Service release
 
 ### Important

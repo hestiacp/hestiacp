@@ -3,20 +3,20 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/server/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet status-icon blue"></i><?= _("IP") ?>
+				<i class="fas fa-ethernet icon-blue"></i><?= _("IP") ?>
 			</a>
 			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
 				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved status-icon red"></i><?= _("Firewall") ?>
+					<i class="fas fa-shield-halved icon-red"></i><?= _("Firewall") ?>
 				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+			<button type="submit" class="button" form="vstobjects">
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -27,19 +27,19 @@
 
 	<form
 		x-data="{
-			hasSmtpRelay: <?= $v_smtp_relay == 'true' ? 'true' : 'false' ?>,
-			remoteBackupEnabled: <?= !empty($v_backup_remote_adv) ? 'true' : 'false' ?>
+			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>,
+			remoteBackupEnabled: <?= !empty($v_backup_remote_adv) ? "true" : "false" ?>
 		}"
 		id="vstobjects"
 		name="v_configure_server"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Configuring Server") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 
 			<!-- Basic options tab -->
 			<details class="collapse u-mb10">
@@ -49,7 +49,7 @@
 				<div class="collapse-content">
 					<div class="u-mb10">
 						<label for="v_hostname" class="form-label"><?= _("Hostname") ?></label>
-						<input type="text" class="form-control" name="v_hostname" id="v_hostname" value="<?=htmlentities(trim($v_hostname, "'"))?>">
+						<input type="text" class="form-control" name="v_hostname" id="v_hostname" value="<?= htmlentities(trim($v_hostname, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_timezone" class="form-label"><?= _("Time Zone") ?></label>
@@ -115,10 +115,10 @@
 				</summary>
 				<div class="collapse-content">
 					<p class="u-mb10">
-						<?= _("Version") ?>: <span class="optional"><?=$_SESSION['VERSION'];?></span>
+						<?= _("Version") ?>: <span class="optional"><?= $_SESSION["VERSION"] ?></span>
 					</p>
-					<?php if ($_SESSION['RELEASE_BRANCH'] !== 'release') {?>
-						<p><?= _("Release") ?>: <span class="optional"><?=$_SESSION['RELEASE_BRANCH'];?></span></p>
+					<?php if ($_SESSION["RELEASE_BRANCH"] !== "release") { ?>
+						<p><?= _("Release") ?>: <span class="optional"><?= $_SESSION["RELEASE_BRANCH"] ?></span></p>
 					<?php } ?>
 					<p class="u-mb5"><?= _("Options") ?></p>
 					<div class="form-check">
@@ -155,68 +155,68 @@
 					<i class="fas fa-earth-americas u-mr15"></i><?= _("Web Server") ?>
 				</summary>
 				<div class="collapse-content">
-					<?php if (!empty($_SESSION['PROXY_SYSTEM'])) { ?>
+					<?php if (!empty($_SESSION["PROXY_SYSTEM"])) { ?>
 						<p>
-							<?= _("Proxy Server") ?>: <span class="u-ml5"><?=$_SESSION['PROXY_SYSTEM']; ?></span>
+							<?= _("Proxy Server") ?>: <span class="u-ml5"><?= $_SESSION["PROXY_SYSTEM"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['PROXY_SYSTEM'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 					<?php } ?>
-					<?php if (!empty($_SESSION['WEB_SYSTEM'])) { ?>
+					<?php if (!empty($_SESSION["WEB_SYSTEM"])) { ?>
 						<p>
-							<?= _("Web Server") ?>: <span class="u-ml5"><?=$_SESSION['WEB_SYSTEM']; ?></span>
+							<?= _("Web Server") ?>: <span class="u-ml5"><?= $_SESSION["WEB_SYSTEM"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['WEB_SYSTEM'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 					<?php } ?>
-					<?php if (!empty($_SESSION['WEB_BACKEND'])) { ?>
+					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<p>
-							<?= _("Backend Server") ?>: <span class="u-ml5"><?=$_SESSION['WEB_BACKEND']; ?></span>
+							<?= _("Backend Server") ?>: <span class="u-ml5"><?= $_SESSION["WEB_BACKEND"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['WEB_BACKEND'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 					<?php } ?>
-					<?php if (!empty($_SESSION['WEB_BACKEND_POOL'])) { ?>
+					<?php if (!empty($_SESSION["WEB_BACKEND_POOL"])) { ?>
 						<p>
-							<?= _("Backend Pool Mode") ?>: <span class="u-ml5"><?=$_SESSION['WEB_BACKEND_POOL']; ?></span>
+							<?= _("Backend Pool Mode") ?>: <span class="u-ml5"><?= $_SESSION["WEB_BACKEND_POOL"] ?></span>
 						</p>
 					<?php } ?>
-					<?php if(count($v_php_versions)): ?>
+					<?php if (count($v_php_versions)): ?>
 						<div class="u-mt15">
 							<p class="u-mb10"><?= _("Enabled multi PHP versions") ?></p>
-							<div class="alert alert-info alert-with-icon u-mb10" role="alert">
+							<div class="alert alert-info u-mb10" role="alert">
 								<i class="fas fa-info"></i>
 								<p><?= _("Please wait while php is installed or removed") ?></p>
 							</div>
 						</div>
-						<?php foreach($v_php_versions as $php_version): ?>
+						<?php foreach ($v_php_versions as $php_version): ?>
 							<div class="form-check">
 								<input class="form-check-input" type="checkbox"
-									<?=$php_version->installed?'checked':''; ?>
-									<?=$php_version->protected?'disabled':''; ?>
-									id="<?=$php_version->name?>"
-									name="v_php_versions[<?=$php_version->tpl?>]">
-								<label for="<?=$php_version->name?>">
-									<?=$php_version->name?>
+									<?= $php_version->installed ? "checked" : "" ?>
+									<?= $php_version->protected ? "disabled" : "" ?>
+									id="<?= $php_version->name ?>"
+									name="v_php_versions[<?= $php_version->tpl ?>]">
+								<label for="<?= $php_version->name ?>">
+									<?= $php_version->name ?>
 								</label>
 							</div>
-							<?php foreach($php_version->usedby as $wd_user => $wd_domains ): ?>
-								<?php foreach($wd_domains as $wd_domain ): ?>
+							<?php foreach ($php_version->usedby as $wd_user => $wd_domains): ?>
+								<?php foreach ($wd_domains as $wd_domain): ?>
 									<p class="u-side-by-side" style="border: 1px lightgrey; padding:0 10px;">
 										<span>
 											<i class="fas fa-user"></i>
-											<?=$wd_user;?>
+											<?= $wd_user ?>
 										</span>
-										<span class="optional"><?=$wd_domain;?></span>
+										<span class="optional"><?= $wd_domain ?></span>
 									</p>
 								<?php endforeach; ?>
 							<?php endforeach; ?>
 						<?php endforeach; ?>
 					<?php endif; ?>
-					<?php if(!empty($_SESSION['WEB_BACKEND'])){ ?>
+					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<div class="u-mt10">
 							<label for="v_php_default_version" class="form-label"><?= _("System PHP version") ?></label>
 							<select class="form-select" name="v_php_default_version" id="v_php_default_version">
@@ -236,16 +236,16 @@
 			</details>
 
 			<!-- DNS Server tab -->
-			<?php if (!empty($_SESSION['DNS_SYSTEM'])) { ?>
+			<?php if (!empty($_SESSION["DNS_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
 						<i class="fas fa-book-atlas u-mr15"></i><?= _("DNS Server") ?>
 					</summary>
 					<div class="collapse-content">
 						<p>
-							<?= _("DNS Server") ?>: <span class="u-ml5"><?=$_SESSION['DNS_SYSTEM']; ?></span>
+							<?= _("DNS Server") ?>: <span class="u-ml5"><?= $_SESSION["DNS_SYSTEM"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['DNS_SYSTEM'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
 						<p>
@@ -257,8 +257,8 @@
 								$i++;
 							?>
 							<div>
-								<label for="v_dns_remote_host" class="form-label"><?= _("Host"). ' #'.$i ?></label>
-								<input type="text" class="form-control" name="v_dns_remote_host" id="v_dns_remote_host" value="<?=$key; ?>" disabled>
+								<label for="v_dns_remote_host" class="form-label"><?= _("Host") . " #" . $i ?></label>
+								<input type="text" class="form-control" name="v_dns_remote_host" id="v_dns_remote_host" value="<?= $key ?>" disabled>
 							</div>
 						<?php } } ?>
 					</div>
@@ -266,40 +266,40 @@
 			<?php } ?>
 
 			<!-- Mail Server tab -->
-			<?php if ((!empty($_SESSION['MAIL_SYSTEM']))) { ?>
+			<?php if (!empty($_SESSION["MAIL_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
 						<i class="fas fa-envelopes-bulk u-mr15"></i><?= _("Mail Server") ?>
 					</summary>
 					<div class="collapse-content">
 						<p>
-							<?= _("Mail Server") ?>: <span class="u-ml5"><?=$_SESSION['MAIL_SYSTEM']; ?></span>
+							<?= _("Mail Server") ?>: <span class="u-ml5"><?= $_SESSION["MAIL_SYSTEM"] ?></span>
 							<a href="/edit/server/<? echo $_SESSION['MAIL_SYSTEM'] ?>/" class="u-ml5">
-								<i class="fas fa-pencil status-icon orange"></i>
+								<i class="fas fa-pencil icon-orange"></i>
 							</a>
 						</p>
-						<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
+						<?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
 							<p>
-								<?= _("Antivirus") ?>: <span class="u-ml5"><?=$_SESSION['ANTIVIRUS_SYSTEM']; ?></span>
+								<?= _("Antivirus") ?>: <span class="u-ml5"><?= $_SESSION["ANTIVIRUS_SYSTEM"] ?></span>
 								<a href="/edit/server/<? echo $_SESSION['ANTIVIRUS_SYSTEM'] ?>/" class="u-ml5">
-									<i class="fas fa-pencil status-icon orange"></i>
+									<i class="fas fa-pencil icon-orange"></i>
 								</a>
 							</p>
 						<?php } ?>
-						<?php if (!empty($_SESSION['ANTISPAM_SYSTEM'])) { ?>
+						<?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
 							<p>
-								<?= _("AntiSpam") ?>: <span class="u-ml5"><?=$_SESSION['ANTISPAM_SYSTEM']; ?></span>
+								<?= _("AntiSpam") ?>: <span class="u-ml5"><?= $_SESSION["ANTISPAM_SYSTEM"] ?></span>
 								<a href="/edit/server/<? echo $_SESSION['ANTISPAM_SYSTEM'] ?>/" class="u-ml5">
-									<i class="fas fa-pencil status-icon orange"></i>
+									<i class="fas fa-pencil icon-orange"></i>
 								</a>
 							</p>
 						<?php } ?>
-						<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
+						<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 							<div class="u-mt15 u-mb10">
 								<label for="v_webmail_alias" class="form-label">
-									<?= _("Webmail URL") ?> <span class="hint">(<?=$_SESSION['WEBMAIL_ALIAS'];?>.example.com)</span>
+									<?= _("Webmail URL") ?> <span class="hint">(<?= $_SESSION["WEBMAIL_ALIAS"] ?>.example.com)</span>
 								</label>
-								<input type="text" class="form-control" name="v_webmail_alias" id="v_webmail_alias" value="<?=$_SESSION['WEBMAIL_ALIAS']; ?>">
+								<input type="text" class="form-control" name="v_webmail_alias" id="v_webmail_alias" value="<?= $_SESSION["WEBMAIL_ALIAS"] ?>">
 							</div>
 						<?php } ?>
 						<div class="form-check u-mt20">
@@ -311,15 +311,15 @@
 						<div x-cloak x-show="hasSmtpRelay" id="smtp_relay_table" class="u-pl30 u-mt20">
 							<div class="u-mb10">
 								<label for="v_smtp_relay_host" class="form-label"><?= _("Host") ?></label>
-								<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?=htmlentities(trim($v_smtp_relay_host, "'"))?>">
+								<input type="text" class="form-control" name="v_smtp_relay_host" id="v_smtp_relay_host" value="<?= htmlentities(trim($v_smtp_relay_host, "'")) ?>">
 							</div>
 							<div class="u-mb10">
 								<label for="v_smtp_relay_port" class="form-label"><?= _("Port") ?></label>
-								<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?=htmlentities(trim($v_smtp_relay_port, "'"))?>">
+								<input type="text" class="form-control" name="v_smtp_relay_port" id="v_smtp_relay_port" value="<?= htmlentities(trim($v_smtp_relay_port, "'")) ?>">
 							</div>
 							<div class="u-mb10">
 								<label for="v_smtp_relay_user" class="form-label"><?= _("Username") ?></label>
-								<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?=htmlentities(trim($v_smtp_relay_user, "'"))?>">
+								<input type="text" class="form-control" name="v_smtp_relay_user" id="v_smtp_relay_user" value="<?= htmlentities(trim($v_smtp_relay_user, "'")) ?>">
 							</div>
 							<div class="u-mb10">
 								<label for="v_smtp_relay_pass" class="form-label"><?= _("Password") ?></label>
@@ -333,7 +333,7 @@
 			<?php } ?>
 
 			<!-- Databases tab -->
-			<?php if (!empty($_SESSION['DB_SYSTEM'])) { ?>
+			<?php if (!empty($_SESSION["DB_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
 						<i class="fas fa-database u-mr15"></i><?= _("Databases") ?>
@@ -341,7 +341,7 @@
 					<div class="collapse-content">
 						<div class="u-mb10">
 							<label for="v_mysql" class="form-label">
-								<?= _("MySQL Support") ?> <a href="/edit/server/mysql/" class="u-ml5"><i class="fas fa-pencil status-icon orange"></i></a>
+								<?= _("MySQL Support") ?> <a href="/edit/server/mysql/" class="u-ml5"><i class="fas fa-pencil icon-orange"></i></a>
 							</label>
 							<select class="form-select" name="v_mysql" id="v_mysql" disabled>
 								<option value="no"><?= _("No") ?></option>
@@ -349,10 +349,10 @@
 							</select>
 						</div>
 						<!-- MySQL / MariaDB Options-->
-						<?php if ($v_mysql == 'yes') { ?>
+						<?php if ($v_mysql == "yes") { ?>
 							<div class="u-mb20">
 								<label for="v_mysql_url" class="form-label"><?= _("phpMyAdmin URL") ?></label>
-								<input type="text" class="form-control" name="v_mysql_url" id="v_mysql_url" value="<?=$_SESSION['DB_PMA_ALIAS']; ?>">
+								<input type="text" class="form-control" name="v_mysql_url" id="v_mysql_url" value="<?= $_SESSION["DB_PMA_ALIAS"] ?>">
 							</div>
 							<div class="u-mb10">
 								<label for="v_phpmyadmin_key" class="form-label">
@@ -371,8 +371,8 @@
 							?>
 							<div class="u-pl30">
 								<div class="u-mb10">
-									<label for="v_mysql_host" class="form-label"><?= _("Host"). ' #'.$i ?></label>
-									<input type="text" class="form-control" name="v_mysql_host" id="v_mysql_host" value="<?=$value['HOST']?>" disabled>
+									<label for="v_mysql_host" class="form-label"><?= _("Host") . " #" . $i ?></label>
+									<input type="text" class="form-control" name="v_mysql_host" id="v_mysql_host" value="<?= $value["HOST"] ?>" disabled>
 								</div>
 								<div class="u-mb10">
 									<label for="v_mysql_password" class="form-label"><?= _("Password") ?></label>
@@ -384,13 +384,13 @@
 									<label for="v_mysql_max" class="form-label">
 										<?= _("Maximum Number Of Databases") ?>
 									</label>
-									<input type="text" class="form-control" name="v_mysql_max" id="v_mysql_max" value="<?=$value['MAX_DB']; ?>" disabled>
+									<input type="text" class="form-control" name="v_mysql_max" id="v_mysql_max" value="<?= $value["MAX_DB"] ?>" disabled>
 								</div>
 								<div class="u-mb10">
 									<label for="v_mysql_current" class="form-label">
 										<?= _("Current Number Of Databases") ?>
 									</label>
-									<input type="text" class="form-control" name="v_mysql_current" id="v_mysql_current" value="<?=$value['U_DB_BASES']; ?>" disabled>
+									<input type="text" class="form-control" name="v_mysql_current" id="v_mysql_current" value="<?= $value["U_DB_BASES"] ?>" disabled>
 								</div>
 							</div>
 						<?php }} ?>
@@ -398,7 +398,7 @@
 						<?php if ($v_pgsql == 'yes') { ?>
 							<div class="u-mb10">
 								<label for="v_pgsql" class="form-label">
-									<?= _("PostgreSQL Support") ?> <a href="/edit/server/postgresql/" class="u-ml5"><i class="fas fa-pencil status-icon orange"></i></a>
+									<?= _("PostgreSQL Support") ?> <a href="/edit/server/postgresql/" class="u-ml5"><i class="fas fa-pencil icon-orange"></i></a>
 								</label>
 								<select class="form-select" name="v_pgsql" id="v_pgsql" disabled>
 									<option value="no"><?= _("No") ?></option>
@@ -409,7 +409,7 @@
 								<label for="v_pgsql_url" class="form-label">
 									<?= _("phpPgAdmin URL") ?>
 								</label>
-								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?=$_SESSION['DB_PGA_ALIAS']; ?>">
+								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?= $_SESSION["DB_PGA_ALIAS"] ?>">
 							</div>
 						<?php } ?>
 						<?php if ($v_pgsql == 'yes') {
@@ -419,20 +419,20 @@
 							?>
 							<div class="u-pl30">
 								<div class="u-mb10">
-									<label for="v_pgsql_host" class="form-label"><?= _("Host"). ' #'.$i ?></label>
-									<input type="text" class="form-control" name="v_pgsql_host" id="v_pgsql_host" value="<?=$value['HOST']?>" disabled>
+									<label for="v_pgsql_host" class="form-label"><?= _("Host") . " #" . $i ?></label>
+									<input type="text" class="form-control" name="v_pgsql_host" id="v_pgsql_host" value="<?= $value["HOST"] ?>" disabled>
 								</div>
 								<div class="u-mb10">
 									<label for="v_psql_max" class="form-label">
 										<?= _("Maximum Number Of Databases") ?>
 									</label>
-									<input type="text" class="form-control" name="v_psql_max" id="v_psql_max" value="<?=$value['MAX_DB']; ?>" disabled>
+									<input type="text" class="form-control" name="v_psql_max" id="v_psql_max" value="<?= $value["MAX_DB"] ?>" disabled>
 								</div>
 								<div class="u-mb10">
 									<label for="v_pgsql_max" class="form-label">
 										<?= _("Current Number Of Databases") ?>
 									</label>
-									<input type="text" class="form-control" name="v_pgsql_max" id="v_pgsql_max" value="<?=$value['U_DB_BASES']; ?>" disabled>
+									<input type="text" class="form-control" name="v_pgsql_max" id="v_pgsql_max" value="<?= $value["U_DB_BASES"] ?>" disabled>
 								</div>
 							</div>
 						<?php }} ?>
@@ -485,7 +485,7 @@
 								<i class="fas fa-circle-question"></i>
 							</a>
 						</label>
-						<input type="text" class="form-control" name="v_backup_dir" id="v_backup_dir" value="<?=trim($v_backup_dir, "'")?>" disabled="disabled">
+						<input type="text" class="form-control" name="v_backup_dir" id="v_backup_dir" value="<?= trim($v_backup_dir, "'") ?>" disabled="disabled">
 					</div>
 					<div class="form-check">
 						<input x-model="remoteBackupEnabled" class="form-check-input" type="checkbox" name="v_backup_remote_adv" id="v_backup_remote_adv">
@@ -569,7 +569,7 @@
 					<div class="u-mb20">
 						<label for="v_ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
-							<span id="generate-csr"> / <a class="generate" target="_blank" href="/generate/ssl/?domain=<?= htmlentities(trim($v_hostname, '"')) ?>"><?= _("Generate CSR") ?></a></span>
+							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities(trim($v_hostname, '"')) ?>"><?= _("Generate CSR") ?></a></span>
 						</label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
@@ -625,17 +625,17 @@
 					<i class="fas fa-key u-mr15"></i><?= _("Security") ?>
 				</summary>
 				<div class="collapse-content">
-					<h3 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
+					<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
 						<?= _("System") ?>
 						<i
 							x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas status-icon dim maroon js-section-toggle-icon"
+							class="fas icon-dim icon-maroon js-section-toggle-icon"
 						></i>
-					</h3>
+					</h2>
 					<div x-cloak x-show="showSystemOptions" id="security-system-table">
-						<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
+						<h3 class="u-mt20 u-mb10">
 							<?= _("API") ?>
-						</p>
+						</h3>
 						<div class="u-mb10">
 							<label for="api-system" class="form-label"><?= _("Enable API access") ?></label>
 							<select class="form-select" name="v_api_system" id="api-system">
@@ -663,9 +663,9 @@
 									?></textarea>
 							</div>
 						</div>
-						<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
+						<h3 class="u-mt20 u-mb10">
 							<?= _("Login") ?>
-						</p>
+						</h3>
 						<div class="u-mb10">
 							<label for="v_login_style" class="form-label"><?= _("Login screen style") ?></label>
 							<select class="form-select" name="v_login_style" id="v_login_style">
@@ -696,17 +696,17 @@
 						</div>
 					</div>
 					<?php if (($_SESSION['userContext'] === "admin") && ($_SESSION['user'] === 'admin')) {?>
-						<h3 x-on:click="showProtectionOptions = !showProtectionOptions" class="section-title">
+						<h2 x-on:click="showProtectionOptions = !showProtectionOptions" class="section-title">
 							<?= _("System Protection") ?>
 							<i
 								x-bind:class="showProtectionOptions ? 'fa-square-minus' : 'fa-square-plus'"
-								class="fas status-icon dim maroon js-section-toggle-icon"
+								class="fas icon-dim icon-maroon js-section-toggle-icon"
 							></i>
-						</h3>
+						</h2>
 						<div x-cloak x-show="showProtectionOptions" id="security-sysadminprotect-table">
-							<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
+							<h3 class="u-mt20 u-mb10">
 								<?= _("System Administrator account") ?>
-							</p>
+							</h3>
 							<div class="u-mb10">
 								<label for="v_policy_system_protected_admin" class="form-label"><?= _("Restrict access to read-only for other administrators") ?></label>
 								<select class="form-select" name="v_policy_system_protected_admin" id="v_policy_system_protected_admin">
@@ -730,18 +730,18 @@
 							</div>
 						</div>
 					<?php } ?>
-					<h3 x-on:click="showPolicyOptions = !showPolicyOptions" class="section-title">
+					<h2 x-on:click="showPolicyOptions = !showPolicyOptions" class="section-title">
 						<?= _("Policies") ?>
 						<i
 							x-bind:class="showPolicyOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas status-icon dim maroon js-section-toggle-icon"
+							class="fas icon-dim icon-maroon js-section-toggle-icon"
 						></i>
-					</h3>
+					</h2>
 					<div x-cloak x-show="showPolicyOptions" id="security-policies-table">
-						<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
+						<h3 class="u-mt20 u-mb10">
 							<?= _("Users") ?>
-						</p>
-						<?php if ($_SESSION['POLICY_SYSTEM_ENABLE_BACON'] === 'true') { ?>
+						</h3>
+						<?php if ($_SESSION["POLICY_SYSTEM_ENABLE_BACON"] === "true") { ?>
 							<div class="u-mb10">
 								<label for="v_policy_user_view_suspended" class="form-label">
 									<?= _("Allow suspended users to log in with read-only access") ?> <span class="hint">(<?= _("Preview") ?>)</span>
@@ -787,9 +787,9 @@
 								<option value="no" <?php if($_SESSION['POLICY_USER_DELETE_LOGS'] == 'no') echo 'selected' ?>><?= _("No") ?></option>
 							</select>
 						</div>
-						<p class="u-pt18" style="font-size:1rem;padding-bottom:12px;">
+						<h3 class="u-mt20 u-mb10">
 							<?= _("Domains") ?>
-						</p>
+						</h3>
 						<div class="u-mb10">
 							<label for="v_enforce_subdomain_ownership" class="form-label"><?= _("Enforce subdomain ownership") ?></label>
 							<select class="form-select" name="v_enforce_subdomain_ownership" id="v_enforce_subdomain_ownership">

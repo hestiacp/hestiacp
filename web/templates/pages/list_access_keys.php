@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/user/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
-			<a href="/add/access-key/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add Access Key") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/edit/user/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a href="/add/access-key/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Access Key") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -37,13 +37,13 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>">
+					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("Access Key") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left text-center wide-2"><b><?= _("Comment") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Date") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Time") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center wide-2"><b><?= _("Comment") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Date") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Time") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -73,12 +73,12 @@
 				</div>
 
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact text-right">
+				<div class="clearfix l-unit__stat-col--left compact u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/access-key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
 									<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 										<p><?= sprintf(_("DELETE_ACCESS_KEY_CONFIRMATION"), $key) ?></p>
@@ -89,20 +89,18 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center wide-2"><b><?= _($key_comment) ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $key_date ?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?= $key_time ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center wide-2"><b><?= _($key_comment) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $key_date ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $key_time ?></b></div>
 			</div>
 		</div>
 	<?php } ?>
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext("%d Access Key", "%d Access Keys", $i), $i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d Access Key", "%d Access Keys", $i), $i); ?>
+		</p>
 	</div>
 </footer>

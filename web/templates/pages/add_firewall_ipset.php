@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/firewall/ipset/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+			<button type="submit" class="button" form="vstobjects">
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -18,15 +18,15 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<form id="vstobjects" name="v_add_ipset" method="post">
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Adding Firewall Ipset List") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_ipname" class="form-label"><?= _("Ip List Name") ?></label>
-				<input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?=htmlentities(trim($v_ipname, "'"))?>">
+				<input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?= htmlentities(trim($v_ipname, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_datasource" class="form-label">
@@ -36,7 +36,7 @@
 					<select class="form-select" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
 						<option value="">clear</option>
 					</select>
-					<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?=htmlentities(trim($v_datasource, "'"))?>">
+					<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?= htmlentities(trim($v_datasource, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">

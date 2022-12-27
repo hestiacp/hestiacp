@@ -3,11 +3,11 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== 'true') {?>
-				<a href="/add/cron/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add Cron Job") ?></a>
+				<a href="/add/cron/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Cron Job") ?></a>
 				<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') { ?>
-					<a class="button button-secondary" href="/delete/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off status-icon green"></i><?= _("turn off notifications") ?></a>
+					<a class="button button-secondary" href="/delete/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off icon-green"></i><?= _("turn off notifications") ?></a>
 				<?php } else { ?>
-					<a class="button button-secondary" href="/add/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off status-icon grey"></i><?= _("turn on notifications") ?></a>
+					<a class="button button-secondary" href="/add/cron/reports/?token=<?=$_SESSION['token'];?>"><i class="fas fa-toggle-off"></i><?= _("turn on notifications") ?></a>
 				<?php } ?>
 			<?php } ?>
 		</div>
@@ -59,15 +59,15 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Command") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-2 text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?= _("Min") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?= _("Hour") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?= _("Day") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?= _("Month") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 text-center"><b><?= _("Day of week") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Min") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Hour") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Day") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Month") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Day of week") ?></b></div>
 		</div>
 	</div>
 
@@ -101,7 +101,7 @@
 					<?php } ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact-2 text-right">
+				<div class="clearfix l-unit__stat-col--left compact-2 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<?php if ($read_only === 'true') {?>
@@ -109,11 +109,11 @@
 								&nbsp;
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-									<div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Cron Job") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Cron Job") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<?php } ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+										<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
 										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>">
 										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf($spnd_confirmation,$key)?></p>
@@ -122,7 +122,7 @@
 								</div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+										<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>">
 										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf(_('DELETE_CRON_CONFIRMATION'),$key)?></p>
@@ -134,22 +134,20 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["MIN"] ?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["HOUR"] ?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["DAY"] ?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["MONTH"] ?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 text-center"><?= $data[$key]["WDAY"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["MIN"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["HOUR"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["DAY"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["MONTH"] ?></div>
+				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["WDAY"] ?></div>
 			</div>
 		</div>
 	<?php } ?>
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext("%d cron job", "%d cron jobs", $i), $i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d cron job", "%d cron jobs", $i), $i); ?>
+		</p>
 	</div>
 </footer>

@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== 'true') {?>
-				<a href="/add/dns/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i><?= _("Add DNS Domain") ?></a>
+				<a href="/add/dns/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add DNS Domain") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -58,16 +58,16 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= _("Records_DNS") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Template") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact"><b><?= _("TTL") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("SOA") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-3"><b><?= _("DNSSEC") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Expiration Date") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Records_DNS") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Template") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("TTL") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("SOA") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("DNSSEC") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Expiration Date") ?></b></div>
 		</div>
 	</div>
 
@@ -104,7 +104,7 @@
 					<?=empty($data[$key]['SRC'])? '' : '<br>⇢ <span style="font-size:11px;">' . htmlspecialchars($data[$key]['SRC'], ENT_QUOTES) . '</span>'; ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-right">
+				<div class="clearfix l-unit__stat-col--left u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<?php if ($read_only === 'true') {?>
@@ -112,15 +112,15 @@
 								&nbsp;
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-									<div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Add DNS Record") ?>"><i class="fas fa-circle-plus status-icon green status-icon dim"></i></a></div>
-									<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Domain") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
-									<?php if($data[$key]['DNSSEC'] == "yes"){?><div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>" title="<?= _("View Public DNSSEC key") ?>"><i class="fas fa-key status-icon orange status-icon dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Add DNS Record") ?>"><i class="fas fa-circle-plus icon-green icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+									<?php if($data[$key]['DNSSEC'] == "yes"){?><div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>" title="<?= _("View Public DNSSEC key") ?>"><i class="fas fa-key icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 								<?php } ?>
-								<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-list status-icon lightblue status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-list icon-lightblue icon-dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-										<i class="fas <?=$spnd_icon?> status-icon highlight status-icon dim do_<?=$spnd_action?>"></i>
+										<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
 										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>">
 										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf($spnd_confirmation,$key)?></p>
@@ -129,7 +129,7 @@
 								</div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-										<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+										<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>">
 										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 											<p><?=sprintf(_('DELETE_DOMAIN_CONFIRMATION'),$key)?></p>
@@ -141,27 +141,25 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left text-center compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center compact">
 					<?php if ($data[$key]['RECORDS']) echo '<span>'.$data[$key]['RECORDS'].'</span>';?>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['TPL']?></b></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact"><?=$data[$key]['TTL']?></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><?=$data[$key]['SOA']?></div>
-				<div class="clearfix l-unit__stat-col--left text-center compact-3">
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['TPL']?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><?=$data[$key]['TTL']?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['SOA']?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-3">
 					<i class="fas <?=$dnssec_icon;?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b><?=$data[$key]['EXP']?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['EXP']?></b></div>
 			</div>
 		</div>
 	<?php } ?>
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d DNS zone', '%d DNS zones', $i),$i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext('%d DNS zone', '%d DNS zones', $i),$i); ?>
+		</p>
 	</div>
 </footer>

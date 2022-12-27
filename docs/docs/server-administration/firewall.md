@@ -1,7 +1,7 @@
 # Firewall
 
 ::: warning
-After every restart, Hestia will clear the current iptables unless the rules are added via Hestia.
+After every edit or update the firewall, Hestia will clear the current iptables unless the rules are added via Hestia and [custom script](#how-can-i-customize-iptables-rules).
 :::
 
 ## How can I open or block a port or IP?
@@ -35,6 +35,37 @@ IPSet are large lists of IP addresses or subnets. They can be used for blacklist
 7. Selected the desired IP version (v4 or v6).
 8. Choose whether to auto-update the list or not.
 9. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
+
+## How can I customize iptables rules?
+
+::: danger
+This is dangerously advanced feature, please make sure you understand what you are doing.
+:::
+
+Hestia supports setting custom rules, chains or flags, etc. using script.
+
+Script must be here: `/usr/local/hestia/data/firewall/custom.sh`
+
+1. Create custom.sh: `touch /usr/local/hestia/data/firewall/custom.sh`
+2. Make it executable: `chmod +x /usr/local/hestia/data/firewall/custom.sh`
+3. Edit it with your favorite editor.
+4. Test and make sure it works.
+5. To make custom rules persistent, run: `v-update-firewall`
+
+**IMPLICIT PROTECTION:** Before making the rules persistent, if you screw up or lock yourself out of the server, just reboot.
+
+custom.sh example:
+
+```bash
+#!/bin/bash
+
+IPTABLES="$(command -v iptables)"
+
+$IPTABLES -N YOURCHAIN
+$IPTABLES -F YOURCHAIN
+$IPTABLES -I YOURCHAIN -s 0.0.0.0/0 -j RETURN
+$IPTABLES -I INPUT -p TCP -m multiport --dports 1:65535 -j YOURCHAIN
+```
 
 ## My IPSet doesn’t work
 

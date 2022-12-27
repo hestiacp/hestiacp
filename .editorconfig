@@ -15,8 +15,12 @@ max_line_length = 100
 [*.md]
 trim_trailing_whitespace = false
 
-# YAML forbids using tabs.
+# YAML forbids using tabs
 # See https://yaml.org/faq.html
 [*.{yml,yaml}]
 indent_size = 2
 indent_style = space
+
+# Views have longer line length for now
+[web/templates/**/*.php]
+max_line_length = 200

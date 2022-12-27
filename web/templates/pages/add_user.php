@@ -3,12 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/user/">
-				<i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button class="button" type="submit" form="vstobjects">
-				<i class="fas fa-floppy-disk status-icon purple"></i><?= _("Save") ?>
+			<button type="submit" class="button" form="vstobjects">
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -25,31 +25,31 @@
 		name="v_add_user"
 		method="post"
 	>
-		<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Adding User") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_username" class="form-label"><?= _("Username") ?></label>
-				<input type="text" class="form-control" name="v_username" id="v_username" value="<?=htmlentities(trim($v_username, "'"))?>" tabindex="1">
+				<input type="text" class="form-control" name="v_username" id="v_username" value="<?= htmlentities(trim($v_username, "'")) ?>" tabindex="1">
 			</div>
 			<div class="u-mb10">
 				<label for="v_name" class="form-label"><?= _("Contact") ?></label>
-				<input type="text" class="form-control" name="v_name" id="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" tabindex="2">
+				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= htmlentities(trim($v_name, "'")) ?>" tabindex="2">
 			</div>
 			<div class="u-mb10">
 				<label for="v_email" class="form-label"><?= _("Email") ?></label>
-				<input type="email" class="form-control" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" tabindex="3">
+				<input type="email" class="form-control" name="v_email" id="v_email" value="<?= htmlentities(trim($v_email, "'")) ?>" tabindex="3">
 			</div>
 			<div class="u-mb10">
 				<label for="v_password" class="form-label">
 					<?= _("Password") ?>
-					<a href="javascript:applyRandomString();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate status-icon green icon-large"></i></a>
+					<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
 				</label>
 				<div class="u-pos-relative u-mb10">
-					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?=htmlentities(trim($v_password, "'"))?>" tabindex="4">
+					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>" tabindex="4">
 					<meter max="4" class="password-meter"></meter>
 				</div>
 			</div>
@@ -122,7 +122,7 @@
 				<label for="v_notify" class="form-label">
 					<?= _("Send login credentials to email address") ?>
 				</label>
-				<input type="email" class="form-control" name="v_notify" id="v_notify" value="<?=htmlentities(trim($v_notify, "'"))?>" tabindex="8">
+				<input type="email" class="form-control" name="v_notify" id="v_notify" value="<?= htmlentities(trim($v_notify, "'")) ?>" tabindex="8">
 			</div>
 		</div>
 

@@ -6,7 +6,7 @@
 		<h1 class="login-title">
 			<?= _("Forgot Password") ?>
 		</h1>
-		<?php if (isset($ERROR)) echo $ERROR ?>
+		<?php show_error_message($ERROR); ?>
 		<div class="u-mb10">
 			<input type="hidden" name="action" value="confirm">
 			<input type="hidden" name="token" value="<?= htmlentities($_SESSION["token"]) ?>">

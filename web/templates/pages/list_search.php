@@ -2,8 +2,8 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="javascript:window.history.back();" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
-			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrows-rotate status-icon green"></i> <?= _("Refresh") ?></a>
+			<a href="javascript:window.history.back();" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrows-rotate icon-green"></i> <?= _("Refresh") ?></a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -16,7 +16,7 @@
 				</ul>
 				<div class="toolbar-search">
 					<form action="/search/" method="get">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" title="<?= _("Search") ?>">
 						<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
 							<i class="fas fa-magnifying-glass"></i>
@@ -35,12 +35,12 @@
 			<div class="clearfix l-unit__stat-col--left super-compact">
 				&nbsp;
 			</div>
-			<div class="clearfix l-unit__stat-col--left text-center compact-2"><b><?= _("Status") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b><?= _("Status") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Search Results") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Date") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Owner") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left text-center"><b><?= _("Type") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Date") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Owner") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Type") ?></b></div>
 		</div>
 	</div>
 
@@ -73,7 +73,7 @@
 			style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value['USER']) === 'admin') { echo 'display: none;';}?>">
 
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact text-center">
+				<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
 					<?php
 						if ($object === 'web domain') {
 								$icon = 'fa-earth-americas';
@@ -94,15 +94,15 @@
 								$icon = 'fa-clock';
 						}
 					?>
-					<i class="fa <?=$icon;?> status-icon dim"></i>
+					<i class="fa <?=$icon;?> icon-dim"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left compact-2 text-center">
+				<div class="clearfix l-unit__stat-col--left compact-2 u-text-center">
 					<b>
 						<?php if ($status === 'active') {?>
-							<i class="fas fa-circle-check status-icon green"></i>
+							<i class="fas fa-circle-check icon-green"></i>
 						<?php	} ?>
 						<?php if ($status === 'suspended') {?>
-							<i class="fas fa-triangle-exclamation status-icon orange"></i>
+							<i class="fas fa-triangle-exclamation icon-orange"></i>
 						<?php	} ?>
 					</b>
 				</div>
@@ -132,37 +132,35 @@
 						<?php } ?>
 					</b>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-right compact-3">
+				<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							&nbsp;
 						</div>
 					</div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left text-center"><?=translate_date($value['DATE'])?></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><b>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><?=translate_date($value['DATE'])?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b>
 						<a href="/search/?q=<?=htmlentities($_GET['q']); ?>&u=<?=$value['USER']; ?>&token=<?=$_SESSION['token']?>"><?=$value['USER']; ?></a>
 						<?php if (!($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes' && $value['USER'] !== 'admin')){
 						if ($_SESSION['userContext'] === 'admin'){
 						?>
-							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$value['USER']?>"><i class="fas fa-right-to-bracket status-icon green status-icon dim icon-large"></i></a>
+							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$value['USER']?>"><i class="fas fa-right-to-bracket icon-green icon-dim"></i></a>
 						<?php
 						}
 						}
 						?>
 						</b></div>
-				<div class="clearfix l-unit__stat-col--left text-center"><?=_($object)?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><?=_($object)?></b></div>
 			</div>
 		</div>
 	<?php } ?>
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right">
-				<?php printf(ngettext('%d object', '%d objects', $i),$i); ?>
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext('%d object', '%d objects', $i),$i); ?>
+		</p>
 	</div>
 </footer>

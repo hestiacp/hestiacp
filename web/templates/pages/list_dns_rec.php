@@ -2,10 +2,10 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left status-icon blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 			<?php if ($read_only !== 'true') {?>
-				<a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus status-icon green"></i> <?= _("Add Record") ?></a>
-				<a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil status-icon blue"></i> <?= _("Editing DNS Domain") ?></a>
+				<a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i> <?= _("Add Record") ?></a>
+				<a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil icon-blue"></i> <?= _("Editing DNS Domain") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -58,13 +58,13 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input id="toggle-all" type="checkbox" name="toggle-all" value="toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("Record") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left super-compact text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?= _("Type") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?= _("Priority") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><b><?= _("TTL") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left super-compact u-text-right"><b>&nbsp;</b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center" style="padding-left: 32px;"><b><?= _("Type") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center"><b><?= _("Priority") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center"><b><?= _("TTL") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("IP or Value") ?></b></div>
 		</div>
@@ -102,7 +102,7 @@
 					</b>
 				</div>
 			<!-- START QUICK ACTION TOOLBAR AREA -->
-			<div class="clearfix l-unit__stat-col--left super-compact text-right">
+			<div class="clearfix l-unit__stat-col--left super-compact u-text-right">
 				<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 					<div class="actions-panel clearfix">
 						<?php if ($read_only === 'true') {?>
@@ -110,11 +110,11 @@
 							&nbsp;
 						<?php } else { ?>
 							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil status-icon orange status-icon dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-									<i class="fas fa-trash status-icon red status-icon dim do_delete"></i>
+									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>">
 									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
 										<p><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
@@ -126,9 +126,9 @@
 				</div>
 			</div>
 			<!-- END QUICK ACTION TOOLBAR AREA -->
-			<div class="clearfix l-unit__stat-col--left compact text-center" style="padding-left: 32px;"><b><?=$data[$key]['TYPE']?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
-			<div class="clearfix l-unit__stat-col--left compact text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center" style="padding-left: 32px;"><b><?=$data[$key]['TYPE']?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
+			<div class="clearfix l-unit__stat-col--left compact u-text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
 			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8') ?></div>
 		</div>
@@ -138,13 +138,9 @@
 </div>
 
 <footer class="app-footer">
-	<div class="container">
-		<div class="l-unit-ft">
-			<div class="l-unit__col l-unit__col--right total clearfix">
-				<?php printf(ngettext("%d DNS record", "%d DNS records", $i), $i); ?>
-			</div>
-			<div class="l-unit__col l-unit__col--right back clearfix">
-			</div>
-		</div>
+	<div class="container app-footer-inner">
+		<p>
+			<?php printf(ngettext("%d DNS record", "%d DNS records", $i), $i); ?>
+		</p>
 	</div>
 </footer>

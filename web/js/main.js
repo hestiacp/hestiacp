@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Cookies = {
 	/**
 	 * Creates a cookie.
@@ -52,6 +53,7 @@ const Cookies = {
  * @throws {Error} if length is too small to create a "sufficiently secure" string
  * @returns {string}
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function randomString(length = 16) {
 	const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
@@ -112,8 +114,6 @@ function randomString(length = 16) {
 }
 
 document.addEventListener('alpine:init', () => {
-	const token = document.querySelector('#token').getAttribute('token');
-
 	// Sticky class helper
 	window.addEventListener('scroll', () => {
 		const toolbar = document.querySelector('.toolbar');
@@ -130,7 +130,7 @@ document.addEventListener('alpine:init', () => {
 	});
 
 	// Select all helper
-	const toggleAll = document.querySelector('#toggle-all');
+	const toggleAll = document.querySelector('.js-toggle-all');
 	if (toggleAll) {
 		toggleAll.addEventListener('change', (evt) => {
 			document.querySelectorAll('.ch-toggle').forEach((el) => (el.checked = evt.target.checked));
@@ -186,6 +186,7 @@ document.addEventListener('alpine:init', () => {
 			}
 		},
 		async list() {
+			const token = document.querySelector('#token').getAttribute('token');
 			const res = await fetch(`/list/notifications/?ajax=1&token=${token}`);
 			this.initialized = true;
 			if (!res.ok) {
@@ -198,6 +199,7 @@ document.addEventListener('alpine:init', () => {
 			);
 		},
 		async remove(id) {
+			const token = document.querySelector('#token').getAttribute('token');
 			await fetch(`/delete/notification/?delete=1&notification_id=${id}&token=${token}`);
 
 			this.notifications = this.notifications.filter((notification) => notification.ID != id);
@@ -206,6 +208,7 @@ document.addEventListener('alpine:init', () => {
 			}
 		},
 		async removeAll() {
+			const token = document.querySelector('#token').getAttribute('token');
 			await fetch(`/delete/notification/?delete=1&token=${token}`);
 
 			this.notifications = [];

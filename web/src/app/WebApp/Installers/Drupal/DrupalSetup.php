@@ -30,7 +30,7 @@ class DrupalSetup extends BaseSetup {
 				"template" => "drupal-composer",
 			],
 			"php" => [
-				"supported" => ["8.0", "8.1"],
+				"supported" => ["8.1", "8.2"],
 			],
 		],
 	];

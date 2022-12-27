@@ -211,7 +211,7 @@ const VE = {
 					$(this).dialog('destroy');
 				},
 				buttons: {
-					OK: function (event, ui) {
+					OK: function () {
 						location.href = confirmed_location_url;
 					},
 					Cancel: function () {
@@ -254,14 +254,14 @@ const VE = {
 				'<span class="toggle-password"><i class="toggle-psw-visibility-icon fas fa-eye-slash ' +
 				enabled
 					? ''
-					: 'show-passwords-enabled-action' +
+					: 'u-opacity-50' +
 					  '" onclick="VE.helpers.toggleHiddenPasswordText(\'' +
 					  ref +
 					  '\', this)"></i></span>';
 			$(ref).after(html);
 		},
 		toggleHiddenPasswordText: (ref, triggering_elm) => {
-			$(triggering_elm).toggleClass('show-passwords-enabled-action');
+			$(triggering_elm).toggleClass('u-opacity-50');
 
 			if ($(ref).prop('type') == 'text') {
 				Cookies.set('hide_passwords', 1, 365);

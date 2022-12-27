@@ -175,14 +175,15 @@ function render_page($user, $TAB, $page) {
 	$__template_dir = dirname(__DIR__) . "/templates/";
 	$__pages_js_dir = dirname(__DIR__) . "/js/pages/";
 
-	// Panel
-	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
 	// Extract global variables
 	// I think those variables should be passed via arguments
 	extract($GLOBALS, EXTR_SKIP);
 
 	// Header
 	include $__template_dir . "header.php";
+
+	// Panel
+	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
 
 	// Including page specific js file
 	if (file_exists($__pages_js_dir . $page . ".js")) {

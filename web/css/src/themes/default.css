@@ -2632,7 +2632,10 @@
 	position: fixed;
 	bottom: 0;
 
-	& a {
+	& button {
+		border: 0;
+		padding: 0;
+		background-color: transparent;
 		color: #fff;
 		font-weight: 500;
 

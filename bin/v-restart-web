@@ -30,7 +30,9 @@ send_email_report() {
 	else
 		service $WEB_SYSTEM configtest >> "$tmpfile" 2>&1
 	fi
-	service "$WEB_SYSTEM" restart >> "$tmpfile" 2>&1
+	if [ "$NO_RESTART_ON_CONF_ERR" != "yes" ]; then
+		service "$WEB_SYSTEM" restart >> "$tmpfile" 2>&1
+	fi
 	cat "$tmpfile" | $SENDMAIL -s "$subj" "$email"
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "[ $date | $WEB_SYSTEM | WEB ]" >> /var/log/hestia/debug.log 2>&1

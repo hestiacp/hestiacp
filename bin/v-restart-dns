@@ -29,7 +29,9 @@ send_email_report() {
 	tmpfile=$(mktemp)
 	subj="$(hostname): "$DNS_SYSTEM" restart failed"
 	/usr/sbin/named-checkconf "$dns_conf" >> $tmpfile 2>&1
-	service "$DNS_SYSTEM" restart >> $tmpfile 2>&1
+	if [ "$NO_RESTART_ON_CONF_ERR" != "yes" ]; then
+		service "$DNS_SYSTEM" restart >> $tmpfile 2>&1
+	fi
 	cat $tmpfile | $SENDMAIL -s "$subj" $email
 	rm -f $tmpfile
 }

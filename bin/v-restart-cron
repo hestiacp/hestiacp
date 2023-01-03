@@ -24,7 +24,9 @@ send_email_report() {
 	tmpfile=$(mktemp)
 	subj="$(hostname): $CRON_SYSTEM restart failed"
 	systemctl status "$CRON_SYSTEM" >> $tmpfile 2>&1
-	service "$CRON_SYSTEM" restart >> $tmpfile 2>&1
+	if [ "$NO_RESTART_ON_CONF_ERR" != "yes" ]; then
+		service "$CRON_SYSTEM" restart >> $tmpfile 2>&1
+	fi
 	cat $tmpfile | $SENDMAIL -s "$subj" $email
 	rm -f $tmpfile
 }

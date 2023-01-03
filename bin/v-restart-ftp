@@ -24,7 +24,9 @@ send_email_report() {
 	tmpfile=$(mktemp)
 	subj="$(hostname): $FTP_SYSTEM restart failed"
 	service "$FTP_SYSTEM" configtest >> $tmpfile 2>&1
-	service "$FTP_SYSTEM" restart >> $tmpfile 2>&1
+	if [ "$NO_RESTART_ON_CONF_ERR" != "yes" ]; then
+		service "$FTP_SYSTEM" restart >> $tmpfile 2>&1
+	fi
 	cat $tmpfile | $SENDMAIL -s "$subj" $email
 	rm -f $tmpfile
 }

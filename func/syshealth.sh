@@ -479,6 +479,10 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: DNS_CLUSTER_SYSTEM ('')"
 		$BIN/v-change-sys-config-value "DNS_CLUSTER_SYSTEM" "hestia"
 	fi
+	if [[ -z $(check_key_exists 'NO_RESTART_ON_CONF_ERR') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: NO_RESTART_ON_CONF_ERR ('')"
+		$BIN/v-change-sys-config-value "NO_RESTART_ON_CONF_ERR" "hestia"
+	fi
 
 	touch $HESTIA/conf/hestia.conf.new
 	while IFS='= ' read -r lhs rhs; do

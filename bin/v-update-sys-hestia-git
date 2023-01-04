@@ -201,7 +201,7 @@ if [ -n "$branch" ]; then
 		echo "ERROR: invalid branch name specified."
 		exit 1
 	else
-		/usr/local/hestia/bin/v-change-sys-config-value 'RELEASE_BRANCH' "$branch"
+		$BIN/v-change-sys-config-value 'RELEASE_BRANCH' "$branch"
 		echo "[!] Changed system release branch to: $branch."
 	fi
 else

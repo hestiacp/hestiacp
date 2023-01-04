@@ -35,7 +35,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Delete old webmail configuration
-for user in $($HESTIA/bin/v-list-sys-users plain); do
+for user in $($BIN/v-list-sys-users plain); do
 	for domain in $($BIN/v-list-mail-domains "$user" plain | cut -f 1); do
 		$BIN/v-delete-mail-domain-webmail "$user" "$domain"
 	done
@@ -45,7 +45,7 @@ done
 $BIN/v-change-sys-config-value 'WEBMAIL_ALIAS' $NEW_ALIAS
 
 # Add new webmail configuration
-for user in $($HESTIA/bin/v-list-sys-users plain); do
+for user in $($BIN/v-list-sys-users plain); do
 	for domain in $($BIN/v-list-mail-domains "$user" plain | cut -f 1); do
 		$BIN/v-add-mail-domain-webmail "$user" "$domain"
 	done

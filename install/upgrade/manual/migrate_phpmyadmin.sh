@@ -28,7 +28,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	sso="no"
 	if [ "$PHPMYADMIN_KEY" != "" ]; then
 		sso="yes"
-		$HESTIA/bin/v-delete-sys-pma-sso
+		$BIN/v-delete-sys-pma-sso
 	fi
 
 	# Create an backup of current config
@@ -95,7 +95,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	if [ -z "$DB_PMA_ALIAS" ]; then
 		echo "DB_PMA_ALIAS='phpmyadmin'" >> $HESTIA/conf/hestia.conf
 	fi
-	$HESTIA/bin/v-change-sys-db-alias 'pma' "phpmyadmin"
+	$BIN/v-change-sys-db-alias 'pma' "phpmyadmin"
 
 	# Special thanks to Pavel Galkin (https://skurudo.ru)
 	# https://github.com/skurudo/phpmyadmin-fixer
@@ -164,6 +164,6 @@ MYSQL_PMA3
 	mysql -uroot < $HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql
 
 	if [ "$sso" == "yes" ]; then
-		$HESTIA/bin/v-add-sys-pma-sso
+		$BIN/v-add-sys-pma-sso
 	fi
 fi

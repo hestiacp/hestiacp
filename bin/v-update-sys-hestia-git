@@ -350,7 +350,7 @@ cd $BUILD_DIR/hestiacp-$branch_dash
 if [ "$install" = "install" ] || [ "$install" = "yes" ] || [ "$install" = "install-auto" ]; then
 	install_build
 	if [ "$install" = "install-auto" ]; then
-		$HESTIA/bin/v-add-cron-hestia-autoupdate git
+		$BIN/v-add-cron-hestia-autoupdate git
 	fi
 else
 	warning_message

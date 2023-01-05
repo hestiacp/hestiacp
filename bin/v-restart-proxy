@@ -27,7 +27,7 @@ send_email_report() {
 	subj="$(hostname): $PROXY_SYSTEM restart failed"
 	nginx -t >> $tmpfile 2>&1
 
-	if [ "$NO_RESTART_ON_CONF_ERR" != "yes" ]; then
+	if [ "$1" == "DO_RESTART" ]; then
 		service "$PROXY_SYSTEM" restart >> $tmpfile 2>&1
 	fi
 	cat "$tmpfile" | $SENDMAIL -s "$subj" "$email"
@@ -70,6 +70,19 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
 	if [ "$1" = 'background' ]; then
 		# Restart system
 		sleep 15
+
+		# Preform a check if Nginx is valid as reload doesn't throw an error / exit
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "[ $date | $PROXY_SYSTEM ]" >> /var/log/hestia/debug.log 2>&1
+			service $PROXY_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
+		else
+			service $PROXY_SYSTEM configtest > /dev/null 2>&1
+		fi
+		if [ $? -ne 0 ]; then
+			send_email_report
+			check_result "$E_RESTART" "$PROXY_SYSTEM restart failed"
+		fi
+
 		$BIN/v-restart-service $PROXY_SYSTEM > /dev/null 2>&1
 
 		# Update restart queue
@@ -84,7 +97,7 @@ if [ -f "$HESTIA/web/inc/nginx_proxy" ]; then
 else
 	# Default behaviour
 
-	# Preform an check if Nginx is valid as reload doesn't throw an error / exit
+	# Preform a check if Nginx is valid as reload doesn't throw an error / exit
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "[ $date | $PROXY_SYSTEM ]" >> /var/log/hestia/debug.log 2>&1
 		service $PROXY_SYSTEM configtest >> /var/log/hestia/debug.log 2>&1
@@ -101,6 +114,10 @@ else
 		restart="ssl"
 	fi
 	$BIN/v-restart-service "$PROXY_SYSTEM" "$restart" > /dev/null 2>&1
+	if [ $? -ne 0 ]; then
+		send_email_report "DO_RESTART"
+		check_result "$E_RESTART" "$PROXY_SYSTEM restart failed"
+	fi
 
 	# Update restart queue
 	if [ -e "$HESTIA/data/queue/restart.pipe" ]; then

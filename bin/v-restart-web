@@ -30,7 +30,7 @@ send_email_report() {
 	else
 		service $WEB_SYSTEM configtest >> "$tmpfile" 2>&1
 	fi
-	if [ "$NO_RESTART_ON_CONF_ERR" != "yes" ]; then
+	if [ "$1" == "DO_RESTART" ]; then
 		service "$WEB_SYSTEM" restart >> "$tmpfile" 2>&1
 	fi
 	cat "$tmpfile" | $SENDMAIL -s "$subj" "$email"
@@ -98,7 +98,7 @@ fi
 $BIN/v-restart-service "$WEB_SYSTEM" "$restart"
 
 if [ $? -ne 0 ]; then
-	send_email_report
+	send_email_report "DO_RESTART"
 	check_result "$E_RESTART" "$WEB_SYSTEM restart failed"
 fi
 

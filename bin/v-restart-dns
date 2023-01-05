@@ -29,7 +29,7 @@ send_email_report() {
 	tmpfile=$(mktemp)
 	subj="$(hostname): "$DNS_SYSTEM" restart failed"
 	/usr/sbin/named-checkconf "$dns_conf" >> $tmpfile 2>&1
-	if [ "$NO_RESTART_ON_CONF_ERR" != "yes" ]; then
+	if [ "$1" == "DO_RESTART" ]; then
 		service "$DNS_SYSTEM" restart >> $tmpfile 2>&1
 	fi
 	cat $tmpfile | $SENDMAIL -s "$subj" $email
@@ -56,10 +56,22 @@ if [ "$1" = 'scheduled' ] || [ -z "$1" -a "$SCHEDULED_RESTART" = 'yes' ]; then
 	exit
 fi
 
+
+if [ -e '/etc/named.conf' ]; then
+	dns_conf='/etc/named.conf'
+else
+	dns_conf='/etc/bind/named.conf'
+fi
+/usr/sbin/named-checkconf "$dns_conf" > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+	send_email_report
+	check_result "$E_RESTART" "$DNS_SYSTEM restart failed'"
+fi
+
 # Restart system
 $BIN/v-restart-service "$DNS_SYSTEM" "$1" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-	send_email_report
+	send_email_report "DO_RESTART"
 	check_result "$E_RESTART" "$DNS_SYSTEM restart failed"
 fi
 

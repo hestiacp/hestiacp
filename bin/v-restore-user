@@ -709,7 +709,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 				-exec chown $exim_user {} \;
 		fi
 
-		$HESTIA/bin/v-rebuild-mail-domain $user $domain
+		$BIN/v-rebuild-mail-domain $user $domain
 
 	done
 
@@ -919,7 +919,7 @@ subj="$user → restore has been completed"
 cat $tmpdir/restore.log | $SENDMAIL -s "$subj" $email $notify
 
 # Send notification to panel
-$HESTIA/bin/v-add-user-notification "$user" "Backup restored successfully" "<b>Archive:</b> $backup"
+$BIN/v-add-user-notification "$user" "Backup restored successfully" "<b>Archive:</b> $backup"
 
 # Deleting temporary data
 rm -rf $tmpdir

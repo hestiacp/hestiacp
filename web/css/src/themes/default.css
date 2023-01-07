@@ -225,6 +225,7 @@
 	border: 0;
 	padding-left: 5px;
 	padding-right: 5px;
+	background: none;
 
 	& .fas {
 		color: #c36;
@@ -239,14 +240,16 @@
 .top-bar-notification-delete-all {
 	display: block;
 	background-color: transparent;
-	border: 0;
-	color: inherit;
-	width: 100%;
 	text-align: center;
+	border: 0;
 	padding: 10px 15px;
+	width: 100%;
+	background: none;
+	color: var(--color-text-link);
 
 	&:hover {
 		background-color: rgb(0 0 0 / 5%);
+		color: var(--color-text-link-hover);
 	}
 
 	& .fas {
@@ -613,7 +616,9 @@
 .toolbar-sorting-toggle {
 	color: var(--color-text);
 	display: block;
+	border: 0;
 	padding-bottom: 5px;
+	background: none;
 	text-transform: uppercase;
 
 	&:hover {
@@ -1556,8 +1561,10 @@
 	font-weight: 600;
 	border-radius: var(--border-radius-base);
 	margin-left: -3px;
+	border: 0;
 	padding-left: 3px;
 	padding-right: 3px;
+	background-color: transparent;
 
 	&:hover {
 		text-decoration: none;
@@ -2625,7 +2632,10 @@
 	position: fixed;
 	bottom: 0;
 
-	& a {
+	& button {
+		border: 0;
+		padding: 0;
+		background-color: transparent;
 		color: #fff;
 		font-weight: 500;
 

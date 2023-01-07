@@ -37,8 +37,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-SearchResults=$(ls -a $HESTIA/bin/ | sort)
-TotalItems=$(ls -a $HESTIA/bin/ | sort | wc -l)
+SearchResults=$(ls -a $BIN/ | sort)
+TotalItems=$(ls -a $BIN/ | sort | wc -l)
 
 for i; do
 	SearchResults=$(echo $SearchResults | tr " " "\n" | grep $i)

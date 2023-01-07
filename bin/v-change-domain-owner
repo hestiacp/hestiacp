@@ -301,7 +301,7 @@ if [ -n "$old_ip" ]; then
 fi
 # Send notification to panel
 if [ -n "$web_data" ] || [ -n "$dns_data" ] || [ -n "$mail_data" ]; then
-	$HESTIA/bin/v-add-user-notification "$user" "$domain has been added to your account" ''
+	$BIN/v-add-user-notification "$user" "$domain has been added to your account" ''
 fi
 
 #----------------------------------------------------------#

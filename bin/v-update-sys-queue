@@ -34,9 +34,9 @@ check_args '1' "$#" 'QUEUE'
 #                       Action                             #
 #----------------------------------------------------------#
 
-b_task=$(ps auxf | grep -v "grep" | grep "$HESTIA/bin/v-update-sys-queue backup")
+b_task=$(ps auxf | grep -v "grep" | grep "$BIN/v-update-sys-queue backup")
 b_task=$(echo "$b_task" | grep -v sudo | wc -l)
-d_task=$(ps auxf | grep -v "grep" | grep "$HESTIA/bin/v-update-sys-queue dns")
+d_task=$(ps auxf | grep -v "grep" | grep "$BIN/v-update-sys-queue dns")
 d_task=$(echo "$d_task" | grep -v sudo | wc -l)
 if [ "$b_task" -gt 2 ] || [ "$d_task" -gt 2 ]; then
 	exit

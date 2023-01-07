@@ -461,11 +461,11 @@ function list_timezones() {
 	foreach ($timezone_offsets as $timezone => $offset) {
 		$offset_prefix = $offset < 0 ? "-" : "+";
 		$offset_formatted = gmdate("H:i", abs($offset));
-		$pretty_offset = "UTC${offset_prefix}${offset_formatted}";
+		$pretty_offset = "UTC{$offset_prefix}{$offset_formatted}";
 		$c = new DateTime(gmdate("Y-M-d H:i:s"), new DateTimeZone("UTC"));
 		$c->setTimezone(new DateTimeZone($timezone));
 		$current_time = $c->format("H:i:s");
-		$timezone_list[$timezone] = "$timezone [ $current_time ] ${pretty_offset}";
+		$timezone_list[$timezone] = "$timezone [ $current_time ] {$pretty_offset}";
 		#$timezone_list[$timezone] = "$timezone ${pretty_offset}";
 	}
 	return $timezone_list;

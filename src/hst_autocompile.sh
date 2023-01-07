@@ -225,7 +225,7 @@ else
 	HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 fi
 OPENSSL_V='3.0.7'
-PCRE_V='10.41'
+PCRE_V='10.42'
 ZLIB_V='1.2.13'
 
 # Create build directories
@@ -564,7 +564,7 @@ if [ "$PHP_B" = true ]; then
 
 		# Build the package
 		echo Building PHP DEB
-		[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb --build $BUILD_DIR_HESTIAPHP $DEB_DIR
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
 		dpkg-deb -Zxz --build $BUILD_DIR_HESTIAPHP $DEB_DIR
 	fi
 

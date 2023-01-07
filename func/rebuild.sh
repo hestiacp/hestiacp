@@ -663,7 +663,7 @@ rebuild_mail_domain_conf() {
 
 		# Webamil client
 		if [ "$WEBMAIL" = '' ]; then
-			$HESTIA/bin/v-add-mail-domain-webmail $user $domain 'roundcube' 'no'
+			$BIN/v-add-mail-domain-webmail $user $domain 'roundcube' 'no'
 		fi
 
 		# Adding catchall email

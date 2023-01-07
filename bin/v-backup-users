@@ -31,7 +31,7 @@ mysqlrepair --all-databases --check --auto-repair > /dev/null 2>&1
 if [ -z "$BACKUP_SYSTEM" ]; then
 	exit
 fi
-for user in $($HESTIA/bin/v-list-sys-users plain); do
+for user in $($BIN/v-list-sys-users plain); do
 	check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
 	log=$HESTIA/log/backup.log
 	if [ ! -f "$HESTIA/data/users/$user/user.conf" ]; then

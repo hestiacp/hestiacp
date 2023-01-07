@@ -287,7 +287,7 @@ function syshealth_repair_system_config() {
 	if [[ -z $(check_key_exists 'BACKEND_PORT') ]]; then
 		ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep "listen" | sed 's/[^0-9]*//g')
 		echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
-		$HESTIA/bin/v-change-sys-config-value 'BACKEND_PORT' $ORIGINAL_PORT
+		$BIN/v-change-sys-config-value 'BACKEND_PORT' $ORIGINAL_PORT
 	fi
 
 	# Upgrade: Send email notification
@@ -509,14 +509,14 @@ function syshealth_repair_system_config() {
 # Repair System Cron Jobs
 # Add default cron jobs to "admin" user account's cron tab
 function syshealth_repair_system_cronjobs() {
-	$HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue restart" '' 'no'
-	$HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue daily" '' 'no'
-	$HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue disk" '' 'no'
-	$HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue traffic" '' 'no'
-	$HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue webstats" '' 'no'
-	$HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-queue backup" '' 'no'
-	$HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $HESTIA/bin/v-backup-users" '' 'no'
-	$HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $HESTIA/bin/v-update-user-stats" '' 'no'
-	$HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $HESTIA/bin/v-update-sys-rrd" '' 'no'
-	$HESTIA/bin/v-restart-cron
+	$BIN/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $BIN/v-update-sys-queue restart" '' 'no'
+	$BIN/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $BIN/v-update-sys-queue daily" '' 'no'
+	$BIN/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $BIN/v-update-sys-queue disk" '' 'no'
+	$BIN/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $BIN/v-update-sys-queue traffic" '' 'no'
+	$BIN/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $BIN/v-update-sys-queue webstats" '' 'no'
+	$BIN/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $BIN/v-update-sys-queue backup" '' 'no'
+	$BIN/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $BIN/v-backup-users" '' 'no'
+	$BIN/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $BIN/v-update-user-stats" '' 'no'
+	$BIN/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $BIN/v-update-sys-rrd" '' 'no'
+	$BIN/v-restart-cron
 }

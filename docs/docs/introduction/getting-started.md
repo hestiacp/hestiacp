@@ -61,7 +61,7 @@ To choose what software gets installed, you can provide flags to the installatio
 -j, --proftpd Install ProFTPD [yes | no] default: no
 -k, --named Install Bind [yes | no] default: yes
 -m, --mysql Install MariaDB [yes | no] default: yes
--M, --mysql-classic Install MariaDB [yes | no] default: no
+-M, --mysql-classic Install Mysql8 [yes | no] default: no
 -g, --postgresql Install PostgreSQL [yes | no] default: no
 -x, --exim Install Exim [yes | no] default: yes
 -z, --dovecot Install Dovecot [yes | no] default: yes

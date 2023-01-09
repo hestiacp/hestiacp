@@ -1,7 +1,7 @@
 {
 	"name": "hestia",
 	"private": true,
-	"version": "1.7.0-alpha",
+	"version": "1.7.0-beta1",
 	"description": "An open-source Linux web server control panel.",
 	"repository": "https://github.com/hestiacp/hestiacp",
 	"license": "GPL-3.0-or-later",

@@ -48,3 +48,8 @@ if [ -z "$(grep -e 'condition =  ${lookup{$local_part@$domain}lsearch{/etc/exim4
 		fi
 	done
 fi
+
+# Allow Email@domain.com for login
+if [ -f "/etc/dovecot/conf.d/10-auth.conf" ]; then
+	sed -i "s/auth_username_format = %u/auth_username_format = %Lu/g" /etc/dovecot/conf.d/10-auth.conf
+fi

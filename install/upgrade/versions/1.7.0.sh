@@ -48,3 +48,8 @@ if [ -z "$(grep -e 'condition =  ${lookup{$local_part@$domain}lsearch{/etc/exim4
 		fi
 	done
 fi
+
+if echo "$BACKUP_SYSTEM" | grep "google" > /dev/null; then
+	echo "[ ! ] Deprecation notice: Backup via Google Cloud has been removed setup backup again via Rclone to reinstate the backup and restore capebilities!"
+	add_upgrade_message "Deprecation notice: Backup via Google Cloud has been removed setup backup again via Rclone to reinstate the backup and restore capebilities!"
+fi

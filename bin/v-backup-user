@@ -710,7 +710,6 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
 		local) local_backup ;;
 		ftp) ftp_backup ;;
 		sftp) sftp_backup ;;
-		google) google_backup ;;
 		b2) b2_backup ;;
 		rclone) rclone_backup ;;
 	esac

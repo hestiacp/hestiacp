@@ -254,7 +254,7 @@ rebuild_web_domain_conf() {
 	if [ ! -d $HOMEDIR/$user/web/$domain ]; then
 		mkdir $HOMEDIR/$user/web/$domain
 	fi
-	chown $user:$user $HOMEDIR/$user/web/$domain
+	chown --no-dereference $user:$user $HOMEDIR/$user/web/$domain
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"

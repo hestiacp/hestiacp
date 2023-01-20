@@ -73,7 +73,7 @@ jobs:
         uses: ./.github/actions/yarn-nm-install
 
       - name: Run ESLint
-        run: yarn eslint web/js/
+        run: yarn eslint .
 
   stylelint:
     name: Stylelint

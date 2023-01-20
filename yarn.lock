@@ -947,9 +947,9 @@ __metadata:
   linkType: hard
 
 "@vue/devtools-api@npm:^6.4.5":
-  version: 6.4.5
-  resolution: "@vue/devtools-api@npm:6.4.5"
-  checksum: 40c5adc8788cb283972ce09ba7ce105fa894f4decec9168829cc8e6211462763402442e6c31be76f9da62b0e74ae724971b924571367b4ac89b94dc6894e2d07
+  version: 6.5.0
+  resolution: "@vue/devtools-api@npm:6.5.0"
+  checksum: ec819ef3a426e91d09e9cfefd2827e9ed8ec9d62bb3b3e0674f3da8c7e92a4b879c3b777dc7329172ca6fe2670b62dd5580d23160339208f0f5ae038f2e504ad
   languageName: node
   linkType: hard
 
@@ -1016,30 +1016,30 @@ __metadata:
   linkType: hard
 
 "@vueuse/core@npm:^9.9.0":
-  version: 9.11.0
-  resolution: "@vueuse/core@npm:9.11.0"
+  version: 9.11.1
+  resolution: "@vueuse/core@npm:9.11.1"
   dependencies:
     "@types/web-bluetooth": ^0.0.16
-    "@vueuse/metadata": 9.11.0
-    "@vueuse/shared": 9.11.0
+    "@vueuse/metadata": 9.11.1
+    "@vueuse/shared": 9.11.1
     vue-demi: "*"
-  checksum: 469bacd20709c3e68de1edf726edae3d68ad2c2cb6f37f197250a42e2ff12d2bd267b9f3c212a55e06a5351d6708fb59dd54d9eac2746ca0482b0aac1767b5b1
+  checksum: c9b4d65d50441d19d452dfebe4e13c8b56a8ea296b31b9cd93b5a52ee1b461c40ebc530415d3869083852eb874c99d5742311fd8bf750d405f4d52a768aebaa3
   languageName: node
   linkType: hard
 
-"@vueuse/metadata@npm:9.11.0":
-  version: 9.11.0
-  resolution: "@vueuse/metadata@npm:9.11.0"
-  checksum: 262ba0cfe89b65ead26b7d9bdb47221c6d8bf3e5a67dc6ff5fb2a67d5fe849b8854749f9bfa337bab6597d2f7e596f01a24028507cc511b9d198ea403f46f6ed
+"@vueuse/metadata@npm:9.11.1":
+  version: 9.11.1
+  resolution: "@vueuse/metadata@npm:9.11.1"
+  checksum: d4025257dc891b4ae3712a68b881409e7a58517f7b96f8949a74a99cec5e46f202fc2c326765eed9bffc8fbde6417ee737d3c2ac650799dd9e99fa5a7f9c2363
   languageName: node
   linkType: hard
 
-"@vueuse/shared@npm:9.11.0":
-  version: 9.11.0
-  resolution: "@vueuse/shared@npm:9.11.0"
+"@vueuse/shared@npm:9.11.1":
+  version: 9.11.1
+  resolution: "@vueuse/shared@npm:9.11.1"
   dependencies:
     vue-demi: "*"
-  checksum: 6ede8f66df880be27b447b4b95085ae223916328e10f86a87b2a9d69baf51184c313a7be6136b0c9ad0d38b68c5616fad64cf535911f3695aa53629d9ccaacba
+  checksum: 373a725ba87dd84eec3882cef4dc92706f28b53256f1c23a800444c12de675c71c1773c254def5d9c3096e54b9830154d13540264c1f017770395f04b07d789f
   languageName: node
   linkType: hard
 
@@ -1419,7 +1419,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^2.0.0":
+"chalk@npm:^2.0.0, chalk@npm:^2.4.1":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
   dependencies:
@@ -2700,6 +2700,7 @@ __metadata:
     postcss: ^8.4.21
     postcss-cli: ^10.1.0
     postcss-import: ^15.1.0
+    postcss-path-replace: ^1.0.4
     postcss-preset-env: ^7.8.3
     postcss-size: ^4.0.1
     prettier: ^2.8.3
@@ -2710,7 +2711,7 @@ __metadata:
     stylelint-config-prettier: ^9.0.4
     stylelint-config-standard: ^29.0.0
     typescript: ^4.9.4
-    vitepress: 1.0.0-alpha.38
+    vitepress: 1.0.0-alpha.40
     vue: ^3.2.45
   languageName: unknown
   linkType: soft
@@ -2999,9 +3000,9 @@ __metadata:
   linkType: hard
 
 "js-sdsl@npm:^4.1.4":
-  version: 4.2.0
-  resolution: "js-sdsl@npm:4.2.0"
-  checksum: 2cd0885f7212afb355929d72ca105cb37de7e95ad6031e6a32619eaefa46735a7d0fb682641a0ba666e1519cb138fe76abc1eea8a34e224140c9d94c995171f1
+  version: 4.3.0
+  resolution: "js-sdsl@npm:4.3.0"
+  checksum: ce908257cf6909e213af580af3a691a736f5ee8b16315454768f917a682a4ea0c11bde1b241bbfaecedc0eb67b72101b2c2df2ffaed32aed5d539fca816f054e
   languageName: node
   linkType: hard
 
@@ -4583,6 +4584,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss-path-replace@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "postcss-path-replace@npm:1.0.4"
+  dependencies:
+    postcss: ^6.0.21
+  checksum: f6b698c62b80a112a1a3c82ea121fba6096222e53adb9caaee752384792437278b1b476d80bbf5d0bbe047e06de04b8f18fff4120537ef24f4d172e5c3626f61
+  languageName: node
+  linkType: hard
+
 "postcss-place@npm:^7.0.5":
   version: 7.0.5
   resolution: "postcss-place@npm:7.0.5"
@@ -4781,6 +4791,17 @@ __metadata:
   version: 4.2.0
   resolution: "postcss-value-parser@npm:4.2.0"
   checksum: 819ffab0c9d51cf0acbabf8996dffbfafbafa57afc0e4c98db88b67f2094cb44488758f06e5da95d7036f19556a4a732525e84289a425f4f6fd8e412a9d7442f
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^6.0.21":
+  version: 6.0.23
+  resolution: "postcss@npm:6.0.23"
+  dependencies:
+    chalk: ^2.4.1
+    source-map: ^0.6.1
+    supports-color: ^5.4.0
+  checksum: cc6cb2c1dbcdefa6f57a71d67fe535c9e96543298bbe28f9a6a64c4f1e21b6127113890dd4cda8873d3f4e6613a0566b7b4bbb230204f3a9a309190bda065d81
   languageName: node
   linkType: hard
 
@@ -5093,8 +5114,8 @@ __metadata:
   linkType: hard
 
 "rollup@npm:^3.7.0":
-  version: 3.10.0
-  resolution: "rollup@npm:3.10.0"
+  version: 3.10.1
+  resolution: "rollup@npm:3.10.1"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -5102,7 +5123,7 @@ __metadata:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: 31a882689c58d084ac36362aeaf2422dc4b80d671bd88c856693c37d63a26ddac9b9819dfba7f79c2d50d5207868b0e3d75f728fe551bbc347cf5dedf8ece18e
+  checksum: 69c2bba82833f2977db08a5c10da651e0668f1335652499543c297633eb44eaf1473575973025a07cffd78903be8d10626e5abac063e49fb47d3f7dd8c18bf00
   languageName: node
   linkType: hard
 
@@ -5564,7 +5585,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^5.3.0":
+"supports-color@npm:^5.3.0, supports-color@npm:^5.4.0":
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"
   dependencies:
@@ -5920,9 +5941,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress@npm:1.0.0-alpha.38":
-  version: 1.0.0-alpha.38
-  resolution: "vitepress@npm:1.0.0-alpha.38"
+"vitepress@npm:1.0.0-alpha.40":
+  version: 1.0.0-alpha.40
+  resolution: "vitepress@npm:1.0.0-alpha.40"
   dependencies:
     "@docsearch/css": ^3.3.1
     "@docsearch/js": ^3.3.1
@@ -5935,7 +5956,7 @@ __metadata:
     vue: ^3.2.45
   bin:
     vitepress: bin/vitepress.js
-  checksum: 451869726be2ce64b6fad28d6f3a7f7247f1a8600b1eac9437dfb27bc16e740d5bb8c308ab4259b21cd275fa67a23a3d64363f59b0b59cb9b68212de75f9d658
+  checksum: 7748d8bfcaa45c3360a3c00dffd9b4083587af243fdc5fd70cc2b85e119a60e31560e5730748d465f7698d56fc6e6d74b6cdd077e54ea9933a74a0bfedc25f10
   languageName: node
   linkType: hard
 

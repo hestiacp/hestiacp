@@ -10,7 +10,7 @@
 		"docs:build": "vitepress build docs",
 		"docs:serve": "vitepress serve docs",
 		"build": "postcss web/css/src/themes/*.css --dir web/css/themes --ext .min.css",
-		"lint": "prettier --check . && eslint web/js/ && stylelint web/css/src/**/*.css && markdownlint-cli2 *.md docs/**/*.md",
+		"lint": "prettier --check . && eslint . && stylelint web/css/src/**/*.css && markdownlint-cli2 *.md docs/**/*.md",
 		"lint-staged": "lint-staged",
 		"format": "prettier --write .",
 		"preinstall": "npx only-allow yarn",
@@ -35,6 +35,7 @@
 		"postcss": "^8.4.21",
 		"postcss-cli": "^10.1.0",
 		"postcss-import": "^15.1.0",
+		"postcss-path-replace": "^1.0.4",
 		"postcss-preset-env": "^7.8.3",
 		"postcss-size": "^4.0.1",
 		"prettier": "^2.8.3",
@@ -45,7 +46,7 @@
 		"stylelint-config-prettier": "^9.0.4",
 		"stylelint-config-standard": "^29.0.0",
 		"typescript": "^4.9.4",
-		"vitepress": "1.0.0-alpha.38",
+		"vitepress": "1.0.0-alpha.40",
 		"vue": "^3.2.45"
 	}
 }

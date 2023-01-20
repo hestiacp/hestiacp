@@ -175,19 +175,20 @@ function render_page($user, $TAB, $page) {
 	$__template_dir = dirname(__DIR__) . "/templates/";
 	$__pages_js_dir = dirname(__DIR__) . "/js/pages/";
 
+	// Extract global variables
+	// I think those variables should be passed via arguments
+	extract($GLOBALS, EXTR_SKIP);
+
 	// Header
 	include $__template_dir . "header.php";
+
+	// Panel
+	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
 
 	// Including page specific js file
 	if (file_exists($__pages_js_dir . $page . ".js")) {
 		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
 	}
-
-	// Panel
-	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
-	// Extract global variables
-	// I think those variables should be passed via arguments
-	extract($GLOBALS, EXTR_SKIP);
 
 	// Policies controller
 	@include_once dirname(__DIR__) . "/inc/policies.php";
@@ -460,11 +461,11 @@ function list_timezones() {
 	foreach ($timezone_offsets as $timezone => $offset) {
 		$offset_prefix = $offset < 0 ? "-" : "+";
 		$offset_formatted = gmdate("H:i", abs($offset));
-		$pretty_offset = "UTC${offset_prefix}${offset_formatted}";
+		$pretty_offset = "UTC{$offset_prefix}{$offset_formatted}";
 		$c = new DateTime(gmdate("Y-M-d H:i:s"), new DateTimeZone("UTC"));
 		$c->setTimezone(new DateTimeZone($timezone));
 		$current_time = $c->format("H:i:s");
-		$timezone_list[$timezone] = "$timezone [ $current_time ] ${pretty_offset}";
+		$timezone_list[$timezone] = "$timezone [ $current_time ] {$pretty_offset}";
 		#$timezone_list[$timezone] = "$timezone ${pretty_offset}";
 	}
 	return $timezone_list;

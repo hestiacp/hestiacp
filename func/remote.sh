@@ -81,9 +81,9 @@ send_ssh_cmd() {
 	fi
 
 	if [ "$USER" = 'root' ]; then
-		args="$HESTIA/bin/$1 \"$2\" \"$3\" \"$4\" \"$5\""
+		args="$BIN/$1 \"$2\" \"$3\" \"$4\" \"$5\""
 	else
-		args="sudo $HESTIA/bin/$1 \"$2\" \"$3\" \"$4\" \"$5\""
+		args="sudo $BIN/$1 \"$2\" \"$3\" \"$4\" \"$5\""
 	fi
 	ssh -i $IDENTITY_FILE $USER@$HOST -p $PORT "$args" > /dev/null 2>&1
 	if [ "$?" -ne '0' ]; then

@@ -53,12 +53,12 @@ if [ "$status" = "enable" ]; then
 		sed -i 's|die("Error: Disabled");|//die("Error: Disabled");|g' $HESTIA/web/api/index.php
 		sed -i 's|////|//|g' $HESTIA/web/api/index.php
 	fi
-	if [ "$version" = "legacy" ] || [ "$version" = "all" ]; then $HESTIA/bin/v-change-sys-config-value "API" "yes"; fi
-	if [ "$version" = "api" ] || [ "$version" = "all" ]; then $HESTIA/bin/v-change-sys-config-value "API_SYSTEM" "1"; fi
+	if [ "$version" = "legacy" ] || [ "$version" = "all" ]; then $BIN/v-change-sys-config-value "API" "yes"; fi
+	if [ "$version" = "api" ] || [ "$version" = "all" ]; then $BIN/v-change-sys-config-value "API_SYSTEM" "1"; fi
 else
-	$HESTIA/bin/v-change-sys-config-value "API" "no"
-	$HESTIA/bin/v-change-sys-config-value "API_ALLOWED_IP" ""
-	$HESTIA/bin/v-change-sys-config-value "API_SYSTEM" "0"
+	$BIN/v-change-sys-config-value "API" "no"
+	$BIN/v-change-sys-config-value "API_ALLOWED_IP" ""
+	$BIN/v-change-sys-config-value "API_SYSTEM" "0"
 	if [ "$status" != "remove" ]; then
 		sed -i 's|//die("Error: Disabled");|die("Error: Disabled");|g' $HESTIA/web/api/index.php
 	fi

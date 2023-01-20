@@ -32,7 +32,7 @@ cp -rf $HESTIA_INSTALL_DIR/templates/mail $HESTIA/data/templates/
 # Rebuild mail domains if mail services are enabled
 if [ -z "$skip" ]; then
 	if [ -n "$MAIL_SYSTEM" ]; then
-		for user in $($HESTIA/bin/v-list-sys-users plain); do
+		for user in $($BIN/v-list-sys-users plain); do
 			$BIN/v-rebuild-mail-domains "$user" no
 		done
 	fi

@@ -135,7 +135,7 @@ fi
 
 if [ "$OWNER" = 'admin' ]; then
 	if [ "$STATUS" = 'shared' ]; then
-		for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
+		for hestia_user in $($BIN/v-list-sys-users plain); do
 			decrease_user_value "$hestia_user" '$IP_AVAIL'
 		done
 	else

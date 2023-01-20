@@ -37,7 +37,7 @@ if [ "$LE_STAGING" = "yes" ]; then
 fi
 
 # Checking user certificates
-for user in $($HESTIA/bin/v-list-sys-users plain); do
+for user in $($BIN/v-list-sys-users plain); do
 	USER_DATA=$HESTIA/data/users/$user
 
 	for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do
@@ -159,11 +159,11 @@ for user in $($HESTIA/bin/v-list-sys-users plain); do
 done
 
 # Restart related services
-$HESTIA/bin/v-restart-web yes
-$HESTIA/bin/v-restart-mail yes
+$BIN/v-restart-web yes
+$BIN/v-restart-mail yes
 
 if [ -n "$PROXY_SYSTEM" ]; then
-	$HESTIA/bin/v-restart-proxy yes
+	$BIN/v-restart-proxy yes
 fi
 
 #----------------------------------------------------------#

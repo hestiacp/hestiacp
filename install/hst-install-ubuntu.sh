@@ -558,7 +558,7 @@ if [ "$mysql" = 'yes' ]; then
 	echo '   - MariaDB Database Server'
 fi
 if [ "$mysqlclassic" = 'yes' ]; then
-	echo '   - MySQL Database Server'
+	echo '   - MySQL8 Database Server'
 fi
 if [ "$postgresql" = 'yes' ]; then
 	echo '   - PostgreSQL Database Server'

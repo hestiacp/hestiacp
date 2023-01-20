@@ -68,7 +68,7 @@ if [ ! -z "$new" ]; then
 			mv $old.conf $new.conf
 			sed -i "s/$old/$new/g" $new.conf
 		fi
-		for user in $($HESTIA/bin/v-list-sys-users plain); do
+		for user in $($BIN/v-list-sys-users plain); do
 			sed -i "s/$old/$new/g" $HESTIA/data/users/$user/web.conf
 			$BIN/v-rebuild-web-domains "$user" no
 		done
@@ -86,14 +86,14 @@ if [ ! -z "$new" ]; then
 	fi
 
 	if [ -n "$IMAP_SYSTEM" ]; then
-		for user in $($HESTIA/bin/v-list-sys-users plain); do
+		for user in $($BIN/v-list-sys-users plain); do
 			$BIN/v-rebuild-mail-domains "$user" no
 		done
 	fi
 
 	# Updating DNS
 	if [ ! -z "$DNS_SYSTEM" ]; then
-		for user in $($HESTIA/bin/v-list-sys-users plain); do
+		for user in $($BIN/v-list-sys-users plain); do
 			sed -i "s/$old/$new/g" $HESTIA/data/users/$user/dns.conf
 			sed -i "s/$old/$new/g" $HESTIA/data/users/$user/dns/*.conf
 			$BIN/v-rebuild-dns-domains "$user" no

@@ -199,7 +199,7 @@ upgrade_send_notification_to_panel() {
 upgrade_send_notification_to_email() {
 	if [ "$UPGRADE_SEND_EMAIL" = "true" ]; then
 		# Retrieve admin email address, sendmail path, and message temp file path
-		admin_email=$($HESTIA/bin/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
+		admin_email=$($BIN/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
 		send_mail="$HESTIA/web/inc/mail-wrapper.php"
 		message_tmp_file="/tmp/hestia-upgrade-complete.txt"
 
@@ -603,8 +603,8 @@ upgrade_filemanager() {
 		if [ "$fm_version" != "$fm_v" ]; then
 			echo "[ ! ] Upgrading File Manager to version $fm_v..."
 			# Reinstall the File Manager
-			$HESTIA/bin/v-delete-sys-filemanager quiet yes
-			$HESTIA/bin/v-add-sys-filemanager quiet
+			$BIN/v-delete-sys-filemanager quiet yes
+			$BIN/v-add-sys-filemanager quiet
 		else
 			echo "[ * ] File Manager is up to date ($fm_v)..."
 
@@ -614,7 +614,7 @@ upgrade_filemanager() {
 					# Update configuration.php
 					cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm/configuration.php
 					# Set environment variable for interface
-					$HESTIA/bin/v-change-sys-config-value 'FILE_MANAGER' 'true'
+					$BIN/v-change-sys-config-value 'FILE_MANAGER' 'true'
 				fi
 			fi
 		fi
@@ -630,7 +630,7 @@ upgrade_roundcube() {
 			rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
 			if [ "$rc_version" != "$rc_v" ]; then
 				echo "[ ! ] Upgrading Roundcube to version $rc_v..."
-				$HESTIA/bin/v-add-sys-roundcube
+				$BIN/v-add-sys-roundcube
 			else
 				echo "[ * ] Roundcube is up to date ($rc_v)..."
 			fi
@@ -643,7 +643,7 @@ upgrade_rainloop() {
 		rl_version=$(cat /var/lib/rainloop/data/VERSION)
 		if [ "$rl_version" != "$rl_v" ]; then
 			echo "[ ! ] Upgrading Rainloop to version $rl_v..."
-			$HESTIA/bin/v-add-sys-rainloop
+			$BIN/v-add-sys-rainloop
 		else
 			echo "[ * ] Rainloop is up to date ($rl_v)..."
 		fi
@@ -652,7 +652,7 @@ upgrade_rainloop() {
 
 upgrade_dependencies() {
 	echo "[ ! ] Update Hesita PHP dependencies"
-	$HESTIA/bin/v-add-sys-dependencies
+	$BIN/v-add-sys-dependencies
 }
 
 upgrade_rebuild_web_templates() {
@@ -683,7 +683,7 @@ upgrade_rebuild_users() {
 		else
 			echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
 		fi
-		for user in $($HESTIA/bin/v-list-sys-users plain); do
+		for user in $($BIN/v-list-sys-users plain); do
 			export restart="no"
 			if [ "$DEBUG_MODE" = "true" ]; then
 				echo "      - $user:"

@@ -29,7 +29,7 @@ domain=$(hostname -f)
 if [ -z $domain ]; then
 	domain=$HOSTNAME
 fi
-user="$($HESTIA/bin/v-search-domain-owner "$domain" web)"
+user="$($BIN/v-search-domain-owner "$domain" web)"
 [[ -z "$user" ]] && user="admin"
 
 USER_DATA=$HESTIA/data/users/$user

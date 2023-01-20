@@ -58,9 +58,7 @@ is_package_consistent() {
 	if [ "$BANDWIDTH" != 'unlimited' ]; then
 		is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
 	fi
-	if [ "$BACKUPS" != 'unlimited' ]; then
-		is_int_format_valid "$BACKUPS" 'BACKUPS'
-	fi
+	is_int_format_valid "$BACKUPS" 'BACKUPS'
 	if [ -n "$WEB_TEMPLATE" ]; then
 		is_web_template_valid "$WEB_TEMPLATE"
 	fi

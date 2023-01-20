@@ -62,7 +62,7 @@ if [ "$ORIGINAL_PORT" = "$PORT" ]; then
 	exit
 else
 	# Set new port in config via v-change-sys-config-value
-	$HESTIA/bin/v-change-sys-config-value "BACKEND_PORT" "$PORT"
+	$BIN/v-change-sys-config-value "BACKEND_PORT" "$PORT"
 	# Replace port in config files.
 	sed -i "/listen/c\        listen          $PORT ssl;" $HESTIA/nginx/conf/nginx.conf
 	if [ -d /etc/roundcube/ ]; then
@@ -82,12 +82,12 @@ else
 
 	# Restart services
 	if [ -n "$FIREWALL_SYSTEM" ] && [ "$FIREWALL_SYSTEM" != no ]; then
-		$HESTIA/bin/v-restart-service iptables
+		$BIN/v-restart-service iptables
 	fi
 
 	# Check if Hestia is running
 	if [[ $(ps -eaf | grep -i hestia | sed '/^$/d' | wc -l) -gt 1 ]]; then
-		$HESTIA/bin/v-restart-service hestia
+		$BIN/v-restart-service hestia
 	fi
 fi
 

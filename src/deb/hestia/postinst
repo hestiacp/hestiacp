@@ -11,10 +11,10 @@ fi
 source /etc/hestiacp/hestia.conf
 
 # Load upgrade functions and variables
-# shellcheck source=/usr/local/hestia/func/upgrade.sh
-source $HESTIA/func/upgrade.sh
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/upgrade.sh
+source $HESTIA/func/upgrade.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 ###############################################################

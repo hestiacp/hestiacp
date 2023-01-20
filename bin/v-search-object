@@ -93,7 +93,7 @@ OLD_IFS=$IFS
 IFS=$'\n'
 
 # User loop
-for user in $($HESTIA/bin/v-list-sys-users plain); do
+for user in $($BIN/v-list-sys-users plain); do
 	# Search query
 	search=$(grep "$object" \
 		$HESTIA/data/users/$user/web.conf \

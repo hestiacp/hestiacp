@@ -37,3 +37,14 @@ for package in $packages; do
 		echo "RATE_LIMIT='200'" >> $HESTIA/data/packages/$package
 	fi
 done
+
+if [ -z "$(grep -e 'condition =  ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}' /etc/exim4/exim4.conf.template)" ]; then
+	for line in $(sed -n '/redirect_router = dnslookup/=' /etc/exim4/exim4.conf.template); do
+		testline=$((line - 1))
+		newline=$((line + 1))
+		if [ "$(awk NR==$testline /etc/exim4/exim4.conf.template)" = "  file_transport = local_delivery" ]; then
+			# Add new line
+			sed -i "$newline i \ \ condition = \${lookup{$local_part@\$domain}lsearch{/etc/exim4/domains/\${lookup{\$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}" /etc/exim4/exim4.conf.template
+		fi
+	done
+fi

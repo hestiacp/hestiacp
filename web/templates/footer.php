@@ -8,7 +8,9 @@
 	<p x-data="{ open: true }" x-cloak x-show="open" class="updates-banner">
 		<strong>New updates are available!</strong> To upgrade your server now, run
 		<code>apt update && apt upgrade</code> from a shell session.
-		(<a href="#" x-on:click="open = false"><strong>hide</strong></a>)
+		(<button type="button" x-on:click="open = false">
+			<strong>hide</strong>
+		</button>)
 	</p>
 <?php } ?>
 	<div title="<?= _("Confirmation") ?>" class="dialog js-confirm-dialog-redirect">

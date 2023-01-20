@@ -53,7 +53,7 @@ if [ -z "$mode" ] || [ "$mode" = "apt" ]; then
 	day='*'
 	month='*'
 	wday='*'
-	command='sudo /usr/local/hestia/bin/v-update-sys-hestia-all'
+	command="sudo $BIN/v-update-sys-hestia-all"
 fi
 
 if [ "$mode" = "git" ]; then
@@ -62,7 +62,7 @@ if [ "$mode" = "git" ]; then
 	day='*'
 	month='*'
 	wday='*'
-	command='sudo /usr/local/hestia/bin/v-update-sys-hestia-git'
+	command="sudo $BIN/v-update-sys-hestia-git"
 fi
 
 # Concatenating cron string

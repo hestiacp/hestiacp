@@ -45,7 +45,7 @@ fi
 [ -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl ] && rm -f $HESTIA/data/templates/web/php-fpm/PHP-${version/\./_}.tpl
 
 # Check if php version exists
-version_check=$($HESTIA/bin/v-list-sys-php plain | grep "$version")
+version_check=$($BIN/v-list-sys-php plain | grep "$version")
 if [ -z "$version_check" ]; then
 	echo "ERROR: Specified PHP version is not installed."
 	exit "$E_INVALID"

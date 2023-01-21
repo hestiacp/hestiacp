@@ -14,7 +14,7 @@
 user=$1
 domain=$2
 domain_idn=$2
-dkim_size=${3-1024}
+dkim_size=${3-2048}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

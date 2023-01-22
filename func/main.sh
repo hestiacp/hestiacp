@@ -680,11 +680,11 @@ sync_cron_jobs() {
 # User format validator
 is_user_format_valid() {
 	if [ ${#1} -eq 1 ]; then
-		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+		if ! [[ "$1" =~ ^[a-zA-Z0-9]$ ]]; then
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	else
-		if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+		if ! [[ "$1" =~ ^[a-zA-Z0-9][-\._a-zA-Z0-9]{0,28}[a-zA-Z0-9]$ ]]; then
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	fi

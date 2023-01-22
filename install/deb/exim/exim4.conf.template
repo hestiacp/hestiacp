@@ -33,7 +33,7 @@ spamd_address = 127.0.0.1 783
 .endif
 
 .ifdef CLAMD
-av_scanner = clamd: /var/run/clamav/clamd.ctl
+av_scanner = clamd: /run/clamav/clamd.ctl
 .endif
 
 log_selector = +tls_sni
@@ -248,13 +248,13 @@ smtp_relay_login:
 dovecot_plain:
   driver = dovecot
   public_name = PLAIN
-  server_socket = /var/run/dovecot/auth-client
+  server_socket = /run/dovecot/auth-client
   server_set_id = $auth1
 
 dovecot_login:
   driver = dovecot
   public_name = LOGIN
-  server_socket = /var/run/dovecot/auth-client
+  server_socket = /run/dovecot/auth-client
   server_set_id = $auth1
 
 

@@ -17,9 +17,9 @@
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 
-upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'true'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
@@ -48,3 +48,21 @@ if [ -z "$(grep -e 'condition =  ${lookup{$local_part@$domain}lsearch{/etc/exim4
 		fi
 	done
 fi
+
+# rename /var/run/xx to /run/
+for file in /etc/dovecot/dovecot.conf /etc/clamav/clamd.conf /etc/exim/exim.conf.template /etc/logrotate.d/apache2 /etc/logrotate.d/nginx /etc/mysql/my.cnf /etc/nginx/nginx.conf; do
+	if [ -f "$file" ]; then
+		echo "[ * ] Update $file legacy /var/run/ to /run/"
+		sed -i 's|/var/run/|/run/|g' $file
+	fi
+done
+# Update any custom php templates
+for file in $HESTIA/data/templates/web/php-fpm/*; do
+	echo "[ * ] Update $file legacy /var/run/ to /run/"
+	sed -i 's|/var/run/|/run/|g' $file
+done
+
+for file in /etc/php/*/fpm/pool.d/www.conf; do
+	echo "[ * ] Update $file legacy /var/run/ to /run/"
+	sed -i 's|/var/run/|/run/|g' $file
+done

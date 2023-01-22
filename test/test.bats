@@ -1194,7 +1194,7 @@ function check_ip_not_banned(){
 }
 
 @test "DNS: Add domain record" {
-    run v-add-dns-record $user $domain test A 198.18.0.125 20
+    run v-add-dns-record $user $domain test A 198.18.0.125 '' 20
     assert_success
     refute_output
 }

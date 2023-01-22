@@ -49,7 +49,9 @@
 						</label>
 						<div class="u-pos-relative u-mb10">
 							<input type="text" class="form-control js-password-input" name="v_password" id="v_password">
-							<meter max="4" class="password-meter"></meter>
+							<div class="password-meter">
+								<meter max="4" class="password-meter-input js-password-meter"></meter>
+							</div>
 						</div>
 					</div>
 					<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>

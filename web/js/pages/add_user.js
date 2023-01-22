@@ -38,7 +38,7 @@ App.Actions.WEB.update_password_meter = function () {
 	if (min_num.test(password)) {
 		score = score + 1;
 	}
-	$('.password-meter').val(score);
+	$('.js-password-meter').val(score);
 };
 
 App.Listeners.WEB.keypress_v_password = function () {

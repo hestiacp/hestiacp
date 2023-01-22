@@ -17,7 +17,7 @@ App.Actions.WEB.update_password_meter = () => {
 	];
 	const strength = validations.reduce((acc, cur) => acc + cur, 0);
 
-	document.querySelector('.password-meter').value = strength;
+	document.querySelector('.js-password-meter').value = strength;
 };
 
 App.Listeners.WEB.keypress_v_password = () => {

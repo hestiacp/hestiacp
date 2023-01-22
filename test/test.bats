@@ -323,18 +323,18 @@ function check_ip_not_banned(){
 @test "User: Add new user Failed 1" {
 	run v-add-user 'jäap' $user $user@hestiacp2.com default "Super Test"
 	assert_failure $E_INVALID
-	refute_output
+	assert_output --partial 'Error: invalid user format'
 }
 @test "User: Add new user Failed 2" {
 	run v-add-user 'ëaap' $user $user@hestiacp2.com default "Super Test"
 	assert_failure $E_INVALID
-	refute_output
+	assert_output --partial 'Error: invalid user format'
 }
 
 @test "User: Add new user Failed 3" {
 	run v-add-user 'jaaẞ'  $user $user@hestiacp2.com default "Super Test"
 	assert_failure $E_INVALID
-	refute_output
+	assert_output --partial 'Error: invalid user format'
 }
 
 @test "User: Change user password" {

@@ -684,8 +684,15 @@ is_user_format_valid() {
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	else
-		if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
-			check_result "$E_INVALID" "invalid $2 format :: $1"
+		if [ -n "$3" ]; then
+			maxlenght=$(($3 - 2))
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,$maxlenght}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		else
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
 		fi
 	fi
 }
@@ -1178,7 +1185,7 @@ is_format_valid() {
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
-				malias) is_user_format_valid "$arg" "$arg_name" ;;
+				malias) is_user_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;
 				month) is_cron_format_valid "$arg" $arg_name ;;

@@ -361,7 +361,7 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 		cd $HOMEDIR/$user/web/$domain
 
 		# Define exclude arguments
-		exlusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain:")
+		exlusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain\|\*:")
 		set -f
 		fargs=()
 		fargs+=(--exclude='./logs/*')

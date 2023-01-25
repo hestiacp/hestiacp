@@ -1495,7 +1495,7 @@ function check_ip_not_banned(){
 	assert_failure $E_INVALID
 }
 
-@test "MAIL: Add account alias" {
+@test "MAIL: Add account alias (duplicate)" {
 	run v-add-mail-account $user $domain test hestiacprocks
 	assert_failure $E_EXISTS
 }

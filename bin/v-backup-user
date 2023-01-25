@@ -90,7 +90,7 @@ get_user_disk_usage() {
 
 				for account in $accounts; do
 					home_dir=$HOMEDIR/$user/mail/$domain/$account
-					exclusion=$(echo "$mail_exclusions" | tr ',' '\n' | grep "$domain\|\*:")
+					exclusion=$(echo "$mail_exclusions" | tr ',' '\n' | grep "$domain:")
 					exclusion=$(echo "$exclusion" | tr ':' '\n' | grep -E "^$account|\*")
 
 					if [ -z "$exclusion" ] && [ -e "$home_dir" ]; then
@@ -495,7 +495,7 @@ if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 		cd $HOMEDIR/$user/mail/$domain_idn
 		accounts=()
 		for account in *; do
-			exclusion=$(echo "$MAIL" | tr ',' '\n' | grep "$domain\|\*:")
+			exclusion=$(echo "$MAIL" | tr ',' '\n' | grep "$domain:")
 			exclusion=$(echo "$exclusion" | tr ':' '\n' | grep -E "^$account|\*")
 
 			# Checking exlusions

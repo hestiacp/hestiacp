@@ -1072,6 +1072,11 @@ is_cron_format_valid() {
 	fi
 }
 
+is_object_name_format_valid() {
+	if ! [[ "$1" =~ ^[-|\ |\.|_[:alnum:]]{0,50}$ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
 # Name validator
 is_name_format_valid() {
 	exclude="['|\"|<|>]"
@@ -1189,7 +1194,7 @@ is_format_valid() {
 				ns6) is_domain_format_valid "$arg" 'ns6' ;;
 				ns7) is_domain_format_valid "$arg" 'ns7' ;;
 				ns8) is_domain_format_valid "$arg" 'ns8' ;;
-				object) is_name_format_valid "$arg" 'object' ;;
+				object) is_object_name_format_valid "$arg" 'object' ;;
 				package) is_object_format_valid "$arg" "$arg_name" ;;
 				password) is_password_format_valid "$arg" ;;
 				port) is_int_format_valid "$arg" 'port' ;;

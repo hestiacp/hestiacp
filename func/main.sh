@@ -1144,7 +1144,7 @@ is_format_valid() {
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;
-				account) is_user_format_valid "$arg" "$arg_name" ;;
+				account) is_user_format_valid "$arg" "$arg_name" '64' ;;
 				action) is_fw_action_format_valid "$arg" ;;
 				active) is_boolean_format_valid "$arg" 'active' ;;
 				aliases) is_alias_format_valid "$arg" ;;

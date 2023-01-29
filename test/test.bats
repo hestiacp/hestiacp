@@ -1493,7 +1493,7 @@ function check_ip_not_banned(){
 }
 
 @test "MAIL: Add account alias" {
-	run v-add-mail-account $user $domain test hestiacprocks
+	run v-add-mail-account-alias $user $domain test hestiacprocks
 	assert_success
 	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacprocks@$domain"
 	refute_output

@@ -1475,8 +1475,33 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "MAIL: Add account alias" {
+	run v-add-mail-account $user $domain test hestiacprocks
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacprocks@$domain"
+	refute_output
+}
+
+@test "MAIL: Add account alias Invalid length" {
+	run v-add-mail-account-alias $user $domain test 'hestiacp-realy-rocks-but-i-want-to-have-feature-xyz-and-i-want-it-now'
+	assert_failure $E_INVALID
+}
+@test "MAIL: Add account alias Invalid" {
+	run v-add-mail-account-alias $user $domain test '-test'
+	assert_failure $E_INVALID
+}
+@test "MAIL: Add account alias Invalid 2" {
+	run v-add-mail-account-alias $user $domain test 'hestia@test'
+	assert_failure $E_INVALID
+}
+
+@test "MAIL: Add account alias (duplicate)" {
+	run v-add-mail-account-alias $user $domain test hestiacprocks
+	assert_failure $E_EXISTS
+}
+
 @test "MAIL: Add account (duplicate)" {
-    run v-add-mail-account $user $domain test "$userpass2"
+    run v-add-mail-account-alias $user $domain test "$userpass2"
     assert_failure $E_EXISTS
 }
 

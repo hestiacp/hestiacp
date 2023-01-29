@@ -1486,10 +1486,15 @@ function check_ip_not_banned(){
 }
 
 @test "MAIL: Add account" {
-    run v-add-mail-account $user $domain info "$userpass2"
+    run v-add-mail-account $user $domain test "$userpass2"
     assert_success
     assert_file_contains /etc/exim4/domains/$domain/limits "test@$domain"
     refute_output
+}
+
+@test "MAIL: Add account (duplicate)" {
+	run v-add-mail-account $user $domain test "$userpass2"
+	assert_failure $E_EXISTS
 }
 
 @test "MAIL: Add account alias" {
@@ -1515,11 +1520,6 @@ function check_ip_not_banned(){
 @test "MAIL: Add account alias (duplicate)" {
 	run v-add-mail-account-alias $user $domain test hestiacprocks
 	assert_failure $E_EXISTS
-}
-
-@test "MAIL: Add account (duplicate)" {
-    run v-add-mail-account $user $domain info "$userpass2"
-    assert_failure $E_EXISTS
 }
 
 @test "MAIL: change mail account password" {

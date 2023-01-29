@@ -3,12 +3,13 @@
 # v-restore-user-cpanel
 # Restores an exported backup from cPanel
 
-# Based on sk-import-cpanel-backup-to-hestiacp
+# Based on sk-import-cpanel-backup-to-vestacp
 # Credits: Maks Usmanov (skamasle) and contributors:
 # Thanks to https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors
 
 # Known issue
-
+# - Importing certificates fails at the moment. Due to format changes of CPanel side
+# - It doesn't update DKIM or any MX records in DNS
 
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -16,18 +17,18 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 
 if [ $# -lt 1 ]; then
-    echo "usage: bash $0 cpanel-backup.tar.gz"
-    echo "or"
-    echo "usage: bash $0 cpanel-backup.tar.gz MX"
-    exit 1
+	echo "usage: bash $0 cpanel-backup.tar.gz"
+	echo "or"
+	echo "usage: bash $0 cpanel-backup.tar.gz MX"
+	exit 1
 fi
 
-if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ] ; then
+if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
 	echo "#######################################"
 	echo "rsync not installed, try install it"
 	echo "This script need: rsync, file"
 	echo "#######################################"
-	if  [ -e /etc/redhat-release ]; then
+	if [ -e /etc/redhat-release ]; then
 		echo "Run: yum install rsync file"
 	else
 		echo "Run: apt-get install rsync file"
@@ -46,8 +47,8 @@ fi
 if [ -z "$BACKUP_TEMP" ]; then
 	BACKUP_TEMP=$BACKUP
 else
-	echo "File does not exists";
-	exit 1;
+	echo "File does not exists"
+	exit 1
 fi
 
 # Creating temporary directory
@@ -56,7 +57,7 @@ tmpdir=$(mktemp -p "$BACKUP_TEMP" -d)
 tput setaf 2
 echo "Checking provided file..."
 tput sgr0
-if ! file "$cpanel_backup" |grep -q -c "gzip compressed data," ; then
+if ! file "$cpanel_backup" | grep -q -c "gzip compressed data,"; then
 	echo "Error 3 not-gzip - no stantard cpanel backup provided of file not installed ( Try yum install file, or apt-get install file )"
 	rm -rf "$tmpdir"
 	exit 3
@@ -66,7 +67,7 @@ tput setaf 2
 echo "OK - Gziped File"
 tput sgr0
 echo "Extracting backup..."
-if tar xzf "$cpanel_backup" -C "$tmpdir" ;then
+if tar xzf "$cpanel_backup" -C "$tmpdir"; then
 	tput setaf 2
 	echo "Backup extracted without errors..."
 	tput sgr0
@@ -77,7 +78,7 @@ else
 	exit 1
 fi
 
-cd $tmpdir/*;
+cd $tmpdir/*
 
 echo "Get prefix..."
 user_prefix=$(cat meta/dbprefix)
@@ -89,19 +90,19 @@ if [ $dbprefix = 1 ]; then
 	echo "Error 255 - I dont like your prefix, I dont want do this job"
 	exit 255
 fi
-main_domain1=$(grep main_domain userdata/main |cut -d " " -f2)
+main_domain1=$(grep main_domain userdata/main | cut -d " " -f2)
 new_user=$(grep "user:" userdata/${main_domain1} | cut -d " " -f2)
 echo "Get User: $new_user"
-	check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$new_user$" )
+check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$new_user$")
 if [ -n "$check_sysuser" ] || [ -e "$HESTIA/data/users/$new_user" ]; then
 	check_result "$E_EXISTS" "user $user exists"
-	echo "User allready exists";
-	exit 2;
+	echo "User allready exists"
+	exit 2
 fi
 
 # Create a new user
 tmp_passwd=$(generate_password)
-email=$(cat ./cp/$new_user | grep  CONTACTEMAIL= | cut -f2 -d'=');
+email=$(cat ./cp/$new_user | grep CONTACTEMAIL= | cut -f2 -d'=')
 $BIN/v-add-user "$new_user" "$tmp_passwd" "$email" "$hestia_package"
 # Restore user password
 update_user_value "$new_user" 'MD5' "$(cat shadow)"
@@ -117,46 +118,43 @@ sed -i "s/\`/'/g" mysql.sql
 
 grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
 # User and database
-grep "GRANT" mysql.sql |grep -v "USAGE ON"  > u_db
-cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq  > uni_u_db
+grep "GRANT" mysql.sql | grep -v "USAGE ON" > u_db
+cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq > uni_u_db
 
 ## User / Password
 grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
 # User and database
-grep "GRANT" mysql.sql |grep -v "USAGE ON"  > u_db
-cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq  > uni_u_db
+grep "GRANT" mysql.sql | grep -v "USAGE ON" > u_db
+cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq > uni_u_db
 sed -i "s/$user_prefix //g" user_password_db
 # Get database list
 db_list=$(grep -m 1 Database: mysql/*.create | awk '{ print  $5 }')
 mysql -e "SHOW DATABASES" > server_dbs
-for db in $db_list
-	do
-		grep -w db server_dbs
-		if [ $? == "1" ]; then
-			echo " Create and restore ${db} "
-			mysql < mysql/${db}.create
-			sed -i "s/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g" mysql/${db}.sql
-			mysql ${db} < mysql/${db}.sql
-		else
-			echo "Error: Cant restore database $db alredy exists in mysql server"
-		fi
+for db in $db_list; do
+	grep -w db server_dbs
+	if [ $? == "1" ]; then
+		echo " Create and restore ${db} "
+		mysql < mysql/${db}.create
+		sed -i "s/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g" mysql/${db}.sql
+		mysql ${db} < mysql/${db}.sql
+	else
+		echo "Error: Cant restore database $db alredy exists in mysql server"
+	fi
 done
 
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
-cat uni_u_db | while read db userdb
-do
-	grep -w $userdb user_password_db |while read user end_user_pass
-		do
-# default cpanel user has all database privileges
-# if you use default user in your config files to connect with database
-# you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
-# this will cause database duplication in db.conf and will interfer with hestiacp backups
-			if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ] && [ "$userdb" != "$sk_real_cp_user" ] ; then
-				echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$new_user/db.conf
-			fi
-		done
+cat uni_u_db | while read db userdb; do
+	grep -w $userdb user_password_db | while read user end_user_pass; do
+		# default cpanel user has all database privileges
+		# if you use default user in your config files to connect with database
+		# you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
+		# this will cause database duplication in db.conf and will interfer with hestiacp backups
+		if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ] && [ "$userdb" != "$sk_real_cp_user" ]; then
+			echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$new_user/db.conf
+		fi
+	done
 done
 
 # Leave hestia restore passwords and create users
@@ -166,7 +164,7 @@ tput sgr0
 $BIN/v-rebuild-databases $new_user
 ## end mysql
 
-addon_domains=$(cat addons |cut -d "=" -f1)
+addon_domains=$(cat addons | cut -d "=" -f1)
 sed -i 's/_/./g; s/=/ /g' addons
 echo "Converting addons domains, subdomains and some other fun"
 cp sds hst_sds
@@ -179,17 +177,17 @@ echo "Start restoring domains"
 tput sgr0
 function get_domain_path() {
 	while read cp_domain path; do
-		echo "Import $cp_domain";
+		echo "Import $cp_domain"
 		if [ -e userdata/$cp_domain ]; then
 			$BIN/v-add-domain "$new_user" "$cp_domain"
 			rm -f /home/$new_user/web/$cp_domain/public_html/index.html
 			rm -f /home/$new_user/web/$cp_domain/public_html/robots.txt
 			sync_count=0
-			rsync -av homedir/$path/ /home/$new_user/web/$cp_domain/public_html 2>&1 |
-			while read file_dm; do
-					sync_count=$(($sync_count+1))
+			rsync -av homedir/$path/ /home/$new_user/web/$cp_domain/public_html 2>&1 \
+				| while read file_dm; do
+					sync_count=$(($sync_count + 1))
 					echo -en "-- $sync_count restored files\r"
-			done
+				done
 			chown $new_user:$new_user -R /home/$new_user/web/$cp_domain/public_html
 			chmod 751 /home/$new_user/web/$cp_domain/public_html
 		fi
@@ -199,19 +197,18 @@ get_domain_path < hst_sds2
 
 /usr/local/hestia/bin/v-add-domain $new_user $main_domain1
 # need it for restore main domain
-if [ ! -e exclude_path ];then
+if [ ! -e exclude_path ]; then
 	touch exclude_path
 fi
 echo "Restore main domain: $main_domain1"
 rm -f /home/$new_user/web/$main_domain1/public_html/index.html
 rm -f /home/$new_user/web/$main_domain1/public_html/robots.txt
 
-rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/$new_user/web/$main_domain1/public_html 2>&1 |
-	while read file_dm; do
-		sync_count=$(($sync_count+1))
+rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/$new_user/web/$main_domain1/public_html 2>&1 \
+	| while read file_dm; do
+		sync_count=$(($sync_count + 1))
 		echo -en "-- $sync_count restored files\r"
 	done
-
 
 chown $new_user:$new_user -R /home/$new_user/web/$main_domain1/public_html
 chmod 751 /home/$new_user/web/$main_domain1/public_html
@@ -219,131 +216,50 @@ chmod 751 /home/$new_user/web/$main_domain1/public_html
 ##################
 # mail
 tput setaf 2
+echo ""
 echo "Start Restoring Mails"
 tput sgr0
-cd homedir/mail;
+cd homedir/mail
 
-for folder in * ; do
+for folder in *; do
 	if [ -d "$folder" ]; then
-		if [[ "$folder" != "cur"  && "$folder" != "new" && "$folder" != "tmp" ]]; then
+		if [[ "$folder" != "cur" && "$folder" != "new" && "$folder" != "tmp" ]]; then
 			echo "Domain: $folder"
 
 			for mail_account in $folder/*; do
-				echo "Import mail account: $mail_account@#$folder"
-				# Doesn't really matter but we don't know the unhashed one
-				tmp_pass=$(generate_password)
-				$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
-				mv $folder/$mail_account /home/$new_user/mail/$folder/
-				chown $new_user:mail /home/$new_user/mail/$folder/
-				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
+				if [ "$mail_account" != "$folder/*" ]; then
+					echo "Import mail account: $mail_account@#$folder"
+					# Doesn't really matter but we don't know the unhashed one
+					tmp_pass=$(generate_password)
+					$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
+					mv $folder/$mail_account /home/$new_user/mail/$folder/
+					chown $new_user:mail /home/$new_user/mail/$folder/
+					find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
 
-				pass=$(grep "^$mail_account:" ../etc/${folder}/shadow | awk -F  ":" '{print $2}')
+					pass=$(grep "^$mail_account:" ../etc/${folder}/shadow | awk -F ":" '{print $2}')
+				fi
 			done
 		fi
 	fi
 done
-exit;
-##################
-# mail
-tput setaf 2
-echo "Start Restoring Mails"
-tput sgr0
-sk_cod=$(date +%s) # Just for numbers and create another file if acccount was restored before.
-sk_mdir=${sk_importer_in}/homedir/mail
-cd $sk_mdir
-for sk_maild in $(ls -1)
-do
-if [[ "$sk_maild" != "cur" && "$sk_maild" != "new" && "$sk_maild" != "tmp"  ]]; then
-	if [ -d "$sk_maild" ]; then
-		for sk_mail_account in $(ls $sk_maild/)
-		 do
-
-					echo "Create and restore mail account: $sk_mail_account@$sk_maild"
-					sk_mail_pass1=$(generate_password)
-					/usr/local/hestia/bin/v-add-mail-account $sk_cp_user $sk_maild $sk_mail_account $sk_mail_pass1
-					mv ${sk_maild}/${sk_mail_account} /home/${sk_cp_user}/mail/${sk_maild}
-					chown ${sk_cp_user}:mail -R /home/${sk_cp_user}/mail/${sk_maild}
-					find /home/${sk_cp_user}/mail/${sk_maild} -type f -name 'dovecot*' -delete
-					echo "${sk_mail_account}@${sk_maild} | $sk_mail_pass1"	>> /root/sk_mail_password_${sk_cp_user}-${sk_cod}
-		done
-	fi
-#else
-# this only detect default dirs account new, cur, tmp etc
-# maybe can do something with this, but on most cpanel default account have only spam.
-fi
-done
 echo "All mail accounts restored"
-############# ssl functions <(°-°)>
-tput setaf 2
-echo "Restoring SSL for domains"
-tput sgr0
 
-mv  ${sk_importer_in}/sslkeys/* ${sk_importer_in}/sslcerts/
-if ls -1 ${sk_importer_in}/ssl/* >/dev/null 2>&1; then
-        mv  ${sk_importer_in}/ssl/* ${sk_importer_in}/sslcerts/
-else
-        echo "No SSL Cert. found..."
-fi
+cd ../ssl/
+mv ./keys/* ./certs/
+ls ./certs/
 
+cat ssl.db
+domains=$(/usr/local/hestia/bin/v-list-web-domains $new_user plain | awk '{ print  $1 }')
 
-sk_domains=$(/usr/local/hestia/bin/v-list-web-domains $sk_cp_user plain |awk '{ print  $1 }')
-
-for ssl in $sk_domains
-do
-	if [ -e ${sk_importer_in}/sslcerts/${ssl}.key ]; then
-		echo "Found SSL for ${ssl}, restoring..."
-		/usr/local/hestia/bin/v-add-web-domain-ssl $sk_cp_user $ssl ${sk_importer_in}/sslcerts/
+for domain in $domains; do
+	if [ -e ./sslcerts/$domain.key ]; then
+		v-add-web-domain-ssl $user $domain $(pwd)/sslcerts/
 	fi
 done
-function sk_restore_pass () {
-sk_actual_pass=$(grep -w "^$sk_cp_user:" /etc/shadow |tr ":" " " | awk '{ print  $2 }' )
-sk_new_pass=$(cat $sk_importer_in/shadow)
-# need replace I hope you have installed it as in most systems...
-# sed is a hero but replace is easy and not need space // :D
-replace "$sk_cp_user:$sk_actual_pass" "$sk_cp_user:$sk_new_pass" -- /etc/shadow
-tput setaf 5
-echo "Old  cPanel password restored in $sk_cp_user hestia account"
-tput sgr0
-}
-function sk_fix_mx () {
-tput setaf 2
-	echo "Start With MX Records"
-tput sgr0
-cd $sk_importer_in/dnszones
-for sk_mx in $sk_domains
-do
-	if [ -e $sk_mx.db ]; then
-		sk_id=$(grep MX /usr/local/hestia/data/users/${sk_cp_user}/dns/${sk_mx}.conf |tr "'" " " | cut -d " " -f 2)
-		/usr/local/hestia/bin/v-delete-dns-record $sk_cp_user $sk_mx $sk_id
-		grep MX ${sk_mx}.db |  awk '{for(sk=NF;sk>=1;sk--) printf "%s ", $sk;print ""}' | while read value pri ns rest
-			do
-				if [ "$ns" == "MX" ];then
-					if [ "$value" == "$sk_mx" ] || [ "$value" == "$sk_mx." ];then
-						value=mail.$value
-					fi
-					/usr/local/hestia/bin/v-add-dns-record $sk_cp_user $sk_mx @ MX $value $pri
-					if [[ "$?" -ge "1" ]]; then
-						/usr/local/hestia/bin/v-add-dns-record $sk_cp_user $sk_mx @ MX mail.${sk_mx} 0
-					fi
-					echo "MX fixed in $sk_mx"
-				fi
-			done
-	fi
-done
-}
-if [ "$2" == "MX" ];then
-# Need some fixed so run if you want try it, marked as experimental
-	sk_fix_mx
-fi
-sk_restore_pass
 
-echo "Remove tmp files"
-rm -rf "/root/${sk_tmp}"
-tput setaf 4
+rm -rf "$tmpdir"
+
 echo "##############################"
 echo "cPanel Backup restored"
 echo "Review your content and report any fail"
-echo "I reset mail password not posible restore it yet."
-echo "Check your new passwords runing: cat /root/sk_mail_password_${sk_cp_user}-${sk_cod}"
-echo "##############################"
-tput sgr0
+exit

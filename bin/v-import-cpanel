@@ -244,19 +244,6 @@ for folder in *; do
 done
 echo "All mail accounts restored"
 
-cd ../ssl/
-mv ./keys/* ./certs/
-ls ./certs/
-
-cat ssl.db
-domains=$(/usr/local/hestia/bin/v-list-web-domains $new_user plain | awk '{ print  $1 }')
-
-for domain in $domains; do
-	if [ -e ./sslcerts/$domain.key ]; then
-		v-add-web-domain-ssl $user $domain $(pwd)/sslcerts/
-	fi
-done
-
 rm -rf "$tmpdir"
 
 echo "##############################"

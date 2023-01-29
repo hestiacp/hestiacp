@@ -66,3 +66,8 @@ for file in /etc/php/*/fpm/pool.d/www.conf; do
 	echo "[ * ] Update $file legacy /var/run/ to /run/"
 	sed -i 's|/var/run/|/run/|g' $file
 done
+
+if echo "$BACKUP_SYSTEM" | grep "google" > /dev/null; then
+	echo "[ ! ] Deprecation notice: Backup via Google Cloud has been removed setup backup again via Rclone to reinstate the backup and restore capebilities!"
+	add_upgrade_message "Deprecation notice: Backup via Google Cloud has been removed setup backup again via Rclone to reinstate the backup and restore capebilities!"
+fi

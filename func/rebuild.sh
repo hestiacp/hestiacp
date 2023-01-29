@@ -150,7 +150,7 @@ rebuild_user_conf() {
 		chmod 751 $HOMEDIR/$user/conf/web
 		chmod 751 $HOMEDIR/$user/web
 		chmod 771 $HOMEDIR/$user/tmp
-		chown --no-dereference $user:$user $HOMEDIR/$user/web
+		chown --no-dereference $root:$user $HOMEDIR/$user/web
 		if [ "$create_user" = "yes" ]; then
 			$BIN/v-rebuild-web-domains $user $restart
 		fi
@@ -251,7 +251,10 @@ rebuild_web_domain_conf() {
 		$BIN/v-delete-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 	fi
 
-	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
+	if [ ! -d $HOMEDIR/$user/web/$domain ]; then
+		mkdir $HOMEDIR/$user/web/$domain
+	fi
+	chown --no-dereference $user:$user $HOMEDIR/$user/web/$domain
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"

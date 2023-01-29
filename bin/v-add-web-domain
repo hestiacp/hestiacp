@@ -97,7 +97,8 @@ source_conf "$USER_DATA/user.conf"
 [[ -e "$HOMEDIR/$user/web/$domain" ]] && check_result "$E_EXISTS" "Web domain folder for $domain should not exist"
 
 # Creating domain directories
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
+mkdir $HOMEDIR/$user/web/$domain
+chown $user:$user $HOMEDIR/$user/web/$domain
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
@@ -187,9 +188,9 @@ add_web_config "$WEB_SYSTEM" "$WEB_TEMPLATE.tpl"
 if [ -n "$PROXY_SYSTEM" ]; then
 	PROXY_EXT="$proxy_ext"
 	if [ -z "$proxy_ext" ]; then
-		PROXY_EXT="jpg,jpeg,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
+		PROXY_EXT="jpg,jpeg,webp,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
 		PROXY_EXT="$PROXY_EXT,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp"
-		PROXY_EXT="$PROXY_EXT,rtf,js,mp3,avi,mpeg,flv,html,htm"
+		PROXY_EXT="$PROXY_EXT,rtf,js,mp3,avi,mpeg,flv,html,htm,woff,woff2,ttf"
 	fi
 	if [ -z "$PROXY_TEMPLATE" ]; then
 		PROXY_TEMPLATE='default'

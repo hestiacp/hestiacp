@@ -69,7 +69,7 @@
 			}
 			$uniq_id .= sha1($value['RESULT']);
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; if($_COOKIE[$uniq_id] == 1) echo ' l-unit--starred'; ?> animate__animated animate__fadeIn" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>" sort-type="<?=_($object)?>" sort-owner="<?=$value['USER']?>" sort-status="<?=$status?>"
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>" sort-type="<?=_($object)?>" sort-owner="<?=$value['USER']?>" sort-status="<?=$status?>"
 			style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value['USER']) === 'admin') { echo 'display: none;';}?>">
 
 			<div class="l-unit__col l-unit__col--right">
@@ -109,27 +109,35 @@
 				<div class="clearfix l-unit__stat-col--left wide-5 truncate">
 					<?php
 						if ($value['KEY'] == 'RECORD') {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
+							$edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];
 						}
 						if ($value['KEY'] == 'ACCOUNT') {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
+							$edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&account='.$value['LINK'].'&user='.$value['USER'];
 						}
 						if ($value['KEY'] == 'JOB') {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
+							$edit_lnk = '/edit/'.$value['TYPE'].'/?job='.$value['LINK'].'&user='.$value['USER'];
 						}
 						if ($value['KEY'] == 'DATABASE') {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
+							$edit_lnk = '/edit/'.$value['TYPE'].'/?database='.$value['RESULT'].'&user='.$value['USER'];
 						}
 						if (($value['KEY'] != 'RECORD') && ($value['KEY'] != 'ACCOUNT') && ($value['KEY'] != 'JOB') && ($value['KEY'] != 'DATABASE') ) {
-							$edit_lnk = '/edit/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'].'&token='.$_SESSION['token'].'';
+							$edit_lnk = '/edit/'.$value['TYPE'].'/?'.strtolower($value['KEY']).'='.$value['RESULT'].'&user='.$value['USER'];
 						}
 					?>
 					<b>
-						<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin') && ($value['USER'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+						<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin') && ($value['USER'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) { ?>
 							<?=$value['RESULT']?>
-						<?} else {?>
-							<a href="<?=$edit_lnk; ?>"><?=$value['RESULT']?></a>
-						<?php } ?>
+						<?} else {
+							if($value['USER'] == $_SESSION['user']){
+							?>
+							<a href="<?=$edit_lnk.'&token='.$_SESSION['token'];?>"><?=$value['RESULT']?></a>
+							<?php
+							}else{
+							?>
+							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>&edit_link=<?=urlencode($edit_lnk);?>""><?=$value['RESULT']?></a>
+							<?php
+							}
+						} ?>
 					</b>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-right compact-3">

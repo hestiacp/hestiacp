@@ -14,6 +14,7 @@ abstract class BaseSetup implements InstallerInterface {
 	protected $domain;
 	protected $extractsubdir;
 	protected $AppDirInstall;
+	protected $appcontext;
 
 	public function setAppDirInstall(string $appDir) {
 		if (!empty($appDir)) {

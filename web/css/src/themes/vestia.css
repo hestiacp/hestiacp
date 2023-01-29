@@ -365,10 +365,10 @@ strong {
 }
 
 .password-meter {
-	border-radius: 0;
-	box-shadow: none;
 	margin-left: 0;
 	margin-right: 0;
+	border-radius: 0;
+	box-shadow: none;
 }
 
 /* Badge component

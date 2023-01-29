@@ -101,7 +101,9 @@
 				</label>
 				<div class="u-pos-relative u-mb10">
 					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>">
-					<meter max="4" class="password-meter"></meter>
+					<div class="password-meter">
+						<meter max="4" class="password-meter-input js-password-meter"></meter>
+					</div>
 				</div>
 			</div>
 			<div id="password-details" class="u-mb20">

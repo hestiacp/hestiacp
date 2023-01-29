@@ -8,10 +8,6 @@ html {
 	scroll-behavior: smooth;
 }
 
-[x-cloak] {
-	display: none !important;
-}
-
 *,
 *::before,
 *::after {
@@ -20,6 +16,10 @@ html {
 
 :focus {
 	outline: none;
+}
+
+[x-cloak] {
+	display: none !important;
 }
 
 html,

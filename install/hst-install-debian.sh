@@ -1743,13 +1743,13 @@ if [ "$clamd" = 'yes' ]; then
 	gpasswd -a clamav Debian-exim > /dev/null 2>&1
 	cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
 	update-rc.d clamav-daemon defaults
-	if [ ! -d "/var/run/clamav" ]; then
-		mkdir /var/run/clamav
+	if [ ! -d "/run/clamav" ]; then
+		mkdir /run/clamav
 	fi
-	chown -R clamav:clamav /var/run/clamav
+	chown -R clamav:clamav /run/clamav
 	if [ -e "/lib/systemd/system/clamav-daemon.service" ]; then
-		exec_pre1='ExecStartPre=-/bin/mkdir -p /var/run/clamav'
-		exec_pre2='ExecStartPre=-/bin/chown -R clamav:clamav /var/run/clamav'
+		exec_pre1='ExecStartPre=-/bin/mkdir -p /run/clamav'
+		exec_pre2='ExecStartPre=-/bin/chown -R clamav:clamav /run/clamav'
 		sed -i "s|\[Service\]/|[Service]\n$exec_pre1\n$exec_pre2|g" \
 			/lib/systemd/system/clamav-daemon.service
 		systemctl daemon-reload

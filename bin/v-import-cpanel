@@ -1,0 +1,252 @@
+#!/bin/bash
+
+# v-restore-user-cpanel
+# Restores an exported backup from cPanel
+
+# Based on sk-import-cpanel-backup-to-vestacp
+# Credits: Maks Usmanov (skamasle) and contributors:
+# Thanks to https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors
+
+# Known issue
+# - Importing certificates fails at the moment. Due to format changes of CPanel side
+# - It doesn't update DKIM or any MX records in DNS
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+
+if [ $# -lt 1 ]; then
+	echo "usage: bash $0 cpanel-backup.tar.gz"
+	echo "or"
+	echo "usage: bash $0 cpanel-backup.tar.gz MX"
+	exit 1
+fi
+
+if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
+	echo "#######################################"
+	echo "rsync not installed, try install it"
+	echo "This script need: rsync, file"
+	echo "#######################################"
+	if [ -e /etc/redhat-release ]; then
+		echo "Run: yum install rsync file"
+	else
+		echo "Run: apt-get install rsync file"
+	fi
+	exit 3
+fi
+# Default settings
+# Put this to 0 if you want use bash -x to debug it
+debug=1
+# Pacakge to be used by default "default"
+hestia_package=default
+
+if [ -f "$1" ]; then
+	cpanel_backup="$1"
+fi
+if [ -z "$BACKUP_TEMP" ]; then
+	BACKUP_TEMP=$BACKUP
+else
+	echo "File does not exists"
+	exit 1
+fi
+
+# Creating temporary directory
+tmpdir=$(mktemp -p "$BACKUP_TEMP" -d)
+
+tput setaf 2
+echo "Checking provided file..."
+tput sgr0
+if ! file "$cpanel_backup" | grep -q -c "gzip compressed data,"; then
+	echo "Error 3 not-gzip - no stantard cpanel backup provided of file not installed ( Try yum install file, or apt-get install file )"
+	rm -rf "$tmpdir"
+	exit 3
+fi
+
+tput setaf 2
+echo "OK - Gziped File"
+tput sgr0
+echo "Extracting backup..."
+if tar xzf "$cpanel_backup" -C "$tmpdir"; then
+	tput setaf 2
+	echo "Backup extracted without errors..."
+	tput sgr0
+else
+	echo "Error on backup extraction, check your file, try extract it manually"
+	echo "Remove tmp"
+	rm -rf "$tmpdir"
+	exit 1
+fi
+
+cd $tmpdir/*
+
+echo "Get prefix..."
+user_prefix=$(cat meta/dbprefix)
+
+sk_importer_in=$(pwd)
+echo "Access tmp directory $sk_importer_in"
+dbprefix=$(cat meta/dbprefix)
+if [ $dbprefix = 1 ]; then
+	echo "Error 255 - I dont like your prefix, I dont want do this job"
+	exit 255
+fi
+main_domain1=$(grep main_domain userdata/main | cut -d " " -f2)
+new_user=$(grep "user:" userdata/${main_domain1} | cut -d " " -f2)
+echo "Get User: $new_user"
+check_sysuser=$(cut -f 1 -d : /etc/passwd | grep "^$new_user$")
+if [ -n "$check_sysuser" ] || [ -e "$HESTIA/data/users/$new_user" ]; then
+	check_result "$E_EXISTS" "user $user exists"
+	echo "User allready exists"
+	exit 2
+fi
+
+# Create a new user
+tmp_passwd=$(generate_password)
+email=$(cat ./cp/$new_user | grep CONTACTEMAIL= | cut -f2 -d'=')
+$BIN/v-add-user "$new_user" "$tmp_passwd" "$email" "$hestia_package"
+# Restore user password
+update_user_value "$new_user" 'MD5' "$(cat shadow)"
+$BIN/v-rebuild-user "$new_user"
+
+# Restore databases
+mysql -e "SET GLOBAL max_allowed_packet=1073741824;"
+tput setaf 2
+echo "Start with Databases"
+tput sgr0
+sed -i 's/\\//g' mysql.sql
+sed -i "s/\`/'/g" mysql.sql
+
+grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
+# User and database
+grep "GRANT" mysql.sql | grep -v "USAGE ON" > u_db
+cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq > uni_u_db
+
+## User / Password
+grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
+# User and database
+grep "GRANT" mysql.sql | grep -v "USAGE ON" > u_db
+cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq > uni_u_db
+sed -i "s/$user_prefix //g" user_password_db
+# Get database list
+db_list=$(grep -m 1 Database: mysql/*.create | awk '{ print  $5 }')
+mysql -e "SHOW DATABASES" > server_dbs
+for db in $db_list; do
+	grep -w db server_dbs
+	if [ $? == "1" ]; then
+		echo " Create and restore ${db} "
+		mysql < mysql/${db}.create
+		sed -i "s/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g" mysql/${db}.sql
+		mysql ${db} < mysql/${db}.sql
+	else
+		echo "Error: Cant restore database $db alredy exists in mysql server"
+	fi
+done
+
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+cat uni_u_db | while read db userdb; do
+	grep -w $userdb user_password_db | while read user end_user_pass; do
+		# default cpanel user has all database privileges
+		# if you use default user in your config files to connect with database
+		# you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
+		# this will cause database duplication in db.conf and will interfer with hestiacp backups
+		if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ] && [ "$userdb" != "$sk_real_cp_user" ]; then
+			echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$new_user/db.conf
+		fi
+	done
+done
+
+# Leave hestia restore passwords and create users
+tput setaf 2
+echo "Rebuild databases files for $new_user"
+tput sgr0
+$BIN/v-rebuild-databases $new_user
+## end mysql
+
+addon_domains=$(cat addons | cut -d "=" -f1)
+sed -i 's/_/./g; s/=/ /g' addons
+echo "Converting addons domains, subdomains and some other fun"
+cp sds hst_sds
+cp sds2 hst_sds2
+sed -i 's/_/./g' hst_sds
+sed -i 's/public_html/public@html/g; s/_/./g; s/public@html/public_html/g; s/=/ /g' hst_sds2
+
+tput setaf 2
+echo "Start restoring domains"
+tput sgr0
+function get_domain_path() {
+	while read cp_domain path; do
+		echo "Import $cp_domain"
+		if [ -e userdata/$cp_domain ]; then
+			$BIN/v-add-domain "$new_user" "$cp_domain"
+			rm -f /home/$new_user/web/$cp_domain/public_html/index.html
+			rm -f /home/$new_user/web/$cp_domain/public_html/robots.txt
+			sync_count=0
+			rsync -av homedir/$path/ /home/$new_user/web/$cp_domain/public_html 2>&1 \
+				| while read file_dm; do
+					sync_count=$(($sync_count + 1))
+					echo -en "-- $sync_count restored files\r"
+				done
+			chown $new_user:$new_user -R /home/$new_user/web/$cp_domain/public_html
+			chmod 751 /home/$new_user/web/$cp_domain/public_html
+		fi
+	done
+}
+get_domain_path < hst_sds2
+
+/usr/local/hestia/bin/v-add-domain $new_user $main_domain1
+# need it for restore main domain
+if [ ! -e exclude_path ]; then
+	touch exclude_path
+fi
+echo "Restore main domain: $main_domain1"
+rm -f /home/$new_user/web/$main_domain1/public_html/index.html
+rm -f /home/$new_user/web/$main_domain1/public_html/robots.txt
+
+rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/$new_user/web/$main_domain1/public_html 2>&1 \
+	| while read file_dm; do
+		sync_count=$(($sync_count + 1))
+		echo -en "-- $sync_count restored files\r"
+	done
+
+chown $new_user:$new_user -R /home/$new_user/web/$main_domain1/public_html
+chmod 751 /home/$new_user/web/$main_domain1/public_html
+
+##################
+# mail
+tput setaf 2
+echo ""
+echo "Start Restoring Mails"
+tput sgr0
+cd homedir/mail
+
+for folder in *; do
+	if [ -d "$folder" ]; then
+		if [[ "$folder" != "cur" && "$folder" != "new" && "$folder" != "tmp" ]]; then
+			echo "Domain: $folder"
+
+			for mail_account in $folder/*; do
+				if [ "$mail_account" != "$folder/*" ]; then
+					echo "Import mail account: $mail_account@#$folder"
+					# Doesn't really matter but we don't know the unhashed one
+					tmp_pass=$(generate_password)
+					$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
+					mv $folder/$mail_account /home/$new_user/mail/$folder/
+					chown $new_user:mail /home/$new_user/mail/$folder/
+					find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
+
+					pass=$(grep "^$mail_account:" ../etc/${folder}/shadow | awk -F ":" '{print $2}')
+				fi
+			done
+		fi
+	fi
+done
+echo "All mail accounts restored"
+
+rm -rf "$tmpdir"
+
+echo "##############################"
+echo "cPanel Backup restored"
+echo "Review your content and report any fail"
+exit

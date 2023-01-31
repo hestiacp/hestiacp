@@ -96,7 +96,7 @@ else
 		#  10-master.conf
 		sed -i -E -z "s/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
 		#  15-lda.conf
-		sed -i -E -z "s/mail_plugins = \\\$mail_plugins sieve\n  auth_socket_path = \/var\/run\/dovecot\/auth-master/\#mail_plugins = \$mail_plugins/g" /etc/dovecot/conf.d/15-lda.conf
+		sed -i -E -z "s/mail_plugins = \\\$mail_plugins sieve\n  auth_socket_path = \/run\/dovecot\/auth-master/\#mail_plugins = \$mail_plugins/g" /etc/dovecot/conf.d/15-lda.conf
 		#  20-imap.conf
 		sed -i "s/mail_plugins = quota imap_quota imap_sieve/mail_plugins = quota imap_quota/g" /etc/dovecot/conf.d/20-imap.conf
 

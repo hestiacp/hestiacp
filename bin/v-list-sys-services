@@ -115,14 +115,14 @@ get_srv_state() {
 
 		# Searching pid file
 		pid_file=''
-		if [ -e "/var/run/$srv.pid" ]; then
-			pid_file="/var/run/$srv.pid"
+		if [ -e "/run/$srv.pid" ]; then
+			pid_file="/run/$srv.pid"
 		fi
-		if [ -z "$pid_file" ] && [ -e "/var/run/$srv/$srv.pid" ]; then
-			pid_file="/var/run/$srv/$srv.pid"
+		if [ -z "$pid_file" ] && [ -e "/run/$srv/$srv.pid" ]; then
+			pid_file="/run/$srv/$srv.pid"
 		fi
-		if [ -z "$pid_file" ] && [ -e "/var/run/$name/$name.pid" ]; then
-			pid_file="/var/run/$name/$name.pid"
+		if [ -z "$pid_file" ] && [ -e "/run/$name/$name.pid" ]; then
+			pid_file="/run/$name/$name.pid"
 		fi
 		if [ -z "$pid_file" ] && [ -e "/proc/$pid" ]; then
 			pid_file="/proc/$pid"

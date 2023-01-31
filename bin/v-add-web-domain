@@ -97,7 +97,8 @@ source_conf "$USER_DATA/user.conf"
 [[ -e "$HOMEDIR/$user/web/$domain" ]] && check_result "$E_EXISTS" "Web domain folder for $domain should not exist"
 
 # Creating domain directories
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain"
+mkdir $HOMEDIR/$user/web/$domain
+chown $user:$user $HOMEDIR/$user/web/$domain
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 $BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"

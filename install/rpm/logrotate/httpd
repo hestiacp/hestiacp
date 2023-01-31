@@ -5,6 +5,6 @@
     sharedscripts
     postrotate
         /sbin/service httpd reload > /dev/null 2>/dev/null || true
-        [ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`
+        [ ! -f /run/nginx.pid ] || kill -USR1 `cat /run/nginx.pid`
     endscript
 }

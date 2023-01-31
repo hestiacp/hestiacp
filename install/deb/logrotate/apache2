@@ -9,7 +9,7 @@
     sharedscripts
     postrotate
         /etc/init.d/apache2 reload > /dev/null || true
-        [ ! -f /var/run/nginx.pid ] || kill -USR1 `cat /var/run/nginx.pid`
+        [ ! -f /run/nginx.pid ] || kill -USR1 `cat /run/nginx.pid`
         endscript
     prerotate
         if [ -d /etc/logrotate.d/httpd-prerotate ]; then \

@@ -684,9 +684,19 @@ is_user_format_valid() {
 			check_result "$E_INVALID" "invalid $2 format :: $1"
 		fi
 	else
-		if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
-			check_result "$E_INVALID" "invalid $2 format :: $1"
+		if [ -n "$3" ]; then
+			maxlenght=$(($3 - 2))
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,$maxlenght}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		else
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
 		fi
+	fi
+	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
 	fi
 }
 
@@ -1072,11 +1082,18 @@ is_cron_format_valid() {
 	fi
 }
 
-# Name validator
-is_name_format_valid() {
+is_object_name_format_valid() {
 	if ! [[ "$1" =~ ^[-|\ |\.|_[:alnum:]]{0,50}$ ]]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
 	fi
+}
+# Name validator
+is_name_format_valid() {
+	exclude="['|\"|<|>]"
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ') :: $1"
+	fi
+	is_no_new_line_format "$1"
 }
 
 # Object validator
@@ -1130,7 +1147,7 @@ is_format_valid() {
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;
-				account) is_user_format_valid "$arg" "$arg_name" ;;
+				account) is_user_format_valid "$arg" "$arg_name" '64' ;;
 				action) is_fw_action_format_valid "$arg" ;;
 				active) is_boolean_format_valid "$arg" 'active' ;;
 				aliases) is_alias_format_valid "$arg" ;;
@@ -1171,7 +1188,7 @@ is_format_valid() {
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
-				malias) is_user_format_valid "$arg" "$arg_name" ;;
+				malias) is_user_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;
 				month) is_cron_format_valid "$arg" $arg_name ;;
@@ -1187,7 +1204,7 @@ is_format_valid() {
 				ns6) is_domain_format_valid "$arg" 'ns6' ;;
 				ns7) is_domain_format_valid "$arg" 'ns7' ;;
 				ns8) is_domain_format_valid "$arg" 'ns8' ;;
-				object) is_name_format_valid "$arg" 'object' ;;
+				object) is_object_name_format_valid "$arg" 'object' ;;
 				package) is_object_format_valid "$arg" "$arg_name" ;;
 				password) is_password_format_valid "$arg" ;;
 				port) is_int_format_valid "$arg" 'port' ;;

@@ -66,7 +66,7 @@ cp -f $ssl_dir/certificate.key $HESTIA/ssl/certificate.key
 
 # Restarting web server
 if [ "$restart" != 'no' ]; then
-	kill -HUP $(cat /var/run/hestia-nginx.pid)
+	kill -HUP $(cat /run/hestia-nginx.pid)
 	$BIN/v-restart-mail "$restart"
 fi
 

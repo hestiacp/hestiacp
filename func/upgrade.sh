@@ -481,7 +481,7 @@ upgrade_start_routine() {
 	VERSION=$(echo "$VERSION" | sed "s/~\([a-zA-Z0-9].*\)//g")
 
 	# Get list of all available version steps and create array
-	upgrade_steps=$(ls $HESTIA/install/upgrade/versions/*.sh)
+	upgrade_steps=$(ls -v $HESTIA/install/upgrade/versions/*.sh)
 	for script in $upgrade_steps; do
 		declare -a available_versions
 		available_versions+=($(echo $script | sed "s|/usr/local/hestia/install/upgrade/versions/||g" | sed "s|.sh||g"))

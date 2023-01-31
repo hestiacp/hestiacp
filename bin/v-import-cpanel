@@ -10,7 +10,7 @@
 
 # Known issue
 # - Importing certificates fails at the moment. Due to format changes of CPanel side
-# - It doesn't update DKIM or any MX records in DNS
+# - It doesn't update DKIM
 
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf

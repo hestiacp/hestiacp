@@ -1,8 +1,9 @@
 #!/bin/bash
-
-# v-restore-user-cpanel
-# Restores an exported backup from cPanel
-
+# info: Import Cpanel backup to a new user
+# options: BACKUP [MX]
+#
+# example: v-import-cpanel /backup/backup.tar.gz yes
+#
 # Based on sk-import-cpanel-backup-to-vestacp
 # Credits: Maks Usmanov (skamasle) and contributors:
 # Thanks to https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors
@@ -44,6 +45,9 @@ hestia_package=default
 if [ -f "$1" ]; then
 	cpanel_backup="$1"
 fi
+if [ -n "$2" ]; then
+	mx="$2"
+fi
 if [ -z "$BACKUP_TEMP" ]; then
 	BACKUP_TEMP=$BACKUP
 else
@@ -83,8 +87,8 @@ cd $tmpdir/*
 echo "Get prefix..."
 user_prefix=$(cat meta/dbprefix)
 
-sk_importer_in=$(pwd)
-echo "Access tmp directory $sk_importer_in"
+main_dir=$(pwd)
+echo "Access tmp directory $main_dir"
 dbprefix=$(cat meta/dbprefix)
 if [ $dbprefix = 1 ]; then
 	echo "Error 255 - I dont like your prefix, I dont want do this job"
@@ -225,24 +229,46 @@ for folder in *; do
 	if [ -d "$folder" ]; then
 		if [[ "$folder" != "cur" && "$folder" != "new" && "$folder" != "tmp" ]]; then
 			echo "Domain: $folder"
-
-			for mail_account in $folder/*; do
-				if [ "$mail_account" != "$folder/*" ]; then
-					echo "Import mail account: $mail_account@#$folder"
-					# Doesn't really matter but we don't know the unhashed one
-					tmp_pass=$(generate_password)
-					$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
-					mv $folder/$mail_account /home/$new_user/mail/$folder/
-					chown $new_user:mail /home/$new_user/mail/$folder/
-					find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
-
-					pass=$(grep "^$mail_account:" ../etc/${folder}/shadow | awk -F ":" '{print $2}')
-				fi
+			cd $folder
+			for mail_account in *; do
+				echo "Import mail account: $mail_account@#$folder"
+				# Doesn't really matter but we don't know the unhashed one
+				tmp_pass=$(generate_password)
+				$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
+				mv $mail_account /home/$new_user/mail/$folder/
+				chown $new_user:mail /home/$new_user/mail/$folder/
+				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
+				pass=$(grep "^$mail_account:" ../../etc/${folder}/shadow | awk -F ":" '{print $2}')
+				USER_DATA=$HESTIA/data/users/$new_user/
+				update_object_value "mail/$folder" 'ACCOUNT' "$mail_account" '$MD5' "$pass"
 			done
+			cd ..
+			$BIN/v-rebuild-mail-domain $new_user $folder
 		fi
 	fi
 done
 echo "All mail accounts restored"
+
+if [ "$mx" = 'yes' ]; then
+	cd $main_dir/dnszones
+	for domain in $($BIN/v-list-mail-domains $new_user plain | awk '{ print  $1 }'); do
+		echo "Replace MX record for $domain"
+		mx_id=$(grep MX $HESTIA/data/users/${new_user}/dns/${domain}.conf | tr "'" " " | cut -d " " -f 2)
+		$BIN/v-delete-dns-record $new_user $domain $mx_id
+		grep MX ${domain}.db | awk '{for(sk=NF;sk>=1;sk--) printf "%s ", $sk;print ""}' | while read value pri ns rest; do
+			if [ "$ns" = "MX" ]; then
+				if [ "$value" == "$sk_mx" ] || [ "$value" == "$sk_mx." ]; then
+					value=mail.$value
+				fi
+				$BIN/v-add-dns-record $new_user $domain @ MX $value $pri
+				if [[ "$?" -ge "1" ]]; then
+					$BIN/v-add-dns-record $new_user $domain @ MX mail.${domain} 0
+				fi
+				echo "MX fixed in $sk_mx"
+			fi
+		done
+	done
+fi
 
 rm -rf "$tmpdir"
 

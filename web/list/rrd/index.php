@@ -16,10 +16,19 @@ exec(HESTIA_CMD . "v-list-sys-rrd json", $output, $return_var);
 $data = json_decode(implode("", $output), true);
 unset($output);
 
+/*
 if (empty($_GET["period"])) {
 	$period = "day";
 } elseif (!in_array($_GET["period"], ["day", "week", "month", "year"])) {
 	$period = "day";
+} else {
+	$period = $_GET["period"];
+}
+*/
+if (empty($_GET["period"])) {
+	$period = "daily";
+} elseif (!in_array($_GET["period"], ["daily", "weekly", "monthly", "yearly"])) {
+	$period = "daily";
 } else {
 	$period = $_GET["period"];
 }

@@ -23,11 +23,11 @@
 				<h2 class="l-unit__name separate">
 					<?= _($data[$key]["TITLE"]) ?>
 				</h2>
-				<?php if ($data[$key]["TYPE"] != "net") { ?>
-				<canvas id="<?= $data[$key]["RRD"] ?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period); ?>"></canvas>
-				<?php } else { ?>
-				<canvas id="net_<?= $data[$key]["RRD"] ?>" class="js-chart" width="800" height="200" period="<?php echo htmlentities($period); ?>"></canvas>
-				<?php } ?>
+				<div>
+				   <a href="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" class="u-block" target="_blank">
+					 <img class="graph-rounded" src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" alt="">
+				   </a>
+				</div>
 			</div>
 		<?php } ?>
 	</div>

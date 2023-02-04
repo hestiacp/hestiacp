@@ -19,15 +19,13 @@
 	<div class="form-container form-container-wide">
 		<!-- Begin graph list item loop -->
 		<?php foreach ($data as $key => $value) { ?>
-			<div class="u-mb20">
-				<h2 class="l-unit__name separate">
+			<div class="u-mb40">
+				<h2 class="u-mb20">
 					<?= _($data[$key]["TITLE"]) ?>
 				</h2>
-				<div>
-				   <a href="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" class="u-block" target="_blank">
-					 <img class="graph-rounded" src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" alt="">
-				   </a>
-				</div>
+				<a href="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" class="u-block" target="_blank">
+					<img class="u-image-fluid u-rounded" src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" alt="">
+				</a>
 			</div>
 		<?php } ?>
 	</div>

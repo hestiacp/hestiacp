@@ -6,10 +6,10 @@ After=hestia-php.service
 
 [Service]
 Type=forking
-PIDFile=/var/run/hestia-nginx.pid
+PIDFile=/run/hestia-nginx.pid
 ExecStart=/usr/local/hestia/nginx/sbin/nginx -c /usr/local/hestia/nginx/conf/nginx.conf
-ExecReload=/bin/sh -c "/bin/kill -s HUP $(/bin/cat /var/run/hestia-nginx.pid)"
-ExecStop=/bin/sh -c "/bin/kill -s TERM $(/bin/cat /var/run/hestia-nginx.pid)"
+ExecReload=/bin/sh -c "/bin/kill -s HUP $(/bin/cat /run/hestia-nginx.pid)"
+ExecStop=/bin/sh -c "/bin/kill -s TERM $(/bin/cat /run/hestia-nginx.pid)"
 
 [Install]
 WantedBy=hestia.service

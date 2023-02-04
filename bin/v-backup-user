@@ -54,15 +54,15 @@ get_user_disk_usage() {
 			| awk -F "DOMAIN='" '{print $2}' | cut -f 1 -d \')
 
 		for domain in $domains; do
-			exclusion=$(echo -e "$web_exclusions" | tr ',' '\n' | grep "^$domain$")
+			exclusion=$(echo -e "$web_exclusions" | tr ',' '\n' | grep "^$domain\|\*$")
 			if [ -z "$exclusion" ]; then
 				# Defining home directory
 				home_dir="$HOMEDIR/$user/web/$domain/"
-				exlusion=$(echo -e "$web_exclusions" | tr ',' '\n' | grep "^$domain:")
+				exclusion=$(echo -e "$web_exclusions" | tr ',' '\n' | grep "^$domain\|\*:")
 				fargs=()
 
-				if [ -n "$exlusion" ]; then
-					xdirs=$(echo -e "$exlusion" | tr ':' '\n' | grep -v "$domain")
+				if [ -n "$exclusion" ]; then
+					xdirs=$(echo -e "$exclusion" | tr ':' '\n' | grep -v "$domain\|\*")
 					for xpath in $xdirs; do
 						fargs+=(--exclude="$xpath")
 					done
@@ -245,7 +245,7 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 	# Parsing domain exclusions
 	conf="$USER_DATA/web.conf"
 	for domain in $(search_objects 'web' 'SUSPENDED' "*" 'DOMAIN'); do
-		exclusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain$")
+		exclusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain\|\*$")
 		if [ -z "$exclusion" ]; then
 			web_list="$web_list $domain"
 		else
@@ -361,12 +361,17 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 		cd $HOMEDIR/$user/web/$domain
 
 		# Define exclude arguments
-		exlusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain:")
+		exclusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain\|\*:")
 		set -f
 		fargs=()
 		fargs+=(--exclude='./logs/*')
-		if [ -n "$exlusion" ]; then
-			xdirs="$(echo -e "$exlusion" | tr ':' '\n' | grep -v $domain)"
+		if [ -n "$exclusion" ]; then
+
+			if [[ "$exclusion" =~ '*' ]]; then
+				exclusion="${exclusion/\*/$domain}"
+			fi
+
+			xdirs="$(echo -e "$exclusion" | tr ':' '\n' | grep -v $domain)"
 			for xpath in $xdirs; do
 				if [ -d "$xpath" ]; then
 					fargs+=(--exclude=$xpath/*)
@@ -498,7 +503,7 @@ if [ -n "$MAIL_SYSTEM" ] && [ "$MAIL" != '*' ]; then
 			exclusion=$(echo "$MAIL" | tr ',' '\n' | grep "$domain:")
 			exclusion=$(echo "$exclusion" | tr ':' '\n' | grep -E "^$account|\*")
 
-			# Checking exlusions
+			# Checking exclusions
 			if [ -z "$exclusion" ] && [[ "$MAIL_SYSTEM" =~ exim ]]; then
 				accounts+=($account)
 			else
@@ -634,7 +639,7 @@ if [ "$USER" != '*' ]; then
 	mkdir $tmpdir/user_dir
 	cd $HOMEDIR/$user
 
-	# Parsing directory exlusions
+	# Parsing directory exclusions
 	USER=''
 	if [ -e "$USER_DATA/backup-excludes.conf" ]; then
 		source $USER_DATA/backup-excludes.conf
@@ -710,7 +715,6 @@ for backup_type in $(echo -e "${BACKUP_SYSTEM//,/\\n}"); do
 		local) local_backup ;;
 		ftp) ftp_backup ;;
 		sftp) sftp_backup ;;
-		google) google_backup ;;
 		b2) b2_backup ;;
 		rclone) rclone_backup ;;
 	esac

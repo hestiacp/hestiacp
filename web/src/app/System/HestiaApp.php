@@ -225,11 +225,11 @@ class HestiaApp {
 				return $match[1] . "." . $match[2];
 			} else {
 				$supported = $this->run("v-list-sys-php", "json", $result);
-				return $this->$supported->json[0];
+				return $result->json[0];
 			}
 		} else {
 			$supported = $this->run("v-list-sys-php", "json", $result);
-			return $this->$supported->json[0];
+			return $this->$result->json[0];
 		}
 	}
 

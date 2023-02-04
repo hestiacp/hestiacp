@@ -442,56 +442,6 @@ sftp_backup() {
 	fi
 }
 
-# Google backup download function
-google_backup() {
-
-	# Defining google settings
-	source_conf "$HESTIA/conf/google.backup.conf"
-	gsutil="$HESTIA/3rdparty/gsutil/gsutil"
-	export BOTO_CONFIG="$HESTIA/conf/.google.backup.boto"
-
-	# Debug info
-	echo -e "$(date "+%F %T") Remote: gs://$BUCKET/$BPATH/$user.$backup_new_date.tar"
-
-	# Checking retention
-	backup_list=$(${gsutil} ls gs://$BUCKET/$BPATH/$user.* 2> /dev/null)
-	backups_count=$(echo "$backup_list" | wc -l)
-	if [ "$backups_count" -ge "$BACKUPS" ]; then
-		backups_rm_number=$((backups_count - BACKUPS))
-		for backup in $(echo "$backup_list" | head -n $backups_rm_number); do
-			echo -e "$(date "+%F %T") Rotated gcp backup: $backup"
-			$gsutil rm $backup > /dev/null 2>&1
-		done
-	fi
-
-	# Uploading backup archive
-	echo -e "$(date "+%F %T") Uploading $user.$backup_new_date.tar ..."
-	if [ "$localbackup" = 'yes' ]; then
-		cd $BACKUP
-		${gsutil} cp $user.$backup_new_date.tar gs://$BUCKET/$BPATH/ > /dev/null 2>&1
-	else
-		cd $tmpdir
-		tar -cf $BACKUP/$user.$backup_new_date.tar .
-		cd $BACKUP/
-		${gsutil} cp $user.$backup_new_date.tar gs://$BUCKET/$BPATH/ > /dev/null 2>&1
-		rc=$?
-		rm -f $user.$backup_new_date.tar
-		if [ "$rc" -ne 0 ]; then
-			check_result "$E_CONNECT" "gsutil failed to upload $user.$backup_new_date.tar"
-		fi
-	fi
-}
-
-google_download() {
-	source_conf "$HESTIA/conf/google.backup.conf"
-	gsutil="$HESTIA/3rdparty/gsutil/gsutil"
-	export BOTO_CONFIG="$HESTIA/conf/.google.backup.boto"
-	${gsutil} cp gs://$BUCKET/$BPATH/$1 $BACKUP/ > /dev/null 2>&1
-	if [ "$?" -ne 0 ]; then
-		check_result "$E_CONNECT" "gsutil failed to download $1"
-	fi
-}
-
 # BackBlaze B2 backup function
 b2_backup() {
 	# Defining backblaze b2 settings

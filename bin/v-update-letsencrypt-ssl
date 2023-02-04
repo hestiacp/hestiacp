@@ -159,18 +159,17 @@ for user in $($BIN/v-list-sys-users plain); do
 done
 
 # Restart related services
-$BIN/v-restart-web yes
-$BIN/v-restart-mail yes
+$BIN/v-restart-web
+$BIN/v-restart-mail
 
 if [ -n "$PROXY_SYSTEM" ]; then
-	$BIN/v-restart-proxy yes
+	$BIN/v-restart-proxy
 fi
 
 #----------------------------------------------------------#
 #                        Hestia                            #
 #----------------------------------------------------------#
 
-# No Logging
-#log_event "$OK" "$EVENT"
+log_event "$OK" "$EVENT"
 
 exit

@@ -69,10 +69,6 @@ fi
 
 # Checking local backup
 if [ ! -e "$BACKUP/$backup" ]; then
-	if [[ "$BACKUP_SYSTEM" =~ "google" ]]; then
-		google_download "$backup"
-		downloaded='yes'
-	fi
 	if [[ "$BACKUP_SYSTEM" =~ "sftp" ]] && [ -z "$downloaded" ]; then
 		sftp_download "$backup"
 		downloaded='yes'

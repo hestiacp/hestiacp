@@ -17,9 +17,9 @@
 			<?php show_alert_message($_SESSION);?>
 			<div
 				x-data="{
-					text: '<?= $v_crt ?>',
+					text: '<?= base64_encode($v_crt) ?>',
 					blob() {
-						return window.URL.createObjectURL(new Blob([this.text], { type: 'text/plain' }))
+						return window.URL.createObjectURL(new Blob([atob(this.text)], { type: 'text/plain' }))
 					}
 				}"
 				class="u-mb20"
@@ -40,9 +40,9 @@
 			</div>
 			<div
 				x-data="{
-					text: '<?= $v_key ?>',
+					text: '<?= base64_encode($v_key) ?>',
 					blob() {
-						return window.URL.createObjectURL(new Blob([this.text], { type: 'text/plain' }))
+						return window.URL.createObjectURL(new Blob([atob(this.text)], { type: 'text/plain' }))
 					}
 				}"
 				class="u-mb20"
@@ -63,9 +63,9 @@
 			</div>
 			<div
 				x-data="{
-					text: '<?= $v_csr ?>',
+					text: '<?= base64_encode($v_csr) ?>',
 					blob() {
-						return window.URL.createObjectURL(new Blob([this.text], { type: 'text/plain' }))
+						return window.URL.createObjectURL(new Blob([atob(this.text)], { type: 'text/plain' }))
 					}
 				}"
 				class="u-mb20"

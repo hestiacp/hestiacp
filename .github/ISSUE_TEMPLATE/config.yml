@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Support Question
+    url: https://forum.hestiacp.com
+    about: We use GitHub issues only to discuss about HestiaCP bugs and new features.

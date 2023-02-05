@@ -15,12 +15,12 @@ server {
     deny all;
     return 404;
     }
-    
-    
+
+
     location / {
     try_files $uri $uri/ =404;
     }
-    
+
     location /error/ {
     alias /var/www/document_errors/;
     }

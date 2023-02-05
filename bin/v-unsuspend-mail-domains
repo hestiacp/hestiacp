@@ -41,7 +41,7 @@ check_hestia_demo_mode
 
 # Starting unsuspend loop
 for domain in $(search_objects 'mail' 'SUSPENDED' "yes" 'DOMAIN'); do
-    $BIN/v-unsuspend-mail-domain "$user" "$domain"
+	$BIN/v-unsuspend-mail-domain "$user" "$domain"
 done
 
 #----------------------------------------------------------#

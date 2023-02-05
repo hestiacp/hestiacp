@@ -23,16 +23,16 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 is_language_valid() {
-    if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
-        echo "Error: language $1 is not valid"
-        log_event "$E_INVALID" "$ARGUMENTS"
-        exit $E_INVALID
-    fi
-    if [ ! -d "$HESTIA/web/locale/$1" ]; then
-        echo "Error: language $1 doesn't exist"
-        log_event "$E_NOTEXIST" "$ARGUMENTS"
-        exit $E_NOTEXIST
-    fi
+	if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
+		echo "Error: language $1 is not valid"
+		log_event "$E_INVALID" "$ARGUMENTS"
+		exit $E_INVALID
+	fi
+	if [ ! -d "$HESTIA/web/locale/$1" ]; then
+		echo "Error: language $1 doesn't exist"
+		log_event "$E_NOTEXIST" "$ARGUMENTS"
+		exit $E_NOTEXIST
+	fi
 }
 
 #----------------------------------------------------------#
@@ -54,9 +54,9 @@ check_hestia_demo_mode
 
 # Change language
 if [ -z "$(grep LANGUAGE $USER_DATA/user.conf)" ]; then
-    sed -i "s/^TIME/LANGUAGE='$language'\nTIME/g" $USER_DATA/user.conf
+	sed -i "s/^TIME/LANGUAGE='$language'\nTIME/g" $USER_DATA/user.conf
 else
-    update_user_value "$user" '$LANGUAGE' "$language"
+	update_user_value "$user" '$LANGUAGE' "$language"
 fi
 
 #----------------------------------------------------------#

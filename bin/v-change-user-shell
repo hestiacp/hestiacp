@@ -42,14 +42,14 @@ check_hestia_demo_mode
 shell_path=$(grep -w "$shell" /etc/shells | head -n1)
 
 # Changing passwd file
-/usr/bin/chsh -s "$shell_path" "$user" >/dev/null 2>&1
+/usr/bin/chsh -s "$shell_path" "$user" > /dev/null 2>&1
 shell=$(basename "$shell_path")
 
 # Adding jailed sftp env
 if [[ "$shell" =~ nologin ]] || [[ "$shell" =~ rssh ]]; then
-    $BIN/v-add-user-sftp-jail "$user" >/dev/null 2>&1
+	$BIN/v-add-user-sftp-jail "$user" > /dev/null 2>&1
 else
-    $BIN/v-delete-user-sftp-jail "$user" >/dev/null 2>&1
+	$BIN/v-delete-user-sftp-jail "$user" > /dev/null 2>&1
 fi
 
 #----------------------------------------------------------#

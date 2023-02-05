@@ -57,7 +57,7 @@ del_web_config "$WEB_SYSTEM" "$TPL.stpl"
 
 # Checking proxy
 if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
-    del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+	del_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
 fi
 
 # Deleting old certificate
@@ -73,7 +73,7 @@ $BIN/v-delete-web-domain-ssl-force "$user" "$domain" 'no' 'yes'
 
 # Update config
 if [ -n "$LETSENCRYPT" ]; then
-    update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
+	update_object_value 'web' 'DOMAIN' "$domain" '$LETSENCRYPT' 'no'
 fi
 update_object_value 'web' 'DOMAIN' "$domain" '$SSL' 'no'
 
@@ -82,10 +82,10 @@ decrease_user_value "$user" '$U_WEB_SSL'
 
 # Restarting web server
 $BIN/v-restart-web "$restart"
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Warning" "Web" "SSL disabled (Domain: $domain)."

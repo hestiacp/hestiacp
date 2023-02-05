@@ -39,7 +39,7 @@ format_domain_idn
 check_args '4' "$#" 'USER DOMAIN ACCOUNT QUOTA'
 is_format_valid 'user' 'domain' 'account'
 if [ "$quota" != 'unlimited' ]; then
-    is_format_valid 'quota'
+	is_format_valid 'quota'
 fi
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -58,12 +58,12 @@ check_hestia_demo_mode
 
 md5=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$MD5')
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    if [ "$quota" = 'unlimited' ]; then
-        quota=0
-    fi
-    sed -i "/^$account:/d" "$HOMEDIR/$user/conf/mail/$domain/passwd"
-    str="$account:$md5:$user:mail::$HOMEDIR/$user:${quota}:userdb_quota_rule=*:storage=${quota}M"
-    echo "$str" >> "$HOMEDIR/$user/conf/mail/$domain/passwd"
+	if [ "$quota" = 'unlimited' ]; then
+		quota=0
+	fi
+	sed -i "/^$account:/d" "$HOMEDIR/$user/conf/mail/$domain/passwd"
+	str="$account:$md5:$user:mail::$HOMEDIR/$user:${quota}:userdb_quota_rule=*:storage=${quota}M"
+	echo "$str" >> "$HOMEDIR/$user/conf/mail/$domain/passwd"
 fi
 
 #----------------------------------------------------------#
@@ -71,7 +71,7 @@ fi
 #----------------------------------------------------------#
 
 if [[ "$quota" -eq 0 ]]; then
-    quota='unlimited'
+	quota='unlimited'
 fi
 
 # Update quota

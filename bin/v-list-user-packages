@@ -21,14 +21,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(echo "$packages" |wc -l)
-    echo "{"
-    for package in $packages; do
-        PACKAGE=${package/.pkg/}
-        source_conf "$HESTIA/data/packages/$PACKAGE.pkg"
-        echo -n '    "'$PACKAGE'": {
+	IFS=$'\n'
+	i=1
+	objects=$(echo "$packages" | wc -l)
+	echo "{"
+	for package in $packages; do
+		PACKAGE=${package/.pkg/}
+		source_conf "$HESTIA/data/packages/$PACKAGE.pkg"
+		echo -n '    "'$PACKAGE'": {
         "WEB_TEMPLATE": "'$WEB_TEMPLATE'",
         "PROXY_TEMPLATE": "'$PROXY_TEMPLATE'",
         "DNS_TEMPLATE": "'$DNS_TEMPLATE'",
@@ -48,56 +48,56 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "PKG   TPL   WEB   DNS   MAIL   DB   SHELL   DISK   BW"
-    echo "---   ---   ---   ---   ----   --   -----   ----   --"
-    for package in $packages; do
-        source $HESTIA/data/packages/$package
-        PACKAGE=${package/.pkg/}
-        package_data=$(cat $HESTIA/data/packages/$package)
-        package_data=$(echo "$package_data" |sed -e 's/unlimited/unlim/g')
-        parse_object_kv_list "$package_data"
-        echo -n "$PACKAGE $WEB_TEMPLATE $WEB_DOMAINS $DNS_DOMAINS "
-        echo "$MAIL_DOMAINS $DATABASES $SHELL $DISK_QUOTA $BANDWIDTH"
-    done
+	echo "PKG   TPL   WEB   DNS   MAIL   DB   SHELL   DISK   BW"
+	echo "---   ---   ---   ---   ----   --   -----   ----   --"
+	for package in $packages; do
+		source $HESTIA/data/packages/$package
+		PACKAGE=${package/.pkg/}
+		package_data=$(cat $HESTIA/data/packages/$package)
+		package_data=$(echo "$package_data" | sed -e 's/unlimited/unlim/g')
+		parse_object_kv_list "$package_data"
+		echo -n "$PACKAGE $WEB_TEMPLATE $WEB_DOMAINS $DNS_DOMAINS "
+		echo "$MAIL_DOMAINS $DATABASES $SHELL $DISK_QUOTA $BANDWIDTH"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    for package in $packages; do
-        source $HESTIA/data/packages/$package
-        PACKAGE=${package/.pkg/}
-        echo -ne "$PACKAGE\t$WEB_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
-        echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
-        echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$DATABASES\t$CRON_JOBS\t"
-        echo -e "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t$TIME\t$DATE"
-    done
+	for package in $packages; do
+		source $HESTIA/data/packages/$package
+		PACKAGE=${package/.pkg/}
+		echo -ne "$PACKAGE\t$WEB_TEMPLATE\t$PROXY_TEMPLATE\t$DNS_TEMPLATE\t"
+		echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
+		echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$DATABASES\t$CRON_JOBS\t"
+		echo -e "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t$TIME\t$DATE"
+	done
 }
 
 # CSV list function
 csv_list() {
-    echo -n "PACKAGE,WEB_TEMPLATE,PROXY_TEMPLATE,DNS_TEMPLATE,"
-    echo -n "WEB_DOMAINS,WEB_ALIASES,DNS_DOMAINS,DNS_RECORDS,"
-    echo -n "MAIL_DOMAINS,MAIL_ACCOUNTS,DATABASES,CRON_JOBS,"
-    echo "DISK_QUOTA,BANDWIDTH,NS,SHELL,BACKUPS,TIME,DATE"
-    for package in $packages; do
-        PACKAGE=${package/.pkg/}
-        echo -n "$PACKAGE,$WEB_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
-        echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
-        echo -n "$MAIL_DOMAINS,$MAIL_ACCOUNTS,$DATABASES,$CRON_JOBS,"
-        echo "$DISK_QUOTA,$BANDWIDTH,\"$NS\",$SHELL,$BACKUPS,$TIME,$DATE"
-    done
+	echo -n "PACKAGE,WEB_TEMPLATE,PROXY_TEMPLATE,DNS_TEMPLATE,"
+	echo -n "WEB_DOMAINS,WEB_ALIASES,DNS_DOMAINS,DNS_RECORDS,"
+	echo -n "MAIL_DOMAINS,MAIL_ACCOUNTS,DATABASES,CRON_JOBS,"
+	echo "DISK_QUOTA,BANDWIDTH,NS,SHELL,BACKUPS,TIME,DATE"
+	for package in $packages; do
+		PACKAGE=${package/.pkg/}
+		echo -n "$PACKAGE,$WEB_TEMPLATE,$PROXY_TEMPLATE,$DNS_TEMPLATE,"
+		echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
+		echo -n "$MAIL_DOMAINS,$MAIL_ACCOUNTS,$DATABASES,$CRON_JOBS,"
+		echo "$DISK_QUOTA,$BANDWIDTH,\"$NS\",$SHELL,$BACKUPS,$TIME,$DATE"
+	done
 }
 
 #----------------------------------------------------------#
@@ -105,14 +105,14 @@ csv_list() {
 #----------------------------------------------------------#
 
 # Parsing packages
-packages=$(ls --sort=time $HESTIA/data/packages |grep .pkg)
+packages=$(ls --sort=time $HESTIA/data/packages | grep .pkg)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

@@ -45,15 +45,15 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Check if SSL is enabled
 if [ "$SSL" != 'yes' ]; then
-    echo "Error: SSL is not enabled"
-    exit "$E_NOTEXIST"
+	echo "Error: SSL is not enabled"
+	exit "$E_NOTEXIST"
 fi
 
 # Check for Apache/Nginx or Nginx/PHP-FPM configuration
 if [ -z "$PROXY_SYSTEM" ]; then
-    hstsconf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.hsts.conf"
+	hstsconf="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.hsts.conf"
 else
-    hstsconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.hsts.conf"
+	hstsconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.hsts.conf"
 fi
 
 echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
@@ -66,7 +66,7 @@ chmod 640 $hstsconf
 #----------------------------------------------------------#
 
 if [ -z "$SSL_HSTS" ]; then
-    add_object_key "web" 'DOMAIN' "$domain" 'SSL_HSTS' 'SSL_FORCE'
+	add_object_key "web" 'DOMAIN' "$domain" 'SSL_HSTS' 'SSL_FORCE'
 fi
 
 # Set forcessl flag to enabled
@@ -82,7 +82,7 @@ check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 if [ "$quiet" != "yes" ]; then
-    $BIN/v-log-action "$user" "Info" "Web" "HTTP Strict Transport Security (HSTS) enabled (Domain: $domain)."
+	$BIN/v-log-action "$user" "Info" "Web" "HTTP Strict Transport Security (HSTS) enabled (Domain: $domain)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

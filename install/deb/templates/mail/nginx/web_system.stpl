@@ -10,7 +10,7 @@ server {
     ssl_certificate_key %ssl_key%;
     ssl_stapling on;
     ssl_stapling_verify on;
-    
+
     location ~ /\.(?!well-known\/) {
         deny all;
         return 404;

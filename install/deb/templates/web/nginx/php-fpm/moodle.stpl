@@ -48,7 +48,7 @@ server {
             expires     max;
             fastcgi_hide_header "Set-Cookie";
         }
-        
+
         location ~ \..*/.*\.php$ {
             return 403;
         }
@@ -72,8 +72,8 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

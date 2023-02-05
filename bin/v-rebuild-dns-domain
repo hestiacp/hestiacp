@@ -40,7 +40,7 @@ is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 check_user=$(is_object_unsuspended 'user' 'USER' "$user")
 if [ -n "$check_user" ]; then
-    exit
+	exit
 fi
 is_object_valid 'dns' 'DOMAIN' "$domain"
 
@@ -59,18 +59,18 @@ conf="$USER_DATA/dns.conf"
 # Defining user name servers
 ns=$(get_user_value '$NS')
 i=1
-for nameserver in ${ns//,/ };do
-    eval ns$i="$nameserver"
-    i=$((i + 1))
+for nameserver in ${ns//,/ }; do
+	eval ns$i="$nameserver"
+	i=$((i + 1))
 done
 
 # Get dns config path
 if [ -e '/etc/named.conf' ]; then
-    dns_conf='/etc/named.conf'
+	dns_conf='/etc/named.conf'
 fi
 
 if [ -e '/etc/bind/named.conf' ]; then
-    dns_conf='/etc/bind/named.conf'
+	dns_conf='/etc/bind/named.conf'
 fi
 
 # Deleting old user's zone
@@ -78,9 +78,10 @@ sed -i "/\/$user\/conf\/dns\/$domain.db\"/d" $dns_conf
 
 # Updating zone serial
 if [ "$update_serial" != 'no' ]; then
-    update_domain_serial
+	update_domain_serial
 fi
 
+syshealth_repair_dns_config
 # Rebuiling zone config
 rebuild_dns_domain_conf
 
@@ -95,7 +96,7 @@ update_user_value "$user" '$SUSPENDED_DNS' "$suspended_dns"
 
 # Restarting named
 $BIN/v-restart-dns "$restart"
-check_result $? "Bind restart failed" >/dev/null
+check_result $? "Bind restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "system" "Info" "System" "Rebuilt DNS domain (User: $user, Domain: $domain)."

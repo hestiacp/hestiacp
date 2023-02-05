@@ -22,58 +22,58 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo -n '{'
-    local quote=''
-    local PERMISSIONS_ARR ACCESS_KEY_ID
-    for key_file in $HESTIA/data/access-keys/*; do
-        key_file="$(basename -- "$key_file")"
-        if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
-            USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
-            source_conf "$HESTIA/data/access-keys/$key_file"
-            if [ "$user" = "$USER" ] || [ -z "$user" ]; then
-                PERMISSIONS_ARR='[]'
-                if [[ -n "$PERMISSIONS" ]]; then
-                    PERMISSIONS_ARR="[\"$(echo "$PERMISSIONS" | sed -E 's|,|", "|g')\"]"
-                fi
-    
-                ACCESS_KEY_ID="$(basename "$key_file")"
-    
-                echo -en "${quote:-\n}"
-                echo -n '    "'$ACCESS_KEY_ID'": {'
-                echo -n '"ACCESS_KEY_ID": "'${ACCESS_KEY_ID}'", '
-                echo -n '"USER": "'${USER}'", '
-                echo -n '"PERMISSIONS": '${PERMISSIONS_ARR}', '
-                echo -n '"COMMENT": "'${COMMENT}'", '
-                echo -n '"TIME": "'${TIME}'", '
-                echo -n '"DATE": "'${DATE}'"'
-                echo -n '}'
-                quote=",\n"
-            fi
-        fi
-    done
+	echo -n '{'
+	local quote=''
+	local PERMISSIONS_ARR ACCESS_KEY_ID
+	for key_file in $HESTIA/data/access-keys/*; do
+		key_file="$(basename -- "$key_file")"
+		if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
+			USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
+			source_conf "$HESTIA/data/access-keys/$key_file"
+			if [ "$user" = "$USER" ] || [ -z "$user" ]; then
+				PERMISSIONS_ARR='[]'
+				if [[ -n "$PERMISSIONS" ]]; then
+					PERMISSIONS_ARR="[\"$(echo "$PERMISSIONS" | sed -E 's|,|", "|g')\"]"
+				fi
 
-    [[ -n "$quote" ]] && echo
-    echo -e '}'
+				ACCESS_KEY_ID="$(basename "$key_file")"
+
+				echo -en "${quote:-\n}"
+				echo -n '    "'$ACCESS_KEY_ID'": {'
+				echo -n '"ACCESS_KEY_ID": "'${ACCESS_KEY_ID}'", '
+				echo -n '"USER": "'${USER}'", '
+				echo -n '"PERMISSIONS": '${PERMISSIONS_ARR}', '
+				echo -n '"COMMENT": "'${COMMENT}'", '
+				echo -n '"TIME": "'${TIME}'", '
+				echo -n '"DATE": "'${DATE}'"'
+				echo -n '}'
+				quote=",\n"
+			fi
+		fi
+	done
+
+	[[ -n "$quote" ]] && echo
+	echo -e '}'
 }
 
 # SHELL list function
 shell_list() {
-    list="ID\tUSER\tPERMISSIONS\tCOMMENT\tTIME\tDATE\n"
-    list+="--\t------\t----\t-----------\t-------\t----\t----\n"
+	list="ID\tUSER\tPERMISSIONS\tCOMMENT\tTIME\tDATE\n"
+	list+="--\t------\t----\t-----------\t-------\t----\t----\n"
 
-    for key_file in $HESTIA/data/access-keys/*; do
-        key_file="$(basename -- "$key_file")"
-        if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
-            USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
-            source_conf "$HESTIA/data/access-keys/$key_file"
-            if [ "$user" = "$USER" ] || [ -z "$user" ]; then
-                ACCESS_KEY_ID="$(basename "$key_file")"
-                list+="${ACCESS_KEY_ID}\t${USER}\t${PERMISSIONS:--}\t${COMMENT:--}\t${TIME}\t${DATE}\n"
-            fi
-        fi
-    done
+	for key_file in $HESTIA/data/access-keys/*; do
+		key_file="$(basename -- "$key_file")"
+		if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
+			USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
+			source_conf "$HESTIA/data/access-keys/$key_file"
+			if [ "$user" = "$USER" ] || [ -z "$user" ]; then
+				ACCESS_KEY_ID="$(basename "$key_file")"
+				list+="${ACCESS_KEY_ID}\t${USER}\t${PERMISSIONS:--}\t${COMMENT:--}\t${TIME}\t${DATE}\n"
+			fi
+		fi
+	done
 
-    echo -e "$list" | column -t -s "	"
+	echo -e "$list" | column -t -s "	"
 }
 
 #----------------------------------------------------------#
@@ -82,10 +82,9 @@ shell_list() {
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	shell) shell_list ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

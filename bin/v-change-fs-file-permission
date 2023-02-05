@@ -32,28 +32,28 @@ check_hestia_demo_mode
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z "$homedir" ]; then
-    echo "Error: user home directory doesn't exist"
-    exit 12
+	echo "Error: user home directory doesn't exist"
+	exit 12
 fi
 
 # Checking source file
 if [ ! -f "$src_file" ]; then
-    echo "Error: source file doesn't exist $src_file"
-    exit 3
+	echo "Error: source file doesn't exist $src_file"
+	exit 3
 fi
 
 # Checking source path
 rpath=$(readlink -f "$src_file")
-if [ -z "$(echo $rpath |egrep "^/tmp|^$homedir")" ]; then
-    echo "Error: invalid source path $src_file"
-    exit 2
+if [ -z "$(echo $rpath | egrep "^/tmp|^$homedir")" ]; then
+	echo "Error: invalid source path $src_file"
+	exit 2
 fi
 
 # Changing file permissions
-user_exec chmod -R $permissions "$src_file" >/dev/null 2>&1
+user_exec chmod -R $permissions "$src_file" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-    echo "Error: access permission on $src_file was not changed"
-    exit 3
+	echo "Error: access permission on $src_file was not changed"
+	exit 3
 fi
 
 $BIN/v-log-action "system" "Info" "System" "File system permissions changed (User: $user, File: $src_file, Permissions: $permissions)."

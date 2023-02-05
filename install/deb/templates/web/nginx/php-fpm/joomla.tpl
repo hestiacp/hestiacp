@@ -37,7 +37,7 @@ server {
             expires 30d;
             fastcgi_hide_header "Set-Cookie";
         }
-        
+
         location ~* /(images|cache|media|logs|tmp)/.*\.(php|pl|py|jsp|asp|sh|cgi)$ {
             deny all;
             return 404;

@@ -25,16 +25,16 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(grep ID $USER_DATA/dns/$domain.conf |wc -l)
-    echo "{"
-    while read str; do
-        unset TTL
-        parse_object_kv_list "$str"
-        [ -z "$TTL" ] && TTL="$zone_ttl"
-        VALUE=$(echo "$VALUE" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g" -e 's/     /\\u0009/g')
-        echo -n '    "'$ID'": {
+	IFS=$'\n'
+	i=1
+	objects=$(grep ID $USER_DATA/dns/$domain.conf | wc -l)
+	echo "{"
+	while read str; do
+		unset TTL
+		parse_object_kv_list "$str"
+		[ -z "$TTL" ] && TTL="$zone_ttl"
+		VALUE=$(echo "$VALUE" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g" -e 's/     /\\u0009/g')
+		echo -n '    "'$ID'": {
         "RECORD": "'$RECORD'",
         "TYPE": "'$TYPE'",
         "PRIORITY": "'$PRIORITY'",
@@ -45,54 +45,54 @@ json_list() {
         "DATE": "'$DATE'",
         "TTL": "'$TTL'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done < <(cat $USER_DATA/dns/$domain.conf)
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < <(cat $USER_DATA/dns/$domain.conf)
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    echo "ID^RECORD^TYPE^VALUE^DATE^TTL"
-    echo "--^------^----^-----^----^----"
-    while read str; do
-        unset TTL
-        parse_object_kv_list "$str"
-        [ -z "$TTL" ] && TTL="$zone_ttl"
-        echo "$ID^$RECORD^$TYPE^${VALUE:0:30}^$DATE^$TTL"
-    done < <(cat $USER_DATA/dns/$domain.conf)
+	IFS=$'\n'
+	echo "ID^RECORD^TYPE^VALUE^DATE^TTL"
+	echo "--^------^----^-----^----^----"
+	while read str; do
+		unset TTL
+		parse_object_kv_list "$str"
+		[ -z "$TTL" ] && TTL="$zone_ttl"
+		echo "$ID^$RECORD^$TYPE^${VALUE:0:30}^$DATE^$TTL"
+	done < <(cat $USER_DATA/dns/$domain.conf)
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    while read str; do
-        unset TTL
-        parse_object_kv_list "$str"
-        [ -z "$TTL" ] && TTL="$zone_ttl"
-        VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
-        echo -ne "$ID\t$RECORD\t$TYPE\t$PRIORITY\t$VALUE\t"
-        echo -e "$SUSPENDED\t$TIME\t$DATE\t$TTL"
-    done < <(cat $USER_DATA/dns/$domain.conf)
+	IFS=$'\n'
+	while read str; do
+		unset TTL
+		parse_object_kv_list "$str"
+		[ -z "$TTL" ] && TTL="$zone_ttl"
+		VALUE=$(echo "$VALUE" | sed -e "s/%quote%/\\'/g")
+		echo -ne "$ID\t$RECORD\t$TYPE\t$PRIORITY\t$VALUE\t"
+		echo -e "$SUSPENDED\t$TIME\t$DATE\t$TTL"
+	done < <(cat $USER_DATA/dns/$domain.conf)
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo "ID,RECORD,TYPE,PRIORITY,VALUE,SUSPENDED,TIME,DATE,TTL"
-    while read str; do
-        unset TTL
-        parse_object_kv_list "$str"
-        [ -z "$TTL" ] && TTL="$zone_ttl"
-        VALUE=$(echo "$VALUE" |sed -e "s/%quote%/\\'/g")
-        echo -n "$ID,$RECORD,$TYPE,$PRIORITY,\"$VALUE\","
-        echo "$SUSPENDED,$TIME,$DATE,$TTL"
-    done < <(cat $USER_DATA/dns/$domain.conf)
+	IFS=$'\n'
+	echo "ID,RECORD,TYPE,PRIORITY,VALUE,SUSPENDED,TIME,DATE,TTL"
+	while read str; do
+		unset TTL
+		parse_object_kv_list "$str"
+		[ -z "$TTL" ] && TTL="$zone_ttl"
+		VALUE=$(echo "$VALUE" | sed -e "s/%quote%/\\'/g")
+		echo -n "$ID,$RECORD,$TYPE,$PRIORITY,\"$VALUE\","
+		echo "$SUSPENDED,$TIME,$DATE,$TTL"
+	done < <(cat $USER_DATA/dns/$domain.conf)
 }
 
 #----------------------------------------------------------#
@@ -112,12 +112,11 @@ zone_ttl="$(get_object_value 'dns' 'DOMAIN' "$domain" '$TTL')"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t -s '^';;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '^' ;;
 esac
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

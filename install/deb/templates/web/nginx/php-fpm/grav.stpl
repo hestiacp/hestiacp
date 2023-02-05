@@ -26,7 +26,7 @@ server {
         expires     max;
         fastcgi_hide_header "Set-Cookie";
         }
-        
+
         location ~ [^/]\.php(/|$) {
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
             if (!-f $document_root$fastcgi_script_name) {
@@ -42,14 +42,14 @@ server {
     location /error/ {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
-    
+
     location ~* /(\.git|cache|bin|logs|backup|tests)/.*$ { return 403; }
     location ~* /(system|vendor)/.*\.(txt|xml|md|html|yaml|yml|php|pl|py|cgi|twig|sh|bat)$ { return 403; }
     location ~* /user/.*\.(txt|md|yaml|yml|php|pl|py|cgi|twig|sh|bat)$ { return 403; }
     location ~ /(LICENSE\.txt|composer\.lock|composer\.json|nginx\.conf|web\.config|htaccess\.txt|\.htaccess) { return 403; }
-    
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

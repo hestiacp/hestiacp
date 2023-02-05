@@ -1,0 +1,87 @@
+#!/bin/bash
+# info: list default PHP version used by default.tpl
+# options: [FORMAT]
+#
+# example: v-list-default-php
+#
+# List the default version used by de the default template
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+format=${1-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+	i=1
+	objects=$(echo "${versions[@]}" | wc -w)
+	echo '['
+	for version in "${versions[@]}"; do
+		if [ "$i" -lt "$objects" ]; then
+			echo -e "\t\"$version\","
+		else
+			echo -e "\t\"$version\""
+		fi
+		((++i))
+	done
+	echo "]"
+}
+
+# SHELL list function
+shell_list() {
+	echo "VERSION"
+	echo "--------"
+	for version in "${versions[@]}"; do
+		echo "$version"
+	done
+}
+
+# PLAIN list function
+plain_list() {
+	for version in "${versions[@]}"; do
+		echo "$version"
+	done
+}
+
+# CSV list function
+csv_list() {
+	echo "VERSION"
+	for version in "${versions[@]}"; do
+		echo "$version"
+	done
+}
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+declare -a versions
+# List through /etc/php
+for version in /etc/php/*/fpm/pool.d/www.conf; do
+	ver=$(echo "$version" | awk -F"/" '{ print $4 }')
+	versions+=("$ver")
+done
+
+# Listing data
+case $format in
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

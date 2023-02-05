@@ -16,7 +16,6 @@ domain=$2
 restart="$3"
 quiet="$4"
 
-
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -48,23 +47,23 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
 # Check if SSL is enabled
 if [ "$SSL" != 'yes' ]; then
-    echo "Error: SSL is not enabled"
-    exit "$E_NOTEXIST"
+	echo "Error: SSL is not enabled"
+	exit "$E_NOTEXIST"
 fi
 
 # Check if proxy is active
-if [ -n  "$PROXY_SYSTEM" ]; then
-    forcessl="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf"
+if [ -n "$PROXY_SYSTEM" ]; then
+	forcessl="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.forcessl.conf"
 else
-    forcessl="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf"
+	forcessl="$HOMEDIR/$user/conf/web/$domain/$WEB_SYSTEM.forcessl.conf"
 fi
 
 # Insert redirect commands
 if [ -n "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
-    echo 'return 301 https://$host$request_uri;' > $forcessl
+	echo 'return 301 https://$host$request_uri;' > $forcessl
 else
-    echo 'RewriteEngine On' > $forcessl
-    echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
+	echo 'RewriteEngine On' > $forcessl
+	echo 'RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]' >> $forcessl
 fi
 
 chown root:$user $forcessl
@@ -75,7 +74,7 @@ chmod 640 $forcessl
 #----------------------------------------------------------#
 
 if [ -z "$SSL_FORCE" ]; then
-    add_object_key "web" 'DOMAIN' "$domain" 'SSL_FORCE' 'SSL_HOME'
+	add_object_key "web" 'DOMAIN' "$domain" 'SSL_FORCE' 'SSL_HOME'
 fi
 
 # Set forcessl flag to enabled
@@ -91,7 +90,7 @@ check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 if [ "$quiet" != "yes" ]; then
-    $BIN/v-log-action "$user" "Info" "Web" "Automatic HTTPS redirection enabled (Domain: $domain)."
+	$BIN/v-log-action "$user" "Info" "Web" "Automatic HTTPS redirection enabled (Domain: $domain)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

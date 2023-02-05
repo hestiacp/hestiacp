@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # phpmyadmin-fixer
 #
 # Fixes for phpmyadmin (configuration storage and some extended features)
@@ -41,6 +41,7 @@ echo "\$cfg['Servers'][\$i]['tracking'] = 'pma__tracking';" >> $pmapath
 echo "\$cfg['Servers'][\$i]['table_coords'] = 'pma__table_coords';" >> $pmapath
 echo "\$cfg['Servers'][\$i]['pdf_pages'] = 'pma__pdf_pages';" >> $pmapath
 echo "\$cfg['Servers'][\$i]['designer_coords'] = 'pma__designer_coords';" >> $pmapath
+echo "\$cfg['Servers'][\$i]['hide_db'] = 'information_schema';" >> $pmapath
 
 #SOME WORK with DATABASE (table / user)
 PMADB=phpmyadmin
@@ -54,13 +55,13 @@ PMAUSER=pma
 # MYSQL_PMA1
 
 #CREATE PMA USER
-mysql -uroot <<MYSQL_PMA2
+mysql -uroot << MYSQL_PMA2
 CREATE USER '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 CREATE DATABASE $PMADB;
 MYSQL_PMA2
 
 #GRANT PMA USE SOME RIGHTS
-mysql -uroot <<MYSQL_PMA3
+mysql -uroot << MYSQL_PMA3
 USE $PMADB;
 GRANT USAGE ON $PMADB.* TO '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 GRANT ALL PRIVILEGES ON $PMADB.* TO '$PMAUSER'@'localhost';

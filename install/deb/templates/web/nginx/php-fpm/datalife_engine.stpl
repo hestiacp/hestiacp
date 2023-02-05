@@ -116,8 +116,8 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

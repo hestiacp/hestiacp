@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: disable system wide smtp relay support
-# options: 
+# options:
 #
 # example: v-delete-sys-smtp-relay
 #

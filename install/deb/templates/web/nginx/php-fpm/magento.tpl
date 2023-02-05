@@ -18,7 +18,7 @@ server {
     access_log  /var/log/nginx/domains/%domain%.log combined;
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
-        
+
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     # PHP entry point for setup application
@@ -188,8 +188,8 @@ server {
     gzip_vary on;
 
     # Banned locations (only reached if the earlier PHP entry point regexes don't match)
-    location ~ /\.(?!well-known\/) { 
-       deny all; 
+    location ~ /\.(?!well-known\/) {
+       deny all;
        return 404;
     }
 

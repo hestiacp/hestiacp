@@ -1,0 +1,65 @@
+#!/bin/bash
+# info: check user password
+# options: TYPE PASSWORD HASH
+#
+# example: v-check-mail-account-hash ARGONID2 PASS HASH
+#
+# This function verifies email account password hash
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+type=$1
+password=$2
+HIDE=2
+hash=$3
+HIDE=2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'TYPE PASS HASH'
+
+is_password_valid
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ "$type" = "BCRYPT" ]; then
+	match=$(doveadm pw -s BLF-CRYPT -p "$password" -t $hash | grep "verified")
+	if [ -n "$match" ]; then
+		exit 0
+	else
+		echo $match
+		exit 2
+	fi
+elif [ "$type" = "ARGONID2" ]; then
+	match=$(doveadm pw -s ARGON2ID -p "$password" -t $hash | grep "verified")
+	if [ -n "$match" ]; then
+		exit 0
+	else
+		echo $match
+		exit 2
+	fi
+else
+	echo "unsupported hash type."
+	exit 2
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

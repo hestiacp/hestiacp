@@ -39,7 +39,7 @@ is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 check_user=$(is_object_unsuspended 'user' 'USER' "$user")
 if [ -n "$check_user" ]; then
-    exit
+	exit
 fi
 
 # Perform verification if read-only mode is enabled

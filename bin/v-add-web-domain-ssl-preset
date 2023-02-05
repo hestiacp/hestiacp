@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Adding force SSL for a domain
-# options: USER DOMAIN [SSL] 
+# options: USER DOMAIN [SSL]
 #
 # example: v-add-web-domain-ssl-preset
 #
@@ -45,13 +45,13 @@ check_hestia_demo_mode
 # Load domain data
 parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 
-if [  "$ssl" = "yes" ]; then
-    if [ -z "$SSL_FORCE" ]; then
-    add_object_key "web" 'DOMAIN' "$domain" 'SSL_FORCE' 'SSL_HOME'
-    fi
+if [ "$ssl" = "yes" ]; then
+	if [ -z "$SSL_FORCE" ]; then
+		add_object_key "web" 'DOMAIN' "$domain" 'SSL_FORCE' 'SSL_HOME'
+	fi
 
-    # Set forcessl flag to enabled
-    update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'yes'
+	# Set forcessl flag to enabled
+	update_object_value 'web' 'DOMAIN' "$domain" '$SSL_FORCE' 'yes'
 fi
 
 # Logging

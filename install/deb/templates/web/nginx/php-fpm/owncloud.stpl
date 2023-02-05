@@ -42,9 +42,9 @@ server {
     location ~ ^/(?:\data|config|db_structure\.xml|README){
         deny all;
     }
-    
+
     location ~ /\.(?!well-known\/|file) {
-       deny all; 
+       deny all;
        return 404;
     }
 

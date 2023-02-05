@@ -23,8 +23,8 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 json_list() {
-    echo '{'
-    echo '    "'$RULE'": {
+	echo '{'
+	echo '    "'$RULE'": {
         "ACTION": "'$ACTION'",
         "PROTOCOL": "'$PROTOCOL'",
         "PORT": "'$PORT'",
@@ -34,31 +34,31 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "ACTION:         $ACTION"
-    echo "PROTOCOL:       $PROTOCOL"
-    echo "PORT:           $PORT"
-    echo "IP:             $IP"
-    echo "COMMENT:        $COMMENT"
-    echo "SUSPENDED:      $SUSPENDED"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
+	echo "ACTION:         $ACTION"
+	echo "PROTOCOL:       $PROTOCOL"
+	echo "PORT:           $PORT"
+	echo "IP:             $IP"
+	echo "COMMENT:        $COMMENT"
+	echo "SUSPENDED:      $SUSPENDED"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP\t$COMMENT\t"
-    echo -e "$SUSPENDED\t$TIME\t$DATE"
+	echo -ne "$RULE\t$ACTION\t$PROTOCOL\t$PORT\t$IP\t$COMMENT\t"
+	echo -e "$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-    echo "RULE,ACTION,PROTOCOL,PORT,IP,COMMENT,SUSPENDED,TIME,DATE"
-    echo "$RULE,$ACTION,$PROTOCOL,$PORT,$IP,$COMMENT,$SUSPENDED,$TIME,$DATE"
+	echo "RULE,ACTION,PROTOCOL,PORT,IP,COMMENT,SUSPENDED,TIME,DATE"
+	echo "$RULE,$ACTION,$PROTOCOL,$PORT,$IP,$COMMENT,$SUSPENDED,$TIME,$DATE"
 }
 
 #----------------------------------------------------------#
@@ -78,10 +78,10 @@ parse_object_kv_list $(grep "RULE='$rule'" $HESTIA/data/firewall/rules.conf)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

@@ -39,8 +39,8 @@ body:
         - Control Panel Command Line Interface
         - Control Panel Installation or Upgrade
         - Control Panel Web Interface
-        - Backend Web Server (Nginx, Apache2)
-        - Database (MariaDB, PostgreSQL)
+        - (Backend) Web Server (Nginx, Apache2)
+        - Database (MariaDB, MySQL, PostgreSQL)
         - Let's Encrypt SSL
         - Mail (Exim, Dovecot)
         - Mail Security (Antivirus, Antispam)

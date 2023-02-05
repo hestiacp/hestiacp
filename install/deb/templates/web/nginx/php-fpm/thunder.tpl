@@ -19,7 +19,7 @@ server {
         log_not_found off;
         access_log off;
     }
-    
+
     location ~ ^/sites/.*/private/ {
         deny all;
         return 404;
@@ -38,7 +38,7 @@ server {
             expires 30d;
             fastcgi_hide_header "Set-Cookie";
         }
-        
+
         location ~ \..*/.*\.php$ {
             deny all;
             return 404;

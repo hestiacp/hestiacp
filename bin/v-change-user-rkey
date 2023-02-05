@@ -33,11 +33,11 @@ is_object_unsuspended 'user' 'USER' "$user"
 check_hestia_demo_mode
 
 if [ -n "$hash" ]; then
-    password=$hash
-    is_password_valid
-    hash=$password;
+	password=$hash
+	is_password_valid
+	hash=$password
 else
-    hash=$(generate_password)
+	hash=$(generate_password)
 fi
 #----------------------------------------------------------#
 #                       Action                             #
@@ -50,9 +50,9 @@ update_user_value "$user" '$RKEY' "$hash"
 
 #check if RKEYEXP exists
 if [ -z "$(grep RKEYEXP $USER_DATA/user.conf)" ]; then
-    sed -i "s/^RKEY/RKEYEXP='$d'\nRKEY/g" $USER_DATA/user.conf
+	sed -i "s/^RKEY/RKEYEXP='$d'\nRKEY/g" $USER_DATA/user.conf
 else
-    update_user_value "$user" '$RKEYEXP' "$d"
+	update_user_value "$user" '$RKEYEXP' "$d"
 fi
 
 #----------------------------------------------------------#

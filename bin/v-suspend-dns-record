@@ -52,12 +52,12 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-update_object_value "dns/$domain" 'ID' "$id"  '$SUSPENDED' "yes"
+update_object_value "dns/$domain" 'ID' "$id" '$SUSPENDED' "yes"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    update_domain_serial
-    update_domain_zone
+	update_domain_serial
+	update_domain_zone
 fi
 
 #----------------------------------------------------------#

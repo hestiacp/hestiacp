@@ -25,8 +25,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo "{"
-    echo -n '    "'$job'": {
+	echo "{"
+	echo -n '    "'$job'": {
         "MIN": "'$MIN'",
         "HOUR": "'$HOUR'",
         "DAY": "'$DAY'",
@@ -38,31 +38,31 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-    echo
-    echo '}'
+	echo
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "MINUTE:         $MIN"
-    echo "HOUR:           $HOUR"
-    echo "DAY:            $DAY"
-    echo "DAY OF WEEK:    $WDAY"
-    echo "COMMAND:        $CMD"
-    echo "SUSPENDED:      $SUSPENDED"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
+	echo "MINUTE:         $MIN"
+	echo "HOUR:           $HOUR"
+	echo "DAY:            $DAY"
+	echo "DAY OF WEEK:    $WDAY"
+	echo "COMMAND:        $CMD"
+	echo "SUSPENDED:      $SUSPENDED"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -e  "$MIN\t$HOUR\t$DAY\t$WDAY\t$CMD\t$SUSPENDED\t$TIME\t$DATE"
+	echo -e "$MIN\t$HOUR\t$DAY\t$WDAY\t$CMD\t$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-    echo  "MIN,HOUR,DAY,WDAY,CMD,SUSPENDED,TIME,DATE"
-    echo  "$MIN,$HOUR,$DAY,$WDAY,\"$CMD\",$SUSPENDED,$TIME,$DATE'"
+	echo "MIN,HOUR,DAY,WDAY,CMD,SUSPENDED,TIME,DATE"
+	echo "$MIN,$HOUR,$DAY,$WDAY,\"$CMD\",$SUSPENDED,$TIME,$DATE'"
 }
 
 #----------------------------------------------------------#
@@ -71,7 +71,7 @@ csv_list() {
 
 check_args '2' "$#" 'USER JOB [FORMAT]'
 is_format_valid 'user'
-is_number_format_valid  "$job" "job_id"
+is_number_format_valid "$job" "job_id"
 is_object_valid 'user' 'USER' "$user"
 
 #----------------------------------------------------------#
@@ -84,21 +84,21 @@ conf=$USER_DATA/cron.conf
 # Checking job id
 cron_line=$(grep "JOB='$job'" $conf)
 if [ -z "$cron_line" ]; then
-    check_result "$E_NOTEXIST" "cron job $job doesn't exist"
+	check_result "$E_NOTEXIST" "cron job $job doesn't exist"
 fi
 
 # Parsing cron job
 parse_object_kv_list "$cron_line"
 
 # Replacing quoted and backslahed text
-CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+CMD=$(echo "$CMD" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

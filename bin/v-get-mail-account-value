@@ -25,7 +25,6 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 # Additional argument formatting
 format_domain
 format_domain_idn
@@ -41,7 +40,7 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 
-key=$(echo "$key"| tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
+key=$(echo "$key" | tr '[:lower:]' '[:upper:]' | sed "s/^/$/")
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -57,4 +56,4 @@ get_object_value "mail/$domain" 'ACCOUNT' "$account" "$key"
 # Logging
 log_event "$OK" "$ARGUMENTS"
 
-exit 
+exit

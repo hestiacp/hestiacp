@@ -23,7 +23,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{
+	echo '{
     "CONFIG": {
         "pg_hba_path": "'$pg_hba_path'",
         "config_path": "'$config_path'"
@@ -33,19 +33,19 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "config_path:    $config_path"
-    echo "pg_hba_path:    $pg_hba_path"
+	echo "config_path:    $config_path"
+	echo "pg_hba_path:    $pg_hba_path"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -e "$config_path\t$pg_hba_path"
+	echo -e "$config_path\t$pg_hba_path"
 }
 
 # CSV list function
 csv_list() {
-    echo "config_path,pg_hba_path"
-    echo "$config_path,$pg_hba_path"
+	echo "config_path,pg_hba_path"
+	echo "$config_path,$pg_hba_path"
 }
 
 #----------------------------------------------------------#
@@ -54,17 +54,16 @@ csv_list() {
 
 # Defining config path
 config_path=$(find /etc/postgresql /var/lib/pgsql/data -name \
-    postgresql.conf 2>/dev/null)
+	postgresql.conf 2> /dev/null)
 pg_hba_path=$(find /etc/postgresql /var/lib/pgsql/data -name \
-    pg_hba.conf 2>/dev/null)
-
+	pg_hba.conf 2> /dev/null)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

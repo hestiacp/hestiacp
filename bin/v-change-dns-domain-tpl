@@ -26,6 +26,8 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -57,9 +59,9 @@ check_hestia_demo_mode
 get_domain_values 'dns'
 i=1
 ns=$(get_user_value '$NS')
-for nameserver in ${ns//,/ };do
-    eval ns$i=$nameserver
-    (( ++i))
+for nameserver in ${ns//,/ }; do
+	eval ns$i=$nameserver
+	((++i))
 done
 
 # Reading template
@@ -67,82 +69,81 @@ template_data=$(cat "$DNSTPL/$template.tpl")
 
 # Deleting unused nameservers
 if [ -z "$ns3" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns3%)
+	template_data=$(echo "$template_data" | grep -v %ns3%)
 fi
 if [ -z "$ns4" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns4%)
+	template_data=$(echo "$template_data" | grep -v %ns4%)
 fi
 if [ -z "$ns5" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns5%)
+	template_data=$(echo "$template_data" | grep -v %ns5%)
 fi
 if [ -z "$ns6" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns6%)
+	template_data=$(echo "$template_data" | grep -v %ns6%)
 fi
 if [ -z "$ns7" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns7%)
+	template_data=$(echo "$template_data" | grep -v %ns7%)
 fi
 if [ -z "$ns8" ]; then
-    template_data=$(echo "$template_data" |grep -v %ns8%)
+	template_data=$(echo "$template_data" | grep -v %ns8%)
 fi
 
 # Changing tpl
-echo "$template_data" |\
-    sed -e "s/%ip%/$IP/g" \
-        -e "s/%domain_idn%/$domain_idn/g" \
-        -e "s/%domain%/$domain/g" \
-        -e "s/%ns1%/$ns1/g" \
-        -e "s/%ns2%/$ns2/g" \
-        -e "s/%ns3%/$ns3/g" \
-        -e "s/%ns4%/$ns4/g" \
-        -e "s/%ns5%/$ns5/g" \
-        -e "s/%ns6%/$ns6/g" \
-        -e "s/%ns7%/$ns7/g" \
-        -e "s/%ns8%/$ns8/g" \
-        -e "s/%time%/$TIME/g" \
-        -e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
-records="$(wc -l $USER_DATA/dns/$domain.conf |cut -f 1 -d ' ')"
+echo "$template_data" \
+	| sed -e "s/%ip%/$IP/g" \
+		-e "s/%domain_idn%/$domain_idn/g" \
+		-e "s/%domain%/$domain/g" \
+		-e "s/%ns1%/$ns1/g" \
+		-e "s/%ns2%/$ns2/g" \
+		-e "s/%ns3%/$ns3/g" \
+		-e "s/%ns4%/$ns4/g" \
+		-e "s/%ns5%/$ns5/g" \
+		-e "s/%ns6%/$ns6/g" \
+		-e "s/%ns7%/$ns7/g" \
+		-e "s/%ns8%/$ns8/g" \
+		-e "s/%time%/$TIME/g" \
+		-e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')"
 
 # Refresh DKIM records in DNS if signing key exists for domain
 if [ "$template" = "default" ] || [ "$template" = "child-ns" ]; then
-    if [ -n "$MAIL_SYSTEM" ] && [ -f "$HOMEDIR/$user/conf/mail/$domain/dkim.pem" ]; then
-        check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
-        if [ "$?" -eq 0 ]; then
-            p=$(cat "$USER_DATA/mail/$domain.pub" |grep -v ' KEY---'|tr -d '\n')
-            record='_domainkey'
-            policy="\"t=y; o=~;\""
-            $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no'
+	if [ -n "$MAIL_SYSTEM" ] && [ -f "$HOMEDIR/$user/conf/mail/$domain/dkim.pem" ]; then
+		check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
+		if [ "$?" -eq 0 ]; then
+			p=$(cat "$USER_DATA/mail/$domain.pub" | grep -v ' KEY---' | tr -d '\n')
+			record='_domainkey'
+			policy="\"t=y; o=~;\""
+			$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no'
 
-            record='mail._domainkey'
-            selector="\"v=DKIM1\; k=rsa\; p=$p\""
-            $BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector"
-        fi
-    fi
+			record='mail._domainkey'
+			selector="\"v=DKIM1\; k=rsa\; p=$p\""
+			$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector"
+		fi
+	fi
 fi
 
 # Set correct domain name formatting for Office 365/Microsoft 365 MX records
 if [ "$template" = "office365" ]; then
-    check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
-    if [ "$?" -eq 0 ]; then
-        record='@'
-        formatted_domain=$(echo "$domain" | sed 's/\./-/g')
-        $BIN/v-add-dns-record "$user" "$domain" "$record" MX "${formatted_domain}.mail.protection.outlook.com." '0' '' "$restart"
-    fi
+	check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
+	if [ "$?" -eq 0 ]; then
+		record='@'
+		formatted_domain=$(echo "$domain" | sed 's/\./-/g')
+		$BIN/v-add-dns-record "$user" "$domain" "$record" MX "${formatted_domain}.mail.protection.outlook.com." '0' '' "$restart"
+	fi
 fi
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    update_domain_serial
-    update_domain_zone
+	rebuild_dns_domain_conf
 fi
 
 # Updating dns-cluster queue
-if [ ! -z "$DNS_CLUSTER" ]; then
-    # Check for first sync
-    dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
-    if [ -z "$dlock" ]; then
-        cmd="$BIN/v-add-remote-dns-domain $user $domain domain"
-        echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
-    fi
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	# Check for first sync
+	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+	if [ -z "$dlock" ]; then
+		cmd="$BIN/v-add-remote-dns-domain $user $domain domain"
+		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -160,7 +161,7 @@ $BIN/v-update-user-counters "$user"
 
 # Restarting named
 $BIN/v-restart-dns "$restart"
-check_result $? "DNS restart failed" >/dev/null
+check_result $? "DNS restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "system" "Info" "DNS" "Template for DNS domain changed (Template: $template, Domain: $domain)."

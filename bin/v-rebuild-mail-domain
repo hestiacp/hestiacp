@@ -33,9 +33,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Define mail user
 if [ "$MAIL_SYSTEM" = 'exim4' ]; then
-    export MAIL_USER="Debian-exim"
+	export MAIL_USER="Debian-exim"
 else
-    export MAIL_USER="exim"
+	export MAIL_USER="exim"
 fi
 
 #----------------------------------------------------------#
@@ -48,12 +48,12 @@ is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 check_user=$(is_object_unsuspended 'user' 'USER' "$user")
 if [ -n "$check_user" ]; then
-    exit
+	exit
 fi
 is_object_valid 'mail' 'DOMAIN' "$domain"
 
 if [ "$MAIL_SYSTEM" = 'remote' ]; then
-    exit
+	exit
 fi
 
 # Perform verification if read-only mode is enabled
@@ -68,13 +68,13 @@ rebuild_mail_domain_conf
 
 # Rebuild webmail configuration
 if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
-    if [ -n "$IMAP_SYSTEM" ]; then
-        WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
-        if [ -n "$WEBMAIL" ]; then
-            $BIN/v-delete-mail-domain-webmail "$user" "$domain" "$restart" 'yes'
-            $BIN/v-add-mail-domain-webmail "$user" "$domain" "$WEBMAIL" "$restart" 'yes'
-        fi
-    fi
+	if [ -n "$IMAP_SYSTEM" ]; then
+		WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
+		if [ -n "$WEBMAIL" ]; then
+			$BIN/v-delete-mail-domain-webmail "$user" "$domain" "$restart" 'yes'
+			$BIN/v-add-mail-domain-webmail "$user" "$domain" "$WEBMAIL" "$restart" 'yes'
+		fi
+	fi
 fi
 
 #----------------------------------------------------------#

@@ -22,20 +22,20 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(echo "$logs" |wc -l)
-    echo "{"
-    for str in $logs; do
-        DATE=$(echo "$str" |cut -f 2 -d \')
-        TIME=$(echo "$str" |cut -f 4 -d \')
-        IP=$(echo "$str" |cut -f 6 -d \')
-        ACTION=$(echo "$str" |cut -f 8 -d \')
-        STATUS=$(echo "$str" |cut -f 10 -d \')
-        USER_AGENT=$(echo "$str" |cut -f 12 -d \')
-        SESSION=$(echo "$str" |cut -f 14 -d \')
-        ACTIVE=$(echo "$str" |cut -f 16 -d \')
-        echo -n '    "'$i'": {
+	IFS=$'\n'
+	i=1
+	objects=$(echo "$logs" | wc -l)
+	echo "{"
+	for str in $logs; do
+		DATE=$(echo "$str" | cut -f 2 -d \')
+		TIME=$(echo "$str" | cut -f 4 -d \')
+		IP=$(echo "$str" | cut -f 6 -d \')
+		ACTION=$(echo "$str" | cut -f 8 -d \')
+		STATUS=$(echo "$str" | cut -f 10 -d \')
+		USER_AGENT=$(echo "$str" | cut -f 12 -d \')
+		SESSION=$(echo "$str" | cut -f 14 -d \')
+		ACTIVE=$(echo "$str" | cut -f 16 -d \')
+		echo -n '    "'$i'": {
             "DATE": "'$DATE'",
             "TIME": "'$TIME'",
             "IP": "'$IP'",
@@ -45,65 +45,65 @@ json_list() {
             "SESSION": "'$SESSION'",
             "ACTIVE": "'$ACTIVE'"
         }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-        done
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done
+	echo '}'
 }
 
 shell_list() {
-    IFS=$'\n'
-    echo "DATE~TIME~IP~SESSION~ACTIVE~STATUS"
-    echo "----~----~--~-----------~------"
-    for str in $logs; do
-        DATE=$(echo "$str" |cut -f 2 -d \')
-        TIME=$(echo "$str" |cut -f 4 -d \')
-        IP=$(echo "$str" |cut -f 6 -d \')
-        ACTION=$(echo "$str" |cut -f 8 -d \')
-        STATUS=$(echo "$str" |cut -f 10 -d \')
-        USER_AGENT=$(echo "$str" |cut -f 12 -d \')
-        SESSION=$(echo "$str" |cut -f 14 -d \')
-        ACTIVE=$(echo "$str" |cut -f 16 -d \')
-        echo "$DATE~$TIME~$IP~$ACTION~$STATUS~$USER_AGENT~$SESSION~$ACTIVE"
-    done
+	IFS=$'\n'
+	echo "DATE~TIME~IP~SESSION~ACTIVE~STATUS"
+	echo "----~----~--~-----------~------"
+	for str in $logs; do
+		DATE=$(echo "$str" | cut -f 2 -d \')
+		TIME=$(echo "$str" | cut -f 4 -d \')
+		IP=$(echo "$str" | cut -f 6 -d \')
+		ACTION=$(echo "$str" | cut -f 8 -d \')
+		STATUS=$(echo "$str" | cut -f 10 -d \')
+		USER_AGENT=$(echo "$str" | cut -f 12 -d \')
+		SESSION=$(echo "$str" | cut -f 14 -d \')
+		ACTIVE=$(echo "$str" | cut -f 16 -d \')
+		echo "$DATE~$TIME~$IP~$ACTION~$STATUS~$USER_AGENT~$SESSION~$ACTIVE"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    for str in $logs; do
-        DATE=$(echo "$str" |cut -f 2 -d \')
-        TIME=$(echo "$str" |cut -f 4 -d \')
-        IP=$(echo "$str" |cut -f 6 -d \')
-        ACTION=$(echo "$str" |cut -f 8 -d \')
-        STATUS=$(echo "$str" |cut -f 10 -d \')
-        USER_AGENT=$(echo "$str" |cut -f 12 -d \')
-        SESSION=$(echo "$str" |cut -f 14 -d \')
-        ACTIVE=$(echo "$str" |cut -f 16 -d \')
-        echo -e "$DATE\t$TIME\t$IP\t$ACTION\t$STATUS\t$USER_AGENT\t$SESSION\t$ACTIVE"
-    done
+	IFS=$'\n'
+	for str in $logs; do
+		DATE=$(echo "$str" | cut -f 2 -d \')
+		TIME=$(echo "$str" | cut -f 4 -d \')
+		IP=$(echo "$str" | cut -f 6 -d \')
+		ACTION=$(echo "$str" | cut -f 8 -d \')
+		STATUS=$(echo "$str" | cut -f 10 -d \')
+		USER_AGENT=$(echo "$str" | cut -f 12 -d \')
+		SESSION=$(echo "$str" | cut -f 14 -d \')
+		ACTIVE=$(echo "$str" | cut -f 16 -d \')
+		echo -e "$DATE\t$TIME\t$IP\t$ACTION\t$STATUS\t$USER_AGENT\t$SESSION\t$ACTIVE"
+	done
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo "DATE,TIME,IP,ACTION,STATUS,USER_AGENT,SESSION,ACTIVE"
-    for str in $logs; do
-        DATE=$(echo "$str" |cut -f 2 -d \')
-        TIME=$(echo "$str" |cut -f 4 -d \')
-        IP=$(echo "$str" |cut -f 6 -d \')
-        ACTION=$(echo "$str" |cut -f 8 -d \')
-        STATUS=$(echo "$str" |cut -f 10 -d \')
-        USER_AGENT=$(echo "$str" |cut -f 12 -d \')
-        SESSION=$(echo "$str" |cut -f 14 -d \')
-        ACTIVE=$(echo "$str" |cut -f 16 -d \')
-        echo "$DATE,$TIME,$IP,$ACTION,$STATUS,$USER_AGENT,$SESSION,$ACTIVE"
+	IFS=$'\n'
+	echo "DATE,TIME,IP,ACTION,STATUS,USER_AGENT,SESSION,ACTIVE"
+	for str in $logs; do
+		DATE=$(echo "$str" | cut -f 2 -d \')
+		TIME=$(echo "$str" | cut -f 4 -d \')
+		IP=$(echo "$str" | cut -f 6 -d \')
+		ACTION=$(echo "$str" | cut -f 8 -d \')
+		STATUS=$(echo "$str" | cut -f 10 -d \')
+		USER_AGENT=$(echo "$str" | cut -f 12 -d \')
+		SESSION=$(echo "$str" | cut -f 14 -d \')
+		ACTIVE=$(echo "$str" | cut -f 16 -d \')
+		echo "$DATE,$TIME,$IP,$ACTION,$STATUS,$USER_AGENT,$SESSION,$ACTIVE"
 
-    done
+	done
 }
 
 #----------------------------------------------------------#
@@ -114,20 +114,20 @@ check_args '1' "$#" 'USER [FORMAT]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
-check_hestia_demo_mode 
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Parsing history log
-logs=$(tail -n 10 $USER_DATA/auth.log 2>/dev/null)
+logs=$(tail -n 10 $USER_DATA/auth.log 2> /dev/null)
 
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t -s '~';;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '~' ;;
 esac
 
 #----------------------------------------------------------#

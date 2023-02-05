@@ -39,7 +39,7 @@ check_hestia_demo_mode
 
 # Starting delete loop
 for database in $(search_objects 'db' 'SUSPENDED' "no" 'DB'); do
-    $BIN/v-delete-database "$user" "$database"
+	$BIN/v-delete-database "$user" "$database"
 done
 
 #----------------------------------------------------------#

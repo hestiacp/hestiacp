@@ -39,14 +39,14 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ "$user" = 'admin' ] && [ "$mode" = "overall" ]; then
-    log_file="$USER_DATA/overall_stats.log"
+	log_file="$USER_DATA/overall_stats.log"
 else
-    log_file="$USER_DATA/stats.log"
+	log_file="$USER_DATA/stats.log"
 fi
 
 if [ -f "$USER_DATA/stats.log" ]; then
-    rm -f "$log_file"
-    touch "$log_file"
+	rm -f "$log_file"
+	touch "$log_file"
 fi
 
 #----------------------------------------------------------#
@@ -54,7 +54,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$mode" = "overall" ]; then
-    $BIN/v-log-action "system" "Info" "System" "Overall usage statistics deleted."
+	$BIN/v-log-action "system" "Info" "System" "Overall usage statistics deleted."
 else
-    $BIN/v-log-action "system" "Info" "System" "Usage statistics deleted (User: $user)."
+	$BIN/v-log-action "system" "Info" "System" "Usage statistics deleted (User: $user)."
 fi

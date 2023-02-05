@@ -22,100 +22,100 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    i=1
-    echo "{"
+	i=1
+	echo "{"
 
-    # Generating timestamp
-    new_timestamp
+	# Generating timestamp
+	new_timestamp
 
-    for type in $rrd_types; do
-        for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
-            if [ "$i" -ne 1 ]; then
-                echo -e "\t},"
-            fi
-            if [ "$type" = 'la' ]; then
-                title="Load Average"
-            fi
-            if [ "$type" = 'mem' ]; then
-                title="Memory Usage"
-            fi
-            if [ "$type" = 'net' ]; then
-                title="Bandwidth Usage $rrd"
-            fi
-            if [ "$type" = 'web' ] || [ "$type" = 'ftp' ] ||\
-               [ "$type" = 'ssh' ]; then
-                title="$(echo $rrd| tr '[:lower:]' '[:upper:]') Usage"
-            fi
-            if [ "$type" = 'mail' ]; then
-                title="Exim Usage"
-            fi
-            if [ "$type" = 'db' ]; then
-                db_type=$(echo $rrd|cut -f 1 -d _ |sed -e 's/mysql/MySQL/g' \
-                    -e 's/pgsql/PostgreSQL/g' )
-                db_host=$(echo $rrd|cut -f 2 -d _ )
-                title="$db_type Usage on $db_host"
-            fi
-            echo -e "\t\"$i\": {"
-            echo -e "\t\t\"TYPE\": \"$type\"",
-            echo -e "\t\t\"RRD\": \"$rrd\"",
-            echo -e "\t\t\"TITLE\": \"$title\","
-            echo -e "\t\t\"TIME\": \"$TIME\","
-            echo -e "\t\t\"DATE\": \"$DATE\""
-            (( ++i))
-        done
-    done
-    if [ "$i" -gt 1 ]; then
-        echo -e "\t}"
-    fi
-    echo "}"
+	for type in $rrd_types; do
+		for rrd in $(ls $RRD/$type | grep rrd$ | sed "s/\.rrd$//g"); do
+			if [ "$i" -ne 1 ]; then
+				echo -e "\t},"
+			fi
+			if [ "$type" = 'la' ]; then
+				title="Load Average"
+			fi
+			if [ "$type" = 'mem' ]; then
+				title="Memory Usage"
+			fi
+			if [ "$type" = 'net' ]; then
+				title="Bandwidth Usage $rrd"
+			fi
+			if [ "$type" = 'web' ] || [ "$type" = 'ftp' ] \
+				|| [ "$type" = 'ssh' ]; then
+				title="$(echo $rrd | tr '[:lower:]' '[:upper:]') Usage"
+			fi
+			if [ "$type" = 'mail' ]; then
+				title="Exim Usage"
+			fi
+			if [ "$type" = 'db' ]; then
+				db_type=$(echo $rrd | cut -f 1 -d _ | sed -e 's/mysql/MySQL/g' \
+					-e 's/pgsql/PostgreSQL/g')
+				db_host=$(echo $rrd | cut -f 2 -d _)
+				title="$db_type Usage on $db_host"
+			fi
+			echo -e "\t\"$i\": {"
+			echo -e "\t\t\"TYPE\": \"$type\"",
+			echo -e "\t\t\"RRD\": \"$rrd\"",
+			echo -e "\t\t\"TITLE\": \"$title\","
+			echo -e "\t\t\"TIME\": \"$TIME\","
+			echo -e "\t\t\"DATE\": \"$DATE\""
+			((++i))
+		done
+	done
+	if [ "$i" -gt 1 ]; then
+		echo -e "\t}"
+	fi
+	echo "}"
 }
 
 # SHELL list function
 shell_list() {
-       echo "TYPE   VAL_1   VAL_2   VAL_3   TIME   DATE"
-       echo "----   -----   -----   -----   ----   ----"
-    for type in $rrd_types; do
-        for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
-            rrd_type=$(echo  "$rrd" |tr '[:lower:]' '[:upper:]')
-            rrd_data=$(rrdtool fetch "$RRD/$type/$rrd.rrd" AVERAGE -e 0 -s 0)
-            rrd_data=$(echo "$rrd_data" |tail -n 1)
-            rrd_timestamp=$(echo "$rrd_data" |cut -f 1 -d :)
-            rrd_time=$(date -d "@$rrd_timestamp" +%F)
-            rrd_date=$(date -d "@$rrd_timestamp" +%T)
-            rrd_val1=$(echo "$rrd_data" |awk '{print $2}' |cut -d. -f1)
-            rrd_val2=$(echo "$rrd_data" |awk '{print $3}' |cut -d. -f1)
-            rrd_val3=$(echo "$rrd_data" |awk '{print $4}' |cut -d. -f1)
-            if [ -z "$rrd_val1" ]; then
-                rrd_val1="-nan"
-            fi
-            if [ -z "$rrd_val2" ]; then
-                rrd_val2="-nan"
-            fi
-            if [ -z "$rrd_val3" ]; then
-                rrd_val3="-nan"
-            fi
-            echo "$rrd_type $rrd_val1 $rrd_val2 $rrd_val3 $rrd_time $rrd_date"
-        done
-    done
+	echo "TYPE   VAL_1   VAL_2   VAL_3   TIME   DATE"
+	echo "----   -----   -----   -----   ----   ----"
+	for type in $rrd_types; do
+		for rrd in $(ls $RRD/$type | grep rrd$ | sed "s/\.rrd$//g"); do
+			rrd_type=$(echo "$rrd" | tr '[:lower:]' '[:upper:]')
+			rrd_data=$(rrdtool fetch "$RRD/$type/$rrd.rrd" AVERAGE -e 0 -s 0)
+			rrd_data=$(echo "$rrd_data" | tail -n 1)
+			rrd_timestamp=$(echo "$rrd_data" | cut -f 1 -d :)
+			rrd_time=$(date -d "@$rrd_timestamp" +%F)
+			rrd_date=$(date -d "@$rrd_timestamp" +%T)
+			rrd_val1=$(echo "$rrd_data" | awk '{print $2}' | cut -d. -f1)
+			rrd_val2=$(echo "$rrd_data" | awk '{print $3}' | cut -d. -f1)
+			rrd_val3=$(echo "$rrd_data" | awk '{print $4}' | cut -d. -f1)
+			if [ -z "$rrd_val1" ]; then
+				rrd_val1="-nan"
+			fi
+			if [ -z "$rrd_val2" ]; then
+				rrd_val2="-nan"
+			fi
+			if [ -z "$rrd_val3" ]; then
+				rrd_val3="-nan"
+			fi
+			echo "$rrd_type $rrd_val1 $rrd_val2 $rrd_val3 $rrd_time $rrd_date"
+		done
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    for type in $rrd_types; do
-        for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
-            echo "$RRD/$type/$rrd.rrd"
-        done
-    done
+	for type in $rrd_types; do
+		for rrd in $(ls $RRD/$type | grep rrd$ | sed "s/\.rrd$//g"); do
+			echo "$RRD/$type/$rrd.rrd"
+		done
+	done
 }
 
 # CSV list function
 csv_list() {
-    for type in $rrd_types; do
-        echo "RRD"
-        for rrd in $(ls $RRD/$type |grep rrd$ |sed "s/\.rrd$//g"); do
-            echo "$RRD/$type/$rrd.rrd"
-        done
-    done
+	for type in $rrd_types; do
+		echo "RRD"
+		for rrd in $(ls $RRD/$type | grep rrd$ | sed "s/\.rrd$//g"); do
+			echo "$RRD/$type/$rrd.rrd"
+		done
+	done
 }
 
 #----------------------------------------------------------#
@@ -127,22 +127,22 @@ rrd_types="la mem net"
 
 # Checking web system
 if [ -n "$WEB_SYSTEM" ]; then
-    rrd_types="$rrd_types web"
+	rrd_types="$rrd_types web"
 fi
 
 # Checking mail system
 if [ -n "$MAIL_SYSTEM" ]; then
-    rrd_types="$rrd_types mail"
+	rrd_types="$rrd_types mail"
 fi
 
 # Checking db system
 if [ -n "$DB_SYSTEM" ]; then
-    rrd_types="$rrd_types db"
+	rrd_types="$rrd_types db"
 fi
 
 # Checking ftp system
 if [ -n "$FTP_SYSTEM" ]; then
-    rrd_types="$rrd_types ftp"
+	rrd_types="$rrd_types ftp"
 fi
 
 # Adding ssh
@@ -150,10 +150,10 @@ rrd_types="$rrd_types ssh"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

@@ -21,15 +21,14 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-
 # Retrieve Hestia Control Panel version number
 HESTIA_VERSION=$(grep VERSION $HESTIA/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
 HESTIA_RELEASE=$(grep RELEASE_BRANCH $HESTIA/conf/hestia.conf | cut -d '=' -f2 | sed "s|'||g")
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo '    "sysinfo": {
+	echo '{'
+	echo '    "sysinfo": {
         "HOSTNAME": "'$HOSTNAME'",
         "OS": "'$OS'",
         "VERSION": "'$VERSION'",
@@ -39,25 +38,25 @@ json_list() {
         "UPTIME": "'$UPTIME'",
         "LOADAVERAGE": "'$LOADAVERAGE'"
         }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "HOSTNAME   OS   VER   ARCH  HESTIA  RELEASE  UPTIME   LA"
-    echo "--------   --   ---   ----  ------  -------  ------   --"
-    echo "$HOSTNAME $OS $VERSION $ARCH $HESTIA_VERSION $HESTIA_RELEASE $UPTIME $LOADAVERAGE"
+	echo "HOSTNAME   OS   VER   ARCH  HESTIA  RELEASE  UPTIME   LA"
+	echo "--------   --   ---   ----  ------  -------  ------   --"
+	echo "$HOSTNAME $OS $VERSION $ARCH $HESTIA_VERSION $HESTIA_RELEASE $UPTIME $LOADAVERAGE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -e "$HOSTNAME\t$OS\t$VERSION\t$ARCH\t$HESTIA_VERSION\t$HESTIA_RELEASE\t$UPTIME\t$LOADAVERAGE"
+	echo -e "$HOSTNAME\t$OS\t$VERSION\t$ARCH\t$HESTIA_VERSION\t$HESTIA_RELEASE\t$UPTIME\t$LOADAVERAGE"
 }
 
 # CSV list function
 csv_list() {
-    echo "HOSTNAME,OS,VERSION,ARCH,HESTIA,RELEASE,UPTIME,LOADAVERAGE"
-    echo "$HOSTNAME,$OS,$VERSION,$ARCH,$HESTIA_VERSION,$HESTIA_RELEASE,$UPTIME,$LOADAVERAGE"
+	echo "HOSTNAME,OS,VERSION,ARCH,HESTIA,RELEASE,UPTIME,LOADAVERAGE"
+	echo "$HOSTNAME,$OS,$VERSION,$ARCH,$HESTIA_VERSION,$HESTIA_RELEASE,$UPTIME,$LOADAVERAGE"
 }
 
 #----------------------------------------------------------#
@@ -69,45 +68,45 @@ HOSTNAME=$(hostname)
 
 # Check OS/Release
 if [ -d '/etc/sysconfig' ]; then
-    if [ -e '/etc/redhat-release' ]; then
-        OS='CentOS'
-        VERSION=$(cat /etc/redhat-release |tr ' ' '\n' |grep [0-9])
-    else
-        OS="Amazon"
-        VERSION=$(cat /etc/issue |tr ' ' '\n' |grep [0-9])
-    fi
+	if [ -e '/etc/redhat-release' ]; then
+		OS='CentOS'
+		VERSION=$(cat /etc/redhat-release | tr ' ' '\n' | grep [0-9])
+	else
+		OS="Amazon"
+		VERSION=$(cat /etc/issue | tr ' ' '\n' | grep [0-9])
+	fi
 else
-    if [ "$(lsb_release -si)" == "Ubuntu" ] && [ -e '/etc/debian_version' ]; then
-        OS="Ubuntu"
-        VERSION=$(grep DISTRIB_RELEASE /etc/lsb-release |cut -f 2 -d '=')
-    else
-        distro=$(head -n1 /etc/issue |cut -f 1 -d ' ')
-        if [ "$distro" = 'Debian' ]; then
-            OS="Debian"
-            VERSION=$(cat /etc/debian_version)
-        else
-            OS='UNKNOWN'
-            VERSION='UNKNOWN'
-        fi
-    fi
+	if [ "$(lsb_release -si)" == "Ubuntu" ] && [ -e '/etc/debian_version' ]; then
+		OS="Ubuntu"
+		VERSION=$(grep DISTRIB_RELEASE /etc/lsb-release | cut -f 2 -d '=')
+	else
+		distro=$(head -n1 /etc/issue | cut -f 1 -d ' ')
+		if [ "$distro" = 'Debian' ]; then
+			OS="Debian"
+			VERSION=$(cat /etc/debian_version)
+		else
+			OS='UNKNOWN'
+			VERSION='UNKNOWN'
+		fi
+	fi
 fi
 
 # Check architecture
 ARCH=$(arch)
 
 # Check uptime
-UPTIME=$(cat /proc/uptime |cut -f 1 -d ' '|cut -f 1 -d .)
-UPTIME="$(echo $UPTIME / 60 |bc)"
+UPTIME=$(cat /proc/uptime | cut -f 1 -d ' ' | cut -f 1 -d .)
+UPTIME="$(echo $UPTIME / 60 | bc)"
 
 # Check LoadAverage
-LOADAVERAGE=$(cat /proc/loadavg |cut -f 1 -d ' ')
+LOADAVERAGE=$(cat /proc/loadavg | cut -f 1 -d ' ')
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

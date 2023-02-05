@@ -40,7 +40,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-suspended=$(grep "JOB='$job'" $USER_DATA/cron.conf |grep "SUSPENDED='yes'")
+suspended=$(grep "JOB='$job'" $USER_DATA/cron.conf | grep "SUSPENDED='yes'")
 # Deleting job
 sed -i "/JOB='$job' /d" $USER_DATA/cron.conf
 
@@ -59,12 +59,12 @@ decrease_user_value "$user" '$U_CRON_JOBS'
 
 # Check if is suspended to decrease the suspended value
 if [ -n "$suspended" ]; then
-    decrease_user_value "$user" '$SUSPENDED_CRON'
+	decrease_user_value "$user" '$SUSPENDED_CRON'
 fi
 
 # Restarting cron
 $BIN/v-restart-cron "$restart"
-check_result $? "Restart restart failed" >/dev/null
+check_result $? "Restart restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Cron Jobs" "Cron job deleted (ID: $job)."

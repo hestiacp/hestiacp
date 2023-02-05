@@ -24,15 +24,15 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(grep NID $USER_DATA/notifications.conf |wc -l)
-    echo "{"
-    while read str; do
-        parse_object_kv_list "$str"
-        TOPIC=$(echo "$TOPIC" |sed -e "s/%quote%/'/g")
-        NOTICE=$(echo "$NOTICE" |sed -e "s/%quote%/'/g")
-        echo -n '    "'$NID'": {
+	IFS=$'\n'
+	i=1
+	objects=$(grep NID $USER_DATA/notifications.conf | wc -l)
+	echo "{"
+	while read str; do
+		parse_object_kv_list "$str"
+		TOPIC=$(echo "$TOPIC" | sed -e "s/%quote%/'/g")
+		NOTICE=$(echo "$NOTICE" | sed -e "s/%quote%/'/g")
+		echo -n '    "'$NID'": {
         "TOPIC": "'$TOPIC'",
         "NOTICE": "'${NOTICE//\"/\'}'",
         "TYPE": "'$TYPE'",
@@ -41,50 +41,50 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done < <(cat $USER_DATA/notifications.conf)
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < <(cat $USER_DATA/notifications.conf)
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    while read str; do
-        parse_object_kv_list "$str"
-        echo "$TOPIC" |sed -e "s/%quote%/'/g"
-        echo "$NOTICE" |sed -e "s/%quote%/'/g"
-        echo "$DATE $TIME"
-        echo "--"
-        echo
-    done < <(cat $USER_DATA/notifications.conf)
+	IFS=$'\n'
+	while read str; do
+		parse_object_kv_list "$str"
+		echo "$TOPIC" | sed -e "s/%quote%/'/g"
+		echo "$NOTICE" | sed -e "s/%quote%/'/g"
+		echo "$DATE $TIME"
+		echo "--"
+		echo
+	done < <(cat $USER_DATA/notifications.conf)
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    while read str; do
-        parse_object_kv_list "$str"
-        TOPIC=$(echo "$TOPIC" |sed -e "s/%quote%/'/g")
-        NOTICE=$(echo "$NOTICE" |sed -e "s/%quote%/'/g")
-        echo -e "$NID\t$TOPIC\t$NOTICE\t$TIME\t$DATE"
-    done < <(cat $USER_DATA/notifications.conf)
+	IFS=$'\n'
+	while read str; do
+		parse_object_kv_list "$str"
+		TOPIC=$(echo "$TOPIC" | sed -e "s/%quote%/'/g")
+		NOTICE=$(echo "$NOTICE" | sed -e "s/%quote%/'/g")
+		echo -e "$NID\t$TOPIC\t$NOTICE\t$TIME\t$DATE"
+	done < <(cat $USER_DATA/notifications.conf)
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo "NID,TOPIC,NOTICE,ACK,TIME,DATE"
-    while read str; do
-        parse_object_kv_list "$str"
-        TOPIC=$(echo "$TOPIC" |sed -e "s/%quote%/'/g")
-        NOTICE=$(echo "$NOTICE" |sed -e "s/%quote%/'/g")
-        echo "$NID,\"$TOPIC\",\"$NOTICE\",$ACK,$TIME,$DATE"
-    done < <(cat $USER_DATA/notifications.conf)
+	IFS=$'\n'
+	echo "NID,TOPIC,NOTICE,ACK,TIME,DATE"
+	while read str; do
+		parse_object_kv_list "$str"
+		TOPIC=$(echo "$TOPIC" | sed -e "s/%quote%/'/g")
+		NOTICE=$(echo "$NOTICE" | sed -e "s/%quote%/'/g")
+		echo "$NID,\"$TOPIC\",\"$NOTICE\",$ACK,$TIME,$DATE"
+	done < <(cat $USER_DATA/notifications.conf)
 }
 
 #----------------------------------------------------------#
@@ -102,10 +102,10 @@ is_object_valid 'user' 'USER' "$user"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

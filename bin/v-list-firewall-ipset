@@ -35,14 +35,14 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(grep LISTNAME $HESTIA/data/firewall/ipset.conf |wc -l)
-    echo "{"
-    while read str; do
-        [[ -z "$str" ]] && continue;
-        parse_object_kv_list "$str"
-        echo -n '    "'$LISTNAME'": {
+	IFS=$'\n'
+	i=1
+	objects=$(grep LISTNAME $HESTIA/data/firewall/ipset.conf | wc -l)
+	echo "{"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -n '    "'$LISTNAME'": {
         "IP_VERSION": "'$IP_VERSION'",
         "AUTOUPDATE": "'$AUTOUPDATE'",
         "SUSPENDED": "'$SUSPENDED'",
@@ -50,55 +50,55 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-    [[ "$i" -lt "$objects" ]] && echo ',' || echo
-    ((i++))
-    done < <(cat $HESTIA/data/firewall/ipset.conf)
-    echo '}'
+		[[ "$i" -lt "$objects" ]] && echo ',' || echo
+		((i++))
+	done < <(cat $HESTIA/data/firewall/ipset.conf)
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    echo "LISTNAME^IP_VERSION^AUTOUPDATE^SUSPENDED^SOURCE^TIME^DATE"
-    echo "----^------^-----^----^--^----^----"
-    while read str; do
-        [[ -z "$str" ]] && continue;
-        parse_object_kv_list "$str"
-        echo "$LISTNAME^$IP_VERSION^$AUTOUPDATE^$SUSPENDED^$SOURCE^$TIME^$DATE"
-    done < <(cat $HESTIA/data/firewall/ipset.conf)
+	IFS=$'\n'
+	echo "LISTNAME^IP_VERSION^AUTOUPDATE^SUSPENDED^SOURCE^TIME^DATE"
+	echo "----^------^-----^----^--^----^----"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo "$LISTNAME^$IP_VERSION^$AUTOUPDATE^$SUSPENDED^$SOURCE^$TIME^$DATE"
+	done < <(cat $HESTIA/data/firewall/ipset.conf)
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    while read str; do
-        [[ -z "$str" ]] && continue;
-        parse_object_kv_list "$str"
-        echo -ne "$LISTNAME\t$IP_VERSION\t$AUTOUPDATE\t$SUSPENDED\t$SOURCE\t"
-        echo -e "$TIME\t$DATE"
-    done < <(cat $HESTIA/data/firewall/ipset.conf)
+	IFS=$'\n'
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -ne "$LISTNAME\t$IP_VERSION\t$AUTOUPDATE\t$SUSPENDED\t$SOURCE\t"
+		echo -e "$TIME\t$DATE"
+	done < <(cat $HESTIA/data/firewall/ipset.conf)
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo "LISTNAME,IP_VERSION,AUTOUPDATE,SUSPENDED,SOURCE,SUSPENDED,TIME,DATE"
-    while read str; do
-        [[ -z "$str" ]] && continue;
-        parse_object_kv_list "$str"
-        echo -n "$LISTNAME,$IP_VERSION,$AUTOUPDATE,$SUSPENDED,\"$SOURCE\","
-        echo "$TIME,$DATE"
-    done < <(cat $HESTIA/data/firewall/ipset.conf)
+	IFS=$'\n'
+	echo "LISTNAME,IP_VERSION,AUTOUPDATE,SUSPENDED,SOURCE,SUSPENDED,TIME,DATE"
+	while read str; do
+		[[ -z "$str" ]] && continue
+		parse_object_kv_list "$str"
+		echo -n "$LISTNAME,$IP_VERSION,$AUTOUPDATE,$SUSPENDED,\"$SOURCE\","
+		echo "$TIME,$DATE"
+	done < <(cat $HESTIA/data/firewall/ipset.conf)
 }
 
 [ ! -f "$HESTIA/data/firewall/ipset.conf" ] && touch "$HESTIA/data/firewall/ipset.conf"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t -s '^' ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '^' ;;
 esac
 
 #----------------------------------------------------------#

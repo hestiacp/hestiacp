@@ -41,8 +41,8 @@ source $USER_DATA/user.conf
 
 # Check if 2FA is already enabled
 if [ -n "$TWOFA" ]; then
-    echo "Error: 2FA already enabled"
-    exit "$E_EXIST"
+	echo "Error: 2FA already enabled"
+	exit "$E_EXISTS"
 fi
 
 # Get secret and qr code from 2fa libary

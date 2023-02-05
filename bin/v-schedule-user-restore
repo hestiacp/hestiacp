@@ -49,9 +49,7 @@ check_hestia_demo_mode
 # Adding restore task to  the queue
 log=$HESTIA/log/restore.log
 options="'$web' '$dns' '$mail' '$db' '$cron' '$udir'"
-echo "$BIN/v-restore-user $user $backup $options  yes >> $log 2>&1" >>\
-    $HESTIA/data/queue/backup.pipe
-
+echo "$BIN/v-restore-user $user $backup $options  yes >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
 
 #----------------------------------------------------------#
 #                       Hestia                             #

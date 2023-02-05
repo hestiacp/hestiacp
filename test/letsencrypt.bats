@@ -33,13 +33,25 @@ function setup() {
 }
 
 @test "[ Web ] Create web domain" {
-    run v-add-web-domain $user $domain $ip yes "www.$domain,renewal.$domain"
+    run v-add-web-domain $user $domain $ip yes "www.$domain,renewal.$domain,foobar.$domain,bar.$domain"
+    assert_success
+    refute_output
+}
+
+@test "[ Web ] Create 2nd web domain" {
+    run v-add-web-domain $user "hestia.$domain" $ip yes
     assert_success
     refute_output
 }
 
 @test "[ Web ] Request new certificate for web domain" {
-    run v-add-letsencrypt-domain $user $domain "www.$domain,renewal.$domain"
+    run v-add-letsencrypt-domain $user $domain "www.$domain,renewal.$domain,foobar.$domain,bar.$domain"
+    assert_success
+    refute_output
+}
+
+@test "[ Web ] Request 2nd new certificate for web domain" {
+    run v-add-letsencrypt-domain $user "hestia.$domain"
     assert_success
     refute_output
 }
@@ -62,6 +74,18 @@ function setup() {
     refute_output
 }
 
+@test "[ All ] Remove alias and update ssl" {
+    run v-delete-web-domain-alias $user $domain bar.$domain
+    assert_success
+    refute_output
+
+    run v-update-letsencrypt-ssl
+    assert_success
+    refute_output
+
+}
+
+
 @test [ Web ] Delete web ssl" {
     run v-delete-letsencrypt-domain $user $domain "yes"
     assert_success
@@ -81,7 +105,7 @@ function setup() {
 }
 
 @test "[ Redirect ] Create web domain" {
-    run v-add-web-domain $user "redirect.$domain" $ip yes 
+    run v-add-web-domain $user "redirect.$domain" $ip yes
     assert_success
     refute_output
 }

@@ -39,7 +39,7 @@ check_hestia_demo_mode
 
 # Unsuspendning jobs
 for job in $(search_objects 'cron' 'SUSPENDED' 'yes' 'JOB'); do
-    $BIN/v-unsuspend-cron-job "$user" "$job" 'no'
+	$BIN/v-unsuspend-cron-job "$user" "$job" 'no'
 done
 
 #----------------------------------------------------------#
@@ -48,7 +48,7 @@ done
 
 # Restarting crond
 $BIN/v-restart-cron "$restart"
-check_result $? "Cron restart failed" >/dev/null
+check_result $? "Cron restart failed" > /dev/null
 
 # Logging
 log_event "$OK" "$ARGUMENTS"

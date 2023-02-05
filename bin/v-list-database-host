@@ -27,8 +27,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo '    "'$HOST'": {
+	echo '{'
+	echo '    "'$HOST'": {
         "HOST": "'$HOST'",
         "PORT": "'$PORT'",
         "TYPE": "'$type'",
@@ -41,44 +41,44 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "HOST:           $HOST"
-    echo "PORT:           $PORT"
-    echo "TYPE:           $type"
-    echo "CHARSETS:       $CHARSETS"
-    echo "MAX_DB:         $MAX_DB"
-    echo "U_DB_BASES:     $U_DB_BASES"
-    echo "U_SYS_USERS:    $U_SYS_USERS"
-    echo "TPL:            $TPL"
-    echo "SUSPENDED:      $SUSPENDED"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
+	echo "HOST:           $HOST"
+	echo "PORT:           $PORT"
+	echo "TYPE:           $type"
+	echo "CHARSETS:       $CHARSETS"
+	echo "MAX_DB:         $MAX_DB"
+	echo "U_DB_BASES:     $U_DB_BASES"
+	echo "U_SYS_USERS:    $U_SYS_USERS"
+	echo "TPL:            $TPL"
+	echo "SUSPENDED:      $SUSPENDED"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$HOST\t$PORT\t$type\t$CHARSETS\t$MAX_DB\t$U_SYS_USERS\t"
-    echo -e "$U_DB_BASES\t$TPL\t$SUSPENDED\t$TIME\t$DATE"
+	echo -ne "$HOST\t$PORT\t$type\t$CHARSETS\t$MAX_DB\t$U_SYS_USERS\t"
+	echo -e "$U_DB_BASES\t$TPL\t$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-    echo -n "HOST,PORT,TYPE,CHARSETS,MAX_DB,U_SYS_USERS,"
-    echo "U_DB_BASES,TPL,SUSPENDED,TIME,DATE'"
-    echo -n "$HOST,$PORT,$type,\"$CHARSETS\",$MAX_DB,\"$U_SYS_USERS\","
-    echo "$U_DB_BASES,$TPL,$SUSPENDED,$TIME,$DATE"
+	echo -n "HOST,PORT,TYPE,CHARSETS,MAX_DB,U_SYS_USERS,"
+	echo "U_DB_BASES,TPL,SUSPENDED,TIME,DATE'"
+	echo -n "$HOST,$PORT,$type,\"$CHARSETS\",$MAX_DB,\"$U_SYS_USERS\","
+	echo "$U_DB_BASES,$TPL,$SUSPENDED,$TIME,$DATE"
 }
 
 # Type format validator
 is_type_format_valid() {
-    exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
-    if [[ "$1" =~ $exclude ]]; then
-        check_result "$E_INVALID" "invalid type extention format :: $1"
-    fi
+	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
+	if [[ "$1" =~ $exclude ]]; then
+		check_result "$E_INVALID" "invalid type extention format :: $1"
+	fi
 }
 
 #----------------------------------------------------------#
@@ -102,10 +102,10 @@ parse_object_kv_list $(grep "HOST='$host'" $HESTIA/conf/$type.conf)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

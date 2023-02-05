@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Purge nginx cache
-# options: USER DOMAINå
+# options: USER DOMAIN
 #
 # example: v-purge-nginx-cache user domain.tld
 #
@@ -13,6 +13,7 @@
 # Argument definition
 user=$1
 domain=$2
+restart=$3
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -28,8 +29,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER DOMAIN'
-is_format_valid 'user' 'domain'
+check_args '2' "$#" 'USER DOMAIN [RESTART]'
+is_format_valid 'user' 'domain' 'restart'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
@@ -43,17 +44,17 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-conf=$(grep "DOMAIN='$domain'" "$USER_DATA/web.conf");
+conf=$(grep "DOMAIN='$domain'" "$USER_DATA/web.conf")
 parse_object_kv_list "$conf"
 
 # Purge nginx FastCGI cache
 if [ -d "/var/cache/nginx/micro/$domain" ]; then
-    rm -rf /var/cache/nginx/micro/$domain
+	rm -rf /var/cache/nginx/micro/$domain/*
 fi
 
 # Purge nginx proxy cache
 if [ -d "/var/cache/nginx/$domain" ]; then
-    rm -rf /var/cache/nginx/$domain
+	rm -rf /var/cache/nginx/$domain/*
 fi
 
 #----------------------------------------------------------#
@@ -61,9 +62,13 @@ fi
 #----------------------------------------------------------#
 
 # Restart services if requested
-if [ -n "$restart" ]; then
-    $BIN/v-restart-web "$restart"
-    check_result $? "Web restart failed" > /dev/null
+if [ "$restart" != "no" ]; then
+	$BIN/v-restart-web "$restart"
+	check_result $? "Web restart failed" > /dev/null
+
+	$BIN/v-restart-proxy "$restart"
+	check_result $? "Proxy restart failed" > /dev/null
+
 fi
 
 # Logging

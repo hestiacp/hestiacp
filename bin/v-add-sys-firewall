@@ -23,7 +23,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 if [ "$FIREWALL_SYSTEM" = 'iptables' ]; then
-    exit
+	exit
 fi
 
 # Perform verification if read-only mode is enabled
@@ -34,8 +34,8 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Adding default ruleset
-if [ -z "$(ls -A $HESTIA/data/firewall 2>/dev/null)" ]; then
-    cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
+if [ -z "$(ls -A $HESTIA/data/firewall 2> /dev/null)" ]; then
+	cp -rf $HESTIA_INSTALL_DIR/firewall $HESTIA/data/
 fi
 
 # Updating FIREWAL_SYSTEM value

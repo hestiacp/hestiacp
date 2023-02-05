@@ -54,23 +54,23 @@ bytes=0
 
 # Parsing log
 while read line; do
-    if  [[ "$line" =~ ^[0-9]+$ ]]; then
-        line=${line#0}
-        if [ -n "$line" ]; then
-            bytes=$(($bytes + $line))
-        fi
-    fi
+	if [[ "$line" =~ ^[0-9]+$ ]]; then
+		line=${line#0}
+		if [ -n "$line" ]; then
+			bytes=$(($bytes + $line))
+		fi
+	fi
 done < $log_file
 
 # Converting to Mb
-mb=$(echo "$bytes / 1024 / 1024"|bc)
+mb=$(echo "$bytes / 1024 / 1024" | bc)
 
 # Nulling log
 echo > $log_file
 
 # Reset counter on the start of the month
 if [ "$(date +%d)" = '01' ]; then
-    update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' '0'
+	update_object_value 'web' 'DOMAIN' "$domain" '$U_BANDWIDTH' '0'
 fi
 
 # Parsing old value

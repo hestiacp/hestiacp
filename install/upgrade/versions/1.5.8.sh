@@ -26,8 +26,8 @@ mkdir -p /root/.gnupg/ && chmod 700 /root/.gnupg/
 
 echo "[ * ] Ensure jail is enabled for sftp or ftp users..."
 shells="rssh|nologin"
-for user in $(grep "$HOMEDIR" /etc/passwd |egrep "$shells" |cut -f 1 -d:); do
-    if [ -d "$HESTIA/data/users/$user" ]; then
-        $BIN/v-add-user-sftp-jail "$user" "no" > /dev/null 2>&1
-    fi
+for user in $(grep "$HOMEDIR" /etc/passwd | egrep "$shells" | cut -f 1 -d:); do
+	if [ -d "$HESTIA/data/users/$user" ]; then
+		$BIN/v-add-user-sftp-jail "$user" "no" > /dev/null 2>&1
+	fi
 done

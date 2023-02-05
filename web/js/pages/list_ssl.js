@@ -1,30 +1,14 @@
-function saveTextToBlob ( file, element ){
-    text = document.getElementById(element).value;
-    var textFileAsBlob = new Blob([text], {type:'text/plain'}); 
-    var downloadLink = document.createElement("a");
-    downloadLink.download = file;
-    downloadLink.innerHTML = "Download File";
-    if (window.webkitURL != null)
-    {
-        // Chrome allows the link to be clicked
-        // without actually adding it to the DOM.
-        downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-    }
-    else
-    {
-        // Firefox requires the link to be added to the DOM
-        // before it can be clicked.
-        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-        downloadLink.onclick = destroyClickedElement;
-        downloadLink.style.display = "none";
-        document.body.appendChild(downloadLink);
-    }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function saveTextToBlob(file, element) {
+	const downloadLink = document.createElement('a');
+	downloadLink.style.display = 'none';
+	downloadLink.textContent = 'Download File';
+	downloadLink.download = file;
+	downloadLink.href = window.URL.createObjectURL(
+		new Blob([document.getElementById(element).value], { type: 'text/plain' })
+	);
 
-    downloadLink.click();
-    return false;
-}
-
-function destroyClickedElement(event)
-{
-    document.body.removeChild(event.target);
+	const child = document.body.appendChild(downloadLink);
+	downloadLink.click();
+	document.body.removeChild(child);
 }

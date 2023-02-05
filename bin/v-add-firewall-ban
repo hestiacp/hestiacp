@@ -12,7 +12,7 @@
 
 # Argument definition
 ip=$1
-chain=$(echo $2|tr '[:lower:]' '[:upper:]')
+chain=$(echo $2 | tr '[:lower:]' '[:upper:]')
 
 # Defining absolute path for iptables and modprobe
 iptables="/sbin/iptables"
@@ -35,7 +35,6 @@ check_args '2' "$#" 'IP CHAIN'
 is_format_valid 'ip' 'chain'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -48,21 +47,21 @@ heal_iptables_links
 
 # Checking server ip
 if [ -e "$HESTIA/data/ips/$ip" ] || [ "$ip" = '127.0.0.1' ]; then
-    exit
+	exit
 fi
 
 # Checking ip exclusions
 excludes="$HESTIA/data/firewall/excludes.conf"
-check_excludes=$(grep "^$ip$" $excludes 2>/dev/null)
-if  [ -n "$check_excludes" ]; then
-    exit
+check_excludes=$(grep "^$ip$" $excludes 2> /dev/null)
+if [ -n "$check_excludes" ]; then
+	exit
 fi
 
 # Checking ip in banlist
 conf="$HESTIA/data/firewall/banlist.conf"
-check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2>/dev/null)
+check_ip=$(grep "IP='$ip' CHAIN='$chain'" $conf 2> /dev/null)
 if [ -n "$check_ip" ]; then
-    exit
+	exit
 fi
 
 # Adding chain
@@ -70,13 +69,13 @@ $BIN/v-add-firewall-chain $chain
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding ip to banlist
 echo "IP='$ip' CHAIN='$chain' TIME='$time' DATE='$date'" >> $conf
 $iptables -I fail2ban-$chain 1 -s $ip \
-    -j REJECT --reject-with icmp-port-unreachable 2>/dev/null
+	-j REJECT --reject-with icmp-port-unreachable 2> /dev/null
 
 # Changing permissions
 chmod 660 $conf

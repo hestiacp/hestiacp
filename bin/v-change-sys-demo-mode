@@ -34,15 +34,15 @@ is_format_valid 'active'
 #----------------------------------------------------------#
 
 if [ "$active" = "yes" ]; then
-    #TO-DO: Instructions for disabling vhosts
-    # Disable API for Demo server
-    $BIN/v-change-sys-api 'disable'
-    $BIN/v-change-sys-config-value 'DEMO_MODE' 'yes'
+	#TO-DO: Instructions for disabling vhosts
+	# Disable API for Demo server
+	$BIN/v-change-sys-api 'disable'
+	$BIN/v-change-sys-config-value 'DEMO_MODE' 'yes'
 elif [ "$active" = "no" ]; then
-    # Note even v-change-sys-demo-mode can be called v-change-sys-config-value is protected to disable demo mode call
-    # Use sed -i "s|^DEMO_MODE=.*'|DEMO_MODE='no'|g" $HESTIA/conf/hestia.conf
-    #TODO: Instructions for enabling vhosts
-    $BIN/v-change-sys-config-value 'DEMO_MODE' 'no'
+	# Note even v-change-sys-demo-mode can be called v-change-sys-config-value is protected to disable demo mode call
+	# Use sed -i "s|^DEMO_MODE=.*'|DEMO_MODE='no'|g" $HESTIA/conf/hestia.conf
+	#TODO: Instructions for enabling vhosts
+	$BIN/v-change-sys-config-value 'DEMO_MODE' 'no'
 fi
 
 #----------------------------------------------------------#
@@ -51,16 +51,16 @@ fi
 
 # Restarting web server
 $BIN/v-restart-web "yes"
-check_result $? "restart" >/dev/null 2>&1
+check_result $? "restart" > /dev/null 2>&1
 
 $BIN/v-restart-proxy "yes"
-check_result $? "restart" >/dev/null 2>&1
+check_result $? "restart" > /dev/null 2>&1
 
 # Logging
 if [ "$active" = "yes" ]; then
-    $BIN/v-log-action "system" "Warning" "System" "Demonstration mode (restricted access) enabled."
+	$BIN/v-log-action "system" "Warning" "System" "Demonstration mode (restricted access) enabled."
 else
-    $BIN/v-log-action "system" "Warning" "Info" "Demonstration mode (restricted access) disabled."
+	$BIN/v-log-action "system" "Warning" "Info" "Demonstration mode (restricted access) disabled."
 fi
 
 log_event "$OK" "$ARGUMENTS"

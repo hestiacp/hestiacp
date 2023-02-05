@@ -32,7 +32,7 @@
 					><i class="fas fa-download"></i></a>
 				</label>
 				<textarea
-					x-model="text"
+					x-model="atob(text)"
 					class="form-control u-min-height100"
 					name="v_crt"
 					id="v_crt"
@@ -55,7 +55,7 @@
 					><i class="fas fa-download"></i></a>
 				</label>
 				<textarea
-					x-model="text"
+					x-model="atob(text)"
 					class="form-control u-min-height100"
 					name="v_key"
 					id="v_key"
@@ -78,7 +78,7 @@
 					><i class="fas fa-download"></i></a>
 				</label>
 				<textarea
-					x-model="text"
+					x-model="atob(text)"
 					class="form-control u-min-height100"
 					name="v_csr"
 					id="v_csr"

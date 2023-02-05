@@ -54,9 +54,9 @@ if [ -z "$str" ]; then
 	fi
 	exit
 fi
-# $DNS_CLUSTER_SYSTEM = "zone" doesn't need to be uopdated
+# $DNS_CLUSTER_SYSTEM = "hestia-zone" doesn't need to be uopdated
 
-if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
+if [ "$DNS_CLUSTER_SYSTEM" != "hestia-zone" ]; then
 	IFS=$'\n'
 	for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 

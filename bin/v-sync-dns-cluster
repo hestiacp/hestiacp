@@ -68,7 +68,7 @@ for cluster in $hosts; do
 				unset $SLAVE
 				parse_object_kv_list "$str"
 				if [ "$SLAVE" != "yes" ]; then
-					if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
+					if [ "$DNS_CLUSTER_SYSTEM" != "hestia-zone" ]; then
 						# Syncing domain index
 
 						cluster_cmd v-insert-dns-domain "$DNS_USER" "$str" "$HOSTNAME" ' ' "no"
@@ -82,7 +82,7 @@ for cluster in $hosts; do
 						cluster_cmd v-insert-dns-records "$DNS_USER" "$DOMAIN" "$tmp_file" 'no'
 						check_result $? "$HOST connection failed" "$E_CONNECT"
 					fi
-					if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+					if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
 						str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g")
 						str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g")
 
@@ -100,7 +100,7 @@ for cluster in $hosts; do
 			done
 		fi
 	done
-	if [ "$DNS_CLUSTER_SYSTEM" != "zone" ]; then
+	if [ "$DNS_CLUSTER_SYSTEM" != "hestia-zone" ]; then
 		# Rebuilding dns zones
 		cluster_cmd v-rebuild-dns-domains "$DNS_USER"
 		check_result $? "$TYPE connection to $HOST failed" "$E_CONNECT"

@@ -52,7 +52,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
     postgresql postgresql-contrib proftpd-basic quota rrdtool spamassassin sudo hestia=${HESTIA_INSTALL_VER}
     hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv rsyslog
-    ipset libonig5 libzip5 openssh-server lsb-release zstd jq"
+    ipset libonig5 libzip4 openssh-server lsb-release zstd jq"
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
 
@@ -942,14 +942,13 @@ if [ -d "$withdebs" ]; then
 fi
 if [ "$release" = '18.04' ]; then
 	software=$(echo "$software" | sed -e "s/libonig5/libonig4/")
-	software=$(echo "$software" | sed -e "s/libzip5/libzip4/")
 fi
 if [ "$release" = '20.04' ]; then
 	software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
+	software=$(echo "$software" | sed -e "s/libzip4/libzip5/")
 fi
 if [ "$release" = '22.04' ]; then
 	software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
-	software=$(echo "$software" | sed -e "s/libzip5/libzip4/")
 fi
 
 #----------------------------------------------------------#

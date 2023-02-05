@@ -55,7 +55,7 @@ if [ -z "$str" ]; then
 	fi
 	exit
 fi
-if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
 	str=$(echo "$str" | sed "s/SLAVE='no'/SLAVE='yes'/g")
 	str=$(echo "$str" | sed "s/SLAVE=''/SLAVE='yes'/g")
 	ip=$($BIN/v-list-sys-ips plain | cut -f1 | head -n1)
@@ -73,7 +73,7 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 	# Parsing domain parameters
 	parse_object_kv_list "$str"
 
-	if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+	if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
 		# Syncing domain data
 		cluster_cmd v-insert-dns-domain $DNS_USER "$str" $HOSTNAME $flush 'no'
 		check_result $? "$HOST connection failed" "$E_CONNECT"
@@ -101,7 +101,7 @@ for cluster in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
 	fi
 done
 
-if [ "$DNS_CLUSTER_SYSTEM" = "zone" ]; then
+if [ "$DNS_CLUSTER_SYSTEM" = "hestia-zone" ]; then
 	rndc notify $domain > /dev/null 2>&1
 fi
 #----------------------------------------------------------#

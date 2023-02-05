@@ -77,7 +77,7 @@
 										<button
 											x-on:click="value = randomString()"
 											class="form-link"
-											href="#"
+											type="button"
 										>
 											<?= _("generate") ?>
 									</button>

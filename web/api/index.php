@@ -40,7 +40,11 @@ function api_error($exit_code, $message, bool $add_log = false, $user = "system"
 	$http_code = $exit_code >= 100 ? $exit_code : exit_code_to_http_code($exit_code);
 	header("Hestia-Exit-Code: $exit_code");
 	http_response_code($http_code);
-	echo !preg_match("/^Error:/", $message) ? "Error: $message" : $message;
+	if ($hst_return == "code") {
+		echo $exit_code;
+	} else {
+		echo !preg_match("/^Error:/", $message) ? "Error: $message" : $message;
+	}
 	exit();
 }
 
@@ -58,15 +62,14 @@ function api_legacy(array $request_data) {
 
 	if ($settings["config"]["API"] != "yes") {
 		echo "Error: API has been disabled";
-		exit();
+		api_error(E_DISABLED, "Error: API Disabled");
 	}
 
 	if ($settings["config"]["API_ALLOWED_IP"] != "allow-all") {
 		$ip_list = explode(",", $settings["config"]["API_ALLOWED_IP"]);
 		$ip_list[] = "";
 		if (!in_array(get_real_user_ip(), $ip_list)) {
-			echo "Error: IP is not allowed to connect with API";
-			exit();
+			api_error(E_FORBIDDEN, "Error: IP is not allowed to connect with API");
 		}
 	}
 
@@ -74,13 +77,11 @@ function api_legacy(array $request_data) {
 	// Authentication
 	if (empty($request_data["hash"])) {
 		if ($request_data["user"] != "admin") {
-			echo "Error: authentication failed";
-			exit();
+			api_error(E_FORBIDDEN, "Error: authentication failed");
 		}
 		$password = $request_data["password"];
 		if (!isset($password)) {
-			echo "Error: missing authentication";
-			exit();
+			api_error(E_PASSWORD, "Error: authentication failed");
 		}
 		$v_ip = quoteshellarg(get_real_user_ip());
 		unset($output);
@@ -134,8 +135,7 @@ function api_legacy(array $request_data) {
 
 		// Check API answer
 		if ($return_var > 0) {
-			echo "Error: authentication failed";
-			exit();
+			api_error(E_PASSWORD, "Error: authentication failed");
 		}
 	} else {
 		$key = "/usr/local/hestia/data/keys/" . basename($request_data["hash"]);
@@ -148,8 +148,7 @@ function api_legacy(array $request_data) {
 		unset($output);
 		// Check API answer
 		if ($return_var > 0) {
-			echo "Error: authentication failed";
-			exit();
+			api_error(E_PASSWORD, "Error: authentication failed");
 		}
 	}
 
@@ -285,7 +284,7 @@ function api_connection(array $request_data) {
 
 	# Check if API access is enabled for nonadmin users
 	if ($key_user != "admin" && $api_status < 2) {
-		api_error(E_DISABLED, "API has been disabled");
+		api_error(E_API_DISABLED, "API has been disabled");
 	}
 
 	// Checks if the value entered in the "user" argument matches the user of the key

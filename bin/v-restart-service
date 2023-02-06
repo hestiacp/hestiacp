@@ -19,6 +19,7 @@ restart=$2
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -77,7 +78,7 @@ for service in $service_list; do
 		"$service" = "proftpd" -o \
 		"$service" = "ssh" -o \
 		"$service" = "fail2ban" ]; then
-		systemctl reload-or-restart "$service" > /dev/null 2>&1
+		systemctl reload-or-restart "$service" >> $log 2>&1
 	else
 		systemctl reset-failed "$service" >> $log 2>&1
 		systemctl restart "$service" >> $log 2>&1

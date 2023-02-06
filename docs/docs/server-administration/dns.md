@@ -48,7 +48,7 @@ There is no limitation on how to chain DNS servers.
 ### DNS Cluster with the Hestia API (Master -> Slave)
 
 1. Create a new user on the Hestia server that will act as a “Slave”.
-2. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='zone'`.
+2. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
 3. On the master server, open `/etc/bind/named.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
    ```bash
@@ -87,7 +87,7 @@ There is no limitation on how to chain DNS servers.
 
 ### Converting an existing DNS cluster to Master -> Slave
 
-1. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='zone'`.
+1. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
 2. On the master server, open `/etc/bind/named.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
    ```bash

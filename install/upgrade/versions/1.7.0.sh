@@ -49,6 +49,11 @@ if [ -z "$(grep -e 'condition =  ${lookup{$local_part@$domain}lsearch{/etc/exim4
 	done
 fi
 
+# Allow Email@domain.com for login
+if [ -f "/etc/dovecot/conf.d/10-auth.conf" ]; then
+	sed -i "s/auth_username_format = %u/auth_username_format = %Lu/g" /etc/dovecot/conf.d/10-auth.conf
+fi
+
 # rename /var/run/xx to /run/
 for file in /etc/dovecot/dovecot.conf /etc/clamav/clamd.conf /etc/exim/exim.conf.template /etc/logrotate.d/apache2 /etc/logrotate.d/nginx /etc/mysql/my.cnf /etc/nginx/nginx.conf; do
 	if [ -f "$file" ]; then

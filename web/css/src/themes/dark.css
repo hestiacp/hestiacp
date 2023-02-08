@@ -313,7 +313,7 @@ strong {
 
 .card-content {
 	color: #fafafa;
-	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
+	text-shadow: 0 1px rgb(0 0 0 / 95%);
 }
 
 /* Server summary component

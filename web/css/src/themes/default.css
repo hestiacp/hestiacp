@@ -1169,14 +1169,14 @@
 .l-unit__stats {
 	margin-bottom: 10px;
 	margin-left: 15%;
-	border-left: 1px solid transparent !important;
-	border-right: 1px solid transparent !important;
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
 
 	&:hover {
-		border-left: 1px solid transparent !important;
-		border-right: 1px solid transparent !important;
-		box-shadow: none !important;
-		background: none !important;
+		border-left: 1px solid transparent;
+		border-right: 1px solid transparent;
+		box-shadow: none;
+		background: none;
 	}
 
 	& table {

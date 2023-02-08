@@ -448,17 +448,15 @@ strong {
 	color: #dadada;
 }
 
-.l-unit__stats:hover {
-	background: transparent !important;
-}
+.l-unit__stat-col--left {
+	& a,
+	& a:visited {
+		color: #fafafa;
+	}
 
-.l-unit__stat-col--left a,
-.l-unit__stat-col--left a:visited {
-	color: #fafafa;
-}
-
-.l-unit__stat-col--left a:hover {
-	color: #fff;
+	& a:hover {
+		color: #fff;
+	}
 }
 
 /* Forms

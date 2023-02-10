@@ -49,7 +49,7 @@ if (!empty($_POST["save"])) {
 		$new_conf = $mktemp_output[0];
 		$fp = fopen($new_conf, "w");
 		fwrite($fp, str_replace("\r\n", "\n", $_POST["v_config"]));
-		fclose($new_conf);
+		fclose($fp);
 		exec(
 			HESTIA_CMD . "v-change-sys-service-config " . $new_conf . " postgresql " . $v_restart,
 			$output,

@@ -10,6 +10,13 @@ define("API_HESTIA_PORT", "%API_HESTIA_PORT%");
 define("API_KEY", "%API_KEY%");
 
 class Hestia_API {
+	/** @var string */
+	public $hostname;
+	/** @var string */
+	public $key;
+	/** @var string */
+	public $pma_key;
+	/** @var string */
 	private $api_url;
 	public function __construct() {
 		$this->hostname = "https://" . API_HOST_NAME . ":" . API_HESTIA_PORT . "/api/";

@@ -10,6 +10,7 @@ use Filegator\Services\Tmpfs\TmpfsInterface;
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class HestiaZipArchiver extends ZipArchiver implements Service, ArchiverInterface {
+	public TmpfsInterface $tmpfs;
 	protected $container;
 
 	public function __construct(TmpfsInterface $tmpfs, Container $container) {

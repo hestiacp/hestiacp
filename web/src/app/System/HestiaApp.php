@@ -6,6 +6,8 @@ namespace Hestia\System;
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 class HestiaApp {
+	/** @var string[] */
+	public $errors;
 	protected const TMPDIR_DOWNLOADS = "/tmp/hestia-webapp";
 	protected $phpsupport = false;
 

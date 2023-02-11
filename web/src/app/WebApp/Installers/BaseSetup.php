@@ -11,6 +11,8 @@ use Hestia\WebApp\Installers\Resources\ComposerResource;
 use Hestia\WebApp\Installers\Resources\WpResource;
 
 abstract class BaseSetup implements InstallerInterface {
+	public $appInfo;
+	public $config;
 	protected $domain;
 	protected $extractsubdir;
 	protected $AppDirInstall;

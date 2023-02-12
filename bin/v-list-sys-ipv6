@@ -1,0 +1,103 @@
+#!/bin/bash
+# info: list system ip
+# options: IP [FORMAT]
+#
+# example: v-list-sys-ip 116.203.78.202
+#
+# This function for getting the list of system ip parameters.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+ipv6=$1
+format=${2-shell}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ipv6.sh
+source $HESTIA/func/ipv6.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# JSON list function
+json_list() {
+    echo '{'
+    echo '    "'$ipv6'": {
+        "OWNER": "'$OWNER'",
+        "STATUS": "'$STATUS'",
+        "NAME": "'$NAME'",
+        "U_SYS_USERS": "'$U_SYS_USERS'",
+        "U_WEB_DOMAINS": "'$U_WEB_DOMAINS'",
+        "INTERFACE": "'$INTERFACE'",
+        "NETMASK": "'$NETMASK'",
+        "NAT": "'$NAT'",
+        "TIME": "'$TIME'",
+        "DATE": "'$DATE'"
+        }'
+    echo '}'
+}
+
+# SHELL list function
+shell_list() {
+    echo "IP:             $ipv6"
+    echo "NETMASK:        $NETMASK"
+    echo "INTERFACE:      $INTERFACE"
+    echo "NAT:            $NAT"
+    echo "OWNER:          $OWNER"
+    echo "STATUS:         $STATUS"
+    echo "NAME:           $NAME"
+    echo "USERS:          $U_SYS_USERS"
+    echo "DOMAINS:        $U_WEB_DOMAINS"
+    echo "TIME:           $TIME"
+    echo "DATE:           $DATE"
+}
+
+# PLAIN list function
+plain_list() {
+    echo -ne "$ipv6\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
+    echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
+}
+
+# CSV list function
+csv_list() {
+    echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
+    echo "NETMASK,NAT,TIME,DATE"
+    echo -n "$ipv6,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
+    echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'IP [FORMAT]'
+is_format_valid 'ipv6'
+if [ ! -e "$HESTIA/data/ips/$ipv6" ]; then
+    check_result $E_NOTEXIST "ip $ipv6 doesn't exist"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Parsing ip
+source_conf "$HESTIA/data/ips/$ipv6"
+
+# Listing data
+case $format in
+    json)   json_list ;;
+    plain)  plain_list ;;
+    csv)    csv_list ;;
+    shell)  shell_list ;;
+esac
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

@@ -742,7 +742,7 @@ is_ip_format_valid() {
 
 # IPv6 format validator
 is_ipv6_format_valid() {
-	object_name=${2-ip6}
+	object_name=${2-ipv6}
 	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
 	t_ip=$(echo $1 | awk -F / '{print $1}')
 	t_cidr=$(echo $1 | awk -F / '{print $2}')

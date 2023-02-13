@@ -20,6 +20,7 @@ body:
       label: Would you like to sponsor this feature to have it implemented?
       description: While there is no obligation, our development team has a limited number of resources and time available and a financial contribution would help prioritize your request.
       options:
+        - "Not Yet"
         - "Yes"
         - "No"
     validations:

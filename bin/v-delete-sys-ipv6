@@ -2,23 +2,29 @@
 # info: delete system ipv6
 # options: IPV6
 #
-# The function for deleting a system ip. It does not allow to delete first ip
-# on interface and do not allow to delete ip which is used by a web domain.
-
+# example: v-delete-sys-ipv6 1234:5678::1
+#
+# This function for deleting a system ipv6. It does not allow
+# to delete ip which is used by a web domain.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
 ipv6=$1
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ipv6.sh
 source $HESTIA/func/ipv6.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
-
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -26,30 +32,31 @@ source $HESTIA/conf/hestia.conf
 
 check_args '1' "$#" 'IPV6'
 is_format_valid 'ipv6'
-is_ip_valid "$ipv6"
-is_ip_key_empty '$U_WEB_DOMAINS'
-is_ip_key_empty '$U_SYS_USERS'
+is_ipv6_valid "$ipv6"
+is_ipv6_key_empty '$U_WEB_DOMAINS'
+is_ipv6_key_empty '$U_SYS_USERS'
 
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
 # Import ip variables
-source $HESTIA/data/ips/$ipv6
-cidr=$(convert_netmaskv6 $NETMASK)
+source "$HESTIA/data/ips/$ipv6"
 
 # Checking main ip on the interface
-interface=$(/sbin/ip  -6 addr | grep "$ipv6/$cidr" | awk '{print $NF}')
-if [ ! -z "$interface" ] && [ -z "$(echo $interface |cut -s -f2 -d :)" ]; then
+interface=$(/sbin/ip  -6 addr | grep "$ipv6${NETMASK}" | awk '{print $NF}')
+if [ $(/sbin/ip -6 addr | grep -c global) -le 1 ]; then
     echo "Error: can't delete main IP address"
     log_event "$E_FORBIDEN" "$ARGUMENTS"
-    exit $E_FORBIDEN
+    exit "$E_FORBIDEN"
 fi
 
 # Deleting system ip
-if [ ! -z "$interface" ]; then
-    /sbin/ip -6 addr del $ip/$cidr dev $INTERFACE
+if [ -n "$interface" ]; then
+    /sbin/ip -6 addr del $ipv6${NETMASK} dev ${INTERFACE%:*}
     if [ "$?" -ne 0 ]; then
         echo "Error: can't delete system ip"
         log_event "$E_FORBIDEN" "$ARGUMENTS"
@@ -63,11 +70,16 @@ if [ -e "/etc/sysconfig/network-scripts/ifcfg-$interface" ]; then
 fi
 
 # Deleting startup conf on Debian/Ubuntu
-if [ -e "/etc/network/interfaces" ]; then
-    ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
-    if [ ! -z "$ip_str" ]; then
-        first_str=$((ip_str - 3))
-        last_str=$((ip_str + 1))
+if [ -f "/etc/netplan/60-hestia.yaml" ]; then
+    sed -i "/$ipv6/d" /etc/netplan/60-hestia.yaml
+    if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
+        rm /etc/netplan/60-hestia.yaml
+    fi
+elif [ -e "/etc/network/interfaces" ]; then
+    ip_str=$(grep -n $ipv6 /etc/network/interfaces |cut -f1 -d:)
+    if [ -n "$ip_str" ]; then
+		first_str=$((ip_str - 4))
+		last_str=$((ip_str + 1))
         sed -i "$first_str,$last_str d" /etc/network/interfaces
     fi
 fi
@@ -76,12 +88,12 @@ fi
 rm -f $HESTIA/data/ips/$ipv6
 
 # Deleting web config
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
     rm -f /etc/$WEB_SYSTEM/conf.d/$ipv6.conf
 fi
 
 # Deleting proxy config
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     rm -f /etc/$PROXY_SYSTEM/conf.d/$ipv6.conf
 
     # mod_extract_forwarded
@@ -95,33 +107,37 @@ if [ ! -z "$PROXY_SYSTEM" ]; then
     # mod_rpaf
     rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
     if [ -e "$rpaf_conf" ]; then
-        ips=$(grep RPAFproxy_ips $rpaf_conf)
-        new_ips=$(echo "$rpaf_str" | sed "s/$ipv6//")
-        sed -i "s/$ips/$new_ips/g" $rpaf_conf
+        ips=$(grep RPAFproxy_ips "$rpaf_conf")
+        new_ips=$(echo "$ips" | sed "s/$ipv6//")
+        sed -i "s/$ips/$new_ips/g" "$rpaf_conf"
+
+        # Remove RPAFproxy_ips line when ip list is empty
+        [ "$(grep RPAFproxy_ips $rpaf_conf | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" $rpaf_conf
     fi
     
     #mod_remoteip
     remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
     if [ -e "$remoteip_conf" ]; then
-        sed -i "s/RemoteIPInternalProxy $ipv6//g" $remoteip_conf
+        sed -i "/RemoteIPInternalProxy $ipv6\$/d" "$remoteip_conf"
     fi
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating user conf
-if [ ! -z "$OWNER" ]; then
+if [ -n "$OWNER" ]; then
     decrease_user_value "$OWNER" '$IPV6_OWNED'
 fi
 
 if [ "$OWNER" = 'admin' ]; then
     if [ "$STATUS" = 'shared' ]; then
-        for user in $(ls $HESTIA/data/users/); do
-            decrease_user_value "$user" '$IPV6_AVAIL'
+        for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
+            decrease_user_value "$hestia_user" '$IPV6_AVAIL'
         done
+    else
+        decrease_user_value "$OWNER" '$IPV6_AVAIL'
     fi
 else
     decrease_user_value "$OWNER" '$IPV6_AVAIL'
@@ -132,18 +148,18 @@ $BIN/v-restart-web
 check_result $? "Web restart failed" >/dev/null
 
 # Restarting proxy server
-if [ ! -z "$PROXY_SYSTEM" ]; then
+if [ -n "$PROXY_SYSTEM" ]; then
     $BIN/v-restart-proxy
     check_result $? "Proxy restart failed" >/dev/null
 fi
 
 # Restarting firewall
-if [ ! -z "$FIREWALL_SYSTEM" ]; then
+if [ -n "$FIREWALL_SYSTEM" ]; then
     $BIN/v-update-firewall
 fi
 
 # Logging
-log_history "deleted system ip address $ip"
+$BIN/v-log-action "system" "Info" "System" "IPV6 address deleted (IPV6: $ipv6)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

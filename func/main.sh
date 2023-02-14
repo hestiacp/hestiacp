@@ -710,7 +710,7 @@ is_domain_format_valid() {
 	is_no_new_line_format "$1"
 }
 
-# Alias forman validator
+# Alias format validator
 is_alias_format_valid() {
 	for object in ${1//,/ }; do
 		exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|<|>|?|_|/|\|\"|'|;|%|\`| ]"
@@ -742,43 +742,46 @@ is_ip_format_valid() {
 
 # IPv6 format validator
 is_ipv6_format_valid() {
-	object_name=${2-ipv6}
-	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-	t_ip=$(echo $1 | awk -F / '{print $1}')
-	t_cidr=$(echo $1 | awk -F / '{print $2}')
-	valid_cidr=1
+    object_name=${2-ipv6}
+    t_ipv6=$(echo $1 |awk -F / '{print $1}')
+    t_prefixlen=$(echo $1 |awk -F / '{print $2}')
+    valid_prefixlen=1
+	
+	if [[ "$object_name" != "prefix_length" ]] || [[ -n "$t_ipv6" ]]; then
+		# check for ipv6 address format excluding "prefix length only" mode
+		WORD="[0-9A-Fa-f]\{1,4\}"
+		# flat address, no compressed words
+		FLAT="^${WORD}\(:${WORD}\)\{7\}$"
 
-	WORD="[0-9A-Fa-f]\{1,4\}"
-	# flat address, no compressed words
-	FLAT="^${WORD}\(:${WORD}\)\{7\}$"
-
-	COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
-	COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
-	COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
-	COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
-	COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
-	COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
-	# trailing :: edge case, includes case of only :: (all 0's)
-	EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
-	# leading :: edge case
-	EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
-
-	echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
-	if [ $? -ne 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
-
-	if [ -n "$(echo $1 | grep '/')" ]; then
-		if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
-			valid_cidr=0
-		fi
-		if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-			valid_cidr=0
+		COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
+		COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
+		COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
+		COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
+		COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
+		COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
+		# trailing :: edge case, includes case of only :: (all 0's)
+		EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
+		# leading :: edge case
+		EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
+		echo $t_ipv6 | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
+		if [ $? -ne 0 ]; then
+			check_result "$E_INVALID" "invalid ipv6 address format :: $1"
 		fi
 	fi
-	if [ "$valid_cidr" -eq 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
+
+	# ipv6 prefix length checks
+    if [ -n "$(echo $1|grep '/')" ]; then
+		# introducing slash as prefix length attribute detected
+        if [[ "$t_prefixlen" -lt 0 ]] || [[ "$t_prefixlen" -gt 128 ]]; then
+            valid_prefixlen=0
+        fi
+        if ! [[ "$t_prefixlen" =~ ^[0-9]+$ ]]; then
+            valid_prefixlen=0
+        fi
+    fi
+    if [ "$valid_prefixlen" -eq 0 ]; then
+        check_result "$E_INVALID" "invalid ipv6 prefix length format :: $1"
+    fi
 }
 
 is_ip46_format_valid() {
@@ -1023,7 +1026,7 @@ is_int_format_valid() {
 # Interface validator
 is_interface_format_valid() {
 	netdevices=$(cat /proc/net/dev | grep : | cut -f 1 -d : | tr -d ' ')
-	if [ -z $(echo "$netdevices" | grep -x $1) ]; then
+	if [ -z $(echo "$netdevices" | grep -x ${1%:*}) ]; then
 		check_result "$E_INVALID" "invalid interface format :: $1"
 	fi
 }
@@ -1209,6 +1212,7 @@ is_format_valid() {
 				password) is_password_format_valid "$arg" ;;
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
+				prefix_length) is_ipv6_format_valid "$arg" 'prefix_length' ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
 				proxy_ext) is_extention_format_valid "$arg" ;;
 				quota) is_int_format_valid "$arg" 'quota' ;;

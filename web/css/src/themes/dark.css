@@ -313,7 +313,7 @@ strong {
 
 .card-content {
 	color: #fafafa;
-	text-shadow: 0 1px rgb(0 0 0 / 95%) !important;
+	text-shadow: 0 1px rgb(0 0 0 / 95%);
 }
 
 /* Server summary component
@@ -448,17 +448,15 @@ strong {
 	color: #dadada;
 }
 
-.l-unit__stats:hover {
-	background: transparent !important;
-}
+.l-unit__stat-col--left {
+	& a,
+	& a:visited {
+		color: #fafafa;
+	}
 
-.l-unit__stat-col--left a,
-.l-unit__stat-col--left a:visited {
-	color: #fafafa;
-}
-
-.l-unit__stat-col--left a:hover {
-	color: #fff;
+	& a:hover {
+		color: #fff;
+	}
 }
 
 /* Forms

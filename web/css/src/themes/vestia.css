@@ -218,13 +218,15 @@ strong {
 	box-shadow: none;
 }
 
-.l-unit__stat-col--left a,
-.l-unit__stat-col--left a:visited {
-	color: #111;
-}
+.l-unit__stat-col--left {
+	& a,
+	& a:visited {
+		color: #111;
+	}
 
-.l-unit__stat-col--left a:hover {
-	color: #ff6701;
+	& a:hover {
+		color: #ff6701;
+	}
 }
 
 .l-unit:hover,

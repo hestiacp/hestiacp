@@ -3,7 +3,7 @@
 // Updates database dns record dynamically, showing its full domain path
 App.Actions.DB.update_dns_record_hint = function (elm, hint) {
 	// clean hint
-	domain = $('input[name="v_domain"]').val();
+	const domain = $('input[name="v_domain"]').val();
 	if (hint.trim() == '') {
 		$(elm).parent().find('.hint').text('');
 	}

@@ -31,7 +31,7 @@ source $HESTIA/func/firewall.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 # Get hestia port by reading nginx.conf
-hestiaport=$(grep 'listen' $HESTIA/nginx/conf/nginx.conf | awk '{print $2}' | sed "s|;||")
+hestiaport=$(grep -m 1 'listen' $HESTIA/nginx/conf/nginx.conf | awk '{print $2}' | sed "s|;||")
 if [ -z "$hestiaport" ]; then
 	hestiaport=8083
 fi

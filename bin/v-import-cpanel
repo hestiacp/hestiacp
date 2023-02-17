@@ -236,7 +236,7 @@ for folder in *; do
 				tmp_pass=$(generate_password)
 				$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
 				mv $mail_account /home/$new_user/mail/$folder/
-				chown $new_user:mail /home/$new_user/mail/$folder/
+				chown -R $new_user:mail /home/$new_user/mail/$folder/
 				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
 				pass=$(grep "^$mail_account:" ../../etc/${folder}/shadow | awk -F ":" '{print $2}')
 				USER_DATA=$HESTIA/data/users/$new_user/

@@ -264,6 +264,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
 		l) lang=$OPTARG ;;         # Language
 		d) api=$OPTARG ;;          # Activate API
 		y) interactive=$OPTARG ;;  # Interactive install
+		6) ipv6=$OPTARG ;;         # IPv6
 		s) servername=$OPTARG ;;   # Hostname
 		e) email=$OPTARG ;;        # Admin email
 		p) vpass=$OPTARG ;;        # Admin password

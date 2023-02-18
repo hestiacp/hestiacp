@@ -36,8 +36,7 @@ if [ -d "$nvmDir" ]; then
     if [ ! -d "/opt/nvm/versions/node/$nodeVersion" ]; then
         echo "Install this version"
         nvm install $nodeVersion
-
-        chmod -R 777 /opt/nvm
+        chmod -R 755 /opt/nvm
     else
         echo "Error on install Node version on NVM"
     fi
@@ -90,7 +89,7 @@ sleep 5
 
 if [ ! -f "$nodeDir/app.sock" ]; then
     echo "Allow nginx access to the socket $nodeDir/app.sock"
-    chmod 777 "$nodeDir/app.sock"
+    chmod 755 "$nodeDir/app.sock"
 else
     echo "Sock file not present disable Node app"
     runuser -l $user -c "pm2 del $scriptName"

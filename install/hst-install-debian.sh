@@ -1634,8 +1634,7 @@ if [ "$postgresql" = 'yes' ]; then
 	wget --retry-connrefused --quiet https://github.com/hestiacp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
 	tar xzf phppgadmin-v$pga_v.tar.gz -C /usr/share/phppgadmin/
 
-	rm -fr /usr/share/phppgadmin/config/
-	ln -s /etc/phppgadmin/config/ /usr/share/phppgadmin/config/
+	ln -s ln -s /etc/phppgadmin/config.inc.php config.inc.php
 
 	# Configuring phpPgAdmin
 	if [ "$apache" = 'yes' ]; then

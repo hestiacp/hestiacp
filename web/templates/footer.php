@@ -74,24 +74,25 @@
 <?php if (!empty($_SESSION["error_msg"])): ?>
 	<div>
 		<script>
-			// TODO: This is broken, $ is not defined
-			$(function() {
-				$('#dialog:ui-dialog').dialog('destroy');
-				$('#dialog-message').dialog({
-					modal: true,
-					resizable: false,
-					buttons: {
-						Ok: function() {
-							$(this).dialog('close');
+			window.onload=function(){
+				$(function() {
+					$('#dialog:ui-dialog').dialog('destroy');
+					$('#dialog-message').dialog({
+						modal: true,
+						resizable: false,
+						buttons: {
+							Ok: function() {
+								$(this).dialog('close');
+							}
+						},
+						create: function() {
+							var buttonGroup = $(this).closest(".ui-dialog").find('.ui-dialog-buttonset');
+							buttonGroup.find('button:first').addClass('button submit')
+							buttonGroup.find('button:last').addClass('button button-secondary cancel');
 						}
-					},
-					create: function() {
-						var buttonGroup = $(this).closest(".ui-dialog").find('.ui-dialog-buttonset');
-						buttonGroup.find('button:first').addClass('button submit')
-						buttonGroup.find('button:last').addClass('button button-secondary cancel');
-					}
+					});
 				});
-			});
+			}
 		</script>
 		<div id="dialog-message" title="">
 			<p><?= htmlentities($_SESSION["error_msg"]) ?></p>

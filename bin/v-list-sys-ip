@@ -59,7 +59,7 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-	echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
+	echo -ne "$ip\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
 	echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
 }
 
@@ -67,7 +67,7 @@ plain_list() {
 csv_list() {
 	echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
 	echo "NETMASK,NAT,TIME,DATE"
-	echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
+	echo -n "$ip,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
 	echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
 }
 

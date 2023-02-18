@@ -213,7 +213,14 @@ $(function () {
 		var elm = $(evt.target);
 		App.Actions.WEB.passwordChanged(elm);
 	});
-	App.Actions.WEB.toggle_letsencrypt($('input[name=v_letsencrypt]'));
+	$('input[name=v_letsencrypt]').change(function (evt) {
+		var input = $(evt.target);
+		if (input.prop('checked')) {
+			$('#ssl-details').hide();
+		} else {
+			$('#ssl-details').show();
+		}
+	});
 
 	$('select[name="v_stats"]').change(function (evt) {
 		var select = $(evt.target);

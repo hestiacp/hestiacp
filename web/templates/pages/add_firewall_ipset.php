@@ -91,34 +91,35 @@
 	blacklist_iplists.sort(function (a, b) {
 		return a.name > b.name;
 	});
+	window.onload = function(){
+		$(function () {
+			var targetElement = document.getElementById('datasource_list');
 
-	$(function () {
-		var targetElement = document.getElementById('datasource_list');
-
-		// Blacklist
-		var newEl = document.createElement("option");
-		newEl.text = "<?= _("BLACKLIST") ?>";
-		newEl.disabled = true;
-		targetElement.appendChild(newEl);
-
-		blacklist_iplists.forEach(iplist => {
+			// Blacklist
 			var newEl = document.createElement("option");
-			newEl.text = iplist.name;
-			newEl.value = iplist.source;
+			newEl.text = "<?= _("BLACKLIST") ?>";
+			newEl.disabled = true;
 			targetElement.appendChild(newEl);
-		});
 
-		// IPVERSE
-		var newEl = document.createElement("option");
-		newEl.text = "<?= _("IPVERSE") ?>";
-		newEl.disabled = true;
-		targetElement.appendChild(newEl);
+			blacklist_iplists.forEach(iplist => {
+				var newEl = document.createElement("option");
+				newEl.text = iplist.name;
+				newEl.value = iplist.source;
+				targetElement.appendChild(newEl);
+			});
 
-		country_iplists.forEach(iplist => {
+			// IPVERSE
 			var newEl = document.createElement("option");
-			newEl.text = iplist.name;
-			newEl.value = iplist.source;
+			newEl.text = "<?= _("IPVERSE") ?>";
+			newEl.disabled = true;
 			targetElement.appendChild(newEl);
+
+			country_iplists.forEach(iplist => {
+				var newEl = document.createElement("option");
+				newEl.text = iplist.name;
+				newEl.value = iplist.source;
+				targetElement.appendChild(newEl);
+			});
 		});
-	});
+	}
 </script>

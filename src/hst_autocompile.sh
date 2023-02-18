@@ -119,7 +119,7 @@ else
 	BUILD_ARCH='amd64'
 fi
 RPM_DIR="$BUILD_DIR/rpm/"
-DEB_DIR="$BUILD_DIR/deb/"
+DEB_DIR="$BUILD_DIR/deb"
 if [ -f '/etc/redhat-release' ]; then
 	BUILD_RPM=true
 	BUILD_DEB=false

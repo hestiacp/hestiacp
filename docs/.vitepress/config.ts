@@ -7,7 +7,7 @@ export default defineConfig({
 	description: "Open-source web server control panel.",
 
 	lastUpdated: true,
-	cleanUrls: "disabled",
+	cleanUrls: false,
 
 	head: [
 		["link", { rel: "icon", sizes: "any", href: "/favicon.ico" }],
@@ -79,11 +79,11 @@ function nav(): DefaultTheme.NavItem[] {
 	];
 }
 
-function sidebarDocs(): DefaultTheme.SidebarGroup[] {
+function sidebarDocs(): DefaultTheme.SidebarItem[] {
 	return [
 		{
 			text: "Introduction",
-			collapsible: true,
+			collapsed: false,
 			items: [
 				{ text: "Getting started", link: "/docs/introduction/getting-started.md" },
 				{ text: "Best practices", link: "/docs/introduction/best-practices.md" },
@@ -91,7 +91,7 @@ function sidebarDocs(): DefaultTheme.SidebarGroup[] {
 		},
 		{
 			text: "User guide",
-			collapsible: true,
+			collapsed: false,
 			items: [
 				{ text: "Account", link: "/docs/user-guide/account.md" },
 				{ text: "Backups", link: "/docs/user-guide/backups.md" },
@@ -109,7 +109,7 @@ function sidebarDocs(): DefaultTheme.SidebarGroup[] {
 		},
 		{
 			text: "Server administration",
-			collapsible: true,
+			collapsed: false,
 			items: [
 				{ text: "Backup & restore", link: "/docs/server-administration/backup-restore.md" },
 				{ text: "Configuration", link: "/docs/server-administration/configuration.md" },
@@ -128,7 +128,7 @@ function sidebarDocs(): DefaultTheme.SidebarGroup[] {
 		},
 		{
 			text: "Contributing",
-			collapsible: true,
+			collapsed: false,
 			items: [
 				{ text: "Development", link: "/docs/contributing/development.md" },
 				{ text: "Documentation", link: "/docs/contributing/documentation.md" },
@@ -139,7 +139,7 @@ function sidebarDocs(): DefaultTheme.SidebarGroup[] {
 		},
 		{
 			text: "Community",
-			collapsible: true,
+			collapsed: false,
 			items: [
 				{ text: "Hestia Nginx Cache", link: "/docs/community/hestia-nginx-cache.md" },
 				{
@@ -151,7 +151,7 @@ function sidebarDocs(): DefaultTheme.SidebarGroup[] {
 		},
 		{
 			text: "Reference",
-			collapsible: true,
+			collapsed: false,
 			items: [
 				{ text: "API", link: "/docs/reference/api.md" },
 				{ text: "CLI", link: "/docs/reference/cli.md" },

@@ -1,0 +1,76 @@
+server {
+    listen      %ip%:%proxy_port%;
+    server_name %domain_idn% %alias_idn%;
+    return      301 https://%domain_idn%$request_uri;
+}
+
+server {
+    listen      %ip%:%proxy_ssl_port%;
+    
+    server_name %domain_idn%;
+    
+    ssl on;
+    ssl_certificate      %ssl_pem%;
+    ssl_certificate_key  %ssl_key%;
+
+    error_log  /var/log/%web_system%/domains/%domain%.error.log error;
+    
+    gzip on;
+    gzip_min_length  1100;
+    gzip_buffers  4 32k;
+    gzip_types    image/svg+xml svg svgz text/plain application/x-javascript text/xml text/css;
+    gzip_vary on;
+    
+    include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+
+    location / {
+
+        #single
+        #proxy_pass     http://127.0.0.1:3000;
+        
+        #unix socket
+        proxy_pass      http://unix:%home%/%user%/web/%domain%/nodeapp/app.sock:$request_uri;
+
+
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_cache_bypass $http_upgrade;
+
+        location ~* ^.+\.(%proxy_extensions%)$ {
+            root           %sdocroot%;
+            access_log     /var/log/%web_system%/domains/%domain%.log combined;
+            access_log     /var/log/%web_system%/domains/%domain%.bytes bytes;
+            expires        max;
+            try_files      $uri @fallback;
+        add_header Pragma public;
+            add_header Cache-Control "public";
+        }
+    }
+
+    location /error/ {
+        alias   %home%/%user%/web/%domain%/document_errors/;
+    }
+
+    location @fallback {
+        #single
+        #proxy_pass     http://127.0.0.1:3000;
+
+        #unix socket
+        proxy_pass      http://unix:%home%/%user%/web/%domain%/nodeapp/app.sock:/$1;
+    }
+
+    location ~ /\.ht    {return 404;}
+    location ~ /\.svn/  {return 404;}
+    location ~ /\.git/  {return 404;}
+    location ~ /\.hg/   {return 404;}
+    location ~ /\.bzr/  {return 404;}
+    location ~ /\.(?!well-known\/|file) {
+      deny all;
+      return 404;
+   }
+
+    include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
+}

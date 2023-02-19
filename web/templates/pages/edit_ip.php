@@ -19,7 +19,7 @@
 
 	<form
 		x-data="{
-			showUserTable: <?= empty($v_dedicated) ? "false" : "true" ?>
+			showUserTable: <?= empty($v_dedicated) ? "true" : "false" ?>
 		}"
 		id="vstobjects"
 		name="v_edit_ip"
@@ -45,12 +45,12 @@
 				<input type="text" class="form-control" name="v_interface" id="v_interface" value="<?= htmlentities(trim($v_interface, "'")) ?>" disabled>
 			</div>
 			<div class="form-check u-mb10">
-				<input x-model="showUserTable" class="form-check-input" type="checkbox" name="v_shared" id="v_shared" <?php if (empty($v_dedicated)) echo 'checked' ?>>
+				<input x-model="showUserTable" class="form-check-input" type="checkbox" name="v_shared" id="v_shared">
 				<label for="v_shared">
 					<?= _("Shared") ?>
 				</label>
 			</div>
-			<div x-cloak x-show="showUserTable" id="usrtable">
+			<div x-cloak x-show="!showUserTable" id="usrtable">
 				<div class="u-mb10">
 					<label for="v_owner" class="form-label"><?= _("Assigned user") ?></label>
 					<select class="form-select" name="v_owner" id="v_owner">

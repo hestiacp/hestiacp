@@ -1680,7 +1680,7 @@ if [ "$postgresql" = 'yes' ]; then
 
 	cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
-	ln -s ln -s /etc/phppgadmin/config.inc.php config.inc.php
+	ln -s ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf/
 
 	# Configuring phpPgAdmin
 	if [ "$apache" = 'yes' ]; then

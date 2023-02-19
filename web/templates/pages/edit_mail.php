@@ -115,7 +115,7 @@
 						</div>
 					</div>
 				</div>
-				<div x-cloak x-show="letsEncryptEnabled" id="ssl-details">
+				<div x-cloak x-show="!letsEncryptEnabled" id="ssl-details">
 					<div class="u-mb10">
 						<label for="v_ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>

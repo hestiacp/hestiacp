@@ -19,7 +19,7 @@
 
 	<form
 		x-data="{
-			showUserTable: <?= empty($v_dedicated) ? "false" : "true" ?>
+			showUserTable: <?= empty($v_dedicated) ? "true" : "false" ?>
 		}"
 		id="vstobjects"
 		name="v_edit_ip"
@@ -50,7 +50,7 @@
 					<?= _("Shared") ?>
 				</label>
 			</div>
-			<div x-cloak x-show="showUserTable" id="usrtable">
+			<div x-cloak x-show="!showUserTable" id="usrtable">
 				<div class="u-mb10">
 					<label for="v_owner" class="form-label"><?= _("Assigned user") ?></label>
 					<select class="form-select" name="v_owner" id="v_owner">

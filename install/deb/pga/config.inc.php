@@ -85,7 +85,7 @@ $conf["autocomplete"] = "default on";
 // your situation, you will need to either turn off auot-start sessions, or
 // turn off secure sessions.  Versions of PHP below 7.3 do not have access
 // to this feature and will be vulnerable to CSRF attacks.
-$conf['extra_session_security'] = true;
+$conf["extra_session_security"] = true;
 
 // If extra login security is true, then logins via phpPgAdmin with no
 // password or certain usernames (pgsql, postgres, root, administrator)

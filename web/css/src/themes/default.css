@@ -891,21 +891,13 @@
 	font-weight: 600;
 }
 
-.body-user .l-unit.animate__animated.animate__fadeIn {
-	line-height: 2rem;
-}
+/* Improve alignment of "Users" list double-height rows */
 
-.body-user .actions-panel {
-	line-height: 2rem;
-}
-
-.l-unit {
-	color: #707070;
-	padding-left: 15px;
-	overflow: hidden;
-	font-size: 0.8rem;
-	border-left: 1px solid transparent;
-	border-right: 1px solid transparent;
+.body-user {
+	& .l-unit.animate__animated.animate__fadeIn,
+	& .actions-panel {
+		line-height: 2rem;
+	}
 }
 
 .table-header {
@@ -942,6 +934,15 @@
 		padding-right: 0;
 		padding-bottom: 0;
 	}
+}
+
+.l-unit {
+	color: #707070;
+	padding-left: 15px;
+	overflow: hidden;
+	font-size: 0.8rem;
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
 }
 
 .units .l-unit {

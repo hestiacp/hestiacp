@@ -6,7 +6,7 @@
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Ubuntu 18.04 LTS, 20.04, 22.04 LTS
+# Ubuntu 20.04, 22.04 LTS
 #
 # ======================================================== #
 
@@ -940,9 +940,6 @@ if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-php//")
 	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
-if [ "$release" = '18.04' ]; then
-	software=$(echo "$software" | sed -e "s/libonig5/libonig4/")
-fi
 if [ "$release" = '20.04' ]; then
 	software=$(echo "$software" | sed -e "s/setpriv/util-linux/")
 	software=$(echo "$software" | sed -e "s/libzip4/libzip5/")
@@ -1355,13 +1352,9 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
-if [ "$release" = "18.04" ]; then
-	$HESTIA/bin/v-generate-ssl-cert $(hostname) $email 'US' 'California' \
-		'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
-else
-	$HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
-		'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
-fi
+$HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
+	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
+
 # Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
 if [ "$release" = "22.04" ]; then
@@ -1776,13 +1769,9 @@ if [ "$named" = 'yes' ]; then
 			systemctl restart apparmor >> $LOG
 		fi
 	fi
-	if [ "$release" != '18.04' ]; then
-		update-rc.d named defaults
-		systemctl start named
-	else
-		update-rc.d bind9 defaults
-		systemctl start bind9
-	fi
+	update-rc.d bind9 defaults
+	systemctl start bind9
+
 	check_result $? "bind9 start failed"
 
 	# Workaround for OpenVZ/Virtuozzo

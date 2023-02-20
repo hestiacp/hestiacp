@@ -128,20 +128,19 @@ log_history() {
 	fi
 	touch $log
 
-	# TODO: Improve log pruning and pagination
-	#
-	#if [ '1000' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then
-	#    tail -n 499 $log > $log.moved
-	#    mv -f $log.moved $log
-	#    chmod 660 $log
-	#fi
+	if [ '750' -lt "$(wc -l $log | cut -f 1 -d ' ')" ]; then
+		tail -n 499 $log > $log.moved
+		mv -f $log.moved $log
+		chmod 660 $log
+	fi
 
 	if [ -z "$date" ]; then
 		time_n_date=$(date +'%T %F')
 		time=$(echo "$time_n_date" | cut -f 1 -d \ )
 		date=$(echo "$time_n_date" | cut -f 2 -d \ )
 	fi
-	curr_str=$(grep "ID=" $log | cut -f 2 -d \' | sort -n | tail -n1)
+
+	curr_str=$(tail -n1 $log | grep "ID=" --text | cut -f2 -d \')
 	id="$((curr_str + 1))"
 	echo "ID='$id' DATE='$date' TIME='$time' LEVEL='$evt_level' CATEGORY='$evt_category' MESSAGE='$message'" >> $log
 }

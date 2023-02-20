@@ -6,6 +6,9 @@
 #                                                                           #
 #===========================================================================#
 
+# Global definitions
+REGEX_IPV4="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$"
+
 # Check ip ownership
 is_ip_owner() {
 	owner=$(grep 'OWNER=' $HESTIA/data/ips/$ip | cut -f 2 -d \')
@@ -224,9 +227,9 @@ get_broadcast() {
 # Get user ips
 get_user_ips() {
 	dedicated=$(grep -H "OWNER='$user'" $HESTIA/data/ips/*)
-	dedicated=$(echo "$dedicated" | cut -f 1 -d : | sed 's=.*/==')
+	dedicated=$(echo "$dedicated" | cut -f 1 -d : | sed 's=.*/==' | grep -E ${REGEX_IPV4})
 	shared=$(grep -H -A1 "OWNER='admin'" $HESTIA/data/ips/* | grep shared)
-	shared=$(echo "$shared" | cut -f 1 -d : | sed 's=.*/==' | cut -f 1 -d \-)
+	shared=$(echo "$shared" | cut -f 1 -d : | sed 's=.*/==' | cut -f 1 -d \- | grep -E ${REGEX_IPV4})
 	for dedicated_ip in $dedicated; do
 		shared=$(echo "$shared" | grep -v $dedicated_ip)
 	done

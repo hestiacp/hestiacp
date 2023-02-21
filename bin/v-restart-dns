@@ -61,6 +61,11 @@ if [ -e '/etc/named.conf' ]; then
 else
 	dns_conf='/etc/bind/named.conf'
 fi
+
+if [ ! -e "/usr/sbin/named-checkconf" ]; then
+	ln -s "$(which named-checkconf)" /sbin/named-checkconf
+fi
+
 /usr/sbin/named-checkconf "$dns_conf" > /dev/null 2>&1
 if [ $? -ne 0 ]; then
 	send_email_report

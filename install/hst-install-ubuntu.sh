@@ -1964,11 +1964,14 @@ echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
 
 #----------------------------------------------------------#
-#                  Configure PHPMailer                     #
+#                  Configure dependencies                  #
 #----------------------------------------------------------#
 
 echo "[ * ] Configuring PHP dependencies..."
 $HESTIA/bin/v-add-sys-dependencies quiet
+
+echo "[ * ] Install Rclone"
+curl -s https://rclone.org/install.sh | bash > /dev/null
 
 #----------------------------------------------------------#
 #                   Configure IP                           #

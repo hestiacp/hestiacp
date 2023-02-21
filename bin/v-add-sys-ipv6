@@ -133,19 +133,20 @@ if [ ! -z "$WEB_SYSTEM" ]; then
         fi
         echo "Listen [$ipv6]:$WEB_PORT" >> $web_conf
         cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> $web_conf
+        sed -i 's/\(VirtualHost \)directIP/\1['$ipv6']/g' $web_conf
         sed -i 's/directIP/'$ipv6'/g' $web_conf
         sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
 
     elif [ "$WEB_SYSTEM" = 'nginx' ]; then
         cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc $web_conf
-        sed -i 's/directIP/'$ipv6'/g' $web_conf
+        sed -i 's/directIP/['$ipv6']/g' $web_conf
     fi
 
     if [ "$WEB_SSL" = 'mod_ssl' ]; then
         if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
-            sed -i "1s/^/NameVirtualHost $ipv6:$WEB_SSL_PORT\n/" $web_conf
+            sed -i "1s/^/NameVirtualHost [$ipv6]:$WEB_SSL_PORT\n/" $web_conf
         fi
-        sed -i "1s/^/Listen $ipv6:$WEB_SSL_PORT\n/" $web_conf
+        sed -i "1s/^/Listen [$ipv6]:$WEB_SSL_PORT\n/" $web_conf
         sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' $web_conf
     fi
 fi

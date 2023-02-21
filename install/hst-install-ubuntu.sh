@@ -1703,7 +1703,7 @@ if [ "$named" = 'yes' ]; then
 			systemctl restart apparmor >> $LOG
 		fi
 	fi
-	update-rc.d bind9 defaults
+	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
 
 	check_result $? "bind9 start failed"
@@ -2154,9 +2154,9 @@ You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 
-	Admin URL:  https://$servername:$port \n"
-if [ "$host_ip" = "$ip" ]; then
-	echo -e "Backup URL:  https://$servername:$port \n"
+	Admin URL:  https://$servername:$port"
+if [ "$host_ip" != "$ip" ]; then
+	echo -e "Backup URL:  https://$servername:$port"
 fi
 echo -e " 	Username:   admin
 	Password:   $displaypass

@@ -2099,9 +2099,9 @@ You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 
-	Admin URL:  https://$servername:$port \n"
-if [ "$host_ip" = "$ip" ]; then
-	echo -e "Backup URL:  https://$servername:$port \n"
+	Admin URL:  https://$servername:$port"
+if [ "$host_ip" != "$ip" ]; then
+	echo -e "Backup URL:  https://$servername:$port"
 fi
 echo -e " 	Username:   admin
 	Password:   $displaypass

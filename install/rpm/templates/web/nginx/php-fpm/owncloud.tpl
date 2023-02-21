@@ -68,7 +68,7 @@ server {
         return  404;
     }
 
-    location /vstats/ {
+    location ^~ /vstats/ {
         alias   %home%/%user%/web/%domain%/stats/;
         include %home%/%user%/web/%domain%/stats/auth.conf*;
     }

@@ -81,7 +81,7 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location /vstats/ {
+    location ^~ /vstats/ {
         alias   %home%/%user%/web/%domain%/stats/;
         include %home%/%user%/web/%domain%/stats/auth.conf*;
     }

@@ -2135,6 +2135,11 @@ fi' >> /root/.bashrc
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
 
+host_ip=$(host $servername | head -n 1 | awk '{print $NF}')
+if [ "$host_ip" = "$ip" ]; then
+	ip="$servername"
+fi
+
 echo -e "\n"
 echo "===================================================================="
 echo -e "\n"
@@ -2146,10 +2151,12 @@ You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 
-	Admin URL:  https://$servername:$port
-    Backup:     https://$ip:$port
-    Username:   admin
-    Password:   $displaypass
+	Admin URL:  https://$servername:$port \n"
+if [ "$host_ip" = "$ip" ]; then
+	echo -e "Backup URL:  https://$servername:$port \n"
+fi
+echo -e " 	Username:   admin
+	Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!

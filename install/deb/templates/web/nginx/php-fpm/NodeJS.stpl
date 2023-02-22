@@ -1,11 +1,5 @@
 server {
-    listen      %ip%:%proxy_port%;
-    server_name %domain_idn% %alias_idn%;
-    return      301 https://%domain_idn%$request_uri;
-}
-
-server {
-    listen      %ip%:%proxy_ssl_port%;
+    listen      %ip%:%web_proxy_ssl%;
     
     server_name %domain_idn%;
     

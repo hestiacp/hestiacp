@@ -48,7 +48,7 @@ software="nginx apache2 apache2-utils apache2-suexec-custom
   awstats vsftpd proftpd-basic bind9 exim4 exim4-daemon-heavy
   clamav-daemon spamassassin dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved
   net-tools mariadb-client mariadb-common mariadb-server mysql-client mysql-common mysql-server postgresql
-  postgresql-contrib phppgadmin mc flex whois git idn2 unzip zip sudo bc ftp lsof
+  postgresql-contrib mc flex whois git idn2 unzip zip sudo bc ftp lsof
   rrdtool quota e2fslibs bsdutils e2fsprogs curl imagemagick fail2ban
   dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
   hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
@@ -1655,11 +1655,20 @@ if [ "$postgresql" = 'yes' ]; then
 	systemctl restart postgresql
 	sudo -iu postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'"
 
+	mkdir -p /etc/phppgadmin/
+	mkdir -p /usr/share/phppgadmin/
+
+	cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
+
+	wget --retry-connrefused --quiet https://github.com/hestiacp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
+	tar xzf phppgadmin-v$pga_v.tar.gz -C /usr/share/phppgadmin/
+
+	ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf/
+
 	# Configuring phpPgAdmin
 	if [ "$apache" = 'yes' ]; then
 		cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.inc
 	fi
-	cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
 	write_config_value "DB_PGA_ALIAS" "phppgadmin"
 	$HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
@@ -1928,23 +1937,10 @@ if [ "$sieve" = 'yes' ]; then
 fi
 
 #----------------------------------------------------------#
-#                  Configure File Manager                  #
+#                   Comfigure API                         #
 #----------------------------------------------------------#
 
-echo "[ * ] Configuring File Manager..."
-$HESTIA/bin/v-add-sys-filemanager quiet
-
-#----------------------------------------------------------#
-#                  Configure PHPMailer                     #
-#----------------------------------------------------------#
-
-echo "[ * ] Configuring PHP dependencies..."
-$HESTIA/bin/v-add-sys-dependencies quiet
-
-#----------------------------------------------------------#
-#                       Configure API                      #
-#----------------------------------------------------------#
-
+# Configuring system IPs
 if [ "$api" = "yes" ]; then
 	# keep legacy api enabled until transition is complete
 	write_config_value "API" "yes"
@@ -1956,6 +1952,23 @@ else
 	write_config_value "API_ALLOWED_IP" ""
 	$HESTIA/bin/v-change-sys-api disable
 fi
+
+#----------------------------------------------------------#
+#                  Configure File Manager                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring File Manager..."
+$HESTIA/bin/v-add-sys-filemanager quiet
+
+#----------------------------------------------------------#
+#                  Configure dependencies                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring PHP dependencies..."
+$HESTIA/bin/v-add-sys-dependencies quiet
+
+echo "[ * ] Install Rclone"
+curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                   Configure IP                           #
@@ -2128,9 +2141,12 @@ You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 
-    Admin URL:  https://$ip:$port
-    Username:   admin
-    Password:   $displaypass
+	Admin URL:  https://$servername:$port"
+if [ "$host_ip" != "$ip" ]; then
+	echo "	Backup URL:  https://$ip:$port"
+fi
+echo -e " 	Username:   admin
+	Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!

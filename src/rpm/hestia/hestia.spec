@@ -111,6 +111,9 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Upgrade phpMyAdmin if applicable
     upgrade_phpmyadmin | tee -a $LOG
 
+	# Upgrade phpMyAdmin if applicable
+	upgrade_phppgadmin | tee -a $LOG
+
     # Upgrade blackblaze-cli-took if applicable
     upgrade_b2_tool | tee -a $LOG
 

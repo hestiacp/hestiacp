@@ -150,7 +150,7 @@
 						}
 					?>
 					<div class="u-pt18 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
-						<span class="form-link js-add-ns"><?= _("Add one more Name Server") ?></span>
+						<span class="form-link"><?= _("Add one more Name Server") ?></span>
 					</div>
 				</div>
 			<?php } ?>

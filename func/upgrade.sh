@@ -325,6 +325,9 @@ upgrade_init_backup() {
 	if [ -d "/etc/phpmyadmin/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/phpmyadmin/
 	fi
+	if [ -d "/etc/phppgadmin/" ]; then
+		mkdir -p $HESTIA_BACKUP/conf/phppgadmin/
+	fi
 }
 
 upgrade_init_logging() {
@@ -467,6 +470,12 @@ upgrade_start_backup() {
 		fi
 		cp -fr /etc/phpmyadmin/* $HESTIA_BACKUP/conf/phpmyadmin
 	fi
+	if [ -d "/etc/phppgadmin" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- phppgadmin"
+		fi
+		cp -fr /etc/phppgadmin/* $HESTIA_BACKUP/conf/phppgadmin
+	fi
 }
 
 upgrade_refresh_config() {
@@ -536,6 +545,29 @@ upgrade_b2_tool() {
 			if [ ! -f "$b2cli" ]; then
 				echo "Error: Binary download failed, b2 doesnt work as expected."
 				exit 3
+			fi
+		fi
+	fi
+}
+
+upgrade_phppgadmin() {
+	if [ -n "$(echo $DB_SYSTEM | grep -w 'pgsql')" ]; then
+		pga_release=$(cat /usr/share/phppgadmin/libraries/lib.inc.php | grep appVersion | head -n1 | cut -f2 -d\' | cut -f1 -d-)
+		if version_ge "$pga_release" "pga_v"; then
+			echo "[ * ] phppgadmin is up to date ($pga_release)..."
+		else
+			# Display upgrade information
+			echo "[ * ] Upgrading phppgadmin to version $pga_v..."
+			[ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
+			# Download latest phpMyAdmin release
+			wget --retry-connrefused --quiet https://github.com/hestiacp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
+			tar xzf phppgadmin-v$pga_v.tar.gz -C /usr/share/phppgadmin/
+
+			if ! version_ge "$pga_release" "7.14.0"; then
+				cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
+			fi
+			if [ ! -f /usr/share/phppgadmin/conf/config.inc.php ]; then
+				ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf
 			fi
 		fi
 	fi

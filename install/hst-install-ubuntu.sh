@@ -46,7 +46,7 @@ software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
     imagemagick libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
     lsof mc mariadb-client mariadb-common mariadb-server mysql-client mysql-common mysql-server nginx
     php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
-    php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu phppgadmin
+    php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu
     php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
     php$fpm_v-imagick php$fpm_v-intl php$fpm_v-mbstring
     php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
@@ -1672,11 +1672,20 @@ if [ "$postgresql" = 'yes' ]; then
 	systemctl restart postgresql
 	sudo -iu postgres psql -c "ALTER USER postgres WITH PASSWORD '$ppass'" > /dev/null 2>&1
 
+	mkdir -p /etc/phppgadmin/
+	mkdir -p /usr/share/phppgadmin/
+
+	wget --retry-connrefused --quiet https://github.com/hestiacp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
+	tar xzf phppgadmin-v$pga_v.tar.gz -C /usr/share/phppgadmin/
+
+	cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
+
+	ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf/
+
 	# Configuring phpPgAdmin
 	if [ "$apache" = 'yes' ]; then
 		cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.inc
 	fi
-	cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
 	write_config_value "DB_PGA_ALIAS" "phppgadmin"
 	$HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"

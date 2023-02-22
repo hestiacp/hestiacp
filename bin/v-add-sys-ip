@@ -73,6 +73,7 @@ if [ -z "$sys_ip_check" ]; then
 	# Adding sys ip
 	/sbin/ip addr add $ip/$cidr dev $iface \
 		broadcast $broadcast label $iface
+	sleep 2	# wait to avoid issues with apache and nginx port binding								 
 
 	# Check if netplan is in use and generate configuration file
 	if [ ! -z $(which netplan) ]; then
@@ -126,7 +127,8 @@ INTERFACE='$iface'
 NETMASK='$netmask'
 NAT='$nat_ip'
 TIME='$time'
-DATE='$date'" > $HESTIA/data/ips/$ip
+DATE='$date'
+VERSION='4'" > $HESTIA/data/ips/$ip
 chmod 660 $HESTIA/data/ips/$ip
 
 # WEB support

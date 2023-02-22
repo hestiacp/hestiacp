@@ -65,7 +65,7 @@ sys_ip_check=$(/sbin/ip -6 addr | grep "$ipv6")
 if [ -z "$sys_ip_check" ]; then
     # Adding sys ip
     /sbin/ip addr add $ipv6$prefix_length dev ${iface%:*} label ${iface}
-										 
+	sleep 2	# wait to avoid issues with apache and nginx port binding								 
     
     # Check if netplan is in use and generate configuration file
     if [ ! -z $(which netplan) ]; then 

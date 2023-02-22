@@ -148,6 +148,15 @@ $conf["help_base"] = "http://www.postgresql.org/docs/%s/interactive/";
 // Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
 $conf["ajax_refresh"] = 3;
 
+// If extra session security is true, then PHP's session cookies will have
+// SameSite cookie flags set to prevent CSRF attacks.  If you're using
+// auto-start sessions, autostarted sessions will be destroyed and
+// restarted with SameSite on.  If this this solution is not acceptable for
+// your situation, you will need to either turn off auot-start sessions, or
+// turn off secure sessions.  Versions of PHP below 7.3 do not have access
+// to this feature and will be vulnerable to CSRF attacks.
+$conf["extra_session_security"] = true;
+
 /*****************************************
  * Don't modify anything below this line *
  *****************************************/

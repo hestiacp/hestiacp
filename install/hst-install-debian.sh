@@ -1899,23 +1899,10 @@ if [ "$sieve" = 'yes' ]; then
 fi
 
 #----------------------------------------------------------#
-#                  Configure File Manager                  #
+#                   Comfigure API                         #
 #----------------------------------------------------------#
 
-echo "[ * ] Configuring File Manager..."
-$HESTIA/bin/v-add-sys-filemanager quiet
-
-#----------------------------------------------------------#
-#                  Configure PHPMailer                     #
-#----------------------------------------------------------#
-
-echo "[ * ] Configuring PHP dependencies..."
-$HESTIA/bin/v-add-sys-dependencies quiet
-
-#----------------------------------------------------------#
-#                       Configure API                      #
-#----------------------------------------------------------#
-
+# Configuring system IPs
 if [ "$api" = "yes" ]; then
 	# keep legacy api enabled until transition is complete
 	write_config_value "API" "yes"
@@ -1927,6 +1914,23 @@ else
 	write_config_value "API_ALLOWED_IP" ""
 	$HESTIA/bin/v-change-sys-api disable
 fi
+
+#----------------------------------------------------------#
+#                  Configure File Manager                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring File Manager..."
+$HESTIA/bin/v-add-sys-filemanager quiet
+
+#----------------------------------------------------------#
+#                  Configure dependencies                  #
+#----------------------------------------------------------#
+
+echo "[ * ] Configuring PHP dependencies..."
+$HESTIA/bin/v-add-sys-dependencies quiet
+
+echo "[ * ] Install Rclone"
+curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                   Configure IP                           #
@@ -2096,9 +2100,12 @@ You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 
-    Admin URL:  https://$ip:$port
-    Username:   admin
-    Password:   $displaypass
+	Admin URL:  https://$servername:$port"
+if [ "$host_ip" != "$ip" ]; then
+	echo "	Backup URL:  https://$ip:$port"
+fi
+echo -e " 	Username:   admin
+	Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!

@@ -1899,6 +1899,23 @@ if [ "$sieve" = 'yes' ]; then
 fi
 
 #----------------------------------------------------------#
+#                   Comfigure API                         #
+#----------------------------------------------------------#
+
+# Configuring system IPs
+if [ "$api" = "yes" ]; then
+	# keep legacy api enabled until transition is complete
+	write_config_value "API" "yes"
+	write_config_value "API_SYSTEM" "1"
+	write_config_value "API_ALLOWED_IP" ""
+else
+	write_config_value "API" "no"
+	write_config_value "API_SYSTEM" "0"
+	write_config_value "API_ALLOWED_IP" ""
+	$HESTIA/bin/v-change-sys-api disable
+fi
+
+#----------------------------------------------------------#
 #                  Configure File Manager                  #
 #----------------------------------------------------------#
 
@@ -1913,23 +1930,7 @@ echo "[ * ] Configuring PHP dependencies..."
 $HESTIA/bin/v-add-sys-dependencies quiet
 
 echo "[ * ] Install Rclone"
-curl -s https://rclone.org/install.sh | bash > /dev/null
-
-#----------------------------------------------------------#
-#                       Configure API                      #
-#----------------------------------------------------------#
-
-if [ "$api" = "yes" ]; then
-	# keep legacy api enabled until transition is complete
-	write_config_value "API" "yes"
-	write_config_value "API_SYSTEM" "1"
-	write_config_value "API_ALLOWED_IP" ""
-else
-	write_config_value "API" "no"
-	write_config_value "API_SYSTEM" "0"
-	write_config_value "API_ALLOWED_IP" ""
-	$HESTIA/bin/v-change-sys-api disable
-fi
+curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                   Configure IP                           #
@@ -2101,7 +2102,7 @@ Ready to get started? Log in using the following credentials:
 
 	Admin URL:  https://$servername:$port"
 if [ "$host_ip" != "$ip" ]; then
-	echo -e "Backup URL:  https://$servername:$port"
+	echo -e "	Backup URL:  https://$servername:$port"
 fi
 echo -e " 	Username:   admin
 	Password:   $displaypass

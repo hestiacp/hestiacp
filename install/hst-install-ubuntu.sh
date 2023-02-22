@@ -1971,12 +1971,13 @@ echo "[ * ] Configuring PHP dependencies..."
 $HESTIA/bin/v-add-sys-dependencies quiet
 
 echo "[ * ] Install Rclone"
-curl -s https://rclone.org/install.sh | bash > /dev/null
+curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                   Configure IP                           #
 #----------------------------------------------------------#
 
+echo "[ * ] Configuring System IP..."
 # Configuring system IPs
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
@@ -1990,7 +1991,6 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-echo "[ * ] Configuring System IP..."
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
 if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
@@ -2156,7 +2156,7 @@ Ready to get started? Log in using the following credentials:
 
 	Admin URL:  https://$servername:$port"
 if [ "$host_ip" != "$ip" ]; then
-	echo -e "Backup URL:  https://$servername:$port"
+	echo -e "	Backup URL:  https://$servername:$port"
 fi
 echo -e " 	Username:   admin
 	Password:   $displaypass

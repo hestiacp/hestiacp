@@ -1,5 +1,5 @@
 server {
-    listen      %ip%:%proxy_ssl_port%;
+    listen      %ip%:%web_proxy_ssl%;
     
     server_name %domain_idn%;
     

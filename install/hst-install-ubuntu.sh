@@ -2167,7 +2167,7 @@ Ready to get started? Log in using the following credentials:
 
 	Admin URL:  https://$servername:$port"
 if [ "$host_ip" != "$ip" ]; then
-	echo "	Backup URL:  https://$ip:$port"
+	echo -n "	Backup URL:  https://$ip:$port"
 fi
 echo -e " 	Username:   admin
 	Password:   $displaypass

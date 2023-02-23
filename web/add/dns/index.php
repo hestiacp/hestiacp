@@ -331,12 +331,17 @@ $v_template = $user_config[$user_plain]["DNS_TEMPLATE"];
 
 if (empty($_GET["domain"])) {
 	// Display body for dns domain
-
+	if (empty($v_domain)) {
+		$v_domain = "";
+	}
 	if (empty($v_ttl)) {
 		$v_ttl = 14400;
 	}
 	if (empty($v_exp)) {
 		$v_exp = date("Y-m-d", strtotime("+1 year"));
+	}
+	if (empty($v_dnssec)) {
+		$v_dnssec = "";
 	}
 	if (empty($v_ns1)) {
 		exec(HESTIA_CMD . "v-list-user-ns " . $user . " json", $output, $return_var);

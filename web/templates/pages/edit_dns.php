@@ -30,19 +30,39 @@
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_ip" class="form-label"><?= _("IP address") ?></label>
+				<label for="v_ip" class="form-label"><?= _("IPV4 address") ?></label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 						<option value="">clear</option>
 						<?php
 							foreach ($v_ips as $ip => $value) {
-								$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
-								$ip_selected = ((!empty($v_ip) && ($v_ip==$ip||$v_ip==$display_ip) ))? 'selected' : '';
-								echo "<option value='{$display_ip}' {$ip_selected}>" . htmlentities($display_ip) . "</option>\n";
+								if ($value['VERSION']==4) {
+									$display_ip = empty($value['NAT']) ? $ip : "{$value['NAT']}";
+									$ip_selected = ((!empty($v_ip) && ($v_ip==$ip||$v_ip==$display_ip) ))? 'selected' : '';
+									echo "<option value='{$display_ip}' {$ip_selected}>" . htmlentities($display_ip) . "</option>\n";
+								}
 							}
 						?>
 					</select>
 					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
+				</div>
+			</div>
+			<div class="u-mb10">
+				<label for="v_ipv6" class="form-label"><?= _("IPV6 address") ?></label>
+				<div class="u-pos-relative">
+					<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
+						<option value="">clear</option>
+						<?php
+							foreach ($v_ips as $ipv6 => $value) {
+								if ($value['VERSION']==6) {
+									$display_ipv6 = $ipv6;
+									$ipv6_selected = ((!empty($v_ipv6) && ($v_ipv6==$ipv6||$v_ipv6==$display_ipv6) ))? 'selected' : '';
+									echo "<option value='{$display_ipv6}' {$ipv6_selected}>" . htmlentities($display_ipv6) . "</option>\n";
+								}
+							}
+						?>
+					</select>
+					<input type="text" class="form-control list-editor" name="v_ipv6" id="v_ipv6" value="<?= htmlentities(trim($v_ipv6, "'")) ?>">
 				</div>
 			</div>
 			<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] === "yes")) { ?>

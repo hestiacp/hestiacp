@@ -68,6 +68,7 @@
 			<div class="u-mb20">
 				<label for="v_ip" class="form-label"><?= _("IPV4 Address") ?></label>
 				<select class="form-select" name="v_ip" id="v_ip">
+					<option value="">clear</option>
 					<?php
 						foreach ($ips as $ip => $value) {
 							if ($value['VERSION']==4) {
@@ -82,6 +83,7 @@
 			<div class="u-mb20">
 				<label for="v_ipv6" class="form-label"><?= _("IPV6 Address") ?></label>
 				<select class="form-select" name="v_ipv6" id="v_ipv6">
+					<option value="">clear</option>
 					<?php
 						foreach ($ips as $ipv6 => $value) {
 							if ($value['VERSION']==6) {

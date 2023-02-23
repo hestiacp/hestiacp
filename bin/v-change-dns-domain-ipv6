@@ -1,12 +1,13 @@
 #!/bin/bash
 # info: change dns domain ip address
-# options: USER DOMAIN IPV6
+# options: USER DOMAIN IPV6 [RESTART]
 #
-# The function for changing the main ipv6 of DNS zone.
-
+# example: v-change-dns-domain-ipv6 admin domain.com 1111:2222::1
+#
+# This function for changing the main ipv6 of DNS zone.
 
 #----------------------------------------------------------#
-#                    Variable&Function                     #
+#                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
@@ -17,26 +18,40 @@ ipv6=$3
 restart=$4
 
 # Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-source $HESTIA/func/ipv6.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-source $HESTIA/conf/hestia.conf
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
 format_domain_idn
+# TODO: $domain_idn not used in this script - maybe $domain should be converted to $doman_idn ?
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN IPV6'
-is_format_valid 'user' 'domain'
+check_args '3' "$#" 'USER DOMAIN IPV6 [RESTART]'
+is_format_valid 'user' 'domain' 'ipv6'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
 
 if [ "$ipv6" != "no" ]; then
     is_format_valid 'ipv6'
@@ -52,11 +67,6 @@ get_domain_values 'dns'
 if [ -z @"$ipv6" ] && [ -z "$IP" ]; then
     check_result $E_INVALID "IP or IPv6 is required"
 fi
-
-#----------------------------------------------------------#
-#                       Action                             #
-#----------------------------------------------------------#
-
 old=$IP6
 
 if [ -z "$old" ]; then
@@ -90,31 +100,29 @@ update_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    update_domain_serial
-    update_domain_zone
+	rebuild_dns_domain_conf
 fi
 
 # Updating dns-cluster queue
-if [ ! -z "$DNS_CLUSTER" ]; then
-    # Check for first sync
-    dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
-    if [ -z "$dlock" ]; then
-        cmd="$BIN/v-add-remote-dns-domain $user $domain domain yes"
-        echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
-    fi
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	# Check for first sync
+	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+	if [ -z "$dlock" ]; then
+		cmd="$BIN/v-add-remote-dns-domain $user $domain domain yes"
+		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+	fi
 fi
 
-
 #----------------------------------------------------------#
-#                       HESTIA                              #
+#                       Hestia                             #
 #----------------------------------------------------------#
 
 # Restarting named
-$BIN/v-restart-dns $restart
-check_result $? "DNS restart failed" >/dev/null
+$BIN/v-restart-dns "$restart"
+check_result $? "DNS restart failed" > /dev/null
 
 # Logging
-log_history "changed dns ipv6 for $domain to $ipv6"
+$BIN/v-log-action "$user" "Info" "DNS" "IPV6 address for DNS domain changed (IPV6: $ipv6, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

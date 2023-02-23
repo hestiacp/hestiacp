@@ -85,15 +85,6 @@ $conf["autocomplete"] = "default on";
 // passworded local connections.
 $conf["extra_login_security"] = true;
 
-// If extra session security is true, then PHP's session cookies will have
-// SameSite cookie flags set to prevent CSRF attacks.  If you're using
-// auto-start sessions, autostarted sessions will be destroyed and
-// restarted with SameSite on.  If this this solution is not acceptable for
-// your situation, you will need to either turn off auot-start sessions, or
-// turn off secure sessions.  Versions of PHP below 7.3 do not have access
-// to this feature and will be vulnerable to CSRF attacks.
-$conf['extra_session_security'] = true;
-
 // Only show owned databases?
 // Note: This will simply hide other databases in the list - this does
 // not in any way prevent your users from seeing other database by

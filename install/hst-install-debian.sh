@@ -2113,9 +2113,9 @@ Ready to get started? Log in using the following credentials:
 
 	Admin URL:  https://$servername:$port"
 if [ "$host_ip" != "$ip" ]; then
-	echo -n "	Backup URL:  https://$ip:$port"
+	echo -n "	Backup URL: https://$ip:$port"
 fi
-echo -e " 	Username:   admin
+echo -e -n " 	Username:   admin
 	Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,

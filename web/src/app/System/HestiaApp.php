@@ -197,6 +197,7 @@ class HestiaApp {
 		string $dbname,
 		string $dbuser,
 		string $dbpass,
+		string $dbtype = "mysql",
 		string $charset = "utf8mb4",
 	) {
 		$v_password = tempnam("/tmp", "hst");
@@ -207,7 +208,7 @@ class HestiaApp {
 			$dbname,
 			$dbuser,
 			$v_password,
-			"mysql",
+			$dbtype,
 			"localhost",
 			$charset,
 		]);

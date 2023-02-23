@@ -24,7 +24,7 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
-# shellcheck source=/usr/local/hestia/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/ipv6.sh
 source $HESTIA/func/ipv6.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"

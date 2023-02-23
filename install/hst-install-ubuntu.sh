@@ -1040,6 +1040,8 @@ systemctl restart ssh
 
 # Disable AWStats cron
 rm -f /etc/cron.d/awstats
+# Replace awstatst function
+cp -f $HESTIA_INSTALL_DIR/logrotate/httpd-prerotate/* /etc/logrotate.d/httpd-prerotate/
 
 # Set directory color
 if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then

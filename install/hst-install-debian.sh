@@ -1035,6 +1035,8 @@ systemctl restart ssh
 
 # Disable AWStats cron
 rm -f /etc/cron.d/awstats
+# Replace awstatst function
+cp -f $HESTIA_INSTALL_DIR/logrotate/httpd-prerotate/* /etc/logrotate.d/httpd-prerotate/
 
 # Set directory color
 if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
@@ -2111,7 +2113,7 @@ Ready to get started? Log in using the following credentials:
 
 	Admin URL:  https://$servername:$port"
 if [ "$host_ip" != "$ip" ]; then
-	echo "	Backup URL:  https://$ip:$port"
+	echo -n "	Backup URL:  https://$ip:$port"
 fi
 echo -e " 	Username:   admin
 	Password:   $displaypass

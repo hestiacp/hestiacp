@@ -17,6 +17,18 @@
 ####### You can use \n within the string to create new lines.                   #######
 #######################################################################################
 
+# load config because we need to know if proftpd is installed
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
@@ -71,6 +83,17 @@ for file in /etc/php/*/fpm/pool.d/www.conf; do
 	echo "[ * ] Update $file legacy /var/run/ to /run/"
 	sed -i 's|/var/run/|/run/|g' $file
 done
+
+#update proftpd
+if [ "$FTP_SYSTEM" = 'proftpd' ]; then
+        contains_conf_d=$(grep -c "Include /etc/proftpd/conf.d/\*.conf" "/etc/proftpd/proftpd.conf")
+# the line below is for testing only:
+#        echo "contains proftpd? $contains_conf_d"
+        if [ $contains_conf_d = 0 ]; then
+                sed -i 's/Include \/etc\/proftpd\/tls.conf/&\nInclude \/etc\/proftpd\/conf.d\/*.conf/' /etc/proftpd/proftpd.conf
+        fi
+	$BIN/v-restart-ftp
+fi
 
 if echo "$BACKUP_SYSTEM" | grep "google" > /dev/null; then
 	echo "[ ! ] Deprecation notice: Backup via Google Cloud has been removed setup backup again via Rclone to reinstate the backup and restore capebilities!"

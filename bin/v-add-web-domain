@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: add web domain
-# options: USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]
+# options: USER DOMAIN [IPV4] [IPV6] [RESTART] [ALIASES] [PROXY_EXTENSIONS]
 #
-# example: v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
+# example: v-add-web-domain admin wonderland.com 192.18.22.43 1111:2222:3333::1 yes www.wonderland.com
 #
 # This function adds virtual host to a server. In cases when ip is
 # undefined in the script, "default" template will be used. The alias of
@@ -20,9 +20,10 @@ user=$1
 domain=$2
 domain_idn=$2
 ip=$3
-restart=$4 # will be moved to the end soon
-aliases=$5
-proxy_ext=$6
+ipv6=$4
+restart=$5 # will be moved to the end soon
+aliases=$6
+proxy_ext=$7
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -33,6 +34,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/ipv6.sh
+source $HESTIA/func/ipv6.sh
 # shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
 # load config file
@@ -49,8 +52,8 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 #----------------------------------------------------------#
 
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
-check_args '2' "$#" 'USER DOMAIN [IP] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
-is_format_valid 'user' 'domain' 'aliases' 'ip' 'proxy_ext'
+check_args '2' "$#" 'USER DOMAIN [IPV4] [IPV6] [RESTART] [ALIASES] [PROXY_EXTENSIONS]'
+is_format_valid 'user' 'domain' 'aliases' 'ip' 'ipv6' 'proxy_ext'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_package_full 'WEB_DOMAINS'
@@ -60,10 +63,10 @@ if [ "$aliases" != "none" ]; then
 	is_package_full 'WEB_ALIASES'
 fi
 
-if [ "$($BIN/v-list-web-domain $user $domain_utf plain | cut -f 1) " != "$domain" ]; then
+if [ "$($BIN/v-list-web-domain $user $domain_utf shell | sed -n '/DOMAIN/s/DOMAIN:[\t ]*//p')" != "$domain" ]; then
 	is_domain_new 'web' "$domain_utf,$aliases"
 fi
-if [ "$($BIN/v-list-web-domain $user $domain_idn plain | cut -f 1) " != "$domain" ]; then
+if [ "$($BIN/v-list-web-domain $user $domain_idn shell | sed -n '/DOMAIN/s/DOMAIN:[\t ]*//p')" != "$domain" ]; then
 	is_domain_new 'web' "$domain_idn,$aliases"
 else
 	is_domain_new 'web' "$domain,$aliases"
@@ -80,7 +83,17 @@ is_base_domain_owner "$domain,$aliases"
 
 if [ -n "$ip" ]; then
 	is_ip_valid "$ip" "$user"
-else
+fi
+
+if [ -n "$ipv6" ]; then
+	is_ipv6_valid "$ipv6" "$user"
+fi
+
+if [ -z "$ip" -a -z "$ipv6" ]; then
+	get_user_ipv6
+fi
+
+if [ -z "$ipv6" ]; then
 	get_user_ip
 fi
 
@@ -205,7 +218,8 @@ fi
 #----------------------------------------------------------#
 
 # Increasing counters
-increase_ip_value "$local_ip"
+[ -n "$ip" ] && increase_ip_value "$local_ip"
+[ -n "$ipv6" ] && increase_ipv6_value "$local_ipv6"
 increase_user_value "$user" '$U_WEB_DOMAINS'
 increase_user_value "$user" '$U_WEB_ALIASES' "$alias_number"
 
@@ -215,7 +229,7 @@ time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding domain in web.conf
-echo "DOMAIN='$domain' IP='$ip' IP6='' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE'\
+echo "DOMAIN='$domain' IP='$ip' IP6='$ipv6' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL='$WEB_TEMPLATE'\
  SSL='no' SSL_FORCE='no' SSL_HOME='same' LETSENCRYPT='no' FTP_USER='' FTP_MD5=''\
  BACKEND='$BACKEND_TEMPLATE' PROXY='$PROXY_TEMPLATE' PROXY_EXT='$PROXY_EXT'\
  STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'\

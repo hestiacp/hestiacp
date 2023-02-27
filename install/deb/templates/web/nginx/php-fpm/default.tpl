@@ -5,7 +5,8 @@
 #=========================================================================#
 
 server {
-    listen      %ip%:%web_port%;
+%<i4    listen      %web_ipv4%:%web_port%;i4>%
+%<i6    listen      %web_ipv6%:%web_port%;i6>%
     server_name %domain_idn% %alias_idn%;
     root        %docroot%;
     index       index.php index.html index.htm;

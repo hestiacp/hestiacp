@@ -4,7 +4,7 @@
 # https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
 #=========================================================================#
 
-<VirtualHost %ip%:%web_ssl_port%>
+<VirtualHost%<i4 %web_ipv4%:%web_ssl_port%i4>%%<i6 %web_ipv6%:%web_ssl_port%i6>%>
 
     ServerName %domain_idn%
     %alias_string%

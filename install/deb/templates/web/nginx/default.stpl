@@ -5,7 +5,8 @@
 #=========================================================================#
 
 server {
-    listen      %ip%:%proxy_ssl_port% ssl http2;
+%<i4    listen      %proxy_ipv4%:%proxy_ssl_port% ssl http2;i4>%
+%<i6    listen      %proxy_ipv6%:%proxy_ssl_port% ssl http2;i6>%
     server_name %domain_idn% %alias_idn%;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
@@ -16,7 +17,7 @@ server {
     include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 
     location / {
-        proxy_pass      https://%ip%:%web_ssl_port%;
+        proxy_pass      https://%web_ip%:%web_ssl_port%;
         location ~* ^.+\.(%proxy_extensions%)$ {
             root           %sdocroot%;
             access_log     /var/log/%web_system%/domains/%domain%.log combined;
@@ -31,7 +32,7 @@ server {
     }
 
     location @fallback {
-        proxy_pass      https://%ip%:%web_ssl_port%;
+        proxy_pass      https://%web_ip%:%web_ssl_port%;
     }
 
     location ~ /\.(?!well-known\/|file) {

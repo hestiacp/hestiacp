@@ -5,7 +5,8 @@
 #=========================================================================#
 
 server {
-    listen      %ip%:%web_ssl_port% ssl http2;
+%<i4    listen      %web_ipv4%:%web_ssl_port% ssl http2;i4>%
+%<i6    listen      %web_ipv6%:%web_ssl_port% ssl http2;i6>%
     server_name %domain_idn% %alias_idn%;
     root        %sdocroot%;
     index       index.php index.html index.htm;

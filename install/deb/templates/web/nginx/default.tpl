@@ -5,13 +5,14 @@
 #=========================================================================#
 
 server {
-    listen      %ip%:%proxy_port%;
+%<i4    listen      %proxy_ipv4%:%proxy_port%;i4>%
+%<i6    listen      %proxy_ipv6%:%proxy_port%;i6>%
     server_name %domain_idn% %alias_idn%;
 
     include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location / {
-        proxy_pass      http://%ip%:%web_port%;
+        proxy_pass      http://%web_ip%:%web_port%;
         location ~* ^.+\.(%proxy_extensions%)$ {
             root           %docroot%;
             access_log     /var/log/%web_system%/domains/%domain%.log combined;
@@ -26,7 +27,7 @@ server {
     }
 
     location @fallback {
-        proxy_pass      http://%ip%:%web_port%;
+        proxy_pass      http://%web_ip%:%web_port%;
     }
 
     location ~ /\.(?!well-known\/|file) {

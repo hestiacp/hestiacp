@@ -250,12 +250,50 @@ add_web_config() {
 		fi
 	fi
 
+	if [ -z "$ip" ]; then
+		i4mark=""
+		ipv4=""
+		web_ipv4=""
+		web_ip="[$ipv6]"
+		proxy_ipv4=""
+		proxy_ip="[$ipv6]"
+		local_ip="[$ipv6]"
+	else
+		i4mark="\1"
+		ipv4="$local_ip"
+		web_ipv4="$local_ip"
+		web_ip="$local_ip"
+		proxy_ipv4="$local_ip"
+		proxy_ip="$local_ip"
+	fi
+	if [ -z "$ipv6" ]; then
+		i6mark=""
+		web_ipv6=""
+		web_ip="$local_ip"
+		proxy_ipv6=""
+		proxy_ip="$local_ip"
+	else
+		i6mark="\1"
+		web_ipv6="[$ipv6]"
+		web_ip="[$ipv6]"
+		proxy_ipv6="[$ipv6]"
+		proxy_ip="[$ipv6]"
+	fi
+	
 	# Note: Removing or renaming template variables will lead to broken custom templates.
 	#   -If possible custom templates should be automatically upgraded to use the new format
 	#   -Alternatively a depreciation period with proper notifications should be considered
 
 	cat "${WEBTPL_LOCATION}/$2" \
-		| sed -e "s|%ip%|$local_ip|g" \
+		| sed -e "s|%<i4\(.*\)i4>%|$i4mark|g" \
+			-e "s|%<i6\(.*\)i6>%|$i6mark|g" \
+			-e "s|%web_ipv4%|$web_ipv4|g" \
+			-e "s|%web_ipv6%|$web_ipv6|g" \
+			-e "s|%web_ip%|$web_ip|g" \
+			-e "s|%proxy_ipv4%|$proxy_ipv4|g" \
+			-e "s|%proxy_ipv6%|$proxy_ipv6|g" \
+			-e "s|%proxy_ip%|$proxy_ip|g" \
+			-e "s|%ip%|$local_ip|g" \
 			-e "s|%domain%|$domain|g" \
 			-e "s|%domain_idn%|$domain_idn|g" \
 			-e "s|%alias%|${aliases//,/ }|g" \

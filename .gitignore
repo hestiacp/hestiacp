@@ -40,6 +40,9 @@ web/src/vendor/composer/installed.json
 **/node_modules/
 npm-debug.log
 
+# optional eslint cache
+.eslintcache
+
 # Yarn Integrity file
 .yarn-integrity
 

@@ -1444,8 +1444,8 @@ if [ -n "$resolver" ]; then
 		sed -i "s/1.0.0.1 \[2606:4700:4700::1111\] 1.0.0.1 \[2606:4700:4700::1001\]/$resolver/g" /etc/nginx/nginx.conf
 		sed -i "s/1.0.0.1 \[2606:4700:4700::1111\] 1.0.0.1 \[2606:4700:4700::1001\]/$resolver/g" /usr/local/hestia/nginx/
 	else
-		sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
-		sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+		sed -i "s/1.0.0.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+		sed -i "s/1.0.0.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 	fi
 fi
 

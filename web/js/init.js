@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 	// Refactored
-	document.querySelector('#vstobjects').addEventListener('submit', () => {
+	document.querySelector('#vstobjects')?.addEventListener('submit', () => {
 		document.querySelector('.fullscreen-loader').classList.add('show');
 	});
 
-	document.querySelectorAll('.toolbar-right .sort-by').forEach((el) => {
+	document.querySelectorAll('.toolbar-right .sort-by')?.forEach((el) => {
 		el.addEventListener('click', () => $('.context-menu.sort-order').toggle());
 	});
 

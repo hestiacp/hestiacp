@@ -361,13 +361,17 @@ get_web_config_lines() {
 
 # Replace web config
 replace_web_config() {
-	conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
-	if [[ "$2" =~ stpl$ ]]; then
-		conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
-	fi
-
-	if [ -e "$conf" ]; then
-		sed -i "s|$old|$new|g" $conf
+	if [ -z "$old" ]; then
+		prepare_web_domain_values #	old parameter is empty. search and replace not possible
+		add_web_config "$@"
+	else
+		conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
+		if [[ "$2" =~ stpl$ ]]; then
+			conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
+		fi
+		if [ -e "$conf" ]; then
+			sed -i "s|$old|$new|g" $conf
+		fi
 	fi
 }
 

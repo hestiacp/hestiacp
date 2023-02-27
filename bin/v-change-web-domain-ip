@@ -39,13 +39,15 @@ format_domain_idn
 #----------------------------------------------------------#
 
 check_args '3' "$#" 'USER DOMAIN IP [RESTART]'
-is_format_valid 'user' 'domain' 'ip'
+if [ -n "$ip" ]; then
+	is_format_valid 'user' 'domain' 'ip'
+	is_ip_valid "$ip" "$user"
+fi
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
-is_ip_valid "$ip" "$user"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -73,8 +75,14 @@ if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
 	fi
 fi
 
+WEBDOMAIN="$DOMAIN"
+DOMAIN=''
+get_object_value 'mail' 'DOMAIN' ${domain}
+MAILDOMAIN="$DOMAIN"
+DOMAIN="$WEBDOMAIN"
+
 # Check for webmail
-if [ -n "$IMAP_SYSTEM" ]; then
+if [ -n "$IMAP_SYSTEM" -a -n "$MAILDOMAIN" ]; then
 	$BIN/v-rebuild-mail-domain "$user" "$domain"
 fi
 
@@ -86,8 +94,8 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$3"
 
 # Update counters
-increase_ip_value "$new"
-decrease_ip_value "$old"
+[ -n "$new" ] && increase_ip_value "$new"
+[ -n "$old" ] && decrease_ip_value "$old"
 
 # Restart web server
 $BIN/v-restart-web "$restart"

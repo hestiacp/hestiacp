@@ -486,19 +486,22 @@ get_user_ipv6() {
 # Validate ipv6 address
 is_ipv6_valid() {
     ipv6="$1"
+    if [ -z "$ipv6" ]; then
+        check_result $E_NOTEXIST "IPV6 address is empty"
+    fi
     if [ ! -e "$HESTIA/data/ips/$1" ]; then
-        check_result $E_NOTEXIST "IP6 $1 doesn't exist"
+        check_result $E_NOTEXIST "IPV6 $1 doesn't exist"
     fi
     if [ ! -z $2 ]; then
         ip_data=$(cat $HESTIA/data/ips/$1)
         ip_owner=$(echo "$ip_data" |grep OWNER= |cut -f2 -d \')
         ip_status=$(echo "$ip_data" |grep STATUS= |cut -f2 -d \')
         if [ "$ip_owner" != "$user" ] && [ "$ip_status" = 'dedicated' ]; then
-            check_result $E_FORBIDEN "$user user can't use IP6 $1"
+            check_result $E_FORBIDEN "$user user can't use IPV6 $1"
         fi
         get_user_owner
         if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
-            check_result $E_FORBIDEN "$user user can't use IP6 $1"
+            check_result $E_FORBIDEN "$user user can't use IPV6 $1"
         fi
     fi
 }

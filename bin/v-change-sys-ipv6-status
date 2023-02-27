@@ -15,7 +15,7 @@ ip_status=$2
 
 # Includes
 source $HESTIA/func/main.sh
-source $HESTIA/func/ipv6.sh
+source $HESTIA/func/ip.sh
 source $HESTIA/conf/hestia.conf
 
 

@@ -19,8 +19,8 @@ format=${2-shell}
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
-# shellcheck source=/usr/local/hestia/func/ipv6.sh
-source $HESTIA/func/ipv6.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 

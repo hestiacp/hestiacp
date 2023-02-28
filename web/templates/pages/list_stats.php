@@ -8,7 +8,7 @@
 		</div>
 		<div class="toolbar-right">
 			<?php if ($_SESSION["userContext"] === "admin" && !isset($_SESSION["look"])) { ?>
-				<form x-bind="BulkEdit" action="/list/stats/" method="get">
+				<form x-data x-bind="BulkEdit" action="/list/stats/" method="get">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="user">
 						<option value=""><?= _("show per user") ?></option>

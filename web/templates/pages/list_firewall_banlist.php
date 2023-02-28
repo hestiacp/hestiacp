@@ -6,7 +6,7 @@
 			<a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Ban IP Address") ?></a>
 		</div>
 		<div class="toolbar-right">
-			<form x-bind="BulkEdit" action="/bulk/firewall/banlist/" method="post">
+			<form x-data x-bind="BulkEdit" action="/bulk/firewall/banlist/" method="post">
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<select class="form-select" name="action">
 					<option value=""><?= _("apply to selected") ?></option>

@@ -116,7 +116,7 @@
 						<label for="v_language" class="form-label"><?= _("Default Language") ?></label>
 						<select x-model="language" class="form-select" name="v_language" id="v_language">
 							<?php foreach ($languages as $key => $value) { ?>
-								<option value="<?= $value ?>">
+								<option value="<?= $key ?>">
 									<?= $value ?>
 								</option>
 							<?php } ?>

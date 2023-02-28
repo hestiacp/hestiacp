@@ -945,9 +945,7 @@
 							class="form-control u-min-height100 u-console"
 							name="v_ssl_crt"
 							id="v_ssl_crt"
-						>
-							<?= htmlentities(trim($v_ssl_crt, "'")) ?>
-						</textarea>
+						><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_key" class="form-label">
@@ -957,9 +955,7 @@
 							class="form-control u-min-height100 u-console"
 							name="v_ssl_key"
 							id="v_ssl_key"
-						>
-							<?= htmlentities(trim($v_ssl_key, "'")) ?>
-						</textarea>
+						><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<ul class="values-list">
 						<li class="values-list-item">

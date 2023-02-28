@@ -19,7 +19,7 @@
 
 	<form
 		x-data="{
-			sendWelcomeMail: <?= $v_login_disabled == "yes" ? "true" : "false" ?>
+			loginDisabled: <?= $v_login_disabled == "yes" ? "true" : "false" ?>
 		}"
 		id="vstobjects"
 		name="v_add_user"
@@ -62,12 +62,12 @@
 				<li><?= _("1 number") ?></li>
 			</ul>
 			<div class="form-check u-mb10">
-				<input x-model="sendWelcomeMail" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
+				<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
 				<label for="v_login_disabled">
 					<?= _("Do not allow user to log in to Control Panel") ?>
 				</label>
 			</div>
-			<div x-cloak x-show="sendWelcomeMail" id="send-welcome">
+			<div x-cloak x-show="loginDisabled" id="send-welcome">
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_email_notice" id="v_email_notify" tabindex="5">
 					<label for="v_email_notify">

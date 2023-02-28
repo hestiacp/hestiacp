@@ -121,7 +121,7 @@
 						</label>
 					</div>
 				<?php } ?>
-				<div x-cloak x-show="loginDisabled" id="password-options">
+				<div x-cloak x-show="!loginDisabled" id="password-options">
 					<div class="form-check u-mt15">
 						<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo 'checked' ?>>
 						<label for="v_twofa">
@@ -134,7 +134,7 @@
 						<div><img class="qr-code" src="<?= htmlentities($v_qrcode) ?>" alt=""></div>
 					<?php } ?>
 				</div>
-				<div x-cloak x-show="loginDisabled" id="password-options-ip">
+				<div x-cloak x-show="!loginDisabled" id="password-options-ip">
 					<div class="form-check">
 						<input x-model="useIpAllowList" class="form-check-input" type="checkbox" name="v_login_use_iplist" id="v_login_use_iplist">
 						<label for="v_login_use_iplist">

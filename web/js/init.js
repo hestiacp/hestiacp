@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-	// Refactored
-	document.querySelector('#vstobjects')?.addEventListener('submit', () => {
+	function showLoader() {
 		document.querySelector('.fullscreen-loader').classList.add('show');
-	});
+	}
+	document.querySelector('#vstobjects')?.addEventListener('submit', showLoader);
+	document.querySelector('[x-bind="BulkEdit"]')?.addEventListener('submit', showLoader);
 
 	document.querySelectorAll('.toolbar-right .sort-by')?.forEach((el) => {
 		el.addEventListener('click', () => $('.context-menu.sort-order').toggle());

@@ -399,16 +399,16 @@ get_web_config_lines() {
 
 # Replace web config
 replace_web_config() {
-	if [ -z "$old" ]; then
-		prepare_web_domain_values #	old parameter is empty. search and replace not possible
-		add_web_config "$@"
+	if [ -z "$old" -o -z "$new" ]; then
+		prepare_web_domain_values #	if one of both parameters is empty, prepare values for the web domain
+		add_web_config "$@"	# web configs must be new generated from the templates
 	else
 		conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
 		if [[ "$2" =~ stpl$ ]]; then
 			conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
 		fi
 		if [ -e "$conf" ]; then
-			sed -i "s|$old|$new|g" $conf
+			sed -i "s|$old|$new|g" $conf # simple search and replace only possible, if both (old and new) parameters are defined
 		fi
 	fi
 }

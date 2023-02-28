@@ -1045,13 +1045,11 @@
 									<?= _("Allowed IP addresses for API") ?>
 									<span class="optional">1 IP address per line</span>
 								</label>
-								<textarea class="form-control" name="v_api_allowed_ip" id="v_api_allowed_ip">
-									<?php
+								<textarea class="form-control" name="v_api_allowed_ip" id="v_api_allowed_ip"><?php
 										foreach (explode(",", $_SESSION["API_ALLOWED_IP"]) as $ip) {
 											echo trim($ip)."\n";
 										}
-									?>
-								</textarea>
+									?></textarea>
 							</div>
 						</div>
 						<h3 class="u-mt20 u-mb10">

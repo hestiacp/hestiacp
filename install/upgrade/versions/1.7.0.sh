@@ -86,12 +86,12 @@ done
 
 #update proftpd
 if [ "$FTP_SYSTEM" = 'proftpd' ]; then
-        contains_conf_d=$(grep -c "Include /etc/proftpd/conf.d/\*.conf" "/etc/proftpd/proftpd.conf")
-# the line below is for testing only:
-#        echo "contains proftpd? $contains_conf_d"
-        if [ $contains_conf_d = 0 ]; then
-                sed -i 's/Include \/etc\/proftpd\/tls.conf/&\nInclude \/etc\/proftpd\/conf.d\/*.conf/' /etc/proftpd/proftpd.conf
-        fi
+	contains_conf_d=$(grep -c "Include /etc/proftpd/conf.d/\*.conf" "/etc/proftpd/proftpd.conf")
+	# the line below is for testing only:
+	#        echo "contains proftpd? $contains_conf_d"
+	if [ $contains_conf_d = 0 ]; then
+		sed -i 's/Include \/etc\/proftpd\/tls.conf/&\nInclude \/etc\/proftpd\/conf.d\/*.conf/' /etc/proftpd/proftpd.conf
+	fi
 	$BIN/v-restart-ftp
 fi
 

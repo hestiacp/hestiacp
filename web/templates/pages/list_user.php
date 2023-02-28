@@ -157,7 +157,7 @@
 				<!-- END QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left u-text-center">
 					<b>
-						<?php if ($data[$key]["PACKAGE"] === "default") { ?>
+						<?php if ($data[$key]["PACKAGE"] === "system") { ?>
 							<?= $data[$key]["PACKAGE"] ?>
 						<?php } else { ?>
 							<a href="/edit/package/?package=<?= $data[$key]["PACKAGE"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Package") ?>"><?= $data[$key]["PACKAGE"] ?></a>

@@ -945,9 +945,7 @@
 							class="form-control u-min-height100 u-console"
 							name="v_ssl_crt"
 							id="v_ssl_crt"
-						>
-							<?= htmlentities(trim($v_ssl_crt, "'")) ?>
-						</textarea>
+						><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_key" class="form-label">
@@ -957,9 +955,7 @@
 							class="form-control u-min-height100 u-console"
 							name="v_ssl_key"
 							id="v_ssl_key"
-						>
-							<?= htmlentities(trim($v_ssl_key, "'")) ?>
-						</textarea>
+						><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<ul class="values-list">
 						<li class="values-list-item">
@@ -1049,13 +1045,11 @@
 									<?= _("Allowed IP addresses for API") ?>
 									<span class="optional">1 IP address per line</span>
 								</label>
-								<textarea class="form-control" name="v_api_allowed_ip" id="v_api_allowed_ip">
-									<?php
+								<textarea class="form-control" name="v_api_allowed_ip" id="v_api_allowed_ip"><?php
 										foreach (explode(",", $_SESSION["API_ALLOWED_IP"]) as $ip) {
 											echo trim($ip)."\n";
 										}
-									?>
-								</textarea>
+									?></textarea>
 							</div>
 						</div>
 						<h3 class="u-mt20 u-mb10">

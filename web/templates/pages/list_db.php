@@ -54,7 +54,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					<li entity="sort-user"><span class="name"><?= _("Username") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<?php if ($read_only !== 'true') {?>
-					<form x-bind="BulkEdit" action="/bulk/db/" method="post">
+					<form x-data x-bind="BulkEdit" action="/bulk/db/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>

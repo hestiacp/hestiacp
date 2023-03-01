@@ -7,7 +7,7 @@ title: Features
   import FeaturePageTitle from "./.vitepress/theme/components/FeaturePageTitle.vue";
   import FeaturePageSection from "./.vitepress/theme/components/FeaturePageSection.vue";
   import FeatureList from "./.vitepress/theme/components/FeatureList.vue";
-  import { users, webDomains, mail, databases, serverAdmin } from "./_data/features";
+  import { users, webDomains, mail, dns, databases, serverAdmin } from "./_data/features";
 </script>
 
 <FeaturePage>

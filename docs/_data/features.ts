@@ -22,9 +22,10 @@ export const webDomains: FeatureListItem[] = [
 			{ text: "PHP 7.1 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
 			{ text: "PHP 7.2 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
 			{ text: "PHP 7.3 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
-			{ text: "PHP 7.4" },
+			{ text: "PHP 7.4 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
 			{ text: "PHP 8.0" },
 			{ text: "PHP 8.1" },
+			{ text: "PHP 8.2" },
 		],
 	},
 	{
@@ -55,12 +56,21 @@ export const mail: FeatureListItem[] = [
 	{ text: "Optional Rainloop installation" },
 ];
 
+export const dns: FeatureListItem[] = [
+	{ text: "Create your own nameservers" },
+	{ text: "Easy DNS cluster setup" },
+	{ text: "Support for DNSSEC on domains" },
+];
+
 export const databases: FeatureListItem[] = [
-	{ text: "Support for MariaDB 10.2 -> 10.8 with 10.6 as default" },
+	{ text: "Support for MariaDB 10.2 -> 10.11 with 10.11 as default" },
+	{ text: "Support for MySQL 8" },
 	{ text: "Support for PostgreSQL" },
-	{ text: "Latest version of phpMyAdmin" },
+	{ text: "Latest version of phpMyAdmin and phpPgAdmin" },
 ];
 
 export const serverAdmin: FeatureListItem[] = [
-	{ text: "Automated backups to SFTP, FTP or Backblaze B2" },
+	{
+		text: "Automated backups to SFTP, FTP and via Rclone with 50+ <a href='https://rclone.org/overview/'>Cloud storage providers</a>",
+	},
 ];

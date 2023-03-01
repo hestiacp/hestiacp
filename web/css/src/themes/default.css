@@ -929,14 +929,6 @@
 	& .fas {
 		font-size: 1rem;
 	}
-
-	@media (--viewport-large) {
-		&.active {
-			position: fixed;
-			top: 84px;
-			z-index: 1;
-		}
-	}
 }
 
 .units {

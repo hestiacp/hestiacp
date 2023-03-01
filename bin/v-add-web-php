@@ -4,7 +4,7 @@
 #
 # example: v-add-web-php 8.0
 #
-# This function checks and delete a fpm php version if not used by any domain.
+# Install php-fpm for provided version.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

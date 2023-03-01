@@ -177,9 +177,17 @@ else
 		ALIAS="$aliases"
 	fi
 
-	ip_alias=$(get_ip_alias "$domain")
-	if [ -n "$ip_alias" ]; then
-		ALIAS="$ALIAS,$ip_alias"
+	if [ -n "$local_ip" ]; then
+		ip_alias=$(get_ip_alias "$domain")
+		if [ -n "$ip_alias" ]; then
+			ALIAS="$ALIAS,$ip_alias"
+		fi
+	fi
+	if [ -n "$local_ipv6" ]; then
+		ipv6_alias=$(get_ipv6_alias "$domain")
+		if [ -n "$ipv6_alias" ]; then
+			ALIAS="$ALIAS,$ipv6_alias"
+		fi
 	fi
 fi
 
@@ -215,8 +223,8 @@ fi
 #----------------------------------------------------------#
 
 # Increasing counters
-[ -n "$ip" ] && increase_ip_value "$local_ip"
-[ -n "$ipv6" ] && increase_ipv6_value "$local_ipv6"
+[ -n "$local_ip" ] && increase_ip_value "$local_ip"
+[ -n "$local_ipv6" ] && increase_ipv6_value "$local_ipv6"
 increase_user_value "$user" '$U_WEB_DOMAINS'
 increase_user_value "$user" '$U_WEB_ALIASES' "$alias_number"
 

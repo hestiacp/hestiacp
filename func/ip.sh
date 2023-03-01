@@ -86,9 +86,13 @@ update_ip_value_new() {
 
 # Get ip name
 get_ip_alias() {
-	ip_name=$(grep "NAME=" $HESTIA/data/ips/$local_ip | cut -f 2 -d \')
-	if [ -n "$ip_name" ]; then
-		echo "${1//./-}.$ip_name"
+	if [ -n "$local_ip"]; then
+		ip_name=$(grep "NAME=" $HESTIA/data/ips/$local_ip | cut -f 2 -d \')
+		if [ -n "$ip_name" ]; then
+			echo "${1//./-}.$ip_name"
+		fi
+	else
+		ip_name=""
 	fi
 }
 
@@ -339,10 +343,14 @@ update_ipv6_value() {
 
 # Get ipv6 name
 get_ipv6_alias() {
-    ip_name=$(grep "NAME=" $HESTIA/data/ips/$ipv6 2> /dev/null |cut -f 2 -d \')
-    if [ ! -z "$ip_name" ]; then
-        echo "${1//./-}.$ip_name"
-    fi
+	if [ -n "$local_ipv6" ]; then
+		ipv6_name=$(grep "NAME=" $HESTIA/data/ips/$local_ipv6 2> /dev/null |cut -f 2 -d \')
+		if [ -n "$ipv6_name" ]; then
+			echo "${1//./-}.$ipv6_name"
+		fi
+	else
+		ipv6_name=""
+	fi
 }
 
 # Increase ipv6 value
@@ -415,7 +423,7 @@ decrease_ipv6_value() {
 # Get ipv6 address value
 get_ipv6_value() {
     key="$1"
-    string=$(cat $HESTIA/data/ips/$ip)
+    string=$(cat $HESTIA/data/ips/$ipv6)
     eval $string
     eval value="$key"
     echo "$value"
@@ -481,12 +489,13 @@ get_user_ip6s() {
 # Get user ipv6
 get_user_ipv6() {
     ipv6=$(get_user_ip6s |head -n1)
+	local_ipv6="$ipv6"
 }
 
 # Validate ipv6 address
 is_ipv6_valid() {
-    ipv6="$1"
-    if [ -z "$ipv6" ]; then
+    local_ipv6="$1"
+    if [ -z "$local_ipv6" ]; then
         check_result $E_NOTEXIST "IPV6 address is empty"
     fi
     if [ ! -e "$HESTIA/data/ips/$1" ]; then

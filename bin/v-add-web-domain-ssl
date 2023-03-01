@@ -94,6 +94,7 @@ fi
 # Parsing domain values
 get_domain_values 'web'
 local_ip=$(get_real_ip "$IP")
+local_ipv6="$IP6"
 
 # Preparing domain values for the template substitution
 SSL_HOME="$ssl_home"

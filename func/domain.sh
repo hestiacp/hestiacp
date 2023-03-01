@@ -249,15 +249,15 @@ add_web_config() {
 			WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"
 		fi
 	fi
-
-	if [ -z "$ip" ]; then
+	
+	if [ -z "$local_ip" ]; then
 		i4mark=""
 		ipv4=""
 		web_ipv4=""
-		web_ip="[$ipv6]"
+		web_ip="[$local_ipv6]"
 		proxy_ipv4=""
-		proxy_ip="[$ipv6]"
-		local_ip="[$ipv6]"
+		proxy_ip="[$local_ipv6]"
+		legacy_ip="[$local_ipv6]"
 	else
 		i4mark="\1"
 		ipv4="$local_ip"
@@ -265,8 +265,9 @@ add_web_config() {
 		web_ip="$local_ip"
 		proxy_ipv4="$local_ip"
 		proxy_ip="$local_ip"
+		legacy_ip="$local_ip"
 	fi
-	if [ -z "$ipv6" ]; then
+	if [ -z "$local_ipv6" ]; then
 		i6mark=""
 		web_ipv6=""
 		web_ip="$local_ip"
@@ -274,10 +275,10 @@ add_web_config() {
 		proxy_ip="$local_ip"
 	else
 		i6mark="\1"
-		web_ipv6="[$ipv6]"
-		web_ip="[$ipv6]"
-		proxy_ipv6="[$ipv6]"
-		proxy_ip="[$ipv6]"
+		web_ipv6="[$local_ipv6]"
+		web_ip="[$local_ipv6]"
+		proxy_ipv6="[$local_ipv6]"
+		proxy_ip="[$local_ipv6]"
 	fi
 	
 	# Note: Removing or renaming template variables will lead to broken custom templates.
@@ -293,7 +294,7 @@ add_web_config() {
 			-e "s|%proxy_ipv4%|$proxy_ipv4|g" \
 			-e "s|%proxy_ipv6%|$proxy_ipv6|g" \
 			-e "s|%proxy_ip%|$proxy_ip|g" \
-			-e "s|%ip%|$local_ip|g" \
+			-e "s|%ip%|$legacy_ip|g" \
 			-e "s|%domain%|$domain|g" \
 			-e "s|%domain_idn%|$domain_idn|g" \
 			-e "s|%alias%|${aliases//,/ }|g" \
@@ -324,7 +325,6 @@ add_web_config() {
 
 	chown root:$user $conf
 	chmod 640 $conf
-
 	if [[ "$2" =~ stpl$ ]]; then
 		rm -f /etc/$1/conf.d/domains/$domain.ssl.conf
 		ln -s $conf /etc/$1/conf.d/domains/$domain.ssl.conf

@@ -52,10 +52,15 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with default template and Quick installer #3133
 - Generalise password reset instructions. #3112
 - Allow .tpl files to be editable in File Manager (#3148 @neto737)
-- Fix #1750 No www alias for domain.co.uk (#3030)
+- Fix an issue www alias form not being created when a domain looks like: domain.co.uk (#3030)
 - Fix/sync issues existing domains (#3028)
-- 2923 [Bug] Unable to create tmp directory (#3019)
+- Fix an issue Unable to create tmp directory (#3019)
 - Fix issue when enabling mysqld-iptables in Fail2Ban (#3025)
+- Fix an issue with Logrotate and Awstats (#3297)
+- Add google public dns as secondary resolver
+- Fixed an issue with Proftpd and passive mode External IP (#3266)
+- Make v-change-sys-port ipv6 proof (#3276 @asmcc)
+- Set the correct conflicts for hestia-php on Ubuntu 22.04
 - Fixed an issue with erroneous deleting $domain.\* instead of $domain.pem (#3221)
 - Fixed an issue with domain redirect and idn2 domains (#3323 #3325)
 - Fixed an issue in Dokuwiki due to changing repository owner (#3327)

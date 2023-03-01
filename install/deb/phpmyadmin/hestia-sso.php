@@ -132,6 +132,7 @@ function session_invalid() {
 	header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
 	die();
 }
+
 $api = new Hestia_API();
 if (!empty($_GET)) {
 	if (isset($_GET["logout"])) {
@@ -141,10 +142,8 @@ if (!empty($_GET)) {
 			$_SESSION["PMA_single_signon_user"],
 			$_SESSION["HESTIA_sso_host"],
 		);
-		//remove sessin
+		//remove session
 		session_invalid();
-		header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
-		die();
 	} else {
 		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
 			$database = $_GET["database"];
@@ -166,8 +165,6 @@ if (!empty($_GET)) {
 						E_USER_WARNING,
 					);
 					session_invalid();
-					die();
-					session_invalid();
 				} else {
 					$id = session_id();
 					//create a new temp user
@@ -184,10 +181,10 @@ if (!empty($_GET)) {
 						@session_write_close();
 						setcookie($session_name, $id, 0, "/");
 						header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
+						die();
 					} else {
 						session_invalid();
 					}
-					die();
 				}
 			} else {
 				trigger_error(
@@ -198,11 +195,9 @@ if (!empty($_GET)) {
 					E_USER_WARNING,
 				);
 				session_invalid();
-				die();
 			}
 		}
 	}
 } else {
 	session_invalid();
-	die();
 }

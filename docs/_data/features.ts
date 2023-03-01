@@ -58,7 +58,7 @@ export const mail: FeatureListItem[] = [
 
 export const dns: FeatureListItem[] = [
 	{ text: "Create your own nameservers" },
-	{ text: "Easy setup for a DNS cluster" },
+	{ text: "Easy DNS cluster setup" },
 	{ text: "Support for DNSSEC on domains" },
 ];
 

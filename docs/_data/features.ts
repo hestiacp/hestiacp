@@ -71,6 +71,6 @@ export const databases: FeatureListItem[] = [
 
 export const serverAdmin: FeatureListItem[] = [
 	{
-		text: "Automated backups to SFTP, FTP and via Rclone with 50+ (<a href='https://rclone.org/overview/'>Cloud storage providers</a>",
+		text: "Automated backups to SFTP, FTP and via Rclone with 50+ <a href='https://rclone.org/overview/'>Cloud storage providers</a>",
 	},
 ];

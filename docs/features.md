@@ -28,6 +28,13 @@ title: Features
       <FeatureList :items="webDomains"></FeatureList>
     </template>
   </FeaturePageSection>
+  <FeaturePageSection image="/images/undraw_domain_names_re_0uun.svg">
+	  <template #title>DNS</template>
+	  <template #lead>Manage your own DNS server!</template>
+	  <template #list>
+		<FeatureList :items="dns"></FeatureList>
+	  </template>
+	</FeaturePageSection>
   <FeaturePageSection image="/images/undraw_personal_email_re_4lx7.svg">
     <template #title>Mail</template>
     <template #lead>Host your own emails, no need to pay a business mail provider!</template>

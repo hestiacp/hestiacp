@@ -99,3 +99,9 @@ if echo "$BACKUP_SYSTEM" | grep "google" > /dev/null; then
 	echo "[ ! ] Deprecation notice: Backup via Google Cloud has been removed setup backup again via Rclone to reinstate the backup and restore capebilities!"
 	add_upgrade_message "Deprecation notice: Backup via Google Cloud has been removed setup backup again via Rclone to reinstate the backup and restore capebilities!"
 fi
+
+if [ "$PHPMYADMIN_KEY" != "" ]; then
+	echo "[ * ] Refresh hestia-sso for PMA..."
+	$BIN/v-delete-sys-pma-sso quiet
+	$BIN/v-add-sys-pma-sso quiet
+fi

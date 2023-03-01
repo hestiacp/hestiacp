@@ -36,7 +36,7 @@ HESTIA_INSTALL_VER='1.8.0~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.0"
-mariadb_v="10.6"
+mariadb_v="10.11"
 
 software="nginx apache2 apache2-utils apache2-suexec-custom
   apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v

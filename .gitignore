@@ -35,7 +35,7 @@ web/src/vendor/composer/installed.json
 
 # vitepress build output
 **/.vitepress/dist/
-
+**/.vitepress/cache/
 # Node
 **/node_modules/
 npm-debug.log

@@ -117,16 +117,12 @@ document.addEventListener('alpine:init', () => {
 	// Sticky class helper
 	window.addEventListener('scroll', () => {
 		const toolbar = document.querySelector('.toolbar');
-		const tableHeader = document.querySelector('.table-header');
 		const toolbarOffset =
 			toolbar.getBoundingClientRect().top + (window.scrollY - document.documentElement.clientTop);
 		const headerHeight = document.querySelector('.top-bar').offsetHeight;
 		const isActive = window.scrollY > toolbarOffset - headerHeight;
 
 		toolbar.classList.toggle('active', isActive);
-		if (tableHeader) {
-			tableHeader.classList.toggle('active', isActive);
-		}
 	});
 
 	// Select all helper

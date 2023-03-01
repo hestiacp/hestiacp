@@ -64,7 +64,7 @@ export const dns: FeatureListItem[] = [
 
 export const databases: FeatureListItem[] = [
 	{ text: "Support for MariaDB 10.2 -> 11.0 with 10.11 as default" },
-	{ text: "Support for Mysql 8" },
+	{ text: "Support for MySQL 8" },
 	{ text: "Support for PostgreSQL" },
 	{ text: "Latest version of phpMyAdmin and phpPgAdmin" },
 ];

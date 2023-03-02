@@ -83,7 +83,7 @@ Automated can sometimes cause issues. Login via SSH and open `/var/log/{webserve
   1. Check if the api has been enabled.
   2. Add the public IP of your server to the allowed IPs in the **Server settings**.
 - `Access denied: There is a security token mismatch`
-  1. Enable and then disable the API. This will refresh both keys.
+  1. Disable and then enable the phpMyAdmin SSO. This will refresh both keys.
   2. If you are behind a firewall or proxy, you may want to disable it and try again.
 - `Link has expired`
   1. Refresh the database page and try again.

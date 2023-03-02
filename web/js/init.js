@@ -1,23 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-	// Refactored
-	const submitLoader = document.querySelector('.button[form=vstobjects][type=submit]');
-	if (submitLoader) {
-		submitLoader.addEventListener('click', (evt) => {
-			const loaderElement = document.createElement('div');
-			loaderElement.classList.add('spinner');
-			loaderElement.innerHTML =
-				'<div class="spinner-inner"></div><div class="spinner-mask"></div><div class="spinner-mask-two"></div>';
-
-			// this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
-			document.querySelector('.button[form=vstobjects][type=submit]').replaceWith(loaderElement);
-			document.querySelector('.button').replaceWith('');
-			// workaround a render bug on Safari (loading icon doesn't render without this)
-			evt.preventDefault();
-			document.querySelector('#vstobjects').submit();
-		});
+	function showLoader() {
+		document.querySelector('.fullscreen-loader').classList.add('show');
 	}
+	document.querySelector('#vstobjects')?.addEventListener('submit', showLoader);
+	document.querySelector('[x-bind="BulkEdit"]')?.addEventListener('submit', showLoader);
 
-	document.querySelectorAll('.toolbar-right .sort-by').forEach((el) => {
+	document.querySelectorAll('.toolbar-right .sort-by')?.forEach((el) => {
 		el.addEventListener('click', () => $('.context-menu.sort-order').toggle());
 	});
 

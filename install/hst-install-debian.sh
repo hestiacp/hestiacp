@@ -36,7 +36,7 @@ HESTIA_INSTALL_VER='1.7.0~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.0"
-mariadb_v="10.6"
+mariadb_v="10.11"
 
 software="nginx apache2 apache2-utils apache2-suexec-custom
   apache2-suexec-pristine libapache2-mod-fcgid libapache2-mod-php$fpm_v
@@ -1338,8 +1338,8 @@ for ip in $dns_resolver; do
 	fi
 done
 if [ -n "$resolver" ]; then
-	sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /etc/nginx/nginx.conf
-	sed -i "s/1.0.0.1 1.1.1.1/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 
 update-rc.d nginx defaults > /dev/null 2>&1
@@ -1643,6 +1643,7 @@ if [ "$postgresql" = 'yes' ]; then
 		cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.inc
 	fi
 
+	rm phppgadmin-v$pga_v.tar.gz
 	write_config_value "DB_PGA_ALIAS" "phppgadmin"
 	$HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
 fi

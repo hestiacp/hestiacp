@@ -17,6 +17,10 @@
 		<p><?= _("LEAVE_PAGE_CONFIRMATION") ?></p>
 	</div>
 
+	<div class="fullscreen-loader">
+		<i class="fas fa-circle-notch fa-spin"></i>
+	</div>
+
 	<div x-data>
 		<dialog x-ref="dialog" class="shortcuts animate__animated animate__fadeIn">
 			<div class="shortcuts-header">

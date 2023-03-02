@@ -7,7 +7,7 @@
 #----------------------------------------------------------#
 
 # Set MariaDB Target Version
-mariadb_v='10.6'
+mariadb_v='10.11'
 
 # Load OS informations
 source /etc/os-release

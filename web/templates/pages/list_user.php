@@ -20,7 +20,7 @@
 					<li entity="sort-disk" sort_as_int="1"><span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<form x-bind="BulkEdit" action="/bulk/user/" method="post">
+				<form x-data x-bind="BulkEdit" action="/bulk/user/" method="post">
 					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("apply to selected") ?></option>
@@ -157,7 +157,7 @@
 				<!-- END QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left u-text-center">
 					<b>
-						<?php if ($data[$key]["PACKAGE"] === "default") { ?>
+						<?php if ($data[$key]["PACKAGE"] === "system") { ?>
 							<?= $data[$key]["PACKAGE"] ?>
 						<?php } else { ?>
 							<a href="/edit/package/?package=<?= $data[$key]["PACKAGE"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Package") ?>"><?= $data[$key]["PACKAGE"] ?></a>

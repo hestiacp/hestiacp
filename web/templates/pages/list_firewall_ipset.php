@@ -6,7 +6,7 @@
 			<a href="/add/firewall/ipset/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add IP list") ?></a>
 		</div>
 		<div class="toolbar-right">
-			<form x-bind="BulkEdit" action="/bulk/firewall/ipset/" method="post">
+			<form x-data x-bind="BulkEdit" action="/bulk/firewall/ipset/" method="post">
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<select class="form-select" name="action">
 					<option value=""><?= _("apply to selected") ?></option>
@@ -37,7 +37,8 @@
 	</div>
 
 	<!-- Begin firewall IP address list item loop -->
-	<?php foreach ($data as $key => $value) {
+	<?php
+	foreach ($data as $key => $value) {
  	$listname = $key; ?>
 		<div class="l-unit animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">
@@ -75,7 +76,9 @@
 				<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><?= $data[$key]["TIME"] ?></div>
 			</div>
 		</div>
-	<?php } ?>
+	<?php
+	$i++;
+} ?>
 </div>
 
 <footer class="app-footer">

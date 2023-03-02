@@ -1036,6 +1036,8 @@ systemctl restart ssh
 
 # Disable AWStats cron
 rm -f /etc/cron.d/awstats
+# Replace awstatst function
+cp -f $HESTIA_INSTALL_DIR/logrotate/httpd-prerotate/* /etc/logrotate.d/httpd-prerotate/
 
 # Set directory color
 if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
@@ -2160,11 +2162,11 @@ You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 
-	Admin URL:  https://$servername:$port"
+	Admin URL:  https://$servername:$port" > $tmpfile
 if [ "$host_ip" != "$ip" ]; then
-	echo "	Backup URL:  https://$ip:$port"
+	echo "	Backup URL: https://$ip:$port" >> $tmpfile
 fi
-echo -e " 	Username:   admin
+echo -e -n " 	Username:   admin
 	Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,
@@ -2189,7 +2191,7 @@ Sincerely yours,
 The Hestia Control Panel development team
 
 Made with love & pride by the open-source community around the world.
-" > $tmpfile
+" >> $tmpfile
 
 send_mail="$HESTIA/web/inc/mail-wrapper.php"
 cat $tmpfile | $send_mail -s "Hestia Control Panel" $email

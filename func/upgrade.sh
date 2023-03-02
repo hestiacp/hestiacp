@@ -569,6 +569,8 @@ upgrade_phppgadmin() {
 			if [ ! -f /usr/share/phppgadmin/conf/config.inc.php ]; then
 				ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf
 			fi
+
+			rm -f phppgadmin-v$pga_v.tar.gz
 		fi
 	fi
 }

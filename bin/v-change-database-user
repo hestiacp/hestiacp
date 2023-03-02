@@ -39,6 +39,7 @@ is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'db' 'DB' "$database"
+is_object_new 'db' 'DBUSER' "$dbuser"
 is_object_unsuspended 'db' 'DB' "$database"
 is_password_valid
 dbpass="$password"

@@ -100,6 +100,12 @@ if echo "$BACKUP_SYSTEM" | grep "google" > /dev/null; then
 	add_upgrade_message "Deprecation notice: Backup via Google Cloud has been removed setup backup again via Rclone to reinstate the backup and restore capebilities!"
 fi
 
+if [ -f /etc/logrotate.d/httpd-prerotate/awstats ]; then
+	echo "[ * ] Update Awstats prerotate to Hestia update method"
+	# Replace awstatst function
+	cp -f $HESTIA_INSTALL_DIR/logrotate/httpd-prerotate/awstats /etc/logrotate.d/httpd-prerotate/
+fi
+
 if [ "$PHPMYADMIN_KEY" != "" ]; then
 	echo "[ * ] Refresh hestia-sso for PMA..."
 	$BIN/v-delete-sys-pma-sso quiet

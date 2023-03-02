@@ -1035,6 +1035,8 @@ systemctl restart ssh
 
 # Disable AWStats cron
 rm -f /etc/cron.d/awstats
+# Replace awstatst function
+cp -f $HESTIA_INSTALL_DIR/logrotate/httpd-prerotate/* /etc/logrotate.d/httpd-prerotate/
 
 # Set directory color
 if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
@@ -1641,6 +1643,7 @@ if [ "$postgresql" = 'yes' ]; then
 		cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.inc
 	fi
 
+	rm phppgadmin-v$pga_v.tar.gz
 	write_config_value "DB_PGA_ALIAS" "phppgadmin"
 	$HESTIA/bin/v-change-sys-db-alias 'pga' "phppgadmin"
 fi
@@ -2111,9 +2114,9 @@ Ready to get started? Log in using the following credentials:
 
 	Admin URL:  https://$servername:$port"
 if [ "$host_ip" != "$ip" ]; then
-	echo "	Backup URL:  https://$ip:$port"
+	echo -n "	Backup URL: https://$ip:$port"
 fi
-echo -e " 	Username:   admin
+echo -e -n " 	Username:   admin
 	Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,

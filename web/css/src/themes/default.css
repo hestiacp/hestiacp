@@ -2195,12 +2195,12 @@
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 0.2s ease, visibility 0s 0.2s;
-}
 
-.fullscreen-loader.show {
-	visibility: visible;
-	opacity: 1;
-	transition: opacity 0.2s ease, visibility 0s 0s;
+	&.show {
+		visibility: visible;
+		opacity: 1;
+		transition: opacity 0.2s ease, visibility 0s 0s;
+	}
 }
 
 .qr-code {

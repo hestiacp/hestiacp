@@ -788,7 +788,8 @@
 		min-width: 0;
 		width: 100%;
 		margin-bottom: 5px;
-		padding: 2px 10px;
+		padding-left: 10px;
+		padding-right: 10px;
 
 		&:last-child {
 			margin-bottom: 0;
@@ -1833,7 +1834,7 @@
 .button {
 	cursor: pointer;
 	display: inline-block;
-	line-height: 1.5;
+	line-height: 21px;
 	font-size: 0.85rem;
 	font-weight: 500;
 	padding: 3px 25px;
@@ -2145,6 +2146,7 @@
 	@media (--viewport-medium) {
 		display: flex;
 		align-items: flex-end;
+		gap: 30px;
 		max-width: 500px;
 
 		& form {

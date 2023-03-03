@@ -435,10 +435,7 @@ get_real_ipv6() {
     if [ -e "$HESTIA/data/ips/$1" ]; then
         echo $1
     else
-        nat=$(grep -H "^NAT='$1'" $HESTIA/data/ips/*)
-        if [ ! -z "$nat" ]; then
-            echo "$nat" |cut -f 1 -d : |cut -f 7 -d /
-        fi
+        check_result $E_NOTEXIST "IPV6 $1 doesn't exist"
     fi
 }
 

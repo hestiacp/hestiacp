@@ -1,5 +1,6 @@
 server {
-    listen      %ip%:%proxy_port%;
+%<i4    listen      %proxy_ipv4%:%proxy_port%;i4>%
+%<i6    listen      %proxy_ipv6%:%proxy_port%;i6>%
     server_name %domain_idn% %alias_idn%;
     root        /var/lib/roundcube;
     index       index.php index.html index.htm;
@@ -19,7 +20,7 @@ server {
     }
 
     location / {
-        proxy_pass http://%ip%:%web_port%;
+        proxy_pass      http://%web_ip%:%web_port%;
         try_files $uri $uri/ =404;
         alias /var/lib/roundcube/;
         location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
@@ -29,11 +30,11 @@ server {
     }
 
     location /error/ {
-        alias /var/www/document_errors/;
+        alias   /var/www/document_errors/;
     }
 
     location @fallback {
-        proxy_pass http://%ip%:%web_port%;
+        proxy_pass      http://%web_ip%:%web_port%;
     }
 
     include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;

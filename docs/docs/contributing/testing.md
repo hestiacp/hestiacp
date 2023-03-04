@@ -30,6 +30,19 @@ curl -s "https://beta-apt.hestiacp.com/pubkey.gpg" | gpg --dearmor | tee /usr/sh
 apt update && apt upgrade
 ```
 
+## Install from beta repo
+
+If you want to install a new Hestia installation form the beta server.
+
+```bash
+# Debian
+wget https://beta-apt.hestiacp.com/hst-install-debian.sh
+# or Ubuntu
+wget https://beta-apt.hestiacp.com/hst-install-ubuntu.sh
+```
+
+Then install via bash hst-install-debian.sh or bash hst-install-ubuntu.sh
+
 ## Disabling the beta repo
 
 Edit `/etc/apt/sources.list.d/hestia.list` and remove the `#` in front of `apt.hestiacp.com`, and add a `#` in front of `beta-apt.hestiacp.com`.

@@ -47,7 +47,7 @@ if [[ "$3" =~ http://|https:// ]]; then
 	scheme=$($HESTIA_PHP -r '$url=parse_url($argv[1]); echo $url["scheme"];' "$redirect")
 	host=$($HESTIA_PHP -r '$url=parse_url($argv[1]); echo $url["host"];' "$redirect")
 	path=$($HESTIA_PHP -r '$url=parse_url($argv[1]); if(!empty($url["path"])){echo $url["path"];}' "$redirect")
-	host=$(idn2 --quiet $host)
+	host=$(idn2 --quiet "$host")
 	redirect="$scheme://$host$path"
 	isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "$redirect")
 	if [ -z "$isValidUrl" ]; then
@@ -56,7 +56,7 @@ if [[ "$3" =~ http://|https:// ]]; then
 else
 	host=$($HESTIA_PHP -r '$url=parse_url($argv[1]); echo $url["host"];' "http://$redirect")
 	path=$($HESTIA_PHP -r '$url=parse_url($argv[1]); if(!empty($url["path"])){echo $url["path"];}' "http://$redirect")
-	host=$(idn2 --quiet $host)
+	host=$(idn2 --quiet "$host")
 	redirect="$host$path"
 	isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "http://$redirect")
 	if [ -z "$isValidUrl" ]; then

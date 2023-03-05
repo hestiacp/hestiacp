@@ -64,7 +64,7 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 
    ```bash
    cd ../install
-   bash hst-install-ubuntu.sh -D /tmp/hestiacp-src/deb/ --interactive no --email admin@example.com --password password123 --hostname demo.hestiacp.com -f
+   bash hst-install-ubuntu.sh -D /tmp/hestiacp-src/deb/ --interactive no --email admin@example.com --password Password123 --hostname demo.hestiacp.com -f
    ```
 
 1. Reboot VM (and exit SSH session)
@@ -79,7 +79,7 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    multipass list
    ```
 
-1. Visit the VM's IP address in your browser using the default Hestia port and login with `admin`/`password123`
+1. Visit the VM's IP address in your browser using the default Hestia port and login with `admin`/`Password123`
 
    _(bypass any SSL errors you see when loading the page)_
 

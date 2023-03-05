@@ -57,7 +57,9 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with Proftpd and passive mode external IP (#3266)
 - Improve IPv6 handling in v-change-sys-port (#3276 @asmcc)
 - Set the correct conflicts for hestia-php on Ubuntu 22.04
-- Fixed an issue with erroneous deleting $domain.\* instead of $domain.pem #3221
+- Fixed an issue with erroneous deleting $domain.\* instead of $domain.pem (#3221)
+- Fixed an issue with domain redirect and idn2 domains (#3323 #3325)
+- Fixed an issue in Dokuwiki due to changing repository owner (#3327)
 
 ### Dependencies
 

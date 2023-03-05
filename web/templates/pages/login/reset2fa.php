@@ -1,5 +1,5 @@
 <div class="login animate__animated animate__zoomIn">
-	<a href="/" class="u-block u-mr30 u-mb40">
+	<a href="/" class="u-block u-mb40">
 		<img src="/images/logo.svg" alt="<?= _("Hestia Control Panel") ?>" width="100" height="120">
 	</a>
 	<?php if ($success) { ?>

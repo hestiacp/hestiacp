@@ -788,7 +788,8 @@
 		min-width: 0;
 		width: 100%;
 		margin-bottom: 5px;
-		padding: 2px 10px;
+		padding-left: 10px;
+		padding-right: 10px;
 
 		&:last-child {
 			margin-bottom: 0;
@@ -891,21 +892,13 @@
 	font-weight: 600;
 }
 
-.body-user .l-unit.animate__animated.animate__fadeIn {
-	line-height: 2rem;
-}
+/* Improve alignment of "Users" list double-height rows */
 
-.body-user .actions-panel {
-	line-height: 2rem;
-}
-
-.l-unit {
-	color: #707070;
-	padding-left: 15px;
-	overflow: hidden;
-	font-size: 0.8rem;
-	border-left: 1px solid transparent;
-	border-right: 1px solid transparent;
+.body-user {
+	& .l-unit.animate__animated.animate__fadeIn,
+	& .actions-panel {
+		line-height: 2rem;
+	}
 }
 
 .table-header {
@@ -942,6 +935,15 @@
 		padding-right: 0;
 		padding-bottom: 0;
 	}
+}
+
+.l-unit {
+	color: #707070;
+	padding-left: 15px;
+	overflow: hidden;
+	font-size: 0.8rem;
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
 }
 
 .units .l-unit {
@@ -1832,7 +1834,7 @@
 .button {
 	cursor: pointer;
 	display: inline-block;
-	line-height: 1.5;
+	line-height: 21px;
 	font-size: 0.85rem;
 	font-weight: 500;
 	padding: 3px 25px;
@@ -2144,6 +2146,7 @@
 	@media (--viewport-medium) {
 		display: flex;
 		align-items: flex-end;
+		gap: 30px;
 		max-width: 500px;
 
 		& form {
@@ -2192,12 +2195,12 @@
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 0.2s ease, visibility 0s 0.2s;
-}
 
-.fullscreen-loader.show {
-	visibility: visible;
-	opacity: 1;
-	transition: opacity 0.2s ease, visibility 0s 0s;
+	&.show {
+		visibility: visible;
+		opacity: 1;
+		transition: opacity 0.2s ease, visibility 0s 0s;
+	}
 }
 
 .qr-code {

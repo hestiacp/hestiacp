@@ -131,7 +131,9 @@
 					<?php if (!empty($v_twofa)) { ?>
 						<p class="u-mb10"><?= _("2FA Reset Code:") . " " . $v_twofa ?></p>
 						<p class="u-mb10"><?= _("Please scan the code below in your 2FA application:") ?></p>
-						<div><img class="qr-code" src="<?= htmlentities($v_qrcode) ?>" alt=""></div>
+						<div class="u-mb10">
+							<img class="qr-code" src="<?= htmlentities($v_qrcode) ?>" alt="<?= _("2FA QR Code") ?>">
+						</div>
 					<?php } ?>
 				</div>
 				<div x-cloak x-show="!loginDisabled" id="password-options-ip">

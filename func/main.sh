@@ -128,19 +128,20 @@ log_history() {
 	fi
 	touch $log
 
-	if [ '750' -lt "$(wc -l $log | cut -f 1 -d ' ')" ]; then
-		tail -n 499 $log > $log.moved
-		mv -f $log.moved $log
-		chmod 660 $log
-	fi
+	# TODO: Improve log pruning and pagination
+	#
+	#if [ '1000' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then
+	#    tail -n 499 $log > $log.moved
+	#    mv -f $log.moved $log
+	#    chmod 660 $log
+	#fi
 
 	if [ -z "$date" ]; then
 		time_n_date=$(date +'%T %F')
 		time=$(echo "$time_n_date" | cut -f 1 -d \ )
 		date=$(echo "$time_n_date" | cut -f 2 -d \ )
 	fi
-
-	curr_str=$(tail -n1 $log | grep "ID=" --text | cut -f2 -d \')
+	curr_str=$(grep "ID=" $log | cut -f 2 -d \' | sort -n | tail -n1)
 	id="$((curr_str + 1))"
 	echo "ID='$id' DATE='$date' TIME='$time' LEVEL='$evt_level' CATEGORY='$evt_category' MESSAGE='$message'" >> $log
 }
@@ -722,26 +723,40 @@ is_alias_format_valid() {
 	done
 }
 
-# IP format validator
-is_ip_format_valid() {
-	object_name=${2-ip}
+# Get IP format
+get_ip_format() {
+	object_name=${2-ipv4}
+	local ret_code=0
+	local ret_string=""
+	
+	# IPV4 check
 	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
 	ip_clean=$(echo "${1%/*}")
-	if ! [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
+	if [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
+		ret_string="4"
+	else
+		ret_code=1	# BIT 0: invalid IPV4 format
 	fi
 	if [ $1 != "$ip_clean" ]; then
+		ret_string=""
 		ip_cidr="$ip_clean/"
 		ip_cidr=$(echo "${1#$ip_cidr}")
-		if [[ "$ip_cidr" -gt 32 ]] || [[ "$ip_cidr" =~ [:alnum:] ]]; then
-			check_result "$E_INVALID" "invalid $object_name format :: $1"
+		if [[ "$ip_cidr" =~ ^[0-9]+$ ]]; then
+			if [ $ip_cidr -le 32 ]; then
+				ret_string="4"
+			else
+				ret_code=$(( $ret_code | 2 ))	# BIT 1: invalid cidr for IPV4 format
+			fi
+		else
+			ret_code=$(( $ret_code | 2 ))	# BIT 1: invalid cidr for IPV4 format
 		fi
 	fi
-}
+	if [ -n "$ret_string" ]; then
+		echo "$ret_string"
+		return $ret_code
+	fi
 
-# IPv6 format validator
-is_ipv6_format_valid() {
-    object_name=${2-ipv6}
+	# IPV6 check
     t_ipv6=$(echo $1 |awk -F / '{print $1}')
     t_prefixlen=$(echo $1 |awk -F / '{print $2}')
     valid_prefixlen=1
@@ -764,23 +779,67 @@ is_ipv6_format_valid() {
 		EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
 		echo $t_ipv6 | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
 		if [ $? -ne 0 ]; then
-			check_result "$E_INVALID" "invalid ipv6 address format :: $1"
+			ret_code=$(( $ret_code | 4 ))	# BIT 2: invalid IPV6 format
+			echo "$ret_string"
+			return $ret_code
 		fi
 	fi
-
+	ret_string="6"
 	# ipv6 prefix length checks
     if [ -n "$(echo $1|grep '/')" ]; then
 		# introducing slash as prefix length attribute detected
         if [[ "$t_prefixlen" -lt 0 ]] || [[ "$t_prefixlen" -gt 128 ]]; then
-            valid_prefixlen=0
+			ret_code=$(( $ret_code | 8 ))	# BIT 3: invalid prefix lenght for IPV6 format
+			ret_string=""
         fi
         if ! [[ "$t_prefixlen" =~ ^[0-9]+$ ]]; then
-            valid_prefixlen=0
+			ret_code=$(( $ret_code | 8 ))	# BIT 3: invalid prefix lenght for IPV6 format
+			ret_string=""
         fi
     fi
-    if [ "$valid_prefixlen" -eq 0 ]; then
-        check_result "$E_INVALID" "invalid ipv6 prefix length format :: $1"
-    fi
+	echo "$ret_string"
+	[ -n "$ret_string" ] && return 0 || return $ret_code
+}
+
+# IP format validator
+is_ip_format_valid() {
+	object_name=${2-ipv4}
+	local ip_format=""
+	local ret_code=0
+	ip_format="$(get_ip_format ${1} ${object_name})"
+	ret_code=$(( $? & 3 ))	# Filter BIT 0 and 1 from error codes for IPV4 format
+	if [ "$ip_format" = "4" ]; then
+		return $ret_code
+	else
+		if [ $ret_code -ne 0 ]; then
+			check_result "$E_INVALID" "invalid $object_name format :: $1"
+			return $ret_code
+		else
+			check_result "$E_INVALID" "ipv6 but not ipv4 format :: $1"
+			return 3
+		fi
+	fi
+}
+
+# IPv6 format validator
+is_ipv6_format_valid() {
+    object_name=${2-ipv6}
+	local ip_format=""
+	local ret_code=0
+	ip_format="$(get_ip_format ${1} ${object_name})"
+	ret_code=$(( $? & 12 ))	# Filter BIT 2 and 3 from error codes for IPV6 format
+	# ret_code=$?
+	if [ "$ip_format" = "6" ]; then
+		return $ret_code
+	else
+		if [ "$ip_format" = "4" ]; then
+			check_result "$E_INVALID" "ipv4 but not ipv6 format :: $1"
+			return 12
+		else
+			check_result "$E_INVALID" "invalid $object_name format :: $1"
+			return $ret_code
+		fi
+	fi
 }
 
 is_ip46_format_valid() {

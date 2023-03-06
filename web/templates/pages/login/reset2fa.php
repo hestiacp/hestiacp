@@ -19,7 +19,7 @@
 			<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 			<h1 class="login-title">
 				<?= _("Reset 2FA") ?>
-			</div>
+			</h1>
 			<?php show_error_message($ERROR); ?>
 			<div class="u-mb10">
 				<label for="user" class="form-label"><?= _("Username") ?></label>

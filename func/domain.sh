@@ -831,7 +831,10 @@ del_mail_ssl_config() {
 
 # Delete generated certificates from user configuration data directory
 del_mail_ssl_certificates() {
-	rm -f $USER_DATA/ssl/mail.$domain.*
+	rm -f $USER_DATA/ssl/mail.$domain.ca
+	rm -f $USER_DATA/ssl/mail.$domain.crt
+	rm -f $USER_DATA/ssl/mail.$domain.key
+	rm -f $USER_DATA/ssl/mail.$domain.pem
 	rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
 }
 

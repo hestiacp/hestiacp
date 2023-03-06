@@ -1414,8 +1414,8 @@ if (!empty($_POST["save"])) {
 					$from_name = _("Hestia Control Panel");
 					$mailtext = sprintf(
 						_("FTP_ACCOUNT_READY"),
-						quoteshellarg($_GET["domain"]),
-						$user,
+						$v_domain,
+						$user_plain,
 						$v_ftp_username_for_emailing,
 						$v_ftp_user_data["v_ftp_password"],
 					);

@@ -17,6 +17,7 @@ BIN=$HESTIA/bin
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 HESTIA_COMMON_DIR="$HESTIA/install/common"
 HESTIA_BACKUP="/root/hst_backups/$(date +%d%m%Y%H%M)"
+HESTIA_PHP="$HESTIA/php/bin/php"
 USER_DATA=$HESTIA/data/users/$user
 WEBTPL=$HESTIA/data/templates/web
 MAILTPL=$HESTIA/data/templates/mail

@@ -49,7 +49,7 @@ class DokuWikiSetup extends BaseSetup {
 		"resources" => [
 			"archive" => [
 				"src" =>
-					"https://github.com/splitbrain/dokuwiki/archive/refs/tags/release_stable_2022-07-31a.zip",
+					"https://github.com/dokuwiki/dokuwiki/archive/refs/tags/release-2022-07-31a.zip",
 			],
 		],
 		"server" => [

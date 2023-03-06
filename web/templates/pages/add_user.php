@@ -67,7 +67,7 @@
 					<?= _("Do not allow user to log in to Control Panel") ?>
 				</label>
 			</div>
-			<div x-cloak x-show="loginDisabled" id="send-welcome">
+			<div x-cloak x-show="!loginDisabled" id="send-welcome">
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_email_notice" id="v_email_notify" tabindex="5">
 					<label for="v_email_notify">

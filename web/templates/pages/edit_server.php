@@ -1227,7 +1227,7 @@
 								name="v_policy_user_edit_details"
 								id="v_policy_user_edit_details"
 							>
-								<option value="yes">>
+								<option value="yes">
 									<?= _("Yes") ?>
 								</option>
 								<option value="no" <?= $_SESSION["POLICY_USER_EDIT_DETAILS"] == "no" ? "selected" : "" ?>>

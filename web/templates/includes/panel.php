@@ -125,7 +125,7 @@
 						<span class="u-hidden"><?= _("Toggle menu") ?></span>
 					</button>
 
-					<ul x-cloak x-show="open" class="top-bar-menu-list animate__animated animate__fadeIn">
+					<ul x-cloak x-show="open" class="top-bar-menu-list">
 
 						<!-- File Manager -->
 						<?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>

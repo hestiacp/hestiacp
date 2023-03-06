@@ -16,7 +16,7 @@
 <!-- End toolbar -->
 
 <div class="container animate__animated animate__fadeIn">
-	<div class="form-container form-container-wide">
+	<div class="form-container form-container-narrow">
 		<!-- Begin graph list item loop -->
 		<?php foreach ($data as $key => $value) { ?>
 			<div class="u-mb40">

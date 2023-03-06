@@ -634,7 +634,7 @@ upgrade_filemanager() {
 		else
 			fm_version="1.0.0"
 		fi
-		if version_ge "$fm_version" "$fm_v"; then
+		if ! version_ge "$fm_version" "$fm_v"; then
 			echo "[ ! ] Upgrading File Manager to version $fm_v..."
 			# Reinstall the File Manager
 			$BIN/v-delete-sys-filemanager quiet yes
@@ -662,7 +662,7 @@ upgrade_roundcube() {
 			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
 		else
 			rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
-			if version_ge "$rc_version" "$rc_v"; then
+			if ! version_ge "$rc_version" "$rc_v"; then
 				echo "[ ! ] Upgrading Roundcube to version $rc_v..."
 				$BIN/v-add-sys-roundcube
 			else
@@ -675,7 +675,7 @@ upgrade_roundcube() {
 upgrade_rainloop() {
 	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
 		rl_version=$(cat /var/lib/rainloop/data/VERSION)
-		if version_ge "$rl_version" "$rl_v"; then
+		if ! version_ge "$rl_version" "$rl_v"; then
 			echo "[ ! ] Upgrading Rainloop to version $rl_v..."
 			$BIN/v-add-sys-rainloop
 		else

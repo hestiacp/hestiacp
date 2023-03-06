@@ -87,6 +87,7 @@ help() {
   -p, --password          Set admin password
   -D, --with-debs         Path to Hestia debs
   -f, --force             Force installation
+  -O, --override          Override checks (dangerous!)
   -h, --help              Print this help
 
   Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --multiphp yes"
@@ -230,6 +231,7 @@ for arg; do
 		--email) args="${args}-e " ;;
 		--password) args="${args}-p " ;;
 		--force) args="${args}-f " ;;
+		--override) args="${args}-O " ;;
 		--with-debs) args="${args}-D " ;;
 		--help) args="${args}-h " ;;
 		*)
@@ -241,7 +243,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:e:p:D:fOh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;       # Apache
 		w) phpfpm=$OPTARG ;;       # PHP-FPM
@@ -270,6 +272,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:e:p:D:fh" Option; d
 		p) vpass=$OPTARG ;;        # Admin password
 		D) withdebs=$OPTARG ;;     # Hestia debs path
 		f) force='yes' ;;          # Force install
+		O) override='yes' ;;       # Override checks
 		h) help ;;                 # Help
 		*) help ;;                 # Print help (default)
 	esac
@@ -335,7 +338,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 	check_result 1 "Script can be run executed only by root"
 fi
 
-if [ -d "/usr/local/hestia" ]; then
+if [ -d "/usr/local/hestia" -a -z "$override" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
 fi
 
@@ -445,7 +448,7 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 		check_result 1 "Unable to detect netplan configuration."
 	fi
 fi
-
+echo "withdebs=$withdebs"
 # Validate whether installation script matches release version before continuing with install
 if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
 	release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control | grep "Version:" | awk '{print $2}')

@@ -61,7 +61,7 @@
 				<li><?= _("1 uppercase & 1 lowercase character") ?></li>
 				<li><?= _("1 number") ?></li>
 			</ul>
-			<div class="form-check u-mb10">
+			<div class="form-check">
 				<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
 				<label for="v_login_disabled">
 					<?= _("Do not allow user to log in to Control Panel") ?>

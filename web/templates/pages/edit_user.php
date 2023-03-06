@@ -122,7 +122,7 @@
 					</div>
 				<?php } ?>
 				<div x-cloak x-show="!loginDisabled" id="password-options">
-					<div class="form-check u-mt15">
+					<div class="form-check">
 						<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo 'checked' ?>>
 						<label for="v_twofa">
 							<?= _("Enable 2FA") ?>

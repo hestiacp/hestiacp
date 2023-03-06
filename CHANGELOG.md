@@ -4,19 +4,71 @@ All notable changes to this project will be documented in this file.
 
 ## [Development] - Service release
 
-### Breaking changes
+### Note
 
-- Dropped support for Debian 9 (Stretch) as it reached EOL date (New installs got already dropped with 1.6.0 release)
+- Debian 9 (Stretch) is no longer supported as it has reached end-of-life status.
+- Basic mobile support has been added in this release. This is early stages and we'd very much appreciate your feedback and any reporting of bugs, to further improve the mobile experience
 
 ### Features
 
-- Add support for DNSSEC support for DNS domains (#2938)
-- Add support for rate limit exim in packages (#2920)
-- Add support for ssh keys for SFTP (#2906)
+- Added basic support for mobile devices (#3166, #3141, #3142, #3157, #3155, #3120, and many more)
+- Added DNSSEC support for DNS domains (#2938)
+- Added support for MySQL 8 (for new installations) (#xxxx @xxxxx)
+- Added support for exim rate limiting in package definitions (#2920)
+- Added support for ssh keys for SFTP backups (#2906)
+- Added Rclone support for backups to AWS, Cloudfare and [+40 other storage systems](https://rclone.org/overview/) (#2928)
+- Added support for importing Cpanel backups (#3238, #3232 @skamasle)
+- Added support for folder wildcards in backup exclusions (#2338 @youradds)
+- Added Nginx template for Mautic (#3192 3188 @youradds)
+- Added alias for composer (#3070)
+- Updated PhpPgAdmin and with support for PostgreSQL 15 (<https://github.com/hestiacp/phppgadmin>)
+- Upgrade MariaDB to 10.11 (#3305)
 
 ### Bugfixes
 
+- Make .yaml files editable in the file manager (#3200 @BelleNottelling)
+- Fixed an issue with search not supporting user impersonation. (#3208 #3199)
+- Prevent users from renaming directories in /home/user/web/ (#3211)
+- Allow special characters for user account "Name" field (#3210)
+- Prevent usernames from containing special characters (#3220 #3213)
+- Increase DKIM length (#3218)
+- Improve password meter CSS (#3221)
+- Improve restart behaviour v-update-letsencrypt-ssl (#3231)
+- Fix order of applied patches on upgrade (#3239)
+- Improve upgrade behaviour for Roundcube and Filegator (#3237 #3236)
+- Allow ClientName@domain.com for login via Dovecot/Email (#3024)
+- Return a proper error code when unable to connect via API (#3235 #3169)
+- Synchronise $BIN and $HESTIA/BIN (#2185 @Steveorevo)
+- Block usage of unlimited backups (#3181)
+- Update paths /var/run/ to /run (#3159)
+- Update PHP versions on various Quick Install apps (#3167 #3149 @dadangnh)
+- Update Media Wiki version to 1.39.1 (#3168 @kizule)
+- Replace custom HTTPS socket code with libcurl (#3160)
+- Add config to avoid restarting daemons on error (#3183 @joeakun)
+- Fixed an issue with default template and Quick App installer #3133
+- Generalise password reset instructions. #3112
+- Allow .tpl files to be editable in File Manager (#3148 @neto737)
+- Fixed an issue where domain alias was not being created for domains with two-tier TLD's (such as .co.uk) (#3030)
+- Fix/sync issues with existing domains (#3028)
+- Fixed an issue Unable to create tmp directory (#3019)
+- Fixed an issue with mysqld-iptables in Fail2Ban (#3025)
+- Fixed an issue with Logrotate and Awstats (#3297)
+- Added Google Public DNS as a secondary resolver to nginx configuration
+- Fixed an issue with Proftpd and passive mode external IP (#3266)
+- Improve IPv6 handling in v-change-sys-port (#3276 @asmcc)
+- Set the correct conflicts for hestia-php on Ubuntu 22.04
+- Fixed an issue with erroneous deleting $domain.\* instead of $domain.pem (#3221)
+- Fixed an issue with domain redirect and idn2 domains (#3323 #3325)
+- Fixed an issue in Dokuwiki due to changing repository owner (#3327)
+
 ### Dependencies
+
+- Updated hestia-nginx to 1.23.3
+- Updated hestia-php to 8.2.3
+- Updated Roundcube to 1.6.1
+- Updated Filegator to 7.9.2
+- Updated phpMyAdmin to 5.2.21
+- Updated phpPgAdmin to 7.3.14-hestiacp
 
 ## [1.6.14] - Service release
 

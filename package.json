@@ -27,7 +27,7 @@
 		"@typescript-eslint/parser": "^5.54.0",
 		"cssnano": "^5.1.15",
 		"eslint": "^8.35.0",
-		"eslint-config-prettier": "^8.6.0",
+		"eslint-config-prettier": "^8.7.0",
 		"eslint-plugin-editorconfig": "^4.0.2",
 		"husky": "^8.0.3",
 		"lint-staged": "^13.1.2",

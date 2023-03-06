@@ -578,8 +578,8 @@ upgrade_phppgadmin() {
 upgrade_phpmyadmin() {
 	# Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
 	if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
-		pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2> /dev/null | tail -n 1)
-		if version_ge "${pma_release_file##*-}" "$pma_v"; then
+		pma_version=$(jq -r .version /usr/share/phpmyadmin/package.json)
+		if version_ge "$pma_version" "$pma_v"; then
 			echo "[ * ] phpMyAdmin is up to date (${pma_release_file##*-})..."
 			# Update permissions
 			if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then

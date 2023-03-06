@@ -270,12 +270,16 @@
 	position: absolute;
 	top: 100%;
 	right: 0;
+	animation-name: fadeIn;
+	animation-duration: var(--animate-duration);
 
 	@media (--viewport-medium) {
 		display: flex !important; /* NOTE: Overrides inline style set by JS */
 		background-color: transparent;
 		box-shadow: none;
 		position: static;
+		animation-name: none;
+		animation-duration: 0s;
 	}
 }
 

@@ -23,7 +23,6 @@ user="admin"
 
 PM_INSTALL_DIR="$HESTIA/web/inc"
 QUICK_INSTALL_DIR="$HESTIA/web/src"
-FA_INSTALL_DIR="$HESTIA/web/inc/2fa"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#
@@ -97,21 +96,10 @@ if [ -z "$openssl_installed" ]; then
 else
 	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
 fi
-cd "$FA_INSTALL_DIR"
-rm --recursive --force ${FA_INSTALL_DIR}/vendor
-mkdir -p ${FA_INSTALL_DIR}/vendor
-chown $user: -R ${FA_INSTALL_DIR}/vendor
-
-if [ -z "$openssl_installed" ]; then
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
-else
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
-fi
 
 # Set permissions
 chown root: -R "${PM_INSTALL_DIR}/vendor"
 chown root: -R "${QUICK_INSTALL_DIR}/vendor"
-chown root: -R "${FA_INSTALL_DIR}/vendor"
 
 #----------------------------------------------------------#
 #                       Logging                            #

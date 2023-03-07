@@ -1,6 +1,6 @@
 <?php
 use RobThree\Auth\TwoFactorAuth;
-require_once "vendor/autoload.php";
+require_once __DIR__ . "/../vendor/autoload.php";
 
 if (isset($argv[1]) && isset($argv[2])) {
 	$secret = $argv[1];

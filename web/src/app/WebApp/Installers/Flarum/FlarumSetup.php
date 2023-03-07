@@ -28,6 +28,9 @@ class FlarumSetup extends BaseSetup {
 			"composer" => ["src" => "flarum/flarum"],
 		],
 		"server" => [
+			"nginx" => [
+				"template" => "flarum",
+			],
 			"php" => [
 				"supported" => ["8.0", "8.1", "8.2"],
 			],

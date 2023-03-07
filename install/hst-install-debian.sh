@@ -81,7 +81,7 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
-  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: no
+  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: yes
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
@@ -306,7 +306,7 @@ set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
-set_default_value 'ipv6' 'no'
+set_default_value 'ipv6' 'yes'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
@@ -448,7 +448,6 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 		check_result 1 "Unable to detect netplan configuration."
 	fi
 fi
-echo "withdebs=$withdebs"
 # Validate whether installation script matches release version before continuing with install
 if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
 	release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control | grep "Version:" | awk '{print $2}')

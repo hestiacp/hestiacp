@@ -80,12 +80,13 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
-  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: no
+  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: yes
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
   -D, --with-debs         Path to Hestia debs
   -f, --force             Force installation
+  -O, --override          Override checks (dangerous!)
   -h, --help              Print this help
 
   Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --multiphp yes"
@@ -223,11 +224,13 @@ for arg; do
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
 		--interactive) args="${args}-y " ;;
+		--ipv6) args="${args}-6 " ;;
 		--api) args="${args}-d " ;;
 		--hostname) args="${args}-s " ;;
 		--email) args="${args}-e " ;;
 		--password) args="${args}-p " ;;
 		--force) args="${args}-f " ;;
+		--override) args="${args}-O " ;;
 		--with-debs) args="${args}-D " ;;
 		--help) args="${args}-h " ;;
 		*)
@@ -239,7 +242,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:e:p:D:fOh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;       # Apache
 		w) phpfpm=$OPTARG ;;       # PHP-FPM
@@ -262,11 +265,13 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
 		l) lang=$OPTARG ;;         # Language
 		d) api=$OPTARG ;;          # Activate API
 		y) interactive=$OPTARG ;;  # Interactive install
+		6) ipv6=$OPTARG ;;         # IPv6
 		s) servername=$OPTARG ;;   # Hostname
 		e) email=$OPTARG ;;        # Admin email
 		p) vpass=$OPTARG ;;        # Admin password
 		D) withdebs=$OPTARG ;;     # Hestia debs path
 		f) force='yes' ;;          # Force install
+		O) override='yes' ;;       # Override checks
 		h) help ;;                 # Help
 		*) help ;;                 # Print help (default)
 	esac
@@ -300,7 +305,7 @@ set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
-set_default_value 'ipv6' 'no'
+set_default_value 'ipv6' 'yes'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
@@ -333,7 +338,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 	check_result 1 "Script can be run executed only by root"
 fi
 
-if [ -d "/usr/local/hestia" ]; then
+if [ -d "/usr/local/hestia" -a -z "$override" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
 fi
 

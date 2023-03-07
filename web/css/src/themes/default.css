@@ -1924,7 +1924,8 @@
 
 .button-circle {
 	border-radius: 50%;
-	min-width: 28px;
+	min-width: 30px;
+	min-height: 30px;
 	padding: 3px;
 
 	& .fas {
@@ -1936,7 +1937,9 @@
 	display: none;
 
 	@media (--viewport-medium) {
-		display: block;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		position: fixed;
 		z-index: 1;
 		bottom: 70px;

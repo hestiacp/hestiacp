@@ -115,7 +115,7 @@ fi
 if [ -f /etc/nginx/nginx.conf ] && [ ! -f /etc/nginx/conf.d/cloudflare.inc ]; then
 	echo "[ * ] Enable support for updating Cloudflare Ips"
 	sed -i '/set_real_ip_from/d' /etc/nginx/nginx.conf
-	sed -i '/real_ip_header     CF-Connecting-IP;/d' /etc/nginx/nginx.conf
+	sed -i '/real_ip_header/d' /etc/nginx/nginx.conf
 	sed -i 's|# Cloudflare https://www.cloudflare.com/ips|# Cloudflare https://www.cloudflare.com/ips\n    include /etc/nginx/conf.d/cloudflare.inc;|g' /etc/nginx/nginx.conf
 	# At a later stage a function  will run and will load all the new rules
 fi

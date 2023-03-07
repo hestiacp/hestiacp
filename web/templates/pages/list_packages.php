@@ -40,11 +40,11 @@
 			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Package") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide"><b><?= _("Package") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-right"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><i class="fas fa-terminal" title="<?= _("Shell") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><i class="fas fa-hard-drive" title="<?= _("Quota") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b><i class="fas fa-hard-drive" title="<?= _("Quota") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-link" title="<?= _("Web Aliases") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Domains") ?>"></i></b></div>
@@ -70,9 +70,11 @@
 					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?=$key?>">
 				</div>
 				<?php if ($key == 'system'){ ?>
-					<div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><?=$key?></b></div>
-				<?php } else {?>
-					<div class="clearfix l-unit__stat-col--left wide-2 truncate"><b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>: <?=$key?>"><?=$key?></a></b></div>
+					<div class="clearfix l-unit__stat-col--left wide truncate"><b><?=$key?></b></div>
+				<?php } else { ?>
+					<div class="clearfix l-unit__stat-col--left wide truncate">
+						<b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>: <?=$key?>"><?=$key?></a></b>
+					</div>
 				<?php } ?>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
@@ -108,7 +110,7 @@
 						<i class="fas fa-circle-check icon-green icon-large"></i>
 					<?php } ?>
 				</div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-2">
 					<span title="<?= _("Quota") ?>: <?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?> <?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>">
 						<?php if (preg_match("/[a-z]/i", $data[$key]["DISK_QUOTA"])): ?>
 							<b>&infin;</b>
@@ -117,7 +119,7 @@
 						<?php endif; ?>
 					</span>
 				</div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact">
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-2">
 					<span title="<?= _("Bandwidth") ?>: <?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?> <?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>">
 						<?php if ($data[$key]["BANDWIDTH"] == "unlimited") { ?>
 							<b>&infin;</b>

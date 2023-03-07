@@ -30,6 +30,8 @@ composer.phar
 test/vendor/
 # PHPMailer
 web/inc/vendor/
+# 2FA support
+web/inc/2fa/vendor/
 # Quick install
 web/src/vendor/
 .phpunit.result.cache

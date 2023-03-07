@@ -1,0 +1,5 @@
+{
+    "require": {
+        "robthree/twofactorauth": "^2.0"
+    }
+}

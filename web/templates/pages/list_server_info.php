@@ -19,9 +19,14 @@
 				</div>
 				<div class="top-bar-right">
 					<nav x-data="{ open: false }" class="top-bar-menu">
-						<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?= _("Toggle menu") ?>">
+						<button
+							type="button"
+							class="top-bar-menu-link u-hide-tablet"
+							x-on:click="open = !open">
 							<i class="fas fa-bars"></i>
-							<span class="u-hidden"><?= _("Toggle menu") ?></span>
+							<span class="u-hidden" x-text="open ? '<?= _("Close menu") ?>' : '<?= _("Open menu") ?>'">
+								<?= _("Open menu") ?>
+							</span>
 						</button>
 						<ul x-cloak x-show="open" class="top-bar-menu-list">
 							<li class="top-bar-menu-item">

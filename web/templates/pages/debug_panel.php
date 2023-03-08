@@ -1,6 +1,10 @@
 <div x-data="{ open: false }" class="debug-panel">
-	<button x-on:click="open = !open" type="button" class="debug-panel-toggle">
-		<?= _("Toggle Debug Panel") ?>
+	<button
+		type="button"
+		class="debug-panel-toggle"
+		x-on:click="open = !open"
+		x-text="open ? '<?= _("Close debug panel") ?>' : '<?= _("Open debug panel") ?>'">
+		<?= _("Open debug panel") ?>
 	</button>
 	<div x-cloak x-show="open" class="debug-panel-content animate__animated animate__fadeIn">
 		<?php

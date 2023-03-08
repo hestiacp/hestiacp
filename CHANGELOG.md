@@ -23,6 +23,9 @@ All notable changes to this project will be documented in this file.
 - Added alias for composer (#3070)
 - Updated PhpPgAdmin and with support for PostgreSQL 15 (<https://github.com/hestiacp/phppgadmin>)
 - Upgrade MariaDB to 10.11 (#3305)
+- Add Quick installer for Flarum (#3342 and #3298 @Steveorevo)
+- Enable UTF8MB4 on default for Mysql (#3337 #1882)
+- Update Cloudflare ip adresses on each update (#3338 #2575)
 
 ### Bugfixes
 
@@ -60,6 +63,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with erroneous deleting $domain.\* instead of $domain.pem (#3221)
 - Fixed an issue with domain redirect and idn2 domains (#3323 #3325)
 - Fixed an issue in Dokuwiki due to changing repository owner (#3327)
+- Fixed an issue with B2 and changing access keys
 
 ### Dependencies
 
@@ -71,6 +75,7 @@ All notable changes to this project will be documented in this file.
 - Updated phpPgAdmin to 7.3.14-hestiacp
 - Update MediaWiki to 1.39.2
 - Update Prestashop to 8.0.1
+- Update TwoFactorAuth to 2.0.0
 
 ## [1.6.14] - Service release
 

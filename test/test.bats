@@ -1937,7 +1937,7 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 @test "Create firewall with Ipset" {
-  run v-add-firewall-rule 'DROP' 'ipset:blacklist' '8083,22' 'TCP' 'Test'
+  run v-add-firewall-rule 'DROP' 'ipset:country-nl' '8083,22' 'TCP' 'Test'
   assert_success
   refute_output
 }
@@ -1945,7 +1945,7 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 @test "List firewall rules" {
   run v-list-firewall csv
   assert_success
-  assert_line --partial '11,DROP,TCP,8083,22,ipset:blacklist'
+  assert_line --partial '11,DROP,TCP,8083,22,ipset:country-nl'
 
 }
 

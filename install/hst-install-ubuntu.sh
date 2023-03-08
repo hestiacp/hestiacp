@@ -1452,6 +1452,24 @@ if [ -n "$resolver" ]; then
 	fi
 fi
 
+# https://github.com/ergin/nginx-cloudflare-real-ip/
+CLOUDFLARE_FILE_PATH='/etc/nginx/conf.d/cloudflare.inc'
+echo "#Cloudflare" > $CLOUDFLARE_FILE_PATH
+echo "" >> $CLOUDFLARE_FILE_PATH
+
+echo "# - IPv4" >> $CLOUDFLARE_FILE_PATH
+for i in $(curl -s -L https://www.cloudflare.com/ips-v4); do
+	echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
+done
+echo "" >> $CLOUDFLARE_FILE_PATH
+echo "# - IPv6" >> $CLOUDFLARE_FILE_PATH
+for i in $(curl -s -L https://www.cloudflare.com/ips-v6); do
+	echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
+done
+
+echo "" >> $CLOUDFLARE_FILE_PATH
+echo "real_ip_header CF-Connecting-IP;" >> $CLOUDFLARE_FILE_PATH
+
 update-rc.d nginx defaults > /dev/null 2>&1
 systemctl start nginx >> $LOG
 check_result $? "nginx start failed"

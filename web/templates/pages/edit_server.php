@@ -788,7 +788,7 @@
 								</option>
 							</select>
 						</div>
-						<div x-cloak x-show="backupType == "ftp' || backupType == "sftp'">
+						<div x-cloak x-show="backupType == 'ftp' || backupType == 'sftp' || backupType == ''">
 							<div class="u-mb10">
 								<label for="v_backup_host" class="form-label">
 									<?= _("Host") ?>

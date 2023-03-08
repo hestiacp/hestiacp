@@ -1043,11 +1043,7 @@ if (!empty($_POST["save"])) {
 
 	// Change remote backup host
 	if (empty($_SESSION["error_msg"])) {
-		if (
-			!empty($_POST["v_backup_host"]) &&
-			$_POST["v_backup_type"] == $v_backup_type &&
-			!isset($v_backup_new)
-		) {
+		if ($_POST["v_backup_type"] == $v_backup_type && !isset($v_backup_new)) {
 			if (in_array($_POST["v_backup_type"], ["ftp", "sftp"])) {
 				if (
 					$_POST["v_backup_host"] != $v_backup_host ||

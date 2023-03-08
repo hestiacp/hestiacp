@@ -86,6 +86,9 @@ upgrade_roundcube | tee -a $LOG
 # Upgrade PHP php dependencies
 upgrade_dependencies | tee -a $LOG
 
+# Upgrade Cloudflare IPs if applicable
+upgrade_cloudflare_ip | tee -a $LOG
+
 # Upgrade phpMyAdmin if applicable
 upgrade_phpmyadmin | tee -a $LOG
 

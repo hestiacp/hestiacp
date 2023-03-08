@@ -29,25 +29,28 @@ json_list() {
 	ip_count=$(ls $HESTIA/data/ips/ | wc -l)
 	i=1
 	while read IP; do
-		source_conf "$HESTIA/data/ips/$IP"
-		echo -n '    "'$IP'": {
-        "OWNER": "'$OWNER'",
-        "STATUS": "'$STATUS'",
-        "NAME": "'$NAME'",
-        "U_SYS_USERS": "'$U_SYS_USERS'",
-        "U_WEB_DOMAINS": "'$U_WEB_DOMAINS'",
-        "INTERFACE": "'$INTERFACE'",
-        "NETMASK": "'$NETMASK'",
-        "NAT": "'$NAT'",
-        "TIME": "'$TIME'",
-        "DATE": "'$DATE'"
-        }'
-		if [ "$i" -lt "$ip_count" ]; then
-			echo ','
-		else
-			echo
+		ip_format="$(get_ip_format ${IP})"
+		if [ -n "$ip_format" ]; then 
+			source_conf "$HESTIA/data/ips/$IP"
+			echo -n '    "'$IP'": {
+			"OWNER": "'$OWNER'",
+			"STATUS": "'$STATUS'",
+			"NAME": "'$NAME'",
+			"U_SYS_USERS": "'$U_SYS_USERS'",
+			"U_WEB_DOMAINS": "'$U_WEB_DOMAINS'",
+			"INTERFACE": "'$INTERFACE'",
+			"NETMASK": "'$NETMASK'",
+			"NAT": "'$NAT'",
+			"TIME": "'$TIME'",
+			"DATE": "'$DATE'"
+			}'
+			if [ "$i" -lt "$ip_count" ]; then
+				echo ','
+			else
+				echo
+			fi
+			((i++))
 		fi
-		((i++))
 	done < <(ls $HESTIA/data/ips/)
 	echo '}'
 }
@@ -57,20 +60,26 @@ shell_list() {
 	echo "IP   MASK   NAT    STATUS   WEB  DATE"
 	echo "--   ----   ---    ------   ---  ----"
 	while read IP; do
-		source_conf "$HESTIA/data/ips/$IP"
-		if [ -z "$NAT" ]; then
-			NAT='no'
+		ip_format="$(get_ip_format ${IP})"
+		if [ -n "$ip_format" ]; then 
+			source_conf "$HESTIA/data/ips/$IP"
+			if [ -z "$NAT" ]; then
+				NAT='no'
+			fi
+			echo "$IP $NETMASK $NAT $STATUS $U_WEB_DOMAINS $DATE"
 		fi
-		echo "$IP $NETMASK $NAT $STATUS $U_WEB_DOMAINS $DATE"
 	done < <(ls $HESTIA/data/ips/)
 }
 
 # PLAIN list function
 plain_list() {
 	while read IP; do
-		source_conf "$HESTIA/data/ips/$IP"
-		echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
-		echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
+		ip_format="$(get_ip_format ${IP})"
+		if [ -n "$ip_format" ]; then 
+			source_conf "$HESTIA/data/ips/$IP"
+			echo -ne "$IP\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
+			echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
+		fi
 	done < <(ls $HESTIA/data/ips/)
 }
 
@@ -79,9 +88,23 @@ csv_list() {
 	echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
 	echo "NETMASK,NAT,TIME,DATE"
 	while read IP; do
-		source_conf "$HESTIA/data/ips/$IP"
-		echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
-		echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
+		ip_format="$(get_ip_format ${IP})"
+		if [ -n "$ip_format" ]; then 
+			source_conf "$HESTIA/data/ips/$IP"
+			echo -n "$IP,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
+			echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
+		fi
+	done < <(ls $HESTIA/data/ips/)
+}
+
+# ONLY IP list function
+only_ip_list() {
+	while read IP; do
+		ip_format="$(get_ip_format ${IP})"
+		if [ -n "$ip_format" ]; then 
+			source_conf "$HESTIA/data/ips/$IP"
+			echo "$IP"
+		fi
 	done < <(ls $HESTIA/data/ips/)
 }
 
@@ -95,6 +118,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
+	list) only_ip_list ;;
 esac
 
 #----------------------------------------------------------#

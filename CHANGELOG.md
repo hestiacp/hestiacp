@@ -69,6 +69,8 @@ All notable changes to this project will be documented in this file.
 - Updated Filegator to 7.9.2
 - Updated phpMyAdmin to 5.2.21
 - Updated phpPgAdmin to 7.3.14-hestiacp
+- Update MediaWiki to 1.39.2
+- Update Prestashop to 8.0.1
 
 ## [1.6.14] - Service release
 

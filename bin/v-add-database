@@ -24,7 +24,7 @@ password=$4
 HIDE=4
 type=${5-mysql}
 host=$6
-charset=${7-UTF8}
+charset=${7-UTF8MB4}
 charset=$(echo "$charset" | tr '[:lower:]' '[:upper:]')
 
 # Includes

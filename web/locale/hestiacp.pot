@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-07 17:48+0100\n"
+"POT-Creation-Date: 2023-03-08 22:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,7 +117,7 @@ msgstr ""
 #: ../../web/templates/pages/list_user.php:71
 #: ../../web/templates/pages/edit_package.php:56
 #: ../../web/templates/pages/list_packages.php:47
-#: ../../web/templates/pages/list_packages.php:121
+#: ../../web/templates/pages/list_packages.php:123
 #: ../../web/templates/includes/panel.php:37
 #: ../../web/templates/includes/panel.html:48
 msgid "Bandwidth"
@@ -134,7 +134,7 @@ msgstr ""
 #: ../../web/templates/pages/list_user.php:70
 #: ../../web/templates/pages/list_db.php:51
 #: ../../web/templates/pages/list_db.php:96
-#: ../../web/templates/pages/list_server_info.php:48
+#: ../../web/templates/pages/list_server_info.php:53
 #: ../../web/templates/includes/panel.php:33
 #: ../../web/templates/includes/panel.html:47
 msgid "Disk"
@@ -355,8 +355,8 @@ msgstr ""
 
 #: ../../web/templates/pages/list_web.php:73
 #: ../../web/templates/pages/list_web.php:195
-#: ../../web/templates/includes/panel.php:180
-#: ../../web/templates/includes/panel.php:182
+#: ../../web/templates/includes/panel.php:185
+#: ../../web/templates/includes/panel.php:187
 #: ../../web/templates/includes/panel.html:29
 msgid "Statistics"
 msgstr ""
@@ -431,7 +431,7 @@ msgstr ""
 #: ../../web/templates/pages/list_firewall.php:110
 #: ../../web/templates/pages/list_log_auth.php:25
 #: ../../web/templates/pages/list_key.php:47
-#: ../../web/templates/pages/list_packages.php:94
+#: ../../web/templates/pages/list_packages.php:96
 #: ../../web/templates/pages/list_dns_rec.php:119
 #: ../../web/templates/pages/list_backup.php:102
 #: ../../web/templates/pages/edit_user.php:46
@@ -478,7 +478,7 @@ msgstr[1] ""
 #: ../../web/templates/pages/add_cron.php:6
 #: ../../web/templates/pages/add_user.php:6
 #: ../../web/templates/pages/list_webapps.php:6
-#: ../../web/templates/pages/list_weblog.php:30
+#: ../../web/templates/pages/list_weblog.php:35
 #: ../../web/templates/pages/list_search.php:5
 #: ../../web/templates/pages/list_access_keys.php:5
 #: ../../web/templates/pages/list_backup_detail.php:5
@@ -499,8 +499,8 @@ msgstr[1] ""
 #: ../../web/templates/pages/generate_ssl.php:62
 #: ../../web/templates/pages/list_key.php:5
 #: ../../web/templates/pages/edit_server_pgsql.php:6
-#: ../../web/templates/pages/list_server_info.php:28
-#: ../../web/templates/pages/list_server_info.php:30
+#: ../../web/templates/pages/list_server_info.php:33
+#: ../../web/templates/pages/list_server_info.php:35
 #: ../../web/templates/pages/list_server_preview.php:5
 #: ../../web/templates/pages/list_packages.php:5
 #: ../../web/templates/pages/edit_cron.php:6
@@ -636,7 +636,7 @@ msgstr ""
 #: ../../web/templates/pages/edit_mail_acc.php:70
 #: ../../web/templates/pages/edit_package.php:47
 #: ../../web/templates/pages/list_packages.php:46
-#: ../../web/templates/pages/list_packages.php:112
+#: ../../web/templates/pages/list_packages.php:114
 msgid "Quota"
 msgstr ""
 
@@ -680,9 +680,9 @@ msgstr ""
 #: ../../web/templates/pages/list_user.php:175
 #: ../../web/templates/pages/edit_package.php:64
 #: ../../web/templates/pages/list_packages.php:56
-#: ../../web/templates/pages/list_packages.php:202
+#: ../../web/templates/pages/list_packages.php:204
 #: ../../web/templates/pages/edit_server.php:668
-#: ../../web/templates/includes/panel.php:348
+#: ../../web/templates/includes/panel.php:354
 #: ../../web/templates/includes/panel.html:197
 msgid "Backups"
 msgstr ""
@@ -690,7 +690,7 @@ msgstr ""
 #: ../../web/templates/pages/add_package.php:65
 #: ../../web/templates/pages/list_stats.php:166
 #: ../../web/templates/pages/edit_package.php:68
-#: ../../web/templates/pages/list_server_info.php:61
+#: ../../web/templates/pages/list_server_info.php:66
 msgid "Web"
 msgstr ""
 
@@ -701,7 +701,7 @@ msgstr ""
 #: ../../web/templates/pages/edit_backup_exclusions.php:28
 #: ../../web/templates/pages/edit_package.php:76
 #: ../../web/templates/pages/list_packages.php:48
-#: ../../web/templates/pages/list_packages.php:130
+#: ../../web/templates/pages/list_packages.php:132
 msgid "Web Domains"
 msgstr ""
 
@@ -709,7 +709,7 @@ msgstr ""
 #: ../../web/templates/pages/list_stats.php:147
 #: ../../web/templates/pages/edit_package.php:84
 #: ../../web/templates/pages/list_packages.php:49
-#: ../../web/templates/pages/list_packages.php:139
+#: ../../web/templates/pages/list_packages.php:141
 msgid "Web Aliases"
 msgstr ""
 
@@ -743,8 +743,8 @@ msgstr ""
 #: ../../web/templates/pages/add_package.php:143
 #: ../../web/templates/pages/add_firewall_banlist.php:39
 #: ../../web/templates/pages/edit_package.php:145
-#: ../../web/templates/pages/list_server_info.php:69
-#: ../../web/templates/includes/panel.php:279
+#: ../../web/templates/pages/list_server_info.php:74
+#: ../../web/templates/includes/panel.php:285
 #: ../../web/templates/includes/panel.html:140
 msgid "DNS"
 msgstr ""
@@ -779,13 +779,13 @@ msgstr ""
 #: ../../web/templates/pages/edit_package.php:234
 #: ../../web/templates/pages/add_dns.php:153
 #: ../../web/templates/pages/edit_user.php:312
-msgid "Add one more Name Server"
+msgid "Add Name Server"
 msgstr ""
 
 #: ../../web/templates/pages/add_package.php:234
 #: ../../web/templates/pages/list_stats.php:194
 #: ../../web/templates/pages/edit_package.php:239
-#: ../../web/templates/pages/list_server_info.php:77
+#: ../../web/templates/pages/list_server_info.php:82
 msgid "Mail"
 msgstr ""
 
@@ -796,7 +796,7 @@ msgstr ""
 #: ../../web/templates/pages/edit_backup_exclusions.php:32
 #: ../../web/templates/pages/edit_package.php:247
 #: ../../web/templates/pages/list_packages.php:52
-#: ../../web/templates/pages/list_packages.php:166
+#: ../../web/templates/pages/list_packages.php:168
 msgid "Mail Domains"
 msgstr ""
 
@@ -804,7 +804,7 @@ msgstr ""
 #: ../../web/templates/pages/list_stats.php:126
 #: ../../web/templates/pages/edit_package.php:255
 #: ../../web/templates/pages/list_packages.php:53
-#: ../../web/templates/pages/list_packages.php:175
+#: ../../web/templates/pages/list_packages.php:177
 msgid "Mail Accounts"
 msgstr ""
 
@@ -831,9 +831,9 @@ msgstr ""
 #: ../../web/templates/pages/edit_package.php:270
 #: ../../web/templates/pages/edit_package.php:278
 #: ../../web/templates/pages/list_packages.php:54
-#: ../../web/templates/pages/list_packages.php:184
+#: ../../web/templates/pages/list_packages.php:186
 #: ../../web/templates/pages/edit_server.php:502
-#: ../../web/templates/includes/panel.php:316
+#: ../../web/templates/includes/panel.php:322
 #: ../../web/templates/includes/panel.html:169
 msgid "Databases"
 msgstr ""
@@ -851,13 +851,13 @@ msgstr ""
 #: ../../web/templates/pages/list_user.php:174
 #: ../../web/templates/pages/edit_package.php:294
 #: ../../web/templates/pages/list_packages.php:55
-#: ../../web/templates/pages/list_packages.php:193
+#: ../../web/templates/pages/list_packages.php:195
 msgid "Cron Jobs"
 msgstr ""
 
 #: ../../web/templates/pages/add_package.php:296
 #: ../../web/templates/pages/edit_package.php:301
-#: ../../web/templates/pages/list_packages.php:106
+#: ../../web/templates/pages/list_packages.php:108
 #: ../../web/templates/pages/edit_user.php:232
 msgid "SSH Access"
 msgstr ""
@@ -937,7 +937,7 @@ msgid "SSH"
 msgstr ""
 
 #: ../../web/templates/pages/add_firewall_banlist.php:37
-#: ../../web/templates/includes/panel.php:260
+#: ../../web/templates/includes/panel.php:266
 #: ../../web/templates/includes/panel.html:125
 msgid "WEB"
 msgstr ""
@@ -949,14 +949,14 @@ msgid "FTP"
 msgstr ""
 
 #: ../../web/templates/pages/add_firewall_banlist.php:40
-#: ../../web/templates/includes/panel.php:298
+#: ../../web/templates/includes/panel.php:304
 #: ../../web/templates/includes/panel.html:155
 msgid "MAIL"
 msgstr ""
 
 #: ../../web/templates/pages/add_firewall_banlist.php:41
-#: ../../web/templates/pages/list_server_info.php:85
-#: ../../web/templates/includes/panel.php:317
+#: ../../web/templates/pages/list_server_info.php:90
+#: ../../web/templates/includes/panel.php:323
 #: ../../web/templates/includes/panel.html:170
 msgid "DB"
 msgstr ""
@@ -1140,8 +1140,13 @@ msgstr ""
 msgid "no exclusions"
 msgstr ""
 
-#: ../../web/templates/pages/debug_panel.php:3
-msgid "Toggle Debug Panel"
+#: ../../web/templates/pages/debug_panel.php:6
+msgid "Close debug panel"
+msgstr ""
+
+#: ../../web/templates/pages/debug_panel.php:6
+#: ../../web/templates/pages/debug_panel.php:7
+msgid "Open debug panel"
 msgstr ""
 
 #: ../../web/templates/pages/add_mail_acc.php:32
@@ -1256,7 +1261,7 @@ msgstr ""
 #: ../../web/templates/pages/edit_web.php:57
 #: ../../web/templates/pages/generate_ssl.php:22
 #: ../../web/templates/pages/edit_server.php:967
-#: ../../web/templates/includes/panel.php:259
+#: ../../web/templates/includes/panel.php:265
 #: ../../web/templates/includes/panel.html:124
 msgid "Aliases"
 msgstr ""
@@ -1498,18 +1503,18 @@ msgid "Login history"
 msgstr ""
 
 #: ../../web/templates/pages/list_log.php:32
-#: ../../web/templates/pages/list_weblog.php:58
-#: ../../web/templates/pages/list_weblog.php:60
+#: ../../web/templates/pages/list_weblog.php:63
+#: ../../web/templates/pages/list_weblog.php:65
 #: ../../web/templates/pages/list_search.php:6
 #: ../../web/templates/pages/list_log_auth.php:12
-#: ../../web/templates/pages/list_server_info.php:90
-#: ../../web/templates/pages/list_server_info.php:92
+#: ../../web/templates/pages/list_server_info.php:95
+#: ../../web/templates/pages/list_server_info.php:97
 msgid "Refresh"
 msgstr ""
 
 #: ../../web/templates/pages/list_log.php:39
 #: ../../web/templates/pages/list_log_auth.php:19
-#: ../../web/templates/pages/list_packages.php:91
+#: ../../web/templates/pages/list_packages.php:93
 #: ../../web/templates/pages/edit_user.php:44
 msgid "Delete"
 msgstr ""
@@ -1766,9 +1771,9 @@ msgstr ""
 #: ../../web/templates/pages/list_ip.php:18
 #: ../../web/templates/pages/list_ip.php:50
 #: ../../web/templates/pages/edit_server.php:1303
-#: ../../web/templates/includes/panel.php:259
-#: ../../web/templates/includes/panel.php:278
-#: ../../web/templates/includes/panel.php:297
+#: ../../web/templates/includes/panel.php:265
+#: ../../web/templates/includes/panel.php:284
+#: ../../web/templates/includes/panel.php:303
 #: ../../web/templates/includes/panel.html:124
 #: ../../web/templates/includes/panel.html:139
 #: ../../web/templates/includes/panel.html:154
@@ -2417,53 +2422,59 @@ msgstr ""
 msgid "Hestia Control Panel"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.php:22
-#: ../../web/templates/pages/list_weblog.php:24
-#: ../../web/templates/pages/list_server_info.php:22
-#: ../../web/templates/pages/list_server_info.php:24
-#: ../../web/templates/includes/panel.php:123
-#: ../../web/templates/includes/panel.php:125
-msgid "Toggle menu"
+#: ../../web/templates/pages/list_weblog.php:27
+#: ../../web/templates/pages/list_server_info.php:27
+#: ../../web/templates/includes/panel.php:128
+msgid "Close menu"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.php:36
+#: ../../web/templates/pages/list_weblog.php:27
+#: ../../web/templates/pages/list_weblog.php:28
+#: ../../web/templates/pages/list_server_info.php:27
+#: ../../web/templates/pages/list_server_info.php:28
+#: ../../web/templates/includes/panel.php:128
+#: ../../web/templates/includes/panel.php:129
+msgid "Open menu"
+msgstr ""
+
+#: ../../web/templates/pages/list_weblog.php:41
 msgid "Access Log"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.php:40
-#: ../../web/templates/pages/list_weblog.php:42
-#: ../../web/templates/pages/list_weblog.php:52
-#: ../../web/templates/pages/list_weblog.php:54
+#: ../../web/templates/pages/list_weblog.php:45
+#: ../../web/templates/pages/list_weblog.php:47
+#: ../../web/templates/pages/list_weblog.php:57
+#: ../../web/templates/pages/list_weblog.php:59
 msgid "Download"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.php:48
+#: ../../web/templates/pages/list_weblog.php:53
 msgid "Error Log"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.php:70
-#: ../../web/templates/pages/list_weblog.php:72
-#: ../../web/templates/pages/list_server_info.php:96
-#: ../../web/templates/pages/list_server_info.php:98
-#: ../../web/templates/includes/panel.php:197
-#: ../../web/templates/includes/panel.php:199
+#: ../../web/templates/pages/list_weblog.php:75
+#: ../../web/templates/pages/list_weblog.php:77
+#: ../../web/templates/pages/list_server_info.php:101
+#: ../../web/templates/pages/list_server_info.php:103
+#: ../../web/templates/includes/panel.php:202
 #: ../../web/templates/includes/panel.php:204
-#: ../../web/templates/includes/panel.php:206
+#: ../../web/templates/includes/panel.php:209
+#: ../../web/templates/includes/panel.php:211
 #: ../../web/templates/includes/panel.html:87
 #: ../../web/templates/includes/panel.html:89
 msgid "Log out"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.php:85
-#: ../../web/templates/pages/list_weblog.php:88
-#: ../../web/templates/pages/list_server_info.php:111
-#: ../../web/templates/pages/list_server_info.php:114
+#: ../../web/templates/pages/list_weblog.php:90
+#: ../../web/templates/pages/list_weblog.php:93
+#: ../../web/templates/pages/list_server_info.php:116
+#: ../../web/templates/pages/list_server_info.php:119
 #: ../../web/templates/includes/panel.html:2 ../../web/templates/footer.php:72
 #: ../../web/templates/footer.php:75
 msgid "Top"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.php:91
+#: ../../web/templates/pages/list_weblog.php:96
 #, php-format
 msgid "Last 70 lines of %s.%s.log"
 msgstr ""
@@ -2577,7 +2588,7 @@ msgid "Cron Records"
 msgstr ""
 
 #: ../../web/templates/pages/list_backup_detail.php:188
-#: ../../web/templates/includes/panel.php:285
+#: ../../web/templates/includes/panel.php:291
 #: ../../web/templates/includes/panel.html:143
 msgid "records"
 msgstr ""
@@ -2626,8 +2637,8 @@ msgstr ""
 #: ../../web/templates/pages/list_services.php:20
 #: ../../web/templates/pages/edit_user.php:23
 #: ../../web/templates/pages/edit_user.php:24
-#: ../../web/templates/includes/panel.php:162
-#: ../../web/templates/includes/panel.php:164
+#: ../../web/templates/includes/panel.php:167
+#: ../../web/templates/includes/panel.php:169
 #: ../../web/templates/includes/panel.html:75
 msgid "Logs"
 msgstr ""
@@ -2672,7 +2683,7 @@ msgid "Service"
 msgstr ""
 
 #: ../../web/templates/pages/list_services.php:105
-#: ../../web/templates/pages/list_server_info.php:36
+#: ../../web/templates/pages/list_server_info.php:41
 msgid "CPU"
 msgstr ""
 
@@ -2742,7 +2753,7 @@ msgstr ""
 #: ../../web/templates/pages/list_user.php:73
 #: ../../web/templates/pages/list_user.php:171
 #: ../../web/templates/pages/list_packages.php:50
-#: ../../web/templates/pages/list_packages.php:148
+#: ../../web/templates/pages/list_packages.php:150
 msgid "DNS Domains"
 msgstr ""
 
@@ -2794,8 +2805,8 @@ msgid "USER_EXCLUSIONS"
 msgstr ""
 
 #: ../../web/templates/pages/edit_package.php:38
-#: ../../web/templates/pages/list_packages.php:75
-#: ../../web/templates/pages/list_packages.php:84
+#: ../../web/templates/pages/list_packages.php:76
+#: ../../web/templates/pages/list_packages.php:86
 msgid "Editing Package"
 msgstr ""
 
@@ -3084,11 +3095,11 @@ msgid_plural "%d SSH Keys"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../web/templates/pages/list_server_info.php:42
+#: ../../web/templates/pages/list_server_info.php:47
 msgid "RAM"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:54
+#: ../../web/templates/pages/list_server_info.php:59
 msgid "Network"
 msgstr ""
 
@@ -3110,20 +3121,20 @@ msgid "Shell"
 msgstr ""
 
 #: ../../web/templates/pages/list_packages.php:51
-#: ../../web/templates/pages/list_packages.php:157
+#: ../../web/templates/pages/list_packages.php:159
 msgid "DNS Records"
 msgstr ""
 
-#: ../../web/templates/pages/list_packages.php:86
+#: ../../web/templates/pages/list_packages.php:88
 msgid "Copy"
 msgstr ""
 
-#: ../../web/templates/pages/list_packages.php:95
+#: ../../web/templates/pages/list_packages.php:97
 #, php-format
 msgid "DELETE_PACKAGE_CONFIRMATION"
 msgstr ""
 
-#: ../../web/templates/pages/list_packages.php:218
+#: ../../web/templates/pages/list_packages.php:220
 #, php-format
 msgid "%d package"
 msgid_plural "%d packages"
@@ -3497,7 +3508,7 @@ msgid "Policies"
 msgstr ""
 
 #: ../../web/templates/pages/edit_server.php:1199
-#: ../../web/templates/includes/panel.php:241
+#: ../../web/templates/includes/panel.php:247
 #: ../../web/templates/includes/panel.html:110
 msgid "Users"
 msgstr ""
@@ -3778,36 +3789,37 @@ msgstr ""
 msgid "Delete all notifications"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:136
-#: ../../web/templates/includes/panel.php:138
+#: ../../web/templates/includes/panel.php:141
+#: ../../web/templates/includes/panel.php:143
 msgid "File manager"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:150
-#: ../../web/templates/includes/panel.php:152
+#: ../../web/templates/includes/panel.php:155
+#: ../../web/templates/includes/panel.php:157
 msgid "Server settings"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:188
-#: ../../web/templates/includes/panel.php:190
+#: ../../web/templates/includes/panel.php:193
+#: ../../web/templates/includes/panel.php:195
 #: ../../web/templates/includes/panel.html:83
 msgid "Help"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:224
+#: ../../web/templates/includes/panel.php:229
 msgid "Collapse main menu"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:224
+#: ../../web/templates/includes/panel.php:229
+#: ../../web/templates/includes/panel.php:232
 msgid "Expand main menu"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:241
-#: ../../web/templates/includes/panel.php:259
-#: ../../web/templates/includes/panel.php:278
-#: ../../web/templates/includes/panel.php:297
-#: ../../web/templates/includes/panel.php:316
-#: ../../web/templates/includes/panel.php:332
+#: ../../web/templates/includes/panel.php:247
+#: ../../web/templates/includes/panel.php:265
+#: ../../web/templates/includes/panel.php:284
+#: ../../web/templates/includes/panel.php:303
+#: ../../web/templates/includes/panel.php:322
+#: ../../web/templates/includes/panel.php:338
 #: ../../web/templates/includes/panel.html:110
 #: ../../web/templates/includes/panel.html:124
 #: ../../web/templates/includes/panel.html:139
@@ -3817,27 +3829,27 @@ msgstr ""
 msgid "Suspended"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:242
+#: ../../web/templates/includes/panel.php:248
 #: ../../web/templates/includes/panel.html:111
 msgid "USER"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:245
+#: ../../web/templates/includes/panel.php:251
 #: ../../web/templates/includes/panel.html:113
 msgid "users"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:248
+#: ../../web/templates/includes/panel.php:254
 #: ../../web/templates/includes/panel.html:114
 msgid "spnd"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:259
-#: ../../web/templates/includes/panel.php:278
-#: ../../web/templates/includes/panel.php:297
-#: ../../web/templates/includes/panel.php:316
-#: ../../web/templates/includes/panel.php:332
-#: ../../web/templates/includes/panel.php:348
+#: ../../web/templates/includes/panel.php:265
+#: ../../web/templates/includes/panel.php:284
+#: ../../web/templates/includes/panel.php:303
+#: ../../web/templates/includes/panel.php:322
+#: ../../web/templates/includes/panel.php:338
+#: ../../web/templates/includes/panel.php:354
 #: ../../web/templates/includes/panel.html:124
 #: ../../web/templates/includes/panel.html:139
 #: ../../web/templates/includes/panel.html:154
@@ -3847,55 +3859,55 @@ msgstr ""
 msgid "Limit"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:263
-#: ../../web/templates/includes/panel.php:301
+#: ../../web/templates/includes/panel.php:269
+#: ../../web/templates/includes/panel.php:307
 #: ../../web/templates/includes/panel.html:127
 #: ../../web/templates/includes/panel.html:157
 msgid "domains"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:266
+#: ../../web/templates/includes/panel.php:272
 #: ../../web/templates/includes/panel.html:128
 msgid "aliases"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:282
+#: ../../web/templates/includes/panel.php:288
 #: ../../web/templates/includes/panel.html:142
 msgid "zones"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:304
+#: ../../web/templates/includes/panel.php:310
 #: ../../web/templates/includes/panel.html:158
 msgid "accounts"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:320
+#: ../../web/templates/includes/panel.php:326
 #: ../../web/templates/includes/panel.html:172
 #: ../../web/edit/package/index.php:180 ../../web/add/package/index.php:69
 msgid "databases"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:332
+#: ../../web/templates/includes/panel.php:338
 #: ../../web/templates/includes/panel.html:183
 msgid "Jobs"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:333
+#: ../../web/templates/includes/panel.php:339
 #: ../../web/templates/includes/panel.html:184
 msgid "CRON"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:336
+#: ../../web/templates/includes/panel.php:342
 #: ../../web/templates/includes/panel.html:186
 msgid "jobs"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:349
+#: ../../web/templates/includes/panel.php:355
 #: ../../web/templates/includes/panel.html:198
 msgid "BACKUP"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:352
+#: ../../web/templates/includes/panel.php:358
 #: ../../web/templates/includes/panel.html:200
 #: ../../web/edit/package/index.php:186 ../../web/add/package/index.php:75
 msgid "backups"

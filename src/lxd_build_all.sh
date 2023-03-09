@@ -43,8 +43,10 @@ if [ -z "$user" ] || [ -z "$user_id" ] || [ -z "$user_gid" ] || [ "$user" = 'roo
 	echo "Script must be run with sudo, not directly as root" && exit 1
 fi
 
-if ! dpkg-query -s lxd > /dev/null 2>&1; then
-	apt -y install lxd
+if ! which lxd > /dev/null 2>&1; then
+	# Use snapd instead
+	apt -y install snapd
+	snap install lxd
 	lxd init --auto
 
 	echo "root:$user_id:1" | sudo tee -a /etc/subuid

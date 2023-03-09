@@ -13,7 +13,7 @@
 #
 
 # Configs:
-oslist=('debian=9,10' 'ubuntu=18.04,20.04')
+oslist=('debian=10,11' 'ubuntu=18.04,20.04,22.04')
 branch='main'
 
 function setup_container() {

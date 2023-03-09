@@ -35,21 +35,30 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Listing system ip addresses
-ips=$(/sbin/ip addr | grep 'inet ' | grep global | awk '{print $2}' | cut -f1 -d/)
-v_ips=$(ls $HESTIA/data/ips/)
+ips=$(/sbin/ip -4 addr | sed -ne '/inet.*global/s/[ \t]*inet[ \t]*\([^ ^\t^\/]*\)\/[ \t]*.*/\1/p')
+ipv6s=$(/sbin/ip -6 addr | sed -ne '/inet6.*global/s/[ \t]*inet6[ \t]*\([^ ^\t^\/]*\)\/[ \t]*.*/\1/p')
+v_ips="$($HESTIA/bin/v-list-sys-ips list)"
 ip_num=$(echo "$ips" | wc -l)
+ipv6_num=$(echo "$ipv6s" | wc -l)
 v_ip_num=$(echo "$v_ips" | wc -l)
 
 # Checking primary IP change
-if [[ "$ip_num" -eq '1' ]] && [[ "$v_ip_num" -eq 1 ]]; then
+if [ "$ip_num" -eq 1 -a "$v_ip_num" -eq 1 ]; then
 	if [ "$ips" != "$v_ips" ]; then
 		new=$ips
 		old=$v_ips
 	fi
 fi
 
+if [ "$ipv6_num" -eq 1 -a "$v_ip_num" -eq 1 ]; then
+	if [ "$ips" != "$v_ips" ]; then
+		new=$ipv6s
+		old=$v_ips
+	fi
+fi
+
 # Updating configs
-if [ ! -z "$new" ]; then
+if [ -n "$new" ]; then
 	mv $HESTIA/data/ips/$old $HESTIA/data/ips/$new
 
 	# Updating PROXY

@@ -13,7 +13,8 @@
 #
 
 # Configs:
-oslist=('debian=10,11' 'ubuntu=18.04,20.04,22.04')
+# Use focal and jammy instead of "20.04 an 22.04"
+oslist=('debian=10,11' 'ubuntu=18.04,focal,jammy')
 branch='main'
 
 function setup_container() {

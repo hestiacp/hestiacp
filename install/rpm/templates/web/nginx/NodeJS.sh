@@ -20,54 +20,53 @@ envFile=""
 
 #if are installed .nvm on the system
 if [ -d "$nvmDir" ]; then
-    
-    #check files .naverc .node-version .nvm
-    if [ -f "$nodeDir/.nvm" ]; then
-        nodeVersion=$(cat $nodeDir/.nvm)
-    elif [ -f "$nodeDir/.node-version" ]; then
-        nodeVersion=$(cat $nodeDir/.node-version)
-    fi
 
-    echo "Needs Node version: $nodeVersion"
+	#check files .naverc .node-version .nvm
+	if [ -f "$nodeDir/.nvm" ]; then
+		nodeVersion=$(cat $nodeDir/.nvm)
+	elif [ -f "$nodeDir/.node-version" ]; then
+		nodeVersion=$(cat $nodeDir/.node-version)
+	fi
 
-    export NVM_DIR=$nvmDir
-    . "$NVM_DIR/nvm.sh"
+	echo "Needs Node version: $nodeVersion"
 
-    if [ ! -d "/opt/nvm/versions/node/$nodeVersion" ]; then
-        echo "Install this version"
-        nvm install $nodeVersion
-        chmod -R 755 /opt/nvm
-    else
-        echo "Error on install Node version on NVM"
-    fi
+	export NVM_DIR=$nvmDir
+	. "$NVM_DIR/nvm.sh"
 
-    nodeInterpreter="--interpreter /opt/nvm/versions/node/$nodeVersion/bin/node"
+	if [ ! -d "/opt/nvm/versions/node/$nodeVersion" ]; then
+		echo "Install this version"
+		nvm install $nodeVersion
+		chmod -R 755 /opt/nvm
+	else
+		echo "Error on install Node version on NVM"
+	fi
+
+	nodeInterpreter="--interpreter /opt/nvm/versions/node/$nodeVersion/bin/node"
 fi
 
 #auto install dependences
 if [ ! -d "$nodeDir/node_modules" ]; then
-    echo "No modules found."
-    cd $nodeDir && npm i
+	echo "No modules found."
+	cd $nodeDir && npm i
 fi
 
 #get init script form package.json
 package="$nodeDir/package.json"
 
-if [ -e $package ]
-then
-    mainScript=$(cat $package \
-                | grep main \
-                | head -1 \
-                | awk -F: '{ print $2 }' \
-                | sed 's/[",]//g' \
-                | sed 's/ *$//g')
+if [ -e $package ]; then
+	mainScript=$(cat $package \
+		| grep main \
+		| head -1 \
+		| awk -F: '{ print $2 }' \
+		| sed 's/[",]//g' \
+		| sed 's/ *$//g')
 
-    scriptName=$(cat $package \
-                | grep name \
-                | head -1 \
-                | awk -F: '{ print $2 }' \
-                | sed 's/[",]//g' \
-                | sed 's/ *$//g')
+	scriptName=$(cat $package \
+		| grep name \
+		| head -1 \
+		| awk -F: '{ print $2 }' \
+		| sed 's/[",]//g' \
+		| sed 's/ *$//g')
 fi
 
 rm "$nodeDir/app.sock"
@@ -75,9 +74,9 @@ runuser -l $user -c "pm2 del $scriptName"
 
 #apply enviroment variables from .env file
 if [ -f "$nodeDir/.env" ]; then
-    echo ".env file in folder, applying."
-    envFile=$(grep -v '^#' $nodeDir/.env | xargs | sed "s/(PORT=(.*) )//g" | sed "s/ = /=/g")
-    echo $envFile
+	echo ".env file in folder, applying."
+	envFile=$(grep -v '^#' $nodeDir/.env | xargs | sed "s/(PORT=(.*) )//g" | sed "s/ = /=/g")
+	echo $envFile
 fi
 
 #remove blank spaces
@@ -88,12 +87,12 @@ echo "Waiting for init PM2"
 sleep 5
 
 if [ ! -f "$nodeDir/app.sock" ]; then
-    echo "Allow nginx access to the socket $nodeDir/app.sock"
-    chmod 755 "$nodeDir/app.sock"
+	echo "Allow nginx access to the socket $nodeDir/app.sock"
+	chmod 755 "$nodeDir/app.sock"
 else
-    echo "Sock file not present disable Node app"
-    runuser -l $user -c "pm2 del $scriptName"
-    rm $nodeDir/app.sock
+	echo "Sock file not present disable Node app"
+	runuser -l $user -c "pm2 del $scriptName"
+	rm $nodeDir/app.sock
 fi
 
 #copy pm2 logs to app folder

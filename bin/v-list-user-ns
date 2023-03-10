@@ -4,7 +4,7 @@
 #
 # example: v-list-user-ns admin
 #
-# Function for obtaining the list of user's DNS servers.
+# List user name servers
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

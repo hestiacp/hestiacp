@@ -40,7 +40,7 @@ function setup() {
     assert_success
     refute_output
 
-    run run v-add-web-domain $user 'testhestiacp.com'
+    run v-add-web-domain $user 'testhestiacp.com'
     assert_success
     refute_output
 

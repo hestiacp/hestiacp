@@ -1899,17 +1899,17 @@ fi
 #                     Install NVM                          #
 #----------------------------------------------------------#
 if [ ! -f ~/.nvm/nvm.sh ]; then
-    # Get the latest nvm release
-    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+	# Get the latest nvm release
+	wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
 
-    mv ~/.nvm /opt/nvm
-    chmod -R 777 /opt/nvm
-	
+	mv ~/.nvm /opt/nvm
+	chmod -R 777 /opt/nvm
+
 	#update bashrc file
-    echo 'export NVM_DIR="/opt/nvm"
+	echo 'export NVM_DIR="/opt/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> /root/.bashrc
-	
+
 	source /opt/nvm/nvm.sh
 fi
 

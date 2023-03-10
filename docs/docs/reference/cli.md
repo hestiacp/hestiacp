@@ -1731,7 +1731,7 @@ This function allow to change user's full name.
 
 ## v-change-user-ns
 
-change user nameservers
+change user name servers
 
 **Options**: `USER` `NS1` `NS2` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]`
 
@@ -1741,7 +1741,7 @@ change user nameservers
 v-change-user-ns ns1.domain.tld ns2.domain.tld
 ```
 
-This function for changing default nameservers for specific user.
+This function for changing default name servers for specific user.
 
 ## v-change-user-package
 

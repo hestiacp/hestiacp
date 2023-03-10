@@ -219,9 +219,14 @@ const VE = {
 					},
 				},
 				create: function () {
-					const buttonGroup = $(this).closest('.ui-dialog').find('.ui-dialog-buttonset');
-					buttonGroup.find('button:first').addClass('button submit');
-					buttonGroup.find('button:last').addClass('button button-secondary cancel');
+					const buttons = $(this).dialog('widget').find('.ui-dialog-buttonpane button');
+					buttons.first().addClass('button submit');
+					buttons.last().addClass('button button-secondary cancel');
+				},
+				focus: function () {
+					const buttons = $(this).dialog('widget').find('.ui-dialog-buttonpane button');
+					// Disable default "focus first button" behavior
+					buttons.first().blur();
 				},
 			};
 

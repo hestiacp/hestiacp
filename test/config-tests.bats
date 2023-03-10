@@ -36,10 +36,10 @@ function setup() {
 }
 
 @test "Prepare for tests" {
-	rm -f /usr/local/hestia/data/templates/web/nginx/php-fpm/*
-	rm -f /usr/local/hestia/data/templates/web/nginx/*
-	rm -f /usr/local/hestia/data/templates/web/apache2/php-fpm/*
-	rm -f /usr/local/hestia/data/templates/web/apache2/*
+	run rm -f /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
+	run rm -f /usr/local/hestia/data/templates/web/nginx/*.*
+	run rm -f /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
+	run rm -f /usr/local/hestia/data/templates/web/apache2/*.*
 
 	run v-update-web-templates
 }

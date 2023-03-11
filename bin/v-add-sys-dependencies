@@ -22,6 +22,7 @@ MODE=$1
 user="admin"
 
 PM_INSTALL_DIR="$HESTIA/web/inc"
+QUICK_INSTALL_DIR="$HESTIA/web/src"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#
@@ -69,7 +70,7 @@ openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl)
 if [ -z "$openssl_installed" ]; then
 	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 else
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
 fi
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up
@@ -85,8 +86,20 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
+cd "$QUICK_INSTALL_DIR"
+rm --recursive --force ${QUICK_INSTALL_DIR}/vendor
+mkdir -p ${QUICK_INSTALL_DIR}/vendor
+chown $user: -R ${QUICK_INSTALL_DIR}/vendor
+
+if [ -z "$openssl_installed" ]; then
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+else
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
+fi
+
 # Set permissions
 chown root: -R "${PM_INSTALL_DIR}/vendor"
+chown root: -R "${QUICK_INSTALL_DIR}/vendor"
 
 #----------------------------------------------------------#
 #                       Logging                            #

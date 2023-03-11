@@ -35,12 +35,21 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
-@test "Setup" {
+@test "Prepare for tests" {
+	run rm -f /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
+	run rm -f /usr/local/hestia/data/templates/web/nginx/*.*
+	run rm -f /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
+	run rm -f /usr/local/hestia/data/templates/web/apache2/*.*
+
+	run v-update-web-templates
+}
+
+@test "Setup Test domain" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
 
-    run run v-add-web-domain $user 'testhestiacp.com'
+    run v-add-web-domain $user 'testhestiacp.com'
     assert_success
     refute_output
 

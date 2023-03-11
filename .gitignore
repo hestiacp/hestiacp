@@ -28,9 +28,10 @@
 # Composer
 composer.phar
 test/vendor/
-web/src/vendor/filp
-web/src/vendor/psr
-web/src/vendor/composer/installed.json
+# PHPMailer
+web/inc/vendor/
+# Quick install
+web/src/vendor/
 .phpunit.result.cache
 
 # vitepress build output

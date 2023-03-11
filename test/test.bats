@@ -1931,13 +1931,13 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 @test "Test create ipset" {
-  run v-add-firewall-ipset "blacklist" "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh" v4 yes
+  run v-add-firewall-ipset "country-nl" "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/nl/ipv4-aggregated.txt" v4 yes
   assert_success
   refute_output
 }
 
 @test "Create firewall with Ipset" {
-  run v-add-firewall-rule 'DROP' 'ipset:blacklist' '8083,22' 'TCP' 'Test'
+  run v-add-firewall-rule 'DROP' 'ipset:country-nl' '8083,22' 'TCP' 'Test'
   assert_success
   refute_output
 }
@@ -1945,7 +1945,7 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 @test "List firewall rules" {
   run v-list-firewall csv
   assert_success
-  assert_line --partial '11,DROP,TCP,8083,22,ipset:blacklist'
+  assert_line --partial '11,DROP,TCP,8083,22,ipset:country-nl'
 
 }
 
@@ -1956,7 +1956,7 @@ echo   "1.2.3.4" >> $HESTIA/data/firewall/excludes.conf
 }
 
 @test "Test delete ipset" {
-  run v-delete-firewall-ipset "blacklist"
+  run v-delete-firewall-ipset "country-nl"
   assert_success
   refute_output
 }

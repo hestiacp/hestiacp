@@ -104,7 +104,13 @@ abstract class BaseSetup implements InstallerInterface {
 			}
 
 			if ($res_type === "composer") {
-				new ComposerResource($this->appcontext, $res_data, $resource_destination);
+				$res_data["php_version"] = $options["php_version"];
+				new ComposerResource(
+					$this->appcontext,
+					$res_data,
+					$resource_destination,
+					$options["php_version"],
+				);
 			} elseif ($res_type === "wp") {
 				new WpResource(
 					$this->appcontext,

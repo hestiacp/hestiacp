@@ -117,7 +117,7 @@ class HestiaApp {
 		$this->runUser("v-run-cli-cmd", ["composer", "selfupdate", "--$version"]);
 	}
 
-	public function runComposer($args, &$cmd_result = null, $version = 2): bool {
+	public function runComposer($args, &$cmd_result = null, $data = []): bool {
 		$composer =
 			$this->getUserHomeDir() .
 			DIRECTORY_SEPARATOR .
@@ -125,15 +125,17 @@ class HestiaApp {
 			DIRECTORY_SEPARATOR .
 			"composer";
 		if (!is_file($composer)) {
-			$this->installComposer($version);
+			$this->installComposer($data["version"]);
 		} else {
-			$this->updateComposer($version);
+			$this->updateComposer($data["version"]);
 		}
-
+		if (empty($data["php_version"])) {
+			$data["php_version"] = "";
+		}
 		if (!empty($args) && is_array($args)) {
-			array_unshift($args, "composer");
+			array_unshift($args, "php" . $data["php_version"], $composer);
 		} else {
-			$args = ["composer", $args];
+			$args = ["php" . $data["php_version"], $composer, $args];
 		}
 
 		return $this->runUser("v-run-cli-cmd", $args, $cmd_result);

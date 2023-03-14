@@ -54,6 +54,7 @@ export default defineConfig({
 function nav(): DefaultTheme.NavItem[] {
 	return [
 		{ text: "Features", link: "/features.md" },
+		{ text: "Install", link: "/install.md" },
 		{ text: "Documentation", link: "/docs/introduction/getting-started.md", activeMatch: "/docs/" },
 		{ text: "Team", link: "/team.md" },
 		{ text: "Demo", link: "https://demo.hestiacp.com:8083/" },

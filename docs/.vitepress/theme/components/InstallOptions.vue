@@ -43,39 +43,47 @@ export default {
 </script>
 
 <template>
-	<div class="form-group" v-for="item in items">
-		<input type="checkbox" :value="item.value" v-model="item.selected" /><label>{{
-			item.id
-		}}</label>
-		<p>{{ item.desc }}</p>
-		<div class="" v-if="item.textField">
-			<input type="text" class="input-from" v-model="item.text" />
+	<div class="template">
+		<div class="form-group" v-for="item in items">
+			<input type="checkbox" :value="item.value" v-model="item.selected" /><label>{{
+				item.id
+			}}</label>
+			<p>{{ item.desc }}</p>
+			<div class="" v-if="item.textField">
+				<input type="text" class="input-from" v-model="item.text" />
+			</div>
 		</div>
-	</div>
-	<div class="form-group">
-		<input value="Submit" @click="generateString" />
-	</div>
-	<div v-if="installstr">
-		<div class="form-group-info">
-			<h1>Installation instruction</h1>
-			<p>
-				Log in to your server as root, either directly or via SSH:
-				<strong>ssh root@your.server</strong> and download the installation script:
-			</p>
-			<textarea v-model="hestia_wget" />
-			<p>And run then the following command</p>
-			<textarea v-model="installstr" />
+		<div class="form-group">
+			<input value="Submit" @click="generateString" />
+		</div>
+		<div v-if="installstr">
+			<div class="form-group-info">
+				<h1>Installation instruction</h1>
+				<p>
+					Log in to your server as root, either directly or via SSH:
+					<strong>ssh root@your.server</strong> and download the installation script:
+				</p>
+				<textarea v-model="hestia_wget" />
+				<p>And run then the following command</p>
+				<textarea v-model="installstr" />
+			</div>
 		</div>
 	</div>
 </template>
 
 <style scoped>
+.template {
+	max-width: 1152px;
+	margin: 0px auto;
+}
 .form-group {
-	margin: 1em 2em 1em 2em;
-	padding: 10px;
-	border: 1px solid;
+	margin: 1em;
+	padding: 5px;
+	border-radius: 10px;
+	pading: 5px;
 	width: 15em;
 	float: left;
+	background-color: var(--vp-c-bg-soft);
 }
 .form-group-info {
 	clear: both;

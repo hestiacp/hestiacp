@@ -14,8 +14,9 @@ export const options: OptionsListItem[] = [
 		param: "--lang",
 		desc: "ISO 639-1 codes",
 		selected: true,
+		default: "en",
+		selectField: true,
 		text: "en",
-		textField: true,
 	},
 	{
 		name: " --hostname",

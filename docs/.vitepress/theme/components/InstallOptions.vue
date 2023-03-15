@@ -1,8 +1,14 @@
 <script lang="ts">
 import { InstallOptions } from "../../../_data/options";
+import { LanguagesOptions } from "../../../_data/languages";
 
 export default {
 	props: {
+		languages: {
+			type: Array<LanguagesOptions>,
+			required: true,
+			selected: "en",
+		},
 		items: {
 			type: Array<InstallOptions>,
 			required: true,
@@ -27,6 +33,8 @@ export default {
 					if (item.text.length >= 2) {
 						installstr.push(item.param + " '" + item.text + "'");
 					}
+				} else if (item.selectField) {
+					installstr.push(item.param + " '" + item.text + "'");
 				} else if (!item.textField) {
 					if (item.param.includes("force")) {
 						item.selected ? installstr.push(item.param) : "";
@@ -51,6 +59,13 @@ export default {
 			<p>{{ item.desc }}</p>
 			<div class="" v-if="item.textField">
 				<input type="text" class="input-from" v-model="item.text" />
+			</div>
+			<div class="" v-if="item.selectField">
+				<select class="input-from" v-model="item.text">
+					<option v-for="language in languages" :value="language.value">
+						{{ language.text }}
+					</option>
+				</select>
 			</div>
 		</div>
 		<div class="form-group">

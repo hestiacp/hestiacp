@@ -1,8 +1,12 @@
 #!/bin/bash
 # info: add system ip address
-# options: IP NETMASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]
+# options: IP [NETMASK] [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]
 #
 # example: v-add-sys-ip 216.239.32.21 255.255.255.0
+# example: v-add-sys-ip 216.239.32.21 /24
+# example: v-add-sys-ip 216.239.32.21/24
+# example: v-add-sys-ip 1234:55:66::1 /64
+# example: v-add-sys-ip 1234:55:66::1/64
 #
 # This function adds ip address into a system. It also creates rc scripts. You
 # can specify ip name which will be used as root domain for temporary aliases.
@@ -15,17 +19,16 @@
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Get interface name
-iface=$(/bin/ip token | awk -F 'dev ' '{print $2}')
-
 # Argument definition
-ip=${1// /}
-netmask=$2
-iface="${3-$iface}"
+first_parameter=${1// /}										# conventional delete of spaces
+ip46=${1%/*}													# clean ip address without cidr/prefix_length
+[ -n "$ip46" ] && [ "$ip46" = "${1}" ] || ip_cidr=${1#$ip46}	# extract cidr/prefix from first parameter
+second_parameter=${2}											# second parameter can be netmask, cidr or prefix_length
+iface="${3}"
 user="${4-admin}"
 ip_status="${5-shared}"
-ip_name=$6
-nat_ip=$7
+ip_name="${6}"
+nat_ip="${7}"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -43,8 +46,66 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'IP NETMASK [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP]'
-is_format_valid 'ip' 'netmask' 'iface' 'user' 'ip_status'
+check_args '1' "$#" 'IP [NETMASK] [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP]'
+
+echo "ip46=$ip46"
+echo "ip_cidr=$ip_cidr"
+
+ip_format="$(get_ip_format ${ip46})"	#	ip verification and format identification
+if [ -n "$second_parameter" -a -n "$ip_format" ]; then
+	[ -n "$ip_cidr" ] && check_result 1 "cidr / prefix length double defined as IP address suffix and as separate argument!"	# wrong parameters
+	netmask="$(echo ${second_parameter} | sed -nr ''/$REGEX_IPV4/p'')"				# extract netmask from second parameter if available
+	cidr_prefixlen="$(echo ${second_parameter} | sed -ne '/^\/[0-9]\{1,3\}$/p')"	# extract cidr/prefix_length from second parameter if available
+	[ -z "$netmask" -a -z "$cidr_prefixlen" ] && check_result 2 "Wrong netmask / cidr / prefix length definition!"	# wrong parameters
+	[ -n "$netmask" -a $ip_format -ne 4 ] && check_result 3 "Netmask definition for a not IPV4 address! Define a prefix lenght instead of netmask!"	# wrong parameters
+fi
+ip_check_string=''ip46''
+if [ -n "$ip_format" ]; then
+	if [ $ip_format -eq 4 ]; then
+		ip=${ip46}
+		ipv6=''
+		ip_check_string=''ip''
+		if [ -n "$netmask" ]; then
+			is_ip_format_valid "${netmask}" 'netmask'	# check for correct netmask
+			cidr="$(convert_netmask $netmask)"			# convert netmask to cidr
+		fi
+		if [ -n "$cidr_prefixlen" ]; then
+			cidr=${cidr_prefixlen}
+		fi
+		if [ -n "$ip_cidr" ]; then
+			cidr=${ip_cidr}
+		else
+			[ -z "$cidr" ] && cidr="/31"
+		fi
+		if [ -z "$netmask" ]; then 
+			is_ip_format_valid "${cidr}" 'cidr'	# check for correct cidr
+			netmask=$(convert_cidr ${cidr})	# convert cidr to netmask
+		fi
+	fi
+	if [ $ip_format -eq 6 ]; then
+		ip=''
+		ipv6=${ip46}
+		ip_check_string=''ipv6''
+		[ -n "$cidr_prefixlen" ] && prefix_length=${cidr_prefixlen}
+		if [ -n "$ip_cidr" ]; then
+			prefix_length="${ip_cidr}"
+		else
+			[ -z "$prefix_length" ] && prefix_length="/64"
+		fi
+	fi
+fi
+
+[ -z "$iface" ] && iface="$($BIN/v-list-sys-interfaces plain | head -n 1)" 			# Get first available system interface, if none defined
+[ -z "$iface" ] && iface='eth0' # eth0, if still not defined
+
+echo "ip_format=$ip_format"
+echo "netmask=$netmask"
+echo "cidr_prefixlen=$cidr_prefixlen"
+echo "cidr=$cidr"
+echo "prefix_length=$prefix_length"
+echo "iface=$iface"
+
+is_format_valid ${ip_check_string} 'netmask' 'prefix_length' 'iface' 'user' 'ip_status'
 is_ip_free
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -67,6 +128,9 @@ check_hestia_demo_mode
 
 cidr=$(convert_netmask $netmask)
 broadcast=$(get_broadcast $ip $netmask)
+
+echo "debug action exit"
+exit
 
 sys_ip_check=$(/sbin/ip addr | grep "$ip")
 if [ -z "$sys_ip_check" ]; then

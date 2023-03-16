@@ -49,7 +49,7 @@ cidr=$(convert_netmask "$NETMASK")
 main_ip=$(hostname -i)
 
 # Checking main ip on the interface
-interface=$(/sbin/ip addr | grep "$ip/$cidr" | awk '{print $NF}')
+interface=$(/sbin/ip addr | grep "$ip$cidr" | awk '{print $NF}')
 if [ -n "$interface" ] && [ "$ip" = "$main_ip" ]; then
 	echo "Error: can't delete main IP address"
 	log_event "$E_FORBIDEN" "$ARGUMENTS"
@@ -58,7 +58,7 @@ fi
 
 # Deleting system ip
 if [ -n "$interface" ]; then
-	/sbin/ip addr del "$ip/$cidr" dev "$INTERFACE"
+	/sbin/ip addr del "$ip$cidr" dev "$INTERFACE"
 	if [ "$?" -ne 0 ]; then
 		echo "Error: can't delete system ip"
 		log_event "$E_FORBIDEN" "$ARGUMENTS"

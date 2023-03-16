@@ -1220,6 +1220,7 @@ is_format_valid() {
 				charset) is_object_format_valid "$arg" "$arg_name" ;;
 				charsets) is_common_format_valid "$arg" 'charsets' ;;
 				chain) is_object_format_valid "$arg" 'chain' ;;
+				cidr) is_ip_format_valid "$arg" 'cidr' ;;
 				comment) is_object_format_valid "$arg" 'comment' ;;
 				database) is_database_format_valid "$arg" 'database' ;;
 				day) is_cron_format_valid "$arg" $arg_name ;;

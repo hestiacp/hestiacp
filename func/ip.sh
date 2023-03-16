@@ -189,6 +189,9 @@ get_real_ip() {
 
 # Convert CIDR to netmask
 convert_cidr() {
+	# CIDR can be defined as /32 (with leading /) or as 32 (number without leading /)
+	# please check the value range of cidr before converting!
+	set ${1#/}	# allow to use cidr format with leading /
 	set -- $((5 - ($1 / 8))) 255 255 255 255 \
 		$(((255 << (8 - ($1 % 8))) & 255)) 0 0 0
 	if [[ $1 -gt 1 ]]; then
@@ -216,7 +219,7 @@ convert_netmask() {
 			0) ;;
 		esac
 	done
-	echo "$nbits"
+	echo "/$nbits"
 }
 
 # Calculate broadcast address
@@ -437,38 +440,6 @@ get_real_ipv6() {
     else
         check_result $E_NOTEXIST "IPV6 $1 doesn't exist"
     fi
-}
-
-# Convert ipv6 CIDR to netmask
-convert_cidrv6() {
-    set -- $(( 5 - ($1 / 8) )) 255 255 255 255 \
-        $(((255 << (8 - ($1 % 8))) & 255 )) 0 0 0
-    if [[ $1 -gt 1 ]]; then
-        shift $1
-    else
-        shift
-    fi
-    echo ${1-0}.${2-0}.${3-0}.${4-0}
-}
-
-# Convert ipv6 netmask to CIDR
-convert_netmaskv6() {
-    nbits=0
-    IFS=.
-    for dec in $1 ; do
-        case $dec in
-            255) let nbits+=8;;
-            254) let nbits+=7;;
-            252) let nbits+=6;;
-            248) let nbits+=5;;
-            240) let nbits+=4;;
-            224) let nbits+=3;;
-            192) let nbits+=2;;
-            128) let nbits+=1;;
-            0);;
-        esac
-    done
-    echo "$nbits"
 }
 
 # Get user ip6s

@@ -21,8 +21,9 @@ is_ip_owner() {
 
 # Check if ip address is free
 is_ip_free() {
-	if [ -e "$HESTIA/data/ips/$ip" ]; then
-		check_result "$E_EXISTS" "$ip is already exists"
+	ip_for_test="${1-$ip}"
+	if [ -e "$HESTIA/data/ips/$ip_for_test" ]; then
+		check_result "$E_EXISTS" "$ip_for_test is already exists"
 	fi
 }
 
@@ -295,13 +296,6 @@ is_ipv6_owner() {
     owner=$(grep 'OWNER=' $HESTIA/data/ips/$ipv6 |cut -f 2 -d \')
     if [ "$owner" != "$user" ]; then
         check_result $E_FORBIDEN "$ipv6 is not owned by $user"
-    fi
-}
-
-# Check if ipv6 address is free
-is_ipv6_free() {
-    if [ -e "$HESTIA/data/ips/$ipv6" ]; then
-        check_result $E_EXISTS "$ipv6 is already exists"
     fi
 }
 

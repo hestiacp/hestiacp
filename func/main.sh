@@ -807,16 +807,32 @@ is_ip_format_valid() {
 	local ip_format=""
 	local ret_code=0
 	ip_format="$(get_ip_format ${1} ${object_name})"
-	ret_code=$(( $? & 3 ))	# Filter BIT 0 and 1 from error codes for IPV4 format
-	if [ "$ip_format" = "4" ]; then
-		return $ret_code
-	else
-		if [ $ret_code -ne 0 ]; then
-			check_result "$E_INVALID" "invalid $object_name format :: $1"
+	ret_code=$?
+	if [ "$object_name" = "ipv6" ]; then
+		ret_code=$(( $ret_code & 12 ))	# Filter BIT 2 and 3 from error codes for IPV6 format
+		if [ "$ip_format" = "6" ]; then
 			return $ret_code
 		else
-			check_result "$E_INVALID" "ipv6 but not ipv4 format :: $1"
-			return 3
+			if [ "$ip_format" = "4" ]; then
+				check_result "$E_INVALID" "ipv4 but not ipv6 format :: $1"
+				return 12
+			else
+				check_result "$E_INVALID" "invalid $object_name format :: $1"
+				return $ret_code
+			fi
+		fi
+	else
+		ret_code=$(( $ret_code & 3 ))	# Filter BIT 0 and 1 from error codes for IPV4 format
+		if [ "$ip_format" = "4" ]; then
+			return $ret_code
+		else
+			if [ $ret_code -ne 0 ]; then
+				check_result "$E_INVALID" "invalid $object_name format :: $1"
+				return $ret_code
+			else
+				check_result "$E_INVALID" "ipv6 but not ipv4 format :: $1"
+				return 3
+			fi
 		fi
 	fi
 }

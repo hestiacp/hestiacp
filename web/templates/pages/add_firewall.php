@@ -74,19 +74,17 @@
 		return a.name > b.name;
 	});
 
-	$(function () {
-		var targetElement = document.getElementById('quickips_list');
+	var targetElement = document.getElementById('quickips_list');
 
+	var newEl = document.createElement("option");
+	newEl.text = "IP address lists:";
+	newEl.disabled = true;
+	targetElement.appendChild(newEl);
+
+	ipLists.forEach(iplist => {
 		var newEl = document.createElement("option");
-		newEl.text = "IP address lists:";
-		newEl.disabled = true;
+		newEl.text = iplist.name;
+		newEl.value = "ipset:" + iplist.name;
 		targetElement.appendChild(newEl);
-
-		ipLists.forEach(iplist => {
-			var newEl = document.createElement("option");
-			newEl.text = iplist.name;
-			newEl.value = "ipset:" + iplist.name;
-			targetElement.appendChild(newEl);
-		});
 	});
 </script>

@@ -78,9 +78,9 @@
 	];
 
 	var blacklist_iplists = [
-		{ name: "[IPv4] Block Malicious IPs", source: "script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.sh" },
+		{ name: "[IPv4] Block Malicious IPs", source: "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh" },
 		/*
-		{name: "[IPv6] Block Malicious IPs",			 source:"script:/usr/local/hestia/install/deb/firewall/ipset/blacklist.ipv6.sh"},
+		{name: "[IPv6] Block Malicious IPs",			 source:"script:/usr/local/hestia/install/common/firewall/ipset/blacklist.ipv6.sh"},
 		*/
 	];
 

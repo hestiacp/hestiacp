@@ -13,14 +13,17 @@ REGEX_IPV4="^((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9
 
 # Check ip ownership
 is_ip_owner() {
-	owner=$(grep 'OWNER=' $HESTIA/data/ips/$ip | cut -f 2 -d \')
+	# ip address (ipv4/ipv6) as first parameter, otherwise $ip (ipv4)
+	ip_for_test="${1-$ip}"
+	owner=$(grep 'OWNER=' $HESTIA/data/ips/$ip_for_test | cut -f 2 -d \')
 	if [ "$owner" != "$user" ]; then
-		check_result "$E_FORBIDEN" "$ip is not owned by $user"
+		check_result "$E_FORBIDEN" "$ip_for_test is not owned by $user"
 	fi
 }
 
 # Check if ip address is free
 is_ip_free() {
+	# ip address (ipv4/ipv6) as first parameter, otherwise $ip (ipv4)
 	ip_for_test="${1-$ip}"
 	if [ -e "$HESTIA/data/ips/$ip_for_test" ]; then
 		check_result "$E_EXISTS" "$ip_for_test is already exists"
@@ -30,12 +33,18 @@ is_ip_free() {
 # Check ip address specific value
 is_ip_key_empty() {
 	key="$1"
-	string=$(cat $HESTIA/data/ips/$ip)
-	eval $string
-	eval value="$key"
-	if [ -n "$value" ] && [ "$value" != '0' ]; then
-		key="$(echo $key | sed -e "s/\$U_//")"
-		check_result "$E_EXISTS" "IP is in use / $key = $value"
+	# ip address (ipv4/ipv6) as second parameter, otherwise $ip (ipv4)
+	ip_for_test="${2-$ip}"
+	if [ -n "$ip_for_test" ]; then
+		string=$(cat $HESTIA/data/ips/$ip_for_test)
+		eval $string
+		eval value="$key"
+		if [ -n "$value" ] && [ "$value" != '0' ]; then
+			key="$(echo $key | sed -e "s/\$U_//")"
+			check_result "$E_EXISTS" "IP is in use / $key = $value"
+		fi
+	else
+		check_result 1 "is_ip_key_empty(): IP address is empty!"
 	fi
 }
 
@@ -291,14 +300,6 @@ is_ip_valid() {
 
 # === IPV6 specific functions ===
 
-# Check ipv6 ownership
-is_ipv6_owner() {
-    owner=$(grep 'OWNER=' $HESTIA/data/ips/$ipv6 |cut -f 2 -d \')
-    if [ "$owner" != "$user" ]; then
-        check_result $E_FORBIDEN "$ipv6 is not owned by $user"
-    fi
-}
-
 # Get full interface name
 get_ipv6_iface() {
     i=$(/sbin/ip addr |grep -w $interface |\
@@ -309,18 +310,6 @@ get_ipv6_iface() {
         n=$((i + 1))
     fi
     echo "$interface:$n"
-}
-
-# Check ipv6 address speciefic value
-is_ipv6_key_empty() {
-    key="$1"
-    string=$(cat $HESTIA/data/ips/$ipv6)
-    eval $string
-    eval value="$key"
-    if [ ! -z "$value" ] && [ "$value" != '0' ]; then
-        key="$(echo $key|sed -e "s/\$U_//")"
-        check_result $E_EXISTS "IP6 is in use / $key = $value"
-    fi
 }
 
 # Update ipv6 address value

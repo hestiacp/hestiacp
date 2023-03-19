@@ -76,7 +76,7 @@ if [ -n "$ip_format" ]; then
 		if [ -n "$ip_cidr" ]; then
 			cidr=${ip_cidr}
 		else
-			[ -z "$cidr" ] && cidr="/31"
+			[ -z "$cidr" ] && cidr="/32"
 		fi
 		if [ -z "$netmask" ]; then 
 			is_ip_format_valid "${cidr}" 'cidr'	# check for correct cidr
@@ -133,7 +133,7 @@ check_hestia_demo_mode
 
 check_ip_par=""
 [ -n "$ip_format" ] && [ $ip_format -eq 4 -o $ip_format -eq 6 ] && check_ip_par=" -${ip_format}"
-sys_ip_check=$(/sbin/ip$check_ip_par addr | grep "${ip46}")
+sys_ip_check=$(/sbin/ip$check_ip_par addr | sed -ne "/inet[6]*[ \t]${ip46}\//p")
 if [ -z "$sys_ip_check" ]; then
 	# Adding sys ip
 	if [ -n "$ip_format" ] && [ $ip_format -eq 6 ]; then

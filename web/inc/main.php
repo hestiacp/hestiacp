@@ -66,7 +66,11 @@ if (!isset($_SESSION["user_combined_ip"])) {
 }
 
 // Checking user to use session from the same IP he has been logged in
-if ($_SESSION["user_combined_ip"] != $user_combined_ip && isset($_SESSION["user"])) {
+if (
+	$_SESSION["user_combined_ip"] != $user_combined_ip &&
+	isset($_SESSION["user"]) &&
+	$_SESSION["DISABLE_IP_CHECK"] != "yes"
+) {
 	$v_user = quoteshellarg($_SESSION["user"]);
 	$v_session_id = quoteshellarg($_SESSION["token"]);
 	exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);

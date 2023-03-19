@@ -142,7 +142,11 @@
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left u-text-center compact">
-					<?php if ($data[$key]['RECORDS']) echo '<span>'.$data[$key]['RECORDS'].'</span>';?>
+					<?php if ($data[$key]['RECORDS']){
+						echo '<span>'.$data[$key]['RECORDS'].'</span>';
+					}else{
+						echo '<span>0</span>';
+					}?>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['TPL']?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center compact"><?=$data[$key]['TTL']?></div>

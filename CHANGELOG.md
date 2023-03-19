@@ -64,6 +64,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with domain redirect and idn2 domains (#3323 #3325)
 - Fixed an issue in Dokuwiki due to changing repository owner (#3327)
 - Fixed an issue with B2 and changing access keys
+- Fixed an issue with Drupal install via Quick installer (#3353 #3352)
+- Fixed issues with default state jQuery UI modals (#3344)
 
 ### Dependencies
 

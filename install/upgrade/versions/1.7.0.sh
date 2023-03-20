@@ -69,18 +69,18 @@ fi
 # rename /var/run/xx to /run/
 for file in /etc/dovecot/dovecot.conf /etc/clamav/clamd.conf /etc/exim/exim.conf.template /etc/logrotate.d/apache2 /etc/logrotate.d/nginx /etc/mysql/my.cnf /etc/nginx/nginx.conf; do
 	if [ -f "$file" ]; then
-		echo "[ * ] Update $file legacy /var/run/ to /run/"
+		echo "[ * ] Update $file legacy /var/run/ to /run/..."
 		sed -i 's|/var/run/|/run/|g' $file
 	fi
 done
 # Update any custom php templates
 for file in $HESTIA/data/templates/web/php-fpm/*; do
-	echo "[ * ] Update $file legacy /var/run/ to /run/"
+	echo "[ * ] Update $file legacy /var/run/ to /run/..."
 	sed -i 's|/var/run/|/run/|g' $file
 done
 
 for file in /etc/php/*/fpm/pool.d/www.conf; do
-	echo "[ * ] Update $file legacy /var/run/ to /run/"
+	echo "[ * ] Update $file legacy /var/run/ to /run/..."
 	sed -i 's|/var/run/|/run/|g' $file
 done
 
@@ -101,7 +101,7 @@ if echo "$BACKUP_SYSTEM" | grep "google" > /dev/null; then
 fi
 
 if [ -f /etc/logrotate.d/httpd-prerotate/awstats ]; then
-	echo "[ * ] Update Awstats prerotate to Hestia update method"
+	echo "[ * ] Update Awstats prerotate to Hestia update method..."
 	# Replace awstatst function
 	cp -f $HESTIA_INSTALL_DIR/logrotate/httpd-prerotate/awstats /etc/logrotate.d/httpd-prerotate/
 fi
@@ -113,7 +113,7 @@ if [ "$PHPMYADMIN_KEY" != "" ]; then
 fi
 
 if [ -f /etc/nginx/nginx.conf ] && [ ! -f /etc/nginx/conf.d/cloudflare.inc ]; then
-	echo "[ * ] Enable support for updating Cloudflare Ips"
+	echo "[ * ] Enable support for updating Cloudflare Ips..."
 	sed -i '/set_real_ip_from/d' /etc/nginx/nginx.conf
 	sed -i '/real_ip_header/d' /etc/nginx/nginx.conf
 	sed -i 's|# Cloudflare https://www.cloudflare.com/ips|# Cloudflare https://www.cloudflare.com/ips\n    include /etc/nginx/conf.d/cloudflare.inc;|g' /etc/nginx/nginx.conf

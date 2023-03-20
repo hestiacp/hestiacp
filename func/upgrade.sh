@@ -706,7 +706,7 @@ upgrade_rainloop() {
 }
 
 upgrade_dependencies() {
-	echo "[ ! ] Update Hestia PHP dependencies"
+	echo "[ ! ] Update Hestia PHP dependencies..."
 	$BIN/v-add-sys-dependencies
 }
 
@@ -734,7 +734,7 @@ upgrade_rebuild_dns_templates() {
 upgrade_rebuild_users() {
 	if [ "$UPGRADE_REBUILD_USERS" = "true" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
-			echo "[ * ] Rebuilding user accounts and domains:"
+			echo "[ * ] Rebuilding user accounts and domains:..."
 		else
 			echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
 		fi

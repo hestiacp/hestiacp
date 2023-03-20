@@ -240,7 +240,13 @@
 						</li>
 						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
 							<button x-on:click="showCertificates = !showCertificates" type="button" class="form-link">
+								<span x-show="showCertificates">
+								<?= _("Hide Certificate") ?>
+								</span>
+								<span x-show="!showCertificates">
 								<?= _("Show Certificate") ?>
+								</span>
+
 							</button>
 						</p>
 					</ul>

@@ -50,12 +50,6 @@ if (!empty($_POST["ok"])) {
 	$v_interface = quoteshellarg($_POST["v_interface"]);
 	$v_owner = quoteshellarg($_POST["v_owner"]);
 	$v_shared = $_POST["v_shared"];
-	if (filter_var($_POST["v_ip"], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-		$v_ipv6_suffix='v6';
-	} else {
-		$v_ipv6_suffix='';
-					   
-	}
 
 	// Check shared checkmark
 	if ($v_shared == "on") {
@@ -69,7 +63,7 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD .
-				"v-add-sys-ip".$v_ipv6_suffix." " .
+				"v-add-sys-ip " .
 				$v_ip .
 				" " .
 				$v_netmask .

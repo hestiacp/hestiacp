@@ -601,7 +601,7 @@ upgrade_phpmyadmin() {
 	if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
 		pma_version=$(jq -r .version /usr/share/phpmyadmin/package.json)
 		if version_ge "$pma_version" "$pma_v"; then
-			echo "[ * ] phpMyAdmin is up to date (${pma_release_file##*-})..."
+			echo "[ * ] phpMyAdmin is up to date (${pma_version})..."
 			# Update permissions
 			if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
 				chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
@@ -706,7 +706,7 @@ upgrade_rainloop() {
 }
 
 upgrade_dependencies() {
-	echo "[ ! ] Update Hesita PHP dependencies"
+	echo "[ ! ] Update Hestia PHP dependencies"
 	$BIN/v-add-sys-dependencies
 }
 

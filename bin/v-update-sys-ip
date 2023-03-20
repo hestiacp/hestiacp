@@ -51,7 +51,7 @@ if [ "$ip_num" -eq 1 -a "$v_ip_num" -eq 1 ]; then
 fi
 
 if [ "$ipv6_num" -eq 1 -a "$v_ip_num" -eq 1 ]; then
-	if [ "$ips" != "$v_ips" ]; then
+	if [ "$ipv6s" != "$v_ips" ]; then
 		new=$ipv6s
 		old=$v_ips
 	fi
@@ -127,14 +127,9 @@ if [ -n "$new" ]; then
 fi
 
 # Adding system IP
-for ip in $ips; do
-	check_ip=$(/sbin/ip addr list | grep "$ip")
-	if [ ! -e "$HESTIA/data/ips/$ip" ] && [ -n "$check_ip" ]; then
-		interface=$(/sbin/ip addr | grep $ip | awk '{print $NF}' | uniq)
-		interface=$(echo "$interface" | cut -f 1 -d : | head -n 1)
-		netmask=$(/sbin/ip addr | grep $ip | cut -f 2 -d / | cut -f 1 -d \ )
-		netmask=$(convert_cidr $netmask)
-		$BIN/v-add-sys-ip "$ip" "$netmask" "$interface"
+$BIN/v-list-network plain | while read listed_ip listed_mask listed_iface; do
+	if [ ! -e "$HESTIA/data/ips/${listed_ip}" ]; then
+		$BIN/v-add-sys-ip ${listed_ip} ${listed_mask} ${listed_iface}
 	fi
 done
 

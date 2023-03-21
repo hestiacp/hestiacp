@@ -66,11 +66,15 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with B2 and changing access keys
 - Fixed an issue with Drupal install via Quick installer (#3353 #3352)
 - Fixed issues with default state jQuery UI modals (#3344)
+- Fixed an issue with login with passwords that contains a - or -- on the first character (#3365 #3354)
+- Add option to disable ip check (#3365)
+- Replace sdocroot with docroot in default.tpl for Apache2 / PHP-FPM setups (#3360)
 
 ### Dependencies
 
 - Updated hestia-nginx to 1.23.3
-- Updated hestia-php to 8.2.3
+- Updated hestia-php to 8.2.4
+- Update OpenSSL to 3.1.0
 - Updated Roundcube to 1.6.1
 - Updated Filegator to 7.9.2
 - Updated phpMyAdmin to 5.2.21

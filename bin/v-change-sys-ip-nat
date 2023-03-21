@@ -3,6 +3,7 @@
 # options: IP NAT_IP [RESTART]
 #
 # example: v-change-sys-ip-nat 185.209.50.140 10.110.104.205
+# example: v-change-sys-ip-nat 1111:2222:3333::1 ''
 #
 # This function for changing nat ip associated with ip.
 

@@ -23,8 +23,7 @@ is_ip_owner() {
 
 # Check if ip address is free
 is_ip_free() {
-	# ip address (ipv4/ipv6) as first parameter, otherwise $ip (ipv4)
-	ip_for_test="${1-$ip}"
+	ip_for_test="${1-$ip}" # ip address (ipv4/ipv6) as first parameter, otherwise $ip (ipv4)
 	if [ -e "$HESTIA/data/ips/$ip_for_test" ]; then
 		check_result "$E_EXISTS" "$ip_for_test is already exists"
 	fi
@@ -33,8 +32,7 @@ is_ip_free() {
 # Check ip address specific value
 is_ip_key_empty() {
 	key="$1"
-	# ip address (ipv4/ipv6) as second parameter, otherwise $ip (ipv4)
-	ip_for_test="${2-$ip}"
+	ip_for_test="${2-$ip}" # ip address (ipv4/ipv6) as second parameter, otherwise $ip (ipv4)
 	if [ -n "$ip_for_test" ]; then
 		string=$(cat $HESTIA/data/ips/$ip_for_test)
 		eval $string
@@ -70,15 +68,20 @@ is_ip_rdns_valid() {
 update_ip_value() {
 	key="$1"
 	value="$2"
-	conf="$HESTIA/data/ips/$ip"
-	str=$(cat $conf)
-	eval $str
-	c_key=$(echo "${key//$/}")
-	eval old="${key}"
-	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g" \
-		$conf
+	ip_for_update="${3-$ip}" # ip address (ipv4/ipv6) as third parameter, otherwise $ip (ipv4)
+	if [ -n "$ip_for_update" ]; then
+		conf="$HESTIA/data/ips/$ip_for_update"
+		str=$(cat $conf)
+		eval $str
+		c_key=$(echo "${key//$/}")
+		eval old="${key}"
+		old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+		new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+		sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g" \
+			$conf
+	else
+		check_result 1 "is_ip_key_empty(): IP address is empty!"
+	fi
 }
 
 # New method that is improved on a later date we need to check if we can improve it for other locations

@@ -3,6 +3,7 @@
 # options: IP IP_STATUS
 #
 # example: v-change-sys-ip-status 91.198.136.14 yourstatus
+# example: v-change-sys-ip-status 1111:2222:3333::1 yourstatus
 #
 # This function of changing an ip address's status.
 
@@ -65,7 +66,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Changing ip name
-update_ip_value '$STATUS' "$ip_status"
+update_ip_value '$STATUS' "$ip_status" "${ip46}"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

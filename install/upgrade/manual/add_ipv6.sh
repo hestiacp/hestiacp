@@ -34,7 +34,7 @@ ipv6use=""
 if [ ! -z "$ipv6" ] && [ "::1" != "$ipv6" ]; then
     netmask="ip addr show | grep '$ipv6' | awk -F '/' '{print \$2}' | awk '{print \$1}'"
     netmask=$(eval $netmask)
-    $HESTIA/bin/v-add-sys-ipv6 $ipv6 $netmask
+    $HESTIA/bin/v-add-sys-ip $ipv6 $netmask
     $BIN/v-update-firewall-ipv6
     ipv6use=$ipv6
 fi

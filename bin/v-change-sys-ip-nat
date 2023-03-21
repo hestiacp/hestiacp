@@ -11,9 +11,9 @@
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
-nat_ip=$2
-restart=$3
+ip46=${1}
+nat_ip=${2}
+restart=${3}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -30,9 +30,22 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP NAT_IP [RESTART]'
-is_format_valid 'ip'
-is_format_valid 'nat_ip'
-is_ip_valid "$ip"
+ip_format="$(get_ip_format ${ip46})"	#	ip verification and format identification
+if [ -n "$ip_format" ]; then
+	if [ $ip_format -eq 6 ]; then
+		ip=""
+		ipv6="${ip46}"
+		is_format_valid 'ipv6'
+		is_ip_valid "$ipv6"
+		nat_ip=""
+	else
+		ip="${ip46}"
+		ipv6=""
+		is_format_valid 'ip'
+		is_ip_valid "$ip"
+		is_format_valid 'nat_ip'
+	fi
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -42,16 +55,16 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Updating IP
-if [ -z "$(grep NAT= $HESTIA/data/ips/$ip)" ]; then
-	sed -i "s/^TIME/NAT='$nat_ip'\nTIME/g" $HESTIA/data/ips/$ip
+if [ -z "$(grep NAT= $HESTIA/data/ips/${ip46})" ]; then
+	sed -i "s/^TIME/NAT='$nat_ip'\nTIME/g" $HESTIA/data/ips/${ip46}
 	old=''
 	new=$nat_ip
 else
 	old=$(get_ip_value '$NAT')
 	new=$nat_ip
-	sed -i "s/NAT=.*/NAT='$new'/" $HESTIA/data/ips/$ip
+	sed -i "s/NAT=.*/NAT='$new'/" $HESTIA/data/ips/${ip46}
 	if [ -z "$nat_ip" ]; then
-		new=$ip
+		new=${ip46}
 	fi
 fi
 
@@ -113,7 +126,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "IP NAT address changed (IP: $ip, NAT IP: $nat_ip)."
+$BIN/v-log-action "system" "Info" "System" "IP NAT address changed (IP: ${ip46}, NAT IP: $nat_ip)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

@@ -11,7 +11,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
+ip46=$1
 user=$2
 
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -28,10 +28,23 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 check_args '2' "$#" 'IP USER'
-is_format_valid 'ip' 'user'
+ip_format="$(get_ip_format ${ip46})"	#	ip verification and format identification
+if [ -n "$ip_format" ]; then
+	if [ $ip_format -eq 6 ]; then
+		ip=""
+		ipv6="${ip46}"
+		is_format_valid 'ipv6'
+		is_ip_valid "$ipv6"
+	else
+		ip="${ip46}"
+		ipv6=""
+		is_format_valid 'ip'
+		is_ip_valid "$ip"
+	fi
+fi
+is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-is_ip_valid "$ip"
 is_ip_key_empty '$U_WEB_DOMAINS'
 is_ip_key_empty '$U_SYS_USERS'
 
@@ -80,7 +93,7 @@ fi
 # Set status to dedicated if owner is not admin
 ip_status="$(get_ip_value '$STATUS')"
 if [ "$user" != 'admin' ] && [ "$ip_status" == 'shared' ]; then
-	$BIN/v-change-sys-ip-status "$ip" 'dedicated'
+	$BIN/v-change-sys-ip-status "${ip46}" 'dedicated'
 fi
 
 #----------------------------------------------------------#
@@ -88,7 +101,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "System" "IP address owner changed (IP: $ip, Owner: $user)"
+$BIN/v-log-action "system" "Info" "System" "IP address owner changed (IP: ${ip46}, Owner: $user)"
 log_event "$OK" "$ARGUMENTS"
 
 exit

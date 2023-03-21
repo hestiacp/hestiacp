@@ -246,7 +246,6 @@
 								<span x-show="!showCertificates">
 								<?= _("Show Certificate") ?>
 								</span>
-
 							</button>
 						</p>
 					</ul>

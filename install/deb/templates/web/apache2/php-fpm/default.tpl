@@ -23,7 +23,7 @@
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    <Directory %sdocroot%>
+    <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes +ExecCGI
     </Directory>

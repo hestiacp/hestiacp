@@ -315,21 +315,6 @@ get_ipv6_iface() {
     echo "$interface:$n"
 }
 
-# Update ipv6 address value
-update_ipv6_value() {
-    key="$1"
-    value="$2"
-    conf="$HESTIA/data/ips/$ipv6"
-    str=$(cat $conf)
-    eval $str
-    c_key=$(echo "${key//$/}")
-    eval old="${key}"
-    old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-    new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-    sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g"\
-        $conf
-}
-
 # Get ipv6 name
 get_ipv6_alias() {
 	if [ -n "$local_ipv6" ]; then

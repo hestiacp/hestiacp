@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://www.hestiacp.com/">Hestia Control Panel</a></h1>
 
-![Hestia screenshot](https://hestiacp.com/img/screen_HestiaServer-dark.png)
+![Hestia screenshot](https://storage.hestiacp.com/hestiascreen.png)
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 

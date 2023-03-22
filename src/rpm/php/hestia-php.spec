@@ -1,12 +1,12 @@
 Name:           hestia-php
 Version:        %HESTIA-PHP-VERSION%
-Release:        0
+Release:        1%{dist}
 Summary:        Hestia internal PHP
 Group:          System Environment/Base
 URL:            https://www.hestiacp.com
 License:        PHP and Zend and BSD and MIT and ASL 1.0 and NCSA
 Vendor:         hestiacp.com
-Requires:       redhat-release >= 7
+Requires:       redhat-release >= 8
 Provides:       hestia-php = %{version}
 BuildRequires:  systemd-rpm-macros
 

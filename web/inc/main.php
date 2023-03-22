@@ -7,14 +7,17 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-if (!file_exists(dirname(__FILE__).'/vendor/autoload.php')) {
-    trigger_error('Unable able to load required libaries. Please run v-add-sys-phpmailer in command line');
-    echo 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line';
+
+try {
+    require_once 'vendor/autoload.php';
+} catch (Throwable $ex) {
+    $errstr = 'Unable able to load required libaries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
+    trigger_error($errstr);
+    echo $errstr;
     exit(1);
 }
 
-require 'vendor/autoload.php';
-
+define('HESTIA_DIR_BIN', '/usr/local/hestia/bin/');
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 define('DEFAULT_PHP_VERSION', 'php-' . exec('php -r "echo substr(phpversion(),0,3);"'));
 
@@ -91,7 +94,7 @@ if ((!isset($_SESSION['user'])) && (!defined('NO_AUTH_REQUIRED'))) {
 // Generate CSRF Token
 if (isset($_SESSION['user'])) {
     if (!isset($_SESSION['token'])) {
-        $token = bin2hex(file_get_contents('/dev/urandom', false, null, 0, 16));
+        $token = bin2hex(random_bytes(16));
         $_SESSION['token'] = $token;
     }
 }
@@ -115,6 +118,15 @@ if (!defined('NO_AUTH_REQUIRED')) {
         exit;
     } else {
         $_SESSION['LAST_ACTIVITY'] = time();
+    }
+}
+
+function ipUsed(){
+    list($http_host, $port) = explode(':', $_SERVER["HTTP_HOST"].":");
+    if(filter_var($http_host, FILTER_VALIDATE_IP)){
+        return true;
+    }else{
+        return false;
     }
 }
 
@@ -176,7 +188,6 @@ function render_page($user, $TAB, $page)
 
     // Policies controller
     @include_once(dirname(__DIR__) . '/inc/policies.php');
-
     // Body
     include($__template_dir . 'pages/' . $page . '.html');
 
@@ -269,9 +280,9 @@ function top_panel($user, $TAB)
     if (!isset($_SESSION['look'])) {
         $_SESSION['userSortOrder'] = $panel[$user]['PREF_UI_SORT'];
     }
-
+    
     // Set home location URLs
-    if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look']))) {
+    if (($_SESSION['userContext'] === 'admin') && (empty($_SESSION['look']))) {
         // Display users list for administrators unless they are impersonating a user account
         $home_url = '/list/user/';
     } else {
@@ -394,7 +405,11 @@ function send_email($to, $subject, $mailtext, $from, $from_name, $to_name = '')
     $mail = new PHPMailer();
 
     if (isset($_SESSION['USE_SERVER_SMTP']) && $_SESSION['USE_SERVER_SMTP'] == "true") {
-        $from = $_SESSION['SERVER_SMTP_ADDR'];
+        if(!empty($_SESSION['SERVER_SMTP_ADDR']) && $_SESSION['SERVER_SMTP_ADDR'] != ''){
+            if(filter_var($_SESSION['SERVER_SMTP_ADDR'], FILTER_VALIDATE_EMAIL)){
+                $from = $_SESSION['SERVER_SMTP_ADDR'];
+            }
+        }
 
         $mail->IsSMTP();
         $mail->Mailer = "smtp";

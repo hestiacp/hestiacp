@@ -40,6 +40,16 @@ App.Listeners.MAIL_ACC.checkbox_unlimited_feature = function() {
     $('.unlim-trigger').on('click', App.Actions.MAIL_ACC.toggle_unlimited_feature);
 }
 
+
+App.Helpers.isUnlimitedValue = function(value) {
+    var value = value.trim();
+    if (value == App.Constants.UNLIM_VALUE || value == App.Constants.UNLIM_TRANSLATED_VALUE) {
+        return true;
+    }
+
+    return false;
+}
+
 App.Listeners.MAIL_ACC.init = function() {
     $('.unlim-trigger').each(function(i, elm) {
         var ref = $(elm).prev('.vst-input');
@@ -52,6 +62,7 @@ App.Listeners.MAIL_ACC.init = function() {
         }
     });
 }
+App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
 
 App.Actions.MAIL_ACC.update_v_password = function (){
     var password = $('input[name="v_password"]').val();
@@ -93,28 +104,17 @@ $('#v_blackhole').on('click', function(evt){
 App.Listeners.MAIL_ACC.keypress_v_password();
 
 
-randomString = function(min_length = 16) {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = min_length;
-    var randomstring = '';
-    for (var i = 0; i < string_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        randomstring += chars.substr(rnum, 1);
-    }
-    var regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/);
-    if(!regex.test(randomstring)){
-        randomString();
-    }else{
-        $('input[name=v_password]').val(randomstring);
-        if($('input[name=v_password]').attr('type') == 'text')
-            $('#v_password').text(randomstring);
-        else
-            $('#v_password').text(Array(randomstring.length+1).join('*'));
-        
-        App.Actions.MAIL_ACC.update_v_password();
-        generate_mail_credentials();
-    }    
-}
+randomString = function (min_length = 16) {
+  var randomstring = randomString2(min_length);
+  $("input[name=v_password]").val(randomstring);
+  if ($("input[name=v_password]").attr("type") == "text")
+    $("#v_password").text(randomstring);
+  else 
+    $("#v_password").text(Array(randomstring.length + 1).join("*"));
+  App.Actions.MAIL_ACC.update_v_password();
+  generate_mail_credentials();
+};
+
 generate_mail_credentials = function() {
     var div = $('.mail-infoblock').clone();
     div.find('#mail_configuration').remove();
@@ -131,7 +131,6 @@ generate_mail_credentials = function() {
     output=output.replace(/ $/, "");
     output=output.replace(/:\|/g, ": ");
     output=output.replace(/\|/g, "\n");
-    //console.log(output);
     $('#v_credentials').val(output);
 }
 

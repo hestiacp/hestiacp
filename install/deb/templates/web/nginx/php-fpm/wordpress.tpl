@@ -50,7 +50,7 @@ server {
             fastcgi_index index.php;
             include /etc/nginx/fastcgi_params;
             include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
-            if ($request_uri ~* "/wp-admin/|wp-.*.php|xmlrpc.php|index.php|/store.*|/cart.*|/my-account.*|/checkout.*") {
+            if ($request_uri ~* "/wp-admin/|/wp-json/|wp-.*.php|xmlrpc.php|index.php|/store.*|/cart.*|/my-account.*|/checkout.*") {
                 set $no_cache 1;
             }
             if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in|woocommerce_items_in_cart|woocommerce_cart_hash|PHPSESSID") {

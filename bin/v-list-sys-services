@@ -94,6 +94,11 @@ get_srv_state() {
     if [ -z "$pids" ] && [ "$name" != 'nginx' ]; then
         pids=$(pgrep $name |tr '\n' '|')
     fi
+    
+    # Prevent from an SSH false positive when there is a TTY or SFTP connection but service is down
+    if [ "$name" == 'ssh' ] && [ "$(systemctl show sshd.service | grep 'SubState=' | cut -f2 -d=)" != "running" ]; then
+        pids=''
+    fi
 
     # Checking pid
     if [ -n "$pids" ]; then

@@ -38,8 +38,20 @@ function setup() {
     refute_output
 }
 
+@test "[ Web ] Create 2nd web domain" {
+    run v-add-web-domain $user "hestia.$domain" $ip yes
+    assert_success
+    refute_output
+}
+
 @test "[ Web ] Request new certificate for web domain" {
     run v-add-letsencrypt-domain $user $domain "www.$domain,renewal.$domain,foobar.$domain,bar.$domain"
+    assert_success
+    refute_output
+}
+
+@test "[ Web ] Request 2nd new certificate for web domain" {
+    run v-add-letsencrypt-domain $user "hestia.$domain"
     assert_success
     refute_output
 }

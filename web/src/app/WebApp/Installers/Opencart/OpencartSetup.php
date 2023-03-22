@@ -10,7 +10,7 @@ class OpencartSetup extends BaseSetup
         'name' => 'Opencart',
         'group' => 'ecommerce',
         'enabled' => true,
-        'version' => '4.0.0.0',
+        'version' => '4.0.1.1',
         'thumbnail' => 'opencart-thumb.png'
     ];
 
@@ -25,7 +25,7 @@ class OpencartSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/4.0.0.0/opencart-4.0.0.0.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/opencart/opencart/releases/download/4.0.1.1/opencart-4.0.1.1.zip' ],
         ],
         'server' => [
             'nginx' => [
@@ -61,10 +61,9 @@ class OpencartSetup extends BaseSetup
             $protocol = 'https://';
         }
         
-        $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
         
         $this->appcontext->runUser('v-run-cli-cmd', [
-            "/usr/bin/php$php_version",
+           "/usr/bin/php".$options['php_version'],
             $this->getDocRoot("/install/cli_install.php"),
             "install",
             "--db_username " . $this->appcontext->user() . '_' .$options['database_user'],

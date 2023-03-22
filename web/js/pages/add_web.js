@@ -2,7 +2,6 @@
     var prepath = $('input[name="v-custom-doc-root_prepath"]').val();
     var domain = $('select[name="v-custom-doc-domain"]').val();
     var folder = $('input[name="v-custom-doc-folder"]').val();
-    console.log(domain, folder);
     $('.custom_docroot_hint').text(prepath+domain+'/public_html/'+folder);
 }
 App.Listeners.DB.keypress_custom_folder = function() {
@@ -237,24 +236,11 @@ $(function() {
 
 
 function WEBrandom() {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = 16;
-    var webrandom = '';
-    for (var i = 0; i < string_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        webrandom += chars.substr(rnum, 1);
-    }
-        document.v_add_web.v_stats_password.value = webrandom;
+        document.v_add_web.v_stats_password.value = randomString2(16);
 }
 
 function FTPrandom(elm) {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = 16;
-    var ftprandomstring = '';
-    for (var i = 0; i < string_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        ftprandomstring += chars.substr(rnum, 1);
-    }
+    var ftprandomstring = randomString2(16);
     $(elm).parents('.ftptable').find('.v-ftp-user-psw').val(ftprandomstring);
 }
 

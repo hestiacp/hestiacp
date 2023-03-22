@@ -115,7 +115,13 @@ steps:
       - ./test/check_php.sh ./web/
 
 trigger:
-   event: [ pull_request, push ] 
+      event: [ pull_request, push ]
+      ref:
+      - refs/heads/staging/*
+      - refs/heads/beta
+      - refs/heads/release
+      - refs/heads/main
+      - refs/pull/*/head
 
 ---
 kind: pipeline
@@ -167,4 +173,4 @@ trigger:
 
 ---
 kind: signature
-hmac: 980aea20314dab4328b0016eb35fa3ef18fdd46e5d891c7ab3809f704891e72b
+hmac: a191a477aa337f2efff534022164906ff20ef2b6340ec808d128c09a06d7eaa3

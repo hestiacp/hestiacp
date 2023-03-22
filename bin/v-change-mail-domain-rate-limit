@@ -62,9 +62,9 @@ if [[ "$rate" = "system" ]]; then
     rate=''
 fi
 
-$HESTIA/bin/v-rebuild-mail-domain "$user" "$domain"
 # Update quota
 update_object_value "mail" 'DOMAIN' "$domain" '$RATE_LIMIT' "$rate"
+$HESTIA/bin/v-rebuild-mail-domain "$user" "$domain"
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "Mail domain rate limit has changed ($rate)"

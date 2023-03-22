@@ -16,6 +16,20 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 source_conf "$HESTIA/install/upgrade/upgrade.conf"
 
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+#check if string already exists
+if grep "dovecot_virtual_delivery" /etc/exim4/exim4.conf.template; then 
+    echo "Plugin allready enabled"
+    exit 0
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
 HAS_DOVECOT_SIEVE_INSTALLED=`dpkg --get-selections dovecot-sieve | grep dovecot-sieve | wc -l`
 
 # Folder paths

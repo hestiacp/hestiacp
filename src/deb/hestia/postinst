@@ -51,13 +51,13 @@ fi
 upgrade_welcome_message_log >> $LOG
 upgrade_welcome_message
 
-# Perform upgrade health check and refresh configuration before upgrading
-upgrade_health_check | tee -a $LOG
-upgrade_replace_default_config
-upgrade_refresh_config
-
 # Back up existing configuration files and templates
 upgrade_start_backup | tee -a $LOG
+
+# Perform upgrade health check and refresh configuration before upgrading
+upgrade_health_check | tee -a $LOG
+upgrade_replace_default_config | tee -a $LOG
+upgrade_refresh_config | tee -a $LOG
 
 # Execute version-specific upgrade scripts
 upgrade_start_routine | tee -a $LOG

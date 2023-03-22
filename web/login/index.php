@@ -5,8 +5,7 @@ define('NO_AUTH_REQUIRED', true);
 
 include($_SERVER['DOCUMENT_ROOT'] . '/inc/main.php');
 
-$TAB = 'login';
-
+$TAB = 'LOGIN';
 
 if (isset($_GET['logout'])) {
     unset($_SESSION);
@@ -130,13 +129,13 @@ function authenticate_user($user, $password, $twofa = '')
                 $hash = str_replace('$rounds=5000', '', $hash);
             }
             if ($method == 'yescrypt') {
-                $v_password = tempnam("/tmp", "vst");
-                $fp = fopen($v_password, "w");
-                fwrite($fp, $_POST['password']."\n");
-                fclose($fp);
-                exec(HESTIA_CMD . 'v-check-user-password '. $v_user.' '. $v_password. ' '.$v_ip.' yes', $output, $return_var);
+                $fp = tmpfile();
+                $v_password = stream_get_meta_data($fp)['uri'];
+                fwrite($fp, $password."\n");
+                exec(HESTIA_CMD . 'v-check-user-password '. $v_user.' '. escapeshellarg($v_password). ' '.$v_ip.' yes', $output, $return_var);
                 $hash = $output[0];
-                unset($output);
+                fclose($fp);
+                unset($output,$fp, $v_password);
             }
             if ($method == 'des') {
                 $hash = crypt($password, $salt);
@@ -323,7 +322,7 @@ if (empty($_SESSION['language'])) {
 }
 
 // Generate CSRF token
-$token = bin2hex(file_get_contents('/dev/urandom', false, null, 0, 16));
+$token = bin2hex(random_bytes(16));
 $_SESSION['token'] = $token;
 
 require_once('../templates/header.html');

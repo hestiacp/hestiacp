@@ -537,7 +537,7 @@ suspend_pgsql_database() {
 # Unsuspend MySQL database
 unsuspend_mysql_database() {
     mysql_connect $HOST
-    query="GRANT ALL ON \`$database\`.* FROM \`$DBUSER\`@\`%\`"
+    query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@\`%\`"
     mysql_query "$query" > /dev/null
     query="GRANT ALL ON \`$database\`.* TO \`$DBUSER\`@localhost"
     mysql_query "$query" > /dev/null

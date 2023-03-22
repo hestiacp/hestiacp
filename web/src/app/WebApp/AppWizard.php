@@ -64,6 +64,10 @@ class AppWizard {
     public function getOptions()
     {
         $options = $this->appsetup->getOptions();
+        
+        $config = $this->appsetup -> getConfig();
+        $options = array_merge($options, array('php_version' => ['type' => 'select', 'value' => $this->appcontext->getCurrentBackendTemplate($this -> domain), 'options' => $this->appcontext->getSupportedPHP($config['server']['php']['supported'])]));
+        
         if ($this->appsetup->withDatabase()) {
             $options = array_merge($options, $this->database_config);
         }
@@ -102,7 +106,7 @@ class AppWizard {
             }
             
             if(!$this->appcontext->checkDatabaseLimit()) {
-                $this->errors[] = _('Unable to add databse! Limit reached!');
+                $this->errors[] = _('Unable to add database! Limit reached!');
                 return false;
             }
 

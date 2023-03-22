@@ -111,7 +111,7 @@ if (!empty($_POST['ok'])) {
         putenv("LANGUAGE=".$_POST['v_language']);
 
         $subject = _("Welcome to Hestia Control Panel");
-        $hostname = exec('hostname');
+        $hostname = get_hostname();
         unset($output);
         $from = "noreply@".$hostname;
         $from_name = _('Hestia Control Panel');

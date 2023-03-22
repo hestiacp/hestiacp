@@ -26,7 +26,6 @@ var Templator = function()
 {
     var init = function()
     {
-        fb.info('Templator work');
         Templator.splitThemAll();
         Templator.freezeTplIndexes();
     };
@@ -36,7 +35,6 @@ var Templator = function()
      * Split the tpl strings into arrays
      */
     Templator.splitThemAll = function(){
-        fb.info('splitting tpls');
         jQuery.each(App.Templates.html, function(o){
             //try{
             var tpls = App.Templates.html[o];
@@ -52,7 +50,6 @@ var Templator = function()
      * Iterates tpls
      */
     Templator.freezeTplIndexes = function(){
-        fb.info('freezing tpl keys');
         jQuery.each(App.Templates.html, Templator.cacheTplIndexes);
     },
 

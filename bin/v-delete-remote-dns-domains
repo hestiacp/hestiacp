@@ -47,7 +47,10 @@ fi
 
 # Starting cluster loop
 for cluster in $hosts; do
-
+    
+    # Reset user, password and hash vars
+    clear_dns_cluster_settings
+    
     # Parsing remote host parameters
     parse_object_kv_list "$cluster"
 

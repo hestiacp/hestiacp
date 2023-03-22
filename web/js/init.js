@@ -613,5 +613,77 @@ $(document).ready(function(){
                 $('.l-unit').find('.ch-toggle').prop('checked', false);
                 $('.l-unit.selected').find('.ch-toggle').prop('checked', true);
             });
+            // todo: maybe give the save button id?
+            $(".ui-button[data-id=vstobjects][data-action=submit]").on('click', function(ev){
+              let loadingAnimationEle = document.createElement("div");
+              loadingAnimationEle.innerHTML = '<div class="timer-container" style="float:right;"><div class="timer-button spinner"><div class="spinner-inner"></div><div class="spinner-mask"></div> <div class="spinner-mask-two"></div></div></div>';
+              // this both gives an indication that we've clicked and is loading, also prevents double-clicking/clicking-on-something-else while loading.
+              $(".ui-button[data-id=vstobjects][data-action=submit]").replaceWith(loadingAnimationEle);
+              $(".ui-button").replaceWith('');
+              // workaround a render bug on Safari (loading icon doesn't render without this)
+              ev.preventDefault();
+              $('#vstobjects').submit();
+            });
     });
 
+/**
+ * generates a random string
+ * using a cryptographically secure rng, 
+ * and ensuring it contains at least 1 lowercase, 1 uppercase, and 1 number.
+ * 
+ * @param int length 
+ * @throws Error if length is too small to create a "sufficiently secure" string
+ * @returns string
+ */
+function randomString2(length = 16) {
+  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  var secure_rng = function (min, max) {
+    if (min < 0 || min > 0xffff) {
+      throw new Error(
+        "minimum supported number is 0, this generator can only make numbers between 0-65535 inclusive."
+      );
+    }
+    if (max > 0xffff || max < 0) {
+      throw new Error(
+        "max supported number is 65535, this generator can only make numbers between 0-65535 inclusive."
+      );
+    }
+    if (min > max) {
+      throw new Error("dude min>max wtf");
+    }
+    // micro-optimization
+    let randArr = max > 255 ? new Uint16Array(1) : new Uint8Array(1);
+    let ret;
+    let attempts = 0;
+    for (;;) {
+      crypto.getRandomValues(randArr);
+      ret = randArr[0];
+      if (ret >= min && ret <= max) {
+        return ret;
+      }
+      ++attempts;
+      if (attempts > 1000000) {
+        // should basically never happen with max 0xFFFF/Uint16Array.
+        throw new Error("tried a million times, something is wrong");
+      }
+    }
+  };
+  let attempts = 0;
+  let minimumStrengthRegex = new RegExp(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/
+  );
+  let randmax = chars.length - 1;
+  for (;;) {
+    let ret = "";
+    for (let i = 0; i < length; ++i) {
+      ret += chars[secure_rng(0, randmax)];
+    }
+    if (minimumStrengthRegex.test(ret)) {
+      return ret;
+    }
+    ++attempts;
+    if (attempts > 1000000) {
+      throw new Error("tried a million times, something is wrong");
+    }
+  }
+};

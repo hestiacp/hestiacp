@@ -14,22 +14,10 @@ $(function() {
 });
 
 
-randomString = function(min_length = 16) {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = min_length;
-    var randomstring = '';
-    for (var i = 0; i < string_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        randomstring += chars.substr(rnum, 1);
-    }
-    var regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/);
-    if(!regex.test(randomstring)){
-        randomString();
-    }else{
-        $('input[name=v_password]').val(randomstring);
-        App.Actions.WEB.update_v_password();
-    }    
-}
+randomString = function (min_length = 16) {
+    $("input[name=v_password]").val(randomString2(min_length));
+    App.Actions.WEB.update_v_password();
+};
 
 App.Actions.WEB.update_v_password = function (){
     var password = $('input[name="v_password"]').val();

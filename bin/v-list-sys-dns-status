@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list dns status
-# options: [FORMAT]
+# options: 
 #
 # example: v-list-sys-dns-status
 #

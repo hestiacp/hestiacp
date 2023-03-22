@@ -52,9 +52,9 @@ class DrupalSetup extends BaseSetup {
         $tmp_configpath = $this->saveTempFile($htaccess_rewrite);
         $this->appcontext->runUser('v-move-fs-file',[$tmp_configpath, $this->getDocRoot(".htaccess")], $result);
         
-        $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
+       
         $this -> appcontext -> runUser('v-run-cli-cmd', [
-            "/usr/bin/php$php_version",
+            "/usr/bin/php".$options['php_version'],
             $this -> getDocRoot('/vendor/drush/drush/drush'), 
             'site-install',
             'standard',

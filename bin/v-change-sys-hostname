@@ -49,15 +49,21 @@ else
     # Debian/Ubuntu
     hostnamectl set-hostname "$domain"
     echo "$domain" > /etc/hostname
-
-    # Update Roundcube password plugin configuration
-    if [ -d /etc/roundcube/ ]; then
-        sed -i "/password_hestia_host/c\$rcmail_config['password_hestia_host'] = '$domain';" /etc/roundcube/plugins/password/config.inc.php
-    fi
-    if [ -d /etc/rainloop/ ]; then
-        sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini 
-    fi
 fi
+
+# Update Roundcube password plugin configuration
+if [ -d /etc/roundcube/ ]; then
+    sed -i "/password_hestia_host/c\$rcmail_config['password_hestia_host'] = '$domain';" /etc/roundcube/plugins/password/config.inc.php
+fi
+if [ -d /etc/rainloop/ ]; then
+    sed -i "/hestia_host/c\hestia_host = \"$domain\"" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini 
+fi
+
+if [ -f /etc/hosts ];then
+    if ! cat /etc/hosts | grep $domain > /dev/null ; then
+        echo "127.0.0.1 $domain" >> /etc/hosts
+    fi
+fi 
 
 #----------------------------------------------------------#
 #                       Hestia                             #

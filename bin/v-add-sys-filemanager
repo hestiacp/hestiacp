@@ -23,8 +23,8 @@ MODE=$1
 user="admin"
 
 FM_INSTALL_DIR="$HESTIA/web/fm"
-FM_FILE="filegator_v${fm_v}.zip"
-FM_URL="https://github.com/filegator/filegator/releases/download/v${fm_v}/${FM_FILE}"
+FM_FILE="filegator_latest"
+FM_URL="https://github.com/filegator/static/raw/master/builds/filegator_latest.zip"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#
@@ -69,18 +69,18 @@ rm --recursive --force "$FM_INSTALL_DIR"
 mkdir -p "$FM_INSTALL_DIR"
 cd "$FM_INSTALL_DIR"
 
-[ ! -f "${FM_INSTALL_DIR}/${FM_FILE}" ] && wget "$FM_URL" --quiet -O "${FM_INSTALL_DIR}/${FM_FILE}"
+[ ! -f "${FM_INSTALL_DIR}/${FM_FILE}" ] && wget "$FM_URL" --quiet -O "${FM_INSTALL_DIR}/${FM_FILE}.zip"
 
-unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}"
+unzip -qq "${FM_INSTALL_DIR}/${FM_FILE}.zip"
 mv --force ${FM_INSTALL_DIR}/filegator/* "${FM_INSTALL_DIR}"
-rm --recursive --force ${FM_INSTALL_DIR}/filegator
+rm --recursive --force ${FM_INSTALL_DIR}/${FM_FILE}
 [[ -f "${FM_INSTALL_DIR}/${FM_FILE}" ]] && rm "${FM_INSTALL_DIR}/${FM_FILE}"
 
 cp --recursive --force ${HESTIA_INSTALL_DIR}/filemanager/filegator/* "${FM_INSTALL_DIR}"
 
 chown $user: -R "${FM_INSTALL_DIR}"
 
-if [ -z "$openssl_installed"  ]; then 
+if [ -z "$openssl_installed"  ]; then
     COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 else
     COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install

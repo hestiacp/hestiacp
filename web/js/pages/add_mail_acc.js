@@ -115,33 +115,20 @@ App.Listeners.MAIL_ACC.keypress_v_password();
 
 
 randomString = function(min_length = 16) {
-    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-    var string_length = min_length;
-    var randomstring = '';
-    for (var i = 0; i < string_length; i++) {
-        var rnum = Math.floor(Math.random() * chars.length);
-        randomstring += chars.substr(rnum, 1);
-    }
-    var regex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\d)[a-zA-Z\d]{8,}$/);
-    if(!regex.test(randomstring)){
-        randomString();
-    }else{
+    var randomstring = randomString2(min_length);
         $('input[name=v_password]').val(randomstring);
         if($('input[name=v_password]').attr('type') == 'text')
             $('#v_password').text(randomstring);
         else
-            $('#v_password').text(Array(randomstring.length+1).join('*'));
-        
+            $('#v_password').text(Array(randomstring.length+1).join('*'));      
         App.Actions.MAIL_ACC.update_v_password();
         generate_mail_credentials();
-    }    
 }
 
 generate_mail_credentials = function() {
     var div = $('.mail-infoblock').clone();
     div.find('#mail_configuration').remove();
-    var pass=div.find('#v_password').text();
-    if (pass=="") div.find('#v_password').text(' ');
+    var pass=$('#v_password').text();
     var output = div.text();
     output=output.replace(/(?:\r\n|\r|\n|\t)/g, "|");
     output=output.replace(/  /g, "");
@@ -153,7 +140,6 @@ generate_mail_credentials = function() {
     output=output.replace(/ $/, "");
     output=output.replace(/:\|/g, ": ");
     output=output.replace(/\|/g, "\n");
-    //console.log(output);
     $('#v_credentials').val(output);
 }
 
@@ -176,10 +162,7 @@ $(document).ready(function() {
     });
 
     $('.toggle-psw-visibility-icon').click(function(){
-        if($('input[name=v_password]').attr('type') == 'text')
-            $('#v_password').text($('input[name=v_password]').val());
-        else
-            $('#v_password').text(Array($('input[name=v_password]').val().length+1).join('*'));
+        $('#v_password').text($('input[name=v_password]').val());
         generate_mail_credentials();
     });
 

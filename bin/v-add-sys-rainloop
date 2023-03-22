@@ -22,12 +22,12 @@ MODE=$1
 UPDATE="no"
 # Version and Download paths
 # Version to be moved to upgrade script
-RL_FILE="rainloop-community-latest.zip"
+RL_FILE="rainloop-latest.zip"
 # For removal of folder
 RL_EXTRACT_MAIN="rainloop"
 
 # Downloading full version
-RL_URL="https://www.rainloop.net/repository/webmail/rainloop-community-latest.zip"
+RL_URL="https://www.rainloop.net/repository/webmail/rainloop-latest.zip"
 
 # Folder paths
 RL_INSTALL_DIR="/var/lib/rainloop"
@@ -155,7 +155,7 @@ else
    [ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RL_URL" --quiet -O "${RL_INSTALL_DIR}/${RL_FILE}"
    version=$(cat $RL_INSTALL_DIR/data/VERSION);
    
-   unzip -q -j rainloop-community-latest.zip "data/VERSION" -d $RL_INSTALL_DIR/ 
+   unzip -q -j rainloop-latest.zip "data/VERSION" -d $RL_INSTALL_DIR/ 
    version_source=$(cat $RL_INSTALL_DIR/VERSION);
    
    # Check version inside .zip file in case hestia didn't update yet

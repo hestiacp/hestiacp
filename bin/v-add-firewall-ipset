@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall ipset
-# options: NAME [SOURCE] [IPVERSION] [AUTOUPDATE] [FORCE]
+# options: NAME [SOURCE] [IPVERSION] [AUTOUPDATE] [REFRESH]
 #
 # example: v-add-firewall-ipset country-nl 'http://ipverse.net/ipblocks/data/countries/nl.zone'
 #
@@ -14,7 +14,7 @@ ip_name=${1}
 data_source=${2}
 ip_version=${3:-v4}
 autoupdate=${4:-yes}
-force=${5:-no}
+refresh=${5:-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -30,8 +30,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 check_args '1' "$#" 'NAME [SOURCE] [IPVERSION] [AUTOUPDATE] [FORCE]'
 is_format_valid 'ip_name'
-is_boolean_format_valid "$autoupdate" 'bool (yes/no)'
-is_boolean_format_valid "$force" 'bool (yes/no)'
+is_boolean_format_valid "$autoupdate" 'Automatically update IP list (yes/no)'
+is_boolean_format_valid "$refresh" 'Refresh IP list (yes/no)'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -39,16 +39,20 @@ check_hestia_demo_mode
 
 # Define variables for ipset configuration
 ipset_hstobject='../../data/firewall/ipset'
-IPSET_BIN="$(which ipset)"
+IPSET_BIN="$(command -v ipset)"
 IPSET_PATH="$HESTIA/data/firewall/ipset"
 
 # Ensure ipset is installed
 if [ -z "$IPSET_BIN" ]; then
-    apt-get --quiet --yes install ipset > /dev/null
-    check_result $? "Installing ipset package"
+	if [ -f '/etc/redhat-release' ]; then
+		dnf install -q -y ipset > /dev/null
+	else
+		apt-get --quiet --yes install ipset > /dev/null
+	fi
+	check_result $? "Installing IPset package"
 
-    IPSET_BIN="$(which ipset)"
-    check_result $? "ipset binary not found"
+	IPSET_BIN="$(which ipset)"
+	check_result $? "IPset binary not found"
 fi
 
 # Ensure ipset configuration path and master file exist before attempting to parse
@@ -83,8 +87,8 @@ IPSET_MIN_SIZE=10
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Generate ip lists file if missing or when forced
-if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
+# Generate ip lists file if missing or required refresh
+if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$refresh" = "yes" ]; then
 
     iplist_tempfile=$(mktemp)
 
@@ -103,10 +107,9 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
 
     elif [[ "$data_source" =~ ^script:/ ]]; then
 
-        # Generate the ip list file trough a external script
-        # ex: compiling a ip list from multiple sources on demand
-
-        if [ -x "${data_source#script:}" ]; then
+		# Generate the ip list file trough a external script
+		# ex: compiling a ip list from multiple sources on demand
+		if [ -x "${data_source#script:}" ]; then
 
             setpriv --clear-groups --reuid nobody --regid nogroup -- ${data_source#script:} "$ip_name" > "$iplist_tempfile"
             check_result $? "Running custom ip list update script"
@@ -115,10 +118,9 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
 
     elif [[ "$data_source" =~ ^file:/ ]]; then
 
-        # Use a external ip-list file managed by other apps
-        # ex: Using a ip list that is continously updated
-
-        [ -f "${data_source#file:}" ] && cp -f "${data_source#file:}" "$iplist_tempfile"
+		# Use a external ip-list file managed by other apps
+		# ex: Using a ip list that is continously updated
+		[ -f "${data_source#file:}" ] && cp -f "${data_source#file:}" "$iplist_tempfile"
 
     fi
 
@@ -130,10 +132,10 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$force" = "yes" ]; then
         sed -i -r -n -e '/^([0-9a-fA-F]{0,4}:){1,7}[0-9a-fA-F]{0,4}/p' "$iplist_tempfile"
     fi
 
-    # Validate iplist file size
-    iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
-    [[ "$iplist_size" -le "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "iplist file too small (<${IPSET_MIN_SIZE}), ignoring"
-    mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
+	# Validate iplist file size
+	iplist_size=$(sed -r -e '/^#|^$/d' "$iplist_tempfile" | wc -l)
+	[[ "$iplist_size" -le "$IPSET_MIN_SIZE" ]] && check_result "$E_INVALID" "IP list file too small (<${IPSET_MIN_SIZE}), ignoring"
+	mv -f "$iplist_tempfile" "${IPSET_PATH}/${IPSET_FILE}.iplist"
 
 fi
 
@@ -160,17 +162,19 @@ date=$(echo "$time_n_date" |cut -f 2 -d \ )
 
 if [ ! -f "${IPSET_PATH}.conf" ] || [ -z "$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$LISTNAME')" ]; then
 
-    # Concatenating rule
-    str="LISTNAME='$ip_name' IP_VERSION='$ip_version' SOURCE='$data_source'"
-    str="$str AUTOUPDATE='$autoupdate' SUSPENDED='no'"
-    str="$str TIME='$time' DATE='$date'"
-    echo "$str" >> $HESTIA/data/firewall/ipset.conf
+	# Concatenating rule
+	str="LISTNAME='$ip_name' IP_VERSION='$ip_version' SOURCE='$data_source'"
+	str="$str AUTOUPDATE='$autoupdate' SUSPENDED='no'"
+	str="$str TIME='$time' DATE='$date'"
+	echo "$str" >> $HESTIA/data/firewall/ipset.conf
+	log_type="added"
 
-elif [ "$force" = "yes" ]; then
+elif [ "$refresh" = "yes" ]; then
 
-    # update iplist last regen time
-    update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$TIME' "$time"
-    update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$DATE' "$date"
+	# Update iplist last regen time
+	update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$TIME' "$time"
+	update_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$DATE' "$date"
+	log_type="refreshed"
 
 fi
 
@@ -189,7 +193,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Firewall" "Added new IP list (Name: $ip_name, IP version: $ip_version, Autoupdate: $autoupdate)."
+$BIN/v-log-action "system" "Info" "Firewall" "IPset IP list ${log_type:-loaded} (Name: $ip_name, IP version: $ip_version, Autoupdate: $autoupdate)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

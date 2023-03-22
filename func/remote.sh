@@ -128,6 +128,11 @@ remote_dns_health_check() {
 
     # Starting health-check
     for str in $(grep "SUSPENDED='no'" $HESTIA/conf/dns-cluster.conf); do
+        
+        # Reset user, password and hash vars
+        clear_dns_cluster_settings
+        
+        # Parsing host values
         parse_object_kv_list "$str"
 
         # Checking host connection
@@ -177,4 +182,10 @@ cluster_file() {
         ssh)    send_scp_file $* ;;
         api)    send_api_file $* ;;
     esac
+}
+
+clear_dns_cluster_settings (){
+    unset USER
+    unset PASSWORD
+    unset HASH
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list db status
-# options: [FORMAT]
+# options: 
 #
 # v-list-sys-db-status
 #

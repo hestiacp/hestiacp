@@ -24,42 +24,46 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-ipset_hstobject='../../data/firewall/ipset'
-
 check_args '1' "$#" 'NAME'
 is_format_valid 'ip_name'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
+
+# Define variables for ipset configuration
+ipset_hstobject='../../data/firewall/ipset'
 is_object_valid "$ipset_hstobject" 'LISTNAME' "$ip_name"
-
 ip_version="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$IP_VERSION')"
-
-IPSET_BIN="$(which ipset)"
-IPSET_PATH="$HESTIA/data/firewall/ipset"
-IPSET_FILE="${ip_name}.${ip_version}"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+IPSET_BIN="$(command -v ipset)"
+IPSET_PATH="$HESTIA/data/firewall/ipset"
+IPSET_FILE="${ip_name}.${ip_version}"
+
 # Install ipset package if missing
 if [ -z "$IPSET_BIN" ]; then
-    apt-get --quiet --yes install ipset > /dev/null
-    check_result $? "Installing ipset package"
+	if [ -f '/etc/redhat-release' ]; then
+		dnf install -q -y ipset > /dev/null
+	else
+		apt-get --quiet --yes install ipset > /dev/null
+	fi
+	check_result $? "Installing IPset package"
 
-    IPSET_BIN="$(which ipset)"
-    check_result $? "ipset binary not found"
+	IPSET_BIN="$(which ipset)"
+	check_result $? "IPset binary not found"
 fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-if $IPSET_BIN --quiet list "${ip_name}-tmp" >/dev/null; then
-    $IPSET_BIN --quiet destroy "${ip_name}-tmp"
+if $IPSET_BIN -quiet list "${ip_name}-tmp" > /dev/null; then
+	$IPSET_BIN -quiet destroy "${ip_name}-tmp"
 fi
 
-if $IPSET_BIN --quiet list "${ip_name}" >/dev/null; then
-    $IPSET_BIN --quiet destroy "${ip_name}"
-    check_result $? "ipset ${ip_name} still used by iptables. Cannot remove"
+if $IPSET_BIN -quiet list "${ip_name}" > /dev/null; then
+	$IPSET_BIN -quiet destroy "${ip_name}"
+	check_result $? "ipset ${ip_name} still used by iptables. Cannot remove"
 fi
 
 sed -i "/LISTNAME='$ip_name'/d" "${IPSET_PATH}.conf"
@@ -70,7 +74,7 @@ rm -f "${IPSET_PATH}/${IPSET_FILE}.iplist"
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Firewall" "Deleted IP list (Name: $ip_name)."
+$BIN/v-log-action "system" "Info" "Firewall" "IPset IP list deleted (Name: $ip_name)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

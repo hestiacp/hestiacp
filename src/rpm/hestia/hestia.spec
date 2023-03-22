@@ -1,12 +1,12 @@
 Name:           hestia
 Version:        %HESTIA-VERSION%
-Release:        0
+Release:        1%{dist}
 Summary:        Hestia Control Panel
 Group:          System Environment/Base
 License:        GPLv3
 URL:            https://www.hestiacp.com
 Vendor:         hestiacp.com
-Requires:       redhat-release >= 7
+Requires:       redhat-release >= 8
 Requires:       bash
 Requires:       chkconfig
 Requires:       gawk
@@ -15,6 +15,7 @@ Requires:       acl
 Requires:       sysstat
 Requires:       (setpriv or util-linux)
 Requires:       zstd
+Requires:       jq
 Conflicts:      vesta
 Provides:       hestia = %{version}
 BuildRequires:  systemd-rpm-macros

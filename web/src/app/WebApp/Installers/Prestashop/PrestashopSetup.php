@@ -10,7 +10,7 @@ class PrestashopSetup extends BaseSetup
         'name' => 'Prestashop',
         'group' => 'ecommerce',
         'enabled' => true,
-        'version' => '1.7.8.6',
+        'version' => '1.7.8.7',
         'thumbnail' => 'prestashop-thumb.png'
     ];
 
@@ -26,7 +26,7 @@ class PrestashopSetup extends BaseSetup
             ],
         'database' => true,
         'resources' => [
-            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.8.6/prestashop_1.7.8.6.zip' ],
+            'archive'  => [ 'src' => 'https://github.com/PrestaShop/PrestaShop/releases/download/1.7.8.7/prestashop_1.7.8.7.zip' ],
         ],
         'server' => [
             'nginx' => [
@@ -61,7 +61,7 @@ class PrestashopSetup extends BaseSetup
         $php_version = $this -> appcontext -> getSupportedPHP($this -> config['server']['php']['supported']);
         
         $this->appcontext->runUser('v-run-cli-cmd', [
-            "/usr/bin/php$php_version",
+            "/usr/bin/php".$options['php_version'],
             $this->getDocRoot("/install/index_cli.php"),
             "--db_user=" . $this->appcontext->user() . '_' .$options['database_user'],
             "--db_password=" . $options['database_password'],

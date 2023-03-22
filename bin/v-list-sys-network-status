@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list system network status
-# options: [FORMAT]
+# options: 
 #
-# example: v-list-sys-network-status json
+# example: v-list-sys-network-status
 #
 # This function lists network status
 

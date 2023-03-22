@@ -286,7 +286,7 @@ if (!empty($_POST['ok_acc'])) {
     if ((!empty($v_send_email)) && (empty($_SESSION['error_msg']))) {
         $to = $v_send_email;
         $subject = _("Email Credentials");
-        $hostname = exec('hostname');
+        $hostname = get_hostname();
         $from = "noreply@".$hostname;
         $from_name = _('Hestia Control Panel');
         $mailtext = $v_credentials;

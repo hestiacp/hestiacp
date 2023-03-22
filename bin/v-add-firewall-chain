@@ -20,12 +20,6 @@ protocol=$(echo $protocol|tr '[:lower:]' '[:upper:]')
 # Defining absolute path to iptables
 iptables="/sbin/iptables"
 
-# Get hestia port by reading nginx.conf
-hestiaport=$(grep 'listen' $HESTIA/nginx/conf/nginx.conf | awk '{print $2}' | sed "s|;||")
-if [ -z "$hestiaport" ]; then
-    hestiaport=8083
-fi
-
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -35,6 +29,12 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/firewall.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+# Get hestia port by reading nginx.conf
+hestiaport=$(grep 'listen' $HESTIA/nginx/conf/nginx.conf | awk '{print $2}' | sed "s|;||")
+if [ -z "$hestiaport" ]; then
+    hestiaport=8083
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #

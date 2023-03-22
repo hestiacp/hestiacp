@@ -414,8 +414,10 @@ is_object_value_exist() {
 # Check if password is transmitted via file
 is_password_valid() {
     if [[ "$password" =~ ^/tmp/ ]]; then
-        if [ -f "$password" ]; then
-            password="$(head -n1 $password)"
+        if ! [[ "$password" == *../* ]]; then
+            if [ -f "$password" ]; then
+                password="$(head -n1 $password)"
+            fi
         fi
     fi
 }
@@ -423,8 +425,10 @@ is_password_valid() {
 # Check if hash is transmitted via file
 is_hash_valid() {
     if [[ "$hash" =~ ^/tmp/ ]]; then
-        if [ -f "$hash" ]; then
-            hash="$(head -n1 $hash)"
+        if ! [[ "$hash" == *../* ]]; then
+            if [ -f "$hash" ]; then
+                hash="$(head -n1 $hash)"
+            fi
         fi
     fi
 }
@@ -475,10 +479,12 @@ add_object_key() {
 search_objects() {
     OLD_IFS="$IFS"
     IFS=$'\n'
-    for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
-        parse_object_kv_list "$line"
-        eval echo \$$4
-    done
+    if [ -f $USER_DATA/$1.conf ]; then
+      for line in $(grep $2=\'$3\' $USER_DATA/$1.conf); do
+          parse_object_kv_list "$line"
+          eval echo \$$4
+      done
+    fi
     IFS="$OLD_IFS"
 }
 
@@ -854,6 +860,13 @@ is_boolean_format_valid() {
     fi
 }
 
+# Refresh IPset format validator
+is_refresh_ipset_format_valid() {
+	if [ "$1" != 'load' ] && [ "$1" != 'yes' ] && [ "$1" != 'no' ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
 # Common format validator
 is_common_format_valid() {
     exclude="[!|#|$|^|&|(|)|+|=|{|}|:|<|>|?|/|\|\"|'|;|%|\`| ]"
@@ -1064,7 +1077,7 @@ is_cron_format_valid() {
 
 # Name validator
 is_name_format_valid() {
-    if ! [[ "$1" =~ ^[[:alnum:]][-|\ |\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+    if ! [[ "$1" =~ ^[-|\ |\.|_[:alnum:]]{0,50}$ ]]; then
         check_result "$E_INVALID" "invalid $2 format :: $1"
     fi
 }
@@ -1186,8 +1199,8 @@ is_format_valid() {
                 proxy_ext)      is_extention_format_valid "$arg" ;;
                 quota)          is_int_format_valid "$arg" 'quota' ;;
                 rate)           is_int_format_valid "$arg" 'rate' ;;
-
                 record)         is_common_format_valid "$arg" 'record';;
+                reject)       is_boolean_format_valid "$arg" 'reject' ;;
                 restart)        is_restart_format_valid "$arg" 'restart' ;;
                 role)           is_role_valid "$arg" 'role' ;;
                 rtype)          is_dns_type_format_valid "$arg" ;;
@@ -1497,8 +1510,14 @@ multiphp_default_version() {
 }
 
 is_hestia_package(){
-    if [ -z "$(echo $1 | grep -w $2)" ]; then
-        check_result "$E_INVALID" "$2 package is not controlled by hestiacp"
+    check=false;
+    for pkg in $1; do 
+      if [ "$pkg" == "$2" ]; then 
+        check="true";
+      fi
+    done
+    if [ "$check" != "true" ]; then
+      check_result $E_INVALID "$2 package is not controlled by hestiacp"
     fi
 }
 

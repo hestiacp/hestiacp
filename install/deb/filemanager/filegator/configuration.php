@@ -6,11 +6,28 @@ $dist_config['public_path'] = '/fm/';
 $dist_config['frontend_config']['app_name'] = 'File Manager - Hestia Control Panel';
 $dist_config['frontend_config']['logo'] = '../images/logo.svg';
 $dist_config['frontend_config']['editable'] = ['.txt', '.css', '.js', '.ts', '.html', '.php', '.py',
-        '.yml', '.xml', '.md', '.log', '.csv', '.conf', '.config', '.ini', '.scss', '.sh', '.env', '.example', '.htaccess'];
+        '.yml', '.xml', '.md', '.log', '.csv', '.conf', '.config', '.ini', '.scss', '.sh', '.env', '.example', '.htaccess', '.twig'];
 $dist_config['frontend_config']['guest_redirection'] = '/login/' ;
 $dist_config['frontend_config']['upload_max_size'] = 1024 * 1024 * 1024;
 
 $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['adapter'] = function () {
+    if (!empty($_SESSION['INACTIVE_SESSION_TIMEOUT'])){
+    if ($_SESSION['INACTIVE_SESSION_TIMEOUT'] * 60 + $_SESSION['LAST_ACTIVITY'] < time()) {
+        $v_user = escapeshellarg($_SESSION['user']);
+        $v_session_id = escapeshellarg($_SESSION['token']);
+        exec('/usr/local/hestia/bin/v-log-user-logout ' . $v_user . ' ' . $v_session_id, $output, $return_var);
+        unset($_SESSION);
+        session_unset();
+        session_destroy();
+        session_start();
+        echo '<meta http-equiv="refresh" content="0; url=/">';
+        exit;
+    } else {
+        $_SESSION['LAST_ACTIVITY'] = time();
+    }
+    }else{
+        echo '<meta http-equiv="refresh" content="0; url=/">';
+    }
     if (isset($_SESSION['user'])) {
         $v_user = $_SESSION['user'];
     }
@@ -25,6 +42,9 @@ $dist_config['services']['Filegator\Services\Storage\Filesystem']['config']['ada
     # Create filemanager sftp key if missing and trash it after 30 min
     if (! file_exists('/home/'.basename($v_user).'/.ssh/hst-filemanager-key')) {
         exec("sudo /usr/local/hestia/bin/v-add-user-sftp-key " . escapeshellarg(basename($v_user)) . " 30", $output, $return_var);
+        // filemanager also requires .ssh chmod o+x ... hopefully we can improve it to g+x or u+x someday
+        // current minimum for filemanager: chmod 0701 .ssh
+        shell_exec("sudo chmod o+x " . escapeshellarg('/home/' . basename($v_user) . '/.ssh'));
     }
 
     if (!isset($_SESSION['SFTP_PORT'])) {
@@ -101,7 +121,7 @@ $dist_config['services']['Filegator\Services\View\ViewInterface']['config'] = [
             }
             observer = new MutationObserver(callback);
             observer.observe(div,config);
-        }    
+        }
     }, 200);
 </script>',
 ];

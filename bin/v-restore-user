@@ -754,9 +754,11 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
         # Importing database dump
         database_dump="$tmpdir/db/$database/$database.$TYPE.sql"
         case $TYPE in
-            mysql) rebuild_mysql_database;
+            mysql) delete_mysql_database
+                   rebuild_mysql_database;
                    import_mysql_database $database_dump ;;
-            pgsql) rebuild_pgsql_database;
+            pgsql) delete_pgsql_database
+                   rebuild_pgsql_database;
                    import_pgsql_database $database_dump ;;
         esac
     done

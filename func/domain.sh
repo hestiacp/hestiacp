@@ -622,7 +622,7 @@ is_dns_nameserver_valid() {
         remote=$(echo $r |grep ".$domain.$")
         if [ -n "$remote" ]; then
             zone=$USER_DATA/dns/$d.conf
-            a_record=$(echo $r |cut -f 1 -d '.')
+            a_record=${r%.$d.}
             n_record=$(grep "RECORD='$a_record'" $zone| grep "TYPE='A'")
             if [ -z "$n_record" ]; then
                 check_result "$E_NOTEXIST" "IN A $a_record.$d does not exist"
@@ -983,16 +983,16 @@ is_base_domain_owner(){
                     parse_object_kv_list "$web"
                     if [ -z "$ALLOW_USERS" ] ||  [ "$ALLOW_USERS" != "yes" ]; then
                         # Don't care if $basedomain all ready exists only if the owner is of the base domain is the current user
-                        is_domain_new "" $basedomain;
+                        check=$(is_domain_new "" $basedomain)
                         if [ $? -ne 0 ]; then
-                            echo "Error: $basedomain belongs to a different user";
+                            echo "Error: Unable to add $object. $basedomain belongs to a different user";
                             exit 4;
                         fi
                     fi
                 else
-                    is_domain_new "" "$basedomain"
+                    check=$(is_domain_new "" "$basedomain")
                     if [ $? -ne 0 ]; then
-                        echo "Error: $basedomain belongs to a different user";
+                        echo "Error: Unable to add $object. $basedomain belongs to a different user";
                         exit 4;
                     fi
                 fi

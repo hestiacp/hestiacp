@@ -165,7 +165,18 @@ fi
 $BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" >/dev/null
 
-$BIN/v-restart-web-backend "$restart"
+# Detect prev version
+if [[ $BACKEND =~ ^.*PHP-([0-9])\_([0-9])$ ]]; then
+    version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+else
+    version=$(multiphp_default_version)
+fi
+
+$BIN/v-restart-web-backend "$restart" "$version"
+if [ "$version" != "$backend_version" ]; then
+    $BIN/v-restart-web-backend "$restart" "$backend_version"
+fi
+
 check_result $? "Web backend restart failed" >/dev/null
 
 # Logging

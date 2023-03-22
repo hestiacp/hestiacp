@@ -16,9 +16,15 @@ class HestiaApp
 
     public function run(string $cmd, $args, &$cmd_result=null): bool
     {
-        $cli_script = HESTIA_CMD . '/' . basename($cmd);
+        $cli_script = realpath(HESTIA_DIR_BIN . $cmd);
+        if (!str_starts_with((string) $cli_script, HESTIA_DIR_BIN)) {
+            $errstr = "$cmd is trying to traverse outside of " . HESTIA_DIR_BIN;
+            trigger_error($errstr);
+            throw new \Exception($errstr);
+        }
+        $cli_script = '/usr/bin/sudo ' . escapeshellarg($cli_script);
+        
         $cli_arguments = '';
-
         if (!empty($args) && is_array($args)) {
             foreach ($args as $arg) {
                 $cli_arguments .= escapeshellarg((string)$arg) . ' ';
@@ -26,7 +32,7 @@ class HestiaApp
         } else {
             $cli_arguments = escapeshellarg($args);
         }
-
+        
         exec($cli_script . ' ' . $cli_arguments . ' 2>&1', $output, $exit_code);
 
         $result['code'] = $exit_code;
@@ -98,7 +104,7 @@ class HestiaApp
         $this->runUser('v-run-cli-cmd', ["composer", "selfupdate","--$version"]);
     }
 
-    public function runComposer($args, &$cmd_result=null, $version=1): bool
+    public function runComposer($args, &$cmd_result=null, $version=2): bool
     {
         $composer = $this->getUserHomeDir() . DIRECTORY_SEPARATOR . '.composer' . DIRECTORY_SEPARATOR . 'composer';
         if (!is_file($composer)) {
@@ -178,12 +184,29 @@ class HestiaApp
         fclose($fp);
         $status = $this->runUser('v-add-database', [$dbname, $dbuser, $v_password, 'mysql', 'localhost', $charset]);
         if(!$status){
-            $this->errors[] = _('Unable to add databse!');
+            $this->errors[] = _('Unable to add database!');
         }
         unlink($v_password);
         return $status;
     }
-
+    
+    public function getCurrentBackendTemplate(string $domain){
+        $status = $this->runUser('v-list-web-domain', [$domain, 'json'],$return_message);
+        $version = $return_message -> json[$domain]['BACKEND'];
+        if (!empty($version)){
+            if($version != "default"){
+                $test= preg_match('/^.*PHP-([0-9])\_([0-9])/',$version, $match);
+                return $match[1].'.'.$match[2];   
+            }else{
+                $supported = $this -> run('v-list-sys-php', 'json', $result);
+                return $this -> $supported -> json[0];
+            }
+        }else{
+            $supported = $this -> run('v-list-sys-php', 'json', $result);
+            return $this -> $supported -> json[0];  
+        }                
+    }
+    
     public function changeWebTemplate(string $domain, string $template)
     {
         $status = $this->runUser('v-change-web-domain-tpl', [$domain, $template]);
@@ -221,9 +244,9 @@ class HestiaApp
                 $supported_versions[] = $version;
             }
         }
-        if ($supported) {
-            return $supported_versions[count($supported_versions) - 1];
-        } else {
+        if($supported){
+            return $supported_versions;
+        }else{
             return false;
         }
     }

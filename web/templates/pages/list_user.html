@@ -108,9 +108,9 @@
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 userlist-username">
 					<?php if ($key == $user_plain) { ?>
-						<b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User');?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></b></a>
+						<b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('Editing User');?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
 					<?php } else { ?>
-						<b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></b></a>
+						<b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?=_('login as');?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
 					<?php } ?>
 					<br />
 					<div class="userlist-email"><b><?=_('Email');?>:</b> <?=$data[$key]['CONTACT']?></div>

@@ -31,11 +31,9 @@ HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.6.0'
+HESTIA_INSTALL_VER='1.6.14'
 # Dependencies
-pma_v='5.2.0'
-rc_v="1.6.0"
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.0"
 mariadb_v="10.6"
 
@@ -54,7 +52,7 @@ software="nginx apache2 apache2-utils apache2-suexec-custom
   dnsutils bsdmainutils cron hestia=${HESTIA_INSTALL_VER} hestia-nginx
   hestia-php expect libmail-dkim-perl unrar-free vim-common acl sysstat
   rsyslog openssh-server util-linux ipset libapache2-mpm-itk zstd
-  lsb-release"
+  lsb-release jq"
 
 
 installer_dependencies="apt-transport-https curl dirmngr gnupg wget ca-certificates"
@@ -135,7 +133,7 @@ set_default_lang() {
     if [ -z "$lang" ]; then
         eval lang=$1
     fi
-    lang_list="ar az bg bn bs cs da de el en es fa fi fr he hr hu hy id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
+    lang_list="ar az bg bn bs ckb cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
     if ! (echo $lang_list |grep -w $lang > /dev/null 2>&1); then
         eval lang=$1
     fi
@@ -171,6 +169,9 @@ sort_config_file(){
 
 # Validate hostname according to RFC1178
 validate_hostname () {
+    # remove extra .
+    servername=$(echo "$servername" |sed -e "s/[.]*$//g")
+    servername=$(echo "$servername" |sed -e "s/^[.]*//")
     if [[ $(echo "$servername" | grep -o "\." | wc -l) -gt 1 ]] && [[ ! $servername =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         # Hostname valid
         return 1
@@ -626,8 +627,10 @@ else
 fi
 
 # Generating admin password if it wasn't set
+displaypass="The password you chose during installation."
 if [ -z "$vpass" ]; then
-    vpass=$(gen_pass)
+    vpass=$(gen_pass);
+    displaypass=$vpass
 fi
 
 # Set FQDN if it wasn't set
@@ -1510,6 +1513,10 @@ fi
 #                    Configure phpMyAdmin                  #
 #----------------------------------------------------------#
 
+# Source upgrade.conf with phpmyadmin versions
+# shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
+source $HESTIA/install/upgrade/upgrade.conf
+
 if [ "$mysql" = 'yes' ]; then
     # Display upgrade information
     echo "[ * ] Installing phpMyAdmin version v$pma_v..."
@@ -1838,7 +1845,7 @@ if [ "$sieve" = 'yes' ]; then
         # Modify Roundcube config 
         mkdir -p $RC_CONFIG_DIR/plugins/managesieve
         cp -f $HESTIA_INSTALL_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
-        ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php\
+        ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
         chown -R root:www-data $RC_CONFIG_DIR/
         chmod 751 -R $RC_CONFIG_DIR
         chmod 644 $RC_CONFIG_DIR/*.php
@@ -1938,7 +1945,7 @@ fi
 
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain admin $servername
+$HESTIA/bin/v-add-web-domain admin $servername $ip
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
@@ -2059,7 +2066,7 @@ Ready to get started? Log in using the following credentials:
 
     Admin URL:  https://$ip:$port
     Username:   admin
-    Password:   $vpass
+    Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,
 we hope that you enjoy using it as much as we do!

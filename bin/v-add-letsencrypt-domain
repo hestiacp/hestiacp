@@ -187,7 +187,10 @@ if [ "$proto" = "http-01" ]; then
             identifier=$(idn2 --quiet $identifier)
         fi
         if ! nslookup "${identifier}" > /dev/null 2>&1 ; then
-            check_result "$E_NOTEXIST" "DNS record for $identifier doesn't exist"
+            # Attempt against Cloudflare DNS
+            if ! nslookup "${identifier}" 1.1.1.1 > /dev/null 2>&1 ; then
+                check_result "$E_NOTEXIST" "DNS record for $identifier doesn't exist"
+            fi
         fi
     done
 fi
@@ -230,7 +233,7 @@ url="$LE_API/acme/new-order"
 payload='{"identifiers":['
 for identifier in $(echo $domain,$aliases |tr ',' '\n' |sort -u); do
     if [[ "$identifier" = *[![:ascii:]]* ]]; then
-        identifier=$(idn -t --quiet -a $identifier)
+        identifier=$(idn2 --quiet $identifier)
     fi
     payload=$payload'{"type":"dns","value":"'$identifier'"},'
 done
@@ -383,7 +386,7 @@ for auth in $authz; do
         status=$(echo "$answer"|grep HTTP/ |tail -n1 |cut -f 2 -d ' ')
         details=$(echo "$answer"| grep detail | cut -f 1 -d ',' | cut -f 2-4 -d ':' | cut -f 2 -d '"')
 
-        debug_log "Step 5" "- status: ${status}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
+        debug_log "Step 5" "- status: ${status}\n- url: ${url}\n- nonce: ${nonce}\n- validation: ${validation}\n- details: ${details}\n- answer: ${answer}"
 
         if [[ "$status" -ne 200 ]]; then
             # Delete DNS CAA record
@@ -397,8 +400,14 @@ for auth in $authz; do
                     fi
                 fi
             fi
-            debug_log "Abort Step 5" "=> Wrong status"
-            check_result "$E_CONNECT" "Let's Encrypt validation status $status ($domain). Details: $details"
+            # Download debug info from LE server
+            result=$(wget -qO- $url)
+            debug_log "Debug information Step 5"  "$result"
+            details=$(echo $result | jq '.error.detail' )
+            error_code=$(echo $result | jq '.error.status' )            
+            
+            debug_log "Abort Step 5" "=> Wrong status" 
+            check_result "$E_CONNECT" "Let's Encrypt validation status $status ($domain). Details: $error_code:$details"
         fi
 
         i=$((i + 1))
@@ -517,10 +526,10 @@ fi
 
 # Adding SSL
 if [ -z "$mail" ]; then
-    ssl_home=$(search_objects 'web' 'LETSENCRYPT' 'yes' 'SSL_HOME')
+    ssl_home="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL_HOME')"
     ssl_enabled="$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')"
     if [ "$ssl_enabled" = "yes" ]; then 
-        $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-update-web-domain-ssl "$user" "$domain" "$ssl_dir" "updatessl" 
     else
         $BIN/v-add-web-domain-ssl "$user" "$domain" "$ssl_dir" "$ssl_home" "updatessl" 
     fi
@@ -528,9 +537,9 @@ if [ -z "$mail" ]; then
  # TODO replace with v-update-mail-domain-ssl if ssl is enabled
     ssl_enabled="$(get_object_value 'mail' 'DOMAIN' "$root_domain" '$SSL')"
     if [ "$ssl_enabled" = "yes" ]; then 
-        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-update-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl" 
     else
-        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "$ssl_home" "updatessl" 
+        $BIN/v-add-mail-domain-ssl "$user" "$root_domain" "$ssl_dir" "updatessl" 
     fi
 fi
 

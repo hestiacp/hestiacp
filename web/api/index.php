@@ -1,5 +1,16 @@
 <?php
+
+try {
+    require_once '../inc/vendor/autoload.php';
+} catch (Throwable $ex) {
+    $errstr = 'Unable able to load required libraries. Please run v-add-sys-phpmailer in command line. Error: ' . $ex->getMessage();
+    trigger_error($errstr);
+    echo $errstr;
+    exit(1);
+}
+
 //die("Error: Disabled");
+define('HESTIA_DIR_BIN', '/usr/local/hestia/bin/');
 define('HESTIA_CMD', '/usr/bin/sudo /usr/local/hestia/bin/');
 
 include($_SERVER['DOCUMENT_ROOT']."/inc/helpers.php");
@@ -69,7 +80,7 @@ function api_legacy(array $request_data) {
             exit;
         }
         $v_ip = escapeshellarg(get_real_user_ip());
-        $output = '';
+        unset($output);
         exec(HESTIA_CMD."v-get-user-salt admin ".$v_ip." json", $output, $return_var);
         $pam = json_decode(implode('', $output), true);
         $salt = $pam['admin']['SALT'];
@@ -81,6 +92,16 @@ function api_legacy(array $request_data) {
         if ($method == 'sha-512') {
             $hash = crypt($password, '$6$rounds=5000$'.$salt.'$');
             $hash = str_replace('$rounds=5000', '', $hash);
+        }
+        if ($method == 'yescrypt') {
+            $fp = tmpfile();
+            $v_password = stream_get_meta_data($fp)['uri'];
+            fwrite($fp, $password."\n");
+            unset($output);
+            exec(HESTIA_CMD . 'v-check-user-password "admin" '. escapeshellarg($v_password). ' '.$v_ip.' yes', $output, $return_var);
+            $hash = $output[0];
+            fclose($fp);
+            unset($output, $fp, $v_password);
         }
         if ($method == 'des') {
             $hash = crypt($password, $salt);

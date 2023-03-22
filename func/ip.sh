@@ -99,8 +99,10 @@ update_ip_value_new() {
 
 # Get ip name
 get_ip_alias() {
-	if [ -n "$local_ip"]; then
-		ip_name=$(grep "NAME=" $HESTIA/data/ips/$local_ip | cut -f 2 -d \')
+	# ip address (ipv4/ipv6) as second parameter, otherwise $local_ip (ipv4)
+	ip_for_test="${2-$local_ip}"
+	if [ -n "$ip_for_test"]; then
+		ip_name=$(grep "NAME=" $HESTIA/data/ips/${ip_for_test} | cut -f 2 -d \')
 		if [ -n "$ip_name" ]; then
 			echo "${1//./-}.$ip_name"
 		fi
@@ -122,7 +124,11 @@ increase_ip_value() {
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
-	new_web=$((current_web + 1))
+	if (( $current_web <= 0 )); then
+		new_web=1
+	else
+		new_web=$((current_web + 1))
+	fi
 	if [ -z "$current_usr" ]; then
 		new_usr="$USER"
 	else
@@ -160,7 +166,11 @@ decrease_ip_value() {
 		check_result $E_PARSING "Parsing error"
 	fi
 
-	new_web=$((current_web - 1))
+	if (( $current_web <= 0 )); then
+		new_web=0
+	else
+		new_web=$((current_web - 1))
+	fi
 	check_ip=$(grep $sip $USER_DATA/web.conf | wc -l)
 	if [[ $check_ip = 0 ]]; then
 		new_usr=$(echo "$current_usr" \
@@ -313,104 +323,6 @@ get_ipv6_iface() {
         n=$((i + 1))
     fi
     echo "$interface:$n"
-}
-
-# Get ipv6 name
-get_ipv6_alias() {
-	if [ -n "$local_ipv6" ]; then
-		ipv6_name=$(grep "NAME=" $HESTIA/data/ips/$local_ipv6 2> /dev/null |cut -f 2 -d \')
-		if [ -n "$ipv6_name" ]; then
-			echo "${1//./-}.$ipv6_name"
-		fi
-	else
-		ipv6_name=""
-	fi
-}
-
-# Increase ipv6 value
-increase_ipv6_value() {
-    sip=${1-ipv6}
-    if [ "$sip" != "no" ] && [ ! -z "$sip" ]; then
-        USER=$user
-        web_key='U_WEB_DOMAINS'
-        usr_key='U_SYS_USERS'
-        current_web=$(grep "$web_key=" $HESTIA/data/ips/$sip |cut -f 2 -d \')
-        current_usr=$(grep "$usr_key=" $HESTIA/data/ips/$sip |cut -f 2 -d \')
-        if [ -z "$current_web" ]; then
-            echo "Error: Parsing error"
-            log_event "$E_PARSING" "$ARGUMENTS"
-            exit $E_PARSING
-        fi
-        new_web=$((current_web + 1))
-        if [ -z "$current_usr" ]; then
-            new_usr="$USER"
-        else
-            check_usr=$(echo -e "${current_usr//,/\n}" |grep -w $USER)
-            if [ -z "$check_usr" ]; then
-                new_usr="$current_usr,$USER"
-            else
-                new_usr="$current_usr"
-            fi
-        fi
-
-        sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
-            $HESTIA/data/ips/$sip
-        sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" \
-            $HESTIA/data/ips/$sip
-    fi
-}
-
-# Decrease ipv6 value
-decrease_ipv6_value() {
-    sip=${1-ipv6}
-    if [ "$sip" != "no" ] && [ ! -z "$sip" ]; then
-        USER=$user
-        web_key='U_WEB_DOMAINS'
-        usr_key='U_SYS_USERS'
-
-        current_web=$(grep "$web_key=" $HESTIA/data/ips/$sip |cut -f 2 -d \')
-        current_usr=$(grep "$usr_key=" $HESTIA/data/ips/$sip |cut -f 2 -d \')
-
-        if [ -z "$current_web" ]; then
-            check_result $E_PARSING "Parsing error"
-        fi
-
-        new_web=$((current_web - 1))
-        check_ip=$(grep $sip $USER_DATA/web.conf |wc -l)
-        if [ "$check_ip" -lt 2 ]; then
-            new_usr=$(echo "$current_usr" |\
-                sed "s/,/\n/g"|\
-                sed "s/^$user$//g"|\
-                sed "/^$/d"|\
-                sed ':a;N;$!ba;s/\n/,/g')
-        else
-            new_usr="$current_usr"
-        fi
-
-        sed -i "s/$web_key='$current_web'/$web_key='$new_web'/g" \
-            $HESTIA/data/ips/$sip
-        sed -i "s/$usr_key='$current_usr'/$usr_key='$new_usr'/g" \
-            $HESTIA/data/ips/$sip
-    fi
-}
-
-# Get ipv6 address value
-get_ipv6_value() {
-    key="$1"
-    string=$(cat $HESTIA/data/ips/$ipv6)
-    eval $string
-    eval value="$key"
-    echo "$value"
-}
-
-
-# Get real ipv6 address
-get_real_ipv6() {
-    if [ -e "$HESTIA/data/ips/$1" ]; then
-        echo $1
-    else
-        check_result $E_NOTEXIST "IPV6 $1 doesn't exist"
-    fi
 }
 
 # Get user ip6s

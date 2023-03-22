@@ -86,7 +86,7 @@ source_conf "$USER_DATA/user.conf"
 domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
 domain_ipv6=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP6')
 if [ -n "$domain_ipv6" ]; then
-	local_ipv6=$(get_real_ipv6 "$domain_ipv6")
+	local_ipv6=$(get_real_ip "$domain_ipv6")
 	is_ipv6_valid "$local_ipv6" "$user"
 fi
 if [ -n "$domain_ip" ]; then

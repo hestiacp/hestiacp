@@ -96,8 +96,8 @@ fi
 update_object_value 'web' 'DOMAIN' "$domain" '$IP6' "$3"
 
 # Update counters
-[ -n "$new" ] && increase_ipv6_value "$new"
-[ -n "$old" ] && decrease_ipv6_value "$old"
+[ -n "$new" ] && increase_ip_value "$new"
+[ -n "$old" ] && decrease_ip_value "$old"
 
 # Restart web server
 $BIN/v-restart-web "$restart"

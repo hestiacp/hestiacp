@@ -257,7 +257,11 @@
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
-							<button x-on:click="showCertificates = !showCertificates" type="button" class="form-link">
+							<button
+								type="button"
+								class="form-link"
+								x-on:click="showCertificates = !showCertificates"
+								x-text="showCertificates ? '<?= _("Hide Certificate") ?>' : '<?= _("Show Certificate") ?>'">
 								<?= _("Show Certificate") ?>
 							</button>
 						</p>

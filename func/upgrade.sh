@@ -558,12 +558,12 @@ upgrade_cloudflare_ip() {
 	echo "" >> $CLOUDFLARE_FILE_PATH
 
 	echo "# - IPv4" >> $CLOUDFLARE_FILE_PATH
-	for i in $(curl -s -L https://www.cloudflare.com/ips-v4); do
+	for i in $(curl -s -L "https://api.cloudflare.com/client/v4/ips" | jq -r '.result.ipv4_cidrs[]'); do
 		echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
 	done
 	echo "" >> $CLOUDFLARE_FILE_PATH
 	echo "# - IPv6" >> $CLOUDFLARE_FILE_PATH
-	for i in $(curl -s -L https://www.cloudflare.com/ips-v6); do
+	for i in $(curl -s -L "https://api.cloudflare.com/client/v4/ips" | jq -r '.result.ipv6_cidrs[]'); do
 		echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
 	done
 

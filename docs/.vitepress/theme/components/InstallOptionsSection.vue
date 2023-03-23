@@ -11,7 +11,7 @@
 <style scoped>
 .InstallForm {
 	margin: 0.55em 0;
-	padding-left: 1em;
+	padding: 0 1em;
 	list-style: disc;
 	line-height: 1.5;
 }

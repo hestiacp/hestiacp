@@ -68,8 +68,8 @@ export default {
 				</select>
 			</div>
 		</div>
-		<div class="form-group">
-			<input value="Submit" @click="generateString" />
+		<div>
+			<input value="Submit" @click="generateString" class="form-submit" />
 		</div>
 		<div v-if="installstr">
 			<div class="form-group-info">
@@ -89,16 +89,29 @@ export default {
 <style scoped>
 .template {
 	max-width: 1152px;
+	display: grid;
+	grid-gap: 20px;
 	margin: 0px auto;
 }
+@media (min-width: 640px) {
+	.template {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (min-width: 960px) {
+	.template {
+		grid-template-columns: 1fr 1fr 1fr;
+	}
+}
+
 .form-group {
-	margin: 1em;
-	padding: 5px;
 	border-radius: 10px;
-	pading: 5px;
-	width: 15em;
-	float: left;
+	padding: 10px;
 	background-color: var(--vp-c-bg-soft);
+}
+.form-group p {
+	margin: 0em 0em 1em 0em;
 }
 .form-group-info {
 	clear: both;
@@ -111,11 +124,14 @@ export default {
 	border: 1px solid;
 	padding: 2px;
 }
+.form-submit {
+	cursor: pointer;
+	text-align: center;
+	font-weight: bold;
+	font-size: 25px;
+}
 textarea {
 	width: 100%;
 	font-size: 1em;
-}
-.form-group p {
-	margin: 0em 0em 1em 0em;
 }
 </style>

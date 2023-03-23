@@ -350,11 +350,11 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 			if [[ "$file" == *.ca ]] || [[ "$file" == *.crt ]] || [[ "$file" == *.key ]] || [[ "$file" == *.pem ]] || [[ "$file" == *.conf ]]; then
 				continue
 			fi
-			if grep "fastcgi_pass" file; then
+			if grep "fastcgi_pass" "$file"; then
 				# Do not allow to run php under a different user
 				continue
 			fi
-			filename=$(basename $file)
+			filename=$(basename "$file")
 			cp -f "$file" "$HOMEDIR/$user/conf/web/$domain/$filename"
 		done
 

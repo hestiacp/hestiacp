@@ -16,7 +16,6 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 exec(HESTIA_CMD . "v-delete-user-log " . $user, $output, $return_var);
 check_return_code($return_var, $output);
 unset($output);
-unset($token);
 
 if ($return_var > 0) {
 	header("Location: /list/log/");

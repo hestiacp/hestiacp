@@ -74,11 +74,11 @@
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="rule[]" value="<?=$key?>">
+						<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="rule[]" value="<?= $key ?>">
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-1">
 						<b>
-							<a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Firewall Rule") ?>">
+							<a href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Editing Firewall Rule") ?>">
 								<?php
 									$suspended = $data[$key]["SUSPENDED"] == "no";
 									$action = $data[$key]["ACTION"];
@@ -129,7 +129,7 @@
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext('%d firewall rule', '%d firewall rules', $i),$i); ?>
+			<?php printf(ngettext("%d firewall rule", "%d firewall rules", $i), $i); ?>
 		</p>
 	</div>
 </footer>

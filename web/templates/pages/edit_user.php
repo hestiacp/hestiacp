@@ -77,19 +77,19 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_user" class="form-label"><?= _("Username") ?></label>
-				<input type="text" class="form-control" name="v_user" id="v_user" value="<?= htmlentities(trim($v_username, "'")) ?>" disabled>
+				<input type="text" class="form-control" name="v_user" id="v_user" value="<?= htmlentities(trim($v_username, "'")) ?>" disabled required>
 				<input type="hidden" name="v_username" value="<?= htmlentities(trim($v_username, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_name" class="form-label"><?= _("Contact") ?></label>
-				<input type="text" class="form-control" name="v_name" id="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> >
+				<input type="text" class="form-control" name="v_name" id="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
 				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 					<input type="hidden" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
 				<?php } ?>
 			</div>
 			<div class="u-mb10">
 				<label for="v_email" class="form-label"><?= _("Email") ?></label>
-				<input type="email" class="form-control" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?>>
+				<input type="email" class="form-control" name="v_email" id="v_email" value="<?=htmlentities(trim($v_email, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
 				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 					<input type="hidden" name="v_email" value="<?=htmlentities(trim($v_email, "'"))?>">
 				<?php } ?>
@@ -150,7 +150,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_language" class="form-label"><?= _("Language") ?></label>
-				<select class="form-select" name="v_language" id="v_language">
+				<select class="form-select" name="v_language" id="v_language" required>
 					<?php
 						foreach ($languages as $key => $value) {
 							echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".$key."\"";
@@ -166,20 +166,16 @@
 					?>
 				</select>
 			</div>
-			<?php if ($v_username == "admin") { ?>
-				<!-- Hide option to change 'admin' user's role-->
-			<?php } else { ?>
-				<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] != $v_username) { ?>
-					<div class="u-mb10">
-						<label for="v_role" class="form-label"><?= _("Role") ?></label>
-						<select class="form-select" name="v_role" id="v_role">
-							<option value="user"><?= _("User") ?>
-							<option value="admin" <?php if($v_role == "admin" ){ echo "selected"; } ?>><?= _("Administrator") ?>
-							<option value="dns-cluster" <?php if($v_role == "dns-cluster" ){ echo "selected"; } ?>><?= _("DNS Sync user") ?>
-						</select>
-					</div>
-				<?php } ?>
-			<?php } ?>
+			<?php if ($v_username != "admin" && $_SESSION["userContext"] === "admin" && $_SESSION["user"] != $v_username): ?>
+				<div class="u-mb10">
+					<label for="v_role" class="form-label"><?= _("Role") ?></label>
+					<select class="form-select" name="v_role" id="v_role" required>
+						<option value="user"><?= _("User") ?></option>
+						<option value="admin" <?= $v_role == "admin" ? "selected" : "" ?>><?= _("Administrator") ?></option>
+						<option value="dns-cluster" <?= $v_role == "dns-cluster" ? "selected" : "" ?>><?= _("DNS Sync user") ?></option>
+					</select>
+				</div>
+			<?php endif; ?>
 			<?php if ($_SESSION["POLICY_USER_CHANGE_THEME"] !== "no") { ?>
 			<div class="u-mb10">
 				<label for="v_user_theme" class="form-label"><?= _("Theme") ?></label>
@@ -209,7 +205,7 @@
 			<?php if ($_SESSION['userContext'] === 'admin') {?>
 				<div class="u-mb20">
 					<label for="v_package" class="form-label"><?= _("Package") ?></label>
-					<select class="form-select" name="v_package" id="v_package">
+					<select class="form-select" name="v_package" id="v_package" required>
 						<?php
 							foreach ($packages as $key => $value) {
 								echo "\n\t\t\t\t\t\t\t\t\t<option value=\"".htmlentities($key)."\"";

@@ -22,7 +22,7 @@ With the release of 1.6.0, we have implemented a new API authentication system. 
 If you still want to use the legacy API to authenticate with **admin** username and the password make sure **Enable legacy API** access is set to **yes**.
 :::
 
-### DNS Cluster with the Hestia API (Master <-> Master)
+### DNS Cluster with the Hestia API (Master <-> Master) "Default setup!"
 
 ::: warning
 This method does not support DNSSEC!

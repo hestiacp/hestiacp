@@ -524,7 +524,7 @@ rclone_backup() {
 		fi
 
 		# Only include *.tar files
-		backup_list=$(rclone lsf $HOST | cut -d' ' -f1 | grep "^$user\." | grep ".tar")
+		backup_list=$(rclone lsf $HOST: | cut -d' ' -f1 | grep "^$user\." | grep ".tar")
 		backups_count=$(echo "$backup_list" | wc -l)
 		backups_rm_number=$((backups_count - BACKUPS))
 		if [ "$backups_count" -ge "$BACKUPS" ]; then
@@ -540,7 +540,7 @@ rclone_backup() {
 		fi
 
 		# Only include *.tar files
-		backup_list=$(rclone lsf $HOST | cut -d' ' -f1 | grep "^$user\." | grep ".tar")
+		backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 | grep "^$user\." | grep ".tar")
 		backups_count=$(echo "$backup_list" | wc -l)
 		backups_rm_number=$(($backups_count - $BACKUPS))
 		if [ "$backups_count" -ge "$BACKUPS" ]; then

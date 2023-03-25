@@ -53,12 +53,12 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					<li entity="sort-server"><span class="name"><?= _("Host") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-user"><span class="name"><?= _("Username") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<?php if ($read_only !== 'true') {?>
+				<?php if ($read_only !== "true") { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/db/" method="post">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>
-							<?php if ($_SESSION['userContext'] === 'admin') {?>
+							<?php if ($_SESSION["userContext"] === "admin") { ?>
 								<option value="rebuild"><?= _("rebuild") ?></option>
 								<option value="suspend"><?= _("suspend") ?></option>
 								<option value="unsuspend"><?= _("unsuspend") ?></option>
@@ -89,7 +89,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-right compact-3"><b>&nbsp;</b></div>
@@ -131,20 +131,20 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="database[]" value="<?=$key?>" <?=$display_mode;?>>
+						<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="database[]" value="<?= $key ?>" <?= $display_mode ?>>
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-3 truncate">
-						<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
-							<b><?=$key?></b>
+						<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+							<b><?= $key ?></b>
 						<?php } else { ?>
-							<b><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Database") ?>: <?=$key?>"><?=$key?></a></b>
+							<b><a href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Editing Database") ?>: <?= $key ?>"><?= $key ?></a></b>
 						<?php } ?>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
 					<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix">
-								<?php if ($read_only === 'true') {?>
+								<?php if ($read_only === "true") { ?>
 									<!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' user -->
 									&nbsp;
 								<?php } else { ?>
@@ -164,11 +164,11 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 										</a>
 									</div>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-										<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
+										<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
 											<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-											<input type="hidden" name="delete_url" value="/delete/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>">
-											<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-												<p><?=sprintf(_('DELETE_DATABASE_CONFIRMATION'),$key)?></p>
+											<input type="hidden" name="delete_url" value="/delete/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
+											<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
+												<p><?= sprintf(_("DELETE_DATABASE_CONFIRMATION"), $key) ?></p>
 											</div>
 										</a>
 									</div>

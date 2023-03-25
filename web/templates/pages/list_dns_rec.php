@@ -3,9 +3,9 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a class="button button-secondary" id="btn-back" href="/list/dns/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<?php if ($read_only !== 'true') {?>
-				<a href="/add/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i> <?= _("Add Record") ?></a>
-				<a href="/edit/dns/?domain=<?=htmlentities($_GET['domain'])?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil icon-blue"></i> <?= _("Editing DNS Domain") ?></a>
+			<?php if ($read_only !== "true") { ?>
+				<a href="/add/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i> <?= _("Add Record") ?></a>
+				<a href="/edit/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil icon-blue"></i> <?= _("Editing DNS Domain") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -24,10 +24,10 @@
 					<li entity="sort-ttl" sort_as_int="1"><span class="name"><?= _("TTL") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-type"><span class="name"><?= _("Type") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<?php if ($read_only !== 'true') {?>
+				<?php if ($read_only !== "true") { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/dns/" method="post">
-						<input type="hidden" name="domain" value="<?=htmlentities($_GET['domain'])?>">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+						<input type="hidden" name="domain" value="<?= htmlentities($_GET["domain"]) ?>">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>
 							<option value="suspend"><?= _("suspend") ?></option>
@@ -58,7 +58,7 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("Record") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left super-compact u-text-right"><b>&nbsp;</b></div>
@@ -90,7 +90,7 @@
 			v_unit_id="<?=htmlentities($key);?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-record="<?=$data[$key]['RECORD']?>" sort-type="<?=$data[$key]['TYPE']?>" sort-ttl="<?=$data[$key]['TTL']?>" sort-value="<?=$data[$key]['VALUE']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$data[$key]['ID']?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="record[]" value="<?=$data[$key]['ID']?>" <?=$display_mode;?>>
+					<input id="check<?= $data[$key]["ID"] ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="record[]" value="<?= $data[$key]["ID"] ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-truncate">
 					<b>
@@ -105,7 +105,7 @@
 			<div class="clearfix l-unit__stat-col--left super-compact u-text-right">
 				<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 					<div class="actions-panel clearfix">
-						<?php if ($read_only === 'true') {?>
+						<?php if ($read_only === "true") { ?>
 							<!-- Restrict editing of DNS records when impersonating 'admin' account -->
 							&nbsp;
 						<?php } else { ?>
@@ -113,11 +113,11 @@
 								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
+								<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
 									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>">
-									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-										<p><?=sprintf(_('DELETE_RECORD_CONFIRMATION'),$key)?></p>
+									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&record_id=<?= $data[$key]["ID"] ?>&token=<?= $_SESSION["token"] ?>">
+									<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
+										<p><?= sprintf(_("DELETE_RECORD_CONFIRMATION"), $key) ?></p>
 									</div>
 								</a>
 							</div>
@@ -130,7 +130,7 @@
 			<div class="clearfix l-unit__stat-col--left compact u-text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
 			<div class="clearfix l-unit__stat-col--left compact u-text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
 			<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?=htmlspecialchars($data[$key]['VALUE'], ENT_QUOTES, 'UTF-8') ?></div>
+			<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?= htmlspecialchars($data[$key]["VALUE"], ENT_QUOTES, "UTF-8") ?></div>
 		</div>
 	</div>
 <?php } ?>

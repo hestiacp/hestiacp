@@ -108,12 +108,36 @@ Once the download and installation is complete, run `rclone config` and then `n`
 Once the config has been saved you can setup Hestia with the following command:
 
 ```bash
-v-add-backup-host 'rclone' 'config_name' '' '' 'Bucket or Folder name' ''
+v-add-backup-host 'rclone' 'remote-name' '' '' 'Bucket or Folder name' ''
 ```
 
 ::: tip
-B2 requires you to setup a bucket during the `v-add-backup-host` stage. S3 or R2 storage will work fine during the setup stage.
+B2 requires you to setup a bucket during the `v-add-backup-host` stage. S3 or R2 storage will work fine during the `rclone config` stage.
 :::
+
+For example:
+
+```bash
+rclone config
+
+Current remotes:
+
+Name Type
+==== ====
+r2 s3
+```
+
+To use the "R2" endpoint use
+
+```bash
+v-add-backup-host 'rclone' 'r2'
+```
+
+For Blackblaze use
+
+```bash
+v-add-backup-host 'rclone' 'b2' '' '' 'hestiacp'
+```
 
 ## How to change default backup folder
 

@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== 'true') {?>
+			<?php if ($read_only !== "true") { ?>
 				<a href="/add/dns/" class="button button-secondary" id="btn-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add DNS Domain") ?>
 				</a>
@@ -24,12 +24,12 @@
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-records"><span class="name"><?= _("Records") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<?php if ($read_only !== 'true') {?>
+				<?php if ($read_only !== "true") { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/dns/" method="post">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>" />
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>" />
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>
-							<?php if ($_SESSION['userContext'] === 'admin') {?>
+							<?php if ($_SESSION["userContext"] === "admin") { ?>
 								<option value="rebuild"><?= _("rebuild") ?></option>
 							<?php } ?>
 							<option value="suspend"><?= _("suspend") ?></option>

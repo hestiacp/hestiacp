@@ -568,6 +568,10 @@
 		&.active {
 			box-shadow: 0 4px 6px rgb(0 0 0 / 10%);
 		}
+
+		& .form-select {
+			max-width: 200px;
+		}
 	}
 }
 

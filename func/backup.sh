@@ -124,11 +124,11 @@ ftp_backup() {
 		return "$E_FTP"
 	fi
 
-	# Checking retention
+	# Checking retention (Only include .tar files)
 	if [ -z $BPATH ]; then
-		backup_list=$(ftpc "ls" | awk '{print $9}' | grep "^$user\.")
+		backup_list=$(ftpc "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar")
 	else
-		backup_list=$(ftpc "cd $BPATH" "ls" | awk '{print $9}' | grep "^$user\.")
+		backup_list=$(ftpc "cd $BPATH" "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar")
 	fi
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then
@@ -399,11 +399,11 @@ sftp_backup() {
 		return "$rc"
 	fi
 
-	# Checking retention
+	# Checking retention (Only include .tar files)
 	if [ -z $BPATH ]; then
-		backup_list=$(sftpc "ls -l" | awk '{print $9}' | grep "^$user\.")
+		backup_list=$(sftpc "ls -l" | awk '{print $9}' | grep "^$user\." | grep ".tar")
 	else
-		backup_list=$(sftpc "cd $BPATH" "ls -l" | awk '{print $9}' | grep "^$user\.")
+		backup_list=$(sftpc "cd $BPATH" "ls -l" | awk '{print $9}' | grep "^$user\." | grep ".tar")
 	fi
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then
@@ -523,7 +523,8 @@ rclone_backup() {
 			check_result "$E_CONNECT" "Unable to upload backup"
 		fi
 
-		backup_list=$(rclone lsf $HOST | cut -d' ' -f1 | grep "^$user\.")
+		# Only include *.tar files
+		backup_list=$(rclone lsf $HOST | cut -d' ' -f1 | grep "^$user\." | grep ".tar")
 		backups_count=$(echo "$backup_list" | wc -l)
 		backups_rm_number=$((backups_count - BACKUPS))
 		if [ "$backups_count" -ge "$BACKUPS" ]; then
@@ -538,7 +539,8 @@ rclone_backup() {
 			check_result "$E_CONNECT" "Unable to upload backup"
 		fi
 
-		backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 | grep "^$user\.")
+		# Only include *.tar files
+		backup_list=$(rclone lsf $HOST | cut -d' ' -f1 | grep "^$user\." | grep ".tar")
 		backups_count=$(echo "$backup_list" | wc -l)
 		backups_rm_number=$(($backups_count - $BACKUPS))
 		if [ "$backups_count" -ge "$BACKUPS" ]; then

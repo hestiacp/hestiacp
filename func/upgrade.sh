@@ -551,24 +551,28 @@ upgrade_b2_tool() {
 }
 
 upgrade_cloudflare_ip() {
-	echo "[ * ] Update Cloudflare IP..."
-	# https://github.com/ergin/nginx-cloudflare-real-ip/
-	CLOUDFLARE_FILE_PATH='/etc/nginx/conf.d/cloudflare.inc'
-	echo "#Cloudflare" > $CLOUDFLARE_FILE_PATH
-	echo "" >> $CLOUDFLARE_FILE_PATH
+	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+		cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
 
-	echo "# - IPv4" >> $CLOUDFLARE_FILE_PATH
-	for i in $(curl -s -L https://www.cloudflare.com/ips-v4); do
-		echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
-	done
-	echo "" >> $CLOUDFLARE_FILE_PATH
-	echo "# - IPv6" >> $CLOUDFLARE_FILE_PATH
-	for i in $(curl -s -L https://www.cloudflare.com/ips-v6); do
-		echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
-	done
+		if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
+			cf_inc="/etc/nginx/conf.d/cloudflare.inc"
 
-	echo "" >> $CLOUDFLARE_FILE_PATH
-	echo "real_ip_header CF-Connecting-IP;" >> $CLOUDFLARE_FILE_PATH
+			echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
+			echo "# Cloudflare IP Ranges" > $cf_inc
+			echo "" >> $cf_inc
+			echo "# IPv4" >> $cf_inc
+			for ipv4 in $(echo "$cf_ips" | jq -r '.result.ipv4_cidrs[]//""' | sort); do
+				echo "set_real_ip_from $ipv4;" >> $cf_inc
+			done
+			echo "" >> $cf_inc
+			echo "# IPv6" >> $cf_inc
+			for ipv6 in $(echo "$cf_ips" | jq -r '.result.ipv6_cidrs[]//""' | sort); do
+				echo "set_real_ip_from $ipv6;" >> $cf_inc
+			done
+			echo "" >> $cf_inc
+			echo "real_ip_header CF-Connecting-IP;" >> $cf_inc
+		fi
+	fi
 }
 
 upgrade_phppgadmin() {

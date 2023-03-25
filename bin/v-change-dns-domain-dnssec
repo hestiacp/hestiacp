@@ -64,8 +64,9 @@ syshealth_repair_dns_config
 # Changing exp
 update_object_value 'dns' 'DOMAIN' "$domain" '$DNSSEC' "$status"
 
+# Update serial
+update_domain_serial
 # Rebuild DNS config
-
 rebuild_dns_domain_conf
 
 if [ $status = "no" ]; then

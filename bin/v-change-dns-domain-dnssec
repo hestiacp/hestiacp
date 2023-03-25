@@ -23,6 +23,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/rebuild.sh
 # shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
+# shellcheck source=/usr/local/hestia/func/upgrade.sh
+source $HESTIA/func/upgrade.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file
@@ -50,6 +52,15 @@ fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
+if [ "$DNS_CLUSTER_SYSTEM" != 'hestia-zone' ]; then
+	check_result "$E_DISABLED" "DNSSEC is not supported when DNS_CLUSTER_SYSTEM is not set to hestia-zone"
+fi
+
+version=$(named -v | awk 'NR==1{print $2}')
+if version_ge '9.18' $version; then
+	check_result "$E_DISABLED" "DNSSEC is not supported when bind / named < 9.18"
+fi
 
 #----------------------------------------------------------#
 #                       Action                             #

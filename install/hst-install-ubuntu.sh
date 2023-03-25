@@ -1580,9 +1580,19 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 		sed -i 's|mariadb.conf.d|mysql.conf.d|g' /etc/mysql/my.cnf
 	fi
 
-	update-rc.d mysql defaults > /dev/null 2>&1
-	systemctl start mysql >> $LOG
-	check_result $? "${mysql_type,,} start failed"
+	if [ "$mysql_type" = 'MariaDB' ]; then
+		update-rc.d mariadb defaults > /dev/null 2>&1
+		systemctl -q enable mariadb 2> /dev/null
+		systemctl start mariadb >> $LOG
+		check_result $? "${mysql_type,,} start failed"
+	fi
+
+	if [ "$mysql_type" = 'MySQL' ]; then
+		update-rc.d mysql defaults > /dev/null 2>&1
+		systemctl -q enable mysql 2> /dev/null
+		systemctl start mysql >> $LOG
+		check_result $? "${mysql_type,,} start failed"
+	fi
 
 	# Securing MariaDB/MySQL installation
 	mpass=$(gen_pass)

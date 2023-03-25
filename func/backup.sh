@@ -510,7 +510,7 @@ b2_delete() {
 rclone_backup() {
 	# Define rclone config
 	source_conf "$HESTIA/conf/rclone.backup.conf"
-	echo -e "$(date "+%F %T") Upload With Rclone: $user.$backup_new_date.tar"
+	echo -e "$(date "+%F %T") Upload With Rclone to $HOST: $user.$backup_new_date.tar"
 	if [ "$localbackup" != 'yes' ]; then
 		cd $tmpdir
 		tar -cf $BACKUP/$user.$backup_new_date.tar .
@@ -518,7 +518,7 @@ rclone_backup() {
 	cd $BACKUP/
 
 	if [ -z "$BPATH" ]; then
-		rclone copy -v $user.$backup_new_date.tar $HOST
+		rclone copy -v $user.$backup_new_date.tar $HOST:$backup
 		if [ "$?" -ne 0 ]; then
 			check_result "$E_CONNECT" "Unable to upload backup"
 		fi

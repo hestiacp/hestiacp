@@ -33,21 +33,6 @@
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<?php if ($_SESSION["user"] == $v_username || isset($_SESSION["look"])) { ?>
-				<!-- Do not show delete button for currently logged in user-->
-			<?} else {?>
-				<a href="/login/?loginas=<?= htmlentities($v_username) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary" id="btn-create" title="<?= _("login as") ?>">
-					<i class="fas fa-right-to-bracket icon-maroon"></i><?= _("login as") ?>
-				</a>
-				<a class="data-controls do_delete button button-secondary button-danger">
-					<i class="do_delete fas fa-circle-xmark icon-red"></i>
-					<?= _("Delete") ?>
-					<input type="hidden" name="delete_url" value="/delete/user/?user=<?= htmlentities($v_username) ?>&token=<?= $_SESSION["token"] ?>">
-					<div class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-						<p><?= sprintf(_("DELETE_USER_CONFIRMATION"), htmlentities($v_username)) ?></p>
-					</div>
-				</a>
-			<?php } ?>
 			<button type="submit" class="button" form="vstobjects">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>

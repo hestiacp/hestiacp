@@ -14,9 +14,6 @@ source $HESTIA/func/syshealth.sh
 #######                Functions & Initialization             #######
 #####################################################################
 
-# Define version check function
-function version_ge() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
-
 add_upgrade_message() {
 	if [ -f "$HESTIA_BACKUP/message.log" ]; then
 		echo -e $1 >> $HESTIA_BACKUP/message.log

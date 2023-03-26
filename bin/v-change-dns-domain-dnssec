@@ -23,8 +23,6 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/rebuild.sh
 # shellcheck source=/usr/local/hestia/func/syshealth.sh
 source $HESTIA/func/syshealth.sh
-# shellcheck source=/usr/local/hestia/func/upgrade.sh
-source $HESTIA/func/upgrade.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
 # load config file

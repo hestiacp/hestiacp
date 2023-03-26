@@ -234,7 +234,7 @@ class HestiaApp {
 			}
 		} else {
 			$supported = $this->run("v-list-sys-php", "json", $result);
-			return $this->$result->json[0];
+			return $result->json[0];
 		}
 	}
 

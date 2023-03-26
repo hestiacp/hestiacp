@@ -45,7 +45,7 @@ json_list() {
         "DNS_SYSTEM": "'$DNS_SYSTEM'",
         "DNS_CLUSTER": "'$DNS_CLUSTER'",
 		"DNS_CLUSTER_SYSTEM": "'$DNS_CLUSTER_SYSTEM'",
-		"SUPORT_DNSSEC": "'$SUPORT_DNSSEC'",
+		"SUPPORT_DNSSEC": "'$SUPPORT_DNSSEC'",
         "STATS_SYSTEM": "'$STATS_SYSTEM'",
         "BACKUP_SYSTEM": "'$BACKUP_SYSTEM'",
         "CRON_SYSTEM": "'$CRON_SYSTEM'",
@@ -270,9 +270,9 @@ csv_list() {
 
 version=$(named -v | awk 'NR==1{print $2}')
 if version_ge '9.18' $version; then
-	SUPORT_DNSSEC="yes"
+	SUPPORT_DNSSEC="yes"
 else
-	SUPORT_DNSSEC="no"
+	SUPPORT_DNSSEC="no"
 fi
 
 # Listing data

@@ -22,10 +22,10 @@
 							<?php } else { ?>
 								<input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?= $_SESSION["token"] ?>">
 							<?php } ?>
-							<div class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-								<p><?= _("DELETE_LOGS_CONFIRMATION") ?></p>
-							</div>
 						</a>
+						<dialog class="modal js-confirm-dialog-delete">
+							<p><?= _("DELETE_LOGS_CONFIRMATION") ?></p>
+						</dialog>
 					</div>
 				<?php } ?>
 			<?php } ?>

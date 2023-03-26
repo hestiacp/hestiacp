@@ -13,9 +13,9 @@
 		</button>)
 	</p>
 <?php } ?>
-	<div title="<?= _("Confirmation") ?>" class="dialog js-confirm-dialog-redirect">
+	<dialog class="modal js-confirm-dialog-redirect">
 		<p><?= _("LEAVE_PAGE_CONFIRMATION") ?></p>
-	</div>
+	</dialog>
 
 	<div class="fullscreen-loader">
 		<i class="fas fa-circle-notch fa-spin"></i>
@@ -76,36 +76,20 @@
 	</a>
 
 <?php if (!empty($_SESSION["error_msg"])): ?>
-	<div>
-		<script>
-			window.onload=function(){
-				$(function() {
-					$('#dialog:ui-dialog').dialog('destroy');
-					$('#dialog-message').dialog({
-						modal: true,
-						resizable: false,
-						buttons: {
-							Ok: function() {
-								$(this).dialog('close');
-							}
-						},
-						create: function() {
-							var buttonGroup = $(this).closest(".ui-dialog").find('.ui-dialog-buttonset');
-							buttonGroup.find('button:first').addClass('button submit')
-							buttonGroup.find('button:last').addClass('button button-secondary cancel');
-						}
-					});
-				});
-			}
-		</script>
-		<div id="dialog-message" title="">
-			<p><?= htmlentities($_SESSION["error_msg"]) ?></p>
-		</div>
-	</div>
+	<dialog id="error-dialog" class="modal">
+		<p><?= htmlentities($_SESSION["error_msg"]) ?></p>
+	</dialog>
+	<script>
+		window.onload = function() {
+			VE.helpers.createConfirmationDialog($('#error-dialog'), '<?= _("Error") ?>');
+		}
+	</script>
 <?php
 	unset($_SESSION['error_msg']);
 	endif;
+?>
 
+<?php
 	if (($_SESSION['DEBUG_MODE']) == "true") {
 		require $_SERVER['HESTIA'] . '/web/templates/pages/debug_panel.php';
 	}

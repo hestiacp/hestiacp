@@ -1,8 +1,9 @@
 #!/bin/bash
-# info: inserts dns records
-# options: USER DOMAIN DATA_FILE
+# info: creates local and remote transfer keys for bind.
+# options: HOST IP
 #
-# This function copy dns record to the domain conf
+# This function creates a new transfer key for the host
+# provided and sends it to the new host
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

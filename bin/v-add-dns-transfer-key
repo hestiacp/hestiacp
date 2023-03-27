@@ -1,6 +1,6 @@
 #!/bin/bash
-# info: inserts dns records
-# options: USER DOMAIN DATA_FILE
+# info: adds the provided file and host to the bind configuration
+# options: DATAFILE DATAFILEPATH HOST IP
 #
 # This function copy dns record to the domain conf
 

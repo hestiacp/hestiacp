@@ -51,7 +51,7 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?= $i ?>" class="data-controls do_delete">
+								<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("Delete") ?>">
 									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/firewall/ipset/?listname=<?= $listname ?>&token=<?= $_SESSION["token"] ?>">
 								</a>

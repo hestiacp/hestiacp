@@ -164,7 +164,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 										</dialog>
 									</div>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-										<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
+										<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("Delete") ?>">
 											<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 											<input type="hidden" name="delete_url" value="/delete/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
 										</a>

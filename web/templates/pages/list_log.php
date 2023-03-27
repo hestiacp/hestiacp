@@ -35,8 +35,8 @@
 			<?php } else { ?>
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_DELETE_LOGS"] !== "no")) { ?>
 					<div class="actions-panel" key-action="js">
-						<a class="data-controls do_delete button button-secondary button-danger">
-							<i class="do_delete fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
+						<a class="button button-secondary button-danger data-controls do_delete" title="<?= _("Delete") ?>">
+							<i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
 							<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
 								<input type="hidden" name="delete_url" value="/delete/log/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>">
 							<?php } else { ?>

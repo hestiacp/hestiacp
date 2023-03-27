@@ -121,7 +121,7 @@
 									</dialog>
 								</div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-									<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
+									<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("Delete") ?>">
 										<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 										<input type="hidden" name="delete_url" value="/delete/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>">
 									</a>

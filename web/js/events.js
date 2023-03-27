@@ -163,31 +163,36 @@ const VE = {
 				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
 				const url = $('input[name="suspend_url"]', ref).val();
 				const dialog_elm = ref.find('.js-confirm-dialog-suspend');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
+				const title = $(elm).parent().attr('title') || $(elm).attr('title');
+				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
 			},
 			do_unsuspend: (evt, elm) => {
 				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
 				const url = $('input[name="unsuspend_url"]', ref).val();
 				const dialog_elm = ref.find('.js-confirm-dialog-suspend');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
+				const title = $(elm).parent().attr('title') || $(elm).attr('title');
+				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
 			},
 			do_delete: (evt, elm) => {
 				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
 				const url = $('input[name="delete_url"]', ref).val();
 				const dialog_elm = ref.find('.js-confirm-dialog-delete');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
+				const title = $(elm).parent().attr('title') || $(elm).attr('title');
+				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
 			},
 			do_servicerestart: (evt, elm) => {
 				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
 				const url = $('input[name="servicerestart_url"]', ref).val();
 				const dialog_elm = ref.find('.js-confirm-dialog-servicerestart');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
+				const title = $(elm).parent().attr('title') || $(elm).attr('title');
+				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
 			},
 			do_servicestop: (evt, elm) => {
 				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
 				const url = $('input[name="servicestop_url"]', ref).val();
 				const dialog_elm = ref.find('.js-confirm-dialog-servicestop');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
+				const title = $(elm).parent().attr('title') || $(elm).attr('title');
+				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
 			},
 		},
 	},
@@ -206,10 +211,12 @@ const VE = {
 			dialog.querySelector('.modal-options')?.remove();
 
 			// Create and insert the title
-			const title = document.createElement('h2');
-			title.textContent = dialogTitle;
-			title.classList.add('modal-title');
-			dialog.prepend(title);
+			if (dialogTitle) {
+				const title = document.createElement('h2');
+				title.textContent = dialogTitle;
+				title.classList.add('modal-title');
+				dialog.prepend(title);
+			}
 
 			// Create and insert the options
 			const optionsWrapper = document.createElement('div');

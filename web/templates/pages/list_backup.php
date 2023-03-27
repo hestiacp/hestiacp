@@ -96,7 +96,7 @@
 									<?php if ($read_only !== 'true') {?>
 										<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
 										<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-											<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
+											<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("Delete") ?>">
 												<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 												<input type="hidden" name="delete_url" value="/delete/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
 											</a>

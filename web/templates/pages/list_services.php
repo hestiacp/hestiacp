@@ -20,8 +20,8 @@
 				<i class="fas fa-binoculars icon-orange"></i><?= _("Logs") ?>
 			</a>
 			<div class="actions-panel" key-action="js">
-				<a class="data-controls do_servicerestart button button-secondary button-danger">
-					<i class="do_servicerestart fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
+				<a class="button button-secondary button-danger data-controls do_servicerestart" title="<?= _("Restart") ?>">
+					<i class="fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
 					<input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>">
 				</a>
 				<dialog class="modal js-confirm-dialog-servicerestart">
@@ -148,8 +148,8 @@
 								<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a>
 							</div>
 							<div class="actions-panel__col actions-panel__stop shortcut-s" key-action="js">
-								<a id="restart_link_<?=$i?>" class="data-controls do_servicerestart" title="<?= _("restart") ?>">
-									<i class="do_servicerestart data-controls fas fa-arrow-rotate-left icon-highlight icon-dim"></i>
+								<a id="restart_link_<?=$i?>" class="data-controls do_servicerestart" title="<?= _("Restart") ?>">
+									<i class="fas fa-arrow-rotate-left icon-highlight icon-dim do_servicerestart"></i>
 									<input type="hidden" name="servicerestart_url" value="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>">
 								</a>
 								<dialog id="restart_link_dialog_<?=$i?>" class="modal js-confirm-dialog-servicerestart">
@@ -158,7 +158,7 @@
 							</div>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_servicestop" title="<?=_($action)?>">
-									<i class="do_servicestop fas <?=$spnd_icon?> icon-red icon-dim"></i>
+									<i class="fas <?=$spnd_icon?> icon-red icon-dim do_servicestop"></i>
 									<input type="hidden" name="servicestop_url" value="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>">
 								</a>
 								<dialog id="delete_dialog_<?=$i?>" class="modal js-confirm-dialog-servicestop">

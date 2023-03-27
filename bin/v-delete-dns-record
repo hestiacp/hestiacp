@@ -56,6 +56,8 @@ check_hestia_demo_mode
 # Deleting record
 sed -i "/^ID='$id'/d" $USER_DATA/dns/$domain.conf
 
+# Update serial
+update_domain_serial
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 	rebuild_dns_domain_conf

@@ -2157,6 +2157,7 @@ write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
 write_config_value "POLICY_CSRF_STRICTNESS" "1"
 write_config_value "DISABLE_IP_CHECK" "no"
+write_config_value "DNS_CLUSTER_SYSTEM" "hestia"
 
 # Add /usr/local/hestia/bin/ to path variable
 echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then

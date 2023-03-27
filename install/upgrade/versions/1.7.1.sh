@@ -37,3 +37,10 @@ if [ "$FIREWALL_SYSTEM" = "iptables" ]; then
 		sed -i 's|/install/deb/firewall/ipset/blacklist.sh|/install/common/firewall/ipset/blacklist.sh|g' $HESTIA/data/firewall/ipset.conf
 	fi
 fi
+
+if [ "$WEB_SYSTEM" = "apache2" ]; then
+	if ! (grep -q "$WEBMAIL_ALIAS.*.conf" /etc/apache2/apache2.conf); then
+		echo "[ * ] Update /etc/apache2/apache2.conf..."
+		sed -i "s/IncludeOptional conf.d\/domains\/\*.conf/IncludeOptional conf.d\/domains\/$WEBMAIL_ALIAS.*.conf\nIncludeOptional conf.d\/domains\/\*.conf/g" /etc/apache2/apache2.conf
+	fi
+fi

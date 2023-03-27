@@ -388,27 +388,27 @@ document.addEventListener('alpine:init', () => {
 				}
 
 				if (Alpine.store('form').dirty) {
-					if (document.querySelector('dialog.modal[open]')) {
-						const dialog = document.querySelector('dialog.modal[open]');
-						dialog.querySelector('button[type="submit"]').click();
-					} else {
+					if (!$('.ui-dialog').is(':visible')) {
 						VE.helpers.createConfirmationDialog(
 							$('.js-confirm-dialog-redirect')[0],
 							'',
 							document.querySelector(`${VE.navigation.state.menu_selector}.focus a`).href
 						);
+					} else {
+						// if dialog is opened - submitting confirm box by "enter" shortcut
+						document.querySelector('.ui-dialog button.submit').click();
 					}
 				} else {
-					if (document.querySelector('dialog.modal[open]')) {
-						const dialog = document.querySelector('dialog.modal[open]');
-						dialog.querySelector('button[type="submit"]').click();
-					} else {
+					if (!$('.ui-dialog').is(':visible')) {
 						const el = $('.units.active .l-unit.focus .shortcut-enter');
 						if (el.length) {
 							VE.navigation.shortcut(el);
 						} else {
 							VE.navigation.enter_focused();
 						}
+					} else {
+						// if dialog is opened - submitting confirm box by "enter" shortcut
+						document.querySelector('.ui-dialog button.submit').click();
 					}
 				}
 			},

@@ -44,10 +44,10 @@
 									<?php } else { ?>
 										<input type="hidden" name="delete_url" value="/delete/key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
 									<?php } ?>
+									<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
+										<p><?= sprintf(_("DELETE_KEY_CONFIRM"), $key) ?></p>
+									</div>
 								</a>
-								<dialog id="delete_dialog_<?= $i ?>" class="modal js-confirm-dialog-delete">
-									<p><?= sprintf(_("DELETE_KEY_CONFIRM"), $key) ?></p>
-								</dialog>
 							</div>
 						</div>
 					</div>

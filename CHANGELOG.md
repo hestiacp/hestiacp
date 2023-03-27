@@ -2,7 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Development] - Service release
+## [1.7.1] - Service release
+
+### Bugfixes
+
+- Fixed an issue with wildcard overruling webmail.domain.com config in Apache2 (#3400 #1631)
+- Removed delete button edit user page (#3997)
+- Fixed an issue with serial not increasing (#3396)
+- Fixed an issue with new hestia-zone sync and servers behind NAT or with multiple IPs (#3388 #3396)
+- Remove option to enable DNSSEC when DNSSEC is not supported (#3372 #3396)
+- Fix toolbar items on locales with long words (#3380 #3395)
+- Only count \*.tar files in rotate routine (#3393 #3385)
+- Fixed broken upgrade_mariadb.sh (#3391 @myrevery)
+- Improve add_firewall_ipset.php (#3390 @myrevery)
+- Update Path change of IPset blacklist.sh (#3389 @myrevery)
+- Improve upgrade script Cloudflare ips (#3388 @myrevery)
+- Update supported message hst-install.sh (#3377 @shizualand)
+- Fixed an issue with adding own ssl certificated to website config (#3374 #3371)
+- Fixed javascript logic edit mail domains (#3373)
+- Add required attribute to login forms (#3376)
+
+## [1.7.0] - Feature / Major release
 
 ### Note
 

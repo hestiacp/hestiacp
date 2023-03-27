@@ -34,7 +34,7 @@
 				</label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
-						<option value="">clear</option>
+						<option value=""><?= _("Clear") ?></option>
 					</select>
 					<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?= htmlentities(trim($v_datasource, "'")) ?>">
 				</div>
@@ -62,25 +62,25 @@
 <script>
 	var country_iplists = [
 		<?php
-			$country = array('ca' => 'Canada', 'cn' => 'China', 'fr' => 'French', 'de' => 'Germany', 'in' => 'India', 'nl' => 'Netherlands', 'ro' => 'Romania', 'ru' => 'Russia', 'es' => 'Spain', 'ch' => 'Switzerland', 'tr' => 'Turkey', 'ua' => 'Ukraine',	'gb' => 'United Kingdom', 'us' => 'United States');
-			foreach($country as $iso =>$name){
-				echo '{name: "[IPv4] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv4-aggregated.txt"},'."\n";
+			$country = array('br' => 'Brazil', 'ca' => 'Canada', 'cn' => 'China', 'fr' => 'French', 'de' => 'Germany', 'in' => 'India', 'id' => 'Indonesia', 'nl' => 'Netherlands', 'ro' => 'Romania', 'ru' => 'Russia', 'es' => 'Spain', 'ch' => 'Switzerland', 'tr' => 'Turkey', 'ua' => 'Ukraine', 'gb' => 'United Kingdom', 'us' => 'United States');
+			foreach($country as $iso => $name){
+				echo '{name: "[IPv4] ' . _("Country") . ' - ' . $name . '", source: "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/' . $iso . '/ipv4-aggregated.txt"},' . "\n";
 			}
 		?>
 		// Define IPv6 country lists
 		/*
 		<?php
-			foreach($country as $iso =>$name){
-				echo '{name: "[IPv6] Country - '.$name.'",	source:"https://raw.githubusercontent.com/ipverse/rir-ip/master/country/'.$iso.'/ipv6-aggregated.txt"},'."\n";
+			foreach($country as $iso => $name){
+				echo '{name: "[IPv6] ' . _("Country") . ' - ' . $name . '", source: "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/' . $iso . '/ipv6-aggregated.txt"},' . "\n";
 			}
 		?>
 		*/
 	];
 
 	var blacklist_iplists = [
-		{ name: "[IPv4] Block Malicious IPs", source: "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh" },
+		{name: "[IPv4] Block Malicious IPs", source: "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh"},
 		/*
-		{name: "[IPv6] Block Malicious IPs",			 source:"script:/usr/local/hestia/install/common/firewall/ipset/blacklist.ipv6.sh"},
+		{name: "[IPv6] Block Malicious IPs", source: "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.ipv6.sh"},
 		*/
 	];
 

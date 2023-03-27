@@ -55,7 +55,7 @@
 			<h1 class="form-title">
 				<?= _("Configuring Server") ?>
 			</h1>
-			<?php show_alert_message($_SESSION) ?>
+			<?php show_alert_message($_SESSION); ?>
 
 			<!-- Basic options section -->
 			<details class="collapse u-mb10">
@@ -106,7 +106,7 @@
 							type="checkbox"
 							name="v_policy_user_change_theme"
 							id="v_policy_user_change_theme"
-							<?= $_SESSION["POLICY_USER_CHANGE_THEME"] == "no"  ? "checked" : "" ?>
+							<?= $_SESSION["POLICY_USER_CHANGE_THEME"] == "no" ? "checked" : "" ?>
 						>
 						<label for="v_policy_user_change_theme">
 							<?= _("Set as selected theme for all users") ?>
@@ -178,7 +178,7 @@
 							type="checkbox"
 							name="v_experimental_features"
 							id="v_experimental_features"
-							<?= $_SESSION["POLICY_SYSTEM_ENABLE_BACON"] == "true" ?  "checked" : "" ?>
+							<?= $_SESSION["POLICY_SYSTEM_ENABLE_BACON"] == "true" ? "checked" : "" ?>
 						>
 						<label for="v_experimental_features">
 							<?= _("Enable preview features") ?>
@@ -353,7 +353,7 @@
 							?>
 							<div>
 								<label for="v_dns_remote_host" class="form-label">
-									<?= _("Host"). " #" . $i ?>
+									<?= _("Host") . " #" . $i ?>
 								</label>
 								<input
 									type="text"
@@ -543,7 +543,7 @@
 									class="form-select"
 									name="v_phpmyadmin_key"
 									id="v_phpmyadmin_key"
-									<?php $_SESSION["API"] != "yes" ? "disabled" : "" ?>
+									<?php $_SESSION["API"] != "yes" ? "disabled" : ""; ?>
 								>
 									<option value="no">
 										<?= _("Disabled") ?>
@@ -696,7 +696,7 @@
 							<option value="gzip">
 								gzip
 							</option>
-							<option value="zstd" <?= $v_backup_mode == "zstd" ? "selected" :"" ?>>
+							<option value="zstd" <?= $v_backup_mode == "zstd" ? "selected" : "" ?>>
 								zstd
 							</option>
 						</select>
@@ -934,7 +934,7 @@
 								/
 								<a
 									class="form-link"
-									href="/generate/ssl/?domain=<?= htmlentities(trim($v_hostname,'"')) ?>"
+									href="/generate/ssl/?domain=<?= htmlentities(trim($v_hostname, '"')) ?>"
 									target="_blank"
 								>
 									<?= _("Generate CSR") ?>
@@ -1122,7 +1122,7 @@
 						</div>
 					</div>
 
-					<?php if (($_SESSION["userContext"] === "admin") && ($_SESSION["user"] === "admin")) { ?>
+					<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] === "admin") { ?>
 						<h2 x-on:click="showProtectionOptions = !showProtectionOptions" class="section-title">
 							<?= _("System Protection") ?>
 							<i
@@ -1146,7 +1146,7 @@
 									<option value="yes">
 										<?= _("Yes") ?>
 									</option>
-									<option value="no" <?= $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] !== "yes" ?"selected" : "" ?>>
+									<option value="no" <?= $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] !== "yes" ? "selected" : "" ?>>
 										<?= _("No") ?>
 									</option>
 								</select>
@@ -1163,7 +1163,7 @@
 									<option value="yes">
 										<?= _("Yes") ?>
 									</option>
-									<option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] !== "yes" ?"selected" : "" ?>>
+									<option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] !== "yes" ? "selected" : "" ?>>
 										<?= _("No") ?>
 									</option>
 								</select>
@@ -1180,7 +1180,7 @@
 									<option value="yes">
 										<?= _("Yes") ?>
 									</option>
-									<option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" ?"selected" : "" ?>>
+									<option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" ? "selected" : "" ?>>
 										<?= _("No") ?>
 									</option>
 								</select>

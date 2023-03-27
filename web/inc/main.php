@@ -145,6 +145,9 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 	$user = quoteshellarg($_SESSION["look"]);
 	$user_plain = htmlentities($_SESSION["look"]);
 }
+if (empty($user_plain)) {
+	$user_plain = "";
+}
 
 require_once dirname(__FILE__) . "/i18n.php";
 

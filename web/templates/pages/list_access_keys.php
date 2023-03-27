@@ -16,7 +16,7 @@
 					<li entity="sort-comment"><span class="name"><?= _("Comment") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<form x-data x-bind="BulkEdit" action="/bulk/access-key/" method="post">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("apply to selected") ?></option>
 						<option value="delete"><?= _("delete") ?></option>
@@ -66,10 +66,10 @@
 
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="key[]" value="<?=$key?>">
+					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="key[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-6">
-					<b><a href="/list/access-key/?key=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Access Key") ?>: <?=$key;?>"><?=$key;?></a></b>
+					<b><a href="/list/access-key/?key=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Access Key") ?>: <?= $key ?>"><?= $key ?></a></b>
 				</div>
 
 				<!-- START QUICK ACTION TOOLBAR AREA -->

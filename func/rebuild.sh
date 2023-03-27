@@ -170,7 +170,7 @@ rebuild_user_conf() {
 		else
 			dns_group='bind'
 		fi
-		chown root:$dns_group $HOMEDIR/$user/conf/dns
+		chown $dns_group:$dns_group $HOMEDIR/$user/conf/dns
 		if [ "$create_user" = "yes" ]; then
 			$BIN/v-rebuild-dns-domains $user $restart
 		fi

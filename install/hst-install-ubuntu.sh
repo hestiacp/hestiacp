@@ -32,29 +32,24 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.7.0'
+HESTIA_INSTALL_VER='1.7.1'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.1"
 mariadb_v="10.11"
 
 # Defining software pack for all distros
-software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
-    apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
-    cron curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved
-    e2fslibs e2fsprogs exim4 exim4-daemon-heavy expect fail2ban flex ftp git idn2
-    imagemagick libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
-    lsof mc mariadb-client mariadb-common mariadb-server mysql-client mysql-common mysql-server nginx
-    php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
-    php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu
-    php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
-    php$fpm_v-imagick php$fpm_v-intl php$fpm_v-mbstring
-    php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
-    postgresql postgresql-contrib proftpd-basic quota rrdtool spamassassin sudo hestia=${HESTIA_INSTALL_VER}
-    hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv rsyslog
-    ipset libonig5 libzip4 openssh-server lsb-release zstd jq"
+software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils awstats bc bind9 bsdmainutils bsdutils
+  clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
+  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php idn2
+  imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf libonig5 libzip4 lsb-release
+  lsof mariadb-client mariadb-common mariadb-server mc mysql-client mysql-common mysql-server nginx openssh-server
+  php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
+  php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
+  php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
+  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd"
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
+installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg software-properties-common wget"
 
 # Defining help function
 help() {
@@ -311,7 +306,6 @@ if [ "$exim" = 'no' ]; then
 	clamd='no'
 	spamd='no'
 	dovecot='no'
-	sieve='no'
 fi
 if [ "$dovecot" = 'no' ]; then
 	sieve='no'
@@ -319,7 +313,7 @@ fi
 if [ "$iptables" = 'no' ]; then
 	fail2ban='no'
 fi
-if [ "$apache" = "no" ]; then
+if [ "$apache" = 'no' ]; then
 	phpfpm='yes'
 fi
 if [ "$mysql" = 'yes' ] && [ "$mysqlclassic" = 'yes' ]; then
@@ -474,6 +468,7 @@ case $architecture in
 		check_result 1 "Installation aborted"
 		;;
 esac
+
 #----------------------------------------------------------#
 #                       Brief Info                         #
 #----------------------------------------------------------#
@@ -553,6 +548,7 @@ if [ "$exim" = 'yes' ]; then
 fi
 
 echo
+
 # Database stack
 if [ "$mysql" = 'yes' ]; then
 	echo '   - MariaDB Database Server'
@@ -699,8 +695,8 @@ echo "[ * ] NGINX"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
 
-#add-apt-repository  does not support it yet see #https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 # Installing sury PHP repo
+# add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
@@ -1044,7 +1040,7 @@ if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
 	echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 fi
 
-# Registering /usr/sbin/nologin
+# Register /usr/sbin/nologin
 if [ -z "$(grep nologin /etc/shells)" ]; then
 	echo "/usr/sbin/nologin" >> /etc/shells
 fi
@@ -1168,7 +1164,6 @@ if [ "$apache" = 'yes' ]; then
 	write_config_value "PROXY_SSL_PORT" "443"
 	write_config_value "STATS_SYSTEM" "awstats"
 fi
-
 if [ "$apache" = 'no' ]; then
 	write_config_value "WEB_SYSTEM" "nginx"
 	write_config_value "WEB_PORT" "80"
@@ -1176,7 +1171,6 @@ if [ "$apache" = 'no' ]; then
 	write_config_value "WEB_SSL" "openssl"
 	write_config_value "STATS_SYSTEM" "awstats"
 fi
-
 if [ "$phpfpm" = 'yes' ] || [ "$multiphp" = 'yes' ]; then
 	write_config_value "WEB_BACKEND" "php-fpm"
 fi
@@ -1185,11 +1179,9 @@ fi
 if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	installed_db_types='mysql'
 fi
-
 if [ "$postgresql" = 'yes' ]; then
 	installed_db_types="$installed_db_types,pgsql"
 fi
-
 if [ -n "$installed_db_types" ]; then
 	db=$(echo "$installed_db_types" \
 		| sed "s/,/\n/g" \
@@ -1296,6 +1288,7 @@ cp -rf $HESTIA_COMMON_DIR/templates/web/skel/document_errors/* /var/www/document
 
 # Installing firewall rules
 cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/
+rm -f $HESTIA/data/firewall/ipset/blacklist.sh $HESTIA/data/firewall/ipset/blacklist.ipv6.sh
 
 # Installing apis
 cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
@@ -1341,6 +1334,7 @@ fi
 if [ -n "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
 	groupdel admin > /dev/null 2>&1
 fi
+
 # Remove sudo "default" sudo permission admin user group should not exists any way
 sed -i "s/%admin ALL=(ALL) ALL/#%admin ALL=(ALL) ALL/g" /etc/sudoers
 
@@ -1538,12 +1532,15 @@ if [ "$proftpd" = 'yes' ]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
+
 	if [ "$release" = '22.04' ]; then
 		sed -i 's|IdentLookups                  off|#IdentLookups                  off|g' /etc/proftpd/proftpd.conf
 	fi
+
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
+
 	if [ "$release" = '22.04' ]; then
 		unit_files="$(systemctl list-unit-files | grep proftpd)"
 		if [[ "$unit_files" =~ "disabled" ]]; then
@@ -1583,9 +1580,19 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 		sed -i 's|mariadb.conf.d|mysql.conf.d|g' /etc/mysql/my.cnf
 	fi
 
-	update-rc.d mysql defaults > /dev/null 2>&1
-	systemctl start mysql >> $LOG
-	check_result $? "${mysql_type,,} start failed"
+	if [ "$mysql_type" = 'MariaDB' ]; then
+		update-rc.d mariadb defaults > /dev/null 2>&1
+		systemctl -q enable mariadb 2> /dev/null
+		systemctl start mariadb >> $LOG
+		check_result $? "${mysql_type,,} start failed"
+	fi
+
+	if [ "$mysql_type" = 'MySQL' ]; then
+		update-rc.d mysql defaults > /dev/null 2>&1
+		systemctl -q enable mysql 2> /dev/null
+		systemctl start mysql >> $LOG
+		check_result $? "${mysql_type,,} start failed"
+	fi
 
 	# Securing MariaDB/MySQL installation
 	mpass=$(gen_pass)
@@ -1624,7 +1631,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	echo "[ * ] Installing phpMyAdmin version v$pma_v..."
 
 	# Download latest phpmyadmin release
-	wget --retry-connrefused --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+	wget --quiet --retry-connrefused https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
 	# Unpack files
 	tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -1655,6 +1662,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	# Create temporary folder and change permission
 	chmod 770 /usr/share/phpmyadmin/tmp
 	chown root:www-data /usr/share/phpmyadmin/tmp
+
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
 	sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
@@ -1731,7 +1739,6 @@ if [ "$named" = 'yes' ]; then
 	fi
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
-
 	check_result $? "bind9 start failed"
 
 	# Workaround for OpenVZ/Virtuozzo
@@ -1776,7 +1783,6 @@ if [ "$exim" = 'yes' ]; then
 	systemctl stop sendmail > /dev/null 2>&1
 	update-rc.d -f postfix remove > /dev/null 2>&1
 	systemctl stop postfix > /dev/null 2>&1
-
 	update-rc.d exim4 defaults
 	systemctl start exim4 >> $LOG
 	check_result $? "exim4 start failed"
@@ -1792,7 +1798,6 @@ if [ "$dovecot" = 'yes' ]; then
 	cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
 	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
-
 	chown -R root:root /etc/dovecot*
 
 	#Alter config for 2.2
@@ -1845,7 +1850,6 @@ if [ "$spamd" = 'yes' ]; then
 	if [[ "$unit_files" =~ "disabled" ]]; then
 		systemctl enable spamassassin > /dev/null 2>&1
 	fi
-
 	sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
 fi
 
@@ -1867,7 +1871,7 @@ if [ "$fail2ban" = 'yes' ]; then
 		sed -i "${fline}s/true/false/" /etc/fail2ban/jail.local
 	fi
 	if [ "$vsftpd" = 'yes' ]; then
-		#Create vsftpd Log File
+		# Create vsftpd Log File
 		if [ ! -f "/var/log/vsftpd.log" ]; then
 			touch /var/log/vsftpd.log
 		fi
@@ -1882,7 +1886,6 @@ if [ "$fail2ban" = 'yes' ]; then
 	update-rc.d fail2ban defaults
 	# Ubuntu 22.04 doesn't start F2B by default on boot
 	update-rc.d fail2ban enable
-
 	systemctl start fail2ban >> $LOG
 	check_result $? "fail2ban start failed"
 fi
@@ -1900,6 +1903,7 @@ fi
 #----------------------------------------------------------#
 #                       Install Roundcube                  #
 #----------------------------------------------------------#
+
 # Min requirements Dovecot + Exim + Mysql
 if ([ "$mysql" == 'yes' ] || [ "$mysqlclassic" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
 	echo "[ * ] Install Roundcube..."
@@ -1925,7 +1929,7 @@ if [ "$sieve" = 'yes' ]; then
 	# dovecot.conf install
 	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
 
-	# dovecot conf files
+	# Dovecot conf files
 	#  10-master.conf
 	sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
 	#  15-lda.conf
@@ -1933,7 +1937,7 @@ if [ "$sieve" = 'yes' ]; then
 	#  20-imap.conf
 	sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 
-	# replace dovecot-sieve config files
+	# Replace dovecot-sieve config files
 	cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
 
 	# Dovecot default file install
@@ -1959,8 +1963,6 @@ if [ "$sieve" = 'yes' ]; then
 		sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
 	fi
 
-	sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
-
 	# Restart Dovecot and exim4
 	systemctl restart dovecot > /dev/null 2>&1
 	systemctl restart exim4 > /dev/null 2>&1
@@ -1971,7 +1973,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$api" = "yes" ]; then
-	# keep legacy api enabled until transition is complete
+	# Keep legacy api enabled until transition is complete
 	write_config_value "API" "yes"
 	write_config_value "API_SYSTEM" "1"
 	write_config_value "API_ALLOWED_IP" ""
@@ -2003,8 +2005,8 @@ curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 #                   Configure IP                           #
 #----------------------------------------------------------#
 
-echo "[ * ] Configuring System IP..."
 # Configuring system IPs
+echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main IP
@@ -2123,7 +2125,7 @@ chown admin:admin $HESTIA/data/sessions
 mkdir -p /backup/
 chmod 755 /backup/
 
-# create cronjob to generate ssl
+# Create cronjob to generate ssl
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
@@ -2155,6 +2157,7 @@ write_config_value "SERVER_SMTP_PASSWD" ""
 write_config_value "SERVER_SMTP_ADDR" ""
 write_config_value "POLICY_CSRF_STRICTNESS" "1"
 write_config_value "DISABLE_IP_CHECK" "no"
+write_config_value "DNS_CLUSTER_SYSTEM" "hestia"
 
 # Add /usr/local/hestia/bin/ to path variable
 echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
@@ -2165,6 +2168,7 @@ fi' >> /root/.bashrc
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
 
+# Comparing hostname and IP
 host_ip=$(host $servername | head -n 1 | awk '{print $NF}')
 if [ "$host_ip" = "$ip" ]; then
 	ip="$servername"

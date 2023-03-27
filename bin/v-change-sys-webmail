@@ -51,6 +51,10 @@ for user in $($BIN/v-list-sys-users plain); do
 	done
 done
 
+if [ -d /etc/apache2/ ]; then
+	sed -i "s/IncludeOptional conf.d\/domains\/$WEBMAIL_ALIAS.*.conf/IncludeOptional conf.d\/domains\/$NEW_ALIAS.*.conf/g" /etc/apache2/apache2.conf
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -56,6 +56,8 @@ check_hestia_demo_mode
 # Changing ttl
 update_object_value 'dns' 'DOMAIN' "$domain" '$TTL' "$ttl"
 
+# Update serial
+update_domain_serial
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 	rebuild_dns_domain_conf

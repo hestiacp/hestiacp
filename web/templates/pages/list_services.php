@@ -23,10 +23,10 @@
 				<a class="data-controls do_servicerestart button button-secondary button-danger">
 					<i class="do_servicerestart fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
 					<input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>">
-					<div class="dialog js-confirm-dialog-servicerestart" title="<?= _("Confirmation") ?>">
-						<p><?= sprintf(_("RESTART_CONFIRMATION"), "Server") ?></p>
-					</div>
 				</a>
+				<dialog class="modal js-confirm-dialog-servicerestart">
+					<p><?= sprintf(_("RESTART_CONFIRMATION"), "Server") ?></p>
+				</dialog>
 			</div>
 		</div>
 		<div class="toolbar-right">
@@ -151,19 +151,19 @@
 								<a id="restart_link_<?=$i?>" class="data-controls do_servicerestart" title="<?= _("restart") ?>">
 									<i class="do_servicerestart data-controls fas fa-arrow-rotate-left icon-highlight icon-dim"></i>
 									<input type="hidden" name="servicerestart_url" value="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>">
-									<div id="restart_link_dialog_<?=$i?>" class="dialog js-confirm-dialog-servicerestart" title="<?= _("Confirmation") ?>">
-										<p><?=sprintf(_('RESTART_CONFIRMATION'),$key); ?></p>
-									</div>
 								</a>
+								<dialog id="restart_link_dialog_<?=$i?>" class="modal js-confirm-dialog-servicerestart">
+									<p><?=sprintf(_('RESTART_CONFIRMATION'),$key); ?></p>
+								</dialog>
 							</div>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 								<a id="delete_link_<?=$i?>" class="data-controls do_servicestop" title="<?=_($action)?>">
 									<i class="do_servicestop fas <?=$spnd_icon?> icon-red icon-dim"></i>
 									<input type="hidden" name="servicestop_url" value="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>">
-									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-servicestop" title="<?= _("Confirmation") ?>">
-										<p><?php if($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service'),$key); }else{ echo sprintf(_('Are you sure you want to start service'),$key); }?></p>
-									</div>
 								</a>
+								<dialog id="delete_dialog_<?=$i?>" class="modal js-confirm-dialog-servicestop">
+									<p><?php if($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service'),$key); }else{ echo sprintf(_('Are you sure you want to start service'),$key); }?></p>
+								</dialog>
 							</div>
 						</div>
 					</div>

@@ -116,10 +116,10 @@
 								<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
 									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
 									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&record_id=<?= $data[$key]["ID"] ?>&token=<?= $_SESSION["token"] ?>">
-									<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-										<p><?= sprintf(_("DELETE_RECORD_CONFIRMATION"), $key) ?></p>
-									</div>
 								</a>
+								<dialog id="delete_dialog_<?= $i ?>" class="modal js-confirm-dialog-delete">
+									<p><?= sprintf(_("DELETE_RECORD_CONFIRMATION"), $key) ?></p>
+								</dialog>
 							</div>
 						<?php } ?>
 					</div>

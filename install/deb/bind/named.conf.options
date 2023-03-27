@@ -7,22 +7,22 @@ options {
         // nameservers, you probably want to use them as forwarders.
         // Uncomment the following block, and insert the addresses replacing
         // the all-0's placeholder.
-         // forwarders {
+        // forwarders {
         //      0.0.0.0;
         // };
-         //========================================================================
+        //========================================================================
         // If BIND logs error messages about the root key being expired,
         // you will need to update your keys.  See https://www.isc.org/bind-keys
         //========================================================================
 
-		// Some security Settings
-		hostname none;
+        // Some security Settings
+        hostname none;
         server-id none;
         version none;
-		minimal-responses yes;
+        minimal-responses yes;
 
 
-		dnssec-validation auto;
+        dnssec-validation auto;
         auth-nxdomain no;
         allow-recursion { 127.0.0.1; ::1; };
         allow-transfer {"none";};

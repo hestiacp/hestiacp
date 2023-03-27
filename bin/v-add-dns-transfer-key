@@ -1,0 +1,53 @@
+#!/bin/bash
+# info: inserts dns records
+# options: USER DOMAIN DATA_FILE
+#
+# This function copy dns record to the domain conf
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+data_file=$1
+data_file_name=$2
+host=$3
+ip=$4
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+
+is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Insert values
+if [ -e "$data_file" ]; then
+	mv -f ""/etc/bind/$data_file_name.conf"" "/etc/bind/$data_file_name.old""
+	mv -f $data_file /etc/bind/$data_file_name.conf
+	chmod 660 /etc/bind/$data_file_name.conf
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

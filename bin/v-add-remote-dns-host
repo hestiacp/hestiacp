@@ -99,6 +99,10 @@ else
 	sed -i "s/DNS_CLUSTER=.*/DNS_CLUSTER='yes'/g" $HESTIA/conf/hestia.conf
 fi
 
+# Create Cluster keys
+remote_ip = $(dig +short $HOST)
+v-create-dns-cluster-config $HOST $remote_ip
+
 # Enabling remote dns-cluster queue
 cluster_cmd v-add-cron-restart-job
 check_result $? "$HOST connection failed" "$E_CONNECT"

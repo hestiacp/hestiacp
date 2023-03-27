@@ -63,7 +63,7 @@ if (!empty($_POST["save"])) {
 }
 
 $v_options_path = "/etc/bind/named.conf.options";
-$v_config_path = "/etc/bind/named.conf";
+$v_config_path = "/etc/bind/named.conf.local";
 $v_service_name = strtoupper("bind9");
 
 // Read config

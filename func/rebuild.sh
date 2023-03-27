@@ -520,10 +520,10 @@ rebuild_dns_domain_conf() {
 	fi
 
 	if [ -e '/etc/bind/named.conf' ]; then
-		dns_conf='/etc/bind/named.conf'
+		dns_conf='/etc/bind/named.conf.local'
 	fi
 
-	# Bind config check
+	# Bind config creation
 	if [ "$SUSPENDED" = 'yes' ]; then
 		rm_string=$(grep -n /etc/namedb/$domain.db $dns_conf | cut -d : -f 1)
 		if [ -n "$rm_string" ]; then

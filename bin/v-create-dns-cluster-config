@@ -1,0 +1,76 @@
+#!/bin/bash
+# info: inserts dns records
+# options: USER DOMAIN DATA_FILE
+#
+# This function copy dns record to the domain conf
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+host=$1
+ip=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '2' "$#" 'HOST IP'
+is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#check if openssl is installed
+openssl_installed=$(which openssl | grep openssl)
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get Transfer-Key File
+if [ -e '/etc/bind/transferkeys.conf' ]; then
+	transfer_keys='/etc/bind/transferkeys.conf'
+fi
+# Get DNS Config file
+if [ -e '/etc/bind/named.conf' ]; then
+	dns_conf='/etc/bind/named.conf'
+fi
+
+# create new transfer-key
+hostkey = $(openssl rand -base64 64)
+
+# Insert values into transferkeys file
+transkey="key \"$host\" {"
+transkey="transkey \algorithm hmac-sha384;"
+transkey="transkey \secret \"$hostkey\";};"
+echo "$transkey" >> transfer_keys
+
+srv="server \"$ip\" { keys { $host; }; };"
+echo "srv" >> $dns_conf
+
+
+tmp_file="/tmp/vst-sync.$transfer_keys"
+cluster_file "/etc/bind/transferkeys.conf" "$tmp_file"
+check_result $? "$HOST connection failed" "$E_CONNECT"
+
+cluster_cmd v-add-dns-transfer-key $transkey "transferkeys.conf" $host $ip
+
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

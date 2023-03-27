@@ -1740,8 +1740,10 @@ if [ "$named" = 'yes' ]; then
 	echo "[ * ] Configuring Bind DNS server..."
 	cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
 	cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
+	cp -f $HESTIA_INSTALL_DIR/bind/transferkeys.conf /etc/bind/
 	chown root:bind /etc/bind/named.conf
 	chown root:bind /etc/bind/named.conf.options
+	chown root:bind /etc/bind/transferkeys.conf
 	chown bind:bind /var/cache/bind
 	chmod 640 /etc/bind/named.conf
 	chmod 640 /etc/bind/named.conf.options

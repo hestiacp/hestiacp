@@ -194,45 +194,62 @@ const VE = {
 	helpers: {
 		/**
 		 * Create dialog box on the fly
-		 * @param elm Element which contains the dialog contents
-		 * @param dialog_title
-		 * @param confirmed_location_url URL that will be redirected to if user hit "OK"
-		 * @param custom_config Custom configuration parameters passed to dialog initialization (optional)
+		 * @param dialogElm The <dialog> element near the link which triggers the dialog
+		 * @param dialogTitle The title of the dialog
+		 * @param targetUrl URL that will be redirected to if user clicks "OK"
 		 */
-		createConfirmationDialog: (elm, dialog_title, confirmed_location_url, custom_config) => {
-			custom_config = custom_config ?? {};
-			const default_config = {
-				modal: true,
-				//autoOpen: true,
-				resizable: false,
-				width: 360,
-				title: dialog_title,
-				close: function () {
-					$(this).dialog('destroy');
-				},
-				buttons: {
-					OK: function () {
-						location.href = confirmed_location_url;
-					},
-					Cancel: function () {
-						$(this).dialog('close');
-					},
-				},
-				create: function () {
-					const buttons = $(this).dialog('widget').find('.ui-dialog-buttonpane button');
-					buttons.first().addClass('button submit');
-					buttons.last().addClass('button button-secondary cancel');
-				},
-				focus: function () {
-					const buttons = $(this).dialog('widget').find('.ui-dialog-buttonpane button');
-					// Disable default "focus first button" behavior
-					buttons.first().blur();
-				},
-			};
+		createConfirmationDialog: (dialogElm, dialogTitle, targetUrl) => {
+			const dialog = dialogElm[0];
 
-			const reference_copied = $(elm[0]).clone();
-			const config = { ...default_config, ...custom_config };
-			$(reference_copied).dialog(config);
+			// Remove any existing inserted content
+			dialog.querySelector('.modal-title')?.remove();
+			dialog.querySelector('.modal-options')?.remove();
+
+			// Create and insert the title
+			const title = document.createElement('h2');
+			title.textContent = dialogTitle;
+			title.classList.add('modal-title');
+			dialog.prepend(title);
+
+			// Create and insert the options
+			const optionsWrapper = document.createElement('div');
+			optionsWrapper.classList.add('modal-options');
+			const confirmButton = VE.helpers.createButton('OK', 'submit', ['button']);
+			const cancelButton = VE.helpers.createButton('Cancel', 'button', [
+				'button',
+				'button-secondary',
+				'cancel',
+			]);
+			optionsWrapper.appendChild(confirmButton);
+			if (targetUrl) {
+				optionsWrapper.appendChild(cancelButton);
+			}
+			dialog.appendChild(optionsWrapper);
+
+			// Add event handlers (use onclick to avoid multiple handlers)
+			confirmButton.onclick = () => {
+				if (targetUrl) {
+					window.location.href = targetUrl;
+				}
+				dialog.close();
+			};
+			cancelButton.onclick = () => {
+				dialog.close();
+			};
+			document.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape') {
+					dialog.close();
+				}
+			});
+
+			dialog.showModal();
+		},
+		createButton: (text, type, classNames) => {
+			const button = document.createElement('button');
+			button.type = type;
+			button.textContent = text;
+			button.classList.add(...classNames);
+			return button;
 		},
 		warn: (msg) => {
 			alert('WARNING: ' + msg);

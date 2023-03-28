@@ -132,22 +132,24 @@
 									<!-- Hide suspend and delete buttons in the user list for current user -->
 								<?php } else { ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-										<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
-										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>">
+									<a
+										class="data-controls js-confirm-action"
+										href="/<?=$spnd_action?>/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"
+										data-confirm-title="<?= _($spnd_action) ?>"
+										data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
+									>
+										<i class="fas <?=$spnd_icon?> icon-highlight icon-dim"></i>
 									</a>
-									<dialog id="<?= $spnd_action ?>_dialog_<?= $i ?>" class="modal js-confirm-dialog-suspend">
-										<p><?=sprintf($spnd_confirmation,$key)?></p>
-									</dialog>
 								</div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("Delete") ?>">
-										<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-										<input type="hidden" name="delete_url" value="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>">
+									<a
+										class="data-controls js-confirm-action"
+										href="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"
+										data-confirm-title="<?= _("Delete") ?>"
+										data-confirm-message="<?= sprintf(_('DELETE_USER_CONFIRMATION'), $key) ?>"
+									>
+										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>
-									<dialog id="delete_dialog_<?= $i ?>" class="modal js-confirm-dialog-delete">
-										<p><?=sprintf(_('DELETE_USER_CONFIRMATION'),$key)?></p>
-									</dialog>
 								</div>
 								<?php } ?>
 							<?php } ?>

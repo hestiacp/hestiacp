@@ -20,13 +20,14 @@
 				<i class="fas fa-binoculars icon-orange"></i><?= _("Logs") ?>
 			</a>
 			<div class="actions-panel" key-action="js">
-				<a class="button button-secondary button-danger data-controls do_servicerestart" title="<?= _("Restart") ?>">
+				<a
+					class="button button-secondary button-danger data-controls js-confirm-action"
+					href="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
+					data-confirm-title="<?= _("Restart") ?>"
+					data-confirm-message="<?= sprintf(_("RESTART_CONFIRMATION"), "Server") ?>"
+				>
 					<i class="fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
-					<input type="hidden" name="servicerestart_url" value="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>">
 				</a>
-				<dialog class="modal js-confirm-dialog-servicerestart">
-					<p><?= sprintf(_("RESTART_CONFIRMATION"), "Server") ?></p>
-				</dialog>
 			</div>
 		</div>
 		<div class="toolbar-right">
@@ -148,22 +149,24 @@
 								<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a>
 							</div>
 							<div class="actions-panel__col actions-panel__stop shortcut-s" key-action="js">
-								<a id="restart_link_<?=$i?>" class="data-controls do_servicerestart" title="<?= _("Restart") ?>">
-									<i class="fas fa-arrow-rotate-left icon-highlight icon-dim do_servicerestart"></i>
-									<input type="hidden" name="servicerestart_url" value="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>">
+								<a
+									class="data-controls js-confirm-action"
+									href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
+									data-confirm-title="<?= _("Restart") ?>"
+									data-confirm-message="<?=sprintf(_('RESTART_CONFIRMATION'),$key); ?>"
+								>
+									<i class="fas fa-arrow-rotate-left icon-highlight icon-dim"></i>
 								</a>
-								<dialog id="restart_link_dialog_<?=$i?>" class="modal js-confirm-dialog-servicerestart">
-									<p><?=sprintf(_('RESTART_CONFIRMATION'),$key); ?></p>
-								</dialog>
 							</div>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?=$i?>" class="data-controls do_servicestop" title="<?=_($action)?>">
-									<i class="fas <?=$spnd_icon?> icon-red icon-dim do_servicestop"></i>
-									<input type="hidden" name="servicestop_url" value="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>">
+								<a
+									class="data-controls js-confirm-action"
+									href="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
+									data-confirm-title="<?= _($action) ?>"
+									data-confirm-message="<?php if($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service'),$key); }else{ echo sprintf(_('Are you sure you want to start service'),$key); }?>"
+								>
+									<i class="fas <?= $spnd_icon ?> icon-red icon-dim"></i>
 								</a>
-								<dialog id="delete_dialog_<?=$i?>" class="modal js-confirm-dialog-servicestop">
-									<p><?php if($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service'),$key); }else{ echo sprintf(_('Are you sure you want to start service'),$key); }?></p>
-								</dialog>
 							</div>
 						</div>
 					</div>

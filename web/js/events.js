@@ -159,81 +159,59 @@ const VE = {
 	},
 	callbacks: {
 		click: {
-			do_suspend: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="suspend_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-suspend');
-				const title = $(elm).parent().attr('title') || $(elm).attr('title');
-				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
-			},
-			do_unsuspend: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="unsuspend_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-suspend');
-				const title = $(elm).parent().attr('title') || $(elm).attr('title');
-				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
-			},
-			do_delete: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="delete_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-delete');
-				const title = $(elm).parent().attr('title') || $(elm).attr('title');
-				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
-			},
-			do_servicerestart: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="servicerestart_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-servicerestart');
-				const title = $(elm).parent().attr('title') || $(elm).attr('title');
-				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
-			},
-			do_servicestop: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="servicestop_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-servicestop');
-				const title = $(elm).parent().attr('title') || $(elm).attr('title');
-				VE.helpers.createConfirmationDialog(dialog_elm, title, url);
-			},
+			// Usage: <a class="data-controls do_something" title="Something">Do something</a>
+			// do_something: (evt, elm) => {
+			// 	const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+			// 	const title = $(elm).parent().attr('title') || $(elm).attr('title');
+			// 	const targetUrl = $('input[name="suspend_url"]', ref).val();
+			// 	VE.helpers.createConfirmationDialog({ title, targetUrl });
+			// },
 		},
 	},
 	helpers: {
 		/**
-		 * Create dialog box on the fly
-		 * @param dialogElm The <dialog> element near the link which triggers the dialog
-		 * @param dialogTitle The title of the dialog
+		 * Create confirmation <dialog> on the fly
+		 * @param title The title of the dialog displayed in the header
+		 * @param message The message displayed in the body of the dialog
 		 * @param targetUrl URL that will be redirected to if user clicks "OK"
 		 */
-		createConfirmationDialog: (dialogElm, dialogTitle, targetUrl) => {
-			const dialog = dialogElm[0];
-
-			// Remove any existing inserted content
-			dialog.querySelector('.modal-title')?.remove();
-			dialog.querySelector('.modal-options')?.remove();
+		createConfirmationDialog: ({ title, message = 'Are you sure?', targetUrl }) => {
+			// Create the dialog
+			const dialog = document.createElement('dialog');
+			dialog.classList.add('modal');
 
 			// Create and insert the title
-			if (dialogTitle) {
-				const title = document.createElement('h2');
-				title.textContent = dialogTitle;
-				title.classList.add('modal-title');
-				dialog.prepend(title);
+			if (title) {
+				const titleElem = document.createElement('h2');
+				titleElem.textContent = title;
+				titleElem.classList.add('modal-title');
+				dialog.appendChild(titleElem);
 			}
+
+			// Create and insert the message
+			const messageElem = document.createElement('p');
+			messageElem.textContent = message;
+			messageElem.classList.add('modal-message');
+			dialog.appendChild(messageElem);
 
 			// Create and insert the options
 			const optionsWrapper = document.createElement('div');
 			optionsWrapper.classList.add('modal-options');
-			const confirmButton = VE.helpers.createButton('OK', 'submit', ['button']);
-			const cancelButton = VE.helpers.createButton('Cancel', 'button', [
-				'button',
-				'button-secondary',
-				'cancel',
-			]);
+			const confirmButton = document.createElement('button');
+			confirmButton.type = 'submit';
+			confirmButton.classList.add('button');
+			confirmButton.textContent = 'OK';
+			const cancelButton = document.createElement('button');
+			cancelButton.type = 'button';
+			cancelButton.classList.add('button', 'button-secondary', 'cancel', 'u-ml5');
+			cancelButton.textContent = 'Cancel';
 			optionsWrapper.appendChild(confirmButton);
 			if (targetUrl) {
 				optionsWrapper.appendChild(cancelButton);
 			}
 			dialog.appendChild(optionsWrapper);
 
-			// Add event handlers (use onclick to avoid multiple handlers)
+			// Add event handlers
 			confirmButton.onclick = () => {
 				if (targetUrl) {
 					window.location.href = targetUrl;
@@ -249,14 +227,14 @@ const VE = {
 				}
 			});
 
+			// Add to DOM and show
+			document.body.appendChild(dialog);
 			dialog.showModal();
-		},
-		createButton: (text, type, classNames) => {
-			const button = document.createElement('button');
-			button.type = type;
-			button.textContent = text;
-			button.classList.add(...classNames);
-			return button;
+
+			// Destroy on close
+			dialog.addEventListener('close', () => {
+				document.body.removeChild(dialog);
+			});
 		},
 		warn: (msg) => {
 			alert('WARNING: ' + msg);

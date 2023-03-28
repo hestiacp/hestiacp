@@ -778,14 +778,14 @@ strong {
 	background-color: rgb(45 45 45 / 95%);
 	border-color: rgb(80 80 80 / 97%);
 	box-shadow: inset 0 1px 3px rgb(0 0 0 / 25%), 0 8px 25px rgb(0 0 0 / 90%);
-
-	& p {
-		color: #dadada;
-	}
 }
 
 .modal-title {
 	color: #f12569;
+}
+
+.modal-message {
+	color: #dadada;
 }
 
 .modal-options {

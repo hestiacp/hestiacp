@@ -13,10 +13,6 @@
 		</button>)
 	</p>
 <?php } ?>
-	<dialog class="modal js-confirm-dialog-redirect">
-		<p><?= _("LEAVE_PAGE_CONFIRMATION") ?></p>
-	</dialog>
-
 	<div class="fullscreen-loader">
 		<i class="fas fa-circle-notch fa-spin"></i>
 	</div>
@@ -76,12 +72,12 @@
 	</a>
 
 <?php if (!empty($_SESSION["error_msg"])): ?>
-	<dialog id="error-dialog" class="modal">
-		<p><?= htmlentities($_SESSION["error_msg"]) ?></p>
-	</dialog>
 	<script>
 		window.onload = function() {
-			VE.helpers.createConfirmationDialog($('#error-dialog'), '<?= _("Error") ?>');
+			VE.helpers.createConfirmationDialog({
+				title: '<?= _("Error") ?>',
+				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
+			});
 		}
 	</script>
 <?php

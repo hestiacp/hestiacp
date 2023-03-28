@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	// TODO: Replace with autofocus
-	if (document.querySelectorAll('dialog.modal[open]').length == 0) {
+	if (document.querySelectorAll('dialog[open]').length == 0) {
 		const input = document.querySelector(
 			'#vstobjects .form-control:not([disabled]),\
 			#vstobjects .form-select:not([disabled])'

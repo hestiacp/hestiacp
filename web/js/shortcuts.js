@@ -128,9 +128,15 @@ document.addEventListener('alpine:init', () => {
 		})
 		.register({ code: 'Backspace', ctrlKey: true }, (_evt) => {
 			const redirect = document.querySelector('a.button#btn-back').href;
+			if (!redirect) {
+				return;
+			}
 
 			if (Alpine.store('form').dirty && redirect) {
-				VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', redirect);
+				VE.helpers.createConfirmationDialog({
+					message: $('body').attr('data-confirm-leave-page'),
+					targetUrl: redirect,
+				});
 			} else if (document.querySelector('form#vstobjects .button.cancel')) {
 				location.href = $('form#vstobjects input.cancel')
 					.attr('onclick')
@@ -156,7 +162,10 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+					VE.helpers.createConfirmationDialog({
+						message: $('body').attr('data-confirm-leave-page'),
+						targetUrl: target.href,
+					});
 				} else {
 					location.href = target.href;
 				}
@@ -171,7 +180,10 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+					VE.helpers.createConfirmationDialog({
+						message: $('body').attr('data-confirm-leave-page'),
+						targetUrl: target.href,
+					});
 				} else {
 					location.href = target.href;
 				}
@@ -186,7 +198,10 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+					VE.helpers.createConfirmationDialog({
+						message: $('body').attr('data-confirm-leave-page'),
+						targetUrl: target.href,
+					});
 				} else {
 					location.href = target.href;
 				}
@@ -201,7 +216,10 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+					VE.helpers.createConfirmationDialog({
+						message: $('body').attr('data-confirm-leave-page'),
+						targetUrl: target.href,
+					});
 				} else {
 					location.href = target.href;
 				}
@@ -216,7 +234,10 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+					VE.helpers.createConfirmationDialog({
+						message: $('body').attr('data-confirm-leave-page'),
+						targetUrl: target.href,
+					});
 				} else {
 					location.href = target.href;
 				}
@@ -231,7 +252,10 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+					VE.helpers.createConfirmationDialog({
+						message: $('body').attr('data-confirm-leave-page'),
+						targetUrl: target.href,
+					});
 				} else {
 					location.href = target.href;
 				}
@@ -246,7 +270,10 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog($('.js-confirm-dialog-redirect'), '', target.href);
+					VE.helpers.createConfirmationDialog({
+						message: $('body').attr('data-confirm-leave-page'),
+						targetUrl: target.href,
+					});
 				} else {
 					location.href = target.href;
 				}
@@ -388,19 +415,19 @@ document.addEventListener('alpine:init', () => {
 				}
 
 				if (Alpine.store('form').dirty) {
-					if (document.querySelector('dialog.modal[open]')) {
-						const dialog = document.querySelector('dialog.modal[open]');
+					if (document.querySelector('dialog[open]')) {
+						const dialog = document.querySelector('dialog[open]');
 						dialog.querySelector('button[type="submit"]').click();
 					} else {
-						VE.helpers.createConfirmationDialog(
-							$('.js-confirm-dialog-redirect')[0],
-							'',
-							document.querySelector(`${VE.navigation.state.menu_selector}.focus a`).href
-						);
+						VE.helpers.createConfirmationDialog({
+							message: $('body').attr('data-confirm-leave-page'),
+							targetUrl: document.querySelector(`${VE.navigation.state.menu_selector}.focus a`)
+								.href,
+						});
 					}
 				} else {
-					if (document.querySelector('dialog.modal[open]')) {
-						const dialog = document.querySelector('dialog.modal[open]');
+					if (document.querySelector('dialog[open]')) {
+						const dialog = document.querySelector('dialog[open]');
 						dialog.querySelector('button[type="submit"]').click();
 					} else {
 						const el = $('.units.active .l-unit.focus .shortcut-enter');

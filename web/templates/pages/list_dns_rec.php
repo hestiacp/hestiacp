@@ -113,13 +113,14 @@
 								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("Delete") ?>">
-									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-									<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&record_id=<?= $data[$key]["ID"] ?>&token=<?= $_SESSION["token"] ?>">
+								<a
+									class="data-controls js-confirm-action"
+									href="/delete/dns/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&record_id=<?= $data[$key]["ID"] ?>&token=<?= $_SESSION["token"] ?>"
+									data-confirm-title="<?= _("Delete") ?>"
+									data-confirm-message="<?= sprintf(_("DELETE_RECORD_CONFIRMATION"), $key) ?>"
+								>
+									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>
-								<dialog id="delete_dialog_<?= $i ?>" class="modal js-confirm-dialog-delete">
-									<p><?= sprintf(_("DELETE_RECORD_CONFIRMATION"), $key) ?></p>
-								</dialog>
 							</div>
 						<?php } ?>
 					</div>

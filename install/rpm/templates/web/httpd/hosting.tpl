@@ -2,7 +2,7 @@
 # Default Web Domain Template                                            #
 
 # DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
-# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
 #=========================================================================#
 
 <VirtualHost %ip%:%web_port%>

@@ -531,7 +531,10 @@ update_domain_zone() {
 				fi
 			fi
 		fi
-		eval echo -e "\"$fields\"" | sed "s/%quote%/'/g" >> $zn_conf
+		
+		if [ "$SUSPENDED" != 'yes' ]; then
+			eval echo -e "\"$fields\"" | sed "s/%quote%/'/g" >> $zn_conf
+		fi
 	done < $USER_DATA/dns/$domain.conf
 }
 

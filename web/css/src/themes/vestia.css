@@ -316,25 +316,15 @@ strong {
 /* Modals
    ========================================================================== */
 
-.ui-dialog {
+.modal {
 	box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
-
-	& .ui-dialog-buttonpane button {
-		box-shadow: none;
-	}
 }
 
-.ui-widget,
-.ui-dialog,
-.ui-dialog .ui-dialog-title {
-	font-family: var(--font-family);
-}
-
-.ui-dialog .ui-dialog-title {
+.modal-title {
 	color: #111;
 }
 
-.ui-dialog .ui-dialog-content {
+.modal-message {
 	color: #333;
 }
 

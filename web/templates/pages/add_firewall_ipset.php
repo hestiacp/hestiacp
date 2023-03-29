@@ -91,7 +91,7 @@
 	blacklist_iplists.sort(function (a, b) {
 		return a.name > b.name;
 	});
-	window.onload = function(){
+	window.addEventListener("load", () => {
 		$(function () {
 			var targetElement = document.getElementById('datasource_list');
 
@@ -121,5 +121,5 @@
 				targetElement.appendChild(newEl);
 			});
 		});
-	}
+	});
 </script>

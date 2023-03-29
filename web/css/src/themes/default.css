@@ -1445,7 +1445,7 @@
 	display: block;
 	width: 100%;
 	padding: 8px 12px;
-	font-size: 0.8rem;
+	font-size: 16px;
 	font-weight: normal;
 	color: #4e4e4e;
 	border-radius: var(--border-radius-base);
@@ -1488,13 +1488,17 @@
 		color: #444;
 		background-color: #fff7b6;
 	}
+
+	@media (--viewport-small) {
+		font-size: 0.8rem;
+	}
 }
 
 .form-select {
 	display: block;
 	width: 100%;
 	font-weight: normal;
-	font-size: 0.8rem;
+	font-size: 16px;
 	padding: 8px 30px 8px 12px;
 	line-height: 1.5;
 	border-radius: var(--border-radius-base);
@@ -1515,6 +1519,10 @@
 
 	&:focus {
 		border-color: #008fee;
+	}
+
+	@media (--viewport-small) {
+		font-size: 0.8rem;
 	}
 }
 
@@ -1719,60 +1727,36 @@
 /* Modals
    ========================================================================== */
 
-.dialog {
-	display: none;
-}
-
-/* Hide the default close button in dialog header */
-.ui-dialog-titlebar-close {
-	display: none;
-}
-
-/* Set dialog z-index */
-.ui-front {
-	z-index: 2;
-}
-
-.ui-dialog {
-	font-family: Exo, system-ui;
-	font-weight: 500;
-	background-color: rgb(255 255 255 / 90%);
+.modal {
+	border-radius: var(--border-radius-base);
 	box-shadow: inset 0 1px 3px rgb(0 0 0 / 25%), 0 8px 40px 0 rgb(0 0 0 / 35%);
-	border-radius: 6px;
+	background-color: rgb(255 255 255 / 90%);
 	border: 1px solid rgb(255 255 255 / 98%);
-	text-align: center;
+
+	@media (--viewport-small) {
+		min-width: 360px;
+		max-width: 550px;
+	}
 }
 
-.ui-dialog .ui-dialog-content {
-	color: #535353;
-	padding: 20px 26px 30px;
-}
-
-.ui-dialog .ui-dialog-title {
-	margin: 0;
+.modal-title {
 	color: #305ba9;
 	font-size: 1rem;
-	text-transform: none;
-	letter-spacing: -0.01em;
 	text-align: center;
-	float: none;
-	font-weight: 500;
+	padding: 15px 20px 0;
 }
 
-.ui-widget-overlay {
-	background-color: rgb(0 0 0 / 60%);
+.modal-message {
+	color: #535353;
+	text-align: center;
+	padding: 25px 20px;
 }
 
-.ui-dialog .ui-dialog-buttonpane {
-	border-color: #fff;
+.modal-options {
 	box-shadow: inset 0 0 2px rgb(0 0 0 / 25%);
-	margin-top: 0;
-	padding: 0;
-}
-
-.ui-dialog .ui-dialog-buttonpane button {
-	margin: 0.5em 0.5em 0.5em 0;
-	box-shadow: 0 1px 4px rgb(0 0 0 / 20%), inset 0 0 1px #fff, inset 0 0 3px rgb(255 255 255 / 50%);
+	display: flex;
+	justify-content: flex-end;
+	padding: 10px;
 }
 
 /* Shortcuts panel

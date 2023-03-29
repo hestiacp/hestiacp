@@ -15,16 +15,17 @@
 			<?php } else { ?>
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_DELETE_LOGS"] !== "no")) { ?>
 					<div class="actions-panel" key-action="js">
-						<a class="data-controls do_delete button button-secondary button-danger">
-							<i class="do_delete fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
+						<a
+							class="button button-secondary button-danger data-controls js-confirm-action"
 							<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
-								<input type="hidden" name="delete_url" value="/delete/log/auth/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>">
+								href="/delete/log/auth/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>"
 							<?php } else { ?>
-								<input type="hidden" name="delete_url" value="/delete/log/auth/?token=<?= $_SESSION["token"] ?>">
+								href="/delete/log/auth/?token=<?= $_SESSION["token"] ?>"
 							<?php } ?>
-							<div class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-								<p><?= _("DELETE_LOGS_CONFIRMATION") ?></p>
-							</div>
+							data-confirm-title="<?= _("Delete") ?>"
+							data-confirm-message="<?= _("DELETE_LOGS_CONFIRMATION") ?>"
+						>
+							<i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
 						</a>
 					</div>
 				<?php } ?>

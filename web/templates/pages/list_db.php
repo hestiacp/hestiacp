@@ -155,21 +155,23 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?= _("phpMyAdmin") ?>"><i class="fas fa-right-to-bracket icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-										<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-											<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
-											<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>">
-											<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
-												<p><?=sprintf($spnd_confirmation,$key)?></p>
-											</div>
+										<a
+											class="data-controls js-confirm-action"
+											href="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+											data-confirm-title="<?= _($spnd_action) ?>"
+											data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
+										>
+											<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
 										</a>
 									</div>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-										<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-											<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-											<input type="hidden" name="delete_url" value="/delete/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
-											<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-												<p><?= sprintf(_("DELETE_DATABASE_CONFIRMATION"), $key) ?></p>
-											</div>
+										<a
+											class="data-controls js-confirm-action"
+											href="/delete/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+											data-confirm-title="<?= _("Delete") ?>"
+											data-confirm-message="<?= sprintf(_("DELETE_DATABASE_CONFIRMATION"), $key) ?>"
+										>
+											<i class="fas fa-trash icon-red icon-dim"></i>
 										</a>
 									</div>
 								<?php } ?>

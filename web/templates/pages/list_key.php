@@ -37,16 +37,17 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
+								<a
+									class="data-controls js-confirm-action"
 									<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-										<input type="hidden" name="delete_url" value="/delete/key/?user=<?= htmlentities($_GET["user"]) ?>&key=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
+										href="/delete/key/?user=<?= htmlentities($_GET["user"]) ?>&key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									<?php } else { ?>
-										<input type="hidden" name="delete_url" value="/delete/key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
+										href="/delete/key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									<?php } ?>
-									<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-										<p><?= sprintf(_("DELETE_KEY_CONFIRM"), $key) ?></p>
-									</div>
+									data-confirm-title="<?= _("Delete") ?>"
+									data-confirm-message="<?= sprintf(_("DELETE_KEY_CONFIRM"), $key) ?>"
+								>
+									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>
 							</div>
 						</div>

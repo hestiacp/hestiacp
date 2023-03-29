@@ -52,12 +52,13 @@
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?= $i ?>" class="data-controls do_delete">
-									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-									<input type="hidden" name="delete_url" value="/delete/firewall/banlist/?ip=<?= $ip ?>&chain=<?= $value["CHAIN"] ?>&token=<?= $_SESSION["token"] ?>">
-									<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-										<p><?= sprintf(_("DELETE_IP_CONFIRMATION"), $key) ?></p>
-									</div>
+								<a
+									class="data-controls js-confirm-action"
+									href="/delete/firewall/banlist/?ip=<?= $ip ?>&chain=<?= $value["CHAIN"] ?>&token=<?= $_SESSION["token"] ?>"
+									data-confirm-title="<?= _("Delete") ?>"
+									data-confirm-message="<?= sprintf(_("DELETE_IP_CONFIRMATION"), $key) ?>"
+								>
+									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>
 							</div>
 						</div>

@@ -195,40 +195,51 @@ const VE = {
 			dialog.appendChild(messageElem);
 
 			// Create and insert the options
-			const optionsWrapper = document.createElement('div');
-			optionsWrapper.classList.add('modal-options');
+			const optionsElem = document.createElement('div');
+			optionsElem.classList.add('modal-options');
+
 			const confirmButton = document.createElement('button');
 			confirmButton.type = 'submit';
 			confirmButton.classList.add('button');
 			confirmButton.textContent = 'OK';
+			optionsElem.appendChild(confirmButton);
+
 			const cancelButton = document.createElement('button');
 			cancelButton.type = 'button';
 			cancelButton.classList.add('button', 'button-secondary', 'cancel', 'u-ml5');
 			cancelButton.textContent = 'Cancel';
-			optionsWrapper.appendChild(confirmButton);
 			if (targetUrl) {
-				optionsWrapper.appendChild(cancelButton);
+				optionsElem.appendChild(cancelButton);
 			}
-			dialog.appendChild(optionsWrapper);
 
-			// Add event handlers
-			confirmButton.onclick = () => {
+			dialog.appendChild(optionsElem);
+
+			// Define named functions to handle the event listeners
+			const handleConfirm = () => {
 				if (targetUrl) {
 					window.location.href = targetUrl;
 				}
-				dialog.close();
+				handleClose();
 			};
-			cancelButton.onclick = () => {
-				dialog.close();
-			};
-			dialog.addEventListener('close', () => {
+			const handleCancel = () => handleClose();
+			const handleClose = () => {
+				confirmButton.removeEventListener('click', handleConfirm);
+				cancelButton.removeEventListener('click', handleCancel);
+				dialog.removeEventListener('close', handleClose);
+				document.removeEventListener('keydown', handleKeydown);
 				document.body.removeChild(dialog);
-			});
-			document.addEventListener('keydown', (event) => {
-				if (event.key === 'Escape') {
-					dialog.close();
+			};
+			const handleKeydown = ({ key }) => {
+				if (key === 'Escape') {
+					handleClose();
 				}
-			});
+			};
+
+			// Add event listeners
+			confirmButton.addEventListener('click', handleConfirm);
+			cancelButton.addEventListener('click', handleCancel);
+			dialog.addEventListener('close', handleClose);
+			document.addEventListener('keydown', handleKeydown);
 
 			// Add to DOM and show
 			document.body.appendChild(dialog);

@@ -30,7 +30,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					</a>
 				<?php } ?>
 				<?php if (ipUsed()) { ?>
-					<a target="_blank" href="https://docs.hestiacp.com/admin_docs/database.html#why-i-can-t-use-http-ip-phpmyadmin">
+					<a target="_blank" href="https://hestiacp.com/docs/server-administration/databases.html#why-i-can-t-use-http-ip-phpmyadmin">
 						<i class="fas fa-circle-question"></i>
 					</a>
 				<?php } ?>

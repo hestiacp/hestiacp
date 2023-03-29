@@ -3,7 +3,6 @@
 @import url("@fortawesome/fontawesome-free/css/brands");
 @import url("@fortawesome/fontawesome-free/css/solid");
 @import url("../dependencies/animate");
-@import url("../dependencies/jquery-ui");
 @import url("../media_queries");
 @import url("../fonts");
 @import url("../base");
@@ -2354,31 +2353,49 @@
 	color: #c0c0c0;
 }
 
-.cron-helper-panel {
+/* Tabs component
+   ========================================================================== */
+
+.tabs {
 	border: 1px solid #cfcfcf;
 	border-radius: var(--border-radius-base);
 	box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-	margin-top: 20px;
+	padding: 10px;
+}
 
-	& .ui-tabs-tab a {
-		color: #777;
-		font-weight: 600;
-		line-height: 30px;
-		padding: 0 12px;
-		text-transform: uppercase;
+.tabs-items {
+	display: flex;
+	flex-wrap: wrap;
+}
 
-		&:hover {
-			color: #c36;
-		}
+.tabs-item {
+	border: 0;
+	background-color: transparent;
+	text-transform: uppercase;
+	font-weight: 600;
+	color: #777;
+	padding: 10px;
 
-		&:active {
-			color: #3b9de8;
-		}
-	}
-
-	& .ui-tabs-tab[aria-expanded="true"] a {
+	&:hover,
+	&[aria-selected="true"] {
 		color: #c36;
 	}
+
+	&:active {
+		color: #3b9de8;
+	}
+
+	@media (--viewport-medium) {
+		margin-right: 10px;
+	}
+}
+
+.tabs-panel {
+	padding: 10px;
+}
+
+.cron-tabs {
+	margin-top: 20px;
 
 	@media (--viewport-medium) {
 		margin-top: 25px;

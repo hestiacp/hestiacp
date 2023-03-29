@@ -1445,7 +1445,7 @@
 	display: block;
 	width: 100%;
 	padding: 8px 12px;
-	font-size: 0.8rem;
+	font-size: 16px;
 	font-weight: normal;
 	color: #4e4e4e;
 	border-radius: var(--border-radius-base);
@@ -1488,13 +1488,17 @@
 		color: #444;
 		background-color: #fff7b6;
 	}
+
+	@media (--viewport-small) {
+		font-size: 0.8rem;
+	}
 }
 
 .form-select {
 	display: block;
 	width: 100%;
 	font-weight: normal;
-	font-size: 0.8rem;
+	font-size: 16px;
 	padding: 8px 30px 8px 12px;
 	line-height: 1.5;
 	border-radius: var(--border-radius-base);
@@ -1515,6 +1519,10 @@
 
 	&:focus {
 		border-color: #008fee;
+	}
+
+	@media (--viewport-small) {
+		font-size: 0.8rem;
 	}
 }
 

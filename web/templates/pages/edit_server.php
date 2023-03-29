@@ -532,7 +532,7 @@
 									<?= _("phpMyAdmin Single Sign On") ?>
 									<span class="hint">
 										<a
-											href="https://docs.hestiacp.com/admin_docs/database/phpmyadmin-sso.html"
+											href="https://hestiacp.com/docs/server-administration/databases.html"
 											target="_blank"
 										>
 											(<?= _("More info") ?>)
@@ -728,7 +728,7 @@
 						<label for="v_backup_dir" class="form-label">
 							<?= _("Directory") ?>
 							<a
-								href="https://docs.hestiacp.com/admin_docs/backups.html#how-to-change-default-backup-folder"
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#how-to-change-default-backup-folder"
 								target="_blank"
 								class="u-ml5"
 							>

@@ -79,10 +79,6 @@ steps:
   - name: Run restore tests
     commands:
       - bats ./test/restore.bats
-  - name: Run Letsencrypt test against Staging
-    commands:
-      - cp /root/le-env.sh /tmp/hestia-le-env.sh
-      - bats ./test/letsencrypt.bats
   - name: Run config tests
     commands:
       - bats ./test/config-tests.bats

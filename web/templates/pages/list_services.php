@@ -153,7 +153,7 @@
 									class="data-controls js-confirm-action"
 									href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
 									data-confirm-title="<?= _("Restart") ?>"
-									data-confirm-message="<?=sprintf(_('RESTART_CONFIRMATION'),$key); ?>"
+									data-confirm-message="<?= sprintf(_('RESTART_CONFIRMATION'), $key) ?>"
 								>
 									<i class="fas fa-arrow-rotate-left icon-highlight icon-dim"></i>
 								</a>

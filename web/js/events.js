@@ -221,6 +221,9 @@ const VE = {
 			cancelButton.onclick = () => {
 				dialog.close();
 			};
+			dialog.addEventListener('close', () => {
+				document.body.removeChild(dialog);
+			});
 			document.addEventListener('keydown', (event) => {
 				if (event.key === 'Escape') {
 					dialog.close();
@@ -230,11 +233,6 @@ const VE = {
 			// Add to DOM and show
 			document.body.appendChild(dialog);
 			dialog.showModal();
-
-			// Destroy on close
-			dialog.addEventListener('close', () => {
-				document.body.removeChild(dialog);
-			});
 		},
 		warn: (msg) => {
 			alert('WARNING: ' + msg);

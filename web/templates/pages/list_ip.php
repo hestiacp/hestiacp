@@ -79,7 +79,7 @@
 									class="data-controls js-confirm-action"
 									href="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?=sprintf(_('DELETE_IP_CONFIRMATION'), $key)?>"
+									data-confirm-message="<?= sprintf(_('DELETE_IP_CONFIRMATION'), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>

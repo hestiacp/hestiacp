@@ -170,7 +170,7 @@
 											data-confirm-title="<?= _($spnd_action) ?>"
 											data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 										>
-											<i class="fas <?=$spnd_icon?> icon-highlight icon-dim"></i>
+											<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
 										</a>
 									</div>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">

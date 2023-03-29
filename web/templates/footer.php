@@ -73,12 +73,12 @@
 
 <?php if (!empty($_SESSION["error_msg"])): ?>
 	<script>
-		window.onload = function() {
+		window.addEventListener("load", (event) => {
 			VE.helpers.createConfirmationDialog({
 				title: '<?= _("Error") ?>',
 				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
 			});
-		}
+		});
 	</script>
 <?php
 	unset($_SESSION['error_msg']);

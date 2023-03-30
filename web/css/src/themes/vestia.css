@@ -196,8 +196,7 @@ strong {
 			text-transform: none;
 		}
 
-		&:active,
-		&:focus {
+		&:active {
 			color: #ff6701;
 			background: none;
 			text-shadow: none;
@@ -264,8 +263,7 @@ strong {
 		box-shadow: none;
 	}
 
-	&:active,
-	&:focus {
+	&:active {
 		border-color: transparent;
 		color: #fff;
 		background: #809c00;
@@ -293,8 +291,7 @@ strong {
 		background: #f5f5f5;
 	}
 
-	&:active,
-	&:focus {
+	&:active {
 		color: #326b9b;
 		text-shadow: none;
 		border-color: #aaa;

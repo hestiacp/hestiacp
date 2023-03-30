@@ -18,7 +18,7 @@
 	</div>
 
 	<div x-data>
-		<dialog x-ref="dialog" class="shortcuts animate__animated animate__fadeIn">
+		<dialog x-ref="dialog" class="shortcuts">
 			<div class="shortcuts-header">
 				<div class="shortcuts-title"><?= _("Shortcuts") ?></div>
 				<div

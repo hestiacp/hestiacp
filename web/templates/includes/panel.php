@@ -69,7 +69,7 @@
 						<ul
 							x-cloak
 							x-show="open"
-							class="top-bar-notifications-list animate__animated animate__fadeIn"
+							class="top-bar-notifications-list"
 						>
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">

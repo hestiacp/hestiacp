@@ -805,25 +805,25 @@ strong {
 	border-bottom: 1px solid #353535;
 }
 
-.cron-helper-panel {
+/* Tabs component
+   ========================================================================== */
+
+.tabs {
 	box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
 	border-color: #606060;
 	background-color: #454545;
+}
 
-	& .ui-tabs-tab a {
-		color: #cacaca;
+.tabs-item {
+	color: #cacaca;
 
-		&:hover {
-			color: #ff3478;
-		}
-
-		&:active {
-			color: #3b9de8;
-		}
+	&:hover,
+	&[aria-selected="true"] {
+		color: #ff3478;
 	}
 
-	& .ui-tabs-tab[aria-expanded="true"] a {
-		color: #ff3478;
+	&:active {
+		color: #3b9de8;
 	}
 }
 

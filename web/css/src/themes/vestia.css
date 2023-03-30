@@ -411,22 +411,24 @@ strong {
 	}
 }
 
-.cron-helper-panel {
+/* Tabs component
+   ========================================================================== */
+
+.tabs {
 	border-radius: 0;
 	box-shadow: none;
+}
 
-	& .ui-tabs-tab a {
-		&:hover {
-			color: #f79b44;
-		}
+.tabs-item {
+	color: #777;
 
-		&:active {
-			color: #e95e00;
-		}
+	&:hover,
+	&[aria-selected="true"] {
+		color: #ff6701;
 	}
 
-	& .ui-tabs-tab[aria-expanded="true"] a {
-		color: #ff6701;
+	&:active {
+		color: #e95e00;
 	}
 }
 

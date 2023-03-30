@@ -1863,8 +1863,7 @@
 		transition: 0.2s;
 	}
 
-	&:active,
-	&:focus {
+	&:active {
 		color: #517bab;
 		text-shadow: 0 -1px 2px rgb(255 255 255 / 85%);
 		border-color: #0066b4;
@@ -1901,8 +1900,7 @@
 	border-color: #f27e71;
 }
 
-.button-danger:active,
-.button-danger:focus {
+.button-danger:active {
 	background: linear-gradient(to bottom, #fcd0ca 0%, #f5a69d 50%, #f9e3df 100%);
 	color: #ce1500;
 	text-shadow: 0 1px 1px rgb(255 255 255 / 20%), 0 -1px 1px rgb(255 255 255 / 60%);
@@ -2187,7 +2185,7 @@
 	justify-content: center;
 	align-items: center;
 	padding: 50px;
-	background-color: rgb(0 0 0 / 50%);
+	background-color: rgb(0 0 0 / 10%);
 	font-size: 50px;
 	z-index: 9999;
 	visibility: hidden;

@@ -122,8 +122,7 @@ strong {
 		);
 	}
 
-	&:active,
-	&:focus {
+	&:active {
 		box-shadow: none;
 		background: linear-gradient(
 			to bottom,
@@ -145,8 +144,7 @@ strong {
 		border-color: #f27e71;
 	}
 
-	&:active,
-	:focus {
+	&:active {
 		background: #a91200;
 		color: #fff;
 		border-color: #f4301a;

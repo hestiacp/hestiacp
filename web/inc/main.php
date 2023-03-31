@@ -192,16 +192,16 @@ function render_page($user, $TAB, $page) {
 	// Panel
 	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
 
-	// Including page specific js file
-	if (file_exists($__pages_js_dir . $page . ".js")) {
-		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
-	}
-
 	// Policies controller
 	@include_once dirname(__DIR__) . "/inc/policies.php";
 
 	// Body
 	include $__template_dir . "pages/" . $page . ".php";
+
+	// Including page specific js file
+	if (file_exists($__pages_js_dir . $page . ".js")) {
+		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
+	}
 
 	// Footer
 	include $__template_dir . "footer.php";

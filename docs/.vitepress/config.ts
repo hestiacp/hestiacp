@@ -43,11 +43,11 @@ export default defineConfig({
 			copyright: "Copyright © 2019-present Hestia Control Panel",
 		},
 
-		// algolia: {
-		//   appId: "REPLACE_ME",
-		//   apiKey: "REPLACE_ME",
-		//   indexName: "REPLACE_ME",
-		// },
+		algolia: {
+			appId: "V04P0P5D2R",
+			apiKey: "f3547968acbc0d023e93c2970137810f",
+			indexName: "hestia_cp",
+		},
 	},
 });
 

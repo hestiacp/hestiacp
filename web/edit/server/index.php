@@ -1641,11 +1641,11 @@ if (!empty($_POST["save"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 	if ($require_refresh == true) {
 		$refresh = $_SERVER["REQUEST_URI"];
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 		header("Location: $refresh");
 		die();
 	}

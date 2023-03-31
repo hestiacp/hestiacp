@@ -547,6 +547,7 @@
 
 		&:focus {
 			border-right-color: #008fee;
+			outline-offset: 1px;
 		}
 	}
 

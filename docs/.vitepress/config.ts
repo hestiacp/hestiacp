@@ -45,8 +45,8 @@ export default defineConfig({
 
 		algolia: {
 			appId: "V04P0P5D2R",
-			apiKey: "f3547968acbc0d023e93c2970137810f",
-			indexName: "hestia_cp",
+			apiKey: "7a90a3ac7f9313f174c50b0f301f7ec6",
+			indexName: "hestiacp",
 		},
 	},
 });

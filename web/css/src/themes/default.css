@@ -1409,8 +1409,14 @@
 @media (--viewport-medium) {
 	.sidebar-left-container {
 		display: grid;
-		gap: 50px;
+		gap: 20px;
 		grid-template-columns: 1fr 3fr;
+	}
+}
+
+@media (--viewport-large) {
+	.sidebar-left-container {
+		gap: 50px;
 	}
 }
 

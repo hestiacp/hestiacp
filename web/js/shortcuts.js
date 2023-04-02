@@ -134,7 +134,7 @@ document.addEventListener('alpine:init', () => {
 
 			if (Alpine.store('form').dirty && redirect) {
 				VE.helpers.createConfirmationDialog({
-					message: $('body').attr('data-confirm-leave-page'),
+					message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 					targetUrl: redirect,
 				});
 			} else if (document.querySelector('form#vstobjects .button.cancel')) {
@@ -163,7 +163,7 @@ document.addEventListener('alpine:init', () => {
 				}
 				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog({
-						message: $('body').attr('data-confirm-leave-page'),
+						message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 						targetUrl: target.href,
 					});
 				} else {
@@ -181,7 +181,7 @@ document.addEventListener('alpine:init', () => {
 				}
 				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog({
-						message: $('body').attr('data-confirm-leave-page'),
+						message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 						targetUrl: target.href,
 					});
 				} else {
@@ -199,7 +199,7 @@ document.addEventListener('alpine:init', () => {
 				}
 				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog({
-						message: $('body').attr('data-confirm-leave-page'),
+						message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 						targetUrl: target.href,
 					});
 				} else {
@@ -217,7 +217,7 @@ document.addEventListener('alpine:init', () => {
 				}
 				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog({
-						message: $('body').attr('data-confirm-leave-page'),
+						message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 						targetUrl: target.href,
 					});
 				} else {
@@ -235,7 +235,7 @@ document.addEventListener('alpine:init', () => {
 				}
 				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog({
-						message: $('body').attr('data-confirm-leave-page'),
+						message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 						targetUrl: target.href,
 					});
 				} else {
@@ -253,7 +253,7 @@ document.addEventListener('alpine:init', () => {
 				}
 				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog({
-						message: $('body').attr('data-confirm-leave-page'),
+						message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 						targetUrl: target.href,
 					});
 				} else {
@@ -271,7 +271,7 @@ document.addEventListener('alpine:init', () => {
 				}
 				if (Alpine.store('form').dirty) {
 					VE.helpers.createConfirmationDialog({
-						message: $('body').attr('data-confirm-leave-page'),
+						message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 						targetUrl: target.href,
 					});
 				} else {
@@ -420,7 +420,7 @@ document.addEventListener('alpine:init', () => {
 						dialog.querySelector('button[type="submit"]').click();
 					} else {
 						VE.helpers.createConfirmationDialog({
-							message: $('body').attr('data-confirm-leave-page'),
+							message: document.querySelector('body').getAttribute('data-confirm-leave-page'),
 							targetUrl: document.querySelector(`${VE.navigation.state.menu_selector}.focus a`)
 								.href,
 						});

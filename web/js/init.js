@@ -20,22 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	// TODO Refactor or remove
-	$('.submenu-select-dropdown').each(() => {
-		$(this).wrap("<span class='submenu-select-wrapper'></span>");
-		$(this).after("<span class='holder'></span>");
-	});
-	$('.submenu-select-dropdown')
-		.change(() => {
-			const selectedOption = $(this).find(':selected').text();
-			$(this).next('.holder').text(selectedOption);
-		})
-		.trigger('change');
-
 	// SORTING
-	$('.toolbar-sorting-toggle').click(function (evt) {
-		evt.preventDefault();
-		$('.toolbar-sorting-menu').toggleClass('u-hidden');
+	document.querySelectorAll('.toolbar-sorting-toggle').forEach((toggle) => {
+		toggle.addEventListener('click', (evt) => {
+			evt.preventDefault();
+			document.querySelector('.toolbar-sorting-menu').classList.toggle('u-hidden');
+		});
 	});
 
 	$('.toolbar-sorting-menu span').click(function () {

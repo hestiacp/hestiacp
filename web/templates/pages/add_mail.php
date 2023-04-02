@@ -46,7 +46,7 @@
 			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
 				<div class="u-mb20">
 					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
+					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
 				</div>
 				<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 					<div class="u-mb20">

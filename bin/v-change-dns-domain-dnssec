@@ -57,7 +57,7 @@ fi
 
 version=$(named -v | awk 'NR==1{print $2}')
 if version_ge '9.18' $version; then
-	check_result "$E_DISABLED" "DNSSEC is not supported when bind / named < 9.18"
+	check_result "$E_DISABLED" "DNSSEC is not supported when bind / named version <= 9.16.18"
 fi
 
 #----------------------------------------------------------#

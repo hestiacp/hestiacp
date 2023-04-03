@@ -64,7 +64,7 @@
 					</select>
 				</div>
 			<?php } ?>
-			<?php if ($_SESSION['DNS_CLUSTER_SYSTEM'] == 'hestia-zone' && $_SESSION['SUPPORT_DNSSEC'] == 'yes'){?>
+			<?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "hestia-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
 			<div class="form-check u-mb10">
 				<input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec === 'yes'){ echo ' checked'; } ?>>
 				<label for="v_dnssec">

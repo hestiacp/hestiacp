@@ -137,11 +137,11 @@
 				sort-memory="<?=$data[$key]['MEM']?>" sort-cpu="<?=$cpu;?>" sort-uptime="<?=$data[$key]['RTIME']?>">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="service[]" value="<?=$key?>">
+						<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="service[]" value="<?= $key ?>">
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-2">
-						<i class="fas <?=$state_icon;?> u-mr5"></i>
-						<b><a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>: <?=$key?>"><?=$key?></a></b>
+						<i class="fas <?= $state_icon ?> u-mr5"></i>
+						<b><a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>: <?= $key ?>"><?= $key ?></a></b>
 					</div>
 					<div class="clearfix l-unit__stat-col--left u-text-center compact-2">
 						<div class="actions-panel clearfix">
@@ -151,9 +151,9 @@
 							<div class="actions-panel__col actions-panel__stop shortcut-s" key-action="js">
 								<a
 									class="data-controls js-confirm-action"
-									href="/restart/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/restart/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									data-confirm-title="<?= _("Restart") ?>"
-									data-confirm-message="<?= sprintf(_('RESTART_CONFIRMATION'), $key) ?>"
+									data-confirm-message="<?= sprintf(_("RESTART_CONFIRMATION"), $key) ?>"
 								>
 									<i class="fas fa-arrow-rotate-left icon-highlight icon-dim"></i>
 								</a>

@@ -547,7 +547,6 @@
 
 		&:focus {
 			border-right-color: #008fee;
-			outline-offset: 1px;
 		}
 	}
 
@@ -1459,6 +1458,7 @@
 	}
 
 	&:focus {
+		outline: 0;
 		border-color: #008fee;
 		background-color: #d7f9ff;
 		color: #333;
@@ -1518,6 +1518,7 @@
 	}
 
 	&:focus {
+		outline: 0;
 		border-color: #008fee;
 	}
 

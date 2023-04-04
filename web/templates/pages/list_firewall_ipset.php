@@ -37,8 +37,7 @@
 	</div>
 
 	<!-- Begin firewall IP address list item loop -->
-	<?php
-	foreach ($data as $key => $value) {
+	<?php foreach ($data as $key => $value) {
  	$listname = $key; ?>
 		<div class="l-unit animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">

@@ -21,7 +21,7 @@
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<form x-data x-bind="BulkEdit" action="/bulk/user/" method="post">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("apply to selected") ?></option>
 						<option value="rebuild"><?= _("rebuild") ?></option>
@@ -99,7 +99,7 @@
 			sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>">
 			<div class="l-unit__col l-unit__col--right" style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== 'admin') && ($key === 'admin')) { echo 'display: none';} else {echo 'display: table-cell';}?>">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="user[]" value="<?=$key?>">
+					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="user[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 userlist-username">
 					<?php if ($key == $user_plain) { ?>
@@ -108,24 +108,24 @@
 						<b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
 					<?php } ?>
 					<br>
-					<div class="userlist-email"><b><?= _("Email") ?>:</b> <?=$data[$key]['CONTACT']?></div>
+					<div class="userlist-email"><b><?= _("Email") ?>:</b> <?= $data[$key]["CONTACT"] ?></div>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
 							<?php if ($key == $user_plain) { ?>
-								<i class="fas fa-user-check icon-dim" title="<?=$key?> (<?=$data[$key]['NAME']?>)"></i>
+								<i class="fas fa-user-check icon-dim" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
 							<?php } else { ?>
-								<a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$key?>"><i class="fas fa-right-to-bracket icon-green icon-dim"></i></a>
+								<a href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("login as") ?> <?= $key ?>"><i class="fas fa-right-to-bracket icon-green icon-dim"></i></a>
 							<?php } ?>
-							<?php if (($_SESSION['userContext'] === 'admin') && ($key == 'admin') && ($_SESSION['user'] != 'admin')) { ?>
+							<?php if ($_SESSION["userContext"] === "admin" && $key == "admin" && $_SESSION["user"] != "admin") { ?>
 								<!-- Hide edit button from admin user when logged in with another admin user -->
 								&nbsp;
 							<?php } else { ?>
 								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
-							<?php if ($key == 'admin') { ?>
+							<?php if ($key == "admin") { ?>
 								<!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->
 							<?php } else { ?>
 								<?php if ($key == $user_plain) { ?>
@@ -134,7 +134,7 @@
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
 									<a
 										class="data-controls js-confirm-action"
-										href="/<?=$spnd_action?>/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/<?= $spnd_action ?>/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										data-confirm-title="<?= _($spnd_action) ?>"
 										data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 									>
@@ -144,9 +144,9 @@
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
 									<a
 										class="data-controls js-confirm-action"
-										href="/delete/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_('DELETE_USER_CONFIRMATION'), $key) ?>"
+										data-confirm-message="<?= sprintf(_("DELETE_USER_CONFIRMATION"), $key) ?>"
 									>
 										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>

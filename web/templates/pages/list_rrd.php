@@ -23,8 +23,8 @@
 				<h2 class="u-mb20">
 					<?= _($data[$key]["TITLE"]) ?>
 				</h2>
-				<a href="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" class="u-block" target="_blank">
-					<img class="u-image-fluid u-rounded" src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" alt="">
+				<a href="/list/rrd/image.php?/rrd/<?= $data[$key]["TYPE"] . "/" . $period . "-" . $data[$key]["RRD"] . ".png" ?>" class="u-block" target="_blank">
+					<img class="u-image-fluid u-rounded" src="/list/rrd/image.php?/rrd/<?= $data[$key]["TYPE"] . "/" . $period . "-" . $data[$key]["RRD"] . ".png" ?>" alt="">
 				</a>
 			</div>
 		<?php } ?>

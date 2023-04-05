@@ -473,9 +473,9 @@ if [ -z "$certificate" ]; then
 		status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 		validation=$(echo "$answer" | grep 'status":' | cut -f4 -d '"')
 		certificate=$(echo "$answer" | grep 'certificate":' | cut -f4 -d '"')
-		sleep $i
+		sleep $((i * 2)) # Sleep for 2s, 4s, 6s, 8s
 		if [ $i -gt 10 ]; then
-			exit "Processing loop"
+			check_result "$E_CONNECT" "Certificate processing timeout ($domain)"
 		fi
 		debug_log "Step 7" "- status: ${status}\n- nonce: ${nonce}\n- payload: ${payload}\n- certificate: ${certificate}\n- answer: ${answer}"
 	done

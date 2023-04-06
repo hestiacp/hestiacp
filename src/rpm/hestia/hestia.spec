@@ -1,8 +1,8 @@
 %global _hardened_build 1
 
 Name:           hestia
-Version:        1.7.2
-Release:        1%{dist}
+Version:        1.7.3
+Release:        1~alpha%{dist}
 Summary:        Hestia Control Panel
 Group:          System Environment/Base
 License:        GPLv3

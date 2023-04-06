@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.2] - Service release
+
+### Note
+
+- Hestia 1.7.2 fixes an issue with certificate downloading introduced by a new feature with [LetsEncrypt](https://community.letsencrypt.org/t/enabling-asynchronous-order-finalization/193522/7) and will go live on the 24th April 2023. Breaking existing setups!
+
+### Bugfixes
+
+- Fixed an issue php after default php version change (#3145 #3414)
+- Fixed importing Add Domains v-import-cpanel (#3242 @adion-gorani)
+- Fixed and issue with DNSSSEC check if DNSEC is available (#3430)
+- Fixed an issue with v-add-web-domain-redirection (#3438 #3440)
+- Remove leading and trailing spaces on a domain (#3439 #3440)
+- Fixed an issue with domain.com:/public_html in v-backup-users (#3434)
+- Fix and issue with custom webmail clients (#3419 #3420)
+- Refine :focus styles (#3432)
+- Replace jQuery UI tabs with vanilla JS (#3413)
+- Reduce amount of animation styles (#3418)
+- Minor UI updates (#3425)
+- Fixed an issue with v-suspend-dns-record still loading after being disabled (#3441 @setiseta)
+- Replace jQuery UI dialogs with <dialog> (#3401)
+- Fixed an issue SSL not found + php error on login page. (#3404)
+
 ## [1.7.1] - Service release
 
 ### Bugfixes

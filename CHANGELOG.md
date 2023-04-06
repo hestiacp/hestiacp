@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Note
 
-- Hestia 1.7.2 fixes an issue with certificate downloading introduced by a new feature with [LetsEncrypt](https://community.letsencrypt.org/t/enabling-asynchronous-order-finalization/193522/7) and will go live on the 24th April 2023. Breaking existing setups!
+- HestiaCP 1.7.2 fixes an issue with downloading certificates from Let's Encrypt due to the implementation of asynchronous requests which will go live on 10th April 2023. Please update your server before this date to ensure compatibility with Let's Encrypt.
 
 ### Bugfixes
 

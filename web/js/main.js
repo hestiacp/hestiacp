@@ -186,7 +186,7 @@ document.addEventListener('alpine:init', () => {
 			const res = await fetch(`/list/notifications/?ajax=1&token=${token}`);
 			this.initialized = true;
 			if (!res.ok) {
-				throw new Error('An error occured while listing notifications.');
+				throw new Error('An error occurred while listing notifications.');
 			}
 
 			this.notifications = Object.entries(await res.json()).reduce(
@@ -211,4 +211,19 @@ document.addEventListener('alpine:init', () => {
 			this.open = false;
 		},
 	}));
+});
+
+// Intercept clicks on .js-confirm-action links and display dialog
+document.addEventListener('click', (evt) => {
+	const triggerLink = evt.target.closest('.js-confirm-action');
+	if (!triggerLink) {
+		return;
+	}
+	evt.preventDefault();
+
+	const title = triggerLink.getAttribute('data-confirm-title');
+	const message = triggerLink.getAttribute('data-confirm-message');
+	const targetUrl = triggerLink.getAttribute('href');
+
+	VE.helpers.createConfirmationDialog({ title, message, targetUrl });
 });

@@ -269,10 +269,10 @@ csv_list() {
 #----------------------------------------------------------#
 
 version=$(named -v | awk 'NR==1{print $2}')
-if version_ge '9.18' $version; then
-	SUPPORT_DNSSEC="yes"
-else
+if version_ge '9.16.18' $version; then
 	SUPPORT_DNSSEC="no"
+else
+	SUPPORT_DNSSEC="yes"
 fi
 
 # Listing data

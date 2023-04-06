@@ -6,10 +6,10 @@
 			<a href="/list/server/?cpu" class="button button-secondary"><i class="fas fa-chart-pie icon-green"></i><?= _("show: CPU / MEM / NET / DISK") ?></a>
 		</div>
 		<div class="toolbar-right">
-			<a class="toolbar-link<?php if ((empty($period)) || ($period == 'day')) echo " selected" ?>" href="?period=daily"><?= _("Daily") ?></a>
-			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'week')) echo " selected" ?>" href="?period=weekly"><?= _("Weekly") ?></a>
-			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'month')) echo " selected" ?>" href="?period=monthly"><?= _("Monthly") ?></a>
-			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'year')) echo " selected" ?>" href="?period=yearly"><?= _("Yearly") ?></a>
+			<a class="toolbar-link<?php if ((empty($period)) || ($period == 'daily')) echo " selected" ?>" href="?period=daily"><?= _("Daily") ?></a>
+			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'weekly')) echo " selected" ?>" href="?period=weekly"><?= _("Weekly") ?></a>
+			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'monthly')) echo " selected" ?>" href="?period=monthly"><?= _("Monthly") ?></a>
+			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'yearly')) echo " selected" ?>" href="?period=yearly"><?= _("Yearly") ?></a>
 		</div>
 	</div>
 </div>
@@ -23,8 +23,8 @@
 				<h2 class="u-mb20">
 					<?= _($data[$key]["TITLE"]) ?>
 				</h2>
-				<a href="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" class="u-block" target="_blank">
-					<img class="u-image-fluid u-rounded" src="/list/rrd/image.php?/rrd/<?=$data[$key]['TYPE']."/".$period."-".$data[$key]['RRD'].".png"?>" alt="">
+				<a href="/list/rrd/image.php?/rrd/<?= $data[$key]["TYPE"] . "/" . $period . "-" . $data[$key]["RRD"] . ".png" ?>" class="u-block" target="_blank">
+					<img class="u-image-fluid u-rounded" src="/list/rrd/image.php?/rrd/<?= $data[$key]["TYPE"] . "/" . $period . "-" . $data[$key]["RRD"] . ".png" ?>" alt="">
 				</a>
 			</div>
 		<?php } ?>

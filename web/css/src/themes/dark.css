@@ -566,7 +566,7 @@ strong {
 	text-shadow: 0 1px 1px rgb(0 0 0 / 35%);
 	font-weight: 400;
 	border-color: #707070;
-	background: rgb(48 48 48);
+	background: #303030;
 	background: linear-gradient(
 		0deg,
 		rgb(48 48 48 / 100%) 0%,
@@ -591,8 +591,7 @@ strong {
 			inset 0 0 3px rgb(0 0 0 / 65%);
 	}
 
-	&:active,
-	&:focus {
+	&:active {
 		color: #d4d4d4;
 		text-shadow: 0 -1px 1px rgb(0 0 0 / 55%);
 		border-color: #0066b4;
@@ -719,6 +718,13 @@ strong {
 	background-color: #282828;
 }
 
+/* Spinner
+   ========================================================================== */
+
+.fullscreen-loader {
+	background-color: rgb(0 0 0 / 50%);
+}
+
 /* Badge component
    ========================================================================== */
 
@@ -760,31 +766,22 @@ strong {
 /* Modals
    ========================================================================== */
 
-.ui-dialog .ui-dialog-buttonpane {
-	border-top: 1px solid #404040;
-}
-
-.ui-dialog .ui-dialog-buttonpane button {
-	box-shadow: 0 1px 4px rgb(0 0 0 / 10%), inset 0 0 1px #000, inset 0 0 3px rgb(0 0 0 / 50%);
-}
-
-.ui-dialog {
+.modal {
 	background-color: rgb(45 45 45 / 95%);
-	border: 1px solid rgb(80 80 80 / 97%);
+	border-color: rgb(80 80 80 / 97%);
 	box-shadow: inset 0 1px 3px rgb(0 0 0 / 25%), 0 8px 25px rgb(0 0 0 / 90%);
 }
 
-.ui-dialog .ui-dialog-content {
+.modal-title {
+	color: #f12569;
+}
+
+.modal-message {
 	color: #dadada;
 }
 
-.ui-dialog .ui-dialog-title {
-	color: #f12569;
-	font-weight: 600;
-}
-
-.ui-widget-header a {
-	color: #cacaca;
+.modal-options {
+	border-top: 1px solid #404040;
 }
 
 /* Shortcuts panel
@@ -800,25 +797,25 @@ strong {
 	border-bottom: 1px solid #353535;
 }
 
-.cron-helper-panel {
+/* Tabs component
+   ========================================================================== */
+
+.tabs {
 	box-shadow: 0 1px 4px rgb(0 0 0 / 25%);
 	border-color: #606060;
 	background-color: #454545;
+}
 
-	& .ui-tabs-tab a {
-		color: #cacaca;
+.tabs-item {
+	color: #cacaca;
 
-		&:hover {
-			color: #ff3478;
-		}
-
-		&:active {
-			color: #3b9de8;
-		}
+	&:hover,
+	&[aria-selected="true"] {
+		color: #ff3478;
 	}
 
-	& .ui-tabs-tab[aria-expanded="true"] a {
-		color: #ff3478;
+	&:active {
+		color: #3b9de8;
 	}
 }
 

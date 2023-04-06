@@ -96,12 +96,13 @@
 									<?php if ($read_only !== 'true') {?>
 										<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
 										<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-											<a id="delete_link_<?= $i ?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-												<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-												<input type="hidden" name="delete_url" value="/delete/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>">
-												<div id="delete_dialog_<?= $i ?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-													<p><?= sprintf(_("DELETE_BACKUP_CONFIRMATION"), $key) ?></p>
-												</div>
+											<a
+												class="data-controls js-confirm-action"
+												href="/delete/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+												data-confirm-title="<?= _("Delete") ?>"
+												data-confirm-message="<?= sprintf(_("DELETE_BACKUP_CONFIRMATION"), $key) ?>"
+											>
+												<i class="fas fa-trash icon-red icon-dim"></i>
 											</a>
 										</div>
 									<?php } ?>

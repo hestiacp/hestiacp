@@ -1,7 +1,7 @@
 {
 	"name": "hestia",
 	"private": true,
-	"version": "1.7.1",
+	"version": "1.7.2~alpha",
 	"description": "An open-source Linux web server control panel.",
 	"repository": "https://github.com/hestiacp/hestiacp",
 	"license": "GPL-3.0-or-later",
@@ -18,15 +18,15 @@
 	},
 	"packageManager": "yarn@3.4.1",
 	"dependencies": {
-		"@fortawesome/fontawesome-free": "^6.3.0",
+		"@fortawesome/fontawesome-free": "^6.4.0",
 		"normalize.css": "^8.0.1"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.19.4",
-		"@typescript-eslint/eslint-plugin": "^5.56.0",
-		"@typescript-eslint/parser": "^5.56.0",
-		"cssnano": "^5.1.15",
-		"eslint": "^8.36.0",
+		"@typescript-eslint/eslint-plugin": "^5.57.0",
+		"@typescript-eslint/parser": "^5.57.0",
+		"cssnano": "^6.0.0",
+		"eslint": "^8.37.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-editorconfig": "^4.0.2",
 		"husky": "^8.0.3",
@@ -36,16 +36,16 @@
 		"postcss-cli": "^10.1.0",
 		"postcss-import": "^15.1.0",
 		"postcss-path-replace": "^1.0.4",
-		"postcss-preset-env": "^8.0.1",
+		"postcss-preset-env": "^8.3.0",
 		"postcss-size": "^4.0.1",
-		"prettier": "^2.8.6",
+		"prettier": "^2.8.7",
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.12.8",
 		"prettier-plugin-sql": "^0.13.0",
-		"stylelint": "^15.3.0",
-		"stylelint-config-standard": "^31.0.0",
-		"typescript": "^5.0.2",
-		"vitepress": "1.0.0-alpha.61",
+		"stylelint": "^15.4.0",
+		"stylelint-config-standard": "^32.0.0",
+		"typescript": "^5.0.3",
+		"vitepress": "1.0.0-alpha.64",
 		"vue": "^3.2.47"
 	}
 }

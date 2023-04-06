@@ -26,7 +26,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
+				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled required>
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
@@ -64,7 +64,7 @@
 					</select>
 				</div>
 			<?php } ?>
-			<?php if ($_SESSION['DNS_CLUSTER_SYSTEM'] == 'hestia-zone' && $_SESSION['SUPPORT_DNSSEC'] == 'yes'){?>
+			<?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "hestia-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
 			<div class="form-check u-mb10">
 				<input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec === 'yes'){ echo ' checked'; } ?>>
 				<label for="v_dnssec">

@@ -59,7 +59,7 @@ query_le_v2() {
 	# Save http response to file passed as "$4" arg or print to stdout if not provided
 	# http response headers are always sent to stdout
 	local save_to_file=${4:-"/dev/stdout"}
-	curl --location --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
+	curl --location --user-agent "HestiaCP" --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout --data "$post_data" "$1" --header "$content" --output "$save_to_file"
 	debug_log "API call" "exit status: $?"
 }
 
@@ -208,7 +208,7 @@ if [ -n "$DNS_SYSTEM" ]; then
 fi
 
 # Requesting nonce / STEP 1
-answer=$(curl -s -I "$LE_API/directory")
+answer=$(curl --user-agent "HestiaCP" -s -I "$LE_API/directory")
 nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
 status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
@@ -242,8 +242,9 @@ nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
 authz=$(echo "$answer" | grep "acme/authz" | cut -f2 -d '"')
 finalize=$(echo "$answer" | grep 'finalize":' | cut -f4 -d '"')
 status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f2 -d ' ')
+order=$(echo -e "$answer" | grep -i location | cut -f2 -d \  | tr -d '\r\n')
 
-debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}"
+debug_log "Step 2" "- status: ${status}\n- nonce: ${nonce}\n- authz: ${authz}\n- finalize: ${finalize}\n- payload: ${payload}\n- answer: ${answer}\n order: ${order}"
 
 if [[ "$status" -ne 201 ]]; then
 	# Delete DNS CAA record
@@ -461,6 +462,25 @@ if [[ "$status" -ne 200 ]]; then
 	check_result "$E_CONNECT" "Let's Encrypt finalize bad status $status ($domain)"
 fi
 
+if [ -z "$certificate" ]; then
+	validation="processing"
+	i=1
+	while [ "$validation" = "processing" ]; do
+		answer=$(query_le_v2 "$order" "" "$nonce")
+		i=$((i + 1))
+
+		nonce=$(echo "$answer" | grep -i nonce | cut -f2 -d \  | tr -d '\r\n')
+		status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
+		validation=$(echo "$answer" | grep 'status":' | cut -f4 -d '"')
+		certificate=$(echo "$answer" | grep 'certificate":' | cut -f4 -d '"')
+		sleep $((i * 2)) # Sleep for 2s, 4s, 6s, 8s
+		if [ $i -gt 10 ]; then
+			check_result "$E_CONNECT" "Certificate processing timeout ($domain)"
+		fi
+		debug_log "Step 7" "- status: ${status}\n- nonce: ${nonce}\n- payload: ${payload}\n- certificate: ${certificate}\n- answer: ${answer}"
+	done
+fi
+
 # Downloading signed certificate / STEP 7
 status=0
 retry=0
@@ -470,7 +490,7 @@ while [[ $status != 200 && $retry -lt 3 ]]; do
 	answer=$(query_le_v2 "$certificate" "" "$nonce" "$ssl_dir/$domain.pem")
 	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
-	debug_log "Step 7" "- status: ${status}\n- retry: ${retry}\n- answer: ${answer}"
+	debug_log "Step 8" "- status: ${status}\n- retry: ${retry}\n- answer: ${answer}"
 
 	if [[ $status != 200 ]]; then
 		retry=$((retry + 1))
@@ -481,10 +501,10 @@ done
 
 # Fallback on depreciated download method for certs (unauthenticated GET)
 if [[ $status != 200 ]]; then
-	answer=$(curl --insecure --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
+	answer=$(curl --insecure --user-agent "HestiaCP" --retry 5 --retry-connrefused --silent --dump-header /dev/stdout "$certificate" --output "$ssl_dir/$domain.pem")
 	status=$(echo "$answer" | grep HTTP/ | tail -n1 | cut -f 2 -d ' ')
 
-	debug_log "Step 7 - Fallback" "- status: ${status}\n- answer: ${answer}"
+	debug_log "Step 8 - Fallback" "- status: ${status}\n- answer: ${answer}"
 fi
 
 debug_log "CERT DIR" "$(ls -las "$ssl_dir/")"

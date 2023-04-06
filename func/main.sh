@@ -1399,6 +1399,8 @@ format_domain() {
 	if [[ "$domain" =~ ^\. ]]; then
 		domain=$(echo "$domain" | sed -e "s/^[.]*//")
 	fi
+	# Remove white spaces
+	domain=$(echo $domain | sed 's/^[ \t]*//;s/[ \t]*$//')
 }
 
 format_domain_idn() {

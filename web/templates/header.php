@@ -9,4 +9,7 @@ require $_SERVER["HESTIA"] . "/web/templates/includes/js.php";
 ?>
 </head>
 
-<body class="body-<?= strtolower($TAB) ?> lang-<?= $_SESSION["language"] ?>">
+<body
+	class="body-<?= strtolower($TAB) ?> lang-<?= $_SESSION["language"] ?>"
+	data-confirm-leave-page="<?= _("LEAVE_PAGE_CONFIRMATION") ?>"
+>

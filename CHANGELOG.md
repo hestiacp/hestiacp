@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - Reduce amount of animation styles (#3418)
 - Minor UI updates (#3425)
 - Fixed an issue with v-suspend-dns-record still loading after being disabled (#3441 @setiseta)
+- Replace jQuery UI dialogs with <dialog> (#3401)
+- Fixed an issue SSL not found + php error on login page. (#3404)
 
 ## [1.7.1] - Service release
 

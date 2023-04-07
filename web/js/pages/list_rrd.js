@@ -57,11 +57,40 @@ function formatLabel(date, period) {
 }
 
 function getChartOptions() {
+	const currentTheme = getCurrentTheme();
+	const textColor = currentTheme === 'dark' ? '#cdcdcd' : '#7c7c7c';
+	const gridColor = currentTheme === 'dark' ? '#434343' : '#e9e9e9';
+
 	return {
 		plugins: {
 			legend: {
 				position: 'bottom',
+				labels: {
+					color: textColor,
+				},
+			},
+		},
+		scales: {
+			x: {
+				ticks: {
+					color: textColor,
+				},
+				grid: {
+					color: gridColor,
+				},
+			},
+			y: {
+				ticks: {
+					color: textColor,
+				},
+				grid: {
+					color: gridColor,
+				},
 			},
 		},
 	};
+}
+
+function getCurrentTheme() {
+	return document.body.getAttribute('data-theme');
 }

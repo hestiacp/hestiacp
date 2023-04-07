@@ -1393,10 +1393,6 @@
 	max-width: 920px;
 }
 
-.form-container-narrow {
-	max-width: 810px;
-}
-
 @media (--viewport-medium) {
 	.sidebar-right-container {
 		display: grid;

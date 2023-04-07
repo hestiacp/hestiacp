@@ -21,6 +21,10 @@
 	--icon-color-maroon: #ff3478;
 	--icon-color-green: #37cf39;
 	--icon-color-blue: #0092f4;
+
+	/* Charts */
+	--chart-label-color: #cdcdcd;
+	--chart-grid-color: #434343;
 }
 
 b,

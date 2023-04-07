@@ -35,6 +35,10 @@
 	--icon-color-orange: #ffc043;
 	--icon-color-blue: #326b9b;
 	--icon-color-lightblue: #6eb6f0;
+
+	/* Charts */
+	--chart-label-color: #7c7c7c;
+	--chart-grid-color: #e9e9e9;
 }
 
 /* App header

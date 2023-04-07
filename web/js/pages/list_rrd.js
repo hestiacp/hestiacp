@@ -56,23 +56,22 @@ function formatLabel(date, period) {
 }
 
 function getChartOptions() {
-	const currentTheme = getCurrentTheme();
-	const textColor = currentTheme === 'dark' ? '#cdcdcd' : '#7c7c7c';
-	const gridColor = currentTheme === 'dark' ? '#434343' : '#e9e9e9';
+	const labelColor = getCssVariable('--chart-label-color');
+	const gridColor = getCssVariable('--chart-grid-color');
 
 	return {
 		plugins: {
 			legend: {
 				position: 'bottom',
 				labels: {
-					color: textColor,
+					color: labelColor,
 				},
 			},
 		},
 		scales: {
 			x: {
 				ticks: {
-					color: textColor,
+					color: labelColor,
 				},
 				grid: {
 					color: gridColor,
@@ -80,7 +79,7 @@ function getChartOptions() {
 			},
 			y: {
 				ticks: {
-					color: textColor,
+					color: labelColor,
 				},
 				grid: {
 					color: gridColor,
@@ -90,6 +89,6 @@ function getChartOptions() {
 	};
 }
 
-function getCurrentTheme() {
-	return document.body.getAttribute('data-theme');
+function getCssVariable(variableName) {
+	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
 }

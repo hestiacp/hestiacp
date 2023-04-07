@@ -109,10 +109,6 @@
 	padding-left: 30px !important;
 }
 
-.u-rounded {
-	border-radius: var(--border-radius-base) !important;
-}
-
 .u-pos-relative {
 	position: relative !important;
 }
@@ -137,11 +133,6 @@
 	display: flex !important;
 	justify-content: space-between !important;
 	align-items: center !important;
-}
-
-.u-image-fluid {
-	max-width: 100% !important;
-	height: auto !important;
 }
 
 .u-list-bulleted {

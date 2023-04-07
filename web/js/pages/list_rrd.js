@@ -1,49 +1,67 @@
-// Default max of 3 lines are drawn for memory. Colors need to be update to work better
-colors = ['rgba(255,52,120,0.5)', 'rgba(255,52,0,0.5)', 'rgba(255,255,120,0.5)'];
-// Other markups are working see https://www.chartjs.org/docs/latest/
+document.addEventListener('DOMContentLoaded', main);
 
-// TODO: Make charts responsive
-(function () {
-	document.querySelectorAll('canvas').forEach(async (el) => {
-		const response = await fetch('/list/rrd/ajax.php', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: {
-				service: el.getAttribute('id'),
-				period: el.getAttribute('period'),
-			},
-		});
-		const rrdData = await response.clone().json();
+async function main() {
+	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
 
-		// data is stored as start, end time and step between each step
-		const labels = [];
-		for (i = rrdData.meta.start; i < rrdData.meta.end; i = i + rrdData.meta.step) {
-			labels.push(new Date(i * 1000).toLocaleString());
-		}
+	for (const chartCanvas of chartCanvases) {
+		const service = chartCanvas.getAttribute('data-service');
+		const period = chartCanvas.getAttribute('data-period');
+		const rrdData = await fetchRrdData(service, period);
+		const chartData = prepareChartData(rrdData, period);
+		const chartOptions = getChartOptions();
 
-		// rrdData.data stores data as i[x,y] useless for chartjs split in separate datasets
-		const datasets = [];
-		for (i = 0; i < rrdData.meta.legend.length; i++) {
-			const data = [];
-			for (b of rrdData.data) {
-				data.push(b[i]);
-			}
-			dataset = { label: rrdData.meta.legend[i], data: data, borderColor: colors[i] };
-			datasets.push(dataset);
-		}
-
-		// draw chart
-		const ctx = document.getElementById(rrdData.service).getContext('2d');
-		new Chart(ctx, {
+		new Chart(chartCanvas, {
 			type: 'line',
-			data: { labels, datasets },
-			options: {
-				scales: {
-					y: { beginAtZero: true },
-				},
-			},
+			data: chartData,
+			options: chartOptions,
 		});
+	}
+}
+
+async function fetchRrdData(service, period) {
+	const response = await fetch('/list/rrd/ajax.php', {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ service, period }),
 	});
-})();
+
+	return response.json();
+}
+
+function prepareChartData(rrdData, period) {
+	return {
+		labels: rrdData.data.map((_, index) => {
+			const timestamp = rrdData.meta.start + index * rrdData.meta.step;
+			const date = new Date(timestamp * 1000);
+			return formatLabel(date, period);
+		}),
+		datasets: rrdData.meta.legend.map((legend, legendIndex) => {
+			return {
+				label: legend,
+				data: rrdData.data.map((dataPoint) => dataPoint[legendIndex]),
+			};
+		}),
+	};
+}
+
+function formatLabel(date, period) {
+	switch (period) {
+		case 'daily':
+			return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		case 'weekly':
+		case 'monthly':
+			return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+		case 'yearly':
+			return date.toLocaleDateString([], { month: 'short' });
+	}
+}
+
+function getChartOptions() {
+	return {
+		plugins: {
+			legend: {
+				position: 'bottom',
+			},
+		},
+	};
+}

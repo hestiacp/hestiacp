@@ -9,21 +9,16 @@ if ($_SESSION["userContext"] != "admin") {
 	exit();
 }
 
-if (empty($_POST["period"])) {
-	$period = "daily";
-} else {
-	if (in_array($_POST["period"], ["day", "week", "month", "year"])) {
-		$period = $_POST["period"];
-	} else {
-		$period = "daily";
-	}
-}
+$requestPayload = json_decode(file_get_contents("php://input"), true);
 
-if (empty($_POST["service"])) {
-	$service = "la";
-} else {
-	$service = $_POST["service"];
-}
+$allowedPeriods = ["daily", "weekly", "monthly", "yearly"];
+
+$period =
+	!empty($requestPayload["period"]) && in_array($requestPayload["period"], $allowedPeriods)
+		? $requestPayload["period"]
+		: "daily";
+
+$service = !empty($requestPayload["service"]) ? $requestPayload["service"] : "la";
 
 // Data
 exec(
@@ -31,6 +26,12 @@ exec(
 	$output,
 	$return_var,
 );
+
+if ($return_var != 0) {
+	http_response_code(500);
+	exit("Error fetching RRD data");
+}
+
 $data = json_decode(implode("", $output), true);
 $data["service"] = $service;
 echo json_encode($data);

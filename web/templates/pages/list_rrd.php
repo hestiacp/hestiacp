@@ -20,12 +20,12 @@
 		<!-- Begin graph list item loop -->
 		<?php foreach ($data as $key => $value) { ?>
 			<div class="u-mb40">
-				<h2 class="u-mb20">
-					<?= _($data[$key]["TITLE"]) ?>
-				</h2>
-				<a href="/list/rrd/image.php?/rrd/<?= $data[$key]["TYPE"] . "/" . $period . "-" . $data[$key]["RRD"] . ".png" ?>" class="u-block" target="_blank">
-					<img class="u-image-fluid u-rounded" src="/list/rrd/image.php?/rrd/<?= $data[$key]["TYPE"] . "/" . $period . "-" . $data[$key]["RRD"] . ".png" ?>" alt="">
-				</a>
+				<h2 class="u-mb20"><?= htmlspecialchars($data[$key]["TITLE"]) ?></h2>
+				<canvas
+					class="js-rrd-chart"
+					data-service="<?= $data[$key]["TYPE"] !== 'net' ? htmlspecialchars($data[$key]["RRD"]) : 'net_' . htmlspecialchars($data[$key]["RRD"]); ?>"
+					data-period="<?= htmlspecialchars($period) ?>"
+				></canvas>
 			</div>
 		<?php } ?>
 	</div>

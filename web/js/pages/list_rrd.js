@@ -45,15 +45,14 @@ function prepareChartData(rrdData, period) {
 }
 
 function formatLabel(date, period) {
-	switch (period) {
-		case 'daily':
-			return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-		case 'weekly':
-		case 'monthly':
-			return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-		case 'yearly':
-			return date.toLocaleDateString([], { month: 'short' });
-	}
+	const options = {
+		daily: { hour: '2-digit', minute: '2-digit' },
+		weekly: { weekday: 'short', day: 'numeric' },
+		monthly: { month: 'short', day: 'numeric' },
+		yearly: { month: 'long' },
+	};
+
+	return date.toLocaleString([], options[period]);
 }
 
 function getChartOptions() {

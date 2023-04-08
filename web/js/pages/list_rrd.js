@@ -38,12 +38,17 @@ function prepareChartData(rrdData, period) {
 			return formatLabel(date, period);
 		}),
 		datasets: rrdData.meta.legend.map((legend, legendIndex) => {
+			const lineColor = getCssVariable(`--chart-line-${legendIndex + 1}-color`);
+
 			return {
 				label: legend,
 				data: rrdData.data.map((dataPoint) => dataPoint[legendIndex]),
-				tension: 0.4,
+				tension: 0.3,
 				pointStyle: false,
 				fill: legendIndex === 0 && totalDatasets > 1,
+				borderWidth: 2,
+				borderColor: lineColor,
+				backgroundColor: lineColor,
 			};
 		}),
 	};

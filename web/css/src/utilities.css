@@ -129,6 +129,10 @@
 	min-height: 600px !important;
 }
 
+.u-max-height300 {
+	max-height: 300px !important;
+}
+
 .u-side-by-side {
 	display: flex !important;
 	justify-content: space-between !important;

@@ -13,12 +13,17 @@ $requestPayload = json_decode(file_get_contents("php://input"), true);
 
 $allowedPeriods = ["daily", "weekly", "monthly", "yearly"];
 
-$period =
-	!empty($requestPayload["period"]) && in_array($requestPayload["period"], $allowedPeriods)
-		? $requestPayload["period"]
-		: "daily";
+if (!empty($requestPayload["period"]) && in_array($requestPayload["period"], $allowedPeriods)) {
+	$period = $requestPayload["period"];
+} else {
+	$period = "daily";
+}
 
-$service = !empty($requestPayload["service"]) ? $requestPayload["service"] : "la";
+if (!empty($requestPayload["service"])) {
+	$service = $requestPayload["service"];
+} else {
+	$service = "la";
+}
 
 // Data
 exec(

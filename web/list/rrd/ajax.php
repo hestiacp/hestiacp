@@ -38,13 +38,18 @@ $serviceUnits = [
 	"apache2" => "Connections",
 	"nginx" => "Connections",
 	"mail" => "Queue Size",
-	"mysql_localhost" => "Queries",
 	"ftp" => "Connections",
 	"ssh" => "Connections",
 ];
 
 if (preg_match("/^net_/", $service)) {
 	$serviceUnits[$service] = "KBytes";
+}
+if (preg_match("/^pgsql_/", $service)) {
+	$serviceUnits[$service] = "Queries";
+}
+if (preg_match("/^mysql_/", $service)) {
+	$serviceUnits[$service] = "Queries";
 }
 
 $data = json_decode(implode("", $output), true);

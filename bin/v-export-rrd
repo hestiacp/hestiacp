@@ -9,7 +9,7 @@
 #----------------------------------------------------------#
 
 chart=$1
-timespan=${2-hour}
+timespan=${2-daily}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -122,14 +122,14 @@ function generate_net_table() {
 	fi
 }
 
-if [ "$timespan" = "week" ]; then
+if [ "$timespan" = "weekly" ]; then
 	start=$(date -d "7 days ago" +%s)
 	# every 30 min
 	step=3600
-elif [ "$timespan" = "month" ]; then
+elif [ "$timespan" = "monthly" ]; then
 	start=$(date -d "1 month ago" +%s)
 	step=21600
-elif [ "$timespan" = "year" ]; then
+elif [ "$timespan" = "yearly" ]; then
 	start=$(date -d "1 year ago" +%s)
 	step=172800
 else

@@ -1,6 +1,5 @@
 <script defer src="/js/main.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/jquery-3.6.4.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/vendor/chart.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/shortcuts.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/events.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/init.js?<?= JS_LATEST_UPDATE ?>"></script>

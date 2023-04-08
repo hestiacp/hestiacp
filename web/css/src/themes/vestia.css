@@ -182,7 +182,7 @@ strong {
 	}
 
 	& #btn-back {
-		color: #30659d;
+		color: #326b9b;
 		background: none;
 		text-shadow: none;
 		text-transform: none;
@@ -278,7 +278,7 @@ strong {
 }
 
 .button-secondary {
-	color: #414141;
+	color: var(--color-text-link);
 	text-shadow: none;
 	text-transform: none;
 	border-color: #bbb;

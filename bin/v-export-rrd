@@ -33,8 +33,8 @@ function generate_load_table() {
 	rrdtool xport --json -s $start -e $end --step $step \
 		DEF:la=$RRD/la/la.rrd:LA:AVERAGE \
 		DEF:pr=$RRD/la/la.rrd:PR:AVERAGE \
-		XPORT:la:load \
-		XPORT:pr:Proccess
+		XPORT:la:Load \
+		XPORT:pr:Processes
 }
 
 function generate_mem_table() {
@@ -115,7 +115,7 @@ function generate_net_table() {
 			DEF:inoctets=$RRD/net/$host.rrd:RX:AVERAGE \
 			DEF:outoctets=$RRD/net/$host.rrd:TX:AVERAGE \
 			XPORT:inoctets:"Input (rx)" \
-			XPORT:outoctets:"Output (rx)"
+			XPORT:outoctets:"Output (tx)"
 	else
 		echo "Does not exists"
 		exit 1

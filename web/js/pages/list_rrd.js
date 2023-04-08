@@ -8,7 +8,7 @@ async function main() {
 		const period = chartCanvas.getAttribute('data-period');
 		const rrdData = await fetchRrdData(service, period);
 		const chartData = prepareChartData(rrdData, period);
-		const chartOptions = getChartOptions();
+		const chartOptions = getChartOptions(rrdData.unit);
 
 		new Chart(chartCanvas, {
 			type: 'line',
@@ -29,6 +29,8 @@ async function fetchRrdData(service, period) {
 }
 
 function prepareChartData(rrdData, period) {
+	const totalDatasets = rrdData.meta.legend.length;
+
 	return {
 		labels: rrdData.data.map((_, index) => {
 			const timestamp = rrdData.meta.start + index * rrdData.meta.step;
@@ -39,6 +41,9 @@ function prepareChartData(rrdData, period) {
 			return {
 				label: legend,
 				data: rrdData.data.map((dataPoint) => dataPoint[legendIndex]),
+				tension: 0.4,
+				pointStyle: false,
+				fill: legendIndex === 0 && totalDatasets > 1,
 			};
 		}),
 	};
@@ -55,7 +60,7 @@ function formatLabel(date, period) {
 	return date.toLocaleString([], options[period]);
 }
 
-function getChartOptions() {
+function getChartOptions(unit) {
 	const labelColor = getCssVariable('--chart-label-color');
 	const gridColor = getCssVariable('--chart-grid-color');
 
@@ -78,6 +83,11 @@ function getChartOptions() {
 				},
 			},
 			y: {
+				title: {
+					display: !!unit,
+					text: unit,
+					color: labelColor,
+				},
 				ticks: {
 					color: labelColor,
 				},

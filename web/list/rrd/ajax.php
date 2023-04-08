@@ -32,6 +32,19 @@ if ($return_var != 0) {
 	exit("Error fetching RRD data");
 }
 
+$serviceUnits = [
+	"la" => "Points",
+	"mem" => "Mbytes",
+	"net_enp0s1" => "KBytes",
+	"apache2" => "Connections",
+	"nginx" => "Connections",
+	"mail" => "Queue Size",
+	"mysql_localhost" => "Queries",
+	"ftp" => "Connections",
+	"ssh" => "Connections",
+];
+
 $data = json_decode(implode("", $output), true);
 $data["service"] = $service;
+$data["unit"] = $serviceUnits[$service] ?? null;
 echo json_encode($data);

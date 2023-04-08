@@ -35,7 +35,6 @@ if ($return_var != 0) {
 $serviceUnits = [
 	"la" => "Points",
 	"mem" => "Mbytes",
-	"net_enp0s1" => "KBytes",
 	"apache2" => "Connections",
 	"nginx" => "Connections",
 	"mail" => "Queue Size",
@@ -43,6 +42,10 @@ $serviceUnits = [
 	"ftp" => "Connections",
 	"ssh" => "Connections",
 ];
+
+if (preg_match("/^net_/", $service)) {
+	$serviceUnits[$service] = "KBytes";
+}
 
 $data = json_decode(implode("", $output), true);
 $data["service"] = $service;

@@ -20,31 +20,32 @@ export default {
 			hestia_wget:
 				"wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh",
 			hestia_install: "sudo bash hst-install.sh",
-			installstr: "",
+			installStr: "",
 		};
 	},
-	mounted() {},
 	methods: {
+		getOptionString(item: InstallOptions): string {
+			if (item.textField && item.selected) {
+				return item.text.length >= 2 ? `${item.param} '${item.text}'` : "";
+			} else if (item.selectField) {
+				return `${item.param} '${item.text}'`;
+			} else if (!item.textField) {
+				return item.param.includes("force") && item.selected
+					? item.param
+					: `${item.param}${item.selected ? " yes" : " no"}`;
+			}
+			return "";
+		},
 		generateString() {
-			let installstr = [];
-			this.$props.items.forEach((value) => {
-				let item = JSON.parse(JSON.stringify(value));
-				if (item.textField && item.selected) {
-					if (item.text.length >= 2) {
-						installstr.push(item.param + " '" + item.text + "'");
-					}
-				} else if (item.selectField) {
-					installstr.push(item.param + " '" + item.text + "'");
-				} else if (!item.textField) {
-					if (item.param.includes("force")) {
-						item.selected ? installstr.push(item.param) : "";
-					} else {
-						installstr.push(item.param + (item.selected ? " yes" : " no"));
-					}
-				}
-			});
+			const installStr = this.items.map(this.getOptionString).filter(Boolean);
 
-			this.$data.installstr = this.$data.hestia_install + " " + installstr.join(" ");
+			this.installStr = `${this.hestia_install} ${installStr.join(" ")}`;
+			(this.$refs.dialog as HTMLDialogElement).showModal();
+		},
+		closeDialog(e) {
+			if (e.target === this.$refs.dialog) {
+				(this.$refs.dialog as HTMLDialogElement).close();
+			}
 		},
 	},
 };
@@ -53,18 +54,18 @@ export default {
 <template>
 	<div class="container">
 		<div class="grid">
-			<div class="form-group" v-for="item in items">
+			<div class="form-group" v-for="item in items" :key="item.id">
 				<div class="u-mb10">
 					<input type="checkbox" :value="item.value" v-model="item.selected" :id="item.id" />
 					<label :for="item.id">{{ item.id }}</label>
 				</div>
 				<p>{{ item.desc }}</p>
-				<div class="" v-if="item.textField">
+				<div v-if="item.textField">
 					<input type="text" class="input-from" v-model="item.text" />
 				</div>
-				<div class="" v-if="item.selectField">
+				<div v-if="item.selectField">
 					<select class="input-from" v-model="item.text">
-						<option v-for="language in languages" :value="language.value">
+						<option v-for="language in languages" :value="language.value" :key="language.value">
 							{{ language.text }}
 						</option>
 					</select>
@@ -74,18 +75,18 @@ export default {
 		<div class="u-text-center u-mb10">
 			<button @click="generateString" class="form-submit" type="button">Submit</button>
 		</div>
-		<div v-if="installstr">
+		<dialog ref="dialog" class="modal" @click="closeDialog">
 			<div class="form-group-info">
 				<h1>Installation instruction</h1>
 				<p>
 					Log in to your server as root, either directly or via SSH:
 					<strong>ssh root@your.server</strong> and download the installation script:
 				</p>
-				<textarea v-model="hestia_wget" />
+				<textarea v-model="hestia_wget" readonly />
 				<p>And run then the following command</p>
-				<textarea v-model="installstr" />
+				<textarea v-model="installStr" readonly />
 			</div>
-		</div>
+		</dialog>
 	</div>
 </template>
 
@@ -126,7 +127,7 @@ export default {
 	background-color: green;
 	font-weight: bold;
 	border-radius: 10px;
-	padding: 10px 20px;
+	padding: 10px 30px;
 	font-size: 25px;
 
 	&:hover {
@@ -136,6 +137,14 @@ export default {
 textarea {
 	width: 100%;
 	font-size: 1em;
+}
+.modal {
+	position: fixed;
+	padding: 0;
+
+	&::backdrop {
+		background-color: rgb(0 0 0 / 60%);
+	}
 }
 .u-mb10 {
 	margin-bottom: 10px !important;

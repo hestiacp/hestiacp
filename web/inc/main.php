@@ -66,7 +66,11 @@ if (!isset($_SESSION["user_combined_ip"])) {
 }
 
 // Checking user to use session from the same IP he has been logged in
-if ($_SESSION["user_combined_ip"] != $user_combined_ip && isset($_SESSION["user"])) {
+if (
+	$_SESSION["user_combined_ip"] != $user_combined_ip &&
+	isset($_SESSION["user"]) &&
+	$_SESSION["DISABLE_IP_CHECK"] != "yes"
+) {
 	$v_user = quoteshellarg($_SESSION["user"]);
 	$v_session_id = quoteshellarg($_SESSION["token"]);
 	exec(HESTIA_CMD . "v-log-user-logout " . $v_user . " " . $v_session_id, $output, $return_var);
@@ -141,6 +145,9 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 	$user = quoteshellarg($_SESSION["look"]);
 	$user_plain = htmlentities($_SESSION["look"]);
 }
+if (empty($user_plain)) {
+	$user_plain = "";
+}
 
 require_once dirname(__FILE__) . "/i18n.php";
 
@@ -185,16 +192,16 @@ function render_page($user, $TAB, $page) {
 	// Panel
 	$panel = top_panel(empty($_SESSION["look"]) ? $_SESSION["user"] : $_SESSION["look"], $TAB);
 
-	// Including page specific js file
-	if (file_exists($__pages_js_dir . $page . ".js")) {
-		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
-	}
-
 	// Policies controller
 	@include_once dirname(__DIR__) . "/inc/policies.php";
 
 	// Body
 	include $__template_dir . "pages/" . $page . ".php";
+
+	// Including page specific js file
+	if (file_exists($__pages_js_dir . $page . ".js")) {
+		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
+	}
 
 	// Footer
 	include $__template_dir . "footer.php";

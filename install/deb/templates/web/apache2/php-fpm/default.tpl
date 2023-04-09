@@ -1,7 +1,7 @@
 #=========================================================================#
 # Default Web Domain Template                                             #
 # DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
-# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
 #=========================================================================#
 
 <VirtualHost %ip%:%web_port%>
@@ -23,7 +23,7 @@
     <Directory %home%/%user%/web/%domain%/stats>
         AllowOverride All
     </Directory>
-    <Directory %sdocroot%>
+    <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes +ExecCGI
     </Directory>
@@ -36,4 +36,3 @@
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*
     IncludeOptional /etc/apache2/conf.d/*.inc
 </VirtualHost>
-

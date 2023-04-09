@@ -1,14 +1,14 @@
 <h1 align="center"><a href="https://www.hestiacp.com/">Hestia Control Panel</a></h1>
 
-![Hestia screenshot](https://hestiacp.com/img/screen_HestiaServer-dark.png)
+![Hestia screenshot](https://storage.hestiacp.com/hestiascreen.png)
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.6.14 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.7.0 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://docs.hestiacp.com/">Documentation</a> |
+	<a href="https://hestiacp.com/docs/">Documentation</a> |
 	<a href="https://forum.hestiacp.com/">Forum</a> |
 	<a href="https://discord.gg/nXRUZch">Discord</a>
 	<br/><br/>
@@ -47,7 +47,7 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 - **NOTE:** Hestia Control Panel does not support 32 bit operating systems!
 
 - **Debian:** 11 or 10
-- **Ubuntu:** 22.04LTS, 20.04 LTS or 18.04 LTS
+- **Ubuntu:** 22.04LTS, 20.04 LTS
 
 - **NOTE:** Hestia Control Panel in combination with OpenVZ 7 or lower might have issue Bind9 server not starting or issues with Firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
 

@@ -39,7 +39,7 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("File Name") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
@@ -73,14 +73,14 @@
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="backup[]" value="<?=$key?>" <?=$display_mode;?>>
+						<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="backup[]" value="<?= $key ?>" <?= $display_mode ?>>
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-4 truncate">
 						<b>
-							<?php if ($read_only === 'true') {?>
-								<?=$key?>
+							<?php if ($read_only === "true") { ?>
+								<?= $key ?>
 							<?php } else { ?>
-								<a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><?=$key?></a>
+								<a href="/list/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("restore") ?>"><?= $key ?></a>
 							<?php } ?>
 						</b>
 					</div>
@@ -88,7 +88,7 @@
 					<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix">
-								<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($read_only === 'true')) {?>
+								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $read_only === "true") { ?>
 									<!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
 									&nbsp;
 								<?php } else { ?>
@@ -96,12 +96,13 @@
 									<?php if ($read_only !== 'true') {?>
 										<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
 										<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-											<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-												<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-												<input type="hidden" name="delete_url" value="/delete/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>">
-												<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-													<p><?=sprintf(_('DELETE_BACKUP_CONFIRMATION'),$key)?></p>
-												</div>
+											<a
+												class="data-controls js-confirm-action"
+												href="/delete/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+												data-confirm-title="<?= _("Delete") ?>"
+												data-confirm-message="<?= sprintf(_("DELETE_BACKUP_CONFIRMATION"), $key) ?>"
+											>
+												<i class="fas fa-trash icon-red icon-dim"></i>
 											</a>
 										</div>
 									<?php } ?>

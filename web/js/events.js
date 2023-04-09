@@ -159,80 +159,91 @@ const VE = {
 	},
 	callbacks: {
 		click: {
-			do_suspend: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="suspend_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-suspend');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
-			},
-			do_unsuspend: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="unsuspend_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-suspend');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
-			},
-			do_delete: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="delete_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-delete');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
-			},
-			do_servicerestart: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="servicerestart_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-servicerestart');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
-			},
-			do_servicestop: (evt, elm) => {
-				const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
-				const url = $('input[name="servicestop_url"]', ref).val();
-				const dialog_elm = ref.find('.js-confirm-dialog-servicestop');
-				VE.helpers.createConfirmationDialog(dialog_elm, $(elm).parent().attr('title'), url);
-			},
+			// Usage: <a class="data-controls do_something" title="Something">Do something</a>
+			// do_something: (evt, elm) => {
+			// 	const ref = elm.hasClass('actions-panel') ? elm : elm.parents('.actions-panel');
+			// 	const title = $(elm).parent().attr('title') || $(elm).attr('title');
+			// 	const targetUrl = $('input[name="suspend_url"]', ref).val();
+			// 	VE.helpers.createConfirmationDialog({ title, targetUrl });
+			// },
 		},
 	},
 	helpers: {
 		/**
-		 * Create dialog box on the fly
-		 * @param elm Element which contains the dialog contents
-		 * @param dialog_title
-		 * @param confirmed_location_url URL that will be redirected to if user hit "OK"
-		 * @param custom_config Custom configuration parameters passed to dialog initialization (optional)
+		 * Create confirmation <dialog> on the fly
+		 * @param title The title of the dialog displayed in the header
+		 * @param message The message displayed in the body of the dialog
+		 * @param targetUrl URL that will be redirected to if user clicks "OK"
 		 */
-		createConfirmationDialog: (elm, dialog_title, confirmed_location_url, custom_config) => {
-			custom_config = custom_config ?? {};
-			const default_config = {
-				modal: true,
-				//autoOpen: true,
-				resizable: false,
-				width: 360,
-				title: dialog_title,
-				close: function () {
-					$(this).dialog('destroy');
-				},
-				buttons: {
-					OK: function () {
-						location.href = confirmed_location_url;
-					},
-					Cancel: function () {
-						$(this).dialog('close');
-					},
-				},
-				create: function () {
-					const buttons = $(this).dialog('widget').find('.ui-dialog-buttonpane button');
-					buttons.first().addClass('button submit');
-					buttons.last().addClass('button button-secondary cancel');
-				},
-				focus: function () {
-					const buttons = $(this).dialog('widget').find('.ui-dialog-buttonpane button');
-					// Disable default "focus first button" behavior
-					buttons.first().blur();
-				},
+		createConfirmationDialog: ({ title, message = 'Are you sure?', targetUrl }) => {
+			// Create the dialog
+			const dialog = document.createElement('dialog');
+			dialog.classList.add('modal');
+
+			// Create and insert the title
+			if (title) {
+				const titleElem = document.createElement('h2');
+				titleElem.textContent = title;
+				titleElem.classList.add('modal-title');
+				dialog.appendChild(titleElem);
+			}
+
+			// Create and insert the message
+			const messageElem = document.createElement('p');
+			messageElem.textContent = message;
+			messageElem.classList.add('modal-message');
+			dialog.appendChild(messageElem);
+
+			// Create and insert the options
+			const optionsElem = document.createElement('div');
+			optionsElem.classList.add('modal-options');
+
+			const confirmButton = document.createElement('button');
+			confirmButton.type = 'submit';
+			confirmButton.classList.add('button');
+			confirmButton.textContent = 'OK';
+			optionsElem.appendChild(confirmButton);
+
+			const cancelButton = document.createElement('button');
+			cancelButton.type = 'button';
+			cancelButton.classList.add('button', 'button-secondary', 'cancel', 'u-ml5');
+			cancelButton.textContent = 'Cancel';
+			if (targetUrl) {
+				optionsElem.appendChild(cancelButton);
+			}
+
+			dialog.appendChild(optionsElem);
+
+			// Define named functions to handle the event listeners
+			const handleConfirm = () => {
+				if (targetUrl) {
+					window.location.href = targetUrl;
+				}
+				handleClose();
+			};
+			const handleCancel = () => handleClose();
+			const handleClose = () => {
+				confirmButton.removeEventListener('click', handleConfirm);
+				cancelButton.removeEventListener('click', handleCancel);
+				dialog.removeEventListener('close', handleClose);
+				document.removeEventListener('keydown', handleKeydown);
+				document.body.removeChild(dialog);
+			};
+			const handleKeydown = ({ key }) => {
+				if (key === 'Escape') {
+					handleClose();
+				}
 			};
 
-			const reference_copied = $(elm[0]).clone();
-			const config = { ...default_config, ...custom_config };
-			$(reference_copied).dialog(config);
+			// Add event listeners
+			confirmButton.addEventListener('click', handleConfirm);
+			cancelButton.addEventListener('click', handleCancel);
+			dialog.addEventListener('close', handleClose);
+			document.addEventListener('keydown', handleKeydown);
+
+			// Add to DOM and show
+			document.body.appendChild(dialog);
+			dialog.showModal();
 		},
 		warn: (msg) => {
 			alert('WARNING: ' + msg);

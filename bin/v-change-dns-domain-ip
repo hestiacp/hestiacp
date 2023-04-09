@@ -63,6 +63,8 @@ update_object_value 'dns' 'DOMAIN' "$domain" '$IP' "$ip"
 # Changing records
 sed -i "s/$old/$ip/g" $USER_DATA/dns/$domain.conf
 
+# Update serial
+update_domain_serial
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 	rebuild_dns_domain_conf

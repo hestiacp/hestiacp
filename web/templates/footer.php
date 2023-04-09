@@ -13,16 +13,12 @@
 		</button>)
 	</p>
 <?php } ?>
-	<div title="<?= _("Confirmation") ?>" class="dialog js-confirm-dialog-redirect">
-		<p><?= _("LEAVE_PAGE_CONFIRMATION") ?></p>
-	</div>
-
 	<div class="fullscreen-loader">
 		<i class="fas fa-circle-notch fa-spin"></i>
 	</div>
 
 	<div x-data>
-		<dialog x-ref="dialog" class="shortcuts animate__animated animate__fadeIn">
+		<dialog x-ref="dialog" class="shortcuts">
 			<div class="shortcuts-header">
 				<div class="shortcuts-title"><?= _("Shortcuts") ?></div>
 				<div
@@ -76,40 +72,22 @@
 	</a>
 
 <?php if (!empty($_SESSION["error_msg"])): ?>
-	<div>
-		<script>
-			window.onload=function(){
-				$(function() {
-					$('#dialog:ui-dialog').dialog('destroy');
-					$('#dialog-message').dialog({
-						modal: true,
-						resizable: false,
-						buttons: {
-							Ok: function() {
-								$(this).dialog('close');
-							}
-						},
-						create: function() {
-							var buttonGroup = $(this).closest(".ui-dialog").find('.ui-dialog-buttonset');
-							buttonGroup.find('button:first').addClass('button submit')
-							buttonGroup.find('button:last').addClass('button button-secondary cancel');
-						}
-					});
-				});
-			}
-		</script>
-		<div id="dialog-message" title="">
-			<p><?= htmlentities($_SESSION["error_msg"]) ?></p>
-		</div>
-	</div>
+	<script>
+		window.addEventListener("load", (event) => {
+			VE.helpers.createConfirmationDialog({
+				title: '<?= _("Error") ?>',
+				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
+			});
+		});
+	</script>
 <?php
 	unset($_SESSION['error_msg']);
 	endif;
-
-	if (($_SESSION['DEBUG_MODE']) == "true") {
-		require $_SERVER['HESTIA'] . '/web/templates/pages/debug_panel.php';
-	}
 ?>
+
+<?php if ($_SESSION["DEBUG_MODE"] == "true") {
+	require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";
+} ?>
 
 </body>
 </html>

@@ -69,7 +69,7 @@
 						<ul
 							x-cloak
 							x-show="open"
-							class="top-bar-notifications-list animate__animated animate__fadeIn"
+							class="top-bar-notifications-list"
 						>
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
@@ -190,7 +190,7 @@
 
 						<!-- Help / Documentation -->
 						<li class="top-bar-menu-item">
-							<a title="<?= _("Help") ?>" class="top-bar-menu-link" href="https://docs.hestiacp.com/" target="_blank" rel="noopener">
+							<a title="<?= _("Help") ?>" class="top-bar-menu-link" href="https://hestiacp.com/docs/server-administration/troubleshooting.html" target="_blank" rel="noopener">
 								<i class="fas fa-circle-question"></i>
 								<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Help") ?></span>
 							</a>

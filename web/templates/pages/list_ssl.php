@@ -14,7 +14,7 @@
 
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Generating CSR") ?></h1>
-			<?php show_alert_message($_SESSION);?>
+			<?php show_alert_message($_SESSION); ?>
 			<div
 				x-data="{
 					text: '<?= base64_encode($v_crt) ?>',
@@ -48,7 +48,7 @@
 				class="u-mb20"
 			>
 				<label for="v_key" class="form-label">
-					<?=_("SSL Key");?>
+					<?= _("SSL Key") ?>
 					<a
 						x-bind:href="blob()"
 						download="<?= htmlentities($v_domain) ?>.key"
@@ -71,7 +71,7 @@
 				class="u-mb20"
 			>
 				<label for="v_csr" class="form-label">
-					<?=_("SSL CSR");?>
+					<?= _("SSL CSR") ?>
 					<a
 						x-bind:href="blob()"
 						download="<?= htmlentities($v_domain) ?>.csr"
@@ -86,7 +86,7 @@
 			</div>
 			<div>
 				<button type="button" class="button button-secondary" onclick="<?= $back ?>">
-					<?=_("Back");?>
+					<?= _("Back") ?>
 				</button>
 			</div>
 		</div>

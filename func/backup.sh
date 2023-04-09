@@ -124,11 +124,11 @@ ftp_backup() {
 		return "$E_FTP"
 	fi
 
-	# Checking retention
+	# Checking retention (Only include .tar files)
 	if [ -z $BPATH ]; then
-		backup_list=$(ftpc "ls" | awk '{print $9}' | grep "^$user\.")
+		backup_list=$(ftpc "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar")
 	else
-		backup_list=$(ftpc "cd $BPATH" "ls" | awk '{print $9}' | grep "^$user\.")
+		backup_list=$(ftpc "cd $BPATH" "ls" | awk '{print $9}' | grep "^$user\." | grep ".tar")
 	fi
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then
@@ -399,11 +399,11 @@ sftp_backup() {
 		return "$rc"
 	fi
 
-	# Checking retention
+	# Checking retention (Only include .tar files)
 	if [ -z $BPATH ]; then
-		backup_list=$(sftpc "ls -l" | awk '{print $9}' | grep "^$user\.")
+		backup_list=$(sftpc "ls -l" | awk '{print $9}' | grep "^$user\." | grep ".tar")
 	else
-		backup_list=$(sftpc "cd $BPATH" "ls -l" | awk '{print $9}' | grep "^$user\.")
+		backup_list=$(sftpc "cd $BPATH" "ls -l" | awk '{print $9}' | grep "^$user\." | grep ".tar")
 	fi
 	backups_count=$(echo "$backup_list" | wc -l)
 	if [ "$backups_count" -ge "$BACKUPS" ]; then
@@ -510,7 +510,7 @@ b2_delete() {
 rclone_backup() {
 	# Define rclone config
 	source_conf "$HESTIA/conf/rclone.backup.conf"
-	echo -e "$(date "+%F %T") Upload With Rclone: $user.$backup_new_date.tar"
+	echo -e "$(date "+%F %T") Upload With Rclone to $HOST: $user.$backup_new_date.tar"
 	if [ "$localbackup" != 'yes' ]; then
 		cd $tmpdir
 		tar -cf $BACKUP/$user.$backup_new_date.tar .
@@ -518,12 +518,13 @@ rclone_backup() {
 	cd $BACKUP/
 
 	if [ -z "$BPATH" ]; then
-		rclone copy -v $user.$backup_new_date.tar $HOST
+		rclone copy -v $user.$backup_new_date.tar $HOST:$backup
 		if [ "$?" -ne 0 ]; then
 			check_result "$E_CONNECT" "Unable to upload backup"
 		fi
 
-		backup_list=$(rclone lsf $HOST | cut -d' ' -f1 | grep "^$user\.")
+		# Only include *.tar files
+		backup_list=$(rclone lsf $HOST: | cut -d' ' -f1 | grep "^$user\." | grep ".tar")
 		backups_count=$(echo "$backup_list" | wc -l)
 		backups_rm_number=$((backups_count - BACKUPS))
 		if [ "$backups_count" -ge "$BACKUPS" ]; then
@@ -538,7 +539,8 @@ rclone_backup() {
 			check_result "$E_CONNECT" "Unable to upload backup"
 		fi
 
-		backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 | grep "^$user\.")
+		# Only include *.tar files
+		backup_list=$(rclone lsf $HOST:$BPATH | cut -d' ' -f1 | grep "^$user\." | grep ".tar")
 		backups_count=$(echo "$backup_list" | wc -l)
 		backups_rm_number=$(($backups_count - $BACKUPS))
 		if [ "$backups_count" -ge "$BACKUPS" ]; then

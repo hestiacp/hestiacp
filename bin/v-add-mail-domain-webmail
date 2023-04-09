@@ -132,10 +132,10 @@ else
 		if [ "$WEB_SYSTEM" = "nginx" ]; then
 			WEBMAIL_TEMPLATE="web_system"
 		fi
-	elif [ "$webmail" == "rainloop" ]; then
-		WEBMAIL_TEMPLATE="rainloop"
+	elif [ -f "$HESTIA/data/templates/mail/$WEB_SYSTEM/$webmail.tpl" ]; then
+		WEBMAIL_TEMPLATE="$webmail"
 		if [ -n "$PROXY_SYSTEM" ]; then
-			PROXY_TEMPLATE="default_rainloop"
+			PROXY_TEMPLATE="default_$webmail"
 		fi
 	else
 		WEBMAIL_TEMPLATE="disabled"

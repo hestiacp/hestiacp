@@ -50,7 +50,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
+				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled required>
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
@@ -239,7 +239,11 @@
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
-							<button x-on:click="showCertificates = !showCertificates" type="button" class="form-link">
+							<button
+								type="button"
+								class="form-link"
+								x-on:click="showCertificates = !showCertificates"
+								x-text="showCertificates ? '<?= _("Hide Certificate") ?>' : '<?= _("Show Certificate") ?>'">
 								<?= _("Show Certificate") ?>
 							</button>
 						</p>
@@ -275,7 +279,7 @@
 							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
 							<label for="v_nginx_cache_check">
 								<?= _("Enable FastCGI Cache") ?>
-								<a href="https://docs.hestiacp.com/admin_docs/web/fastcgi.html#nginx-fastcgi-cache" target="_blank" class="u-ml5">
+								<a href="https://hestiacp.com/docs/server-administration/web-templates.html#nginx-fastcgi-cache" target="_blank" class="u-ml5">
 									<i class="fas fa-circle-question"></i>
 								</a>
 							</label>

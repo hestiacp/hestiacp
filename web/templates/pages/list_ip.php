@@ -19,7 +19,7 @@
 					<li entity="sort-owner"><span class="name"><?= _("Owner") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<form x-data x-bind="BulkEdit" action="/bulk/ip/" method="post">
-					<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("apply to selected") ?></option>
 						<option value="reread IP"><?= _("reread IP") ?></option>
@@ -65,7 +65,7 @@
 
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="ip[]" value="<?=$key?>">
+					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="ip[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing IP Address") ?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
 				</div>
@@ -75,12 +75,13 @@
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-								<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-									<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-									<input type="hidden" name="delete_url" value="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>">
-									<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-										<p><?=sprintf(_('DELETE_IP_CONFIRMATION'),$key)?></p>
-									</div>
+								<a
+									class="data-controls js-confirm-action"
+									href="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>"
+									data-confirm-title="<?= _("Delete") ?>"
+									data-confirm-message="<?= sprintf(_('DELETE_IP_CONFIRMATION'), $key) ?>"
+								>
+									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>
 							</div>
 						</div>

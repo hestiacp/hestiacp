@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($read_only !== 'true') {?>
+			<?php if ($read_only !== "true") { ?>
 				<a href="/add/dns/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add DNS Domain") ?></a>
 			<?php } ?>
 		</div>
@@ -22,12 +22,12 @@
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-records"><span class="name"><?= _("Records") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
-				<?php if ($read_only !== 'true') {?>
+				<?php if ($read_only !== "true") { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/dns/" method="post">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>
-							<?php if ($_SESSION['userContext'] === 'admin') {?>
+							<?php if ($_SESSION["userContext"] === "admin") { ?>
 								<option value="rebuild"><?= _("rebuild") ?></option>
 							<?php } ?>
 							<option value="suspend"><?= _("suspend") ?></option>
@@ -58,7 +58,7 @@
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?=$display_mode;?>>
+				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-right"><b>&nbsp;</b></div>
@@ -97,17 +97,17 @@
 			sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$key]['RECORDS']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
+					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 truncate">
-					<b><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>: <?=htmlentities($key);?>"><?=htmlentities($key);?></a></b>
-					<?=empty($data[$key]['SRC'])? '' : '<br>⇢ <span style="font-size:11px;">' . htmlspecialchars($data[$key]['SRC'], ENT_QUOTES) . '</span>'; ?>
+					<b><a href="/list/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("DNS records") ?>: <?= htmlentities($key) ?>"><?= htmlentities($key) ?></a></b>
+					<?= empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span style="font-size:11px;">' . htmlspecialchars($data[$key]["SRC"], ENT_QUOTES) . "</span>" ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<?php if ($read_only === 'true') {?>
+							<?php if ($read_only === "true") { ?>
 								<!-- Restrict administrators from editing domain items when impersonating the 'admin' user -->
 								&nbsp;
 							<?php } else { ?>
@@ -119,21 +119,23 @@
 								<?php } ?>
 								<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-list icon-lightblue icon-dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
-									<a id="<?=$spnd_action ?>_link_<?=$i?>" class="data-controls do_<?=$spnd_action?>" title="<?=_($spnd_action)?>">
-										<i class="fas <?=$spnd_icon?> icon-highlight icon-dim do_<?=$spnd_action?>"></i>
-										<input type="hidden" name="<?=$spnd_action?>_url" value="/<?=$spnd_action?>/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>">
-										<div id="<?=$spnd_action?>_dialog_<?=$i?>" class="dialog js-confirm-dialog-suspend" title="<?= _("Confirmation") ?>">
-											<p><?=sprintf($spnd_confirmation,$key)?></p>
-										</div>
+									<a
+										class="data-controls js-confirm-action"
+										href="/<?=$spnd_action?>/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+										data-confirm-title="<?= _($spnd_action) ?>"
+										data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
+									>
+										<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
 									</a>
 								</div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
-									<a id="delete_link_<?=$i?>" class="data-controls do_delete" title="<?= _("delete") ?>">
-										<i class="fas fa-trash icon-red icon-dim do_delete"></i>
-										<input type="hidden" name="delete_url" value="/delete/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>">
-										<div id="delete_dialog_<?=$i?>" class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-											<p><?=sprintf(_('DELETE_DOMAIN_CONFIRMATION'),$key)?></p>
-										</div>
+									<a
+										class="data-controls js-confirm-action"
+										href="/delete/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
+										data-confirm-title="<?= _("Delete") ?>"
+										data-confirm-message="<?= sprintf(_("DELETE_DOMAIN_CONFIRMATION"), $key) ?>"
+									>
+										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>
 								</div>
 							<?php } ?>
@@ -142,15 +144,19 @@
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
 				<div class="clearfix l-unit__stat-col--left u-text-center compact">
-					<?php if ($data[$key]['RECORDS']) echo '<span>'.$data[$key]['RECORDS'].'</span>';?>
+					<?php if ($data[$key]['RECORDS']){
+						echo '<span>'.$data[$key]['RECORDS'].'</span>';
+					}else{
+						echo '<span>0</span>';
+					}?>
 				</div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['TPL']?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact"><?=$data[$key]['TTL']?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['SOA']?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["TPL"] ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><?= $data[$key]["TTL"] ?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><?= $data[$key]["SOA"] ?></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center compact-3">
-					<i class="fas <?=$dnssec_icon;?>"></i>
+					<i class="fas <?= $dnssec_icon ?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['EXP']?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["EXP"] ?></b></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -159,7 +165,7 @@
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext('%d DNS zone', '%d DNS zones', $i),$i); ?>
+			<?php printf(ngettext("%d DNS zone", "%d DNS zones", $i), $i); ?>
 		</p>
 	</div>
 </footer>

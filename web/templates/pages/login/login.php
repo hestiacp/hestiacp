@@ -11,7 +11,7 @@
 		<?php show_error_message($error); ?>
 		<div class="u-mb20">
 			<label for="user" class="form-label"><?= _("Username") ?></label>
-			<input type="text" class="form-control" name="user" id="user" autofocus>
+			<input type="text" class="form-control" name="user" id="user" required autofocus>
 		</div>
 		<button type="submit" class="button">
 			<i class="fas fa-right-to-bracket"></i><?= _("Next") ?>

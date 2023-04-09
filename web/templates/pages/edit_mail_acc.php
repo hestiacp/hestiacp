@@ -94,6 +94,15 @@
 							</label>
 						</div>
 					</div>
+
+					<div id="v-fwd-opt">
+						<div class="u-mb10">
+							<label for="v_fwd" class="form-label">
+								<?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
+							</label>
+							<textarea class="form-control" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+						</div>
+					</div>
 					<div class="form-check u-mb10">
 						<input x-model="hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">
 						<label for="v_autoreply">
@@ -104,14 +113,6 @@
 						<div class="u-mb10">
 							<label for="v_autoreply_message" class="form-label"><?= _("Message") ?></label>
 							<textarea class="form-control" name="v_autoreply_message" id="v_autoreply_message"><?= htmlentities(trim($v_autoreply_message, "'")) ?></textarea>
-						</div>
-					</div>
-					<div id="v-fwd-opt">
-						<div class="u-mb10">
-							<label for="v_fwd" class="form-label">
-								<?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
-							</label>
-							<textarea class="form-control" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
 						</div>
 					</div>
 					<div class="u-mb20">

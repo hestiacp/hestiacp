@@ -20,6 +20,11 @@ export const projectManagers: DefaultTheme.TeamMember[] = [
 		name: "Robert Zollner 🇷🇴",
 		links: [{ icon: "github", link: "https://github.com/Lupul" }],
 	},
+	{
+		avatar:
+			"https://cdn.discordapp.com/avatars/737720562482151485/bac8f56f0a909032efaf60c1aa4047e5.webp",
+		name: "Kristan Kenney 🇨🇦",
+	},
 ];
 
 export const teamMembers: DefaultTheme.TeamMember[] = [
@@ -65,13 +70,5 @@ export const teamMembers: DefaultTheme.TeamMember[] = [
 		avatar: "https://www.github.com/AlecRust.png",
 		name: "Alec Rust 🇬🇧",
 		links: [{ icon: "github", link: "https://github.com/AlecRust" }],
-	},
-];
-
-export const emeriti: DefaultTheme.TeamMember[] = [
-	{
-		avatar:
-			"https://cdn.discordapp.com/avatars/737720562482151485/bac8f56f0a909032efaf60c1aa4047e5.webp",
-		name: "Kristan Kenney 🇨🇦",
 	},
 ];

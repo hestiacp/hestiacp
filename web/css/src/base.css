@@ -14,10 +14,6 @@ html {
 	box-sizing: inherit;
 }
 
-:focus {
-	outline: none;
-}
-
 [x-cloak] {
 	display: none !important;
 }

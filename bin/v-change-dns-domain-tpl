@@ -131,6 +131,8 @@ if [ "$template" = "office365" ]; then
 	fi
 fi
 
+# Update serial
+update_domain_serial
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 	rebuild_dns_domain_conf

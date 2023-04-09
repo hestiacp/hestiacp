@@ -154,12 +154,12 @@ else
 	[ ! -f "${RC_INSTALL_DIR}/${RC_FILE}" ] && wget "$RL_URL" --quiet -O "${RL_INSTALL_DIR}/${RL_FILE}"
 	version=$(cat $RL_INSTALL_DIR/data/VERSION)
 
-	unzip -q -j rainloop-latest.zip "data/VERSION" -d $RL_INSTALL_DIR/
+	unzip -q -j ${RL_INSTALL_DIR}/${RL_FILE} "data/VERSION" -d $RL_INSTALL_DIR/
 	version_source=$(cat $RL_INSTALL_DIR/VERSION)
 
 	# Check version inside .zip file in case hestia didn't update yet
 	if [ "$version" != "$version_source" ]; then
-		unzip -q ${RL_INSTALL_DIR}/${RL_FILE}
+		unzip -q -o ${RL_INSTALL_DIR}/${RL_FILE} -d $RL_INSTALL_DIR/
 		rm $RL_INSTALL_DIR/$RL_FILE
 	fi
 	rm ${RL_INSTALL_DIR}/VERSION

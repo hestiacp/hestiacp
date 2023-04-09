@@ -169,6 +169,9 @@ check_args() {
 	fi
 }
 
+# Define version check function
+version_ge() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
+
 # Subsystem checker
 is_system_enabled() {
 	if [ -z "$1" ] || [ "$1" = no ]; then
@@ -1396,6 +1399,8 @@ format_domain() {
 	if [[ "$domain" =~ ^\. ]]; then
 		domain=$(echo "$domain" | sed -e "s/^[.]*//")
 	fi
+	# Remove white spaces
+	domain=$(echo $domain | sed 's/^[ \t]*//;s/[ \t]*$//')
 }
 
 format_domain_idn() {

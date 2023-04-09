@@ -14,9 +14,6 @@ source $HESTIA/func/syshealth.sh
 #######                Functions & Initialization             #######
 #####################################################################
 
-# Define version check function
-function version_ge() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
-
 add_upgrade_message() {
 	if [ -f "$HESTIA_BACKUP/message.log" ]; then
 		echo -e $1 >> $HESTIA_BACKUP/message.log
@@ -186,13 +183,13 @@ upgrade_send_notification_to_panel() {
 	# Add notification to panel if variable is set to true or is not set
 	if [[ "$new_version" =~ "alpha" ]]; then
 		# Send notifications for development releases
-		$BIN/v-add-user-notification admin 'Development snapshot installed' '<b>Version:</b> '$new_version'<br><b>Code Branch:</b> '$RELEASE_BRANCH'<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification admin 'Development snapshot installed' '<b>Version:</b> '$new_version'<br><b>Code Branch:</b> '$RELEASE_BRANCH'<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a> and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.<br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 	elif [[ "$new_version" =~ "beta" ]]; then
 		# Send feedback notification for beta releases
-		$BIN/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br>Found a bug? Report it on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.<br><br>Found a bug? Report it on <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 	else
 		# Send normal upgrade complete notification for stable releases
-		$BIN/v-add-user-notification admin 'Upgrade complete' 'Hestia Control Panel has been updated to <b>v'$new_version'</b>.<br><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_new">View release notes</a><br><br>Please tell us about any bugs or issues by opening a new issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification admin 'Upgrade complete' 'Hestia Control Panel has been updated to <b>v'$new_version'</b>.<br><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_blank">View release notes</a><br><br>Please tell us about any bugs or issues by opening a new issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 	fi
 }
 
@@ -551,24 +548,28 @@ upgrade_b2_tool() {
 }
 
 upgrade_cloudflare_ip() {
-	echo "[ * ] Update Cloudflare IP"
-	# https://github.com/ergin/nginx-cloudflare-real-ip/
-	CLOUDFLARE_FILE_PATH='/etc/nginx/conf.d/cloudflare.inc'
-	echo "#Cloudflare" > $CLOUDFLARE_FILE_PATH
-	echo "" >> $CLOUDFLARE_FILE_PATH
+	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+		cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
 
-	echo "# - IPv4" >> $CLOUDFLARE_FILE_PATH
-	for i in $(curl -s -L https://www.cloudflare.com/ips-v4); do
-		echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
-	done
-	echo "" >> $CLOUDFLARE_FILE_PATH
-	echo "# - IPv6" >> $CLOUDFLARE_FILE_PATH
-	for i in $(curl -s -L https://www.cloudflare.com/ips-v6); do
-		echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
-	done
+		if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
+			cf_inc="/etc/nginx/conf.d/cloudflare.inc"
 
-	echo "" >> $CLOUDFLARE_FILE_PATH
-	echo "real_ip_header CF-Connecting-IP;" >> $CLOUDFLARE_FILE_PATH
+			echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
+			echo "# Cloudflare IP Ranges" > $cf_inc
+			echo "" >> $cf_inc
+			echo "# IPv4" >> $cf_inc
+			for ipv4 in $(echo "$cf_ips" | jq -r '.result.ipv4_cidrs[]//""' | sort); do
+				echo "set_real_ip_from $ipv4;" >> $cf_inc
+			done
+			echo "" >> $cf_inc
+			echo "# IPv6" >> $cf_inc
+			for ipv6 in $(echo "$cf_ips" | jq -r '.result.ipv6_cidrs[]//""' | sort); do
+				echo "set_real_ip_from $ipv6;" >> $cf_inc
+			done
+			echo "" >> $cf_inc
+			echo "real_ip_header CF-Connecting-IP;" >> $cf_inc
+		fi
+	fi
 }
 
 upgrade_phppgadmin() {
@@ -601,7 +602,7 @@ upgrade_phpmyadmin() {
 	if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
 		pma_version=$(jq -r .version /usr/share/phpmyadmin/package.json)
 		if version_ge "$pma_version" "$pma_v"; then
-			echo "[ * ] phpMyAdmin is up to date (${pma_release_file##*-})..."
+			echo "[ * ] phpMyAdmin is up to date (${pma_version})..."
 			# Update permissions
 			if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
 				chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
@@ -706,7 +707,7 @@ upgrade_rainloop() {
 }
 
 upgrade_dependencies() {
-	echo "[ ! ] Update Hesita PHP dependencies"
+	echo "[ ! ] Update Hestia PHP dependencies..."
 	$BIN/v-add-sys-dependencies
 }
 
@@ -734,7 +735,7 @@ upgrade_rebuild_dns_templates() {
 upgrade_rebuild_users() {
 	if [ "$UPGRADE_REBUILD_USERS" = "true" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
-			echo "[ * ] Rebuilding user accounts and domains:"
+			echo "[ * ] Rebuilding user accounts and domains:..."
 		else
 			echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
 		fi

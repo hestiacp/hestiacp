@@ -69,8 +69,8 @@ $v_letsencrypt = $data[$v_domain]["LETSENCRYPT"];
 if (empty($v_letsencrypt)) {
 	$v_letsencrypt = "no";
 }
-$v_ssl_home = $data[$v_domain]["SSL_HOME"];
-$v_backend_template = $data[$v_domain]["BACKEND"];
+$v_ssl_home = $data[$v_domain]["SSL_HOME"] ?? "";
+$v_backend_template = $data[$v_domain]["BACKEND"] ?? "";
 $v_nginx_cache = $data[$v_domain]["FASTCGI_CACHE"] ?? "";
 $v_nginx_cache_duration = $data[$v_domain]["FASTCGI_DURATION"] ?? "";
 $v_nginx_cache_check = "";
@@ -848,10 +848,7 @@ if (!empty($_POST["save"])) {
 		if (empty($_POST["v_ssl_key"])) {
 			$errors[] = "ssl key";
 		}
-		if (empty($_POST["v_ssl_home"])) {
-			$errors[] = "ssl home";
-		}
-		$v_ssl_home = quoteshellarg($_POST["v_ssl_home"]);
+
 		if (!empty($errors[0])) {
 			foreach ($errors as $i => $error) {
 				if ($i == 0) {
@@ -885,6 +882,7 @@ if (!empty($_POST["save"])) {
 				fwrite($fp, str_replace("\r\n", "\n", $_POST["v_ssl_ca"]));
 				fclose($fp);
 			}
+			//keep using the original value for v_ssl_home
 			exec(
 				HESTIA_CMD .
 					"v-add-web-domain-ssl " .
@@ -894,7 +892,7 @@ if (!empty($_POST["save"])) {
 					" " .
 					$tmpdir .
 					" " .
-					$v_ssl_home .
+					quoteshellarg($v_ssl_home) .
 					" 'no'",
 				$output,
 				$return_var,
@@ -1517,7 +1515,7 @@ if (!empty($_POST["save"])) {
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 		header("Location: /edit/web/?domain=" . $v_domain);
 		exit();
 	}

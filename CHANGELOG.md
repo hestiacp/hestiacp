@@ -2,7 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Development] - Service release
+## [1.7.2] - Service release
+
+### Note
+
+- HestiaCP 1.7.2 fixes an issue with downloading certificates from Let's Encrypt due to the implementation of asynchronous requests which will go live on 10th April 2023. Please update your server before this date to ensure compatibility with Let's Encrypt.
+
+### Bugfixes
+
+- Fixed an issue php after default php version change (#3145 #3414)
+- Fixed importing Add Domains v-import-cpanel (#3242 @adion-gorani)
+- Fixed and issue with DNSSSEC check if DNSEC is available (#3430)
+- Fixed an issue with v-add-web-domain-redirection (#3438 #3440)
+- Remove leading and trailing spaces on a domain (#3439 #3440)
+- Fixed an issue with domain.com:/public_html in v-backup-users (#3434)
+- Fix and issue with custom webmail clients (#3419 #3420)
+- Refine :focus styles (#3432)
+- Replace jQuery UI tabs with vanilla JS (#3413)
+- Reduce amount of animation styles (#3418)
+- Minor UI updates (#3425)
+- Fixed an issue with v-suspend-dns-record still loading after being disabled (#3441 @setiseta)
+- Replace jQuery UI dialogs with <dialog> (#3401)
+- Fixed an issue SSL not found + php error on login page. (#3404)
+
+## [1.7.1] - Service release
+
+### Bugfixes
+
+- Fixed an issue with wildcard overruling webmail.domain.com config in Apache2 (#3400 #1631)
+- Removed delete button edit user page (#3997)
+- Fixed an issue with serial not increasing (#3396)
+- Fixed an issue with new hestia-zone sync and servers behind NAT or with multiple IPs (#3388 #3396)
+- Remove option to enable DNSSEC when DNSSEC is not supported (#3372 #3396)
+- Fix toolbar items on locales with long words (#3380 #3395)
+- Only count \*.tar files in rotate routine (#3393 #3385)
+- Fixed broken upgrade_mariadb.sh (#3391 @myrevery)
+- Improve add_firewall_ipset.php (#3390 @myrevery)
+- Update Path change of IPset blacklist.sh (#3389 @myrevery)
+- Improve upgrade script Cloudflare ips (#3388 @myrevery)
+- Update supported message hst-install.sh (#3377 @shizualand)
+- Fixed an issue with adding own ssl certificated to website config (#3374 #3371)
+- Fixed javascript logic edit mail domains (#3373)
+- Add required attribute to login forms (#3376)
+
+## [1.7.0] - Feature / Major release
 
 ### Note
 
@@ -66,11 +109,15 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with B2 and changing access keys
 - Fixed an issue with Drupal install via Quick installer (#3353 #3352)
 - Fixed issues with default state jQuery UI modals (#3344)
+- Fixed an issue with login with passwords that contains a - or -- on the first character (#3365 #3354)
+- Add option to disable ip check (#3365)
+- Replace sdocroot with docroot in default.tpl for Apache2 / PHP-FPM setups (#3360)
 
 ### Dependencies
 
 - Updated hestia-nginx to 1.23.3
-- Updated hestia-php to 8.2.3
+- Updated hestia-php to 8.2.4
+- Update OpenSSL to 3.1.0
 - Updated Roundcube to 1.6.1
 - Updated Filegator to 7.9.2
 - Updated phpMyAdmin to 5.2.21
@@ -703,7 +750,7 @@ After that run apt update && apt upgrade
 
 ### Features
 
-- Add support for Dovecote Sieve #2163 (@gejobj) => [How to enable Managesieve](https://docs.hestiacp.com/admin_docs/mail.html#how-can-i-enable-managesieve)
+- Add support for Dovecote Sieve #2163 (@gejobj) => [How to enable Managesieve](https://hestiacp.com/docs/server-administration/email.html#how-can-i-enable-managesieve)
 - Improve HELO based system and use RDNS lookup instead our old system
 - Add support for PHP 8.1 #2233
 - Set default php version for new installs to PHP 8.0

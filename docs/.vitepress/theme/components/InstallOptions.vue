@@ -51,25 +51,28 @@ export default {
 </script>
 
 <template>
-	<div class="template">
-		<div class="form-group" v-for="item in items">
-			<input type="checkbox" :value="item.value" v-model="item.selected" /><label>{{
-				item.id
-			}}</label>
-			<p>{{ item.desc }}</p>
-			<div class="" v-if="item.textField">
-				<input type="text" class="input-from" v-model="item.text" />
-			</div>
-			<div class="" v-if="item.selectField">
-				<select class="input-from" v-model="item.text">
-					<option v-for="language in languages" :value="language.value">
-						{{ language.text }}
-					</option>
-				</select>
+	<div class="container">
+		<div class="grid">
+			<div class="form-group" v-for="item in items">
+				<div class="u-mb10">
+					<input type="checkbox" :value="item.value" v-model="item.selected" :id="item.id" />
+					<label :for="item.id">{{ item.id }}</label>
+				</div>
+				<p>{{ item.desc }}</p>
+				<div class="" v-if="item.textField">
+					<input type="text" class="input-from" v-model="item.text" />
+				</div>
+				<div class="" v-if="item.selectField">
+					<select class="input-from" v-model="item.text">
+						<option v-for="language in languages" :value="language.value">
+							{{ language.text }}
+						</option>
+					</select>
+				</div>
 			</div>
 		</div>
-		<div>
-			<input value="Submit" @click="generateString" class="form-submit" />
+		<div class="u-text-center u-mb10">
+			<button @click="generateString" class="form-submit" type="button">Submit</button>
 		</div>
 		<div v-if="installstr">
 			<div class="form-group-info">
@@ -87,31 +90,26 @@ export default {
 </template>
 
 <style scoped>
-.template {
+.container {
+	margin: 0px auto;
 	max-width: 1152px;
+}
+.grid {
 	display: grid;
 	grid-gap: 20px;
-	margin: 0px auto;
-}
-@media (min-width: 640px) {
-	.template {
+
+	@media (min-width: 640px) {
 		grid-template-columns: 1fr 1fr;
 	}
-}
 
-@media (min-width: 960px) {
-	.template {
+	@media (min-width: 960px) {
 		grid-template-columns: 1fr 1fr 1fr;
 	}
 }
-
 .form-group {
 	border-radius: 10px;
-	padding: 10px;
-	background-color: var(--vp-c-bg-soft);
-}
-.form-group p {
-	margin: 0em 0em 1em 0em;
+	padding: 20px;
+	background-color: var(--vp-c-bg-alt);
 }
 .form-group-info {
 	clear: both;
@@ -125,13 +123,24 @@ export default {
 	padding: 2px;
 }
 .form-submit {
-	cursor: pointer;
-	text-align: center;
+	background-color: green;
 	font-weight: bold;
+	border-radius: 10px;
+	padding: 10px 20px;
 	font-size: 25px;
+
+	&:hover {
+		background-color: #4caf50;
+	}
 }
 textarea {
 	width: 100%;
 	font-size: 1em;
+}
+.u-mb10 {
+	margin-bottom: 10px !important;
+}
+.u-text-center {
+	text-align: center !important;
 }
 </style>

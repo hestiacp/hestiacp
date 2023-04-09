@@ -1,6 +1,8 @@
 <script lang="ts">
 import { InstallOptions } from "../../../_data/options";
 import { LanguagesOptions } from "../../../_data/languages";
+import { ref } from "vue";
+const slot = ref(null);
 
 export default {
 	props: {
@@ -47,6 +49,30 @@ export default {
 				(this.$refs.dialog as HTMLDialogElement).close();
 			}
 		},
+		checkDependencies(e) {
+			if (e.target.checked) {
+				let conflicts = e.target.getAttribute("conflicts");
+				if (conflicts) {
+					document.getElementById(conflicts).checked = false;
+				}
+				let depends = e.target.getAttribute("depends");
+				if (depends) {
+					document.getElementById(depends).checked = true;
+				}
+			}
+		},
+		enableOption(e) {
+			let checked = e.target.getElementsByTagName("input")[0];
+			if (checked) {
+				if (checked.checked) {
+					checked.checked = false;
+				} else {
+					checked.checked = true;
+					var event = new Event("change");
+					checked.dispatchEvent(event);
+				}
+			}
+		},
 	},
 };
 </script>
@@ -54,9 +80,17 @@ export default {
 <template>
 	<div class="container">
 		<div class="grid">
-			<div class="form-group" v-for="item in items" :key="item.id">
+			<div class="form-group" v-for="item in items" @click="enableOption">
 				<div class="u-mb10">
-					<input type="checkbox" :value="item.value" v-model="item.selected" :id="item.id" />
+					<input
+						@change="checkDependencies"
+						type="checkbox"
+						:value="item.value"
+						v-model="item.selected"
+						:id="item.id"
+						:conflicts="item.conflicts"
+						:depends="item.depends"
+					/>
 					<label :for="item.id">{{ item.id }}</label>
 				</div>
 				<p>{{ item.desc }}</p>
@@ -82,6 +116,7 @@ export default {
 					Log in to your server as root, either directly or via SSH:
 					<strong>ssh root@your.server</strong> and download the installation script:
 				</p>
+				```shell npm i markdown-to-vue-loader --save-dev ```
 				<textarea v-model="hestia_wget" readonly />
 				<p>And run then the following command</p>
 				<textarea v-model="installStr" readonly />
@@ -117,6 +152,10 @@ export default {
 	margin: 1em 2em 1em 2em;
 	padding: 10px;
 	border: 1px solid;
+}
+label {
+	margin-left: 2px;
+	text-transform: capitalize;
 }
 .input-from {
 	font-size: 1em;

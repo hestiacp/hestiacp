@@ -5,6 +5,10 @@
 		<div class="InstallOptionsSection">
 			<slot name="list" />
 		</div>
+		<cite
+			>Based on: <a href="https://github.com/gabizz/hestiacp-scriptline-generator">@gabizz</a> and
+			<a href="https://github.com/turbopixel/HestiaCP-Command-Creator">@turbopixel</a></cite
+		>
 	</form>
 </template>
 
@@ -15,7 +19,14 @@
 	list-style: disc;
 	line-height: 1.5;
 }
-
+cite {
+	font-size: small;
+	margin: 0px auto;
+	margin: 0.55em 0;
+}
+cite a {
+	color: var(--vp-c-txt-1) !important;
+}
 @media (min-width: 640px) {
 	.InstallForm {
 		font-size: 1.15rem;

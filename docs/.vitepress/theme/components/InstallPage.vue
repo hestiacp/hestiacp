@@ -8,7 +8,6 @@
 .InstallPage {
 	line-height: 1.5;
 }
-
 .InstallPage :deep(.container) {
 	display: flex;
 	flex-direction: column;

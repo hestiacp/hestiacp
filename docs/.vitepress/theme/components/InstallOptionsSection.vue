@@ -16,20 +16,15 @@
 .InstallForm {
 	margin: 0.55em 0;
 	padding: 0 1em;
-	list-style: disc;
 	line-height: 1.5;
 }
 cite {
 	font-size: small;
 	margin: 0px auto;
 	margin: 0.55em 0;
-}
-cite a {
-	color: var(--vp-c-txt-1) !important;
-}
-@media (min-width: 640px) {
-	.InstallForm {
-		font-size: 1.15rem;
+
+	& a {
+		color: var(--vp-c-txt-1) !important;
 	}
 }
 </style>

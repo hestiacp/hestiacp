@@ -73,6 +73,21 @@ export default {
 				}
 			}
 		},
+		copyToClipboard(text: string, button: HTMLButtonElement) {
+			navigator.clipboard.writeText(text).then(
+				() => {
+					button.textContent = "Copied!";
+					button.classList.add("is-active");
+					setTimeout(() => {
+						button.textContent = "Copy";
+						button.classList.remove("is-active");
+					}, 1000);
+				},
+				(err) => {
+					console.error("Could not copy to clipboard:", err);
+				}
+			);
+		},
 	},
 };
 </script>
@@ -81,24 +96,30 @@ export default {
 	<div class="container">
 		<div class="grid">
 			<div class="form-group" v-for="item in items" @click="enableOption">
-				<div class="u-mb10">
+				<div class="form-check u-mb10">
 					<input
 						@change="checkDependencies"
 						type="checkbox"
-						:value="item.value"
+						class="form-check-input"
 						v-model="item.selected"
+						:value="item.value"
 						:id="item.id"
 						:conflicts="item.conflicts"
 						:depends="item.depends"
 					/>
 					<label :for="item.id">{{ item.id }}</label>
 				</div>
-				<p>{{ item.desc }}</p>
+				<template v-if="item.textField || item.selectField">
+					<label class="form-label" :for="'input-' + item.id">{{ item.desc }}</label>
+				</template>
+				<template v-else>
+					<p>{{ item.desc }}</p>
+				</template>
 				<div v-if="item.textField">
-					<input type="text" class="input-from" v-model="item.text" />
+					<input type="text" class="form-control" v-model="item.text" :id="'input-' + item.id" />
 				</div>
 				<div v-if="item.selectField">
-					<select class="input-from" v-model="item.text">
+					<select class="form-select" v-model="item.text" :id="'input-' + item.id">
 						<option v-for="language in languages" :value="language.value" :key="language.value">
 							{{ language.text }}
 						</option>
@@ -110,15 +131,33 @@ export default {
 			<button @click="generateString" class="form-submit" type="button">Submit</button>
 		</div>
 		<dialog ref="dialog" class="modal" @click="closeDialog">
-			<div class="form-group-info">
-				<h1>Installation instruction</h1>
-				<p>
-					Log in to your server as root, either directly or via SSH:
-					<strong>ssh root@your.server</strong> and download the installation script:
-				</p>
-				<textarea v-model="hestia_wget" readonly />
-				<p>And run then the following command</p>
-				<textarea v-model="installStr" readonly />
+			<h1 class="u-mb10">Installation instructions</h1>
+			<p class="u-mb10">
+				Log in to your server as root, either directly or via SSH:
+				<code>ssh root@your.server</code> and download the installation script:
+			</p>
+			<div class="u-pos-relative">
+				<input type="text" class="form-control u-monospace u-mb10" v-model="hestia_wget" readonly />
+				<button
+					class="button-positioned"
+					@click="copyToClipboard(hestia_wget, $event.target)"
+					type="button"
+					title="Copy to Clipboard"
+				>
+					Copy
+				</button>
+			</div>
+			<p class="u-mb10">And then run the following command:</p>
+			<div class="u-pos-relative">
+				<textarea class="form-control u-min-height100" v-model="installStr" readonly />
+				<button
+					class="button-positioned"
+					@click="copyToClipboard(installStr, $event.target)"
+					type="button"
+					title="Copy to Clipboard"
+				>
+					Copy
+				</button>
 			</div>
 		</dialog>
 	</div>
@@ -132,6 +171,7 @@ export default {
 .grid {
 	display: grid;
 	grid-gap: 20px;
+	margin-top: 30px;
 
 	@media (min-width: 640px) {
 		grid-template-columns: 1fr 1fr;
@@ -142,52 +182,132 @@ export default {
 	}
 }
 .form-group {
+	font-size: 0.9em;
 	border-radius: 10px;
-	padding: 20px;
+	padding: 15px 20px;
 	background-color: var(--vp-c-bg-alt);
 }
-.form-group-info {
-	clear: both;
-	margin: 1em 2em 1em 2em;
-	padding: 10px;
-	border: 1px solid;
-}
-label {
+.form-label {
+	display: inline-block;
 	margin-left: 2px;
+	padding-bottom: 5px;
 	text-transform: capitalize;
 }
-.input-from {
-	font-size: 1em;
-	border: 1px solid;
-	padding: 2px;
-}
-.form-submit {
-	background-color: green;
-	font-weight: bold;
-	border-radius: 10px;
-	padding: 10px 30px;
-	font-size: 25px;
+.form-control {
+	font-size: 0.9em;
+	border: 1px solid var(--vp-c-border);
+	border-radius: 4px;
+	background-color: var(--vp-c-bg);
+	width: 100%;
+	padding: 5px 10px;
 
 	&:hover {
-		background-color: #4caf50;
+		border-color: var(--vp-c-border-hover);
+	}
+
+	&:focus {
+		border-color: var(--vp-c-brand);
 	}
 }
-textarea {
+.form-select {
+	appearance: auto;
+	font-size: 0.9em;
+	border: 1px solid var(--vp-c-border);
+	border-radius: 4px;
+	background-color: var(--vp-c-bg);
+	padding: 5px 10px;
 	width: 100%;
-	font-size: 1em;
+
+	&:hover {
+		border-color: var(--vp-c-border-hover);
+	}
+
+	&:focus {
+		border-color: var(--vp-c-brand);
+	}
+}
+.form-check {
+	position: relative;
+	padding-left: 20px;
+	margin-left: 3px;
+	min-height: 24px;
+
+	& label {
+		font-weight: 600;
+	}
+}
+.form-check-input {
+	position: absolute;
+	margin-top: 6px;
+	margin-left: -20px;
+}
+.form-submit {
+	border: 1px solid transparent;
+	display: inline-block;
+	font-weight: 600;
+	transition: color 0.25s, border-color 0.25s, background-color 0.25s;
+	border-radius: 20px;
+	font-size: 14px;
+	padding: 10px 20px;
+	background-color: var(--vp-button-brand-bg);
+	border-color: var(--vp-button-brand-border);
+	color: var(--vp-button-brand-text);
+
+	&:hover {
+		background-color: var(--vp-button-brand-hover-bg);
+		border-color: var(--vp-button-brand-hover-border);
+		color: var(--vp-button-brand-hover-text);
+	}
+
+	&:active {
+		background-color: var(--vp-button-brand-active-bg);
+		border-color: var(--vp-button-brand-active-border);
+		color: var(--vp-button-brand-active-text);
+	}
+}
+.button-positioned {
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	border-top-right-radius: 3px;
+	color: var(--vp-c-brand);
+	font-weight: 600;
+	padding: 5px 10px;
+	background-color: var(--vp-c-bg);
+
+	&.is-active {
+		color: green;
+	}
 }
 .modal {
+	border-radius: 10px;
+	border: 1px solid var(--vp-c-border);
 	position: fixed;
-	padding: 0;
+	padding: 15px 20px;
 
 	&::backdrop {
 		background-color: rgb(0 0 0 / 60%);
 	}
 }
+.modal-close {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	color: #fff;
+}
 .u-mb10 {
 	margin-bottom: 10px !important;
 }
+.u-min-height100 {
+	min-height: 100px;
+}
 .u-text-center {
 	text-align: center !important;
+}
+.u-monospace {
+	font-family: monospace !important;
+}
+.u-pos-relative {
+	position: relative !important;
 }
 </style>

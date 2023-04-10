@@ -116,7 +116,6 @@ export default {
 					Log in to your server as root, either directly or via SSH:
 					<strong>ssh root@your.server</strong> and download the installation script:
 				</p>
-				```shell npm i markdown-to-vue-loader --save-dev ```
 				<textarea v-model="hestia_wget" readonly />
 				<p>And run then the following command</p>
 				<textarea v-model="installStr" readonly />

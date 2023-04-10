@@ -74,7 +74,7 @@ bash hst-install.sh -h
 ### List of installation options
 
 ::: tip
-An easier way to choose your installation options is by using the [Install string generator](https://gabizz.github.io/hestiacp-scriptline-generator/) by [Gabriel Claudiu Maftei](https://github.com/gabizz/).
+An easier way to choose your installation options is by using the [Install string generator](/install.md).
 :::
 
 To choose what software gets installed, you can provide flags to the installation script. You can view the full list of options below.

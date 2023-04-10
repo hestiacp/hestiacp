@@ -20,8 +20,9 @@
 }
 cite {
 	font-size: small;
-	margin: 0px auto;
 	margin: 0.55em 0;
+	display: block;
+	text-align: center;
 
 	& a {
 		color: var(--vp-c-txt-1) !important;

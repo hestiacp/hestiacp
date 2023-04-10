@@ -45,7 +45,7 @@ export default {
 			(this.$refs.dialog as HTMLDialogElement).showModal();
 		},
 		closeDialog(e) {
-			if (e.target === this.$refs.dialog) {
+			if (e.target === this.$refs.dialogClose || e.target === this.$refs.dialog) {
 				(this.$refs.dialog as HTMLDialogElement).close();
 			}
 		},
@@ -77,10 +77,8 @@ export default {
 			navigator.clipboard.writeText(text).then(
 				() => {
 					button.textContent = "Copied!";
-					button.classList.add("is-active");
 					setTimeout(() => {
 						button.textContent = "Copy";
-						button.classList.remove("is-active");
 					}, 1000);
 				},
 				(err) => {
@@ -131,33 +129,43 @@ export default {
 			<button @click="generateString" class="form-submit" type="button">Submit</button>
 		</div>
 		<dialog ref="dialog" class="modal" @click="closeDialog">
-			<h1 class="u-mb10">Installation instructions</h1>
-			<p class="u-mb10">
-				Log in to your server as root, either directly or via SSH:
-				<code>ssh root@your.server</code> and download the installation script:
-			</p>
-			<div class="u-pos-relative">
-				<input type="text" class="form-control u-monospace u-mb10" v-model="hestia_wget" readonly />
-				<button
-					class="button-positioned"
-					@click="copyToClipboard(hestia_wget, $event.target)"
-					type="button"
-					title="Copy to Clipboard"
-				>
-					Copy
-				</button>
-			</div>
-			<p class="u-mb10">And then run the following command:</p>
-			<div class="u-pos-relative">
-				<textarea class="form-control u-min-height100" v-model="installStr" readonly />
-				<button
-					class="button-positioned"
-					@click="copyToClipboard(installStr, $event.target)"
-					type="button"
-					title="Copy to Clipboard"
-				>
-					Copy
-				</button>
+			<button class="modal-close" @click="closeDialog" type="button" ref="dialogClose">
+				Close
+			</button>
+			<div ref="dialogContent" class="modal-content">
+				<h1 class="modal-heading">Installation instructions</h1>
+				<p class="u-mb10">
+					Log in to your server as root, either directly or via SSH:
+					<code>ssh root@your.server</code> and download the installation script:
+				</p>
+				<div class="u-pos-relative">
+					<input
+						type="text"
+						class="form-control u-monospace u-mb10"
+						v-model="hestia_wget"
+						readonly
+					/>
+					<button
+						class="button-positioned"
+						@click="copyToClipboard(hestia_wget, $event.target)"
+						type="button"
+						title="Copy to Clipboard"
+					>
+						Copy
+					</button>
+				</div>
+				<p class="u-mb10">Then run the following command:</p>
+				<div class="u-pos-relative">
+					<textarea class="form-control u-min-height100" v-model="installStr" readonly />
+					<button
+						class="button-positioned"
+						@click="copyToClipboard(installStr, $event.target)"
+						type="button"
+						title="Copy to Clipboard"
+					>
+						Copy
+					</button>
+				</div>
 			</div>
 		</dialog>
 	</div>
@@ -172,6 +180,7 @@ export default {
 	display: grid;
 	grid-gap: 20px;
 	margin-top: 30px;
+	margin-bottom: 30px;
 
 	@media (min-width: 640px) {
 		grid-template-columns: 1fr 1fr;
@@ -238,7 +247,7 @@ export default {
 }
 .form-check-input {
 	position: absolute;
-	margin-top: 6px;
+	margin-top: 5px;
 	margin-left: -20px;
 }
 .form-submit {
@@ -247,7 +256,7 @@ export default {
 	font-weight: 600;
 	transition: color 0.25s, border-color 0.25s, background-color 0.25s;
 	border-radius: 20px;
-	font-size: 14px;
+	font-size: 16px;
 	padding: 10px 20px;
 	background-color: var(--vp-button-brand-bg);
 	border-color: var(--vp-button-brand-border);
@@ -270,20 +279,18 @@ export default {
 	right: 1px;
 	top: 1px;
 	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
 	color: var(--vp-c-brand);
 	font-weight: 600;
-	padding: 5px 10px;
+	padding: 6px 10px;
 	background-color: var(--vp-c-bg);
-
-	&.is-active {
-		color: green;
-	}
 }
 .modal {
+	position: fixed;
 	border-radius: 10px;
 	border: 1px solid var(--vp-c-border);
-	position: fixed;
-	padding: 15px 20px;
+	box-shadow: 0 8px 40px 0 rgb(0 0 0 / 35%);
+	padding: 0;
 
 	&::backdrop {
 		background-color: rgb(0 0 0 / 60%);
@@ -292,8 +299,23 @@ export default {
 .modal-close {
 	position: absolute;
 	top: 10px;
-	right: 10px;
-	color: #fff;
+	right: 15px;
+	font-weight: 600;
+	color: var(--vp-c-brand);
+}
+.modal-content {
+	padding: 30px;
+}
+.modal-heading {
+	font-weight: 600;
+	font-size: 1.3em;
+	text-align: center;
+	margin-bottom: 15px;
+}
+code {
+	background-color: var(--vp-c-bg-alt);
+	border-radius: 3px;
+	padding: 2px 5px;
 }
 .u-mb10 {
 	margin-bottom: 10px !important;

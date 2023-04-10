@@ -29,14 +29,15 @@ export default {
 		getOptionString(item: InstallOptions): string {
 			if (item.textField && item.selected) {
 				return item.text.length >= 2 ? `${item.param} '${item.text}'` : "";
-			} else if (item.selectField) {
-				return `${item.param} '${item.text}'`;
-			} else if (!item.textField) {
-				return item.param.includes("force") && item.selected
-					? item.param
-					: `${item.param}${item.selected ? " yes" : " no"}`;
 			}
-			return "";
+
+			if (item.selectField) {
+				return `${item.param} '${item.text}'`;
+			}
+
+			return item.param.includes("force") && item.selected
+				? item.param
+				: `${item.param}${item.selected ? " yes" : " no"}`;
 		},
 		generateString() {
 			const installStr = this.items.map(this.getOptionString).filter(Boolean);
@@ -49,7 +50,7 @@ export default {
 				(this.$refs.dialog as HTMLDialogElement).close();
 			}
 		},
-		checkDependencies(e) {
+		toggleOption(e) {
 			if (e.target.checked) {
 				let conflicts = e.target.getAttribute("conflicts");
 				if (conflicts) {
@@ -58,18 +59,6 @@ export default {
 				let depends = e.target.getAttribute("depends");
 				if (depends) {
 					document.getElementById(depends).checked = true;
-				}
-			}
-		},
-		enableOption(e) {
-			let checked = e.target.getElementsByTagName("input")[0];
-			if (checked) {
-				if (checked.checked) {
-					checked.checked = false;
-				} else {
-					checked.checked = true;
-					var event = new Event("change");
-					checked.dispatchEvent(event);
 				}
 			}
 		},
@@ -93,10 +82,10 @@ export default {
 <template>
 	<div class="container">
 		<div class="grid">
-			<div class="form-group" v-for="item in items" @click="enableOption">
+			<div class="form-group" v-for="item in items">
 				<div class="form-check u-mb10">
 					<input
-						@change="checkDependencies"
+						@change="toggleOption"
 						type="checkbox"
 						class="form-check-input"
 						v-model="item.selected"

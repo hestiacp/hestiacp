@@ -1,5 +1,7 @@
+%global _hardened_build 1
+
 Name:           hestia-php
-Version:        %HESTIA-PHP-VERSION%
+Version:        8.2.4
 Release:        1%{dist}
 Summary:        Hestia internal PHP
 Group:          System Environment/Base
@@ -39,7 +41,7 @@ mkdir -p %{buildroot}%{_unitdir}
 %defattr(-,root,root)
 %attr(755,root,root) /usr/local/hestia/php
 %attr(775,admin,admin) /usr/local/hestia/php/var/log
-%attr(775,admin,admin) /usr/local/hestia/php/run
+%attr(775,admin,admin) /usr/local/hestia/php/var/run
 %config(noreplace) /usr/local/hestia/php/etc/php-fpm.conf
 %config(noreplace) /usr/local/hestia/php/lib/php.ini
 %{_unitdir}/hestia-php.service

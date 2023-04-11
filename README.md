@@ -8,7 +8,7 @@
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://docs.hestiacp.com/">Documentation</a> |
+	<a href="https://hestiacp.com/docs/">Documentation</a> |
 	<a href="https://forum.hestiacp.com/">Forum</a> |
 	<a href="https://discord.gg/nXRUZch">Discord</a>
 	<br/><br/>

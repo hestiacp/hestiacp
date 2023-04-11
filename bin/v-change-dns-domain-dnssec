@@ -51,6 +51,15 @@ fi
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+if [ "$DNS_CLUSTER_SYSTEM" != 'hestia-zone' ]; then
+	check_result "$E_DISABLED" "DNSSEC is not supported when DNS_CLUSTER_SYSTEM is not set to hestia-zone"
+fi
+
+version=$(named -v | awk 'NR==1{print $2}')
+if version_ge '9.16.18' $version; then
+	check_result "$E_DISABLED" "DNSSEC is not supported when bind / named version <= 9.16.18"
+fi
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -64,8 +73,9 @@ syshealth_repair_dns_config
 # Changing exp
 update_object_value 'dns' 'DOMAIN' "$domain" '$DNSSEC' "$status"
 
+# Update serial
+update_domain_serial
 # Rebuild DNS config
-
 rebuild_dns_domain_conf
 
 if [ $status = "no" ]; then

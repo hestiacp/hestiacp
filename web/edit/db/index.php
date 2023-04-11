@@ -97,7 +97,7 @@ if (!empty($_POST["save"])) {
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 	// if the mysql username was changed, render_page() below will render with the OLD mysql username,
 	// to prvent that, make the browser refresh the page.

@@ -52,15 +52,15 @@
 					</div>
 				</div>
 				<div>
-					<div class="cron-helper-panel js-cron-tabs">
-						<ul>
-							<li><a href="#tabs-1"><?= _("Minutes") ?></a></li>
-							<li><a href="#tabs-2"><?= _("Hourly") ?></a></li>
-							<li><a href="#tabs-3"><?= _("Daily") ?></a></li>
-							<li><a href="#tabs-4"><?= _("Weekly") ?></a></li>
-							<li><a href="#tabs-5"><?= _("Monthly") ?></a></li>
-						</ul>
-						<div id="tabs-1">
+					<div class="tabs cron-tabs js-tabs">
+						<div class="tabs-items" role="tablist">
+							<button type="button" class="tabs-item" id="tab-one" role="tab" tabindex="0" aria-selected="true"><?= _("Minutes") ?></button>
+							<button type="button" class="tabs-item" id="tab-two" role="tab" tabindex="-1"><?= _("Hourly") ?></button>
+							<button type="button" class="tabs-item" id="tab-three" role="tab" tabindex="-1"><?= _("Daily") ?></button>
+							<button type="button" class="tabs-item" id="tab-four" role="tab" tabindex="-1"><?= _("Weekly") ?></button>
+							<button type="button" class="tabs-item" id="tab-five" role="tab" tabindex="-1"><?= _("Monthly") ?></button>
+						</div>
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-one" tabindex="0">
 							<fieldset>
 								<input type="hidden" name="h_hour" value="*" form="">
 								<input type="hidden" name="h_day" value="*" form="">
@@ -84,8 +84,7 @@
 								</div>
 							</fieldset>
 						</div>
-
-						<div id="tabs-2">
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-two" tabindex="0" hidden>
 							<fieldset>
 								<input type="hidden" name="h_day" value="*" form="">
 								<input type="hidden" name="h_month" value="*" form="">
@@ -115,8 +114,7 @@
 								</div>
 							</fieldset>
 						</div>
-
-						<div id="tabs-3">
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-three" tabindex="0" hidden>
 							<fieldset>
 								<input type="hidden" name="h_month" value="*" form="">
 								<input type="hidden" name="h_wday" value="*" form="">
@@ -185,8 +183,7 @@
 								</div>
 							</fieldset>
 						</div>
-
-						<div id="tabs-4">
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-four" tabindex="0" hidden>
 							<fieldset>
 								<input type="hidden" name="h_month" value="*" form="">
 								<input type="hidden" name="h_day" value="*" form="">
@@ -258,8 +255,7 @@
 								</div>
 							</fieldset>
 						</div>
-
-						<div id="tabs-5">
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-five" tabindex="0" hidden>
 							<fieldset>
 								<input type="hidden" name="h_wday" value="*" form="">
 								<div class="u-mt10 u-mb10">

@@ -98,12 +98,12 @@
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-2 u-text-center">
 					<b>
-						<?php if ($status === 'active') {?>
+						<?php if ($status === "active") { ?>
 							<i class="fas fa-circle-check icon-green"></i>
-						<?php	} ?>
-						<?php if ($status === 'suspended') {?>
+						<?php } ?>
+						<?php if ($status === "suspended") { ?>
 							<i class="fas fa-triangle-exclamation icon-orange"></i>
-						<?php	} ?>
+						<?php } ?>
 					</b>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-5 truncate">
@@ -125,19 +125,18 @@
 						}
 					?>
 					<b>
-						<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin') && ($value['USER'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) { ?>
-							<?=$value['RESULT']?>
-						<?} else {
-							if($value['USER'] == $_SESSION['user']){
-							?>
-							<a href="<?=$edit_lnk.'&token='.$_SESSION['token'];?>"><?=$value['RESULT']?></a>
-							<?php
-							}else{
-							?>
-							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>&edit_link=<?=urlencode($edit_lnk);?>""><?=$value['RESULT']?></a>
-							<?php
+						<?php
+							if (($_SESSION['userContext'] === 'admin') && ($_SESSION['user'] !== 'admin') && ($value['USER'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {
+								echo $value['RESULT'];
+							} else {
+								if ($value['USER'] == $_SESSION['user']) {
+									$href = $edit_lnk.'&token='.$_SESSION['token'];
+								} else {
+									$href = '/login/?loginas='.$value['USER'].'&token='.$_SESSION['token'].'&edit_link='.urlencode($edit_lnk);
+								}
+								echo '<a href="' . $href . '">' . $value['RESULT'] . '</a>';
 							}
-						} ?>
+						?>
 					</b>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
@@ -147,19 +146,18 @@
 						</div>
 					</div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><?=translate_date($value['DATE'])?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><?= translate_date($value["DATE"]) ?></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center">
+					<b>
 						<a href="/search/?q=<?=htmlentities($_GET['q']); ?>&u=<?=$value['USER']; ?>&token=<?=$_SESSION['token']?>"><?=$value['USER']; ?></a>
-						<?php if (!($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes' && $value['USER'] !== 'admin')){
-						if ($_SESSION['userContext'] === 'admin'){
-						?>
-							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$value['USER']?>"><i class="fas fa-right-to-bracket icon-green icon-dim"></i></a>
-						<?php
-						}
-						}
-						?>
-						</b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><?=_($object)?></b></div>
+						<?php if (!($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes' && $value['USER'] !== 'admin') && ($_SESSION['userContext'] === 'admin')) { ?>
+							<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$value['USER']?>">
+								<i class="fas fa-right-to-bracket icon-green icon-dim"></i>
+							</a>
+						<?php } ?>
+					</b>
+				</div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><?= _($object) ?></b></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -168,7 +166,7 @@
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext('%d object', '%d objects', $i),$i); ?>
+			<?php printf(ngettext("%d object", "%d objects", $i), $i); ?>
 		</p>
 	</div>
 </footer>

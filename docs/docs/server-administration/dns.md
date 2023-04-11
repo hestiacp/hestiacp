@@ -22,13 +22,13 @@ With the release of 1.6.0, we have implemented a new API authentication system. 
 If you still want to use the legacy API to authenticate with **admin** username and the password make sure **Enable legacy API** access is set to **yes**.
 :::
 
-### DNS Cluster with the Hestia API (Master <-> Master)
+### DNS Cluster with the Hestia API (Master <-> Master) "Default setup!"
 
 ::: warning
 This method does not support DNSSEC!
 :::
 
-1. Create a new user on the Hestia server that will act as a “Slave”.
+1. Create a new user on the Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-user" or has the role `dns-cluster`
 2. Run the following command to enable the DNS server.
 
 ```bash
@@ -47,7 +47,7 @@ There is no limitation on how to chain DNS servers.
 
 ### DNS Cluster with the Hestia API (Master -> Slave)
 
-1. Create a new user on the Hestia server that will act as a “Slave”.
+1. Create a new user on the Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-user" or has the role `dns-cluster`
 2. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
 3. On the master server, open `/etc/bind/named.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
@@ -147,7 +147,7 @@ v-add-remote-dns-host slave.yourhost.com 8083 api_key '' '' useraccount
 With the new API system, you can also replace `api_key` with `access_key:secret_key`
 
 ::: info
-Please note that currently, only the user `dns-user` is exempted from syncing to other servers. If you have a DNS cluster with multiple master slaves you might run in issues.
+By default the user `dns-user` or user with the role `dns-cluster` are exempted from syncing to other DNS servers!
 :::
 
 ## I am not able to add a server as DNS host

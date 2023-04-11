@@ -46,7 +46,7 @@
 			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
 				<div class="u-mb10">
 					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
+					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
 				</div>
 				<div class="u-mb10">
 					<label for="v_ip" class="form-label"><?= _("IP address") ?></label>
@@ -88,12 +88,14 @@
 					</button>
 				</div>
 				<div x-cloak  x-show="showAdvanced" id="advtable">
+					<?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "hestia-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec === 'yes'){ echo ' checked'; } ?>>
 						<label for="v_dnssec">
 							<?= _("Enable DNSSEC") ?>
 						</label>
 					</div>
+					<?php } ?>
 					<div class="u-mb10">
 						<label for="v_exp" class="form-label">
 							<?= _("Expiration Date") ?> <span class="optional">(<?= _("YYYY-MM-DD") ?>)</span>

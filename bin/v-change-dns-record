@@ -136,6 +136,8 @@ echo "$dns_rec" >> $USER_DATA/dns/$domain.conf
 # Sorting records
 sort_dns_records
 
+# Update serial
+update_domain_serial
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 	rebuild_dns_domain_conf

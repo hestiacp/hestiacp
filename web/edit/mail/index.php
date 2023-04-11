@@ -732,7 +732,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 }
 
@@ -1082,7 +1082,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 }
 

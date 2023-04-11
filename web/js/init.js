@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 
 	// TODO: Replace with autofocus
-	if (document.querySelectorAll('.ui-dialog').length == 0) {
+	if (document.querySelectorAll('dialog[open]').length == 0) {
 		const input = document.querySelector(
 			'#vstobjects .form-control:not([disabled]),\
 			#vstobjects .form-select:not([disabled])'
@@ -20,22 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	}
 
-	// TODO Refactor or remove
-	$('.submenu-select-dropdown').each(() => {
-		$(this).wrap("<span class='submenu-select-wrapper'></span>");
-		$(this).after("<span class='holder'></span>");
-	});
-	$('.submenu-select-dropdown')
-		.change(() => {
-			const selectedOption = $(this).find(':selected').text();
-			$(this).next('.holder').text(selectedOption);
-		})
-		.trigger('change');
-
 	// SORTING
-	$('.toolbar-sorting-toggle').click(function (evt) {
-		evt.preventDefault();
-		$('.toolbar-sorting-menu').toggleClass('u-hidden');
+	document.querySelectorAll('.toolbar-sorting-toggle').forEach((toggle) => {
+		toggle.addEventListener('click', (evt) => {
+			evt.preventDefault();
+			document.querySelector('.toolbar-sorting-menu').classList.toggle('u-hidden');
+		});
 	});
 
 	$('.toolbar-sorting-menu span').click(function () {

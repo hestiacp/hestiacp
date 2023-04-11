@@ -37,6 +37,12 @@ If not, you have 2 options:
    - [SMTP2GO](https://www.smtp2go.com)
    - [Sendinblue](https://www.sendinblue.com)
 
+## What is an SMTP relay service and how to set it up
+
+SMTP mail relay is the process of transferring an email from one server to another for delivery. Often email from a server is blocked by de service provider due to fear of spam. Or the IP reputation is so low that all email go straight into the spam box. To prevent such issues a lot of companies offer a SMTP relay that takes care of the delivery part. As they send a lot email via the same ip addresses they have a better reputation.
+
+To setup create a account by the provider you want or use and follow their instruction to update your DNS. When completed you can enter the SMTP user account they provider in the settings under "Global SMTP" or under the "Edit mail domain" -> "SMTP relay"
+
 ## I am unable to receive email
 
 If you are unable to receive emails, make sure you have setup your DNS properly. If you are using Cloudflare, disable the use of the proxy for `mail.domain.tld`.

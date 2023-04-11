@@ -34,6 +34,7 @@ web/templates/
 
 # vitepress build output
 **/.vitepress/dist/
+**/.vitepress/cache/
 
 # Logs
 logs

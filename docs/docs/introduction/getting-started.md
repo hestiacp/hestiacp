@@ -37,18 +37,44 @@ Hestia does not support non-LTS Operating systems. If you install it on, for exa
 
 Interactive installer that will install the default Hestia software configuration.
 
+### Step 1: Download
+
+Download the installation script for the latest release:
+
 ```bash
-wget -qO - https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh | bash
+wget https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh
 ```
+
+If the download fails due to an SSL validation error, please be sure you've installed the ca-certificate package on your system - you can do this with the following command:
+
+```bash
+apt-get update && apt-get install ca-certificates
+```
+
+### Step 2: Run
+
+To begin the installation process, simply run the script and follow the on-screen prompts:
+
+```bash
+bash hst-install.sh
+```
+
+You will receive a welcome email at the address specified during installation (if applicable) and on-screen instructions after the installation is completed to log in and access your server.
 
 ## Custom installation
 
 If you want to customise which software gets installed, or want to run an unattended installation, you will need to run a custom installation.
 
+To view a list of available options, run
+
+```bash
+bash hst-install.sh -h
+```
+
 ### List of installation options
 
 ::: tip
-An easier way to choose your installation options is by using the [Install string generator](https://gabizz.github.io/hestiacp-scriptline-generator/) by [Gabriel Claudiu Maftei](https://github.com/gabizz/).
+An easier way to choose your installation options is by using the [Install string generator](/install.md).
 :::
 
 To choose what software gets installed, you can provide flags to the installation script. You can view the full list of options below.
@@ -86,7 +112,7 @@ To choose what software gets installed, you can provide flags to the installatio
 #### Example
 
 ```bash
-wget -qO - https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh | bash -s -- \
+bash hst-install.sh \
 	--interactive no \
 	--hostname host.domain.tld \
 	--email email@domain.tld \

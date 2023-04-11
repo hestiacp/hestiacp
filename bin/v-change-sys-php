@@ -52,7 +52,8 @@ for user in $($BIN/v-list-sys-users plain); do
 	$BIN/v-rebuild-mail-domains "$user" 'no' > /dev/null 2>&1
 done
 
-# restart
+# Reload "current" php version before reload everthing
+$BIN/v-restart-web-backend '' $(multiphp_default_version)
 $BIN/v-restart-web-backend
 $BIN/v-restart-web
 $BIN/v-restart-proxy

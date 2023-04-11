@@ -43,17 +43,18 @@ export default defineConfig({
 			copyright: "Copyright © 2019-present Hestia Control Panel",
 		},
 
-		// algolia: {
-		//   appId: "REPLACE_ME",
-		//   apiKey: "REPLACE_ME",
-		//   indexName: "REPLACE_ME",
-		// },
+		algolia: {
+			appId: "V04P0P5D2R",
+			apiKey: "7a90a3ac7f9313f174c50b0f301f7ec6",
+			indexName: "hestia_cp",
+		},
 	},
 });
 
 function nav(): DefaultTheme.NavItem[] {
 	return [
 		{ text: "Features", link: "/features.md" },
+		{ text: "Install", link: "/install.md" },
 		{ text: "Documentation", link: "/docs/introduction/getting-started.md", activeMatch: "/docs/" },
 		{ text: "Team", link: "/team.md" },
 		{ text: "Demo", link: "https://demo.hestiacp.com:8083/" },

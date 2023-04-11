@@ -1,4 +1,4 @@
-App.Actions.WEB.update_custom_doc_root = function (elm, hint) {
+App.Actions.WEB.update_custom_doc_root = function () {
 	var prepath = $('input[name="v-custom-doc-root_prepath"]').val();
 	var domain = $('select[name="v-custom-doc-domain"]').val();
 	var folder = $('input[name="v-custom-doc-folder"]').val();
@@ -21,7 +21,7 @@ App.Listeners.DB.keypress_custom_folder = function () {
 
 App.Listeners.DB.change_custom_doc = function () {
 	var ref = $('select[name="v-custom-doc-domain"]');
-	var current_rec = ref.val();
+	// var current_rec = ref.val();
 
 	ref.bind('change select', function (evt) {
 		clearTimeout(window.frp_usr_tmt);
@@ -269,10 +269,12 @@ $(function () {
 	});
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function WEBrandom() {
 	document.v_edit_web.v_stats_password.value = randomString(16);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function FTPrandom(elm) {
 	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(randomString(16));
 	App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);

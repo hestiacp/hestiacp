@@ -1,7 +1,7 @@
 #=========================================================================#
 # Default Web Domain Template                                             #
 # DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
-# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
 #=========================================================================#
 
 server {
@@ -37,6 +37,15 @@ server {
             expires 30d;
             fastcgi_hide_header "Set-Cookie";
         }
+
+		# Craft-specific location handlers to ensure AdminCP requests route through index.php
+		# If you change your `cpTrigger`, change it here as well
+		location ^~ /admin {
+			try_files $uri $uri/ /index.php?$query_string;
+		}
+		location ^~ /cpresources {
+			try_files $uri $uri/ /index.php?$query_string;
+		}
 
         location ~ [^/]\.php(/|$) {
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;

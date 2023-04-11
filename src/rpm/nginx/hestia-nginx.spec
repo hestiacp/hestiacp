@@ -1,5 +1,7 @@
+%global _hardened_build 1
+
 Name:           hestia-nginx
-Version:        %HESTIA-NGINX-VERSION%
+Version:        1.23.4
 Release:        1%{dist}
 Summary:        Hestia internal nginx web server
 Group:          System Environment/Base

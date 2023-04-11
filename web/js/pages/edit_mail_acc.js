@@ -53,36 +53,12 @@ App.Listeners.MAIL_ACC.init = function () {
 App.Listeners.MAIL_ACC.init();
 App.Listeners.MAIL_ACC.checkbox_unlimited_feature();
 
-App.Actions.MAIL_ACC.update_password_meter = function () {
-	var password = $('input[name="v_password"]').val();
-	var min_small = new RegExp(/^(?=.*[a-z]).+$/);
-	var min_cap = new RegExp(/^(?=.*[A-Z]).+$/);
-	var min_num = new RegExp(/^(?=.*\d).+$/);
-	var min_length = 8;
-	var score = 0;
-
-	if (password.length >= min_length) {
-		score = score + 1;
-	}
-	if (min_small.test(password)) {
-		score = score + 1;
-	}
-	if (min_cap.test(password)) {
-		score = score + 1;
-	}
-	if (min_num.test(password)) {
-		score = score + 1;
-	}
-	$('.js-password-meter').val(score);
-};
-
 App.Listeners.MAIL_ACC.keypress_v_password = function () {
 	var ref = $('input[name="v_password"]');
 	ref.bind('keypress input', function (evt) {
 		clearTimeout(window.frp_usr_tmt);
 		window.frp_usr_tmt = setTimeout(function () {
-			var elm = $(evt.target);
-			App.Actions.MAIL_ACC.update_password_meter(elm, $(elm).val());
+			VE.helpers.recalculatePasswordStrength(evt.target);
 		}, 100);
 	});
 };
@@ -101,13 +77,19 @@ $('#v_blackhole').on('click', function () {
 App.Listeners.MAIL_ACC.keypress_v_password();
 
 applyRandomPassword = function (min_length = 16) {
-	var randomPassword = randomString(min_length);
-	$('input[name=v_password]').val(randomPassword);
-	if ($('input[name=v_password]').attr('type') == 'text')
-		$('.js-password-output').text(randomPassword);
-	else $('.js-password-output').text(Array(randomPassword.length + 1).join('*'));
-	App.Actions.MAIL_ACC.update_password_meter();
-	generate_mail_credentials();
+	const randomPassword = randomString(min_length);
+	const passwordInput = document.querySelector('input[name=v_password]');
+	if (passwordInput) {
+		passwordInput.value = randomPassword;
+		VE.helpers.recalculatePasswordStrength(passwordInput);
+		const passwordOutput = document.querySelector('.js-password-output');
+		if (passwordInput.getAttribute('type') === 'text' && passwordOutput) {
+			passwordOutput.textContent = randomPassword;
+		} else {
+			passwordOutput.textContent = Array(randomPassword.length + 1).join('*');
+		}
+		generate_mail_credentials();
+	}
 };
 
 generate_mail_credentials = function () {

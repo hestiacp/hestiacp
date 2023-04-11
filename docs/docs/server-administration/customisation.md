@@ -20,15 +20,9 @@ Create a new theme in `/usr/local/hestia/web/css/theme/custom/my_theme.css`
 
 ## Customising a default theme
 
-Changes to default themes are always overwritten during updates. However, via the `v-add-sys-theme` command, you can create a new theme.
+Changes to default themes are always overwritten during updates. Custom CSS files can be uploaded to `/usr/local/hestia/web/css/custom` in `.css` or `.min.css` format.
 
-If you want to edit the dark theme,
-
-```bash
-cp $HESTIA/install/deb/themes/dark.css /root/my_dark.css
-```
-
-Apply your changes and follow the instructions above.
+Please note that `default.css` base theme is always loaded. Other default and custom themes override the rules in this file.
 
 ## Customising the _Domain not found_ page
 

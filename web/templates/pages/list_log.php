@@ -2,15 +2,15 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin')) {?>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin") { ?>
 				<a href="/list/user/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<?php } else if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) === 'system')) { ?>
+			<?php } elseif ($_SESSION["userContext"] === "admin" && htmlentities($_GET["user"]) === "system") { ?>
 				<a href="/list/server/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 			<?php } else { ?>
 				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
 					<a href="/edit/user/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 				<?php } else { ?>
-					<a href="/edit/user/?token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+					<a href="/edit/user/?token=<?= $_SESSION["token"] ?>" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 				<?php } ?>
 			<?php } ?>
 			<?php if ($_SESSION['DEMO_MODE'] != "yes"){
@@ -23,28 +23,29 @@
 					<a href="/list/log/auth/" class="button button-secondary" id="btn-back" title="<?= _("Login history") ?>"><i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?></a>
 				<?php } ?>
 			<?php } ?>
-			<?php if ($_SESSION['userContext'] === 'user') {?>
+			<?php if ($_SESSION["userContext"] === "user") { ?>
 				<a href="/list/log/auth/" class="button button-secondary" id="btn-back" title="<?= _("Login history") ?>"><i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?></a>
 			<?php }
 			} ?>
 		</div>
 		<div class="toolbar-buttons">
 			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrow-rotate-right icon-green"></i><?= _("Refresh") ?></a>
-			<?php if (($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] === 'admin') && ($_SESSION['POLICY_SYSTEM_PROTECTED_ADMIN'] === 'yes')) {?>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] === "yes") { ?>
 				<!-- Hide delete buttons-->
 			<?php } else { ?>
-				<?php if (($_SESSION['userContext'] === 'admin') || (($_SESSION['userContext'] === 'user') && ($_SESSION['POLICY_USER_DELETE_LOGS'] !== 'no'))) {?>
+				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_DELETE_LOGS"] !== "no")) { ?>
 					<div class="actions-panel" key-action="js">
-						<a class="data-controls do_delete button button-secondary button-danger">
-							<i class="do_delete fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
-							<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user']))) {?>
-								<input type="hidden" name="delete_url" value="/delete/log/?user=<?=htmlentities($_GET['user']);?>&token=<?=$_SESSION['token']?>">
+						<a
+							class="button button-secondary button-danger data-controls js-confirm-action"
+							<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
+								href="/delete/log/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>"
 							<?php } else { ?>
-								<input type="hidden" name="delete_url" value="/delete/log/?token=<?=$_SESSION['token']?>">
+								href="/delete/log/?token=<?= $_SESSION["token"] ?>"
 							<?php } ?>
-							<div class="dialog js-confirm-dialog-delete" title="<?= _("Confirmation") ?>">
-								<p><?= _("DELETE_LOGS_CONFIRMATION") ?></p>
-							</div>
+							data-confirm-title="<?= _("Delete") ?>"
+							data-confirm-message="<?= _("DELETE_LOGS_CONFIRMATION") ?>"
+						>
+							<i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
 						</a>
 					</div>
 				<?php } ?>
@@ -84,12 +85,12 @@
 		<div class="l-unit header animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
-					<i class="fas <?=$level_icon;?>"></i>
+					<i class="fas <?= $level_icon ?>"></i>
 				</div>
-				<div class="clearfix l-unit__stat-col--left"><b><?=translate_date($data[$key]['DATE'])?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact-2"><b><?=htmlspecialchars($data[$key]['TIME']);?></b></div>
-				<div class="clearfix l-unit__stat-col--left"><b><?=htmlspecialchars($data[$key]['CATEGORY']);?></b></div>
-				<div class="clearfix l-unit__stat-col--left wide-7"><?=htmlspecialchars($data[$key]['MESSAGE'], ENT_QUOTES);?></div>
+				<div class="clearfix l-unit__stat-col--left"><b><?= translate_date($data[$key]["DATE"]) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact-2"><b><?= htmlspecialchars($data[$key]["TIME"]) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left"><b><?= htmlspecialchars($data[$key]["CATEGORY"]) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-7"><?= htmlspecialchars($data[$key]["MESSAGE"], ENT_QUOTES) ?></div>
 			</div>
 		</div>
 	<?php } ?>
@@ -98,7 +99,7 @@
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext('%d log record', '%d log records', $i),$i); ?>
+			<?php printf(ngettext("%d log record", "%d log records", $i), $i); ?>
 		</p>
 	</div>
 </footer>

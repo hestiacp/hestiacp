@@ -9,20 +9,20 @@ if ($_SESSION["userContext"] != "admin") {
 	exit();
 }
 
-if (empty($_POST["period"])) {
-	$period = "daily";
+$requestPayload = json_decode(file_get_contents("php://input"), true);
+
+$allowedPeriods = ["daily", "weekly", "monthly", "yearly"];
+
+if (!empty($requestPayload["period"]) && in_array($requestPayload["period"], $allowedPeriods)) {
+	$period = $requestPayload["period"];
 } else {
-	if (in_array($_POST["period"], ["day", "week", "month", "year"])) {
-		$period = $_POST["period"];
-	} else {
-		$period = "daily";
-	}
+	$period = "daily";
 }
 
-if (empty($_POST["service"])) {
-	$service = "la";
+if (!empty($requestPayload["service"])) {
+	$service = $requestPayload["service"];
 } else {
-	$service = $_POST["service"];
+	$service = "la";
 }
 
 // Data
@@ -31,6 +31,33 @@ exec(
 	$output,
 	$return_var,
 );
+
+if ($return_var != 0) {
+	http_response_code(500);
+	exit("Error fetching RRD data");
+}
+
+$serviceUnits = [
+	"la" => "Points",
+	"mem" => "Mbytes",
+	"apache2" => "Connections",
+	"nginx" => "Connections",
+	"mail" => "Queue Size",
+	"ftp" => "Connections",
+	"ssh" => "Connections",
+];
+
+if (preg_match("/^net_/", $service)) {
+	$serviceUnits[$service] = "KBytes";
+}
+if (preg_match("/^pgsql_/", $service)) {
+	$serviceUnits[$service] = "Queries";
+}
+if (preg_match("/^mysql_/", $service)) {
+	$serviceUnits[$service] = "Queries";
+}
+
 $data = json_decode(implode("", $output), true);
 $data["service"] = $service;
+$data["unit"] = $serviceUnits[$service] ?? null;
 echo json_encode($data);

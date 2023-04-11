@@ -25,15 +25,13 @@ module.exports = {
 	rules: {
 		// Set those as warnings instead. They should be fixed at some point
 		'@typescript-eslint/no-unused-vars': [
-			'warn',
+			'error',
 			{
 				argsIgnorePattern: '^_',
 				varsIgnorePattern: '^_',
 				caughtErrorsIgnorePattern: '^_',
 			},
 		],
-		'@typescript-eslint/no-empty-function': 'warn',
-		'@typescript-eslint/no-this-alias': 'warn',
 		'@typescript-eslint/no-var-requires': 'off',
 		'no-redeclare': 'off',
 		'no-undef': 'off',

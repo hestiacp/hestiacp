@@ -28,3 +28,30 @@ v-change-user-config-value admin LOGIN_ALLOW_IPS ''
 ## Can I update my cronjobs via `crontab -e`?
 
 No, you cannot. When you update HestiaCP, the crontab will simply get overwritten. The changes will not get saved in backups either.
+
+## After update Apache2 I am not able to restart Apache2 or Nginx
+
+The error message states (98) Address already in use: AG0072: make_sock: could not bind to address 0.0.0.0:80
+
+When a package update sometimes comes with a new config and probally it has been overwritten...
+
+```batch
+Configuration file '/etc/apache2/apache2.conf'
+ ==> Modified (by you or by a script) since installation.
+ ==> Package distributor has shipped an updated version.
+   What would you like to do about it ?  Your options are:
+	Y or I  : install the package maintainer's version
+	N or O  : keep your currently-installed version
+	  D     : show the differences between the versions
+	  Z     : start a shell to examine the situation
+ The default action is to keep your current version.
+*** apache2.conf (Y/I/N/O/D/Z) [default=N] ?
+```
+
+If you see this message **ALWAYS** press "N" or **ENTER** to select the default value!
+
+How ever if you entered Y or I. Then replace the config that can be found in /root/hst_backups/xxxxx/conf/apache2/ folder and copy over apache2.conf and ports.conf to /etc/apache2/ folder
+
+xxxxxx is the date/time the backup is made during the last update of HestiaCP
+
+If you don't have have a backup made you can also copy the config in /usr/local/hestia/install/deb/apache2/apache2.conf to /etc/apache2.conf and also empty /etc/apache2/ports.conf

@@ -132,6 +132,8 @@ chmod 660 $zone
 # Sorting records
 sort_dns_records
 
+# Update serial
+update_domain_serial
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
 	# Do full rebuild due DNS SEC

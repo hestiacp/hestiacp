@@ -40,9 +40,9 @@ App.Listeners.WEB.keypress_domain_name = function () {
 	$('#v_domain').bind('keypress input', function () {
 		clearTimeout(window.frp_usr_tmt);
 		window.frp_usr_tmt = setTimeout(function () {
-			var domain = $('.js-ftp-path-prefix').text(
-				Alpine.store('globals').FTP_USER_PREPATH + '/' + $('#v_domain').val()
-			);
+			// var domain = $('.js-ftp-path-prefix').text(
+			// 	Alpine.store('globals').FTP_USER_PREPATH + '/' + $('#v_domain').val()
+			// );
 			$('#v-custom-doc-domain-main').text($('#v_domain').val());
 			$('#v-custom-doc-domain-main').val($('#v_domain').val());
 			App.Actions.WEB.update_custom_doc_root(13, 12);
@@ -93,6 +93,7 @@ $(function () {
 	});
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function WEBrandom() {
 	document.v_add_web.v_stats_password.value = randomString(16);
 }

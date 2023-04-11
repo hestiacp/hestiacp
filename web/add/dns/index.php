@@ -117,7 +117,11 @@ if (!empty($_POST["ok"])) {
 	unset($output);
 	$v_template = $user_config[$user_plain]["DNS_TEMPLATE"];
 
-	if ($v_template != $_POST["v_template"] && empty($_SESSION["error_msg"])) {
+	if (
+		$v_template != $_POST["v_template"] &&
+		!empty($_POST["v_template"]) &&
+		empty($_SESSION["error_msg"])
+	) {
 		$v_template = quoteshellarg($_POST["v_template"]);
 		exec(
 			HESTIA_CMD .

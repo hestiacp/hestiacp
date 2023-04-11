@@ -245,7 +245,7 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 	# Parsing domain exclusions
 	conf="$USER_DATA/web.conf"
 	for domain in $(search_objects 'web' 'SUSPENDED' "*" 'DOMAIN'); do
-		exclusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain\|\*$")
+		exclusion=$(echo -e "$WEB" | tr ',' '\n' | grep "^$domain$\|^\*$")
 		if [ -z "$exclusion" ]; then
 			web_list="$web_list $domain"
 		else

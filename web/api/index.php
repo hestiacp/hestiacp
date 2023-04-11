@@ -349,7 +349,7 @@ if (isset($_POST["access_key"]) || isset($_POST["user"]) || isset($_POST["hash"]
 } else {
 	api_error(
 		405,
-		"Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/api.html",
+		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
 	);
 }
 
@@ -375,6 +375,6 @@ if (isset($request_data["access_key"]) && isset($request_data["secret_key"])) {
 } else {
 	api_error(
 		405,
-		"Error: data received is null or invalid, check https://docs.hestiacp.com/admin_docs/api.html",
+		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
 	);
 }

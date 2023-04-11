@@ -36,7 +36,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
+				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled required>
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>

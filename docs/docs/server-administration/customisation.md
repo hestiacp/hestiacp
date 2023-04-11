@@ -20,7 +20,9 @@ Create a new theme in `/usr/local/hestia/web/css/theme/custom/my_theme.css`
 
 ## Customising a default theme
 
-Changes to default themes are always overwritten during updates. Custom CSS files can be uploaded to /usr/local/hestia/web/css/custom in .css or .min.css format
+Changes to default themes are always overwritten during updates. Custom CSS files can be uploaded to `/usr/local/hestia/web/css/custom` in `.css` or `.min.css` format.
+
+Please note that `default.css` base theme is always loaded. Other default and custom themes override the rules in this file.
 
 ## Customising the _Domain not found_ page
 

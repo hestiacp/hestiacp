@@ -245,6 +245,21 @@ const VE = {
 			document.body.appendChild(dialog);
 			dialog.showModal();
 		},
+		recalculatePasswordStrength: (input) => {
+			const password = input.value;
+			const meter = input.parentNode.querySelector('.js-password-meter');
+			if (meter) {
+				// TODO: Switch to zxcvbn or something when we can load modules
+				const validations = [
+					password.length >= 8, // Min length of 8
+					password.search(/[a-z]/) > -1, // Contains 1 lowercase letter
+					password.search(/[A-Z]/) > -1, // Contains 1 uppercase letter
+					password.search(/[0-9]/) > -1, // Contains 1 number
+				];
+				const strength = validations.reduce((acc, cur) => acc + cur, 0);
+				meter.value = strength;
+			}
+		},
 		warn: (msg) => {
 			alert('WARNING: ' + msg);
 		},

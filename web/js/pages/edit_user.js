@@ -1,30 +1,16 @@
 applyRandomPassword = function (min_length = 16) {
-	$('input[name=v_password]').val(randomString(min_length));
-	App.Actions.WEB.update_password_meter();
-};
-
-App.Actions.WEB.update_password_meter = () => {
-	/**
-	 * @type string
-	 */
-	const password = document.querySelector('input[name=v_password]').value;
-
-	const validations = [
-		password.length >= 8, // Min length of 8
-		password.search(/[a-z]/) > -1, // Contains 1 lowercase letter
-		password.search(/[A-Z]/) > -1, // Contains 1 uppercase letter
-		password.search(/[0-9]/) > -1, // Contains 1 number
-	];
-	const strength = validations.reduce((acc, cur) => acc + cur, 0);
-
-	document.querySelector('.js-password-meter').value = strength;
+	const passwordInput = document.querySelector('input[name=v_password]');
+	if (passwordInput) {
+		passwordInput.value = randomString(min_length);
+		VE.helpers.recalculatePasswordStrength(passwordInput);
+	}
 };
 
 App.Listeners.WEB.keypress_v_password = () => {
 	const updateTimeout = (evt) => {
 		clearTimeout(window.frp_usr_tmt);
 		window.frp_usr_tmt = setTimeout(() => {
-			App.Actions.WEB.update_password_meter(evt.target, evt.target.value);
+			VE.helpers.recalculatePasswordStrength(evt.target);
 		}, 100);
 	};
 

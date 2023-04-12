@@ -149,7 +149,7 @@ function syshealth_repair_web_config() {
 	get_domain_values 'web'
 	prev="DOMAIN"
 	for key in $known_keys; do
-		if [ -z "${!key}" ]; then
+		if [ -z "$key" ]; then
 			add_object_key 'web' 'DOMAIN' "$domain" "$key" "$prev"
 		fi
 		prev=$key

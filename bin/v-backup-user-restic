@@ -1,0 +1,83 @@
+#!/bin/bash
+# info: backup system user with all its objects to restic backup
+# options: USER NOTIFY
+#
+# example: v-backup-user admin yes
+#
+# This function is used for backing up user with all its domains and databases.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+# Argument definition
+user=$1
+notify=${2-no}
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/backup.sh
+source $HESTIA/func/backup.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+#is_backup_enabled
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+source_conf $HESTIA/conf/restic.conf
+
+if [ ! -f "$USER_DATA/restic.conf" ]; then
+	password=$(generate_password '' '32')
+	echo "$password" > $USER_DATA/restic.conf
+
+	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf init
+
+	echo "restic --repo $REPO$user --password-file $USER_DATA/restic.conf init"
+
+	if [ $? -ne 0 ]; then
+		check_result $E_CONNECT "Unable to create restic repo"
+	fi
+fi
+
+# create backup of the user.conf an database
+$BIN/v-backup-user-config $user
+
+restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf backup /home/$user
+
+# Send notification
+if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
+	subj="$user → backup has been completed"
+	email=$(get_user_value '$CONTACT')
+	cat $BACKUP/$user.log | $SENDMAIL -s "$subj" "$email" "$notify"
+	$BIN/v-add-user-notification "$user" "Backup created successfully" "<b>Archive:</b> $user.$backup_new_date.tar"
+fi
+
+# Deleting task from queue
+sed -i "/v-backup-user-restic $user /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "$user" "Info" "Backup" "Backup created."
+$BIN/v-log-action "system" "Info" "Backup" "Backup created (User: $user)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

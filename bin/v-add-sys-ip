@@ -205,7 +205,7 @@ chmod 660 $HESTIA/data/ips/${ip46}
 
 # WEB support
 if [ ! -z "$WEB_SYSTEM" ]; then
-	web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
+	web_conf="/etc/$WEB_SYSTEM/conf.d/${ip46}.conf"
 	rm -f $web_conf
 
 	if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then

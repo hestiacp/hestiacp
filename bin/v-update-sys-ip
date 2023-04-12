@@ -43,14 +43,14 @@ ipv6_num=$(echo "$ipv6s" | wc -l)
 v_ip_num=$(echo "$v_ips" | wc -l)
 
 # Checking primary IP change
-if [ "$ip_num" -eq 1 -a "$v_ip_num" -eq 1 ]; then
+if [ "$ip_num" -eq 1 -a "$ipv6_num" -eq 0 -a "$v_ip_num" -eq 1 ]; then
 	if [ "$ips" != "$v_ips" ]; then
 		new=$ips
 		old=$v_ips
 	fi
 fi
 
-if [ "$ipv6_num" -eq 1 -a "$v_ip_num" -eq 1 ]; then
+if [ "$ipv6_num" -eq 1 -a "$ip_num" -eq 0 -a "$v_ip_num" -eq 1 ]; then
 	if [ "$ipv6s" != "$v_ips" ]; then
 		new=$ipv6s
 		old=$v_ips

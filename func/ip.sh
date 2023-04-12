@@ -101,7 +101,7 @@ update_ip_value_new() {
 get_ip_alias() {
 	# ip address (ipv4/ipv6) as second parameter, otherwise $local_ip (ipv4)
 	ip_for_test="${2-$local_ip}"
-	if [ -n "$ip_for_test"]; then
+	if [ -n "$ip_for_test" ]; then
 		ip_name=$(grep "NAME=" $HESTIA/data/ips/${ip_for_test} | cut -f 2 -d \')
 		if [ -n "$ip_name" ]; then
 			echo "${1//./-}.$ip_name"

@@ -92,10 +92,12 @@ applyRandomPassword = function (min_length = 16) {
 		passwordInput.value = randomPassword;
 		VE.helpers.recalculatePasswordStrength(passwordInput);
 		const passwordOutput = document.querySelector('.js-password-output');
-		if (passwordInput.getAttribute('type') === 'text' && passwordOutput) {
-			passwordOutput.textContent = randomPassword;
-		} else {
-			passwordOutput.textContent = Array(randomPassword.length + 1).join('*');
+		if (passwordOutput) {
+			if (passwordInput.getAttribute('type') === 'text') {
+				passwordOutput.textContent = randomPassword;
+			} else {
+				passwordOutput.textContent = Array(randomPassword.length + 1).join('*');
+			}
 		}
 		generate_mail_credentials();
 	}

@@ -260,6 +260,30 @@ const VE = {
 				meter.value = strength;
 			}
 		},
+		enableInputUnlimited: (input, toggleButton) => {
+			toggleButton.classList.add('is-active');
+			input.dataset.prevValue = input.value;
+			input.value = Alpine.store('globals').UNLIM_TRANSLATED_VALUE;
+			input.disabled = true;
+		},
+		disableInputUnlimited: (input, toggleButton) => {
+			toggleButton.classList.remove('is-active');
+			const prevValue = input.dataset.prevValue?.trim();
+			if (prevValue) {
+				input.value = prevValue;
+			}
+			if (Alpine.store('globals').isUnlimitedValue(input.value)) {
+				input.value = '0';
+			}
+			input.disabled = false;
+		},
+		toggleInputUnlimited: (input, toggleButton) => {
+			if (toggleButton.classList.contains('is-active')) {
+				VE.helpers.disableInputUnlimited(input, toggleButton);
+			} else {
+				VE.helpers.enableInputUnlimited(input, toggleButton);
+			}
+		},
 		warn: (msg) => {
 			alert('WARNING: ' + msg);
 		},

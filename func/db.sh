@@ -65,7 +65,11 @@ mysql_connect() {
 		fi
 	fi
 	mysql_out=$(mktemp)
-	mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+	if [ -f '/usr/bin/mariadb' ]; then
+		mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+	else
+		mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+	fi
 	if [ '0' -ne "$?" ]; then
 		if [ "$notify" != 'no' ]; then
 			email=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f 2 -d \')
@@ -90,17 +94,26 @@ mysql_connect() {
 mysql_query() {
 	sql_tmp=$(mktemp)
 	echo "$1" > $sql_tmp
-	mysql --defaults-file=$mycnf < "$sql_tmp" 2> /dev/null
-	return_code=$?
+	if [ -f '/usr/bin/mariadb' ]; then
+		mariadb --defaults-file=$mycnf < "$sql_tmp" 2> /dev/null
+		return_code=$?
+	else
+		mysql --defaults-file=$mycnf < "$sql_tmp" 2> /dev/null
+		return_code=$?
+	fi
 	rm -f "$sql_tmp"
 	return $return_code
 }
 
 mysql_dump() {
 	err="/tmp/e.mysql"
-	mysqldump --defaults-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+	mysqldmp="mysqldump"
+	if [ -f '/usr/bin/mariadb-dump' ]; then
+		mysqldmp="/usr/bin/mariadb-dump"
+	fi
+	$mysqldmp --defaults-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
 	if [ '0' -ne "$?" ]; then
-		mysqldump --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
+		$mysqldmp --defaults-extra-file=$mycnf --single-transaction --routines -r $1 $2 2> $err
 		if [ '0' -ne "$?" ]; then
 			rm -rf $tmpdir
 			if [ "$notify" != 'no' ]; then

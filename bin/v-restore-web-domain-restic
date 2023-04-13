@@ -15,6 +15,7 @@ user=$1
 snapshot=$2
 web=$3
 notify=${4-no}
+new_user=${5-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -41,6 +42,7 @@ source_conf $HESTIA/conf/restic.conf
 args_usage='USER SNAPSHOT DOMAIN [NOTIFY]'
 check_args '3' "$#" "$args_usage"
 is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
 
 source_conf $HESTIA/conf/restic.conf
 
@@ -51,7 +53,12 @@ source_conf $HESTIA/conf/restic.conf
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/backup.conf > $tmpdir/backup.conf
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Unable to download from snapshot"
+	fi
 fi
+restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/pam/passwd > $tmpdir/passwd
+old_uid=$(cut -f 3 -d : $tmpdir/passwd)
 
 parse_object_kv_list $(cat $tmpdir/backup.conf)
 IFS=','
@@ -197,13 +204,27 @@ for domain in ${domains[@]}; do
 			rm -rf $HOMEDIR/$user/web/$domain/public_html/*
 		fi
 
-		chmod u+w "$HOMEDIR/$user/web/$domain"
 		[[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
 
 		restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --include /home/$user/web/$domain --target /
+		if [ "$?" -ne 0 ]; then
+			check_result "$E_NOTEXIST" "Unable to download user data"
+		fi
+		if [ "$new_user" = "yes" ]; then
+			echo "[ * ] Fix permissions"
+			chown --no-dereference $user:$user \
+				$HOMEDIR/$user/ \
+				$HOMEDIR/$user/web/ \
+				$HOMEDIR/$user/web/$domain \
+				$HOMEDIR/$user/web/$domain/private \
+				$HOMEDIR/$user/web/$domain/cgi-bin \
+				$HOMEDIR/$user/web/$domain/public_*html \
+				$HOMEDIR/$user/web/$domain/logs \
+				$HOMEDIR/$user/web/$domain/stats
 
-		# @todo fix chowning
-
+			chown -R $user:$user $HOMEDIR/$user/web/$domain/document_errors
+			chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.*
+		fi
 		# Rebuilding web config for the second time to make sure ftp users keep working
 		rebuild_web_domain_conf
 
@@ -212,7 +233,9 @@ done
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
+if [ "$new_user" = "yes" ]; then
+	rebuild_user_conf
+fi
 rm -fr $tmpdir
 
 # Update user counters

@@ -32,8 +32,6 @@ source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-source_conf $HESTIA/conf/restic.conf
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,6 +39,7 @@ source_conf $HESTIA/conf/restic.conf
 args_usage='USER SNAPSHOT [NOTIFY]'
 check_args '2' "$#" "$args_usage"
 is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
 
 source_conf $HESTIA/conf/restic.conf
 

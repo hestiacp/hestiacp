@@ -32,8 +32,6 @@ source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-source_conf $HESTIA/conf/restic.conf
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -41,6 +39,7 @@ source_conf $HESTIA/conf/restic.conf
 args_usage='USER SNAPSHOT DOMAIN [NOTIFY]'
 check_args '3' "$#" "$args_usage"
 is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
 
 source_conf $HESTIA/conf/restic.conf
 
@@ -51,6 +50,9 @@ source_conf $HESTIA/conf/restic.conf
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/backup.conf > $tmpdir/backup.conf
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Unable to download snapshot"
+	fi
 fi
 
 parse_object_kv_list $(cat $tmpdir/backup.conf)
@@ -189,6 +191,9 @@ for domain in ${domains[@]}; do
 		chown $user:$user "$HOMEDIR/$user/mail/$domain_idn"
 
 		restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --include /home/$user/mail/$domain_idn --target /
+		if [ "$?" -ne 0 ]; then
+			check_result "$E_NOTEXIST" "Unable to download user data"
+		fi
 
 		# Chowning mail conf files to exim user
 		if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then

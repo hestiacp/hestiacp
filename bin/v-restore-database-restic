@@ -30,8 +30,6 @@ source $HESTIA/func/syshealth.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-source_conf $HESTIA/conf/restic.conf
-
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -39,6 +37,7 @@ source_conf $HESTIA/conf/restic.conf
 args_usage='USER SNAPSHOT DATABSE [NOTIFY]'
 check_args '3' "$#" "$args_usage"
 is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
 
 source_conf $HESTIA/conf/restic.conf
 
@@ -49,6 +48,9 @@ source_conf $HESTIA/conf/restic.conf
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
 	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json dump $snapshot /home/$user/backup/backup.conf > $tmpdir/backup.conf
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Unable to download snapshot"
+	fi
 fi
 
 parse_object_kv_list $(cat $tmpdir/backup.conf)
@@ -59,6 +61,9 @@ for db in ${databases[@]}; do
 		check_config=$(grep "DB='$db'" $USER_DATA/db.conf)
 		if [ -z "$check_config" ]; then
 			restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json dump $snapshot /home/$user/backup/db/$db/hestia/db.conf > $tmpdir/db.conf
+			if [ "$?" -ne 0 ]; then
+				check_result "$E_NOTEXIST" "Unable to download user data"
+			fi
 			parse_object_kv_list $(cat $tmpdir/db.conf)
 			# @todo add support for renaming user
 			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"

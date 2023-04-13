@@ -51,9 +51,6 @@ if [ ! -f "$USER_DATA/restic.conf" ]; then
 	echo "$password" > $USER_DATA/restic.conf
 
 	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf init
-
-	echo "restic --repo $REPO$user --password-file $USER_DATA/restic.conf init"
-
 	if [ $? -ne 0 ]; then
 		check_result $E_CONNECT "Unable to create restic repo"
 	fi
@@ -63,6 +60,7 @@ fi
 $BIN/v-backup-user-config $user
 
 restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf backup /home/$user
+restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf forget --keep-last $SNAPSHOTS --prune
 
 # Send notification
 if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then

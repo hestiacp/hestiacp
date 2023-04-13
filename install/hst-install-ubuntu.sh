@@ -900,12 +900,6 @@ if [ "$postgresql" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/postgresql-contrib//")
 	software=$(echo "$software" | sed -e "s/postgresql//")
 	software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
-	if [ "$multiphp" = 'yes' ]; then
-		for v in "${multiphp_v[@]}"; do
-			software=$(echo "$software" | sed -e "s/php$v-pgsql//")
-		done
-	fi
-	software=$(echo "$software" | sed -e "s/phppgadmin//")
 fi
 if [ "$fail2ban" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/fail2ban//")

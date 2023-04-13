@@ -728,7 +728,7 @@
 						<label for="v_backup_dir" class="form-label">
 							<?= _("Directory") ?>
 							<a
-								href=""
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#how-to-change-default-backup-folder"
 								target="_blank"
 								class="u-ml5"
 							>

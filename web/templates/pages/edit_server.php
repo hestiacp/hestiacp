@@ -685,7 +685,7 @@
 						<label for="v_backup_mode" class="form-label">
 							<?= _("Compression") ?>
 							<a
-								href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-difference-between-zstd-and-gzip"
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-difference-between-zstd-and-gzip"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -705,7 +705,7 @@
 						<label for="v_backup_gzip" class="form-label">
 							<?= _("Compression level") ?>
 							<a
-								href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-optimal-compression-ratio"
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -728,7 +728,7 @@
 						<label for="v_backup_dir" class="form-label">
 							<?= _("Directory") ?>
 							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#how-to-change-default-backup-folder"
+								href=""
 								target="_blank"
 								class="u-ml5"
 							>
@@ -761,7 +761,7 @@
 							<label for="backup_type" class="form-label">
 								<?= _("Protocol") ?>
 								<a
-									href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"
+									href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-kind-of-protocols-are-currently-supported"
 									target="_blank"
 									class="u-ml5"
 								>

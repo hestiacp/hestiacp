@@ -1844,7 +1844,9 @@
 
 .button {
 	cursor: pointer;
-	display: inline-block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	line-height: 21px;
 	font-size: 0.85rem;
 	font-weight: 500;

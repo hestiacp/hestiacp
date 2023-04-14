@@ -3,24 +3,20 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a href="/list/server/" class="button button-secondary" id="btn-back">
-				<i class="fas fa-arrow-left icon-blue"></i>
-				<?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet icon-blue"></i>
-				<?= _("IP") ?>
+				<i class="fas fa-ethernet icon-blue"></i><?= _("IP") ?>
 			</a>
 			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
 				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved icon-red"></i>
-					<?= _("Firewall") ?>
+					<i class="fas fa-shield-halved icon-red"></i><?= _("Firewall") ?>
 				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="vstobjects">
-				<i class="fas fa-floppy-disk icon-purple"></i>
-				<?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>

@@ -2,11 +2,19 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/server/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/add/firewall/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Rule") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/edit/server/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/add/firewall/" class="button button-secondary" id="btn-create">
+				<i class="fas fa-circle-plus icon-green"></i><?= _("Add Rule") ?>
+			</a>
 			<?php if (!empty($_SESSION["FIREWALL_EXTENSION"])): ?>
-				<a class="button button-secondary" href="/list/firewall/banlist/"><i class="fas fa-eye icon-red"></i><?= _("list fail2ban") ?></a>
-				<a class="button button-secondary" href="/list/firewall/ipset/"><i class="fas fa-list icon-blue"></i><?= _("list ipset") ?></a>
+				<a class="button button-secondary" href="/list/firewall/banlist/">
+					<i class="fas fa-eye icon-red"></i><?= _("list fail2ban") ?>
+				</a>
+				<a class="button button-secondary" href="/list/firewall/ipset/">
+					<i class="fas fa-list icon-blue"></i><?= _("list ipset") ?>
+				</a>
 			<?php endif; ?>
 		</div>
 		<div class="toolbar-right">

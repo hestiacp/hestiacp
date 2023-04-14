@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="javascript:window.history.back();" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="javascript:location.reload();" class="button button-secondary"><i class="fas fa-arrows-rotate icon-green"></i> <?= _("Refresh") ?></a>
+			<a href="javascript:window.history.back();" class="button button-secondary" id="btn-back">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="javascript:location.reload();" class="button button-secondary">
+				<i class="fas fa-arrows-rotate icon-green"></i><?= _("Refresh") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">

@@ -3,28 +3,42 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] === "admin") { ?>
-				<a href="/list/user/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+				<a href="/list/user/" class="button button-secondary" id="btn-back">
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				</a>
 			<?php } elseif ($_SESSION["userContext"] === "admin" && htmlentities($_GET["user"]) === "system") { ?>
-				<a href="/list/server/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+				<a href="/list/server/" class="button button-secondary" id="btn-back">
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				</a>
 			<?php } else { ?>
 				<?php if (($_SESSION['userContext'] === 'admin') && (isset($_GET['user'])) && ($_GET['user'] !== 'admin')) { ?>
-					<a href="/edit/user/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+					<a href="/edit/user/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-back">
+						<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+					</a>
 				<?php } else { ?>
-					<a href="/edit/user/?token=<?= $_SESSION["token"] ?>" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+					<a href="/edit/user/?token=<?= $_SESSION["token"] ?>" class="button button-secondary" id="btn-back">
+						<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+					</a>
 				<?php } ?>
 			<?php } ?>
 			<?php if ($_SESSION['DEMO_MODE'] != "yes"){
 			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 				<?php if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] != '') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 					<?php if (htmlentities($_GET['user']) !== 'system') {?>
-						<a href="/list/log/auth/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-back" title="<?= _("Login history") ?>"><i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?></a>
+						<a href="/list/log/auth/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary" id="btn-back" title="<?= _("Login history") ?>">
+							<i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?>
+						</a>
 					<?php } ?>
 				<?php } else { ?>
-					<a href="/list/log/auth/" class="button button-secondary" id="btn-back" title="<?= _("Login history") ?>"><i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?></a>
+					<a href="/list/log/auth/" class="button button-secondary" id="btn-back" title="<?= _("Login history") ?>">
+						<i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?>
+					</a>
 				<?php } ?>
 			<?php } ?>
 			<?php if ($_SESSION["userContext"] === "user") { ?>
-				<a href="/list/log/auth/" class="button button-secondary" id="btn-back" title="<?= _("Login history") ?>"><i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?></a>
+				<a href="/list/log/auth/" class="button button-secondary" id="btn-back" title="<?= _("Login history") ?>">
+					<i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?>
+				</a>
 			<?php }
 			} ?>
 		</div>

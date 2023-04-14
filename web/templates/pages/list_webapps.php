@@ -6,8 +6,6 @@
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
-		<div class="toolbar-buttons">
-		</div>
 	</div>
 </div>
 <!-- End toolbar -->

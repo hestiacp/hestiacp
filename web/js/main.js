@@ -136,6 +136,21 @@ document.addEventListener('alpine:init', () => {
 		});
 	}
 
+	// Unlimited input toggle
+	document.querySelectorAll('.js-unlimited-toggle').forEach((toggleButton) => {
+		const input = toggleButton.parentElement.querySelector('input');
+
+		if (Alpine.store('globals').isUnlimitedValue(input.value)) {
+			VE.helpers.enableInputUnlimited(input, toggleButton);
+		} else {
+			VE.helpers.disableInputUnlimited(input, toggleButton);
+		}
+
+		toggleButton.addEventListener('click', () => {
+			VE.helpers.toggleInputUnlimited(input, toggleButton);
+		});
+	});
+
 	// Bulk edit forms
 	Alpine.bind('BulkEdit', () => ({
 		/** @param {SubmitEvent} evt */

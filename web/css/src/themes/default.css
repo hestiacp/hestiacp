@@ -1683,13 +1683,29 @@
 	}
 }
 
-.unlim-trigger {
-	cursor: pointer;
+.unlimited-toggle {
 	position: absolute;
-	top: 13px;
-	right: 12px;
+	top: 0;
+	right: 1px;
 	z-index: 1;
-	font-size: 0.8rem;
+	border: 0;
+	padding: 0 13px;
+	opacity: 0.5;
+	height: 100%;
+	background-color: transparent;
+
+	&:hover {
+		opacity: 0.8;
+	}
+
+	&.is-active {
+		opacity: 1;
+	}
+
+	& .fas {
+		font-size: 0.8rem;
+		color: #4e4e4e;
+	}
 }
 
 .optional {

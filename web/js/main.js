@@ -229,16 +229,14 @@ document.addEventListener('alpine:init', () => {
 });
 
 // Intercept clicks on .js-confirm-action links and display dialog
-document.addEventListener('click', (evt) => {
-	const triggerLink = evt.target.closest('.js-confirm-action');
-	if (!triggerLink) {
-		return;
-	}
-	evt.preventDefault();
+document.querySelectorAll('.js-confirm-action').forEach((triggerLink) => {
+	triggerLink.addEventListener('click', (evt) => {
+		evt.preventDefault();
 
-	const title = triggerLink.getAttribute('data-confirm-title');
-	const message = triggerLink.getAttribute('data-confirm-message');
-	const targetUrl = triggerLink.getAttribute('href');
+		const title = triggerLink.getAttribute('data-confirm-title');
+		const message = triggerLink.getAttribute('data-confirm-message');
+		const targetUrl = triggerLink.getAttribute('href');
 
-	VE.helpers.createConfirmationDialog({ title, message, targetUrl });
+		VE.helpers.createConfirmationDialog({ title, message, targetUrl });
+	});
 });

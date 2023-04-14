@@ -272,3 +272,16 @@ document.querySelectorAll('.js-confirm-action').forEach((triggerLink) => {
 		VE.helpers.createConfirmationDialog({ title, message, targetUrl });
 	});
 });
+
+// Listen for changes to password inputs and update the password strength
+document.querySelectorAll('.js-password-input').forEach((passwordInput) => {
+	const updateTimeout = (evt) => {
+		clearTimeout(window.frp_usr_tmt);
+		window.frp_usr_tmt = setTimeout(() => {
+			VE.helpers.recalculatePasswordStrength(evt.target);
+		}, 100);
+	};
+
+	passwordInput.addEventListener('keypress', updateTimeout);
+	passwordInput.addEventListener('input', updateTimeout);
+});

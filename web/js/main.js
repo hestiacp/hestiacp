@@ -265,8 +265,8 @@ document.querySelectorAll('.js-confirm-action').forEach((triggerLink) => {
 	triggerLink.addEventListener('click', (evt) => {
 		evt.preventDefault();
 
-		const title = triggerLink.getAttribute('data-confirm-title');
-		const message = triggerLink.getAttribute('data-confirm-message');
+		const title = triggerLink.dataset.confirmTitle;
+		const message = triggerLink.dataset.confirmMessage;
 		const targetUrl = triggerLink.getAttribute('href');
 
 		VE.helpers.createConfirmationDialog({ title, message, targetUrl });

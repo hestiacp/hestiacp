@@ -60,8 +60,7 @@
 			<!-- Basic options section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-gear u-mr15"></i>
-					<?= _("Basic options") ?>
+					<i class="fas fa-gear u-mr10"></i><?= _("Basic options") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
@@ -139,8 +138,7 @@
 			<!-- Updates section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-code-branch u-mr15"></i>
-					<?= _("Updates") ?>
+					<i class="fas fa-code-branch u-mr10"></i><?= _("Updates") ?>
 				</summary>
 				<div class="collapse-content">
 					<p class="u-mb10">
@@ -219,8 +217,7 @@
 			<!-- Web Server section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-earth-americas u-mr15"></i>
-					<?= _("Web Server") ?>
+					<i class="fas fa-earth-americas u-mr10"></i><?= _("Web Server") ?>
 				</summary>
 				<div class="collapse-content">
 					<?php if (!empty($_SESSION["PROXY_SYSTEM"])) { ?>
@@ -327,8 +324,7 @@
 			<?php if (!empty($_SESSION["DNS_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-book-atlas u-mr15"></i>
-						<?= _("DNS Server") ?>
+						<i class="fas fa-book-atlas u-mr10"></i><?= _("DNS Server") ?>
 					</summary>
 					<div class="collapse-content">
 						<p>
@@ -373,8 +369,7 @@
 			<?php if (!empty($_SESSION["MAIL_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-envelopes-bulk u-mr15"></i>
-						<?= _("Mail Server") ?>
+						<i class="fas fa-envelopes-bulk u-mr10"></i><?= _("Mail Server") ?>
 					</summary>
 					<div class="collapse-content">
 						<p>
@@ -498,8 +493,7 @@
 			<?php if (!empty($_SESSION["DB_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-database u-mr15"></i>
-						<?= _("Databases") ?>
+						<i class="fas fa-database u-mr10"></i><?= _("Databases") ?>
 					</summary>
 					<div class="collapse-content">
 						<div class="u-mb10">
@@ -664,8 +658,7 @@
 			<!-- Backups section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-arrow-rotate-left u-mr15"></i>
-					<?= _("Backups") ?>
+					<i class="fas fa-arrow-rotate-left u-mr10"></i><?= _("Backups") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
@@ -923,8 +916,7 @@
 			<!-- SSL tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-lock u-mr15"></i>
-					<?= _("SSL") ?>
+					<i class="fas fa-lock u-mr10"></i><?= _("SSL") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb20">
@@ -995,8 +987,7 @@
 			<!-- Security tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-key u-mr15"></i>
-					<?= _("Security") ?>
+					<i class="fas fa-key u-mr10"></i><?= _("Security") ?>
 				</summary>
 				<div class="collapse-content">
 					<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
@@ -1326,8 +1317,7 @@
 			<!-- Plugins tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-puzzle-piece u-mr15"></i>
-					<?= _("Hestia Control Panel Plugins") ?>
+					<i class="fas fa-puzzle-piece u-mr10"></i><?= _("Hestia Control Panel Plugins") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">

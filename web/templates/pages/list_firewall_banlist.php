@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/firewall/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Ban IP Address") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/firewall/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create">
+				<i class="fas fa-circle-plus icon-green"></i><?= _("Ban IP Address") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<form x-data x-bind="BulkEdit" action="/bulk/firewall/banlist/" method="post">

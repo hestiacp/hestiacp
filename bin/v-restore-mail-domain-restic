@@ -2,7 +2,10 @@
 # info: restore WEB domain
 # options: USER SNAPSHOT DOMAIN
 #
-# example: v-restore-user user snapshot domain.com
+# example: v-restore-mail-domain-restic user snapshot domain.com
+# example: v-restore-mail-domain-restic user snapshot 'domain.com,domain2.com'
+# example: v-restore-mail-domain-restic user snapshot '*'
+
 #
 # This function for restoring database from restic snapshot.
 
@@ -56,7 +59,7 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 fi
 
 parse_object_kv_list $(cat $tmpdir/backup.conf)
-IFS=','
+read -a domains_array <<< "$mail"
 read -a domains <<< "$MAIL"
 
 # Checking exim username for later chowning
@@ -67,7 +70,7 @@ if [ "$check_exim_username" -eq 1 ]; then
 fi
 
 for domain in ${domains[@]}; do
-	if [[ "$mail" = "$domain" || "$mail" = '*' ]]; then
+	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$mail" = '*' ]]; then
 		# Checking domain existance
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
 		if [ -z "$check_config" ]; then

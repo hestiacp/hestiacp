@@ -57,9 +57,10 @@ fi
 
 parse_object_kv_list $(cat $tmpdir/backup.conf)
 IFS=','
+read -a domains_array <<< "$dns"
 read -a domains <<< "$DNS"
 for domain in ${domains[@]}; do
-	if [[ "$dns" = "$domain" || "$dns" = '*' ]]; then
+	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$dns" = '*' ]]; then
 		# Cleanup previous config keys
 		unset -v DOMAIN IP TPL TTL EXP SOA RECORDS DNSSEC KEY SLAVE MASTER
 		# Checking domain existence

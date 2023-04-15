@@ -2,7 +2,9 @@
 # info: restore WEB domain
 # options: USER SNAPSHOT DOMAIN
 #
-# example: v-restore-user user snapshot domain.com
+# example: v-restore-web-domain-restic user snapshot domain.com
+# example: v-restore-web-domain-restic user snapshot 'domain.com,domain2.com'
+# example: v-restore-web-domain-restic user snapsho '*'
 #
 # This function for restoring database from restic snapshot.
 
@@ -62,9 +64,10 @@ old_uid=$(cut -f 3 -d : $tmpdir/passwd)
 
 parse_object_kv_list $(cat $tmpdir/backup.conf)
 IFS=','
+read -a domains_array <<< "$web"
 read -a domains <<< "$WEB"
 for domain in ${domains[@]}; do
-	if [[ "$web" = "$domain" || "$web" = '*' ]]; then
+	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$web" = '*' ]]; then
 		# Cleanup previous domain keys
 		unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT
 

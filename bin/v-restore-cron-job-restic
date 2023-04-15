@@ -72,6 +72,8 @@ $BIN/v-update-user-counters $user
 $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
+sed -i "/v-restore-cron-job-restic '$user' '$snapshot'/d" $HESTIA/data/queue/backup.pipe
+
 # Logging
 $BIN/v-log-action "system" "Info" "Backup" "Cron jobs successfully restored (User: $user, Snapshot: $snapshot)."
 $BIN/v-log-action "$user" "Info" "Backup" "Cron jobs  successfully restored (User: $user, Snapshot: $snapshot)."

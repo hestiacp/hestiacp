@@ -19,6 +19,19 @@ if (empty($_GET["snapshot"])) {
 		$data = json_decode(implode("", $output), true);
 		render_page($user, $TAB, "list_backup_detail_incremental");
 	} else {
-		echo "test";
+		if (empty($_GET["folder"])) {
+			$_GET["folder"] = "/home/" . $user_plain;
+		}
+		$folder = quoteshellarg($_GET["folder"]);
+		$snapshot = quoteshellarg($_GET["snapshot"]);
+		exec(HESTIA_CMD . "v-list-user-files-restic $user $snapshot $folder", $output, $return_var);
+		$info = json_decode($output[0], true);
+		unset($output[0]);
+		$files = [];
+		foreach ($output as $value) {
+			$files[] = json_decode($value, true);
+		}
+		echo HESTIA_CMD . "v-list-user-files-restic $user $snapshot $folder";
+		render_page($user, $TAB, "list_files_incremental");
 	}
 }

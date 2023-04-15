@@ -218,6 +218,8 @@ $BIN/v-update-user-counters $user
 $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
+sed -i "/v-restore-mail-domain-restic '$user' '$snapshot' '$mail' /d" $HESTIA/data/queue/backup.pipe
+
 # Logging
 $BIN/v-log-action "system" "Info" "Backup" "Mail domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
 $BIN/v-log-action "$user" "Info" "Backup" "Mail domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."

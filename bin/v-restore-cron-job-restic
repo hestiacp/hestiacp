@@ -49,10 +49,10 @@ source_conf $HESTIA/conf/restic.conf
 
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 
-restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json dump $snapshot /home/$user/backup/cron/cron.conf > $tmpdir/cron.conf
+restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/cron/cron.conf" > "$tmpdir/cron.conf"
 
 # Restoring cron jobs
-cp $tmpdir/cron.conf $USER_DATA/cron.conf
+cp "$tmpdir/cron.conf" "$USER_DATA/cron.conf"
 
 # Rebuilding cron jobs
 sync_cron_jobs
@@ -65,7 +65,7 @@ check_result $? "CRON restart failed"
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-rm -fr $tmpdir
+rm -fr "$tmpdir"
 
 # Update user counters
 $BIN/v-update-user-counters $user
@@ -73,7 +73,7 @@ $BIN/v-update-user-counters admin
 $BIN/v-update-sys-ip-counters
 
 # Logging
-$BIN/v-log-action "system" "Info" "Backup" "Cron jobs successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
-$BIN/v-log-action "$user" "Info" "Backup" "Cron jobs  successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+$BIN/v-log-action "system" "Info" "Backup" "Cron jobs successfully restored (User: $user, Snapshot: $snapshot)."
+$BIN/v-log-action "$user" "Info" "Backup" "Cron jobs  successfully restored (User: $user, Snapshot: $snapshot)."
 log_event "$OK" "$ARGUMENTS"
 exit

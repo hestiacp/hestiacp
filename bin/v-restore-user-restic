@@ -54,32 +54,34 @@ source_conf $HESTIA/conf/restic.conf
 
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
-	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/backup.conf > $tmpdir/backup.conf
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_NOTEXIST" "Invalid snapshot"
 	fi
 fi
 
 # Download user data
-restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --include /home/$user/backup/ --target $tmpdir
+restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/" --target "$tmpdir"
 if [ "$?" -ne 0 ]; then
 	check_result "$E_NOTEXIST" "Unable to download user data"
 fi
 
 # Restore web domains
 echo "[ * ] Restore Web domains"
-$BIN/v-restore-web-domain-restic $user $snapshot "$web" 'no'
+$BIN/v-restore-web-domain-restic "$user" "$snapshot" "$web" 'no'
 echo "[ * ] Restore DNS domains"
-$BIN/v-restore-dns-domain-restic $user $snapshot "$dns"
+$BIN/v-restore-dns-domain-restic "$user" "$snapshot" "$dns"
 echo "[ * ] Restore Mail domains"
-$BIN/v-restore-mail-domain-restic $user $snapshot "$mail"
+$BIN/v-restore-mail-domain-restic "$user" "$snapshot" "$mail"
 echo "[ * ] Restore Databases"
-$BIN/v-restore-database-restic $user $snapshot "$database"
-echo "[ * ] Restore Cronjobs"
-$BIN/v-restore-cron-job-restic $user $snapshot
+$BIN/v-restore-database-restic "$user" "$snapshot" "$db"
+if [ -n "$cron" ]; then
+	echo "[ * ] Restore Cronjobs"
+	$BIN/v-restore-cron-job-restic "$user" "$snapshot"
+fi
 if [ "$udir" = "yes" ]; then
 	echo "[ * ] Restore user files"
-	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --exclude /home/$user/web/ --exclude /home/$user/conf --exclude /home/$user/mail --target /
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --exclude "/home/$user/web/" --exclude "/home/$user/conf" --exclude "/home/$user/mail" --target /
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_NOTEXIST" "Unable to download user folders"
 	fi
@@ -92,7 +94,7 @@ rebuild_user_conf
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-rm -fr $tmpdir
+rm -fr "$tmpdir"
 
 # Update user counters
 $BIN/v-update-user-counters $user

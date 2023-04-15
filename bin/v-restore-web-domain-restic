@@ -54,12 +54,12 @@ source_conf $HESTIA/conf/restic.conf
 
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
-	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/backup.conf > $tmpdir/backup.conf
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_NOTEXIST" "Unable to download from snapshot"
 	fi
 fi
-restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/pam/passwd > $tmpdir/passwd
+restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/pam/passwd" > "$tmpdir/passwd"
 old_uid=$(cut -f 3 -d : $tmpdir/passwd)
 
 parse_object_kv_list $(cat $tmpdir/backup.conf)
@@ -83,7 +83,7 @@ for domain in ${domains[@]}; do
 				check_result "$E_PARSING" "$error"
 			fi
 		fi
-		restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --include /home/$user/backup/web/$domain --target $tmpdir
+		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/web/$domain" --target "$tmpdir"
 		if [ "$?" -ne 0 ]; then
 			check_result $E_NOTEXIST "Unable to download domain from snapshot"
 		fi
@@ -209,7 +209,7 @@ for domain in ${domains[@]}; do
 
 		[[ -d $HOMEDIR/$user/web/$domain/stats ]] && chmod u+w "$HOMEDIR/$user/web/$domain/stats"
 
-		restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --include /home/$user/web/$domain --target /
+		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/web/$domain" --target /
 		if [ "$?" -ne 0 ]; then
 			check_result "$E_NOTEXIST" "Unable to download user data"
 		fi

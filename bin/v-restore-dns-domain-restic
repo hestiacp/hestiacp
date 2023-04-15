@@ -49,13 +49,13 @@ source_conf $HESTIA/conf/restic.conf
 
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
-	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/backup.conf > $tmpdir/backup.conf
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_NOTEXIST" "Unable to download snapshot data"
 	fi
 fi
 
-parse_object_kv_list $(cat $tmpdir/backup.conf)
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
 IFS=','
 read -a domains_array <<< "$dns"
 read -a domains <<< "$DNS"
@@ -66,16 +66,16 @@ for domain in ${domains[@]}; do
 		# Checking domain existence
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 		if [ -z "$check_config" ]; then
-			check_new=$(is_domain_new 'dns' $domain)
+			check_new=$(is_domain_new 'dns' "$domain")
 			if [ -n "$check_new" ]; then
 				rm -rf $tmpdir
 				error="$domain belongs to another user"
-				echo "$error" | $SENDMAIL -s "$subj" $email $notify
+				echo "$error" | $SENDMAIL -s "$subj" "$email" "$notify"
 				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
 				check_result "$E_PARSING" "$error"
 			fi
 		fi
-		restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --include /home/$user/backup/dns/$domain --target $tmpdir
+		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/dns/$domain" --target "$tmpdir"
 		if [ "$?" -ne 0 ]; then
 			check_result $E_NOTEXIST "Unable to download domain from snapshot"
 		fi
@@ -115,7 +115,7 @@ for domain in ${domains[@]}; do
 		fi
 
 		# Restoring DNS records
-		cp -f $tmpdir/home/$user/backup/dns/$domain/hestia/$domain.conf $USER_DATA/dns/
+		cp -f "$tmpdir/home/$user/backup/dns/$domain/hestia/$domain.conf" "$USER_DATA/dns/"
 
 		# Update IP in records
 		if [ -n "$old_ip" ]; then

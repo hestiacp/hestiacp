@@ -50,15 +50,15 @@ source_conf $HESTIA/conf/restic.conf
 #                       Action                             #
 #----------------------------------------------------------#
 
-tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
-	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/backup.conf > $tmpdir/backup.conf
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > $tmpdir/backup.conf
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_NOTEXIST" "Unable to download snapshot"
 	fi
 fi
 
-parse_object_kv_list $(cat $tmpdir/backup.conf)
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
 read -a domains_array <<< "$mail"
 read -a domains <<< "$MAIL"
 
@@ -84,7 +84,7 @@ for domain in ${domains[@]}; do
 			fi
 		fi
 
-		restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --include /home/$user/backup/mail/$domain --target $tmpdir
+		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/mail/$domain" --target "$tmpdir"
 		if [ "$?" -ne 0 ]; then
 			check_result $E_NOTEXIST "Unable to download domain from snapshot"
 		fi
@@ -193,7 +193,7 @@ for domain in ${domains[@]}; do
 		chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
 		chown $user:$user "$HOMEDIR/$user/mail/$domain_idn"
 
-		restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf restore $snapshot --include /home/$user/mail/$domain_idn --target /
+		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include /home/$user/mail/$domain_idn --target /
 		if [ "$?" -ne 0 ]; then
 			check_result "$E_NOTEXIST" "Unable to download user data"
 		fi
@@ -204,7 +204,7 @@ for domain in ${domains[@]}; do
 				-exec chown $exim_user {} \;
 		fi
 
-		$BIN/v-rebuild-mail-domain $user $domain
+		$BIN/v-rebuild-mail-domain "$user" "$domain"
 	fi
 done
 #----------------------------------------------------------#

@@ -49,13 +49,13 @@ source_conf $HESTIA/conf/restic.conf
 
 tmpdir=$(mktemp -p /home/$user/tmp/ -d)
 if [ ! -f "$tmpdir/backup.conf" ]; then
-	restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json dump $snapshot /home/$user/backup/backup.conf > $tmpdir/backup.conf
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
 	if [ "$?" -ne 0 ]; then
 		check_result "$E_NOTEXIST" "Unable to download snapshot"
 	fi
 fi
 
-parse_object_kv_list $(cat $tmpdir/backup.conf)
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
 
 IFS=','
 read -a databases_array <<< "$database"
@@ -65,33 +65,33 @@ for db in ${databases[@]}; do
 	if [[ "${IFS}${databases_array[*]}${IFS}" =~ "${IFS}${db}${IFS}" || "$databases_array" = '*' ]]; then
 		check_config=$(grep "DB='$db'" $USER_DATA/db.conf)
 		if [ -z "$check_config" ]; then
-			restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf --json dump $snapshot /home/$user/backup/db/$db/hestia/db.conf > $tmpdir/db.conf
+			restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" --json dump "$snapshot" "/home/$user/backup/db/$db/hestia/db.conf" > "$tmpdir/db.conf"
 			if [ "$?" -ne 0 ]; then
 				check_result "$E_NOTEXIST" "Unable to download user data"
 			fi
-			parse_object_kv_list $(cat $tmpdir/db.conf)
+			parse_object_kv_list $(cat "$tmpdir/db.conf")
 			# @todo add support for renaming user
 			str="DB='$DB' DBUSER='$DBUSER' MD5='$MD5' HOST='$HOST'"
 			str="$str TYPE='$TYPE' CHARSET='$CHARSET' U_DISK='$U_DISK'"
 			str="$str SUSPENDED='no' TIME='$(date +%T)' DATE='$(date +%F)'"
-			echo $str >> $USER_DATA/db.conf
+			echo "$str" >> $USER_DATA/db.conf
 		else
 			parse_object_kv_list $(grep "DB='$db'" $USER_DATA/db.conf)
 		fi
 
 		# Download databse
 		if [ "$BACKUP_MODE" = "zstd" ]; then
-			restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/db/$db/$db.$TYPE.sql.zst > $tmpdir/$db.$TYPE.sql.zst
+			restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/db/$db/$db.$TYPE.sql.zst" > $tmpdir/$db.$TYPE.sql.zst
 			if [ "$?" -ne 0 ]; then
 				check_result $E_NOTEXIST "Unable to download database"
 			fi
-			pzstd -d $tmpdir/$db.$TYPE.sql.zst
+			pzstd -d "$tmpdir/$db.$TYPE.sql.zst"
 		else
-			restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf dump $snapshot /home/$user/backup/db/$db/$db.$TYPE.sql.gz > $tmpdir/$db.$TYPE.sql.gz
+			restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/db/$db/$db.$TYPE.sql.gz" > $tmpdir/$db.$TYPE.sql.gz
 			if [ "$?" -ne 0 ]; then
 				check_result $E_NOTEXIST "Unable to download database"
 			fi
-			gzip -d $tmpdir/$db.$TYPE.sql.gz
+			gzip -d "$tmpdir/$db.$TYPE.sql.gz"
 		fi
 
 		# Restore and rebuild

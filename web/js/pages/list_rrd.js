@@ -4,8 +4,8 @@ async function main() {
 	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
 
 	for (const chartCanvas of chartCanvases) {
-		const service = chartCanvas.getAttribute('data-service');
-		const period = chartCanvas.getAttribute('data-period');
+		const service = chartCanvas.dataset.service;
+		const period = chartCanvas.dataset.period;
 		const rrdData = await fetchRrdData(service, period);
 		const chartData = prepareChartData(rrdData, period);
 		const chartOptions = getChartOptions(rrdData.unit);

@@ -67,18 +67,6 @@ App.Listeners.DB.keypress_db_databasename = function () {
 	});
 };
 
-App.Listeners.DB.keypress_v_password = function () {
-	var ref = $('input[name="v_password"]');
-	ref.bind('keypress input', function (evt) {
-		clearTimeout(window.frp_usr_tmt);
-		window.frp_usr_tmt = setTimeout(function () {
-			VE.helpers.recalculatePasswordStrength(evt.target);
-		}, 100);
-	});
-};
-
-App.Listeners.DB.keypress_v_password();
-
 //
 // Page entry point
 // Trigger listeners
@@ -86,7 +74,7 @@ App.Listeners.DB.keypress_db_username();
 App.Listeners.DB.keypress_db_databasename();
 
 applyRandomPassword = function (min_length = 16) {
-	const passwordInput = document.querySelector('input[name=v_password]');
+	const passwordInput = document.querySelector('.js-password-input');
 	if (passwordInput) {
 		passwordInput.value = randomString(min_length);
 		VE.helpers.recalculatePasswordStrength(passwordInput);

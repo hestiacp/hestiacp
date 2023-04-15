@@ -17,21 +17,9 @@ $('form[name="v_quota"]').on('submit', function () {
 	});
 });
 
-App.Listeners.MAIL_ACC.keypress_v_password = function () {
-	var ref = $('input[name="v_password"]');
-	ref.bind('keypress input', function (evt) {
-		clearTimeout(window.frp_usr_tmt);
-		window.frp_usr_tmt = setTimeout(function () {
-			VE.helpers.recalculatePasswordStrength(evt.target);
-		}, 100);
-	});
-};
-
-App.Listeners.MAIL_ACC.keypress_v_password();
-
 applyRandomPassword = function (min_length = 16) {
 	const randomPassword = randomString(min_length);
-	const passwordInput = document.querySelector('input[name=v_password]');
+	const passwordInput = document.querySelector('.js-password-input');
 	if (passwordInput) {
 		passwordInput.value = randomPassword;
 		VE.helpers.recalculatePasswordStrength(passwordInput);
@@ -66,7 +54,7 @@ generate_mail_credentials = function () {
 
 $(document).ready(function () {
 	$('.js-account-output').text($('input[name=v_account]').val());
-	$('.js-password-output').text($('input[name=v_password]').val());
+	$('.js-password-output').text($('.js-password-input').val());
 	generate_mail_credentials();
 
 	$('input[name=v_account]').change(function () {
@@ -74,15 +62,15 @@ $(document).ready(function () {
 		generate_mail_credentials();
 	});
 
-	$('input[name=v_password]').change(function () {
-		if ($('input[name=v_password]').attr('type') == 'text')
+	$('.js-password-input').change(function () {
+		if ($('.js-password-input').attr('type') == 'text')
 			$('.js-password-output').text($(this).val());
 		else $('.js-password-output').text(Array($(this).val().length + 1).join('*'));
 		generate_mail_credentials();
 	});
 
 	$('.toggle-psw-visibility-icon').click(function () {
-		$('.js-password-output').text($('input[name=v_password]').val());
+		$('.js-password-output').text($('.js-password-input').val());
 		generate_mail_credentials();
 	});
 

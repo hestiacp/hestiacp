@@ -55,7 +55,7 @@ else
 	elif [ "$object" = "db" ]; then
 		echo "$BIN/v-restore-database-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
 	elif [ "$object" = "cron" ]; then
-		echo "$BIN/v-restore-cron-restic '$user' '$snapshot' '$value' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
+		echo "$BIN/v-restore-cron-restic '$user' '$snapshot' 'yes' >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
 	else
 		check_result "$E_INVALID" "Not supported"
 	fi

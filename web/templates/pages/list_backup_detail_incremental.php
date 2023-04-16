@@ -6,9 +6,9 @@
 			<a href="/schedule/restore/incremental/?token=<?= $_SESSION["token"] ?>&snapshot=<?= htmlentities($_GET["snapshot"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
 		</div>
 		<div class="toolbar-right">
-			<form x-data x-bind="BulkEdit" action="/bulk/restore/" method="post">
+			<form x-data x-bind="BulkEdit" action="/bulk/restore/incremental/" method="post">
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-				<input type="hidden" name="backup" value="<?= htmlentities($_GET["snapshot"]) ?>">
+				<input type="hidden" name="snapshot" value="<?= htmlentities($_GET["snapshot"]) ?>">
 				<select class="form-select" name="action">
 					<option value=""><?= _("apply to selected") ?></option>
 					<option value="restore"><?= _("restore") ?></option>

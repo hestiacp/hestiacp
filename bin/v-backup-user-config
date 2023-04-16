@@ -53,10 +53,9 @@ email=$(grep CONTACT "$HESTIA/data/users/admin/user.conf" | cut -f 2 -d \')
 
 tmpdir="/home/$user/backup/"
 
-if [ ! -d "$tmpdir" ]; then
-	# Create backup folder
-	mkdir -p "$tmpdir"
-fi
+# We delete the backup dir first make sure all old database has been cleared
+rm -fr "/home/$user/backup/"
+mkdir -p "$tmpdir"
 
 # Backup sys configs
 echo "-- SYSTEM --" | tee $BACKUP/$user.log

@@ -9,7 +9,7 @@
 		</div>
 		<div class="toolbar-right">
 			<?php if ($read_only !== "true") { ?>
-				<form x-data x-bind="BulkEdit" action="/bulk/backup/" method="post">
+				<form x-data x-bind="BulkEdit" action="/bulk/backup/incremental" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("apply to selected") ?></option>
@@ -41,10 +41,12 @@
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("Snapshot") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Snapshot") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Date") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide u-text-center"><b><?= _("Date") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Type") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Hostname") ?></b></div>
+
 			</div>
 		</div>
 	</div>
@@ -61,7 +63,7 @@
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="backup[]" value="<?= $key ?>" <?= $display_mode ?>>
 					</div>
-					<div class="clearfix l-unit__stat-col--left wide-4 truncate">
+					<div class="clearfix l-unit__stat-col--left wide-5 truncate">
 					<b>
 						<?php if ($read_only === "true") { ?>
 							<?= $value['short_id'] ?>
@@ -76,23 +78,26 @@
 							<!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
 							&nbsp;
 						<?php } else { ?>
-							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/incremental/?snapshot=<?= $value['short_id'] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
+							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/incremental/?snapshot=<?= $value['short_id'] ?>&browse=yes&token=<?= $_SESSION["token"] ?>" title="<?= _("Browse") ?>"><i class="fas fa-folder-open icon-lightblue icon-dim"></i></a></div>
+							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/incremental/?snapshot=<?= $value['short_id'] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
 						<?php } ?>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= translate_date($value['time']) ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?= convert_datetime($value['time']) ?></b></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center">Restic</div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=htmlentities($value['hostname'])?></div>
 				</div>
 			</div>
 		</div>
 	<?php
-	} ?>
+	}
+	 ?>
 </div>
 
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext("%d backup", "%d backups", $i), $i); ?>
+			<?php printf(ngettext("%d snapshot", "%d snapshots", count($data)), count($data)); ?>
 		</p>
 	</div>
 </footer>

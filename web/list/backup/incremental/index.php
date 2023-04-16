@@ -5,11 +5,31 @@ $TAB = "BACKUP";
 // Main include
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
+function getTransByType($type) {
+	switch ($type) {
+		case "dir":
+			echo _("Directory");
+			break;
+		case "file":
+			echo _("File");
+			break;
+		case "symlink":
+			echo _("Symlink");
+			break;
+		default:
+			echo _("Unknown");
+	}
+}
+
 // Data & Render page
 if (empty($_GET["snapshot"])) {
 	exec(HESTIA_CMD . "v-list-user-backups-restic $user json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
-	$data = array_reverse($data);
+	if (is_array($data)) {
+		$data = array_reverse($data);
+	} else {
+		$data = "";
+	}
 
 	render_page($user, $TAB, "list_backup_incremental");
 } else {
@@ -31,7 +51,6 @@ if (empty($_GET["snapshot"])) {
 		foreach ($output as $value) {
 			$files[] = json_decode($value, true);
 		}
-		echo HESTIA_CMD . "v-list-user-files-restic $user $snapshot $folder";
 		render_page($user, $TAB, "list_files_incremental");
 	}
 }

@@ -183,14 +183,14 @@ const VE = {
 			// Create and insert the title
 			if (title) {
 				const titleElem = document.createElement('h2');
-				titleElem.textContent = title;
+				titleElem.innerHTML = title;
 				titleElem.classList.add('modal-title');
 				dialog.appendChild(titleElem);
 			}
 
 			// Create and insert the message
 			const messageElem = document.createElement('p');
-			messageElem.textContent = message;
+			messageElem.innerHTML = message;
 			messageElem.classList.add('modal-message');
 			dialog.appendChild(messageElem);
 

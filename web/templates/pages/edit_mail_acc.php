@@ -38,12 +38,14 @@
 						<label for="v_email" class="form-label"><?= _("Account") ?></label>
 						<input type="text" class="form-control" name="v_email" id="v_email" value="<?= htmlentities($_GET["account"]) . "@" . htmlentities($_GET["domain"]) ?>" disabled>
 						<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
-						<input type="hidden" name="v_account" value="<?= htmlentities(trim($v_account, "'")) ?>">
+						<input type="hidden" name="v_account" value="<?= htmlentities(trim($v_account, "'")) ?>" class="js-account-input">
 					</div>
 					<div class="u-mb10">
 						<label for="v_password" class="form-label">
 							<?= _("Password") ?>
-							<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
+							<button type="button" title="<?= _("generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+								<i class="fas fa-arrows-rotate icon-green"></i>
+							</button>
 						</label>
 						<div class="u-pos-relative u-mb10">
 							<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>">

@@ -18,7 +18,7 @@
 				<!-- Hide delete buttons-->
 			<?php } else { ?>
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_DELETE_LOGS"] !== "no")) { ?>
-					<div class="actions-panel" key-action="js">
+					<div class="actions-panel" data-key-action="js">
 						<a
 							class="button button-secondary button-danger data-controls js-confirm-action"
 							<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>

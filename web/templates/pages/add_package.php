@@ -37,7 +37,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package" class="form-label"><?= _("Package Name") ?></label>
-				<input type="text" class="form-control" name="v_package" id="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>">
+				<input type="text" class="form-control" name="v_package" id="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_disk_quota" class="form-label">

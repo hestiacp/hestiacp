@@ -1,37 +1,26 @@
 // Build JS and CSS using esbuild and PostCSS
-const esbuild = require('esbuild');
-const postcss = require('postcss');
-const fs = require('fs').promises;
-const path = require('path');
-const postcssConfig = require('./postcss.config.js');
+import esbuild from 'esbuild';
+import postcss from 'postcss';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import postcssConfig from './postcss.config.js';
 
-// Esbuild JavaScript configuration
 const esbuildConfig = {
-	outdir: './web/js/dist',
-	entryNames: '[dir]/[name].min',
+	outfile: './web/js/dist/main.min.js',
+	bundle: true,
 	minify: true,
+	sourcemap: true,
 };
 
 // Build JavaScript
 async function buildJS() {
-	const jsSrcPath = './web/js/src/';
-	const jsEntries = await fs.readdir(jsSrcPath);
-	const jsBuildPromises = jsEntries
-		.filter((entry) => path.extname(entry) === '.js')
-		.map((entry) => {
-			const inputPath = path.join(jsSrcPath, entry);
-			return esbuild
-				.build({
-					...esbuildConfig,
-					entryPoints: [inputPath],
-				})
-				.then(() => {
-					console.log('✅ JavaScript build completed for', inputPath);
-				});
-		});
-
+	const inputPath = './web/js/src/main.js';
 	try {
-		await Promise.all(jsBuildPromises);
+		await esbuild.build({
+			...esbuildConfig,
+			entryPoints: [inputPath],
+		});
+		console.log('✅ JavaScript build completed for', inputPath);
 	} catch (error) {
 		console.error('❌ Error building JavaScript:', error);
 		process.exit(1);
@@ -56,14 +45,14 @@ async function processCSS(inputFile, outputFile) {
 
 // Build CSS files
 async function buildCSS() {
-	const themesSrcPath = './web/css/src/themes/';
-	const cssEntries = await fs.readdir(themesSrcPath);
+	const themesSourcePath = './web/css/src/themes/';
+	const cssEntries = await fs.readdir(themesSourcePath);
 
 	const cssBuildPromises = cssEntries
 		.filter((entry) => path.extname(entry) === '.css')
 		.map(async (entry) => {
 			const entryName = entry.replace('.css', '.min.css');
-			const inputPath = path.join(themesSrcPath, entry);
+			const inputPath = path.join(themesSourcePath, entry);
 			const outputPath = `./web/css/themes/${entryName}`;
 			await processCSS(inputPath, outputPath);
 		});

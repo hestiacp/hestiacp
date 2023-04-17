@@ -77,8 +77,8 @@
 				<div class="clearfix l-unit__stat-col--left compact u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+							<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>"

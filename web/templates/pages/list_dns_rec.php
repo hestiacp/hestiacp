@@ -116,9 +116,9 @@
 							&nbsp;
 						<?php } else { ?>
 							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/delete/dns/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&record_id=<?= $data[$key]["ID"] ?>&token=<?= $_SESSION["token"] ?>"

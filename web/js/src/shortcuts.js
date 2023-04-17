@@ -1,11 +1,13 @@
+import { createConfirmationDialog } from './helpers.js';
+
 /**
+ * Shortcuts
  * @typedef {{ key: string, altKey?: boolean, ctrlKey?: boolean, metaKey?: boolean, shiftKey?: boolean }} KeyCombination
  * @typedef {{ code: string, altKey?: boolean, ctrlKey?: boolean, metaKey?: boolean, shiftKey?: boolean }} CodeCombination
  * @typedef {{ combination: KeyCombination, event: 'keydown' | 'keyup', callback: (evt: KeyboardEvent) => void, target: EventTarget }} RegisteredShortcut
  * @typedef {{ type?: 'keydown' | 'keyup', propagate?: boolean, disabledInInput?: boolean, target?: EventTarget }} ShortcutOptions
  */
-
-document.addEventListener('alpine:init', () => {
+export default function initShortcuts() {
 	Alpine.store('shortcuts', {
 		/**
 		 * @type RegisteredShortcut[]
@@ -68,7 +70,7 @@ document.addEventListener('alpine:init', () => {
 			};
 
 			this.registeredShortcuts.push({
-				combination: combination,
+				combination,
 				callback: func,
 				target: options.target,
 				event: options.type,
@@ -133,15 +135,10 @@ document.addEventListener('alpine:init', () => {
 			}
 
 			if (Alpine.store('form').dirty && redirect) {
-				VE.helpers.createConfirmationDialog({
+				createConfirmationDialog({
 					message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 					targetUrl: redirect,
 				});
-			} else if (document.querySelector('form#vstobjects .button.cancel')) {
-				location.href = $('form#vstobjects input.cancel')
-					.attr('onclick')
-					.replace("location.href='", '')
-					.replace("'", '');
 			} else if (redirect) {
 				location.href = redirect;
 			}
@@ -150,7 +147,9 @@ document.addEventListener('alpine:init', () => {
 			{ key: 'F' },
 			(_evt) => {
 				const searchBox = document.querySelector('.js-search-input');
-				searchBox.focus();
+				if (searchBox) {
+					searchBox.focus();
+				}
 			},
 			{ disabledInInput: true }
 		)
@@ -162,7 +161,7 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -180,7 +179,7 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -198,7 +197,7 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -216,7 +215,7 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -234,7 +233,7 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -252,7 +251,7 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -270,7 +269,7 @@ document.addEventListener('alpine:init', () => {
 					return;
 				}
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -293,37 +292,37 @@ document.addEventListener('alpine:init', () => {
 			{ disabledInInput: true }
 		)
 		.register({ code: 'Escape' }, (_evt) => {
-			const shortcutsDialog = document.querySelector('.shortcuts');
-			if (shortcutsDialog.open) {
-				shortcutsDialog.close();
+			const openDialog = document.querySelector('dialog[open]');
+			if (openDialog) {
+				openDialog.close();
 			}
 			document.querySelectorAll('input, checkbox, textarea, select').forEach((el) => el.blur());
 		})
 		.register(
 			{ code: 'ArrowLeft' },
 			(_evt) => {
-				VE.navigation.move_focus_left();
+				VE.navigation.moveFocusLeft();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowRight' },
 			(_evt) => {
-				VE.navigation.move_focus_right();
+				VE.navigation.moveFocusRight();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowDown' },
 			(_evt) => {
-				VE.navigation.move_focus_down();
+				VE.navigation.moveFocusDown();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowUp' },
 			(_evt) => {
-				VE.navigation.move_focus_up();
+				VE.navigation.moveFocusUp();
 			},
 			{ disabledInInput: true }
 		)
@@ -419,7 +418,7 @@ document.addEventListener('alpine:init', () => {
 						const dialog = document.querySelector('dialog[open]');
 						dialog.querySelector('button[type="submit"]').click();
 					} else {
-						VE.helpers.createConfirmationDialog({
+						createConfirmationDialog({
 							message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 							targetUrl: document.querySelector(`${VE.navigation.state.menu_selector}.focus a`)
 								.href,
@@ -434,11 +433,11 @@ document.addEventListener('alpine:init', () => {
 						if (el.length) {
 							VE.navigation.shortcut(el);
 						} else {
-							VE.navigation.enter_focused();
+							VE.navigation.enterFocused();
 						}
 					}
 				}
 			},
 			{ propagate: true }
 		);
-});
+}

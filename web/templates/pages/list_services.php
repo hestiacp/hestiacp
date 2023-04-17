@@ -19,7 +19,7 @@
 			<a href="/list/log/?user=system&token=<?= $_SESSION["token"] ?>" class="button button-secondary">
 				<i class="fas fa-binoculars icon-orange"></i><?= _("Logs") ?>
 			</a>
-			<div class="actions-panel" key-action="js">
+			<div class="actions-panel" data-key-action="js">
 				<a
 					class="button button-secondary button-danger data-controls js-confirm-action"
 					href="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
@@ -145,10 +145,10 @@
 					</div>
 					<div class="clearfix l-unit__stat-col--left u-text-center compact-2">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href">
+							<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href">
 								<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a>
 							</div>
-							<div class="actions-panel__col actions-panel__stop shortcut-s" key-action="js">
+							<div class="actions-panel__col actions-panel__stop shortcut-s" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/restart/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
@@ -158,7 +158,7 @@
 									<i class="fas fa-arrow-rotate-left icon-highlight icon-dim"></i>
 								</a>
 							</div>
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"

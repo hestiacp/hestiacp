@@ -55,7 +55,7 @@
 				<div class="clearfix l-unit__stat-col--left compact-4">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/delete/firewall/banlist/?ip=<?= $ip ?>&chain=<?= $value["CHAIN"] ?>&token=<?= $_SESSION["token"] ?>"

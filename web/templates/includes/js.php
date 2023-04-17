@@ -1,8 +1,8 @@
-<script defer src="/js/main.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/jquery-3.6.4.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/shortcuts.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/events.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/init.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/shortcuts.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/events.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/init.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/alpine-3.10.5.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script>
 	// TODO: REMOVE

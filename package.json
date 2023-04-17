@@ -9,7 +9,7 @@
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",
 		"docs:serve": "vitepress serve docs",
-		"build": "postcss web/css/src/themes/*.css --dir web/css/themes --ext .min.css",
+		"build": "node build.js",
 		"lint": "prettier --cache --check . && eslint --cache . && stylelint web/css/src/**/*.css && markdownlint-cli2 *.md docs/**/*.md",
 		"lint-staged": "lint-staged",
 		"format": "prettier --cache --write .",
@@ -26,14 +26,14 @@
 		"@typescript-eslint/eslint-plugin": "^5.58.0",
 		"@typescript-eslint/parser": "^5.58.0",
 		"cssnano": "^6.0.0",
+		"esbuild": "^0.17.16",
 		"eslint": "^8.38.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-editorconfig": "^4.0.2",
 		"husky": "^8.0.3",
 		"lint-staged": "^13.2.1",
 		"markdownlint-cli2": "^0.6.0",
-		"postcss": "^8.4.21",
-		"postcss-cli": "^10.1.0",
+		"postcss": "^8.4.22",
 		"postcss-import": "^15.1.0",
 		"postcss-path-replace": "^1.0.4",
 		"postcss-preset-env": "^8.3.1",
@@ -42,10 +42,13 @@
 		"prettier-plugin-nginx": "^1.0.3",
 		"prettier-plugin-sh": "^0.12.8",
 		"prettier-plugin-sql": "^0.14.0",
-		"stylelint": "^15.4.0",
-		"stylelint-config-standard": "^32.0.0",
+		"stylelint": "^15.5.0",
+		"stylelint-config-standard": "^33.0.0",
 		"typescript": "^5.0.4",
-		"vitepress": "1.0.0-alpha.65",
+		"vitepress": "1.0.0-alpha.70",
 		"vue": "^3.2.47"
-	}
+	},
+	"browserslist": [
+		"defaults"
+	]
 }

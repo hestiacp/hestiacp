@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Re-implement RRD charts in Chart.js (#3452)
+- Add JS/CSS build script (#3471)
+
+### Dependencies
+
+- Update hestia-php to 8.2.5
+- Update hestia-nginx to 1.23.4
 
 ### Bugfixes
 

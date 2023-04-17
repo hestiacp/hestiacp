@@ -59,6 +59,7 @@ is_package_consistent() {
 		is_int_format_valid "$BANDWIDTH" 'BANDWIDTH'
 	fi
 	is_int_format_valid "$BACKUPS" 'BACKUPS'
+	is_boolean_format_valid "$BACKUPS_INCREMENTAL" 'BACKUP_INCREMENTAL'
 	if [ -n "$WEB_TEMPLATE" ]; then
 		is_web_template_valid "$WEB_TEMPLATE"
 	fi

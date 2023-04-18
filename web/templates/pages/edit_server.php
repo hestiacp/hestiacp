@@ -904,6 +904,141 @@
 							</div>
 						</div>
 					</div>
+					<div class="form-check">
+						<input
+							x-model="incrementalBackupEnabled"
+							class="form-check-input"
+							type="checkbox"
+							name="v_backup_incremental_adv"
+							id="v_backup_incremental_adv"
+						>
+						<label for="v_backup_incremental_adv">
+							<?= _("Incremental Backups") ?>
+							<a
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
+								target="_blank"
+								class="u-ml5"
+							>
+								<i class="fas fa-circle-question"></i>
+							</a>
+						</label>
+					</div>
+					<div x-cloak x-show="remoteBackupEnabled" class="u-pl30 u-mt20">
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Repo") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_repo"
+								id="v_repo"
+								value="<?= trim($v_repo, "'") ?>"
+							>
+							<a
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
+								target="_blank"
+								class="u-ml5"
+							>
+								<i class="fas fa-circle-question"></i>
+							</a>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Snapshots") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_snapshots"
+								id="v_snapshots"
+								value="<?= trim($v_snapshots, "'") ?>"
+							>
+							<a
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
+								target="_blank"
+								class="u-ml5"
+							>
+								<i class="fas fa-circle-question"></i>
+							</a>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Keep last daily backups") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_keep_daily"
+								id="v_keep_daily"
+								value="<?= trim($v_keep_daily, "'") ?>"
+							>
+							<a
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
+								target="_blank"
+								class="u-ml5"
+							>
+								<i class="fas fa-circle-question"></i>
+							</a>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Keep last weekly backups") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_keep_weekly"
+								id="v_keep_weekly"
+								value="<?= trim($v_keep_weekly, "'") ?>"
+							>
+							<a
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
+								target="_blank"
+								class="u-ml5"
+							>
+								<i class="fas fa-circle-question"></i>
+							</a>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Keep last monthly backups") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_keep_monthly"
+								id="v_keep_monthly"
+								value="<?= trim($v_keep_monthly, "'") ?>"
+							>
+							<a
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
+								target="_blank"
+								class="u-ml5"
+							>
+								<i class="fas fa-circle-question"></i>
+							</a>
+						</div>
+						<div class="u-mb10">
+							<label for="v_repo" class="form-label">
+								<?= _("Keep last yearly backups") ?>
+							</label>
+							<input
+								type="text"
+								class="form-control"
+								name="v_keep_monthly"
+								id="v_keep_monthly"
+								value="<?= trim($v_keep_monthly, "'") ?>"
+							>
+							<a
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
+								target="_blank"
+								class="u-ml5"
+							>
+								<i class="fas fa-circle-question"></i>
+							</a>
+						</div>
+					</div>
 				</div>
 			</details>
 

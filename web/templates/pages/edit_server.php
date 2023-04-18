@@ -33,6 +33,7 @@
 			language: '<?= $_SESSION["LANGUAGE"] ?>',
 			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>,
 			remoteBackupEnabled: <?= !empty($v_backup_remote_adv) ? "true" : "false" ?>,
+			incrementalBackups: <?= !empty($v_backup_incremental) ? "true" : "false" ?>,
 			backupType: '<?= !empty($v_backup_type) ? trim($v_backup_type, "'") : "" ?>',
 			webmailAlias: '<?= $_SESSION["WEBMAIL_ALIAS"] ?? "" ?>',
 			apiSystem: '<?= $_SESSION["API_SYSTEM"] ?>',
@@ -904,29 +905,30 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-check">
-						<input
-							x-model="incrementalBackupEnabled"
-							class="form-check-input"
-							type="checkbox"
-							name="v_backup_incremental_adv"
-							id="v_backup_incremental_adv"
-						>
-						<label for="v_backup_incremental_adv">
-							<?= _("Incremental Backups") ?>
-							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
-								target="_blank"
-								class="u-ml5"
-							>
-								<i class="fas fa-circle-question"></i>
-							</a>
+				</div>
+			</details>
+			<details class="collapse u-mb10">
+				<summary class="collapse-header">
+					<i class="fas fa-arrow-rotate-left u-mr10"></i><?= _("Incremental Backups") ?>
+				</summary>
+				<div class="collapse-content">
+					<div class="u-mb10">
+						<label for="v_backup" class="form-label">
+							<?= _("Enable incremental backup") ?>
 						</label>
+						<select class="form-select" name="v_backup_incremental" id="v_backup_incremental" x-model="incrementalBackups">
+							<option value="no">
+								<?= _("No") ?>
+							</option>
+							<option value="yes" <?= $v_backup_incremental == "yes" ? "selected" : "" ?>>
+								<?= _("Yes") ?>
+							</option>
+						</select>
 					</div>
-					<div x-cloak x-show="remoteBackupEnabled" class="u-pl30 u-mt20">
+						<div x-cloak x-show="incrementalBackups == 'yes'">
 						<div class="u-mb10">
 							<label for="v_repo" class="form-label">
-								<?= _("Repo") ?>
+								<?= _("Repository") ?>
 							</label>
 							<input
 								type="text"
@@ -935,13 +937,6 @@
 								id="v_repo"
 								value="<?= trim($v_repo, "'") ?>"
 							>
-							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
-								target="_blank"
-								class="u-ml5"
-							>
-								<i class="fas fa-circle-question"></i>
-							</a>
 						</div>
 						<div class="u-mb10">
 							<label for="v_repo" class="form-label">
@@ -954,13 +949,6 @@
 								id="v_snapshots"
 								value="<?= trim($v_snapshots, "'") ?>"
 							>
-							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
-								target="_blank"
-								class="u-ml5"
-							>
-								<i class="fas fa-circle-question"></i>
-							</a>
 						</div>
 						<div class="u-mb10">
 							<label for="v_repo" class="form-label">
@@ -973,13 +961,6 @@
 								id="v_keep_daily"
 								value="<?= trim($v_keep_daily, "'") ?>"
 							>
-							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
-								target="_blank"
-								class="u-ml5"
-							>
-								<i class="fas fa-circle-question"></i>
-							</a>
 						</div>
 						<div class="u-mb10">
 							<label for="v_repo" class="form-label">
@@ -992,13 +973,6 @@
 								id="v_keep_weekly"
 								value="<?= trim($v_keep_weekly, "'") ?>"
 							>
-							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
-								target="_blank"
-								class="u-ml5"
-							>
-								<i class="fas fa-circle-question"></i>
-							</a>
 						</div>
 						<div class="u-mb10">
 							<label for="v_repo" class="form-label">
@@ -1011,13 +985,6 @@
 								id="v_keep_monthly"
 								value="<?= trim($v_keep_monthly, "'") ?>"
 							>
-							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
-								target="_blank"
-								class="u-ml5"
-							>
-								<i class="fas fa-circle-question"></i>
-							</a>
 						</div>
 						<div class="u-mb10">
 							<label for="v_repo" class="form-label">
@@ -1030,13 +997,6 @@
 								id="v_keep_monthly"
 								value="<?= trim($v_keep_monthly, "'") ?>"
 							>
-							<a
-								href="https://hestiacp.com/docs/server-administration/backup-restore.html#restic"
-								target="_blank"
-								class="u-ml5"
-							>
-								<i class="fas fa-circle-question"></i>
-							</a>
 						</div>
 					</div>
 				</div>

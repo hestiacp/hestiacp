@@ -213,8 +213,6 @@ foreach ($backup_types as $backup_type) {
 	}
 }
 
-#if ()
-
 if (empty($v_backup)) {
 	$v_backup = "";
 }
@@ -253,6 +251,25 @@ if (empty($v_rclone_host)) {
 }
 if (empty($v_rclone_path)) {
 	$v_rclone_path = "";
+}
+
+// Incremental backups
+$v_backup_incremental = $_SESSION["BACKUP_INCREMENTAL"];
+if ($_SESSION["BACKUP_INCREMENTAL"] == "yes") {
+	exec(HESTIA_CMD . "v-list-backup-host-restic json", $output, $return_var);
+	$v_incremental_backups = json_decode(implode("", $output), true);
+	$v_snapshots = $v_incremental_backups["SNAPSHOTS"];
+	$v_keep_daily = $v_incremental_backups["KEEP_DAILY"];
+	$v_keep_weekly = $v_incremental_backups["KEEP_WEEKLY"];
+	$v_keep_mothly = $v_incremental_backups["KEEP_MONTHLY"];
+	$v_keep_yearly = $v_incremental_backups["KEEP_YEARLY"];
+} else {
+	// Default value
+	$v_snapshots = "30";
+	$v_keep_daily = "-1";
+	$v_keep_weekly = "-1";
+	$v_keep_mothly = "-1";
+	$v_keep_yearly = "-1";
 }
 
 // List ssl certificate info
@@ -1228,6 +1245,84 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	if (empty($_SESSION["error_msg"])) {
+		if ($_POST["v_backup_incremental"] === "yes" && $_SESSION["BACKUP_INCREMENTAL"] !== "yes") {
+			//Add new Restic backups host
+			if (empty($_POST["v_repo"])) {
+				$_SESSION["error_msg"] = _("Repository can not be empty");
+			}
+			$repo = quoteshellarg($_POST["v_repo"]);
+			$snapshots = quoteshellarg($_POST["v_snapshots"]);
+			$keep_daily = quoteshellarg($_POST["v_keep_daily"]);
+			$keep_weekly = quoteshellarg($_POST["v_keep_weekly"]);
+			$keep_monthly = quoteshellarg($_POST["v_keep_monthly"]);
+			$keep_yearly = quoteshellarg($_POST["v_keep_yearly"]);
+
+			exec(
+				HESTIA_CMD .
+					"v-add-backup-host-restic " .
+					$repo .
+					" " .
+					$snapshots .
+					" " .
+					$keep_daily .
+					" " .
+					$keep_weekly .
+					" " .
+					$keep_monthly .
+					" " .
+					$keep_yearly,
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+		}
+	}
+	if (empty($_SESSION["error_msg"])) {
+		if ($_POST["v_backup_incremental"] !== "yes" && $_SESSION["BACKUP_INCREMENTAL"] === "yes") {
+			exec(HESTIA_CMD . "v-delete-backup-host-restic ", $output, $return);
+			check_return_code($return_var, $output);
+			unset($output);
+		}
+	}
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			$v_incremental_backups["SNAPSHOTS"] != $_POST["v_snapshots"] ||
+			$v_incremental_backups["KEEP_DAILY"] != $_POST["v_keep_daily"] ||
+			$v_incremental_backups["KEEP_WEEKLY"] != $_POST["v_keep_weekly"] ||
+			$v_incremental_backups["KEEP_MONTHLY"] != $_POST["v_keep_montly"] ||
+			$v_incremental_backups["KEEP_YEARLY"] != $_POST["v_keep_yearly"]
+		) {
+			exec(HESTIA_CMD . "v-delete-backup-host-restic ", $output, $return);
+			check_return_code($return_var, $output);
+			unset($output);
+			$repo = quoteshellarg($_POST["v_repo"]);
+			$snapshots = quoteshellarg($_POST["v_snapshots"]);
+			$keep_daily = quoteshellarg($_POST["v_keep_daily"]);
+			$keep_weekly = quoteshellarg($_POST["v_keep_weekly"]);
+			$keep_monthly = quoteshellarg($_POST["v_keep_monthly"]);
+			$keep_yearly = quoteshellarg($_POST["v_keep_yearly"]);
+
+			exec(
+				HESTIA_CMD .
+					"v-add-backup-host-restic " .
+					$repo .
+					" " .
+					$snapshots .
+					" " .
+					$keep_daily .
+					" " .
+					$keep_weekly .
+					" " .
+					$keep_monthly .
+					" " .
+					$keep_yearly,
+				$output,
+				$return_var,
+			);
+		}
+	}
 	// Change INACTIVE_SESSION_TIMEOUT
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST["v_inactive_session_timeout"] != $_SESSION["INACTIVE_SESSION_TIMEOUT"]) {

@@ -35,7 +35,7 @@ is_format_valid 'user'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-#is_backup_enabled
+is_incremental_backup_enabled
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -58,16 +58,32 @@ fi
 
 # create backup of the user.conf an database
 $BIN/v-backup-user-config $user
-
 restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf backup /home/$user
-restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf forget --keep-last $SNAPSHOTS --prune
+
+if [[ -n "$SNAPSHOTS" && "$SNAPSHOTS" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-last $SNAPSHOTS"
+fi
+if [[ -n "$KEEP_DAILY" && "$KEEP_DAILY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-daily $KEEP_DAILY"
+fi
+if [[ -n "$KEEP_WEEKLY" && "$KEEP_WEEKLY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-weekly $KEEP_WEEKLY"
+fi
+if [[ -n "$KEEP_MONTLY" && "$KEEP_MONTLY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-monthly $KEEP_MONTLY"
+fi
+if [[ -n "$KEEP_YEARLY" && "$KEEP_YEARLY" -ge 0 ]]; then
+	restic_prune="$restic_prune --keep-yearly $KEEP_YEARLY"
+fi
+
+restic --repo "$REPO$user" --password-file $USER_DATA/restic.conf forget $restic_prune --prune
 
 # Send notification
 if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
 	subj="$user → backup has been completed"
 	email=$(get_user_value '$CONTACT')
 	cat $BACKUP/$user.log | $SENDMAIL -s "$subj" "$email" "$notify"
-	$BIN/v-add-user-notification "$user" "Backup created successfully" "<b>Archive:</b> $user.$backup_new_date.tar"
+	$BIN/v-add-user-notification "$user" "Snapshot created successfully" "Snap shot of user successfully created"
 fi
 
 # Deleting task from queue

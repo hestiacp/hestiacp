@@ -28,9 +28,10 @@ check_hestia_demo_mode
 # Auto-repair all databases before backuping all accounts
 mysqlrepair --all-databases --check --auto-repair > /dev/null 2>&1
 
-if [ -z "$BACKUP_SYSTEM" ]; then
+if [ "$BACKUP_INCREMENTAL" = "yes" ]; then
 	exit
 fi
+
 for user in $($BIN/v-list-sys-users plain); do
 	check_suspend=$(grep "SUSPENDED='no'" $HESTIA/data/users/$user/user.conf)
 	log=$HESTIA/log/backup.log

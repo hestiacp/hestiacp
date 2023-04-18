@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
 - Fix: Do not add a trailing . on DNSKEY #3458
 - Fix toolbar spacing on mobile in some scenarios e.g. Backups page (#3460)
 - Fix: Users can not create a new DNS domain (#3451)
+- Fix: Error message containing html are encode twice (#3473)
+- Fix button width regression (#3474)
 - Remove opacity from modal background (#3460)
 - Refactor add/remove name server javascript ($3468)
 - Refactor "Unlimited" inputs (#3464)

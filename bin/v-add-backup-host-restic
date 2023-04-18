@@ -60,8 +60,8 @@ echo "REPO='$repo'" > /usr/local/hestia/conf/restic.conf
 echo "SNAPSHOTS='$snapshots'" >> /usr/local/hestia/conf/restic.conf
 echo "KEEP_DAILY='$daily'" >> /usr/local/hestia/conf/restic.conf
 echo "KEEP_WEEKLY='$weekly'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_MONTLY='$monthly'" >> /usr/local/hestia/conf/restic.conf
-echo "KEEP_YAERLY='$yearly'" >> /usr/local/hestia/conf/restic.conf
+echo "KEEP_MONTHLY='$monthly'" >> /usr/local/hestia/conf/restic.conf
+echo "KEEP_YEARLY='$yearly'" >> /usr/local/hestia/conf/restic.conf
 
 $BIN/v-change-sys-config-value 'BACKUP_INCREMENTAL' 'yes'
 

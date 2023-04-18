@@ -11,8 +11,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-type=$1
-format=${2-shell}
+format=${1-shell}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -26,12 +25,12 @@ source_conf "$HESTIA/conf/hestia.conf"
 json_list() {
 	echo '{'
 	echo '    "restic": {
-	"REPO": "'$HOST'",
+	"REPO": "'$REPO'",
 	"SNAPSHOTS": "'$SNAPSHOTS'",
-	"KEEPDAILY": "'$KEEPDAILY'",
-	"KEEPWEEKLY": "'$KEEPWEEKLY'",
-	"KEEPMONTHLY": "'$KEEPMONTHLY'",
-	"KEEPYEARLY": "'$KEEPYEARLY'"
+	"KEEP_DAILY": "'$KEEP_DAILY'",
+	"KEEP_WEEKLY": "'$KEEP_WEEKLY'",
+	"KEEP_MONTHLY": "'$KEEP_MONTHLY'",
+	"KEEP_YEARLY": "'$KEEP_YEARLY'"
 	}'
 	echo '}'
 }
@@ -40,22 +39,20 @@ json_list() {
 shell_list() {
 	echo "REPO:           $REPO"
 	echo "SNAPSHOTS:      $SNAPSHOTS"
-	echo "KEEPDAILY:      $KEEPDAILY"
-	echo "KEEPWEEKLY:     $KEEPWEEKLY"
-	echo "KEEPMONTHLY:    $KEEPMONTHLY"
-	echo "KEEPYEARLY:     $KEEPYEARLY"
+	echo "KEEP_DAILY:      $KEEP_DAILY"
+	echo "KEEP_WEEKLY:     $KEEP_WEEKLY"
+	echo "KEEP_MONTHLY:    $KEEP_MONTHLY"
+	echo "KEEP_YEARLY:     $KEEP_YEARLY"
 }
 
 # PLAIN list function
 plain_list() {
-	echo -e "$REPO\t$SNAPSHOTS\t$KEEPDAILY\t$KEEPWEEKLY\t$KEEPMONTHLY\t$KEEPYEARLY"
+	echo -e "$REPO\t$SNAPSHOTS\t$KEEP_DAILY\t$KEEP_WEEKLY\t$KEEP_MONTHLY\t$KEEP_YEARLY"
 }
 
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
-
-check_args '1' "$#" '[FORMAT]'
 
 #----------------------------------------------------------#
 #                       Action                             #

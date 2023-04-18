@@ -33,8 +33,8 @@
 			language: '<?= $_SESSION["LANGUAGE"] ?>',
 			hasSmtpRelay: <?= $v_smtp_relay == "true" ? "true" : "false" ?>,
 			remoteBackupEnabled: <?= !empty($v_backup_remote_adv) ? "true" : "false" ?>,
-			incrementalBackups: <?= !empty($v_backup_incremental) ? "true" : "false" ?>,
-			backupType: '<?= !empty($v_backup_type) ? trim($v_backup_type, "'") : "" ?>',
+			incrementalBackups: '<?=$v_backup_incremental ?? '' ?>',
+			backupType: '<?= (!empty($v_backup_type)) ? trim($v_backup_type, "'") : "" ?>',
 			webmailAlias: '<?= $_SESSION["WEBMAIL_ALIAS"] ?? "" ?>',
 			apiSystem: '<?= $_SESSION["API_SYSTEM"] ?>',
 			legacyApi: '<?= $_SESSION["API"] ?>',
@@ -993,9 +993,9 @@
 							<input
 								type="text"
 								class="form-control"
-								name="v_keep_monthly"
-								id="v_keep_monthly"
-								value="<?= trim($v_keep_monthly, "'") ?>"
+								name="v_keep_yearly"
+								id="v_keep_yearly"
+								value="<?= trim($v_keep_yearly, "'") ?>"
 							>
 						</div>
 					</div>

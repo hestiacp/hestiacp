@@ -39,7 +39,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package_new" class="form-label"><?= _("Package Name") ?></label>
-				<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?= htmlentities(trim($v_package_new, "'")) ?>">
+				<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?= htmlentities(trim($v_package_new, "'")) ?>" required>
 				<input type="hidden" name="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>">
 			</div>
 			<div class="u-mb10">

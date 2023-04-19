@@ -1588,20 +1588,6 @@
 	}
 }
 
-.toggle-password {
-	color: #aaa;
-	z-index: 1;
-	position: absolute;
-	top: 9px;
-	right: 12px;
-}
-
-.toggle-psw-visibility-icon {
-	cursor: pointer;
-	opacity: 1;
-	margin: -2px;
-}
-
 .password-meter {
 	height: 3px;
 	overflow: hidden;
@@ -1698,7 +1684,7 @@
 		opacity: 0.8;
 	}
 
-	&.is-active {
+	&.active {
 		opacity: 1;
 	}
 
@@ -2213,7 +2199,7 @@
 	opacity: 0;
 	transition: opacity 0.2s ease, visibility 0s 0.2s;
 
-	&.show {
+	&.active {
 		visibility: visible;
 		opacity: 1;
 		transition: opacity 0.2s ease, visibility 0s 0s;

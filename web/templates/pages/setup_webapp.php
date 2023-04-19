@@ -69,7 +69,7 @@
 									<?php if ($field_type == "password") { ?>
 										/
 										<button
-											x-on:click="value = randomString()"
+											x-on:click="value = VE.helpers.randomPassword()"
 											class="form-link"
 											type="button"
 										>

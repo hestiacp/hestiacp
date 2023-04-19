@@ -5,20 +5,20 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import postcssConfig from './postcss.config.js';
 
-const esbuildConfig = {
-	outfile: './web/js/dist/main.min.js',
-	bundle: true,
-	minify: true,
-	sourcemap: true,
-};
+// Packages to build but exclude from bundle
+const externalPackages = ['chart.js/auto'];
 
-// Build JavaScript
+// Build main bundle
 async function buildJS() {
 	const inputPath = './web/js/src/main.js';
 	try {
 		await esbuild.build({
-			...esbuildConfig,
 			entryPoints: [inputPath],
+			outfile: './web/js/dist/main.min.js',
+			bundle: true,
+			minify: true,
+			sourcemap: true,
+			external: externalPackages,
 		});
 		console.log('✅ JavaScript build completed for', inputPath);
 	} catch (error) {
@@ -27,7 +27,29 @@ async function buildJS() {
 	}
 }
 
-// Process and build CSS
+// Build external packages
+async function buildExternalJS() {
+	try {
+		const buildPromises = externalPackages.map(async (pkg) => {
+			const outputPath = `./web/js/dist/${pkg.replace('/', '-')}.min.js`;
+			await esbuild.build({
+				entryPoints: [pkg],
+				outfile: outputPath,
+				bundle: true,
+				minify: true,
+				format: 'esm',
+			});
+			console.log(`✅ Dependency build completed for ${pkg}`);
+		});
+
+		await Promise.all(buildPromises);
+	} catch (error) {
+		console.error('❌ Error building external packages:', error);
+		process.exit(1);
+	}
+}
+
+// Process a CSS file
 async function processCSS(inputFile, outputFile) {
 	try {
 		const css = await fs.readFile(inputFile);
@@ -43,7 +65,7 @@ async function processCSS(inputFile, outputFile) {
 	}
 }
 
-// Build CSS files
+// Build CSS
 async function buildCSS() {
 	const themesSourcePath = './web/css/src/themes/';
 	const cssEntries = await fs.readdir(themesSourcePath);
@@ -64,6 +86,7 @@ async function buildCSS() {
 async function build() {
 	console.log('🚀 Building JS and CSS...');
 	await buildJS();
+	await buildExternalJS();
 	await buildCSS();
 	console.log('🎉 Build completed.');
 }

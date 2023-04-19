@@ -97,7 +97,7 @@ You may specify a number of various flags during installation to only install th
 bash hst-install.sh -h
 ```
 
-Alternatively, You can use <http://hestiacp.com/install.html> which allows you to easily generate the installation command via GUI.
+Alternatively, You can use <https://hestiacp.com/install.html> which allows you to easily generate the installation command via GUI.
 
 ## How to upgrade an existing installation
 

@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fix: named command warning (#3447 #neto737)
+- Fix: named command warning (#3447 @neto737)
 - Fix: Include Cloudflare IPS during install (#3449 #3448)
 - Fix: Bug in upgrade_phppgadmin preventing folder from being created when not exists (#3450)
 - Add warnings to php-fpm templates (#3450)
@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file.
 - Fix: Error message containing html are encode twice (#3473)
 - Fix button width regression (#3474)
 - Remove opacity from modal background (#3460)
-- Refactor add/remove name server javascript ($3468)
+- Refactor add/remove name server javascript (#3468)
 - Refactor "Unlimited" inputs (#3464)
 - Refactor password strength JS (#3459)
 

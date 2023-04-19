@@ -1174,6 +1174,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vue/reactivity@npm:~3.1.1":
+  version: 3.1.5
+  resolution: "@vue/reactivity@npm:3.1.5"
+  dependencies:
+    "@vue/shared": 3.1.5
+  checksum: b7dfcaa30aacd658502ce9373d4343d3607486796fbaae28d4ac4ab955cec766c8c6a34cb422965b21154b6319e467c54259cd6da2d9b2687501cd9e36f4197c
+  languageName: node
+  linkType: hard
+
 "@vue/runtime-core@npm:3.2.47":
   version: 3.2.47
   resolution: "@vue/runtime-core@npm:3.2.47"
@@ -1204,6 +1213,13 @@ __metadata:
   peerDependencies:
     vue: 3.2.47
   checksum: 482fe3c9bbb0e154864259a976bac50f5a6cbbb86bc4376c5942a6108919466e57d9830c65060abff6ecb6a9ff1d5e3e4fede165f4312edf25b0088b8c0e26af
+  languageName: node
+  linkType: hard
+
+"@vue/shared@npm:3.1.5":
+  version: 3.1.5
+  resolution: "@vue/shared@npm:3.1.5"
+  checksum: a34b942e1aeed5d2b0fe887d0804061d2e799ef9a0d641aaae368c6fa9e2bf311e415f02883f26963bd35d90cac165433cfe74360f7ee88304fccaa144422d83
   languageName: node
   linkType: hard
 
@@ -1340,6 +1356,15 @@ __metadata:
     "@algolia/requester-node-http": 4.17.0
     "@algolia/transporter": 4.17.0
   checksum: 982fd46519283ea769142aebb24eb15a0f8090a8211159c60772d0333bbb7f4dec1edcc72fc79223aa87ebf2a970d9d12b5735236f47fc3b5c5b07dd2eb24e35
+  languageName: node
+  linkType: hard
+
+"alpinejs@npm:^3.12.0":
+  version: 3.12.0
+  resolution: "alpinejs@npm:3.12.0"
+  dependencies:
+    "@vue/reactivity": ~3.1.1
+  checksum: e061efe93e815123c15cb244482298b36dd0ae2f246895253c73b5b7d11aec49dd0ee2bd099f2bdc81dd04a6e577ca70d239831b3cefbfa2871d4f90f1862b2b
   languageName: node
   linkType: hard
 
@@ -2819,6 +2844,7 @@ __metadata:
     "@prettier/plugin-php": ^0.19.4
     "@typescript-eslint/eslint-plugin": ^5.59.0
     "@typescript-eslint/parser": ^5.59.0
+    alpinejs: ^3.12.0
     chart.js: ^4.2.1
     cssnano: ^6.0.0
     esbuild: ^0.17.17

@@ -1,3 +1,4 @@
+import Alpine from 'alpinejs';
 import { createConfirmationDialog } from './helpers.js';
 
 /**

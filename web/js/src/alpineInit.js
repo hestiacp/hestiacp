@@ -1,3 +1,4 @@
+import Alpine from 'alpinejs';
 import notificationMethods from './notifications.js';
 import initUnlimitedInput from './unlimitedInput.js';
 import initShortcuts from './shortcuts.js';

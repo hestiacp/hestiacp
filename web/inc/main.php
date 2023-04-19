@@ -200,7 +200,7 @@ function render_page($user, $TAB, $page) {
 
 	// Including page specific js file
 	if (file_exists($__pages_js_dir . $page . ".js")) {
-		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
+		echo '<script src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
 	}
 
 	// Footer

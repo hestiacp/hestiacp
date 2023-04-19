@@ -1,6 +1,5 @@
-<script defer src="/js/vendor/jquery-3.6.4.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/vendor/alpine-3.10.5.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script src="/js/vendor/jquery-3.6.4.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script>
 	// TODO: REMOVE
 	const App = {
@@ -43,7 +42,7 @@ foreach ($customScriptDirectory as $customScript) {
 	$extension = $customScript->getExtension();
 	if ($extension === "js") {
 		$customScriptPath = "/js/custom_scripts/" . rawurlencode($customScript->getBasename());
-		echo '<script defer src="' . $customScriptPath . '"></script>';
+		echo '<script src="' . $customScriptPath . '"></script>';
 	} elseif ($extension === "php") {
 		require_once $customScript->getPathname();
 	}

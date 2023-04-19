@@ -1,3 +1,5 @@
+import Alpine from 'alpinejs';
+
 // Adds listeners for "unlimited" input toggles
 export default function initUnlimitedInput() {
 	document.querySelectorAll('.js-unlimited-toggle').forEach((toggleButton) => {

@@ -8,10 +8,16 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/mail/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary" id="btn-back" href="/list/mail/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Account") ?></a>
-				<a href="/edit/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-pencil icon-blue"></i><?= _("Editing Mail Domain") ?></a>
+				<a href="/add/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create">
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Account") ?>
+				</a>
+				<a href="/edit/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create">
+					<i class="fas fa-pencil icon-blue"></i><?= _("Editing Mail Domain") ?>
+				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">

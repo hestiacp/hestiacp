@@ -77,10 +77,6 @@
 	margin-right: 10px !important;
 }
 
-.u-mr15 {
-	margin-right: 15px !important;
-}
-
 .u-mb5 {
 	margin-bottom: 5px !important;
 }
@@ -109,10 +105,6 @@
 	padding-left: 30px !important;
 }
 
-.u-rounded {
-	border-radius: var(--border-radius-base) !important;
-}
-
 .u-pos-relative {
 	position: relative !important;
 }
@@ -133,15 +125,14 @@
 	min-height: 600px !important;
 }
 
+.u-max-height300 {
+	max-height: 300px !important;
+}
+
 .u-side-by-side {
 	display: flex !important;
 	justify-content: space-between !important;
 	align-items: center !important;
-}
-
-.u-image-fluid {
-	max-width: 100% !important;
-	height: auto !important;
 }
 
 .u-list-bulleted {

@@ -72,7 +72,9 @@
 							</label>
 							<div class="u-pos-relative">
 								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= htmlentities(trim($v_quota, "'")) ?>">
-								<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+									<i class="fas fa-infinity"></i>
+								</button>
 							</div>
 						</div>
 						<div class="u-mb10">

@@ -183,14 +183,14 @@ const VE = {
 			// Create and insert the title
 			if (title) {
 				const titleElem = document.createElement('h2');
-				titleElem.textContent = title;
+				titleElem.innerHTML = title;
 				titleElem.classList.add('modal-title');
 				dialog.appendChild(titleElem);
 			}
 
 			// Create and insert the message
 			const messageElem = document.createElement('p');
-			messageElem.textContent = message;
+			messageElem.innerHTML = message;
 			messageElem.classList.add('modal-message');
 			dialog.appendChild(messageElem);
 
@@ -244,6 +244,45 @@ const VE = {
 			// Add to DOM and show
 			document.body.appendChild(dialog);
 			dialog.showModal();
+		},
+		recalculatePasswordStrength: (input) => {
+			const password = input.value;
+			const meter = input.parentNode.querySelector('.js-password-meter');
+			if (meter) {
+				// TODO: Switch to zxcvbn or something when we can load modules
+				const validations = [
+					password.length >= 8, // Min length of 8
+					password.search(/[a-z]/) > -1, // Contains 1 lowercase letter
+					password.search(/[A-Z]/) > -1, // Contains 1 uppercase letter
+					password.search(/[0-9]/) > -1, // Contains 1 number
+				];
+				const strength = validations.reduce((acc, cur) => acc + cur, 0);
+				meter.value = strength;
+			}
+		},
+		enableInputUnlimited: (input, toggleButton) => {
+			toggleButton.classList.add('is-active');
+			input.dataset.prevValue = input.value;
+			input.value = Alpine.store('globals').UNLIM_TRANSLATED_VALUE;
+			input.disabled = true;
+		},
+		disableInputUnlimited: (input, toggleButton) => {
+			toggleButton.classList.remove('is-active');
+			const prevValue = input.dataset.prevValue?.trim();
+			if (prevValue) {
+				input.value = prevValue;
+			}
+			if (Alpine.store('globals').isUnlimitedValue(input.value)) {
+				input.value = '0';
+			}
+			input.disabled = false;
+		},
+		toggleInputUnlimited: (input, toggleButton) => {
+			if (toggleButton.classList.contains('is-active')) {
+				VE.helpers.disableInputUnlimited(input, toggleButton);
+			} else {
+				VE.helpers.enableInputUnlimited(input, toggleButton);
+			}
 		},
 		warn: (msg) => {
 			alert('WARNING: ' + msg);

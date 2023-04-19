@@ -45,7 +45,9 @@
 				</label>
 				<div class="u-pos-relative">
 					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
-					<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+					<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+						<i class="fas fa-infinity"></i>
+					</button>
 				</div>
 			</div>
 			<div class="u-mb10">
@@ -54,7 +56,9 @@
 				</label>
 				<div class="u-pos-relative">
 					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">
-					<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+					<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+						<i class="fas fa-infinity"></i>
+					</button>
 				</div>
 			</div>
 			<div class="u-mb10">
@@ -73,7 +77,9 @@
 					<label for="v_web_domains" class="form-label"><?= _("Web Domains") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_web_domains" id="v_web_domains" value="<?= htmlentities(trim($v_web_domains, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
@@ -82,7 +88,9 @@
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?= htmlentities(trim($v_web_aliases, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
@@ -167,7 +175,9 @@
 					<label for="v_dns_domains" class="form-label"><?= _("DNS domains") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?= htmlentities(trim($v_dns_domains, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
@@ -176,7 +186,9 @@
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
@@ -242,7 +254,9 @@
 					<label for="v_mail_domains" class="form-label"><?= _("Mail Domains") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?= htmlentities(trim($v_mail_domains, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
@@ -251,7 +265,9 @@
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
@@ -273,7 +289,9 @@
 					<label for="v_databases" class="form-label"><?= _("Databases") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_databases" id="v_databases" value="<?= htmlentities(trim($v_databases, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -289,7 +307,9 @@
 					<label for="v_cron_jobs" class="form-label"><?= _("Cron Jobs") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_cron_jobs" id="v_cron_jobs" value="<?= htmlentities(trim($v_cron_jobs, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">

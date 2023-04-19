@@ -2,19 +2,13 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a
-				class="button button-secondary"
-				id="btn-back"
-				href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>"
-			>
-				<i class="fas fa-arrow-left icon-blue"></i>
-				<?= _("Back") ?>
+			<a class="button button-secondary" id="btn-back" href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="vstobjects">
-				<i class="fas fa-floppy-disk icon-purple"></i>
-				<?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>

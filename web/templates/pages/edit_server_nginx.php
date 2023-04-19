@@ -6,7 +6,7 @@
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/edit/server/php/" class="button button-secondary">
-				<i class="fas fa-pencil icon-orange"></i> <?= _("Configure") ?> PHP
+				<i class="fas fa-pencil icon-orange"></i><?= _("Configure") ?> PHP
 			</a>
 		</div>
 		<div class="toolbar-buttons">

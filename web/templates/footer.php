@@ -75,7 +75,6 @@
 	<script>
 		window.addEventListener("load", (event) => {
 			VE.helpers.createConfirmationDialog({
-				title: '<?= _("Error") ?>',
 				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
 			});
 		});

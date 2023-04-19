@@ -4,11 +4,11 @@
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.7.0 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.7.3 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://hestiacp.com/docs/introduction/getting-started.html">Documentation</a> |
+	<a href="https://hestiacp.com/docs/">Documentation</a> |
 	<a href="https://forum.hestiacp.com/">Forum</a> |
 	<a href="https://discord.gg/nXRUZch">Discord</a>
 	<br/><br/>
@@ -97,7 +97,7 @@ You may specify a number of various flags during installation to only install th
 bash hst-install.sh -h
 ```
 
-Alternatively, @gabizz has made available a command-line script generator at <https://gabizz.github.io/hestiacp-scriptline-generator/> which allows you to easily generate the installation command via GUI.
+Alternatively, You can use <https://hestiacp.com/install.html> which allows you to easily generate the installation command via GUI.
 
 ## How to upgrade an existing installation
 

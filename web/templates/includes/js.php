@@ -1,9 +1,8 @@
-<script defer src="/js/main.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/jquery-3.6.4.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/vendor/chart.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/shortcuts.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/events.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/init.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/shortcuts.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/events.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/init.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/alpine-3.10.5.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script>
 	// TODO: REMOVE
@@ -33,6 +32,7 @@
 			UNLIM_TRANSLATED_VALUE: '<?= _("unlimited") ?>',
 			NOTIFICATIONS_EMPTY: '<?= _("no notifications") ?>',
 			NOTIFICATIONS_DELETE_ALL: '<?= _("Delete all notifications") ?>',
+			CONFIRM_LEAVE_PAGE: '<?= _("LEAVE_PAGE_CONFIRMATION") ?>',
 			isUnlimitedValue(value) {
 				return value.trim() == this.UNLIM_VALUE || value.trim() == this.UNLIM_TRANSLATED_VALUE;
 			}

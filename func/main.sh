@@ -1027,7 +1027,17 @@ is_int_format_valid() {
 is_interface_format_valid() {
 	netdevices=$(cat /proc/net/dev | grep : | cut -f 1 -d : | tr -d ' ')
 	if [ -z $(echo "$netdevices" | grep -x $1) ]; then
-		check_result "$E_INVALID" "invalid interface format :: $1"
+		# Patch for https://forum.hestiacp.com/t/error-on-fresh-install-usr-local-hestia-data-ips-no-such-file-or-directory/9416
+		match='no'
+		for device in $netdevices; do
+			test=$(ip link show $device | grep 'altname ' | awk '{$1=$1};1' | cut -f2 -d' ')
+			if [ "$test" = "$1" ]; then
+				match="yes"
+			fi
+		done
+		if [ "$match" = "no" ]; then
+			check_result "$E_INVALID" "invalid interface format :: $1"
+		fi
 	fi
 }
 

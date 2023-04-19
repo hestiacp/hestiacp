@@ -29,8 +29,6 @@ async function fetchRrdData(service, period) {
 }
 
 function prepareChartData(rrdData, period) {
-	const totalDatasets = rrdData.meta.legend.length;
-
 	return {
 		labels: rrdData.data.map((_, index) => {
 			const timestamp = rrdData.meta.start + index * rrdData.meta.step;
@@ -45,10 +43,8 @@ function prepareChartData(rrdData, period) {
 				data: rrdData.data.map((dataPoint) => dataPoint[legendIndex]),
 				tension: 0.3,
 				pointStyle: false,
-				fill: legendIndex === 0 && totalDatasets > 1,
 				borderWidth: 2,
 				borderColor: lineColor,
-				backgroundColor: lineColor,
 			};
 		}),
 	};

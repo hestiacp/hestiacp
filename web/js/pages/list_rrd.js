@@ -1,6 +1,10 @@
-document.addEventListener('DOMContentLoaded', main);
+async function loadChartJs() {
+	const module = await import('/js/dist/chart.js-auto.min.js');
+	return module.Chart;
+}
 
 async function main() {
+	const Chart = await loadChartJs();
 	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
 
 	for (const chartCanvas of chartCanvases) {
@@ -103,3 +107,5 @@ function getChartOptions(unit) {
 function getCssVariable(variableName) {
 	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
 }
+
+main();

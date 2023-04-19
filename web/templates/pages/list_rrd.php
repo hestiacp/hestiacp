@@ -19,8 +19,6 @@
 </div>
 <!-- End toolbar -->
 
-<script defer src="/js/vendor/chart.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-
 <div class="container animate__animated animate__fadeIn">
 	<div class="form-container form-container-wide">
 		<!-- Begin graph list item loop -->

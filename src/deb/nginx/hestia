@@ -17,6 +17,7 @@ NGINX_DAEMON=/usr/local/hestia/nginx/sbin/hestia-nginx
 NGINX_NAME=hestia-nginx
 NGINX_DESC=hestia-nginx
 NGINX_PID=/run/hestia-nginx.pid
+NGINX_CONF=/usr/local/hestia/nginx/conf/nginx.conf
 
 PHP_DAEMON=/usr/local/hestia/php/sbin/hestia-php
 PHP_NAME=hestia-php
@@ -30,7 +31,23 @@ set -e
 
 . /etc/profile.d/hestia.sh
 
+adapt_nginx_config()	{
+	ipv4_string="$(ip -4 addr show scope global | sed -ne '/^[ \t]*inet[6]*/p')"
+	ipv6_string="$(ip -6 addr show scope global | sed -ne '/^[ \t]*inet[6]*/p')"
+	if [ -n "$ipv4_string" ]; then
+		sed -i 's/#IPV4\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' ${NGINX_CONF}
+	else
+		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#IPV4\1/' ${NGINX_CONF}
+	fi
+	if [ -n "$ipv6_string" ]; then
+		sed -i 's/#IPV6\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' ${NGINX_CONF}
+	else
+		sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#IPV6\1/' ${NGINX_CONF}
+	fi
+}
+
 start_nginx() {
+	adapt_nginx_config
 	start-stop-daemon --start --quiet --pidfile $NGINX_PID \
 		--retry 5 --exec $NGINX_DAEMON --oknodo
 }

@@ -271,12 +271,12 @@ $(function () {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function WEBrandom() {
-	document.v_edit_web.v_stats_password.value = randomString(16);
+	document.v_edit_web.v_stats_password.value = VE.helpers.randomPassword();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function FTPrandom(elm) {
-	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(randomString(16));
+	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(VE.helpers.randomPassword());
 	App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
 }
 

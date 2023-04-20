@@ -3,7 +3,9 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/dns/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add DNS Domain") ?></a>
+				<a href="/add/dns/" class="button button-secondary js-button-create">
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add DNS Domain") ?>
+				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -112,13 +114,13 @@
 								&nbsp;
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-									<div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Add DNS Record") ?>"><i class="fas fa-circle-plus icon-green icon-dim"></i></a></div>
-									<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
-									<?php if($data[$key]['DNSSEC'] == "yes"){?><div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>" title="<?= _("View Public DNSSEC key") ?>"><i class="fas fa-key icon-orange icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__logs shortcut-n" data-key-action="href"><a href="/add/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Add DNS Record") ?>"><i class="fas fa-circle-plus icon-green icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+									<?php if($data[$key]['DNSSEC'] == "yes"){?><div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>" title="<?= _("View Public DNSSEC key") ?>"><i class="fas fa-key icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 								<?php } ?>
-								<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-list icon-lightblue icon-dim"></i></a></div>
-								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+								<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-list icon-lightblue icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/<?=$spnd_action?>/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
@@ -128,7 +130,7 @@
 										<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
 									</a>
 								</div>
-								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/delete/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"

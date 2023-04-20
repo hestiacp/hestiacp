@@ -1,4 +1,11 @@
 ; origin-src: deb/templates/web/php-fpm/default.tpl
+;#=========================================================================#
+;# Default Web Domain Template                                             #
+;# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+;# https://hestiacp.com/docs/server-administration/web-templates.html      #
+;#=========================================================================#
+
+
 
 [%backend%]
 listen = /run/php/php%backend_version%-fpm-%domain%.sock

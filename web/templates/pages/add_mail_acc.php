@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/mail/?domain=<?= htmlentities(trim($v_domain, "'")) ?>&token=<?= $_SESSION["token"] ?>">
+			<a class="button button-secondary button-back js-button-back" href="/list/mail/?domain=<?= htmlentities(trim($v_domain, "'")) ?>&token=<?= $_SESSION["token"] ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -40,12 +40,14 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_account" class="form-label"><?= _("Account") ?></label>
-						<input type="text" class="form-control" name="v_account" id="v_account" value="<?= htmlentities(trim($v_account, "'")) ?>">
+						<input type="text" class="form-control js-account-input" name="v_account" id="v_account" value="<?= htmlentities(trim($v_account, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_password" class="form-label">
 							<?= _("Password") ?>
-							<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
+							<button type="button" title="<?= _("generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+								<i class="fas fa-arrows-rotate icon-green"></i>
+							</button>
 						</label>
 						<div class="u-pos-relative u-mb10">
 							<input type="text" class="form-control js-password-input" name="v_password" id="v_password">
@@ -72,7 +74,9 @@
 							</label>
 							<div class="u-pos-relative">
 								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= htmlentities(trim($v_quota, "'")) ?>">
-								<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+								<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+									<i class="fas fa-infinity"></i>
+								</button>
 							</div>
 						</div>
 						<div class="u-mb10">

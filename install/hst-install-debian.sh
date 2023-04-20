@@ -32,7 +32,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.7.3~alpha'
+HESTIA_INSTALL_VER='1.7.4~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.1"
@@ -918,7 +918,6 @@ if [ "$postgresql" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/postgresql-contrib//")
 	software=$(echo "$software" | sed -e "s/postgresql//")
 	software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
-	software=$(echo "$software" | sed -e "s/phppgadmin//")
 fi
 if [ "$fail2ban" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/fail2ban//")

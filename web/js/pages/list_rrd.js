@@ -1,11 +1,15 @@
-document.addEventListener('DOMContentLoaded', main);
+async function loadChartJs() {
+	const module = await import('/js/dist/chart.js-auto.min.js');
+	return module.Chart;
+}
 
 async function main() {
+	const Chart = await loadChartJs();
 	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
 
 	for (const chartCanvas of chartCanvases) {
-		const service = chartCanvas.getAttribute('data-service');
-		const period = chartCanvas.getAttribute('data-period');
+		const service = chartCanvas.dataset.service;
+		const period = chartCanvas.dataset.period;
 		const rrdData = await fetchRrdData(service, period);
 		const chartData = prepareChartData(rrdData, period);
 		const chartOptions = getChartOptions(rrdData.unit);
@@ -29,8 +33,6 @@ async function fetchRrdData(service, period) {
 }
 
 function prepareChartData(rrdData, period) {
-	const totalDatasets = rrdData.meta.legend.length;
-
 	return {
 		labels: rrdData.data.map((_, index) => {
 			const timestamp = rrdData.meta.start + index * rrdData.meta.step;
@@ -45,10 +47,8 @@ function prepareChartData(rrdData, period) {
 				data: rrdData.data.map((dataPoint) => dataPoint[legendIndex]),
 				tension: 0.3,
 				pointStyle: false,
-				fill: legendIndex === 0 && totalDatasets > 1,
 				borderWidth: 2,
 				borderColor: lineColor,
-				backgroundColor: lineColor,
 			};
 		}),
 	};
@@ -107,3 +107,5 @@ function getChartOptions(unit) {
 function getCssVariable(variableName) {
 	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
 }
+
+main();

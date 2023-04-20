@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/user/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/add/access-key/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Access Key") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/edit/user/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/add/access-key/" class="button button-secondary js-button-create">
+				<i class="fas fa-circle-plus icon-green"></i><?= _("Add Access Key") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -76,7 +80,7 @@
 				<div class="clearfix l-unit__stat-col--left compact u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/delete/access-key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"

@@ -2,11 +2,11 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/server/">
+			<a class="button button-secondary button-back js-button-back" href="/list/server/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/edit/server/php/" class="button button-secondary">
-				<i class="fas fa-pencil icon-orange"></i> <?= _("Configure") ?> PHP
+				<i class="fas fa-pencil icon-orange"></i><?= _("Configure") ?> PHP
 			</a>
 		</div>
 		<div class="toolbar-buttons">

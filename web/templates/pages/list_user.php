@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/add/user/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add User") ?></a>
-			<a href="/list/package/" class="button button-secondary"><i class="fas fa-box-open icon-orange"></i><?= _("Packages") ?></a>
+			<a href="/add/user/" class="button button-secondary js-button-create">
+				<i class="fas fa-circle-plus icon-green"></i><?= _("Add User") ?>
+			</a>
+			<a href="/list/package/" class="button button-secondary">
+				<i class="fas fa-box-open icon-orange"></i><?= _("Packages") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -123,7 +127,7 @@
 								<!-- Hide edit button from admin user when logged in with another admin user -->
 								&nbsp;
 							<?php } else { ?>
-								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<?php if ($key == "admin") { ?>
 								<!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->
@@ -131,7 +135,7 @@
 								<?php if ($key == $user_plain) { ?>
 									<!-- Hide suspend and delete buttons in the user list for current user -->
 								<?php } else { ?>
-								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/<?= $spnd_action ?>/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
@@ -141,7 +145,7 @@
 										<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
 									</a>
 								</div>
-								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"

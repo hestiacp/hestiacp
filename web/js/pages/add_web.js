@@ -93,11 +93,6 @@ $(function () {
 	});
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function WEBrandom() {
-	document.v_add_web.v_stats_password.value = randomString(16);
-}
-
 document.getElementById('vstobjects').addEventListener('submit', function () {
 	$('input[disabled]').each(function (i, elm) {
 		$(elm).removeAttr('disabled');

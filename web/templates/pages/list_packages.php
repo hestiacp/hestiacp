@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/user/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/add/package/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Package") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/list/user/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/add/package/" class="button button-secondary js-button-create">
+				<i class="fas fa-circle-plus icon-green"></i><?= _("Add Package") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -83,13 +87,13 @@
 							<?php if (($key == 'system')) { ?>
 								<!-- Restrict editing system package -->
 							<?php } else {?>
-								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
-							<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Copy") ?>"><i class="fas fa-clone icon-teal icon-dim"></i></a></div>
+							<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Copy") ?>"><i class="fas fa-clone icon-teal icon-dim"></i></a></div>
 							<?php if ($key == 'system') { ?>
 								<!-- Restrict deleting system package -->
 							<?php } else {?>
-								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"

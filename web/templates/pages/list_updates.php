@@ -2,7 +2,9 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/server/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/list/server/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
 			<?php
 				if($autoupdate == 'Enabled') {
 					$btn_url = '/delete/cron/autoupdate/?token='.$_SESSION['token'].'';
@@ -14,7 +16,9 @@
 					$btn_label = _('Enable automatic updates');
 				}
 			?>
-			<a class="button button-secondary" href="<?=$btn_url;?>"><i class="fas <?=$btn_icon;?>"></i><?=$btn_label;?></a>
+			<a class="button button-secondary" href="<?=$btn_url;?>">
+				<i class="fas <?=$btn_icon;?>"></i><?= $btn_label; ?>
+			</a>
 		</div>
 	</div>
 </div>

@@ -510,6 +510,11 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: SUBJECT_EMAIL ('{{subject}}')"
 		$BIN/v-change-sys-config-value "SUBJECT_EMAIL" "{{subject}}"
 	fi
+    
+	if [[ -z $(check_key_exists 'BACKUP_INCREMENTAL') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: BACKUP_INCREMENTAL ('no')"
+		$BIN/v-change-sys-config-value "BACKUP_INCREMENTAL" "no"
+	fi
 
 	if [[ -z $(check_key_exists 'TITLE') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: TITLE ('{{page}} - {{hostname}} - {{appname}}')"

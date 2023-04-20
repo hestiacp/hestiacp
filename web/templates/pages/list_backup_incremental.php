@@ -4,7 +4,6 @@
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
 				<a href="/schedule/backup/?token=<?= $_SESSION["token"] ?>" class="button button-secondary"><i class="fas fa-circle-plus icon-green"></i><?= _("Create Backup") ?></a>
-				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus icon-orange"></i><?= _("backup exclusions") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">

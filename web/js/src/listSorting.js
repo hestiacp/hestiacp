@@ -1,5 +1,6 @@
 // List view sorting dropdown
 export default function initSorting() {
+	// Toggle dropdown button
 	document.querySelectorAll('.toolbar-sorting-toggle').forEach((toggle) => {
 		toggle.addEventListener('click', (evt) => {
 			evt.preventDefault();
@@ -7,6 +8,19 @@ export default function initSorting() {
 		});
 	});
 
+	// "Click outside" to close dropdown
+	document.addEventListener('click', (event) => {
+		const toggleButton = document.querySelector('.toolbar-sorting-toggle');
+		const dropdown = document.querySelector('.toolbar-sorting-menu');
+
+		if (!dropdown || !toggleButton) return;
+
+		if (!dropdown.contains(event.target) && !toggleButton.contains(event.target)) {
+			dropdown.classList.add('u-hidden');
+		}
+	});
+
+	// Inner dropdown sorting behavior
 	document.querySelectorAll('.toolbar-sorting-menu span').forEach((span) => {
 		span.addEventListener('click', function () {
 			const menu = document.querySelector('.toolbar-sorting-menu');

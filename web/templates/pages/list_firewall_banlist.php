@@ -2,10 +2,10 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/firewall/">
+			<a class="button button-secondary button-back js-button-back" href="/list/firewall/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
-			<a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create">
+			<a href="/add/firewall/banlist/" class="button button-secondary js-button-create">
 				<i class="fas fa-circle-plus icon-green"></i><?= _("Ban IP Address") ?>
 			</a>
 		</div>

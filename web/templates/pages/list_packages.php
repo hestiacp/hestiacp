@@ -2,10 +2,10 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/user/">
+			<a class="button button-secondary button-back js-button-back" href="/list/user/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
-			<a href="/add/package/" class="button button-secondary" id="btn-create">
+			<a href="/add/package/" class="button button-secondary js-button-create">
 				<i class="fas fa-circle-plus icon-green"></i><?= _("Add Package") ?>
 			</a>
 		</div>

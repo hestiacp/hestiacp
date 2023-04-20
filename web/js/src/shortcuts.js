@@ -106,7 +106,7 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'A' },
 			(_evt) => {
-				const createButton = document.querySelector('.button#btn-create');
+				const createButton = document.querySelector('a.js-button-create');
 				if (!createButton) {
 					return;
 				}
@@ -129,7 +129,7 @@ export default function initShortcuts() {
 			document.querySelector('form#vstobjects').submit();
 		})
 		.register({ code: 'Backspace', ctrlKey: true }, (_evt) => {
-			const redirect = document.querySelector('a.button#btn-back').href;
+			const redirect = document.querySelector('a.js-button-back').href;
 			if (!redirect) {
 				return;
 			}

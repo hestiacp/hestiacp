@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/add/user/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add User") ?></a>
-			<a href="/list/package/" class="button button-secondary"><i class="fas fa-box-open icon-orange"></i><?= _("Packages") ?></a>
+			<a href="/add/user/" class="button button-secondary js-button-create">
+				<i class="fas fa-circle-plus icon-green"></i><?= _("Add User") ?>
+			</a>
+			<a href="/list/package/" class="button button-secondary">
+				<i class="fas fa-box-open icon-orange"></i><?= _("Packages") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">

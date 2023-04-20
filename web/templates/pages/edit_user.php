@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/user/">
+			<a class="button button-secondary button-back js-button-back" href="/list/user/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<?php
@@ -16,18 +16,18 @@
 					$keys_url = "/list/access-key/";
 				}
 			?>
-			<a href="<?=$ssh_key_url; ?>" class="button button-secondary" id="btn-create" title="<?= _("Manage SSH keys") ?>">
+			<a href="<?=$ssh_key_url; ?>" class="button button-secondary js-button-create" title="<?= _("Manage SSH keys") ?>">
 				<i class="fas fa-key icon-orange"></i><?= _("Manage SSH keys") ?>
 			</a>
 			<?php if ($_SESSION["userContext"] == "admin" || ($_SESSION["userContext"] !== "admin" && $_SESSION["POLICY_USER_VIEW_LOGS"] !== "no")) { ?>
-				<a href="<?= $log_url ?>" class="button button-secondary" id="btn-create" title="<?= _("Logs") ?>">
+				<a href="<?= $log_url ?>" class="button button-secondary js-button-create" title="<?= _("Logs") ?>">
 					<i class="fas fa-clock-rotate-left icon-maroon"></i><?= _("Logs") ?>
 				</a>
 			<?php } ?>
 			<?php
 				$api_status = (!empty($_SESSION['API_SYSTEM']) && is_numeric($_SESSION['API_SYSTEM'])) ? $_SESSION['API_SYSTEM'] : 0;
 				if (($user_plain == 'admin' && $api_status > 0) || ($user_plain != 'admin' && $api_status > 1)) { ?>
-				<a href="<?=$keys_url; ?>" class="button button-secondary" id="btn-create" title="<?= _("Access Keys") ?>">
+				<a href="<?=$keys_url; ?>" class="button button-secondary js-button-create" title="<?= _("Access Keys") ?>">
 					<i class="fas fa-key icon-purple"></i><?= _("Access Keys") ?>
 				</a>
 			<?php } ?>

@@ -2,14 +2,14 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/dns/">
+			<a class="button button-secondary button-back js-button-back" href="/list/dns/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create">
+				<a href="/add/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Record") ?>
 				</a>
-				<a href="/edit/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary" id="btn-create">
+				<a href="/edit/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-pencil icon-blue"></i><?= _("Editing DNS Domain") ?>
 				</a>
 			<?php } ?>

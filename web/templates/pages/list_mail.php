@@ -3,7 +3,9 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/mail/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Domain") ?></a>
+				<a href="/add/mail/" class="button button-secondary js-button-create">
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Domain") ?>
+				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">

@@ -16,7 +16,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/db/" class="button button-secondary" id="btn-create">
+				<a href="/add/db/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Database") ?>
 				</a>
 				<?php if ($_SESSION["DB_SYSTEM"] === "mysql" || $_SESSION["DB_SYSTEM"] === "mysql,pgsql" || $_SESSION["DB_SYSTEM"] === "pgsql,mysql") { ?>

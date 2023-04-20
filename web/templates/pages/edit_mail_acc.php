@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/mail/?domain=<?= htmlentities(trim($v_domain, "'")) ?>&token=<?= $_SESSION["token"] ?>">
+			<a class="button button-secondary button-back js-button-back" href="/list/mail/?domain=<?= htmlentities(trim($v_domain, "'")) ?>&token=<?= $_SESSION["token"] ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>

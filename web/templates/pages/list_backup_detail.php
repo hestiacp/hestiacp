@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
 		</div>
 		<div class="toolbar-right">

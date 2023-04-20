@@ -3,11 +3,17 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/cron/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Cron Job") ?></a>
+				<a href="/add/cron/" class="button button-secondary js-button-create">
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Cron Job") ?>
+				</a>
 				<?php if ($panel[$user_plain]["CRON_REPORTS"] == "yes") { ?>
-					<a class="button button-secondary" href="/delete/cron/reports/?token=<?= $_SESSION["token"] ?>"><i class="fas fa-toggle-off icon-green"></i><?= _("turn off notifications") ?></a>
+					<a class="button button-secondary" href="/delete/cron/reports/?token=<?= $_SESSION["token"] ?>">
+						<i class="fas fa-toggle-off icon-green"></i><?= _("turn off notifications") ?>
+					</a>
 				<?php } else { ?>
-					<a class="button button-secondary" href="/add/cron/reports/?token=<?= $_SESSION["token"] ?>"><i class="fas fa-toggle-off"></i><?= _("turn on notifications") ?></a>
+					<a class="button button-secondary" href="/add/cron/reports/?token=<?= $_SESSION["token"] ?>">
+						<i class="fas fa-toggle-off"></i><?= _("turn on notifications") ?>
+					</a>
 				<?php } ?>
 			<?php } ?>
 		</div>

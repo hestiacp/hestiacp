@@ -2,15 +2,15 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/user/?token=<?= $_SESSION["token"] ?>">
+			<a class="button button-secondary button-back js-button-back" href="/edit/user/?token=<?= $_SESSION["token"] ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-				<a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary" id="btn-create">
+				<a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?>
 				</a>
 			<?php } else { ?>
-				<a href="/add/key/" class="button button-secondary" id="btn-create">
+				<a href="/add/key/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?>
 				</a>
 			<?php } ?>

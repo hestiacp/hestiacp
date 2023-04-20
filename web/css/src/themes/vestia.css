@@ -181,7 +181,7 @@ strong {
 		text-shadow: none;
 	}
 
-	& #btn-back {
+	& .button-back {
 		color: #326b9b;
 		background: none;
 		text-shadow: none;

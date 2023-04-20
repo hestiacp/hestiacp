@@ -2,25 +2,21 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/list/server/" class="button button-secondary" id="btn-back">
-				<i class="fas fa-arrow-left icon-blue"></i>
-				<?= _("Back") ?>
+			<a href="/list/server/" class="button button-secondary button-back js-button-back">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet icon-blue"></i>
-				<?= _("IP") ?>
+				<i class="fas fa-ethernet icon-blue"></i><?= _("IP") ?>
 			</a>
 			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
 				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved icon-red"></i>
-					<?= _("Firewall") ?>
+					<i class="fas fa-shield-halved icon-red"></i><?= _("Firewall") ?>
 				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="vstobjects">
-				<i class="fas fa-floppy-disk icon-purple"></i>
-				<?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -60,8 +56,7 @@
 			<!-- Basic options section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-gear u-mr15"></i>
-					<?= _("Basic options") ?>
+					<i class="fas fa-gear u-mr10"></i><?= _("Basic options") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
@@ -139,8 +134,7 @@
 			<!-- Updates section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-code-branch u-mr15"></i>
-					<?= _("Updates") ?>
+					<i class="fas fa-code-branch u-mr10"></i><?= _("Updates") ?>
 				</summary>
 				<div class="collapse-content">
 					<p class="u-mb10">
@@ -219,8 +213,7 @@
 			<!-- Web Server section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-earth-americas u-mr15"></i>
-					<?= _("Web Server") ?>
+					<i class="fas fa-earth-americas u-mr10"></i><?= _("Web Server") ?>
 				</summary>
 				<div class="collapse-content">
 					<?php if (!empty($_SESSION["PROXY_SYSTEM"])) { ?>
@@ -327,8 +320,7 @@
 			<?php if (!empty($_SESSION["DNS_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-book-atlas u-mr15"></i>
-						<?= _("DNS Server") ?>
+						<i class="fas fa-book-atlas u-mr10"></i><?= _("DNS Server") ?>
 					</summary>
 					<div class="collapse-content">
 						<p>
@@ -373,8 +365,7 @@
 			<?php if (!empty($_SESSION["MAIL_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-envelopes-bulk u-mr15"></i>
-						<?= _("Mail Server") ?>
+						<i class="fas fa-envelopes-bulk u-mr10"></i><?= _("Mail Server") ?>
 					</summary>
 					<div class="collapse-content">
 						<p>
@@ -498,8 +489,7 @@
 			<?php if (!empty($_SESSION["DB_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-database u-mr15"></i>
-						<?= _("Databases") ?>
+						<i class="fas fa-database u-mr10"></i><?= _("Databases") ?>
 					</summary>
 					<div class="collapse-content">
 						<div class="u-mb10">
@@ -664,8 +654,7 @@
 			<!-- Backups section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-arrow-rotate-left u-mr15"></i>
-					<?= _("Backups") ?>
+					<i class="fas fa-arrow-rotate-left u-mr10"></i><?= _("Backups") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
@@ -685,7 +674,7 @@
 						<label for="v_backup_mode" class="form-label">
 							<?= _("Compression") ?>
 							<a
-								href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-difference-between-zstd-and-gzip"
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-difference-between-zstd-and-gzip"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -705,7 +694,7 @@
 						<label for="v_backup_gzip" class="form-label">
 							<?= _("Compression level") ?>
 							<a
-								href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-optimal-compression-ratio"
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -761,7 +750,7 @@
 							<label for="backup_type" class="form-label">
 								<?= _("Protocol") ?>
 								<a
-									href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"
+									href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-kind-of-protocols-are-currently-supported"
 									target="_blank"
 									class="u-ml5"
 								>
@@ -923,8 +912,7 @@
 			<!-- SSL tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-lock u-mr15"></i>
-					<?= _("SSL") ?>
+					<i class="fas fa-lock u-mr10"></i><?= _("SSL") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb20">
@@ -995,8 +983,7 @@
 			<!-- Security tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-key u-mr15"></i>
-					<?= _("Security") ?>
+					<i class="fas fa-key u-mr10"></i><?= _("Security") ?>
 				</summary>
 				<div class="collapse-content">
 					<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
@@ -1326,8 +1313,7 @@
 			<!-- Plugins tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-puzzle-piece u-mr15"></i>
-					<?= _("Hestia Control Panel Plugins") ?>
+					<i class="fas fa-puzzle-piece u-mr10"></i><?= _("Hestia Control Panel Plugins") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">

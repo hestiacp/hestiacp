@@ -45,10 +45,6 @@
 	white-space: nowrap !important;
 }
 
-.u-opacity-50 {
-	opacity: 0.5 !important;
-}
-
 .u-mt15 {
 	margin-top: 15px !important;
 }
@@ -75,10 +71,6 @@
 
 .u-mr10 {
 	margin-right: 10px !important;
-}
-
-.u-mr15 {
-	margin-right: 15px !important;
 }
 
 .u-mb5 {
@@ -147,6 +139,12 @@
 .u-allow-resize {
 	min-width: 100% !important;
 	resize: both !important;
+}
+
+.u-unstyled-button {
+	border: 0 !important;
+	padding: 0 !important;
+	background-color: transparent !important;
 }
 
 .u-console {

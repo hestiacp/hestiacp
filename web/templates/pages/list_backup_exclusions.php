@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/edit/backup/exclusions/" class="button button-secondary"><i class="fas fa-pencil icon-orange"></i><?= _("Editing Backup Exclusions") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/list/backup/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/edit/backup/exclusions/" class="button button-secondary">
+				<i class="fas fa-pencil icon-orange"></i><?= _("Editing Backup Exclusions") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-search">

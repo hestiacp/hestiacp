@@ -13,7 +13,7 @@
 		</button>)
 	</p>
 <?php } ?>
-	<div class="fullscreen-loader">
+	<div class="fullscreen-loader js-fullscreen-loader">
 		<i class="fas fa-circle-notch fa-spin"></i>
 	</div>
 
@@ -75,7 +75,6 @@
 	<script>
 		window.addEventListener("load", (event) => {
 			VE.helpers.createConfirmationDialog({
-				title: '<?= _("Error") ?>',
 				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
 			});
 		});

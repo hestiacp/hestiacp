@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/server/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/add/ip/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add IP") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/edit/server/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/add/ip/" class="button button-secondary js-button-create">
+				<i class="fas fa-circle-plus icon-green"></i><?= _("Add IP") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -73,8 +77,8 @@
 				<div class="clearfix l-unit__stat-col--left compact u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+							<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>"

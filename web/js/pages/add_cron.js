@@ -24,8 +24,7 @@ if (tabs) {
 	});
 }
 
-const generateCronButtons = document.querySelectorAll('.js-generate-cron');
-generateCronButtons.forEach((button) => {
+document.querySelectorAll('.js-generate-cron').forEach((button) => {
 	button.addEventListener('click', () => {
 		const fieldset = button.closest('fieldset');
 		const inputNames = ['min', 'hour', 'day', 'month', 'wday'];

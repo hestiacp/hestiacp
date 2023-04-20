@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/db/">
+			<a class="button button-secondary button-back js-button-back" href="/list/db/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -75,7 +75,9 @@
 				<div class="u-mb10">
 					<label for="v_password" class="form-label">
 						<?= _("Password") ?>
-						<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
+						<button type="button" title="<?= _("generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+							<i class="fas fa-arrows-rotate icon-green"></i>
+						</button>
 					</label>
 					<div class="u-pos-relative u-mb10">
 						<input type="text" class="form-control js-password-input" name="v_password" id="v_password">

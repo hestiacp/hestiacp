@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/web/">
+			<a class="button button-secondary button-back js-button-back" href="/list/web/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -12,7 +12,7 @@
 			</a>
 			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
 				<a href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>" class="button button-secondary">
-					<i class="fas fa-magic icon-blue"></i> <?= _("Quick Install App") ?>
+					<i class="fas fa-magic icon-blue"></i><?= _("Quick Install App") ?>
 				</a>
 			<?php } ?>
 			<button type="submit" class="button" form="vstobjects">

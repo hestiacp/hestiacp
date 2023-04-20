@@ -3,7 +3,9 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/mail/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Domain") ?></a>
+				<a href="/add/mail/" class="button button-secondary js-button-create">
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Domain") ?>
+				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -147,23 +149,23 @@
 							<div class="actions-panel clearfix">
 								<?php if ($read_only === 'true') {?>
 									<!-- Restrict ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
-									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("mail accounts") ?>"><i class="fas fa-users icon-blue icon-dim"></i></a></div>
-									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records mail") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("mail accounts") ?>"><i class="fas fa-users icon-blue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records mail") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
 									<?php } ?>
 								<?php } else { ?>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__logs shortcut-n" key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Add Mail Account") ?>"><i class="fas fa-circle-plus icon-green icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-n" data-key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Add Mail Account") ?>"><i class="fas fa-circle-plus icon-green icon-dim"></i></a></div>
 										<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 											<?php if (!empty($data[$key]['WEBMAIL'])) {?>
-												<div class="actions-panel__col actions-panel__edit" key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
+												<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
 											<?php } ?>
 										<?php } ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 									<?php } ?>
-									<div class="actions-panel__col actions-panel__edit shortcut-l" key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
-									<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
 											href="/<?=$spnd_action?>/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
@@ -173,7 +175,7 @@
 											<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
 										</a>
 									</div>
-									<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+									<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
 											href="/delete/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"

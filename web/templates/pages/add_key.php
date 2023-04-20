@@ -3,11 +3,11 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-				<a class="button button-secondary" id="btn-back" href="/list/key/?user=<?= htmlentities($_GET["user"]) ?>">
+				<a class="button button-secondary button-back js-button-back" href="/list/key/?user=<?= htmlentities($_GET["user"]) ?>">
 					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 				</a>
 			<?php } else { ?>
-				<a class="button button-secondary" id="btn-back" href="/list/key/">
+				<a class="button button-secondary button-back js-button-back" href="/list/key/">
 					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 				</a>
 			<?php } ?>

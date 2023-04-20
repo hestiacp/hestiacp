@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.3] - Service release
+
+### Features
+
+- Re-implement RRD charts in Chart.js (#3452)
+- Add JS/CSS build script (#3471)
+
+### Dependencies
+
+- Update hestia-php to 8.2.5
+- Update hestia-nginx to 1.23.4
+
+### Bugfixes
+
+- Fix: named command warning (#3447 @neto737)
+- Fix: Include Cloudflare IPS during install (#3449 #3448)
+- Fix: Bug in upgrade_phppgadmin preventing folder from being created when not exists (#3450)
+- Add warnings to php-fpm templates (#3450)
+- Exim: Never show HELO for authenticated users (#3462 @myvesta)
+- Misleading title "Error" on popup notification when creating manual backup (#3460 #3461)
+- Fix: Do not add a trailing . on DNSKEY #3458
+- Fix toolbar spacing on mobile in some scenarios e.g. Backups page (#3460)
+- Fix: Users can not create a new DNS domain (#3451)
+- Fix: Error message containing html are encode twice (#3473)
+- Fix button width regression (#3474)
+- Remove opacity from modal background (#3460)
+- Refactor add/remove name server javascript (#3468)
+- Refactor "Unlimited" inputs (#3464)
+- Refactor password strength JS (#3459)
+
 ## [1.7.2] - Service release
 
 ### Note

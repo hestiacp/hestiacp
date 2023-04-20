@@ -54,11 +54,15 @@ export default {
 			if (e.target.checked) {
 				let conflicts = e.target.getAttribute("conflicts");
 				if (conflicts) {
-					document.getElementById(conflicts).checked = false;
+					if (document.getElementById(conflicts).checked) {
+						document.getElementById(conflicts).click();
+					}
 				}
 				let depends = e.target.getAttribute("depends");
 				if (depends) {
-					document.getElementById(depends).checked = true;
+					if (!document.getElementById(depends).checked) {
+						document.getElementById(depends).click();
+					}
 				}
 			}
 		},

@@ -580,7 +580,7 @@ upgrade_phppgadmin() {
 		else
 			# Display upgrade information
 			echo "[ * ] Upgrading phppgadmin to version $pga_v..."
-			[ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
+			[ -d /usr/share/phppgadmin ] || mkdir -p /usr/share/phppgadmin
 			# Download latest phpMyAdmin release
 			wget --retry-connrefused --quiet https://github.com/hestiacp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
 			tar xzf phppgadmin-v$pga_v.tar.gz -C /usr/share/phppgadmin/

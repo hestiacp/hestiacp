@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
 			<a href="/schedule/restore/?token=<?= $_SESSION["token"] ?>&backup=<?= htmlentities($_GET["backup"]) ?>" class="button button-secondary"><i class="fas fa-arrow-rotate-left icon-green"></i><?= _("Restore All") ?></a>
 		</div>
 		<div class="toolbar-right">
@@ -65,7 +65,7 @@
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+							<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href">
 								<a href="/schedule/restore/?backup=<?= $backup ?>&type=web&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left icon-green icon-dim u-mr5"></i>
 								</a>
@@ -97,7 +97,7 @@
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+							<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href">
 								<a href="/schedule/restore/?backup=<?= $backup ?>&type=mail&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
@@ -129,7 +129,7 @@
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+							<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href">
 								<a href="/schedule/restore/?backup=<?= $backup ?>&type=dns&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
@@ -161,7 +161,7 @@
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+							<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href">
 								<a href="/schedule/restore/?backup=<?= $backup ?>&type=db&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
@@ -190,7 +190,7 @@
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+							<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href">
 								<a href="/schedule/restore/?backup=<?= $backup ?>&type=cron&object=records&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>
@@ -222,7 +222,7 @@
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href">
+							<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href">
 								<a href="/schedule/restore/?backup=<?= $backup ?>&type=udir&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
 									<i class="fas fa-arrow-rotate-left icon-green icon-dim"></i>
 								</a>

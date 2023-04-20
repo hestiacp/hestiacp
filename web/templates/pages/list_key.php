@@ -2,12 +2,18 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/user/?token=<?= $_SESSION["token"] ?>"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-						<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-						<a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?></a>
-						<?php } else { ?>
-			<a href="/add/key/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?></a>
-						<?php } ?>
+			<a class="button button-secondary button-back js-button-back" href="/edit/user/?token=<?= $_SESSION["token"] ?>">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
+				<a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary js-button-create">
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?>
+				</a>
+			<?php } else { ?>
+				<a href="/add/key/" class="button button-secondary js-button-create">
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?>
+				</a>
+			<?php } ?>
 		</div>
 	</div>
 </div>
@@ -36,7 +42,7 @@
 				<div class="clearfix l-unit__stat-col--left text-left compact-2">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>

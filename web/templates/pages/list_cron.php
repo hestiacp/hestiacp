@@ -3,11 +3,17 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/cron/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add Cron Job") ?></a>
+				<a href="/add/cron/" class="button button-secondary js-button-create">
+					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Cron Job") ?>
+				</a>
 				<?php if ($panel[$user_plain]["CRON_REPORTS"] == "yes") { ?>
-					<a class="button button-secondary" href="/delete/cron/reports/?token=<?= $_SESSION["token"] ?>"><i class="fas fa-toggle-off icon-green"></i><?= _("turn off notifications") ?></a>
+					<a class="button button-secondary" href="/delete/cron/reports/?token=<?= $_SESSION["token"] ?>">
+						<i class="fas fa-toggle-off icon-green"></i><?= _("turn off notifications") ?>
+					</a>
 				<?php } else { ?>
-					<a class="button button-secondary" href="/add/cron/reports/?token=<?= $_SESSION["token"] ?>"><i class="fas fa-toggle-off"></i><?= _("turn on notifications") ?></a>
+					<a class="button button-secondary" href="/add/cron/reports/?token=<?= $_SESSION["token"] ?>">
+						<i class="fas fa-toggle-off"></i><?= _("turn on notifications") ?>
+					</a>
 				<?php } ?>
 			<?php } ?>
 		</div>
@@ -109,9 +115,9 @@
 								&nbsp;
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-									<div class="actions-panel__col actions-panel__download shortcut-enter" key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Cron Job") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__download shortcut-enter" data-key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Cron Job") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<?php } ?>
-								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/<?= $spnd_action ?>/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
@@ -121,7 +127,7 @@
 										<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
 									</a>
 								</div>
-								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/delete/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"

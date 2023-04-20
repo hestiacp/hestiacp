@@ -1,10 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function toggleOptions() {
 	if ($('#advanced-options').is(':visible')) {
-		Cookies.remove('advanced');
 		$('#advanced-options').hide();
 		$('#basic-options').show();
 	} else {
-		Cookies.set('advanced', 1);
 		$('#advanced-options').show();
 		$('#basic-options').hide();
 
@@ -31,11 +30,5 @@ $('#vstobjects').submit(function () {
 			var regexp = new RegExp('(' + search + ')(.+)(' + prev_value + ')');
 			advance_options.val(advance_options.val().replace(regexp, '$1$2' + $(elm).val()));
 		});
-	}
-});
-
-$(document).ready(function () {
-	if (Cookies.read('advanced')) {
-		toggleOptions();
 	}
 });

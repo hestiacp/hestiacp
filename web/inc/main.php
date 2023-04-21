@@ -364,6 +364,9 @@ function humanize_usage_size($usage, $round = 2) {
 			$usage = number_format($usage, $round);
 		}
 	}
+	if (strlen($usage) > 4) {
+		return number_format($usage, $round - 1);
+	}
 	return $usage;
 }
 

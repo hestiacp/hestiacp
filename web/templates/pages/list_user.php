@@ -67,8 +67,8 @@
 			<div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center width"><b><?= _("Package") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><?= _("IPs") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><i class="fas fa-hard-drive" title="<?= _("Disk") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><i class="fas fa-hard-drive" title="<?= _("Disk") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i></b></div>
@@ -166,8 +166,8 @@
 					</b>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><?= $data[$key]["IP_OWNED"] ?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= humanize_usage_size($data[$key]["U_DISK"],0) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span>/<b><?= humanize_usage_size($data[$key]["DISK_QUOTA"],0) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?></small></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= humanize_usage_size($data[$key]["U_BANDWIDTH"],0) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>/<b><?= humanize_usage_size($data[$key]["BANDWIDTH"],0) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?></small></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><?= humanize_usage_size($data[$key]["U_DISK"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span>/<b><?= humanize_usage_size($data[$key]["DISK_QUOTA"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><?= humanize_usage_size($data[$key]["U_BANDWIDTH"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?></span>/<b><?= humanize_usage_size($data[$key]["BANDWIDTH"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_WEB_DOMAINS"] ?> <?= _("Web Domains") ?>"><span class="badge"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_DNS_DOMAINS"] ?> <?= _("DNS Domains") ?>"><span class="badge"><b><?= $data[$key]["U_DNS_DOMAINS"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_MAIL_DOMAINS"] ?> <?= _("Mail Domains") ?>"><span class="badge"><b><?= $data[$key]["U_MAIL_DOMAINS"] ?></b></span></div>

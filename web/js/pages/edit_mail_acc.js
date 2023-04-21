@@ -9,5 +9,5 @@ $('#v_blackhole').on('click', function () {
 	}
 });
 
-VE.helpers.monitorAndUpdate('.js-account-input', '.js-account-output');
-VE.helpers.monitorAndUpdate('.js-password-input', '.js-password-output');
+Hestia.helpers.monitorAndUpdate('.js-account-input', '.js-account-output');
+Hestia.helpers.monitorAndUpdate('.js-password-input', '.js-password-output');

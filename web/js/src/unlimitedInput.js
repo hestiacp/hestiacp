@@ -24,7 +24,7 @@ function enableUnlimitedInput(input, toggleButton) {
 
 function disableUnlimitedInput(input, toggleButton) {
 	toggleButton.classList.remove('active');
-	const previousValue = input.dataset.prevValue?.trim();
+	const previousValue = input.dataset.prevValue ? input.dataset.prevValue.trim() : null;
 	if (previousValue) {
 		input.value = previousValue;
 	}

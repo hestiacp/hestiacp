@@ -387,7 +387,7 @@ strong {
 	border-left: 2px solid #ff3478;
 }
 
-.units.active .l-unit.focus {
+.units .l-unit.focus {
 	background-color: #353535;
 }
 

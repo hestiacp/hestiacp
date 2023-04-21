@@ -346,7 +346,7 @@ function humanize_time($usage) {
 	}
 }
 
-function humanize_usage_size($usage) {
+function humanize_usage_size($usage, $round = 2) {
 	if ($usage == "unlimited") {
 		return "∞";
 	}
@@ -356,20 +356,34 @@ function humanize_usage_size($usage) {
 			$usage = $usage / 1024;
 			if ($usage > 1024) {
 				$usage = $usage / 1024;
-				$usage = number_format($usage, 2);
+				$usage = number_format($usage, $round);
 			} else {
-				$usage = number_format($usage, 2);
+				if ($usage > 1000) {
+					$usage = $usage / 1024;
+				}
+				$usage = number_format($usage, $round);
 			}
 		} else {
-			$usage = number_format($usage, 2);
+			if ($usage > 1000) {
+				$usage = $usage / 1024;
+			}
+			$usage = number_format($usage, $round);
 		}
+	} else {
+		if ($usage > 1000) {
+			$usage = $usage / 1024;
+		}
+		$usage = number_format($usage, $round);
+	}
+	if (strlen($usage) > 4) {
+		return number_format($usage, $round - 1);
 	}
 	return $usage;
 }
 
 function humanize_usage_measure($usage) {
 	if ($usage == "unlimited") {
-		return "mb";
+		return;
 	}
 
 	$measure = "kb";
@@ -377,12 +391,12 @@ function humanize_usage_measure($usage) {
 		$usage = $usage / 1024;
 		if ($usage > 1024) {
 			$usage = $usage / 1024;
-			$measure = $usage > 1024 ? "pb" : "tb";
+			$measure = $usage < 1024 ? "tb" : "pb";
 		} else {
-			$measure = "gb";
+			$measure = $usage < 1024 ? "gb" : "tb";
 		}
 	} else {
-		$measure = "mb";
+		$measure = $usage < 1024 ? "mb" : "gb";
 	}
 	return $measure;
 }

@@ -190,7 +190,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 
 				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _(humanize_usage_size($data[$key]["QUOTA"])) ?></b> <span class="u-text-small"><?= _(humanize_usage_measure($data[$key]["QUOTA"])) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=humanize_usage_size($data[$key]["QUOTA"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["QUOTA"]) ?></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center">
 					<i class="fas <?= $alias_icon ?>"></i>
 				</div>

@@ -1239,6 +1239,10 @@
 		width: 90px;
 	}
 
+	&.compact-6 {
+		width: 100px;
+	}
+
 	&.compact-4 {
 		width: 130px;
 	}

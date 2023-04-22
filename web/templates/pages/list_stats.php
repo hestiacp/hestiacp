@@ -71,7 +71,8 @@
 							</span>
 							<span class="u-mr10">
 								<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?></span>
-								<?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
+								<?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?> / <span class="u-text-bold"><?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?></span>
+									<?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>
 							</span>
 						</h3>
 						<ul class="stats-item-summary-list u-mb10">
@@ -94,7 +95,9 @@
 							</span>
 							<span class="u-mr10">
 								<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK"]) ?></span>
-								<?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
+								<?= humanize_usage_measure($data[$key]["U_DISK"]) ?> / <span class="u-text-bold"><?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?></span>
+										<?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
+								</span>
 							</span>
 						</h3>
 						<ul class="stats-item-summary-list">

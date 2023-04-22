@@ -1,37 +1,35 @@
 import alpineInit from './alpineInit.js';
 import focusFirstInput from './focusFirstInput.js';
-import initListeners from './listeners.js';
-import navigationMethods from './navigation.js';
-import {
-	randomPassword,
-	createConfirmationDialog,
-	generateMailCredentials,
-	monitorAndUpdate,
-} from './helpers.js';
+import initConfirmationDialogs from './confirmationDialog.js';
+import initListSelectAll from './selectAll.js';
+import initListSorting from './listSorting.js';
+import initLoadingSpinner from './loadingSpinner.js';
+import initNameServerInput from './nameServerInput.js';
+import initPasswordInput from './passwordInput.js';
+import initShortcuts from './shortcuts.js';
+import initStickyToolbar from './stickyToolbar.js';
+import initToggleAdvanced from './toggleAdvanced.js';
+import initUnlimitedInput from './unlimitedInput.js';
+import * as helpers from './helpers.js';
 
-function initializeApp() {
-	window.VE = {
-		// List view sorting state
-		tmp: {
-			sort_par: 'sort-name',
-			sort_direction: -1,
-			sort_as_int: false,
-		},
-		// Page navigation methods called by shortcuts
-		navigation: navigationMethods(),
-		// Helpers exposed for page-specific JS and inline <script> usage
-		helpers: {
-			createConfirmationDialog,
-			randomPassword,
-			generateMailCredentials,
-			monitorAndUpdate,
-		},
-	};
+window.Hestia = { helpers };
 
-	initListeners();
-	focusFirstInput();
+initListeners();
+focusFirstInput();
+
+function initListeners() {
+	initConfirmationDialogs();
+	initListSelectAll();
+	initListSorting();
+	initLoadingSpinner();
+	initNameServerInput();
+	initPasswordInput();
+	initStickyToolbar();
+	initToggleAdvanced();
 }
 
-initializeApp();
-
-document.addEventListener('alpine:init', () => alpineInit());
+document.addEventListener('alpine:init', () => {
+	alpineInit();
+	initUnlimitedInput();
+	initShortcuts();
+});

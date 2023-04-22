@@ -1,8 +1,21 @@
-import { nanoid } from 'nanoid';
+import { customAlphabet } from 'nanoid';
 
-// Generates a random password using and ensures a number is included
+// Generates a random password that always passes password requirements
 export function randomPassword(length = 16) {
-	return nanoid(length) + Math.floor(Math.random() * 10);
+	const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+	const numbers = '0123456789';
+	const symbols = '!@#$%^&*()_+-=[]{}|;:,./<>?';
+	const allCharacters = uppercase + lowercase + numbers + symbols;
+	const generate = customAlphabet(allCharacters, length);
+
+	let password;
+	do {
+		password = generate();
+		// Must contain at least one uppercase letter, one lowercase letter, and one number
+	} while (!(/[a-z]/.test(password) && /[A-Z]/.test(password) && /\d/.test(password)));
+
+	return password;
 }
 
 // Creates a confirmation <dialog> on the fly
@@ -81,7 +94,7 @@ export function monitorAndUpdate(inputSelector, outputSelector) {
 
 	function updateOutput(value) {
 		outputElement.textContent = value;
-		VE.helpers.generateMailCredentials();
+		generateMailCredentials();
 	}
 
 	inputElement.addEventListener('input', (event) => {
@@ -96,6 +109,17 @@ export function generateMailCredentials() {
 	if (!mailInfoPanel) return;
 	const formattedCredentials = emailCredentialsAsPlainText(mailInfoPanel.cloneNode(true));
 	document.querySelector('.js-hidden-credentials').value = formattedCredentials;
+}
+
+// Updates textarea with values from text inputs
+export function updateTextareaWithInputValues(textInputs, textarea) {
+	textInputs.forEach((textInput) => {
+		const search = textInput.dataset.regexp;
+		const prevValue = textInput.dataset.prevValue;
+		textInput.setAttribute('data-prev-value', textInput.value);
+		const regexp = new RegExp(`(${search})(.+)(${prevValue})`);
+		textarea.value = textarea.value.replace(regexp, `$1$2${textInput.value}`);
+	});
 }
 
 // Reformats cloned DOM email credentials into plain text

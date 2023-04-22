@@ -44,8 +44,7 @@ function prevent_post_csrf() {
 				$port_is_defined = preg_match("/\[?[^]]*\]?:[0-9]{1,5}$/", $_SERVER["HTTP_HOST"]);
 				if ($port_is_defined) {
 					$port = preg_replace("/(\[?[^]]*\]?):([0-9]{1,5})$/","$2", $_SERVER["HTTP_HOST"]);
-				}
-				else {
+				} else {
 					$port = 443;
 				}
 			} else {
@@ -82,8 +81,7 @@ function prevent_get_csrf() {
 				$port_is_defined = preg_match("/\[?[^]]*\]?:[0-9]{1,5}$/", $_SERVER["HTTP_HOST"]);
 				if ($port_is_defined) {
 					$port = preg_replace("/(\[?[^]]*\]?):([0-9]{1,5})$/","$2", $_SERVER["HTTP_HOST"]);
-				}
-				else {
+				} else {
 					$port = 443;
 				}
 			} else {

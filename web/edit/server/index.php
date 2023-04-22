@@ -255,6 +255,7 @@ if (empty($v_rclone_path)) {
 
 if ($_SESSION["BACKUP_INCREMENTAL"] == "yes") {
 	exec(HESTIA_CMD . "v-list-backup-host-restic json", $output, $return_var);
+	$v_backup_incremental = "yes";
 	$v_incremental_backups = json_decode(implode("", $output), true);
 	unset($output);
 	$v_repo = $v_incremental_backups["restic"]["REPO"];
@@ -265,6 +266,7 @@ if ($_SESSION["BACKUP_INCREMENTAL"] == "yes") {
 	$v_keep_yearly = $v_incremental_backups["restic"]["KEEP_YEARLY"];
 } else {
 	// Default value
+	$v_backup_incremental = "no";
 	$v_repo = "";
 	$v_snapshots = "30";
 	$v_keep_daily = "-1";

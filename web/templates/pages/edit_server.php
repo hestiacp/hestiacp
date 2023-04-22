@@ -909,7 +909,7 @@
 			</details>
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-arrow-rotate-left u-mr10"></i><?= _("Incremental Backups") ?>
+					<i class="fas fa-vault u-mr10"></i><?= _("Incremental Backups") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">

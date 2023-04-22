@@ -48,179 +48,187 @@
 <div class="container units">
 
 	<!-- Begin statistics list item loop -->
-	<?php foreach ($data as $key => $value) {
- 	++$i; ?>
-		<div class="header animate__animated animate__fadeIn">
-			<div class="l-unit">
-				<div class="l-unit-toolbar clearfix">
-					<div class="l-unit-toolbar__col l-unit-toolbar__col--left">
-					</div>
-					<div class="l-unit-toolbar__col l-unit-toolbar__col--right">
-						<div class="actions-panel clearfix">
-						</div>
-					</div>
-				</div>
-				<div class="l-unit__col l-unit__col--left clearfix">
-					<i class="fas fa-chart-bar icon-dim" style="font-size: 3em;margin-left: 20px;margin-top: 10px;"></i>
-				</div>
-				<div class="l-unit__col l-unit__col--right">
-					<div class="l-unit__name separate">
+	<div class="stats">
+		<?php foreach ($data as $key => $value) {
+		++$i; ?>
+			<div class="stats-item">
+
+				<div class="stats-item-header">
+					<i class="fas fa-chart-bar icon-dim stats-item-header-icon u-mr10"></i>
+					<h2 class="stats-item-header-title">
 						<?php $date = new DateTime($key);
 						echo _($date -> format('M')) .' '.$date -> format('Y') ?>
-					</div>
-					<div class="l-unit__stats">
-						<table>
-							<tr>
-								<td>
-									<div class="l-unit__stat-cols clearfix">
-										<div class="l-unit__stat-cols clearfix graph">
-											<div class="l-unit__stat-col l-unit__stat-col--left">
-												<i class="fas fa-right-left icon-dim icon-large u-mr5" title="<?= _("Bandwidth") ?>"></i><b><?= _("Bandwidth") ?></b>
-											</div>
-											<div class="l-unit__stat-col l-unit__stat-col--right u-text-right">
-												<b><?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?></b> <?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
-											</div>
-										</div>
-										<div class="l-percent">
-											<div class="l-percent__fill" style="width: <?= get_percentage($data[$key]["U_BANDWIDTH"], $data[$key]["BANDWIDTH"]) ?>%"></div>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("Web Domains") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_WEB_DOMAINS"] ?></b>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix last">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("Mail Domains") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_MAIL_DOMAINS"] ?></b>
-										</div>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div class="l-unit__stat-cols clearfix u-text-small">
-										<div class="u-text-right">
-											<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $data[$key]["IP_OWNED"] != "0")) { ?>
-												<span style="float: left;font-weight:500;"><?= _("IP Addresses") ?>:</span><b><?= $data[$key]["IP_OWNED"] ?></b> <?= _("IPs") ?></span>
-											<?php } ?>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("SSL Domains") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_WEB_SSL"] ?></b>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix last">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("Mail Accounts") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_MAIL_ACCOUNTS"] ?></b>
-										</div>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div class="l-unit__stat-cols clearfix graph">
-										<div class="l-unit__stat-col l-unit__stat-col--left"><i class="fas fa-hard-drive icon-dim icon-large u-mr5" title="<?= _("Disk") ?>"></i><b><?= _("Disk") ?></b></div>
-										<div class="l-unit__stat-col l-unit__stat-col--right u-text-right">
-											<b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
-										</div>
-									</div>
-									<div class="l-percent">
-										<div class="l-percent__fill" style="width: <?= get_percentage($data[$key]["U_DISK"], $data[$key]["DISK_QUOTA"]) ?>%"></div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("Web Aliases") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_WEB_ALIASES"] ?></b>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix last">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("Databases") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_DATABASES"] ?></b>
-										</div>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div class="l-unit__stat-cols clearfix u-text-small">
-										<div class="u-text-right">
-											<span style="float: left;font-weight:500;"><?= _("Web") ?>:</span> <b><?= humanize_usage_size($data[$key]["U_DISK_WEB"]) ?></b> <?= humanize_usage_measure($data[$key]["U_DISK_WEB"]) ?>
-										</div>
-										<div class="u-text-right">
-											<span style="float: left;font-weight:500;"><?= _("Databases") ?>:</span> <b><?= humanize_usage_size($data[$key]["U_DISK_DB"]) ?></b> <?= humanize_usage_measure($data[$key]["U_DISK_DB"]) ?>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("DNS domains") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_DNS_DOMAINS"] ?></b>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix last">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("Cron Jobs") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_CRON_JOBS"] ?></b>
-										</div>
-									</div>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<div class="l-unit__stat-cols clearfix u-text-small">
-										<div class="u-text-right">
-											<span style="float: left;font-weight:500;"><?= _("Mail") ?>:</span> <b><?= humanize_usage_size($data[$key]["U_DISK_MAIL"]) ?></b> <?= humanize_usage_measure($data[$key]["U_DISK_MAIL"]) ?>
-										</div>
-										<div class="u-text-right">
-											<span style="float: left;font-weight:500;"><?= _("User Directories") ?>:</span> <b><?= humanize_usage_size($data[$key]["U_DISK_DIRS"]) ?></b> <?= humanize_usage_measure($data[$key]["U_DISK_DIRS"]) ?>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("DNS records") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_DNS_RECORDS"] ?></b>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="l-unit__stat-cols clearfix last">
-										<div class="l-unit__stat-col l-unit__stat-col--left u-text-right u-text-italic u-mr5"><?= _("Backups") ?>:</div>
-										<div class="l-unit__stat-col l-unit__stat-col--right statistics-count">
-											<b><?= $data[$key]["U_BACKUPS"] ?></b>
-										</div>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>
+					</h2>
 				</div>
+
+				<div class="stats-item-content">
+
+					<div class="stats-item-summary">
+						<h3 class="stats-item-summary-title">
+							<span class="u-text-bold">
+								<i class="fas fa-right-left icon-dim icon-large u-mr5" title="<?= _("Bandwidth") ?>"></i>
+								<?= _("Bandwidth") ?>
+							</span>
+							<span class="u-mr10">
+								<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?></span>
+								<?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?> / <span class="u-text-bold"><?= humanize_usage_size($data[$key]["BANDWIDTH"]) ?></span>
+									<?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>
+							</span>
+						</h3>
+						<ul class="stats-item-summary-list u-mb10">
+							<li class="stats-item-summary-list-item">
+								<span>
+									<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $data[$key]["IP_OWNED"] != "0")) { ?>
+										<?= _("IP Addresses") ?>:
+									<?php } ?>
+								</span>
+								<span>
+									<span class="u-text-bold"><?= $data[$key]["IP_OWNED"] ?></span>
+									<?= _("IPs") ?>
+								</span>
+							</li>
+						</ul>
+						<h3 class="stats-item-summary-title">
+							<span class="u-text-bold">
+								<i class="fas fa-hard-drive icon-dim icon-large u-mr5" title="Disk"></i>
+								<?= _("Disk") ?>
+							</span>
+							<span class="u-mr10">
+								<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK"]) ?></span>
+								<?= humanize_usage_measure($data[$key]["U_DISK"]) ?> / <span class="u-text-bold"><?= humanize_usage_size($data[$key]["DISK_QUOTA"]) ?></span>
+										<?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
+								</span>
+							</span>
+						</h3>
+						<ul class="stats-item-summary-list">
+							<li class="stats-item-summary-list-item">
+								<span>
+									<?= _("Web") ?>:
+								</span>
+								<span>
+									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_WEB"]) ?></span>
+									<?= humanize_usage_measure($data[$key]["U_DISK_WEB"]) ?>
+								</span>
+							</li>
+							<li class="stats-item-summary-list-item u-mb5">
+								<span>
+									<?= _("Databases") ?>:
+								</span>
+								<span>
+									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_DB"]) ?></span>
+									<?= humanize_usage_measure($data[$key]["U_DISK_DB"]) ?>
+								</span>
+							</li>
+							<li class="stats-item-summary-list-item">
+								<span>
+									<?= _("Mail") ?>:
+								</span>
+								<span>
+									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_MAIL"]) ?></span>
+									<?= humanize_usage_measure($data[$key]["U_DISK_MAIL"]) ?>
+								</span>
+							</li>
+							<li class="stats-item-summary-list-item">
+								<span>
+									<?= _("User Directories") ?>:
+								</span>
+								<span>
+									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_DIRS"]) ?></span>
+									<?= humanize_usage_measure($data[$key]["U_DISK_DIRS"]) ?>
+								</span>
+							</li>
+						</ul>
+					</div>
+
+					<ul class="stats-item-list">
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("Web Domains") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_WEB_DOMAINS"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("Mail Domains") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_MAIL_DOMAINS"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("SSL Domains") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_WEB_SSL"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("Mail Accounts") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_MAIL_ACCOUNTS"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("Web Aliases") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_WEB_ALIASES"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("Databases") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_DATABASES"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("DNS domains") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_DNS_DOMAINS"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("Cron Jobs") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_CRON_JOBS"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("DNS records") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_DNS_RECORDS"] ?>
+							</span>
+						</li>
+						<li class="stats-item-list-item">
+							<span class="stats-item-list-item-label">
+								<?= _("Backups") ?>:
+							</span>
+							<span class="stats-item-list-item-value">
+								<?= $data[$key]["U_BACKUPS"] ?>
+							</span>
+						</li>
+					</ul>
+
+				</div>
+
 			</div>
-		</div>
-	<?php } ?>
+		<?php } ?>
+	</div>
+
 </div>
 
 <footer class="app-footer">

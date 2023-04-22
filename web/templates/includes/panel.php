@@ -69,6 +69,7 @@
 						<ul
 							x-cloak
 							x-show="open"
+							x-on:click.outside="open = false"
 							class="top-bar-notifications-list"
 						>
 							<template x-if="initialized && notifications.length == 0">
@@ -130,7 +131,7 @@
 						</span>
 					</button>
 
-					<ul x-cloak x-show="open" class="top-bar-menu-list">
+					<ul x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-list">
 
 						<!-- File Manager -->
 						<?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>

@@ -1,34 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function toggleOptions() {
-	if ($('#advanced-options').is(':visible')) {
-		$('#advanced-options').hide();
-		$('#basic-options').show();
-	} else {
-		$('#advanced-options').show();
-		$('#basic-options').hide();
-
-		var advance_options = $('#advanced-options textarea');
-
-		$('#vstobjects input[type=text]').each(function (i, elm) {
-			var search = $(elm).attr('regexp');
-			var prev_value = $(elm).attr('prev_value');
-			$(elm).attr('prev_value', $(elm).val());
-			var regexp = new RegExp('^(' + search + ')(.+)(' + prev_value + ')', 'm');
-			advance_options.val(advance_options.val().replace(regexp, '$1$2' + $(elm).val()));
-		});
-	}
-}
-
-$('#vstobjects').submit(function () {
-	if ($('#basic-options').is(':visible')) {
-		var advance_options = $('#advanced-options textarea');
-
-		$('#vstobjects input[type=text]').each(function (i, elm) {
-			var search = $(elm).attr('regexp');
-			var prev_value = $(elm).attr('prev_value');
-			$(elm).attr('prev_value', $(elm).val());
-			var regexp = new RegExp('^(' + search + ')(.+)(' + prev_value + ')', 'm');
-			advance_options.val(advance_options.val().replace(regexp, '$1$2' + $(elm).val()));
-		});
+// Listen to form submit and update textarea if basic options are visible
+document.querySelector('#vstobjects').addEventListener('submit', () => {
+	const basicOptionsWrapper = document.querySelector('.js-basic-options');
+	if (!basicOptionsWrapper.classList.contains('u-hidden')) {
+		const advancedTextarea = document.querySelector('.js-advanced-textarea');
+		const textInputs = document.querySelectorAll('#vstobjects input[type=text]');
+		Hestia.helpers.updateTextareaWithInputValues(textInputs, advancedTextarea);
 	}
 });

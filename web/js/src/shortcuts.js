@@ -1,3 +1,11 @@
+import {
+	moveFocusLeft,
+	moveFocusRight,
+	moveFocusDown,
+	moveFocusUp,
+	enterFocused,
+	executeShortcut,
+} from './navigation.js';
 import { createConfirmationDialog } from './helpers.js';
 
 /**
@@ -301,37 +309,37 @@ export default function initShortcuts() {
 		.register(
 			{ code: 'ArrowLeft' },
 			(_evt) => {
-				VE.navigation.moveFocusLeft();
+				moveFocusLeft();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowRight' },
 			(_evt) => {
-				VE.navigation.moveFocusRight();
+				moveFocusRight();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowDown' },
 			(_evt) => {
-				VE.navigation.moveFocusDown();
+				moveFocusDown();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowUp' },
 			(_evt) => {
-				VE.navigation.moveFocusUp();
+				moveFocusUp();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ key: 'L' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-l');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const el = document.querySelector('.units .l-unit.focus .shortcut-l');
+				if (el) {
+					executeShortcut(el);
 				}
 			},
 			{ disabledInInput: true }
@@ -339,9 +347,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'S' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-s');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const el = document.querySelector('.units .l-unit.focus .shortcut-s');
+				if (el) {
+					executeShortcut(el);
 				}
 			},
 			{ disabledInInput: true }
@@ -349,9 +357,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'W' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-w');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const el = document.querySelector('.units .l-unit.focus .shortcut-w');
+				if (el) {
+					executeShortcut(el);
 				}
 			},
 			{ disabledInInput: true }
@@ -359,9 +367,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'D' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-d');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const el = document.querySelector('.units .l-unit.focus .shortcut-d');
+				if (el) {
+					executeShortcut(el);
 				}
 			},
 			{ disabledInInput: true }
@@ -369,9 +377,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'R' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-r');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const el = document.querySelector('.units .l-unit.focus .shortcut-r');
+				if (el) {
+					executeShortcut(el);
 				}
 			},
 			{ disabledInInput: true }
@@ -379,9 +387,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'N' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-n');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const el = document.querySelector('.units .l-unit.focus .shortcut-n');
+				if (el) {
+					executeShortcut(el);
 				}
 			},
 			{ disabledInInput: true }
@@ -389,9 +397,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'U' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-u');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const el = document.querySelector('.units .l-unit.focus .shortcut-u');
+				if (el) {
+					executeShortcut(el);
 				}
 			},
 			{ disabledInInput: true }
@@ -399,9 +407,9 @@ export default function initShortcuts() {
 		.register(
 			{ code: 'Delete' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-delete');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const el = document.querySelector('.units .l-unit.focus .shortcut-delete');
+				if (el) {
+					executeShortcut(el);
 				}
 			},
 			{ disabledInInput: true }
@@ -420,8 +428,7 @@ export default function initShortcuts() {
 					} else {
 						createConfirmationDialog({
 							message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
-							targetUrl: document.querySelector(`${VE.navigation.state.menu_selector}.focus a`)
-								.href,
+							targetUrl: document.querySelector('.main-menu-item.focus a').href,
 						});
 					}
 				} else {
@@ -429,11 +436,11 @@ export default function initShortcuts() {
 						const dialog = document.querySelector('dialog[open]');
 						dialog.querySelector('button[type="submit"]').click();
 					} else {
-						const el = $('.units.active .l-unit.focus .shortcut-enter');
-						if (el.length) {
-							VE.navigation.shortcut(el);
+						const el = document.querySelector('.units .l-unit.focus .shortcut-enter');
+						if (el) {
+							executeShortcut(el);
 						} else {
-							VE.navigation.enterFocused();
+							enterFocused();
 						}
 					}
 				}

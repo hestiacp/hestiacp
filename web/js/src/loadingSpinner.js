@@ -1,7 +1,14 @@
 // Attaches listeners to various events and shows loading spinner overlay
 export default function initLoadingSpinner() {
-	document.querySelector('#vstobjects')?.addEventListener('submit', showLoader);
-	document.querySelector('[x-bind="BulkEdit"]')?.addEventListener('submit', showLoader);
+	const pageForm = document.querySelector('#vstobjects');
+	if (pageForm) {
+		pageForm.addEventListener('submit', showLoader);
+	}
+
+	const bulkEditForm = document.querySelector('[x-bind="BulkEdit"]');
+	if (bulkEditForm) {
+		bulkEditForm.addEventListener('submit', showLoader);
+	}
 }
 
 function showLoader() {

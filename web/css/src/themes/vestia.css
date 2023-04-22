@@ -233,8 +233,15 @@ strong {
 	box-shadow: none;
 }
 
-.l-unit__name {
-	letter-spacing: 0 !important;
+/* Statistics
+   ========================================================================== */
+
+.stats-item {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
+	}
 }
 
 /* Buttons

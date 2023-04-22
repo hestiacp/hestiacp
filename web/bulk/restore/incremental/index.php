@@ -11,12 +11,12 @@ verify_csrf($_POST);
 $action = $_POST["action"];
 $snapshot = quoteshellarg($_POST["snapshot"]);
 
-$web = "no";
-$dns = "no";
-$mail = "no";
-$db = "no";
-$cron = "no";
-$udir = "no";
+$web = [];
+$dns = [];
+$mail = [];
+$db = [];
+$cron = [];
+$udir = [];
 
 if (!empty($_POST["web"])) {
 	$web = quoteshellarg(implode(",", $_POST["web"]));
@@ -98,13 +98,14 @@ if ($action == "restore") {
 			);
 		}
 	}
-	if (!empty($db)) {
+	if (!empty($cron)) {
 		exec(
 			HESTIA_CMD . "v-schedule-user-restore-restic " . $user . " " . $snapshot . " " . "cron",
 			$output,
 			$return_var,
 		);
 	}
+
 	if (!empty($file)) {
 		exec(
 			HESTIA_CMD .

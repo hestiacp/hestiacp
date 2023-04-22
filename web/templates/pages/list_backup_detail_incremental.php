@@ -178,13 +178,13 @@
 		<div class="l-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check5<?= $i ?>" class="ch-toggle" type="checkbox" name="check" value="<?= $key ?>">
+					<input id="check5<?= $i ?>" class="ch-toggle" type="checkbox" name="cron" value="yes">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
 					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Cron Records") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
-					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?= "cron " . _("records") ?></b></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?=$data['snapshot']["CRON"]?> <?=_("Cronjobs") ?></b></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">

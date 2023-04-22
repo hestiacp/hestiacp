@@ -1,8 +1,6 @@
 import notificationMethods from './notifications.js';
-import initUnlimitedInput from './unlimitedInput.js';
-import initShortcuts from './shortcuts.js';
 
-// Set up various Alpine things, loads after Alpine is initialized
+// Set up various Alpine things after it's initialized
 export default function alpineInit() {
 	// Bulk edit forms
 	Alpine.bind('BulkEdit', () => ({
@@ -40,10 +38,4 @@ export default function alpineInit() {
 
 	// Register Alpine notifications methods
 	Alpine.data('notifications', notificationMethods);
-	initAlpineDependentModules();
-}
-
-function initAlpineDependentModules() {
-	initUnlimitedInput();
-	initShortcuts();
 }

@@ -1,125 +1,114 @@
 // Page navigation methods called by shortcuts
-export default function navigationMethods() {
-	return {
-		state: {
-			active_menu: 1,
-			menu_selector: '.main-menu-item',
-			menu_active_selector: '.active',
-		},
-		enterFocused: () => {
-			if ($('.units').hasClass('active')) {
-				location.href = $(
-					'.units.active .l-unit.focus .actions-panel__col.actions-panel__edit a'
-				).attr('href');
-			} else {
-				if ($(VE.navigation.state.menu_selector + '.focus a').attr('href')) {
-					location.href = $(VE.navigation.state.menu_selector + '.focus a').attr('href');
-				}
-			}
-		},
-		moveFocusLeft: () => {
-			let index = Number.parseInt(
-				$(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector + '.focus'))
-			);
-			if (index == -1)
-				index = Number.parseInt(
-					$(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))
-				);
+let state = {
+	active_menu: 1,
+	menu_selector: '.main-menu-item',
+	menu_active_selector: '.active',
+};
 
-			if ($('.units').hasClass('active')) {
-				$('.units').removeClass('active');
-				index++;
-			}
+export function moveFocusLeft() {
+	moveFocusLeftRight('left');
+}
 
-			$(VE.navigation.state.menu_selector).removeClass('focus');
+export function moveFocusRight() {
+	moveFocusLeftRight('right');
+}
 
-			if (index > 0) {
-				$($(VE.navigation.state.menu_selector)[index - 1]).addClass('focus');
-			} else {
-				VE.navigation.switchMenu('last');
-			}
-		},
-		moveFocusRight: () => {
-			const max_index = $(VE.navigation.state.menu_selector).length - 1;
-			let index = Number.parseInt(
-				$(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_selector + '.focus'))
-			);
-			if (index == -1)
-				index =
-					Number.parseInt(
-						$(VE.navigation.state.menu_selector).index($(VE.navigation.state.menu_active_selector))
-					) || 0;
-			$(VE.navigation.state.menu_selector).removeClass('focus');
+export function moveFocusDown() {
+	moveFocusUpDown('down');
+}
 
-			if ($('.units').hasClass('active')) {
-				$('.units').removeClass('active');
-				index--;
-			}
+export function moveFocusUp() {
+	moveFocusUpDown('up');
+}
 
-			if (index < max_index) {
-				$($(VE.navigation.state.menu_selector)[index + 1]).addClass('focus');
-			} else {
-				VE.navigation.switchMenu('first');
-			}
-		},
-		moveFocusDown: () => {
-			const max_index = $('.units .l-unit:not(.header)').length - 1;
-			const index = Number.parseInt($('.units .l-unit').index($('.units .l-unit.focus')));
+// Navigate to whatever item has been selected in the UI by other shortcuts
+export function enterFocused() {
+	const activeMainMenuItem = document.querySelector(state.menu_selector + '.focus a');
+	if (activeMainMenuItem) {
+		return (location.href = activeMainMenuItem.getAttribute('href'));
+	}
 
-			if (index < max_index) {
-				$('.units .l-unit.focus').removeClass('focus');
-				$($('.units .l-unit:not(.header)')[index + 1]).addClass('focus');
+	const activeUnit = document.querySelector(
+		'.units .l-unit.focus .actions-panel__col.actions-panel__edit a'
+	);
+	if (activeUnit) {
+		location.href = activeUnit.getAttribute('href');
+	}
+}
 
-				$('html, body').animate({ scrollTop: $('.units .l-unit.focus').offset().top - 200 }, 200);
-			}
-		},
-		moveFocusUp: () => {
-			let index = Number.parseInt(
-				$('.units .l-unit:not(.header)').index($('.units .l-unit.focus'))
-			);
+// Either click or follow a link based on the data-key-action attribute
+export function executeShortcut(elm) {
+	const action = elm.dataset.keyAction;
+	if (action === 'js') {
+		return elm.querySelector('.data-controls').click();
+	}
+	if (action === 'href') {
+		location.href = elm.querySelector('a').getAttribute('href');
+	}
+}
 
-			if (index == -1) index = 0;
+function moveFocusLeftRight(direction) {
+	const menuSelector = state.menu_selector;
+	const activeSelector = state.menu_active_selector;
+	const menuItems = Array.from(document.querySelectorAll(menuSelector));
+	const currentFocused = document.querySelector(`${menuSelector}.focus`);
+	const currentActive = document.querySelector(menuSelector + activeSelector);
+	let index = menuItems.indexOf(currentFocused);
 
-			if (index > 0) {
-				$('.units .l-unit.focus').removeClass('focus');
-				$($('.units .l-unit:not(.header)')[index - 1]).addClass('focus');
+	if (index === -1) {
+		index = menuItems.indexOf(currentActive);
+	}
 
-				$('html, body').animate({ scrollTop: $('.units .l-unit.focus').offset().top - 200 }, 200);
-			}
-		},
-		switchMenu: (position) => {
-			position = position || 'first'; // last
+	menuItems.forEach((item) => item.classList.remove('focus'));
 
-			if (VE.navigation.state.active_menu == 0) {
-				VE.navigation.state.active_menu = 1;
-				VE.navigation.state.menu_selector = '.main-menu-item';
-				VE.navigation.state.menu_active_selector = '.active';
+	if (direction === 'left') {
+		if (index > 0) {
+			menuItems[index - 1].classList.add('focus');
+		} else {
+			switchMenu('last');
+		}
+	} else if (direction === 'right') {
+		if (index < menuItems.length - 1) {
+			menuItems[index + 1].classList.add('focus');
+		} else {
+			switchMenu('first');
+		}
+	}
+}
 
-				if (position == 'first') {
-					$($(VE.navigation.state.menu_selector)[0]).addClass('focus');
-				} else {
-					const max_index = $(VE.navigation.state.menu_selector).length - 1;
-					$($(VE.navigation.state.menu_selector)[max_index]).addClass('focus');
-				}
-			}
-		},
-		shortcut: (elm) => {
-			const action = elm[0].dataset.keyAction;
-			switch (action) {
-				case 'js': {
-					elm[0].querySelector('.data-controls').click();
-					break;
-				}
+function moveFocusUpDown(direction) {
+	const unitSelector = '.units .l-unit:not(.header)';
+	const units = Array.from(document.querySelectorAll(unitSelector));
+	const currentFocused = document.querySelector('.units .l-unit.focus');
+	let index = units.indexOf(currentFocused);
 
-				case 'href': {
-					location.href = elm.find('a').attr('href');
-					break;
-				}
+	if (index === -1) index = 0;
 
-				default: {
-					break;
-				}
-			}
-		},
-	};
+	if (direction === 'up' && index > 0) {
+		index--;
+	} else if (direction === 'down' && index < units.length - 1) {
+		index++;
+	} else {
+		return;
+	}
+
+	if (currentFocused) currentFocused.classList.remove('focus');
+	units[index].classList.add('focus');
+
+	window.scrollTo({
+		top: units[index].getBoundingClientRect().top - 200 + window.scrollY,
+		behavior: 'smooth',
+	});
+}
+
+function switchMenu(position = 'first') {
+	if (state.active_menu === 0) {
+		state.active_menu = 1;
+		state.menu_selector = '.main-menu-item';
+		state.menu_active_selector = '.active';
+
+		const menuItems = document.querySelectorAll(state.menu_selector);
+		const focusedIndex = position === 'first' ? 0 : menuItems.length - 1;
+		menuItems[focusedIndex].classList.add('focus');
+	}
 }

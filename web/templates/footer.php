@@ -74,7 +74,7 @@
 <?php if (!empty($_SESSION["error_msg"])): ?>
 	<script>
 		window.addEventListener("load", (event) => {
-			VE.helpers.createConfirmationDialog({
+			Hestia.helpers.createConfirmationDialog({
 				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
 			});
 		});

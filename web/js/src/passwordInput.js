@@ -1,3 +1,4 @@
+import { passwordStrength } from 'check-password-strength';
 import { randomPassword, generateMailCredentials } from './helpers.js';
 
 // Adds listeners to password inputs (to monitor strength) and generate password buttons
@@ -30,18 +31,11 @@ export default function initPasswordInput() {
 	});
 }
 
-// TODO: Switch to zxcvbn module or something to determine password strength?
 function recalculatePasswordStrength(input) {
 	const password = input.value;
 	const meter = input.parentNode.querySelector('.js-password-meter');
 	if (meter) {
-		const validations = [
-			password.length >= 8, // Min length of 8
-			password.search(/[a-z]/) > -1, // Contains 1 lowercase letter
-			password.search(/[A-Z]/) > -1, // Contains 1 uppercase letter
-			password.search(/\d/) > -1 || password.search(/[^\dA-Za-z]/) > -1, // Contains 1 number or special character
-		];
-		const strength = validations.reduce((acc, cur) => acc + cur, 0);
-		meter.value = strength;
+		const strength = passwordStrength(password).id;
+		meter.value = strength + 1;
 	}
 }

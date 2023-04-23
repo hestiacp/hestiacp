@@ -124,7 +124,7 @@ increase_ip_value() {
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
-	if (( $current_web <= 0 )); then
+	if (($current_web <= 0)); then
 		new_web=1
 	else
 		new_web=$((current_web + 1))
@@ -166,7 +166,7 @@ decrease_ip_value() {
 		check_result $E_PARSING "Parsing error"
 	fi
 
-	if (( $current_web <= 0 )); then
+	if (($current_web <= 0)); then
 		new_web=0
 	else
 		new_web=$((current_web - 1))
@@ -214,7 +214,7 @@ get_real_ip() {
 convert_cidr() {
 	# CIDR can be defined as /32 (with leading /) or as 32 (number without leading /)
 	# please check the value range of cidr before converting!
-	set ${1#/}	# allow to use cidr format with leading /
+	set ${1#/} # allow to use cidr format with leading /
 	set -- $((5 - ($1 / 8))) 255 255 255 255 \
 		$(((255 << (8 - ($1 % 8))) & 255)) 0 0 0
 	if [[ $1 -gt 1 ]]; then
@@ -315,53 +315,53 @@ is_ip_valid() {
 
 # Get full interface name
 get_ipv6_iface() {
-    i=$(/sbin/ip addr |grep -w $interface |\
-         awk '{print $NF}' |tail -n 1 |cut -f 2 -d :)
-    if [ "$i" = "$interface" ]; then
-        n=0
-    else
-        n=$((i + 1))
-    fi
-    echo "$interface:$n"
+	i=$(/sbin/ip addr | grep -w $interface \
+		| awk '{print $NF}' | tail -n 1 | cut -f 2 -d :)
+	if [ "$i" = "$interface" ]; then
+		n=0
+	else
+		n=$((i + 1))
+	fi
+	echo "$interface:$n"
 }
 
 # Get user ip6s
 get_user_ip6s() {
-    dedicated=$(grep -H -A10 "OWNER='$user'" $HESTIA/data/ips/* |grep "VERSION='6'")
-    dedicated=$(echo "$dedicated" |cut -f 1 -d '-' |sed 's=.*/==')
-    shared=$(grep -H -A10 "OWNER='admin'" $HESTIA/data/ips/* |grep -A10 shared |grep "VERSION='6'")
-    shared=$(echo "$shared" |cut -f 1 -d '-' |sed 's=.*/==' |cut -f 1 -d \-)
-    for dedicated_ip in $dedicated; do
-        shared=$(echo "$shared" |grep -v $dedicated_ip)
-    done
-    echo -e "$dedicated\n$shared" |sed "/^$/d"
+	dedicated=$(grep -H -A10 "OWNER='$user'" $HESTIA/data/ips/* | grep "VERSION='6'")
+	dedicated=$(echo "$dedicated" | cut -f 1 -d '-' | sed 's=.*/==')
+	shared=$(grep -H -A10 "OWNER='admin'" $HESTIA/data/ips/* | grep -A10 shared | grep "VERSION='6'")
+	shared=$(echo "$shared" | cut -f 1 -d '-' | sed 's=.*/==' | cut -f 1 -d \-)
+	for dedicated_ip in $dedicated; do
+		shared=$(echo "$shared" | grep -v $dedicated_ip)
+	done
+	echo -e "$dedicated\n$shared" | sed "/^$/d"
 }
 
 # Get user ipv6
 get_user_ipv6() {
-    ipv6=$(get_user_ip6s |head -n1)
+	ipv6=$(get_user_ip6s | head -n1)
 	local_ipv6="$ipv6"
 }
 
 # Validate ipv6 address
 is_ipv6_valid() {
-    local_ipv6="$1"
-    if [ -z "$local_ipv6" ]; then
-        check_result $E_NOTEXIST "IPV6 address is empty"
-    fi
-    if [ ! -e "$HESTIA/data/ips/$1" ]; then
-        check_result $E_NOTEXIST "IPV6 $1 doesn't exist"
-    fi
-    if [ ! -z $2 ]; then
-        ip_data=$(cat $HESTIA/data/ips/$1)
-        ip_owner=$(echo "$ip_data" |grep OWNER= |cut -f2 -d \')
-        ip_status=$(echo "$ip_data" |grep STATUS= |cut -f2 -d \')
-        if [ "$ip_owner" != "$user" ] && [ "$ip_status" = 'dedicated' ]; then
-            check_result $E_FORBIDEN "$user user can't use IPV6 $1"
-        fi
-        get_user_owner
-        if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
-            check_result $E_FORBIDEN "$user user can't use IPV6 $1"
-        fi
-    fi
+	local_ipv6="$1"
+	if [ -z "$local_ipv6" ]; then
+		check_result $E_NOTEXIST "IPV6 address is empty"
+	fi
+	if [ ! -e "$HESTIA/data/ips/$1" ]; then
+		check_result $E_NOTEXIST "IPV6 $1 doesn't exist"
+	fi
+	if [ ! -z $2 ]; then
+		ip_data=$(cat $HESTIA/data/ips/$1)
+		ip_owner=$(echo "$ip_data" | grep OWNER= | cut -f2 -d \')
+		ip_status=$(echo "$ip_data" | grep STATUS= | cut -f2 -d \')
+		if [ "$ip_owner" != "$user" ] && [ "$ip_status" = 'dedicated' ]; then
+			check_result $E_FORBIDEN "$user user can't use IPV6 $1"
+		fi
+		get_user_owner
+		if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
+			check_result $E_FORBIDEN "$user user can't use IPV6 $1"
+		fi
+	fi
 }

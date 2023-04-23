@@ -287,8 +287,8 @@ add_web_config() {
 			WEBTPL_LOCATION="$WEBTPL/$1/$WEB_BACKEND"
 		fi
 	fi
-	
-	prepare_ips_for_template	#	prepare IPV4 and IPV6 variables for template substitution
+
+	prepare_ips_for_template #	prepare IPV4 and IPV6 variables for template substitution
 
 	# Note: Removing or renaming template variables will lead to broken custom templates.
 	#   -If possible custom templates should be automatically upgraded to use the new format
@@ -410,7 +410,7 @@ get_web_config_lines() {
 replace_web_config() {
 	if [ -z "$old" -o -z "$new" ]; then
 		prepare_web_domain_values #	if one of both parameters is empty, prepare values for the web domain
-		add_web_config "$@"	# web configs must be new generated from the templates
+		add_web_config "$@"       # web configs must be new generated from the templates
 	else
 		conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
 		if [[ "$2" =~ stpl$ ]]; then
@@ -863,7 +863,7 @@ add_webmail_config() {
 		override_alias_idn="mail.$domain_idn"
 	fi
 
-	prepare_ips_for_template	#	prepare IPV4 and IPV6 variables for template substitution
+	prepare_ips_for_template #	prepare IPV4 and IPV6 variables for template substitution
 
 	# Note: Removing or renaming template variables will lead to broken custom templates.
 	#   -If possible custom templates should be automatically upgraded to use the new format

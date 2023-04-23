@@ -353,7 +353,7 @@ if (!empty($_POST["save"])) {
 	}
 
 	// Change mail domain IP
-	if ((($v_ip != $_POST["v_ip"]) || ($v_ipv6 != $_POST["v_ipv6"])) && empty($_SESSION["error_msg"])) {
+	if (($v_ip != $_POST["v_ip"] || $v_ipv6 != $_POST["v_ipv6"]) && empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD . "v-list-mail-domain " . $user . " " . quoteshellarg($v_domain) . " json",
 			$output,

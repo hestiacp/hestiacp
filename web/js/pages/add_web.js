@@ -20,13 +20,13 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 App.Listeners.WEB.keypress_ftp_username = function () {
 	var ftp_user_inputs = $('.v-ftp-user');
 	$.each(ftp_user_inputs, function (i, ref) {
-		var ref = $(ref);
-		var current_val = ref.val();
+		var $ref = $(ref);
+		var current_val = $ref.val();
 		if (current_val.trim() != '') {
-			App.Actions.WEB.update_ftp_username_hint(ref, current_val);
+			App.Actions.WEB.update_ftp_username_hint($ref, current_val);
 		}
 
-		ref.bind('keypress input', function (evt) {
+		$ref.bind('keypress input', function (evt) {
 			clearTimeout(window.frp_usr_tmt);
 			window.frp_usr_tmt = setTimeout(function () {
 				var elm = $(evt.target);

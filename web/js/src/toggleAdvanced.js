@@ -1,15 +1,15 @@
 import { updateTextareaWithInputValues } from './helpers.js';
 
 // Add listeners to .js-toggle-options buttons
-export default function initToggleAdvanced() {
+export default function handleToggleAdvanced() {
 	document.querySelectorAll('.js-toggle-options').forEach((toggleOptionsButton) => {
-		toggleOptionsButton.addEventListener('click', toggleOptions);
+		toggleOptionsButton.addEventListener('click', toggleAdvancedOptions);
 	});
 }
 
 // Toggle between basic and advanced options.
 // When switching from basic to advanced, the textarea is updated with the values from the inputs
-function toggleOptions() {
+function toggleAdvancedOptions() {
 	const advancedOptionsWrapper = document.querySelector('.js-advanced-options');
 	const basicOptionsWrapper = document.querySelector('.js-basic-options');
 

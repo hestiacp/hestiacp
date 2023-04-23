@@ -15,7 +15,7 @@ import { createConfirmationDialog } from './helpers.js';
  * @typedef {{ combination: KeyCombination, event: 'keydown' | 'keyup', callback: (evt: KeyboardEvent) => void, target: EventTarget }} RegisteredShortcut
  * @typedef {{ type?: 'keydown' | 'keyup', propagate?: boolean, disabledInInput?: boolean, target?: EventTarget }} ShortcutOptions
  */
-export default function initShortcuts() {
+export default function handleShortcuts() {
 	Alpine.store('shortcuts', {
 		/**
 		 * @type RegisteredShortcut[]

@@ -3,7 +3,7 @@ async function loadChartJs() {
 	return module.Chart;
 }
 
-async function main() {
+async function initCharts() {
 	const Chart = await loadChartJs();
 	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
 
@@ -108,4 +108,4 @@ function getCssVariable(variableName) {
 	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
 }
 
-main();
+initCharts();

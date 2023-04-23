@@ -1,5 +1,5 @@
 // Add class to (sticky) toolbar on list view pages when scrolling
-export default function initStickyToolbar() {
+export default function handleStickyToolbar() {
 	const toolbar = document.querySelector('.toolbar');
 	const header = document.querySelector('.top-bar');
 
@@ -7,9 +7,9 @@ export default function initStickyToolbar() {
 		return;
 	}
 
-	window.addEventListener('scroll', handleToolbarOnScroll);
+	window.addEventListener('scroll', addClassOnScroll);
 
-	function handleToolbarOnScroll() {
+	function addClassOnScroll() {
 		const toolbarRectTop = toolbar.getBoundingClientRect().top;
 		const scrolledDistance = window.scrollY;
 		const clientTop = document.documentElement.clientTop;

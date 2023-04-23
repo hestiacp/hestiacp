@@ -1,5 +1,5 @@
 // List view sorting dropdown
-export default function initSorting() {
+export default function handleListSorting() {
 	let state = {
 		sort_par: 'sort-name',
 		sort_direction: -1,

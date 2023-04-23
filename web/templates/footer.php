@@ -71,19 +71,6 @@
 		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
 
-<?php if (!empty($_SESSION["error_msg"])): ?>
-	<script>
-		window.addEventListener("load", (event) => {
-			Hestia.helpers.createConfirmationDialog({
-				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
-			});
-		});
-	</script>
-<?php
-	unset($_SESSION['error_msg']);
-	endif;
-?>
-
 <?php if ($_SESSION["DEBUG_MODE"] == "true") {
 	require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";
 } ?>

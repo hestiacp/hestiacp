@@ -1,63 +1,61 @@
-//
-//
 // Updates database username dynamically, showing its prefix
-App.Actions.DB.update_db_username_hint = function (elm, hint) {
-	if (hint.trim() == '') {
-		$(elm).parent().find('.hint').text('');
+App.Actions.DB.update_db_username_hint = function (input) {
+	const hintElement = input.parentElement.querySelector('.hint');
+
+	if (input.value.trim() === '') {
+		hintElement.textContent = '';
 	}
-	$(elm)
-		.parent()
-		.find('.hint')
-		.text(Alpine.store('globals').DB_USER_PREFIX + hint);
+
+	hintElement.textContent = Alpine.store('globals').DB_USER_PREFIX + input.value;
 };
 
-//
-//
 // Updates database name dynamically, showing its prefix
-App.Actions.DB.update_db_databasename_hint = function (elm, hint) {
-	if (hint.trim() == '') {
-		$(elm).parent().find('.hint').text('');
+App.Actions.DB.update_db_databasename_hint = function (input) {
+	const hintElement = input.parentElement.querySelector('.hint');
+
+	if (input.value.trim() === '') {
+		hintElement.textContent = '';
 	}
-	$(elm)
-		.parent()
-		.find('.hint')
-		.text(Alpine.store('globals').DB_DBNAME_PREFIX + hint);
+
+	hintElement.textContent = Alpine.store('globals').DB_DBNAME_PREFIX + input.value;
 };
 
-//
-// listener that triggers database user hint updating
-App.Listeners.DB.keypress_db_username = function () {
-	var ref = $('input[name="v_dbuser"]');
-	var current_val = ref.val();
-	if (current_val.trim() != '') {
-		App.Actions.DB.update_db_username_hint(ref, current_val);
+// Listener that triggers database user hint updating
+App.Listeners.DB.keypress_db_username = () => {
+	const input = document.querySelector('input[name="v_dbuser"]');
+
+	if (input.value.trim() != '') {
+		App.Actions.DB.update_db_username_hint(input);
 	}
 
-	ref.bind('keypress input', function (evt) {
+	const updateTimeout = (evt) => {
 		clearTimeout(window.frp_usr_tmt);
-		window.frp_usr_tmt = setTimeout(function () {
-			var elm = $(evt.target);
-			App.Actions.DB.update_db_username_hint(elm, $(elm).val());
+		window.frp_usr_tmt = setTimeout(() => {
+			App.Actions.DB.update_db_username_hint(evt.target);
 		}, 100);
-	});
+	};
+
+	input.addEventListener('keypress', updateTimeout);
+	input.addEventListener('input', updateTimeout);
 };
 
-//
-// listener that triggers database name hint updating
-App.Listeners.DB.keypress_db_databasename = function () {
-	var ref = $('input[name="v_database"]');
-	var current_val = ref.val();
-	if (current_val.trim() != '') {
-		App.Actions.DB.update_db_databasename_hint(ref, current_val);
+// Listener that triggers database user hint updating
+App.Listeners.DB.keypress_db_databasename = () => {
+	const input = document.querySelector('input[name="v_database"]');
+
+	if (input.value.trim() != '') {
+		App.Actions.DB.update_db_databasename_hint(input);
 	}
 
-	ref.bind('keypress input', function (evt) {
+	const updateTimeout = (evt) => {
 		clearTimeout(window.frp_dbn_tmt);
-		window.frp_dbn_tmt = setTimeout(function () {
-			var elm = $(evt.target);
-			App.Actions.DB.update_db_databasename_hint(elm, $(elm).val());
+		window.frp_dbn_tmt = setTimeout(() => {
+			App.Actions.DB.update_db_databasename_hint(evt.target);
 		}, 100);
-	});
+	};
+
+	input.addEventListener('keypress', updateTimeout);
+	input.addEventListener('input', updateTimeout);
 };
 
 //

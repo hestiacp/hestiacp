@@ -1,4 +1,5 @@
 /* eslint-env node */
+/* eslint-disable no-console */
 
 // Build JS and CSS using esbuild and PostCSS
 import { promises as fs } from 'node:fs';

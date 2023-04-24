@@ -1,9 +1,9 @@
-// Adds listeners for "unlimited" input toggles
 export default function handleUnlimitedInput() {
+	// Add listeners to "unlimited" input toggles
 	document.querySelectorAll('.js-unlimited-toggle').forEach((toggleButton) => {
 		const input = toggleButton.parentElement.querySelector('input');
 
-		if (Alpine.store('globals').isUnlimitedValue(input.value)) {
+		if (isUnlimitedValue(input.value)) {
 			enableInput(input, toggleButton);
 		} else {
 			disableInput(input, toggleButton);
@@ -13,6 +13,23 @@ export default function handleUnlimitedInput() {
 			toggleInput(input, toggleButton);
 		});
 	});
+
+	// Enable any disabled unlimited inputs before submitting
+	// the page form, and set their value to "unlimited"
+	document.querySelector('form').addEventListener('submit', () => {
+		document.querySelectorAll('input:disabled').forEach((input) => {
+			if (isUnlimitedValue(input.value)) {
+				input.disabled = false;
+				input.value = Alpine.store('globals').UNLIM_VALUE;
+			}
+		});
+	});
+}
+
+function isUnlimitedValue(value) {
+	const { UNLIM_VALUE, UNLIM_TRANSLATED_VALUE } = Alpine.store('globals');
+	const trimmedValue = value.trim();
+	return trimmedValue === UNLIM_VALUE || trimmedValue === UNLIM_TRANSLATED_VALUE;
 }
 
 function enableInput(input, toggleButton) {
@@ -28,7 +45,7 @@ function disableInput(input, toggleButton) {
 	if (previousValue) {
 		input.value = previousValue;
 	}
-	if (Alpine.store('globals').isUnlimitedValue(input.value)) {
+	if (isUnlimitedValue(input.value)) {
 		input.value = '0';
 	}
 	input.disabled = false;

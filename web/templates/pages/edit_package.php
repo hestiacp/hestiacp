@@ -25,7 +25,6 @@
 			showDatabaseOptions: false,
 			showSystemOptions: false,
 		}"
-		x-on:submit="App.Listeners.PACKAGE.submit()"
 		id="vstobjects"
 		name="v_edit_package"
 		method="post"

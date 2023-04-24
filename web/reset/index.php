@@ -49,15 +49,12 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 				$to = $data[$user]["CONTACT"];
 				$subject = sprintf(_("MAIL_RESET_SUBJECT"), date("Y-m-d H:i:s"));
 				$hostname = get_hostname();
-				if ($hostname . ":" . $_SERVER["SERVER_PORT"] == $_SERVER["HTTP_HOST"]) {
-					$check = true;
-					$hostname_email = $hostname;
-				} elseif ($hostname_full . ":" . $_SERVER["SERVER_PORT"] == $_SERVER["HTTP_HOST"]) {
-					$check = true;
-					$hostname_email = $hostname_full;
+				if (!$hostname) {
+				}
+				if (empty($_SERVER["SERVER_PORT]"])) {
+					$port = "443";
 				} else {
-					$check = false;
-					$ERROR = "<p class=\"error\">" . _("Invalid host domain") . "</p>";
+					$port = $_SERVER["SERVER_PORT"];
 				}
 				if ($check == true) {
 					$from = "noreply@" . $hostname;
@@ -69,10 +66,10 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					}
 					$mailtext .= sprintf(
 						_("PASSWORD_RESET_REQUEST"),
-						$_SERVER["HTTP_HOST"],
+						$hostname . ":" . $port,
 						$user,
 						$rkey,
-						$_SERVER["HTTP_HOST"],
+						$hostname . ":" . $port,
 						$user,
 						$rkey,
 					);

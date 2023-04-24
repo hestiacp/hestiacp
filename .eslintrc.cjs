@@ -39,6 +39,7 @@ module.exports = {
 				groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
 			},
 		],
+		'no-console': 'error',
 		'import/no-unresolved': 'off',
 	},
 };

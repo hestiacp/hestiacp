@@ -1,5 +1,5 @@
 // Attaches listeners to various events and shows loading spinner overlay
-export default function initLoadingSpinner() {
+export default function handleLoadingSpinner() {
 	const pageForm = document.querySelector('#vstobjects');
 	if (pageForm) {
 		pageForm.addEventListener('submit', showLoader);

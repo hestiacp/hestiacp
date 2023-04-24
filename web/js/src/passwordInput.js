@@ -2,7 +2,7 @@ import { passwordStrength } from 'check-password-strength';
 import { randomPassword, generateMailCredentials } from './helpers.js';
 
 // Adds listeners to password inputs (to monitor strength) and generate password buttons
-export default function initPasswordInput() {
+export default function handlePasswordInput() {
 	// Listen for changes to password inputs and update the password strength
 	document.querySelectorAll('.js-password-input').forEach((passwordInput) => {
 		const updateTimeout = (evt) => {

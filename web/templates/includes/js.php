@@ -30,12 +30,15 @@
 			NOTIFICATIONS_EMPTY: '<?= _("no notifications") ?>',
 			NOTIFICATIONS_DELETE_ALL: '<?= _("Delete all notifications") ?>',
 			CONFIRM_LEAVE_PAGE: '<?= _("LEAVE_PAGE_CONFIRMATION") ?>',
+			ERROR_MESSAGE: '<?= !empty($_SESSION['error_msg']) ? htmlentities($_SESSION['error_msg']) : '' ?>',
 			isUnlimitedValue(value) {
 				return value.trim() == this.UNLIM_VALUE || value.trim() == this.UNLIM_TRANSLATED_VALUE;
 			}
 		});
 	})
 </script>
+
+<?php if (!empty($_SESSION['error_msg'])) unset($_SESSION['error_msg']); ?>
 
 <?php
 $customScriptDirectory = new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts");

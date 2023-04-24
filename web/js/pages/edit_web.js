@@ -54,13 +54,13 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 App.Listeners.WEB.keypress_ftp_username = function () {
 	var ftp_user_inputs = $('.v-ftp-user');
 	$.each(ftp_user_inputs, function (i, ref) {
-		var ref = $(ref);
-		var current_val = ref.val();
+		var $ref = $(ref);
+		var current_val = $ref.val();
 		if (current_val.trim() != '') {
-			App.Actions.WEB.update_ftp_username_hint(ref, current_val);
+			App.Actions.WEB.update_ftp_username_hint($ref, current_val);
 		}
 
-		ref.bind('keypress input', function (evt) {
+		$ref.bind('keypress input', function (evt) {
 			clearTimeout(window.frp_usr_tmt);
 			window.frp_usr_tmt = setTimeout(function () {
 				var elm = $(evt.target);
@@ -90,13 +90,13 @@ App.Actions.WEB.update_ftp_path_hint = function (elm, hint) {
 App.Listeners.WEB.keypress_ftp_path = function () {
 	var ftp_path_inputs = $('.js-ftp-path');
 	$.each(ftp_path_inputs, function (i, ref) {
-		var ref = $(ref);
-		var current_val = ref.val();
+		var $ref = $(ref);
+		var current_val = $ref.val();
 		if (current_val.trim() != '') {
-			App.Actions.WEB.update_ftp_path_hint(ref, current_val);
+			App.Actions.WEB.update_ftp_path_hint($ref, current_val);
 		}
 
-		ref.bind('keypress input', function (evt) {
+		$ref.bind('keypress input', function (evt) {
 			clearTimeout(window.frp_usr_tmt);
 			window.frp_usr_tmt = setTimeout(function () {
 				var elm = $(evt.target);
@@ -109,34 +109,36 @@ App.Listeners.WEB.keypress_ftp_path = function () {
 //
 //
 App.Actions.WEB.add_ftp_user_form = function () {
-	var ref = $('#templates').find('.js-ftp-account-nrm').clone(true);
-	var index = $('.form-container .js-ftp-account').length + 1;
+	const template = $('#templates').find('.js-ftp-account-nrm').clone(true);
+	const ftpAccounts = $('.form-container .js-ftp-account');
+	const newIndex = ftpAccounts.length + 1;
 
-	ref.find('input').each(function (i, elm) {
-		var name = $(elm).attr('name');
-		var id = $(elm).attr('id');
-		$(elm).attr('name', name.replace('%INDEX%', index));
+	template.find('input').each((_, elm) => {
+		const $elm = $(elm);
+		const name = $elm.attr('name');
+		const id = $elm.attr('id');
+		$elm.attr('name', name.replace('%INDEX%', newIndex));
 		if (id) {
-			$(elm).attr('id', id.replace('%INDEX%', index));
+			$elm.attr('id', id.replace('%INDEX%', newIndex));
 		}
 	});
 
-	ref
+	template
 		.find('input')
 		.prev('label')
-		.each(function (i, elm) {
-			var for_attr = $(elm).attr('for');
-			$(elm).attr('for', for_attr.replace('%INDEX%', index));
+		.each((_, elm) => {
+			const $elm = $(elm);
+			const forAttr = $elm.attr('for');
+			$elm.attr('for', forAttr.replace('%INDEX%', newIndex));
 		});
 
-	ref.find('.ftp-user-number').text(index);
+	template.find('.ftp-user-number').text(newIndex);
+	$('#ftp_users').append(template);
 
-	$('#ftp_users').append(ref);
-
-	var index = 1;
-	$('.form-container .ftp-user-number:visible').each(function (i, o) {
-		$(o).text(index);
-		index += 1;
+	let counter = 1;
+	$('.form-container .ftp-user-number:visible').each((_, o) => {
+		$(o).text(counter);
+		counter += 1;
 	});
 };
 

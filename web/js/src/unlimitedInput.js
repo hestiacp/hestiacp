@@ -1,28 +1,28 @@
 // Adds listeners for "unlimited" input toggles
-export default function initUnlimitedInput() {
+export default function handleUnlimitedInput() {
 	document.querySelectorAll('.js-unlimited-toggle').forEach((toggleButton) => {
 		const input = toggleButton.parentElement.querySelector('input');
 
 		if (Alpine.store('globals').isUnlimitedValue(input.value)) {
-			enableUnlimitedInput(input, toggleButton);
+			enableInput(input, toggleButton);
 		} else {
-			disableUnlimitedInput(input, toggleButton);
+			disableInput(input, toggleButton);
 		}
 
 		toggleButton.addEventListener('click', () => {
-			toggleUnlimitedInput(input, toggleButton);
+			toggleInput(input, toggleButton);
 		});
 	});
 }
 
-function enableUnlimitedInput(input, toggleButton) {
+function enableInput(input, toggleButton) {
 	toggleButton.classList.add('active');
 	input.dataset.prevValue = input.value;
 	input.value = Alpine.store('globals').UNLIM_TRANSLATED_VALUE;
 	input.disabled = true;
 }
 
-function disableUnlimitedInput(input, toggleButton) {
+function disableInput(input, toggleButton) {
 	toggleButton.classList.remove('active');
 	const previousValue = input.dataset.prevValue ? input.dataset.prevValue.trim() : null;
 	if (previousValue) {
@@ -34,10 +34,10 @@ function disableUnlimitedInput(input, toggleButton) {
 	input.disabled = false;
 }
 
-function toggleUnlimitedInput(input, toggleButton) {
+function toggleInput(input, toggleButton) {
 	if (toggleButton.classList.contains('active')) {
-		disableUnlimitedInput(input, toggleButton);
+		disableInput(input, toggleButton);
 	} else {
-		enableUnlimitedInput(input, toggleButton);
+		enableInput(input, toggleButton);
 	}
 }

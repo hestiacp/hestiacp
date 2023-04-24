@@ -1,8 +1,10 @@
+/* eslint-env node */
+
 // Build JS and CSS using esbuild and PostCSS
-import esbuild from 'esbuild';
-import postcss from 'postcss';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import esbuild from 'esbuild';
+import postcss from 'postcss';
 import postcssConfig from './postcss.config.js';
 
 // Packages to build but exclude from bundle

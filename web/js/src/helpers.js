@@ -27,14 +27,14 @@ export function createConfirmationDialog({ title, message = 'Are you sure?', tar
 	// Create and insert the title
 	if (title) {
 		const titleElement = document.createElement('h2');
-		titleElement.textContent = title;
+		titleElement.innerHTML = title;
 		titleElement.classList.add('modal-title');
 		dialog.append(titleElement);
 	}
 
 	// Create and insert the message
 	const messageElement = document.createElement('p');
-	messageElement.textContent = message;
+	messageElement.innerHTML = message;
 	messageElement.classList.add('modal-message');
 	dialog.append(messageElement);
 

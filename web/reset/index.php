@@ -49,14 +49,29 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 				$to = $data[$user]["CONTACT"];
 				$subject = sprintf(_("MAIL_RESET_SUBJECT"), date("Y-m-d H:i:s"));
 				$hostname = get_hostname();
-				if (!$hostname) {
-				}
-				if (empty($_SERVER["SERVER_PORT]"])) {
-					$port = "443";
-				} else {
-					$port = $_SERVER["SERVER_PORT"];
-				}
-				if ($check == true) {
+				if ($hostname) {
+					$host = preg_replace(
+						"/(\[?[^]]*\]?):([0-9]{1,5})$/",
+						"$1",
+						$_SERVER["HTTP_HOST"],
+					);
+					if ($host == $hostname) {
+						$port_is_defined = preg_match(
+							"/\[?[^]]*\]?:[0-9]{1,5}$/",
+							$_SERVER["HTTP_HOST"],
+						);
+						if ($port_is_defined) {
+							$port = preg_replace(
+								"/(\[?[^]]*\]?):([0-9]{1,5})$/",
+								"$2",
+								$_SERVER["HTTP_HOST"],
+							);
+						} else {
+							$port = "";
+						}
+					} else {
+						$port = ":" . $_SERVER["SERVER_PORT"];
+					}
 					$from = "noreply@" . $hostname;
 					$from_name = _("Hestia Control Panel");
 					if (!empty($name)) {
@@ -66,10 +81,10 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					}
 					$mailtext .= sprintf(
 						_("PASSWORD_RESET_REQUEST"),
-						$hostname . ":" . $port,
+						$hostname . $port,
 						$user,
 						$rkey,
-						$hostname . ":" . $port,
+						$hostname . $port,
 						$user,
 						$rkey,
 					);
@@ -83,13 +98,13 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 							$data[$user]["NAME"],
 						);
 					}
-					$ERROR =
-						"<p class=\"error\">" .
-						_(
-							"Password reset instructions have been sent to the email address associated with this account.",
-						) .
-						"</p>";
 				}
+				$ERROR =
+					"<p class=\"error\">" .
+					_(
+						"Password reset instructions have been sent to the email address associated with this account.",
+					) .
+					"</p>";
 			} else {
 				# Prevent user enumeration and let hackers guess username and working email
 				$ERROR =

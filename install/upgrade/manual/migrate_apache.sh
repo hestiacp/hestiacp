@@ -22,7 +22,7 @@ if [ ! -z "$WEB_BACKEND" ]; then
 fi
 
 if [ "$(multiphp_count)" -gt 1 ]; then
-	check_result $E_EXISTS "Multiphp allready enabled" > /dev/null
+	check_result $E_EXISTS "Multiphp already enabled" > /dev/null
 fi
 
 #----------------------------------------------------------#

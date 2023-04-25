@@ -85,27 +85,22 @@
 						<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
 					</div>
 					<div class="form-check">
-						<input class="form-check-input" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
+						<input class="form-check-input js-discard-all-mail" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
 						<label for="v_blackhole">
 							<?= _("Discard all mail") ?>
 						</label>
 					</div>
-					<div id="id_fwd_for" style="display:<?php if ($v_blackhole == 'yes') {echo 'none';} else {echo 'block';}?> ;">
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
-							<label for="v_fwd_for">
-								<?= _("Do not store forwarded mail") ?>
-							</label>
-						</div>
+					<div class="form-check <?php if ($v_blackhole == 'yes') { echo 'u-hidden'; } ?>">
+						<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
+						<label for="v_fwd_for">
+							<?= _("Do not store forwarded mail") ?>
+						</label>
 					</div>
-
-					<div id="v-fwd-opt">
-						<div class="u-mb10">
-							<label for="v_fwd" class="form-label">
-								<?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
-							</label>
-							<textarea class="form-control" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
-						</div>
+					<div class="u-mb10">
+						<label for="v_fwd" class="form-label">
+							<?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
+						</label>
+						<textarea class="form-control" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
 					</div>
 					<div class="form-check u-mb10">
 						<input x-model="hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">

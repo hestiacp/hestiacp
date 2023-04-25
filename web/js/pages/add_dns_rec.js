@@ -43,7 +43,6 @@ App.Listeners.DB.keypress_dns_rec_entry = () => {
 		}, 100);
 	};
 
-	input.addEventListener('keypress', updateTimeout);
 	input.addEventListener('input', updateTimeout);
 };
 

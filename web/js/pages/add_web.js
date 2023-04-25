@@ -93,7 +93,7 @@ $(function () {
 	});
 });
 
-document.getElementById('vstobjects').addEventListener('submit', function () {
+document.querySelector('#vstobjects').addEventListener('submit', () => {
 	$('input[disabled]').each(function (i, elm) {
 		$(elm).removeAttr('disabled');
 	});

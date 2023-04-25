@@ -1,9 +1,4 @@
-async function loadChartJs() {
-	const module = await import('/js/dist/chart.js-auto.min.js');
-	return module.Chart;
-}
-
-async function initCharts() {
+async function init() {
 	const Chart = await loadChartJs();
 	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
 
@@ -20,6 +15,11 @@ async function initCharts() {
 			options: chartOptions,
 		});
 	}
+}
+
+async function loadChartJs() {
+	const module = await import('/js/dist/chart.js-auto.min.js');
+	return module.Chart;
 }
 
 async function fetchRrdData(service, period) {
@@ -40,7 +40,7 @@ function prepareChartData(rrdData, period) {
 			return formatLabel(date, period);
 		}),
 		datasets: rrdData.meta.legend.map((legend, legendIndex) => {
-			const lineColor = getCssVariable(`--chart-line-${legendIndex + 1}-color`);
+			const lineColor = Hestia.helpers.getCssVariable(`--chart-line-${legendIndex + 1}-color`);
 
 			return {
 				label: legend,
@@ -66,8 +66,8 @@ function formatLabel(date, period) {
 }
 
 function getChartOptions(unit) {
-	const labelColor = getCssVariable('--chart-label-color');
-	const gridColor = getCssVariable('--chart-grid-color');
+	const labelColor = Hestia.helpers.getCssVariable('--chart-label-color');
+	const gridColor = Hestia.helpers.getCssVariable('--chart-grid-color');
 
 	return {
 		plugins: {
@@ -104,8 +104,4 @@ function getChartOptions(unit) {
 	};
 }
 
-function getCssVariable(variableName) {
-	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
-}
-
-initCharts();
+init();

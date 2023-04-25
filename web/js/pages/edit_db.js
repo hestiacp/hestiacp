@@ -35,7 +35,6 @@ App.Listeners.DB.keypress_db_username = () => {
 		}, 100);
 	};
 
-	input.addEventListener('keypress', updateTimeout);
 	input.addEventListener('input', updateTimeout);
 };
 
@@ -59,7 +58,6 @@ App.Listeners.DB.keypress_db_databasename = () => {
 		}, 100);
 	};
 
-	input.addEventListener('keypress', updateTimeout);
 	input.addEventListener('input', updateTimeout);
 };
 

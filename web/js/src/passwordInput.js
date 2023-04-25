@@ -1,5 +1,5 @@
 import { passwordStrength } from 'check-password-strength';
-import { randomPassword, generateMailCredentials } from './helpers.js';
+import { randomPassword } from './helpers.js';
 
 // Adds listeners to password inputs (to monitor strength) and generate password buttons
 export default function handlePasswordInput() {
@@ -12,11 +12,10 @@ export default function handlePasswordInput() {
 			}, 100);
 		};
 
-		passwordInput.addEventListener('keypress', updateTimeout);
 		passwordInput.addEventListener('input', updateTimeout);
 	});
 
-	// Listen for clicks on all js-generate-password buttons and generate a password
+	// Listen for clicks on generate password buttons and set a new random password
 	document.querySelectorAll('.js-generate-password').forEach((generatePasswordButton) => {
 		generatePasswordButton.addEventListener('click', () => {
 			const passwordInput =
@@ -24,8 +23,6 @@ export default function handlePasswordInput() {
 			if (passwordInput) {
 				passwordInput.value = randomPassword();
 				passwordInput.dispatchEvent(new Event('input'));
-				recalculatePasswordStrength(passwordInput);
-				generateMailCredentials();
 			}
 		});
 	});
@@ -34,8 +31,11 @@ export default function handlePasswordInput() {
 function recalculatePasswordStrength(input) {
 	const password = input.value;
 	const meter = input.parentNode.querySelector('.js-password-meter');
+
 	if (meter) {
-		const strength = passwordStrength(password).id;
-		meter.value = strength + 1;
+		if (password === '') {
+			return (meter.value = 0);
+		}
+		meter.value = passwordStrength(password).id + 1;
 	}
 }

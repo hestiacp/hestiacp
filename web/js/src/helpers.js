@@ -18,6 +18,11 @@ export function randomPassword(length = 16) {
 	return password;
 }
 
+// Returns the value of a CSS variable
+export function getCssVariable(variableName) {
+	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+}
+
 // Creates a confirmation <dialog> on the fly
 export function createConfirmationDialog({ title, message = 'Are you sure?', targetUrl }) {
 	// Create the dialog
@@ -83,34 +88,6 @@ export function createConfirmationDialog({ title, message = 'Are you sure?', tar
 	dialog.showModal();
 }
 
-// Monitors an input field for change and updates another selector with the value
-export function monitorAndUpdate(inputSelector, outputSelector) {
-	const inputElement = document.querySelector(inputSelector);
-	const outputElement = document.querySelector(outputSelector);
-
-	if (!inputElement || !outputElement) {
-		return;
-	}
-
-	function updateOutput(value) {
-		outputElement.textContent = value;
-		generateMailCredentials();
-	}
-
-	inputElement.addEventListener('input', (event) => {
-		updateOutput(event.target.value);
-	});
-	updateOutput(inputElement.value);
-}
-
-// Updates hidden input field with values from cloned email info panel
-export function generateMailCredentials() {
-	const mailInfoPanel = document.querySelector('.js-mail-info');
-	if (!mailInfoPanel) return;
-	const formattedCredentials = emailCredentialsAsPlainText(mailInfoPanel.cloneNode(true));
-	document.querySelector('.js-hidden-credentials').value = formattedCredentials;
-}
-
 // Updates textarea with values from text inputs
 export function updateTextareaWithInputValues(textInputs, textarea) {
 	textInputs.forEach((textInput) => {
@@ -120,30 +97,4 @@ export function updateTextareaWithInputValues(textInputs, textarea) {
 		const regexp = new RegExp(`(${search})(.+)(${prevValue})`);
 		textarea.value = textarea.value.replace(regexp, `$1$2${textInput.value}`);
 	});
-}
-
-// Reformats cloned DOM email credentials into plain text
-export function emailCredentialsAsPlainText(element) {
-	const headings = [...element.querySelectorAll('h2')];
-	const lists = [...element.querySelectorAll('ul')];
-
-	return headings
-		.map((heading, index) => {
-			const items = [...lists[index].querySelectorAll('li')];
-
-			const itemText = items
-				.map((item) => {
-					const label = item.querySelector('.values-list-label');
-					const value = item.querySelector('.values-list-value');
-					const valueLink = value.querySelector('a');
-
-					const valueText = valueLink ? valueLink.href : value.textContent;
-
-					return `${label.textContent}: ${valueText}`;
-				})
-				.join('\n');
-
-			return `${heading.textContent}\n${itemText}\n`;
-		})
-		.join('\n');
 }

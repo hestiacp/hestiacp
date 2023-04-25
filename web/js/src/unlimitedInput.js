@@ -16,14 +16,17 @@ export default function handleUnlimitedInput() {
 
 	// Enable any disabled unlimited inputs before submitting
 	// the page form, and set their value to "unlimited"
-	document.querySelector('form').addEventListener('submit', () => {
-		document.querySelectorAll('input:disabled').forEach((input) => {
-			if (isUnlimitedValue(input.value)) {
-				input.disabled = false;
-				input.value = Alpine.store('globals').UNLIM_VALUE;
-			}
+	const pageForm = document.querySelector('#vstobjects');
+	if (pageForm) {
+		pageForm.addEventListener('submit', () => {
+			document.querySelectorAll('input:disabled').forEach((input) => {
+				if (isUnlimitedValue(input.value)) {
+					input.disabled = false;
+					input.value = Alpine.store('globals').UNLIM_VALUE;
+				}
+			});
 		});
-	});
+	}
 }
 
 function isUnlimitedValue(value) {

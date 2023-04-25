@@ -1,5 +1,9 @@
-const tabs = document.querySelector('.js-tabs');
-if (tabs) {
+// Tabs behavior (used on cron pages)
+export default function handleTabPanels() {
+	const tabs = document.querySelector('.js-tabs');
+
+	if (!tabs) return;
+
 	const tabItems = tabs.querySelectorAll('.tabs-item');
 	const panels = tabs.querySelectorAll('.tabs-panel');
 	tabItems.forEach((tab) => {
@@ -23,26 +27,3 @@ if (tabs) {
 		});
 	});
 }
-
-document.querySelectorAll('.js-generate-cron').forEach((button) => {
-	button.addEventListener('click', () => {
-		const fieldset = button.closest('fieldset');
-		const inputNames = ['min', 'hour', 'day', 'month', 'wday'];
-
-		inputNames.forEach((inputName) => {
-			const value = fieldset.querySelector(`[name=h_${inputName}]`).value;
-			const formInput = document.querySelector(`#vstobjects input[name=v_${inputName}]`);
-
-			formInput.value = value;
-			formInput.classList.add('highlighted');
-
-			formInput.addEventListener(
-				'transitionend',
-				() => {
-					formInput.classList.remove('highlighted');
-				},
-				{ once: true }
-			);
-		});
-	});
-});

@@ -137,6 +137,6 @@ This command will install Hestia in French with the following software:
 
 ## What’s next?
 
-By now, you should have a Hestia installation on your server. You are be ready to add new users, so that you (or they) can add new websites on your server.
+By now, you should have a Hestia installation on your server. You are ready to add new users, so that you (or they) can add new websites on your server.
 
 To access your control panel, navigate to `https://host.domain.tld:8083` or `http://your.public.ip.address:8083`

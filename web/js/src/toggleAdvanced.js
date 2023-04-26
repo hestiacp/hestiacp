@@ -1,5 +1,3 @@
-import { updateTextareaWithInputValues } from './helpers.js';
-
 // Add listeners to .js-toggle-options buttons
 export default function handleToggleAdvanced() {
 	document.querySelectorAll('.js-toggle-options').forEach((toggleOptionsButton) => {
@@ -23,9 +21,16 @@ function toggleAdvancedOptions() {
 	}
 }
 
-// Update the advanced textarea with input values
-function updateAdvancedTextarea() {
+// Update the "advanced options" textarea with "basic options" input values
+export function updateAdvancedTextarea() {
 	const advancedTextarea = document.querySelector('.js-advanced-textarea');
 	const textInputs = document.querySelectorAll('#vstobjects input[type=text]');
-	updateTextareaWithInputValues(textInputs, advancedTextarea);
+
+	textInputs.forEach((textInput) => {
+		const search = textInput.dataset.regexp;
+		const prevValue = textInput.dataset.prevValue;
+		textInput.setAttribute('data-prev-value', textInput.value);
+		const regexp = new RegExp(`(${search})(.+)(${prevValue})`);
+		advancedTextarea.value = advancedTextarea.value.replace(regexp, `$1$2${textInput.value}`);
+	});
 }

@@ -5,8 +5,8 @@ import {
 	moveFocusUp,
 	enterFocused,
 	executeShortcut,
-} from './navigation.js';
-import { createConfirmationDialog } from './helpers.js';
+} from './navigation';
+import { createConfirmationDialog } from './helpers';
 
 /**
  * Shortcuts

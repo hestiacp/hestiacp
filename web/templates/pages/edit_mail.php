@@ -26,7 +26,7 @@
 		id="vstobjects"
 		name="v_edit_mail"
 		method="post"
-		class="<?= $v_status ?>"
+		class="<?= $v_status ?> js-enable-inputs-on-submit"
 	>
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">

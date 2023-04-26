@@ -19,7 +19,7 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_web" method="post">
+	<form id="vstobjects" name="v_add_web" method="post" class="js-enable-inputs-on-submit">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 

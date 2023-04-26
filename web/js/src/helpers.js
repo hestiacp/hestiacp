@@ -23,6 +23,11 @@ export function getCssVariable(variableName) {
 	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
 }
 
+// Shows the loading spinner overlay
+export function showSpinner() {
+	document.querySelector('.js-fullscreen-loader').classList.add('active');
+}
+
 // Creates a confirmation <dialog> on the fly
 export function createConfirmationDialog({ title, message = 'Are you sure?', targetUrl }) {
 	// Create the dialog
@@ -86,15 +91,4 @@ export function createConfirmationDialog({ title, message = 'Are you sure?', tar
 	// Add to DOM and show
 	document.body.append(dialog);
 	dialog.showModal();
-}
-
-// Updates textarea with values from text inputs
-export function updateTextareaWithInputValues(textInputs, textarea) {
-	textInputs.forEach((textInput) => {
-		const search = textInput.dataset.regexp;
-		const prevValue = textInput.dataset.prevValue;
-		textInput.setAttribute('data-prev-value', textInput.value);
-		const regexp = new RegExp(`(${search})(.+)(${prevValue})`);
-		textarea.value = textarea.value.replace(regexp, `$1$2${textInput.value}`);
-	});
 }

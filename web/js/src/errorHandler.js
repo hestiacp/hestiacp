@@ -1,4 +1,4 @@
-import { createConfirmationDialog } from './helpers.js';
+import { createConfirmationDialog } from './helpers';
 
 // Displays page error message/notice in a confirmation dialog
 export default function handleErrorMessage() {

@@ -22,7 +22,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing DNS Domain") ?></h1>
+			<h1 class="form-title"><?= _("Edit DNS Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>

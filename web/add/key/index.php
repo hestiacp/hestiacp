@@ -14,7 +14,7 @@ if (!empty($_POST["ok"])) {
 	verify_csrf($_POST);
 
 	if (empty($_POST["v_key"])) {
-		$_SESSION["error_msg"] = _("Field SSH_KEY can not be blank.");
+		$_SESSION["error_msg"] = _("Field SSH Key must not be blank");
 	}
 
 	if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
@@ -60,7 +60,7 @@ if (!empty($_POST["ok"])) {
 	unset($output);
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("SSH KEY created");
+		$_SESSION["ok_msg"] = _("SSH key created");
 	}
 }
 if (empty($v_key)) {

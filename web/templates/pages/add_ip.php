@@ -32,7 +32,7 @@
 			<h1 class="form-title"><?= _("Adding IP address") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
-				<label for="v_ip" class="form-label"><?= _("IP address") ?></label>
+				<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
 				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
 			</div>
 			<div class="u-mb10">
@@ -73,13 +73,13 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_name" class="form-label">
-					<?= _("Assigned domain") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					<?= _("Assigned Domain") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= htmlentities(trim($v_name, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_nat" class="form-label">
-					<?= _("NAT IP association") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					<?= _("NAT IP Association") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_nat" id="v_nat" value="<?= htmlentities(trim($v_nat, "'")) ?>">
 			</div>

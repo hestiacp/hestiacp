@@ -10,7 +10,7 @@
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Record") ?>
 				</a>
 				<a href="/edit/dns/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary js-button-create">
-					<i class="fas fa-pencil icon-blue"></i><?= _("Editing DNS Domain") ?>
+					<i class="fas fa-pencil icon-blue"></i><?= _("Edit DNS Domain") ?>
 				</a>
 			<?php } ?>
 		</div>
@@ -36,9 +36,9 @@
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("apply to selected") ?></option>
-							<option value="suspend"><?= _("suspend") ?></option>
-							<option value="unsuspend"><?= _("unsuspend") ?></option>
-							<option value="delete"><?= _("delete") ?></option>
+							<option value="suspend"><?= _("Suspend") ?></option>
+							<option value="unsuspend"><?= _("Unsuspend") ?></option>
+							<option value="delete"><?= _("Delete") ?></option>
 						</select>
 						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
@@ -80,17 +80,6 @@
 	<?php
 		foreach ($data as $key => $value) {
 			++$i;
-			if ($data[$key]['SUSPENDED'] == 'yes') {
-				$status = 'suspended';
-				$spnd_action = 'unsuspend';
-				$spnd_icon = 'fa-play';
-				$spnd_confirmation = _('UNSUSPEND_DOMAIN_CONFIRMATION');
-			} else {
-				$status = 'active';
-				$spnd_action = 'suspend';
-				$spnd_icon = 'fa-pause';
-				$spnd_confirmation = _('SUSPEND_DOMAIN_CONFIRMATION');
-			}
 		?>
 		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animate__animated animate__fadeIn"
 			v_unit_id="<?=htmlentities($key);?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-record="<?=$data[$key]['RECORD']?>" sort-type="<?=$data[$key]['TYPE']?>" sort-ttl="<?=$data[$key]['TTL']?>" sort-value="<?=$data[$key]['VALUE']?>">
@@ -103,7 +92,7 @@
 					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
 						<?=substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
 					<?php } else { ?>
-						<a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") . ': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a>
+						<a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit DNS Record") . ': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a>
 					<?php } ?>
 					</b>
 				</div>
@@ -116,14 +105,14 @@
 							&nbsp;
 						<?php } else { ?>
 							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/delete/dns/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&record_id=<?= $data[$key]["ID"] ?>&token=<?= $_SESSION["token"] ?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_("DELETE_RECORD_CONFIRMATION"), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete record %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>

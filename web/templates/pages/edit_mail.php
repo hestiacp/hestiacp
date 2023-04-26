@@ -32,7 +32,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing Mail Domain") ?></h1>
+			<h1 class="form-title"><?= _("Edits Mail Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
@@ -56,7 +56,7 @@
 				</div>
 			<?php } ?>
 			<div class="u-mb10">
-				<label for="v_catchall" class="form-label"><?= _("Catchall email") ?></label>
+				<label for="v_catchall" class="form-label"><?= _("Catch-All Email") ?></label>
 				<input type="email" class="form-control" name="v_catchall" id="v_catchall" value="<?= htmlentities(trim($v_catchall, "'")) ?>">
 			</div>
 			<div class="u-mb20">
@@ -103,7 +103,7 @@
 				<div class="form-check u-mb10">
 					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
 					<label for="v_letsencrypt">
-						<?= _("Lets Encrypt Support") ?>
+						<?= _("Use Lets Encrypt to obtain SSL certificate") ?>
 					</label>
 				</div>
 				<div id="le-warning" class="u-mb20">
@@ -124,12 +124,12 @@
 						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb10">
-						<label for="v_ssl_key" class="form-label"><?= _("SSL Key") ?></label>
+						<label for="v_ssl_key" class="form-label"><?= _("SSL Cerficate Key") ?></label>
 						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_ca" class="form-label">
-							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("optional") ?>)</span>
+							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 						</label>
 						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
 					</div>
@@ -137,7 +137,7 @@
 				<?php if ($v_ssl != "no") { ?>
 					<ul class="values-list">
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SUBJECT") ?></span>
+							<span class="values-list-label"><?= _("Domain") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_subject) ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
@@ -147,23 +147,23 @@
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_BEFORE") ?></span>
+							<span class="values-list-label"><?= _("Not Before") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_not_before) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_AFTER") ?></span>
+							<span class="values-list-label"><?= _("Not After") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_not_after) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SIGNATURE") ?></span>
+							<span class="values-list-label"><?= _("Signature") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_signature) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("PUB_KEY") ?></span>
+							<span class="values-list-label"><?= _("Public Key") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_pub_key) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("ISSUER") ?></span>
+							<span class="values-list-label"><?= _("Issuer") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_issuer) ?></span>
 						</li>
 					</ul>

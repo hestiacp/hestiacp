@@ -27,7 +27,7 @@
 								href="/delete/log/auth/?token=<?= $_SESSION["token"] ?>"
 							<?php } ?>
 							data-confirm-title="<?= _("Delete") ?>"
-							data-confirm-message="<?= _("DELETE_LOGS_CONFIRMATION") ?>"
+							data-confirm-message="<?= _("Are you sure you want to delete the logs?") ?>"
 						>
 							<i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
 						</a>
@@ -66,10 +66,10 @@
 			}
 			if ($data[$key]['STATUS'] == 'success')	{
 					$status_icon = 'fa-circle-check icon-green';
-					$status_title = 'Success';
+					$status_title = _('Success');
 			} else {
 					$status_icon = 'fa-circle-minus icon-red';
-					$status_title = 'Failed';
+					$status_title = _('Failed');
 			}
 		?>
 		<div class="l-unit header animate__animated animate__fadeIn">

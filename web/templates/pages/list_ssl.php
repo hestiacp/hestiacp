@@ -13,7 +13,7 @@
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Generating CSR") ?></h1>
+			<h1 class="form-title"><?= _("Generate SSL Certificate") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div
 				x-data="{
@@ -48,7 +48,7 @@
 				class="u-mb20"
 			>
 				<label for="v_key" class="form-label">
-					<?= _("SSL Key") ?>
+					<?= _("SSL Certificate Key") ?>
 					<a
 						x-bind:href="blob()"
 						download="<?= htmlentities($v_domain) ?>.key"
@@ -71,7 +71,7 @@
 				class="u-mb20"
 			>
 				<label for="v_csr" class="form-label">
-					<?= _("SSL CSR") ?>
+					<?= _("SSL Certificate CSR") ?>
 					<a
 						x-bind:href="blob()"
 						download="<?= htmlentities($v_domain) ?>.csr"

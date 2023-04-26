@@ -32,10 +32,10 @@
 				<form x-data x-bind="BulkEdit" action="/bulk/firewall/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
-						<option value=""><?= _("apply to selected") ?></option>
-						<option value="delete"><?= _("delete") ?></option>
+						<option value=""><?= _("Apply to selected") ?></option>
+						<option value="delete"><?= _("Delete") ?></option>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
@@ -68,12 +68,12 @@
 				$status = 'suspended';
 				$spnd_action = 'unsuspend';
 				$spnd_icon = 'fa-play';
-				$spnd_confirmation = _('UNSUSPEND_RULE_CONFIRMATION') ;
+				$spnd_confirmation = _('Are you sure you want to unsuspend rule #%s?') ;
 			} else {
 				$status = 'active';
 				$spnd_action = 'suspend';
 				$spnd_icon = 'fa-pause';
-				$spnd_confirmation = _('SUSPEND_RULE_CONFIRMATION') ;
+				$spnd_confirmation = _('Are you sure you want to suspend rule #%s?') ;
 			}
 		?>
 		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="firewall"
@@ -86,14 +86,14 @@
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-1">
 						<b>
-							<a href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Editing Firewall Rule") ?>">
+							<a href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Firewall Rule") ?>">
 								<?php
 									$suspended = $data[$key]["SUSPENDED"] == "no";
 									$action = $data[$key]["ACTION"];
 									$iconClass = $action == "DROP" ? "fa-circle-minus" : "fa-circle-check";
 									$colorClass = $action == "DROP" ? "icon-red" : "icon-green";
 								?>
-								<i class="fas <?= $iconClass ?> u-mr5 <?= $suspended ? $colorClass : "" ?>"></i> <?= _($action) ?>
+								<i class="fas <?= $iconClass ?> u-mr5 <?= $suspended ? $colorClass : "" ?>"></i> <?=$action ?>
 							</a>
 						</b>
 					</div>
@@ -101,7 +101,7 @@
 					<div class="clearfix l-unit__stat-col--left compact-2 u-text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix" style="padding-right: 10px;">
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Firewall Rule") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Firewall Rule") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
@@ -117,7 +117,7 @@
 										class="data-controls js-confirm-action"
 										href="/delete/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
 										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_('DELETE_RULE_CONFIRMATION'), $key) ?>"
+										data-confirm-message="<?= sprintf(_('Are you sure you want to delete rule %s'), $key) ?>"
 									>
 										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>

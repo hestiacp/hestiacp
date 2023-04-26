@@ -36,6 +36,46 @@ function translate_json($string) {
 	return $json_a[$string][0] . " (" . $json_a[$string . "_locale"][0] . ")";
 }
 /**
+ * Support translation strings that contains html
+ */
+function htmlify_trans($string, $closingTag) {
+	$arguments = func_get_args();
+	return preg_replace_callback(
+		"/{(.*?)}/", // Ungreedy (*?)
+		function ($matches) use ($arguments, $closingTag) {
+			static $i = 1;
+			$i++;
+			return $arguments[$i] . $matches[1] . $closingTag;
+		},
+		$string,
+	);
+}
+
+function get_email_template($file, $language) {
+	if (
+		file_exists(
+			$_SERVER["HESTIA"] . "/data/templates/email/" . $language . "/" . $file . ".html",
+		)
+	) {
+		return file_get_contents(
+			$_SERVER["HESTIA"] . "/data/templates/email/" . $language . "/" . $file . ".html",
+		);
+	}
+	if (file_exists($_SERVER["HESTIA"] . "/data/templates/email/" . $file . ".html")) {
+		return file_get_contents($_SERVER["HESTIA"] . "/data/templates/email/" . $file . ".html");
+	}
+	return false;
+}
+
+function translate_email($string, $replace) {
+	$array1 = $array2 = [];
+	foreach ($replace as $key => $value) {
+		$array1[] = "{{" . $key . "}}";
+		$array2[] = $value;
+	}
+	return str_replace($array1, $array2, $string);
+}
+/**
  * Detects user language .
  * @param string Fallback language (default: 'en')
  * @return string Language code (such as 'en' and 'ja')

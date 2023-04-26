@@ -10,8 +10,8 @@
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<input type="hidden" name="backup" value="<?= htmlentities($_GET["backup"]) ?>">
 				<select class="form-select" name="action">
-					<option value=""><?= _("apply to selected") ?></option>
-					<option value="restore"><?= _("restore") ?></option>
+					<option value=""><?= _("Apply to selected") ?></option>
+					<option value="restore"><?= _("Restore") ?></option>
 				</select>
 				<button type="submit" class="toolbar-input-submit">
 					<i class="fas fa-arrow-right"></i>
@@ -214,7 +214,7 @@
 					<input id="check6<?= $i ?>" class="ch-toggle" type="checkbox" name="udir[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("user dir") ?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("User Directory") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?= $key ?></b></div>

@@ -27,16 +27,16 @@
 			<div class="u-mb10">
 				<label for="v_action" class="form-label"><?= _("Action") ?></label>
 				<select class="form-select" name="v_action" id="v_action">
-					<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "'DROP'" )) echo 'selected'?>><?= _("DROP") ?></option>
-					<option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "'ACCEPT'" )) echo 'selected'?>><?= _("ACCEPT") ?></option>
+					<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "'DROP'" )) echo 'selected'?>>DROP</option>
+					<option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "'ACCEPT'" )) echo 'selected'?>>ACCEPT</option>
 				</select>
 			</div>
 			<div class="u-mb10">
 				<label for="v_protocol" class="form-label"><?= _("Protocol") ?></label>
 				<select class="form-select" name="v_protocol" id="v_protocol">
-					<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'TCP'" )) echo 'selected'?>><?= _("TCP") ?></option>
-					<option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'UDP'" )) echo 'selected'?>><?= _("UDP") ?></option>
-					<option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'ICMP'" )) echo 'selected'?>><?= _("ICMP") ?></option>
+					<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'TCP'" )) echo 'selected'?>TCP</option>
+					<option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'UDP'" )) echo 'selected'?>>UDP</option>
+					<option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "'ICMP'" )) echo 'selected'?>>ICMP</option>
 				</select>
 			</div>
 			<div class="u-mb10">

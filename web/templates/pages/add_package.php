@@ -41,7 +41,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_disk_quota" class="form-label">
-					<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+					<?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
@@ -52,7 +52,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_bandwidth" class="form-label">
-					<?= _("Bandwidth") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+					<?= _("Bandwidth") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">

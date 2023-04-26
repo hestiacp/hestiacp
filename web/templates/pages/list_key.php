@@ -51,7 +51,7 @@
 										href="/delete/key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									<?php } ?>
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_("DELETE_KEY_CONFIRM"), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete SSH key %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>
@@ -68,7 +68,7 @@
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext("%d SSH Key", "%d SSH Keys", $i), $i); ?>
+			<?php printf(ngettext("%d SSH key", "%d SSH keys", $i), $i); ?>
 		</p>
 	</div>
 </footer>

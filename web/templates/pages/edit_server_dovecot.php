@@ -65,7 +65,7 @@
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 				<label for="v_restart">
-					<?= _("restart") ?>
+					<?= _("Restart") ?>
 				</label>
 			</div>
 		</div>

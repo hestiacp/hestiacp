@@ -12,8 +12,8 @@
 				<form x-data x-bind="BulkEdit" action="/bulk/backup/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
-						<option value=""><?= _("apply to selected") ?></option>
-						<option value="delete"><?= _("delete") ?></option>
+						<option value=""><?= _("Apply to selected") ?></option>
+						<option value="delete"><?= _("Delete") ?></option>
 					</select>
 					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
@@ -55,19 +55,19 @@
 	<?php
 		foreach ($data as $key => $value) {
 			++$i;
-			$web = _('no');
-			$dns = _('no');
-			$mail = _('no');
-			$db = _('no');
-			$cron = _('no');
-			$udir = _('no');
+			$web = _('No');
+			$dns = _('No');
+			$mail = _('No');
+			$db = _('No');
+			$cron = _('No');
+			$udir = _('No');
 
-			if (!empty($data[$key]['WEB'])) $web = _('yes');
-			if (!empty($data[$key]['DNS'])) $dns = _('yes');
-			if (!empty($data[$key]['MAIL'])) $mail = _('yes');
-			if (!empty($data[$key]['DB'])) $db = _('yes');
-			if (!empty($data[$key]['CRON'])) $cron = _('yes');
-			if (!empty($data[$key]['UDIR'])) $udir = _('yes');
+			if (!empty($data[$key]['WEB'])) $web = _('Yes');
+			if (!empty($data[$key]['DNS'])) $dns = _('Yes');
+			if (!empty($data[$key]['MAIL'])) $mail = _('Yes');
+			if (!empty($data[$key]['DB'])) $db = _('Yes');
+			if (!empty($data[$key]['CRON'])) $cron = _('Yes');
+			if (!empty($data[$key]['UDIR'])) $udir = _('Yes');
 		?>
 		<div class="l-unit animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">
@@ -100,7 +100,7 @@
 												class="data-controls js-confirm-action"
 												href="/delete/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 												data-confirm-title="<?= _("Delete") ?>"
-												data-confirm-message="<?= sprintf(_("DELETE_BACKUP_CONFIRMATION"), $key) ?>"
+												data-confirm-message="<?= sprintf(_("Are you sure you want to delete %s backup?"), $key) ?>"
 											>
 												<i class="fas fa-trash icon-red icon-dim"></i>
 											</a>

@@ -6,7 +6,7 @@
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/server/?cpu" class="button button-secondary">
-				<i class="fas fa-chart-pie icon-green"></i><?= _("show: CPU / MEM / NET / DISK") ?>
+				<i class="fas fa-chart-pie icon-green"></i><?= _("show: View Advanced Details") ?>
 			</a>
 		</div>
 		<div class="toolbar-right">

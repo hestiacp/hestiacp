@@ -124,10 +124,10 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("WEB_DOMAIN_CREATED_OK"),
-			htmlentities($v_domain),
-			htmlentities($v_domain),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(_("Domain {%s} has been created successfully."), htmlentities($v_domain)),
+			"</b></a>",
+			'<a href="/edit/web/?domain=' . htmlentities($v_domain) . '"><b>',
 		);
 		unset($v_domain);
 		unset($v_aliases);
@@ -178,9 +178,7 @@ $user_domains = json_decode(implode("", $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
-if (empty($_GET["accept"])) {
-	$_GET["accept"] = false;
-}
+$accept = $_GET["accept"] ?? "";
 
 $v_domain = $_POST["domain"] ?? "";
 

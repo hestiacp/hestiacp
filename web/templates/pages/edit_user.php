@@ -58,7 +58,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing User") ?></h1>
+			<h1 class="form-title"><?= _("Edit User") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_user" class="form-label"><?= _("Username") ?></label>
@@ -112,12 +112,12 @@
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo 'checked' ?>>
 						<label for="v_twofa">
-							<?= _("Enable 2FA") ?>
+							<?= _("Enable two-factor authentication") ?>
 						</label>
 					</div>
 					<?php if (!empty($v_twofa)) { ?>
-						<p class="u-mb10"><?= _("2FA Reset Code:") . " " . $v_twofa ?></p>
-						<p class="u-mb10"><?= _("Please scan the code below in your 2FA application:") ?></p>
+						<p class="u-mb10"><?= _("Account Recovery Code") . ": " . $v_twofa ?></p>
+						<p class="u-mb10"><?= _("Please scan the code below in your 2FA application") ?>:</p>
 						<div class="u-mb10">
 							<img class="qr-code" src="<?= htmlentities($v_qrcode) ?>" alt="<?= _("2FA QR Code") ?>">
 						</div>
@@ -132,7 +132,7 @@
 					</div>
 				</div>
 				<div x-cloak x-show="useIpAllowList" id="ip-allowlist" class="u-mt10">
-					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= htmlentities(trim($v_login_allowed_ips, "'")) ?>" placeholder="<?= _("Example: 127.0.0.1,192.168.1.100") ?>">
+					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= htmlentities(trim($v_login_allowed_ips, "'")) ?>" placeholder="<?= _("Example") ?>: 127.0.0.1,192.168.1.100"">
 				</div>
 			</div>
 			<div class="u-mb10">

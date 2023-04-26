@@ -1070,13 +1070,86 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 	}
 
 	// Email login credentials
-	if (!empty($v_send_email) && empty($_SESSION["error_msg"])) {
-		$to = $v_send_email;
-		$subject = _("Email Credentials");
+	if (!empty($_POST["v_send_email"]) && empty($_SESSION["error_msg"])) {
+		$to = $_POST["v_send_email"];
+		$template = get_email_template("email_credentials", $_SESSION["language"]);
+		if (!empty($template)) {
+			preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
+			$subject = $matches[1];
+			$subject = str_replace(
+				["{{hostname}}", "{{appname}}", "{{account}}", "{{domain}}"],
+				[
+					get_hostname(),
+					$_SESSION["APP_NAME"],
+					htmlentities(strtolower($_POST["v_account"])),
+					htmlentities($_POST["v_domain"]),
+				],
+				$subject,
+			);
+			$template = str_replace($matches[0], "", $template);
+		} else {
+			$template = _(
+				"Mail account has been created\n" .
+					"\n" .
+					"Common account settings:\n" .
+					"Username: {{account}}@{{domain}}\n" .
+					"Password: {{password}}\n" .
+					"Webmail: {{webmail}}\n" .
+					"Hostname: {{hostname}}\n" .
+					"\n" .
+					"IMAP settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 993\n" .
+					"STARTTLS: Port 143\n" .
+					"No encryption: Port 143\n" .
+					"\n" .
+					"POP3 settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 995\n" .
+					"STARTTLS: Port 110\n" .
+					"No encryption: Port 110\n" .
+					"\n" .
+					"SMTP settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 465\n" .
+					"STARTTLS: Port 587\n" .
+					"No encryption: Port 25\n" .
+					"\n" .
+					"--\n" .
+					"{{appname}}",
+			);
+		}
+		if (empty($subject)) {
+			$subject = str_replace(
+				["{{subject}}", "{{hostname}}", "{{appname}}"],
+				[
+					sprintf(
+						_("Email Credentials %s@%s"),
+						htmlentities(strtolower($_POST["v_account"])),
+						htmlentities($_POST["v_domain"]),
+					),
+					get_hostname(),
+					$_SESSION["APP_NAME"],
+				],
+				$_SESSION["SUBJECT_EMAIL"],
+			);
+		}
+
 		$hostname = get_hostname();
-		$from = "noreply@" . $hostname;
-		$from_name = _("Hestia Control Panel");
-		$mailtext = $v_credentials;
+		$from = !empty($_SESSION["FROM_EMAIL"]) ? $_SESSION["FROM_EMAIL"] : "noreply@" . $hostname;
+		$from_name = !empty($_SESSION["FROM_NAME"])
+			? $_SESSION["FROM_NAME"]
+			: $_SESSION["APP_NAME"];
+
+		$mailtext = translate_email($template, [
+			"domain" => htmlentities($_POST["v_domain"]),
+			"account" => htmlentities(strtolower($_POST["v_account"])),
+			"password" => $_POST["v_password"],
+			"webmail" => $webmail . "." . htmlentities($_POST["v_domain"]),
+			"hostname" => "mail." . htmlentities($_POST["v_domain"]),
+			"appname" => $_SESSION["APP_NAME"],
+		]);
+
 		send_email($to, $subject, $mailtext, $from, $from_name);
 	}
 

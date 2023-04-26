@@ -28,19 +28,19 @@
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("apply to selected") ?></option>
-						<option value="rebuild"><?= _("rebuild") ?></option>
-						<option value="rebuild user"><?= _("rebuild user") ?></option>
-						<option value="rebuild web"><?= _("rebuild web") ?></option>
-						<option value="rebuild dns"><?= _("rebuild dns") ?></option>
-						<option value="rebuild mail"><?= _("rebuild mail") ?></option>
-						<option value="rebuild db"><?= _("rebuild db") ?></option>
-						<option value="rebuild cron"><?= _("rebuild cron") ?></option>
-						<option value="update counters"><?= _("update counters") ?></option>
-						<option value="suspend"><?= _("suspend") ?></option>
-						<option value="unsuspend"><?= _("unsuspend") ?></option>
-						<option value="delete"><?= _("delete") ?></option>
+						<option value="rebuild"><?= _("Rebuild All") ?></option>
+						<option value="rebuild user"><?= _("Rebuild User") ?></option>
+						<option value="rebuild web"><?= _("Rebuild Web Domains") ?></option>
+						<option value="rebuild dns"><?= _("Rebuild Dns Domains") ?></option>
+						<option value="rebuild mail"><?= _("Rebuild Mail Domains") ?></option>
+						<option value="rebuild db"><?= _("Rebuild Databases") ?></option>
+						<option value="rebuild cron"><?= _("Rebuild Cron Jobs") ?></option>
+						<option value="update counters"><?= _("Update Usage Counters") ?></option>
+						<option value="suspend"><?= _("Suspend") ?></option>
+						<option value="unsuspend"><?= _("Unsuspend") ?></option>
+						<option value="delete"><?= _("Delete") ?></option>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
@@ -89,12 +89,12 @@
 				$status = 'suspended';
 				$spnd_action = 'unsuspend';
 				$spnd_icon = 'fa-play';
-				$spnd_confirmation = _('UNSUSPEND_USER_CONFIRMATION');
+				$spnd_confirmation = _('Are you sure you want to unsuspend user %s?');
 			} else {
 				$status = 'active';
 				$spnd_action = 'suspend';
 				$spnd_icon = 'fa-pause';
-				$spnd_confirmation = _('SUSPEND_USER_CONFIRMATION');
+				$spnd_confirmation = _('Are you sure you want to suspend user %s?');
 			}
 		?>
 		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended';?> animate__animated animate__fadeIn" v_section="user"
@@ -106,7 +106,7 @@
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 userlist-username">
 					<?php if ($key == $user_plain) { ?>
-						<b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
+						<b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit User") ?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
 					<?php } else { ?>
 						<b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
 					<?php } ?>
@@ -149,7 +149,7 @@
 										class="data-controls js-confirm-action"
 										href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_("DELETE_USER_CONFIRMATION"), $key) ?>"
+										data-confirm-message="<?= sprintf(_('Are you sure you want to delete user %s?'), $key) ?>"
 									>
 										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>

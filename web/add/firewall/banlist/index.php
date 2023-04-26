@@ -49,7 +49,7 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("BANLIST_CREATED_OK");
+		$_SESSION["ok_msg"] = _("IP address has been banned successfully");
 		unset($v_chain);
 		unset($v_ip);
 	}

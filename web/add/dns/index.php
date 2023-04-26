@@ -194,11 +194,15 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("DNS_DOMAIN_CREATED_OK"),
-			htmlentities($_POST["v_domain"]),
-			htmlentities($_POST["v_domain"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("DNS domain {%s} has been created successfully"),
+				htmlentities($_POST["v_domain"]),
+			),
+			"</b></a>",
+			'<a href="/edit/dns/?domain=' . htmlentities($_POST["v_domain"]) . '"><b>',
 		);
+
 		unset($v_domain);
 	}
 }
@@ -272,7 +276,7 @@ if (!empty($_POST["ok_rec"])) {
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
 		$_SESSION["ok_msg"] = sprintf(
-			_("DNS_RECORD_CREATED_OK"),
+			_("Record <b>%s.%s</b> has been created successfully."),
 			htmlentities($_POST["v_rec"]),
 			htmlentities($_POST["v_domain"]),
 		);
@@ -365,6 +369,7 @@ if (empty($_GET["domain"])) {
 		$v_ns8 = str_replace("'", "", $nameservers[7]);
 		unset($output);
 	}
+	$accept = $_GET["accept"] ?? "";
 
 	render_page($user, $TAB, "add_dns");
 } else {
@@ -388,6 +393,7 @@ if (empty($_GET["domain"])) {
 	if (empty($v_dnssec)) {
 		$v_dnssec = "";
 	}
+
 	render_page($user, $TAB, "add_dns_rec");
 }
 

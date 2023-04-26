@@ -11,7 +11,7 @@
 				<form x-data x-bind="BulkEdit" action="/list/stats/" method="get">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="user">
-						<option value=""><?= _("show per user") ?></option>
+						<option value=""><?= _("Show Per User") ?></option>
 						<?php
 							foreach ($users as $key => $value) {
 								if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value === 'admin')) {
@@ -26,7 +26,7 @@
 							}
 						?>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>

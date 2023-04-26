@@ -94,7 +94,7 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("RULE_CREATED_OK");
+		$_SESSION["ok_msg"] = _("Rule has been created successfully.");
 		unset($v_port);
 		unset($v_ip);
 		unset($v_comment);

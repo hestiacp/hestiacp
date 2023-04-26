@@ -26,19 +26,19 @@
 		<div class="form-container">
 			<h1 class="form-title"><?= _("Add Web Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<?php if ($user_plain == "admin" && $_GET["accept"] !== "true") { ?>
+			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?= _("Avoid adding web domains on admin account") ?></p>
+					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a web domain')), '</a>', '<a href="/add/user/">'); ?></p>
 				</div>
 			<?php } ?>
-			<?php if ($user_plain == "admin" && empty($_GET["accept"])) { ?>
+			<?php if ($user_plain == "admin" && empty($accept)) { ?>
 				<div class="u-side-by-side u-pt18">
 					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
 					<a href="/add/web/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
 				</div>
 			<?php } ?>
-			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
+			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<div class="u-mb10">
 					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
 					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>

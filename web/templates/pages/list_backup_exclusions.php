@@ -6,7 +6,7 @@
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/edit/backup/exclusions/" class="button button-secondary">
-				<i class="fas fa-pencil icon-orange"></i><?= _("Editing Backup Exclusions") ?>
+				<i class="fas fa-pencil icon-orange"></i><?= _("Edit Backup Exclusions") ?>
 			</a>
 		</div>
 		<div class="toolbar-right">

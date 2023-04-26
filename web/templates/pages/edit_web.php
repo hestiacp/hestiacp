@@ -46,7 +46,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing Domain") ?></h1>
+			<h1 class="form-title"><?= _("Edit Web Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
@@ -110,7 +110,7 @@
 						</div>
 						<div class="u-mb20">
 							<label for="v_password" class="form-label">
-								<?= _("Password") ?> / <a href="javascript:WEBrandom();" class="form-link"><?= _("generate") ?></a>
+								<?= _("Password") ?> / <a href="javascript:WEBrandom();" class="form-link"><?= _("Generate") ?></a>
 							</label>
 							<div class="u-pos-relative">
 								<input type="text" class="form-control js-password-input" name="v_stats_password" id="v_password" value="<?= trim($v_stats_password, "'") ?>">
@@ -165,38 +165,38 @@
 			<div class="form-check u-mb10">
 				<input x-model="sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
 				<label for="v_ssl">
-					<?= _("SSL Support") ?>
+					<?= _("Enable SSL for this domain") ?>
 				</label>
 			</div>
 			<div x-cloak x-show="sslEnabled" id="ssltable" class="u-pl30">
 				<div class="form-check u-mb10">
 					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt">
 					<label for="letsencrypt">
-						<?= _("Lets Encrypt Support") ?>
+						<?= _("Use Lets Encrypt to obtain SSL certificate") ?>
 					</label>
 				</div>
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo 'checked' ?>>
 					<label for="v_ssl_forcessl">
-						<?= _("Force SSL/HTTPS") ?>
+						<?= _("Enable automatic HTTPS redirection") ?>
 					</label>
 				</div>
 				<div class="form-check u-mb20">
 					<input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo 'checked' ?>>
 					<label for="ssl_hsts">
-						<?= _("Enable SSL HSTS") ?>
+						<?= _("Enable HTTP Strict Transport Security (HSTS)") ?><a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>
 					</label>
 				</div>
 				<div x-cloak x-show="showCertificates" id="ssl-details">
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
-							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate CSR") ?></a></span>
+							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate Self-Signed SSL Certificate") ?></a></span>
 						</label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb10">
-						<label for="v_ssl_key" class="form-label"><?= _("SSL Key") ?></label>
+						<label for="v_ssl_key" class="form-label"><?= _("SSL Cerficate Key") ?></label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
@@ -209,33 +209,33 @@
 				<?php if ($v_ssl != "no") { ?>
 					<ul class="values-list">
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SUBJECT") ?></span>
+							<span class="values-list-label"><?= _("Domain") ?></span>
 							<span class="values-list-value"><?= $v_ssl_subject ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("ALIASES") ?></span>
+								<span class="values-list-label"><?= _("Aliases") ?></span>
 								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_BEFORE") ?></span>
+							<span class="values-list-label"><?= _("Not Before") ?></span>
 							<span class="values-list-value"><?= $v_ssl_not_before ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_AFTER") ?></span>
+							<span class="values-list-label"><?= _("Not After") ?></span>
 							<span class="values-list-value"><?= $v_ssl_not_after ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SIGNATURE") ?></span>
+							<span class="values-list-label"><?= _("Signature") ?></span>
 							<span class="values-list-value"><?= $v_ssl_signature ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("PUB_KEY") ?></span>
+							<span class="values-list-label"><?= _("Public Key") ?></span>
 							<span class="values-list-value"><?= $v_ssl_pub_key ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("ISSUER") ?></span>
+							<span class="values-list-label"><?= _("Issuer") ?></span>
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
@@ -381,7 +381,7 @@
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp_user)) echo 'checked' ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)">
 						<label for="v_ftp">
-							<?= _("Additional FTP Account") ?>
+							<?= _("Additional FTP account(s)") ?>
 						</label>
 					</div>
 					<div id="ftp_users">
@@ -396,7 +396,7 @@
 						<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;">
 							<div class="u-mb10">
 								<?= _("FTP") ?> #<span class="ftp-user-number"><?=$i + 1; ?></span>
-								<button type="button" class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></button>
+								<button type="button" class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("Delete") ?></button>
 								<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
 								<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
 							</div>
@@ -412,7 +412,7 @@
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?=$i ?>][v_ftp_password]" class="form-label">
-									<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("generate") ?></a>
+									<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("Generate") ?></a>
 								</label>
 								<input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[<?=$i ?>][v_ftp_password]" id="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
 							</div>
@@ -435,7 +435,7 @@
 
 					<div class="js-add-new-ftp-user-button" style="<?=!empty($v_ftp_user) ? '' : 'display:none;' ?>">
 						<div class="u-pt18 v-add-new-user">
-							<a class="form-link" onclick="App.Actions.WEB.add_ftp_user_form()"><?= _("Add one more FTP Account") ?></a>
+							<a class="form-link" onclick="App.Actions.WEB.add_ftp_user_form()"><?= _("Add FTP account") ?></a>
 						</div>
 					</div>
 				<?php } ?>
@@ -450,7 +450,7 @@
 	<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
 		<div class="u-mb10">
 			<?= _("FTP") ?> #<span class="ftp-user-number"></span>
-			<a class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
+			<a class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("Delete") ?></a>
 			<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
 			<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
 		</div>

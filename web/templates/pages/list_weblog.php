@@ -13,8 +13,8 @@
 		<div class="top-bar">
 			<div class="container top-bar-inner">
 				<div class="top-bar-left">
-					<a href="/" class="top-bar-logo" title="<?= _("Hestia Control Panel") ?>">
-						<img src="/images/logo-header.svg" alt="<?= _("Hestia Control Panel") ?>" width="54" height="29">
+					<a href="/" class="top-bar-logo" title="<?= htmlentities($_SESSION['APP_NAME']);?>">
+						<img src="<?php if ( !empty($_SESSION['LOGO_HEADER'])){ echo $_SESSION['LOGO_HEADER']; } else{ echo "/images/logo-header.svg"; } ?>" alt="<?= htmlentities($_SESSION['APP_NAME']);?>" width="54" height="29">
 					</a>
 				</div>
 				<div class="top-bar-right">

@@ -2131,31 +2131,8 @@ echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbi
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
-write_config_value "PHPMYADMIN_KEY" ""
-write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
-write_config_value "POLICY_USER_VIEW_LOGS" "yes"
-write_config_value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
-write_config_value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
-write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
-write_config_value "POLICY_USER_DELETE_LOGS" "yes"
-write_config_value "POLICY_USER_CHANGE_THEME" "yes"
-write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
-write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "yes"
-write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "no"
-write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
-write_config_value "PLUGIN_APP_INSTALLER" "true"
-write_config_value "DEBUG_MODE" "no"
-write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-write_config_value "USE_SERVER_SMTP" "false"
-write_config_value "SERVER_SMTP_PORT" ""
-write_config_value "SERVER_SMTP_HOST" ""
-write_config_value "SERVER_SMTP_SECURITY" ""
-write_config_value "SERVER_SMTP_USER" ""
-write_config_value "SERVER_SMTP_PASSWD" ""
-write_config_value "SERVER_SMTP_ADDR" ""
-write_config_value "POLICY_CSRF_STRICTNESS" "1"
-write_config_value "DISABLE_IP_CHECK" "no"
-write_config_value "DNS_CLUSTER_SYSTEM" "hestia"
+source $HESTIA/func/syshealth.sh
+syshealth_repair_system_config
 
 # Add /usr/local/hestia/bin/ to path variable
 echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then

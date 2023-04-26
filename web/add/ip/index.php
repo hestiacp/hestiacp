@@ -88,10 +88,13 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("IP_CREATED_OK"),
-			htmlentities($_POST["v_ip"]),
-			htmlentities($_POST["v_ip"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("IP address {%s} has been created successfully."),
+				htmlentities($_POST["v_ip"]),
+			),
+			"</b></a>",
+			'<a href="/edit/ip/?ip=' . htmlentities($_POST["v_ip"]) . '"><b>',
 		);
 		unset($v_ip);
 		unset($v_netmask);

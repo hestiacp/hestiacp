@@ -36,7 +36,7 @@
 							<option value="unsuspend"><?= _("unsuspend") ?></option>
 							<option value="delete"><?= _("delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>

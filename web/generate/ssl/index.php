@@ -118,7 +118,7 @@ $v_org = $_POST["v_org"];
 if ($return_var != 0) {
 	$error = implode("<br>", $output);
 	if (empty($error)) {
-		$error = sprintf(_("Error code:"), $return_var);
+		$error = sprintf(_("Error code: %s"), $return_var);
 	}
 	$_SESSION["error_msg"] = $error;
 	render_page($user, $TAB, "generate_ssl");
@@ -127,7 +127,7 @@ if ($return_var != 0) {
 }
 
 // OK message
-$_SESSION["ok_msg"] = _("SSL_GENERATED_OK");
+$_SESSION["ok_msg"] = _("Certificate has been generated successfully.");
 
 // Parse output
 $data = json_decode(implode("", $output), true);

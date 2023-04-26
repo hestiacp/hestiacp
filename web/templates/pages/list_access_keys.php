@@ -85,7 +85,7 @@
 									class="data-controls js-confirm-action"
 									href="/delete/access-key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_("DELETE_ACCESS_KEY_CONFIRMATION"), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete access key %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>

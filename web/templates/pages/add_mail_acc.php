@@ -81,13 +81,13 @@
 						</div>
 						<div class="u-mb10">
 							<label for="v_aliases" class="form-label">
-								<?= _("Aliases") ?> <span class="optional">(<?= _("use local-part") ?>)</span>
+								<?= _("Aliases") ?> <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
 							</label>
 							<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
 						</div>
 						<div class="u-mb10">
 							<label for="v_fwd" class="form-label">
-								<?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
+								<?= _("Forward to") ?> <span class="optional">(<?= _("One or more email addresses") ?>)</span>
 							</label>
 							<textarea class="form-control" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
 						</div>
@@ -115,7 +115,6 @@
 							<?= _("Send login credentials to email address") ?>
 						</label>
 						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= htmlentities(trim($v_send_email, "'")) ?>">
-						<input type="hidden" name="v_credentials" class="js-hidden-credentials">
 					</div>
 				</div>
 				<div>
@@ -148,11 +147,11 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("SSL/TLS") ?></span>
+								<span class="values-list-label">SSL/TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 993</span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("STARTTLS") ?></span>
+								<span class="values-list-label">STARTTLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 143</span>
 							</li>
 							<li class="values-list-item">
@@ -167,11 +166,11 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("SSL/TLS") ?></span>
-								<span class="values-list-value"><?= _("Port") ?> 995</span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("STARTTLS") ?></span>
+									<span class="values-list-label">SSL/TLS</span>
+									<span class="values-list-value"><?= _("Port") ?> 995</span>
+								</li>
+								<li class="values-list-item">
+									<span class="values-list-label">STARTTLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 110</span>
 							</li>
 							<li class="values-list-item">
@@ -186,11 +185,11 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("SSL/TLS") ?></span>
+								<span class="values-list-label">SSL/TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 465</span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("STARTTLS") ?></span>
+								<span class="values-list-label">STARTTLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 587</span>
 							</li>
 							<li class="values-list-item">

@@ -139,45 +139,98 @@ if (!empty($_POST["ok"])) {
 		// send email in "users" language
 		putenv("LANGUAGE=" . $_POST["v_language"]);
 
-		$subject = _("Welcome to Hestia Control Panel");
-		$hostname = get_hostname();
-		unset($output);
-		$from = "noreply@" . $hostname;
-		$from_name = _("Hestia Control Panel");
+		$name = empty($_POST["v_name"]) ? $_POST["v_username"] : $_POST["v_name"];
 
-		if (!empty($_POST["v_name"])) {
-			$mailtext = sprintf(_("GREETINGS_GORDON"), $_POST["v_name"]) . "\r\n";
+		$template = get_email_template("account_ready", $v_language);
+		if (!empty($template)) {
+			preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
+			$subject = $matches[1];
+			$subject = str_replace(
+				["{{hostname}}", "{{appname}}", "{{user}}", "{{name}}"],
+				[get_hostname(), $_SESSION["APP_NAME"], $_POST["v_username"], $name],
+				$subject,
+			);
+			$template = str_replace($matches[0], "", $template);
 		} else {
-			$mailtext = _("GREETINGS") . "\r\n";
+			$template = _(
+				"Hello {{name}},\n" .
+					"Your account has been created and is ready for use.\n" .
+					"https://{{hostname}}/login/\n" .
+					"Username: {{user}}\n" .
+					"Password: {{password}}\n" .
+					"--\n" .
+					"{{appname}}",
+			);
 		}
 
-		$mailtext .= sprintf(
-			_("ACCOUNT_READY"),
-			$_SERVER["HTTP_HOST"],
-			$_POST["v_username"],
-			$_POST["v_password"],
-		);
-		send_email($to, $subject, $mailtext, $from, $from_name, $_POST["name"]);
+		if (empty($subject)) {
+			$subject = str_replace(
+				["{{subject}}", "{{hostname}}", "{{appname}}"],
+				[
+					sprintf(_("Welcome to %s"), $_SESSION["APP_NAME"]),
+					get_hostname(),
+					$_SESSION["APP_NAME"],
+				],
+				$_SESSION["SUBJECT_EMAIL"],
+			);
+		}
+
+		$hostname = get_hostname();
+
+		$from = !empty($_SESSION["FROM_EMAIL"]) ? $_SESSION["FROM_EMAIL"] : "noreply@" . $hostname;
+		$from_name = !empty($_SESSION["FROM_NAME"])
+			? $_SESSION["FROM_NAME"]
+			: $_SESSION["APP_NAME"];
+
+		if ($hostname) {
+			$host = preg_replace("/(\[?[^]]*\]?):([0-9]{1,5})$/", "$1", $_SERVER["HTTP_HOST"]);
+			if ($host == $hostname) {
+				$port_is_defined = preg_match("/\[?[^]]*\]?:[0-9]{1,5}$/", $_SERVER["HTTP_HOST"]);
+				if ($port_is_defined) {
+					$port = preg_replace(
+						"/(\[?[^]]*\]?):([0-9]{1,5})$/",
+						"$2",
+						$_SERVER["HTTP_HOST"],
+					);
+				} else {
+					$port = "";
+				}
+			} else {
+				$port = ":" . $_SERVER["SERVER_PORT"];
+			}
+			$hostname = $hostname . $port;
+		} else {
+			$hostname = $_SERVER["HTTP_HOST"];
+		}
+
+		$mailtext = translate_email($template, [
+			"name" => $name,
+			"user" => $_POST["v_username"],
+			"password" => $_POST["v_password"],
+			"hostname" => $hostname,
+			"appname" => $_SESSION["APP_NAME"],
+		]);
+
+		send_email($to, $subject, $mailtext, $from, $from_name, $name);
 		putenv("LANGUAGE=" . detect_user_language());
 	}
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("USER_CREATED_OK"),
-			htmlentities($_POST["v_username"]),
-			htmlentities($_POST["v_username"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("User {%s} has been created successfully. / {login as %s}"),
+				htmlentities($_POST["v_username"]),
+				htmlentities($_POST["v_username"]),
+			),
+			"</b></a>",
+			'<a href="/edit/user/?user=' . htmlentities($_POST["v_username"]) . '"><b>',
+			'<a href="/login/?loginas=' .
+				htmlentities($_POST["v_username"]) .
+				"&token=" .
+				htmlentities($_SESSION["token"]) .
+				'"><b>',
 		);
-		$_SESSION["ok_msg"] .=
-			" / <a href=/login/?loginas=" .
-			htmlentities($_POST["v_username"]) .
-			"&token=" .
-			htmlentities($_SESSION["token"]) .
-			">" .
-			_("login as") .
-			" " .
-			htmlentities($_POST["v_username"]) .
-			"</a>";
 		unset($v_username);
 		unset($v_password);
 		unset($v_email);

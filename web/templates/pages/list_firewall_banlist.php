@@ -13,10 +13,10 @@
 			<form x-data x-bind="BulkEdit" action="/bulk/firewall/banlist/" method="post">
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<select class="form-select" name="action">
-					<option value=""><?= _("apply to selected") ?></option>
-					<option value="delete"><?= _("delete") ?></option>
+					<option value=""><?= _("Apply to selected") ?></option>
+					<option value="delete"><?= _("Delete") ?></option>
 				</select>
-				<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+				<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>
@@ -60,7 +60,7 @@
 									class="data-controls js-confirm-action"
 									href="/delete/firewall/banlist/?ip=<?= $ip ?>&chain=<?= $value["CHAIN"] ?>&token=<?= $_SESSION["token"] ?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_("DELETE_IP_CONFIRMATION"), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete IP address %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>

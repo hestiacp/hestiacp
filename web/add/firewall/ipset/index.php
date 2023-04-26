@@ -69,7 +69,7 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("IPSET_CREATED_OK");
+		$_SESSION["ok_msg"] = _("IP list created successfully");
 	}
 }
 if (empty($v_ipname)) {

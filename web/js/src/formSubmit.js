@@ -9,6 +9,13 @@ export default function handleFormSubmit() {
 			// Show loading spinner
 			showSpinner();
 
+			// Enable any disabled inputs to ensure all fields are submitted
+			if (pageForm.classList.contains('js-enable-inputs-on-submit')) {
+				document.querySelectorAll('input[disabled]').forEach((input) => {
+					input.disabled = false;
+				});
+			}
+
 			// Enable any disabled unlimited inputs and set their value to "unlimited"
 			enableUnlimitedInputs();
 

@@ -196,7 +196,7 @@ ftp_delete() {
 # SFTP Functions
 # sftp command function
 sftpc() {
-	if [ $PRIVATEKEY != "yes" ]; then
+	if [ "$PRIVATEKEY" != "yes" ]; then
 		expect -f "-" "$@" << EOF
             set timeout 60
             set count 0

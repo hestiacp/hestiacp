@@ -540,7 +540,7 @@ upgrade_b2_tool() {
 			wget -O $b2cli $b2lnk > /dev/null 2>&1
 			chmod +x $b2cli > /dev/null 2>&1
 			if [ ! -f "$b2cli" ]; then
-				echo "Error: Binary download failed, b2 doesnt work as expected."
+				echo "Error: Binary download failed, b2 doesn't work as expected."
 				exit 3
 			fi
 		fi

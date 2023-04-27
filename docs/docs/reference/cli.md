@@ -857,7 +857,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
-www.domain.tld type will be automatically assigned to the domain unless
+<www.domain.tld> type will be automatically assigned to the domain unless
 "none" is transmited as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
@@ -2025,7 +2025,7 @@ v-change-web-domain-sslhome admin acme.com single
 example: v-change-web-domain-sslhome admin acme.com same
 ```
 
-This function changes SSL home directory. Single will seperate the both public_html / public_shtml. Same will always point to public_shtml
+This function changes SSL home directory. Single will separate the both public_html / public_shtml. Same will always point to public_shtml
 
 ## v-change-web-domain-stats
 
@@ -4150,7 +4150,7 @@ This function for obtaining the list of postgresql config parameters.
 
 ## v-list-sys-php
 
-listing availble PHP versions installed
+listing available PHP versions installed
 
 **Options**: `[FORMAT]`
 

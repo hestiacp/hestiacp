@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Script for preparing lxd enviorment and building Hestia packages for all supported distros
+# Script for preparing lxd environment and building Hestia packages for all supported distros
 # - Run with sudo, not directly as root!
 #
 # Arguments:

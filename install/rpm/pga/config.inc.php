@@ -53,12 +53,12 @@ $conf["servers"][0]["slony_sql"] = "/usr/share/pgsql";
 //$conf['servers'][1]['slony_sql'] = 'C:\\Program Files\\PostgreSQL\\8.0\\share';
 
 // Example of groups definition.
-// Groups allow administrators to logicaly group servers together under group nodes in the left browser tree
+// Groups allow administrators to logically group servers together under group nodes in the left browser tree
 //
 // The group '0' description
 //$conf['srv_groups'][0]['desc'] = 'group one';
 //
-// Add here servers indexes belonging to the group '0' seperated by comma
+// Add here server indexes belonging to the group '0' separated by comma
 //$conf['srv_groups'][0]['servers'] = '0,1,2';
 //
 // A server can belong to multi groups

@@ -54,7 +54,7 @@
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
-						<label for="v_hostname" class="form-label">
+						<label for="v_app_name" class="form-label">
 							<?= _("Application Name") ?>
 						</label>
 						<input
@@ -115,13 +115,12 @@
 						>
 					</div>
 					<div class="u-mb10">
-						<label for="v_timezone" class="form-label">
+						<label for="v_hide_docs" class="form-label">
 							<?= _("Hide link to Documentation") ?>
 						</label>
 						<select x-model="hide_docs" class="form-select" name="v_hide_docs" id="v_hide_docs">
 							<option value="yes"><?=_('Hide Documentation Link');?></option>
 							<option value="no"><?=_('Display Documentation Link');?></option>
-
 						</select>
 					</div>
 				</div>

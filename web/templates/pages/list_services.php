@@ -161,7 +161,7 @@
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
-									href="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
 									data-confirm-title="<?= _($action) ?>"
 									data-confirm-message="<?php if($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service %s?'),$key); }else{ echo sprintf(_('Are you sure you want to start service %s?'),$key); }?>"
 								>

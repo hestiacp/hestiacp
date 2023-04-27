@@ -1,6 +1,6 @@
 <div class="login animate__animated animate__zoomIn">
 	<a href="/" class="u-block u-mb40">
-		<img src="/images/logo.svg" alt="<?=htmlentities($_SESSION['APP_NAME']);?>" width="100" height="120">
+		<img src="/images/logo.svg" alt="<?= htmlentities($_SESSION['APP_NAME']); ?>" width="100" height="120">
 	</a>
 	<form id="form_login" method="post" action="/login/">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
@@ -8,7 +8,7 @@
 		<h1 class="login-title">
 			<?= _("2 Factor Authentication") ?>
 		</h1>
-		<?php if(!empty($error){ show_error_message($error); }?>
+		<?php if(!empty($error){ show_error_message($error); } ?>
 		<div class="u-mb20">
 			<label for="twofa" class="form-label u-side-by-side">
 				<?= _("2FA Token") ?>

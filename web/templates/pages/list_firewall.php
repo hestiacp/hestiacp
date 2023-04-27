@@ -93,7 +93,7 @@
 									$iconClass = $action == "DROP" ? "fa-circle-minus" : "fa-circle-check";
 									$colorClass = $action == "DROP" ? "icon-red" : "icon-green";
 								?>
-								<i class="fas <?= $iconClass ?> u-mr5 <?= $suspended ? $colorClass : "" ?>"></i> <?=$action ?>
+								<i class="fas <?= $iconClass ?> u-mr5 <?= $suspended ? $colorClass : "" ?>"></i> <?= $action ?>
 							</a>
 						</b>
 					</div>

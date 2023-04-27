@@ -135,7 +135,7 @@
 										class="data-controls js-confirm-action"
 										href="/delete/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key);?>"
+										data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>"
 									>
 										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>

@@ -4,7 +4,6 @@
 	</a>
 	<form id="form_login" method="post" action="/login/">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-		<input type="hidden" name="murmur" value="" id="murmur">
 		<h1 class="login-title">
 			<?= _("2 Factor Authentication") ?>
 		</h1>

@@ -4,11 +4,10 @@
 	</a>
 	<form id="form_login" method="post" action="/login/">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-		<input type="hidden" name="murmur" value="" id="murmur">
 		<h1 class="login-title">
 			<?= sprintf(_("Welcome to %s"),htmlentities($_SESSION['APP_NAME'])) ?>
 		</h1>
-		<?php show_error_message($error); ?>
+		<?php if(!empty($error)){ show_error_message($error); } ?>
 		<div class="u-mb20">
 			<label for="user" class="form-label"><?= _("Username") ?></label>
 			<input type="text" class="form-control" name="user" id="user" required autofocus>

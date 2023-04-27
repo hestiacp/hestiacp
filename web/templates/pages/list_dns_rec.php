@@ -80,6 +80,12 @@
 	<?php
 		foreach ($data as $key => $value) {
 			++$i;
+			if ($data[$key]['SUSPENDED'] == 'yes') {
+				$status = 'suspended';
+			}else{
+				$status = 'active';
+
+			}
 		?>
 		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animate__animated animate__fadeIn"
 			v_unit_id="<?=htmlentities($key);?>" v_section="dns_rec" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-record="<?=$data[$key]['RECORD']?>" sort-type="<?=$data[$key]['TYPE']?>" sort-ttl="<?=$data[$key]['TTL']?>" sort-value="<?=$data[$key]['VALUE']?>">

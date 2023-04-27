@@ -407,7 +407,6 @@
 								</label>
 								<input type="text" class="form-control v-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
 								name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
-								<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
 								<small class="hint"></small>
 							</div>
 							<div class="u-pl30 u-mb10">

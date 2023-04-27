@@ -92,7 +92,7 @@
 
 					<div class="u-mb10">
 						<label for="v_from_email" class="form-label">
-							<?= _("Sender email adress") ?><span class="optional"><?=sprintf('Default: noreply@%s', htmlentities(trim(get_hostname(), "'")));?></span>
+							<?= _("Sender email address") ?><span class="optional"><?=sprintf('Default: noreply@%s', htmlentities(trim(get_hostname(), "'")));?></span>
 						</label>
 						<input
 							type="text"

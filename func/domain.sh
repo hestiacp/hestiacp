@@ -664,7 +664,7 @@ is_mail_domain_new() {
 	done
 }
 
-# Checking mail account existance
+# Checking mail account existence
 is_mail_new() {
 	check_acc=$(grep "ACCOUNT='$1'" $USER_DATA/mail/$domain.conf)
 	if [ -n "$check_acc" ]; then
@@ -915,7 +915,7 @@ del_webmail_ssl_config() {
 #                        CMN                               #
 #----------------------------------------------------------#
 
-# Checking domain existance
+# Checking domain existence
 is_domain_new() {
 	type=$1
 	for object in ${2//,/ }; do

@@ -4331,7 +4331,7 @@ msgstr ""
 
 #: ../../web/add/webapp/index.php:91
 #, php-format
-msgid "%s App was installed succesfully!"
+msgid "%s App was installed successfully!"
 msgstr ""
 
 #: ../../web/add/dns/index.php:194

@@ -6,7 +6,7 @@
 Modifying templates could cause errors on the server and may cause some services to not be able to reload or start.
 :::
 
-Everytime you rebuild the user or domain, the config files of the domain are overwritten by the new templates.
+Every time you rebuild the user or domain, the config files of the domain are overwritten by the new templates.
 
 This happens when:
 

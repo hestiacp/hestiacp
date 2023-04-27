@@ -304,7 +304,7 @@ if (!empty($_POST["save"])) {
 	fclose($fp);
 	unlink($tmpfile);
 
-	// Propogate new package
+	// Propagate new package
 	exec(HESTIA_CMD . "v-update-user-package " . $v_package . " 'json'", $output, $return_var);
 	check_return_code($return_var, $output);
 	unset($output);

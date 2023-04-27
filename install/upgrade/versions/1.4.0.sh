@@ -169,7 +169,7 @@ rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal8.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter2.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter3.*tpl
 
-# Clean up old Hestia controled webapps
+# Clean up old Hestia controlled webapps
 if [ -d "$HESTIA/web/images/webapps/" ]; then
 	echo "[ * ] Clean up old web apps code..."
 	rm -rf $HESTIA/web/images/webapps/

@@ -6,12 +6,14 @@ import handleCronGenerator from './cronGenerator';
 import handleDiscardAllMail from './discardAllMail';
 import handleErrorMessage from './errorHandler';
 import handleFormSubmit from './formSubmit';
+import handleIpListDataSource from './ipListDataSource';
 import handleListSelectAll from './listSelectAll';
 import handleListSorting from './listSorting';
 import handleNameServerInput from './nameServerInput';
 import handlePasswordInput from './passwordInput';
 import handleShortcuts from './shortcuts';
 import handleStickyToolbar from './stickyToolbar';
+import handleSyncEmailValues from './syncEmailValues';
 import handleTabPanels from './tabPanels';
 import handleToggleAdvanced from './toggleAdvanced';
 import handleUnlimitedInput from './unlimitedInput';
@@ -33,6 +35,7 @@ function initListeners() {
 	handleNameServerInput();
 	handlePasswordInput();
 	handleStickyToolbar();
+	handleSyncEmailValues();
 	handleTabPanels();
 	handleToggleAdvanced();
 }
@@ -40,6 +43,7 @@ function initListeners() {
 document.addEventListener('alpine:init', () => {
 	alpineInit();
 	handleErrorMessage();
+	handleIpListDataSource();
 	handleShortcuts();
 	handleUnlimitedInput();
 });

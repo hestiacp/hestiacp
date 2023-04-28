@@ -234,24 +234,29 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
 	for db in ${DB_SYSTEM//,/ }; do
 		service="$db"
 		proc_name=''
+		mysql="/usr/bin/mysql"
+		if [ -f '/usr/bin/mariadb' ]; then
+			mysql="/usr/bin/mariadb"
+		fi
 		if [ "$service" = 'mysql' ]; then
-			mysql_version=$(mysql -V)
+			mysql_version=$($mysql -V)
 			mariadb_string="MariaDB"
 			if [[ ! $mysql_version =~ $mariadb_string ]]; then
 				# MySQL
 				service='mysql'
 				proc_name='mysqld'
 			else
-				# MariaDB
-				if [ -e "/lib/systemd/system/mariadb.service" ]; then
-					service='mariadb'
-					proc_name='mysqld'
-				fi
-				if [ -f /usr/bin/mysql ]; then
-					mariadb_v=$(mysql -V | awk 'NR==1{print $5}' | cut -d'.' -f2)
-					if [ $mariadb_v -ge "5" ]; then
-						service='mariadb'
-						proc_name='mariadbd'
+				service='mariadb'
+				proc_name='mariadbd'
+				# MariaDB 10.4 and lower
+				if [ -f $mysql ]; then
+					mariadb_v=$($mysql -V | awk 'NR==1{print $5}')
+					if [[ $mariadb_v =~ $mariadb_string ]]; then
+						mariadb_v=$(echo $mariadb_v | cut -f2 -d'.')
+						if [ $mariadb_v -le "4" ]; then
+							service='mariadb'
+							proc_name='mysqld'
+						fi
 					fi
 				fi
 			fi

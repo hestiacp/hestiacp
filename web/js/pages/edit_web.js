@@ -44,7 +44,7 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 
 	hint = hint.replace(/[^\w\d]/gi, '');
 
-	$(elm).parent().find('.v-ftp-user').val(hint);
+	$(elm).parent().find('.js-ftp-user').val(hint);
 	$(elm)
 		.parent()
 		.find('.hint')
@@ -52,7 +52,7 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 };
 
 App.Listeners.WEB.keypress_ftp_username = function () {
-	var ftp_user_inputs = $('.v-ftp-user');
+	var ftp_user_inputs = $('.js-ftp-user');
 	$.each(ftp_user_inputs, function (i, ref) {
 		var $ref = $(ref);
 		var current_val = $ref.val();
@@ -132,11 +132,11 @@ App.Actions.WEB.add_ftp_user_form = function () {
 			$elm.attr('for', forAttr.replace('%INDEX%', newIndex));
 		});
 
-	template.find('.ftp-user-number').text(newIndex);
+	template.find('.js-ftp-user-number').text(newIndex);
 	$('#ftp_users').append(template);
 
 	let counter = 1;
-	$('.form-container .ftp-user-number:visible').each((_, o) => {
+	$('.form-container .js-ftp-user-number:visible').each((_, o) => {
 		$(o).text(counter);
 		counter += 1;
 	});
@@ -144,8 +144,8 @@ App.Actions.WEB.add_ftp_user_form = function () {
 
 App.Actions.WEB.remove_ftp_user = function (elm) {
 	var ref = $(elm).parents('.js-ftp-account');
-	ref.find('.v-ftp-user-deleted').val('1');
-	if (ref.find('.v-ftp-user-is-new').val() == 1) {
+	ref.find('.js-ftp-user-deleted').val('1');
+	if (ref.find('.js-ftp-user-is-new').val() == 1) {
 		ref.remove();
 		return true;
 	}
@@ -153,7 +153,7 @@ App.Actions.WEB.remove_ftp_user = function (elm) {
 	ref.hide();
 
 	var index = 1;
-	$('.form-container .ftp-user-number:visible').each(function (i, o) {
+	$('.form-container .js-ftp-user-number:visible').each(function (i, o) {
 		$(o).text(index);
 		index += 1;
 	});
@@ -168,17 +168,17 @@ App.Actions.WEB.toggle_additional_ftp_accounts = function (elm) {
 	if ($(elm).prop('checked')) {
 		$('.js-ftp-account-nrm, .v-add-new-user, .js-add-new-ftp-user-button').show();
 		$('.js-ftp-account-nrm').each(function (i, elm) {
-			var login = $(elm).find('.v-ftp-user');
+			var login = $(elm).find('.js-ftp-user');
 			if (login.val().trim() != '') {
-				$(elm).find('.v-ftp-user-deleted').val(0);
+				$(elm).find('.js-ftp-user-deleted').val(0);
 			}
 		});
 	} else {
 		$('.js-ftp-account-nrm, .v-add-new-user, .js-add-new-ftp-user-button').hide();
 		$('.js-ftp-account-nrm').each(function (i, elm) {
-			var login = $(elm).find('.v-ftp-user');
+			var login = $(elm).find('.js-ftp-user');
 			if (login.val().trim() != '') {
-				$(elm).find('.v-ftp-user-deleted').val(1);
+				$(elm).find('.js-ftp-user-deleted').val(1);
 			}
 		});
 	}
@@ -191,7 +191,7 @@ App.Actions.WEB.randomPasswordGenerated = function (elm) {
 App.Actions.WEB.passwordChanged = function (elm) {
 	var ref = $(elm).parents('.js-ftp-account');
 	if (ref.find('.js-email-alert-on-psw').length == 0) {
-		var inp_name = ref.find('.v-ftp-user-is-new').prop('name');
+		var inp_name = ref.find('.js-ftp-user-is-new').prop('name');
 		inp_name = inp_name.replace('is_new', 'v_ftp_email');
 		ref.find('div:last').after(
 			`<div class="u-pl30 u-mb10">
@@ -211,7 +211,7 @@ App.Listeners.WEB.keypress_ftp_username();
 App.Listeners.WEB.keypress_ftp_path();
 
 $(function () {
-	$('.v-ftp-user-psw').on('keypress', function (evt) {
+	$('.js-ftp-user-psw').on('keypress', function (evt) {
 		var elm = $(evt.target);
 		App.Actions.WEB.passwordChanged(elm);
 	});
@@ -263,17 +263,12 @@ $(function () {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function WEBrandom() {
-	document.v_edit_web.v_stats_password.value = Hestia.helpers.randomPassword();
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function FTPrandom(elm) {
-	$(elm).parents('.js-ftp-account').find('.v-ftp-user-psw').val(Hestia.helpers.randomPassword());
+	$(elm).parents('.js-ftp-account').find('.js-ftp-user-psw').val(Hestia.helpers.randomPassword());
 	App.Actions.WEB.randomPasswordGenerated && App.Actions.WEB.randomPasswordGenerated(elm);
 }
 
-$('.v-redirect-custom-value').change(function () {
+$('.js-redirect-custom-value').change(function () {
 	if (this.value == 'custom') {
 		$('#custom_redirect').show();
 	} else {

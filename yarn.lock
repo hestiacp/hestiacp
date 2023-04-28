@@ -5,31 +5,31 @@ __metadata:
   version: 6
   cacheKey: 8
 
-"@algolia/autocomplete-core@npm:1.7.4":
-  version: 1.7.4
-  resolution: "@algolia/autocomplete-core@npm:1.7.4"
+"@algolia/autocomplete-core@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@algolia/autocomplete-core@npm:1.8.2"
   dependencies:
-    "@algolia/autocomplete-shared": 1.7.4
-  checksum: cd7c0badec2dd7f32eb1c567e740473df41d0b5cfdc009efc2b44d2c72e30d90a05882ca0616d6dc29326177d5183a7fd9c6189e5eab3abe26936e232ac5f43a
+    "@algolia/autocomplete-shared": 1.8.2
+  checksum: 03c164d8ce685e8b690734364a2e8653a7ebaf9b49ccbea5f94236b1231d66ed6771010406a0b00a2ce884b767712d71903a7d124ec11f35a87006d1456da762
   languageName: node
   linkType: hard
 
-"@algolia/autocomplete-preset-algolia@npm:1.7.4":
-  version: 1.7.4
-  resolution: "@algolia/autocomplete-preset-algolia@npm:1.7.4"
+"@algolia/autocomplete-preset-algolia@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@algolia/autocomplete-preset-algolia@npm:1.8.2"
   dependencies:
-    "@algolia/autocomplete-shared": 1.7.4
+    "@algolia/autocomplete-shared": 1.8.2
   peerDependencies:
     "@algolia/client-search": ">= 4.9.1 < 6"
     algoliasearch: ">= 4.9.1 < 6"
-  checksum: 4ea134757d611d1b7489f34b4366d103fb981dde3f75f39762fb71142f23bd024825f7541ab756ead9c87e223184616fd74b7762982054c96927fecd5a6e6e3e
+  checksum: f968b0f9d0ad9e75d3e1cfe35a02816ed01d83eb3d702bb8d4297bb9abf542991659c4a16c6ea323eea9268f189e85f58fcb109de76e6c4a9f58a0d63812c92e
   languageName: node
   linkType: hard
 
-"@algolia/autocomplete-shared@npm:1.7.4":
-  version: 1.7.4
-  resolution: "@algolia/autocomplete-shared@npm:1.7.4"
-  checksum: d304b1e3523ccf36a4a21ef9c116c83360fc1bffc595e888f05c35ab00de293104184dafebd9b9ed8ac5ffa5c416ddd4b1139e9794a253f52863c1ae544c2c9c
+"@algolia/autocomplete-shared@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@algolia/autocomplete-shared@npm:1.8.2"
+  checksum: 1ec17deb594c41e983643cfd888e3590963aa7207ef6a67859c49a8f4835340493ba3b025b8b617b488365730ba9817ad58ee44a610c172332446e560fb68780
   languageName: node
   linkType: hard
 
@@ -559,30 +559,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docsearch/css@npm:3.3.3, @docsearch/css@npm:^3.3.3":
-  version: 3.3.3
-  resolution: "@docsearch/css@npm:3.3.3"
-  checksum: c3e678dd5e05a962d3e29b4c953632a013af3a352ad99d0e630546409e665684e122265034bca1619d9bd659e42d35c7cc90ee373836fcfb2614aae2057c5dc1
+"@docsearch/css@npm:3.3.4, @docsearch/css@npm:^3.3.3":
+  version: 3.3.4
+  resolution: "@docsearch/css@npm:3.3.4"
+  checksum: 56e3ae677423fa4cf508ffb964d0616862a4af22affad308f47edf5c1ad097a2b21187c53d240f83463c4e7add3cd60e3630022a68e2089bb3066bfbaded64a0
   languageName: node
   linkType: hard
 
 "@docsearch/js@npm:^3.3.3":
-  version: 3.3.3
-  resolution: "@docsearch/js@npm:3.3.3"
+  version: 3.3.4
+  resolution: "@docsearch/js@npm:3.3.4"
   dependencies:
-    "@docsearch/react": 3.3.3
+    "@docsearch/react": 3.3.4
     preact: ^10.0.0
-  checksum: 445bb7f66f9ca4b385a28fd78bcbac048acd20d925978a1c23cc1ef74022ec4e3ff93d58819eae9a721dc1ac6eed17e40de536ec67ab99b87fff6e4db6b78a96
+  checksum: 4a865e6fede00b5d7d957d1e640d0114235b0217cfb21d6d6de02ede11bc6081ddf82fb5a96284bc1f47642eea35211a7ba0cf7541e8d356913c56f8b1408cf5
   languageName: node
   linkType: hard
 
-"@docsearch/react@npm:3.3.3":
-  version: 3.3.3
-  resolution: "@docsearch/react@npm:3.3.3"
+"@docsearch/react@npm:3.3.4":
+  version: 3.3.4
+  resolution: "@docsearch/react@npm:3.3.4"
   dependencies:
-    "@algolia/autocomplete-core": 1.7.4
-    "@algolia/autocomplete-preset-algolia": 1.7.4
-    "@docsearch/css": 3.3.3
+    "@algolia/autocomplete-core": 1.8.2
+    "@algolia/autocomplete-preset-algolia": 1.8.2
+    "@docsearch/css": 3.3.4
     algoliasearch: ^4.0.0
   peerDependencies:
     "@types/react": ">= 16.8.0 < 19.0.0"
@@ -595,7 +595,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 8a31c175853b61ee80748abc0cebdc33d247483643c4151a430e05d37f159bf59ea08cb69f878cff7787d3ca122b664701575543914d3c3692b448b63d3ad716
+  checksum: 50f122f08c543711fffe8ba3b507311a01defef6db5d47401bd2b5c7759512357fa26d2a88a68b50916b9084fd922f7340ad03e479b4d60ac2e22b4a198dc06d
   languageName: node
   linkType: hard
 
@@ -1093,12 +1093,12 @@ __metadata:
   linkType: hard
 
 "@vitejs/plugin-vue@npm:^4.1.0":
-  version: 4.2.0
-  resolution: "@vitejs/plugin-vue@npm:4.2.0"
+  version: 4.2.1
+  resolution: "@vitejs/plugin-vue@npm:4.2.1"
   peerDependencies:
     vite: ^4.0.0
     vue: ^3.2.25
-  checksum: 210dad859d996a9b0fa00f7806de282d6a04581ced1792dd902d3f28c46cde33f8db03b164bed3b066c5602f2b962a00473b7dfbe234f0a276eb61cc9cc96669
+  checksum: a7266a45378d5fd7813699cf97dfac0e313dc63bd245a1c932848b2b5dc58aede922231d5a534baeeb7e2842c7172f17194a4833bd6a7a6ed61dc0a31d60c7c9
   languageName: node
   linkType: hard
 
@@ -1707,12 +1707,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chart.js@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "chart.js@npm:4.2.1"
+"chart.js@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "chart.js@npm:4.3.0"
   dependencies:
     "@kurkle/color": ^0.3.0
-  checksum: 7319fdfd1e29812e87bbc07737e8c9072ff659bbc09ade8dd262f83424cd7e48f89afe5220e11e002c9f236883fae3f3adb8adc16acb4682b0ddcc0b661c3af9
+  checksum: 157ceaa3815665163cb30ccc221a5af40834dca940faa6ec02cb95406bf3e83c15c5f36ad950a1716c9d199e87f7b9be953227c4d9d445d593536175b47bbab8
   languageName: node
   linkType: hard
 
@@ -2230,9 +2230,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.284":
-  version: 1.4.372
-  resolution: "electron-to-chromium@npm:1.4.372"
-  checksum: 946c50f1ec5df2408fc90164ab3814081dacd20cad7c440b829da391f864fefcda202e9e5a7016ce9d06d3c8746a505ffad820dfc51aa269dd13a6fdbf71d15d
+  version: 1.4.376
+  resolution: "electron-to-chromium@npm:1.4.376"
+  checksum: 881351d25e0e983432c10844540bb664ee4c54f781b81b7247c36d6e617dc85305fd87ffb5de6d9630c6a54f4432afd8e97565a11c62bb77b63051e43cb8a942
   languageName: node
   linkType: hard
 
@@ -3152,7 +3152,7 @@ __metadata:
     "@prettier/plugin-php": ^0.19.4
     "@typescript-eslint/eslint-plugin": ^5.59.1
     "@typescript-eslint/parser": ^5.59.1
-    chart.js: ^4.2.1
+    chart.js: ^4.3.0
     check-password-strength: ^2.0.7
     cssnano: ^6.0.0
     esbuild: ^0.17.18
@@ -3161,8 +3161,8 @@ __metadata:
     eslint-plugin-editorconfig: ^4.0.2
     eslint-plugin-import: ^2.27.5
     husky: ^8.0.3
-    lint-staged: ^13.2.1
-    markdownlint-cli2: ^0.7.0
+    lint-staged: ^13.2.2
+    markdownlint-cli2: ^0.7.1
     nanoid: ^4.0.2
     normalize.css: ^8.0.1
     postcss: ^8.4.23
@@ -3720,9 +3720,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^13.2.1":
-  version: 13.2.1
-  resolution: "lint-staged@npm:13.2.1"
+"lint-staged@npm:^13.2.2":
+  version: 13.2.2
+  resolution: "lint-staged@npm:13.2.2"
   dependencies:
     chalk: 5.2.0
     cli-truncate: ^3.1.0
@@ -3736,10 +3736,10 @@ __metadata:
     object-inspect: ^1.12.3
     pidtree: ^0.6.0
     string-argv: ^0.3.1
-    yaml: ^2.2.1
+    yaml: ^2.2.2
   bin:
     lint-staged: bin/lint-staged.js
-  checksum: 5788d3fe38e69b7f7b7f700284d4e10738978a0916bc77d3f6253c43a030fc4f01f89c09da349fb658f929f3393d8b1e3eaabaac5b604416ebc33476640b51ce
+  checksum: f34f6e2e85e827364658ab8717bf8b35239473c2d4959d746b053a4cf158ac657348444c755820a8ef3eac2d4753a37c52e9db3e201ee20b085f26d2f2fbc9ed
   languageName: node
   linkType: hard
 
@@ -3935,21 +3935,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdownlint-cli2@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "markdownlint-cli2@npm:0.7.0"
+"markdownlint-cli2@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "markdownlint-cli2@npm:0.7.1"
   dependencies:
     globby: 13.1.4
-    markdownlint: 0.28.1
+    markdownlint: 0.28.2
     markdownlint-cli2-formatter-default: 0.0.4
     micromatch: 4.0.5
     strip-json-comments: 5.0.0
-    yaml: 2.2.1
+    yaml: 2.2.2
   bin:
     markdownlint-cli2: markdownlint-cli2.js
     markdownlint-cli2-config: markdownlint-cli2-config.js
     markdownlint-cli2-fix: markdownlint-cli2-fix.js
-  checksum: be0d937be2a6f620a85a420cce9a070c7e9e6eb669fa338837339eb8b2b1cff93acd5fcc5038a348d408f31439c95db0daf60b53d9fc38c0a2261a7823c3f73b
+  checksum: 665dc5cf66bade88f802bac0938a9dc828517d8362ce65f98ab0ca1abf81d3a92fcf280ad4c0990949cbab02c858b325f35ec836e0075fa2704a82e38333bf46
   languageName: node
   linkType: hard
 
@@ -3960,13 +3960,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdownlint@npm:0.28.1":
-  version: 0.28.1
-  resolution: "markdownlint@npm:0.28.1"
+"markdownlint@npm:0.28.2":
+  version: 0.28.2
+  resolution: "markdownlint@npm:0.28.2"
   dependencies:
     markdown-it: 13.0.1
     markdownlint-micromark: 0.1.2
-  checksum: d606e3f069d9b261b9c4ed0533f035420f38a4a19d73b238b35ff51a854be72a38e87d80eb15432aace34837a45b7da12bfbccaea4f70792d1e66ee771ded6d5
+  checksum: 2b83ff8223d7002ebcc8228abfd34c1f85f6c9b14e591a162498140dfa6d89b5083bbc45b097e279e5ae9a2e54b8603807634eb5141f575fce601ad781ce77aa
   languageName: node
   linkType: hard
 
@@ -5402,7 +5402,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.1.10, postcss@npm:^8.4.21, postcss@npm:^8.4.22, postcss@npm:^8.4.23":
+"postcss@npm:^8.1.10, postcss@npm:^8.4.22, postcss@npm:^8.4.23":
   version: 8.4.23
   resolution: "postcss@npm:8.4.23"
   dependencies:
@@ -5715,11 +5715,11 @@ __metadata:
   linkType: hard
 
 "rxjs@npm:^7.8.0":
-  version: 7.8.0
-  resolution: "rxjs@npm:7.8.0"
+  version: 7.8.1
+  resolution: "rxjs@npm:7.8.1"
   dependencies:
     tslib: ^2.1.0
-  checksum: 61b4d4fd323c1043d8d6ceb91f24183b28bcf5def4f01ca111511d5c6b66755bc5578587fe714ef5d67cf4c9f2e26f4490d4e1d8cabf9bd5967687835e9866a2
+  checksum: de4b53db1063e618ec2eca0f7965d9137cabe98cf6be9272efe6c86b47c17b987383df8574861bcced18ebd590764125a901d5506082be84a8b8e364bf05f119
   languageName: node
   linkType: hard
 
@@ -5843,6 +5843,13 @@ __metadata:
   version: 3.0.7
   resolution: "signal-exit@npm:3.0.7"
   checksum: a2f098f247adc367dffc27845853e9959b9e88b01cb301658cfe4194352d8d2bb32e18467c786a7fe15f1d44b233ea35633d076d5e737870b7139949d1ab6318
+  languageName: node
+  linkType: hard
+
+"signal-exit@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "signal-exit@npm:4.0.1"
+  checksum: 832043367dca23e61ab6033e8b41c595fc805119bfe4fee63dea201cdc809a8b086bc54597bbbc1b2cde1a63c7dd554d1295ed2cca92db598233834a0b59b281
   languageName: node
   linkType: hard
 
@@ -6552,12 +6559,12 @@ __metadata:
   linkType: hard
 
 "vite@npm:^4.3.1":
-  version: 4.3.2
-  resolution: "vite@npm:4.3.2"
+  version: 4.3.3
+  resolution: "vite@npm:4.3.3"
   dependencies:
     esbuild: ^0.17.5
     fsevents: ~2.3.2
-    postcss: ^8.4.21
+    postcss: ^8.4.23
     rollup: ^3.21.0
   peerDependencies:
     "@types/node": ">= 14"
@@ -6584,7 +6591,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 0194c06c44efa6fc2f81389d16d90cc3da8e7a58d071fe80e787053d604e0ea653e367fc6eb0528058d255c1ae72625396128561301add48b8e480c45343d11c
+  checksum: 99970cb1fed3330458e60f8341ec73c4260c82d815e51c95295321ab496e4c8cb447bc942daf4d94f78bbc8b2bed36cbc237f43fdc1cede19250fac737e5a0fc
   languageName: node
   linkType: hard
 
@@ -6747,12 +6754,12 @@ __metadata:
   linkType: hard
 
 "write-file-atomic@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "write-file-atomic@npm:5.0.0"
+  version: 5.0.1
+  resolution: "write-file-atomic@npm:5.0.1"
   dependencies:
     imurmurhash: ^0.1.4
-    signal-exit: ^3.0.7
-  checksum: 6ee16b195572386cb1c905f9d29808f77f4de2fd063d74a6f1ab6b566363832d8906a493b764ee715e57ab497271d5fc91642a913724960e8e845adf504a9837
+    signal-exit: ^4.0.1
+  checksum: 8dbb0e2512c2f72ccc20ccedab9986c7d02d04039ed6e8780c987dc4940b793339c50172a1008eed7747001bfacc0ca47562668a069a7506c46c77d7ba3926a9
   languageName: node
   linkType: hard
 
@@ -6770,14 +6777,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:2.2.1":
-  version: 2.2.1
-  resolution: "yaml@npm:2.2.1"
-  checksum: 84f68cbe462d5da4e7ded4a8bded949ffa912bc264472e5a684c3d45b22d8f73a3019963a32164023bdf3d83cfb6f5b58ff7b2b10ef5b717c630f40bd6369a23
-  languageName: node
-  linkType: hard
-
-"yaml@npm:^2.2.1":
+"yaml@npm:2.2.2, yaml@npm:^2.2.2":
   version: 2.2.2
   resolution: "yaml@npm:2.2.2"
   checksum: d90c235e099e30094dcff61ba3350437aef53325db4a6bcd04ca96e1bfe7e348b191f6a7a52b5211e2dbc4eeedb22a00b291527da030de7c189728ef3f2b4eb3

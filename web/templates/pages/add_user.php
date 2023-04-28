@@ -41,12 +41,12 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_email" class="form-label"><?= _("Email") ?></label>
-				<input type="email" class="form-control" name="v_email" id="v_email" value="<?= htmlentities(trim($v_email, "'")) ?>" tabindex="3" required>
+				<input type="email" class="form-control js-sync-email-input" name="v_email" id="v_email" value="<?= htmlentities(trim($v_email, "'")) ?>" tabindex="3" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_password" class="form-label">
 					<?= _("Password") ?>
-					<button type="button" title="<?= _("generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+					<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
 						<i class="fas fa-arrows-rotate icon-green"></i>
 					</button>
 				</label>
@@ -71,7 +71,7 @@
 			</div>
 			<div x-cloak x-show="!loginDisabled" id="send-welcome">
 				<div class="form-check u-mb10">
-					<input class="form-check-input" type="checkbox" name="v_email_notice" id="v_email_notify" tabindex="5">
+					<input class="form-check-input js-sync-email-checkbox" type="checkbox" name="v_email_notice" id="v_email_notify" tabindex="5">
 					<label for="v_email_notify">
 						<?= _("Send welcome email") ?>
 					</label>
@@ -126,7 +126,7 @@
 				<label for="v_notify" class="form-label">
 					<?= _("Email login credentials to:") ?>
 				</label>
-				<input type="email" class="form-control" name="v_notify" id="v_notify" value="<?= htmlentities(trim($v_notify, "'")) ?>" tabindex="8">
+				<input type="email" class="form-control js-sync-email-output" name="v_notify" id="v_notify" value="<?= htmlentities(trim($v_notify, "'")) ?>" tabindex="8">
 			</div>
 		</div>
 

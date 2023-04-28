@@ -442,6 +442,10 @@ is_web_domain_cert_valid() {
 		check_result "$E_FORBIDEN" "SSL Key is protected (remove pass_phrase)"
 	fi
 
+	if pgrep -x "openssl" > /dev/null; then
+		pkill openssl
+	fi
+
 	openssl s_server -quiet -cert $ssl_dir/$domain.crt \
 		-key $ssl_dir/$domain.key >> /dev/null 2>&1 &
 	pid=$!

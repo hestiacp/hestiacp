@@ -6,6 +6,7 @@ import handleCronGenerator from './cronGenerator';
 import handleDiscardAllMail from './discardAllMail';
 import handleErrorMessage from './errorHandler';
 import handleFormSubmit from './formSubmit';
+import handleIpListDataSource from './ipListDataSource';
 import handleListSelectAll from './listSelectAll';
 import handleListSorting from './listSorting';
 import handleNameServerInput from './nameServerInput';
@@ -42,6 +43,7 @@ function initListeners() {
 document.addEventListener('alpine:init', () => {
 	alpineInit();
 	handleErrorMessage();
+	handleIpListDataSource();
 	handleShortcuts();
 	handleUnlimitedInput();
 });

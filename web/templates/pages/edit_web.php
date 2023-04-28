@@ -110,7 +110,10 @@
 						</div>
 						<div class="u-mb20">
 							<label for="v_password" class="form-label">
-								<?= _("Password") ?> / <a href="javascript:WEBrandom();" class="form-link"><?= _("generate") ?></a>
+								<?= _("Password") ?>
+								<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+									<i class="fas fa-arrows-rotate icon-green"></i>
+								</button>
 							</label>
 							<div class="u-pos-relative">
 								<input type="text" class="form-control js-password-input" name="v_stats_password" id="v_password" value="<?= trim($v_stats_password, "'") ?>">
@@ -127,19 +130,19 @@
 			</div>
 			<div x-cloak x-show="redirectEnabled" id="v_redirect" class="u-pl30 u-mb10">
 				<div class="form-check">
-					<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-1" value="<?='www.'.htmlentities($v_domain);?>" <?php if ($v_redirect == "www.".$v_domain) echo 'checked'; ?>>
 					<label for="v-redirect-radio-1">
 						<?= sprintf(_("Redirect visitors to %s"), "www." . htmlentities($v_domain)) ?>
 					</label>
 				</div>
 				<div class="form-check">
-					<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo 'checked';?> >
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?=htmlentities($v_domain);?>" <?php if( $v_redirect == $v_domain) echo 'checked';?> >
 					<label for="v-redirect-radio-2">
 						<?= sprintf(_("Redirect visitors to %s"), htmlentities($v_domain)) ?>
 					</label>
 				</div>
 				<div class="form-check">
-					<input class="form-check-input v-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if( !empty($v_redirect_custom)) echo 'checked';?>>
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if( !empty($v_redirect_custom)) echo 'checked';?>>
 					<label for="v-redirect-radio-3">
 						<?= _("Redirect visitors to a custom domain or web address") ?>
 					</label>
@@ -395,33 +398,33 @@
 						?>
 						<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;">
 							<div class="u-mb10">
-								<?= _("FTP") ?> #<span class="ftp-user-number"><?=$i + 1; ?></span>
+								<?= _("FTP") ?> #<span class="js-ftp-user-number"><?=$i + 1; ?></span>
 								<button type="button" class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></button>
-								<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
-								<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
+								<input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
+								<input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?=$i ?>][v_ftp_user]" class="form-label">
 									<?= _("Username") ?><br>
 									<span style="color:#777;"><?=sprintf(_('Prefix %s will be added to username automatically'),$user_plain."_");?></span>
 								</label>
-								<input type="text" class="form-control v-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
+								<input type="text" class="form-control js-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
 								name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
 								<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
 								<small class="hint"></small>
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?=$i ?>][v_ftp_password]" class="form-label">
-									<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("generate") ?></a>
+									<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("Generate") ?></a>
 								</label>
-								<input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[<?=$i ?>][v_ftp_password]" id="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
+								<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[<?=$i ?>][v_ftp_password]" id="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?=$i ?>][v_ftp_path]" class="form-label"><?= _("Path") ?></label>
 								<input type="hidden" name="v_ftp_pre_path" value="<?=!empty($v_ftp_pre_path) ? htmlentities(trim($v_ftp_pre_path, "'")) : '/'; ?>">
 								<input type="hidden" name="v_ftp_user[<?=$i ?>][v_ftp_path_prev]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
 								<input type="text" class="form-control js-ftp-path" name="v_ftp_user[<?=$i ?>][v_ftp_path]" id="v_ftp_user[<?=$i ?>][v_ftp_path]" value="<?php if (!empty($v_ftp_path)) echo ($v_ftp_path[0] != '/' ? '/' : '').htmlentities(trim($v_ftp_path, "'")) ?>">
-								<span class="hint-prefix js-ftp-path-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="hint js-ftp-path-hint"></span>
+								<span class="hint-prefix"><?=htmlentities(trim($v_ftp_pre_path, "'"))?></span><span class="hint js-ftp-path-hint"></span>
 							</div>
 							<?php if ($ftp_user['is_new'] == 1): ?>
 								<div class="u-pl30 u-mb10">
@@ -449,30 +452,30 @@
 <div id="templates" class="u-hidden">
 	<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
 		<div class="u-mb10">
-			<?= _("FTP") ?> #<span class="ftp-user-number"></span>
+			<?= _("FTP") ?> #<span class="js-ftp-user-number"></span>
 			<a class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
-			<input type="hidden" class="v-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
-			<input type="hidden" class="v-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
+			<input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
+			<input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_user]" class="form-label">
 				<?= _("Username") ?><br>
 				<span style="color:#777;"><?= sprintf(_("Prefix %s will be added to username automatically"), $user_plain . "_") ?></span>
 			</label>
-			<input type="text" class="form-control v-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
+			<input type="text" class="form-control js-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
 			<small class="hint"></small>
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_password]" class="form-label">
-				<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("generate") ?></a>
+				<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("Generate") ?></a>
 			</label>
-			<input type="text" class="form-control v-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
+			<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_path]" class="form-label"><?= _("Path") ?></label>
 			<input type="hidden" name="v_ftp_pre_path" value="">
 			<input type="text" class="form-control js-ftp-path" name="v_ftp_user[%INDEX%][v_ftp_path]" id="v_ftp_user[%INDEX%][v_ftp_path]" value="">
-			<span class="hint-prefix js-ftp-path-prefix"><?= htmlentities(trim($v_ftp_pre_path_new_user, "'")) ?></span><span class="hint js-ftp-path-hint"></span>
+			<span class="hint-prefix"><?= htmlentities(trim($v_ftp_pre_path_new_user, "'")) ?></span><span class="hint js-ftp-path-hint"></span>
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_email]" class="form-label"><?= _("Send FTP credentials to email") ?></label>

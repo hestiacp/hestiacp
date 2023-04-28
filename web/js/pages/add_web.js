@@ -10,7 +10,7 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 
 	hint = hint.replace(/[^\w\d]/gi, '');
 
-	$(elm).parent().find('.v-ftp-user').val(hint);
+	$(elm).parent().find('.js-ftp-user').val(hint);
 	$(elm)
 		.parent()
 		.find('.hint')
@@ -18,7 +18,7 @@ App.Actions.WEB.update_ftp_username_hint = function (elm, hint) {
 };
 
 App.Listeners.WEB.keypress_ftp_username = function () {
-	var ftp_user_inputs = $('.v-ftp-user');
+	var ftp_user_inputs = $('.js-ftp-user');
 	$.each(ftp_user_inputs, function (i, ref) {
 		var $ref = $(ref);
 		var current_val = $ref.val();
@@ -40,9 +40,6 @@ App.Listeners.WEB.keypress_domain_name = function () {
 	$('#v_domain').bind('keypress input', function () {
 		clearTimeout(window.frp_usr_tmt);
 		window.frp_usr_tmt = setTimeout(function () {
-			// var domain = $('.js-ftp-path-prefix').text(
-			// 	Alpine.store('globals').FTP_USER_PREPATH + '/' + $('#v_domain').val()
-			// );
 			$('#v-custom-doc-domain-main').text($('#v_domain').val());
 			$('#v-custom-doc-domain-main').val($('#v_domain').val());
 			App.Actions.WEB.update_custom_doc_root(13, 12);

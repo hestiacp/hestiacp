@@ -64,7 +64,7 @@
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Records_DNS") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Records") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Template") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("TTL") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("SOA") ?></b></div>

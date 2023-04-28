@@ -89,7 +89,7 @@ else
 		# Checking destination path
 		real_target_directory="$(readlink -e "${target_domain_directory}/public_html/$target_directory/")"
 		if [ ! -e "$real_target_directory" ]; then
-			check_result "$E_NOTEXIST" "Directory $target_directory does not exist under $HOMEDIR/$user/$target_domain/public_html/."
+			check_result "$E_NOTEXIST" "Directory $target_directory does not exist under $HOMEDIR/$user/web/$target_domain/public_html/."
 		elif [ -z "$(echo $real_target_directory | egrep "^$target_domain_directory\b")" ]; then
 			check_result "$E_FORBIDEN" "Target dir outside of target domain dir"
 		else

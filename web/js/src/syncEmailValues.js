@@ -1,3 +1,5 @@
+import { debounce } from './helpers';
+
 // Synchronizes the "Email" input value with "Email login credentials to" input value
 // based on the "Send welcome email" checkbox state on Add User page
 export default function handleSyncEmailValues() {
@@ -17,6 +19,11 @@ export default function handleSyncEmailValues() {
 		}
 	}
 
-	emailInput.addEventListener('input', syncEmailValues);
+	emailInput.addEventListener(
+		'input',
+		debounce(() => {
+			syncEmailValues();
+		}, 100)
+	);
 	sendWelcomeEmailCheckbox.addEventListener('change', syncEmailValues);
 }

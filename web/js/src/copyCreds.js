@@ -1,3 +1,5 @@
+import { debounce } from './helpers';
+
 // Monitor "Account" and "Password" inputs on "Add/Edit Mail Account"
 // page and update the sidebar "Account" and "Password" output
 export default function handleCopyCreds() {
@@ -18,9 +20,12 @@ function monitorAndUpdate(inputSelector, outputSelector) {
 		generateMailCredentials();
 	}
 
-	inputElement.addEventListener('input', (event) => {
-		updateOutput(event.target.value);
-	});
+	inputElement.addEventListener(
+		'input',
+		debounce((evt) => {
+			updateOutput(evt.target.value);
+		}, 100)
+	);
 	updateOutput(inputElement.value);
 }
 
@@ -28,7 +33,9 @@ function monitorAndUpdate(inputSelector, outputSelector) {
 function generateMailCredentials() {
 	const mailInfoPanel = document.querySelector('.js-mail-info');
 
-	if (!mailInfoPanel) return;
+	if (!mailInfoPanel) {
+		return;
+	}
 
 	const formattedCredentials = emailCredentialsAsPlainText(mailInfoPanel.cloneNode(true));
 	document.querySelector('.js-hidden-credentials').value = formattedCredentials;

@@ -31,7 +31,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_rec" class="form-label"><?= _("Record") ?></label>
-				<input type="text" class="form-control" name="v_rec" id="v_rec" value="<?= htmlentities(trim($v_rec, "'")) ?>">
+				<input type="text" class="form-control js-dns-record-input" name="v_rec" id="v_rec" value="<?= htmlentities(trim($v_rec, "'")) ?>">
 				<input type="hidden" name="v_record_id" value="<?= htmlentities(trim($v_record_id, "'")) ?>">
 				<small class="hint"></small>
 			</div>

@@ -1,18 +1,16 @@
 import { passwordStrength } from 'check-password-strength';
-import { randomPassword } from './helpers';
+import { randomPassword, debounce } from './helpers';
 
 // Adds listeners to password inputs (to monitor strength) and generate password buttons
 export default function handlePasswordInput() {
 	// Listen for changes to password inputs and update the password strength
 	document.querySelectorAll('.js-password-input').forEach((passwordInput) => {
-		const updateTimeout = (evt) => {
-			clearTimeout(window.frp_usr_tmt);
-			window.frp_usr_tmt = setTimeout(() => {
+		passwordInput.addEventListener(
+			'input',
+			debounce((evt) => {
 				recalculatePasswordStrength(evt.target);
-			}, 100);
-		};
-
-		passwordInput.addEventListener('input', updateTimeout);
+			}, 100)
+		);
 	});
 
 	// Listen for clicks on generate password buttons and set a new random password

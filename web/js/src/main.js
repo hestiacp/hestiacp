@@ -12,6 +12,7 @@ import handleNameServerInput from './nameServerInput';
 import handlePasswordInput from './passwordInput';
 import handleShortcuts from './shortcuts';
 import handleStickyToolbar from './stickyToolbar';
+import handleSyncEmailValues from './syncEmailValues';
 import handleTabPanels from './tabPanels';
 import handleToggleAdvanced from './toggleAdvanced';
 import handleUnlimitedInput from './unlimitedInput';
@@ -33,6 +34,7 @@ function initListeners() {
 	handleNameServerInput();
 	handlePasswordInput();
 	handleStickyToolbar();
+	handleSyncEmailValues();
 	handleTabPanels();
 	handleToggleAdvanced();
 }

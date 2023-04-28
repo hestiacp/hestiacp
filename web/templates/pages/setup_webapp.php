@@ -73,7 +73,7 @@
 											class="form-link"
 											type="button"
 										>
-											<?= _("generate") ?>
+											<?= _("Generate") ?>
 									</button>
 									<?php } ?>
 								</label>

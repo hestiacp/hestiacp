@@ -82,8 +82,10 @@ export function createConfirmationDialog({ title, message = 'Are you sure?', tar
 		if (targetUrl) {
 			window.location.href = targetUrl;
 		}
+
 		handleClose();
 	};
+
 	const handleCancel = () => handleClose();
 	const handleClose = () => {
 		confirmButton.removeEventListener('click', handleConfirm);

@@ -32,6 +32,7 @@ function recalculatePasswordStrength(input) {
 		if (password === '') {
 			return (meter.value = 0);
 		}
+
 		meter.value = passwordStrength(password).id + 1;
 	}
 }

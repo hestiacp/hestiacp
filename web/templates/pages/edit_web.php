@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary <?php if ( $v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx')) { echo "block"; } else{ echo "u-hidden"; }?>" id="v-clear-cache">
+			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
 				<i class="fas fa-trash icon-red"></i><?= _("Purge Nginx Cache") ?>
 			</a>
 			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
@@ -79,7 +79,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_stats" class="form-label"><?= _("Web Statistics") ?></label>
-				<select class="form-select" name="v_stats" id="v_stats">
+				<select class="form-select js-stats-select" name="v_stats" id="v_stats">
 					<?php
 						foreach ($stats as $key => $value) {
 							$svalue = "'".$value."'";
@@ -93,7 +93,7 @@
 					?>
 				</select>
 			</div>
-			<div class="stats-auth u-mb10" style="<?php if ($v_stats == "none") { ?>display:none<?php } ?>">
+			<div class="u-mb10 js-stats-auth" style="<?php if ($v_stats == "none") { ?>display:none<?php } ?>">
 				<div class="form-check">
 					<input x-model="statsAuthEnabled" class="form-check-input" type="checkbox" name="v_stats_auth" id="v_stats_auth">
 					<label for="v_stats_auth">
@@ -101,23 +101,21 @@
 					</label>
 				</div>
 			</div>
-			<div class="stats-auth">
-				<div class="u-pl30">
-					<div x-cloak x-show="statsAuthEnabled" id="statstable" name="v-add-web-domain-stats-user">
-						<div class="u-mb10">
-							<label for="v_stats_user" class="form-label"><?= _("Username") ?></label>
-							<input type="text" class="form-control" name="v_stats_user" id="v_stats_user" value="<?= htmlentities(trim($v_stats_user, "'")) ?>">
-						</div>
-						<div class="u-mb20">
-							<label for="v_password" class="form-label">
-								<?= _("Password") ?>
-								<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
-									<i class="fas fa-arrows-rotate icon-green"></i>
-								</button>
-							</label>
-							<div class="u-pos-relative">
-								<input type="text" class="form-control js-password-input" name="v_stats_password" id="v_password" value="<?= trim($v_stats_password, "'") ?>">
-							</div>
+			<div class="u-pl30 js-stats-auth">
+				<div x-cloak x-show="statsAuthEnabled" name="v-add-web-domain-stats-user">
+					<div class="u-mb10">
+						<label for="v_stats_user" class="form-label"><?= _("Username") ?></label>
+						<input type="text" class="form-control" name="v_stats_user" id="v_stats_user" value="<?= htmlentities(trim($v_stats_user, "'")) ?>">
+					</div>
+					<div class="u-mb20">
+						<label for="v_password" class="form-label">
+							<?= _("Password") ?>
+							<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+								<i class="fas fa-arrows-rotate icon-green"></i>
+							</button>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control js-password-input" name="v_stats_password" id="v_password" value="<?= trim($v_stats_password, "'") ?>">
 						</div>
 					</div>
 				</div>
@@ -147,7 +145,7 @@
 						<?= _("Redirect visitors to a custom domain or web address") ?>
 					</label>
 				</div>
-				<div id="custom_redirect" class="u-pl30" style="display:<?php if (empty($v_redirect_custom)) { echo 'none';} else {echo 'block';}?> ;">
+				<div class="u-pl30 js-custom-redirect-fields <?php if (empty($v_redirect_custom)) { echo 'u-hidden'; } ?>">
 					<div class="u-mt15 u-mb10">
 						<label for="v-redirect-custom" class="form-label"><?= _("Target domain or URL") ?></label>
 						<input type="text" class="form-control" name="v-redirect-custom" id="v-redirect-custom" value="<?= $v_redirect_custom ?>">
@@ -171,11 +169,11 @@
 					<?= _("SSL Support") ?>
 				</label>
 			</div>
-			<div x-cloak x-show="sslEnabled" id="ssltable" class="u-pl30">
+			<div x-cloak x-show="sslEnabled" class="u-pl30">
 				<div class="form-check u-mb10">
-					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt">
-					<label for="letsencrypt">
-						<?= _("Lets Encrypt Support") ?>
+					<input x-model="letsEncryptEnabled" class="form-check-input js-toggle-lets-encrypt" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
+					<label for="v_letsencrypt">
+						<?= _("Use Let's Encrypt to obtain SSL certificate") ?>
 					</label>
 				</div>
 				<div class="form-check u-mb10">
@@ -190,7 +188,7 @@
 						<?= _("Enable SSL HSTS") ?>
 					</label>
 				</div>
-				<div x-cloak x-show="showCertificates" id="ssl-details">
+				<div x-cloak x-show="showCertificates" class="js-ssl-details">
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
@@ -330,7 +328,7 @@
 						<div x-cloak x-show="proxySupportEnabled" id="proxytable">
 							<div class="u-mb10">
 								<label for="v_proxy_template" class="form-label"><?= _("Proxy Template") ?></label>
-								<select class="form-select" name="v_proxy_template" id="v_proxy_template">
+								<select class="form-select js-proxy-template-select" name="v_proxy_template" id="v_proxy_template">
 									<?php
 										foreach ($proxy_templates as $key => $value) {
 											echo "\t\t\t\t<option value=\"".htmlentities($value)."\"";
@@ -362,8 +360,8 @@
 				<div x-cloak x-show="customDocumentRootEnabled" id="v_custom_doc_root" class="u-pl30">
 					<div class="u-mb10">
 						<label for="v-custom-doc-domain" class="form-label"><?= _("Point to") ?></label>
-						<input type="hidden" name="v-custom-doc-root_prepath" value="<?= $v_custom_doc_root_prepath ?>">
-						<select class="form-select" name="v-custom-doc-domain" id="v-custom-doc-domain">
+						<input type="hidden" class="js-custom-docroot-prepath" name="v-custom-doc-root_prepath" value="<?= $v_custom_doc_root_prepath ?>">
+						<select class="form-select js-custom-docroot-domain" name="v-custom-doc-domain" id="v-custom-doc-domain">
 							<?php foreach ($user_domains as $domain): ?>
 							<option value="<?= htmlentities($domain) ?>"
 								<?= $v_custom_doc_domain === $domain || (empty($v_custom_doc_domain) && $domain === $v_domain) ? ' selected="selected" ' : "" ?>>
@@ -376,30 +374,30 @@
 						<label for="v-custom-doc-folder" class="form-label">
 							<?php print _("Directory"); ?> <span class="optional">(<?= _("optional") ?>)</span>
 						</label>
-						<input type="text" class="form-control" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= htmlentities(trim($v_custom_doc_folder, "'")) ?>">
+						<input type="text" class="form-control js-custom-docroot-dir" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= htmlentities(trim($v_custom_doc_folder, "'")) ?>">
 						<small class="js-custom-docroot-hint"></small>
 					</div>
 				</div>
 				<?php if (in_array($_SESSION["FTP_SYSTEM"], ["vsftpd", "proftpd"])) { ?>
 					<div class="form-check u-mb10">
-						<input class="form-check-input" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp_user)) echo 'checked' ?> onclick="App.Actions.WEB.toggle_additional_ftp_accounts(this)">
+						<input class="form-check-input js-toggle-ftp-accounts" type="checkbox" name="v_ftp" id="v_ftp" <?php if (!empty($v_ftp_user)) echo 'checked' ?>>
 						<label for="v_ftp">
-							<?= _("Additional FTP Account") ?>
+							<?= _("Additional FTP account(s)") ?>
 						</label>
 					</div>
-					<div id="ftp_users">
+					<div class="js-active-ftp-accounts">
 						<?php foreach ($v_ftp_users as $i => $ftp_user): ?>
 						<?php
-							$v_ftp_user		 = $ftp_user['v_ftp_user'];
+							$v_ftp_user     = $ftp_user['v_ftp_user'];
 							$v_ftp_password = $ftp_user['v_ftp_password'];
-							$v_ftp_path		 = $ftp_user['v_ftp_path'];
-							$v_ftp_email		= $ftp_user['v_ftp_email'];
+							$v_ftp_path     = $ftp_user['v_ftp_path'];
+							$v_ftp_email    = $ftp_user['v_ftp_email'];
 							$v_ftp_pre_path = $ftp_user['v_ftp_pre_path'];
 						?>
-						<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="display:<?php if (empty($v_ftp_user)) { echo 'none';} else {echo 'block';}?> ;">
+						<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp" style="<?php if (empty($v_ftp_user)) { echo 'display: none;'; } ?>">
 							<div class="u-mb10">
 								<?= _("FTP") ?> #<span class="js-ftp-user-number"><?=$i + 1; ?></span>
-								<button type="button" class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></button>
+								<button type="button" class="form-link form-link-danger u-ml5 js-delete-ftp-account"><?= _("Delete") ?></button>
 								<input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[<?=$i ?>][delete]" value="0">
 								<input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[<?=$i ?>][is_new]" value="<?=htmlentities($ftp_user['is_new']) ?>">
 							</div>
@@ -411,11 +409,14 @@
 								<input type="text" class="form-control js-ftp-user" <?=$ftp_user['is_new'] != 1 ? 'disabled="disabled"' : '' ?>
 								name="v_ftp_user[<?=$i ?>][v_ftp_user]" id="v_ftp_user[<?=$i ?>][v_ftp_user]" value="<?=htmlentities(trim($v_ftp_user, "'"))?>">
 								<input type="hidden" name="v_record_id" value="<?=htmlentities(trim($v_record_id, "'"))?>">
-								<small class="hint"></small>
+								<small class="hint js-ftp-user-hint"></small>
 							</div>
 							<div class="u-pl30 u-mb10">
 								<label for="v_ftp_user[<?=$i ?>][v_ftp_password]" class="form-label">
-									<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("Generate") ?></a>
+									<?= _("Password") ?>
+									<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-ftp-password-generate">
+										<i class="fas fa-arrows-rotate icon-green"></i>
+									</button>
 								</label>
 								<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[<?=$i ?>][v_ftp_password]" id="v_ftp_user[<?=$i ?>][v_ftp_password]" value="<?=htmlentities(trim($v_ftp_password, "'"))?>">
 							</div>
@@ -436,10 +437,8 @@
 						<?php endforeach; ?>
 					</div>
 
-					<div class="js-add-new-ftp-user-button" style="<?=!empty($v_ftp_user) ? '' : 'display:none;' ?>">
-						<div class="u-pt18 v-add-new-user">
-							<a class="form-link" onclick="App.Actions.WEB.add_ftp_user_form()"><?= _("Add one more FTP Account") ?></a>
-						</div>
+					<div class="u-pt18 js-add-new-ftp-user-button" style="<?php if (empty($v_ftp_user)) echo 'display: none;' ?>">
+						<button type="button" class="form-link js-add-ftp-account"><?= _("Add FTP account") ?></button>
 					</div>
 				<?php } ?>
 			</div>
@@ -449,11 +448,11 @@
 
 </div>
 
-<div id="templates" class="u-hidden">
+<div class="u-hidden js-ftp-account-template">
 	<div class="js-ftp-account js-ftp-account-nrm" name="v_add_domain_ftp">
 		<div class="u-mb10">
 			<?= _("FTP") ?> #<span class="js-ftp-user-number"></span>
-			<a class="form-link form-link-danger" onclick="App.Actions.WEB.remove_ftp_user(this)"><?= _("delete") ?></a>
+			<button type="button" class="form-link form-link-danger u-ml5 js-delete-ftp-account"><?= _("Delete") ?></button>
 			<input type="hidden" class="js-ftp-user-deleted" name="v_ftp_user[%INDEX%][delete]" value="0">
 			<input type="hidden" class="js-ftp-user-is-new" name="v_ftp_user[%INDEX%][is_new]" value="1">
 		</div>
@@ -463,11 +462,14 @@
 				<span style="color:#777;"><?= sprintf(_("Prefix %s will be added to username automatically"), $user_plain . "_") ?></span>
 			</label>
 			<input type="text" class="form-control js-ftp-user" name="v_ftp_user[%INDEX%][v_ftp_user]" id="v_ftp_user[%INDEX%][v_ftp_user]" value="">
-			<small class="hint"></small>
+			<small class="hint js-ftp-user-hint"></small>
 		</div>
 		<div class="u-pl30 u-mb10">
 			<label for="v_ftp_user[%INDEX%][v_ftp_password]" class="form-label">
-				<?= _("Password") ?> / <a href="javascript:void(0);" onclick="FTPrandom(this)" ; class="form-link"><?= _("Generate") ?></a>
+				<?= _("Password") ?>
+				<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-ftp-password-generate">
+					<i class="fas fa-arrows-rotate icon-green"></i>
+				</button>
 			</label>
 			<input type="text" class="form-control js-ftp-user-psw" name="v_ftp_user[%INDEX%][v_ftp_password]" id="v_ftp_user[%INDEX%][v_ftp_password]">
 		</div>

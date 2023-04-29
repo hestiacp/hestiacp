@@ -99,11 +99,11 @@
 					<?= _("SSL Support") ?>
 				</label>
 			</div>
-			<div x-cloak x-show="sslEnabled" id="ssltable" class="u-pl30">
+			<div x-cloak x-show="sslEnabled" class="u-pl30">
 				<div class="form-check u-mb10">
 					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
 					<label for="v_letsencrypt">
-						<?= _("Lets Encrypt Support") ?>
+						<?= _("Use Let's Encrypt to obtain SSL certificate") ?>
 					</label>
 				</div>
 				<div id="le-warning" class="u-mb20">
@@ -115,7 +115,7 @@
 						</div>
 					</div>
 				</div>
-				<div x-cloak x-show="!letsEncryptEnabled" id="ssl-details">
+				<div x-cloak x-show="!letsEncryptEnabled">
 					<div class="u-mb10">
 						<label for="v_ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>

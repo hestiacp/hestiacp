@@ -28,8 +28,8 @@
 				<label for="v_cmd" class="form-label"><?= _("Command") ?></label>
 				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= htmlentities(trim($v_cmd, "'")) ?>">
 			</div>
-			<div class="sidebar-left-container">
-				<div>
+			<div class="sidebar-left-grid">
+				<div class="sidebar-left-grid-sidebar">
 					<div class="u-mb10">
 						<label for="v_min" class="form-label"><?= _("Minute") ?></label>
 						<input type="text" class="form-control" name="v_min" id="v_min" value="<?= htmlentities(trim($v_min, "'")) ?>">
@@ -51,7 +51,7 @@
 						<input type="text" class="form-control" name="v_wday" id="v_wday" value="<?= htmlentities(trim($v_wday, "'")) ?>">
 					</div>
 				</div>
-				<div>
+				<div class="sidebar-left-grid-content">
 					<div class="tabs cron-tabs js-tabs">
 						<div class="tabs-items" role="tablist">
 							<button type="button" class="tabs-item" id="tab-one" role="tab" tabindex="0" aria-selected="true"><?= _("Minutes") ?></button>

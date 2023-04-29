@@ -26,7 +26,7 @@
 			<div class="clearfix l-unit__stat-col--left compact-2">
 				&nbsp;
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("SSH KEY") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("SSH Key") ?></b></div>
 		</div>
 	</div>
 

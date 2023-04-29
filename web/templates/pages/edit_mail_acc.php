@@ -32,8 +32,8 @@
 		<div class="form-container form-container-wide">
 			<h1 class="form-title"><?= _("Editing Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<div class="sidebar-right-container">
-				<div>
+			<div class="sidebar-right-grid">
+				<div class="sidebar-right-grid-content">
 					<div class="u-mb10">
 						<label for="v_email" class="form-label"><?= _("Account") ?></label>
 						<input type="text" class="form-control" name="v_email" id="v_email" value="<?= htmlentities($_GET["account"]) . "@" . htmlentities($_GET["domain"]) ?>" disabled>
@@ -120,17 +120,17 @@
 						<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 					</div>
 				</div>
-				<div>
+				<div class="sidebar-right-grid-sidebar">
 					<div class="panel js-mail-info">
 						<h2 class="u-text-H3 u-mb10"><?= _("Common account settings") ?></h2>
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Username") ?></span>
-								<span class="values-list-value"><span class="js-account-output"></span>@<?= htmlentities(trim($v_domain, "'")) ?></span>
+								<span class="values-list-value u-overflow"><span class="js-account-output"></span>@<?= htmlentities(trim($v_domain, "'")) ?></span>
 							</li>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Password") ?></span>
-								<span class="values-list-value"><span class="js-password-output"></span></span>
+								<span class="values-list-value u-overflow"><span class="js-password-output"></span></span>
 							</li>
 							<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 								<li class="values-list-item">

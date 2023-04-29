@@ -2,7 +2,9 @@
 export default function handleTabPanels() {
 	const tabs = document.querySelector('.js-tabs');
 
-	if (!tabs) return;
+	if (!tabs) {
+		return;
+	}
 
 	const tabItems = tabs.querySelectorAll('.tabs-item');
 	const panels = tabs.querySelectorAll('.tabs-panel');

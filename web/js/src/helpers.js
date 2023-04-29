@@ -18,6 +18,15 @@ export function randomPassword(length = 16) {
 	return password;
 }
 
+// Debounces a function to avoid excessive calls
+export function debounce(func, wait = 100) {
+	let timeout;
+	return function (...args) {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func.apply(this, args), wait);
+	};
+}
+
 // Returns the value of a CSS variable
 export function getCssVariable(variableName) {
 	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();

@@ -2,7 +2,9 @@
 export default function handleDiscardAllMail() {
 	const discardAllMailCheckbox = document.querySelector('.js-discard-all-mail');
 
-	if (!discardAllMailCheckbox) return;
+	if (!discardAllMailCheckbox) {
+		return;
+	}
 
 	discardAllMailCheckbox.addEventListener('click', () => {
 		const forwardToTextarea = document.getElementById('v_fwd');

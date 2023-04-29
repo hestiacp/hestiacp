@@ -28,7 +28,7 @@
 				<label for="v_ip" class="form-label">
 					<?= _("IP address") ?> <span class="optional">(<?= _("CIDR format is supported") ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
+				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_chain" class="form-label"><?= _("Banlist") ?></label>

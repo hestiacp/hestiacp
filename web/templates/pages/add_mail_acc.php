@@ -31,8 +31,8 @@
 		<div class="form-container form-container-wide">
 			<h1 class="form-title"><?= _("Adding Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<div class="sidebar-right-container">
-				<div>
+			<div class="sidebar-right-grid">
+				<div class="sidebar-right-grid-content">
 					<div class="u-mb10">
 						<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
 						<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
@@ -40,7 +40,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_account" class="form-label"><?= _("Account") ?></label>
-						<input type="text" class="form-control js-account-input" name="v_account" id="v_account" value="<?= htmlentities(trim($v_account, "'")) ?>">
+						<input type="text" class="form-control js-account-input" name="v_account" id="v_account" value="<?= htmlentities(trim($v_account, "'")) ?>" required>
 					</div>
 					<div class="u-mb10">
 						<label for="v_password" class="form-label">
@@ -50,7 +50,7 @@
 							</button>
 						</label>
 						<div class="u-pos-relative u-mb10">
-							<input type="text" class="form-control js-password-input" name="v_password" id="v_password">
+							<input type="text" class="form-control js-password-input" name="v_password" id="v_password" required>
 							<div class="password-meter">
 								<meter max="4" class="password-meter-input js-password-meter"></meter>
 							</div>
@@ -117,17 +117,17 @@
 						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= htmlentities(trim($v_send_email, "'")) ?>">
 					</div>
 				</div>
-				<div>
+				<div class="sidebar-right-grid-sidebar">
 					<div class="panel js-mail-info">
 						<h2 class="u-text-H3 u-mb10"><?= _("Common account settings") ?></h2>
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Username") ?></span>
-								<span class="values-list-value"><span class="js-account-output"></span>@<?= htmlentities(trim($v_domain, "'")) ?></span>
+								<span class="values-list-value u-overflow"><span class="js-account-output"></span>@<?= htmlentities(trim($v_domain, "'")) ?></span>
 							</li>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Password") ?></span>
-								<span class="values-list-value"><span class="js-password-output"></span></span>
+								<span class="values-list-value u-overflow"><span class="js-password-output"></span></span>
 							</li>
 							<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 								<li class="values-list-item">

@@ -30,13 +30,13 @@
 						</button>
 						<ul x-cloak x-show="open" class="top-bar-menu-list">
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="/list/web/">
+								<a class="top-bar-menu-link" href="/list/web/" title="<?= _("Back") ?>">
 									<i class="fas fa-circle-left"></i>
 									<span class="top-bar-menu-link-label"><?= _("Back") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access&token=<?=$_SESSION['token']?>">
+								<a class="top-bar-menu-link <?php if($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access&token=<?=$_SESSION['token']?>" title="<?= _("Access Log") ?>">
 									<i class="fas fa-eye"></i>
 									<span class="top-bar-menu-link-label"><?= _("Access Log") ?></span>
 								</a>
@@ -48,7 +48,7 @@
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if($_GET['type'] == 'error') echo 'active' ?>" href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>">
+								<a class="top-bar-menu-link <?php if($_GET['type'] == 'error') echo 'active' ?>" href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>" title="<?= _("Error Log") ?>">
 									<i class="fas fa-circle-exclamation"></i>
 									<span class="top-bar-menu-link-label"><?= _("Error Log") ?></span>
 								</a>
@@ -66,7 +66,7 @@
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="/edit/user/" title="<?= htmlentities($user) ?>">
+								<a class="top-bar-menu-link" href="/list/user/" title="<?= htmlentities($user) ?>">
 									<i class="fas fa-circle-user"></i>
 									<span class="u-hidden"><?= htmlentities($user) ?></span>
 								</a>

@@ -55,7 +55,7 @@ if (!empty($_GET["app"])) {
 			} else {
 				$info["enabled"] = false;
 				$_SESSION["error_msg"] = sprintf(
-					_("Unable to install %s, %s is not available"),
+					_("Unable to install %s, %s is not available."),
 					$app,
 					"PHP-" . end($info["php_support"]),
 				);
@@ -70,7 +70,7 @@ if (!empty($_GET["app"])) {
 			exit();
 		}
 	} else {
-		$_SESSION["error_msg"] = sprintf(_("%s installer missing"), $app);
+		$_SESSION["error_msg"] = sprintf(_("%s installer missing."), $app);
 	}
 }
 

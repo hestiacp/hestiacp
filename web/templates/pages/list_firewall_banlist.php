@@ -31,7 +31,7 @@
 			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP address") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP Address") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Date") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Time") ?></b></div>

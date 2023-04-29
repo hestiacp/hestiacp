@@ -53,7 +53,7 @@ if (!empty($_POST["ok"])) {
 	// Check password length
 	if (empty($_SESSION["error_msg"])) {
 		if (!validate_password($_POST["v_password"])) {
-			$_SESSION["error_msg"] = _("Password does not match the minimum requirements");
+			$_SESSION["error_msg"] = _("Password does not match the minimum requirements.");
 		}
 	}
 
@@ -154,7 +154,7 @@ if (!empty($_POST["ok"])) {
 		} else {
 			$template = _(
 				"Hello {{name}},\n" .
-					"Your account has been created and is ready for use.\n" .
+					"Your account has been created and ready to use.\n" .
 					"https://{{hostname}}/login/\n" .
 					"Username: {{user}}\n" .
 					"Password: {{password}}\n" .
@@ -219,7 +219,7 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		$_SESSION["ok_msg"] = htmlify_trans(
 			sprintf(
-				_("User {%s} has been created successfully. / {login as %s}"),
+				_("User {%s} has been created successfully. / {Log in as %s}"),
 				htmlentities($_POST["v_username"]),
 				htmlentities($_POST["v_username"]),
 			),

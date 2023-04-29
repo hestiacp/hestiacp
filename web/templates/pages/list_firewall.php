@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/edit/server/">
+			<a class="button button-secondary button-back js-button-back" href="/list/server/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/add/firewall/" class="button button-secondary js-button-create">
@@ -10,23 +10,23 @@
 			</a>
 			<?php if (!empty($_SESSION["FIREWALL_EXTENSION"])): ?>
 				<a class="button button-secondary" href="/list/firewall/banlist/">
-					<i class="fas fa-eye icon-red"></i><?= _("list fail2ban") ?>
+					<i class="fas fa-eye icon-red"></i><?= _("Fail2ban Banlists") ?>
 				</a>
 				<a class="button button-secondary" href="/list/firewall/ipset/">
-					<i class="fas fa-list icon-blue"></i><?= _("list ipset") ?>
+					<i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>
 				</a>
 			<?php endif; ?>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>: <b><?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i></b>
+					<?= _("SORT BY") ?>: <b><?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i></b>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-action"><span class="name"><?= _("Action") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-protocol"><span class="name"><?= _("Protocol") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-port"><span class="name"><?= _("Port") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-ip" sort_as_int="1"><span class="name"><?= _("IP address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-ip" sort_as_int="1"><span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-comment"><span class="name"><?= _("Comment") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
 				<form x-data x-bind="BulkEdit" action="/bulk/firewall/" method="post">
@@ -56,7 +56,7 @@
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Comment") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Protocol") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left wide-3 u-text-center"><b><?= _("Port") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IP address") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IP Address") ?></b></div>
 		</div>
 	</div>
 

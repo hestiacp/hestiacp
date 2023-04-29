@@ -17,7 +17,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("SORT BY") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Record'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -35,12 +35,12 @@
 						<input type="hidden" name="domain" value="<?= htmlentities($_GET["domain"]) ?>">
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
-							<option value=""><?= _("apply to selected") ?></option>
+							<option value=""><?= _("Apply to selected") ?></option>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
 							<option value="delete"><?= _("Delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>

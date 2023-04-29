@@ -29,7 +29,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding DNS Domain") ?></h1>
+			<h1 class="form-title"><?= _("Add DNS Zone") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
@@ -84,7 +84,7 @@
 				<?php } ?>
 				<div class="u-mb20 u-mt20">
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-						<?= _("Advanced options") ?>
+						<?= _("Advanced Options") ?>
 					</button>
 				</div>
 				<div x-cloak  x-show="showAdvanced" id="advtable">

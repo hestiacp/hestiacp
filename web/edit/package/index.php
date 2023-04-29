@@ -162,7 +162,7 @@ if (!empty($_POST["save"])) {
 		$errors[] = _("web aliases");
 	}
 	if (!isset($_POST["v_dns_domains"])) {
-		$errors[] = _("dns domains");
+		$errors[] = _("dns zones");
 	}
 	if (!isset($_POST["v_dns_records"])) {
 		$errors[] = _("dns records");

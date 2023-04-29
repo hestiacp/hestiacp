@@ -29,7 +29,7 @@
 		<input type="hidden" name="ok_acc" value="add">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Adding Mail Account") ?></h1>
+			<h1 class="form-title"><?= _("Add Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="sidebar-right-container">
 				<div>
@@ -64,13 +64,13 @@
 					</ul>
 					<div class="u-pt18 u-mb20">
 						<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-							<?= _("Advanced options") ?>
+							<?= _("Advanced Options") ?>
 						</button>
 					</div>
 					<div x-cloak x-show="showAdvanced" id="advtable">
 						<div class="u-mb10">
 							<label for="v_quota" class="form-label">
-								<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+								<?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 							</label>
 							<div class="u-pos-relative">
 								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= htmlentities(trim($v_quota, "'")) ?>">
@@ -105,14 +105,14 @@
 						</div>
 						<div class="u-mt10 u-mb10">
 							<label for="v_rate" class="form-label">
-								<?= _("Rate limit") ?> <span class="optional">(<?= _("Email / hour") ?>)</span>
+								<?= _("Rate limit") ?> <span class="optional">(<?= _("Email / Hour") ?>)</span>
 							</label>
 							<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 						</div>
 					</div>
 					<div class="u-mt15 u-mb20">
 						<label for="v_send_email" class="form-label">
-							<?= _("Send login credentials to email address") ?>
+							<?= _("Email login credentials to:") ?>
 						</label>
 						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= htmlentities(trim($v_send_email, "'")) ?>">
 					</div>
@@ -147,7 +147,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 993</span>
 							</li>
 							<li class="values-list-item">
@@ -166,7 +166,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 995</span>
 							</li>
 							<li class="values-list-item">
@@ -185,7 +185,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 465</span>
 							</li>
 							<li class="values-list-item">

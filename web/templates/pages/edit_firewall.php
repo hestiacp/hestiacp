@@ -22,13 +22,13 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing Firewall Rule") ?></h1>
+			<h1 class="form-title"><?= _("Edit Firewall Rule") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_action" class="form-label"><?= _("Action") ?></label>
 				<select class="form-select" name="v_action" id="v_action">
-					<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>>DROP</option>
-					<option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>>ACCEPT</option>
+					<option value="DROP" <?php if ((!empty($v_action)) && ( $v_action == "DROP" )) echo 'selected'?>><?= _("DROP") ?></option>
+					<option value="ACCEPT" <?php if ((!empty($v_action)) && ( $v_action == "ACCEPT" )) echo 'selected'?>><?= _("ACCEPT") ?></option>
 				</select>
 			</div>
 			<div class="u-mb10">
@@ -41,24 +41,24 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_port" class="form-label">
-					<?= _("Port") ?> <span class="optional">(<?= _("Ranges and Lists are acceptable") ?>)</span>
+					<?= _("Port") ?> <span class="optional">(<?= _("Ranges and lists are acceptable") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_port" id="v_port" value="<?= htmlentities(trim($v_port, "'")) ?>" placeholder="<?= _("All ports: 0, Range: 80-82, List: 80,443,8080,8443") ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_ip" class="form-label">
-					<?= _("IP address / IPset") ?> <span class="optional">(<?= _("CIDR format is supported") ?>)</span>
+					<?= _("IP address / IPset IP list") ?> <span class="optional">(<?= _("Support CIDR format") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
-						<option value="">&nbsp;</option>
+						<option value=""><?= _("Clear") ?></option>
 					</select>
 					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_comment" class="form-label">
-					<?= _("Comment") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					<?= _("Comment") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_comment" id="v_comment" maxlength="255" value="<?= htmlentities(trim($v_comment, "'")) ?>">
 			</div>
@@ -77,7 +77,7 @@
 	var targetElement = document.getElementById('quickips_list');
 
 	var newEl = document.createElement("option");
-	newEl.text = "IP address lists:";
+	newEl.text = "<?= _("IPset IP Lists") ?>";
 	newEl.disabled = true;
 	targetElement.appendChild(newEl);
 

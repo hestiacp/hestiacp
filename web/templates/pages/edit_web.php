@@ -61,7 +61,7 @@
 				<div class="u-mb10">
 					<div class="alert alert-info" role="alert">
 						<i class="fas fa-exclamation"></i>
-						<p><?= _("Lets Encrypt will obtain a new SSL certificate if web domain aliases are changed.") ?></p>
+						<p><?= _("If the aliases changes, Let's Encrypt will obtain a new SSL certificate.") ?></p>
 					</div>
 				</div>
 			<?php } ?>
@@ -175,7 +175,7 @@
 				<div class="form-check u-mb10">
 					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="letsencrypt">
 					<label for="letsencrypt">
-						<?= _("Use Lets Encrypt to obtain SSL certificate") ?>
+						<?= _("Use Let's Encrypt to obtain SSL certificate") ?>
 					</label>
 				</div>
 				<div class="form-check u-mb10">
@@ -199,12 +199,12 @@
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb10">
-						<label for="v_ssl_key" class="form-label"><?= _("SSL Cerficate Key") ?></label>
+						<label for="v_ssl_key" class="form-label"><?= _("SSL Private Key") ?></label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_ca" class="form-label">
-							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("optional") ?>)</span>
+							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 						</label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
 					</div>
@@ -212,12 +212,12 @@
 				<?php if ($v_ssl != "no") { ?>
 					<ul class="values-list">
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("Domain") ?></span>
+							<span class="values-list-label"><?= _("Issued To") ?></span>
 							<span class="values-list-value"><?= $v_ssl_subject ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Aliases") ?></span>
+								<span class="values-list-label"><?= _("Alternate") ?></span>
 								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
 							</li>
 						<?php } ?>
@@ -234,11 +234,11 @@
 							<span class="values-list-value"><?= $v_ssl_signature ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("Public Key") ?></span>
+							<span class="values-list-label"><?= _("Key Size") ?></span>
 							<span class="values-list-value"><?= $v_ssl_pub_key ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("Issuer") ?></span>
+							<span class="values-list-label"><?= _("Issued By") ?></span>
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
@@ -255,7 +255,7 @@
 			</div>
 			<div class="u-mt15 u-mb20">
 				<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-					<?= _("Advanced options") ?>
+					<?= _("Advanced Options") ?>
 				</button>
 			</div>
 			<div x-cloak x-show="showAdvanced">
@@ -374,7 +374,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v-custom-doc-folder" class="form-label">
-							<?php print _("Directory"); ?> <span class="optional">(<?= _("optional") ?>)</span>
+							<?php print _("Directory"); ?> <span class="optional">(<?= _("Optional") ?>)</span>
 						</label>
 						<input type="text" class="form-control" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= htmlentities(trim($v_custom_doc_folder, "'")) ?>">
 						<small class="custom_docroot_hint"></small>

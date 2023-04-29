@@ -22,7 +22,7 @@
 		<input type="hidden" name="ok_rec" value="add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding DNS Record") ?></h1>
+			<h1 class="form-title"><?= _("Add DNS Record") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>

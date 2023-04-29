@@ -30,7 +30,7 @@
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_ip" class="form-label"><?= _("IP address") ?></label>
+				<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 						<option value="">clear</option>

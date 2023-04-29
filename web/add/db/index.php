@@ -52,7 +52,7 @@ if (!empty($_POST["ok"])) {
 	// Check password length
 	if (empty($_SESSION["error_msg"])) {
 		if (!validate_password($_POST["v_password"])) {
-			$_SESSION["error_msg"] = _("Password does not match the minimum requirements");
+			$_SESSION["error_msg"] = _("Password does not match the minimum requirements.");
 		}
 	}
 

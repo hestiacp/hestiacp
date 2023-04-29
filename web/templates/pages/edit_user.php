@@ -16,8 +16,8 @@
 					$keys_url = "/list/access-key/";
 				}
 			?>
-			<a href="<?=$ssh_key_url; ?>" class="button button-secondary js-button-create" title="<?= _("Manage SSH keys") ?>">
-				<i class="fas fa-key icon-orange"></i><?= _("Manage SSH keys") ?>
+			<a href="<?=$ssh_key_url; ?>" class="button button-secondary js-button-create" title="<?= _("Manage SSH Keys") ?>">
+				<i class="fas fa-key icon-orange"></i><?= _("Manage SSH Keys") ?>
 			</a>
 			<?php if ($_SESSION["userContext"] == "admin" || ($_SESSION["userContext"] !== "admin" && $_SESSION["POLICY_USER_VIEW_LOGS"] !== "no")) { ?>
 				<a href="<?= $log_url ?>" class="button button-secondary js-button-create" title="<?= _("Logs") ?>">
@@ -207,7 +207,7 @@
 				</div>
 				<div class="u-mb20">
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-						<?= _("Advanced options") ?>
+						<?= _("Advanced Options") ?>
 					</button>
 				</div>
 				<div x-cloak x-show="showAdvanced">

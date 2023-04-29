@@ -29,7 +29,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding Mail Domain") ?></h1>
+			<h1 class="form-title"><?= _("Add Mail Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
@@ -68,13 +68,13 @@
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ((empty($v_antispam)) || ($v_antispam == 'yes')) echo 'checked'; ?>>
 						<label for="v_antispam">
-							<?= _("AntiSpam Support") ?>
+							<?= _("Spam Filter") ?>
 						</label>
 					</div>
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ((empty($v_reject)) || ($v_reject == 'yes')) echo 'checked'; ?>>
 						<label for="v_reject">
-							<?= _("Reject spam") ?>
+							<?= _("Reject Spam") ?>
 						</label>
 					</div>
 				<?php } ?>
@@ -82,7 +82,7 @@
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo 'checked'; ?>>
 						<label for="v_antivirus">
-							<?= _("AntiVirus Support") ?>
+							<?= _("Anti-Virus") ?>
 						</label>
 					</div>
 				<?php } ?>

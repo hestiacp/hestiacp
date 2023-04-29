@@ -13,15 +13,17 @@
 					<option value=""><?= _("Apply to selected") ?></option>
 					<option value="restore"><?= _("Restore") ?></option>
 				</select>
-				<button type="submit" class="toolbar-input-submit">
+				<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>
 			<div class="toolbar-search">
 				<form action="/search/" method="get">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>">
-					<button type="submit" class="toolbar-input-submit" value=""><i class="fas fa-magnifying-glass"></i></button>
+					<input type="search" class="form-control js-search-input" name="q" value="<? echo isset($_POST['q']) ? htmlspecialchars($_POST['q']) : '' ?>" title="<?= _("Search") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Search") ?>">
+						<i class="fas fa-magnifying-glass"></i>
+					</button>
 				</form>
 			</div>
 		</div>
@@ -57,7 +59,7 @@
 					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" name="web[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Web domain") ?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Web Domain") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?= $key ?></b></div>
@@ -89,7 +91,7 @@
 					<input id="check2<?= $i ?>" class="ch-toggle" type="checkbox" name="mail[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Mail domain") ?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("Mail Domain") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?= $key ?></b></div>
@@ -121,7 +123,7 @@
 					<input id="check3<?= $i ?>" class="ch-toggle" type="checkbox" name="dns[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left compact-4">
-					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("DNS domain") ?></div>
+					<div class="l-unit__stat-col l-unit__stat-col--left"><?= _("DNS Zone") ?></div>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-7">
 					<div class="l-unit__stat-col l-unit__stat-col--left wide-7"><b><?= $key ?></b></div>

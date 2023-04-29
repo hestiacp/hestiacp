@@ -54,7 +54,7 @@ if (!empty($_POST["ok"])) {
 		$errors[] = _("web aliases");
 	}
 	if (!isset($_POST["v_dns_domains"])) {
-		$errors[] = _("dns domains");
+		$errors[] = _("dns zones");
 	}
 	if (!isset($_POST["v_dns_records"])) {
 		$errors[] = _("dns records");
@@ -294,10 +294,10 @@ if (empty($v_ratelimit)) {
 	$v_ratelimit = "'200'";
 }
 if (empty($v_ns1)) {
-	$v_ns1 = "ns1.example.ltd";
+	$v_ns1 = "ns1.example.tld";
 }
 if (empty($v_ns2)) {
-	$v_ns2 = "ns2.example.ltd";
+	$v_ns2 = "ns2.example.tld";
 }
 if (empty($v_ns3)) {
 	$v_ns3 = "";

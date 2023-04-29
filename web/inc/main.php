@@ -172,7 +172,7 @@ function check_return_code_redirect($return_var, $output, $location) {
 	if ($return_var != 0) {
 		$error = implode("<br>", $output);
 		if (empty($error)) {
-			$error = sprintf(_("Error code:%s"), $return_var);
+			$error = sprintf(_("Error code: %s"), $return_var);
 		}
 		$_SESSION["error_msg"] = $error;
 		header("Location:" . $location);
@@ -263,7 +263,7 @@ function top_panel($user, $TAB) {
 	exec($command, $output, $return_var);
 	if ($return_var > 0) {
 		destroy_sessions();
-		$_SESSION["error_msg"] = _("You have been logged out. Please log in again.");
+		$_SESSION["error_msg"] = _("You are logged out, please log in again.");
 		header("Location: /login/");
 		exit();
 	}
@@ -274,7 +274,7 @@ function top_panel($user, $TAB) {
 	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
 		if (empty($_SESSION["look"])) {
 			destroy_sessions();
-			$_SESSION["error_msg"] = _("You have been logged out. Please log in again.");
+			$_SESSION["error_msg"] = _("You are logged out, please log in again.");
 			header("Location: /login/");
 		}
 	}

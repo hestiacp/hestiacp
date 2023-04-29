@@ -6,15 +6,10 @@
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet icon-blue"></i><?= _("IP") ?>
+				<i class="fas fa-ethernet icon-blue"></i><?= _("Network") ?>
 			</a>
-			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
-				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved icon-red"></i><?= _("Firewall") ?>
-				</a>
-			<?php } ?>
 			<a href="/edit/server/whitelabel/" class="button button-secondary">
-				<i class="fas fa-paint-brush icon-blue"></i><?= _("White label") ?>
+				<i class="fas fa-paint-brush icon-blue"></i><?= _("White Label") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
@@ -59,7 +54,7 @@
 			<!-- Basic options section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-gear u-mr10"></i><?= _("Basic options") ?>
+					<i class="fas fa-gear u-mr10"></i><?= _("Basic Options") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
@@ -940,7 +935,7 @@
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_key" class="form-label">
-							<?= _("SSL Cerficate Key") ?>
+							<?= _("SSL Private Key") ?>
 						</label>
 						<textarea
 							class="form-control u-min-height100 u-console"
@@ -950,12 +945,12 @@
 					</div>
 					<ul class="values-list">
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("Domain") ?></span>
+							<span class="values-list-label"><?= _("Issued To") ?></span>
 							<span class="values-list-value"><?= $v_ssl_subject ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Aliases") ?></span>
+								<span class="values-list-label"><?= _("Alternate") ?></span>
 								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
 							</li>
 						<?php } ?>
@@ -972,11 +967,11 @@
 							<span class="values-list-value"><?= $v_ssl_signature ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("Public Key") ?></span>
+							<span class="values-list-label"><?= _("Key Size") ?></span>
 							<span class="values-list-value"><?= $v_ssl_pub_key ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("Issuer") ?></span>
+							<span class="values-list-label"><?= _("Issued By") ?></span>
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 					</ul>

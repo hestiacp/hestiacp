@@ -2,7 +2,9 @@
 export default function handleIpListDataSource() {
 	const dataSourceSelect = document.querySelector('.js-datasource-select');
 
-	if (!dataSourceSelect) return;
+	if (!dataSourceSelect) {
+		return;
+	}
 
 	// Parse IP lists from HTML and sort them alphabetically
 	const countryIplists = parseAndSortIplists(dataSourceSelect.dataset.countryIplists);
@@ -32,6 +34,8 @@ function addOption(element, text, value, disabled) {
 	const option = document.createElement('option');
 	option.text = text;
 	option.value = value;
-	if (disabled) option.disabled = true;
+	if (disabled) {
+		option.disabled = true;
+	}
 	element.appendChild(option);
 }

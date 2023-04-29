@@ -28,14 +28,12 @@ App.Listeners.DB.keypress_db_username = () => {
 		App.Actions.DB.update_db_username_hint(input);
 	}
 
-	const updateTimeout = (evt) => {
-		clearTimeout(window.frp_usr_tmt);
-		window.frp_usr_tmt = setTimeout(() => {
+	input.addEventListener(
+		'input',
+		Hestia.helpers.debounce((evt) => {
 			App.Actions.DB.update_db_username_hint(evt.target);
-		}, 100);
-	};
-
-	input.addEventListener('input', updateTimeout);
+		}, 100)
+	);
 };
 
 // Listener that triggers database user hint updating
@@ -46,14 +44,12 @@ App.Listeners.DB.keypress_db_databasename = () => {
 		App.Actions.DB.update_db_databasename_hint(input);
 	}
 
-	const updateTimeout = (evt) => {
-		clearTimeout(window.frp_dbn_tmt);
-		window.frp_dbn_tmt = setTimeout(() => {
+	input.addEventListener(
+		'input',
+		Hestia.helpers.debounce((evt) => {
 			App.Actions.DB.update_db_databasename_hint(evt.target);
-		}, 100);
-	};
-
-	input.addEventListener('input', updateTimeout);
+		}, 100)
+	);
 };
 
 //

@@ -99,7 +99,9 @@ export default function handleShortcuts() {
 			const shortcut = this.registeredShortcuts.find(
 				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination)
 			);
-			if (!shortcut) return;
+			if (!shortcut) {
+				return;
+			}
 
 			this.registeredShortcuts = this.registeredShortcuts.filter(
 				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination)

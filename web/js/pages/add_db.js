@@ -6,7 +6,7 @@ App.Actions.DB.update_db_username_hint = function (input) {
 		hintElement.textContent = '';
 	}
 
-	hintElement.textContent = Alpine.store('globals').DB_USER_PREFIX + input.value;
+	hintElement.textContent = Alpine.store('globals').USER_PREFIX + input.value;
 };
 
 // Updates database name dynamically, showing its prefix
@@ -17,7 +17,7 @@ App.Actions.DB.update_db_databasename_hint = function (input) {
 		hintElement.textContent = '';
 	}
 
-	hintElement.textContent = Alpine.store('globals').DB_DBNAME_PREFIX + input.value;
+	hintElement.textContent = Alpine.store('globals').USER_PREFIX + input.value;
 };
 
 // Listener that triggers database user hint updating

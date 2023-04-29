@@ -75,7 +75,7 @@
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
 									<i class="fas fa-bell-slash icon-dim"></i>
-									<p><?= _("no notifications") ?></p>
+									<p><?= _("No notifications") ?></p>
 								</li>
 							</template>
 							<template x-for="notification in notifications" :key="notification.ID">

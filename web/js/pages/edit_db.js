@@ -6,7 +6,7 @@ App.Actions.DB.update_db_username_hint = function (input) {
 		hintElement.textContent = '';
 	}
 
-	hintElement.textContent = Alpine.store('globals').DB_USER_PREFIX + input.value;
+	hintElement.textContent = Alpine.store('globals').USER_PREFIX + input.value;
 };
 
 // Updates database name dynamically, showing its prefix
@@ -17,7 +17,7 @@ App.Actions.DB.update_db_databasename_hint = function (input) {
 		hintElement.textContent = '';
 	}
 
-	hintElement.textContent = Alpine.store('globals').DB_DBNAME_PREFIX + input.value;
+	hintElement.textContent = Alpine.store('globals').USER_PREFIX + input.value;
 };
 
 // Listener that triggers database user hint updating
@@ -39,10 +39,11 @@ App.Listeners.DB.keypress_db_username = () => {
 // Listener that triggers database user hint updating
 App.Listeners.DB.keypress_db_databasename = () => {
 	const input = document.querySelector('input[name="v_database"]');
-	const prefixIndex = input.value.indexOf(Alpine.store('globals').DB_DBNAME_PREFIX);
 
+	// Remove prefix from the input if it exists (for editing)
+	const prefixIndex = input.value.indexOf(Alpine.store('globals').USER_PREFIX);
 	if (prefixIndex === 0) {
-		input.value = input.value.slice(Alpine.store('globals').DB_DBNAME_PREFIX.length);
+		input.value = input.value.slice(Alpine.store('globals').USER_PREFIX.length);
 	}
 
 	if (input.value.trim() != '') {

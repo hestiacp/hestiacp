@@ -20,21 +20,21 @@ export function enableUnlimitedInputs() {
 	document.querySelectorAll('input:disabled').forEach((input) => {
 		if (isUnlimitedValue(input.value)) {
 			input.disabled = false;
-			input.value = Alpine.store('globals').UNLIM_VALUE;
+			input.value = 'unlimited';
 		}
 	});
 }
 
 function isUnlimitedValue(value) {
-	const { UNLIM_VALUE, UNLIM_TRANSLATED_VALUE } = Alpine.store('globals');
+	const { UNLIMITED_SYMBOL } = Alpine.store('globals');
 	const trimmedValue = value.trim();
-	return trimmedValue === UNLIM_VALUE || trimmedValue === UNLIM_TRANSLATED_VALUE;
+	return trimmedValue === 'unlimited' || trimmedValue === UNLIMITED_SYMBOL;
 }
 
 function enableInput(input, toggleButton) {
 	toggleButton.classList.add('active');
 	input.dataset.prevValue = input.value;
-	input.value = Alpine.store('globals').UNLIM_TRANSLATED_VALUE;
+	input.value = Alpine.store('globals').UNLIMITED_SYMBOL;
 	input.disabled = true;
 }
 

@@ -26,15 +26,14 @@ export function enableUnlimitedInputs() {
 }
 
 function isUnlimitedValue(value) {
-	const { UNLIMITED_SYMBOL } = Alpine.store('globals');
 	const trimmedValue = value.trim();
-	return trimmedValue === 'unlimited' || trimmedValue === UNLIMITED_SYMBOL;
+	return trimmedValue === 'unlimited' || trimmedValue === Alpine.store('globals').UNLIMITED;
 }
 
 function enableInput(input, toggleButton) {
 	toggleButton.classList.add('active');
 	input.dataset.prevValue = input.value;
-	input.value = Alpine.store('globals').UNLIMITED_SYMBOL;
+	input.value = Alpine.store('globals').UNLIMITED;
 	input.disabled = true;
 }
 

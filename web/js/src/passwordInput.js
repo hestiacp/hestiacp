@@ -7,9 +7,7 @@ export default function handlePasswordInput() {
 	document.querySelectorAll('.js-password-input').forEach((passwordInput) => {
 		passwordInput.addEventListener(
 			'input',
-			debounce((evt) => {
-				recalculatePasswordStrength(evt.target);
-			}, 100)
+			debounce((evt) => recalculatePasswordStrength(evt.target))
 		);
 	});
 

@@ -23,7 +23,7 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.store('globals', {
 			USER_PREFIX: '<?= $user_plain ?>_',
-			UNLIMITED_SYMBOL: '<?= _("Unlimited") ?>',
+			UNLIMITED: '<?= _("Unlimited") ?>',
 			NOTIFICATIONS_EMPTY: '<?= _("No notifications") ?>',
 			NOTIFICATIONS_DELETE_ALL: '<?= _("Delete all notifications") ?>',
 			CONFIRM_LEAVE_PAGE: '<?= _("LEAVE_PAGE_CONFIRMATION") ?>',

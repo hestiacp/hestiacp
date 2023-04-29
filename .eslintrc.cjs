@@ -40,6 +40,7 @@ module.exports = {
 			},
 		],
 		'no-console': 'error',
+		'prefer-const': 'error',
 		'import/no-unresolved': 'off',
 	},
 };

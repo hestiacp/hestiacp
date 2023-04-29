@@ -377,7 +377,7 @@
 							<?php print _("Directory"); ?> <span class="optional">(<?= _("Optional") ?>)</span>
 						</label>
 						<input type="text" class="form-control" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= htmlentities(trim($v_custom_doc_folder, "'")) ?>">
-						<small class="custom_docroot_hint"></small>
+						<small class="js-custom-docroot-hint"></small>
 					</div>
 				</div>
 				<?php if (in_array($_SESSION["FTP_SYSTEM"], ["vsftpd", "proftpd"])) { ?>

@@ -1,5 +1,5 @@
 // Page navigation methods called by shortcuts
-let state = {
+const state = {
 	active_menu: 1,
 	menu_selector: '.main-menu-item',
 	menu_active_selector: '.active',
@@ -82,7 +82,9 @@ function moveFocusUpDown(direction) {
 	const currentFocused = document.querySelector('.units .l-unit.focus');
 	let index = units.indexOf(currentFocused);
 
-	if (index === -1) index = 0;
+	if (index === -1) {
+		index = 0;
+	}
 
 	if (direction === 'up' && index > 0) {
 		index--;
@@ -92,7 +94,9 @@ function moveFocusUpDown(direction) {
 		return;
 	}
 
-	if (currentFocused) currentFocused.classList.remove('focus');
+	if (currentFocused) {
+		currentFocused.classList.remove('focus');
+	}
 	units[index].classList.add('focus');
 
 	window.scrollTo({

@@ -49,7 +49,7 @@
 				</p>
 				<div class="u-mb10">
 					<label for="v_database" class="form-label"><?= _("Database") ?></label>
-					<input type="text" class="form-control" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>">
+					<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
@@ -69,7 +69,7 @@
 						<?= _("Username") ?>
 						<em><small>(<?= sprintf(_("maximum %s characters length, including prefix"), 32) ?>)</small></em>
 					</label>
-					<input type="text" class="form-control" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
+					<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">

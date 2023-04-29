@@ -1,3 +1,5 @@
+import { debounce } from './helpers';
+
 // Monitor "Account" and "Password" inputs on "Add/Edit Mail Account"
 // page and update the sidebar "Account" and "Password" output
 export default function handleCopyCreds() {
@@ -17,8 +19,9 @@ function monitorAndUpdate(inputSelector, outputSelector) {
 		outputElement.textContent = value;
 	}
 
-	inputElement.addEventListener('input', (event) => {
-		updateOutput(event.target.value);
-	});
+	inputElement.addEventListener(
+		'input',
+		debounce((evt) => updateOutput(evt.target.value))
+	);
 	updateOutput(inputElement.value);
 }

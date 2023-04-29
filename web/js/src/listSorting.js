@@ -1,6 +1,6 @@
 // List view sorting dropdown
 export default function handleListSorting() {
-	let state = {
+	const state = {
 		sort_par: 'sort-name',
 		sort_direction: -1,
 		sort_as_int: false,
@@ -19,7 +19,9 @@ export default function handleListSorting() {
 		const toggleButton = document.querySelector('.toolbar-sorting-toggle');
 		const dropdown = document.querySelector('.toolbar-sorting-menu');
 
-		if (!dropdown || !toggleButton) return;
+		if (!dropdown || !toggleButton) {
+			return;
+		}
 
 		if (
 			!dropdown.contains(event.target) &&
@@ -36,7 +38,9 @@ export default function handleListSorting() {
 			const menu = document.querySelector('.toolbar-sorting-menu');
 			menu.classList.toggle('u-hidden');
 
-			if (this.classList.contains('active')) return;
+			if (this.classList.contains('active')) {
+				return;
+			}
 
 			document
 				.querySelectorAll('.toolbar-sorting-menu span')

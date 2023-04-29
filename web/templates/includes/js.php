@@ -22,12 +22,9 @@
 	document.documentElement.classList.replace('no-js', 'js');
 	document.addEventListener('alpine:init', () => {
 		Alpine.store('globals', {
-			FTP_USER_PREFIX: '<?= $user_plain ?>_',
-			DB_USER_PREFIX: '<?= $user_plain ?>_',
-			DB_DBNAME_PREFIX: '<?= $user_plain ?>_',
-			UNLIM_VALUE: 'unlimited',
-			UNLIM_TRANSLATED_VALUE: '<?= _("unlimited") ?>',
-			NOTIFICATIONS_EMPTY: '<?= _("no notifications") ?>',
+			USER_PREFIX: '<?= $user_plain ?>_',
+			UNLIMITED: '<?= _("Unlimited") ?>',
+			NOTIFICATIONS_EMPTY: '<?= _("No notifications") ?>',
 			NOTIFICATIONS_DELETE_ALL: '<?= _("Delete all notifications") ?>',
 			CONFIRM_LEAVE_PAGE: '<?= _("LEAVE_PAGE_CONFIRMATION") ?>',
 			ERROR_MESSAGE: '<?= !empty($_SESSION['error_msg']) ? htmlentities($_SESSION['error_msg']) : '' ?>',

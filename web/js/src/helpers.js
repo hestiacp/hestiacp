@@ -19,7 +19,7 @@ export function randomPassword(length = 16) {
 }
 
 // Debounces a function to avoid excessive calls
-export function debounce(func, wait) {
+export function debounce(func, wait = 100) {
 	let timeout;
 	return function (...args) {
 		clearTimeout(timeout);

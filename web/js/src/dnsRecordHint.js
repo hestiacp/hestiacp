@@ -14,15 +14,13 @@ export default function handleDnsRecordHint() {
 
 	recordInput.addEventListener(
 		'input',
-		debounce((evt) => {
-			updateHint(evt.target);
-		}, 100)
+		debounce((evt) => updateHint(evt.target))
 	);
 }
 
 // Update DNS "Record" field hint
 function updateHint(input) {
-	const domainInput = document.querySelector('input[name="v_domain"]');
+	const domainInput = document.querySelector('.js-dns-record-domain');
 	const hintElement = input.parentElement.querySelector('.hint');
 	let hint = input.value.trim();
 

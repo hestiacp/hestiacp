@@ -3,6 +3,7 @@ import focusFirstInput from './focusFirstInput';
 import handleConfirmationDialogs from './confirmationDialog';
 import handleCopyCreds from './copyCreds';
 import handleCronGenerator from './cronGenerator';
+import handleDatabaseHints from './databaseHints';
 import handleDiscardAllMail from './discardAllMail';
 import handleDnsRecordHint from './dnsRecordHint';
 import handleErrorMessage from './errorHandler';
@@ -44,6 +45,7 @@ function initListeners() {
 
 document.addEventListener('alpine:init', () => {
 	alpineInit();
+	handleDatabaseHints();
 	handleErrorMessage();
 	handleIpListDataSource();
 	handleShortcuts();

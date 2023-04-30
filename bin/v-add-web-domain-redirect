@@ -98,6 +98,8 @@ if [ -n "$path" ]; then
 	if [ "$lastchr" = "/" ]; then
 		requesturi=1
 	fi
+else
+	requesturi=1
 fi
 
 # Insert redirect commands

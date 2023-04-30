@@ -70,11 +70,11 @@
 									<label for="h_min_1" class="form-label first"><?= _("Run Command") ?>:</label>
 									<select class="form-select" name="h_min" id="h_min_1" form="">
 										<option value="*" selected="selected"><?= _("Every minute") ?></option>
-										<option value="*/2"><?= _("Every") ?> 2 <?= _("minutes") ?></option>
-										<option value="*/5"><?= _("Every") ?> 5 <?= _("minutes") ?></option>
-										<option value="*/10"><?= _("Every") ?> 10 <?= _("minutes") ?></option>
-										<option value="*/15"><?= _("Every") ?> 15 <?= _("minutes") ?></option>
-										<option value="*/30"><?= _("Every") ?> 30 <?= _("minutes") ?></option>
+										<option value="*/2"><?= sprintf(_("Every %s minutes"), 2) ?></option>
+										<option value="*/5"><?= sprintf(_("Every %s minutes"), 5) ?></option>
+										<option value="*/10"><?= sprintf(_("Every %s minutes"), 10) ?></option>
+										<option value="*/15"><?= sprintf(_("Every %s minutes"), 15) ?></option>
+										<option value="*/30"><?= sprintf(_("Every %s minutes"), 30) ?></option>
 									</select>
 								</div>
 								<div class="u-pt10">
@@ -93,9 +93,9 @@
 									<label for="h_hour_2" class="form-label first"><?= _("Run Command") ?>:</label>
 									<select class="form-select" name="h_hour" id="h_hour_2" form="">
 										<option value="*" selected="selected"><?= _("Every hour") ?></option>
-										<option value="*/2"><?= _("Every") ?> 2 <?= _("hours") ?></option>
-										<option value="*/6"><?= _("Every") ?> 6 <?= _("hours") ?></option>
-										<option value="*/12"><?= _("Every") ?> 12 <?= _("hours") ?></option>
+										<option value="*/2"><?= sprintf(_("Every %s hours"), 2) ?></option>
+										<option value="*/6"><?= sprintf(_("Every %s hours"), 6) ?></option>
+										<option value="*/12"><?= sprintf(_("Every %s hours"), 12) ?></option>
 									</select>
 								</div>
 								<div class="u-mb20">
@@ -124,10 +124,10 @@
 										<option value="*" selected="selected"><?= _("Every day") ?></option>
 										<option value="1-31/2"><?= _("Every odd day") ?></option>
 										<option value="*/2"><?= _("Every even day") ?></option>
-										<option value="*/3"><?= _("Every") ?> 3 <?= _("days") ?></option>
-										<option value="*/5"><?= _("Every") ?> 5 <?= _("days") ?></option>
-										<option value="*/10"><?= _("Every") ?> 10 <?= _("days") ?></option>
-										<option value="*/15"><?= _("Every") ?> 15 <?= _("days") ?></option>
+										<option value="*/3"><?= sprintf(_("Every %s days"), 2) ?></option>
+										<option value="*/5"><?= sprintf(_("Every %s days"), 5) ?></option>
+										<option value="*/10"><?= sprintf(_("Every %s days"), 10) ?></option>
+										<option value="*/15"><?= sprintf(_("Every %s days"), 15) ?></option>
 									</select>
 								</div>
 								<div class="u-mb20">
@@ -264,8 +264,8 @@
 										<option value="*" selected="selected"><?= _("Every month") ?></option>
 										<option value="1-11/2"><?= _("Every odd month") ?></option>
 										<option value="*/2"><?= _("Every even month") ?></option>
-										<option value="*/3"><?= _("Every") ?> 3 <?= _("months") ?></option>
-										<option value="*/6"><?= _("Every") ?> 6 <?= _("months") ?></option>
+										<option value="*/3"><?= sprintf(_("Every %s month"), 3) ?></option>
+										<option value="*/6"><?= sprintf(_("Every %s month"), 6) ?></option>
 										<option value="1"><?= _("Jan") ?></option>
 										<option value="2"><?= _("Feb") ?></option>
 										<option value="3"><?= _("Mar") ?></option>
@@ -281,7 +281,7 @@
 									</select>
 								</div>
 								<div class="u-mb20">
-									<label for="h_day_5" class="form-label first"><?= _("Date") ?>:</label>
+									<label for="h_day_5" class="form-label first"><?= _("Day") ?>:</label>
 									<select class="form-select" name="h_day" id="h_day_5" style="width:70px;" form="">
 										<option value="1" selected="selected">01</option>
 										<option value="2">02</option>

@@ -735,7 +735,7 @@ strong {
 /* Spinner
    ========================================================================== */
 
-.fullscreen-loader {
+.spinner-overlay {
 	background-color: rgb(0 0 0 / 50%);
 }
 

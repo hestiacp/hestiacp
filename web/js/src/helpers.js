@@ -34,11 +34,16 @@ export function getCssVariable(variableName) {
 
 // Shows the loading spinner overlay
 export function showSpinner() {
-	document.querySelector('.js-fullscreen-loader').classList.add('active');
+	document.querySelector('.js-spinner').classList.add('active');
 }
 
 // Creates a confirmation <dialog> on the fly
-export function createConfirmationDialog({ title, message = 'Are you sure?', targetUrl }) {
+export function createConfirmationDialog({
+	title,
+	message = 'Are you sure?',
+	targetUrl,
+	spinner = false,
+}) {
 	// Create the dialog
 	const dialog = document.createElement('dialog');
 	dialog.classList.add('modal');
@@ -80,6 +85,9 @@ export function createConfirmationDialog({ title, message = 'Are you sure?', tar
 	// Define named functions to handle the event listeners
 	const handleConfirm = () => {
 		if (targetUrl) {
+			if (spinner) {
+				showSpinner();
+			}
 			window.location.href = targetUrl;
 		}
 

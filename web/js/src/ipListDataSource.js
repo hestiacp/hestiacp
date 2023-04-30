@@ -37,5 +37,6 @@ function addOption(element, text, value, disabled) {
 	if (disabled) {
 		option.disabled = true;
 	}
-	element.appendChild(option);
+
+	element.append(option);
 }

@@ -38,7 +38,7 @@
 						<option value="update counters"><?= _("update counters") ?></option>
 						<option value="suspend"><?= _("suspend") ?></option>
 						<option value="unsuspend"><?= _("unsuspend") ?></option>
-						<option value="delete"><?= _("delete") ?></option>
+						<option value="delete"><?= _("Delete") ?></option>
 					</select>
 					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>

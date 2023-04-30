@@ -39,7 +39,7 @@
 							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('turn on notifications').'</option>'; ?>
 							<option value="suspend"><?= _("suspend") ?></option>
 							<option value="unsuspend"><?= _("unsuspend") ?></option>
-							<option value="delete"><?= _("delete") ?></option>
+							<option value="delete"><?= _("Delete") ?></option>
 						</select>
 						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>

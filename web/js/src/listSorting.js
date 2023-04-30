@@ -48,7 +48,7 @@ export default function handleListSorting() {
 			this.classList.add('active');
 			const parentLi = this.closest('li');
 			state.sort_par = parentLi.getAttribute('entity');
-			state.sort_as_int = !!parentLi.getAttribute('sort_as_int');
+			state.sort_as_int = Boolean(parentLi.getAttribute('sort_as_int'));
 			state.sort_direction = this.classList.contains('up') ? 1 : -1;
 
 			const toggle = document.querySelector('.toolbar-sorting-toggle');
@@ -62,12 +62,12 @@ export default function handleListSorting() {
 				const bAttr = b.getAttribute(state.sort_par);
 
 				if (state.sort_as_int) {
-					const aInt = parseInt(aAttr);
-					const bInt = parseInt(bAttr);
+					const aInt = Number.parseInt(aAttr);
+					const bInt = Number.parseInt(bAttr);
 					return aInt >= bInt ? state.sort_direction : state.sort_direction * -1;
-				} else {
-					return aAttr <= bAttr ? state.sort_direction : state.sort_direction * -1;
 				}
+
+				return aAttr <= bAttr ? state.sort_direction : state.sort_direction * -1;
 			});
 
 			const unitsContainer = document.querySelector('.units');

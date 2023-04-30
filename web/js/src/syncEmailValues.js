@@ -12,11 +12,7 @@ export default function handleSyncEmailValues() {
 	}
 
 	function syncEmailValues() {
-		if (sendWelcomeEmailCheckbox.checked) {
-			emailCredentialsToInput.value = emailInput.value;
-		} else {
-			emailCredentialsToInput.value = '';
-		}
+		emailCredentialsToInput.value = sendWelcomeEmailCheckbox.checked ? emailInput.value : '';
 	}
 
 	emailInput.addEventListener(

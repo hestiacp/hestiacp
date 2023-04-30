@@ -1,4 +1,3 @@
-<script defer src="/js/vendor/jquery-3.6.4.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/vendor/alpine-3.12.0.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script>

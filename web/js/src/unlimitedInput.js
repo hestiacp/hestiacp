@@ -43,9 +43,11 @@ function disableInput(input, toggleButton) {
 	if (previousValue) {
 		input.value = previousValue;
 	}
+
 	if (isUnlimitedValue(input.value)) {
 		input.value = '0';
 	}
+
 	input.disabled = false;
 }
 

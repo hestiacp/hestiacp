@@ -42,6 +42,7 @@ export function executeShortcut(elm) {
 	if (action === 'js') {
 		return elm.querySelector('.data-controls').click();
 	}
+
 	if (action === 'href') {
 		location.href = elm.querySelector('a').getAttribute('href');
 	}
@@ -97,6 +98,7 @@ function moveFocusUpDown(direction) {
 	if (currentFocused) {
 		currentFocused.classList.remove('focus');
 	}
+
 	units[index].classList.add('focus');
 
 	window.scrollTo({

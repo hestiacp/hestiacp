@@ -89,7 +89,7 @@ function getChartOptions(unit) {
 			},
 			y: {
 				title: {
-					display: !!unit,
+					display: Boolean(unit),
 					text: unit,
 					color: labelColor,
 				},

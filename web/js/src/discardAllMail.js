@@ -7,8 +7,9 @@ export default function handleDiscardAllMail() {
 	}
 
 	discardAllMailCheckbox.addEventListener('click', () => {
-		const forwardToTextarea = document.getElementById('v_fwd');
-		const doNotStoreCheckbox = document.getElementById('v_fwd_for');
+		// TODO: Use .js- class instead of #id
+		const forwardToTextarea = document.querySelector('#v_fwd');
+		const doNotStoreCheckbox = document.querySelector('#v_fwd_for');
 
 		if (discardAllMailCheckbox.checked) {
 			// Disable "Forward to" textarea

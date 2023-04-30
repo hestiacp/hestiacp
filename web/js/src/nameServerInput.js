@@ -1,9 +1,9 @@
 // Attaches listeners to nameserver add and remove links to clone or remove the input
 export default function handleNameServerInput() {
 	// Add new name server input
-	const addNsElem = document.querySelector('.js-add-ns');
-	if (addNsElem) {
-		addNsElem.addEventListener('click', () => addNsInput(addNsElem));
+	const addNsElement = document.querySelector('.js-add-ns');
+	if (addNsElement) {
+		addNsElement.addEventListener('click', () => addNsInput(addNsElement));
 	}
 
 	// Remove name server input
@@ -12,7 +12,7 @@ export default function handleNameServerInput() {
 	});
 }
 
-function addNsInput(addNsElem) {
+function addNsInput(addNsElement) {
 	const currentNsInputs = document.querySelectorAll('input[name^=v_ns]');
 	const inputCount = currentNsInputs.length;
 
@@ -22,16 +22,16 @@ function addNsInput(addNsElem) {
 
 		templateNsInput.removeAttribute('value');
 		templateNsInput.name = `v_ns${inputCount + 1}`;
-		addNsElem.before(template);
+		addNsElement.before(template);
 	}
 
 	if (inputCount === 7) {
-		addNsElem.classList.add('u-hidden');
+		addNsElement.classList.add('u-hidden');
 	}
 }
 
-function removeNsInput(removeNsElem) {
-	removeNsElem.parentElement.remove();
+function removeNsInput(removeNsElement) {
+	removeNsElement.parentElement.remove();
 	const currentNsInputs = document.querySelectorAll('input[name^=v_ns]');
 	currentNsInputs.forEach((input, index) => (input.name = `v_ns${index + 1}`));
 	document.querySelector('.js-add-ns').classList.remove('u-hidden');

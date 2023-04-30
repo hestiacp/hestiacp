@@ -3,24 +3,12 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<a href="/list/server/" class="button button-secondary" id="btn-back">
-				<i class="fas fa-arrow-left icon-blue"></i>
-				<?= _("Back") ?>
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
-			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet icon-blue"></i>
-				<?= _("IP") ?>
-			</a>
-			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
-				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved icon-red"></i>
-					<?= _("Firewall") ?>
-				</a>
-			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="vstobjects">
-				<i class="fas fa-floppy-disk icon-purple"></i>
-				<?= _("Save") ?>
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -42,7 +30,7 @@
 
 		<div class="form-container">
 			<h1 class="form-title">
-				<?= _("White label options") ?>
+				<?= _("White Label Options") ?>
 			</h1>
 			<?php show_alert_message($_SESSION); ?>
 
@@ -92,7 +80,7 @@
 
 					<div class="u-mb10">
 						<label for="v_from_email" class="form-label">
-							<?= _("Sender email address") ?><span class="optional"><?=sprintf('Default: noreply@%s', htmlentities(trim(get_hostname(), "'")));?></span>
+							<?= _("Sender Email Address") ?><span class="optional"><?=sprintf('Default: noreply@%s', htmlentities(trim(get_hostname(), "'")));?></span>
 						</label>
 						<input
 							type="text"

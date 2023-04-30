@@ -11,7 +11,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("SORT BY") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -20,7 +20,7 @@
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-expire" sort_as_int="1"><span class="name"><?= _("Expire") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-ip"><span class="name"><?= _("IP address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+					<li entity="sort-ip"><span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 					<li entity="sort-records"><span class="name"><?= _("Records") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
 				</ul>
@@ -28,7 +28,7 @@
 					<form x-data x-bind="BulkEdit" action="/bulk/dns/" method="post">
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
-							<option value=""><?= _("apply to selected") ?></option>
+							<option value=""><?= _("Apply to selected") ?></option>
 							<?php if ($_SESSION["userContext"] === "admin") { ?>
 								<option value="rebuild"><?= _("Rebuild") ?></option>
 							<?php } ?>
@@ -102,7 +102,7 @@
 					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 truncate">
-					<b><a href="/list/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("DNS records") ?>: <?= htmlentities($key) ?>"><?= htmlentities($key) ?></a></b>
+					<b><a href="/list/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("DNS Records") ?>: <?= htmlentities($key) ?>"><?= htmlentities($key) ?></a></b>
 					<?= empty($data[$key]["SRC"]) ? "" : '<br>⇢ <span style="font-size:11px;">' . htmlspecialchars($data[$key]["SRC"], ENT_QUOTES) . "</span>" ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
@@ -115,11 +115,11 @@
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
 									<div class="actions-panel__col actions-panel__logs shortcut-n" data-key-action="href"><a href="/add/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Add DNS Record") ?>"><i class="fas fa-circle-plus icon-green icon-dim"></i></a></div>
-									<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing DNS Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
-									<?php if($data[$key]['DNSSEC'] == "yes"){?><div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>" title="<?= _("View Public DNSSEC key") ?>"><i class="fas fa-key icon-orange icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit DNS Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+									<?php if($data[$key]['DNSSEC'] == "yes"){?><div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>" title="<?= _("View Public DNSSEC Key") ?>"><i class="fas fa-key icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 								<?php } ?>
-								<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-list icon-lightblue icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>" title="<?= _("DNS Records") ?>"><i class="fas fa-list icon-lightblue icon-dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"

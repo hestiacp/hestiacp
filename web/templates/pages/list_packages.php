@@ -12,7 +12,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("SORT BY") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -51,7 +51,7 @@
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-link" title="<?= _("Web Aliases") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Domains") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Zones") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-globe" title="<?= _("DNS Records") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-inbox" title="<?= _("Mail Accounts") ?>"></i></b></div>
@@ -77,7 +77,7 @@
 					<div class="clearfix l-unit__stat-col--left wide truncate"><b><?=$key?></b></div>
 				<?php } else { ?>
 					<div class="clearfix l-unit__stat-col--left wide truncate">
-						<b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>: <?=$key?>"><?=$key?></a></b>
+						<b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Package") ?>: <?=$key?>"><?=$key?></a></b>
 					</div>
 				<?php } ?>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
@@ -87,7 +87,7 @@
 							<?php if (($key == 'system')) { ?>
 								<!-- Restrict editing system package -->
 							<?php } else {?>
-								<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Package") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Package") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Copy") ?>"><i class="fas fa-clone icon-teal icon-dim"></i></a></div>
 							<?php if ($key == 'system') { ?>
@@ -152,7 +152,7 @@
 					</span>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact">
-					<span class="badge" title="<?= _("DNS Domains") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
+					<span class="badge" title="<?= _("DNS Zones") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
 						<?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
 							<b>&infin;</b>
 						<?php } else { ?>

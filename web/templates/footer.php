@@ -30,9 +30,9 @@
 			</div>
 			<div class="shortcuts-inner">
 				<ul class="shortcuts-list">
-					<li><span class="key">a</span><?= _("Add New object") ?></li>
-					<li><span class="key">Ctrl + Enter</span><?= _("Save Form") ?></li>
-					<li class="u-mb20"><span class="key">Ctrl + Backspace</span><?= _("Cancel saving form") ?></li>
+					<li><span class="key">a</span><?= _("Add new object") ?></li>
+					<li><span class="key">Ctrl + Enter</span><?= _("Save form") ?></li>
+					<li class="u-mb20"><span class="key">Ctrl + Backspace</span><?= _("Unsave form") ?></li>
 					<li><span class="key">1</span><?= _("Go to WEB list") ?></li>
 					<li><span class="key">2</span><?= _("Go to DNS list") ?></li>
 					<li><span class="key">3</span><?= _("Go to MAIL list") ?></li>
@@ -42,7 +42,7 @@
 				</ul>
 				<ul class="shortcuts-list">
 					<li class="u-mb20"><span class="key">f</span><?= _("Focus on search") ?></li>
-					<li class="u-mb20"><span class="key">h</span><?= _("Display/Close shortcuts") ?></li>
+					<li class="u-mb20"><span class="key">h</span><?= _("Display / Hide shortcuts") ?></li>
 					<li><span class="key bigger">&larr;</span><?= _("Move backward through top menu") ?></li>
 					<li><span class="key bigger">&rarr;</span><?= _("Move forward through top menu") ?></li>
 					<li class="u-mb20"><span class="key">Enter</span><?= _("Enter focused element") ?></li>

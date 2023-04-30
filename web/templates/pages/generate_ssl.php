@@ -32,7 +32,7 @@
 			<div class="u-mb10">
 				<label for="v_country" class="form-label">
 					<?= _("Country") ?>
-					<span class="optional">(<?= _("2 letter code") ?>)</span>
+					<span class="optional">(<?= _("ISO 3166-1 alpha-2 two-letter code") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_country" id="v_country" value="<?= htmlentities(trim($v_country, "'")) ?>">
 			</div>

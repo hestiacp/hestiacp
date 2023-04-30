@@ -12,7 +12,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("SORT BY") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -27,11 +27,11 @@
 				<form x-data x-bind="BulkEdit" action="/bulk/user/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
-						<option value=""><?= _("apply to selected") ?></option>
+						<option value=""><?= _("Apply to selected") ?></option>
 						<option value="rebuild"><?= _("Rebuild All") ?></option>
 						<option value="rebuild user"><?= _("Rebuild User") ?></option>
 						<option value="rebuild web"><?= _("Rebuild Web Domains") ?></option>
-						<option value="rebuild dns"><?= _("Rebuild Dns Domains") ?></option>
+						<option value="rebuild dns"><?= _("Rebuild DNS Zones") ?></option>
 						<option value="rebuild mail"><?= _("Rebuild Mail Domains") ?></option>
 						<option value="rebuild db"><?= _("Rebuild Databases") ?></option>
 						<option value="rebuild cron"><?= _("Rebuild Cron Jobs") ?></option>
@@ -74,7 +74,7 @@
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><i class="fas fa-hard-drive" title="<?= _("Disk") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Domains") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Zones") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-database" title="<?= _("Databases") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-file-zipper" title="<?= _("Backups") ?>"></i></b></div>
@@ -108,7 +108,7 @@
 					<?php if ($key == $user_plain) { ?>
 						<b><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit User") ?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
 					<?php } else { ?>
-						<b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("login as") ?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
+						<b><a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Log in as") ?> <?=$key?>"><?=$key?> <span style="font-weight: normal !important;">(<?=$data[$key]['NAME'];?>)</span></a></b>
 					<?php } ?>
 					<br>
 					<div class="userlist-email"><b><?= _("Email") ?>:</b> <?= $data[$key]["CONTACT"] ?></div>
@@ -120,13 +120,13 @@
 							<?php if ($key == $user_plain) { ?>
 								<i class="fas fa-user-check icon-dim" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
 							<?php } else { ?>
-								<a href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("login as") ?> <?= $key ?>"><i class="fas fa-right-to-bracket icon-green icon-dim"></i></a>
+								<a href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Log in as") ?> <?= $key ?>"><i class="fas fa-right-to-bracket icon-green icon-dim"></i></a>
 							<?php } ?>
 							<?php if ($_SESSION["userContext"] === "admin" && $key == "admin" && $_SESSION["user"] != "admin") { ?>
 								<!-- Hide edit button from admin user when logged in with another admin user -->
 								&nbsp;
 							<?php } else { ?>
-								<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit User") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<?php if ($key == "admin") { ?>
 								<!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->
@@ -173,7 +173,7 @@
 				<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><?= humanize_usage_size($data[$key]["U_DISK"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span> / <b><?= humanize_usage_size($data[$key]["DISK_QUOTA"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><?= humanize_usage_size($data[$key]["U_BANDWIDTH"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?></span> / <b><?= humanize_usage_size($data[$key]["BANDWIDTH"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_WEB_DOMAINS"] ?> <?= _("Web Domains") ?>"><span class="badge"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></span></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_DNS_DOMAINS"] ?> <?= _("DNS Domains") ?>"><span class="badge"><b><?= $data[$key]["U_DNS_DOMAINS"] ?></b></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_DNS_DOMAINS"] ?> <?= _("DNS Zones") ?>"><span class="badge"><b><?= $data[$key]["U_DNS_DOMAINS"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_MAIL_DOMAINS"] ?> <?= _("Mail Domains") ?>"><span class="badge"><b><?= $data[$key]["U_MAIL_DOMAINS"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_DATABASES"] ?> <?= _("Databases") ?>"><span class="badge"><b><?= $data[$key]["U_DATABASES"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_BACKUPS"] ?> <?= _("Backups") ?>"><span class="badge"><b><?= $data[$key]["U_BACKUPS"] ?></b></span></div>

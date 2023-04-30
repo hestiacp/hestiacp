@@ -24,7 +24,7 @@ if ($_SESSION["userContext"] === "admin") {
 		case "delete-cron-reports":
 			$cmd = "v-delete-cron-reports";
 			exec(HESTIA_CMD . $cmd . " " . $user, $output, $return_var);
-			$_SESSION["error_msg"] = _("Cronjob email reporting has been successfully disabled");
+			$_SESSION["error_msg"] = _("Cronjob email reporting has been successfully disabled.");
 			unset($output);
 			header("Location: /list/cron/");
 			exit();
@@ -32,7 +32,7 @@ if ($_SESSION["userContext"] === "admin") {
 		case "add-cron-reports":
 			$cmd = "v-add-cron-reports";
 			exec(HESTIA_CMD . $cmd . " " . $user, $output, $return_var);
-			$_SESSION["error_msg"] = _("Cronjob email reporting has been successfully enabled");
+			$_SESSION["error_msg"] = _("Cronjob email reporting has been successfully enabled.");
 			unset($output);
 			header("Location: /list/cron/");
 			exit();
@@ -49,7 +49,7 @@ if ($_SESSION["userContext"] === "admin") {
 		case "delete-cron-reports":
 			$cmd = "v-delete-cron-reports";
 			exec(HESTIA_CMD . $cmd . " " . $user, $output, $return_var);
-			$_SESSION["error_msg"] = _("Cronjob email reporting has been successfully disabled");
+			$_SESSION["error_msg"] = _("Cronjob email reporting has been successfully disabled.");
 			unset($output);
 			header("Location: /list/cron/");
 			exit();
@@ -57,7 +57,7 @@ if ($_SESSION["userContext"] === "admin") {
 		case "add-cron-reports":
 			$cmd = "v-add-cron-reports";
 			exec(HESTIA_CMD . $cmd . " " . $user, $output, $return_var);
-			$_SESSION["error_msg"] = _("Cronjob email reporting has been successfully enabled");
+			$_SESSION["error_msg"] = _("Cronjob email reporting has been successfully enabled.");
 			unset($output);
 			header("Location: /list/cron/");
 			exit();

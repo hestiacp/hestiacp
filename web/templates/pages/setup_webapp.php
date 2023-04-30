@@ -45,7 +45,7 @@
 						$field_label =
 							isset($form_control["label"])
 								? htmlentities($form_control["label"])
-								: ucwords(str_replace([".","_"], " ", $form_name));
+								: ucwords(str_replace([".", "_"], " ", $form_name));
 						$field_placeholder = "";
 						if (is_array($form_control)) {
 							$field_type = !empty($form_control["type"]) ? $form_control["type"] : "text";

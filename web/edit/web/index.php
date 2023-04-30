@@ -1239,7 +1239,7 @@ if (!empty($_POST["save"])) {
 							$template = str_replace($matches[0], "", $template);
 						} else {
 							$template = _(
-								"FTP account has been created and is ready for use.\n" .
+								"FTP account has been created and ready to use.\n" .
 									"Hostname: {{domain}}\n" .
 									"Username: {{username}}\n" .
 									"Password: {{password}}\n" .
@@ -1252,7 +1252,7 @@ if (!empty($_POST["save"])) {
 								["{{subject}}", "{{hostname}}", "{{appname}}"],
 								[
 									sprintf(
-										_("FTP Accont Credentials %s"),
+										_("FTP Account Credentials %s"),
 										$user_plain . "_" . $v_ftp_username_for_emailing,
 									),
 									get_hostname(),
@@ -1381,7 +1381,7 @@ if (!empty($_POST["save"])) {
 						$template = str_replace($matches[0], "", $template);
 					} else {
 						$template = _(
-							"FTP account has been created and is ready for use.\n" .
+							"FTP account has been created and ready to use.\n" .
 								"Hostname: {{domain}}\n" .
 								"Username: {{username}}\n" .
 								"Password: {{password}}\n" .
@@ -1394,7 +1394,7 @@ if (!empty($_POST["save"])) {
 							["{{subject}}", "{{hostname}}", "{{appname}}"],
 							[
 								sprintf(
-									_("FTP Accont Credentials %s"),
+									_("FTP Account Credentials %s"),
 									$user_plain . "_" . $v_ftp_username_for_emailing,
 								),
 								get_hostname(),

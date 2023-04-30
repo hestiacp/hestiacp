@@ -30,7 +30,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Editing Mail Account") ?></h1>
+			<h1 class="form-title"><?= _("Edit Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="sidebar-right-grid">
 				<div class="sidebar-right-grid-content">
@@ -62,13 +62,13 @@
 					</ul>
 					<div class="u-pt18 u-mb10">
 						<label for="v_send_email" class="form-label">
-							<?= _("Send login credentials to email address") ?>
+							<?= _("Email login credentials to:") ?>
 						</label>
 						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= htmlentities(trim($v_send_email, "'")) ?>">
 					</div>
 					<div class="u-mb10">
 						<label for="v_quota" class="form-label">
-							<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+							<?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 						</label>
 						<div class="u-pos-relative">
 							<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?php if (!empty($v_quota)) {echo htmlentities(trim($v_quota, "'"));} else { echo "0"; } ?>">
@@ -79,7 +79,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_aliases" class="form-label">
-							<?= _("Aliases") ?> <span class="optional">(<?= _("use local-part") ?>)</span>
+							<?= _("Aliases") ?> <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
 						</label>
 						<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
 					</div>
@@ -115,7 +115,7 @@
 					</div>
 					<div class="u-mb20">
 						<label for="v_rate" class="form-label">
-							<?= _("Rate limit") ?> <span class="optional">(<?= _("Email / hour") ?>)</span>
+							<?= _("Rate limit") ?> <span class="optional">(<?= _("Email / Hour") ?>)</span>
 						</label>
 						<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 					</div>
@@ -150,7 +150,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 993</span>
 							</li>
 							<li class="values-list-item">
@@ -169,7 +169,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 995</span>
 							</li>
 							<li class="values-list-item">
@@ -188,7 +188,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 465</span>
 							</li>
 							<li class="values-list-item">

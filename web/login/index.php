@@ -255,7 +255,7 @@ function authenticate_user($user, $password, $twofa = "") {
 								$v_session_id .
 								" " .
 								$v_user_agent .
-								' yes "Ip not in allowed list"',
+								' yes "IP address not in allowed list"',
 							$output,
 							$return_var,
 						);

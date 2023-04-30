@@ -36,7 +36,7 @@
 				<input type="text" class="form-control" name="v_username" id="v_username" value="<?= htmlentities(trim($v_username, "'")) ?>" tabindex="1" required>
 			</div>
 			<div class="u-mb10">
-				<label for="v_name" class="form-label"><?= _("Name") ?></label>
+				<label for="v_name" class="form-label"><?= _("Contact Name") ?></label>
 				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= htmlentities(trim($v_name, "'")) ?>" tabindex="2" required>
 			</div>
 			<div class="u-mb10">

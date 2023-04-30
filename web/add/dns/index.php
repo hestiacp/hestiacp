@@ -196,7 +196,7 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		$_SESSION["ok_msg"] = htmlify_trans(
 			sprintf(
-				_("DNS domain {%s} has been created successfully"),
+				_("DNS zone {%s} has been created successfully."),
 				htmlentities($_POST["v_domain"]),
 			),
 			"</b></a>",

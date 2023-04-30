@@ -60,11 +60,11 @@
 				<li class="server-summary-item">
 					<span class="server-summary-list-label">Hestia Control Panel</span>
 					<span class="server-summary-list-value">
-						<?php if ($sys["sysinfo"]["RELEASE"] != "Release") { ?>
+						<?php if ($sys["sysinfo"]["RELEASE"] != "release") { ?>
 							<i class="fas fa-flask icon-red" title="<?= $sys["sysinfo"]["RELEASE"] ?>"></i>
 						<?php } ?>
 						<?php if ($sys["sysinfo"]["RELEASE"] == "release") { ?>
-							<i class="fas fa-cube" title="<?= _("Production release") ?>"></i>
+							<i class="fas fa-cube" title="<?= _("Production Release") ?>"></i>
 						<?php } ?>
 						&nbsp;v<?= $sys["sysinfo"]["HESTIA"] ?>
 					</span>
@@ -123,7 +123,7 @@
 					$spnd_icon = 'fa-play';
 					$state_icon = 'fa-circle-minus icon-red';
 				}
-				if(in_array($key, $phpfpm)){
+				if (in_array($key, $phpfpm)){
 					$edit_url="php";
 				} else {
 					$edit_url=$key;
@@ -146,7 +146,7 @@
 					<div class="clearfix l-unit__stat-col--left u-text-center compact-2">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href">
-								<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a>
+								<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("Edit") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a>
 							</div>
 							<div class="actions-panel__col actions-panel__stop shortcut-s" data-key-action="js">
 								<a
@@ -163,7 +163,7 @@
 									class="data-controls js-confirm-action"
 									href="/<?= $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
 									data-confirm-title="<?= _($action) ?>"
-									data-confirm-message="<?php if($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service %s?'),$key); }else{ echo sprintf(_('Are you sure you want to start service %s?'),$key); }?>"
+									data-confirm-message="<?php if ($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service %s?'), $key); } else { echo sprintf(_('Are you sure you want to start service %s?'), $key); }?>"
 								>
 									<i class="fas <?= $spnd_icon ?> icon-red icon-dim"></i>
 								</a>
@@ -173,7 +173,7 @@
 					<div class="clearfix l-unit__stat-col--left wide-3"><?=_($data[$key]['SYSTEM'])?></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=humanize_time($data[$key]['RTIME'])?></b></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$cpu?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['MEM']?> <?= _("mb") ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['MEM']?> <?= _("MB") ?></b></div>
 				</div>
 			</div>
 		<?php } ?>

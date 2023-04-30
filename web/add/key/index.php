@@ -14,7 +14,7 @@ if (!empty($_POST["ok"])) {
 	verify_csrf($_POST);
 
 	if (empty($_POST["v_key"])) {
-		$_SESSION["error_msg"] = _("Field SSH Key must not be blank");
+		$_SESSION["error_msg"] = sprintf(_('Field "%s" can not be blank.'), "SSH Key");
 	}
 
 	if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
@@ -44,10 +44,10 @@ if (!empty($_POST["ok"])) {
 			//for deleting / revoking key the last part user@domain is used therefore needs to be unique
 			//maybe consider adding random generated message or even an human read able string set by user?
 			if (in_array($v_key_parts[2], $idlist)) {
-				$_SESSION["error_msg"] = _("SSH KEY already exists");
+				$_SESSION["error_msg"] = _("SSH Key already exists.");
 			}
 			if (in_array($v_key_parts[1], $keylist)) {
-				$_SESSION["error_msg"] = _("SSH KEY already exists");
+				$_SESSION["error_msg"] = _("SSH Key already exists.");
 			}
 			$v_key = quoteshellarg(trim($_POST["v_key"]));
 		}
@@ -60,7 +60,7 @@ if (!empty($_POST["ok"])) {
 	unset($output);
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("SSH key created");
+		$_SESSION["ok_msg"] = _("SSH Key has been created successfully.");
 	}
 }
 if (empty($v_key)) {

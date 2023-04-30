@@ -10,13 +10,13 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 if (!empty($_GET["domain"])) {
 	$v_domain = $_GET["domain"];
 } else {
-	$v_domain = "example.ltd";
+	$v_domain = "example.tld";
 }
 $v_email = "";
 $v_country = "US";
 $v_state = "California";
 $v_locality = "San Francisco";
-$v_org = "MyCompany LLC";
+$v_org = "MyCompany, LLC";
 $v_org_unit = "IT";
 
 // Back uri

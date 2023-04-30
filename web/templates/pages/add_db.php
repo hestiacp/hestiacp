@@ -94,13 +94,13 @@
 				</ul>
 				<div class="u-mb20">
 					<label for="v_db_email" class="form-label">
-						<?= _("Send login credentials to email address") ?>
+						<?= _("Email login credentials to:") ?>
 					</label>
 					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= htmlentities(trim($v_db_email, "'")) ?>">
 				</div>
 				<div class="u-mb20">
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-						<?= _("Advanced options") ?>
+						<?= _("Advanced Options") ?>
 					</button>
 				</div>
 				<div x-cloak x-show="showAdvanced">

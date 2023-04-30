@@ -154,7 +154,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 		} else {
 			$error =
 				"<p class=\"error\">" .
-				_("Please wait 15 minutes before sending a new request") .
+				_("Please wait 15 minutes before sending a new request.") .
 				"</p>";
 		}
 	} else {

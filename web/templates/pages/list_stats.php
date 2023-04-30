@@ -191,7 +191,7 @@
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("DNS domains") ?>:
+								<?= _("DNS Zones") ?>:
 							</span>
 							<span class="stats-item-list-item-value">
 								<?= $data[$key]["U_DNS_DOMAINS"] ?>
@@ -207,7 +207,7 @@
 						</li>
 						<li class="stats-item-list-item">
 							<span class="stats-item-list-item-label">
-								<?= _("DNS records") ?>:
+								<?= _("DNS Records") ?>:
 							</span>
 							<span class="stats-item-list-item-value">
 								<?= $data[$key]["U_DNS_RECORDS"] ?>

@@ -23,7 +23,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("SORT BY") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -140,7 +140,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
 						<b><?=$key."@".htmlentities($_GET['domain']);?></b>
 					<?php } else { ?>
-						<b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Account") ?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".htmlentities($_GET['domain']);?></a></b>
+						<b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Mail Account") ?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".htmlentities($_GET['domain']);?></a></b>
 					<?php } ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
@@ -152,16 +152,16 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 								<?php if ($data[$key]['SUSPENDED'] == 'yes') { ?>
 									&nbsp;
 								<?php } else { ?>
-									<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("Open Webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
 								<?php } ?>
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
 									<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 										<?php if (!empty($data[$key]['WEBMAIL'])) { ?>
-											<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
+											<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("Open Webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
 										<?php } ?>
 									<?php } ?>
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Account") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Mail Account") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<?php } ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a

@@ -8,11 +8,11 @@
 				</a>
 				<?php if ($panel[$user_plain]["CRON_REPORTS"] == "yes") { ?>
 					<a class="button button-secondary" href="/delete/cron/reports/?token=<?= $_SESSION["token"] ?>">
-						<i class="fas fa-toggle-off icon-green"></i><?= _("Turn off notifications") ?>
+						<i class="fas fa-toggle-off icon-green"></i><?= _("Disable Notifications") ?>
 					</a>
 				<?php } else { ?>
 					<a class="button button-secondary" href="/add/cron/reports/?token=<?= $_SESSION["token"] ?>">
-						<i class="fas fa-toggle-off"></i><?= _("Turn on notifications") ?>
+						<i class="fas fa-toggle-off"></i><?= _("Enable Notifications") ?>
 					</a>
 				<?php } ?>
 			<?php } ?>
@@ -20,7 +20,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("SORT BY") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -35,13 +35,13 @@
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("Apply to selected") ?></option>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'._('Turn off notifications').'</option>'; ?>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('Turn on notifications').'</option>'; ?>
+							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">' . _('Disable Notifications') . '</option>'; ?>
+							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">' . _('Enable Notifications') . '</option>'; ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
 							<option value="delete"><?= _("Delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>
@@ -73,7 +73,7 @@
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Hour") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Day") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Month") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Day of week") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Day of Week") ?></b></div>
 		</div>
 	</div>
 
@@ -103,7 +103,7 @@
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<b><?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?></b>
 					<?php } else { ?>
-						<b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Cron Job") ?>: <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b>
+						<b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>: <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b>
 					<?php } ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
@@ -115,7 +115,7 @@
 								&nbsp;
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-									<div class="actions-panel__col actions-panel__download shortcut-enter" data-key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Cron Job") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__download shortcut-enter" data-key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<?php } ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a

@@ -29,7 +29,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding IP address") ?></h1>
+			<h1 class="form-title"><?= _("Add IP Address") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
@@ -59,7 +59,7 @@
 			</div>
 			<div x-cloak x-show="!showUserTable" id="usrtable">
 				<div class="u-mb10">
-					<label for="v_owner" class="form-label"><?= _("Assigned user") ?></label>
+					<label for="v_owner" class="form-label"><?= _("Assigned User") ?></label>
 					<select class="form-select" name="v_owner" id="v_owner">
 						<?php
 							foreach ($users as $key => $value) {

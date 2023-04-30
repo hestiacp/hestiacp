@@ -34,7 +34,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing Package") ?></h1>
+			<h1 class="form-title"><?= _("Edit Package") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package_new" class="form-label"><?= _("Package Name") ?></label>
@@ -176,7 +176,7 @@
 					</select>
 				</div>
 				<div class="u-mb10">
-					<label for="v_dns_domains" class="form-label"><?= _("DNS domains") ?></label>
+					<label for="v_dns_domains" class="form-label"><?= _("DNS Zones") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?= htmlentities(trim($v_dns_domains, "'")) ?>">
 						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
@@ -186,7 +186,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_dns_records" class="form-label">
-						<?= _("DNS records") ?> <span class="optional">(<?= _("per domain") ?>)</span>
+						<?= _("DNS Records") ?> <span class="optional">(<?= _("Per Domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
@@ -196,7 +196,7 @@
 					</div>
 				</div>
 				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
-					<p class="form-label u-mb10"><?= _("Name servers") ?></p>
+					<p class="form-label u-mb10"><?= _("Name Servers") ?></p>
 					<div class="u-mb5">
 						<input type="text" class="form-control" name="v_ns1" value="<?= htmlentities(trim($v_ns1, "'")) ?>">
 					</div>
@@ -265,7 +265,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_mail_accounts" class="form-label">
-						<?= _("Mail Accounts") ?> <span class="optional">(<?= _("per domain") ?>)</span>
+						<?= _("Mail Accounts") ?> <span class="optional">(<?= _("Per Domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
@@ -276,7 +276,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_ratelimit" class="form-label">
-						<?= _("Rate limit") ?> <span class="optional">(<?= _("per account / hour") ?>)</span>
+						<?= _("Rate limit") ?> <span class="optional">(<?= _("Per Account / Hour") ?>)</span>
 					</label>
 					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
 				</div>

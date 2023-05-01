@@ -178,7 +178,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 										class="data-controls js-confirm-action"
 										href="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"
 										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_('"Are you sure you want to delete %s?'), $key) ?>"
+										data-confirm-message="<?= sprintf(_('Are you sure you want to delete %s?'), $key) ?>"
 									>
 										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>

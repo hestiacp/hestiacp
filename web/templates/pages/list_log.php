@@ -25,19 +25,19 @@
 			if (($_SESSION['userContext'] === 'admin') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 				<?php if (($_SESSION['userContext'] === 'admin') && ($_GET['user'] != '') && (htmlentities($_GET['user']) !== 'admin')) { ?>
 					<?php if (htmlentities($_GET['user']) !== 'system') {?>
-						<a href="/list/log/auth/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary button-back js-button-back" title="<?= _("Login history") ?>">
-							<i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?>
+						<a href="/list/log/auth/?user=<?=htmlentities($_GET['user']); ?>&token=<?=$_SESSION['token']?>" class="button button-secondary button-back js-button-back" title="<?= _("Login History") ?>">
+							<i class="fas fa-binoculars icon-green"></i><?= _("Login History") ?>
 						</a>
 					<?php } ?>
 				<?php } else { ?>
-					<a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= _("Login history") ?>">
-						<i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?>
+					<a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= _("Login History") ?>">
+						<i class="fas fa-binoculars icon-green"></i><?= _("Login History") ?>
 					</a>
 				<?php } ?>
 			<?php } ?>
 			<?php if ($_SESSION["userContext"] === "user") { ?>
-				<a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= _("Login history") ?>">
-					<i class="fas fa-binoculars icon-green"></i><?= _("Login history") ?>
+				<a href="/list/log/auth/" class="button button-secondary button-back js-button-back" title="<?= _("Login History") ?>">
+					<i class="fas fa-binoculars icon-green"></i><?= _("Login History") ?>
 				</a>
 			<?php }
 			} ?>

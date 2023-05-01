@@ -79,7 +79,7 @@
 							<li class="stats-item-summary-list-item">
 								<span>
 									<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $data[$key]["IP_OWNED"] != "0")) { ?>
-										<?= _("IP Addresses") ?>:
+										<?= _("IP Address") ?>:
 									<?php } ?>
 								</span>
 								<span>

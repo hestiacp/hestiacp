@@ -276,7 +276,7 @@ if (!empty($_POST["ok_rec"])) {
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
 		$_SESSION["ok_msg"] = sprintf(
-			_("Record {%s.%s} has been created successfully."),
+			_("Record <b>%s.%s</b> has been created successfully."),
 			htmlentities($_POST["v_rec"]),
 			htmlentities($_POST["v_domain"]),
 		);

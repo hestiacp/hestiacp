@@ -23,6 +23,7 @@ import handleSyncEmailValues from './syncEmailValues';
 import handleTabPanels from './tabPanels';
 import handleToggleAdvanced from './toggleAdvanced';
 import handleUnlimitedInput from './unlimitedInput';
+import initRrdCharts from './rrdCharts';
 import * as helpers from './helpers';
 
 window.Hestia = { helpers };
@@ -48,6 +49,7 @@ function initListeners() {
 	handleSyncEmailValues();
 	handleTabPanels();
 	handleToggleAdvanced();
+	initRrdCharts();
 }
 
 document.addEventListener('alpine:init', () => {

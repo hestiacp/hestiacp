@@ -5,14 +5,14 @@
 	<form id="form_login" method="post" action="/login/">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<h1 class="login-title">
-			<?= _("2 Factor Authentication") ?>
+			<?= _("Two-factor Authentication") ?>
 		</h1>
 		<?php if(!empty($error){ show_error_message($error); } ?>
 		<div class="u-mb20">
 			<label for="twofa" class="form-label u-side-by-side">
 				<?= _("2FA Token") ?>
 				<a class="login-form-link" href="/reset2fa/">
-					<?= _("Forgot token") ?>
+					<?= _("Forgot Token") ?>
 				</a>
 			</label>
 			<input type="text" class="form-control" name="twofa" id="twofa" required autofocus>

@@ -20,16 +20,16 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_ip"])) {
-		$errors[] = _("ip address");
+		$errors[] = _("IP Address");
 	}
 	if (empty($_POST["v_netmask"])) {
-		$errors[] = _("netmask");
+		$errors[] = _("Netmask");
 	}
 	if (empty($_POST["v_interface"])) {
-		$errors[] = _("interface");
+		$errors[] = _("Interface");
 	}
 	if (empty($_POST["v_owner"])) {
-		$errors[] = _("assigned user");
+		$errors[] = _("Assigned User");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {

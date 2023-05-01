@@ -264,8 +264,8 @@
 										<option value="*" selected="selected"><?= _("Every month") ?></option>
 										<option value="1-11/2"><?= _("Every odd month") ?></option>
 										<option value="*/2"><?= _("Every even month") ?></option>
-										<option value="*/3"><?= sprintf(_("Every %s month"), 3) ?></option>
-										<option value="*/6"><?= sprintf(_("Every %s month"), 6) ?></option>
+										<option value="*/3"><?= sprintf(_("Every %s months"), 3) ?></option>
+										<option value="*/6"><?= sprintf(_("Every %s months"), 6) ?></option>
 										<option value="1"><?= _("Jan") ?></option>
 										<option value="2"><?= _("Feb") ?></option>
 										<option value="3"><?= _("Mar") ?></option>

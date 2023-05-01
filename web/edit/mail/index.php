@@ -744,7 +744,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 	// Validate email
 	if (!empty($_POST["v_send_email"]) && empty($_SESSION["error_msg"])) {
 		if (!filter_var($_POST["v_send_email"], FILTER_VALIDATE_EMAIL)) {
-			$_SESSION["error_msg"] = _("Please enter valid email address.");
+			$_SESSION["error_msg"] = _("Please enter a valid email address.");
 		}
 	}
 
@@ -1089,27 +1089,27 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 			$template = str_replace($matches[0], "", $template);
 		} else {
 			$template = _(
-				"Mail account has been created\n" .
+				"Mail account has been created.\n" .
 					"\n" .
-					"Common account settings:\n" .
+					"Common Account Settings:\n" .
 					"Username: {{account}}@{{domain}}\n" .
 					"Password: {{password}}\n" .
 					"Webmail: {{webmail}}\n" .
 					"Hostname: {{hostname}}\n" .
 					"\n" .
-					"IMAP settings\n" .
+					"IMAP Settings\n" .
 					"Authentication: Normal Password\n" .
 					"SSL/TLS: Port 993\n" .
 					"STARTTLS: Port 143\n" .
 					"No encryption: Port 143\n" .
 					"\n" .
-					"POP3 settings\n" .
+					"POP3 Settings\n" .
 					"Authentication: Normal Password\n" .
 					"SSL/TLS: Port 995\n" .
 					"STARTTLS: Port 110\n" .
 					"No encryption: Port 110\n" .
 					"\n" .
-					"SMTP settings\n" .
+					"SMTP Settings\n" .
 					"Authentication: Normal Password\n" .
 					"SSL/TLS: Port 465\n" .
 					"STARTTLS: Port 587\n" .
@@ -1124,7 +1124,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 				["{{subject}}", "{{hostname}}", "{{appname}}"],
 				[
 					sprintf(
-						_("Email Credentials %s@%s"),
+						_("Email Credentials: %s@%s"),
 						htmlentities(strtolower($_POST["v_account"])),
 						htmlentities($_POST["v_domain"]),
 					),

@@ -1068,7 +1068,7 @@ if (!empty($_POST["save"])) {
 	// Change web stats user or password
 	if (empty($v_stats_user) && !empty($_POST["v_stats_auth"]) && empty($_SESSION["error_msg"])) {
 		if (empty($_POST["v_stats_user"])) {
-			$errors[] = _("stats username");
+			$errors[] = _("Username");
 		}
 		if (!empty($errors[0])) {
 			foreach ($errors as $i => $error) {
@@ -1108,7 +1108,7 @@ if (!empty($_POST["save"])) {
 	// Add web stats authorization
 	if (!empty($v_stats_user) && !empty($_POST["v_stats_auth"]) && empty($_SESSION["error_msg"])) {
 		if (empty($_POST["v_stats_user"])) {
-			$errors[] = _("stats user");
+			$errors[] = _("Username");
 		}
 		if (!empty($errors[0])) {
 			foreach ($errors as $i => $error) {
@@ -1167,7 +1167,7 @@ if (!empty($_POST["save"])) {
 					!empty($v_ftp_user_data["v_ftp_email"]) &&
 					!filter_var($v_ftp_user_data["v_ftp_email"], FILTER_VALIDATE_EMAIL)
 				) {
-					$_SESSION["error_msg"] = _("Please enter valid email address.");
+					$_SESSION["error_msg"] = _("Please enter a valid email address.");
 				}
 				if (empty($v_ftp_user_data["v_ftp_user"])) {
 					$errors[] = "ftp user";
@@ -1240,9 +1240,11 @@ if (!empty($_POST["save"])) {
 						} else {
 							$template = _(
 								"FTP account has been created and ready to use.\n" .
+									"\n" .
 									"Hostname: {{domain}}\n" .
 									"Username: {{username}}\n" .
 									"Password: {{password}}\n" .
+									"\n" .
 									"--\n" .
 									"{{appname}}",
 							);
@@ -1252,7 +1254,7 @@ if (!empty($_POST["save"])) {
 								["{{subject}}", "{{hostname}}", "{{appname}}"],
 								[
 									sprintf(
-										_("FTP Account Credentials %s"),
+										_("FTP Account Credentials: %s"),
 										$user_plain . "_" . $v_ftp_username_for_emailing,
 									),
 									get_hostname(),
@@ -1318,7 +1320,7 @@ if (!empty($_POST["save"])) {
 
 			if (!empty($_POST["v_ftp"])) {
 				if (empty($v_ftp_user_data["v_ftp_user"])) {
-					$errors[] = _("ftp user");
+					$errors[] = _("Username");
 				}
 				if (!empty($errors[0])) {
 					foreach ($errors as $i => $error) {
@@ -1382,9 +1384,11 @@ if (!empty($_POST["save"])) {
 					} else {
 						$template = _(
 							"FTP account has been created and ready to use.\n" .
+								"\n" .
 								"Hostname: {{domain}}\n" .
 								"Username: {{username}}\n" .
 								"Password: {{password}}\n" .
+								"\n" .
 								"--\n" .
 								"{{appname}}",
 						);
@@ -1394,7 +1398,7 @@ if (!empty($_POST["save"])) {
 							["{{subject}}", "{{hostname}}", "{{appname}}"],
 							[
 								sprintf(
-									_("FTP Account Credentials %s"),
+									_("FTP Account Credentials: %s"),
 									$user_plain . "_" . $v_ftp_username_for_emailing,
 								),
 								get_hostname(),

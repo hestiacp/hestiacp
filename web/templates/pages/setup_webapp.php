@@ -30,7 +30,7 @@
 					<div class="alert alert-info" role="alert">
 						<i class="fas fa-info"></i>
 						<div>
-							<p class="u-mb10"><?= _("Data loss warning!") ?></p>
+							<p class="u-mb10"><?= _("Data Loss Warning!") ?></p>
 							<p class="u-mb10"><?= _("Your web folder already has files uploaded to it. The installer will overwrite your files and / or the installation might fail.") ?></p>
 							<p><?php echo sprintf(_("Please make sure ~/web/%s/public_html is empty!"), $v_domain); ?></p>
 						</div>

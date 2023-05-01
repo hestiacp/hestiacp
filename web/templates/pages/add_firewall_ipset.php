@@ -98,8 +98,8 @@
 			<div class="u-mb10">
 				<label for="v_autoupdate" class="form-label"><?= _("Auto Update") ?></label>
 				<select class="form-select" name="v_autoupdate" id="v_autoupdate">
-					<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?= _("yes") ?></option>
-					<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?= _("no") ?></option>
+					<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?= _("Yes") ?></option>
+					<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?= _("No") ?></option>
 				</select>
 			</div>
 		</div>

@@ -12,7 +12,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("SORT BY") ?>:
+					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -29,7 +29,7 @@
 					<select class="form-select" name="action">
 						<option value=""><?= _("Apply to selected") ?></option>
 						<option value="rebuild"><?= _("Rebuild All") ?></option>
-						<option value="rebuild user"><?= _("Rebuild User") ?></option>
+						<option value="rebuild user"><?= _("Rebuild User Profile") ?></option>
 						<option value="rebuild web"><?= _("Rebuild Web Domains") ?></option>
 						<option value="rebuild dns"><?= _("Rebuild DNS Zones") ?></option>
 						<option value="rebuild mail"><?= _("Rebuild Mail Domains") ?></option>

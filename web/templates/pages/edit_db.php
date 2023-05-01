@@ -32,7 +32,7 @@
 			<div class="u-mb10">
 				<label for="v_dbuser" class="form-label u-side-by-side">
 					<?= _("Username") ?>
-					<em><small>(<?= sprintf(_("maximum %s characters length, including prefix"), 32) ?>)</small></em>
+					<em><small>(<?= sprintf(_("Maximum %s characters length, including prefix"), 32) ?>)</small></em>
 				</label>
 				<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
 				<small class="hint"></small>

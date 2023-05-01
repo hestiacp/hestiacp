@@ -47,7 +47,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_ip" class="form-label">
-					<?= _("IP address / IPset IP list") ?> <span class="optional">(<?= _("Support CIDR format") ?>)</span>
+					<?= _("IP Address / IPset IP List") ?> <span class="optional">(<?= _("Support CIDR format") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">

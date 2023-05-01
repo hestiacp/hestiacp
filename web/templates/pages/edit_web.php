@@ -8,7 +8,7 @@
 		</div>
 		<div class="toolbar-buttons">
 			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
-				<i class="fas fa-trash icon-red"></i><?= _("Purge Nginx Cache") ?>
+				<i class="fas fa-trash icon-red"></i><?= _("Purge NGINX Cache") ?>
 			</a>
 			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
 				<a href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>" class="button button-secondary">
@@ -279,7 +279,7 @@
 						<div class="form-check u-mb10">
 							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
 							<label for="v_nginx_cache_check">
-								<?= _("Enable FastCGI Cache") ?>
+								<?= _("Enable FastCGI cache") ?>
 								<a href="https://hestiacp.com/docs/server-administration/web-templates.html#nginx-fastcgi-cache" target="_blank" class="u-ml5">
 									<i class="fas fa-circle-question"></i>
 								</a>
@@ -288,7 +288,7 @@
 						<div x-cloak x-show="nginxCacheEnabled" id="v_nginx_duration" class="u-pl30">
 							<div class="u-mb10">
 								<label for="v_nginx_cache_duration" class="form-label">
-									<?= _("Cache Duration") ?> <span class="optional"><?= _("For example: 30s, 10m or 1d") ?>
+									<?= _("Cache Duration") ?> <span class="optional">(<?= _("For example") ?>: 30s, 10m or 1d)</span>
 								</label>
 								<input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?= htmlentities(trim($v_nginx_cache_duration, "'")) ?>">
 							</div>

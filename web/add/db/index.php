@@ -14,22 +14,22 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_database"])) {
-		$errors[] = _("database");
+		$errors[] = _("Database");
 	}
 	if (empty($_POST["v_dbuser"])) {
-		$errors[] = _("username");
+		$errors[] = _("Username");
 	}
 	if (empty($_POST["v_password"])) {
-		$errors[] = _("password");
+		$errors[] = _("Password");
 	}
 	if (empty($_POST["v_type"])) {
-		$errors[] = _("type");
+		$errors[] = _("Type");
 	}
 	if (empty($_POST["v_host"])) {
-		$errors[] = _("host");
+		$errors[] = _("Host");
 	}
 	if (empty($_POST["v_charset"])) {
-		$errors[] = _("charset");
+		$errors[] = _("Charset");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
@@ -45,7 +45,7 @@ if (!empty($_POST["ok"])) {
 	// Validate email
 	if (!empty($_POST["v_db_email"]) && empty($_SESSION["error_msg"])) {
 		if (!filter_var($_POST["v_db_email"], FILTER_VALIDATE_EMAIL)) {
-			$_SESSION["error_msg"] = _("Please enter valid email address.");
+			$_SESSION["error_msg"] = _("Please enter a valid email address.");
 		}
 	}
 
@@ -147,11 +147,13 @@ if (!empty($_POST["ok"])) {
 			$template = str_replace($matches[0], "", $template);
 		} else {
 			$template = _(
-				"Database has been created successfully\n" .
+				"Database has been created.\n" .
+					"\n" .
 					"Database: {{database}}\n" .
 					"User: {{username}}\n" .
 					"Password: {{password}}\n" .
-					"{{dbadmin}}\n" .
+					"SQL Manager: {{dbadmin}}\n" .
+					"\n" .
 					"--\n" .
 					"{{appname}}",
 			);
@@ -192,7 +194,7 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		$_SESSION["ok_msg"] = htmlify_trans(
 			sprintf(
-				_("Database {%s} has been created successfully / {open %s}"),
+				_("Database {%s} has been created successfully. / {Open %s}"),
 				htmlentities($user_plain) . "_" . htmlentities($_POST["v_database"]),
 				htmlentities($user_plain) . "_" . htmlentities($_POST["v_database"]),
 			),

@@ -20,7 +20,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("SORT BY") ?>: <b><?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i></b>
+					<?= _("Sort by") ?>: <b><?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i></b>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-action"><span class="name"><?= _("Action") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span></li>

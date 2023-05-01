@@ -67,16 +67,16 @@ if (!empty($_POST["save"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_action"])) {
-		$errors[] = _("action");
+		$errors[] = _("Action");
 	}
 	if (empty($_POST["v_protocol"])) {
-		$errors[] = _("protocol");
+		$errors[] = _("Protocol");
 	}
 	if (empty($_POST["v_port"]) && strlen($_POST["v_port"]) == 0) {
-		$errors[] = _("port");
+		$errors[] = _("Port");
 	}
 	if (empty($_POST["v_ip"])) {
-		$errors[] = _("ip address");
+		$errors[] = _("IP Address");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {

@@ -17,7 +17,7 @@
 				<?= _("Password") ?>
 				<?php if ($_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] !== "no") { ?>
 					<a class="login-form-link" href="/reset/">
-						<?= _("forgot password") ?>
+						<?= _("Forgot Password") ?>
 					</a>
 				<?php } ?>
 			</label>

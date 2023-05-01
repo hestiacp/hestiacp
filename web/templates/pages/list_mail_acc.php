@@ -23,7 +23,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("SORT BY") ?>:
+					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -78,7 +78,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Quota") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Aliases") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Forwarding") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Autoreply") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Auto Reply") ?></b></div>
 			</div>
 		</div>
 	</div>

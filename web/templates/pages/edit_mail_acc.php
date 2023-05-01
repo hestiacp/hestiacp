@@ -104,7 +104,7 @@
 					<div class="form-check u-mb10">
 						<input x-model="hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">
 						<label for="v_autoreply">
-							<?= _("Autoreply") ?>
+							<?= _("Auto Reply") ?>
 						</label>
 					</div>
 					<div x-cloak x-show="hasAutoReply" id="autoreplytable">
@@ -115,14 +115,14 @@
 					</div>
 					<div class="u-mb20">
 						<label for="v_rate" class="form-label">
-							<?= _("Rate limit") ?> <span class="optional">(<?= _("Email / Hour") ?>)</span>
+							<?= _("Rate Limit") ?> <span class="optional">(<?= _("Email / Hour") ?>)</span>
 						</label>
 						<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 					</div>
 				</div>
 				<div class="sidebar-right-grid-sidebar">
 					<div class="panel js-mail-info">
-						<h2 class="u-text-H3 u-mb10"><?= _("Common account settings") ?></h2>
+						<h2 class="u-text-H3 u-mb10"><?= _("Common Account Settings") ?></h2>
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Username") ?></span>
@@ -143,7 +143,7 @@
 								<span class="values-list-value">mail.<?= htmlentities($v_domain) ?></span>
 							</li>
 						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("IMAP settings") ?></h2>
+						<h2 class="u-text-H3 u-mb10"><?= _("IMAP Settings") ?></h2>
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Authentication") ?></span>
@@ -162,7 +162,7 @@
 								<span class="values-list-value"><?= _("Port") ?> 143</span>
 							</li>
 						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("POP3 settings") ?></h2>
+						<h2 class="u-text-H3 u-mb10"><?= _("POP3 Settings") ?></h2>
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Authentication") ?></span>
@@ -181,7 +181,7 @@
 								<span class="values-list-value"><?= _("Port") ?> 110</span>
 							</li>
 						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("SMTP settings") ?></h2>
+						<h2 class="u-text-H3 u-mb10"><?= _("SMTP Settings") ?></h2>
 						<ul class="values-list">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Authentication") ?></span>

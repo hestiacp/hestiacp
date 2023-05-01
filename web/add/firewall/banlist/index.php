@@ -20,10 +20,10 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_chain"])) {
-		$errors[] = _("banlist");
+		$errors[] = _("Banlist");
 	}
 	if (empty($_POST["v_ip"])) {
-		$errors[] = _("ip address");
+		$errors[] = _("IP Address");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {

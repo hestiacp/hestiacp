@@ -13,8 +13,19 @@ if (!empty($_POST["ok"])) {
 	// Check token
 	verify_csrf($_POST);
 
+	// Check empty fields
 	if (empty($_POST["v_key"])) {
-		$_SESSION["error_msg"] = sprintf(_('Field "%s" can not be blank.'), "SSH Key");
+		$errors[] = _("SSH Key");
+	}
+	if (!empty($errors[0])) {
+		foreach ($errors as $i => $error) {
+			if ($i == 0) {
+				$error_msg = $error;
+			} else {
+				$error_msg = $error_msg . ", " . $error;
+			}
+		}
+		$_SESSION["error_msg"] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
 	}
 
 	if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {

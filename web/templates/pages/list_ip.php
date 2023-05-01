@@ -12,7 +12,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("SORT BY") ?>: <b><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></b>
+					<?= _("Sort by") ?>: <b><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></b>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
@@ -26,7 +26,7 @@
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("Apply to selected") ?></option>
-						<option value="reread IP"><?= _("Verify IP address") ?></option>
+						<option value="reread IP"><?= _("Verify IP Address") ?></option>
 						<option value="delete"><?= _("Delete") ?></option>
 					</select>
 					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">

@@ -20,7 +20,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("SORT BY") ?>:
+					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -35,8 +35,8 @@
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("Apply to selected") ?></option>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'._('Turn off notifications').'</option>'; ?>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('Turn on notifications').'</option>'; ?>
+							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'._('Disable notifications').'</option>'; ?>
+							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('Enable notifications').'</option>'; ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
 							<option value="delete"><?= _("Delete") ?></option>
@@ -69,7 +69,7 @@
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Command") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Min") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Minute") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Hour") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Day") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Month") ?></b></div>
@@ -85,12 +85,12 @@
 				$status = 'suspended';
 				$spnd_action = 'unsuspend';
 				$spnd_icon = 'fa-play';
-				$spnd_confirmation = _('Are you sure you want to unsuspend cron job?') ;
+				$spnd_confirmation = _('Are you sure you want to unsuspend the cron job?') ;
 			} else {
 				$status = 'active';
 				$spnd_action = 'suspend';
 				$spnd_icon = 'fa-pause';
-				$spnd_confirmation = _('Are you sure you want to suspend cron job?') ;
+				$spnd_confirmation = _('Are you sure you want to suspend the cron job?') ;
 			}
 		?>
 		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="cron"
@@ -132,7 +132,7 @@
 										class="data-controls js-confirm-action"
 										href="/delete/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
 										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_("Are you sure you want to delete cron job?"), $key) ?>"
+										data-confirm-message="<?= sprintf(_("Are you sure you want to delete the cron job?"), $key) ?>"
 									>
 										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>

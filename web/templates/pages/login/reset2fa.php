@@ -5,7 +5,7 @@
 	<?php if ($success) { ?>
 		<div>
 			<h1 class="login-title">
-				<?= _("Account has been successfully unlocked") ?>
+				<?= _("Account Unlocked") ?>
 			</h1>
 			<div class="u-mt20">
 				<p><?_("Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in.");?></p>

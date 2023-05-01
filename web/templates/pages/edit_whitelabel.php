@@ -55,7 +55,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_title" class="form-label">
-							<?= _("Title") ?><span class="optional">Supported vars: {{appname}}, {{hostname}}, {{ip}} and {{page}}</span>
+							<?= _("Title") ?><span class="optional">(<?= _("Supported variables") ?>: {{appname}}, {{hostname}}, {{ip}} and {{page}} )</span>
 						</label>
 						<input
 							type="text"
@@ -67,7 +67,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_from_name" class="form-label">
-							<?= _("Sender Name") ?><span class="optional"><?=sprintf('Default: %s', htmlentities(trim($v_app_name, "'")));?></span>
+							<?= _("Sender Name") ?><span class="optional">(<?= _("Default") ?>: <?= htmlentities(trim($v_app_name, "'")) ?>)</span>
 						</label>
 						<input
 							type="text"
@@ -80,7 +80,7 @@
 
 					<div class="u-mb10">
 						<label for="v_from_email" class="form-label">
-							<?= _("Sender Email Address") ?><span class="optional"><?=sprintf('Default: noreply@%s', htmlentities(trim(get_hostname(), "'")));?></span>
+							<?= _("Sender Email Address") ?><span class="optional">(<?= _("Default") ?>: <?=sprintf('noreply@%s', htmlentities(trim(get_hostname(), "'")));?>)</span>
 						</label>
 						<input
 							type="text"
@@ -92,7 +92,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_subject_email" class="form-label">
-							<?= _("Subject Email") ?><span class="optional">Supported vars: {{appname}}, {{hostname}}, {{subject}}</span>
+							<?= _("Email Subject") ?><span class="optional">(<?= _("Supported variables") ?>: {{appname}}, {{hostname}}, {{subject}} )</span>
 						</label>
 						<input
 							type="text"

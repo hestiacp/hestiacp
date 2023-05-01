@@ -16,7 +16,7 @@ $v_email = "";
 $v_country = "US";
 $v_state = "California";
 $v_locality = "San Francisco";
-$v_org = "MyCompany, LLC";
+$v_org = "MyCompany Inc.";
 $v_org_unit = "IT";
 
 // Back uri

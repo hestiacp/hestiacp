@@ -20,19 +20,19 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_username"])) {
-		$errors[] = _("user");
+		$errors[] = _("Username");
 	}
 	if (empty($_POST["v_password"])) {
-		$errors[] = _("password");
+		$errors[] = _("Password");
 	}
 	if (empty($_POST["v_package"])) {
-		$errrors[] = _("package");
+		$errrors[] = _("Package");
 	}
 	if (empty($_POST["v_email"])) {
-		$errors[] = _("email");
+		$errors[] = _("Email");
 	}
 	if (empty($_POST["v_name"])) {
-		$errors[] = _("name");
+		$errors[] = _("Contact Name");
 	}
 	if (!empty($errors)) {
 		foreach ($errors as $i => $error) {
@@ -47,7 +47,7 @@ if (!empty($_POST["ok"])) {
 
 	// Validate email
 	if (empty($_SESSION["error_msg"]) && !filter_var($_POST["v_email"], FILTER_VALIDATE_EMAIL)) {
-		$_SESSION["error_msg"] = _("Please enter valid email address.");
+		$_SESSION["error_msg"] = _("Please enter a valid email address.");
 	}
 
 	// Check password length
@@ -154,10 +154,13 @@ if (!empty($_POST["ok"])) {
 		} else {
 			$template = _(
 				"Hello {{name}},\n" .
+					"\n" .
 					"Your account has been created and ready to use.\n" .
+					"\n" .
 					"https://{{hostname}}/login/\n" .
 					"Username: {{user}}\n" .
 					"Password: {{password}}\n" .
+					"\n" .
 					"--\n" .
 					"{{appname}}",
 			);

@@ -29,9 +29,9 @@ function checkStrictness($level) {
 		return true;
 	} else {
 		http_response_code(400);
-		echo "<h1>Potential use CSRF detected</h1>\n" .
+		echo "<h1>Potential CSRF use detected</h1>\n" .
 			"<p>Please disable any plugins/add-ons inside your browser or contact your system administrator. If you are the system administrator you can run v-change-sys-config-value 'POLICY_CSRF_STRICTNESS' '0' as root to disable this check.<p>" .
-			"<p>If you followed a bookmark or an static link <a href='/'>please click here</a>";
+			"<p>If you followed a bookmark or an static link please <a href='/'>navigate to root</a>";
 		die();
 	}
 }

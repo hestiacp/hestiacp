@@ -155,7 +155,7 @@
 						<select class="form-select" name="v-redirect-code" id="v-redirect-code">
 							<?php foreach ($redirect_code_options as $status_code): ?>
 							<option value="<?= $status_code ?>"
-								<?= $v_redirect_code === $status_code || (empty($v_redirect_code) && $status_code === $v_redirect_code) ? ' selected="selected" ' : "" ?>>
+								<?= trim($v_redirect_code) === $status_code || (empty($v_redirect_code) && $status_code === trim($v_redirect_code)) ? ' selected="selected" ' : "" ?>>
 								<?= $status_code ?>
 							</option>
 							<?php endforeach; ?>

@@ -1,7 +1,12 @@
 // Create Chart.js charts from in-page data on Task Monitor page
 export default async function initRrdCharts() {
-	const Chart = await loadChartJs();
 	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
+
+	if (!chartCanvases.length) {
+		return;
+	}
+
+	const Chart = await loadChartJs();
 
 	for (const chartCanvas of chartCanvases) {
 		const service = chartCanvas.dataset.service;

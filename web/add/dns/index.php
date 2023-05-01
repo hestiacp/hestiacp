@@ -220,13 +220,13 @@ if (!empty($_POST["ok_rec"])) {
 		$errors[] = _("Domain");
 	}
 	if (empty($_POST["v_rec"])) {
-		$errors[] = _("Record")"";
+		$errors[] = _("Record");
 	}
 	if (empty($_POST["v_type"])) {
-		$errors[] = _("Type")"";
+		$errors[] = _("Type");
 	}
 	if (empty($_POST["v_val"])) {
-		$errors[] = _("IP or Value")"";
+		$errors[] = _("IP or Value");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {

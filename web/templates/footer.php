@@ -13,7 +13,7 @@
 		</button>)
 	</p>
 <?php } ?>
-	<div class="fullscreen-loader js-fullscreen-loader">
+	<div class="spinner-overlay js-spinner">
 		<i class="fas fa-circle-notch fa-spin"></i>
 	</div>
 

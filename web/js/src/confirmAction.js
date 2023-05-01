@@ -1,7 +1,7 @@
 import { createConfirmationDialog } from './helpers';
 
-// Adds listeners to .js-confirm-action links and intercepts them with a confirmation dialog
-export default function handleConfirmationDialogs() {
+// Listen to .js-confirm-action links and intercept clicks with a confirmation dialog
+export default function handleConfirmAction() {
 	document.querySelectorAll('.js-confirm-action').forEach((triggerLink) => {
 		triggerLink.addEventListener('click', (evt) => {
 			evt.preventDefault();
@@ -10,7 +10,7 @@ export default function handleConfirmationDialogs() {
 			const message = triggerLink.dataset.confirmMessage;
 			const targetUrl = triggerLink.getAttribute('href');
 
-			createConfirmationDialog({ title, message, targetUrl });
+			createConfirmationDialog({ title, message, targetUrl, spinner: true });
 		});
 	});
 }

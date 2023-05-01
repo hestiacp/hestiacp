@@ -1,6 +1,6 @@
 import alpineInit from './alpineInit';
 import focusFirstInput from './focusFirstInput';
-import handleConfirmationDialogs from './confirmationDialog';
+import handleConfirmAction from './confirmAction';
 import handleCopyCreds from './copyCreds';
 import handleCronGenerator from './cronGenerator';
 import handleDatabaseHints from './databaseHints';
@@ -31,7 +31,7 @@ initListeners();
 focusFirstInput();
 
 function initListeners() {
-	handleConfirmationDialogs();
+	handleConfirmAction();
 	handleCopyCreds();
 	handleCronGenerator();
 	handleDiscardAllMail();

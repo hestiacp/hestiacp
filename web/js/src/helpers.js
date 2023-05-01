@@ -37,6 +37,12 @@ export function showSpinner() {
 	document.querySelector('.js-spinner').classList.add('active');
 }
 
+// Parses and sorts IP lists from HTML
+export function parseAndSortIpLists(ipListsData) {
+	const ipLists = JSON.parse(ipListsData || '[]');
+	return ipLists.sort((a, b) => a.name.localeCompare(b.name));
+}
+
 // Creates a confirmation <dialog> on the fly
 export function createConfirmationDialog({
 	title,

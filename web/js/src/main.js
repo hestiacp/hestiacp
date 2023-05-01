@@ -1,5 +1,6 @@
 import alpineInit from './alpineInit';
 import focusFirstInput from './focusFirstInput';
+import handleAddIpLists from './addIpLists';
 import handleConfirmAction from './confirmAction';
 import handleCopyCreds from './copyCreds';
 import handleCronGenerator from './cronGenerator';
@@ -32,6 +33,7 @@ initListeners();
 focusFirstInput();
 
 function initListeners() {
+	handleAddIpLists();
 	handleConfirmAction();
 	handleCopyCreds();
 	handleCronGenerator();

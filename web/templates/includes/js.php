@@ -1,5 +1,5 @@
 <script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/vendor/alpine-3.12.0.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/alpinejs.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script>
 	document.documentElement.classList.replace('no-js', 'js');
 	document.addEventListener('alpine:init', () => {

@@ -29,7 +29,7 @@
 		"@prettier/plugin-php": "^0.19.4",
 		"@typescript-eslint/eslint-plugin": "^5.59.1",
 		"@typescript-eslint/parser": "^5.59.1",
-		"cssnano": "^6.0.0",
+		"cssnano": "^6.0.1",
 		"esbuild": "^0.17.18",
 		"eslint": "^8.39.0",
 		"eslint-config-prettier": "^8.8.0",
@@ -50,7 +50,7 @@
 		"stylelint": "^15.6.0",
 		"stylelint-config-standard": "^33.0.0",
 		"typescript": "^5.0.4",
-		"vitepress": "1.0.0-alpha.74",
+		"vitepress": "1.0.0-alpha.75",
 		"vue": "^3.2.47"
 	},
 	"browserslist": [

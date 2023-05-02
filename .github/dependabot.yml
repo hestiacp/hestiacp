@@ -6,19 +6,20 @@ updates:
     schedule:
       interval: "weekly"
 
+  # Maintain dependencies for npm
   - package-ecosystem: "npm"
     directory: "/"
-    sschedule:
+    schedule:
       interval: "weekly"
 
   # Maintain dependencies for Composer
   - package-ecosystem: "composer"
-    directory: "/web/inc"
+    directory: "/web/inc" # Location of package manifests
     schedule:
       interval: "weekly"
 
-  # Quick install App
+  # Maintain dependencies for Composer
   - package-ecosystem: "composer"
-    directory: "/web/src/"
+    directory: "/web/src" # Location of package manifests
     schedule:
       interval: "weekly"

@@ -91,7 +91,7 @@ steps:
   - name: Build theme files
     image: node:current-slim
     commands:
-      - yarn set version 3.x
+      - yarn set version stable
       - yarn install
       - yarn build
   - name: Build

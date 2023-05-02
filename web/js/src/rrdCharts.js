@@ -1,3 +1,5 @@
+import { getCssVariable } from './helpers';
+
 // Create Chart.js charts from in-page data on Task Monitor page
 export default async function initRrdCharts() {
 	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
@@ -49,7 +51,7 @@ function prepareChartData(rrdData, period) {
 			return formatLabel(date, period);
 		}),
 		datasets: rrdData.meta.legend.map((legend, legendIndex) => {
-			const lineColor = Hestia.helpers.getCssVariable(`--chart-line-${legendIndex + 1}-color`);
+			const lineColor = getCssVariable(`--chart-line-${legendIndex + 1}-color`);
 
 			return {
 				label: legend,
@@ -75,8 +77,8 @@ function formatLabel(date, period) {
 }
 
 function getChartOptions(unit) {
-	const labelColor = Hestia.helpers.getCssVariable('--chart-label-color');
-	const gridColor = Hestia.helpers.getCssVariable('--chart-grid-color');
+	const labelColor = getCssVariable('--chart-label-color');
+	const gridColor = getCssVariable('--chart-grid-color');
 
 	return {
 		plugins: {

@@ -25,6 +25,12 @@
 
 .env
 
+# Distribution CSS
+web/css/themes/
+
+# Distribution JS
+web/js/dist/
+
 # Composer
 composer.phar
 test/vendor/

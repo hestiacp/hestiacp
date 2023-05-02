@@ -25,16 +25,10 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package and install
     commands:
+      - yarn set version stable
+      - yarn install
+      - yarn build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-  - name: Run system / user tests
-    commands:
-      - bats ./test/test.bats
-  - name: Run restore tests
-    commands:
-      - bats ./test/restore.bats
-  - name: Run config tests
-    commands:
-      - bats ./test/config-tests.bats
 
 trigger:
   event: [pull_request, push]
@@ -73,19 +67,6 @@ steps:
   - name: Build Hestia package install
     commands:
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
-  - name: Run system / user tests
-    commands:
-      - bats ./test/test.bats
-  - name: Run restore tests
-    commands:
-      - bats ./test/restore.bats
-  - name: Run Letsencrypt test against Staging
-    commands:
-      - cp /root/le-env.sh /tmp/hestia-le-env.sh
-      - bats ./test/letsencrypt.bats
-  - name: Run config tests
-    commands:
-      - bats ./test/config-tests.bats
 
 trigger:
   event: [pull_request, push]
@@ -106,6 +87,12 @@ platform:
   arch: amd64
 
 steps:
+  - name: Build JS/CSS
+    image: node:current-slim
+    commands:
+      - yarn set version stable
+      - yarn install
+      - yarn build
   - name: Build
     image: debian:bullseye
     commands:

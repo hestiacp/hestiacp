@@ -1,3 +1,5 @@
+import { parseAndSortIpLists } from './helpers';
+
 // Populates the "Data Source" select with various IP lists on the New IP List page
 export default function handleIpListDataSource() {
 	const dataSourceSelect = document.querySelector('.js-datasource-select');
@@ -7,26 +9,21 @@ export default function handleIpListDataSource() {
 	}
 
 	// Parse IP lists from HTML and sort them alphabetically
-	const countryIplists = parseAndSortIplists(dataSourceSelect.dataset.countryIplists);
-	const blacklistIplists = parseAndSortIplists(dataSourceSelect.dataset.blacklistIplists);
+	const countryIpLists = parseAndSortIpLists(dataSourceSelect.dataset.countryIpLists);
+	const blacklistIpLists = parseAndSortIpLists(dataSourceSelect.dataset.blacklistIpLists);
 
 	// Add IP lists to the "Data Source" select
-	addIPListsToSelect(dataSourceSelect, Alpine.store('globals').BLACKLIST, blacklistIplists);
-	addIPListsToSelect(dataSourceSelect, Alpine.store('globals').IPVERSE, countryIplists);
+	addIPListsToSelect(dataSourceSelect, Alpine.store('globals').BLACKLIST, blacklistIpLists);
+	addIPListsToSelect(dataSourceSelect, Alpine.store('globals').IPVERSE, countryIpLists);
 }
 
-function parseAndSortIplists(iplistsData) {
-	const iplists = JSON.parse(iplistsData || '[]');
-	return iplists.sort((a, b) => a.name.localeCompare(b.name));
-}
-
-function addIPListsToSelect(dataSourceSelect, label, iplists) {
+function addIPListsToSelect(dataSourceSelect, label, ipLists) {
 	// Add a disabled option as a label
 	addOption(dataSourceSelect, label, '', true);
 
 	// Add IP lists to the select element
-	iplists.forEach((iplist) => {
-		addOption(dataSourceSelect, iplist.name, iplist.source, false);
+	ipLists.forEach((ipList) => {
+		addOption(dataSourceSelect, ipList.name, ipList.source, false);
 	});
 }
 

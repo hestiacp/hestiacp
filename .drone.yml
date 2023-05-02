@@ -75,6 +75,9 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package install
     commands:
+      - yarn set version stable
+      - yarn install
+      - yarn build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
   - name: Run system / user tests
     commands:

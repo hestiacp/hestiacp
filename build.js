@@ -67,6 +67,7 @@ function getOutputPath(pkg) {
 // Process a CSS file
 async function processCSS(inputFile, outputFile) {
 	try {
+		await ensureDir(path.dirname(outputFile));
 		const css = await fs.readFile(inputFile);
 		const result = await postcss(postcssConfig.plugins).process(css, {
 			from: inputFile,
@@ -95,6 +96,17 @@ async function buildCSS() {
 		});
 
 	await Promise.all(cssBuildPromises);
+}
+
+// Ensure a directory exists
+async function ensureDir(dir) {
+	try {
+		await fs.mkdir(dir, { recursive: true });
+	} catch (error) {
+		if (error.code !== 'EEXIST') {
+			throw error;
+		}
+	}
 }
 
 // Build all assets

@@ -26,11 +26,9 @@
 .env
 
 # Distribution CSS
-web/css/themes/*.css
-web/css/themes/*.min.css
+web/css/themes/
 
 # Distribution JS
-web/js/vendor/
 web/js/dist/
 
 # Composer

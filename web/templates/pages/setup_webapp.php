@@ -57,47 +57,30 @@
 						$field_name = htmlentities($field_name);
 						$field_placeholder = htmlentities($field_placeholder);
 					?>
-						<div
-							x-data="{
-								value: '<?= !empty($field_value) ? $field_value : "" ?>'
-							}"
-							class="u-mb10"
-						>
+						<div class="u-mb10">
 							<?php if ($field_type != "boolean"): ?>
 								<label for="<?= $field_name ?>" class="form-label">
 									<?= $field_label ?>
-									<?php if ($field_type == "password") { ?>
-										/
-										<button
-											x-on:click="value = Hestia.helpers.randomPassword()"
-											class="form-link"
-											type="button"
-										>
-											<?= _("Generate") ?>
-									</button>
-									<?php } ?>
+									<?php if ($field_type == "password"): ?>
+										<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+											<i class="fas fa-arrows-rotate icon-green"></i>
+										</button>
+									<?php endif; ?>
 								</label>
 							<?php endif; ?>
 
-							<?php if ($field_type == 'select' && count($form_control['options'])) { ?>
+							<?php if ($field_type == 'select' && count($form_control['options'])): ?>
 								<select class="form-select" name="<?= $field_name ?>" id="<?= $field_name ?>">
-									<?php
-									foreach ($form_control['options'] as $key => $option) {
+									<?php foreach ($form_control['options'] as $key => $option):
 										$key = !is_numeric($key) ? $key : $option;
-										$selected = !empty($form_control['value'] && $key == $form_control['value']) ? 'selected' : '';
-									?>
-										<option
-											value="<?= $key ?>"
-											<?= $selected ?>
-										>
+										$selected = !empty($form_control['value'] && $key == $form_control['value']) ? 'selected' : ''; ?>
+										<option value="<?= $key ?>" <?= $selected ?>>
 											<?= htmlentities($option) ?>
 										</option>
-									<?php } ?>
+									<?php endforeach; ?>
 								</select>
-							<?php
-							} elseif ($field_type == "boolean") {
-								$checked = !empty($field_value) ? "checked" : "";
-							?>
+							<?php elseif ($field_type == "boolean"):
+								$checked = !empty($field_value) ? "checked" : ""; ?>
 								<div class="form-check">
 									<input
 										class="form-check-input"
@@ -111,16 +94,30 @@
 										<?= $field_label ?>
 									</label>
 								</div>
-							<?php } else { ?>
-								<input
-									x-model="value"
-									type="text"
-									class="form-control"
-									name="<?= $field_name ?>"
-									id="<?= $field_name ?>"
-									placeholder="<?= $field_placeholder ?>"
-								>
-							<?php } ?>
+							<?php else: ?>
+								<?php if ($field_type == "password"): ?>
+									<div class="u-pos-relative">
+										<input
+											type="text"
+											class="form-control js-password-input"
+											name="<?= $field_name ?>"
+											id="<?= $field_name ?>"
+											placeholder="<?= $field_placeholder ?>"
+										>
+										<div class="password-meter">
+											<meter max="4" class="password-meter-input js-password-meter"></meter>
+										</div>
+									</div>
+								<?php else: ?>
+									<input
+										type="text"
+										class="form-control"
+										name="<?= $field_name ?>"
+										id="<?= $field_name ?>"
+										placeholder="<?= $field_placeholder ?>"
+									>
+								<?php endif; ?>
+    					<?php endif; ?>
 						</div>
 					<?php } ?>
 				</div>

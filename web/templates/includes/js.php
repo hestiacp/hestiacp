@@ -1,23 +1,6 @@
 <script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
-<script defer src="/js/vendor/alpine-3.12.0.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<script defer src="/js/dist/alpinejs.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script>
-	// TODO: REMOVE
-	const App = {
-		Actions: {
-			DB: {},
-			WEB: {},
-			PACKAGE: {},
-			MAIL_ACC: {},
-			MAIL: {},
-		},
-		Listeners: {
-			DB: {},
-			WEB: {},
-			PACKAGE: {},
-			MAIL_ACC: {},
-		}
-	}
-
 	document.documentElement.classList.replace('no-js', 'js');
 	document.addEventListener('alpine:init', () => {
 		Alpine.store('globals', {
@@ -33,7 +16,6 @@
 	})
 </script>
 
-<?php if (!empty($_SESSION['error_msg'])) unset($_SESSION['error_msg']); ?>
 
 <?php
 $customScriptDirectory = new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts");

@@ -9,9 +9,9 @@
 			</h1>
 			<div class="u-mt20">
 				<p><?_("Two-factor authentication is now turned off for your account.<br><br>You may now proceed to log in.");?></p>
-				<button type="button" class="button button-secondary" onclick="location.href='/login/'">
+				<a href="/login/" class="button button-secondary">
 					<?= _("Log in") ?>
-				</button>
+				</a>
 			</div>
 		</div>
 	<?php } else { ?>
@@ -33,9 +33,9 @@
 				<button type="submit" class="button">
 					<?= _("Submit") ?>
 				</button>
-				<button type="button" class="button button-secondary" onclick="location.href='/login/?logout'">
+				<a href="/login/?logout" class="button button-secondary">
 					<?= _("Back") ?>
-				</button>
+				</a>
 			</div>
 		</form>
 	<?php } ?>

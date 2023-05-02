@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Install update from Git repository
-# options: REPOSITORY BRANCH INSTALL [PACKAGES]
+# options: REPOSITORY BRANCH INSTALL
 #
 # example: v-update-sys-hestia-git hestiacp staging/beta install
 #          # Will download from the hestiacp repository
@@ -23,6 +23,11 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
+if [ -z $(which "yarn") ]; then
+	echo "Unable to locate Yarn and NodeJS  See https://hestiacp.com/docs/contributing/development.html"
+	exit 0
+fi
 
 # Define download function
 download_file() {
@@ -294,6 +299,11 @@ mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 
 # Move needed directories
 cd $BUILD_DIR/hestiacp-$branch_dash
+
+yarn set version stable
+yarn install
+yarn build
+
 cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
 
 # Set permissions

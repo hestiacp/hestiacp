@@ -2200,7 +2200,7 @@
 /* Spinner
    ========================================================================== */
 
-.fullscreen-loader {
+.spinner-overlay {
 	position: fixed;
 	inset: 0;
 	display: flex;
@@ -2209,7 +2209,7 @@
 	padding: 50px;
 	background-color: rgb(0 0 0 / 10%);
 	font-size: 50px;
-	z-index: 9999;
+	z-index: 4;
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 0.2s ease, visibility 0s 0.2s;

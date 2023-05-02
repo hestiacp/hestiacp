@@ -9,7 +9,7 @@ import postcss from 'postcss';
 import postcssConfig from './postcss.config.js';
 
 // Packages to build but exclude from bundle
-const externalPackages = ['chart.js/auto'];
+const externalPackages = ['chart.js/auto', 'alpinejs/dist/cdn.min.js'];
 
 // Build main bundle
 async function buildJS() {
@@ -34,7 +34,7 @@ async function buildJS() {
 async function buildExternalJS() {
 	try {
 		const buildPromises = externalPackages.map(async (pkg) => {
-			const outputPath = `./web/js/dist/${pkg.replace('/', '-')}.min.js`;
+			const outputPath = getOutputPath(pkg);
 			await esbuild.build({
 				entryPoints: [pkg],
 				outfile: outputPath,
@@ -52,9 +52,22 @@ async function buildExternalJS() {
 	}
 }
 
+function getOutputPath(pkg) {
+	let pkgName;
+
+	if (pkg.startsWith('alpinejs')) {
+		pkgName = 'alpinejs';
+	} else {
+		pkgName = pkg.replace(/\//g, '-');
+	}
+
+	return `./web/js/dist/${pkgName}.min.js`;
+}
+
 // Process a CSS file
 async function processCSS(inputFile, outputFile) {
 	try {
+		await ensureDir(path.dirname(outputFile));
 		const css = await fs.readFile(inputFile);
 		const result = await postcss(postcssConfig.plugins).process(css, {
 			from: inputFile,
@@ -83,6 +96,17 @@ async function buildCSS() {
 		});
 
 	await Promise.all(cssBuildPromises);
+}
+
+// Ensure a directory exists
+async function ensureDir(dir) {
+	try {
+		await fs.mkdir(dir, { recursive: true });
+	} catch (error) {
+		if (error.code !== 'EEXIST') {
+			throw error;
+		}
+	}
 }
 
 // Build all assets

@@ -1,4 +1,4 @@
-// "Discard all mail" checkbox behavior
+// "Discard all mail" checkbox behavior on Add/Edit Mail Account pages
 export default function handleDiscardAllMail() {
 	const discardAllMailCheckbox = document.querySelector('.js-discard-all-mail');
 
@@ -7,9 +7,8 @@ export default function handleDiscardAllMail() {
 	}
 
 	discardAllMailCheckbox.addEventListener('click', () => {
-		// TODO: Use .js- class instead of #id
-		const forwardToTextarea = document.querySelector('#v_fwd');
-		const doNotStoreCheckbox = document.querySelector('#v_fwd_for');
+		const forwardToTextarea = document.querySelector('.js-forward-to-textarea');
+		const doNotStoreCheckbox = document.querySelector('.js-do-not-store-checkbox');
 
 		if (discardAllMailCheckbox.checked) {
 			// Disable "Forward to" textarea

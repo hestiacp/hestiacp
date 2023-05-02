@@ -1,6 +1,7 @@
 import alpineInit from './alpineInit';
 import focusFirstInput from './focusFirstInput';
-import handleConfirmationDialogs from './confirmationDialog';
+import handleAddIpLists from './addIpLists';
+import handleConfirmAction from './confirmAction';
 import handleCopyCreds from './copyCreds';
 import handleCronGenerator from './cronGenerator';
 import handleDatabaseHints from './databaseHints';
@@ -23,6 +24,7 @@ import handleSyncEmailValues from './syncEmailValues';
 import handleTabPanels from './tabPanels';
 import handleToggleAdvanced from './toggleAdvanced';
 import handleUnlimitedInput from './unlimitedInput';
+import initRrdCharts from './rrdCharts';
 import * as helpers from './helpers';
 
 window.Hestia = { helpers };
@@ -31,7 +33,8 @@ initListeners();
 focusFirstInput();
 
 function initListeners() {
-	handleConfirmationDialogs();
+	handleAddIpLists();
+	handleConfirmAction();
 	handleCopyCreds();
 	handleCronGenerator();
 	handleDiscardAllMail();
@@ -48,6 +51,7 @@ function initListeners() {
 	handleSyncEmailValues();
 	handleTabPanels();
 	handleToggleAdvanced();
+	initRrdCharts();
 }
 
 document.addEventListener('alpine:init', () => {

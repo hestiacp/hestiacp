@@ -181,7 +181,6 @@ function check_return_code_redirect($return_var, $output, $location) {
 
 function render_page($user, $TAB, $page) {
 	$__template_dir = dirname(__DIR__) . "/templates/";
-	$__pages_js_dir = dirname(__DIR__) . "/js/pages/";
 
 	// Extract global variables
 	// I think those variables should be passed via arguments
@@ -198,11 +197,6 @@ function render_page($user, $TAB, $page) {
 
 	// Body
 	include $__template_dir . "pages/" . $page . ".php";
-
-	// Including page specific js file
-	if (file_exists($__pages_js_dir . $page . ".js")) {
-		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
-	}
 
 	// Footer
 	include $__template_dir . "footer.php";
@@ -563,3 +557,13 @@ function backendtpl_with_webdomains() {
 function validate_password($password) {
 	return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(.){8,}$/', $password);
 }
+
+function unset_alerts() {
+	if (!empty($_SESSION["error_msg"])) {
+		unset($_SESSION["error_msg"]);
+	}
+	if (!empty($_SESSION["ok_msg"])) {
+		unset($_SESSION["ok_msg"]);
+	}
+}
+register_shutdown_function("unset_alerts");

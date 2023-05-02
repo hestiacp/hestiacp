@@ -50,7 +50,12 @@
 					<?= _("IP Address / IPset IP List") ?> <span class="optional">(<?= _("Support CIDR format") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<select class="form-select" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
+					<select
+						class="form-select js-ip-list-select"
+						tabindex="-1"
+						onchange="this.nextElementSibling.value=this.value"
+						data-ipset-lists="<?= htmlspecialchars($ipset_lists_json, ENT_QUOTES, 'UTF-8') ?>"
+					>
 						<option value=""><?= _("Clear") ?></option>
 					</select>
 					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
@@ -67,24 +72,3 @@
 	</form>
 
 </div>
-
-<script>
-	var ipLists = JSON.parse('<?= $ipset_lists_json ?>');
-	ipLists.sort(function (a, b) {
-		return a.name > b.name;
-	});
-
-	var targetElement = document.getElementById('quickips_list');
-
-	var newEl = document.createElement("option");
-	newEl.text = "<?= _("IPset IP Lists") ?>";
-	newEl.disabled = true;
-	targetElement.appendChild(newEl);
-
-	ipLists.forEach(iplist => {
-		var newEl = document.createElement("option");
-		newEl.text = iplist.name;
-		newEl.value = "ipset:" + iplist.name;
-		targetElement.appendChild(newEl);
-	});
-</script>

@@ -1,6 +1,12 @@
-async function init() {
-	const Chart = await loadChartJs();
+// Create Chart.js charts from in-page data on Task Monitor page
+export default async function initRrdCharts() {
 	const chartCanvases = document.querySelectorAll('.js-rrd-chart');
+
+	if (!chartCanvases.length) {
+		return;
+	}
+
+	const Chart = await loadChartJs();
 
 	for (const chartCanvas of chartCanvases) {
 		const service = chartCanvas.dataset.service;
@@ -18,8 +24,11 @@ async function init() {
 }
 
 async function loadChartJs() {
-	const module = await import('/js/dist/chart.js-auto.min.js');
-	return module.Chart;
+	// NOTE: String expression used to prevent ESBuild from resolving
+	// the import on build (Chart.js is a separate bundle)
+	const chartJsBundlePath = '/js/dist/chart.js-auto.min.js';
+	const chartJsModule = await import(`${chartJsBundlePath}`);
+	return chartJsModule.Chart;
 }
 
 async function fetchRrdData(service, period) {
@@ -103,5 +112,3 @@ function getChartOptions(unit) {
 		},
 	};
 }
-
-init();

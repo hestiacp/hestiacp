@@ -275,10 +275,14 @@ if (!empty($_POST["ok_rec"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("Record {%s.%s} has been created successfully."),
-			htmlentities($_POST["v_rec"]),
-			htmlentities($_POST["v_domain"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("Record {%s.%s} has been created successfully."),
+				htmlentities($_POST["v_rec"]),
+				htmlentities($_POST["v_domain"]),
+			),
+			"</b>",
+			"<b>",
 		);
 		unset($v_domain);
 		unset($v_rec);

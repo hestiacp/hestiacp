@@ -2565,6 +2565,10 @@
 	color: #f33;
 }
 
+.inline-alert-warning {
+	color: #ffd500;
+}
+
 .inline-alert-success {
 	color: #53ba55;
 

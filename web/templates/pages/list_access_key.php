@@ -37,7 +37,7 @@ if (!empty($_POST["ok"])) { ?>
 					<div class="u-mb20">
 						<label for="secret_key" class="form-label">
 							<?= _("Secret Key") ?><br>
-							<span style="color:#ffd500;"><?= _("Warning! Last chance to save secret key!") ?></span>
+							<span class="inline-alert inline-alert-warning u-mb20"><?= _("Warning! Last chance to save secret key!") ?></span>
 						</label>
 						<input type="text" class="form-control" id="secret_key" maxlength="255" readonly value="<?= htmlentities(trim($key_data["SECRET_ACCESS_KEY"], "'")) ?>">
 					</div>

@@ -231,7 +231,6 @@ function show_alert_message($data) {
 	$msgIcon = "";
 	$msgText = "";
 	$msgClass = "";
-
 	if (!empty($data["error_msg"])) {
 		$msgIcon = "fa-circle-exclamation";
 		$msgText = htmlentities($data["error_msg"]);

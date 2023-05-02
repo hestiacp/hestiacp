@@ -74,9 +74,13 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("Access key {%s} has been created successfully."),
-			htmlentities($key_data["ACCESS_KEY_ID"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("Access key {%s} has been created successfully."),
+				htmlentities($key_data["ACCESS_KEY_ID"]),
+			),
+			"</b>",
+			"<b>",
 		);
 		unset($apis_selected);
 		unset($check_invalid_apis);

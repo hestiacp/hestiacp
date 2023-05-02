@@ -90,7 +90,7 @@ platform:
   arch: amd64
 
 steps:
-  - name: Build theme files
+  - name: Build JS/CSS
     image: node:current-slim
     commands:
       - yarn set version stable

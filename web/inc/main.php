@@ -557,3 +557,13 @@ function backendtpl_with_webdomains() {
 function validate_password($password) {
 	return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(.){8,}$/', $password);
 }
+
+function unset_alerts() {
+	if (!empty($_SESSION["error_msg"])) {
+		unset($_SESSION["error_msg"]);
+	}
+	if (!empty($_SESSION["ok_msg"])) {
+		unset($_SESSION["ok_msg"]);
+	}
+}
+register_shutdown_function("unset_alerts");

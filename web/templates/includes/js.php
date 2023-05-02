@@ -16,7 +16,6 @@
 	})
 </script>
 
-<?php if (!empty($_SESSION['error_msg'])) unset($_SESSION['error_msg']); ?>
 
 <?php
 $customScriptDirectory = new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts");

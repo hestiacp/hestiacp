@@ -1,4 +1,4 @@
-import { getCssVariable } from './helpers';
+import { post, getCssVariable } from './helpers';
 
 // Create Chart.js charts from in-page data on Task Monitor page
 export default async function initRrdCharts() {
@@ -13,7 +13,7 @@ export default async function initRrdCharts() {
 	for (const chartCanvas of chartCanvases) {
 		const service = chartCanvas.dataset.service;
 		const period = chartCanvas.dataset.period;
-		const rrdData = await fetchRrdData(service, period);
+		const rrdData = await post('/list/rrd/ajax.php', { service, period });
 		const chartData = prepareChartData(rrdData, period);
 		const chartOptions = getChartOptions(rrdData.unit);
 
@@ -31,16 +31,6 @@ async function loadChartJs() {
 	const chartJsBundlePath = '/js/dist/chart.js-auto.min.js';
 	const chartJsModule = await import(`${chartJsBundlePath}`);
 	return chartJsModule.Chart;
-}
-
-async function fetchRrdData(service, period) {
-	const response = await fetch('/list/rrd/ajax.php', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ service, period }),
-	});
-
-	return response.json();
 }
 
 function prepareChartData(rrdData, period) {

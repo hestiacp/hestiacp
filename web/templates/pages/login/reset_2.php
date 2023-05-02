@@ -21,9 +21,9 @@
 			<button type="submit" class="button">
 				<?= _("Confirm") ?>
 			</button>
-			<button type="button" class="button button-secondary" onclick="location.href='/reset/'">
+			<a href="/reset/" class="button button-secondary">
 				<?= _("Back") ?>
-			</button>
+			</a>
 		</div>
 	</form>
 </div>

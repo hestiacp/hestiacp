@@ -20,9 +20,9 @@
 			<button type="submit" class="button">
 				<?= _("Submit") ?>
 			</button>
-			<button type="button" class="button button-secondary" onclick="location.href='/login/?logout'">
+			<a href="/login/?logout" class="button button-secondary">
 				<?= _("Back") ?>
-			</button>
+			</a>
 		</div>
 	</form>
 </div>

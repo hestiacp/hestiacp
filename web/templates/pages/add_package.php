@@ -66,7 +66,7 @@
 				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= htmlentities(trim($v_backups, "'")) ?>">
 			</div>
 			<h2 x-on:click="showWebOptions = !showWebOptions" class="section-title">
-				<?= _("Web") ?>
+				<?= _("WEB") ?>
 				<i
 					x-bind:class="showWebOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"
@@ -243,7 +243,7 @@
 				<?php } ?>
 			</div>
 			<h2 x-on:click="showMailOptions = !showMailOptions" class="section-title">
-				<?= _("Mail") ?>
+				<?= _("MAIL") ?>
 				<i
 					x-bind:class="showMailOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"
@@ -272,13 +272,13 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_ratelimit" class="form-label">
-						<?= _("Rate limit") ?> <span class="optional">(<?= _("Per Account / Hour") ?>)</span>
+						<?= _("Rate Limit") ?> <span class="optional">(<?= _("Per Account / Hour") ?>)</span>
 					</label>
 					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
 				</div>
 			</div>
 			<h2 x-on:click="showDatabaseOptions = !showDatabaseOptions" class="section-title">
-				<?= _("Databases") ?>
+				<?= _("DB") ?>
 				<i
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"

@@ -58,6 +58,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					putenv("LANGUAGE=" . $data[$user]["LANGUAGE"]);
 					$template = _(
 						"Hello {{name}},\n" .
+							"\n" .
 							"To reset your {{appname}} password, please follow this link:\n" .
 							"https://{{hostname}}/reset/?action=confirm&user={{user}}&code={{resetcode}}\n" .
 							"\n" .

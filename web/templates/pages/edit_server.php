@@ -190,7 +190,7 @@
 							<?= $_SESSION["UPGRADE_SEND_EMAIL"] == "true" ? "checked" : "" ?>
 						>
 						<label for="v_upgrade_send_notification_email">
-							<?= _("SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL") ?>
+							<?= _("Send email notification when an update has been installed") ?>
 						</label>
 					</div>
 					<div class="form-check">
@@ -295,7 +295,7 @@
 					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<div class="u-mt10">
 							<label for="v_php_default_version" class="form-label">
-								<?= _("System PHP version") ?>
+								<?= _("System PHP Version") ?>
 							</label>
 							<select class="form-select" name="v_php_default_version" id="v_php_default_version">
 								<?php foreach ($v_php_versions as $php_version) { ?>
@@ -575,7 +575,7 @@
 								</div>
 								<div class="u-mb10">
 									<label for="v_mysql_max" class="form-label">
-										<?= _("Maximum Number Of Databases") ?>
+										<?= _("Maximum Number of Databases") ?>
 									</label>
 									<input
 										type="text"
@@ -588,7 +588,7 @@
 								</div>
 								<div class="u-mb10">
 									<label for="v_mysql_current" class="form-label">
-										<?= _("Current Number Of Databases") ?>
+										<?= _("Current Number of Databases") ?>
 									</label>
 									<input
 										type="text"
@@ -633,13 +633,13 @@
 								</div>
 								<div class="u-mb10">
 									<label for="v_psql_max" class="form-label">
-										<?= _("Maximum Number Of Databases") ?>
+										<?= _("Maximum Number of Databases") ?>
 									</label>
 									<input type="text" class="form-control" name="v_psql_max" id="v_psql_max" value="<?= $value["MAX_DB"] ?>" disabled>
 								</div>
 								<div class="u-mb10">
 									<label for="v_pgsql_max" class="form-label">
-										<?= _("Current Number Of Databases") ?>
+										<?= _("Current Number of Databases") ?>
 									</label>
 									<input type="text" class="form-control" name="v_pgsql_max" id="v_pgsql_max" value="<?= $value["U_DB_BASES"] ?>" disabled>
 								</div>
@@ -657,7 +657,7 @@
 				<div class="collapse-content">
 					<div class="u-mb10">
 						<label for="v_backup" class="form-label">
-							<?= _("Local backup") ?>
+							<?= _("Local Backup") ?>
 						</label>
 						<select class="form-select" name="v_backup" id="v_backup">
 							<option value="no">
@@ -690,7 +690,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_backup_gzip" class="form-label">
-							<?= _("Compression level") ?>
+							<?= _("Compression Level") ?>
 							<a
 								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio"
 								target="_blank"
@@ -740,7 +740,7 @@
 							id="v_backup_remote_adv"
 						>
 						<label for="v_backup_remote_adv">
-							<?= _("Remote backup") ?>
+							<?= _("Remote Backup") ?>
 						</label>
 					</div>
 					<div x-cloak x-show="remoteBackupEnabled" class="u-pl30 u-mt20">
@@ -842,7 +842,7 @@
 						<div x-cloak x-show="backupType == 'b2'">
 							<div class="u-mb10">
 								<label for="v_backup_bucket" class="form-label">
-									<?= _("Bucket") ?>
+									Bucket
 								</label>
 								<input
 									type="text"

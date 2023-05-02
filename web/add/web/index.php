@@ -14,10 +14,10 @@ if (!empty($_POST["ok"])) {
 
 	// Check for empty fields
 	if (empty($_POST["v_domain"])) {
-		$errors[] = _("domain");
+		$errors[] = _("Domain");
 	}
 	if (empty($_POST["v_ip"])) {
-		$errors[] = _("ip");
+		$errors[] = _("IP Address");
 	}
 
 	if (!empty($errors[0])) {

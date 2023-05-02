@@ -101,7 +101,7 @@
 				<select class="form-select" name="v_role" id="v_role" required>
 					<option value="user"><?= _("User") ?></option>
 					<option value="admin" <?= $v_role == "admin" ? "selected" : "" ?>><?= _("Administrator") ?></option>
-					<option value="dns-cluster" <?= $v_role == "dns-cluster" ? "selected" : "" ?>><?= _("DNS Sync user") ?></option>
+					<option value="dns-cluster" <?= $v_role == "dns-cluster" ? "selected" : "" ?>><?= _("DNS Sync User") ?></option>
 				</select>
 			</div>
 			<div class="u-mb10">

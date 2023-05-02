@@ -13,7 +13,7 @@
 		<input type="hidden" name="generate" value="generate">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("New Self-Signed SSL Certificate") ?></h1>
+			<h1 class="form-title"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
 				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
@@ -56,10 +56,7 @@
 			</div>
 			<div class="u-side-by-side">
 				<button type="submit" class="button" name="generate">
-					<?= _("Ok") ?>
-				</button>
-				<button type="button" class="button button-secondary" onclick="<?= $back ?>">
-					<?= _("Back") ?>
+					<?= _("Generate") ?>
 				</button>
 			</div>
 		</div>

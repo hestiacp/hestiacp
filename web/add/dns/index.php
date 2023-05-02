@@ -19,10 +19,10 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_domain"])) {
-		$errors[] = _("domain");
+		$errors[] = _("Domain");
 	}
 	if (empty($_POST["v_ip"])) {
-		$errors[] = _("ip");
+		$errors[] = _("IP Address");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
@@ -217,16 +217,16 @@ if (!empty($_POST["ok_rec"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_domain"])) {
-		$errors[] = "domain";
+		$errors[] = _("Domain");
 	}
 	if (empty($_POST["v_rec"])) {
-		$errors[] = "record";
+		$errors[] = _("Record");
 	}
 	if (empty($_POST["v_type"])) {
-		$errors[] = "type";
+		$errors[] = _("Type");
 	}
 	if (empty($_POST["v_val"])) {
-		$errors[] = "value";
+		$errors[] = _("IP or Value");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
@@ -275,10 +275,14 @@ if (!empty($_POST["ok_rec"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("Record <b>%s.%s</b> has been created successfully."),
-			htmlentities($_POST["v_rec"]),
-			htmlentities($_POST["v_domain"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("Record {%s.%s} has been created successfully."),
+				htmlentities($_POST["v_rec"]),
+				htmlentities($_POST["v_domain"]),
+			),
+			"</b>",
+			"<b>",
 		);
 		unset($v_domain);
 		unset($v_rec);

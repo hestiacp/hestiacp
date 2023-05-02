@@ -6,15 +6,19 @@ updates:
     schedule:
       interval: "weekly"
 
-  # Maintain dependencies for npm
-  # TODO: Enable this when we build JS and have no checked-in minified JS/CSS
-  # - package-ecosystem: "npm"
-  #   directory: "/web"
-  #   schedule:
-  #     interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/"
+    sschedule:
+      interval: "weekly"
 
   # Maintain dependencies for Composer
   - package-ecosystem: "composer"
-    directory: "/web/inc" # Location of package manifests
+    directory: "/web/inc"
+    schedule:
+      interval: "weekly"
+
+  # Quick install App
+  - package-ecosystem: "composer"
+    directory: "/web/src/"
     schedule:
       interval: "weekly"

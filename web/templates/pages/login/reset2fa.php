@@ -7,7 +7,7 @@
 			<h1 class="login-title">
 				<?= _("2FA Reset successfully") ?>
 			</h1>
-			<?php show_error_message($ERROR); ?>
+			<?= $error ?? ''; ?>
 			<div class="u-mt20">
 				<a href="/login/" class="button button-secondary">
 					<?= _("Log in") ?>
@@ -20,7 +20,7 @@
 			<h1 class="login-title">
 				<?= _("Reset 2FA") ?>
 			</h1>
-			<?php show_error_message($ERROR); ?>
+			<?= $error ?? ''; ?>
 			<div class="u-mb10">
 				<label for="user" class="form-label"><?= _("Username") ?></label>
 				<input type="text" class="form-control" name="user" id="user" required>

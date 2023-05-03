@@ -99,7 +99,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 						);
 					}
 				}
-				$ERROR =
+				$error =
 					"<p class=\"error\">" .
 					_(
 						"Password reset instructions have been sent to the email address associated with this account.",
@@ -107,7 +107,7 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					"</p>";
 			} else {
 				# Prevent user enumeration and let hackers guess username and working email
-				$ERROR =
+				$error =
 					"<p class=\"error\">" .
 					_(
 						"Password reset instructions have been sent to the email address associated with this account.",
@@ -115,14 +115,14 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					"</p>";
 			}
 		} else {
-			$ERROR =
+			$error =
 				"<p class=\"error\">" .
 				_("Please wait 15 minutes before sending a new request") .
 				"</p>";
 		}
 	} else {
 		# Prevent user enumeration and let hackers guess username and working email
-		$ERROR =
+		$error =
 			"<p class=\"error\">" .
 			_(
 				"Password reset instructions have been sent to the email address associated with this account.",
@@ -158,7 +158,7 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 					unlink($v_password);
 					if ($return_var > 0) {
 						sleep(5);
-						$ERROR = "<p class=\"error\">" . _("An internal error occurred") . "</p>";
+						$error = "<p class=\"error\">" . _("An internal error occurred") . "</p>";
 					} else {
 						$_SESSION["user"] = $_POST["user"];
 						header("Location: /");
@@ -166,7 +166,7 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 					}
 				} else {
 					sleep(5);
-					$ERROR = "<p class=\"error\">" . _("Code has been expired") . "</p>";
+					$error = "<p class=\"error\">" . _("Code has been expired") . "</p>";
 					exec(
 						HESTIA_CMD .
 							"v-log-user-login " .
@@ -184,7 +184,7 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 				}
 			} else {
 				sleep(5);
-				$ERROR = "<p class=\"error\">" . _("Invalid username or code") . "</p>";
+				$error = "<p class=\"error\">" . _("Invalid username or code") . "</p>";
 				exec(
 					HESTIA_CMD .
 						"v-log-user-login " .
@@ -202,10 +202,10 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 			}
 		} else {
 			sleep(5);
-			$ERROR = "<p class=\"error\">" . _("Invalid username or code") . "</p>";
+			$error = "<p class=\"error\">" . _("Invalid username or code") . "</p>";
 		}
 	} else {
-		$ERROR = "<p class=\"error\">" . _("Passwords not match") . "</p>";
+		$error = "<p class=\"error\">" . _("Passwords not match") . "</p>";
 	}
 }
 

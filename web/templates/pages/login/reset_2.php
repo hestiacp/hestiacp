@@ -6,7 +6,7 @@
 		<h1 class="login-title">
 			<?= _("Forgot Password") ?>
 		</h1>
-		<?php show_error_message($ERROR); ?>
+		<?= $error ?? ''; ?>
 		<p class="inline-success u-mb10">
 			<?= _("RESET_CODE_SENT") ?>
 		</p>

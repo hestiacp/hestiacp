@@ -8,7 +8,7 @@
 		<h1 class="login-title">
 			<?= _("Welcome") ?> <?= htmlspecialchars($_SESSION["login"]["username"]) ?>!
 		</h1>
-		<?php show_error_message($ERROR); ?>
+		<?= $error ?? ''; ?>
 		<div class="u-mb20">
 			<label for="password" class="form-label u-side-by-side">
 				<?= _("Password") ?>

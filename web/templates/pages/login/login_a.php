@@ -8,7 +8,7 @@
 		<h1 class="login-title">
 			<?= _("Welcome to Hestia Control Panel") ?>
 		</h1>
-		<?php show_error_message($error); ?>
+		<?php echo $error ?? ''; ?>
 		<div class="u-mb10">
 			<label for="user" class="form-label"><?= _("Username") ?></label>
 			<input type="text" class="form-control" name="user" id="user" required autofocus>

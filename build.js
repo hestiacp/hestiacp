@@ -13,7 +13,7 @@ const externalPackages = ['chart.js/auto', 'alpinejs/dist/cdn.min.js'];
 
 // Build main bundle
 async function buildJS() {
-	const inputPath = './web/js/src/main.js';
+	const inputPath = './web/js/src/index.js';
 	try {
 		await esbuild.build({
 			entryPoints: [inputPath],

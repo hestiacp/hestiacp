@@ -19,7 +19,6 @@ module.exports = {
 		es2021: true,
 	},
 	globals: {
-		Hestia: 'readonly',
 		Alpine: 'readonly',
 	},
 	rules: {

@@ -43,6 +43,25 @@ export function parseAndSortIpLists(ipListsData) {
 	return ipLists.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+// Posts data to the given URL and returns the response
+export async function post(url, data, headers = {}) {
+	const requestOptions = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			...headers,
+		},
+		body: JSON.stringify(data),
+	};
+
+	const response = await fetch(url, requestOptions);
+	if (!response.ok) {
+		throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+	}
+
+	return response.json();
+}
+
 // Creates a confirmation <dialog> on the fly
 export function createConfirmationDialog({
 	title,

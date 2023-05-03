@@ -1,6 +1,5 @@
 @import url("normalize.css");
 @import url("@fortawesome/fontawesome-free/css/fontawesome");
-@import url("@fortawesome/fontawesome-free/css/brands");
 @import url("@fortawesome/fontawesome-free/css/solid");
 @import url("../dependencies/animate");
 @import url("../media_queries");
@@ -2138,7 +2137,7 @@
 .login {
 	flex-grow: 1;
 	padding: 30px;
-	margin-bottom: 20%;
+	margin-bottom: 15%;
 
 	& .form-label {
 		color: #fff;

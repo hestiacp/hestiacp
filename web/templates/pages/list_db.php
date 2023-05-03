@@ -152,7 +152,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Database") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 									<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>/hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="phpMyAdmin"><i class="fas fa-right-to-bracket icon-orange icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="phpMyAdmin"><i class="fas fa-right-to-bracket icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a

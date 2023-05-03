@@ -29,7 +29,7 @@ COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 if [ ! -f "$COMPOSER_BIN" ]; then
 	$BIN/v-add-user-composer "$user"
 	if [ $? -ne 0 ]; then
-		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>.'
+		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.'
 		fm_error='yes'
 	fi
 fi
@@ -54,7 +54,7 @@ if [ "$fm_error" != "yes" ]; then
 	if [ -f "/usr/bin/php7.3" ]; then
 		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php7.3 $COMPOSER_BIN --quiet --no-dev install
 		if [ $? -ne 0 ]; then
-			$BIN/v-add-user-notification admin 'File Manager installation failed!' 'Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>.'
+			$BIN/v-add-user-notification admin 'File Manager installation failed!' 'Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.'
 			fm_error="yes"
 		fi
 	else

@@ -29,6 +29,15 @@ steps:
       - yarn install
       - yarn build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+  - name: Run system / user tests
+    commands:
+      - bats ./test/test.bats
+  - name: Run restore tests
+    commands:
+      - bats ./test/restore.bats
+  - name: Run config tests
+    commands:
+      - bats ./test/config-tests.bats
 
 trigger:
   event: [pull_request, push]
@@ -66,7 +75,23 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package install
     commands:
+      - yarn set version stable
+      - yarn install
+      - yarn build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+  - name: Run system / user tests
+    commands:
+      - bats ./test/test.bats
+  - name: Run restore tests
+    commands:
+      - bats ./test/restore.bats
+  - name: Run config tests
+    commands:
+      - bats ./test/config-tests.bats
+  - name: Run Letsencrypt test against Staging
+    commands:
+      - cp /root/le-env.sh /tmp/hestia-le-env.sh
+      - bats ./test/letsencrypt.bats
 
 trigger:
   event: [pull_request, push]

@@ -69,6 +69,7 @@ rfc1413_hosts = *
 rfc1413_query_timeout = 0s
 ignore_bounce_errors_after = 2d
 timeout_frozen_after = 7d
+tls_require_ciphers = PFS:!MD5:!VERS-TLS1.0:!VERS-TLS1.1:!VERS-SSL3.0
 
 DKIM_DOMAIN = ${lc:${domain:$h_from:}}
 DKIM_FILE = /etc/exim4/domains/${lc:${domain:$h_from:}}/dkim.pem

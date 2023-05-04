@@ -1787,7 +1787,7 @@ function check_ip_not_banned(){
 }
 
 @test "MYSQL: Create temp user" {
-	run v-add-database-temp-user $user $database localhost 1
+	run v-add-database-temp-user $user $database mysql localhost 1
 	assert_success
 }
 

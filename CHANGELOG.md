@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
+- Remove Font Awesome "brands" usage (#3535)
+- Make uft8mb4 default charset for databases (#3534)
+- Remove extra slash in SSO url (#3533)
+- Improve Quick Install App password input (#3530)
 - Kill OpenSSL server if its already running before validating SSL certificate (#3505)
 - Improve redirect behaviour (#3503)
 - Fix: PMA SSO for cp panel template (#3493)

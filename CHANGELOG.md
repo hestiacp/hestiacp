@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.4] - Service release
+
+### Features
+
+- Build JS/CSS Theme on release (#3525)
+- Refactor away jQuery
+
+### Bugfixes
+
+- Remove Font Awesome "brands" usage (#3535)
+- Make uft8mb4 default charset for databases (#3534)
+- Remove extra slash in SSO url (#3533)
+- Improve Quick Install App password input (#3530)
+- Kill OpenSSL server if its already running before validating SSL certificate (#3505)
+- Improve redirect behaviour (#3503)
+- Fix: PMA SSO for cp panel template (#3493)
+- Fix: Bug in sftp backup (#3489)
+- Improve Quick Install App password input (#3530)
+- Refactor away on click usage on login pages (#3526)
+- Refactor Add/Edit Firewall Rule JS (#3522)
+- Build Alpine.js bundle (#3521)
+- Improve charts JS (#3519)
+- Show spinner when confirming dialog action (#3517)
+- Refactor Edit Web JS/remove jQuery (#3513)
+- Refactor Add/Edit Database JS (#3511)
+- UI updates (#3510)
+- Refactor JS (#3508)
+- Fix #3318 Remove: decrepitation warning MariaDB (#3465)
+- Fix: 3514 Fix UI not matching true value (#3515)
+- Refactor form submit JS (#3502)
+- Refactor JS (#3500)
+- Refactor unlimited input JS (#3495)
+- Tidy JS (#3492)
+- IPV6 compatible prevent CSRF (#3491)
+- Rewrite statistics UI mobile-first (#3490)
+- Refactor JS (#3488)
+- Add Quota info to the user list (#3487)
+- Minor UI updates (#3485)
+- Dynamically load Chart.js bundle (#3480)
+- Refactor JS to use ES modules (#3476)
+
 ## [1.7.3] - Service release
 
 ### Features

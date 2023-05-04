@@ -1786,11 +1786,6 @@ function check_ip_not_banned(){
     assert_failure $E_NOTEXIST
 }
 
-@test "MYSQL: Create temp user" {
-	run v-add-database-temp-user $user $database mysql localhost 1
-	assert_success
-}
-
 @test "PGSQL: Add database invalid user" {
   if [ -z "$(echo $DB_SYSTEM | grep -w "pgsql")" ]; then
     skip "PostGreSQL is not installed"

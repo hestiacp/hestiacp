@@ -56,18 +56,18 @@ PMAUSER=pma
 
 #CREATE PMA USER
 if [ -f '/usr/bin/mariadb' ]; then
-	mysql="mariadb"
+	mysql_server="mariadb"
 else
-	mysql="mysql"
+	mysql_server="mysql"
 fi
 
-$mysql -uroot << MYSQL_PMA2
+$mysql_server -uroot << MYSQL_PMA2
 CREATE USER '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 CREATE DATABASE $PMADB;
 MYSQL_PMA2
 
 #GRANT PMA USE SOME RIGHTS
-$mysql -uroot << MYSQL_PMA3
+$mysql_server -uroot << MYSQL_PMA3
 USE $PMADB;
 GRANT USAGE ON $PMADB.* TO '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
 GRANT ALL PRIVILEGES ON $PMADB.* TO '$PMAUSER'@'localhost';
@@ -75,4 +75,4 @@ FLUSH PRIVILEGES;
 MYSQL_PMA3
 
 #MYSQL DB and TABLES ADDITION
-$mysql -uroot < "$HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql"
+$mysql_server -uroot < "$HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql"

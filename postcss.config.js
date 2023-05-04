@@ -1,14 +1,20 @@
-module.exports = {
+import postcssImport from 'postcss-import';
+import postcssPathReplace from 'postcss-path-replace';
+import postcssSize from 'postcss-size';
+import cssnano from 'cssnano';
+import postcssPresetEnv from 'postcss-preset-env';
+
+export default {
 	plugins: [
-		require('postcss-import'),
-		require('postcss-path-replace')({
+		postcssImport,
+		postcssPathReplace({
 			publicPath: '/webfonts/',
 			matched: '../webfonts/',
 			mode: 'replace',
 		}),
-		require('postcss-size'),
-		require('cssnano'),
-		require('postcss-preset-env')({
+		postcssSize,
+		cssnano,
+		postcssPresetEnv({
 			autoprefixer: {
 				flexbox: 'no-2009',
 			},

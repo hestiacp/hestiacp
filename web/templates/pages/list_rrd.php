@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/server/">
+			<a class="button button-secondary button-back js-button-back" href="/list/server/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/server/?cpu" class="button button-secondary">
@@ -18,8 +18,6 @@
 	</div>
 </div>
 <!-- End toolbar -->
-
-<script defer src="/js/vendor/chart.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 
 <div class="container animate__animated animate__fadeIn">
 	<div class="form-container form-container-wide">

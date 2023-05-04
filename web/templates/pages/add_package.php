@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/package/">
+			<a class="button button-secondary button-back js-button-back" href="/list/package/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -37,7 +37,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package" class="form-label"><?= _("Package Name") ?></label>
-				<input type="text" class="form-control" name="v_package" id="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>">
+				<input type="text" class="form-control" name="v_package" id="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_disk_quota" class="form-label">

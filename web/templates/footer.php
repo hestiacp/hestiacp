@@ -13,7 +13,7 @@
 		</button>)
 	</p>
 <?php } ?>
-	<div class="fullscreen-loader">
+	<div class="spinner-overlay js-spinner">
 		<i class="fas fa-circle-notch fa-spin"></i>
 	</div>
 
@@ -70,19 +70,6 @@
 		<i class="fas fa-arrow-up"></i>
 		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
-
-<?php if (!empty($_SESSION["error_msg"])): ?>
-	<script>
-		window.addEventListener("load", (event) => {
-			VE.helpers.createConfirmationDialog({
-				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
-			});
-		});
-	</script>
-<?php
-	unset($_SESSION['error_msg']);
-	endif;
-?>
 
 <?php if ($_SESSION["DEBUG_MODE"] == "true") {
 	require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";

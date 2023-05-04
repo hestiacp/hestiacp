@@ -35,7 +35,7 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 1. Create an Ubuntu VM with at least 2G of memory and 15G of disk space
 
    ```bash
-   multipass launch --name hestia-dev --mem 2G --disk 15G
+   multipass launch --name hestia-dev --memory 2G --disk 15G
    ```
 
 1. Map your cloned repository to the VM's home directory
@@ -49,6 +49,16 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    ```bash
    multipass exec hestia-dev -- sudo bash
    sudo apt update && sudo apt install -y jq libjq1
+   ```
+
+1. Install [Node JS](https://nodejs.org/en) and Yarn `npm install --global yarn`
+
+1. Build the theme files with
+
+   ```bash
+   yarn set version stable
+   yarn install
+   yarn build
    ```
 
 1. Navigate to `/src` and build Hestia packages
@@ -175,6 +185,8 @@ Use if you have Hestia already installed, for your changes to take effect.
 
 The following is useful for testing a Pull Request or a branch on a fork.
 
+Make sure to install [Node JS](https://nodejs.org/en) and Yarn `npm install --global yarn` before.
+
 ```bash
 # Replace with https://github.com/username/hestiacp.git if you want to test a branch that you created yourself
 git clone https://github.com/hestiacp/hestiacp.git
@@ -182,6 +194,13 @@ cd ./hestiacp/
 
 # Replace main with the branch you want to test
 git checkout main
+
+# Enable Yarn 3.x
+yarn set version stable
+# Install Dependencies
+yarn install
+# Build
+yarn build
 
 cd ./src/
 

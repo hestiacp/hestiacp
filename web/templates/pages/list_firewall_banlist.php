@@ -2,10 +2,10 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/firewall/">
+			<a class="button button-secondary button-back js-button-back" href="/list/firewall/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
-			<a href="/add/firewall/banlist/" class="button button-secondary" id="btn-create">
+			<a href="/add/firewall/banlist/" class="button button-secondary js-button-create">
 				<i class="fas fa-circle-plus icon-green"></i><?= _("Ban IP Address") ?>
 			</a>
 		</div>
@@ -14,7 +14,7 @@
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<select class="form-select" name="action">
 					<option value=""><?= _("apply to selected") ?></option>
-					<option value="delete"><?= _("delete") ?></option>
+					<option value="delete"><?= _("Delete") ?></option>
 				</select>
 				<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 					<i class="fas fa-arrow-right"></i>
@@ -55,7 +55,7 @@
 				<div class="clearfix l-unit__stat-col--left compact-4">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/delete/firewall/banlist/?ip=<?= $ip ?>&chain=<?= $value["CHAIN"] ?>&token=<?= $_SESSION["token"] ?>"

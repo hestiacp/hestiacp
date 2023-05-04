@@ -39,14 +39,18 @@
 	font-style: italic !important;
 }
 
+.u-text-bold {
+	font-weight: bold !important;
+}
+
 .u-truncate {
 	overflow: hidden !important;
 	text-overflow: ellipsis !important;
 	white-space: nowrap !important;
 }
 
-.u-opacity-50 {
-	opacity: 0.5 !important;
+.u-overflow {
+	overflow: auto !important;
 }
 
 .u-mt15 {
@@ -143,6 +147,12 @@
 .u-allow-resize {
 	min-width: 100% !important;
 	resize: both !important;
+}
+
+.u-unstyled-button {
+	border: 0 !important;
+	padding: 0 !important;
+	background-color: transparent !important;
 }
 
 .u-console {

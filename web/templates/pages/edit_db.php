@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/db/">
+			<a class="button button-secondary button-back js-button-back" href="/list/db/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -26,7 +26,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_database" class="form-label"><?= _("Database") ?></label>
-				<input type="text" class="form-control" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>" disabled>
+				<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>" disabled>
 				<small class="hint"></small>
 			</div>
 			<div class="u-mb10">
@@ -34,13 +34,15 @@
 					<?= _("Username") ?>
 					<em><small>(<?= sprintf(_("maximum characters length, including prefix"), 32) ?>)</small></em>
 				</label>
-				<input type="text" class="form-control" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
+				<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
 				<small class="hint"></small>
 			</div>
 			<div class="u-mb10">
 				<label for="v_password" class="form-label">
 					<?= _("Password") ?>
-					<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
+					<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+						<i class="fas fa-arrows-rotate icon-green"></i>
+					</button>
 				</label>
 				<div class="u-pos-relative u-mb10">
 					<input type="text" class="form-control js-password-input" name="v_password" id="v_password" value="<?= htmlentities(trim($v_password, "'")) ?>">

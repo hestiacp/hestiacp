@@ -13,7 +13,7 @@
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("apply to selected") ?></option>
-						<option value="delete"><?= _("delete") ?></option>
+						<option value="delete"><?= _("Delete") ?></option>
 					</select>
 					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
@@ -92,10 +92,10 @@
 									<!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
 									&nbsp;
 								<?php } else { ?>
-									<div class="actions-panel__col actions-panel__download shortcut-d" key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("download") ?>"><i class="fas fa-file-arrow-down icon-lightblue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__download shortcut-d" data-key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("download") ?>"><i class="fas fa-file-arrow-down icon-lightblue icon-dim"></i></a></div>
 									<?php if ($read_only !== 'true') {?>
-										<div class="actions-panel__col actions-panel__list shortcut-enter" key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
-										<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+										<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 											<a
 												class="data-controls js-confirm-action"
 												href="/delete/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>"

@@ -88,7 +88,7 @@ if (!empty($_POST["ok"]) && !empty($app)) {
 				}
 			} else {
 				$_SESSION["ok_msg"] = sprintf(
-					_("%s App was installed succesfully!"),
+					_("%s App was installed successfully!"),
 					htmlspecialchars($app),
 				);
 				header("Location: /add/webapp/?domain=" . $v_domain);

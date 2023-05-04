@@ -32,7 +32,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.7.3'
+HESTIA_INSTALL_VER='1.7.4'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.1"
@@ -1597,23 +1597,28 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
 	chmod 600 /root/.my.cnf
 
+	if [ -f '/usr/bin/mariadb' ]; then
+		mysql="mariadb"
+	else
+		mysql="mysql"
+	fi
 	# Alter root password
-	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
+	$mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
 	if [ "$mysql_type" = 'MariaDB' ]; then
 		# Allow mysql access via socket for startup
-		mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+		$mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
 		# Disable anonymous users
-		mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
+		$mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
 	else
-		mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
-		mysql -e "DELETE FROM mysql.user WHERE User='';"
-		mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+		$mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
+		$mysql -e "DELETE FROM mysql.user WHERE User='';"
+		$mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
 	fi
 	# Drop test database
-	mysql -e "DROP DATABASE IF EXISTS test"
-	mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+	$mysql -e "DROP DATABASE IF EXISTS test"
+	$mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 	# Flush privileges
-	mysql -e "FLUSH PRIVILEGES;"
+	$mysql -e "FLUSH PRIVILEGES;"
 fi
 
 #----------------------------------------------------------#
@@ -2223,7 +2228,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://hestiacp.com/docs/" target="_blank">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_blank">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://hestiacp.com/docs/" target="_blank">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_blank">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 
 # Clean-up
 # Sort final configuration file

@@ -1,11 +1,21 @@
+import {
+	moveFocusLeft,
+	moveFocusRight,
+	moveFocusDown,
+	moveFocusUp,
+	enterFocused,
+	executeShortcut,
+} from './navigation';
+import { createConfirmationDialog } from './helpers';
+
 /**
+ * Shortcuts
  * @typedef {{ key: string, altKey?: boolean, ctrlKey?: boolean, metaKey?: boolean, shiftKey?: boolean }} KeyCombination
  * @typedef {{ code: string, altKey?: boolean, ctrlKey?: boolean, metaKey?: boolean, shiftKey?: boolean }} CodeCombination
  * @typedef {{ combination: KeyCombination, event: 'keydown' | 'keyup', callback: (evt: KeyboardEvent) => void, target: EventTarget }} RegisteredShortcut
  * @typedef {{ type?: 'keydown' | 'keyup', propagate?: boolean, disabledInInput?: boolean, target?: EventTarget }} ShortcutOptions
  */
-
-document.addEventListener('alpine:init', () => {
+export default function handleShortcuts() {
 	Alpine.store('shortcuts', {
 		/**
 		 * @type RegisteredShortcut[]
@@ -55,7 +65,7 @@ document.addEventListener('alpine:init', () => {
 					(combination.metaKey && evt.metaKey) || (!combination.metaKey && !evt.metaKey),
 					(combination.shiftKey && evt.shiftKey) || (!combination.shiftKey && !evt.shiftKey),
 				];
-				const valid = validations.filter((validation) => validation);
+				const valid = validations.filter(Boolean);
 
 				if (valid.length === validations.length) {
 					callback(evt);
@@ -68,7 +78,7 @@ document.addEventListener('alpine:init', () => {
 			};
 
 			this.registeredShortcuts.push({
-				combination: combination,
+				combination,
 				callback: func,
 				target: options.target,
 				event: options.type,
@@ -89,7 +99,9 @@ document.addEventListener('alpine:init', () => {
 			const shortcut = this.registeredShortcuts.find(
 				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination)
 			);
-			if (!shortcut) return;
+			if (!shortcut) {
+				return;
+			}
 
 			this.registeredShortcuts = this.registeredShortcuts.filter(
 				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination)
@@ -104,10 +116,11 @@ document.addEventListener('alpine:init', () => {
 		.register(
 			{ key: 'A' },
 			(_evt) => {
-				const createButton = document.querySelector('.button#btn-create');
+				const createButton = document.querySelector('a.js-button-create');
 				if (!createButton) {
 					return;
 				}
+
 				location.href = createButton.href;
 			},
 			{ disabledInInput: true }
@@ -127,21 +140,16 @@ document.addEventListener('alpine:init', () => {
 			document.querySelector('form#vstobjects').submit();
 		})
 		.register({ code: 'Backspace', ctrlKey: true }, (_evt) => {
-			const redirect = document.querySelector('a.button#btn-back').href;
+			const redirect = document.querySelector('a.js-button-back').href;
 			if (!redirect) {
 				return;
 			}
 
 			if (Alpine.store('form').dirty && redirect) {
-				VE.helpers.createConfirmationDialog({
+				createConfirmationDialog({
 					message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 					targetUrl: redirect,
 				});
-			} else if (document.querySelector('form#vstobjects .button.cancel')) {
-				location.href = $('form#vstobjects input.cancel')
-					.attr('onclick')
-					.replace("location.href='", '')
-					.replace("'", '');
 			} else if (redirect) {
 				location.href = redirect;
 			}
@@ -150,7 +158,9 @@ document.addEventListener('alpine:init', () => {
 			{ key: 'F' },
 			(_evt) => {
 				const searchBox = document.querySelector('.js-search-input');
-				searchBox.focus();
+				if (searchBox) {
+					searchBox.focus();
+				}
 			},
 			{ disabledInInput: true }
 		)
@@ -161,8 +171,9 @@ document.addEventListener('alpine:init', () => {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -179,8 +190,9 @@ document.addEventListener('alpine:init', () => {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -197,8 +209,9 @@ document.addEventListener('alpine:init', () => {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -215,8 +228,9 @@ document.addEventListener('alpine:init', () => {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -233,8 +247,9 @@ document.addEventListener('alpine:init', () => {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -251,8 +266,9 @@ document.addEventListener('alpine:init', () => {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -269,8 +285,9 @@ document.addEventListener('alpine:init', () => {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
-					VE.helpers.createConfirmationDialog({
+					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
 						targetUrl: target.href,
 					});
@@ -293,46 +310,46 @@ document.addEventListener('alpine:init', () => {
 			{ disabledInInput: true }
 		)
 		.register({ code: 'Escape' }, (_evt) => {
-			const shortcutsDialog = document.querySelector('.shortcuts');
-			if (shortcutsDialog.open) {
-				shortcutsDialog.close();
+			const openDialog = document.querySelector('dialog[open]');
+			if (openDialog) {
+				openDialog.close();
 			}
 			document.querySelectorAll('input, checkbox, textarea, select').forEach((el) => el.blur());
 		})
 		.register(
 			{ code: 'ArrowLeft' },
 			(_evt) => {
-				VE.navigation.move_focus_left();
+				moveFocusLeft();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowRight' },
 			(_evt) => {
-				VE.navigation.move_focus_right();
+				moveFocusRight();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowDown' },
 			(_evt) => {
-				VE.navigation.move_focus_down();
+				moveFocusDown();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ code: 'ArrowUp' },
 			(_evt) => {
-				VE.navigation.move_focus_up();
+				moveFocusUp();
 			},
 			{ disabledInInput: true }
 		)
 		.register(
 			{ key: 'L' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-l');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-l');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -340,9 +357,9 @@ document.addEventListener('alpine:init', () => {
 		.register(
 			{ key: 'S' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-s');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-s');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -350,9 +367,9 @@ document.addEventListener('alpine:init', () => {
 		.register(
 			{ key: 'W' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-w');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-w');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -360,9 +377,9 @@ document.addEventListener('alpine:init', () => {
 		.register(
 			{ key: 'D' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-d');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-d');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -370,9 +387,9 @@ document.addEventListener('alpine:init', () => {
 		.register(
 			{ key: 'R' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-r');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-r');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -380,9 +397,9 @@ document.addEventListener('alpine:init', () => {
 		.register(
 			{ key: 'N' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-n');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-n');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -390,9 +407,9 @@ document.addEventListener('alpine:init', () => {
 		.register(
 			{ key: 'U' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-u');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-u');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -400,9 +417,9 @@ document.addEventListener('alpine:init', () => {
 		.register(
 			{ code: 'Delete' },
 			(_evt) => {
-				const el = $('.units.active .l-unit.focus .shortcut-delete');
-				if (el.length) {
-					VE.navigation.shortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-delete');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -419,26 +436,23 @@ document.addEventListener('alpine:init', () => {
 						const dialog = document.querySelector('dialog[open]');
 						dialog.querySelector('button[type="submit"]').click();
 					} else {
-						VE.helpers.createConfirmationDialog({
+						createConfirmationDialog({
 							message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
-							targetUrl: document.querySelector(`${VE.navigation.state.menu_selector}.focus a`)
-								.href,
+							targetUrl: document.querySelector('.main-menu-item.focus a').href,
 						});
 					}
+				} else if (document.querySelector('dialog[open]')) {
+					const dialog = document.querySelector('dialog[open]');
+					dialog.querySelector('button[type="submit"]').click();
 				} else {
-					if (document.querySelector('dialog[open]')) {
-						const dialog = document.querySelector('dialog[open]');
-						dialog.querySelector('button[type="submit"]').click();
+					const element = document.querySelector('.units .l-unit.focus .shortcut-enter');
+					if (element) {
+						executeShortcut(element);
 					} else {
-						const el = $('.units.active .l-unit.focus .shortcut-enter');
-						if (el.length) {
-							VE.navigation.shortcut(el);
-						} else {
-							VE.navigation.enter_focused();
-						}
+						enterFocused();
 					}
 				}
 			},
 			{ propagate: true }
 		);
-});
+}

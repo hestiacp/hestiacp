@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/add/user/" class="button button-secondary" id="btn-create"><i class="fas fa-circle-plus icon-green"></i><?= _("Add User") ?></a>
-			<a href="/list/package/" class="button button-secondary"><i class="fas fa-box-open icon-orange"></i><?= _("Packages") ?></a>
+			<a href="/add/user/" class="button button-secondary js-button-create">
+				<i class="fas fa-circle-plus icon-green"></i><?= _("Add User") ?>
+			</a>
+			<a href="/list/package/" class="button button-secondary">
+				<i class="fas fa-box-open icon-orange"></i><?= _("Packages") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -34,7 +38,7 @@
 						<option value="update counters"><?= _("update counters") ?></option>
 						<option value="suspend"><?= _("suspend") ?></option>
 						<option value="unsuspend"><?= _("unsuspend") ?></option>
-						<option value="delete"><?= _("delete") ?></option>
+						<option value="delete"><?= _("Delete") ?></option>
 					</select>
 					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
@@ -65,15 +69,14 @@
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Package") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center width"><b><?= _("Package") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><?= _("IPs") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-hard-drive" title="<?= _("Disk") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><i class="fas fa-hard-drive" title="<?= _("Disk") ?>"></i></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-book-atlas" title="<?= _("DNS Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-database" title="<?= _("Databases") ?>"></i></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-clock" title="<?= _("Cron Jobs") ?>"></i></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><i class="fas fa-file-zipper" title="<?= _("Backups") ?>"></i></b></div>
 		</div>
 	</div>
@@ -97,7 +100,7 @@
 		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended';?> animate__animated animate__fadeIn" v_section="user"
 			v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=strtolower($key)?>"
 			sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>" sort-disk="<?=$data[$key]['U_DISK']?>">
-			<div class="l-unit__col l-unit__col--right" style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== 'admin') && ($key === 'admin')) { echo 'display: none';} else {echo 'display: table-cell';}?>">
+			<div class="l-unit__col l-unit__col--right" style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== 'admin') && ($key === 'admin')) { echo 'display: none';} ?>">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="user[]" value="<?= $key ?>">
 				</div>
@@ -123,7 +126,7 @@
 								<!-- Hide edit button from admin user when logged in with another admin user -->
 								&nbsp;
 							<?php } else { ?>
-								<div class="actions-panel__col actions-panel__edit shortcut-enter" key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing User") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
 							<?php if ($key == "admin") { ?>
 								<!-- Hide suspend and delete buttons in the user list for primary 'admin' account -->
@@ -131,7 +134,7 @@
 								<?php if ($key == $user_plain) { ?>
 									<!-- Hide suspend and delete buttons in the user list for current user -->
 								<?php } else { ?>
-								<div class="actions-panel__col actions-panel__suspend shortcut-s" key-action="js">
+								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/<?= $spnd_action ?>/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
@@ -141,7 +144,7 @@
 										<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
 									</a>
 								</div>
-								<div class="actions-panel__col actions-panel__delete shortcut-delete" key-action="js">
+								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
@@ -157,7 +160,7 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left u-text-center">
+				<div class="clearfix l-unit__stat-col--left u-text-center width">
 					<b>
 						<?php if ($data[$key]["PACKAGE"] === "system") { ?>
 							<?= $data[$key]["PACKAGE"] ?>
@@ -167,19 +170,17 @@
 					</b>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><?= $data[$key]["IP_OWNED"] ?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center super-compact"><b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><?= humanize_usage_size($data[$key]["U_DISK"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span> / <b><?= humanize_usage_size($data[$key]["DISK_QUOTA"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?></span></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact-6"><b><?= humanize_usage_size($data[$key]["U_BANDWIDTH"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?></span> / <b><?= humanize_usage_size($data[$key]["BANDWIDTH"],1) ?></b><span class="u-text-small"><?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_WEB_DOMAINS"] ?> <?= _("Web Domains") ?>"><span class="badge"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_DNS_DOMAINS"] ?> <?= _("DNS Domains") ?>"><span class="badge"><b><?= $data[$key]["U_DNS_DOMAINS"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_MAIL_DOMAINS"] ?> <?= _("Mail Domains") ?>"><span class="badge"><b><?= $data[$key]["U_MAIL_DOMAINS"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_DATABASES"] ?> <?= _("Databases") ?>"><span class="badge"><b><?= $data[$key]["U_DATABASES"] ?></b></span></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_CRON_JOBS"] ?> <?= _("Cron Jobs") ?>"><span class="badge"><b><?= $data[$key]["U_CRON_JOBS"] ?></b></span></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center super-compact" title="<?= $data[$key]["U_BACKUPS"] ?> <?= _("Backups") ?>"><span class="badge"><b><?= $data[$key]["U_BACKUPS"] ?></b></span></div>
 			</div>
 		</div>
 	<?php } ?>
 </div>
-
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>

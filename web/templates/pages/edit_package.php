@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/package/">
+			<a class="button button-secondary button-back js-button-back" href="/list/package/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -25,7 +25,6 @@
 			showDatabaseOptions: false,
 			showSystemOptions: false,
 		}"
-		x-on:submit="App.Listeners.PACKAGE.submit()"
 		id="vstobjects"
 		name="v_edit_package"
 		method="post"
@@ -39,7 +38,7 @@
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package_new" class="form-label"><?= _("Package Name") ?></label>
-				<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?= htmlentities(trim($v_package_new, "'")) ?>">
+				<input type="text" class="form-control" name="v_package_new" id="v_package_new" value="<?= htmlentities(trim($v_package_new, "'")) ?>" required>
 				<input type="hidden" name="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>">
 			</div>
 			<div class="u-mb10">

@@ -71,7 +71,7 @@ When a server IP changes, you need to run the following command, which will rebu
 v-update-sys-ip
 ```
 
-## Unable to bind adress
+## Unable to bind address
 
 In rare cases the network service might be slower than Apache2 and or Nginx. In that case, Nginx or Apache2 will refuse to successfully start. You can verify that this is the case by looking at the service’s status:
 

@@ -3,7 +3,7 @@
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
-				<a href="/add/dns/" class="button button-secondary" id="btn-create">
+				<a href="/add/dns/" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add DNS Domain") ?>
 				</a>
 			<?php } ?>
@@ -34,7 +34,7 @@
 							<?php } ?>
 							<option value="suspend"><?= _("suspend") ?></option>
 							<option value="unsuspend"><?= _("unsuspend") ?></option>
-							<option value="delete"><?= _("delete") ?></option>
+							<option value="delete"><?= _("Delete") ?></option>
 						</select>
 						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>

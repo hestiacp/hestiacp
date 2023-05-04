@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.4] - Service release
+
+### Features
+
+- Build JS/CSS Theme on release (#3525)
+- Refactor away jQuery
+
+### Bugfixes
+
+- Remove Font Awesome "brands" usage (#3535)
+- Make uft8mb4 default charset for databases (#3534)
+- Remove extra slash in SSO url (#3533)
+- Improve Quick Install App password input (#3530)
+- Kill OpenSSL server if its already running before validating SSL certificate (#3505)
+- Improve redirect behaviour (#3503)
+- Fix: PMA SSO for cp panel template (#3493)
+- Fix: Bug in sftp backup (#3489)
+- Improve Quick Install App password input (#3530)
+- Refactor away on click usage on login pages (#3526)
+- Refactor Add/Edit Firewall Rule JS (#3522)
+- Build Alpine.js bundle (#3521)
+- Improve charts JS (#3519)
+- Show spinner when confirming dialog action (#3517)
+- Refactor Edit Web JS/remove jQuery (#3513)
+- Refactor Add/Edit Database JS (#3511)
+- UI updates (#3510)
+- Refactor JS (#3508)
+- Fix #3318 Remove: decrepitation warning MariaDB (#3465)
+- Fix: 3514 Fix UI not matching true value (#3515)
+- Refactor form submit JS (#3502)
+- Refactor JS (#3500)
+- Refactor unlimited input JS (#3495)
+- Tidy JS (#3492)
+- IPV6 compatible prevent CSRF (#3491)
+- Rewrite statistics UI mobile-first (#3490)
+- Refactor JS (#3488)
+- Add Quota info to the user list (#3487)
+- Minor UI updates (#3485)
+- Dynamically load Chart.js bundle (#3480)
+- Refactor JS to use ES modules (#3476)
+
 ## [1.7.3] - Service release
 
 ### Features
@@ -16,7 +57,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fix: named command warning (#3447 #neto737)
+- Fix: named command warning (#3447 @neto737)
 - Fix: Include Cloudflare IPS during install (#3449 #3448)
 - Fix: Bug in upgrade_phppgadmin preventing folder from being created when not exists (#3450)
 - Add warnings to php-fpm templates (#3450)
@@ -28,7 +69,7 @@ All notable changes to this project will be documented in this file.
 - Fix: Error message containing html are encode twice (#3473)
 - Fix button width regression (#3474)
 - Remove opacity from modal background (#3460)
-- Refactor add/remove name server javascript ($3468)
+- Refactor add/remove name server javascript (#3468)
 - Refactor "Unlimited" inputs (#3464)
 - Refactor password strength JS (#3459)
 
@@ -112,7 +153,7 @@ All notable changes to this project will be documented in this file.
 - Improve restart behaviour v-update-letsencrypt-ssl (#3231)
 - Fix order of applied patches on upgrade (#3239)
 - Improve upgrade behaviour for Roundcube and Filegator (#3237 #3236)
-- Allow ClientName@domain.com for login via Dovecot/Email (#3024)
+- Allow <ClientName@domain.com> for login via Dovecot/Email (#3024)
 - Return a proper error code when unable to connect via API (#3235 #3169)
 - Synchronise $BIN and $HESTIA/BIN (#2185 @Steveorevo)
 - Block usage of unlimited backups (#3181)
@@ -161,7 +202,7 @@ All notable changes to this project will be documented in this file.
 ## Bugfixes
 
 - Improve firewall rules cleanup #3135 @myrevery
-- Reverted changes to v-add-web-php as php8.2-imagick is now availble
+- Reverted changes to v-add-web-php as php8.2-imagick is now available
 - Fixed an issue with editing timezone in when editing a server (#3127)
 - Fixed an issue with hostname during install
 - Fixed an issue with WordPress installer not working properly (#3129)
@@ -174,7 +215,7 @@ All notable changes to this project will be documented in this file.
 
 ### Bugfixes
 
-- Fix issue with php8.2-imagick not availble
+- Fix issue with php8.2-imagick not available
 - Fixed an issue with Letsnecrypt and no mail features enabled (#2930 #2931)
 
 ## [1.6.12] - Service release
@@ -414,7 +455,7 @@ A bug in v-update-sys-hestia caused auto update to be not working. Please run: `
 ## [1.6.2] - Service release
 
 - Fixed an issue with rate limits in Exim4 and make it more bullet proof (#2703)
-- Fixed an issue with system-filter not propperly loaded in Exim4 for Exim 4.94 and Ugrades from 1.5.x
+- Fixed an issue with system-filter not properly loaded in Exim4 for Exim 4.94 and Ugrades from 1.5.x
 
 ## [1.6.1] - Service release
 
@@ -871,7 +912,7 @@ After that run apt update && apt upgrade
 - Add small wait for /usr/bin/iptables-restore [Forum](https://forum.hestiacp.com/t/clean-install-arm64-does-not-start-after-reboot-v-start-service-iptables/4395/7) + Fixed v-add-firewall / v-delete-firewall function (#2112) @myrevery
 - Fix bug in v-change-sys-api. When using v-change-sys-api remove and then v-change-sys-api enable + custom release branch the resetting of api failed + no "error" output was producted
 - Improve error reporting PMA Single sign on function function
-- Fixed an issue in v-change-web-domain-name where webserserver where not able to start because old config files where not propperly deleted #2104
+- Fixed an issue in v-change-web-domain-name where webserserver where not able to start because old config files where not properly deleted #2104
 - Fixed potential XSS vulnerability in /list/keys/ @wtwwer [Disclosure](https://huntr.dev/bounties/0fefa2f6-7024-44c8-87c7-4d01fb93403e/)
 - Removed /edit/file as it has been replaced by Filegator and part of the old Vesta Filemanager
 - Fixed potential External control / path vulnerability in /add/package @wtwwer [Disclosure](https://huntr.dev/bounties/e0a2c6ff-b4fe-45a2-9d79-1f4dc1b381ab/)
@@ -905,7 +946,7 @@ After that run apt update && apt upgrade
 - Fix an issue with sorting the update scripts when version goes higher then 1.x.10
 - Allow the use of multiple CAA records for domain. #2073
 - Add missing group (www-data) to migrate_phpmyadmin script #2077 @bet0x
-- Fix an issue where news@domain.com get forwarded to /var/spool/news
+- Fix an issue where <news@domain.com> get forwarded to /var/spool/news
 - Synced up translations with HestiaCP (IT, PL, RU, SK and ZN-CN updated)
 
 ## [1.4.10] - Service release
@@ -1143,7 +1184,7 @@ apt update && apt upgrade
 - Fixed an issue where the api was enabled after an update of HestiaCP
 - Fixed an issue when the default php version got deleted webmail didn't work any more. #1477
 - Limit access when "demo" mode is enabled.
-- Fixed an issue where limitations on aliases didn't work propperly
+- Fixed an issue where limitations on aliases didn't work properly
 - Fixed an issue where "Exit to control pannel" link got changed to "Logout" #1669
 - Allow packages to be deleted when in use. Current users are changed to "Default" package.
 - Fixed multiple bugs with in v-restore-users
@@ -1217,7 +1258,7 @@ apt update && apt upgrade
 ### Bugfixes
 
 - Fixed an issue where updates for `hestia-php` were incorrectly being marked as out-of-date in the UI due to a change in our servicing and package versioning scheme.
-- Fixed an issue that occured on the Updates page where the table row color of available updates would be difficult to read.
+- Fixed an issue that occurred on the Updates page where the table row color of available updates would be difficult to read.
 - Fixed an issue where an administrator would get stuck in a loop trying to navigate back after adding a SSH key.
 - Fixed an issue where long table entries which exceeded the table length would overlap other UI elements.
 - Fixed an issue where the total amount of items on a page would fail to display correctly.
@@ -1322,7 +1363,7 @@ apt update && apt upgrade
 
 ### Bugfixes
 
-- Create mailhelo.conf if it doesnt exist to prevent a error message during grep.
+- Create mailhelo.conf if it doesn't exist to prevent a error message during grep.
 - Corrected the display of DNS record types to appear in alphabetical order.
 - Fixed an issue where the DNS record type field would reset if an error occurred while adding a new DNS record. (#992)
 - Fixed an issue where the DNS domain hint would not appear correctly when editing a DNS record. (#993)
@@ -1420,7 +1461,7 @@ apt update && apt upgrade
 - Fixed an issue where the backup update counter was not updated properly when v-delete-user-backup was executed.
 - Fixed an issue with public\_(s)html file ownership.
 - Fixed an issue with phpPgAdmin access.
-- Fixed an issue where the wrong port was set for www.conf on certain configurations.
+- Fixed an issue where the wrong port was set for <www.conf> on certain configurations.
 - Fixed an issue where Composer would fail to install.
 - Fixed an issue where the selected theme was not immediately applied.
 - Fixed an issue where HTTP-to-HTTPS redirection and HTTP Strict Transport Security (HSTS) events were not shown in the user history log.

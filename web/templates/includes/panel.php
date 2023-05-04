@@ -69,12 +69,13 @@
 						<ul
 							x-cloak
 							x-show="open"
+							x-on:click.outside="open = false"
 							class="top-bar-notifications-list"
 						>
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
 									<i class="fas fa-bell-slash icon-dim"></i>
-									<p><?= _("no notifications") ?></p>
+									<p><?= _("No notifications") ?></p>
 								</li>
 							</template>
 							<template x-for="notification in notifications" :key="notification.ID">
@@ -130,7 +131,7 @@
 						</span>
 					</button>
 
-					<ul x-cloak x-show="open" class="top-bar-menu-list">
+					<ul x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-list">
 
 						<!-- File Manager -->
 						<?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>

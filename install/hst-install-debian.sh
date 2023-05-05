@@ -32,7 +32,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.7.4'
+HESTIA_INSTALL_VER='1.8.0~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.1"
@@ -318,6 +318,10 @@ if [ "$apache" = 'no' ]; then
 fi
 if [ "$mysql" = 'yes' ] && [ "$mysqlclassic" = 'yes' ]; then
 	mysql='no'
+fi
+
+if [ "$mysqlclassic" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
+	check_result 1 "Mysql 8 does not support ARM64 yet for Debian please use Ubuntu. Unable to continue"
 fi
 
 # Checking root permissions
@@ -1555,27 +1559,27 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	chmod 600 /root/.my.cnf
 
 	if [ -f '/usr/bin/mariadb' ]; then
-		mysql="mariadb"
+		mysql_server="mariadb"
 	else
-		mysql="mysql"
+		mysql_server="mysql"
 	fi
 	# Alter root password
-	$mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
+	$mysql_server -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
 	if [ "$mysql_type" = 'MariaDB' ]; then
 		# Allow mysql access via socket for startup
-		$mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+		$mysql_server -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
 		# Disable anonymous users
-		$mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
+		$mysql_server -e "DELETE FROM mysql.global_priv WHERE User='';"
 	else
-		$mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
-		$mysql -e "DELETE FROM mysql.user WHERE User='';"
-		$mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+		$mysql_server -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
+		$mysql_server -e "DELETE FROM mysql.user WHERE User='';"
+		$mysql_server -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
 	fi
 	# Drop test database
-	$mysql -e "DROP DATABASE IF EXISTS test"
-	$mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+	$mysql_server -e "DROP DATABASE IF EXISTS test"
+	$mysql_server -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 	# Flush privileges
-	$mysql -e "FLUSH PRIVILEGES;"
+	$mysql_server -e "FLUSH PRIVILEGES;"
 fi
 
 #----------------------------------------------------------#

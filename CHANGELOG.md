@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Bugfixes
 
 - Fixed Error message "deleted" before shown due to register_shutdown_function (#3548 #3547)
-- Fixed an in issue in humanize_usage_size with nnumber format (#3546 #3547)
+- Fixed an in issue in humanize_usage_size with number format (#3546 #3547)
 - Fixed rounding issue with humanize_usage_measure (#3540 #3541)
 
 ## [1.7.5] - Service release

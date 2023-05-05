@@ -44,7 +44,11 @@ is_mysql_host_alive() {
 	echo "port='$port'" >> $mycnf
 
 	chmod 600 $mycnf
-	mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > /dev/null 2>&1
+	if [ -f '/usr/bin/mariadb' ]; then
+		mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+	else
+		mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+	fi
 	if [ "$?" -ne '0' ]; then
 		echo "Error: MySQL connection to $host failed"
 		rm $mycnf
@@ -52,7 +56,12 @@ is_mysql_host_alive() {
 		exit "$E_CONNECT"
 	fi
 
-	grants=$(mysql --defaults-file=$mycnf -e 'SHOW GRANTS FOR CURRENT_USER();')
+	if [ -f '/usr/bin/mariadb' ]; then
+		grants=$(mariadb --defaults-file=$mycnf -e 'SHOW GRANTS FOR CURRENT_USER();')
+	else
+		grants=$(mysql --defaults-file=$mycnf -e 'SHOW GRANTS FOR CURRENT_USER();')
+	fi
+
 	if [ "$?" -ne '0' ]; then
 		echo "Error: MySQL connection to $host failed"
 		rm $mycnf

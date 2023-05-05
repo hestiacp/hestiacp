@@ -570,11 +570,14 @@ function validate_password($password) {
 }
 
 function unset_alerts() {
-	if (!empty($_SESSION["error_msg"])) {
-		unset($_SESSION["error_msg"]);
-	}
-	if (!empty($_SESSION["ok_msg"])) {
-		unset($_SESSION["ok_msg"]);
+	if (!empty($_SESSION["unset_alerts"])) {
+		if (!empty($_SESSION["error_msg"])) {
+			unset($_SESSION["error_msg"]);
+		}
+		if (!empty($_SESSION["ok_msg"])) {
+			unset($_SESSION["ok_msg"]);
+		}
+		unset($_SESSION["unset_alerts"]);
 	}
 }
 register_shutdown_function("unset_alerts");

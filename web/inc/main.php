@@ -344,35 +344,36 @@ function humanize_usage_size($usage, $round = 2) {
 	if ($usage == "unlimited") {
 		return "∞";
 	}
+	$display_usage = $usage;
 	if ($usage > 1024) {
 		$usage = $usage / 1024;
 		if ($usage > 1024) {
 			$usage = $usage / 1024;
 			if ($usage > 1024) {
 				$usage = $usage / 1024;
-				$usage = number_format($usage, $round);
+				$display_usage = number_format($usage, $round);
 			} else {
-				if ($usage > 1000) {
+				if ($usage > 999) {
 					$usage = $usage / 1024;
 				}
-				$usage = number_format($usage, $round);
+				$display_usage = number_format($usage, $round);
 			}
 		} else {
-			if ($usage > 1000) {
+			if ($usage > 999) {
 				$usage = $usage / 1024;
 			}
-			$usage = number_format($usage, $round);
+			$display_usage = number_format($usage, $round);
 		}
 	} else {
-		if ($usage > 1000) {
+		if ($usage > 999) {
 			$usage = $usage / 1024;
 		}
-		$usage = number_format($usage, $round);
+		$display_usage = number_format($usage, $round);
 	}
-	if (strlen($usage) > 4) {
+	if (strlen($display_usage) > 4) {
 		return number_format($usage, $round - 1);
 	}
-	return $usage;
+	return $display_usage;
 }
 
 function humanize_usage_measure($usage) {
@@ -386,20 +387,20 @@ function humanize_usage_measure($usage) {
 		if ($usage > 1024) {
 			$usage = $usage / 1024;
 			$measure = $usage < 1024 ? "tb" : "pb";
-			if ($usage > 1000) {
+			if ($usage > 999) {
 				$usage = $usage / 1024;
 				$measure = "pb";
 			}
 		} else {
 			$measure = $usage < 1024 ? "gb" : "tb";
-			if ($usage > 1000) {
+			if ($usage > 999) {
 				$usage = $usage / 1024;
 				$measure = "tb";
 			}
 		}
 	} else {
 		$measure = $usage < 1024 ? "mb" : "gb";
-		if ($usage > 1000) {
+		if ($usage > 999) {
 			$measure = "gb";
 		}
 	}
@@ -570,11 +571,14 @@ function validate_password($password) {
 }
 
 function unset_alerts() {
-	if (!empty($_SESSION["error_msg"])) {
-		unset($_SESSION["error_msg"]);
-	}
-	if (!empty($_SESSION["ok_msg"])) {
-		unset($_SESSION["ok_msg"]);
+	if (!empty($_SESSION["unset_alerts"])) {
+		if (!empty($_SESSION["error_msg"])) {
+			unset($_SESSION["error_msg"]);
+		}
+		if (!empty($_SESSION["ok_msg"])) {
+			unset($_SESSION["ok_msg"]);
+		}
+		unset($_SESSION["unset_alerts"]);
 	}
 }
 register_shutdown_function("unset_alerts");

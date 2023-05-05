@@ -44,6 +44,7 @@ is_mysql_host_alive() {
 	echo "port='$port'" >> $mycnf
 
 	chmod 600 $mycnf
+	mysql_out=$(mktemp)
 	if [ -f '/usr/bin/mariadb' ]; then
 		mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
 	else

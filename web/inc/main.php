@@ -353,19 +353,19 @@ function humanize_usage_size($usage, $round = 2) {
 				$usage = $usage / 1024;
 				$display_usage = number_format($usage, $round);
 			} else {
-				if ($usage > 1000) {
+				if ($usage > 999) {
 					$usage = $usage / 1024;
 				}
 				$display_usage = number_format($usage, $round);
 			}
 		} else {
-			if ($usage > 1000) {
+			if ($usage > 999) {
 				$usage = $usage / 1024;
 			}
 			$display_usage = number_format($usage, $round);
 		}
 	} else {
-		if ($usage > 1000) {
+		if ($usage > 999) {
 			$usage = $usage / 1024;
 		}
 		$display_usage = number_format($usage, $round);
@@ -387,20 +387,20 @@ function humanize_usage_measure($usage) {
 		if ($usage > 1024) {
 			$usage = $usage / 1024;
 			$measure = $usage < 1024 ? "tb" : "pb";
-			if ($usage > 1000) {
+			if ($usage > 999) {
 				$usage = $usage / 1024;
 				$measure = "pb";
 			}
 		} else {
 			$measure = $usage < 1024 ? "gb" : "tb";
-			if ($usage > 1000) {
+			if ($usage > 999) {
 				$usage = $usage / 1024;
 				$measure = "tb";
 			}
 		}
 	} else {
 		$measure = $usage < 1024 ? "mb" : "gb";
-		if ($usage > 1000) {
+		if ($usage > 999) {
 			$measure = "gb";
 		}
 	}

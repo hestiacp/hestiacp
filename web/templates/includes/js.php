@@ -15,7 +15,9 @@
 		});
 	})
 </script>
-
+<?php
+$_SESSION['unset_alerts'] = true;
+?>
 
 <?php
 $customScriptDirectory = new DirectoryIterator($_SERVER["HESTIA"] . "/web/js/custom_scripts");

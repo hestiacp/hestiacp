@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.5] - Service release
+
+### Bugfixes
+
+- Fix issue with install MariaDB (#3543)
+
 ## [1.7.4] - Service release
 
 ### Features

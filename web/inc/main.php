@@ -344,35 +344,36 @@ function humanize_usage_size($usage, $round = 2) {
 	if ($usage == "unlimited") {
 		return "∞";
 	}
+	$display_usage = $usage;
 	if ($usage > 1024) {
 		$usage = $usage / 1024;
 		if ($usage > 1024) {
 			$usage = $usage / 1024;
 			if ($usage > 1024) {
 				$usage = $usage / 1024;
-				$usage = number_format($usage, $round);
+				$display_usage = number_format($usage, $round);
 			} else {
 				if ($usage > 1000) {
 					$usage = $usage / 1024;
 				}
-				$usage = number_format($usage, $round);
+				$display_usage = number_format($usage, $round);
 			}
 		} else {
 			if ($usage > 1000) {
 				$usage = $usage / 1024;
 			}
-			$usage = number_format($usage, $round);
+			$display_usage = number_format($usage, $round);
 		}
 	} else {
 		if ($usage > 1000) {
 			$usage = $usage / 1024;
 		}
-		$usage = number_format($usage, $round);
+		$display_usage = number_format($usage, $round);
 	}
-	if (strlen($usage) > 4) {
+	if (strlen($display_usage) > 4) {
 		return number_format($usage, $round - 1);
 	}
-	return $usage;
+	return $display_usage;
 }
 
 function humanize_usage_measure($usage) {

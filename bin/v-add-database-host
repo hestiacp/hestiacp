@@ -45,9 +45,9 @@ is_mysql_host_alive() {
 
 	chmod 600 $mycnf
 	if [ -f '/usr/bin/mariadb' ]; then
-		mariadb --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+		mariadb --defaults-file=$mycnf -e 'SELECT VERSION()'
 	else
-		mysql --defaults-file=$mycnf -e 'SELECT VERSION()' > $mysql_out 2>&1
+		mysql --defaults-file=$mycnf -e 'SELECT VERSION()'
 	fi
 	if [ "$?" -ne '0' ]; then
 		echo "Error: MySQL connection to $host failed"

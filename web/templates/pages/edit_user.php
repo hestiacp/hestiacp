@@ -16,8 +16,8 @@
 					$keys_url = "/list/access-key/";
 				}
 			?>
-			<a href="<?=$ssh_key_url; ?>" class="button button-secondary js-button-create" title="<?= _("Manage SSH keys") ?>">
-				<i class="fas fa-key icon-orange"></i><?= _("Manage SSH keys") ?>
+			<a href="<?=$ssh_key_url; ?>" class="button button-secondary js-button-create" title="<?= _("Manage SSH Keys") ?>">
+				<i class="fas fa-key icon-orange"></i><?= _("Manage SSH Keys") ?>
 			</a>
 			<?php if ($_SESSION["userContext"] == "admin" || ($_SESSION["userContext"] !== "admin" && $_SESSION["POLICY_USER_VIEW_LOGS"] !== "no")) { ?>
 				<a href="<?= $log_url ?>" class="button button-secondary js-button-create" title="<?= _("Logs") ?>">
@@ -58,7 +58,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing User") ?></h1>
+			<h1 class="form-title"><?= _("Edit User") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_user" class="form-label"><?= _("Username") ?></label>
@@ -66,7 +66,7 @@
 				<input type="hidden" name="v_username" value="<?= htmlentities(trim($v_username, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_name" class="form-label"><?= _("Contact") ?></label>
+				<label for="v_name" class="form-label"><?= _("Contact Name") ?></label>
 				<input type="text" class="form-control" name="v_name" id="v_name" value="<?=htmlentities(trim($v_name, "'"))?>" <?php if (($_SESSION['userContext'] !=='admin' ) && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !=='yes' )) { echo 'disabled' ; }?> required>
 				<?php if (($_SESSION['userContext'] !== 'admin') && ($_SESSION['POLICY_USER_EDIT_DETAILS'] !== 'yes')) {?>
 					<input type="hidden" name="v_name" value="<?=htmlentities(trim($v_name, "'"))?>">
@@ -112,12 +112,12 @@
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" name="v_twofa" id="v_twofa" <?php if(!empty($v_twofa)) echo 'checked' ?>>
 						<label for="v_twofa">
-							<?= _("Enable 2FA") ?>
+							<?= _("Enable two-factor authentication") ?>
 						</label>
 					</div>
 					<?php if (!empty($v_twofa)) { ?>
-						<p class="u-mb10"><?= _("2FA Reset Code:") . " " . $v_twofa ?></p>
-						<p class="u-mb10"><?= _("Please scan the code below in your 2FA application:") ?></p>
+						<p class="u-mb10"><?= _("Account Recovery Code") . ": " . $v_twofa ?></p>
+						<p class="u-mb10"><?= _("Please scan the code below in your 2FA application") ?>:</p>
 						<div class="u-mb10">
 							<img class="qr-code" src="<?= htmlentities($v_qrcode) ?>" alt="<?= _("2FA QR Code") ?>">
 						</div>
@@ -132,7 +132,7 @@
 					</div>
 				</div>
 				<div x-cloak x-show="useIpAllowList" id="ip-allowlist" class="u-mt10">
-					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= htmlentities(trim($v_login_allowed_ips, "'")) ?>" placeholder="<?= _("Example: 127.0.0.1,192.168.1.100") ?>">
+					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= htmlentities(trim($v_login_allowed_ips, "'")) ?>" placeholder="<?= _("For example") ?>: 127.0.0.1,192.168.1.100"">
 				</div>
 			</div>
 			<div class="u-mb10">
@@ -159,7 +159,7 @@
 					<select class="form-select" name="v_role" id="v_role" required>
 						<option value="user"><?= _("User") ?></option>
 						<option value="admin" <?= $v_role == "admin" ? "selected" : "" ?>><?= _("Administrator") ?></option>
-						<option value="dns-cluster" <?= $v_role == "dns-cluster" ? "selected" : "" ?>><?= _("DNS Sync user") ?></option>
+						<option value="dns-cluster" <?= $v_role == "dns-cluster" ? "selected" : "" ?>><?= _("DNS Sync User") ?></option>
 					</select>
 				</div>
 			<?php endif; ?>
@@ -183,7 +183,7 @@
 			</div>
 			<?php } ?>
 				<div class="u-mb10">
-					<label for="v_sort_order" class="form-label"><?= _("Default list sort order") ?></label>
+					<label for="v_sort_order" class="form-label"><?= _("Default List Sort Order") ?></label>
 					<select class="form-select" name="v_sort_order" id="v_sort_order">
 						<option value='date' <?php if($v_sort_order === 'date') echo 'selected' ?>><?= _("Date") ?></option>
 						<option value='name' <?php if($v_sort_order === 'name') echo 'selected' ?>><?= _("Name") ?></option>
@@ -207,7 +207,7 @@
 				</div>
 				<div class="u-mb20">
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-						<?= _("Advanced options") ?>
+						<?= _("Advanced Options") ?>
 					</button>
 				</div>
 				<div x-cloak x-show="showAdvanced">

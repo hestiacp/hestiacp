@@ -6,7 +6,7 @@
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/edit/backup/exclusions/" class="button button-secondary">
-				<i class="fas fa-pencil icon-orange"></i><?= _("Editing Backup Exclusions") ?>
+				<i class="fas fa-pencil icon-orange"></i><?= _("Edit Backup Exclusions") ?>
 			</a>
 		</div>
 		<div class="toolbar-right">
@@ -44,7 +44,7 @@
 					<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
 					<div class="clearfix l-unit__stat-col--left wide-3">
 						<?php
-							if (empty($value)) echo _('no exclusions');
+							if (empty($value)) echo _('No exclusions');
 							foreach ($value as $ex_key => $ex_value) {
 								echo '<b>'.$ex_key.' </b>'.$ex_value.'<br>';
 							}

@@ -28,7 +28,7 @@ if (!empty($_POST["ok"])) { ?>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if (!empty($key_data["ACCESS_KEY_ID"])) { ?>
 				<div class="u-mt15 u-mb10">
-					<label for="access_key_id" class="form-label"><?= _("Access Key Id") ?></label>
+					<label for="access_key_id" class="form-label"><?= _("Access Key ID") ?></label>
 					<input type="text" class="form-control" id="access_key_id" maxlength="255" readonly value="<?= htmlentities(trim($key_data["ACCESS_KEY_ID"], "'")) ?>">
 				</div>
 			<?php } ?>
@@ -37,7 +37,7 @@ if (!empty($_POST["ok"])) { ?>
 					<div class="u-mb20">
 						<label for="secret_key" class="form-label">
 							<?= _("Secret Key") ?><br>
-							<span style="color:#ffd500;"><?= _("Warning! Last chance to save secret access key!") ?></span>
+							<span class="inline-alert inline-alert-warning u-mb20"><?= _("Warning! Last chance to save secret key!") ?></span>
 						</label>
 						<input type="text" class="form-control" id="secret_key" maxlength="255" readonly value="<?= htmlentities(trim($key_data["SECRET_ACCESS_KEY"], "'")) ?>">
 					</div>

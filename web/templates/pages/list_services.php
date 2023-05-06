@@ -6,7 +6,7 @@
 				<i class="fas fa-gear icon-maroon"></i><?= _("Configure") ?>
 			</a>
 			<a href="/list/rrd/" class="button button-secondary">
-				<i class="fas fa-chart-area icon-blue"></i><?= _("Graphs") ?>
+				<i class="fas fa-chart-area icon-blue"></i><?= _("Task Monitor") ?>
 			</a>
 			<a href="/list/updates/" class="button button-secondary">
 				<i class="fas fa-arrows-rotate icon-green"></i><?= _("Updates") ?>
@@ -24,7 +24,7 @@
 					class="button button-secondary button-danger data-controls js-confirm-action"
 					href="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
 					data-confirm-title="<?= _("Restart") ?>"
-					data-confirm-message="<?= sprintf(_("RESTART_CONFIRMATION"), "Server") ?>"
+					data-confirm-message="<?= sprintf(_("Are you sure you want to restart %s?"), "Server") ?>"
 				>
 					<i class="fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
 				</a>
@@ -34,12 +34,12 @@
 			<form x-data x-bind="BulkEdit" action="/bulk/service/" method="post">
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<select class="form-select" name="action">
-					<option value=""><?= _("apply to selected") ?></option>
-					<option value="stop"><?= _("stop") ?></option>
-					<option value="start"><?= _("start") ?></option>
-					<option value="restart"><?= _("restart") ?></option>
+					<option value=""><?= _("Apply to selected") ?></option>
+					<option value="stop"><?= _("Stop") ?></option>
+					<option value="start"><?= _("Start") ?></option>
+					<option value="restart"><?= _("Restart") ?></option>
 				</select>
-				<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+				<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>
@@ -58,13 +58,13 @@
 			<h1 class="server-summary-title"><?= $sys["sysinfo"]["HOSTNAME"] ?></h1>
 			<ul class="server-summary-list">
 				<li class="server-summary-item">
-					<span class="server-summary-list-label"><?= _("Hestia Control Panel") ?></span>
+					<span class="server-summary-list-label">Hestia Control Panel</span>
 					<span class="server-summary-list-value">
 						<?php if ($sys["sysinfo"]["RELEASE"] != "release") { ?>
 							<i class="fas fa-flask icon-red" title="<?= $sys["sysinfo"]["RELEASE"] ?>"></i>
 						<?php } ?>
 						<?php if ($sys["sysinfo"]["RELEASE"] == "release") { ?>
-							<i class="fas fa-cube" title="<?= _("Production release") ?>"></i>
+							<i class="fas fa-cube" title="<?= _("Production Release") ?>"></i>
 						<?php } ?>
 						&nbsp;v<?= $sys["sysinfo"]["HESTIA"] ?>
 					</span>
@@ -123,7 +123,7 @@
 					$spnd_icon = 'fa-play';
 					$state_icon = 'fa-circle-minus icon-red';
 				}
-				if(in_array($key, $phpfpm)){
+				if (in_array($key, $phpfpm)){
 					$edit_url="php";
 				} else {
 					$edit_url=$key;
@@ -141,19 +141,19 @@
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-2">
 						<i class="fas <?= $state_icon ?> u-mr5"></i>
-						<b><a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>: <?= $key ?>"><?= $key ?></a></b>
+						<b><a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("Edit") ?>: <?= $key ?>"><?= $key ?></a></b>
 					</div>
 					<div class="clearfix l-unit__stat-col--left u-text-center compact-2">
 						<div class="actions-panel clearfix">
 							<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href">
-								<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("edit") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a>
+								<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("Edit") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a>
 							</div>
 							<div class="actions-panel__col actions-panel__stop shortcut-s" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
 									href="/restart/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									data-confirm-title="<?= _("Restart") ?>"
-									data-confirm-message="<?= sprintf(_("RESTART_CONFIRMATION"), $key) ?>"
+									data-confirm-message="<?= sprintf(_('Are you sure you want to restart %s?'), $key) ?>"
 								>
 									<i class="fas fa-arrow-rotate-left icon-highlight icon-dim"></i>
 								</a>
@@ -161,9 +161,9 @@
 							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 								<a
 									class="data-controls js-confirm-action"
-									href="/<?=$action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
 									data-confirm-title="<?= _($action) ?>"
-									data-confirm-message="<?php if($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service'),$key); }else{ echo sprintf(_('Are you sure you want to start service'),$key); }?>"
+									data-confirm-message="<?php if ($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service %s?'), $key); } else { echo sprintf(_('Are you sure you want to start service %s?'), $key); }?>"
 								>
 									<i class="fas <?= $spnd_icon ?> icon-red icon-dim"></i>
 								</a>
@@ -173,7 +173,7 @@
 					<div class="clearfix l-unit__stat-col--left wide-3"><?=_($data[$key]['SYSTEM'])?></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=humanize_time($data[$key]['RTIME'])?></b></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$cpu?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['MEM']?> <?= _("mb") ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=$data[$key]['MEM']?> <?= _("MB") ?></b></div>
 				</div>
 			</div>
 		<?php } ?>

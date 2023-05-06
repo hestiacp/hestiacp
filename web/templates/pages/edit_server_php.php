@@ -22,7 +22,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Configuring Server") ?>: PHP</h1>
+			<h1 class="form-title"><?= _("Configure Server") ?>: PHP</h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="js-basic-options">
 				<div class="u-mb10">
@@ -55,14 +55,14 @@
 				</div>
 				<div class="u-mb20">
 					<button type="button" class="button button-secondary js-toggle-options">
-						<?= _("Advanced options") ?>
+						<?= _("Advanced Options") ?>
 					</button>
 				</div>
 			</div>
 			<div class="js-advanced-options <?php if (empty($v_adv)) echo 'u-hidden'; ?>">
 				<div class="u-mb20">
 					<button type="button" class="button button-secondary js-toggle-options">
-						<?= _("Basic options") ?>
+						<?= _("Basic Options") ?>
 					</button>
 				</div>
 				<div class="u-mb20">
@@ -72,7 +72,7 @@
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 					<label for="v_restart">
-						<?= _("restart") ?>
+						<?= _("Restart") ?>
 					</label>
 				</div>
 			</div>

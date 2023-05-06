@@ -31,7 +31,8 @@
 				<div class="clearfix l-unit__stat-col--left super-compact center">
 					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide"><b><?= _("Package") ?></b></div>
+				<!-- Not a typo, to differentiate from User "Package Name" -->
+				<div class="clearfix l-unit__stat-col--left wide"><b><?= _("Package Names") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Description") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?= _("Version") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Status") ?></b></div>

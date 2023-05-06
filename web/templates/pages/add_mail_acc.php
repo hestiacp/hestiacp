@@ -29,7 +29,7 @@
 		<input type="hidden" name="ok_acc" value="add">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Adding Mail Account") ?></h1>
+			<h1 class="form-title"><?= _("Add Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="sidebar-right-grid">
 				<div class="sidebar-right-grid-content">
@@ -64,13 +64,13 @@
 					</ul>
 					<div class="u-pt18 u-mb20">
 						<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-							<?= _("Advanced options") ?>
+							<?= _("Advanced Options") ?>
 						</button>
 					</div>
 					<div x-cloak x-show="showAdvanced" id="advtable">
 						<div class="u-mb10">
 							<label for="v_quota" class="form-label">
-								<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+								<?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 							</label>
 							<div class="u-pos-relative">
 								<input type="text" class="form-control" name="v_quota" id="v_quota" value="<?= htmlentities(trim($v_quota, "'")) ?>">
@@ -81,13 +81,13 @@
 						</div>
 						<div class="u-mb10">
 							<label for="v_aliases" class="form-label">
-								<?= _("Aliases") ?> <span class="optional">(<?= _("use local-part") ?>)</span>
+								<?= _("Aliases") ?> <span class="optional">(<?= _("Use local-part without domain name") ?>)</span>
 							</label>
 							<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
 						</div>
 						<div class="u-mb10">
 							<label for="v_fwd" class="form-label">
-								<?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
+								<?= _("Forward to") ?> <span class="optional">(<?= _("One or more email addresses") ?>)</span>
 							</label>
 							<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
 						</div>
@@ -105,22 +105,21 @@
 						</div>
 						<div class="u-mt10 u-mb10">
 							<label for="v_rate" class="form-label">
-								<?= _("Rate limit") ?> <span class="optional">(<?= _("Email / hour") ?>)</span>
+								<?= _("Rate Limit") ?> <span class="optional">(<?= _("Email / Hour") ?>)</span>
 							</label>
 							<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 						</div>
 					</div>
 					<div class="u-mt15 u-mb20">
 						<label for="v_send_email" class="form-label">
-							<?= _("Send login credentials to email address") ?>
+							<?= _("Email login credentials to:") ?>
 						</label>
 						<input type="email" class="form-control" name="v_send_email" id="v_send_email" value="<?= htmlentities(trim($v_send_email, "'")) ?>">
-						<input type="hidden" name="v_credentials" class="js-hidden-credentials">
 					</div>
 				</div>
 				<div class="sidebar-right-grid-sidebar">
 					<div class="panel js-mail-info">
-						<h2 class="u-text-H3 u-mb10"><?= _("Common account settings") ?></h2>
+						<h2 class="u-text-H3 u-mb10"><?= _("Common Account Settings") ?></h2>
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Username") ?></span>
@@ -141,18 +140,18 @@
 								<span class="values-list-value">mail.<?= htmlentities($v_domain) ?></span>
 							</li>
 						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("IMAP settings") ?></h2>
+						<h2 class="u-text-H3 u-mb10"><?= _("IMAP Settings") ?></h2>
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Authentication") ?></span>
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("SSL/TLS") ?></span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 993</span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("STARTTLS") ?></span>
+								<span class="values-list-label">STARTTLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 143</span>
 							</li>
 							<li class="values-list-item">
@@ -160,18 +159,18 @@
 								<span class="values-list-value"><?= _("Port") ?> 143</span>
 							</li>
 						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("POP3 settings") ?></h2>
+						<h2 class="u-text-H3 u-mb10"><?= _("POP3 Settings") ?></h2>
 						<ul class="values-list u-mb20">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Authentication") ?></span>
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("SSL/TLS") ?></span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 995</span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("STARTTLS") ?></span>
+								<span class="values-list-label">STARTTLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 110</span>
 							</li>
 							<li class="values-list-item">
@@ -179,18 +178,18 @@
 								<span class="values-list-value"><?= _("Port") ?> 110</span>
 							</li>
 						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("SMTP settings") ?></h2>
+						<h2 class="u-text-H3 u-mb10"><?= _("SMTP Settings") ?></h2>
 						<ul class="values-list">
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Authentication") ?></span>
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("SSL/TLS") ?></span>
+								<span class="values-list-label">SSL / TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 465</span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("STARTTLS") ?></span>
+								<span class="values-list-label">STARTTLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 587</span>
 							</li>
 							<li class="values-list-item">

@@ -8,7 +8,7 @@
 		</div>
 		<div class="toolbar-buttons">
 			<a href="/delete/web/cache/?domain=<?=htmlentities($v_domain);?>&token=<?=$_SESSION['token'];?>" class="button button-secondary js-clear-cache-button <?php if (!($v_nginx_cache == 'yes' || (($v_proxy_template == 'caching' || is_int(strpos($v_proxy_template, 'caching-'))) && $_SESSION['PROXY_SYSTEM'] == 'nginx'))) { echo "u-hidden"; } ?>">
-				<i class="fas fa-trash icon-red"></i><?= _("Purge Nginx Cache") ?>
+				<i class="fas fa-trash icon-red"></i><?= _("Purge NGINX Cache") ?>
 			</a>
 			<?php if ($_SESSION["PLUGIN_APP_INSTALLER"] !== "false") { ?>
 				<a href="/add/webapp/?domain=<?= htmlentities($v_domain) ?>" class="button button-secondary">
@@ -46,7 +46,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing Domain") ?></h1>
+			<h1 class="form-title"><?= _("Edit Web Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
@@ -61,7 +61,7 @@
 				<div class="u-mb10">
 					<div class="alert alert-info" role="alert">
 						<i class="fas fa-exclamation"></i>
-						<p><?= _("Lets Encrypt will obtain a new SSL certificate if web domain aliases are changed.") ?></p>
+						<p><?= _("If the aliases changes, Let's Encrypt will obtain a new SSL certificate.") ?></p>
 					</div>
 				</div>
 			<?php } ?>
@@ -166,7 +166,7 @@
 			<div class="form-check u-mb10">
 				<input x-model="sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
 				<label for="v_ssl">
-					<?= _("SSL Support") ?>
+					<?= _("Enable SSL for this domain") ?>
 				</label>
 			</div>
 			<div x-cloak x-show="sslEnabled" class="u-pl30">
@@ -179,30 +179,30 @@
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_ssl_forcessl" id="v_ssl_forcessl" <?php if($v_ssl_forcessl == 'yes') echo 'checked' ?>>
 					<label for="v_ssl_forcessl">
-						<?= _("Force SSL/HTTPS") ?>
+						<?= _("Enable automatic HTTPS redirection") ?>
 					</label>
 				</div>
 				<div class="form-check u-mb20">
 					<input class="form-check-input" type="checkbox" name="v_ssl_hsts" id="ssl_hsts" <?php if($v_ssl_hsts == 'yes') echo 'checked' ?>>
 					<label for="ssl_hsts">
-						<?= _("Enable SSL HSTS") ?>
+						<?= _("Enable HTTP Strict Transport Security (HSTS)") ?><a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank"><i class="fas fa-question-circle"></i></a>
 					</label>
 				</div>
 				<div x-cloak x-show="showCertificates" class="js-ssl-details">
 					<div class="u-mb10">
 						<label for="ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
-							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate CSR") ?></a></span>
+							<span id="generate-csr"> / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate Self-Signed SSL Certificate") ?></a></span>
 						</label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_crt" id="ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb10">
-						<label for="v_ssl_key" class="form-label"><?= _("SSL Key") ?></label>
+						<label for="v_ssl_key" class="form-label"><?= _("SSL Private Key") ?></label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_ca" class="form-label">
-							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("optional") ?>)</span>
+							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 						</label>
 						<textarea class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
 					</div>
@@ -210,33 +210,33 @@
 				<?php if ($v_ssl != "no") { ?>
 					<ul class="values-list">
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SUBJECT") ?></span>
+							<span class="values-list-label"><?= _("Issued To") ?></span>
 							<span class="values-list-value"><?= $v_ssl_subject ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("ALIASES") ?></span>
+								<span class="values-list-label"><?= _("Alternate") ?></span>
 								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_BEFORE") ?></span>
+							<span class="values-list-label"><?= _("Not Before") ?></span>
 							<span class="values-list-value"><?= $v_ssl_not_before ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_AFTER") ?></span>
+							<span class="values-list-label"><?= _("Not After") ?></span>
 							<span class="values-list-value"><?= $v_ssl_not_after ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SIGNATURE") ?></span>
+							<span class="values-list-label"><?= _("Signature") ?></span>
 							<span class="values-list-value"><?= $v_ssl_signature ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("PUB_KEY") ?></span>
+							<span class="values-list-label"><?= _("Key Size") ?></span>
 							<span class="values-list-value"><?= $v_ssl_pub_key ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("ISSUER") ?></span>
+							<span class="values-list-label"><?= _("Issued By") ?></span>
 							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
 						</li>
 						<p x-cloak x-show="letsEncryptEnabled" id="letsinfo">
@@ -253,7 +253,7 @@
 			</div>
 			<div class="u-mt15 u-mb20">
 				<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-					<?= _("Advanced options") ?>
+					<?= _("Advanced Options") ?>
 				</button>
 			</div>
 			<div x-cloak x-show="showAdvanced">
@@ -279,7 +279,7 @@
 						<div class="form-check u-mb10">
 							<input x-model="nginxCacheEnabled" class="form-check-input" type="checkbox" name="v_nginx_cache_check" id="v_nginx_cache_check">
 							<label for="v_nginx_cache_check">
-								<?= _("Enable FastCGI Cache") ?>
+								<?= _("Enable FastCGI cache") ?>
 								<a href="https://hestiacp.com/docs/server-administration/web-templates.html#nginx-fastcgi-cache" target="_blank" class="u-ml5">
 									<i class="fas fa-circle-question"></i>
 								</a>
@@ -288,7 +288,7 @@
 						<div x-cloak x-show="nginxCacheEnabled" id="v_nginx_duration" class="u-pl30">
 							<div class="u-mb10">
 								<label for="v_nginx_cache_duration" class="form-label">
-									<?= _("Cache Duration") ?> <span class="optional"><?= _("For example: 30s, 10m or 1d") ?>
+									<?= _("Cache Duration") ?> <span class="optional">(<?= _("For example") ?>: 30s, 10m or 1d)</span>
 								</label>
 								<input type="text" class="form-control" name="v_nginx_cache_duration" id="v_nginx_cache_duration" value="<?= htmlentities(trim($v_nginx_cache_duration, "'")) ?>">
 							</div>
@@ -372,7 +372,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v-custom-doc-folder" class="form-label">
-							<?php print _("Directory"); ?> <span class="optional">(<?= _("optional") ?>)</span>
+							<?php print _("Directory"); ?> <span class="optional">(<?= _("Optional") ?>)</span>
 						</label>
 						<input type="text" class="form-control js-custom-docroot-dir" name="v-custom-doc-folder" id="v-custom-doc-folder" value="<?= htmlentities(trim($v_custom_doc_folder, "'")) ?>">
 						<small class="js-custom-docroot-hint"></small>

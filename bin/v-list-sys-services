@@ -200,7 +200,7 @@ fi
 # Checking MAIL IMAP
 if [ -n "$IMAP_SYSTEM" ] && [ "$IMAP_SYSTEM" != 'remote' ]; then
 	get_srv_state "$IMAP_SYSTEM"
-	data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='pop/imap server' STATE='$state'"
+	data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='imap / pop server' STATE='$state'"
 	data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -217,7 +217,7 @@ if [ -n "$ANTIVIRUS_SYSTEM" ] && [ "$ANTIVIRUS_SYSTEM" != 'remote' ]; then
 		fi
 		get_srv_state "$ANTIVIRUS_SYSTEM" "$proc_name"
 	fi
-	data="$data\nNAME='$ANTIVIRUS_SYSTEM' SYSTEM='email antivirus'"
+	data="$data\nNAME='$ANTIVIRUS_SYSTEM' SYSTEM='email anti-virus'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 	proc_name=''
 fi
@@ -225,7 +225,7 @@ fi
 # Checking MAIL ANTISPAM
 if [ -n "$ANTISPAM_SYSTEM" ] && [ "$ANTISPAM_SYSTEM" != 'remote' ]; then
 	get_srv_state "$ANTISPAM_SYSTEM" "spamd"
-	data="$data\nNAME='$ANTISPAM_SYSTEM' SYSTEM='email antispam'"
+	data="$data\nNAME='$ANTISPAM_SYSTEM' SYSTEM='email spam filter'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -295,7 +295,7 @@ fi
 # Checking SSH daemon
 if [ -e "/etc/ssh/sshd_config" ]; then
 	get_srv_state ssh
-	data="$data\nNAME='ssh' SYSTEM='SSH Access' STATE='$state'"
+	data="$data\nNAME='ssh' SYSTEM='ssh server' STATE='$state'"
 	data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -320,7 +320,7 @@ if [ -n "$FIREWALL_EXTENSION" ]; then
 	else
 		get_srv_state "$FIREWALL_EXTENSION" fail2ban-server script
 	fi
-	data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force monitor'"
+	data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force protection'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 

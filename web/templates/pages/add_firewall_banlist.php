@@ -22,11 +22,11 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding IP Address to Banlist") ?></h1>
+			<h1 class="form-title"><?= _("Add IP Address to Banlist") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_ip" class="form-label">
-					<?= _("IP address") ?> <span class="optional">(<?= _("CIDR format is supported") ?>)</span>
+					<?= _("IP Address") ?> <span class="optional">(<?= _("Support CIDR format") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>" required>
 			</div>

@@ -11,7 +11,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -27,15 +27,15 @@
 					<form x-data x-bind="BulkEdit" action="/bulk/mail/" method="post">
 						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
 						<select class="form-select" name="action">
-							<option value=""><?= _("apply to selected") ?></option>
+							<option value=""><?= _("Apply to selected") ?></option>
 							<?php if ($_SESSION['userContext'] === 'admin') {?>
-								<option value="rebuild"><?= _("rebuild") ?></option>
+								<option value="rebuild"><?= _("Rebuild All") ?></option>
 							<?php } ?>
-							<option value="suspend"><?= _("suspend") ?></option>
-							<option value="unsuspend"><?= _("unsuspend") ?></option>
+							<option value="suspend"><?= _("Suspend") ?></option>
+							<option value="unsuspend"><?= _("Unsuspend") ?></option>
 							<option value="delete"><?= _("Delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>
@@ -65,8 +65,8 @@
 			<div class="clearfix l-unit__stat-col--left u-text-right compact-5"><b>&nbsp;</b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b><?= _("Accounts") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-2"><b><?= _("Disk") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("Antivirus") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("AntiSpam") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("Anti-Virus") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("Spam Filter") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("DKIM") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-3"><b><?= _("SSL") ?></b></div>
 		</div>
@@ -83,7 +83,7 @@
 				$status = 'suspended';
 				$spnd_action = 'unsuspend';
 				$spnd_icon = 'fa-play';
-				$spnd_confirmation = _('UNSUSPEND_DOMAIN_CONFIRMATION');
+				$spnd_confirmation = _('Are you sure you want to unsuspend domain %s?');
 				if ($data[$key]['ANTIVIRUS'] == 'no') {
 					$antivirus_icon = 'fa-circle-xmark';
 				} else {
@@ -108,7 +108,7 @@
 				$status = 'active';
 				$spnd_action = 'suspend';
 				$spnd_icon = 'fa-pause';
-				$spnd_confirmation = _('SUSPEND_DOMAIN_CONFIRMATION');
+				$spnd_confirmation = _('Are you sure you want to suspend domain %s?');
 				if ($data[$key]['ANTIVIRUS'] == 'no') {
 					$antivirus_icon = 'fa-circle-xmark icon-red';
 				} else {
@@ -142,29 +142,29 @@
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
 					</div>
-					<div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("mail accounts") ?>: <?=$key?>"><?=$key?></a></b></div>
+					<div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Mail Accounts") ?>: <?=$key?>"><?=$key?></a></b></div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
 					<div class="clearfix l-unit__stat-col--left u-text-right compact-5">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix">
 								<?php if ($read_only === 'true') {?>
 									<!-- Restrict ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
-									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("mail accounts") ?>"><i class="fas fa-users icon-blue icon-dim"></i></a></div>
-									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records mail") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Mail Accounts") ?>"><i class="fas fa-users icon-blue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS Records") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("Open Webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
 									<?php } ?>
 								<?php } else { ?>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
 										<div class="actions-panel__col actions-panel__logs shortcut-n" data-key-action="href"><a href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Add Mail Account") ?>"><i class="fas fa-circle-plus icon-green icon-dim"></i></a></div>
 										<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 											<?php if (!empty($data[$key]['WEBMAIL'])) {?>
-												<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
+												<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$webmail;?>.<?=$key?>/" target="_blank" title="<?= _("Open Webmail") ?>"><i class="fas fa-paper-plane icon-lightblue icon-dim"></i></a></div>
 											<?php } ?>
 										<?php } ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Mail Domain") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 									<?php } ?>
-									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS records") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit shortcut-l" data-key-action="href"><a href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>" title="<?= _("DNS Records") ?>"><i class="fas fa-book-atlas icon-blue icon-dim"></i></a></div>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
@@ -180,7 +180,7 @@
 											class="data-controls js-confirm-action"
 											href="/delete/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
 											data-confirm-title="<?= _("Delete") ?>"
-											data-confirm-message="<?= sprintf(_('DELETE_DOMAIN_CONFIRMATION'), $key) ?>"
+											data-confirm-message="<?= sprintf(_('Are you sure you want to delete domain %s?'), $key) ?>"
 										>
 											<i class="fas fa-trash icon-red icon-dim"></i>
 										</a>

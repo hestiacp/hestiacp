@@ -255,7 +255,7 @@ function authenticate_user($user, $password, $twofa = "") {
 								$v_session_id .
 								" " .
 								$v_user_agent .
-								' yes "Ip not in allowed list"',
+								' yes "IP address not in allowed list"',
 							$output,
 							$return_var,
 						);
@@ -337,7 +337,6 @@ function authenticate_user($user, $password, $twofa = "") {
 				);
 
 				$_SESSION["LAST_ACTIVITY"] = time();
-				$_SESSION["MURMUR"] = $_POST["murmur"];
 
 				// Define user role / context
 				$_SESSION["userContext"] = $data[$user]["ROLE"];

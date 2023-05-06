@@ -1068,7 +1068,7 @@ if (!empty($_POST["save"])) {
 	// Change web stats user or password
 	if (empty($v_stats_user) && !empty($_POST["v_stats_auth"]) && empty($_SESSION["error_msg"])) {
 		if (empty($_POST["v_stats_user"])) {
-			$errors[] = _("stats username");
+			$errors[] = _("Username");
 		}
 		if (!empty($errors[0])) {
 			foreach ($errors as $i => $error) {
@@ -1108,7 +1108,7 @@ if (!empty($_POST["save"])) {
 	// Add web stats authorization
 	if (!empty($v_stats_user) && !empty($_POST["v_stats_auth"]) && empty($_SESSION["error_msg"])) {
 		if (empty($_POST["v_stats_user"])) {
-			$errors[] = _("stats user");
+			$errors[] = _("Username");
 		}
 		if (!empty($errors[0])) {
 			foreach ($errors as $i => $error) {
@@ -1167,7 +1167,7 @@ if (!empty($_POST["save"])) {
 					!empty($v_ftp_user_data["v_ftp_email"]) &&
 					!filter_var($v_ftp_user_data["v_ftp_email"], FILTER_VALIDATE_EMAIL)
 				) {
-					$_SESSION["error_msg"] = _("Please enter valid email address.");
+					$_SESSION["error_msg"] = _("Please enter a valid email address.");
 				}
 				if (empty($v_ftp_user_data["v_ftp_user"])) {
 					$errors[] = "ftp user";
@@ -1211,17 +1211,66 @@ if (!empty($_POST["save"])) {
 					check_return_code($return_var, $output);
 					if (!empty($v_ftp_user_data["v_ftp_email"]) && empty($_SESSION["error_msg"])) {
 						$to = $v_ftp_user_data["v_ftp_email"];
-						$subject = _("FTP login credentials");
+						$template = get_email_template("ftp_credentials", $_SESSION["language"]);
 						$hostname = get_hostname();
-						$from = "noreply@" . $hostname;
-						$from_name = _("Hestia Control Panel");
-						$mailtext = sprintf(
-							_("FTP_ACCOUNT_READY"),
-							$v_domain,
-							$user_plain,
-							$v_ftp_username,
-							$v_ftp_user_data["v_ftp_password"],
+						$from = !empty($_SESSION["FROM_EMAIL"])
+							? $_SESSION["FROM_EMAIL"]
+							: "noreply@" . $hostname;
+						$from_name = !empty($_SESSION["FROM_NAME"])
+							? $_SESSION["FROM_NAME"]
+							: $_SESSION["APP_NAME"];
+						$template = get_email_template(
+							"ftpaccount_created",
+							$data[$user]["LANGUAGE"],
 						);
+						if (!empty($template)) {
+							preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
+							$subject = $matches[1];
+							$subject = str_replace(
+								["{{hostname}}", "{{appname}}", "{{username}}", "{{domain}}"],
+								[
+									get_hostname(),
+									$_SESSION["APP_NAME"],
+									$user_plain . "_" . $v_ftp_username_for_emailing,
+									$v_domain,
+								],
+								$subject,
+							);
+							$template = str_replace($matches[0], "", $template);
+						} else {
+							$template = _(
+								"FTP account has been created and ready to use.\n" .
+									"\n" .
+									"Hostname: {{domain}}\n" .
+									"Username: {{username}}\n" .
+									"Password: {{password}}\n" .
+									"\n" .
+									"--\n" .
+									"{{appname}}",
+							);
+						}
+						if (empty($subject)) {
+							$subject = str_replace(
+								["{{subject}}", "{{hostname}}", "{{appname}}"],
+								[
+									sprintf(
+										_("FTP Account Credentials: %s"),
+										$user_plain . "_" . $v_ftp_username_for_emailing,
+									),
+									get_hostname(),
+									$_SESSION["APP_NAME"],
+								],
+								$_SESSION["SUBJECT_EMAIL"],
+							);
+						}
+
+						$mailtext = translate_email($template, [
+							"domain" => $v_domain,
+							"username" => $user_plain . "_" . $v_ftp_username_for_emailing,
+							"password" => $v_ftp_user_data["v_ftp_password"],
+							"appname" => $_SESSION["APP_NAME"],
+						]);
+
 						send_email($to, $subject, $mailtext, $from, $from_name);
 						unset($v_ftp_email);
 					}
@@ -1271,7 +1320,7 @@ if (!empty($_POST["save"])) {
 
 			if (!empty($_POST["v_ftp"])) {
 				if (empty($v_ftp_user_data["v_ftp_user"])) {
-					$errors[] = _("ftp user");
+					$errors[] = _("Username");
 				}
 				if (!empty($errors[0])) {
 					foreach ($errors as $i => $error) {
@@ -1307,38 +1356,65 @@ if (!empty($_POST["save"])) {
 					unset($output);
 				}
 				// Change FTP account password
-				if (!empty($v_ftp_user_data["v_ftp_password"])) {
-					$v_ftp_password = tempnam("/tmp", "vst");
-					$fp = fopen($v_ftp_password, "w");
-					fwrite($fp, $v_ftp_user_data["v_ftp_password"] . "\n");
-					fclose($fp);
-					exec(
-						HESTIA_CMD .
-							"v-change-web-domain-ftp-password " .
-							$user .
-							" " .
-							quoteshellarg($v_domain) .
-							" " .
-							$v_ftp_username .
-							" " .
-							$v_ftp_password,
-						$output,
-						$return_var,
-					);
-					unlink($v_ftp_password);
-
+				if (!empty($v_ftp_user_data["v_ftp_email"]) && empty($_SESSION["error_msg"])) {
 					$to = $v_ftp_user_data["v_ftp_email"];
-					$subject = _("FTP login credentials");
+					$template = get_email_template("ftp_credentials", $_SESSION["language"]);
 					$hostname = get_hostname();
-					$from = "noreply@" . $hostname;
-					$from_name = _("Hestia Control Panel");
-					$mailtext = sprintf(
-						_("FTP_ACCOUNT_READY"),
-						$v_domain,
-						$user_plain,
-						$v_ftp_username_for_emailing,
-						$v_ftp_user_data["v_ftp_password"],
-					);
+					$from = !empty($_SESSION["FROM_EMAIL"])
+						? $_SESSION["FROM_EMAIL"]
+						: "noreply@" . $hostname;
+					$from_name = !empty($_SESSION["FROM_NAME"])
+						? $_SESSION["FROM_NAME"]
+						: $_SESSION["APP_NAME"];
+					$template = get_email_template("ftpaccount_created", $data[$user]["LANGUAGE"]);
+					if (!empty($template)) {
+						preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
+						$subject = $matches[1];
+						$subject = str_replace(
+							["{{hostname}}", "{{appname}}", "{{username}}", "{{domain}}"],
+							[
+								get_hostname(),
+								$_SESSION["APP_NAME"],
+								$user_plain . "_" . $v_ftp_username_for_emailing,
+								$v_domain,
+							],
+							$subject,
+						);
+						$template = str_replace($matches[0], "", $template);
+					} else {
+						$template = _(
+							"FTP account has been created and ready to use.\n" .
+								"\n" .
+								"Hostname: {{domain}}\n" .
+								"Username: {{username}}\n" .
+								"Password: {{password}}\n" .
+								"\n" .
+								"--\n" .
+								"{{appname}}",
+						);
+					}
+					if (empty($subject)) {
+						$subject = str_replace(
+							["{{subject}}", "{{hostname}}", "{{appname}}"],
+							[
+								sprintf(
+									_("FTP Account Credentials: %s"),
+									$user_plain . "_" . $v_ftp_username_for_emailing,
+								),
+								get_hostname(),
+								$_SESSION["APP_NAME"],
+							],
+							$_SESSION["SUBJECT_EMAIL"],
+						);
+					}
+
+					$mailtext = translate_email($template, [
+						"domain" => $v_domain,
+						"username" => $user_plain . "_" . $v_ftp_username_for_emailing,
+						"password" => $v_ftp_user_data["v_ftp_password"],
+						"appname" => $_SESSION["APP_NAME"],
+					]);
+
 					send_email($to, $subject, $mailtext, $from, $from_name);
 					unset($v_ftp_email);
 				}

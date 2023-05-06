@@ -39,7 +39,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -57,15 +57,15 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					<form x-data x-bind="BulkEdit" action="/bulk/db/" method="post">
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
-							<option value=""><?= _("apply to selected") ?></option>
+							<option value=""><?= _("Apply to selected") ?></option>
 							<?php if ($_SESSION["userContext"] === "admin") { ?>
-								<option value="rebuild"><?= _("rebuild") ?></option>
-								<option value="suspend"><?= _("suspend") ?></option>
-								<option value="unsuspend"><?= _("unsuspend") ?></option>
+								<option value="rebuild"><?= _("Rebuild All") ?></option>
+								<option value="suspend"><?= _("Suspend All") ?></option>
+								<option value="unsuspend"><?= _("Unsuspend All") ?></option>
 							<?php } ?>
 							<option value="delete"><?= _("Delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>
@@ -110,12 +110,12 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				$status = 'suspended';
 				$spnd_action = 'unsuspend';
 				$spnd_icon = 'fa-play';
-				$spnd_confirmation = _('UNSUSPEND_DATABASE_CONFIRMATION') ;
+				$spnd_confirmation = _('Are you sure you want to unsuspend database %s?') ;
 			} else {
 				$status = 'active';
 				$spnd_action = 'suspend';
 				$spnd_icon = 'fa-pause';
-				$spnd_confirmation = _('SUSPEND_DATABASE_CONFIRMATION') ;
+				$spnd_confirmation = _('Are you sure you want to suspend database %s?') ;
 			}
 			if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
 			if ($data[$key]['TYPE'] == 'mysql') $db_admin = "phpMyAdmin";
@@ -137,7 +137,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 						<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 							<b><?= $key ?></b>
 						<?php } else { ?>
-							<b><a href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Editing Database") ?>: <?= $key ?>"><?= $key ?></a></b>
+							<b><a href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Database") ?>: <?= $key ?>"><?= $key ?></a></b>
 						<?php } ?>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
@@ -149,10 +149,10 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 									&nbsp;
 								<?php } else { ?>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Database") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Database") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 									<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="<?= _("phpMyAdmin") ?>"><i class="fas fa-right-to-bracket icon-orange icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="phpMyAdmin"><i class="fas fa-right-to-bracket icon-orange icon-dim"></i></a></div>
 									<?php } ?>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a
@@ -169,7 +169,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 											class="data-controls js-confirm-action"
 											href="/delete/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 											data-confirm-title="<?= _("Delete") ?>"
-											data-confirm-message="<?= sprintf(_("DELETE_DATABASE_CONFIRMATION"), $key) ?>"
+											data-confirm-message="<?= sprintf(_("Are you sure you want to delete database %s?"), $key) ?>"
 										>
 											<i class="fas fa-trash icon-red icon-dim"></i>
 										</a>
@@ -193,7 +193,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext("%d SQL database", "%d SQL databases", $i), $i); ?>
+			<?php printf(ngettext("%d database", "%d databases", $i), $i); ?>
 		</p>
 	</div>
 </footer>

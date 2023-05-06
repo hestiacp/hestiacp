@@ -168,3 +168,9 @@ function get_hostname() {
 	}
 	return $ret3;
 }
+
+function display_title($tab) {
+	$array1 = ["{{page}}", "{{hostname}}", "{{ip}}", "{{appname}}"];
+	$array2 = [$tab, get_hostname(), $_SERVER["REMOTE_ADDR"], $_SESSION["APP_NAME"]];
+	return str_replace($array1, $array2, $_SESSION["TITLE"]);
+}

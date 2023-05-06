@@ -26,10 +26,10 @@ if (!empty($_POST["ok"])) {
 		$errors[] = _("Data Source");
 	}
 	if (empty($_POST["v_ipver"])) {
-		$errors[] = _("Ip Version");
+		$errors[] = _("IP Version");
 	}
 	if (empty($_POST["v_autoupdate"])) {
-		$errors[] = _("Autoupdate");
+		$errors[] = _("Auto Update");
 	}
 
 	if (!empty($errors[0])) {
@@ -69,7 +69,7 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("IPSET_CREATED_OK");
+		$_SESSION["ok_msg"] = _("IP list has been created successfully.");
 	}
 }
 if (empty($v_ipname)) {

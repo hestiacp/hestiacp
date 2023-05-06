@@ -33,7 +33,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding Package") ?></h1>
+			<h1 class="form-title"><?= _("Add Package") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package" class="form-label"><?= _("Package Name") ?></label>
@@ -41,7 +41,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_disk_quota" class="form-label">
-					<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+					<?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
@@ -52,7 +52,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_bandwidth" class="form-label">
-					<?= _("Bandwidth") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+					<?= _("Bandwidth") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">
@@ -66,7 +66,7 @@
 				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= htmlentities(trim($v_backups, "'")) ?>">
 			</div>
 			<h2 x-on:click="showWebOptions = !showWebOptions" class="section-title">
-				<?= _("Web") ?>
+				<?= _("WEB") ?>
 				<i
 					x-bind:class="showWebOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"
@@ -84,7 +84,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_web_aliases" class="form-label">
-						<?= _("Web Aliases") ?> <span class="optional">(<?= _("per domain") ?>)</span>
+						<?= _("Web Aliases") ?> <span class="optional">(<?= _("Per Domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?= htmlentities(trim($v_web_aliases, "'")) ?>">
@@ -172,7 +172,7 @@
 					</select>
 				</div>
 				<div class="u-mb10">
-					<label for="v_dns_domains" class="form-label"><?= _("DNS domains") ?></label>
+					<label for="v_dns_domains" class="form-label"><?= _("DNS Zones") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?= htmlentities(trim($v_dns_domains, "'")) ?>">
 						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
@@ -182,7 +182,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_dns_records" class="form-label">
-						<?= _("DNS records") ?> <span class="optional">(<?= _("per domain") ?>)</span>
+						<?= _("DNS Records") ?> <span class="optional">(<?= _("Per Domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
@@ -192,7 +192,7 @@
 					</div>
 				</div>
 				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
-					<p class="form-label u-mb10"><?= _("Name servers") ?></p>
+					<p class="form-label u-mb10"><?= _("Name Servers") ?></p>
 					<div class="u-mb5">
 						<input type="text" class="form-control" name="v_ns1" value="<?= htmlentities(trim($v_ns1, "'")) ?>">
 					</div>
@@ -243,7 +243,7 @@
 				<?php } ?>
 			</div>
 			<h2 x-on:click="showMailOptions = !showMailOptions" class="section-title">
-				<?= _("Mail") ?>
+				<?= _("MAIL") ?>
 				<i
 					x-bind:class="showMailOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"
@@ -261,7 +261,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_mail_accounts" class="form-label">
-						<?= _("Mail Accounts") ?> <span class="optional">(<?= _("per domain") ?>)</span>
+						<?= _("Mail Accounts") ?> <span class="optional">(<?= _("Per Domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
@@ -272,13 +272,13 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_ratelimit" class="form-label">
-						<?= _("Rate limit") ?> <span class="optional">(<?= _("per account / hour") ?>)</span>
+						<?= _("Rate Limit") ?> <span class="optional">(<?= _("Per Account / Hour") ?>)</span>
 					</label>
 					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
 				</div>
 			</div>
 			<h2 x-on:click="showDatabaseOptions = !showDatabaseOptions" class="section-title">
-				<?= _("Databases") ?>
+				<?= _("DB") ?>
 				<i
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"

@@ -107,7 +107,7 @@ if [ -n "$hesta_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
 fi
 
 data="NAME='hestia' VERSION='$VERSION' ARCH='$ARCH'"
-data="$data UPDATED='$UPDATED' DESCR='core package' TIME='$TIME' DATE='$DATE'"
+data="$data UPDATED='$UPDATED' DESCR='Hestia core package' TIME='$TIME' DATE='$DATE'"
 
 # Checking installed hestia-php version
 if [ -f '/etc/redhat-release' ]; then
@@ -122,7 +122,7 @@ if [ -n "$php_v" ] && [ "$php_v" \> "$VERSION" ]; then
 fi
 
 data="$data\nNAME='hestia-php' VERSION='$VERSION'"
-data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='php interpreter'"
+data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='Hestia internal php interpreter'"
 data="$data TIME='$TIME' DATE='$DATE'"
 
 # Checking installed hestia-nginx version
@@ -138,7 +138,7 @@ if [ -n "$nginx_v" ] && [ "$nginx_v" \> "$VERSION" ]; then
 fi
 
 data="$data\nNAME='hestia-nginx' VERSION='$VERSION'"
-data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='internal web server'"
+data="$data ARCH='$ARCH' UPDATED='$UPDATED' DESCR='Hestia internal web server'"
 data="$data TIME='$TIME' DATE='$DATE'"
 
 # Listing data

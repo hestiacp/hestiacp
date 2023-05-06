@@ -1628,8 +1628,8 @@ function check_ip_not_banned(){
 #----------------------------------------------------------#
 
 @test "Allow Users: User can't add user.user2.com " {
-    # Case: admin company.ltd
-    # users should not be allowed to add user.company.ltd
+    # Case: admin company.tld
+    # users should not be allowed to add user.company.tld
     run v-add-user $user2 $user2 $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
@@ -1659,8 +1659,8 @@ function check_ip_not_banned(){
 
 @test "Allow Users: Set Allow users" {
     # Allow user to yes allows
-    # Case: admin company.ltd
-    # users are allowed to add user.company.ltd
+    # Case: admin company.tld
+    # users are allowed to add user.company.tld
     run v-add-web-domain-allow-users $user2 $rootdomain
     assert_success
     refute_output

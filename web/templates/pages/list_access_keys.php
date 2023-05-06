@@ -12,7 +12,7 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>: <b><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></b>
+					<?= _("Sort by") ?>: <b><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></b>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
 					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
@@ -22,10 +22,10 @@
 				<form x-data x-bind="BulkEdit" action="/bulk/access-key/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
-						<option value=""><?= _("apply to selected") ?></option>
+						<option value=""><?= _("Apply to selected") ?></option>
 						<option value="delete"><?= _("Delete") ?></option>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
@@ -85,7 +85,7 @@
 									class="data-controls js-confirm-action"
 									href="/delete/access-key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_("DELETE_ACCESS_KEY_CONFIRMATION"), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete access key %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>
@@ -105,7 +105,7 @@
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext("%d Access Key", "%d Access Keys", $i), $i); ?>
+			<?php printf(ngettext("%d access key", "%d access keys", $i), $i); ?>
 		</p>
 	</div>
 </footer>

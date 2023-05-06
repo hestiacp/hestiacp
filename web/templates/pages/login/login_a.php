@@ -1,14 +1,13 @@
 <div class="login animate__animated animate__zoomIn">
 	<a href="/" class="u-block u-mb40">
-		<img src="/images/logo.svg" alt="<?= _("Hestia Control Panel") ?>" width="100" height="120">
+		<img src="/images/logo.svg" alt="<?= htmlentities($_SESSION['APP_NAME']); ?>" width="100" height="120">
 	</a>
 	<form id="form_login" method="post" action="/login/">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
-		<input type="hidden" name="murmur" value="" id="murmur">
 		<h1 class="login-title">
-			<?= _("Welcome to Hestia Control Panel") ?>
+			<?= sprintf(_("Welcome to %s"),htmlentities($_SESSION['APP_NAME'])) ?>
 		</h1>
-		<?php show_error_message($error); ?>
+		<?php if(!empty($error)){ show_error_message($error); } ?>
 		<div class="u-mb10">
 			<label for="user" class="form-label"><?= _("Username") ?></label>
 			<input type="text" class="form-control" name="user" id="user" required autofocus>
@@ -18,7 +17,7 @@
 				<?= _("Password") ?>
 				<?php if ($_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] !== "no") { ?>
 					<a class="login-form-link" href="/reset/">
-						<?= _("forgot password") ?>
+						<?= _("Forgot Password") ?>
 					</a>
 				<?php } ?>
 			</label>

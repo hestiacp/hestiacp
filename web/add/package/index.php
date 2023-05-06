@@ -20,14 +20,14 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_package"])) {
-		$errors[] = _("package");
+		$errors[] = _("Package");
 	}
 	if (empty($_POST["v_web_template"])) {
-		$errors[] = _("web template");
+		$errors[] = _("Web Template");
 	}
 	if (!empty($_SESSION["WEB_BACKEND"])) {
 		if (empty($_POST["v_backend_template"])) {
-			$errors[] = _("backend template");
+			$errors[] = _("Backend Template");
 		}
 	} else {
 		# When modphp is enabled
@@ -35,61 +35,61 @@ if (!empty($_POST["ok"])) {
 	}
 	if (!empty($_SESSION["PROXY_SYSTEM"])) {
 		if (empty($_POST["v_proxy_template"])) {
-			$errors[] = _("proxy template");
+			$errors[] = _("Proxy Template");
 		}
 	} else {
 		# when nginx only is enabled
 		$_POST["v_proxy_template"] = "default";
 	}
 	if (empty($_POST["v_dns_template"])) {
-		$errors[] = _("dns template");
+		$errors[] = _("DNS Template");
 	}
 	if (empty($_POST["v_shell"])) {
-		$errrors[] = _("shell");
+		$errrors[] = _("Shell");
 	}
 	if (!isset($_POST["v_web_domains"])) {
-		$errors[] = _("web domains");
+		$errors[] = _("Web Domains");
 	}
 	if (!isset($_POST["v_web_aliases"])) {
-		$errors[] = _("web aliases");
+		$errors[] = _("Web Aliases");
 	}
 	if (!isset($_POST["v_dns_domains"])) {
-		$errors[] = _("dns domains");
+		$errors[] = _("DNS Zones");
 	}
 	if (!isset($_POST["v_dns_records"])) {
-		$errors[] = _("dns records");
+		$errors[] = _("DNS Records");
 	}
 	if (!isset($_POST["v_mail_domains"])) {
-		$errors[] = _("mail domains");
+		$errors[] = _("Mail Domains");
 	}
 	if (!isset($_POST["v_mail_accounts"])) {
-		$errors[] = _("mail accounts");
+		$errors[] = _("Mail Accounts");
 	}
 	if (!isset($_POST["v_databases"])) {
-		$errors[] = _("databases");
+		$errors[] = _("Databases");
 	}
 	if (!isset($_POST["v_cron_jobs"])) {
-		$errors[] = _("cron jobs");
+		$errors[] = _("Cron Jobs");
 	}
 	if (!isset($_POST["v_backups"])) {
-		$errors[] = _("backups");
+		$errors[] = _("Backups");
 	}
 	if (!isset($_POST["v_disk_quota"])) {
-		$errors[] = _("quota");
+		$errors[] = _("Quota");
 	}
 	if (!isset($_POST["v_bandwidth"])) {
-		$errors[] = _("bandwidth");
+		$errors[] = _("Bandwidth");
 	}
 	if (!isset($_POST["v_ratelimit"])) {
-		$errors[] = _("rate limit");
+		$errors[] = _("Rate Limit");
 	}
 	// Check if name server entries are blank if DNS server is installed
 	if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) {
 		if (empty($_POST["v_ns1"])) {
-			$errors[] = _("ns1");
+			$errors[] = _("NS1");
 		}
 		if (empty($_POST["v_ns2"])) {
-			$errors[] = _("ns2");
+			$errors[] = _("NS2");
 		}
 	}
 	if (!empty($errors[0])) {
@@ -197,10 +197,13 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("PACKAGE_CREATED_OK"),
-			htmlentities($_POST["v_package"]),
-			htmlentities($_POST["v_package"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("Package {%s} has been created successfully."),
+				htmlentities($_POST["v_package"]),
+			),
+			"</b></a>",
+			'<a href="/edit/package/?package=' . htmlentities($_POST["v_package"]) . '"><b>',
 		);
 		unset($v_package);
 	}
@@ -291,10 +294,10 @@ if (empty($v_ratelimit)) {
 	$v_ratelimit = "'200'";
 }
 if (empty($v_ns1)) {
-	$v_ns1 = "ns1.example.ltd";
+	$v_ns1 = "ns1.example.tld";
 }
 if (empty($v_ns2)) {
-	$v_ns2 = "ns2.example.ltd";
+	$v_ns2 = "ns2.example.tld";
 }
 if (empty($v_ns3)) {
 	$v_ns3 = "";

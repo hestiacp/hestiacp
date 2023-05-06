@@ -67,7 +67,9 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 							"\n" .
 							"If you did not request password reset, please ignore this message and accept our apologies.\n" .
 							"\n" .
-							"Best regards\n" .
+							"Best regards,\n" .
+							"\n" .
+							"--\n" .
 							"{{appname}}",
 					);
 					putenv("LANGUAGE=" . detect_user_language());

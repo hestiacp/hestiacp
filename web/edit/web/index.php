@@ -1245,6 +1245,8 @@ if (!empty($_POST["save"])) {
 									"Username: {{username}}\n" .
 									"Password: {{password}}\n" .
 									"\n" .
+									"Best regards,\n" .
+									"\n" .
 									"--\n" .
 									"{{appname}}",
 							);
@@ -1388,6 +1390,8 @@ if (!empty($_POST["save"])) {
 								"Hostname: {{domain}}\n" .
 								"Username: {{username}}\n" .
 								"Password: {{password}}\n" .
+								"\n" .
+								"Best regards,\n" .
 								"\n" .
 								"--\n" .
 								"{{appname}}",

@@ -147,7 +147,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL / TLS</span>
+								<span class="values-list-label">SSL/TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 993</span>
 							</li>
 							<li class="values-list-item">
@@ -166,7 +166,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL / TLS</span>
+								<span class="values-list-label">SSL/TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 995</span>
 							</li>
 							<li class="values-list-item">
@@ -185,7 +185,7 @@
 								<span class="values-list-value"><?= _("Normal password") ?></span>
 							</li>
 							<li class="values-list-item">
-								<span class="values-list-label">SSL / TLS</span>
+								<span class="values-list-label">SSL/TLS</span>
 								<span class="values-list-value"><?= _("Port") ?> 465</span>
 							</li>
 							<li class="values-list-item">

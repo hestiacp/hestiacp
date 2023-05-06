@@ -89,7 +89,7 @@
 							<?php } else {?>
 								<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Package") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 							<?php } ?>
-							<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Copy") ?>"><i class="fas fa-clone icon-teal icon-dim"></i></a></div>
+							<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Duplicate") ?>"><i class="fas fa-clone icon-teal icon-dim"></i></a></div>
 							<?php if ($key == 'system') { ?>
 								<!-- Restrict deleting system package -->
 							<?php } else {?>

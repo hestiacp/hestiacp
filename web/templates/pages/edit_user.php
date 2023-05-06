@@ -132,7 +132,7 @@
 					</div>
 				</div>
 				<div x-cloak x-show="useIpAllowList" id="ip-allowlist" class="u-mt10">
-					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= htmlentities(trim($v_login_allowed_ips, "'")) ?>" placeholder="<?= _("For example") ?>: 127.0.0.1,192.168.1.100"">
+					<input type="text" class="form-control" name="v_login_allowed_ips" value="<?= htmlentities(trim($v_login_allowed_ips, "'")) ?>" placeholder="<?= _("For example") ?>: 127.0.0.1,192.168.1.100">
 				</div>
 			</div>
 			<div class="u-mb10">

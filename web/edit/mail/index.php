@@ -1115,6 +1115,8 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 					"STARTTLS: Port 587\n" .
 					"No encryption: Port 25\n" .
 					"\n" .
+					"Best regards,\n" .
+					"\n" .
 					"--\n" .
 					"{{appname}}",
 			);

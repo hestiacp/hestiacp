@@ -258,7 +258,7 @@
 					<?php if (count($v_php_versions)) { ?>
 						<div class="u-mt15">
 							<p class="u-mb10">
-								<?= _("Enabled multi PHP versions") ?>
+								<?= _("Enabled PHP Versions") ?>
 							</p>
 							<div class="alert alert-info u-mb10" role="alert">
 								<i class="fas fa-info"></i>

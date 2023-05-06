@@ -37,7 +37,7 @@
 				<textarea class="form-control" name="v_db" id="v_db" placeholder="<?= _("Type full database name, one per line. To exclude all databases use *") ?>"><?= htmlentities(trim($v_db, "'")) ?></textarea>
 			</div>
 			<div class="u-mb10">
-				<label for="v_userdir" class="form-label"><?= _("User Directories") ?></label>
+				<label for="v_userdir" class="form-label"><?= _("User Directory") ?></label>
 				<textarea class="form-control" name="v_userdir" id="v_userdir" placeholder="<?= _("Type directory name, one per line. To exlude all dirs use *") ?>"><?= htmlentities(trim($v_userdir, "'")) ?></textarea>
 			</div>
 		</div>

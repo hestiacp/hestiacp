@@ -12,7 +12,7 @@ export default function handleAddIpLists() {
 	const ipSetLists = parseAndSortIpLists(ipListSelect.dataset.ipsetLists);
 
 	const headerOption = document.createElement('option');
-	headerOption.textContent = 'IP address lists:';
+	headerOption.textContent = 'IPset IP Lists';
 	headerOption.disabled = true;
 	ipListSelect.appendChild(headerOption);
 

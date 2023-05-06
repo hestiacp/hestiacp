@@ -200,7 +200,7 @@ fi
 # Checking MAIL IMAP
 if [ -n "$IMAP_SYSTEM" ] && [ "$IMAP_SYSTEM" != 'remote' ]; then
 	get_srv_state "$IMAP_SYSTEM"
-	data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='imap / pop server' STATE='$state'"
+	data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='imap/pop3 server' STATE='$state'"
 	data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 

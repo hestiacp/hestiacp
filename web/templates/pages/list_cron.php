@@ -35,8 +35,8 @@
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("Apply to selected") ?></option>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">'._('Disable notifications').'</option>'; ?>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">'._('Enable notifications').'</option>'; ?>
+							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">' . _('Disable Notifications') . '</option>'; ?>
+							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">' . _('Enable Notifications') . '</option>'; ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
 							<option value="delete"><?= _("Delete") ?></option>

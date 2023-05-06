@@ -154,6 +154,8 @@ if (!empty($_POST["ok"])) {
 					"Password: {{password}}\n" .
 					"SQL Manager: {{dbadmin}}\n" .
 					"\n" .
+					"Best regards,\n" .
+					"\n" .
 					"--\n" .
 					"{{appname}}",
 			);

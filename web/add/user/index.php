@@ -161,6 +161,8 @@ if (!empty($_POST["ok"])) {
 					"Username: {{user}}\n" .
 					"Password: {{password}}\n" .
 					"\n" .
+					"Best regards,\n" .
+					"\n" .
 					"--\n" .
 					"{{appname}}",
 			);

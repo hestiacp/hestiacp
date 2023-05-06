@@ -130,7 +130,7 @@
 							</li>
 							<li class="stats-item-summary-list-item">
 								<span>
-									<?= _("User Directories") ?>:
+									<?= _("User Directory") ?>:
 								</span>
 								<span>
 									<span class="u-text-bold"><?= humanize_usage_size($data[$key]["U_DISK_DIRS"]) ?></span>

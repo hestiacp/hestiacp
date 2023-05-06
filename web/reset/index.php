@@ -130,42 +130,27 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 
 					send_email($to, $subject, $mailtext, $from, $from_name, $data[$user]["NAME"]);
 					putenv("LANGUAGE=" . detect_user_language());
-					$error =
-						"<p class=\"error\">" .
-						_(
-							"Password reset instructions have been sent to the email address associated with this account.",
-						) .
-						"</p>";
-				}
-				$ERROR =
-					"<p class=\"error\">" .
-					_(
+					$error = _(
 						"Password reset instructions have been sent to the email address associated with this account.",
-					) .
-					"</p>";
+					);
+				}
+				$error = _(
+					"Password reset instructions have been sent to the email address associated with this account.",
+				);
 			} else {
 				# Prevent user enumeration and let hackers guess username and working email
-				$error =
-					"<p class=\"error\">" .
-					_(
-						"Password reset instructions have been sent to the email address associated with this account.",
-					) .
-					"</p>";
+				$error = _(
+					"Password reset instructions have been sent to the email address associated with this account.",
+				);
 			}
 		} else {
-			$error =
-				"<p class=\"error\">" .
-				_("Please wait 15 minutes before sending a new request.") .
-				"</p>";
+			$error = _("Please wait 15 minutes before sending a new request.");
 		}
 	} else {
 		# Prevent user enumeration and let hackers guess username and working email
-		$error =
-			"<p class=\"error\">" .
-			_(
-				"Password reset instructions have been sent to the email address associated with this account.",
-			) .
-			"</p>";
+		$error = _(
+			"Password reset instructions have been sent to the email address associated with this account.",
+		);
 	}
 	unset($output);
 }
@@ -196,7 +181,7 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 					unlink($v_password);
 					if ($return_var > 0) {
 						sleep(5);
-						$ERROR = "<p class=\"error\">" . _("An internal error occurred") . "</p>";
+						$error = _("An internal error occurred");
 					} else {
 						$_SESSION["user"] = $_POST["user"];
 						header("Location: /");
@@ -204,7 +189,7 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 					}
 				} else {
 					sleep(5);
-					$ERROR = "<p class=\"error\">" . _("Code has been expired") . "</p>";
+					$error = _("Code has been expired");
 					exec(
 						HESTIA_CMD .
 							"v-log-user-login " .
@@ -222,7 +207,7 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 				}
 			} else {
 				sleep(5);
-				$ERROR = "<p class=\"error\">" . _("Invalid username or code") . "</p>";
+				$error = _("Invalid username or code");
 				exec(
 					HESTIA_CMD .
 						"v-log-user-login " .
@@ -240,10 +225,10 @@ if (!empty($_POST["user"]) && !empty($_POST["code"]) && !empty($_POST["password"
 			}
 		} else {
 			sleep(5);
-			$error = "<p class=\"error\">" . _("Invalid username or code") . "</p>";
+			$error = _("Invalid username or code");
 		}
 	} else {
-		$error = "<p class=\"error\">" . _("Passwords not match") . "</p>";
+		$error = _("Passwords do not match");
 	}
 }
 

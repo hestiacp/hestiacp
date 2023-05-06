@@ -245,12 +245,6 @@ function show_alert_message($data) {
 	}
 }
 
-function show_error_message($error) {
-	if (isset($error)) {
-		echo $error;
-	}
-}
-
 function top_panel($user, $TAB) {
 	$command = HESTIA_CMD . "v-list-user " . $user . " 'json'";
 	exec($command, $output, $return_var);

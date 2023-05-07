@@ -269,7 +269,7 @@ function authenticate_user($user, $password, $twofa = "") {
 						$output,
 						$return_var,
 					);
-					$error = "<p class=\"error\">" . _("Invalid or missing 2FA token");
+					$error = _("Invalid or missing 2FA token");
 					if (empty($twofa)) {
 						$_SESSION["login"]["username"] = $user;
 						$_SESSION["login"]["password"] = $password;

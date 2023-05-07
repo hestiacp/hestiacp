@@ -1,0 +1,11 @@
+openssl_conf = hestia_conf
+
+[hestia_conf]
+ssl_conf = hestia_ssl_sect
+
+[hestia_ssl_sect]
+system_default = hestia_openssl_sect
+
+[hestia_openssl_sect]
+Ciphersuites = TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384
+Options = PrioritizeChaCha

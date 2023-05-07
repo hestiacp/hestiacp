@@ -2248,9 +2248,10 @@
 }
 
 .console-output {
+	color: #202020;
 	font-family: var(--font-family-monospace);
 	font-size: 0.92rem;
-	color: #202020;
+	line-height: 1.15;
 }
 
 #vstobjects.suspended {
@@ -2438,9 +2439,8 @@
 }
 
 .server-console-output {
-	color: #c36;
-	padding: 10px 0 20px 20px;
 	background: #fff;
+	padding: 10px 0 20px 20px;
 }
 
 .userlist-email {

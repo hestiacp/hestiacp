@@ -65,8 +65,8 @@ for db in $(echo $DB_SYSTEM | tr ',' '\n'); do
 				mysqladmin --defaults-file=$mycnf status | sed -e "s/  /\n/g"
 				echo
 				mysqladmin --defaults-file=$mycnf processlist
-				echo -en "\n-------------------------------------"
-				echo -en "-------------------------------------\n\n"
+				echo -en "\n---------------------------------------------"
+				echo -en "---------------------------------------------\n\n"
 			fi
 
 			# Checking PostgreSQL

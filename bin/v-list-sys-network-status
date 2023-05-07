@@ -13,7 +13,7 @@
 # Displaying network stats
 ss -s
 echo -en "\n---------------------------------------------"
-echo -en "-------------------------------------\n\n"
+echo -en "---------------------------------------------\n\n"
 
 # Displaying network usage
 lsof -iudp -itcp -n -P

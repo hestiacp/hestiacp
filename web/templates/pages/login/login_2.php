@@ -7,7 +7,11 @@
 		<h1 class="login-title">
 			<?= _("Two-factor Authentication") ?>
 		</h1>
-		<?php if(!empty($error){ show_error_message($error); } ?>
+		<?php if(!empty($error)){
+		?>
+			<p class="error"><?=$error;?></p>
+		<?php
+		 } ?>
 		<div class="u-mb20">
 			<label for="twofa" class="form-label u-side-by-side">
 				<?= _("2FA Token") ?>

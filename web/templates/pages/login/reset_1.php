@@ -7,7 +7,11 @@
 		<h1 class="login-title">
 			<?= _("Forgot Password") ?>
 		</h1>
-		<?php if(!empty($error)){ show_error_message($error); } ?>
+		<?php if(!empty($error)){
+		?>
+			<p class="error"><?=$error;?></p>
+		<?php
+		 } ?>
 		<div class="u-mb10">
 			<label for="user" class="form-label"><?= _("Username") ?></label>
 			<input type="text" class="form-control" name="user" id="user" required>

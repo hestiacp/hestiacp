@@ -70,7 +70,7 @@
 <div class="container units">
 
 	<!-- Table header -->
-	<div class="table-header">
+	<div class="units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">

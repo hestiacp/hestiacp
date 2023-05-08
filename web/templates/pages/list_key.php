@@ -20,7 +20,7 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("SSH ID") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-2">

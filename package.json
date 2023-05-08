@@ -34,7 +34,7 @@
 		"esbuild": "^0.17.18",
 		"eslint": "^8.40.0",
 		"eslint-config-prettier": "^8.8.0",
-		"eslint-plugin-editorconfig": "^4.0.2",
+		"eslint-plugin-editorconfig": "^4.0.3",
 		"eslint-plugin-import": "^2.27.5",
 		"husky": "^8.0.3",
 		"lint-staged": "^13.2.2",

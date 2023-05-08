@@ -9,8 +9,8 @@ export default function handleIpListDataSource() {
 	}
 
 	// Parse IP lists from HTML and sort them alphabetically
-	const countryIpLists = parseAndSortIpLists(dataSourceSelect.dataset.countryIpLists);
-	const blacklistIpLists = parseAndSortIpLists(dataSourceSelect.dataset.blacklistIpLists);
+	const countryIpLists = parseAndSortIpLists(dataSourceSelect.dataset.countryIplists);
+	const blacklistIpLists = parseAndSortIpLists(dataSourceSelect.dataset.blacklistIplists);
 
 	// Add IP lists to the "Data Source" select
 	addIPListsToSelect(dataSourceSelect, Alpine.store('globals').BLACKLIST, blacklistIpLists);
@@ -34,6 +34,5 @@ function addOption(element, text, value, disabled) {
 	if (disabled) {
 		option.disabled = true;
 	}
-
 	element.append(option);
 }

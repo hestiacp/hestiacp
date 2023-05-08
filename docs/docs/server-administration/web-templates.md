@@ -147,3 +147,15 @@ FastCGI cache is an option for Nginx mode only. If you are using Nginx + Apache2
 To write custom caching templates, use the following naming scheme:
 
 `caching-yourname.tpl`, `caching-yourname.stpl` and `caching-yourname.sh`
+
+### Does Hestia support Web socket support
+
+Yes, Hestia works fine with Web sockets how ever our default templates include on default:
+
+```bash
+proxy_hide_header Upgrade
+```
+
+This resolved an issue with Safari from loading websites.
+
+To allow the use of Web sockets remove this line. Other wise Web sockets will not work

@@ -131,6 +131,7 @@ function sidebarDocs(): DefaultTheme.SidebarItem[] {
 			text: "Contributing",
 			collapsed: false,
 			items: [
+				{ text: "Building Packages", link: "/docs/contributing/building.md" },
 				{ text: "Development", link: "/docs/contributing/development.md" },
 				{ text: "Documentation", link: "/docs/contributing/documentation.md" },
 				{ text: "Quick install app", link: "/docs/contributing/quick-install-app.md" },

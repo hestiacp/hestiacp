@@ -67,11 +67,13 @@
 			if ($data[$key]['SUSPENDED'] == 'yes') {
 				$status = 'suspended';
 				$spnd_action = 'unsuspend';
+				$spnd_action_title = _('Unsuspend');
 				$spnd_icon = 'fa-play';
 				$spnd_confirmation = _('Are you sure you want to unsuspend rule #%s?') ;
 			} else {
 				$status = 'active';
 				$spnd_action = 'suspend';
+				$spnd_action_title = _('Suspend');
 				$spnd_icon = 'fa-pause';
 				$spnd_confirmation = _('Are you sure you want to suspend rule #%s?') ;
 			}
@@ -106,7 +108,7 @@
 									<a
 										class="data-controls js-confirm-action"
 										href="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
-										data-confirm-title="<?= _($spnd_action) ?>"
+										data-confirm-title="<?= $spnd_action_title ?>"
 										data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 									>
 										<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>

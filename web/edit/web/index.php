@@ -1267,9 +1267,11 @@ if (!empty($_POST["save"])) {
 						}
 
 						$mailtext = translate_email($template, [
-							"domain" => $v_domain,
-							"username" => $user_plain . "_" . $v_ftp_username_for_emailing,
-							"password" => $v_ftp_user_data["v_ftp_password"],
+							"domain" => htmlentities($v_domain),
+							"username" => htmlentities(
+								$user_plain . "_" . $v_ftp_username_for_emailing,
+							),
+							"password" => htmlentities($v_ftp_user_data["v_ftp_password"]),
 							"appname" => $_SESSION["APP_NAME"],
 						]);
 

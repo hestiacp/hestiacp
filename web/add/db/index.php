@@ -182,9 +182,9 @@ if (!empty($_POST["ok"])) {
 			: $_SESSION["APP_NAME"];
 
 		$mailtext = translate_email($template, [
-			"database" => $user_plain . "_" . $_POST["v_database"],
-			"username" => $user_plain . "_" . $_POST["v_dbuser"],
-			"password" => $_POST["v_password"],
+			"database" => htmlentities($user_plain . "_" . $_POST["v_database"]),
+			"username" => htmlentities($user_plain . "_" . $_POST["v_dbuser"]),
+			"password" => htmlentities($_POST["v_password"]),
 			"dbadmin" => $db_admin_link,
 			"appname" => $_SESSION["APP_NAME"],
 		]);

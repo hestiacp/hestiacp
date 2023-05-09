@@ -492,7 +492,7 @@ if (!empty($_POST["ok_acc"])) {
 		$mailtext = translate_email($template, [
 			"domain" => htmlentities($_POST["v_domain"]),
 			"account" => htmlentities(strtolower($_POST["v_account"])),
-			"password" => $_POST["v_password"],
+			"password" => htmlentities($_POST["v_password"]),
 			"webmail" => $webmail . "." . htmlentities($_POST["v_domain"]),
 			"hostname" => "mail." . htmlentities($_POST["v_domain"]),
 			"appname" => $_SESSION["APP_NAME"],

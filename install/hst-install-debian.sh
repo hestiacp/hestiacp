@@ -1265,7 +1265,7 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 # Configuring global OpenSSL options
 echo "[ * ] Configuring OpenSSL to improve TLS performance..."
 cp -f $HESTIA_COMMON_DIR/openssl/hestia-openssl.cnf /etc/ssl
-if grep -q "^#.include filename" /etc/ssl/openssl.cnf 2>/dev/null; then
+if grep -q "^#.include filename$" /etc/ssl/openssl.cnf 2> /dev/null; then
 	sed -i 's|^#.include filename|#.include filename\n\n# Hestia OpenSSL configuration\n.include /etc/ssl/hestia-openssl.cnf|' /etc/ssl/openssl.cnf
 elif [ -s "/etc/ssl/openssl.cnf" ]; then
 	sed -i '1i# Hestia OpenSSL configuration\n.include /etc/ssl/hestia-openssl.cnf\n' /etc/ssl/openssl.cnf

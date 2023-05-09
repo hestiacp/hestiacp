@@ -86,10 +86,10 @@ if (!empty($_POST["ok"])) {
 	// Check if name server entries are blank if DNS server is installed
 	if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) {
 		if (empty($_POST["v_ns1"])) {
-			$errors[] = _("NS1");
+			$errors[] = _("Nameserver 1");
 		}
 		if (empty($_POST["v_ns2"])) {
-			$errors[] = _("NS2");
+			$errors[] = _("Nameserver 2");
 		}
 	}
 	if (!empty($errors[0])) {

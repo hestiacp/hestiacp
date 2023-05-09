@@ -672,7 +672,7 @@ if [ -z "$(swapon -s)" ] && [ "$memory" -lt 1000000 ]; then
 	chmod 600 /swapfile
 	mkswap /swapfile
 	swapon /swapfile
-	echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
+	echo "/swapfile	none	swap	sw	0	0" >> /etc/fstab
 fi
 
 #----------------------------------------------------------#
@@ -756,7 +756,10 @@ check_result $? 'apt-get upgrade failed'
 mkdir -p $hst_backups
 cd $hst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
-mkdir spamassassin mysql postgresql hestia
+mkdir spamassassin mysql postgresql openssl hestia
+
+# Backup OpenSSL configuration
+cp /etc/ssl/*.cnf $hst_backups/openssl > /dev/null 2>&1
 
 # Backup nginx configuration
 systemctl stop nginx > /dev/null 2>&1
@@ -769,7 +772,7 @@ rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
 systemctl stop php*-fpm > /dev/null 2>&1
-cp -r /etc/php/* $hst_backups/php/ > /dev/null 2>&1
+cp -r /etc/php/* $hst_backups/php > /dev/null 2>&1
 
 # Backup Bind configuration
 systemctl stop bind9 > /dev/null 2>&1
@@ -1290,6 +1293,17 @@ cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
+# Configuring global OpenSSL options
+echo "[ * ] Configuring OpenSSL to improve TLS performance..."
+cp -f $HESTIA_COMMON_DIR/openssl/hestia-openssl.cnf /etc/ssl
+if grep -q "^#.include filename" /etc/ssl/openssl.cnf 2>/dev/null; then
+	sed -i 's|^#.include filename|#.include filename\n\n# Hestia OpenSSL configuration\n.include /etc/ssl/hestia-openssl.cnf|' /etc/ssl/openssl.cnf
+elif [ -s "/etc/ssl/openssl.cnf" ]; then
+	sed -i '1i# Hestia OpenSSL configuration\n.include /etc/ssl/hestia-openssl.cnf\n' /etc/ssl/openssl.cnf
+else
+	echo -e "# Hestia OpenSSL configuration\n.include /etc/ssl/hestia-openssl.cnf" > /etc/ssl/openssl.cnf
+fi
+
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
 $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
@@ -1372,8 +1386,8 @@ for ip in $dns_resolver; do
 	fi
 done
 if [ -n "$resolver" ]; then
-	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
-	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/

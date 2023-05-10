@@ -80,9 +80,9 @@ export const options: OptionsListItem[] = [
 		conflicts: "mysql8",
 	},
 	{
-		name: " --mysql-classic",
+		name: " --mysql8",
 		id: "mysql8",
-		param: "--mysql-classic",
+		param: "--mysql8",
 		desc: "Install Mysql8.",
 		selected: false,
 		conflicts: "mysql",

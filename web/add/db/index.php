@@ -150,7 +150,7 @@ if (!empty($_POST["ok"])) {
 				"Database has been created.\n" .
 					"\n" .
 					"Database: {{database}}\n" .
-					"User: {{username}}\n" .
+					"Username: {{username}}\n" .
 					"Password: {{password}}\n" .
 					"SQL Manager: {{dbadmin}}\n" .
 					"\n" .

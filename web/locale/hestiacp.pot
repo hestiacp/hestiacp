@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-02 09:19+0200\n"
+"POT-Creation-Date: 2023-05-09 20:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,29 +225,45 @@ msgid "Rebuild"
 msgstr ""
 
 #: ../../web/templates/pages/list_web.php:35
+#: ../../web/templates/pages/list_web.php:90
 #: ../../web/templates/pages/list_mail.php:34
+#: ../../web/templates/pages/list_mail.php:111
 #: ../../web/templates/pages/list_mail_acc.php:44
+#: ../../web/templates/pages/list_mail_acc.php:114
 #: ../../web/templates/pages/list_cron.php:40
+#: ../../web/templates/pages/list_cron.php:93
 #: ../../web/templates/pages/list_dns.php:35
+#: ../../web/templates/pages/list_dns.php:89
 #: ../../web/templates/pages/list_dns_public.php:35
 #: ../../web/templates/pages/list_user.php:39
+#: ../../web/templates/pages/list_user.php:97
+#: ../../web/templates/pages/list_db.php:118
+#: ../../web/templates/pages/list_firewall.php:76
 #: ../../web/templates/pages/list_dns_rec.php:39
 msgid "Suspend"
 msgstr ""
 
 #: ../../web/templates/pages/list_web.php:36
+#: ../../web/templates/pages/list_web.php:84
 #: ../../web/templates/pages/list_mail.php:35
+#: ../../web/templates/pages/list_mail.php:85
 #: ../../web/templates/pages/list_mail_acc.php:45
+#: ../../web/templates/pages/list_mail_acc.php:93
 #: ../../web/templates/pages/list_cron.php:41
+#: ../../web/templates/pages/list_cron.php:87
 #: ../../web/templates/pages/list_dns.php:36
+#: ../../web/templates/pages/list_dns.php:83
 #: ../../web/templates/pages/list_dns_public.php:36
 #: ../../web/templates/pages/list_user.php:40
+#: ../../web/templates/pages/list_user.php:91
+#: ../../web/templates/pages/list_db.php:112
+#: ../../web/templates/pages/list_firewall.php:70
 #: ../../web/templates/pages/list_dns_rec.php:40
 msgid "Unsuspend"
 msgstr ""
 
 #: ../../web/templates/pages/list_web.php:37
-#: ../../web/templates/pages/list_web.php:220
+#: ../../web/templates/pages/list_web.php:222
 #: ../../web/templates/pages/list_firewall_ipset.php:17
 #: ../../web/templates/pages/list_firewall_ipset.php:60
 #: ../../web/templates/pages/list_log.php:59
@@ -255,24 +271,24 @@ msgstr ""
 #: ../../web/templates/pages/list_firewall_banlist.php:17
 #: ../../web/templates/pages/list_firewall_banlist.php:62
 #: ../../web/templates/pages/list_mail.php:36
-#: ../../web/templates/pages/list_mail.php:182
+#: ../../web/templates/pages/list_mail.php:184
 #: ../../web/templates/pages/list_ip.php:30
 #: ../../web/templates/pages/list_ip.php:85
 #: ../../web/templates/pages/list_mail_acc.php:46
-#: ../../web/templates/pages/list_mail_acc.php:180
+#: ../../web/templates/pages/list_mail_acc.php:182
 #: ../../web/templates/pages/list_cron.php:42
-#: ../../web/templates/pages/list_cron.php:134
+#: ../../web/templates/pages/list_cron.php:136
 #: ../../web/templates/pages/list_dns.php:37
-#: ../../web/templates/pages/list_dns.php:137
+#: ../../web/templates/pages/list_dns.php:139
 #: ../../web/templates/pages/list_access_keys.php:26
 #: ../../web/templates/pages/list_access_keys.php:87
 #: ../../web/templates/pages/list_dns_public.php:37
 #: ../../web/templates/pages/list_user.php:41
-#: ../../web/templates/pages/list_user.php:151
+#: ../../web/templates/pages/list_user.php:153
 #: ../../web/templates/pages/list_db.php:66
-#: ../../web/templates/pages/list_db.php:171
+#: ../../web/templates/pages/list_db.php:173
 #: ../../web/templates/pages/list_firewall.php:36
-#: ../../web/templates/pages/list_firewall.php:119
+#: ../../web/templates/pages/list_firewall.php:121
 #: ../../web/templates/pages/list_log_auth.php:29
 #: ../../web/templates/pages/list_log_auth.php:32
 #: ../../web/templates/pages/edit_web.php:400
@@ -352,65 +368,65 @@ msgid "SSL"
 msgstr ""
 
 #: ../../web/templates/pages/list_web.php:73
-#: ../../web/templates/pages/list_web.php:195
+#: ../../web/templates/pages/list_web.php:197
 #: ../../web/templates/includes/panel.php:186
 #: ../../web/templates/includes/panel.php:188
 msgid "Statistics"
 msgstr ""
 
-#: ../../web/templates/pages/list_web.php:85
-#: ../../web/templates/pages/list_mail.php:86
-#: ../../web/templates/pages/list_dns.php:84
+#: ../../web/templates/pages/list_web.php:86
+#: ../../web/templates/pages/list_mail.php:87
+#: ../../web/templates/pages/list_dns.php:85
 #, php-format
 msgid "Are you sure you want to unsuspend domain %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_web.php:90
-#: ../../web/templates/pages/list_mail.php:111
-#: ../../web/templates/pages/list_dns.php:89
+#: ../../web/templates/pages/list_web.php:92
+#: ../../web/templates/pages/list_mail.php:113
+#: ../../web/templates/pages/list_dns.php:91
 #, php-format
 msgid "Are you sure you want to suspend domain %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_web.php:171
+#: ../../web/templates/pages/list_web.php:173
 #: ../../web/templates/pages/list_firewall_ipset.php:49
 #: ../../web/templates/pages/list_firewall_banlist.php:51
-#: ../../web/templates/pages/list_mail.php:143
+#: ../../web/templates/pages/list_mail.php:145
 #: ../../web/templates/pages/list_ip.php:72
-#: ../../web/templates/pages/list_mail_acc.php:137
-#: ../../web/templates/pages/list_cron.php:100
-#: ../../web/templates/pages/list_dns.php:102
+#: ../../web/templates/pages/list_mail_acc.php:139
+#: ../../web/templates/pages/list_cron.php:102
+#: ../../web/templates/pages/list_dns.php:104
 #: ../../web/templates/pages/list_updates.php:65
 #: ../../web/templates/pages/list_access_keys.php:73
 #: ../../web/templates/pages/list_services.php:140
-#: ../../web/templates/pages/list_user.php:105
-#: ../../web/templates/pages/list_db.php:134
-#: ../../web/templates/pages/list_firewall.php:85
+#: ../../web/templates/pages/list_user.php:107
+#: ../../web/templates/pages/list_db.php:136
+#: ../../web/templates/pages/list_firewall.php:87
 #: ../../web/templates/pages/list_packages.php:74
 #: ../../web/templates/pages/list_dns_rec.php:94
 #: ../../web/templates/pages/list_backup.php:76
 msgid "Select"
 msgstr ""
 
-#: ../../web/templates/pages/list_web.php:186
-#: ../../web/templates/pages/list_web.php:203
+#: ../../web/templates/pages/list_web.php:188
+#: ../../web/templates/pages/list_web.php:205
 msgid "Edit Domain"
 msgstr ""
 
-#: ../../web/templates/pages/list_web.php:205
+#: ../../web/templates/pages/list_web.php:207
 #: ../../web/templates/pages/list_weblog.php:39
 #: ../../web/templates/pages/list_weblog.php:41
 msgid "Access Log"
 msgstr ""
 
-#: ../../web/templates/pages/list_web.php:221
-#: ../../web/templates/pages/list_mail.php:183
-#: ../../web/templates/pages/list_dns.php:138
+#: ../../web/templates/pages/list_web.php:223
+#: ../../web/templates/pages/list_mail.php:185
+#: ../../web/templates/pages/list_dns.php:140
 #, php-format
 msgid "Are you sure you want to delete domain %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_web.php:249
+#: ../../web/templates/pages/list_web.php:251
 #, php-format
 msgid "%d web domain"
 msgid_plural "%d web domains"
@@ -477,12 +493,12 @@ msgstr[1] ""
 #: ../../web/templates/pages/list_rrd.php:6
 #: ../../web/templates/pages/edit_server_bind9.php:6
 #: ../../web/templates/pages/edit_server.php:6
-#: ../../web/templates/pages/login/reset_1.php:24
+#: ../../web/templates/pages/login/reset_1.php:28
 #: ../../web/templates/pages/login/login_1.php:26
-#: ../../web/templates/pages/login/reset2fa.php:37
+#: ../../web/templates/pages/login/reset2fa.php:41
 #: ../../web/templates/pages/login/reset_2.php:25
-#: ../../web/templates/pages/login/reset_3.php:27
-#: ../../web/templates/pages/login/login_2.php:25
+#: ../../web/templates/pages/login/reset_3.php:31
+#: ../../web/templates/pages/login/login_2.php:29
 #: ../../web/templates/pages/add_web.php:6
 #: ../../web/templates/pages/add_dns.php:6
 #: ../../web/templates/pages/edit_server_mysql.php:6
@@ -632,14 +648,14 @@ msgstr ""
 #: ../../web/templates/pages/edit_package.php:272
 #: ../../web/templates/pages/edit_package.php:296
 #: ../../web/templates/pages/edit_package.php:314
-#: ../../web/templates/includes/js.php:25
+#: ../../web/templates/includes/js.php:8
 msgid "Unlimited"
 msgstr ""
 
 #: ../../web/templates/pages/add_package.php:65
 #: ../../web/templates/pages/list_stats.php:218
 #: ../../web/templates/pages/list_user.php:80
-#: ../../web/templates/pages/list_user.php:179
+#: ../../web/templates/pages/list_user.php:181
 #: ../../web/templates/pages/edit_package.php:67
 #: ../../web/templates/pages/list_packages.php:60
 #: ../../web/templates/pages/list_packages.php:209
@@ -660,7 +676,7 @@ msgstr ""
 #: ../../web/templates/pages/add_package.php:77
 #: ../../web/templates/pages/list_stats.php:146
 #: ../../web/templates/pages/list_user.php:76
-#: ../../web/templates/pages/list_user.php:175
+#: ../../web/templates/pages/list_user.php:177
 #: ../../web/templates/pages/edit_backup_exclusions.php:28
 #: ../../web/templates/pages/edit_package.php:79
 #: ../../web/templates/pages/list_packages.php:52
@@ -684,7 +700,7 @@ msgstr ""
 #: ../../web/templates/pages/edit_package.php:89
 #: ../../web/templates/pages/edit_package.php:189
 #: ../../web/templates/pages/edit_package.php:268
-msgid "Per Domain"
+msgid "per domain"
 msgstr ""
 
 #: ../../web/templates/pages/add_package.php:98
@@ -725,7 +741,7 @@ msgstr ""
 #: ../../web/templates/pages/add_package.php:175
 #: ../../web/templates/pages/list_stats.php:194
 #: ../../web/templates/pages/list_user.php:77
-#: ../../web/templates/pages/list_user.php:176
+#: ../../web/templates/pages/list_user.php:178
 #: ../../web/templates/pages/edit_package.php:179
 #: ../../web/templates/pages/list_packages.php:54
 #: ../../web/templates/pages/list_packages.php:155
@@ -735,10 +751,10 @@ msgstr ""
 
 #: ../../web/templates/pages/add_package.php:185
 #: ../../web/templates/pages/list_stats.php:210
-#: ../../web/templates/pages/list_mail.php:153
-#: ../../web/templates/pages/list_mail.php:167
-#: ../../web/templates/pages/list_dns.php:105
-#: ../../web/templates/pages/list_dns.php:122
+#: ../../web/templates/pages/list_mail.php:155
+#: ../../web/templates/pages/list_mail.php:169
+#: ../../web/templates/pages/list_dns.php:107
+#: ../../web/templates/pages/list_dns.php:124
 #: ../../web/templates/pages/edit_package.php:189
 #: ../../web/templates/pages/list_packages.php:55
 #: ../../web/templates/pages/list_packages.php:164
@@ -769,7 +785,7 @@ msgstr ""
 #: ../../web/templates/pages/add_package.php:254
 #: ../../web/templates/pages/list_stats.php:154
 #: ../../web/templates/pages/list_user.php:78
-#: ../../web/templates/pages/list_user.php:177
+#: ../../web/templates/pages/list_user.php:179
 #: ../../web/templates/pages/edit_backup_exclusions.php:32
 #: ../../web/templates/pages/edit_package.php:258
 #: ../../web/templates/pages/list_packages.php:56
@@ -780,8 +796,8 @@ msgstr ""
 
 #: ../../web/templates/pages/add_package.php:264
 #: ../../web/templates/pages/list_stats.php:170
-#: ../../web/templates/pages/list_mail.php:145
-#: ../../web/templates/pages/list_mail.php:152
+#: ../../web/templates/pages/list_mail.php:147
+#: ../../web/templates/pages/list_mail.php:154
 #: ../../web/templates/pages/edit_package.php:268
 #: ../../web/templates/pages/list_packages.php:57
 #: ../../web/templates/pages/list_packages.php:182
@@ -800,7 +816,7 @@ msgstr ""
 
 #: ../../web/templates/pages/add_package.php:275
 #: ../../web/templates/pages/edit_package.php:279
-msgid "Per Account / Hour"
+msgid "per account / hour"
 msgstr ""
 
 #: ../../web/templates/pages/add_package.php:281
@@ -815,7 +831,7 @@ msgstr ""
 #: ../../web/templates/pages/list_stats.php:115
 #: ../../web/templates/pages/list_stats.php:186
 #: ../../web/templates/pages/list_user.php:79
-#: ../../web/templates/pages/list_user.php:178
+#: ../../web/templates/pages/list_user.php:180
 #: ../../web/templates/pages/edit_backup_exclusions.php:36
 #: ../../web/templates/pages/edit_package.php:293
 #: ../../web/templates/pages/list_packages.php:58
@@ -836,6 +852,7 @@ msgstr ""
 
 #: ../../web/templates/pages/add_package.php:307
 #: ../../web/templates/pages/list_stats.php:202
+#: ../../web/templates/pages/list_backup_detail.php:187
 #: ../../web/templates/pages/edit_package.php:311
 #: ../../web/templates/pages/list_packages.php:59
 #: ../../web/templates/pages/list_packages.php:200
@@ -890,10 +907,10 @@ msgstr ""
 #: ../../web/templates/pages/edit_dns_rec.php:75
 #: ../../web/templates/pages/edit_dns_rec.php:81
 #: ../../web/templates/pages/edit_mail.php:132
-#: ../../web/templates/pages/add_firewall.php:61
+#: ../../web/templates/pages/add_firewall.php:66
 #: ../../web/templates/pages/edit_ip.php:69
 #: ../../web/templates/pages/edit_ip.php:75
-#: ../../web/templates/pages/edit_firewall.php:61
+#: ../../web/templates/pages/edit_firewall.php:66
 #: ../../web/templates/pages/add_dns_rec.php:74
 #: ../../web/templates/pages/add_dns_rec.php:80
 #: ../../web/templates/pages/edit_web.php:205
@@ -949,11 +966,11 @@ msgstr ""
 
 #: ../../web/templates/pages/add_access_key.php:37
 #: ../../web/templates/pages/list_firewall_banlist.php:38
-#: ../../web/templates/pages/add_firewall.php:61
+#: ../../web/templates/pages/add_firewall.php:66
 #: ../../web/templates/pages/list_access_keys.php:20
 #: ../../web/templates/pages/list_access_keys.php:48
 #: ../../web/templates/pages/list_access_key.php:53
-#: ../../web/templates/pages/edit_firewall.php:61
+#: ../../web/templates/pages/edit_firewall.php:66
 #: ../../web/templates/pages/list_firewall.php:30
 #: ../../web/templates/pages/list_firewall.php:56
 msgid "Comment"
@@ -983,8 +1000,9 @@ msgid "Mail"
 msgstr ""
 
 #: ../../web/templates/pages/list_stats.php:133
+#: ../../web/templates/pages/list_backup_detail.php:219
 #: ../../web/templates/pages/edit_backup_exclusions.php:40
-msgid "User Directories"
+msgid "User Directory"
 msgstr ""
 
 #: ../../web/templates/pages/list_stats.php:162
@@ -1022,12 +1040,13 @@ msgid "url, script or file"
 msgstr ""
 
 #: ../../web/templates/pages/add_firewall_ipset.php:86
-#: ../../web/templates/pages/add_firewall.php:54
-#: ../../web/templates/pages/edit_firewall.php:54
+#: ../../web/templates/pages/add_firewall.php:59
+#: ../../web/templates/pages/edit_firewall.php:59
 msgid "Clear"
 msgstr ""
 
 #: ../../web/templates/pages/add_firewall_ipset.php:101
+#: ../../web/templates/pages/edit_whitelabel.php:110
 #: ../../web/templates/pages/edit_server.php:336
 #: ../../web/templates/pages/edit_server.php:497
 #: ../../web/templates/pages/edit_server.php:610
@@ -1058,6 +1077,7 @@ msgid "Yes"
 msgstr ""
 
 #: ../../web/templates/pages/add_firewall_ipset.php:102
+#: ../../web/templates/pages/edit_whitelabel.php:111
 #: ../../web/templates/pages/edit_server.php:336
 #: ../../web/templates/pages/edit_server.php:497
 #: ../../web/templates/pages/edit_server.php:610
@@ -1171,7 +1191,7 @@ msgid "Open debug panel"
 msgstr ""
 
 #: ../../web/templates/pages/add_mail_acc.php:32
-#: ../../web/templates/pages/list_mail.php:159
+#: ../../web/templates/pages/list_mail.php:161
 #: ../../web/templates/pages/list_mail_acc.php:16
 msgid "Add Mail Account"
 msgstr ""
@@ -1212,7 +1232,7 @@ msgstr ""
 #: ../../web/templates/pages/edit_server.php:470
 #: ../../web/templates/pages/edit_server.php:565
 #: ../../web/templates/pages/edit_server.php:817
-#: ../../web/templates/pages/login/login_a.php:17
+#: ../../web/templates/pages/login/login_a.php:21
 #: ../../web/templates/pages/login/login_1.php:12
 #: ../../web/templates/pages/edit_db.php:42
 #: ../../web/templates/pages/edit_user.php:84 ../../web/add/db/index.php:23
@@ -1221,7 +1241,7 @@ msgid "Password"
 msgstr ""
 
 #: ../../web/templates/pages/add_mail_acc.php:48
-#: ../../web/templates/pages/setup_webapp.php:76
+#: ../../web/templates/pages/setup_webapp.php:64
 #: ../../web/templates/pages/add_cron.php:82
 #: ../../web/templates/pages/add_cron.php:112
 #: ../../web/templates/pages/add_cron.php:181
@@ -1316,7 +1336,7 @@ msgstr ""
 
 #: ../../web/templates/pages/add_mail_acc.php:108
 #: ../../web/templates/pages/edit_mail_acc.php:118
-msgid "Email / Hour"
+msgid "email / hour"
 msgstr ""
 
 #: ../../web/templates/pages/add_mail_acc.php:115
@@ -1344,13 +1364,13 @@ msgstr ""
 #: ../../web/templates/pages/add_db.php:69
 #: ../../web/templates/pages/edit_server.php:458
 #: ../../web/templates/pages/edit_server.php:805
-#: ../../web/templates/pages/login/login_a.php:12
-#: ../../web/templates/pages/login/reset_1.php:12
-#: ../../web/templates/pages/login/login.php:12
-#: ../../web/templates/pages/login/reset2fa.php:25
+#: ../../web/templates/pages/login/login_a.php:16
+#: ../../web/templates/pages/login/reset_1.php:16
+#: ../../web/templates/pages/login/login.php:16
+#: ../../web/templates/pages/login/reset2fa.php:29
 #: ../../web/templates/pages/edit_db.php:34
 #: ../../web/templates/pages/edit_user.php:64 ../../web/edit/web/index.php:1071
-#: ../../web/edit/web/index.php:1111 ../../web/edit/web/index.php:1323
+#: ../../web/edit/web/index.php:1111 ../../web/edit/web/index.php:1325
 #: ../../web/add/db/index.php:20 ../../web/add/user/index.php:23
 msgid "Username"
 msgstr ""
@@ -1451,7 +1471,7 @@ msgstr ""
 #: ../../web/templates/pages/setup_webapp.php:34
 msgid ""
 "Your web folder already has files uploaded to it. The installer will "
-"overwrite your files and / or the installation might fail."
+"overwrite your files and/or the installation might fail."
 msgstr ""
 
 #: ../../web/templates/pages/setup_webapp.php:35
@@ -1600,20 +1620,20 @@ msgstr ""
 msgid "DKIM"
 msgstr ""
 
-#: ../../web/templates/pages/list_mail.php:155
-#: ../../web/templates/pages/list_mail.php:162
-#: ../../web/templates/pages/list_mail_acc.php:155
-#: ../../web/templates/pages/list_mail_acc.php:161
+#: ../../web/templates/pages/list_mail.php:157
+#: ../../web/templates/pages/list_mail.php:164
+#: ../../web/templates/pages/list_mail_acc.php:157
+#: ../../web/templates/pages/list_mail_acc.php:163
 msgid "Open Webmail"
 msgstr ""
 
-#: ../../web/templates/pages/list_mail.php:165
+#: ../../web/templates/pages/list_mail.php:167
 #: ../../web/templates/pages/edit_mail.php:35
 #: ../../web/templates/pages/list_mail_acc.php:19
 msgid "Edit Mail Domain"
 msgstr ""
 
-#: ../../web/templates/pages/list_mail.php:228
+#: ../../web/templates/pages/list_mail.php:230
 #, php-format
 msgid "%d mail domain"
 msgid_plural "%d mail domains"
@@ -1638,7 +1658,7 @@ msgid "Catch-All Email"
 msgstr ""
 
 #: ../../web/templates/pages/edit_mail.php:64
-msgid "Email / Hour / Account"
+msgid "email / hour / account"
 msgstr ""
 
 #: ../../web/templates/pages/edit_mail.php:78
@@ -1807,28 +1827,28 @@ msgstr ""
 msgid "Auto Reply"
 msgstr ""
 
-#: ../../web/templates/pages/list_mail_acc.php:94
+#: ../../web/templates/pages/list_mail_acc.php:95
 #, php-format
 msgid "Are you sure you want to unsuspend %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_mail_acc.php:114
+#: ../../web/templates/pages/list_mail_acc.php:116
 #, php-format
 msgid "Are you sure you want to suspend %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_mail_acc.php:143
-#: ../../web/templates/pages/list_mail_acc.php:164
+#: ../../web/templates/pages/list_mail_acc.php:145
+#: ../../web/templates/pages/list_mail_acc.php:166
 #: ../../web/templates/pages/edit_mail_acc.php:33
 msgid "Edit Mail Account"
 msgstr ""
 
-#: ../../web/templates/pages/list_mail_acc.php:181
+#: ../../web/templates/pages/list_mail_acc.php:183
 #, php-format
 msgid "Are you sure you want to delete %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_mail_acc.php:211
+#: ../../web/templates/pages/list_mail_acc.php:213
 #, php-format
 msgid "%d mail account"
 msgid_plural "%d mail accounts"
@@ -1882,22 +1902,18 @@ msgstr ""
 msgid "IP Address / IPset IP List"
 msgstr ""
 
-#: ../../web/templates/pages/add_firewall.php:80
-#: ../../web/templates/pages/edit_firewall.php:80
-#: ../../web/templates/pages/list_firewall.php:16
-msgid "IPset IP Lists"
-msgstr ""
-
 #: ../../web/templates/pages/list_cron.php:7
 #: ../../web/templates/pages/add_cron.php:25
 msgid "Add Cron Job"
 msgstr ""
 
 #: ../../web/templates/pages/list_cron.php:11
+#: ../../web/templates/pages/list_cron.php:38
 msgid "Disable Notifications"
 msgstr ""
 
 #: ../../web/templates/pages/list_cron.php:15
+#: ../../web/templates/pages/list_cron.php:39
 msgid "Enable Notifications"
 msgstr ""
 
@@ -1906,14 +1922,6 @@ msgstr ""
 #: ../../web/templates/pages/add_cron.php:28
 #: ../../web/templates/pages/edit_cron.php:28 ../../web/add/cron/index.php:32
 msgid "Command"
-msgstr ""
-
-#: ../../web/templates/pages/list_cron.php:38
-msgid "Disable notifications"
-msgstr ""
-
-#: ../../web/templates/pages/list_cron.php:39
-msgid "Enable notifications"
 msgstr ""
 
 #: ../../web/templates/pages/list_cron.php:72
@@ -1962,26 +1970,26 @@ msgstr ""
 msgid "Day of Week"
 msgstr ""
 
-#: ../../web/templates/pages/list_cron.php:88
+#: ../../web/templates/pages/list_cron.php:89
 msgid "Are you sure you want to unsuspend the cron job?"
 msgstr ""
 
-#: ../../web/templates/pages/list_cron.php:93
+#: ../../web/templates/pages/list_cron.php:95
 msgid "Are you sure you want to suspend the cron job?"
 msgstr ""
 
-#: ../../web/templates/pages/list_cron.php:106
-#: ../../web/templates/pages/list_cron.php:118
+#: ../../web/templates/pages/list_cron.php:108
+#: ../../web/templates/pages/list_cron.php:120
 #: ../../web/templates/pages/edit_cron.php:25
 msgid "Edit Cron Job"
 msgstr ""
 
-#: ../../web/templates/pages/list_cron.php:135
+#: ../../web/templates/pages/list_cron.php:137
 #, php-format
 msgid "Are you sure you want to delete the cron job?"
 msgstr ""
 
-#: ../../web/templates/pages/list_cron.php:158
+#: ../../web/templates/pages/list_cron.php:160
 #, php-format
 msgid "%d cron job"
 msgid_plural "%d cron jobs"
@@ -2026,22 +2034,22 @@ msgstr ""
 msgid "Expiration Date"
 msgstr ""
 
-#: ../../web/templates/pages/list_dns.php:117
+#: ../../web/templates/pages/list_dns.php:119
 #: ../../web/templates/pages/add_dns_rec.php:25
 msgid "Add DNS Record"
 msgstr ""
 
-#: ../../web/templates/pages/list_dns.php:118
+#: ../../web/templates/pages/list_dns.php:120
 #: ../../web/templates/pages/list_dns_rec.php:13
 #: ../../web/templates/pages/edit_dns.php:25
 msgid "Edit DNS Domain"
 msgstr ""
 
-#: ../../web/templates/pages/list_dns.php:119
+#: ../../web/templates/pages/list_dns.php:121
 msgid "View Public DNSSEC Key"
 msgstr ""
 
-#: ../../web/templates/pages/list_dns.php:170
+#: ../../web/templates/pages/list_dns.php:172
 #, php-format
 msgid "%d DNS zone"
 msgid_plural "%d DNS zones"
@@ -2049,11 +2057,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../../web/templates/pages/list_updates.php:12
-msgid "Disable automatic updates"
+msgid "Disable Automatic Updates"
 msgstr ""
 
 #: ../../web/templates/pages/list_updates.php:16
-msgid "Enable automatic updates"
+msgid "Enable Automatic Updates"
 msgstr ""
 
 #: ../../web/templates/pages/list_updates.php:35
@@ -2319,9 +2327,9 @@ msgid "Contact Name"
 msgstr ""
 
 #: ../../web/templates/pages/add_user.php:43
-#: ../../web/templates/pages/list_user.php:114
+#: ../../web/templates/pages/list_user.php:116
 #: ../../web/templates/pages/generate_ssl.php:27
-#: ../../web/templates/pages/login/reset_1.php:16
+#: ../../web/templates/pages/login/reset_1.php:20
 #: ../../web/templates/pages/edit_user.php:76 ../../web/add/user/index.php:32
 msgid "Email"
 msgstr ""
@@ -2435,8 +2443,8 @@ msgid "Search Results"
 msgstr ""
 
 #: ../../web/templates/pages/list_search.php:158
-#: ../../web/templates/pages/list_user.php:111
-#: ../../web/templates/pages/list_user.php:123
+#: ../../web/templates/pages/list_user.php:113
+#: ../../web/templates/pages/list_user.php:125
 msgid "Log in as"
 msgstr ""
 
@@ -2525,16 +2533,10 @@ msgstr ""
 msgid "Database"
 msgstr ""
 
-#: ../../web/templates/pages/list_backup_detail.php:187
-msgid "Cron Records"
-msgstr ""
-
 #: ../../web/templates/pages/list_backup_detail.php:190
-msgid "records"
-msgstr ""
-
-#: ../../web/templates/pages/list_backup_detail.php:219
-msgid "User Directory"
+#: ../../web/templates/includes/panel.php:340
+#: ../../web/templates/includes/panel.php:344
+msgid "Jobs"
 msgstr ""
 
 #: ../../web/templates/pages/list_backup_detail.php:243
@@ -2671,35 +2673,35 @@ msgstr ""
 msgid "Update Usage Counters"
 msgstr ""
 
-#: ../../web/templates/pages/list_user.php:92
+#: ../../web/templates/pages/list_user.php:93
 #, php-format
 msgid "Are you sure you want to unsuspend user %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_user.php:97
+#: ../../web/templates/pages/list_user.php:99
 #, php-format
 msgid "Are you sure you want to suspend user %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_user.php:109
-#: ../../web/templates/pages/list_user.php:129
+#: ../../web/templates/pages/list_user.php:111
+#: ../../web/templates/pages/list_user.php:131
 #: ../../web/templates/pages/edit_user.php:61
 msgid "Edit User"
 msgstr ""
 
-#: ../../web/templates/pages/list_user.php:152
+#: ../../web/templates/pages/list_user.php:154
 #, php-format
 msgid "Are you sure you want to delete user %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_user.php:168
+#: ../../web/templates/pages/list_user.php:170
 #: ../../web/templates/pages/edit_package.php:37
 #: ../../web/templates/pages/list_packages.php:80
 #: ../../web/templates/pages/list_packages.php:90
 msgid "Edit Package"
 msgstr ""
 
-#: ../../web/templates/pages/list_user.php:187
+#: ../../web/templates/pages/list_user.php:189
 #, php-format
 msgid "%d user account"
 msgid_plural "%d user accounts"
@@ -2715,7 +2717,7 @@ msgstr ""
 
 #: ../../web/templates/pages/edit_backup_exclusions.php:33
 msgid ""
-"ype domain name, one per line. To exclude all domains use *. To exclude "
+"Type domain name, one per line. To exclude all domains use *. To exclude "
 "specific accounts use following format: domain.tld:info:support:postmaster"
 msgstr ""
 
@@ -2785,28 +2787,28 @@ msgstr ""
 msgid "Unsuspend All"
 msgstr ""
 
-#: ../../web/templates/pages/list_db.php:113
+#: ../../web/templates/pages/list_db.php:114
 #, php-format
 msgid "Are you sure you want to unsuspend database %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_db.php:118
+#: ../../web/templates/pages/list_db.php:120
 #, php-format
 msgid "Are you sure you want to suspend database %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_db.php:140
-#: ../../web/templates/pages/list_db.php:152
+#: ../../web/templates/pages/list_db.php:142
+#: ../../web/templates/pages/list_db.php:154
 #: ../../web/templates/pages/edit_db.php:25
 msgid "Edit Database"
 msgstr ""
 
-#: ../../web/templates/pages/list_db.php:172
+#: ../../web/templates/pages/list_db.php:174
 #, php-format
 msgid "Are you sure you want to delete database %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_db.php:196
+#: ../../web/templates/pages/list_db.php:198
 #, php-format
 msgid "%d database"
 msgid_plural "%d databases"
@@ -2814,8 +2816,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../../web/templates/pages/edit_firewall.php:25
-#: ../../web/templates/pages/list_firewall.php:89
-#: ../../web/templates/pages/list_firewall.php:104
+#: ../../web/templates/pages/list_firewall.php:91
+#: ../../web/templates/pages/list_firewall.php:106
 msgid "Edit Firewall Rule"
 msgstr ""
 
@@ -2827,22 +2829,26 @@ msgstr ""
 msgid "Fail2ban Banlists"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall.php:71
+#: ../../web/templates/pages/list_firewall.php:16
+msgid "IPset IP Lists"
+msgstr ""
+
+#: ../../web/templates/pages/list_firewall.php:72
 #, php-format
 msgid "Are you sure you want to unsuspend rule #%s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall.php:76
+#: ../../web/templates/pages/list_firewall.php:78
 #, php-format
 msgid "Are you sure you want to suspend rule #%s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall.php:120
+#: ../../web/templates/pages/list_firewall.php:122
 #, php-format
 msgid "Are you sure you want to delete rule %s"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall.php:142
+#: ../../web/templates/pages/list_firewall.php:144
 #, php-format
 msgid "%d firewall rule"
 msgid_plural "%d firewall rules"
@@ -2903,14 +2909,6 @@ msgstr ""
 
 #: ../../web/templates/pages/edit_whitelabel.php:107
 msgid "Hide link to Documentation"
-msgstr ""
-
-#: ../../web/templates/pages/edit_whitelabel.php:110
-msgid "Hide Documentation Link"
-msgstr ""
-
-#: ../../web/templates/pages/edit_whitelabel.php:111
-msgid "Display Documentation Link"
 msgstr ""
 
 #: ../../web/templates/pages/edit_web.php:11
@@ -3110,7 +3108,7 @@ msgid "Shell"
 msgstr ""
 
 #: ../../web/templates/pages/list_packages.php:92
-msgid "Copy"
+msgid "Duplicate"
 msgstr ""
 
 #: ../../web/templates/pages/list_packages.php:101
@@ -3236,7 +3234,7 @@ msgid "Backend Pool Mode"
 msgstr ""
 
 #: ../../web/templates/pages/edit_server.php:261
-msgid "Enabled multi PHP versions"
+msgid "Enabled PHP Versions"
 msgstr ""
 
 #: ../../web/templates/pages/edit_server.php:265
@@ -3360,7 +3358,7 @@ msgstr ""
 
 #: ../../web/templates/pages/edit_server.php:1041
 #: ../../web/templates/pages/login/login_1.php:23
-#: ../../web/templates/pages/login/login_2.php:22
+#: ../../web/templates/pages/login/login_2.php:26
 msgid "Login"
 msgstr ""
 
@@ -3463,12 +3461,12 @@ msgid "File System Disk Quota"
 msgstr ""
 
 #: ../../web/templates/pages/login/login_a.php:8
-#: ../../web/templates/pages/login/login.php:8 ../../web/add/user/index.php:173
+#: ../../web/templates/pages/login/login.php:8 ../../web/add/user/index.php:175
 #, php-format
 msgid "Welcome to %s"
 msgstr ""
 
-#: ../../web/templates/pages/login/login_a.php:20
+#: ../../web/templates/pages/login/login_a.php:24
 #: ../../web/templates/pages/login/reset_1.php:8
 #: ../../web/templates/pages/login/login_1.php:15
 #: ../../web/templates/pages/login/reset_2.php:7
@@ -3476,13 +3474,13 @@ msgstr ""
 msgid "Forgot Password"
 msgstr ""
 
-#: ../../web/templates/pages/login/login_a.php:27
-#: ../../web/templates/pages/login/login.php:16
+#: ../../web/templates/pages/login/login_a.php:31
+#: ../../web/templates/pages/login/login.php:20
 msgid "Next"
 msgstr ""
 
-#: ../../web/templates/pages/login/reset_1.php:21
-#: ../../web/templates/pages/login/reset2fa.php:34
+#: ../../web/templates/pages/login/reset_1.php:25
+#: ../../web/templates/pages/login/reset2fa.php:38
 msgid "Submit"
 msgstr ""
 
@@ -3508,7 +3506,7 @@ msgstr ""
 msgid "Unlock Account"
 msgstr ""
 
-#: ../../web/templates/pages/login/reset2fa.php:29
+#: ../../web/templates/pages/login/reset2fa.php:33
 msgid "2FA Reset Code"
 msgstr ""
 
@@ -3524,15 +3522,15 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: ../../web/templates/pages/login/reset_3.php:15
+#: ../../web/templates/pages/login/reset_3.php:19
 msgid "New Password"
 msgstr ""
 
-#: ../../web/templates/pages/login/reset_3.php:19
+#: ../../web/templates/pages/login/reset_3.php:23
 msgid "Confirm Password"
 msgstr ""
 
-#: ../../web/templates/pages/login/reset_3.php:24
+#: ../../web/templates/pages/login/reset_3.php:28
 msgid "Reset"
 msgstr ""
 
@@ -3540,11 +3538,11 @@ msgstr ""
 msgid "Two-factor Authentication"
 msgstr ""
 
-#: ../../web/templates/pages/login/login_2.php:13
+#: ../../web/templates/pages/login/login_2.php:17
 msgid "2FA Token"
 msgstr ""
 
-#: ../../web/templates/pages/login/login_2.php:15
+#: ../../web/templates/pages/login/login_2.php:19
 msgid "Forgot Token"
 msgstr ""
 
@@ -3662,7 +3660,7 @@ msgid "Notifications"
 msgstr ""
 
 #: ../../web/templates/includes/panel.php:78
-#: ../../web/templates/includes/js.php:26
+#: ../../web/templates/includes/js.php:9
 msgid "No notifications"
 msgstr ""
 
@@ -3671,7 +3669,7 @@ msgid "Delete notification"
 msgstr ""
 
 #: ../../web/templates/includes/panel.php:113
-#: ../../web/templates/includes/js.php:27
+#: ../../web/templates/includes/js.php:10
 msgid "Delete all notifications"
 msgstr ""
 
@@ -3726,11 +3724,6 @@ msgstr ""
 msgid "Zones"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:340
-#: ../../web/templates/includes/panel.php:344
-msgid "Jobs"
-msgstr ""
-
 #: ../../web/templates/includes/panel.php:341
 msgid "CRON"
 msgstr ""
@@ -3739,15 +3732,15 @@ msgstr ""
 msgid "BACKUP"
 msgstr ""
 
-#: ../../web/templates/includes/js.php:28
+#: ../../web/templates/includes/js.php:11
 msgid "Are you sure you want to leave the page?"
 msgstr ""
 
-#: ../../web/templates/includes/js.php:30
+#: ../../web/templates/includes/js.php:13
 msgid "BLACKLIST"
 msgstr ""
 
-#: ../../web/templates/includes/js.php:31
+#: ../../web/templates/includes/js.php:14
 msgid "IPVERSE"
 msgstr ""
 
@@ -3843,7 +3836,7 @@ msgstr ""
 
 #: ../../web/edit/firewall/index.php:89 ../../web/edit/web/index.php:860
 #: ../../web/edit/web/index.php:1081 ../../web/edit/web/index.php:1121
-#: ../../web/edit/web/index.php:1183 ../../web/edit/web/index.php:1333
+#: ../../web/edit/web/index.php:1183 ../../web/edit/web/index.php:1335
 #: ../../web/edit/mail/index.php:598 ../../web/edit/package/index.php:213
 #: ../../web/add/access-key/index.php:56 ../../web/add/firewall/index.php:61
 #: ../../web/add/firewall/ipset/index.php:43
@@ -3858,12 +3851,12 @@ msgstr ""
 msgid "Field \"%s\" can not be blank."
 msgstr ""
 
-#: ../../web/edit/firewall/index.php:134 ../../web/edit/web/index.php:1594
+#: ../../web/edit/firewall/index.php:134 ../../web/edit/web/index.php:1598
 #: ../../web/edit/db/index.php:100 ../../web/edit/cron/index.php:89
 #: ../../web/edit/dns/index.php:234 ../../web/edit/dns/index.php:325
 #: ../../web/edit/user/index.php:540 ../../web/edit/ip/index.php:97
 #: ../../web/edit/backup/exclusions/index.php:132
-#: ../../web/edit/mail/index.php:735 ../../web/edit/mail/index.php:1158
+#: ../../web/edit/mail/index.php:735 ../../web/edit/mail/index.php:1160
 #: ../../web/edit/package/index.php:323 ../../web/edit/server/php/index.php:44
 #: ../../web/edit/server/named/index.php:44
 #: ../../web/edit/server/bind9/index.php:61
@@ -3896,7 +3889,7 @@ msgstr ""
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: ../../web/edit/web/index.php:1242 ../../web/edit/web/index.php:1386
+#: ../../web/edit/web/index.php:1242 ../../web/edit/web/index.php:1388
 msgid ""
 "FTP account has been created and ready to use.\n"
 "\n"
@@ -3904,11 +3897,13 @@ msgid ""
 "Username: {{username}}\n"
 "Password: {{password}}\n"
 "\n"
+"Best regards,\n"
+"\n"
 "--\n"
 "{{appname}}"
 msgstr ""
 
-#: ../../web/edit/web/index.php:1257 ../../web/edit/web/index.php:1401
+#: ../../web/edit/web/index.php:1259 ../../web/edit/web/index.php:1405
 #, php-format
 msgid "FTP Account Credentials: %s"
 msgstr ""
@@ -3955,21 +3950,23 @@ msgid ""
 "STARTTLS: Port 587\n"
 "No encryption: Port 25\n"
 "\n"
+"Best regards,\n"
+"\n"
 "--\n"
 "{{appname}}"
 msgstr ""
 
-#: ../../web/edit/mail/index.php:1127 ../../web/add/mail/index.php:473
+#: ../../web/edit/mail/index.php:1129 ../../web/add/mail/index.php:475
 #, php-format
 msgid "Email Credentials: %s@%s"
 msgstr ""
 
 #: ../../web/edit/package/index.php:198 ../../web/add/package/index.php:89
-msgid "NS1"
+msgid "Nameserver 1"
 msgstr ""
 
 #: ../../web/edit/package/index.php:201 ../../web/add/package/index.php:92
-msgid "NS2"
+msgid "Nameserver 2"
 msgstr ""
 
 #: ../../web/edit/server/index.php:1187
@@ -3981,7 +3978,7 @@ msgstr ""
 msgid "Info (read-only mode): Crontab can only be edited via SSH."
 msgstr ""
 
-#: ../../web/add/access-key/index.php:78
+#: ../../web/add/access-key/index.php:79
 #, php-format
 msgid "Access key {%s} has been created successfully."
 msgstr ""
@@ -4016,20 +4013,22 @@ msgid ""
 "Database has been created.\n"
 "\n"
 "Database: {{database}}\n"
-"User: {{username}}\n"
+"Username: {{username}}\n"
 "Password: {{password}}\n"
 "SQL Manager: {{dbadmin}}\n"
+"\n"
+"Best regards,\n"
 "\n"
 "--\n"
 "{{appname}}"
 msgstr ""
 
-#: ../../web/add/db/index.php:166
+#: ../../web/add/db/index.php:168
 #, php-format
 msgid "Database Credentials: %s"
 msgstr ""
 
-#: ../../web/add/db/index.php:197
+#: ../../web/add/db/index.php:199
 #, php-format
 msgid "Database {%s} has been created successfully. / {Open %s}"
 msgstr ""
@@ -4058,7 +4057,7 @@ msgstr ""
 msgid "DNS zone {%s} has been created successfully."
 msgstr ""
 
-#: ../../web/add/dns/index.php:279
+#: ../../web/add/dns/index.php:280
 #, php-format
 msgid "Record {%s.%s} has been created successfully."
 msgstr ""
@@ -4073,11 +4072,13 @@ msgid ""
 "Username: {{user}}\n"
 "Password: {{password}}\n"
 "\n"
+"Best regards,\n"
+"\n"
 "--\n"
 "{{appname}}"
 msgstr ""
 
-#: ../../web/add/user/index.php:225
+#: ../../web/add/user/index.php:227
 #, php-format
 msgid "User {%s} has been created successfully. / {Log in as %s}"
 msgstr ""
@@ -4092,7 +4093,7 @@ msgstr ""
 msgid "Mail domain {%s} has been created successfully."
 msgstr ""
 
-#: ../../web/add/mail/index.php:506
+#: ../../web/add/mail/index.php:508
 #, php-format
 msgid "Mail account {%s@%s} has been created successfully."
 msgstr ""
@@ -4129,25 +4130,25 @@ msgstr ""
 msgid "Certificate has been generated successfully."
 msgstr ""
 
-#: ../../web/inc/main.php:266 ../../web/inc/main.php:277
+#: ../../web/inc/main.php:253 ../../web/inc/main.php:264
 msgid "You are logged out, please log in again."
 msgstr ""
 
-#: ../../web/inc/main.php:339
+#: ../../web/inc/main.php:326
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../web/inc/main.php:342
+#: ../../web/inc/main.php:329
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../web/inc/main.php:346
+#: ../../web/inc/main.php:333
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
@@ -4185,10 +4186,6 @@ msgid ""
 "An existing backup is already running. Please wait for that backup to finish."
 msgstr ""
 
-#: ../../web/schedule/backup/incremental/index.php:17
-msgid "Snapshot has been sheduled"
-msgstr ""
-
 #: ../../web/bulk/cron/index.php:27 ../../web/bulk/cron/index.php:52
 msgid "Cron job email reporting has been successfully disabled."
 msgstr ""
@@ -4215,40 +4212,42 @@ msgid ""
 "If you did not request password reset, please ignore this message and accept "
 "our apologies.\n"
 "\n"
-"Best regards\n"
+"Best regards,\n"
+"\n"
+"--\n"
 "{{appname}}"
 msgstr ""
 
-#: ../../web/reset/index.php:82
+#: ../../web/reset/index.php:84
 #, php-format
 msgid "Password Reset at %s"
 msgstr ""
 
-#: ../../web/reset/index.php:136 ../../web/reset/index.php:143
-#: ../../web/reset/index.php:151 ../../web/reset/index.php:166
+#: ../../web/reset/index.php:136 ../../web/reset/index.php:140
+#: ../../web/reset/index.php:145 ../../web/reset/index.php:154
 msgid ""
 "Password reset instructions have been sent to the email address associated "
 "with this account."
 msgstr ""
 
-#: ../../web/reset/index.php:158
+#: ../../web/reset/index.php:149
 msgid "Please wait 15 minutes before sending a new request."
 msgstr ""
 
-#: ../../web/reset/index.php:199
+#: ../../web/reset/index.php:186
 msgid "An internal error occurred"
 msgstr ""
 
-#: ../../web/reset/index.php:207
+#: ../../web/reset/index.php:194
 msgid "Code has been expired"
 msgstr ""
 
-#: ../../web/reset/index.php:225 ../../web/reset/index.php:243
+#: ../../web/reset/index.php:212 ../../web/reset/index.php:230
 msgid "Invalid username or code"
 msgstr ""
 
-#: ../../web/reset/index.php:246
-msgid "Passwords not match"
+#: ../../web/reset/index.php:233
+msgid "Passwords do not match"
 msgstr ""
 
 #: ../../web/start/service/index.php:23
@@ -4269,7 +4268,7 @@ msgstr ""
 msgid "Invalid username or password"
 msgstr ""
 
-#: ../../web/login/index.php:272 ../../web/login/index.php:288
+#: ../../web/login/index.php:272 ../../web/login/index.php:287
 msgid "Invalid or missing 2FA token"
 msgstr ""
 
@@ -4311,7 +4310,7 @@ msgid "mail server"
 msgstr ""
 
 #: ../../bin/v-list-sys-services:203
-msgid "imap / pop server"
+msgid "imap/pop3 server"
 msgstr ""
 
 #: ../../bin/v-list-sys-services:220

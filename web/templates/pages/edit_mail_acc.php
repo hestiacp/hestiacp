@@ -115,7 +115,7 @@
 					</div>
 					<div class="u-mb20">
 						<label for="v_rate" class="form-label">
-							<?= _("Rate Limit") ?> <span class="optional">(<?= _("Email / Hour") ?>)</span>
+							<?= _("Rate Limit") ?> <span class="optional">(<?= _("email / hour") ?>)</span>
 						</label>
 						<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 					</div>

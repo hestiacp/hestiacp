@@ -107,8 +107,8 @@
 							<?= _("Hide link to Documentation") ?>
 						</label>
 						<select x-model="hide_docs" class="form-select" name="v_hide_docs" id="v_hide_docs">
-							<option value="yes"><?=_('Hide Documentation Link');?></option>
-							<option value="no"><?=_('Display Documentation Link');?></option>
+							<option value="yes"><?=_('Yes');?></option>
+							<option value="no"><?=_('No');?></option>
 						</select>
 					</div>
 				</div>

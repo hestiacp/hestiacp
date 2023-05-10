@@ -2099,6 +2099,8 @@ echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbi
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
+
+BIN="$HESTIA/bin"
 source $HESTIA/func/syshealth.sh
 syshealth_repair_system_config
 

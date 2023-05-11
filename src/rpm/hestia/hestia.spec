@@ -110,11 +110,17 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Upgrade PHPMailer if applicable
     upgrade_phpmailer | tee -a $LOG
 
+    # Update DNS resolver for NGINX
+    upgrade_nginx_resolver | tee -a $LOG
+
+    # Update Cloudflare IPs if applicable
+    upgrade_cloudflare_ip | tee -a $LOG
+
     # Upgrade phpMyAdmin if applicable
     upgrade_phpmyadmin | tee -a $LOG
 
-	# Upgrade phpMyAdmin if applicable
-	upgrade_phppgadmin | tee -a $LOG
+    # Upgrade phpPgAdmin if applicable
+    upgrade_phppgadmin | tee -a $LOG
 
     # Upgrade blackblaze-cli-took if applicable
     upgrade_b2_tool | tee -a $LOG

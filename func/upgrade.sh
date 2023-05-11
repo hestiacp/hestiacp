@@ -555,14 +555,30 @@ upgrade_b2_tool() {
 	fi
 }
 
+upgrade_nginx_resolver() {
+	dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
+	for ip in $dns_resolver; do
+		if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+			resolver="$ip $resolver"
+		fi
+	done
+	if [ -n "$resolver" ]; then
+		echo "[ * ] Updating DNS resolver for NGINX..."
+		if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+		fi
+		sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+	fi
+}
+
 upgrade_cloudflare_ip() {
 	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
-		cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
+		cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"
 
 		if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
 			cf_inc="/etc/nginx/conf.d/cloudflare.inc"
 
-			echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
+			echo "[ * ] Updating Cloudflare IP Ranges for NGINX..."
 			echo "# Cloudflare IP Ranges" > $cf_inc
 			echo "" >> $cf_inc
 			echo "# IPv4" >> $cf_inc

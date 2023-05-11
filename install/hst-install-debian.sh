@@ -1352,7 +1352,7 @@ if [ -n "$resolver" ]; then
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/
-cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
+cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"
 
 if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
 	cf_inc="/etc/nginx/conf.d/cloudflare.inc"

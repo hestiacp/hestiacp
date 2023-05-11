@@ -780,6 +780,10 @@ upgrade_rebuild_users() {
 	fi
 }
 
+update_whitelabel_logo() {
+	$BIN/v-update-white-label-logo
+}
+
 upgrade_replace_default_config() {
 	syshealth_update_web_config_format
 	syshealth_update_mail_config_format

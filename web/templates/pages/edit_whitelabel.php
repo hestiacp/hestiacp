@@ -135,6 +135,12 @@
 							<li>favicon.ico<<small>(16px x 16px)</small></li>
 						</ul>
 					</div>
+					<div class="u-mb10">
+						<input type="checkbox" id="v_update_logo" name="v_update_logo"/>
+						<label for="v_update_logo" class="form-label">
+							<?= _("Update logo") ?>
+						</label>
+					</div>
 			</details>
 		</div>
 	</form>

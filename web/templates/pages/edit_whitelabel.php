@@ -113,6 +113,29 @@
 					</div>
 				</div>
 			</details>
+			<!-- Basic options section -->
+			<details class="collapse u-mb10">
+				<summary class="collapse-header">
+					<i class="fas fa-gear u-mr15"></i>
+					<?= _("Custom Logo") ?>
+				</summary>
+				<div class="collapse-content">
+					<div class="u-mb10">
+						<label for="v_custom_logo" class="form-label">
+							<?= _("Custom logo") ?>
+						</label>
+					</div>
+					<div class="u-mb10">
+						<p><?=sprintf(_("Upload the files to %s"), '/usr/local/hestia/web/images/custom/');?></p>
+						<ul>
+							<li>logo.svg <small>(100px x 120px)</small></li>
+							<li>logo.png <small>(100px x 120px)</small></li>
+							<li>logo-header.png <small>(54x x 29px)</small></li>
+							<li>favicon.png <small>(64px x 64px)</small></li>
+							<li>favicon.ico<<small>(16px x 16px)</small></li>
+						</ul>
+					</div>
+			</details>
 		</div>
 	</form>
 </div>

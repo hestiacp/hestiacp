@@ -110,9 +110,6 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Upgrade PHPMailer if applicable
     upgrade_phpmailer | tee -a $LOG
 
-    # Update DNS resolver for NGINX
-    upgrade_nginx_resolver | tee -a $LOG
-
     # Update Cloudflare IPs if applicable
     upgrade_cloudflare_ip | tee -a $LOG
 

@@ -86,9 +86,6 @@ upgrade_roundcube | tee -a $LOG
 # Upgrade PHP dependencies
 upgrade_dependencies | tee -a $LOG
 
-# Update DNS resolver for NGINX
-upgrade_nginx_resolver | tee -a $LOG
-
 # Update Cloudflare IPs if applicable
 upgrade_cloudflare_ip | tee -a $LOG
 

@@ -555,22 +555,6 @@ upgrade_b2_tool() {
 	fi
 }
 
-upgrade_nginx_resolver() {
-	dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-	for ip in $dns_resolver; do
-		if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-			resolver="$ip $resolver"
-		fi
-	done
-	if [ -n "$resolver" ]; then
-		echo "[ * ] Updating DNS resolver for NGINX..."
-		if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
-			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
-		fi
-		sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
-	fi
-}
-
 upgrade_cloudflare_ip() {
 	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"

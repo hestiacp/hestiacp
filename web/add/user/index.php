@@ -209,10 +209,10 @@ if (!empty($_POST["ok"])) {
 		}
 
 		$mailtext = translate_email($template, [
-			"name" => $name,
-			"user" => $_POST["v_username"],
-			"password" => $_POST["v_password"],
-			"hostname" => $hostname,
+			"name" => htmlentities($name),
+			"user" => htmlentities($_POST["v_username"]),
+			"password" => htmlentities($_POST["v_password"]),
+			"hostname" => htmlentities($hostname),
 			"appname" => $_SESSION["APP_NAME"],
 		]);
 

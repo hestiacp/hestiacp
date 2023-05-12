@@ -1069,6 +1069,11 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 		}
 	}
 
+	$webmail = "http://" . $hostname . "/" . $v_webmail_alias . "/";
+	if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
+		$webmail = $_SESSION["WEBMAIL_ALIAS"];
+	}
+
 	// Email login credentials
 	if (!empty($_POST["v_send_email"]) && empty($_SESSION["error_msg"])) {
 		$to = $_POST["v_send_email"];
@@ -1146,7 +1151,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 		$mailtext = translate_email($template, [
 			"domain" => htmlentities($_POST["v_domain"]),
 			"account" => htmlentities(strtolower($_POST["v_account"])),
-			"password" => $_POST["v_password"],
+			"password" => htmlentities($_POST["v_password"]),
 			"webmail" => $webmail . "." . htmlentities($_POST["v_domain"]),
 			"hostname" => "mail." . htmlentities($_POST["v_domain"]),
 			"appname" => $_SESSION["APP_NAME"],

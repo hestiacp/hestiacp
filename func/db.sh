@@ -360,9 +360,22 @@ add_pgsql_database() {
 
 add_mysql_database_temp_user() {
 	mysql_connect $host
-	query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
-    IDENTIFIED BY '$dbpass'"
-	mysql_query "$query" > /dev/null
+
+	mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
+	mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
+
+	if [ "$mysql_fork" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
+		query="CREATE USER \`$dbuser\`@localhost
+			IDENTIFIED BY '$dbpass'"
+		mysql_query "$query" > /dev/null
+
+		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost"
+		mysql_query "$query" > /dev/null
+	else
+		query="GRANT ALL ON \`$database\`.* TO \`$dbuser\`@localhost
+    		IDENTIFIED BY '$dbpass'"
+		mysql_query "$query" > /dev/null
+	fi
 }
 
 delete_mysql_database_temp_user() {

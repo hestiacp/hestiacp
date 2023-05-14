@@ -49,7 +49,7 @@ software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-util
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
   proftpd-basic quota rrdtool rsyslog spamassassin sudo sysstat unrar-free unzip util-linux vim-common vsftpd whois zip zstd"
 
-installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg wget"
+installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget"
 
 # Defining help function
 help() {
@@ -787,7 +787,7 @@ mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
 mkdir spamassassin mysql postgresql openssl hestia
 
 # Backup OpenSSL configuration
-cp /etc/ssl/*.cnf $hst_backups/openssl > /dev/null 2>&1
+cp /etc/ssl/openssl.cnf $hst_backups/openssl > /dev/null 2>&1
 
 # Backup nginx configuration
 systemctl stop nginx > /dev/null 2>&1
@@ -1264,13 +1264,18 @@ $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
 # Configuring global OpenSSL options
 echo "[ * ] Configuring OpenSSL to improve TLS performance..."
-cp -f $HESTIA_COMMON_DIR/openssl/hestia-openssl.cnf /etc/ssl
-if grep -q "^#.include filename$" /etc/ssl/openssl.cnf 2> /dev/null; then
-	sed -i 's|^#.include filename|#.include filename\n\n# Hestia OpenSSL configuration\n.include /etc/ssl/hestia-openssl.cnf|' /etc/ssl/openssl.cnf
-elif [ -s "/etc/ssl/openssl.cnf" ]; then
-	sed -i '1i# Hestia OpenSSL configuration\n.include /etc/ssl/hestia-openssl.cnf\n' /etc/ssl/openssl.cnf
-else
-	echo -e "# Hestia OpenSSL configuration\n.include /etc/ssl/hestia-openssl.cnf" > /etc/ssl/openssl.cnf
+tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
+if [ "$release" = "10" ] || [ "$release" = "11" ]; then
+	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+elif [ "$release" = "12" ]; then
+	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
+		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
+	fi
+	if ! grep -qw "^[ssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
+		sed -i '$a \\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
+		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+	fi
 fi
 
 # Generating SSL certificate
@@ -1491,7 +1496,7 @@ if [ "$vsftpd" = 'yes' ]; then
 	touch /var/log/xferlog
 	chown root:adm /var/log/xferlog
 	chmod 640 /var/log/xferlog
-	update-rc.d vsftpd defaults
+	update-rc.d vsftpd defaults > /dev/null 2>&1
 	systemctl start vsftpd >> $LOG
 	check_result $? "vsftpd start failed"
 fi

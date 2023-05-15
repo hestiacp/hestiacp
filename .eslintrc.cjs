@@ -9,21 +9,19 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:editorconfig/noconflict',
+		'plugin:import/recommended',
 		'prettier',
 	],
-	plugins: ['editorconfig', '@typescript-eslint'],
+	plugins: ['editorconfig', '@typescript-eslint', 'import'],
 	ignorePatterns: ['*.cjs'],
 	env: {
 		browser: true,
 		es2021: true,
 	},
 	globals: {
-		$: 'readonly',
-		jQuery: 'readonly',
-		App: 'readonly',
+		Alpine: 'readonly',
 	},
 	rules: {
-		// Set those as warnings instead. They should be fixed at some point
 		'@typescript-eslint/no-unused-vars': [
 			'error',
 			{
@@ -32,8 +30,14 @@ module.exports = {
 				caughtErrorsIgnorePattern: '^_',
 			},
 		],
-		'@typescript-eslint/no-var-requires': 'off',
-		'no-redeclare': 'off',
-		'no-undef': 'off',
+		'import/order': [
+			'error',
+			{
+				groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+			},
+		],
+		'no-console': 'error',
+		'prefer-const': 'error',
+		'import/no-unresolved': 'off',
 	},
 };

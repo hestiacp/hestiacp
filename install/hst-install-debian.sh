@@ -32,7 +32,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.7.4~alpha'
+HESTIA_INSTALL_VER='1.8.0~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.1"
@@ -61,7 +61,7 @@ help() {
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
   -k, --named             Install Bind          [yes|no]  default: yes
   -m, --mysql             Install MariaDB       [yes|no]  default: yes
-  -M, --mysql-classic     Install MySQL         [yes|no]  default: no
+  -M, --mysql8            Install MySQL         [yes|no]  default: no
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
@@ -203,7 +203,9 @@ for arg; do
 		--proftpd) args="${args}-j " ;;
 		--named) args="${args}-k " ;;
 		--mysql) args="${args}-m " ;;
+		--mariadb) args="${args}-m " ;;
 		--mysql-classic) args="${args}-M " ;;
+		--mysql8) args="${args}-M " ;;
 		--postgresql) args="${args}-g " ;;
 		--exim) args="${args}-x " ;;
 		--dovecot) args="${args}-z " ;;
@@ -235,34 +237,34 @@ eval set -- "$args"
 # Parsing arguments
 while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
 	case $Option in
-		a) apache=$OPTARG ;;       # Apache
-		w) phpfpm=$OPTARG ;;       # PHP-FPM
-		o) multiphp=$OPTARG ;;     # Multi-PHP
-		v) vsftpd=$OPTARG ;;       # Vsftpd
-		j) proftpd=$OPTARG ;;      # Proftpd
-		k) named=$OPTARG ;;        # Named
-		m) mysql=$OPTARG ;;        # MariaDB
-		M) mysqlclassic=$OPTARG ;; # MySQL
-		g) postgresql=$OPTARG ;;   # PostgreSQL
-		x) exim=$OPTARG ;;         # Exim
-		z) dovecot=$OPTARG ;;      # Dovecot
-		Z) sieve=$OPTARG ;;        # Sieve
-		c) clamd=$OPTARG ;;        # ClamAV
-		t) spamd=$OPTARG ;;        # SpamAssassin
-		i) iptables=$OPTARG ;;     # Iptables
-		b) fail2ban=$OPTARG ;;     # Fail2ban
-		q) quota=$OPTARG ;;        # FS Quota
-		r) port=$OPTARG ;;         # Backend Port
-		l) lang=$OPTARG ;;         # Language
-		d) api=$OPTARG ;;          # Activate API
-		y) interactive=$OPTARG ;;  # Interactive install
-		s) servername=$OPTARG ;;   # Hostname
-		e) email=$OPTARG ;;        # Admin email
-		p) vpass=$OPTARG ;;        # Admin password
-		D) withdebs=$OPTARG ;;     # Hestia debs path
-		f) force='yes' ;;          # Force install
-		h) help ;;                 # Help
-		*) help ;;                 # Print help (default)
+		a) apache=$OPTARG ;;      # Apache
+		w) phpfpm=$OPTARG ;;      # PHP-FPM
+		o) multiphp=$OPTARG ;;    # Multi-PHP
+		v) vsftpd=$OPTARG ;;      # Vsftpd
+		j) proftpd=$OPTARG ;;     # Proftpd
+		k) named=$OPTARG ;;       # Named
+		m) mysql=$OPTARG ;;       # MariaDB
+		M) mysql8=$OPTARG ;;      # MySQL
+		g) postgresql=$OPTARG ;;  # PostgreSQL
+		x) exim=$OPTARG ;;        # Exim
+		z) dovecot=$OPTARG ;;     # Dovecot
+		Z) sieve=$OPTARG ;;       # Sieve
+		c) clamd=$OPTARG ;;       # ClamAV
+		t) spamd=$OPTARG ;;       # SpamAssassin
+		i) iptables=$OPTARG ;;    # Iptables
+		b) fail2ban=$OPTARG ;;    # Fail2ban
+		q) quota=$OPTARG ;;       # FS Quota
+		r) port=$OPTARG ;;        # Backend Port
+		l) lang=$OPTARG ;;        # Language
+		d) api=$OPTARG ;;         # Activate API
+		y) interactive=$OPTARG ;; # Interactive install
+		s) servername=$OPTARG ;;  # Hostname
+		e) email=$OPTARG ;;       # Admin email
+		p) vpass=$OPTARG ;;       # Admin password
+		D) withdebs=$OPTARG ;;    # Hestia debs path
+		f) force='yes' ;;         # Force install
+		h) help ;;                # Help
+		*) help ;;                # Print help (default)
 	esac
 done
 
@@ -316,8 +318,12 @@ fi
 if [ "$apache" = 'no' ]; then
 	phpfpm='yes'
 fi
-if [ "$mysql" = 'yes' ] && [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] && [ "$mysql8" = 'yes' ]; then
 	mysql='no'
+fi
+
+if [ "$mysqlclassic" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
+	check_result 1 "Mysql 8 does not support ARM64 yet for Debian please use Ubuntu. Unable to continue"
 fi
 
 # Checking root permissions
@@ -560,7 +566,7 @@ echo
 if [ "$mysql" = 'yes' ]; then
 	echo '   - MariaDB Database Server'
 fi
-if [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql8" = 'yes' ]; then
 	echo '   - MySQL8 Database Server'
 fi
 if [ "$postgresql" = 'yes' ]; then
@@ -722,7 +728,7 @@ if [ "$mysql" = 'yes' ]; then
 fi
 
 # Installing Mysql8 repo
-if [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql8" = 'yes' ]; then
 	echo "[ * ] Mysql 8"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-apt-config" >> /etc/apt/sources.list.d/mysql.list
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
@@ -906,12 +912,12 @@ if [ "$mysql" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/mariadb-client//")
 	software=$(echo "$software" | sed -e "s/mariadb-common//")
 fi
-if [ "$mysqlclassic" = 'no' ]; then
+if [ "$mysql8" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/mysql-server//")
 	software=$(echo "$software" | sed -e "s/mysql-client//")
 	software=$(echo "$software" | sed -e "s/mysql-common//")
 fi
-if [ "$mysql" = 'no' ] && [ "$mysqlclassic" = 'no' ]; then
+if [ "$mysql" = 'no' ] && [ "$mysql8" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
 fi
 if [ "$postgresql" = 'no' ]; then
@@ -1135,7 +1141,7 @@ if [ "$phpfpm" = 'yes' ]; then
 fi
 
 # Database stack
-if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	installed_db_types='mysql'
 fi
 if [ "$postgresql" = 'yes' ]; then
@@ -1508,7 +1514,7 @@ fi
 #               Configure MariaDB / MySQL                  #
 #----------------------------------------------------------#
 
-if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	[ "$mysql" = 'yes' ] && mysql_type="MariaDB" || mysql_type="MySQL"
 	echo "[ * ] Configuring $mysql_type database server..."
 	mycnf="my-small.cnf"
@@ -1554,23 +1560,28 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
 	chmod 600 /root/.my.cnf
 
+	if [ -f '/usr/bin/mariadb' ]; then
+		mysql_server="mariadb"
+	else
+		mysql_server="mysql"
+	fi
 	# Alter root password
-	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
+	$mysql_server -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
 	if [ "$mysql_type" = 'MariaDB' ]; then
 		# Allow mysql access via socket for startup
-		mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+		$mysql_server -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
 		# Disable anonymous users
-		mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
+		$mysql_server -e "DELETE FROM mysql.global_priv WHERE User='';"
 	else
-		mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
-		mysql -e "DELETE FROM mysql.user WHERE User='';"
-		mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+		$mysql_server -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
+		$mysql_server -e "DELETE FROM mysql.user WHERE User='';"
+		$mysql_server -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
 	fi
 	# Drop test database
-	mysql -e "DROP DATABASE IF EXISTS test"
-	mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+	$mysql_server -e "DROP DATABASE IF EXISTS test"
+	$mysql_server -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 	# Flush privileges
-	mysql -e "FLUSH PRIVILEGES;"
+	$mysql_server -e "FLUSH PRIVILEGES;"
 fi
 
 #----------------------------------------------------------#
@@ -1581,7 +1592,7 @@ fi
 # shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
 source $HESTIA/install/upgrade/upgrade.conf
 
-if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	# Display upgrade information
 	echo "[ * ] Installing phpMyAdmin version v$pma_v..."
 
@@ -1861,7 +1872,7 @@ if [ "$fail2ban" = 'yes' ]; then
 fi
 
 # Configuring MariaDB/MySQL host
-if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	$HESTIA/bin/v-add-database-host mysql localhost root $mpass
 fi
 
@@ -1875,7 +1886,7 @@ fi
 #----------------------------------------------------------#
 
 # Min requirements Dovecot + Exim + Mysql
-if ([ "$mysql" == 'yes' ] || [ "$mysqlclassic" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
+if ([ "$mysql" == 'yes' ] || [ "$mysql8" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
 	echo "[ * ] Install Roundcube..."
 	$HESTIA/bin/v-add-sys-roundcube
 	write_config_value "WEBMAIL_ALIAS" "webmail"
@@ -2088,31 +2099,10 @@ echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbi
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
-write_config_value "PHPMYADMIN_KEY" ""
-write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
-write_config_value "POLICY_USER_VIEW_LOGS" "yes"
-write_config_value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
-write_config_value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
-write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
-write_config_value "POLICY_USER_DELETE_LOGS" "yes"
-write_config_value "POLICY_USER_CHANGE_THEME" "yes"
-write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
-write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "yes"
-write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "no"
-write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
-write_config_value "PLUGIN_APP_INSTALLER" "true"
-write_config_value "DEBUG_MODE" "no"
-write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-write_config_value "USE_SERVER_SMTP" "false"
-write_config_value "SERVER_SMTP_PORT" ""
-write_config_value "SERVER_SMTP_HOST" ""
-write_config_value "SERVER_SMTP_SECURITY" ""
-write_config_value "SERVER_SMTP_USER" ""
-write_config_value "SERVER_SMTP_PASSWD" ""
-write_config_value "SERVER_SMTP_ADDR" ""
-write_config_value "POLICY_CSRF_STRICTNESS" "1"
-write_config_value "DISABLE_IP_CHECK" "no"
-write_config_value "DNS_CLUSTER_SYSTEM" "hestia"
+
+BIN="$HESTIA/bin"
+source $HESTIA/func/syshealth.sh
+syshealth_repair_system_config
 
 # Add /usr/local/hestia/bin/ to path variable
 echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
@@ -2180,7 +2170,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://hestiacp.com/docs/" target="_blank">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_blank">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.<br><br>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 
 # Clean-up
 # Sort final configuration file

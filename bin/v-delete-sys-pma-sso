@@ -68,7 +68,7 @@ $BIN/v-change-sys-config-value 'PHPMYADMIN_KEY' ""
 #----------------------------------------------------------#
 
 if [ "$MODE" != "quiet" ]; then
-	echo "PMA Hestia-SSO plugin has been succesfully removed/disabled"
+	echo "PMA Hestia-SSO plugin has been successfully removed/disabled"
 fi
 
 # Logging

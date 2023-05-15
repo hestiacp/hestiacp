@@ -483,6 +483,34 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: DISABLE_IP_CHECK ('no')"
 		$BIN/v-change-sys-config-value "DISABLE_IP_CHECK" "no"
 	fi
+	if [[ -z $(check_key_exists 'APP_NAME') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: APP_NAME ('Hestia Control Panel')"
+		$BIN/v-change-sys-config-value "APP_NAME" "Hestia Control Panel"
+	fi
+	if [[ -z $(check_key_exists 'FROM_NAME') ]]; then
+		# Default is always APP_NAME
+		echo "[ ! ] Adding missing variable to hestia.conf: FROM_NAME ('')"
+		$BIN/v-change-sys-config-value "FROM_NAME" ""
+	fi
+	if [[ -z $(check_key_exists 'FROM_EMAIL') ]]; then
+		# Default is always noreply@hostname.com
+		echo "[ ! ] Adding missing variable to hestia.conf: FROM_EMAIL ('')"
+		$BIN/v-change-sys-config-value "FROM_EMAIL" ""
+	fi
+	if [[ -z $(check_key_exists 'SUBJECT_EMAIL') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: SUBJECT_EMAIL ('{{subject}}')"
+		$BIN/v-change-sys-config-value "SUBJECT_EMAIL" "{{subject}}"
+	fi
+
+	if [[ -z $(check_key_exists 'TITLE') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: TITLE ('{{page}} - {{hostname}} - {{appname}}')"
+		$BIN/v-change-sys-config-value "TITLE" "{{page}} - {{hostname}} - {{appname}}"
+	fi
+
+	if [[ -z $(check_key_exists 'HIDE_DOCS') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: HIDE_DOCS ('no')"
+		$BIN/v-change-sys-config-value "HIDE_DOCS" "no"
+	fi
 
 	touch $HESTIA/conf/hestia.conf.new
 	while IFS='= ' read -r lhs rhs; do

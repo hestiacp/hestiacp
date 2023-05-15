@@ -1580,7 +1580,7 @@ source_conf() {
 format_no_quotes() {
 	exclude="['|\"]"
 	if [[ "$1" =~ $exclude ]]; then
-		check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ') :: $1"
+		check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ' or | ) :: $1"
 	fi
 	is_no_new_line_format "$1"
 }

@@ -21,11 +21,54 @@
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
+		<?php
+		$country = [
+			"br" => "Brazil",
+			"ca" => "Canada",
+			"cn" => "China",
+			"fr" => "French",
+			"de" => "Germany",
+			"in" => "India",
+			"id" => "Indonesia",
+			"nl" => "Netherlands",
+			"ro" => "Romania",
+			"ru" => "Russia",
+			"es" => "Spain",
+			"ch" => "Switzerland",
+			"tr" => "Turkey",
+			"ua" => "Ukraine",
+			"gb" => "United Kingdom",
+			"us" => "United States",
+		];
+
+		function generate_iplist($country, $type) {
+			$iplist = [];
+			$lowercaseType = strtolower($type);
+			foreach ($country as $iso => $name) {
+				$iplist[] = [
+					"name" => "[$type] " . _("Country") . " - $name",
+					"source" => "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/$iso/$lowercaseType-aggregated.txt",
+				];
+			}
+			return $iplist;
+		}
+
+		$country_iplists = generate_iplist($country, "IPv4");
+		// Uncomment below for IPv6
+		// $country_ipv6lists = generate_iplist($country, 'IPv6');
+
+		$blacklist_iplists = [
+			["name" => "[IPv4] " . _("Block Malicious IPs"), "source" => "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh"],
+			// Uncomment below for IPv6
+			// array('name' => "[IPv6] " . _("Block Malicious IPs"), 'source' => "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.ipv6.sh"),
+		];
+		?>
+
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding Firewall Ipset List") ?></h1>
+			<h1 class="form-title"><?= _("Add IPset IP List for Firewall") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
-				<label for="v_ipname" class="form-label"><?= _("Ip List Name") ?></label>
+				<label for="v_ipname" class="form-label"><?= _("IP List Name") ?></label>
 				<input type="text" class="form-control" name="v_ipname" id="v_ipname" maxlength="255" value="<?= htmlentities(trim($v_ipname, "'")) ?>">
 			</div>
 			<div class="u-mb10">
@@ -33,24 +76,30 @@
 					<?= _("Data Source") ?> <span class="optional">(<?= _("url, script or file") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<select class="form-select" tabindex="-1" id="datasource_list" onchange="this.nextElementSibling.value=this.value">
+					<select
+						class="form-select js-datasource-select"
+						tabindex="-1"
+						onchange="this.nextElementSibling.value=this.value"
+						data-country-iplists="<?= htmlspecialchars(json_encode($country_iplists), ENT_QUOTES, 'UTF-8') ?>"
+						data-blacklist-iplists="<?= htmlspecialchars(json_encode($blacklist_iplists), ENT_QUOTES, 'UTF-8') ?>"
+					>
 						<option value=""><?= _("Clear") ?></option>
 					</select>
 					<input type="text" class="form-control list-editor" name="v_datasource" id="v_datasource" maxlength="255" value="<?= htmlentities(trim($v_datasource, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">
-				<label for="v_ipver" class="form-label"><?= _("Ip Version") ?></label>
+				<label for="v_ipver" class="form-label"><?= _("IP Version") ?></label>
 				<select class="form-select" name="v_ipver" id="v_ipver">
-					<option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>><?= _("ip v4") ?></option>
-					<option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>><?= _("ip v6") ?></option>
+					<option value="v4" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v4'" )) echo 'selected'?>>IPv4</option>
+					<option value="v6" <?php if ((!empty($v_ipver)) && ( $v_ipver == "'v6'" )) echo 'selected'?>>IPv6</option>
 				</select>
 			</div>
 			<div class="u-mb10">
-				<label for="v_autoupdate" class="form-label"><?= _("Autoupdate") ?></label>
+				<label for="v_autoupdate" class="form-label"><?= _("Auto Update") ?></label>
 				<select class="form-select" name="v_autoupdate" id="v_autoupdate">
-					<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?= _("yes") ?></option>
-					<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?= _("no") ?></option>
+					<option value="yes" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'yes'" )) echo 'selected'?>><?= _("Yes") ?></option>
+					<option value="no" <?php if ((!empty($v_autoupdate)) && ( $v_autoupdate == "'no'" )) echo 'selected'?>><?= _("No") ?></option>
 				</select>
 			</div>
 		</div>
@@ -58,68 +107,3 @@
 	</form>
 
 </div>
-
-<script>
-	var country_iplists = [
-		<?php
-			$country = array('br' => 'Brazil', 'ca' => 'Canada', 'cn' => 'China', 'fr' => 'French', 'de' => 'Germany', 'in' => 'India', 'id' => 'Indonesia', 'nl' => 'Netherlands', 'ro' => 'Romania', 'ru' => 'Russia', 'es' => 'Spain', 'ch' => 'Switzerland', 'tr' => 'Turkey', 'ua' => 'Ukraine', 'gb' => 'United Kingdom', 'us' => 'United States');
-			foreach($country as $iso => $name){
-				echo '{name: "[IPv4] ' . _("Country") . ' - ' . $name . '", source: "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/' . $iso . '/ipv4-aggregated.txt"},' . "\n";
-			}
-		?>
-		// Define IPv6 country lists
-		/*
-		<?php
-			foreach($country as $iso => $name){
-				echo '{name: "[IPv6] ' . _("Country") . ' - ' . $name . '", source: "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/' . $iso . '/ipv6-aggregated.txt"},' . "\n";
-			}
-		?>
-		*/
-	];
-
-	var blacklist_iplists = [
-		{name: "[IPv4] Block Malicious IPs", source: "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.sh"},
-		/*
-		{name: "[IPv6] Block Malicious IPs", source: "script:/usr/local/hestia/install/common/firewall/ipset/blacklist.ipv6.sh"},
-		*/
-	];
-
-	country_iplists.sort(function (a, b) {
-		return a.name > b.name;
-	});
-
-	blacklist_iplists.sort(function (a, b) {
-		return a.name > b.name;
-	});
-	window.addEventListener("load", () => {
-		$(function () {
-			var targetElement = document.getElementById('datasource_list');
-
-			// Blacklist
-			var newEl = document.createElement("option");
-			newEl.text = "<?= _("BLACKLIST") ?>";
-			newEl.disabled = true;
-			targetElement.appendChild(newEl);
-
-			blacklist_iplists.forEach(iplist => {
-				var newEl = document.createElement("option");
-				newEl.text = iplist.name;
-				newEl.value = iplist.source;
-				targetElement.appendChild(newEl);
-			});
-
-			// IPVERSE
-			var newEl = document.createElement("option");
-			newEl.text = "<?= _("IPVERSE") ?>";
-			newEl.disabled = true;
-			targetElement.appendChild(newEl);
-
-			country_iplists.forEach(iplist => {
-				var newEl = document.createElement("option");
-				newEl.text = iplist.name;
-				newEl.value = iplist.source;
-				targetElement.appendChild(newEl);
-			});
-		});
-	});
-</script>

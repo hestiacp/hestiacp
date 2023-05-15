@@ -28,9 +28,8 @@ if (!empty($data["config"]["LANGUAGE"])) {
 //define vars
 //make hostname detection a bit more feature proof
 $hostname = get_hostname();
-
-$from = "noreply@" . $hostname;
-$from_name = _("Hestia Control Panel");
+$from = !empty($_SESSION["FROM_EMAIL"]) ? $_SESSION["FROM_EMAIL"] : "noreply@" . $hostname;
+$from_name = !empty($_SESSION["FROM_NAME"]) ? $_SESSION["FROM_NAME"] : $_SESSION["APP_NAME"];
 $to = $argv[3] . "\n";
 $subject = $argv[2] . "\n";
 $mailtext = file_get_contents("php://stdin");

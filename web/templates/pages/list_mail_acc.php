@@ -16,14 +16,14 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add Mail Account") ?>
 				</a>
 				<a href="/edit/mail/?domain=<?= htmlentities($_GET["domain"]) ?>" class="button button-secondary js-button-create">
-					<i class="fas fa-pencil icon-blue"></i><?= _("Editing Mail Domain") ?>
+					<i class="fas fa-pencil icon-blue"></i><?= _("Edit Mail Domain") ?>
 				</a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
-					<?= _("sort by") ?>:
+					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
@@ -40,12 +40,12 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<input type="hidden" value="<?= htmlspecialchars($_GET["domain"]) ?>" name="domain">
 						<select class="form-select" name="action">
-							<option value=""><?= _("apply to selected") ?></option>
-							<option value="suspend"><?= _("suspend") ?></option>
-							<option value="unsuspend"><?= _("unsuspend") ?></option>
-							<option value="delete"><?= _("delete") ?></option>
+							<option value=""><?= _("Apply to selected") ?></option>
+							<option value="suspend"><?= _("Suspend") ?></option>
+							<option value="unsuspend"><?= _("Unsuspend") ?></option>
+							<option value="delete"><?= _("Delete") ?></option>
 						</select>
-						<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+						<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 							<i class="fas fa-arrow-right"></i>
 						</button>
 					</form>
@@ -78,7 +78,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Quota") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Aliases") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Forwarding") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Autoreply") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Auto Reply") ?></b></div>
 			</div>
 		</div>
 	</div>
@@ -90,8 +90,9 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			if ($data[$key]['SUSPENDED'] == 'yes') {
 				$status = 'suspended';
 				$spnd_action = 'unsuspend';
+				$spnd_action_title = _('Unsuspend');
 				$spnd_icon = 'fa-play';
-				$spnd_confirmation = _('UNSUSPEND_MAIL_ACCOUNT_CONFIRMATION');
+				$spnd_confirmation = _('Are you sure you want to unsuspend %s?');
 				if ($data[$key]['ALIAS'] == '') {
 					$alias_icon = 'fa-circle-minus';
 				} else {
@@ -110,8 +111,9 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			} else {
 				$status = 'active';
 				$spnd_action = 'suspend';
+				$spnd_action_title = _('Suspend');
 				$spnd_icon = 'fa-pause';
-				$spnd_confirmation = _('SUSPEND_MAIL_ACCOUNT_CONFIRMATION');
+				$spnd_confirmation = _('Are you sure you want to suspend %s?');
 				if ($data[$key]['ALIAS'] == '') {
 					$alias_icon = 'fa-circle-minus';
 				} else {
@@ -140,7 +142,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
 						<b><?=$key."@".htmlentities($_GET['domain']);?></b>
 					<?php } else { ?>
-						<b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Account") ?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".htmlentities($_GET['domain']);?></a></b>
+						<b><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Mail Account") ?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"><?=$key."@".htmlentities($_GET['domain']);?></a></b>
 					<?php } ?>
 				</div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->
@@ -152,22 +154,22 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 								<?php if ($data[$key]['SUSPENDED'] == 'yes') { ?>
 									&nbsp;
 								<?php } else { ?>
-									<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("Open Webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
 								<?php } ?>
 							<?php } else { ?>
 								<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
 									<?php if($_SESSION['WEBMAIL_SYSTEM']){?>
 										<?php if (!empty($data[$key]['WEBMAIL'])) { ?>
-											<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("open webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
+											<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>" target="_blank" title="<?= _("Open Webmail") ?>"><i class="fas fa-envelope-open-text icon-maroon icon-dim"></i></a></div>
 										<?php } ?>
 									<?php } ?>
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Editing Mail Account") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Mail Account") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<?php } ?>
 								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
 										href="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"
-										data-confirm-title="<?= _($spnd_action) ?>"
+										data-confirm-title="<?= $spnd_action_title ?>"
 										data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 									>
 										<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
@@ -178,7 +180,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 										class="data-controls js-confirm-action"
 										href="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"
 										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_('DELETE_MAIL_ACCOUNT_CONFIRMATION'), $key) ?>"
+										data-confirm-message="<?= sprintf(_('Are you sure you want to delete %s?'), $key) ?>"
 									>
 										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>

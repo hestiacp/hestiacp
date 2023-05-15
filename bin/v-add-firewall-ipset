@@ -119,7 +119,7 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$refresh" = "yes" ]; then
 	elif [[ "$data_source" =~ ^file:/ ]]; then
 
 		# Use a external ip-list file managed by other apps
-		# ex: Using a ip list that is continously updated
+		# ex: Using a ip list that is continuously updated
 		[ -f "${data_source#file:}" ] && cp -f "${data_source#file:}" "$iplist_tempfile"
 
 	fi

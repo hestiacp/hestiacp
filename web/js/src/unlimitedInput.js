@@ -1,43 +1,60 @@
-// Adds listeners for "unlimited" input toggles
-export default function initUnlimitedInput() {
+export default function handleUnlimitedInput() {
+	// Add listeners to "unlimited" input toggles
 	document.querySelectorAll('.js-unlimited-toggle').forEach((toggleButton) => {
 		const input = toggleButton.parentElement.querySelector('input');
 
-		if (Alpine.store('globals').isUnlimitedValue(input.value)) {
-			enableUnlimitedInput(input, toggleButton);
+		if (isUnlimitedValue(input.value)) {
+			enableInput(input, toggleButton);
 		} else {
-			disableUnlimitedInput(input, toggleButton);
+			disableInput(input, toggleButton);
 		}
 
 		toggleButton.addEventListener('click', () => {
-			toggleUnlimitedInput(input, toggleButton);
+			toggleInput(input, toggleButton);
 		});
 	});
 }
 
-function enableUnlimitedInput(input, toggleButton) {
+// Called on form submit to enable any disabled unlimited inputs
+export function enableUnlimitedInputs() {
+	document.querySelectorAll('input:disabled').forEach((input) => {
+		if (isUnlimitedValue(input.value)) {
+			input.disabled = false;
+			input.value = 'unlimited';
+		}
+	});
+}
+
+function isUnlimitedValue(value) {
+	const trimmedValue = value.trim();
+	return trimmedValue === 'unlimited' || trimmedValue === Alpine.store('globals').UNLIMITED;
+}
+
+function enableInput(input, toggleButton) {
 	toggleButton.classList.add('active');
 	input.dataset.prevValue = input.value;
-	input.value = Alpine.store('globals').UNLIM_TRANSLATED_VALUE;
+	input.value = Alpine.store('globals').UNLIMITED;
 	input.disabled = true;
 }
 
-function disableUnlimitedInput(input, toggleButton) {
+function disableInput(input, toggleButton) {
 	toggleButton.classList.remove('active');
 	const previousValue = input.dataset.prevValue ? input.dataset.prevValue.trim() : null;
 	if (previousValue) {
 		input.value = previousValue;
 	}
-	if (Alpine.store('globals').isUnlimitedValue(input.value)) {
+
+	if (isUnlimitedValue(input.value)) {
 		input.value = '0';
 	}
+
 	input.disabled = false;
 }
 
-function toggleUnlimitedInput(input, toggleButton) {
+function toggleInput(input, toggleButton) {
 	if (toggleButton.classList.contains('active')) {
-		disableUnlimitedInput(input, toggleButton);
+		disableInput(input, toggleButton);
 	} else {
-		enableUnlimitedInput(input, toggleButton);
+		enableInput(input, toggleButton);
 	}
 }

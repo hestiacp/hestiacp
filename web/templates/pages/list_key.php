@@ -22,11 +22,11 @@
 <div class="container units">
 	<div class="header table-header">
 		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("SSH_ID") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("SSH ID") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-2">
 				&nbsp;
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("SSH KEY") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("SSH Key") ?></b></div>
 		</div>
 	</div>
 
@@ -51,7 +51,7 @@
 										href="/delete/key/?key=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									<?php } ?>
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_("DELETE_KEY_CONFIRM"), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete SSH key %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>
@@ -68,7 +68,7 @@
 <footer class="app-footer">
 	<div class="container app-footer-inner">
 		<p>
-			<?php printf(ngettext("%d SSH Key", "%d SSH Keys", $i), $i); ?>
+			<?php printf(ngettext("%d SSH key", "%d SSH keys", $i), $i); ?>
 		</p>
 	</div>
 </footer>

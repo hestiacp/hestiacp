@@ -200,7 +200,7 @@ fi
 # Checking MAIL IMAP
 if [ -n "$IMAP_SYSTEM" ] && [ "$IMAP_SYSTEM" != 'remote' ]; then
 	get_srv_state "$IMAP_SYSTEM"
-	data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='pop/imap server' STATE='$state'"
+	data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='imap/pop3 server' STATE='$state'"
 	data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -217,7 +217,7 @@ if [ -n "$ANTIVIRUS_SYSTEM" ] && [ "$ANTIVIRUS_SYSTEM" != 'remote' ]; then
 		fi
 		get_srv_state "$ANTIVIRUS_SYSTEM" "$proc_name"
 	fi
-	data="$data\nNAME='$ANTIVIRUS_SYSTEM' SYSTEM='email antivirus'"
+	data="$data\nNAME='$ANTIVIRUS_SYSTEM' SYSTEM='email anti-virus'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 	proc_name=''
 fi
@@ -225,7 +225,7 @@ fi
 # Checking MAIL ANTISPAM
 if [ -n "$ANTISPAM_SYSTEM" ] && [ "$ANTISPAM_SYSTEM" != 'remote' ]; then
 	get_srv_state "$ANTISPAM_SYSTEM" "spamd"
-	data="$data\nNAME='$ANTISPAM_SYSTEM' SYSTEM='email antispam'"
+	data="$data\nNAME='$ANTISPAM_SYSTEM' SYSTEM='email spam filter'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -234,24 +234,29 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
 	for db in ${DB_SYSTEM//,/ }; do
 		service="$db"
 		proc_name=''
+		mysql="/usr/bin/mysql"
+		if [ -f '/usr/bin/mariadb' ]; then
+			mysql="/usr/bin/mariadb"
+		fi
 		if [ "$service" = 'mysql' ]; then
-			mysql_version=$(mysql -V)
+			mysql_version=$($mysql -V)
 			mariadb_string="MariaDB"
 			if [[ ! $mysql_version =~ $mariadb_string ]]; then
 				# MySQL
 				service='mysql'
 				proc_name='mysqld'
 			else
-				# MariaDB
-				if [ -e "/lib/systemd/system/mariadb.service" ]; then
-					service='mariadb'
-					proc_name='mysqld'
-				fi
-				if [ -f /usr/bin/mysql ]; then
-					mariadb_v=$(mysql -V | awk 'NR==1{print $5}' | cut -d'.' -f2)
-					if [ $mariadb_v -ge "5" ]; then
-						service='mariadb'
-						proc_name='mariadbd'
+				service='mariadb'
+				proc_name='mariadbd'
+				# MariaDB 10.4 and lower
+				if [ -f $mysql ]; then
+					mariadb_v=$($mysql -V | awk 'NR==1{print $5}')
+					if [[ $mariadb_v =~ $mariadb_string ]]; then
+						mariadb_v=$(echo $mariadb_v | cut -f2 -d'.')
+						if [ $mariadb_v -le "4" ]; then
+							service='mariadb'
+							proc_name='mysqld'
+						fi
 					fi
 				fi
 			fi
@@ -290,7 +295,7 @@ fi
 # Checking SSH daemon
 if [ -e "/etc/ssh/sshd_config" ]; then
 	get_srv_state ssh
-	data="$data\nNAME='ssh' SYSTEM='SSH Access' STATE='$state'"
+	data="$data\nNAME='ssh' SYSTEM='ssh server' STATE='$state'"
 	data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -315,7 +320,7 @@ if [ -n "$FIREWALL_EXTENSION" ]; then
 	else
 		get_srv_state "$FIREWALL_EXTENSION" fail2ban-server script
 	fi
-	data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force monitor'"
+	data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force protection'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 

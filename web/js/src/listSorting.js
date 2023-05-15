@@ -1,6 +1,6 @@
 // List view sorting dropdown
-export default function initSorting() {
-	let state = {
+export default function handleListSorting() {
+	const state = {
 		sort_par: 'sort-name',
 		sort_direction: -1,
 		sort_as_int: false,
@@ -19,7 +19,9 @@ export default function initSorting() {
 		const toggleButton = document.querySelector('.toolbar-sorting-toggle');
 		const dropdown = document.querySelector('.toolbar-sorting-menu');
 
-		if (!dropdown || !toggleButton) return;
+		if (!dropdown || !toggleButton) {
+			return;
+		}
 
 		if (
 			!dropdown.contains(event.target) &&
@@ -36,7 +38,9 @@ export default function initSorting() {
 			const menu = document.querySelector('.toolbar-sorting-menu');
 			menu.classList.toggle('u-hidden');
 
-			if (this.classList.contains('active')) return;
+			if (this.classList.contains('active')) {
+				return;
+			}
 
 			document
 				.querySelectorAll('.toolbar-sorting-menu span')
@@ -44,7 +48,7 @@ export default function initSorting() {
 			this.classList.add('active');
 			const parentLi = this.closest('li');
 			state.sort_par = parentLi.getAttribute('entity');
-			state.sort_as_int = !!parentLi.getAttribute('sort_as_int');
+			state.sort_as_int = Boolean(parentLi.getAttribute('sort_as_int'));
 			state.sort_direction = this.classList.contains('up') ? 1 : -1;
 
 			const toggle = document.querySelector('.toolbar-sorting-toggle');
@@ -58,12 +62,12 @@ export default function initSorting() {
 				const bAttr = b.getAttribute(state.sort_par);
 
 				if (state.sort_as_int) {
-					const aInt = parseInt(aAttr);
-					const bInt = parseInt(bAttr);
+					const aInt = Number.parseInt(aAttr);
+					const bInt = Number.parseInt(bAttr);
 					return aInt >= bInt ? state.sort_direction : state.sort_direction * -1;
-				} else {
-					return aAttr <= bAttr ? state.sort_direction : state.sort_direction * -1;
 				}
+
+				return aAttr <= bAttr ? state.sort_direction : state.sort_direction * -1;
 			});
 
 			const unitsContainer = document.querySelector('.units');

@@ -24,7 +24,7 @@
 					</div>
 					<div class="card-content">
 						<p class="card-title"><?= $webapp["name"] ?></p>
-						<p class="u-mb10"><?= _("version") ?>: <?= $webapp["version"] ?></p>
+						<p class="u-mb10"><?= _("Version") ?>: <?= $webapp["version"] ?></p>
 						<a class="button" href="/add/webapp/?app=<?= $webapp["name"] ?>&domain=<?= htmlentities($v_domain) ?>">
 							<?= _("Setup") ?>
 						</a>

@@ -35,8 +35,8 @@ fi
 # Displaying exim queue status
 echo "Exim queue status"
 exim -bp
-echo -en "\n-------------------------------------"
-echo -en "-------------------------------------\n\n"
+echo -en "\n---------------------------------------------"
+echo -en "---------------------------------------------\n\n"
 
 # Displaying exim stats
 if [ -e "/var/log/exim4/mainlog" ]; then

@@ -1,6 +1,5 @@
 @import url("normalize.css");
 @import url("@fortawesome/fontawesome-free/css/fontawesome");
-@import url("@fortawesome/fontawesome-free/css/brands");
 @import url("@fortawesome/fontawesome-free/css/solid");
 @import url("../dependencies/animate");
 @import url("../media_queries");
@@ -1055,6 +1054,16 @@
 	padding-top: 12px;
 	vertical-align: top;
 	padding-bottom: 10px;
+
+	@media (--viewport-large) {
+		& .actions-panel {
+			visibility: hidden;
+		}
+
+		&:hover .actions-panel {
+			visibility: visible;
+		}
+	}
 }
 
 .l-unit__col--right.total {
@@ -1222,24 +1231,17 @@
 
 .actions-panel__col {
 	display: inline-block;
-	margin-left: 3px;
-	text-transform: uppercase;
+	margin-left: 6px;
 
 	& a {
 		color: #777;
-		font-weight: 600;
 		font-size: 0.9rem;
 		display: inline-block;
-		cursor: pointer;
 	}
-}
 
-.l-unit__col .actions-panel .fas {
-	display: none;
-}
-
-.l-unit__col:hover .actions-panel .fas {
-	display: inline-block;
+	@media (--viewport-large) {
+		margin-left: 3px;
+	}
 }
 
 /* Statistics
@@ -1395,23 +1397,36 @@
 }
 
 @media (--viewport-medium) {
-	.sidebar-right-container {
+	.sidebar-right-grid {
 		display: grid;
 		gap: 50px;
 		grid-template-columns: 2fr 1.3fr;
 	}
+
+	.sidebar-right-grid-content {
+	}
+
+	.sidebar-right-grid-sidebar {
+		max-width: 385px;
+	}
 }
 
 @media (--viewport-medium) {
-	.sidebar-left-container {
+	.sidebar-left-grid {
 		display: grid;
 		gap: 20px;
 		grid-template-columns: 1fr 3fr;
 	}
+
+	.sidebar-left-grid-sidebar {
+	}
+
+	.sidebar-left-grid-content {
+	}
 }
 
 @media (--viewport-large) {
-	.sidebar-left-container {
+	.sidebar-left-grid {
 		gap: 50px;
 	}
 }
@@ -2122,7 +2137,7 @@
 .login {
 	flex-grow: 1;
 	padding: 30px;
-	margin-bottom: 20%;
+	margin-bottom: 15%;
 
 	& .form-label {
 		color: #fff;
@@ -2184,7 +2199,7 @@
 /* Spinner
    ========================================================================== */
 
-.fullscreen-loader {
+.spinner-overlay {
 	position: fixed;
 	inset: 0;
 	display: flex;
@@ -2193,7 +2208,7 @@
 	padding: 50px;
 	background-color: rgb(0 0 0 / 10%);
 	font-size: 50px;
-	z-index: 9999;
+	z-index: 4;
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 0.2s ease, visibility 0s 0.2s;
@@ -2233,9 +2248,10 @@
 }
 
 .console-output {
+	color: #202020;
 	font-family: var(--font-family-monospace);
 	font-size: 0.92rem;
-	color: #202020;
+	line-height: 1.15;
 }
 
 #vstobjects.suspended {
@@ -2423,9 +2439,8 @@
 }
 
 .server-console-output {
-	color: #c36;
+	background-color: #fff;
 	padding: 10px 0 20px 20px;
-	background: #fff;
 }
 
 .userlist-email {
@@ -2547,6 +2562,10 @@
 
 .inline-alert-danger {
 	color: #f33;
+}
+
+.inline-alert-warning {
+	color: #ffd500;
 }
 
 .inline-alert-success {

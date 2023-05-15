@@ -4,7 +4,7 @@
 		<div class="toolbar-buttons">
 			<?php if ($read_only !== "true") { ?>
 				<a href="/schedule/backup/?token=<?= $_SESSION["token"] ?>" class="button button-secondary"><i class="fas fa-circle-plus icon-green"></i><?= _("Create Backup") ?></a>
-				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus icon-orange"></i><?= _("backup exclusions") ?></a>
+				<a href="/list/backup/exclusions/" class="button button-secondary"><i class="fas fa-folder-minus icon-orange"></i><?= _("Backup Exclusions") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
@@ -12,10 +12,10 @@
 				<form x-data x-bind="BulkEdit" action="/bulk/backup/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
-						<option value=""><?= _("apply to selected") ?></option>
-						<option value="delete"><?= _("delete") ?></option>
+						<option value=""><?= _("Apply to selected") ?></option>
+						<option value="delete"><?= _("Delete") ?></option>
 					</select>
-					<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 						<i class="fas fa-arrow-right"></i>
 					</button>
 				</form>
@@ -55,19 +55,19 @@
 	<?php
 		foreach ($data as $key => $value) {
 			++$i;
-			$web = _('no');
-			$dns = _('no');
-			$mail = _('no');
-			$db = _('no');
-			$cron = _('no');
-			$udir = _('no');
+			$web = _('No');
+			$dns = _('No');
+			$mail = _('No');
+			$db = _('No');
+			$cron = _('No');
+			$udir = _('No');
 
-			if (!empty($data[$key]['WEB'])) $web = _('yes');
-			if (!empty($data[$key]['DNS'])) $dns = _('yes');
-			if (!empty($data[$key]['MAIL'])) $mail = _('yes');
-			if (!empty($data[$key]['DB'])) $db = _('yes');
-			if (!empty($data[$key]['CRON'])) $cron = _('yes');
-			if (!empty($data[$key]['UDIR'])) $udir = _('yes');
+			if (!empty($data[$key]['WEB'])) $web = _('Yes');
+			if (!empty($data[$key]['DNS'])) $dns = _('Yes');
+			if (!empty($data[$key]['MAIL'])) $mail = _('Yes');
+			if (!empty($data[$key]['DB'])) $db = _('Yes');
+			if (!empty($data[$key]['CRON'])) $cron = _('Yes');
+			if (!empty($data[$key]['UDIR'])) $udir = _('Yes');
 		?>
 		<div class="l-unit animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">
@@ -80,7 +80,7 @@
 							<?php if ($read_only === "true") { ?>
 								<?= $key ?>
 							<?php } else { ?>
-								<a href="/list/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("restore") ?>"><?= $key ?></a>
+								<a href="/list/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>"><?= $key ?></a>
 							<?php } ?>
 						</b>
 					</div>
@@ -92,15 +92,15 @@
 									<!-- Restrict ability to restore or delete backups when impersonating 'admin' account -->
 									&nbsp;
 								<?php } else { ?>
-									<div class="actions-panel__col actions-panel__download shortcut-d" data-key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("download") ?>"><i class="fas fa-file-arrow-down icon-lightblue icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__download shortcut-d" data-key-action="href"><a href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Download") ?>"><i class="fas fa-file-arrow-down icon-lightblue icon-dim"></i></a></div>
 									<?php if ($read_only !== 'true') {?>
-										<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__list shortcut-enter" data-key-action="href"><a href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Restore") ?>"><i class="fas fa-arrow-rotate-left icon-green icon-dim"></i></a></div>
 										<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 											<a
 												class="data-controls js-confirm-action"
 												href="/delete/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 												data-confirm-title="<?= _("Delete") ?>"
-												data-confirm-message="<?= sprintf(_("DELETE_BACKUP_CONFIRMATION"), $key) ?>"
+												data-confirm-message="<?= sprintf(_("Are you sure you want to delete backup %s?"), $key) ?>"
 											>
 												<i class="fas fa-trash icon-red icon-dim"></i>
 											</a>

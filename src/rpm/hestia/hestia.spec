@@ -122,6 +122,9 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Upgrade blackblaze-cli-took if applicable
     upgrade_b2_tool | tee -a $LOG
 
+	# update whitelabel logo's
+	update_whitelabel_logo | tee -a $LOG
+
     # Set new version number in hestia.conf
     upgrade_set_version
 

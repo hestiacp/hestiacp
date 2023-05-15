@@ -123,10 +123,10 @@ if (!empty($_POST["user"]) && empty($_POST["code"])) {
 					$name = empty($data[$user]["NAME"]) ? $user : $data[$user]["NAME"];
 
 					$mailtext = translate_email($template, [
-						"name" => $name,
-						"hostname" => $hostname . $port,
-						"user" => $user,
-						"resetcode" => $rkey,
+						"name" => htmlentities($name),
+						"hostname" => htmlentities($hostname . $port),
+						"user" => htmlentities($user),
+						"resetcode" => htmlentities($rkey),
 						"appname" => $_SESSION["APP_NAME"],
 					]);
 

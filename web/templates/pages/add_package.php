@@ -84,7 +84,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_web_aliases" class="form-label">
-						<?= _("Web Aliases") ?> <span class="optional">(<?= _("Per Domain") ?>)</span>
+						<?= _("Web Aliases") ?> <span class="optional">(<?= _("per domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?= htmlentities(trim($v_web_aliases, "'")) ?>">
@@ -182,7 +182,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_dns_records" class="form-label">
-						<?= _("DNS Records") ?> <span class="optional">(<?= _("Per Domain") ?>)</span>
+						<?= _("DNS Records") ?> <span class="optional">(<?= _("per domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
@@ -261,7 +261,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_mail_accounts" class="form-label">
-						<?= _("Mail Accounts") ?> <span class="optional">(<?= _("Per Domain") ?>)</span>
+						<?= _("Mail Accounts") ?> <span class="optional">(<?= _("per domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
@@ -272,7 +272,7 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_ratelimit" class="form-label">
-						<?= _("Rate Limit") ?> <span class="optional">(<?= _("Per Account / Hour") ?>)</span>
+						<?= _("Rate Limit") ?> <span class="optional">(<?= _("per account / hour") ?>)</span>
 					</label>
 					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
 				</div>

@@ -41,7 +41,7 @@ if (!empty($_POST["ok"])) {
 	} elseif (count($check_invalid_apis) > 0) {
 		//$errors[] = sprintf("%d apis not allowed", count($check_invalid_apis));
 		foreach ($check_invalid_apis as $api_name) {
-			$errors[] = sprintf("api %s not allowed", $api_name);
+			$errors[] = sprintf("API %s not allowed", $api_name);
 		}
 	}
 
@@ -74,9 +74,13 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("Access key %s has been created"),
-			htmlentities($key_data["ACCESS_KEY_ID"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("Access key {%s} has been created successfully."),
+				htmlentities($key_data["ACCESS_KEY_ID"]),
+			),
+			"</b>",
+			"<b>",
 		);
 		unset($apis_selected);
 		unset($check_invalid_apis);

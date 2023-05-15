@@ -623,7 +623,7 @@ send_notice 'LETSENCRYPT' "$domain SSL has been installed successfully"
 # Logging
 log_event "$OK" "$ARGUMENTS"
 
-# Cleanup debug since the SSL was issues succesfully
+# Cleanup debug since the SSL was issues successfully
 rm -f "$log_file"
 
 exit

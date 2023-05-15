@@ -35,7 +35,7 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 1. Create an Ubuntu VM with at least 2G of memory and 15G of disk space
 
    ```bash
-   multipass launch --name hestia-dev --mem 2G --disk 15G
+   multipass launch --name hestia-dev --memory 2G --disk 15G
    ```
 
 1. Map your cloned repository to the VM's home directory
@@ -49,6 +49,16 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    ```bash
    multipass exec hestia-dev -- sudo bash
    sudo apt update && sudo apt install -y jq libjq1
+   ```
+
+1. Install [Node JS](https://nodejs.org/en) and Yarn via `corepack enable`
+
+1. Build the theme files with
+
+   ```bash
+   yarn set version stable
+   yarn install
+   yarn build
    ```
 
 1. Navigate to `/src` and build Hestia packages
@@ -134,91 +144,6 @@ You can delete the backups by running `rm -rf /root/hst_backups` as root user on
 :::
 
 Please refer to the [contributing guidelines](https://github.com/hestiacp/hestiacp/blob/main/CONTRIBUTING.md) for more details on submitting code changes for review.
-
-### Building packages
-
-::: info
-For building `hestia-nginx` or `hestia-php`, at least 2 GB of memory is required!
-:::
-
-Here is more detailed information about the build scripts that are run from `src`:
-
-#### Build packages only
-
-```bash
-# Only Hestia
-./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
-```
-
-```bash
-# Hestia + hestia-nginx and hestia-php
-./hst_autocompile.sh --all --noinstall --keepbuild '~localsrc'
-```
-
-#### Build and install packages
-
-::: info
-Use if you have Hestia already installed, for your changes to take effect.
-:::
-
-```bash
-# Only Hestia
-./hst_autocompile.sh --hestia --install '~localsrc'
-```
-
-```bash
-# Hestia + hestia-nginx and hestia-php
-./hst_autocompile.sh --all --install '~localsrc'
-```
-
-## Installing Hestia from a branch
-
-The following is useful for testing a Pull Request or a branch on a fork.
-
-```bash
-# Replace with https://github.com/username/hestiacp.git if you want to test a branch that you created yourself
-git clone https://github.com/hestiacp/hestiacp.git
-cd ./hestiacp/
-
-# Replace main with the branch you want to test
-git checkout main
-
-cd ./src/
-
-# Compile packages
-./hst_autocompile.sh --all --noinstall --keepbuild '~localsrc'
-
-cd ../install
-
-bash hst-install-{os}.sh --with-debs /tmp/hestiacp-src/deb/
-```
-
-Any option can be appended to the installer command. [See the complete list](../introduction/getting-started#list-of-installation-options).
-
-## Updating Hestia from GitHub
-
-The following is useful for pulling the latest staging/beta changes from GitHub and compiling the changes.
-
-::: info
-The following method only supports building the `hestia` package. If you need to build `hestia-nginx` or `hestia-php`, use one of the previous commands.
-:::
-
-```bash
-v-update-sys-hestia-git [USERNAME] [BRANCH]
-```
-
-**Note:** Sometimes dependencies will get added or removed when the packages are installed with `dpkg`. It is not possible to preload the dependencies. If this happens, you will see an error like this:
-
-```bash
-dpkg: error processing package hestia (–install):
-dependency problems - leaving unconfigured
-```
-
-To solve this issue, run:
-
-```bash
-apt install -f
-```
 
 ## Running automated tests
 

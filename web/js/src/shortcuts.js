@@ -5,8 +5,8 @@ import {
 	moveFocusUp,
 	enterFocused,
 	executeShortcut,
-} from './navigation.js';
-import { createConfirmationDialog } from './helpers.js';
+} from './navigation';
+import { createConfirmationDialog } from './helpers';
 
 /**
  * Shortcuts
@@ -15,7 +15,7 @@ import { createConfirmationDialog } from './helpers.js';
  * @typedef {{ combination: KeyCombination, event: 'keydown' | 'keyup', callback: (evt: KeyboardEvent) => void, target: EventTarget }} RegisteredShortcut
  * @typedef {{ type?: 'keydown' | 'keyup', propagate?: boolean, disabledInInput?: boolean, target?: EventTarget }} ShortcutOptions
  */
-export default function initShortcuts() {
+export default function handleShortcuts() {
 	Alpine.store('shortcuts', {
 		/**
 		 * @type RegisteredShortcut[]
@@ -65,7 +65,7 @@ export default function initShortcuts() {
 					(combination.metaKey && evt.metaKey) || (!combination.metaKey && !evt.metaKey),
 					(combination.shiftKey && evt.shiftKey) || (!combination.shiftKey && !evt.shiftKey),
 				];
-				const valid = validations.filter((validation) => validation);
+				const valid = validations.filter(Boolean);
 
 				if (valid.length === validations.length) {
 					callback(evt);
@@ -99,7 +99,9 @@ export default function initShortcuts() {
 			const shortcut = this.registeredShortcuts.find(
 				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination)
 			);
-			if (!shortcut) return;
+			if (!shortcut) {
+				return;
+			}
 
 			this.registeredShortcuts = this.registeredShortcuts.filter(
 				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination)
@@ -118,6 +120,7 @@ export default function initShortcuts() {
 				if (!createButton) {
 					return;
 				}
+
 				location.href = createButton.href;
 			},
 			{ disabledInInput: true }
@@ -168,6 +171,7 @@ export default function initShortcuts() {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
 					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
@@ -186,6 +190,7 @@ export default function initShortcuts() {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
 					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
@@ -204,6 +209,7 @@ export default function initShortcuts() {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
 					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
@@ -222,6 +228,7 @@ export default function initShortcuts() {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
 					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
@@ -240,6 +247,7 @@ export default function initShortcuts() {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
 					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
@@ -258,6 +266,7 @@ export default function initShortcuts() {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
 					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
@@ -276,6 +285,7 @@ export default function initShortcuts() {
 				if (!target) {
 					return;
 				}
+
 				if (Alpine.store('form').dirty) {
 					createConfirmationDialog({
 						message: Alpine.store('globals').CONFIRM_LEAVE_PAGE,
@@ -337,9 +347,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'L' },
 			(_evt) => {
-				const el = document.querySelector('.units .l-unit.focus .shortcut-l');
-				if (el) {
-					executeShortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-l');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -347,9 +357,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'S' },
 			(_evt) => {
-				const el = document.querySelector('.units .l-unit.focus .shortcut-s');
-				if (el) {
-					executeShortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-s');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -357,9 +367,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'W' },
 			(_evt) => {
-				const el = document.querySelector('.units .l-unit.focus .shortcut-w');
-				if (el) {
-					executeShortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-w');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -367,9 +377,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'D' },
 			(_evt) => {
-				const el = document.querySelector('.units .l-unit.focus .shortcut-d');
-				if (el) {
-					executeShortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-d');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -377,9 +387,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'R' },
 			(_evt) => {
-				const el = document.querySelector('.units .l-unit.focus .shortcut-r');
-				if (el) {
-					executeShortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-r');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -387,9 +397,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'N' },
 			(_evt) => {
-				const el = document.querySelector('.units .l-unit.focus .shortcut-n');
-				if (el) {
-					executeShortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-n');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -397,9 +407,9 @@ export default function initShortcuts() {
 		.register(
 			{ key: 'U' },
 			(_evt) => {
-				const el = document.querySelector('.units .l-unit.focus .shortcut-u');
-				if (el) {
-					executeShortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-u');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -407,9 +417,9 @@ export default function initShortcuts() {
 		.register(
 			{ code: 'Delete' },
 			(_evt) => {
-				const el = document.querySelector('.units .l-unit.focus .shortcut-delete');
-				if (el) {
-					executeShortcut(el);
+				const element = document.querySelector('.units .l-unit.focus .shortcut-delete');
+				if (element) {
+					executeShortcut(element);
 				}
 			},
 			{ disabledInInput: true }
@@ -431,17 +441,15 @@ export default function initShortcuts() {
 							targetUrl: document.querySelector('.main-menu-item.focus a').href,
 						});
 					}
+				} else if (document.querySelector('dialog[open]')) {
+					const dialog = document.querySelector('dialog[open]');
+					dialog.querySelector('button[type="submit"]').click();
 				} else {
-					if (document.querySelector('dialog[open]')) {
-						const dialog = document.querySelector('dialog[open]');
-						dialog.querySelector('button[type="submit"]').click();
+					const element = document.querySelector('.units .l-unit.focus .shortcut-enter');
+					if (element) {
+						executeShortcut(element);
 					} else {
-						const el = document.querySelector('.units .l-unit.focus .shortcut-enter');
-						if (el) {
-							executeShortcut(el);
-						} else {
-							enterFocused();
-						}
+						enterFocused();
 					}
 				}
 			},

@@ -31,8 +31,8 @@
 			<h1 class="form-title"><?= _("Add SSH Key") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div>
-				<label for="v_key" class="form-label"><?= _("SSH KEY") ?></label>
-				<textarea class="form-control u-min-height300" name="v_key" id="v_key"><?= htmlentities(trim($v_key, "'")) ?></textarea>
+				<label for="v_key" class="form-label"><?= _("SSH Key") ?></label>
+				<textarea class="form-control u-min-height300" name="v_key" id="v_key" required><?= htmlentities(trim($v_key, "'")) ?></textarea>
 			</div>
 		</div>
 

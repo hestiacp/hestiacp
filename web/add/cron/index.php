@@ -14,22 +14,22 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (!isset($_POST["v_min"]) || $_POST["v_min"] == "") {
-		$errors[] = _("minute");
+		$errors[] = _("Minute");
 	}
 	if (!isset($_POST["v_hour"]) || $_POST["v_hour"] == "") {
-		$errors[] = _("hour");
+		$errors[] = _("Hour");
 	}
 	if (!isset($_POST["v_day"]) || $_POST["v_day"] == "") {
-		$errors[] = _("day");
+		$errors[] = _("Day");
 	}
 	if (!isset($_POST["v_month"]) || $_POST["v_month"] == "") {
-		$errors[] = _("month");
+		$errors[] = _("Month");
 	}
 	if (!isset($_POST["v_wday"]) || $_POST["v_wday"] == "") {
-		$errors[] = _("day of week");
+		$errors[] = _("Day of Week");
 	}
 	if (!isset($_POST["v_cmd"]) || $_POST["v_cmd"] == "") {
-		$errors[] = _("cmd");
+		$errors[] = _("Command");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
@@ -77,7 +77,7 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("CRON_CREATED_OK");
+		$_SESSION["ok_msg"] = _("Cron job has been created successfully.");
 		unset($v_min);
 		unset($v_hour);
 		unset($v_day);

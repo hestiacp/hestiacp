@@ -18,8 +18,57 @@ export function randomPassword(length = 16) {
 	return password;
 }
 
+// Debounces a function to avoid excessive calls
+export function debounce(func, wait = 100) {
+	let timeout;
+	return function (...args) {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func.apply(this, args), wait);
+	};
+}
+
+// Returns the value of a CSS variable
+export function getCssVariable(variableName) {
+	return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+}
+
+// Shows the loading spinner overlay
+export function showSpinner() {
+	document.querySelector('.js-spinner').classList.add('active');
+}
+
+// Parses and sorts IP lists from HTML
+export function parseAndSortIpLists(ipListsData) {
+	const ipLists = JSON.parse(ipListsData || '[]');
+	return ipLists.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// Posts data to the given URL and returns the response
+export async function post(url, data, headers = {}) {
+	const requestOptions = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			...headers,
+		},
+		body: JSON.stringify(data),
+	};
+
+	const response = await fetch(url, requestOptions);
+	if (!response.ok) {
+		throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+	}
+
+	return response.json();
+}
+
 // Creates a confirmation <dialog> on the fly
-export function createConfirmationDialog({ title, message = 'Are you sure?', targetUrl }) {
+export function createConfirmationDialog({
+	title,
+	message = 'Are you sure?',
+	targetUrl,
+	spinner = false,
+}) {
 	// Create the dialog
 	const dialog = document.createElement('dialog');
 	dialog.classList.add('modal');
@@ -27,14 +76,14 @@ export function createConfirmationDialog({ title, message = 'Are you sure?', tar
 	// Create and insert the title
 	if (title) {
 		const titleElement = document.createElement('h2');
-		titleElement.textContent = title;
+		titleElement.innerHTML = title;
 		titleElement.classList.add('modal-title');
 		dialog.append(titleElement);
 	}
 
 	// Create and insert the message
 	const messageElement = document.createElement('p');
-	messageElement.textContent = message;
+	messageElement.innerHTML = message;
 	messageElement.classList.add('modal-message');
 	dialog.append(messageElement);
 
@@ -61,10 +110,15 @@ export function createConfirmationDialog({ title, message = 'Are you sure?', tar
 	// Define named functions to handle the event listeners
 	const handleConfirm = () => {
 		if (targetUrl) {
+			if (spinner) {
+				showSpinner();
+			}
 			window.location.href = targetUrl;
 		}
+
 		handleClose();
 	};
+
 	const handleCancel = () => handleClose();
 	const handleClose = () => {
 		confirmButton.removeEventListener('click', handleConfirm);
@@ -81,69 +135,4 @@ export function createConfirmationDialog({ title, message = 'Are you sure?', tar
 	// Add to DOM and show
 	document.body.append(dialog);
 	dialog.showModal();
-}
-
-// Monitors an input field for change and updates another selector with the value
-export function monitorAndUpdate(inputSelector, outputSelector) {
-	const inputElement = document.querySelector(inputSelector);
-	const outputElement = document.querySelector(outputSelector);
-
-	if (!inputElement || !outputElement) {
-		return;
-	}
-
-	function updateOutput(value) {
-		outputElement.textContent = value;
-		generateMailCredentials();
-	}
-
-	inputElement.addEventListener('input', (event) => {
-		updateOutput(event.target.value);
-	});
-	updateOutput(inputElement.value);
-}
-
-// Updates hidden input field with values from cloned email info panel
-export function generateMailCredentials() {
-	const mailInfoPanel = document.querySelector('.js-mail-info');
-	if (!mailInfoPanel) return;
-	const formattedCredentials = emailCredentialsAsPlainText(mailInfoPanel.cloneNode(true));
-	document.querySelector('.js-hidden-credentials').value = formattedCredentials;
-}
-
-// Updates textarea with values from text inputs
-export function updateTextareaWithInputValues(textInputs, textarea) {
-	textInputs.forEach((textInput) => {
-		const search = textInput.dataset.regexp;
-		const prevValue = textInput.dataset.prevValue;
-		textInput.setAttribute('data-prev-value', textInput.value);
-		const regexp = new RegExp(`(${search})(.+)(${prevValue})`);
-		textarea.value = textarea.value.replace(regexp, `$1$2${textInput.value}`);
-	});
-}
-
-// Reformats cloned DOM email credentials into plain text
-export function emailCredentialsAsPlainText(element) {
-	const headings = [...element.querySelectorAll('h2')];
-	const lists = [...element.querySelectorAll('ul')];
-
-	return headings
-		.map((heading, index) => {
-			const items = [...lists[index].querySelectorAll('li')];
-
-			const itemText = items
-				.map((item) => {
-					const label = item.querySelector('.values-list-label');
-					const value = item.querySelector('.values-list-value');
-					const valueLink = value.querySelector('a');
-
-					const valueText = valueLink ? valueLink.href : value.textContent;
-
-					return `${label.textContent}: ${valueText}`;
-				})
-				.join('\n');
-
-			return `${heading.textContent}\n${itemText}\n`;
-		})
-		.join('\n');
 }

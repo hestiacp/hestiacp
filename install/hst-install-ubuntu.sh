@@ -39,22 +39,17 @@ fpm_v="8.1"
 mariadb_v="10.11"
 
 # Defining software pack for all distros
-software="apache2 apache2.2-common apache2-suexec-custom apache2-utils
-    apparmor-utils awstats bc bind9 bsdmainutils bsdutils clamav-daemon
-    cron curl dnsutils dovecot-imapd dovecot-pop3d dovecot-sieve dovecot-managesieved
-    e2fslibs e2fsprogs exim4 exim4-daemon-heavy expect fail2ban flex ftp git idn2
-    imagemagick libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf
-    lsof mc mariadb-client mariadb-common mariadb-server mysql-client mysql-common mysql-server nginx
-    php$fpm_v php$fpm_v-cgi php$fpm_v-common php$fpm_v-curl
-    php$fpm_v-mysql php$fpm_v-imap php$fpm_v-ldap php$fpm_v-apcu
-    php$fpm_v-pgsql php$fpm_v-zip php$fpm_v-bz2 php$fpm_v-cli php$fpm_v-gd
-    php$fpm_v-imagick php$fpm_v-intl php$fpm_v-mbstring
-    php$fpm_v-opcache php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml
-    postgresql postgresql-contrib proftpd-basic quota rrdtool spamassassin sudo hestia=${HESTIA_INSTALL_VER}
-    hestia-nginx hestia-php vim-common vsftpd whois unzip zip acl sysstat setpriv rsyslog
-    ipset libonig5 libzip4 openssh-server lsb-release zstd jq"
+software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils apparmor-utils awstats bc bind9 bsdmainutils bsdutils
+  clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
+  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php idn2
+  imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mod-rpaf libonig5 libzip4 lsb-release
+  lsof mariadb-client mariadb-common mariadb-server mc mysql-client mysql-common mysql-server nginx openssh-server
+  php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
+  php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
+  php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
+  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd"
 
-installer_dependencies="apt-transport-https curl dirmngr gnupg wget software-properties-common ca-certificates"
+installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg software-properties-common wget"
 
 # Defining help function
 help() {
@@ -66,7 +61,7 @@ help() {
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
   -k, --named             Install Bind          [yes|no]  default: yes
   -m, --mysql             Install MariaDB       [yes|no]  default: yes
-  -M, --mysql-classic     Install MySQL         [yes|no]  default: no
+  -M, --mysql8            Install MySQL         [yes|no]  default: no
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
@@ -80,13 +75,11 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
-  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: yes
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
   -D, --with-debs         Path to Hestia debs
   -f, --force             Force installation
-  -O, --override          Override checks (dangerous!)
   -h, --help              Print this help
 
   Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --multiphp yes"
@@ -210,7 +203,9 @@ for arg; do
 		--proftpd) args="${args}-j " ;;
 		--named) args="${args}-k " ;;
 		--mysql) args="${args}-m " ;;
+		--mariadb) args="${args}-m " ;;
 		--mysql-classic) args="${args}-M " ;;
+		--mysql8) args="${args}-M " ;;
 		--postgresql) args="${args}-g " ;;
 		--exim) args="${args}-x " ;;
 		--dovecot) args="${args}-z " ;;
@@ -224,13 +219,11 @@ for arg; do
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
 		--interactive) args="${args}-y " ;;
-		--ipv6) args="${args}-6 " ;;
 		--api) args="${args}-d " ;;
 		--hostname) args="${args}-s " ;;
 		--email) args="${args}-e " ;;
 		--password) args="${args}-p " ;;
 		--force) args="${args}-f " ;;
-		--override) args="${args}-O " ;;
 		--with-debs) args="${args}-D " ;;
 		--help) args="${args}-h " ;;
 		*)
@@ -242,7 +235,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:e:p:D:fOh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;       # Apache
 		w) phpfpm=$OPTARG ;;       # PHP-FPM
@@ -265,13 +258,11 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:e:p:D:fOh" Option; 
 		l) lang=$OPTARG ;;         # Language
 		d) api=$OPTARG ;;          # Activate API
 		y) interactive=$OPTARG ;;  # Interactive install
-		6) ipv6=$OPTARG ;;         # IPv6
 		s) servername=$OPTARG ;;   # Hostname
 		e) email=$OPTARG ;;        # Admin email
 		p) vpass=$OPTARG ;;        # Admin password
 		D) withdebs=$OPTARG ;;     # Hestia debs path
 		f) force='yes' ;;          # Force install
-		O) override='yes' ;;       # Override checks
 		h) help ;;                 # Help
 		*) help ;;                 # Print help (default)
 	esac
@@ -286,7 +277,7 @@ set_default_value 'vsftpd' 'yes'
 set_default_value 'proftpd' 'no'
 set_default_value 'named' 'yes'
 set_default_value 'mysql' 'yes'
-set_default_value 'mysqlclassic' 'no'
+set_default_value 'mysql8' 'no'
 set_default_value 'postgresql' 'no'
 set_default_value 'exim' 'yes'
 set_default_value 'dovecot' 'yes'
@@ -305,7 +296,6 @@ set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
-set_default_value 'ipv6' 'yes'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
@@ -318,7 +308,6 @@ if [ "$exim" = 'no' ]; then
 	clamd='no'
 	spamd='no'
 	dovecot='no'
-	sieve='no'
 fi
 if [ "$dovecot" = 'no' ]; then
 	sieve='no'
@@ -326,10 +315,10 @@ fi
 if [ "$iptables" = 'no' ]; then
 	fail2ban='no'
 fi
-if [ "$apache" = "no" ]; then
+if [ "$apache" = 'no' ]; then
 	phpfpm='yes'
 fi
-if [ "$mysql" = 'yes' ] && [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] && [ "$mysql8" = 'yes' ]; then
 	mysql='no'
 fi
 
@@ -338,7 +327,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 	check_result 1 "Script can be run executed only by root"
 fi
 
-if [ -d "/usr/local/hestia" -a -z "$override" ]; then
+if [ -d "/usr/local/hestia" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
 fi
 
@@ -481,6 +470,7 @@ case $architecture in
 		check_result 1 "Installation aborted"
 		;;
 esac
+
 #----------------------------------------------------------#
 #                       Brief Info                         #
 #----------------------------------------------------------#
@@ -560,11 +550,12 @@ if [ "$exim" = 'yes' ]; then
 fi
 
 echo
+
 # Database stack
 if [ "$mysql" = 'yes' ]; then
 	echo '   - MariaDB Database Server'
 fi
-if [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql8" = 'yes' ]; then
 	echo '   - MySQL8 Database Server'
 fi
 if [ "$postgresql" = 'yes' ]; then
@@ -653,16 +644,10 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
 		servername="example.com"
 	fi
 	echo "127.0.0.1 $servername" >> /etc/hosts
-	if [ "$ipv6" = 'yes' ]; then
-		echo "::1 $servername" >> /etc/hosts
-	fi
 fi
 
 if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
-	if [ "$ipv6" = 'yes' ]; then
-		echo "::1 $servername" >> /etc/hosts
-	fi
 fi
 
 # Set email if it wasn't set
@@ -712,8 +697,8 @@ echo "[ * ] NGINX"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
 curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
 
-#add-apt-repository  does not support it yet see #https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 # Installing sury PHP repo
+# add-apt-repository does not yet support signed-by see: https://bugs.launchpad.net/ubuntu/+source/software-properties/+bug/1862764
 echo "[ * ] PHP"
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php > /dev/null 2>&1
 
@@ -899,12 +884,12 @@ if [ "$mysql" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/mariadb-client//")
 	software=$(echo "$software" | sed -e "s/mariadb-common//")
 fi
-if [ "$mysqlclassic" = 'no' ]; then
+if [ "$mysql8" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/mysql-server//")
 	software=$(echo "$software" | sed -e "s/mysql-client//")
 	software=$(echo "$software" | sed -e "s/mysql-common//")
 fi
-if [ "$mysql" = 'no' ] && [ "$mysqlclassic" = 'no' ]; then
+if [ "$mysql" = 'no' ] && [ "$mysql8" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
 	if [ "$multiphp" = 'yes' ]; then
 		for v in "${multiphp_v[@]}"; do
@@ -917,12 +902,6 @@ if [ "$postgresql" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/postgresql-contrib//")
 	software=$(echo "$software" | sed -e "s/postgresql//")
 	software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
-	if [ "$multiphp" = 'yes' ]; then
-		for v in "${multiphp_v[@]}"; do
-			software=$(echo "$software" | sed -e "s/php$v-pgsql//")
-		done
-	fi
-	software=$(echo "$software" | sed -e "s/phppgadmin//")
 fi
 if [ "$fail2ban" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/fail2ban//")
@@ -1057,7 +1036,7 @@ if [ -z "$(grep 'LS_COLORS="$LS_COLORS:di=00;33"' /etc/profile)" ]; then
 	echo 'LS_COLORS="$LS_COLORS:di=00;33"' >> /etc/profile
 fi
 
-# Registering /usr/sbin/nologin
+# Register /usr/sbin/nologin
 if [ -z "$(grep nologin /etc/shells)" ]; then
 	echo "/usr/sbin/nologin" >> /etc/shells
 fi
@@ -1079,19 +1058,6 @@ if [ ! -e "/sbin/iptables" ]; then
 			ln -s "$autoiptables" /sbin/iptables
 		fi
 	fi
-
-	if [ "$ipv6" = 'yes' ]; then
-		if which ip6tables; then
-			ln -s "$(which ip6tables)" /sbin/ip6tables
-		elif [ -e "/usr/sbin/ip6tables" ]; then
-			ln -s /usr/sbin/ip6tables /sbin/ip6tables
-		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables; then
-			autoip6tables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables | cut -d '' -f 2)
-			if [ -x "$autoip6tables" ]; then
-				ln -s "$autoip6tables" /sbin/ip6tables
-			fi
-		fi
-	fi
 fi
 
 if [ ! -e "/sbin/iptables-save" ]; then
@@ -1105,18 +1071,6 @@ if [ ! -e "/sbin/iptables-save" ]; then
 			ln -s "$autoiptables_save" /sbin/iptables-save
 		fi
 	fi
-	if [ "$ipv6" = 'yes' ]; then
-		if which ip6tables-save; then
-			ln -s "$(which ip6tables-save)" /sbin/ip6tables-save
-		elif [ -e "/usr/sbin/ip6tables-save" ]; then
-			ln -s /usr/sbin/ip6tables-save /sbin/ip6tables-save
-		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-save; then
-			autoip6tables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
-			if [ -x "$autoip6tables_save" ]; then
-				ln -s "$autoip6tables_save" /sbin/ip6tables-save
-			fi
-		fi
-	fi
 fi
 
 if [ ! -e "/sbin/iptables-restore" ]; then
@@ -1128,18 +1082,6 @@ if [ ! -e "/sbin/iptables-restore" ]; then
 		autoiptables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
 		if [ -x "$autoiptables_restore" ]; then
 			ln -s "$autoiptables_restore" /sbin/iptables-restore
-		fi
-	fi
-	if [ "$ipv6" = 'yes' ]; then
-		if which ip6tables-restore; then
-			ln -s "$(which ip6tables-restore)" /sbin/ip6tables-restore
-		elif [ -e "/usr/sbin/ip6tables-restore" ]; then
-			ln -s /usr/sbin/ip6tables-restore /sbin/ip6tables-restore
-		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-restore; then
-			autoip6tables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
-			if [ -x "$autoip6tables_restore" ]; then
-				ln -s "$autoip6tables_restore" /sbin/ip6tables-restore
-			fi
 		fi
 	fi
 fi
@@ -1218,7 +1160,6 @@ if [ "$apache" = 'yes' ]; then
 	write_config_value "PROXY_SSL_PORT" "443"
 	write_config_value "STATS_SYSTEM" "awstats"
 fi
-
 if [ "$apache" = 'no' ]; then
 	write_config_value "WEB_SYSTEM" "nginx"
 	write_config_value "WEB_PORT" "80"
@@ -1226,20 +1167,17 @@ if [ "$apache" = 'no' ]; then
 	write_config_value "WEB_SSL" "openssl"
 	write_config_value "STATS_SYSTEM" "awstats"
 fi
-
 if [ "$phpfpm" = 'yes' ] || [ "$multiphp" = 'yes' ]; then
 	write_config_value "WEB_BACKEND" "php-fpm"
 fi
 
 # Database stack
-if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	installed_db_types='mysql'
 fi
-
 if [ "$postgresql" = 'yes' ]; then
 	installed_db_types="$installed_db_types,pgsql"
 fi
-
 if [ -n "$installed_db_types" ]; then
 	db=$(echo "$installed_db_types" \
 		| sed "s/,/\n/g" \
@@ -1346,6 +1284,7 @@ cp -rf $HESTIA_COMMON_DIR/templates/web/skel/document_errors/* /var/www/document
 
 # Installing firewall rules
 cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/
+rm -f $HESTIA/data/firewall/ipset/blacklist.sh $HESTIA/data/firewall/ipset/blacklist.ipv6.sh
 
 # Installing apis
 cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
@@ -1391,6 +1330,7 @@ fi
 if [ -n "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
 	groupdel admin > /dev/null 2>&1
 fi
+
 # Remove sudo "default" sudo permission admin user group should not exists any way
 sed -i "s/%admin ALL=(ALL) ALL/#%admin ALL=(ALL) ALL/g" /etc/sudoers
 
@@ -1422,10 +1362,6 @@ cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
-if [ "$ipv6" = 'yes' ]; then
-	cp -f $HESTIA_INSTALL_DIR/nginx/nginx-ipv6.conf /etc/nginx/nginx.conf
-	cp -f $HESTIA_INSTALL_DIR/nginx/status-ipv6.conf /etc/nginx/conf.d/status.conf
-fi
 mkdir -p /etc/nginx/conf.d/domains
 mkdir -p /etc/nginx/modules-enabled
 mkdir -p /var/log/nginx/domains
@@ -1436,39 +1372,33 @@ for ip in $dns_resolver; do
 	if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 		resolver="$ip $resolver"
 	fi
-	if [ "$ipv6" = 'yes' ]; then
-		if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
-			resolver="[$ip] $resolver"
-		fi
-	fi
 done
 if [ -n "$resolver" ]; then
-	if [ "$ipv6" = 'yes' ]; then
-		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /etc/nginx/nginx.conf
-		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /usr/local/hestia/nginx/
-	else
-		sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
-		sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
-	fi
+	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/
-CLOUDFLARE_FILE_PATH='/etc/nginx/conf.d/cloudflare.inc'
-echo "#Cloudflare" > $CLOUDFLARE_FILE_PATH
-echo "" >> $CLOUDFLARE_FILE_PATH
+cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
 
-echo "# - IPv4" >> $CLOUDFLARE_FILE_PATH
-for i in $(curl -s -L https://www.cloudflare.com/ips-v4); do
-	echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
-done
-echo "" >> $CLOUDFLARE_FILE_PATH
-echo "# - IPv6" >> $CLOUDFLARE_FILE_PATH
-for i in $(curl -s -L https://www.cloudflare.com/ips-v6); do
-	echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
-done
+if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
+	cf_inc="/etc/nginx/conf.d/cloudflare.inc"
 
-echo "" >> $CLOUDFLARE_FILE_PATH
-echo "real_ip_header CF-Connecting-IP;" >> $CLOUDFLARE_FILE_PATH
+	echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
+	echo "# Cloudflare IP Ranges" > $cf_inc
+	echo "" >> $cf_inc
+	echo "# IPv4" >> $cf_inc
+	for ipv4 in $(echo "$cf_ips" | jq -r '.result.ipv4_cidrs[]//""' | sort); do
+		echo "set_real_ip_from $ipv4;" >> $cf_inc
+	done
+	echo "" >> $cf_inc
+	echo "# IPv6" >> $cf_inc
+	for ipv6 in $(echo "$cf_ips" | jq -r '.result.ipv6_cidrs[]//""' | sort); do
+		echo "set_real_ip_from $ipv6;" >> $cf_inc
+	done
+	echo "" >> $cf_inc
+	echo "real_ip_header CF-Connecting-IP;" >> $cf_inc
+fi
 
 update-rc.d nginx defaults > /dev/null 2>&1
 systemctl start nginx >> $LOG
@@ -1489,10 +1419,6 @@ if [ "$apache" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
 	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
 	cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
-
-	if [ "$ipv6" = 'yes' ]; then
-		cp -f $HESTIA_INSTALL_DIR/apache2/status-ipv6.conf /etc/apache2/mods-available/hestia-status.conf
-	fi
 
 	# Enable needed modules
 	a2enmod rewrite > /dev/null 2>&1
@@ -1586,9 +1512,6 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 if [ "$vsftpd" = 'yes' ]; then
 	echo "[ * ] Configuring Vsftpd server..."
 	cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
-	if [ "$ipv6" = 'yes' ]; then
-		cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd-ipv6.conf /etc/vsftpd.conf
-	fi
 	touch /var/log/vsftpd.log
 	chown root:adm /var/log/vsftpd.log
 	chmod 640 /var/log/vsftpd.log
@@ -1609,12 +1532,15 @@ if [ "$proftpd" = 'yes' ]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
+
 	if [ "$release" = '22.04' ]; then
 		sed -i 's|IdentLookups                  off|#IdentLookups                  off|g' /etc/proftpd/proftpd.conf
 	fi
+
 	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
+
 	if [ "$release" = '22.04' ]; then
 		unit_files="$(systemctl list-unit-files | grep proftpd)"
 		if [[ "$unit_files" =~ "disabled" ]]; then
@@ -1627,7 +1553,7 @@ fi
 #               Configure MariaDB / MySQL                  #
 #----------------------------------------------------------#
 
-if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	[ "$mysql" = 'yes' ] && mysql_type="MariaDB" || mysql_type="MySQL"
 	echo "[ * ] Configuring $mysql_type database server..."
 	mycnf="my-small.cnf"
@@ -1654,32 +1580,47 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 		sed -i 's|mariadb.conf.d|mysql.conf.d|g' /etc/mysql/my.cnf
 	fi
 
-	update-rc.d mysql defaults > /dev/null 2>&1
-	systemctl start mysql >> $LOG
-	check_result $? "${mysql_type,,} start failed"
+	if [ "$mysql_type" = 'MariaDB' ]; then
+		update-rc.d mariadb defaults > /dev/null 2>&1
+		systemctl -q enable mariadb 2> /dev/null
+		systemctl start mariadb >> $LOG
+		check_result $? "${mysql_type,,} start failed"
+	fi
+
+	if [ "$mysql_type" = 'MySQL' ]; then
+		update-rc.d mysql defaults > /dev/null 2>&1
+		systemctl -q enable mysql 2> /dev/null
+		systemctl start mysql >> $LOG
+		check_result $? "${mysql_type,,} start failed"
+	fi
 
 	# Securing MariaDB/MySQL installation
 	mpass=$(gen_pass)
 	echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
 	chmod 600 /root/.my.cnf
 
+	if [ -f '/usr/bin/mariadb' ]; then
+		mysql_server="mariadb"
+	else
+		mysql_server="mysql"
+	fi
 	# Alter root password
-	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
+	$mysql_server -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
 	if [ "$mysql_type" = 'MariaDB' ]; then
 		# Allow mysql access via socket for startup
-		mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+		$mysql_server -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
 		# Disable anonymous users
-		mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
+		$mysql_server -e "DELETE FROM mysql.global_priv WHERE User='';"
 	else
-		mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
-		mysql -e "DELETE FROM mysql.user WHERE User='';"
-		mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+		$mysql_server -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
+		$mysql_server -e "DELETE FROM mysql.user WHERE User='';"
+		$mysql_server -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
 	fi
 	# Drop test database
-	mysql -e "DROP DATABASE IF EXISTS test"
-	mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+	$mysql_server -e "DROP DATABASE IF EXISTS test"
+	$mysql_server -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 	# Flush privileges
-	mysql -e "FLUSH PRIVILEGES;"
+	$mysql_server -e "FLUSH PRIVILEGES;"
 fi
 
 #----------------------------------------------------------#
@@ -1690,12 +1631,12 @@ fi
 # shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
 source $HESTIA/install/upgrade/upgrade.conf
 
-if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	# Display upgrade information
 	echo "[ * ] Installing phpMyAdmin version v$pma_v..."
 
 	# Download latest phpmyadmin release
-	wget --retry-connrefused --quiet https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
+	wget --quiet --retry-connrefused https://files.phpmyadmin.net/phpMyAdmin/$pma_v/phpMyAdmin-$pma_v-all-languages.tar.gz
 
 	# Unpack files
 	tar xzf phpMyAdmin-$pma_v-all-languages.tar.gz
@@ -1726,6 +1667,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	# Create temporary folder and change permission
 	chmod 770 /usr/share/phpmyadmin/tmp
 	chown root:www-data /usr/share/phpmyadmin/tmp
+
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
 	sed -i "s|%blowfish_secret%|$blowfish|" /etc/phpmyadmin/config.inc.php
@@ -1802,7 +1744,6 @@ if [ "$named" = 'yes' ]; then
 	fi
 	update-rc.d bind9 defaults > /dev/null 2>&1
 	systemctl start bind9
-
 	check_result $? "bind9 start failed"
 
 	# Workaround for OpenVZ/Virtuozzo
@@ -1847,7 +1788,6 @@ if [ "$exim" = 'yes' ]; then
 	systemctl stop sendmail > /dev/null 2>&1
 	update-rc.d -f postfix remove > /dev/null 2>&1
 	systemctl stop postfix > /dev/null 2>&1
-
 	update-rc.d exim4 defaults
 	systemctl start exim4 >> $LOG
 	check_result $? "exim4 start failed"
@@ -1863,7 +1803,6 @@ if [ "$dovecot" = 'yes' ]; then
 	cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
 	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
-
 	chown -R root:root /etc/dovecot*
 
 	#Alter config for 2.2
@@ -1916,7 +1855,6 @@ if [ "$spamd" = 'yes' ]; then
 	if [[ "$unit_files" =~ "disabled" ]]; then
 		systemctl enable spamassassin > /dev/null 2>&1
 	fi
-
 	sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
 fi
 
@@ -1938,7 +1876,7 @@ if [ "$fail2ban" = 'yes' ]; then
 		sed -i "${fline}s/true/false/" /etc/fail2ban/jail.local
 	fi
 	if [ "$vsftpd" = 'yes' ]; then
-		#Create vsftpd Log File
+		# Create vsftpd Log File
 		if [ ! -f "/var/log/vsftpd.log" ]; then
 			touch /var/log/vsftpd.log
 		fi
@@ -1953,13 +1891,12 @@ if [ "$fail2ban" = 'yes' ]; then
 	update-rc.d fail2ban defaults
 	# Ubuntu 22.04 doesn't start F2B by default on boot
 	update-rc.d fail2ban enable
-
 	systemctl start fail2ban >> $LOG
 	check_result $? "fail2ban start failed"
 fi
 
 # Configuring MariaDB/MySQL host
-if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	$HESTIA/bin/v-add-database-host mysql localhost root $mpass
 fi
 
@@ -1971,8 +1908,9 @@ fi
 #----------------------------------------------------------#
 #                       Install Roundcube                  #
 #----------------------------------------------------------#
+
 # Min requirements Dovecot + Exim + Mysql
-if ([ "$mysql" == 'yes' ] || [ "$mysqlclassic" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
+if ([ "$mysql" == 'yes' ] || [ "$mysql8" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
 	echo "[ * ] Install Roundcube..."
 	$HESTIA/bin/v-add-sys-roundcube
 	write_config_value "WEBMAIL_ALIAS" "webmail"
@@ -1996,7 +1934,7 @@ if [ "$sieve" = 'yes' ]; then
 	# dovecot.conf install
 	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
 
-	# dovecot conf files
+	# Dovecot conf files
 	#  10-master.conf
 	sed -i -E -z "s/  }\n  user = dovecot\n}/  \}\n  unix_listener auth-master \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n  user = dovecot\n\}/g" /etc/dovecot/conf.d/10-master.conf
 	#  15-lda.conf
@@ -2004,7 +1942,7 @@ if [ "$sieve" = 'yes' ]; then
 	#  20-imap.conf
 	sed -i "s/mail_plugins = quota imap_quota/mail_plugins = quota imap_quota imap_sieve/g" /etc/dovecot/conf.d/20-imap.conf
 
-	# replace dovecot-sieve config files
+	# Replace dovecot-sieve config files
 	cp -f $HESTIA_COMMON_DIR/dovecot/sieve/* /etc/dovecot/conf.d
 
 	# Dovecot default file install
@@ -2030,8 +1968,6 @@ if [ "$sieve" = 'yes' ]; then
 		sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
 	fi
 
-	sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
-
 	# Restart Dovecot and exim4
 	systemctl restart dovecot > /dev/null 2>&1
 	systemctl restart exim4 > /dev/null 2>&1
@@ -2042,7 +1978,7 @@ fi
 #----------------------------------------------------------#
 
 if [ "$api" = "yes" ]; then
-	# keep legacy api enabled until transition is complete
+	# Keep legacy api enabled until transition is complete
 	write_config_value "API" "yes"
 	write_config_value "API_SYSTEM" "1"
 	write_config_value "API_ALLOWED_IP" ""
@@ -2074,8 +2010,8 @@ curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 #                   Configure IP                           #
 #----------------------------------------------------------#
 
-echo "[ * ] Configuring System IP..."
 # Configuring system IPs
+echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
 # Get main IP
@@ -2089,8 +2025,6 @@ fi
 
 # Get public IP
 pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
-pub_ipv6=$(curl --ipv6 -s https://ip.hestiacp.com/)
-
 if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
 		sed -i '/exit 0/d' /etc/rc.local
@@ -2196,7 +2130,7 @@ chown admin:admin $HESTIA/data/sessions
 mkdir -p /backup/
 chmod 755 /backup/
 
-# create cronjob to generate ssl
+# Create cronjob to generate ssl
 echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:' && /usr/local/hestia/bin/v-add-letsencrypt-host" > /etc/cron.d/hestia-ssl
 
 #----------------------------------------------------------#
@@ -2204,30 +2138,9 @@ echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbi
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
-write_config_value "PHPMYADMIN_KEY" ""
-write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
-write_config_value "POLICY_USER_VIEW_LOGS" "yes"
-write_config_value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
-write_config_value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
-write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
-write_config_value "POLICY_USER_DELETE_LOGS" "yes"
-write_config_value "POLICY_USER_CHANGE_THEME" "yes"
-write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
-write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "yes"
-write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "no"
-write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
-write_config_value "PLUGIN_APP_INSTALLER" "true"
-write_config_value "DEBUG_MODE" "no"
-write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
-write_config_value "USE_SERVER_SMTP" "false"
-write_config_value "SERVER_SMTP_PORT" ""
-write_config_value "SERVER_SMTP_HOST" ""
-write_config_value "SERVER_SMTP_SECURITY" ""
-write_config_value "SERVER_SMTP_USER" ""
-write_config_value "SERVER_SMTP_PASSWD" ""
-write_config_value "SERVER_SMTP_ADDR" ""
-write_config_value "POLICY_CSRF_STRICTNESS" "1"
-write_config_value "DISABLE_IP_CHECK" "no"
+BIN="$HESTIA/bin"
+source $HESTIA/func/syshealth.sh
+syshealth_repair_system_config
 
 # Add /usr/local/hestia/bin/ to path variable
 echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
@@ -2238,6 +2151,7 @@ fi' >> /root/.bashrc
 #                   Hestia Access Info                     #
 #----------------------------------------------------------#
 
+# Comparing hostname and IP
 host_ip=$(host $servername | head -n 1 | awk '{print $NF}')
 if [ "$host_ip" = "$ip" ]; then
 	ip="$servername"
@@ -2267,7 +2181,7 @@ we hope that you enjoy using it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://docs.hestiacp.com/
+Documentation:  https://hestiacp.com/docs/
 Forum:          https://forum.hestiacp.com/
 Discord:        https://discord.gg/nXRUZch
 GitHub:         https://www.github.com/hestiacp/hestiacp
@@ -2294,7 +2208,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://docs.hestiacp.com/" target="_new">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_new">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.<br><br>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 
 # Clean-up
 # Sort final configuration file

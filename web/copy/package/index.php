@@ -30,11 +30,10 @@ if ($_SESSION["userContext"] === "admin") {
 	}
 
 	if ($return_var != 0) {
-		$error = implode("<br>", $output);
-		if (empty($error)) {
-			$error = "Error: unable to copy package.";
+		$_SESSION["error_msg"] = implode("<br>", $output);
+		if (empty($_SESSION["error_msg"])) {
+			$_SESSION["error_msg"] = _("Error: unable to copy package.");
 		}
-		$_SESSION["error_msg"] = $error;
 	}
 	unset($output);
 }

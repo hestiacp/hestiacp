@@ -1099,6 +1099,30 @@ function check_ip_not_banned(){
     rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
 }
 
+@test "Multiphp: Change backend version - PHP v8.2" {
+	test_phpver='8.2'
+	multi_domain="multiphp.${domain}"
+
+	if [ ! -d "/etc/php/${test_phpver}/fpm/pool.d/" ]; then
+		skip "PHP ${test_phpver} not installed"
+	fi
+
+	run v-change-web-domain-backend-tpl $user $multi_domain 'PHP-8_2' 'yes'
+	assert_success
+	refute_output
+
+	# Changing web backend will create a php-fpm pool config in the corresponding php folder
+	assert_file_exist "/etc/php/${test_phpver}/fpm/pool.d/${multi_domain}.conf"
+
+	# A single php-fpm pool config file must be present
+	num_fpm_config_files="$(find -L /etc/php/ -name "${multi_domain}.conf" | wc -l)"
+	assert_equal "$num_fpm_config_files" '1'
+
+	echo -e "<?php\necho 'hestia-multiphptest:'.PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" > "$HOMEDIR/$user/web/$multi_domain/public_html/php-test.php"
+	validate_web_domain $user $multi_domain "hestia-multiphptest:$test_phpver" 'php-test.php'
+	rm $HOMEDIR/$user/web/$multi_domain/public_html/php-test.php
+}
+
 @test "Multiphp: Cleanup" {
     multi_domain="multiphp.${domain}"
 
@@ -1604,8 +1628,8 @@ function check_ip_not_banned(){
 #----------------------------------------------------------#
 
 @test "Allow Users: User can't add user.user2.com " {
-    # Case: admin company.ltd
-    # users should not be allowed to add user.company.ltd
+    # Case: admin company.tld
+    # users should not be allowed to add user.company.tld
     run v-add-user $user2 $user2 $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
@@ -1635,8 +1659,8 @@ function check_ip_not_banned(){
 
 @test "Allow Users: Set Allow users" {
     # Allow user to yes allows
-    # Case: admin company.ltd
-    # users are allowed to add user.company.ltd
+    # Case: admin company.tld
+    # users are allowed to add user.company.tld
     run v-add-web-domain-allow-users $user2 $rootdomain
     assert_success
     refute_output

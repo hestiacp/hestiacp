@@ -29,7 +29,7 @@
 			</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("System") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("Policy") ?>: <?= _("Allow suspended users to log in with read-only access") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-2">Partially implemented.</div>
+			<div class="clearfix l-unit__stat-col--left wide-2"><?= _("Partially implemented") ?></div>
 		</div>
 	</div>
 	<!-- End of item element-->

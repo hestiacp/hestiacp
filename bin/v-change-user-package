@@ -23,7 +23,7 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-is_package_avalable() {
+is_package_available() {
 
 	source_conf "$USER_DATA/user.conf"
 
@@ -155,7 +155,7 @@ is_format_valid 'user' 'package'
 is_object_valid 'user' 'USER' "$user"
 is_package_valid
 if [ "$force" != 'yes' ]; then
-	is_package_avalable
+	is_package_available
 fi
 
 # Perform verification if read-only mode is enabled

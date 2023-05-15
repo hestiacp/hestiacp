@@ -39,16 +39,16 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_action"])) {
-		$errors[] = _("action");
+		$errors[] = _("Action");
 	}
 	if (empty($_POST["v_protocol"])) {
-		$errors[] = _("protocol");
+		$errors[] = _("Protocol");
 	}
 	if (empty($_POST["v_port"]) && strlen($_POST["v_port"]) == 0) {
-		$errors[] = _("port");
+		$errors[] = _("Port");
 	}
 	if (empty($_POST["v_ip"])) {
-		$errors[] = _("ip address");
+		$errors[] = _("IP Address");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
@@ -94,7 +94,7 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("RULE_CREATED_OK");
+		$_SESSION["ok_msg"] = _("Rule has been created successfully.");
 		unset($v_port);
 		unset($v_ip);
 		unset($v_comment);

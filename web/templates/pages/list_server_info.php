@@ -119,6 +119,6 @@
 		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
 
-	<div class="server-console-output">.</div>
+	<div class="server-console-output">&nbsp;</div>
 	<div class="container">
 		<pre class="console-output animate__animated animate__fadeIn">

@@ -22,16 +22,16 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing DNS Record") ?></h1>
+			<h1 class="form-title"><?= _("Edit DNS Record") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
+				<input type="text" class="form-control js-dns-record-domain" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_rec" class="form-label"><?= _("Record") ?></label>
-				<input type="text" class="form-control" name="v_rec" id="v_rec" value="<?= htmlentities(trim($v_rec, "'")) ?>">
+				<input type="text" class="form-control js-dns-record-input" name="v_rec" id="v_rec" value="<?= htmlentities(trim($v_rec, "'")) ?>">
 				<input type="hidden" name="v_record_id" value="<?= htmlentities(trim($v_record_id, "'")) ?>">
 				<small class="hint"></small>
 			</div>
@@ -72,13 +72,13 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_priority" class="form-label">
-					<?= _("Priority") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					<?= _("Priority") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_priority" id="v_priority" value="<?= htmlentities(trim($v_priority, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_ttl" class="form-label">
-					<?= _("TTL") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					<?= _("TTL") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?= htmlentities(trim($v_ttl, "'")) ?>">
 			</div>

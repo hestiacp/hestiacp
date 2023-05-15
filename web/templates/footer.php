@@ -13,7 +13,7 @@
 		</button>)
 	</p>
 <?php } ?>
-	<div class="fullscreen-loader js-fullscreen-loader">
+	<div class="spinner-overlay js-spinner">
 		<i class="fas fa-circle-notch fa-spin"></i>
 	</div>
 
@@ -30,9 +30,9 @@
 			</div>
 			<div class="shortcuts-inner">
 				<ul class="shortcuts-list">
-					<li><span class="key">a</span><?= _("Add New object") ?></li>
-					<li><span class="key">Ctrl + Enter</span><?= _("Save Form") ?></li>
-					<li class="u-mb20"><span class="key">Ctrl + Backspace</span><?= _("Cancel saving form") ?></li>
+					<li><span class="key">a</span><?= _("Add new object") ?></li>
+					<li><span class="key">Ctrl + Enter</span><?= _("Save form") ?></li>
+					<li class="u-mb20"><span class="key">Ctrl + Backspace</span><?= _("Unsave form") ?></li>
 					<li><span class="key">1</span><?= _("Go to WEB list") ?></li>
 					<li><span class="key">2</span><?= _("Go to DNS list") ?></li>
 					<li><span class="key">3</span><?= _("Go to MAIL list") ?></li>
@@ -42,7 +42,7 @@
 				</ul>
 				<ul class="shortcuts-list">
 					<li class="u-mb20"><span class="key">f</span><?= _("Focus on search") ?></li>
-					<li class="u-mb20"><span class="key">h</span><?= _("Display/Close shortcuts") ?></li>
+					<li class="u-mb20"><span class="key">h</span><?= _("Display / Hide shortcuts") ?></li>
 					<li><span class="key bigger">&larr;</span><?= _("Move backward through top menu") ?></li>
 					<li><span class="key bigger">&rarr;</span><?= _("Move forward through top menu") ?></li>
 					<li class="u-mb20"><span class="key">Enter</span><?= _("Enter focused element") ?></li>
@@ -70,19 +70,6 @@
 		<i class="fas fa-arrow-up"></i>
 		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
-
-<?php if (!empty($_SESSION["error_msg"])): ?>
-	<script>
-		window.addEventListener("load", (event) => {
-			Hestia.helpers.createConfirmationDialog({
-				message: '<?= htmlentities($_SESSION["error_msg"]) ?>'
-			});
-		});
-	</script>
-<?php
-	unset($_SESSION['error_msg']);
-	endif;
-?>
 
 <?php if ($_SESSION["DEBUG_MODE"] == "true") {
 	require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";

@@ -13,10 +13,10 @@
 			<form x-data x-bind="BulkEdit" action="/bulk/firewall/ipset/" method="post">
 				<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 				<select class="form-select" name="action">
-					<option value=""><?= _("apply to selected") ?></option>
-					<option value="delete"><?= _("delete") ?></option>
+					<option value=""><?= _("Apply to selected") ?></option>
+					<option value="delete"><?= _("Delete") ?></option>
 				</select>
-				<button type="submit" class="toolbar-input-submit" title="<?= _("apply to selected") ?>">
+				<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
 					<i class="fas fa-arrow-right"></i>
 				</button>
 			</form>
@@ -31,10 +31,10 @@
 			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Ip List Name") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP List Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Autoupdate") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?= _("Ip Version") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Auto Update") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?= _("IP Version") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?= _("Date") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact-4"><b><?= _("Time") ?></b></div>
 		</div>
@@ -58,7 +58,7 @@
 									class="data-controls js-confirm-action"
 									href="/delete/firewall/ipset/?listname=<?= $listname ?>&token=<?= $_SESSION["token"] ?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_("DELETE_IPSET_CONFIRMATION"), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete IP list %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red icon-dim"></i>
 								</a>
@@ -92,7 +92,7 @@
 				if ( $i == 0) {
 					echo _('There are currently no IP lists defined.');
 				} else {
-					printf(ngettext('%d Ipset list', '%d Ipset lists', $i),$i);
+					printf(ngettext('%d IP list', '%d IP lists', $i),$i);
 				}
 			?>
 		</p>

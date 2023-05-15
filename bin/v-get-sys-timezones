@@ -45,7 +45,7 @@ plain_list() {
 	done
 }
 
-zones=$(cd /usr/share/zoneinfo/posix && find * -type f -or -type l | sort)
+zones=$(cd /usr/share/zoneinfo/posix && find -L * -type f -or -type l | sort)
 
 # Listing data
 case $format in

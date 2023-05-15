@@ -159,7 +159,13 @@ export const options: OptionsListItem[] = [
 		desc: "Provides Bruteforce protection for SSH, Email, FTP, database",
 		selected: true,
 	},
-	{ name: " --quota", id: "quota", param: "--quota", desc: "Filesystem Quota.", selected: false },
+	{
+		name: " --quota",
+		id: "quota",
+		param: "--quota",
+		desc: "Use hard disk space limits on user packages",
+		selected: false,
+	},
 	{ name: " --api", id: "api", param: "--api", desc: "Activate API.", selected: true },
 	{
 		name: " --interactive",

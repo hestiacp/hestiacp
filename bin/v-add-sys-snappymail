@@ -59,11 +59,6 @@ if [ -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
 	exit 2
 fi
 
-if [ -d "/usr/share/snappymail" ]; then
-	echo "ERROR: Install done from apt source, unable to continue"
-	exit 2
-fi
-
 # Get current version
 if [ -f "/var/lib/snappymail/data/VERSION" ]; then
 	version=$(cat $SM_INSTALL_DIR/data/VERSION)
@@ -92,7 +87,8 @@ if [ "$UPDATE" == "no" ]; then
 	cd "$SM_INSTALL_DIR"
 	[ ! -f "${SM_INSTALL_DIR}/${SM_FILE}" ] && wget "$SM_URL" --retry-connrefused --quiet -O "${SM_INSTALL_DIR}/${SM_FILE}"
 
-	if [ -f "${SM_INSTALL_DIR}/${SM_FILE}" ]; then
+	ls ${SM_INSTALL_DIR}/
+	if [ ! -f "${SM_INSTALL_DIR}/${SM_FILE}" ]; then
 		echo "ERROR: Download failed, installation aborted."
 		exit 2
 	fi
@@ -113,14 +109,19 @@ if [ "$UPDATE" == "no" ]; then
 	mv ./data $SM_CONFIG_DIR/
 	ln -s $SM_CONFIG_DIR/data/ ./data
 
-	# Create database
-	mysql -e "CREATE DATABASE snappymail"
-	# Mysql available on system
-	r=$(generate_password)
-	mysql -e "GRANT ALL ON snappymail.*
-     TO snappymail@localhost IDENTIFIED BY '$r'"
+	if [ -f '/usr/bin/mariadb' ]; then
+		#mariadb -e "CREATE DATABASE snappymail" 2>&1
+		r=$(generate_password)
+		mariadb -e "GRANT ALL ON snappymail.*
+		 TO snappymail@localhost IDENTIFIED BY '$r'"
+	else
+		#mysql -e "CREATE DATABASE snappymail" 2>&1
+		r=$(generate_password)
+		mysql -e "GRANT ALL ON snappymail.*
+		 TO snappymail@localhost IDENTIFIED BY '$r'"
+	fi
 
-	php -f $HESTIA_INSTALL_DIR/snappymail/hestia.php "admin_$key" "$admin_password" "$r"
+	php -f $HESTIA_COMMON_DIR/snappymail/install.php "admin_$key" "$admin_password" "$r"
 
 	chown -R www-data:www-data ./data
 	chown -R www-data:www-data $SM_CONFIG_DIR/

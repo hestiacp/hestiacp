@@ -23,10 +23,11 @@ $oConfig->Set("plugins", "enable", "On");
 
 \SnappyMail\Repository::installPackage("plugin", "change-password");
 \SnappyMail\Repository::installPackage("plugin", "change-password-hestia");
+
 $sFile = APP_PRIVATE_DATA . "configs/plugin-change-password.json";
 if (!file_exists($sFile)) {
 	file_put_contents(
-		"",
+		"$sFile",
 		json_encode(
 			[
 				"plugin" => [
@@ -49,7 +50,7 @@ if (!file_exists($sFile)) {
 $sFile = APP_PRIVATE_DATA . "configs/plugin-add-x-originating-ip-header.json";
 if (!file_exists($sFile)) {
 	file_put_contents(
-		"",
+		"$sFile",
 		json_encode(
 			[
 				"plugin" => [
@@ -65,7 +66,7 @@ $oConfig->Save();
 
 $sFile = APP_PRIVATE_DATA . "domains/hestia.json";
 if (!file_exists($sFile)) {
-	$config = json_decode(file_get_contents(__DIR__ . "/app/domains/default.json"), true);
+	$config = json_decode(APP_PRIVATE_DATA . "domains/default.json", true);
 	$config["IMAP"]["shortLogin"] = true;
 	$config["SMTP"]["shortLogin"] = true;
 	file_put_contents($sFile, json_encode($config, JSON_PRETTY_PRINT));

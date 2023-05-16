@@ -1491,6 +1491,18 @@ function check_ip_not_banned(){
     validate_webmail_domain $user $domain 'RainLoop Webmail'
 }
 
+@test "MAIL: Add mail domain webmail client (SnappyMail)" {
+    if [ -z "$(echo $WEBMAIL_SYSTEM | grep -w "snappymail")" ]; then
+        skip "Webmail client SnappyMail not installed"
+    fi
+    run v-add-mail-domain-webmail $user $domain "snappymail" "yes"
+    assert_success
+    refute_output
+    validate_mail_domain $user $domain
+
+    validate_webmail_domain $user $domain 'SnappyMail Webmail'
+}
+
 @test "MAIL: Disable webmail client" {
     run v-add-mail-domain-webmail $user $domain "disabled" "yes"
     assert_success

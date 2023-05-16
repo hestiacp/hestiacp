@@ -104,6 +104,9 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Upgrade Rainloop if applicable
     upgrade_rainloop | tee -a $LOG
 
+    # Upgrade SnappyMail if applicable
+    upgrade_snappymail | tee -a $LOG
+
     # Upgrade Roundcube if applicable
     upgrade_roundcube | tee -a $LOG
 

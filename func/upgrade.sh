@@ -717,12 +717,17 @@ upgrade_rainloop() {
 
 upgrade_snappymail() {
 	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
-		sm_version=$(cat /var/lib/snappymail/data/VERSION)
-		if ! version_ge "$sm_version" "$sm_v"; then
-			echo "[ ! ] Upgrading SnappyMail to version $sm_v..."
-			$BIN/v-add-sys-snappymail
+		if [ -d "/usr/share/roundcube" ]; then
+			echo "[ ! ] Roundcube: Updates are currently managed using the apt package manager"
+			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
 		else
-			echo "[ * ] SnappyMail is up to date ($sm_v)..."
+			sm_version=$(cat /var/lib/snappymail/data/VERSION)
+			if ! version_ge "$sm_version" "$sm_v"; then
+				echo "[ ! ] Upgrading SnappyMail to version $sm_v..."
+				$BIN/v-add-sys-snappymail
+			else
+				echo "[ * ] SnappyMail is up to date ($sm_v)..."
+			fi
 		fi
 	fi
 }

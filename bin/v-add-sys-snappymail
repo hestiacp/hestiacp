@@ -54,6 +54,16 @@ if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
     exit 2
 fi
 
+if [ -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
+	echo "ERROR: Mysql not available. Installation aborted"
+	exit 2
+fi
+
+if [ -d "/usr/share/snappymail" ]; then
+	echo "ERROR: Install done from apt source, unable to continue"
+	exit 2
+fi
+
 # Get current version
 if [ -f "/var/lib/snappymail/data/VERSION" ]; then
     version=$(cat $SM_INSTALL_DIR/data/VERSION);

@@ -69,6 +69,26 @@ Secret key: admin_f0e5a5aa
 
 You can access the admin by navigating to `https://webmail.domain.tld/?admin_f0e5a5aa`, and login by using the data you found in the file. Once it’s not needed anymore, remove the file, for security reasons.
 
+## How do I install SnappyMail?
+
+You can install SnappyMail by running the following command:
+
+```bash
+v-add-sys-snappymail
+```
+
+## Can I login into the backend of SnappyMail
+
+In the root folder, there is a file called `.snappymail` containing the username and password:
+
+```bash
+Username: admin_f0e5a5aa
+Password: D0ung4naLOptuaa
+Secret key: admin_f0e5a5aa
+```
+
+You can access the admin by navigating to `https://webmail.domain.tld/?admin_f0e5a5aa`, and login by using the data you found in the file. Once it’s not needed anymore, remove the file, for security reasons.
+
 ## Can I use Cloudflare Proxy with email
 
 No, Cloudflare’s Proxy does not work with email. If you use email hosted on you server, make sure the proxy for the A record `mail.domain.tld` is switched off. Otherwise, you will not be able receive emails. The following records are suggested if you want to use Hestia as your mail server:

@@ -316,9 +316,6 @@ upgrade_init_backup() {
 	if [ -d "/etc/roundcube/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/roundcube/
 	fi
-	if [ -d "/etc/rainloop/" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/rainloop/
-	fi
 	if [ -d "/etc/snappymail/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/snappymail/
 	fi
@@ -457,12 +454,6 @@ upgrade_start_backup() {
 			echo "      ---- Roundcube"
 		fi
 		cp -fr /etc/roundcube/* $HESTIA_BACKUP/conf/roundcube
-	fi
-	if [ -d "/etc/rainloop" ]; then
-		if [ "$DEBUG_MODE" = "true" ]; then
-			echo "      ---- Rainloop"
-		fi
-		cp -fr /etc/rainloop/* $HESTIA_BACKUP/conf/rainloop
 	fi
 	if [ -d "/etc/snappymail" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
@@ -703,31 +694,14 @@ upgrade_roundcube() {
 	fi
 }
 
-upgrade_rainloop() {
-	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
-		rl_version=$(cat /var/lib/rainloop/data/VERSION)
-		if ! version_ge "$rl_version" "$rl_v"; then
-			echo "[ ! ] Upgrading Rainloop to version $rl_v..."
-			$BIN/v-add-sys-rainloop
-		else
-			echo "[ * ] Rainloop is up to date ($rl_v)..."
-		fi
-	fi
-}
-
 upgrade_snappymail() {
 	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
-		if [ -d "/usr/share/roundcube" ]; then
-			echo "[ ! ] Roundcube: Updates are currently managed using the apt package manager"
-			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
+		sm_version=$(cat /var/lib/snappymail/data/VERSION)
+		if ! version_ge "$sm_version" "$sm_v"; then
+			echo "[ ! ] Upgrading SnappyMail to version $sm_v..."
+			$BIN/v-add-sys-snappymail
 		else
-			sm_version=$(cat /var/lib/snappymail/data/VERSION)
-			if ! version_ge "$sm_version" "$sm_v"; then
-				echo "[ ! ] Upgrading SnappyMail to version $sm_v..."
-				$BIN/v-add-sys-snappymail
-			else
-				echo "[ * ] SnappyMail is up to date ($sm_v)..."
-			fi
+			echo "[ * ] SnappyMail is up to date ($sm_v)..."
 		fi
 	fi
 }

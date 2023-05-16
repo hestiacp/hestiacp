@@ -40,18 +40,18 @@ SM_LOG="/var/log/snappymail"
 
 # Checking root permissions
 if [ "x$(id -u)" != 'x0' ]; then
-    echo "ERROR: v-add-sys-snappymail can only be executed by the root user"
-    exit 10
+	echo "ERROR: v-add-sys-snappymail can only be executed by the root user"
+	exit 10
 fi
 
 # Ensure that $HESTIA (/usr/local/hestia/) and other variables are valid.
 if [ -z "$HESTIA" ]; then
-    HESTIA="/usr/local/hestia"
+	HESTIA="/usr/local/hestia"
 fi
 
 if [ -z "$HOMEDIR" ] || [ -z "$HESTIA_INSTALL_DIR" ]; then
-    echo "ERROR: Environment variables not present, installation aborted."
-    exit 2
+	echo "ERROR: Environment variables not present, installation aborted."
+	exit 2
 fi
 
 if [ -z "$(echo "$DB_SYSTEM" | grep -w 'mysql')" ]; then
@@ -66,13 +66,13 @@ fi
 
 # Get current version
 if [ -f "/var/lib/snappymail/data/VERSION" ]; then
-    version=$(cat $SM_INSTALL_DIR/data/VERSION);
-    if [ "$version" == "$sm_v" ]; then
-        echo "Error: Installed version ($version) is equal to the available version ($sm_v)"
-        exit 2;
-    else
-        UPDATE="yes"
-    fi
+	version=$(cat $SM_INSTALL_DIR/data/VERSION)
+	if [ "$version" == "$sm_v" ]; then
+		echo "Error: Installed version ($version) is equal to the available version ($sm_v)"
+		exit 2
+	else
+		UPDATE="yes"
+	fi
 fi
 
 # Perform verification if read-only mode is enabled
@@ -83,79 +83,79 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ "$UPDATE" == "no" ]; then
-    rm -f -r $SM_INSTALL_DIR
-    rm -f -r $SM_CONFIG_DIR
+	rm -f -r $SM_INSTALL_DIR
+	rm -f -r $SM_CONFIG_DIR
 
-    mkdir $SM_INSTALL_DIR
-    mkdir $SM_CONFIG_DIR
+	mkdir $SM_INSTALL_DIR
+	mkdir $SM_CONFIG_DIR
 
-    cd "$SM_INSTALL_DIR"
-    [ ! -f "${SM_INSTALL_DIR}/${SM_FILE}" ] && wget "$SM_URL" --retry-connrefused --quiet -O "${SM_INSTALL_DIR}/${SM_FILE}"
+	cd "$SM_INSTALL_DIR"
+	[ ! -f "${SM_INSTALL_DIR}/${SM_FILE}" ] && wget "$SM_URL" --retry-connrefused --quiet -O "${SM_INSTALL_DIR}/${SM_FILE}"
 
-    if [ -f "${SM_INSTALL_DIR}/${SM_FILE}" ]; then
-        echo "ERROR: Download failed, installation aborted."
-        exit 2
-    fi
+	if [ -f "${SM_INSTALL_DIR}/${SM_FILE}" ]; then
+		echo "ERROR: Download failed, installation aborted."
+		exit 2
+	fi
 
-# Get current version
+	# Get current version
 
-    key=$(openssl rand -hex 4);
+	key=$(openssl rand -hex 4)
 
-    admin_account="admin_$key"
-    admin_password=$(generate_password)
+	admin_account="admin_$key"
+	admin_password=$(generate_password)
 
-    echo "Username: admin_$key" > ~/.snappymail
-    echo "Password: $admin_password" >> ~/.snappymail
-    echo "Secret key: admin_$key" >> ~/.snappymail
+	echo "Username: admin_$key" > ~/.snappymail
+	echo "Password: $admin_password" >> ~/.snappymail
+	echo "Secret key: admin_$key" >> ~/.snappymail
 
-    tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
+	tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
 
-    mv ./data $SM_CONFIG_DIR/
-    ln -s $SM_CONFIG_DIR/data/ ./data
+	mv ./data $SM_CONFIG_DIR/
+	ln -s $SM_CONFIG_DIR/data/ ./data
 
-    # Create database
-    mysql -e "CREATE DATABASE snappymail"
-    # Mysql available on system
-    r=$(generate_password)
-    mysql -e "GRANT ALL ON snappymail.*
+	# Create database
+	mysql -e "CREATE DATABASE snappymail"
+	# Mysql available on system
+	r=$(generate_password)
+	mysql -e "GRANT ALL ON snappymail.*
      TO snappymail@localhost IDENTIFIED BY '$r'"
 
-    php -f $HESTIA_INSTALL_DIR/snappymail/hestia.php "admin_$key" "$admin_password" "$r"
+	php -f $HESTIA_INSTALL_DIR/snappymail/hestia.php "admin_$key" "$admin_password" "$r"
 
-    chown -R  www-data:www-data ./data
-    chown -R  www-data:www-data $SM_CONFIG_DIR/
+	chown -R www-data:www-data ./data
+	chown -R www-data:www-data $SM_CONFIG_DIR/
 
-    rm  ${SM_INSTALL_DIR}/${SM_FILE}
-    # Add robots.txt
-    echo "User-agent: *" > $SM_INSTALL_DIR/robots.txt
-    echo "Disallow: /" >> $SM_INSTALL_DIR/robots.txt
+	rm ${SM_INSTALL_DIR}/${SM_FILE}
+	# Add robots.txt
+	echo "User-agent: *" > $SM_INSTALL_DIR/robots.txt
+	echo "Disallow: /" >> $SM_INSTALL_DIR/robots.txt
 
-    # Updating hestia.conf
-    if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
-        $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'snappymail'
-    else
-        if [  -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
-           if [ -n "$WEBMAIL_SYSTEM" ]; then
-               $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "snappymail,$WEBMAIL_SYSTEM"
-           else
-               $BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "snappymail"
-           fi
-        fi
-    fi
+	# Updating hestia.conf
+	if [ -z "$(grep WEBMAIL_SYSTEM $HESTIA/conf/hestia.conf)" ]; then
+		$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' 'snappymail'
+	else
+		if [ -z "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
+			if [ -n "$WEBMAIL_SYSTEM" ]; then
+				$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "snappymail,$WEBMAIL_SYSTEM"
+			else
+				$BIN/v-change-sys-config-value 'WEBMAIL_SYSTEM' "snappymail"
+			fi
+		fi
+	fi
 
 else
-   [ ! -f "${SM_INSTALL_DIR}/${SM_FILE}" ] && wget "$SM_URL" --quiet -O "${SM_INSTALL_DIR}/${SM_FILE}"
-   version=$(cat $SM_INSTALL_DIR/data/VERSION);
+	[ ! -f "${SM_INSTALL_DIR}/${SM_FILE}" ] && wget "$SM_URL" --quiet -O "${SM_INSTALL_DIR}/${SM_FILE}"
+	version=$(cat $SM_INSTALL_DIR/data/VERSION)
 
-   tar -xzf snappymail-latest.tar.gz "data/VERSION" $SM_INSTALL_DIR/
-   version_source=$(cat $SM_INSTALL_DIR/VERSION);
+	tar -xzf snappymail-latest.tar.gz "data/VERSION" $SM_INSTALL_DIR/
+	version_source=$(cat $SM_INSTALL_DIR/VERSION)
 
-   # Check version inside .tar.gz file in case hestia didn't update yet
-   if [ "$version" != "$version_source" ]; then
-       tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
-       rm $SM_INSTALL_DIR/$SM_FILE
-    fi
-    rm ${SM_INSTALL_DIR}/VERSION
+	# Check version inside .tar.gz file in case hestia didn't update yet
+	if [ "$version" != "$version_source" ]; then
+		tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
+		rm $SM_INSTALL_DIR/$SM_FILE
+	fi
+	rm ${SM_INSTALL_DIR}/VERSION
 fi
 
 #----------------------------------------------------------#
@@ -163,8 +163,8 @@ fi
 #----------------------------------------------------------#
 
 if [ "$UPDATE" = "yes" ]; then
-    $BIN/v-log-action "system" "Info" "Plugins" "SnappyMail updated (Version: $version)."
+	$BIN/v-log-action "system" "Info" "Plugins" "SnappyMail updated (Version: $version)."
 else
-    $BIN/v-log-action "system" "Info" "Plugins" "SnappyMail enabled (Version: $version)."
+	$BIN/v-log-action "system" "Info" "Plugins" "SnappyMail enabled (Version: $version)."
 fi
 log_event "$OK" "$ARGUMENTS"

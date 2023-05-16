@@ -77,9 +77,6 @@ upgrade_rebuild_dns_templates | tee -a $LOG
 # Upgrade File Manager and update configuration
 upgrade_filemanager | tee -a $LOG
 
-# Upgrade Rainloop if applicable
-upgrade_rainloop | tee -a $LOG
-
 # Upgrade SnappyMail if applicable
 upgrade_snappymail | tee -a $LOG
 

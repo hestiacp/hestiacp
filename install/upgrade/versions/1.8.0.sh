@@ -24,7 +24,20 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 if [ "$IMAP_SYSTEM" = "dovecot" ]; then
-	if grep -qw "^extra_groups = mail$" /etc/dovecot/conf.d/10-master.conf 2> /dev/null; then
+	if ! grep -qw "^extra_groups = mail$" /etc/dovecot/conf.d/10-master.conf 2> /dev/null; then
 		sed -i "s/^service auth {/service auth {\n  extra_groups = mail\n/g" /etc/dovecot/conf.d/10-master.conf
+	fi
+fi
+
+if [ -f /etc/fail2ban/jail.local ]; then
+	# Add phpmyadmin rule
+	if ! -qw "^[phpmyadmin]$" /etc/fail2ban/jail.local 2> /dev/null; then
+		echo "
+		[phpmyadmin]
+		enabled  = true
+		filter   = phpmyadmin-syslog
+		action   = hestia[name=WEB]
+		logpath  = /var/log/auth.log
+		maxretry = 5" >> /etc/fail2ban/jail.local
 	fi
 fi

@@ -119,7 +119,7 @@ if [ "$UPDATE" == "no" ]; then
 		mysql -e "GRANT ALL ON snappymail.*
 		 TO snappymail@localhost IDENTIFIED BY '$r'"
 	fi
-	php -f $HESTIA_COMMON_DIR/snappymail/install.php "admin_$key" "$admin_password" "$r"
+	php -f $HESTIA_COMMON_DIR/snappymail/install.php "admin_$key" "$admin_password" "$r" "$BACKEND_PORT"
 
 	chown -R www-data:www-data ./data
 	chown -R www-data:www-data $SM_CONFIG_DIR/

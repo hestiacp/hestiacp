@@ -36,7 +36,7 @@ if (!file_exists($sFile)) {
 					"driver_hestia_enabled" => true,
 					"driver_hestia_allowed_emails" => "*",
 					"hestia_host" => gethostname(),
-					"hestia_port" => 8083, // $BACKEND_PORT
+					"hestia_port" => $argv[4], // $BACKEND_PORT
 				],
 			],
 			JSON_PRETTY_PRINT,

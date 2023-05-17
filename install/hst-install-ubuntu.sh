@@ -32,7 +32,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.7.6'
+HESTIA_INSTALL_VER='1.7.7'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.1"
@@ -2228,7 +2228,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://hestiacp.com/docs/" target="_blank">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_blank">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.<br><br>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 
 # Clean-up
 # Sort final configuration file

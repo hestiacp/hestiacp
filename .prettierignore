@@ -24,8 +24,8 @@
 web/templates/
 
 # Hestia Nginx.conf
-/scr/deb/nginx/nginx.conf
-/scr/rpm/nginx/nginx.conf
+/src/deb/nginx/nginx.conf
+/src/rpm/nginx/nginx.conf
 
 # Email templates
 /install/common/templates/email/

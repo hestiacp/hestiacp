@@ -2168,7 +2168,12 @@ Ready to get started? Log in using the following credentials:
 
 	Admin URL:  https://$servername:$port" > $tmpfile
 if [ "$host_ip" != "$ip" ]; then
-	echo "	Backup URL: https://$ip:$port" >> $tmpfile
+	if [ -n "$ip" ]; then
+		echo "	Backup URL: https://$ip:$port" >> $tmpfile
+	fi
+	if [ -n "$ipv6" ]; then
+		echo "	Backup URL: https://[$ipv6]:$port" >> $tmpfile
+	fi
 fi
 echo -e -n " 	Username:   admin
 	Password:   $displaypass

@@ -31,7 +31,7 @@ set -e
 
 . /etc/profile.d/hestia.sh
 
-adapt_nginx_config()	{
+adapt_nginx_config() {
 	ipv4_string="$(ip -4 addr show scope global | sed -ne '/^[ \t]*inet[6]*/p')"
 	ipv6_string="$(ip -6 addr show scope global | sed -ne '/^[ \t]*inet[6]*/p')"
 	if [ -n "$ipv4_string" ]; then

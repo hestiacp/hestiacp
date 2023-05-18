@@ -30,7 +30,7 @@
 					<li data-entity="sort-name">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
-					<li data-entity="sort-date" sort_as_int="1">
+					<li data-entity="sort-date" data-sort-as-int="1">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>

@@ -32,7 +32,7 @@
 					<li data-entity="sort-port">
 						<span class="name"><?= _("Port") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
-					<li data-entity="sort-ip" sort_as_int="1">
+					<li data-entity="sort-ip" data-sort-as-int="1">
 						<span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 					<li data-entity="sort-comment">

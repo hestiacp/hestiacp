@@ -15,7 +15,7 @@
 					<?= _("Sort by") ?>: <b><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></b>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li data-entity="sort-date" sort_as_int="1">
+					<li data-entity="sort-date" data-sort-as-int="1">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 					<li data-entity="sort-key">

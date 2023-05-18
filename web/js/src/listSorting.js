@@ -48,7 +48,7 @@ export default function handleListSorting() {
 			this.classList.add('active');
 			const parentLi = this.closest('li');
 			state.sort_par = parentLi.dataset.entity;
-			state.sort_as_int = Boolean(parentLi.getAttribute('sort_as_int'));
+			state.sort_as_int = Boolean(parentLi.dataset.sortAsInt);
 			state.sort_direction = this.classList.contains('up') ? 1 : -1;
 
 			const toggle = document.querySelector('.toolbar-sorting-toggle');

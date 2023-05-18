@@ -144,8 +144,10 @@
 				$data[$key]['CATCHALL'] = '/dev/null';
 			}
 		?>
-		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="mail"
-			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
+		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn"
+			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
+			sort-name="<?=$key?>"
+			sort-disk="<?=$data[$key]['U_DISK']?>"
 			sort-accounts="<?=$data[$key]['ACCOUNTS']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>

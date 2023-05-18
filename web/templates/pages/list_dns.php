@@ -106,9 +106,12 @@
 				}
 			}
 		?>
-		<div class="l-unit <?php if ($status == 'suspended') echo ' l-unit--suspended'; ?> animate__animated animate__fadeIn" v_unit_id="<?=htmlentities($key);?>"
-			v_section="dns" sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlentities($key);?>"
-			sort-expire="<?=strtotime($data[$key]['EXP'])?>" sort-records="<?=(int)$data[$key]['RECORDS']?>">
+		<div class="l-unit <?php if ($status == 'suspended') echo ' l-unit--suspended'; ?> animate__animated animate__fadeIn"
+			sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
+			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
+			sort-name="<?=htmlentities($key);?>"
+			sort-expire="<?=strtotime($data[$key]['EXP'])?>"
+			sort-records="<?=(int)$data[$key]['RECORDS']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>

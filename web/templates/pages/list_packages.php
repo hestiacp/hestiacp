@@ -70,9 +70,11 @@
 		foreach ($data as $key => $value) {
 			++$i;
 		?>
-		<div class="l-unit animate__animated animate__fadeIn" v_section="user"
-			v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
-			sort-bandwidth="<?=$data[$key]['BANDWIDTH']?>" sort-disk="<?=$data[$key]['DISK_QUOTA']?>">
+		<div class="l-unit animate__animated animate__fadeIn"
+			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
+			sort-name="<?=$key?>"
+			sort-bandwidth="<?=$data[$key]['BANDWIDTH']?>"
+			sort-disk="<?=$data[$key]['DISK_QUOTA']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?=$key?>">

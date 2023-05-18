@@ -77,7 +77,14 @@
 			}
 			$uniq_id .= sha1($value['RESULT']);
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn" id="web-unit-<?=$i?>" uniq-id="<?=$uniq_id?>" sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>" sort-name="<?=$value['RESULT']?>" sort-type="<?=_($object)?>" sort-owner="<?=$value['USER']?>" sort-status="<?=$status?>"
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn"
+			id="web-unit-<?=$i?>"
+			uniq-id="<?=$uniq_id?>"
+			sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>"
+			sort-name="<?=$value['RESULT']?>"
+			sort-type="<?=_($object)?>"
+			sort-owner="<?=$value['USER']?>"
+			sort-status="<?=$status?>"
 			style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value['USER']) === 'admin') { echo 'display: none;';}?>">
 
 			<div class="l-unit__col l-unit__col--right">

@@ -140,8 +140,10 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			}
 		?>
 		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended';?> animate__animated animate__fadeIn"
-			v_unit_id="<?=$key."@".htmlentities($_GET['domain']);?>" v_section="mail_acc" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
-			sort-quota="<?=$data[$key]['QUOTA']?>" >
+			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
+			sort-name="<?=$key?>"
+			sort-disk="<?=$data[$key]['U_DISK']?>"
+			sort-quota="<?=$data[$key]['QUOTA']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
 					<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="account[]" value="<?=$key?>" <?=$display_mode;?>>

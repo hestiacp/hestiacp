@@ -88,7 +88,7 @@
 				$spnd_confirmation = _('Are you sure you want to suspend rule #%s?') ;
 			}
 		?>
-		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="firewall"
+		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animate__animated animate__fadeIn"
 			sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>"
 			sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>">
 			<div class="l-unit__col l-unit__col--right">

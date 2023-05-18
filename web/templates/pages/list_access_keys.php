@@ -69,8 +69,8 @@
 				$key_date = !empty($value['DATE']) ? $value['DATE'] : '-';
 				$key_time = !empty($value['TIME']) ? $value['TIME'] : '-';
 		?>
-		<div class="l-unit animate__animated animate__fadeIn" v_unit_id="<?=$key?>"
-			v_section="key" sort-key="<?=strtolower($key)?>"
+		<div class="l-unit animate__animated animate__fadeIn"
+			sort-key="<?=strtolower($key)?>"
 			sort-comment="<?=strtolower($key_comment)?>"
 			sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>">
 

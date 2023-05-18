@@ -74,9 +74,12 @@
 		foreach ($data as $key => $value) {
 			++$i;
 		?>
-		<div class="l-unit animate__animated animate__fadeIn" v_unit_id="<?=$key?>"
-			v_section="ip" sort-ip="<?=str_replace('.', '', $key)?>" sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
-			sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>" sort-interface="<?=$data[$key]['INTERFACE']?>" sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
+		<div class="l-unit animate__animated animate__fadeIn"
+			sort-ip="<?=str_replace('.', '', $key)?>"
+			sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
+			sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>"
+			sort-interface="<?=$data[$key]['INTERFACE']?>"
+			sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
 			sort-owner="<?=$data[$key]['OWNER']?>">
 
 			<div class="l-unit__col l-unit__col--right">

@@ -139,9 +139,13 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "https://".$http_host."/phppgadmin/";
 			if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = $_SESSION['DB_PGA_ALIAS'];
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="db"
-			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
-			sort-user="<?=$data[$key]['DBUSER']?>" sort-server="<?=$data[$key]['HOST']?>" sort-charset="<?=$data[$key]['CHARSET']?>">
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn"
+			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
+			sort-name="<?=$key?>"
+			sort-disk="<?=$data[$key]['U_DISK']?>"
+			sort-user="<?=$data[$key]['DBUSER']?>"
+			sort-server="<?=$data[$key]['HOST']?>"
+			sort-charset="<?=$data[$key]['CHARSET']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">

@@ -96,10 +96,12 @@
 										</button>
 									</div>
 									<div x-html="notification.NOTICE"></div>
-									<p
-										x-text="`${notification.TIME} ${notification.DATE}`"
-										class="top-bar-notification-timestamp"
-									></p>
+									<p class="top-bar-notification-timestamp">
+										<time
+											:datetime="`${notification.DATE}T${notification.TIME}`"
+											x-text="`${notification.TIME} ${notification.DATE}`"
+										></time>
+									</p>
 								</li>
 							</template>
 							<template x-if="initialized && notifications.length > 2">

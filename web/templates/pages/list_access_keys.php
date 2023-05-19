@@ -11,10 +11,10 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>: <b><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></b>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -69,10 +69,10 @@
 				$key_date = !empty($value['DATE']) ? $value['DATE'] : '-';
 				$key_time = !empty($value['TIME']) ? $value['TIME'] : '-';
 		?>
-		<div class="l-unit animate__animated animate__fadeIn"
-			sort-key="<?=strtolower($key)?>"
-			sort-comment="<?=strtolower($key_comment)?>"
-			sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>">
+		<div class="l-unit animate__animated animate__fadeIn js-sortable-unit"
+			data-sort-key="<?=strtolower($key)?>"
+			data-sort-comment="<?=strtolower($key_comment)?>"
+			data-sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>">
 
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">

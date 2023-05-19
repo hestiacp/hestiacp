@@ -11,10 +11,10 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>: <b><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></b>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -77,14 +77,13 @@
 			}
 			$uniq_id .= sha1($value['RESULT']);
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn"
-			id="web-unit-<?=$i?>"
-			uniq-id="<?=$uniq_id?>"
-			sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>"
-			sort-name="<?=$value['RESULT']?>"
-			sort-type="<?=_($object)?>"
-			sort-owner="<?=$value['USER']?>"
-			sort-status="<?=$status?>"
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-sortable-unit"
+			data-uniq-id="<?=$uniq_id?>"
+			data-sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>"
+			data-sort-name="<?=$value['RESULT']?>"
+			data-sort-type="<?=_($object)?>"
+			data-sort-owner="<?=$value['USER']?>"
+			data-sort-status="<?=$status?>"
 			style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value['USER']) === 'admin') { echo 'display: none;';}?>">
 
 			<div class="l-unit__col l-unit__col--right">

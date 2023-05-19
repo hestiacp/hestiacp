@@ -6,60 +6,59 @@ export default function handleListSorting() {
 		sort_as_int: false,
 	};
 
+	const toggleButton = document.querySelector('.js-toggle-sorting-menu');
+	const sortingMenu = document.querySelector('.js-sorting-menu');
+	const unitsContainer = document.querySelector('.units');
+
+	if (!toggleButton || !sortingMenu || !unitsContainer) {
+		return;
+	}
+
 	// Toggle dropdown button
-	document.querySelectorAll('.toolbar-sorting-toggle').forEach((toggle) => {
-		toggle.addEventListener('click', (evt) => {
-			evt.preventDefault();
-			document.querySelector('.toolbar-sorting-menu').classList.toggle('u-hidden');
-		});
+	toggleButton.addEventListener('click', () => {
+		sortingMenu.classList.toggle('u-hidden');
 	});
 
 	// "Click outside" to close dropdown
 	document.addEventListener('click', (event) => {
-		const toggleButton = document.querySelector('.toolbar-sorting-toggle');
-		const dropdown = document.querySelector('.toolbar-sorting-menu');
-
-		if (!dropdown || !toggleButton) {
-			return;
-		}
-
-		if (
-			!dropdown.contains(event.target) &&
-			!toggleButton.contains(event.target) &&
-			!dropdown.classList.contains('u-hidden')
-		) {
-			dropdown.classList.add('u-hidden');
+		const isClickInside = sortingMenu.contains(event.target) || toggleButton.contains(event.target);
+		if (!isClickInside && !sortingMenu.classList.contains('u-hidden')) {
+			sortingMenu.classList.add('u-hidden');
 		}
 	});
 
 	// Inner dropdown sorting behavior
-	document.querySelectorAll('.toolbar-sorting-menu span').forEach((span) => {
+	sortingMenu.querySelectorAll('span').forEach((span) => {
 		span.addEventListener('click', function () {
-			const menu = document.querySelector('.toolbar-sorting-menu');
-			menu.classList.toggle('u-hidden');
+			sortingMenu.classList.add('u-hidden');
 
-			if (this.classList.contains('active')) {
+			// Skip if the clicked sort is already active
+			if (span.classList.contains('active')) {
 				return;
 			}
 
-			document
-				.querySelectorAll('.toolbar-sorting-menu span')
-				.forEach((s) => s.classList.remove('active'));
-			this.classList.add('active');
-			const parentLi = this.closest('li');
+			// Remove 'active' class from all spans and add it to the clicked span
+			sortingMenu.querySelectorAll('span').forEach((s) => {
+				s.classList.remove('active');
+			});
+			span.classList.add('active');
+
+			// Update state with new sorting parameters
+			const parentLi = span.closest('li');
 			state.sort_par = parentLi.dataset.entity;
 			state.sort_as_int = Boolean(parentLi.dataset.sortAsInt);
-			state.sort_direction = this.classList.contains('up') ? 1 : -1;
+			state.sort_direction = span.classList.contains('up') ? 1 : -1;
 
-			const toggle = document.querySelector('.toolbar-sorting-toggle');
-			toggle.querySelector('b').innerHTML = parentLi.querySelector('.name').innerHTML;
-			const fas = toggle.querySelector('.fas');
-			fas.classList.remove('fa-arrow-up-a-z', 'fa-arrow-down-a-z');
-			fas.classList.add(this.classList.contains('up') ? 'fa-arrow-up-a-z' : 'fa-arrow-down-a-z');
+			// Update toggle button text and icon
+			toggleButton.querySelector('b').innerHTML = parentLi.querySelector('.name').innerHTML;
+			const faIcon = toggleButton.querySelector('.fas');
+			faIcon.classList.remove('fa-arrow-up-a-z', 'fa-arrow-down-a-z');
+			faIcon.classList.add(span.classList.contains('up') ? 'fa-arrow-up-a-z' : 'fa-arrow-down-a-z');
 
-			const units = Array.from(document.querySelectorAll('.units .l-unit')).sort((a, b) => {
-				const aAttr = a.getAttribute(state.sort_par);
-				const bAttr = b.getAttribute(state.sort_par);
+			// Sort units and reattach them to the DOM
+			const units = Array.from(document.querySelectorAll('.js-sortable-unit')).sort((a, b) => {
+				const aAttr = a.getAttribute(`data-${state.sort_par}`);
+				const bAttr = b.getAttribute(`data-${state.sort_par}`);
 
 				if (state.sort_as_int) {
 					const aInt = Number.parseInt(aAttr);
@@ -70,7 +69,6 @@ export default function handleListSorting() {
 				return aAttr <= bAttr ? state.sort_direction : state.sort_direction * -1;
 			});
 
-			const unitsContainer = document.querySelector('.units');
 			units.forEach((unit) => unitsContainer.appendChild(unit));
 		});
 	});

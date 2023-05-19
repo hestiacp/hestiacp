@@ -2135,7 +2135,17 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 fi
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain admin $servername $ip
+if [ -n "$ip" ]; then
+	if [ -n "ipv6" ]; then
+		$HESTIA/bin/v-add-web-domain admin $servername $ip $ipv6
+	else
+		$HESTIA/bin/v-add-web-domain admin $servername $ip
+	fi
+else
+	if [ -n "ipv6" ]; then
+		$HESTIA/bin/v-add-web-domain admin $servername "" $ipv6
+	fi
+fi
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs

@@ -74,9 +74,10 @@
 			<div class="clearfix l-unit__stat-col--left super-compact">
 				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("Name") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IP Address") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IPV4 address") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IPV6 address") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Disk") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Bandwidth") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("SSL") ?></b></div>
@@ -184,7 +185,7 @@
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?=$i?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
 					</div>
-					<div class="clearfix l-unit__stat-col--left wide-4 truncate">
+					<div class="clearfix l-unit__stat-col--left wide-3 truncate">
 						<b>
 							<?php if ($read_only === 'true') {?>
 								<?=$key?>
@@ -242,7 +243,8 @@
 						</div>
 					</div>
 					<!-- END QUICK ACTION TOOLBAR AREA -->
-					<div class="clearfix l-unit__stat-col--left u-text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=empty($ips[$data[$key]['IP']]['NAT']) ? (empty($data[$key]['IP']) ? "&nbsp;" : $data[$key]['IP']) : "{$ips[$data[$key]['IP']]['NAT']}"; ?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?=empty($ips[$data[$key]['IP6']]) ? "&nbsp;" : $data[$key]['IP6']; ?></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?=humanize_usage_size($data[$key]['U_DISK'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_DISK'])?></span></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?=humanize_usage_size($data[$key]['U_BANDWIDTH'])?></b> <span class="u-text-small"><?=humanize_usage_measure($data[$key]['U_BANDWIDTH'])?></span></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center">

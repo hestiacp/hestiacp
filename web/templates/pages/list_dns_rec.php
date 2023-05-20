@@ -71,10 +71,10 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left"><b><?= _("Record") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left super-compact u-text-right"><b>&nbsp;</b></div>
@@ -97,7 +97,7 @@
 
 			}
 		?>
-		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended';?> animate__animated animate__fadeIn js-sortable-unit"
+		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended';?> animate__animated animate__fadeIn js-unit"
 			data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 			data-sort-record="<?=$data[$key]['RECORD']?>"
 			data-sort-type="<?=$data[$key]['TYPE']?>"
@@ -105,7 +105,7 @@
 			data-sort-value="<?=$data[$key]['VALUE']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?= $data[$key]["ID"] ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="record[]" value="<?= $data[$key]["ID"] ?>" <?= $display_mode ?>>
+					<input id="check<?= $data[$key]["ID"] ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="record[]" value="<?= $data[$key]["ID"] ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left u-truncate">
 					<b>

@@ -25,11 +25,11 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact center">
-					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 				</div>
 				<!-- Not a typo, to differentiate from User "Package Name" -->
 				<div class="clearfix l-unit__stat-col--left wide"><b><?= _("Package Names") ?></b></div>
@@ -62,7 +62,7 @@
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact center">
-						<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="pkg[]" value="<?= $key ?>">
+						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="pkg[]" value="<?= $key ?>">
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide"><b><?=$key?></b></div>
 					<div class="clearfix l-unit__stat-col--left wide-5"><?=_($data[$key]['DESCR'])?></div>

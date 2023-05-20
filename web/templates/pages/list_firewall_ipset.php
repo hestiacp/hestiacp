@@ -26,10 +26,10 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP List Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4"><b>&nbsp;</b></div>
@@ -46,7 +46,7 @@
 		<div class="l-unit animate__animated animate__fadeIn">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="setname[]" value="<?= $listname ?>">
+					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="setname[]" value="<?= $listname ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= $listname ?></b></div>
 				<!-- START QUICK ACTION TOOLBAR AREA -->

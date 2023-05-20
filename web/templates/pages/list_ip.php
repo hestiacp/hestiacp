@@ -52,11 +52,11 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP Address") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
@@ -74,7 +74,7 @@
 		foreach ($data as $key => $value) {
 			++$i;
 		?>
-		<div class="l-unit animate__animated animate__fadeIn js-sortable-unit"
+		<div class="l-unit animate__animated animate__fadeIn js-unit"
 			data-sort-ip="<?=str_replace('.', '', $key)?>"
 			data-sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
 			data-sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>"
@@ -84,7 +84,7 @@
 
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="ip[]" value="<?= $key ?>">
+					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="ip[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
 				</div>

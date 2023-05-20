@@ -128,11 +128,11 @@ export default function handleShortcuts() {
 		.register(
 			{ key: 'A', ctrlKey: true, shiftKey: true },
 			(_evt) => {
-				const checked = document.querySelector('.l-unit .ch-toggle:eq(0)').checked;
+				const checked = document.querySelector('.js-unit-checkbox:eq(0)').checked;
 				document
 					.querySelectorAll('.l-unit')
 					.forEach((el) => el.classList.toggle('selected'), !checked);
-				document.querySelectorAll('.l-unit .ch-toggle').forEach((el) => (el.checked = !checked));
+				document.querySelectorAll('.js-unit-checkbox').forEach((el) => (el.checked = !checked));
 			},
 			{ disabledInInput: true }
 		)

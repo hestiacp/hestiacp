@@ -43,10 +43,10 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="table-header">
+	<div class="units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide"><b><?= _("Package") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-right"><b>&nbsp;</b></div>
@@ -70,14 +70,14 @@
 		foreach ($data as $key => $value) {
 			++$i;
 		?>
-		<div class="l-unit animate__animated animate__fadeIn js-sortable-unit"
+		<div class="l-unit animate__animated animate__fadeIn js-unit"
 			data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 			data-sort-name="<?=$key?>"
 			data-sort-bandwidth="<?=$data[$key]['BANDWIDTH']?>"
 			data-sort-disk="<?=$data[$key]['DISK_QUOTA']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?=$key?>">
+					<input id="check<?=$i?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?=$key?>">
 				</div>
 				<?php if ($key == 'system'){ ?>
 					<div class="clearfix l-unit__stat-col--left wide truncate"><b><?=$key?></b></div>

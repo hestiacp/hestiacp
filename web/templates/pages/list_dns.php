@@ -67,10 +67,10 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode; ?>>
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode; ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-right"><b>&nbsp;</b></div>
@@ -106,7 +106,7 @@
 				}
 			}
 		?>
-		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-sortable-unit"
+		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
 			data-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
 			data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 			data-sort-name="<?=htmlentities($key);?>"
@@ -114,7 +114,7 @@
 			data-sort-records="<?=(int)$data[$key]['RECORDS']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
+					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3 truncate">
 					<b><a href="/list/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("DNS Records") ?>: <?= htmlentities($key) ?>"><?= htmlentities($key) ?></a></b>

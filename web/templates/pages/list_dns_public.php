@@ -10,14 +10,14 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -68,33 +68,35 @@
 
 <div class="container units">
 
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DNSKEY Record") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-sortable-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DNSKEY Record") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>"></b></div>
+		</div>
 	</div>
-</div>
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DS Record") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-sortable-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DS Record") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>"></b></div>
+		</div>
 	</div>
-</div>
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Public Key") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-sortable-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Public Key") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>"></b></div>
+		</div>
 	</div>
-</div>
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-sortable-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
+		</div>
 	</div>
-</div>
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-sortable-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm; ?>"></b></div>
+		</div>
 	</div>
+
 </div>

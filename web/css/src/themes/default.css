@@ -1750,7 +1750,7 @@
 
 	@media (--viewport-small) {
 		min-width: 360px;
-		max-width: 550px;
+		max-width: 460px;
 	}
 }
 

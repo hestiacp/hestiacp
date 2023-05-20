@@ -11,8 +11,8 @@
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
-ip_name=$2
+ip="$1"
+ip_name="$2"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -40,7 +40,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing ip name
+# Changing IP name
 update_ip_value '$NAME' "$ip_name"
 
 #----------------------------------------------------------#

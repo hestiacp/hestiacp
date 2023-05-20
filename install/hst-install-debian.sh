@@ -1990,9 +1990,14 @@ curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
-# Get main IP
-ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
-local_ip=$ip
+# Get primary IP
+default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
+# IPv4
+primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+# IPv6
+#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+ip="$primary_ipv4"
+local_ip="$primary_ipv4"
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
@@ -2000,10 +2005,10 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
-if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
-	$HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
-	ip=$pub_ip
+pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
+if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
+	$HESTIA/bin/v-change-sys-ip-nat "$ip" "$pub_ipv4" > /dev/null 2>&1
+	ip="$pub_ipv4"
 fi
 
 # Configuring libapache2-mod-remoteip
@@ -2011,14 +2016,14 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 	cd /etc/apache2/mods-available
 	echo "<IfModule mod_remoteip.c>" > remoteip.conf
 	echo "  RemoteIPHeader X-Real-IP" >> remoteip.conf
-	if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ip" != "127.0.0.1" ]; then
+	if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ipv4" != "127.0.0.1" ]; then
 		echo "  RemoteIPInternalProxy 127.0.0.1" >> remoteip.conf
 	fi
-	if [ -n "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
+	if [ -n "$local_ip" ] && [ "$local_ip" != "$pub_ipv4" ]; then
 		echo "  RemoteIPInternalProxy $local_ip" >> remoteip.conf
 	fi
-	if [ -n "$pub_ip" ]; then
-		echo "  RemoteIPInternalProxy $pub_ip" >> remoteip.conf
+	if [ -n "$pub_ipv4" ]; then
+		echo "  RemoteIPInternalProxy $pub_ipv4" >> remoteip.conf
 	fi
 	echo "</IfModule>" >> remoteip.conf
 	sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
@@ -2027,7 +2032,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 fi
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain admin $servername $ip
+$HESTIA/bin/v-add-web-domain admin "$servername" "$ip"
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs

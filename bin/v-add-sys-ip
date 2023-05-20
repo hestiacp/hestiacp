@@ -15,17 +15,23 @@
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Get interface name
-iface=$(/bin/ip token | awk -F 'dev ' '{print $2}')
-
 # Argument definition
-ip=${1// /}
-netmask=$2
+ip="${1// /}"
+netmask="$2"
+
+# Get interface name
+# First try to detect which interface the IP address resides on
+iface="$(ip -d -j addr show | jq --arg IP "$ip" -r '.[] | if .addr_info[].local == $IP then .ifname else empty end')"
+# If that fails, detect the default interface as a fallback
+if [ -z "$iface" ]; then
+	iface="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
+fi
+
 iface="${3-$iface}"
 user="${4-admin}"
 ip_status="${5-shared}"
-ip_name=$6
-nat_ip=$7
+ip_name="$6"
+nat_ip="$7"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -65,31 +71,26 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-cidr=$(convert_netmask $netmask)
-broadcast=$(get_broadcast $ip $netmask)
+cidr="$(convert_netmask "$netmask")"
+broadcast="$(get_broadcast "$ip" "$netmask")"
 
-sys_ip_check=$(/sbin/ip addr | grep "$ip")
+sys_ip_check="$(ip addr | grep -w "$ip")"
 if [ -z "$sys_ip_check" ]; then
-	# Adding sys ip
-	/sbin/ip addr add $ip/$cidr dev $iface \
-		broadcast $broadcast label $iface
+	# Adding system IP
+	ip addr add "$ip/$cidr" dev "$iface" broadcast "$broadcast" label "$iface"
 
 	# Check if netplan is in use and generate configuration file
-	if [ ! -z $(which netplan) ]; then
-		if [ ! -z "$(netplan generate --mapping "$iface" | grep networkd)" ]; then
-			netplan=1
-		else
-			netplan=0
-		fi
+	if [ -n "$(netplan generate --mapping "$iface" 2> /dev/null | grep networkd)" ]; then
+		netplan="true"
 	else
-		netplan=0
+		netplan="false"
 	fi
 
-	if [ "$netplan" == "1" ]; then
+	if [ "$netplan" = "true" ]; then
 		if [ -f "/etc/netplan/60-hestia.yaml" ]; then
 			sys_ip="        - $ip/$cidr"
 		else
-			sys_ip="# Added by hestia, please do not edit the file manually!"
+			sys_ip="# Added by Hestia, please do not edit the file manually!"
 			sys_ip="$sys_ip\nnetwork:"
 			sys_ip="$sys_ip\n  version: 2"
 			sys_ip="$sys_ip\n  renderer: networkd"
@@ -99,7 +100,7 @@ if [ -z "$sys_ip_check" ]; then
 			sys_ip="$sys_ip\n        - $ip/$cidr"
 		fi
 		IFS='%'
-		echo -e $sys_ip >> /etc/netplan/60-hestia.yaml
+		echo -e "$sys_ip" >> /etc/netplan/60-hestia.yaml
 		unset IFS
 	else
 		sys_ip="\n# Added by Hestia Control Panel"
@@ -112,11 +113,9 @@ if [ -z "$sys_ip_check" ]; then
 fi
 
 # Generating timestamp
-time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" | cut -f 1 -d \ )
-date=$(echo "$time_n_date" | cut -f 2 -d \ )
+new_timestamp
 
-# Adding hestia ip
+# Adding Hestia IP
 echo "OWNER='$user'
 STATUS='$ip_status'
 NAME='$ip_name'
@@ -130,7 +129,7 @@ DATE='$date'" > $HESTIA/data/ips/$ip
 chmod 660 $HESTIA/data/ips/$ip
 
 # WEB support
-if [ ! -z "$WEB_SYSTEM" ]; then
+if [ -n "$WEB_SYSTEM" ]; then
 	web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
 	rm -f $web_conf
 
@@ -182,7 +181,7 @@ if [ -n "$PROXY_SYSTEM" ]; then
 		sed -i "s/.*RPAFproxy_ips.*/$rpaf_str/" $rpaf_conf
 	fi
 
-	#mod_remoteip
+	# mod_remoteip
 	remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
 	if [ -e "$remoteip_conf" ]; then
 		if [ $(grep -ic "$ip" $remoteip_conf) -eq 0 ]; then

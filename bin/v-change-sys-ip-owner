@@ -11,8 +11,8 @@
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
-user=$2
+ip="$1"
+user="$2"
 
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf

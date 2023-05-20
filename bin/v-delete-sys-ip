@@ -12,7 +12,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
+ip="$1"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -43,22 +43,22 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Import ip variables
+# Import IP variables
 source $HESTIA/data/ips/$ip
-cidr=$(convert_netmask "$NETMASK")
-main_ip=$(hostname -i)
+cidr="$(convert_netmask "$NETMASK")"
+main_ip="$(hostname -i)"
 
 # Checking main ip on the interface
-interface=$(/sbin/ip addr | grep "$ip/$cidr" | awk '{print $NF}')
+interface=$(ip addr | grep "$ip/$cidr" | awk '{print $NF}')
 if [ -n "$interface" ] && [ "$ip" = "$main_ip" ]; then
 	echo "Error: can't delete main IP address"
 	log_event "$E_FORBIDEN" "$ARGUMENTS"
 	exit "$E_FORBIDEN"
 fi
 
-# Deleting system ip
+# Deleting system IP
 if [ -n "$interface" ]; then
-	/sbin/ip addr del "$ip/$cidr" dev "$INTERFACE"
+	ip addr del "$ip/$cidr" dev "$INTERFACE" 2> /dev/null
 	if [ "$?" -ne 0 ]; then
 		echo "Error: can't delete system ip"
 		log_event "$E_FORBIDEN" "$ARGUMENTS"
@@ -86,7 +86,7 @@ elif [ -e "/etc/network/interfaces" ]; then
 	fi
 fi
 
-# Deleting hestia ip
+# Deleting Hestia IP
 rm -f $HESTIA/data/ips/$ip
 
 # Deleting web config
@@ -101,23 +101,23 @@ if [ -n "$PROXY_SYSTEM" ]; then
 	# mod_extract_forwarded
 	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
 	if [ -e "$fw_conf" ]; then
-		ips=$(grep 'MEFaccept 127.0.0.1' $fw_conf)
-		new_ips=$(echo "$ips" | sed "s/$ip//")
-		sed -i "s/$ips/$new_ips/g" $fw_conf
+		ips="$(grep 'MEFaccept 127.0.0.1' "$fw_conf")"
+		new_ips="$(echo "$ips" | sed "s/$ip//")"
+		sed -i "s/$ips/$new_ips/g" "$fw_conf"
 	fi
 
 	# mod_rpaf
 	rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
 	if [ -e "$rpaf_conf" ]; then
-		ips=$(grep RPAFproxy_ips "$rpaf_conf")
-		new_ips=$(echo "$ips" | sed "s/ $ip//")
+		ips="$(grep RPAFproxy_ips "$rpaf_conf")"
+		new_ips="$(echo "$ips" | sed "s/ $ip//")"
 		sed -i "s/$ips/$new_ips/g" "$rpaf_conf"
 
 		# Remove RPAFproxy_ips line when ip list is empty
-		[ "$(grep RPAFproxy_ips $rpaf_conf | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" $rpaf_conf
+		[ "$(grep RPAFproxy_ips "$rpaf_conf" | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" "$rpaf_conf"
 	fi
 
-	#mod_remoteip
+	# mod_remoteip
 	remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
 	if [ -e "$remoteip_conf" ]; then
 		sed -i "/RemoteIPInternalProxy $ip\$/d" "$remoteip_conf"

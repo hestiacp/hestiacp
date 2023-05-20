@@ -96,7 +96,7 @@
 		<div class="units-header">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 				</div>
 
 				<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Service") ?></b></div>
@@ -140,7 +140,7 @@
 				data-sort-uptime="<?=$data[$key]['RTIME']?>">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="service[]" value="<?= $key ?>">
+						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="service[]" value="<?= $key ?>">
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-2">
 						<i class="fas <?= $state_icon ?> u-mr5"></i>

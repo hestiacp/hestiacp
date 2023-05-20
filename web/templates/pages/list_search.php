@@ -77,7 +77,7 @@
 			}
 			$uniq_id .= sha1($value['RESULT']);
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-sortable-unit"
+		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
 			data-uniq-id="<?=$uniq_id?>"
 			data-sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>"
 			data-sort-name="<?=$value['RESULT']?>"

@@ -47,7 +47,7 @@
 		<div class="l-unit__col l-unit__col--right">
 			<div>
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("Access Key") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
@@ -69,14 +69,14 @@
 				$key_date = !empty($value['DATE']) ? $value['DATE'] : '-';
 				$key_time = !empty($value['TIME']) ? $value['TIME'] : '-';
 		?>
-		<div class="l-unit animate__animated animate__fadeIn js-sortable-unit"
+		<div class="l-unit animate__animated animate__fadeIn js-unit"
 			data-sort-key="<?=strtolower($key)?>"
 			data-sort-comment="<?=strtolower($key_comment)?>"
 			data-sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>">
 
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="key[]" value="<?= $key ?>">
+					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="key[]" value="<?= $key ?>">
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-6">
 					<b><a href="/list/access-key/?key=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Access Key") ?>: <?= $key ?>"><?= $key ?></a></b>

@@ -72,7 +72,7 @@
 	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
@@ -174,7 +174,7 @@
 					}
 				}
 			?>
-			<div class="l-unit <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-sortable-unit"
+			<div class="l-unit <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
 				data-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
 				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 				data-sort-name="<?=$key?>"
@@ -182,7 +182,7 @@
 				data-sort-disk="<?=$data[$key]['U_DISK']?>">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
+						<input id="check<?=$i?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-4 truncate">
 						<b>

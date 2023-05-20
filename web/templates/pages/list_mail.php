@@ -10,18 +10,26 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-accounts" sort_as_int="1"><span class="name"><?= _("Accounts") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-disk" sort_as_int="1"><span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+					<li data-entity="sort-accounts" data-sort-as-int="1">
+						<span class="name"><?= _("Accounts") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-date" data-sort-as-int="1">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-disk" data-sort-as-int="1">
+						<span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-name">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
 				</ul>
 				<?php if ($read_only !== 'true') {?>
 					<form x-data x-bind="BulkEdit" action="/bulk/mail/" method="post">
@@ -56,10 +64,10 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left u-text-right compact-5"><b>&nbsp;</b></div>
@@ -136,13 +144,15 @@
 				$data[$key]['CATCHALL'] = '/dev/null';
 			}
 		?>
-		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="mail"
-			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>" sort-disk="<?=$data[$key]['U_DISK']?>"
-			sort-accounts="<?=$data[$key]['ACCOUNTS']?>">
+		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
+			data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
+			data-sort-name="<?=$key?>"
+			data-sort-disk="<?=$data[$key]['U_DISK']?>"
+			data-sort-accounts="<?=$data[$key]['ACCOUNTS']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
+						<input id="check<?=$i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?=$key?>" <?=$display_mode;?>>
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-3 truncate"><b><a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Mail Accounts") ?>: <?=$key?>"><?=$key?></a></b></div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->

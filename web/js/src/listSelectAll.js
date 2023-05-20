@@ -1,6 +1,6 @@
 // Select all checkbox on list view pages
 export default function handleListSelectAll() {
-	const selectAllCheckbox = document.querySelector('.js-toggle-all');
+	const selectAllCheckbox = document.querySelector('.js-toggle-all-checkbox');
 	if (selectAllCheckbox) {
 		selectAllCheckbox.addEventListener('change', toggleAll);
 	}
@@ -9,11 +9,11 @@ export default function handleListSelectAll() {
 function toggleAll(evt) {
 	const isChecked = evt.target.checked;
 
-	document.querySelectorAll('.ch-toggle').forEach((el) => {
+	document.querySelectorAll('.js-unit-checkbox').forEach((el) => {
 		el.checked = isChecked;
 	});
 
-	document.querySelectorAll('.l-unit').forEach((el) => {
+	document.querySelectorAll('.js-unit').forEach((el) => {
 		el.classList.toggle('selected', isChecked);
 	});
 }

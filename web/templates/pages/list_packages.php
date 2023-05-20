@@ -11,16 +11,20 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+					<li data-entity="sort-date" data-sort-as-int="1">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-name">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
 				</ul>
 				<form x-data x-bind="BulkEdit" action="/bulk/package/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
@@ -39,10 +43,10 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="table-header">
+	<div class="units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide"><b><?= _("Package") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-3 u-text-right"><b>&nbsp;</b></div>
@@ -66,12 +70,14 @@
 		foreach ($data as $key => $value) {
 			++$i;
 		?>
-		<div class="l-unit animate__animated animate__fadeIn" v_section="user"
-			v_unit_id="<?=$key?>" sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=$key?>"
-			sort-bandwidth="<?=$data[$key]['BANDWIDTH']?>" sort-disk="<?=$data[$key]['DISK_QUOTA']?>">
+		<div class="l-unit animate__animated animate__fadeIn js-unit"
+			data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
+			data-sort-name="<?=$key?>"
+			data-sort-bandwidth="<?=$data[$key]['BANDWIDTH']?>"
+			data-sort-disk="<?=$data[$key]['DISK_QUOTA']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?=$i?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?=$key?>">
+					<input id="check<?=$i?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?=$key?>">
 				</div>
 				<?php if ($key == 'system'){ ?>
 					<div class="clearfix l-unit__stat-col--left wide truncate"><b><?=$key?></b></div>

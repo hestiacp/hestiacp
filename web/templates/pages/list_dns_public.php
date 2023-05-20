@@ -10,19 +10,29 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-expire" sort_as_int="1"><span class="name"><?= _("Expire") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-ip"><span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-records"><span class="name"><?= _("Records") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+					<li data-entity="sort-date" data-sort-as-int="1">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-expire" data-sort-as-int="1">
+						<span class="name"><?= _("Expire") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-ip">
+						<span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-name">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-records">
+						<span class="name"><?= _("Records") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
 				</ul>
 				<?php if ($read_only !== "true") { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/dns/" method="post">
@@ -58,33 +68,35 @@
 
 <div class="container units">
 
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DNSKEY Record") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DNSKEY Record") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>"></b></div>
+		</div>
 	</div>
-</div>
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DS Record") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DS Record") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>"></b></div>
+		</div>
 	</div>
-</div>
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Public Key") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Public Key") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>"></b></div>
+		</div>
 	</div>
-</div>
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
+		</div>
 	</div>
-</div>
-<div class="l-unit animate__animated animate__fadeIn">
-	<div class="l-unit__col l-unit__col--right">
-		<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
-		<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm; ?>"></b></div>
+	<div class="l-unit animate__animated animate__fadeIn js-unit">
+		<div class="l-unit__col l-unit__col--right">
+			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
+			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm; ?>"></b></div>
+		</div>
 	</div>
+
 </div>

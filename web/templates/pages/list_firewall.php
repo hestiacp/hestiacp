@@ -19,15 +19,25 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>: <b><?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i></b>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-action"><span class="name"><?= _("Action") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-protocol"><span class="name"><?= _("Protocol") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-port"><span class="name"><?= _("Port") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-ip" sort_as_int="1"><span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-comment"><span class="name"><?= _("Comment") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+					<li data-entity="sort-action">
+						<span class="name"><?= _("Action") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-protocol">
+						<span class="name"><?= _("Protocol") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-port">
+						<span class="name"><?= _("Port") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-ip" data-sort-as-int="1">
+						<span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-comment">
+						<span class="name"><?= _("Comment") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
 				</ul>
 				<form x-data x-bind="BulkEdit" action="/bulk/firewall/" method="post">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
@@ -46,10 +56,10 @@
 <!-- End toolbar -->
 
 <div class="container units compact">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
 			</div>
 			<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Action") ?></b></div>
 			<div class="clearfix l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>
@@ -78,13 +88,16 @@
 				$spnd_confirmation = _('Are you sure you want to suspend rule #%s?') ;
 			}
 		?>
-		<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--suspended';?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="firewall"
-			sort-action="<?=$data[$key]['ACTION']?>" sort-protocol="<?=$data[$key]['PROTOCOL']?>" sort-port="<?=$data[$key]['PORT']?>"
-			sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>" sort-comment="<?=$data[$key]['COMMENT']?>">
+		<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
+			data-sort-action="<?=$data[$key]['ACTION']?>"
+			data-sort-protocol="<?=$data[$key]['PROTOCOL']?>"
+			data-sort-port="<?=$data[$key]['PORT']?>"
+			data-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
+			data-sort-comment="<?=$data[$key]['COMMENT']?>">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="rule[]" value="<?= $key ?>">
+						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="rule[]" value="<?= $key ?>">
 					</div>
 					<div class="clearfix l-unit__stat-col--left wide-1">
 						<b>

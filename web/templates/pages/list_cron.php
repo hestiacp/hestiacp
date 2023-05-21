@@ -91,13 +91,13 @@
 					$spnd_action = 'unsuspend';
 					$spnd_action_title = _('Unsuspend');
 					$spnd_icon = 'fa-play';
-					$spnd_confirmation = _('Are you sure you want to unsuspend the cron job?') ;
+					$spnd_confirmation = _('Are you sure you want to unsuspend this cron job?') ;
 				} else {
 					$status = 'active';
 					$spnd_action = 'suspend';
 					$spnd_action_title = _('Suspend');
 					$spnd_icon = 'fa-pause';
-					$spnd_confirmation = _('Are you sure you want to suspend the cron job?') ;
+					$spnd_confirmation = _('Are you sure you want to suspend this cron job?') ;
 				}
 			?>
 			<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
@@ -140,7 +140,7 @@
 											class="data-controls js-confirm-action"
 											href="/delete/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
 											data-confirm-title="<?= _("Delete") ?>"
-											data-confirm-message="<?= sprintf(_("Are you sure you want to delete the cron job?"), $key) ?>"
+											data-confirm-message="<?= sprintf(_("Are you sure you want to delete this cron job?"), $key) ?>"
 										>
 											<i class="fas fa-trash icon-red icon-dim"></i>
 										</a>

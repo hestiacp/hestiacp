@@ -66,37 +66,37 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
-
-	<div class="l-unit animate__animated animate__fadeIn js-unit">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DNSKEY Record") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>"></b></div>
+<div class="container">
+	<div class="units">
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DNSKEY Record") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>"></b></div>
+			</div>
+		</div>
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DS Record") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>"></b></div>
+			</div>
+		</div>
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Public Key") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>"></b></div>
+			</div>
+		</div>
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
+			</div>
+		</div>
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm; ?>"></b></div>
+			</div>
 		</div>
 	</div>
-	<div class="l-unit animate__animated animate__fadeIn js-unit">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DS Record") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>"></b></div>
-		</div>
-	</div>
-	<div class="l-unit animate__animated animate__fadeIn js-unit">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Public Key") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>"></b></div>
-		</div>
-	</div>
-	<div class="l-unit animate__animated animate__fadeIn js-unit">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
-		</div>
-	</div>
-	<div class="l-unit animate__animated animate__fadeIn js-unit">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Algorithm") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $algorithm; ?>"></b></div>
-		</div>
-	</div>
-
 </div>

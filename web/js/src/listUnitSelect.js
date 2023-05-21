@@ -1,7 +1,7 @@
 // Select unit behavior
 export default function handleListUnitSelect() {
 	const checkboxes = Array.from(document.querySelectorAll('.js-unit-checkbox'));
-	const units = Array.from(document.querySelectorAll('.js-unit'));
+	const units = checkboxes.map((checkbox) => checkbox.closest('.js-unit'));
 	const selectAllCheckbox = document.querySelector('.js-toggle-all-checkbox');
 
 	if (checkboxes.length === 0 || !selectAllCheckbox) {
@@ -11,43 +11,35 @@ export default function handleListUnitSelect() {
 	let lastCheckedIndex = null;
 
 	checkboxes.forEach((checkbox, index) => {
-		const unit = checkbox.closest('.js-unit');
-
 		checkbox.addEventListener('click', (event) => {
-			unit.classList.toggle('selected', event.target.checked);
+			const isChecked = checkbox.checked;
+			updateUnitSelection(units[index], isChecked);
 
-			// "Hold shift to select multiple" behavior
-			if (!event.shiftKey || lastCheckedIndex === null) {
-				lastCheckedIndex = index;
-				return;
-			}
-
-			const rangeStart = Math.min(index, lastCheckedIndex);
-			const rangeEnd = Math.max(index, lastCheckedIndex);
-			const isChecked = checkboxes[lastCheckedIndex].checked;
-
-			for (let i = rangeStart; i <= rangeEnd; i++) {
-				checkboxes[i].checked = isChecked;
-				units[i].classList.toggle('selected', isChecked);
+			if (event.shiftKey && lastCheckedIndex !== null) {
+				handleMultiSelect(checkboxes, units, index, lastCheckedIndex, isChecked);
 			}
 
 			lastCheckedIndex = index;
 		});
 	});
 
-	selectAllCheckbox.addEventListener('change', (evt) => {
-		toggleAll(evt, checkboxes, units);
+	selectAllCheckbox.addEventListener('change', () => {
+		const isChecked = selectAllCheckbox.checked;
+		checkboxes.forEach((checkbox) => (checkbox.checked = isChecked));
+		units.forEach((unit) => updateUnitSelection(unit, isChecked));
 	});
 }
 
-function toggleAll(evt, checkboxes, units) {
-	const isChecked = evt.target.checked;
+function updateUnitSelection(unit, isChecked) {
+	unit.classList.toggle('selected', isChecked);
+}
 
-	checkboxes.forEach((el) => {
-		el.checked = isChecked;
-	});
+function handleMultiSelect(checkboxes, units, index, lastCheckedIndex, isChecked) {
+	const rangeStart = Math.min(index, lastCheckedIndex);
+	const rangeEnd = Math.max(index, lastCheckedIndex);
 
-	units.forEach((el) => {
-		el.classList.toggle('selected', isChecked);
-	});
+	for (let i = rangeStart; i <= rangeEnd; i++) {
+		checkboxes[i].checked = isChecked;
+		updateUnitSelection(units[i], isChecked);
+	}
 }

@@ -1,10 +1,20 @@
-server {
-    listen      %ip%:%web_port%;
-    server_name %domain_idn% %alias_idn%;
-    
-    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
+#=========================================================================#
 
-    error_log  /var/log/%web_system%/domains/%domain%.error.log error;
+server {
+	listen      %ip%:%web_port%;
+	server_name %domain_idn% %alias_idn%;
+	root        %docroot%;
+	index       index.php index.html index.htm;
+
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
+
+	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
     location / {
         #single node
@@ -13,8 +23,14 @@ server {
         #unix socket mode
         proxy_pass      http://unix:%home%/%user%/web/%domain%/nodeapp/app.sock:$request_uri;
 
-        
-        location ~* ^.+\.(%proxy_extensions%)$ {
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $host;
+		proxy_set_header X-NginX-Proxy true;
+		proxy_cache_bypass $http_upgrade;
+
+        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
             root           %docroot%;
             access_log     /var/log/%web_system%/domains/%domain%.log combined;
             access_log     /var/log/%web_system%/domains/%domain%.bytes bytes;
@@ -35,16 +51,11 @@ server {
         proxy_pass      http://unix:%home%/%user%/web/%domain%/nodeapp/app.sock:/$1;
     }
 
-    location ~ /\.ht    {return 404;}
-    location ~ /\.svn/  {return 404;}
-    location ~ /\.git/  {return 404;}
-    location ~ /\.hg/   {return 404;}
-    location ~ /\.bzr/  {return 404;}
-    location ~ /\.(?!well-known\/|file) {
-       deny all;
-       return 404;
-    }
+	location ~ /\.(?!well-known\/) {
+		deny all;
+		return 404;
+	}
 
     include %home%/%user%/conf/web/%domain%/nginx.conf_*;
-    
+
 }

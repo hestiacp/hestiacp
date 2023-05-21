@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: list system ips
+# info: list system IPs
 # options: [FORMAT]
 #
 # example: v-list-sys-ips
 #
-# This function for obtaining the list of system ip addresses.
+# This function for obtaining the list of system IP addresses.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

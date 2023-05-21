@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: list user ips
+# info: list user IPs
 # options: USER [FORMAT]
 #
 # example: v-list-user-ips admin
 #
-# This function for obtaining the list of available ip addresses.
+# This function for obtaining the list of available IP addresses.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

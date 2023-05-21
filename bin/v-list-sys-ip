@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: list system ip
+# info: list system IP
 # options: IP [FORMAT]
 #
-# example: v-list-sys-ip 116.203.78.202
+# example: v-list-sys-ip 203.0.113.1
 #
-# This function for getting the list of system ip parameters.
+# This function for getting the list of system IP parameters.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

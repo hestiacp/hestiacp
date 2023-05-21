@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: change ip name
+# info: change IP name
 # options: IP NAME
 #
-# example: v-change-sys-ip-name 80.122.52.70 acme.com
+# example: v-change-sys-ip-name 203.0.113.1 acme.com
 #
-# This function for changing dns domain associated with ip.
+# This function for changing dns domain associated with IP.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -1027,14 +1027,14 @@ is_int_format_valid() {
 is_interface_format_valid() {
 	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
 	nic_names="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname, if .altnames then .altnames[] else empty end end')"
-	if [ -z $(echo "$nic_names" | grep -x $1) ]; then
+	if [ -z "$(echo "$nic_names" | grep -x "$1")" ]; then
 		check_result "$E_INVALID" "invalid interface format :: $1"
 	fi
 }
 
 # IP status validator
 is_ip_status_format_valid() {
-	if [ -z "$(echo shared,dedicated | grep -w $1)" ]; then
+	if [ -z "$(echo shared,dedicated | grep -w "$1")" ]; then
 		check_result "$E_INVALID" "invalid status format :: $1"
 	fi
 }

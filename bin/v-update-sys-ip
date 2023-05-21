@@ -1,12 +1,12 @@
 #!/bin/bash
-# info: update system ip
+# info: update system IP
 # options: NONE
 #
 # example: v-update-sys-ip
 #          # Intended for internal usage
 #
-# This function scans configured ip in the system and register them with hestia
-# internal database. This call is intended for use on vps servers, where ip is
+# This function scans configured IP in the system and register them with Hestia
+# internal database. This call is intended for use on vps servers, where IP is
 # set by hypervisor.
 
 #----------------------------------------------------------#
@@ -39,11 +39,11 @@ check_hestia_demo_mode
 physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
 
 for nic in $physical_nics; do
-	nic_ips="$(ip -4 -d -j addr show "$nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end')"
+	nic_ipv4s="$(ip -4 -d -j addr show "$nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end')"
 	if [ -z "$ips" ]; then
-		ips="$nic_ips"
+		ips="$nic_ipv4s"
 	else
-		ips="$ips\n$nic_ips"
+		ips="$ips\n$nic_ipv4s"
 	fi
 done
 
@@ -54,8 +54,8 @@ v_ip_num="$(echo "$v_ips" | wc -l)"
 # Checking primary IP change
 if [ "$ip_num" -eq "1" ] && [ "$v_ip_num" -eq "1" ]; then
 	if [ -n "$v_ips" ] && [ "$ips" != "$v_ips" ]; then
-		new_ip=$ips
-		old_ip=$v_ips
+		new_ip="$ips"
+		old_ip="$v_ips"
 	fi
 fi
 
@@ -129,9 +129,9 @@ if [ -n "$old_ip" ]; then
 
 	# Updating FTP
 	if [ -n "$FTP_SYSTEM" ] && [ "$FTP_SYSTEM" = 'vsftpd' ]; then
-		ftp_conf=$(find /etc/ -maxdepth 2 -name $FTP_SYSTEM.conf)
+		ftp_conf="$(find /etc/ -maxdepth 2 -name $FTP_SYSTEM.conf)"
 		if [ -n "$ftp_conf" ]; then
-			sed -i "s/$old_ip/$new_ip/g" $ftp_conf
+			sed -i "s/$old_ip/$new_ip/g" "$ftp_conf"
 			$BIN/v-restart-ftp
 		fi
 	fi

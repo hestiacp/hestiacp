@@ -1,14 +1,14 @@
 #!/bin/bash
-# info: add system ip address
+# info: add system IP address
 # options: IP NETMASK [INTERFACE] [USER] [IP_STATUS] [IP_NAME] [NAT_IP]
 #
-# example: v-add-sys-ip 216.239.32.21 255.255.255.0
+# example: v-add-sys-ip 203.0.113.1 255.255.255.0
 #
-# This function adds ip address into a system. It also creates rc scripts. You
-# can specify ip name which will be used as root domain for temporary aliases.
+# This function adds IP address into a system. It also creates rc scripts. You
+# can specify IP name which will be used as root domain for temporary aliases.
 # For example, if you set a1.myhosting.com as name, each new domain created on
-# this ip will automatically receive alias $domain.a1.myhosting.com. Of course
-# you must have wildcard record *.a1.myhosting.com pointed to ip. This feature
+# this IP will automatically receive alias $domain.a1.myhosting.com. Of course
+# you must have wildcard record *.a1.myhosting.com pointed to IP. This feature
 # is very handy when customer wants to test domain before dns migration.
 
 #----------------------------------------------------------#
@@ -131,28 +131,28 @@ chmod 660 $HESTIA/data/ips/$ip
 # WEB support
 if [ -n "$WEB_SYSTEM" ]; then
 	web_conf="/etc/$WEB_SYSTEM/conf.d/$ip.conf"
-	rm -f $web_conf
+	rm -f "$web_conf"
 
 	if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
 		if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
-			echo "NameVirtualHost $ip:$WEB_PORT" > $web_conf
+			echo "NameVirtualHost $ip:$WEB_PORT" > "$web_conf"
 		fi
-		echo "Listen $ip:$WEB_PORT" >> $web_conf
-		cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> $web_conf
-		sed -i 's/directIP/'$ip'/g' $web_conf
-		sed -i 's/directPORT/'$WEB_PORT'/g' $web_conf
+		echo "Listen $ip:$WEB_PORT" >> "$web_conf"
+		cat $HESTIA_INSTALL_DIR/apache2/unassigned.conf >> "$web_conf"
+		sed -i 's/directIP/'$ip'/g' "$web_conf"
+		sed -i 's/directPORT/'$WEB_PORT'/g' "$web_conf"
 
 	elif [ "$WEB_SYSTEM" = 'nginx' ]; then
-		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc $web_conf
-		sed -i 's/directIP/'$ip'/g' $web_conf
+		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc "$web_conf"
+		sed -i 's/directIP/'$ip'/g' "$web_conf"
 	fi
 
 	if [ "$WEB_SSL" = 'mod_ssl' ]; then
 		if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
-			sed -i "1s/^/NameVirtualHost $ip:$WEB_SSL_PORT\n/" $web_conf
+			sed -i "1s/^/NameVirtualHost $ip:$WEB_SSL_PORT\n/" "$web_conf"
 		fi
-		sed -i "1s/^/Listen $ip:$WEB_SSL_PORT\n/" $web_conf
-		sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' $web_conf
+		sed -i "1s/^/Listen $ip:$WEB_SSL_PORT\n/" "$web_conf"
+		sed -i 's/directSSLPORT/'$WEB_SSL_PORT'/g' "$web_conf"
 	fi
 fi
 
@@ -168,24 +168,24 @@ if [ -n "$PROXY_SYSTEM" ]; then
 	# mod_extract_forwarded
 	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
 	if [ -e "$fw_conf" ]; then
-		ips=$(grep 'MEFaccept ' $fw_conf | grep -v '#' | head -n1)
-		sed -i "s/$ips/$ips $ip/g" $fw_conf
+		ips=$(grep 'MEFaccept ' "$fw_conf" | grep -v '#' | head -n1)
+		sed -i "s/$ips/$ips $ip/g" "$fw_conf"
 	fi
 
 	# mod_rpaf
 	rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
 	if [ -e "$rpaf_conf" ]; then
-		rpaf_str=$(grep RPAFproxy_ips $rpaf_conf)
-		[ -z "$rpaf_str" ] && sed -i 's|</IfModule>|RPAFproxy_ips\n</IfModule>|' $rpaf_conf && rpaf_str='RPAFproxy_ips'
+		rpaf_str="$(grep RPAFproxy_ips "$rpaf_conf")"
+		[ -z "$rpaf_str" ] && sed -i 's|</IfModule>|RPAFproxy_ips\n</IfModule>|' "$rpaf_conf" && rpaf_str='RPAFproxy_ips'
 		rpaf_str="$rpaf_str $ip"
-		sed -i "s/.*RPAFproxy_ips.*/$rpaf_str/" $rpaf_conf
+		sed -i "s/.*RPAFproxy_ips.*/$rpaf_str/" "$rpaf_conf"
 	fi
 
 	# mod_remoteip
 	remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
 	if [ -e "$remoteip_conf" ]; then
-		if [ $(grep -ic "$ip" $remoteip_conf) -eq 0 ]; then
-			sed -i "s/<\/IfModule>/RemoteIPInternalProxy $ip\n<\/IfModule>/g" $remoteip_conf
+		if [ "$(grep -ic "$ip" "$remoteip_conf")" -eq "0" ]; then
+			sed -i "s/<\/IfModule>/RemoteIPInternalProxy $ip\n<\/IfModule>/g" "$remoteip_conf"
 		fi
 	fi
 fi

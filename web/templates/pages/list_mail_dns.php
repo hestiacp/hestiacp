@@ -16,7 +16,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 </div>
 
 <div class="container">
-	<div class="units">
+	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
 				<div>

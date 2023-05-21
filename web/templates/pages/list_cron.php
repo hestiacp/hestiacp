@@ -123,7 +123,11 @@
 									&nbsp;
 								<?php } else { ?>
 									<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-										<div class="actions-panel__col actions-panel__download shortcut-enter" data-key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+										<div class="actions-panel__col actions-panel__download shortcut-enter" data-key-action="href">
+											<a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>">
+												<i class="fas fa-pencil icon-orange icon-dim"></i>
+											</a>
+										</div>
 									<?php } ?>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a

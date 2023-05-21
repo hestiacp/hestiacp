@@ -170,7 +170,7 @@ rebuild_user_conf() {
 		else
 			dns_group='bind'
 		fi
-		chown root:$dns_group $HOMEDIR/$user/conf/dns
+		chown $dns_group:$dns_group $HOMEDIR/$user/conf/dns
 		if [ "$create_user" = "yes" ]; then
 			$BIN/v-rebuild-dns-domains $user $restart
 		fi
@@ -893,8 +893,12 @@ import_mysql_database() {
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
+	if [ -f '/usr/bin/mariadb' ]; then
+		mariadb -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
+	else
+		mysql -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
+	fi
 
-	mysql -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
 }
 
 # Import PostgreSQL dump

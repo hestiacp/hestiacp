@@ -22,7 +22,7 @@ body:
     attributes:
       label: Tell us how to replicate the bug
       description: |
-        What steps did you take when the bug occured or things did not work as you expected?
+        What steps did you take when the bug occurred or things did not work as you expected?
       placeholder: |
         1. Click on the Web tab.
         2. Click on Add Web Domain.

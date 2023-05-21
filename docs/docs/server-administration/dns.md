@@ -10,6 +10,10 @@ With the release of version 1.7.0, we have implemented support for DNSSEC. DNSSE
 
 ## DNS Cluster setup
 
+::: tip
+Create for each server a unique user and assing them the "Sync DNS User" or "dns-cluster" role!
+:::
+
 If you are looking at options to minimise DNS-related downtime or for a way to manage DNS across all your servers, you might consider setting up a DNS cluster.
 
 1. Whitelist your master server IP in **Configure Server** -> **Security** -> **Allowed IP addresses for API**, otherwise you will get an error when adding the slave server to the cluster.
@@ -22,23 +26,23 @@ With the release of 1.6.0, we have implemented a new API authentication system. 
 If you still want to use the legacy API to authenticate with **admin** username and the password make sure **Enable legacy API** access is set to **yes**.
 :::
 
-### DNS Cluster with the Hestia API (Master <-> Master)
+### DNS Cluster with the Hestia API (Master <-> Master) "Default setup!"
 
 ::: warning
 This method does not support DNSSEC!
 :::
 
-1. Create a new user on the Hestia server that will act as a “Slave”.
+1. Create a new user on the Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-cluster" or has the role `dns-cluster`
 2. Run the following command to enable the DNS server.
 
 ```bash
-v-add-remote-dns-host slave.yourhost.com 8083 'accesskey:secretkey' '' 'api' 'dns-user'
+v-add-remote-dns-host slave.yourhost.com 8083 'accesskey:secretkey' '' 'api' 'username'
 ```
 
 Or if you still want to use admin and password authentication
 
 ```bash
-v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'dns-user'
+v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'username'
 ```
 
 This way you can set up Master -> Slave or Master <-> Master <-> Master cluster.
@@ -47,7 +51,7 @@ There is no limitation on how to chain DNS servers.
 
 ### DNS Cluster with the Hestia API (Master -> Slave)
 
-1. Create a new user on the Hestia server that will act as a “Slave”.
+1. Create a new user on the Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-user" or has the role `dns-cluster`
 2. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
 3. On the master server, open `/etc/bind/named.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
@@ -76,13 +80,13 @@ There is no limitation on how to chain DNS servers.
 5. Run the following command to enable the DNS server:
 
    ```bash
-   v-add-remote-dns-host slave.yourhost.com 8083 'accesskey:secretkey' '' 'api' 'dns-user'
+   v-add-remote-dns-host slave.yourhost.com 8083 'accesskey:secretkey' '' 'api' 'user-name'
    ```
 
    If you still want to use admin and password authentication:
 
    ```bash
-   v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'dns-user'
+   v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'user-name'
    ```
 
 ### Converting an existing DNS cluster to Master -> Slave
@@ -134,20 +138,20 @@ Removing or disabling the private key in Hestia will make the domain inaccessble
 
 Yes, you can just supply the user variable at the end of the command.
 
-```bash
-v-add-remote-dns-host slave.yourhost.com 8083 admin p4sw0rd '' useraccount
-```
+````bash
+v-add-remote-dns-host slave.yourhost.com 8083 'access_key:secret_key' '' '' 'username'```
+````
 
-Or
+or
 
 ```bash
-v-add-remote-dns-host slave.yourhost.com 8083 api_key '' '' useraccount
+v-add-remote-dns-host slave.yourhost.com 8083 admin p4sw0rd '' 'username'
 ```
 
 With the new API system, you can also replace `api_key` with `access_key:secret_key`
 
 ::: info
-Please note that currently, only the user `dns-user` is exempted from syncing to other servers. If you have a DNS cluster with multiple master slaves you might run in issues.
+By default the user `dns-cluster` or user with the role `dns-cluster` are exempted from syncing to other DNS servers!
 :::
 
 ## I am not able to add a server as DNS host

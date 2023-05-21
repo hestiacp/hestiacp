@@ -17,7 +17,7 @@ if (!file_exists("/backup/" . $backup)) {
 		$return_var,
 	);
 	if ($return_var == 0) {
-		$_SESSION["error_msg"] = _("BACKUP_DOWNLOAD_SCHEDULED");
+		$_SESSION["error_msg"] = _("Download of remote backup file has been scheduled.");
 	} else {
 		$_SESSION["error_msg"] = implode("<br>", $output);
 		if (empty($_SESSION["error_msg"])) {

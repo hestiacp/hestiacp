@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/cron/">
+			<a class="button button-secondary button-back js-button-back" href="/list/cron/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -22,14 +22,14 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Adding Cron Job") ?></h1>
+			<h1 class="form-title"><?= _("Add Cron Job") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_cmd" class="form-label"><?= _("Command") ?></label>
 				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= htmlentities(trim($v_cmd, "'")) ?>">
 			</div>
-			<div class="sidebar-left-container">
-				<div>
+			<div class="sidebar-left-grid">
+				<div class="sidebar-left-grid-sidebar">
 					<div class="u-mb10">
 						<label for="v_min" class="form-label"><?= _("Minute") ?></label>
 						<input type="text" class="form-control" name="v_min" id="v_min" value="<?= htmlentities(trim($v_min, "'")) ?>">
@@ -47,20 +47,20 @@
 						<input type="text" class="form-control" name="v_month" id="v_month" value="<?= htmlentities(trim($v_month, "'")) ?>">
 					</div>
 					<div class="u-mb10">
-						<label for="v_wday" class="form-label"><?= _("Day of week") ?></label>
+						<label for="v_wday" class="form-label"><?= _("Day of Week") ?></label>
 						<input type="text" class="form-control" name="v_wday" id="v_wday" value="<?= htmlentities(trim($v_wday, "'")) ?>">
 					</div>
 				</div>
-				<div>
-					<div class="cron-helper-panel js-cron-tabs">
-						<ul>
-							<li><a href="#tabs-1"><?= _("Minutes") ?></a></li>
-							<li><a href="#tabs-2"><?= _("Hourly") ?></a></li>
-							<li><a href="#tabs-3"><?= _("Daily") ?></a></li>
-							<li><a href="#tabs-4"><?= _("Weekly") ?></a></li>
-							<li><a href="#tabs-5"><?= _("Monthly") ?></a></li>
-						</ul>
-						<div id="tabs-1">
+				<div class="sidebar-left-grid-content">
+					<div class="tabs cron-tabs js-tabs">
+						<div class="tabs-items" role="tablist">
+							<button type="button" class="tabs-item" id="tab-one" role="tab" tabindex="0" aria-selected="true"><?= _("Minutes") ?></button>
+							<button type="button" class="tabs-item" id="tab-two" role="tab" tabindex="-1"><?= _("Hourly") ?></button>
+							<button type="button" class="tabs-item" id="tab-three" role="tab" tabindex="-1"><?= _("Daily") ?></button>
+							<button type="button" class="tabs-item" id="tab-four" role="tab" tabindex="-1"><?= _("Weekly") ?></button>
+							<button type="button" class="tabs-item" id="tab-five" role="tab" tabindex="-1"><?= _("Monthly") ?></button>
+						</div>
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-one" tabindex="0">
 							<fieldset>
 								<input type="hidden" name="h_hour" value="*" form="">
 								<input type="hidden" name="h_day" value="*" form="">
@@ -69,23 +69,22 @@
 								<div class="u-mt10 u-mb20">
 									<label for="h_min_1" class="form-label first"><?= _("Run Command") ?>:</label>
 									<select class="form-select" name="h_min" id="h_min_1" form="">
-										<option value="*" selected="selected"><?= _("every minute") ?></option>
-										<option value="*/2"><?= _("every two minutes") ?></option>
-										<option value="*/5"><?= _("every") ?> 5</option>
-										<option value="*/10"><?= _("every") ?> 10</option>
-										<option value="*/15"><?= _("every") ?> 15</option>
-										<option value="*/30"><?= _("every") ?> 30</option>
+										<option value="*" selected="selected"><?= _("Every minute") ?></option>
+										<option value="*/2"><?= sprintf(_("Every %s minutes"), 2) ?></option>
+										<option value="*/5"><?= sprintf(_("Every %s minutes"), 5) ?></option>
+										<option value="*/10"><?= sprintf(_("Every %s minutes"), 10) ?></option>
+										<option value="*/15"><?= sprintf(_("Every %s minutes"), 15) ?></option>
+										<option value="*/30"><?= sprintf(_("Every %s minutes"), 30) ?></option>
 									</select>
 								</div>
 								<div class="u-pt10">
 									<button type="button" class="button button-secondary js-generate-cron">
-										<?= _("generate") ?>
+										<?= _("Generate") ?>
 									</button>
 								</div>
 							</fieldset>
 						</div>
-
-						<div id="tabs-2">
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-two" tabindex="0" hidden>
 							<fieldset>
 								<input type="hidden" name="h_day" value="*" form="">
 								<input type="hidden" name="h_month" value="*" form="">
@@ -93,10 +92,10 @@
 								<div class="u-mt10 u-mb10">
 									<label for="h_hour_2" class="form-label first"><?= _("Run Command") ?>:</label>
 									<select class="form-select" name="h_hour" id="h_hour_2" form="">
-										<option value="*" selected="selected"><?= _("every hour") ?></option>
-										<option value="*/2"><?= _("every two hours") ?></option>
-										<option value="*/6"><?= _("every") ?> 6</option>
-										<option value="*/12"><?= _("every") ?> 12</option>
+										<option value="*" selected="selected"><?= _("Every hour") ?></option>
+										<option value="*/2"><?= sprintf(_("Every %s hours"), 2) ?></option>
+										<option value="*/6"><?= sprintf(_("Every %s hours"), 6) ?></option>
+										<option value="*/12"><?= sprintf(_("Every %s hours"), 12) ?></option>
 									</select>
 								</div>
 								<div class="u-mb20">
@@ -110,26 +109,25 @@
 								</div>
 								<div class="u-pt10">
 									<button type="button" class="button button-secondary js-generate-cron">
-										<?= _("generate") ?>
+										<?= _("Generate") ?>
 									</button>
 								</div>
 							</fieldset>
 						</div>
-
-						<div id="tabs-3">
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-three" tabindex="0" hidden>
 							<fieldset>
 								<input type="hidden" name="h_month" value="*" form="">
 								<input type="hidden" name="h_wday" value="*" form="">
 								<div class="u-mt10 u-mb10">
 									<label for="h_day_3" class="form-label first"><?= _("Run Command") ?>:</label>
 									<select class="form-select" name="h_day" id="h_day_3" form="">
-										<option value="*" selected="selected"><?= _("every day") ?></option>
-										<option value="1-31/2"><?= _("every odd day") ?></option>
-										<option value="*/2"><?= _("every even day") ?></option>
-										<option value="*/3"><?= _("every") ?> 3</option>
-										<option value="*/5"><?= _("every") ?> 5</option>
-										<option value="*/10"><?= _("every") ?> 10</option>
-										<option value="*/15"><?= _("every") ?> 15</option>
+										<option value="*" selected="selected"><?= _("Every day") ?></option>
+										<option value="1-31/2"><?= _("Every odd day") ?></option>
+										<option value="*/2"><?= _("Every even day") ?></option>
+										<option value="*/3"><?= sprintf(_("Every %s days"), 2) ?></option>
+										<option value="*/5"><?= sprintf(_("Every %s days"), 5) ?></option>
+										<option value="*/10"><?= sprintf(_("Every %s days"), 10) ?></option>
+										<option value="*/15"><?= sprintf(_("Every %s days"), 15) ?></option>
 									</select>
 								</div>
 								<div class="u-mb20">
@@ -180,22 +178,21 @@
 								</div>
 								<div class="u-pt10">
 									<button type="button" class="button button-secondary js-generate-cron">
-										<?= _("generate") ?>
+										<?= _("Generate") ?>
 									</button>
 								</div>
 							</fieldset>
 						</div>
-
-						<div id="tabs-4">
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-four" tabindex="0" hidden>
 							<fieldset>
 								<input type="hidden" name="h_month" value="*" form="">
 								<input type="hidden" name="h_day" value="*" form="">
 								<div class="u-mt10 u-mb10">
 									<label for="h_wday_4" class="form-label first"><?= _("Run Command") ?>:</label>
 									<select class="form-select" name="h_wday" id="h_wday_4" form="">
-										<option value="*" selected="selected"><?= _("every day") ?></option>
-										<option value="1,2,3,4,5"><?= _("weekdays (5 days)") ?></option>
-										<option value="0,6"><?= _("weekend (2 days)") ?></option>
+										<option value="*" selected="selected"><?= _("Every day") ?></option>
+										<option value="1,2,3,4,5"><?= _("Weekdays (5 days)") ?></option>
+										<option value="0,6"><?= _("Weekend (2 days)") ?></option>
 										<option value="1"><?= _("Monday") ?></option>
 										<option value="2"><?= _("Tuesday") ?></option>
 										<option value="3"><?= _("Wednesday") ?></option>
@@ -253,23 +250,22 @@
 								</div>
 								<div class="u-pt10">
 									<button type="button" class="button button-secondary js-generate-cron">
-										<?= _("generate") ?>
+										<?= _("Generate") ?>
 									</button>
 								</div>
 							</fieldset>
 						</div>
-
-						<div id="tabs-5">
+						<div class="tabs-panel" role="tabpanel" aria-labelledby="tab-five" tabindex="0" hidden>
 							<fieldset>
 								<input type="hidden" name="h_wday" value="*" form="">
 								<div class="u-mt10 u-mb10">
 									<label for="h_month_5" class="form-label first"><?= _("Run Command") ?>:</label>
 									<select class="form-select" name="h_month" id="h_month_5" form="">
-										<option value="*" selected="selected"><?= _("every month") ?></option>
-										<option value="1-11/2"><?= _("every odd month") ?></option>
-										<option value="*/2"><?= _("every even month") ?></option>
-										<option value="*/3"><?= _("every") ?> 3</option>
-										<option value="*/6"><?= _("every") ?> 6</option>
+										<option value="*" selected="selected"><?= _("Every month") ?></option>
+										<option value="1-11/2"><?= _("Every odd month") ?></option>
+										<option value="*/2"><?= _("Every even month") ?></option>
+										<option value="*/3"><?= sprintf(_("Every %s months"), 3) ?></option>
+										<option value="*/6"><?= sprintf(_("Every %s months"), 6) ?></option>
 										<option value="1"><?= _("Jan") ?></option>
 										<option value="2"><?= _("Feb") ?></option>
 										<option value="3"><?= _("Mar") ?></option>
@@ -285,17 +281,17 @@
 									</select>
 								</div>
 								<div class="u-mb20">
-									<label for="h_day_5" class="form-label first"><?= _("Date") ?>:</label>
+									<label for="h_day_5" class="form-label first"><?= _("Day") ?>:</label>
 									<select class="form-select" name="h_day" id="h_day_5" style="width:70px;" form="">
-										<option value="1" selected="selected">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">5</option>
-										<option value="6">6</option>
-										<option value="7">7</option>
-										<option value="8">8</option>
-										<option value="9">9</option>
+										<option value="1" selected="selected">01</option>
+										<option value="2">02</option>
+										<option value="3">03</option>
+										<option value="4">04</option>
+										<option value="5">05</option>
+										<option value="6">06</option>
+										<option value="7">07</option>
+										<option value="8">08</option>
+										<option value="9">09</option>
 										<option value="10">10</option>
 										<option value="11">11</option>
 										<option value="12">12</option>
@@ -366,7 +362,7 @@
 								</div>
 								<div class="u-pt10">
 									<button type="button" class="button button-secondary js-generate-cron">
-										<?= _("generate") ?>
+										<?= _("Generate") ?>
 									</button>
 								</div>
 							</fieldset>

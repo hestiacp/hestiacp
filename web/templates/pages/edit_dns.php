@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/dns/">
+			<a class="button button-secondary button-back js-button-back" href="/list/dns/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -22,15 +22,15 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing DNS Domain") ?></h1>
+			<h1 class="form-title"><?= _("Edit DNS Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
+				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled required>
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_ip" class="form-label"><?= _("IP address") ?></label>
+				<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 						<option value="">clear</option>
@@ -64,12 +64,14 @@
 					</select>
 				</div>
 			<?php } ?>
+			<?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "hestia-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
 			<div class="form-check u-mb10">
 				<input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec === 'yes'){ echo ' checked'; } ?>>
 				<label for="v_dnssec">
 					<?= _("Enable DNSSEC") ?>
 				</label>
 			</div>
+			<?php } ?>
 			<div class="u-mb10">
 				<label for="v_exp" class="form-label">
 					<?= _("Expiration Date") ?><span class="optional">(<?= _("YYYY-MM-DD") ?>)</span>

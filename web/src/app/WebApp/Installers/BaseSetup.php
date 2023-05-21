@@ -11,8 +11,8 @@ use Hestia\WebApp\Installers\Resources\ComposerResource;
 use Hestia\WebApp\Installers\Resources\WpResource;
 
 abstract class BaseSetup implements InstallerInterface {
-	public $appInfo;
-	public $config;
+	protected $appInfo;
+	protected $config;
 	protected $domain;
 	protected $extractsubdir;
 	protected $AppDirInstall;
@@ -104,7 +104,13 @@ abstract class BaseSetup implements InstallerInterface {
 			}
 
 			if ($res_type === "composer") {
-				new ComposerResource($this->appcontext, $res_data, $resource_destination);
+				$res_data["php_version"] = $options["php_version"];
+				new ComposerResource(
+					$this->appcontext,
+					$res_data,
+					$resource_destination,
+					$options["php_version"],
+				);
 			} elseif ($res_type === "wp") {
 				new WpResource(
 					$this->appcontext,

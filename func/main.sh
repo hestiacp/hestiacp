@@ -17,6 +17,7 @@ BIN=$HESTIA/bin
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
 HESTIA_COMMON_DIR="$HESTIA/install/common"
 HESTIA_BACKUP="/root/hst_backups/$(date +%d%m%Y%H%M)"
+HESTIA_PHP="$HESTIA/php/bin/php"
 USER_DATA=$HESTIA/data/users/$user
 WEBTPL=$HESTIA/data/templates/web
 MAILTPL=$HESTIA/data/templates/mail
@@ -128,20 +129,19 @@ log_history() {
 	fi
 	touch $log
 
-	# TODO: Improve log pruning and pagination
-	#
-	#if [ '1000' -lt "$(wc -l $log |cut -f 1 -d ' ')" ]; then
-	#    tail -n 499 $log > $log.moved
-	#    mv -f $log.moved $log
-	#    chmod 660 $log
-	#fi
+	if [ '750' -lt "$(wc -l $log | cut -f 1 -d ' ')" ]; then
+		tail -n 499 $log > $log.moved
+		mv -f $log.moved $log
+		chmod 660 $log
+	fi
 
 	if [ -z "$date" ]; then
 		time_n_date=$(date +'%T %F')
 		time=$(echo "$time_n_date" | cut -f 1 -d \ )
 		date=$(echo "$time_n_date" | cut -f 2 -d \ )
 	fi
-	curr_str=$(grep "ID=" $log | cut -f 2 -d \' | sort -n | tail -n1)
+
+	curr_str=$(tail -n1 $log | grep "ID=" --text | cut -f2 -d \')
 	id="$((curr_str + 1))"
 	echo "ID='$id' DATE='$date' TIME='$time' LEVEL='$evt_level' CATEGORY='$evt_category' MESSAGE='$message'" >> $log
 }
@@ -168,6 +168,9 @@ check_args() {
 		check_result "$E_ARGS" "not enought arguments" > /dev/null
 	fi
 }
+
+# Define version check function
+version_ge() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
 
 # Subsystem checker
 is_system_enabled() {
@@ -1396,6 +1399,8 @@ format_domain() {
 	if [[ "$domain" =~ ^\. ]]; then
 		domain=$(echo "$domain" | sed -e "s/^[.]*//")
 	fi
+	# Remove white spaces
+	domain=$(echo $domain | sed 's/^[ \t]*//;s/[ \t]*$//')
 }
 
 format_domain_idn() {
@@ -1575,7 +1580,7 @@ source_conf() {
 format_no_quotes() {
 	exclude="['|\"]"
 	if [[ "$1" =~ $exclude ]]; then
-		check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ') :: $1"
+		check_result "$E_INVALID" "Invalid $2 contains qoutes (\" or ' or | ) :: $1"
 	fi
 	is_no_new_line_format "$1"
 }

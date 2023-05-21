@@ -263,7 +263,7 @@ if [ "$type" = 'b2' ]; then
 			chmod +x $b2cli > /dev/null 2>&1
 		fi
 		if [ ! -f "$b2cli" ]; then
-			echo "Error: Binary download failed, b2 doesnt work as expected."
+			echo "Error: Binary download failed, b2 doesn't work as expected."
 			exit 3
 		fi
 	fi
@@ -271,7 +271,7 @@ if [ "$type" = 'b2' ]; then
 	# Validate b2 binary
 	b2version="$(b2 version)"
 	if [[ ! "$b2version" =~ "b2 command line tool" ]]; then
-		echo "Error: Binary download failed, b2 doesnt work as expected."
+		echo "Error: Binary download failed, b2 doesn't work as expected."
 		exit 3
 	fi
 
@@ -298,7 +298,7 @@ if [ "$type" = 'rclone' ]; then
 			rclone delete $host:$path/hestia-backup.txt
 		fi
 	else
-		check_result "$E_CONNECT" "Rclone config does not exits"
+		check_result "$E_CONNECT" "Rclone config does not exist"
 	fi
 fi
 

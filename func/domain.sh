@@ -442,6 +442,10 @@ is_web_domain_cert_valid() {
 		check_result "$E_FORBIDEN" "SSL Key is protected (remove pass_phrase)"
 	fi
 
+	if pgrep -x "openssl" > /dev/null; then
+		pkill openssl
+	fi
+
 	openssl s_server -quiet -cert $ssl_dir/$domain.crt \
 		-key $ssl_dir/$domain.key >> /dev/null 2>&1 &
 	pid=$!
@@ -531,7 +535,10 @@ update_domain_zone() {
 				fi
 			fi
 		fi
-		eval echo -e "\"$fields\"" | sed "s/%quote%/'/g" >> $zn_conf
+
+		if [ "$SUSPENDED" != 'yes' ]; then
+			eval echo -e "\"$fields\"" | sed "s/%quote%/'/g" >> $zn_conf
+		fi
 	done < $USER_DATA/dns/$domain.conf
 }
 
@@ -661,7 +668,7 @@ is_mail_domain_new() {
 	done
 }
 
-# Checking mail account existance
+# Checking mail account existence
 is_mail_new() {
 	check_acc=$(grep "ACCOUNT='$1'" $USER_DATA/mail/$domain.conf)
 	if [ -n "$check_acc" ]; then
@@ -780,7 +787,10 @@ del_mail_ssl_config() {
 
 # Delete generated certificates from user configuration data directory
 del_mail_ssl_certificates() {
-	rm -f $USER_DATA/ssl/mail.$domain.*
+	rm -f $USER_DATA/ssl/mail.$domain.ca
+	rm -f $USER_DATA/ssl/mail.$domain.crt
+	rm -f $USER_DATA/ssl/mail.$domain.key
+	rm -f $USER_DATA/ssl/mail.$domain.pem
 	rm -f $HOMEDIR/$user/conf/mail/$domain/ssl/*
 }
 
@@ -909,7 +919,7 @@ del_webmail_ssl_config() {
 #                        CMN                               #
 #----------------------------------------------------------#
 
-# Checking domain existance
+# Checking domain existence
 is_domain_new() {
 	type=$1
 	for object in ${2//,/ }; do

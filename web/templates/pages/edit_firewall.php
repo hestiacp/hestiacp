@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/firewall/">
+			<a class="button button-secondary button-back js-button-back" href="/list/firewall/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -22,7 +22,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing Firewall Rule") ?></h1>
+			<h1 class="form-title"><?= _("Edit Firewall Rule") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_action" class="form-label"><?= _("Action") ?></label>
@@ -34,31 +34,36 @@
 			<div class="u-mb10">
 				<label for="v_protocol" class="form-label"><?= _("Protocol") ?></label>
 				<select class="form-select" name="v_protocol" id="v_protocol">
-					<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>><?= _("TCP") ?></option>
-					<option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>><?= _("UDP") ?></option>
-					<option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>><?= _("ICMP") ?></option>
+					<option value="TCP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "TCP" )) echo 'selected'?>>TCP</option>
+					<option value="UDP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "UDP" )) echo 'selected'?>>UDP</option>
+					<option value="ICMP" <?php if ((!empty($v_protocol)) && ( $v_protocol == "ICMP" )) echo 'selected'?>>ICMP</option>
 				</select>
 			</div>
 			<div class="u-mb10">
 				<label for="v_port" class="form-label">
-					<?= _("Port") ?> <span class="optional">(<?= _("Ranges and Lists are acceptable") ?>)</span>
+					<?= _("Port") ?> <span class="optional">(<?= _("Ranges and lists are acceptable") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_port" id="v_port" value="<?= htmlentities(trim($v_port, "'")) ?>" placeholder="<?= _("All ports: 0, Range: 80-82, List: 80,443,8080,8443") ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_ip" class="form-label">
-					<?= _("IP address / IPset") ?> <span class="optional">(<?= _("CIDR format is supported") ?>)</span>
+					<?= _("IP Address / IPset IP List") ?> <span class="optional">(<?= _("Support CIDR format") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
-					<select class="form-select" tabindex="-1" id="quickips_list" onchange="this.nextElementSibling.value=this.value">
-						<option value="">&nbsp;</option>
+					<select
+						class="form-select js-ip-list-select"
+						tabindex="-1"
+						onchange="this.nextElementSibling.value=this.value"
+						data-ipset-lists="<?= htmlspecialchars($ipset_lists_json, ENT_QUOTES, 'UTF-8') ?>"
+					>
+						<option value=""><?= _("Clear") ?></option>
 					</select>
 					<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_comment" class="form-label">
-					<?= _("Comment") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					<?= _("Comment") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_comment" id="v_comment" maxlength="255" value="<?= htmlentities(trim($v_comment, "'")) ?>">
 			</div>
@@ -67,26 +72,3 @@
 	</form>
 
 </div>
-
-<script>
-	var ipLists = JSON.parse('<?= $ipset_lists_json ?>');
-	ipLists.sort(function (a, b) {
-		return a.name > b.name;
-	});
-
-	$(function () {
-		var targetElement = document.getElementById('quickips_list');
-
-		var newEl = document.createElement("option");
-		newEl.text = "IP address lists:";
-		newEl.disabled = true;
-		targetElement.appendChild(newEl);
-
-		ipLists.forEach(iplist => {
-			var newEl = document.createElement("option");
-			newEl.text = iplist.name;
-			newEl.value = "ipset:" + iplist.name;
-			targetElement.appendChild(newEl);
-		});
-	});
-</script>

@@ -156,7 +156,7 @@ if (!empty($_POST["save"])) {
 		// Check password length
 		$pw_len = strlen($_POST["v_password"]);
 		if (!validate_password($_POST["v_password"])) {
-			$_SESSION["error_msg"] = _("Password does not match the minimum requirements");
+			$_SESSION["error_msg"] = _("Password does not match the minimum requirements.");
 		}
 		if (empty($_SESSION["error_msg"])) {
 			$v_password = tempnam("/tmp", "vst");
@@ -399,7 +399,7 @@ if (!empty($_POST["save"])) {
 	// Change contact email
 	if ($v_email != $_POST["v_email"] && empty($_SESSION["error_msg"])) {
 		if (!filter_var($_POST["v_email"], FILTER_VALIDATE_EMAIL)) {
-			$_SESSION["error_msg"] = _("Please enter valid email address.");
+			$_SESSION["error_msg"] = _("Please enter a valid email address.");
 		} else {
 			$v_email = quoteshellarg($_POST["v_email"]);
 			exec(
@@ -415,7 +415,7 @@ if (!empty($_POST["save"])) {
 	// Change full name
 	if ($v_name != $_POST["v_name"]) {
 		if (empty($_POST["v_name"])) {
-			$_SESSION["error_msg"] = _("Please enter a valid name");
+			$_SESSION["error_msg"] = _("Please enter a valid contact name.");
 		} else {
 			$v_name = quoteshellarg($_POST["v_name"]);
 			exec(
@@ -537,7 +537,7 @@ if (!empty($_POST["save"])) {
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 }
 

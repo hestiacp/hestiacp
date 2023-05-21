@@ -69,7 +69,7 @@ Currently supported backup protocols are:
 Login via SSH and run the following command as root:
 
 ```bash
-v-add-backup-host 'ftp' 'remote.ftp-host.ltd' 'backup-user' 'p4ssw0rd' '/path-backups/' 'port'
+v-add-backup-host 'ftp' 'remote.ftp-host.tld' 'backup-user' 'p4ssw0rd' '/path-backups/' 'port'
 ```
 
 ### How to setup an SFTP backup server
@@ -81,13 +81,13 @@ Please note passwords are stored as **plain text** on the server. They are only 
 Login via SSH and run the following command as root:
 
 ```bash
-v-add-backup-host 'sftp' 'remote.ftp-host.ltd' 'backup-user' 'p4ssw0rd' '/path-backups/' 'port'
+v-add-backup-host 'sftp' 'remote.ftp-host.tld' 'backup-user' 'p4ssw0rd' '/path-backups/' 'port'
 ```
 
 If using public and private keys (recommended):
 
 ```bash
-v-add-backup-host 'sftp' 'remote.ftp-host.ltd' 'backup-user' '/root/id_rsa' '/path-backups/' 'port'
+v-add-backup-host 'sftp' 'remote.ftp-host.tld' 'backup-user' '/root/id_rsa' '/path-backups/' 'port'
 ```
 
 ## How to setup Rclone
@@ -105,15 +105,58 @@ curl https://rclone.org/install.sh | sudo bash
 
 Once the download and installation is complete, run `rclone config` and then `n`. Follow the instruction on the screen, then save when completed.
 
+To verify if it is working run as intended:
+
+```bash
+echo "test" > /tmp/backuptest.txt
+rclone cp /tmp/backuptest.txt $HOST:$FOLDER/backuptest.txt
+rclone lsf $HOST:$FOLDER
+```
+
+And see the file has been uploaded
+
+```bash
+rclone delete $HOST:$FOLDER/backuptest.txt
+```
+
 Once the config has been saved you can setup Hestia with the following command:
 
 ```bash
-v-add-backup-host 'rclone' 'config_name' '' '' 'Bucket or Folder name' ''
+v-add-backup-host 'rclone' 'remote-name' '' '' 'Bucket or Folder name' ''
 ```
 
 ::: tip
-B2 requires you to setup a bucket during the `v-add-backup-host` stage. S3 or R2 storage will work fine during the setup stage.
+Configuration per endpoint might be different! Make sure to test it is working before relying on it. To verify it works run
+
+```bash
+v-backup-user admin
+```
+
 :::
+
+For example:
+
+```bash
+rclone config
+
+Current remotes:
+
+Name Type
+==== ====
+r2 s3
+```
+
+To use the "R2" endpoint use
+
+```bash
+v-add-backup-host 'rclone' 'r2' '' '' 'folder'
+```
+
+For Blackblaze use
+
+```bash
+v-add-backup-host 'rclone' 'b2' '' '' 'hestiacp'
+```
 
 ## How to change default backup folder
 

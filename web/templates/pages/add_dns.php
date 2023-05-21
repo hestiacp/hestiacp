@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/dns/">
+			<a class="button button-secondary button-back js-button-back" href="/list/dns/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -29,27 +29,27 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding DNS Domain") ?></h1>
+			<h1 class="form-title"><?= _("Add DNS Zone") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<?php if ($user_plain == "admin" && $_GET["accept"] !== "true") { ?>
+			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?= _("Avoid adding web domains on admin account") ?></p>
+					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a dns domain')), '</a>', '<a href="/add/user/">'); ?></p>
 				</div>
 			<?php } ?>
-			<?php if ($user_plain == "admin" && empty($_GET["accept"])) { ?>
+			<?php if ($user_plain == "admin" && empty($accept)) { ?>
 				<div class="u-side-by-side u-pt18">
 					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
 					<a href="/add/dns/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
 				</div>
 			<?php } ?>
-			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
+			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<div class="u-mb10">
 					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
+					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
 				</div>
 				<div class="u-mb10">
-					<label for="v_ip" class="form-label"><?= _("IP address") ?></label>
+					<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
 					<div class="u-pos-relative">
 						<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 							<option value="">clear</option>
@@ -84,16 +84,18 @@
 				<?php } ?>
 				<div class="u-mb20 u-mt20">
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-						<?= _("Advanced options") ?>
+						<?= _("Advanced Options") ?>
 					</button>
 				</div>
 				<div x-cloak  x-show="showAdvanced" id="advtable">
+					<?php if ($_SESSION["DNS_CLUSTER_SYSTEM"] == "hestia-zone" && $_SESSION["SUPPORT_DNSSEC"] == "yes") { ?>
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_dnssec" id="v_dnssec" value="yes" <?php if($v_dnssec === 'yes'){ echo ' checked'; } ?>>
 						<label for="v_dnssec">
 							<?= _("Enable DNSSEC") ?>
 						</label>
 					</div>
+					<?php } ?>
 					<div class="u-mb10">
 						<label for="v_exp" class="form-label">
 							<?= _("Expiration Date") ?> <span class="optional">(<?= _("YYYY-MM-DD") ?>)</span>
@@ -104,7 +106,7 @@
 						<label for="v_ttl" class="form-label"><?= _("TTL") ?></label>
 						<input type="text" class="form-control" name="v_ttl" id="v_ttl" value="<?= htmlentities(trim($v_ttl, "'")) ?>">
 					</div>
-					<p class="form-label u-mb10"><?= _("Name servers") ?></p>
+					<p class="form-label u-mb10"><?= _("Name Servers") ?></p>
 					<div class="u-mb5">
 						<input type="text" class="form-control" name="v_ns1" value="<?= htmlentities(trim($v_ns1, "'")) ?>">
 					</div>
@@ -114,43 +116,43 @@
 					<?php
 						if($v_ns3) {
 							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">'._('delete').'</span>
+								<input type="text" class="form-control" name="v_ns3" value="' . htmlentities(trim($v_ns3, "'")) . '">
+								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
 						if($v_ns4) {
 							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">'._('delete').'</span>
+								<input type="text" class="form-control" name="v_ns4" value="' . htmlentities(trim($v_ns4, "'")) . '">
+								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
 						if($v_ns5) {
 							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">'._('delete').'</span>
+								<input type="text" class="form-control" name="v_ns5" value="' . htmlentities(trim($v_ns5, "'")) . '">
+								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
 						if($v_ns6) {
 							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">'._('delete').'</span>
+								<input type="text" class="form-control" name="v_ns6" value="' . htmlentities(trim($v_ns6, "'")) . '">
+								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
 						if($v_ns7) {
 							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">'._('delete').'</span>
+								<input type="text" class="form-control" name="v_ns7" value="' . htmlentities(trim($v_ns7, "'")) . '">
+								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
 						if($v_ns8) {
 							echo '<div class="u-side-by-side u-mb5">
-								<input type="text" class="form-control" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-								<span class="form-link form-link-danger u-ml10 js-remove-ns">'._('delete').'</span>
+								<input type="text" class="form-control" name="v_ns8" value="' . htmlentities(trim($v_ns8, "'")) . '">
+								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
 					?>
 					<div class="u-pt18 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
-						<span class="form-link js-add-ns"><?= _("Add one more Name Server") ?></span>
+						<span class="form-link"><?= _("Add Name Server") ?></span>
 					</div>
 				</div>
 			<?php } ?>

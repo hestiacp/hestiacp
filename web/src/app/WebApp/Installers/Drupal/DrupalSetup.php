@@ -38,8 +38,11 @@ class DrupalSetup extends BaseSetup {
 	public function install(array $options = null): bool {
 		parent::install($options);
 		parent::setup($options);
-
-		$this->appcontext->runComposer(["require", "-d " . $this->getDocRoot(), "drush/drush:^10"]);
+		$this->appcontext->runComposer(
+			["require", "-d " . $this->getDocRoot(), "drush/drush"],
+			$status2,
+			["version" => 2, "php_version" => $options["php_version"]],
+		);
 
 		$htaccess_rewrite = '
 <IfModule mod_rewrite.c>

@@ -6,7 +6,7 @@ title: The Team
 
 <script setup lang="ts">
   import { VPTeamPage, VPTeamPageTitle, VPTeamPageSection, VPTeamMembers } from "vitepress/theme";
-  import { projectManagers, teamMembers, emeriti } from "./_data/team";
+  import { projectManagers, teamMembers } from "./_data/team";
 </script>
 
 <VPTeamPage>
@@ -26,15 +26,6 @@ title: The Team
     <template #title>Team Members</template>
     <template #members>
       <VPTeamMembers :members="teamMembers" />
-    </template>
-  </VPTeamPageSection>
-  <VPTeamPageSection>
-    <template #title>Team Emeriti</template>
-    <template #lead>
-      Here we honor some no-longer-active team members who have made valuable contributions in the past.
-    </template>
-    <template #members>
-      <VPTeamMembers :members="emeriti" />
     </template>
   </VPTeamPageSection>
   <!-- <VPTeamPageSection>

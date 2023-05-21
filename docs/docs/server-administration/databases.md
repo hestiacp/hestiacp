@@ -83,7 +83,38 @@ Automated can sometimes cause issues. Login via SSH and open `/var/log/{webserve
   1. Check if the api has been enabled.
   2. Add the public IP of your server to the allowed IPs in the **Server settings**.
 - `Access denied: There is a security token mismatch`
-  1. Enable and then disable the API. This will refresh both keys.
+  1. Disable and then enable the phpMyAdmin SSO. This will refresh both keys.
   2. If you are behind a firewall or proxy, you may want to disable it and try again.
 - `Link has expired`
   1. Refresh the database page and try again.
+
+## Remote databases
+
+If needed you can simply host Mysql or Postgresql on a remote server.
+
+To add a remote database:
+
+```bash
+v-add-database-host TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TPL] [PORT]
+```
+
+For example:
+
+```bash
+v-add-database-host mysql db.hestiacp.com root mypassword 500
+```
+
+If you want you can setup phpMyAdmin on the host server to allow to connect to the database. Create a copy of `01-localhost` file in /etc/phpmyadmin/conf.d and change:
+
+```php
+$cfg["Servers"][$i]["host"] = "localhost";
+$cfg["Servers"][$i]["port"] = "3306";
+$cfg["Servers"][$i]["pmadb"] = "phpmyadmin";
+$cfg["Servers"][$i]["controluser"] = "pma";
+$cfg["Servers"][$i]["controlpass"] = "random password";
+$cfg["Servers"][$i]["bookmarktable"] = "pma__bookmark";
+```
+
+Please make sure to create aswell the phpmyadmin user and database.
+
+See `/usr/local/hestia/install/deb/phpmyadmin/pma.sh`

@@ -66,7 +66,7 @@ if [ "$MAIL_SYSTEM" == "exim4" ]; then
 			echo 'you will have to replace or modify your config with the one found'
 			echo 'on GitHub at https://github.com/hestiacp/hestiacp/blob/release/install/deb/exim/exim4.conf.template.'
 			echo 'Your exim config file will be found here: /etc/exim4/exim4.conf.template'
-			$HESTIA/bin/v-add-user-notification admin 'SMTP Relay upgrade failed' 'Because of the complexity of the SMTP Relay upgrade, we were unable to safely modify your existing exim config file.<br><br>If you would like to use the new SMTP Relay features, you will have to replace or modify your config with the one found on <a href="https://github.com/hestiacp/hestiacp/blob/release/install/deb/exim/exim4.conf.template" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br>Your exim config file will be found here:<br><br><code>/etc/exim4/exim4.conf.template</code>'
+			$HESTIA/bin/v-add-user-notification admin 'SMTP Relay upgrade failed' 'Because of the complexity of the SMTP Relay upgrade, we were unable to safely modify your existing exim config file.<br><br>If you would like to use the new SMTP Relay features, you will have to replace or modify your config with the one <a href="https://github.com/hestiacp/hestiacp/blob/release/install/deb/exim/exim4.conf.template" target="_blank">found on GitHub</a>.<br><br>Your exim config file will be found here:<br><br><code>/etc/exim4/exim4.conf.template</code>'
 		else
 			disable_smtp_relay=false
 		fi
@@ -169,7 +169,7 @@ rm -rf $HESTIA/data/templates/web/nginx/php-fpm/drupal8.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter2.*tpl
 rm -rf $HESTIA/data/templates/web/nginx/php-fpm/codeigniter3.*tpl
 
-# Clean up old Hestia controled webapps
+# Clean up old Hestia controlled webapps
 if [ -d "$HESTIA/web/images/webapps/" ]; then
 	echo "[ * ] Clean up old web apps code..."
 	rm -rf $HESTIA/web/images/webapps/

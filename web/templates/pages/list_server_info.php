@@ -19,11 +19,16 @@
 				</div>
 				<div class="top-bar-right">
 					<nav x-data="{ open: false }" class="top-bar-menu">
-						<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?= _("Toggle menu") ?>">
+						<button
+							type="button"
+							class="top-bar-menu-link u-hide-tablet"
+							x-on:click="open = !open">
 							<i class="fas fa-bars"></i>
-							<span class="u-hidden"><?= _("Toggle menu") ?></span>
+							<span class="u-hidden" x-text="open ? '<?= _("Close menu") ?>' : '<?= _("Open menu") ?>'">
+								<?= _("Open menu") ?>
+							</span>
 						</button>
-						<ul x-cloak x-show="open" class="top-bar-menu-list animate__animated animate__fadeIn">
+						<ul x-cloak x-show="open" class="top-bar-menu-list">
 							<li class="top-bar-menu-item">
 								<a class="top-bar-menu-link" href="/list/rrd/" title="<?= _("Back") ?>">
 									<i class="fas fa-circle-left"></i>
@@ -114,6 +119,6 @@
 		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
 
-	<div class="server-console-output">.</div>
+	<div class="server-console-output">&nbsp;</div>
 	<div class="container">
 		<pre class="console-output animate__animated animate__fadeIn">

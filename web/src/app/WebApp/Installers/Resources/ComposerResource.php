@@ -27,7 +27,7 @@ class ComposerResource {
 				$this->project,
 			],
 			$status,
-			$data["version"],
+			$data,
 		);
 
 		if ($status->code !== 0) {

@@ -94,6 +94,11 @@ if [ -n "$old" ] && [ -n "$FTP_SYSTEM" ]; then
 			fi
 		fi
 	fi
+	if [ "$FTP_SYSTEM" = 'proftpd' ]; then
+		conf="/etc/$FTP_SYSTEM/conf.d/external_ip.conf"
+		content="MasqueradeAddress ${nat_ip}"
+		echo "$content" > $conf
+	fi
 	$BIN/v-restart-ftp "$restart"
 fi
 

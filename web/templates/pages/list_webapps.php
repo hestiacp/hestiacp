@@ -2,11 +2,9 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/edit/web/?domain=<?= htmlentities($v_domain) ?>">
+			<a class="button button-secondary button-back js-button-back" href="/edit/web/?domain=<?= htmlentities($v_domain) ?>">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
-		</div>
-		<div class="toolbar-buttons">
 		</div>
 	</div>
 </div>
@@ -26,7 +24,7 @@
 					</div>
 					<div class="card-content">
 						<p class="card-title"><?= $webapp["name"] ?></p>
-						<p class="u-mb10"><?= _("version") ?>: <?= $webapp["version"] ?></p>
+						<p class="u-mb10"><?= _("Version") ?>: <?= $webapp["version"] ?></p>
 						<a class="button" href="/add/webapp/?app=<?= $webapp["name"] ?>&domain=<?= htmlentities($v_domain) ?>">
 							<?= _("Setup") ?>
 						</a>

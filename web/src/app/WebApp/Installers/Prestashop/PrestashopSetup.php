@@ -9,7 +9,7 @@ class PrestashopSetup extends BaseSetup {
 		"name" => "Prestashop",
 		"group" => "ecommerce",
 		"enabled" => true,
-		"version" => "1.7.8.7",
+		"version" => "8.0.4",
 		"thumbnail" => "prestashop-thumb.png",
 	];
 
@@ -27,7 +27,7 @@ class PrestashopSetup extends BaseSetup {
 		"resources" => [
 			"archive" => [
 				"src" =>
-					"https://github.com/PrestaShop/PrestaShop/releases/download/1.7.8.7/prestashop_1.7.8.7.zip",
+					"https://github.com/PrestaShop/PrestaShop/releases/download/8.0.4/prestashop_8.0.4.zip",
 			],
 		],
 		"server" => [
@@ -35,7 +35,7 @@ class PrestashopSetup extends BaseSetup {
 				"template" => "prestashop",
 			],
 			"php" => [
-				"supported" => ["7.3", "7.4"],
+				"supported" => ["8.0", "8.1"],
 			],
 		],
 	];
@@ -43,7 +43,6 @@ class PrestashopSetup extends BaseSetup {
 	public function install(array $options = null): bool {
 		parent::install($options);
 		parent::setup($options);
-
 		$this->appcontext->archiveExtract(
 			$this->getDocRoot($this->extractsubdir . "/prestashop.zip"),
 			$this->getDocRoot(),

@@ -13,25 +13,30 @@
 		<div class="top-bar">
 			<div class="container top-bar-inner">
 				<div class="top-bar-left">
-					<a href="/" class="top-bar-logo" title="<?= _("Hestia Control Panel") ?>">
-						<img src="/images/logo-header.svg" alt="<?= _("Hestia Control Panel") ?>" width="54" height="29">
+					<a href="/" class="top-bar-logo" title="<?= htmlentities($_SESSION['APP_NAME']);?>">
+						<img src="<?php if ( !empty($_SESSION['LOGO_HEADER'])){ echo $_SESSION['LOGO_HEADER']; } else{ echo "/images/logo-header.svg"; } ?>" alt="<?= htmlentities($_SESSION['APP_NAME']);?>" width="54" height="29">
 					</a>
 				</div>
 				<div class="top-bar-right">
 					<nav x-data="{ open: false }" class="top-bar-menu">
-						<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?= _("Toggle menu") ?>">
+						<button
+							type="button"
+							class="top-bar-menu-link u-hide-tablet"
+							x-on:click="open = !open">
 							<i class="fas fa-bars"></i>
-							<span class="u-hidden"><?= _("Toggle menu") ?></span>
+							<span class="u-hidden" x-text="open ? '<?= _("Close menu") ?>' : '<?= _("Open menu") ?>'">
+								<?= _("Open menu") ?>
+							</span>
 						</button>
-						<ul x-cloak x-show="open" class="top-bar-menu-list animate__animated animate__fadeIn">
+						<ul x-cloak x-show="open" class="top-bar-menu-list">
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="/list/web/">
+								<a class="top-bar-menu-link" href="/list/web/" title="<?= _("Back") ?>">
 									<i class="fas fa-circle-left"></i>
 									<span class="top-bar-menu-link-label"><?= _("Back") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access&token=<?=$_SESSION['token']?>">
+								<a class="top-bar-menu-link <?php if($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=access&token=<?=$_SESSION['token']?>" title="<?= _("Access Log") ?>">
 									<i class="fas fa-eye"></i>
 									<span class="top-bar-menu-link-label"><?= _("Access Log") ?></span>
 								</a>
@@ -43,7 +48,7 @@
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if($_GET['type'] == 'error') echo 'active' ?>" href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>">
+								<a class="top-bar-menu-link <?php if($_GET['type'] == 'error') echo 'active' ?>" href="/list/web-log/?domain=<?=htmlentities($_GET['domain'])?>&type=error&token=<?=$_SESSION['token']?>" title="<?= _("Error Log") ?>">
 									<i class="fas fa-circle-exclamation"></i>
 									<span class="top-bar-menu-link-label"><?= _("Error Log") ?></span>
 								</a>
@@ -61,7 +66,7 @@
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="/edit/user/" title="<?= htmlentities($user) ?>">
+								<a class="top-bar-menu-link" href="/list/user/" title="<?= htmlentities($user) ?>">
 									<i class="fas fa-circle-user"></i>
 									<span class="u-hidden"><?= htmlentities($user) ?></span>
 								</a>

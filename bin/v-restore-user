@@ -224,7 +224,7 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 		# Cleanup previous domain keys
 		unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT
 
-		# Checking domain existance
+		# Checking domain existence
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'web' $domain)
@@ -350,11 +350,11 @@ if [ "$web" != 'no' ] && [ -n "$WEB_SYSTEM" ]; then
 			if [[ "$file" == *.ca ]] || [[ "$file" == *.crt ]] || [[ "$file" == *.key ]] || [[ "$file" == *.pem ]] || [[ "$file" == *.conf ]]; then
 				continue
 			fi
-			if grep "fastcgi_pass" file; then
+			if grep "fastcgi_pass" "$file"; then
 				# Do not allow to run php under a different user
 				continue
 			fi
-			filename=$(basename $file)
+			filename=$(basename "$file")
 			cp -f "$file" "$HOMEDIR/$user/conf/web/$domain/$filename"
 		done
 
@@ -433,7 +433,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 		# Cleanup previous config keys
 		unset -v DOMAIN IP TPL TTL EXP SOA RECORDS DNSSEC KEY SLAVE MASTER
 
-		# Checking domain existance
+		# Checking domain existence
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'dns' $domain)
@@ -540,7 +540,7 @@ if [ "$mail" != 'no' ] && [ -n "$MAIL_SYSTEM" ]; then
 	for domain in $domains; do
 		echo -e "$(date "+%F %T") $domain" | tee -a $tmpdir/restore.log
 
-		# Checking domain existance
+		# Checking domain existence
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'mail' $domain)
@@ -740,7 +740,7 @@ if [ "$db" != 'no' ] && [ -n "$DB_SYSTEM" ]; then
 		# Cleanup previous config keys
 		unset -v DB DBUSER MD5 HOST TYPE CHARSET U_DISK
 
-		# Checking database existance
+		# Checking database existence
 		check_config=$(grep "DB='$database'" $USER_DATA/db.conf)
 
 		# Unpacking database container

@@ -71,7 +71,7 @@ if (!empty($_POST["save"])) {
 	// Change database password
 	if (!empty($_POST["v_password"]) && empty($_SESSION["error_msg"])) {
 		if (!validate_password($_POST["v_password"])) {
-			$_SESSION["error_msg"] = _("Password does not match the minimum requirements");
+			$_SESSION["error_msg"] = _("Password does not match the minimum requirements.");
 		} else {
 			$v_password = tempnam("/tmp", "vst");
 			$fp = fopen($v_password, "w");
@@ -97,7 +97,7 @@ if (!empty($_POST["save"])) {
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 	// if the mysql username was changed, render_page() below will render with the OLD mysql username,
 	// to prvent that, make the browser refresh the page.

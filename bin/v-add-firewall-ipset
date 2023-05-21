@@ -2,7 +2,7 @@
 # info: add firewall ipset
 # options: NAME [SOURCE] [IPVERSION] [AUTOUPDATE] [REFRESH]
 #
-# example: v-add-firewall-ipset country-nl 'http://ipverse.net/ipblocks/data/countries/nl.zone'
+# example: v-add-firewall-ipset country-nl "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/nl/ipv4-aggregated.txt"
 #
 # This function adds new ipset to system firewall
 
@@ -119,7 +119,7 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$refresh" = "yes" ]; then
 	elif [[ "$data_source" =~ ^file:/ ]]; then
 
 		# Use a external ip-list file managed by other apps
-		# ex: Using a ip list that is continously updated
+		# ex: Using a ip list that is continuously updated
 		[ -f "${data_source#file:}" ] && cp -f "${data_source#file:}" "$iplist_tempfile"
 
 	fi

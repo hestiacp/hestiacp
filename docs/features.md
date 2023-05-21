@@ -7,7 +7,7 @@ title: Features
   import FeaturePageTitle from "./.vitepress/theme/components/FeaturePageTitle.vue";
   import FeaturePageSection from "./.vitepress/theme/components/FeaturePageSection.vue";
   import FeatureList from "./.vitepress/theme/components/FeatureList.vue";
-  import { users, webDomains, mail, databases, serverAdmin } from "./_data/features";
+  import { users, webDomains, mail, dns, databases, serverAdmin } from "./_data/features";
 </script>
 
 <FeaturePage>
@@ -26,6 +26,13 @@ title: Features
     <template #lead>Add multiple domains and quickly install apps on them.</template>
     <template #list>
       <FeatureList :items="webDomains"></FeatureList>
+    </template>
+  </FeaturePageSection>
+  <FeaturePageSection image="/images/undraw_domain_names_re_0uun.svg">
+    <template #title>DNS</template>
+    <template #lead>Manage your own DNS server!</template>
+    <template #list>
+      <FeatureList :items="dns"></FeatureList>
     </template>
   </FeaturePageSection>
   <FeaturePageSection image="/images/undraw_personal_email_re_4lx7.svg">

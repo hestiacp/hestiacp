@@ -181,8 +181,8 @@ strong {
 		text-shadow: none;
 	}
 
-	& #btn-back {
-		color: #30659d;
+	& .button-back {
+		color: #326b9b;
 		background: none;
 		text-shadow: none;
 		text-transform: none;
@@ -196,8 +196,7 @@ strong {
 			text-transform: none;
 		}
 
-		&:active,
-		&:focus {
+		&:active {
 			color: #ff6701;
 			background: none;
 			text-shadow: none;
@@ -206,7 +205,7 @@ strong {
 	}
 }
 
-.table-header {
+.units-header {
 	box-shadow: none;
 	background: #fafafa;
 	line-height: 1.2rem;
@@ -234,8 +233,15 @@ strong {
 	box-shadow: none;
 }
 
-.l-unit__name {
-	letter-spacing: 0 !important;
+/* Statistics
+   ========================================================================== */
+
+.stats-item {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
+	}
 }
 
 /* Buttons
@@ -264,8 +270,7 @@ strong {
 		box-shadow: none;
 	}
 
-	&:active,
-	&:focus {
+	&:active {
 		border-color: transparent;
 		color: #fff;
 		background: #809c00;
@@ -280,7 +285,7 @@ strong {
 }
 
 .button-secondary {
-	color: #414141;
+	color: var(--color-text-link);
 	text-shadow: none;
 	text-transform: none;
 	border-color: #bbb;
@@ -293,8 +298,7 @@ strong {
 		background: #f5f5f5;
 	}
 
-	&:active,
-	&:focus {
+	&:active {
 		color: #326b9b;
 		text-shadow: none;
 		border-color: #aaa;
@@ -316,25 +320,15 @@ strong {
 /* Modals
    ========================================================================== */
 
-.ui-dialog {
+.modal {
 	box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
-
-	& .ui-dialog-buttonpane button {
-		box-shadow: none;
-	}
 }
 
-.ui-widget,
-.ui-dialog,
-.ui-dialog .ui-dialog-title {
-	font-family: var(--font-family);
-}
-
-.ui-dialog .ui-dialog-title {
+.modal-title {
 	color: #111;
 }
 
-.ui-dialog .ui-dialog-content {
+.modal-message {
 	color: #333;
 }
 
@@ -421,22 +415,24 @@ strong {
 	}
 }
 
-.cron-helper-panel {
+/* Tabs component
+   ========================================================================== */
+
+.tabs {
 	border-radius: 0;
 	box-shadow: none;
+}
 
-	& .ui-tabs-tab a {
-		&:hover {
-			color: #f79b44;
-		}
+.tabs-item {
+	color: #777;
 
-		&:active {
-			color: #e95e00;
-		}
+	&:hover,
+	&[aria-selected="true"] {
+		color: #ff6701;
 	}
 
-	& .ui-tabs-tab[aria-expanded="true"] a {
-		color: #ff6701;
+	&:active {
+		color: #e95e00;
 	}
 }
 

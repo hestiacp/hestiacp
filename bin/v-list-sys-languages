@@ -27,6 +27,7 @@ json_list() {
 	objects=$(echo "$languages" | wc -l)
 	i=1
 	echo '['
+	echo -e "\t\"en\","
 	for lang in $languages; do
 		if [ "$i" -lt "$objects" ]; then
 			echo -e "\t\"$lang\","
@@ -42,6 +43,7 @@ json_list() {
 shell_list() {
 	echo "LANGUAGE"
 	echo "--------"
+	echo "en"
 	for lang in $languages; do
 		echo "$lang"
 	done
@@ -49,6 +51,7 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
+	echo "en"
 	for lang in $languages; do
 		echo "$lang"
 	done
@@ -57,6 +60,7 @@ plain_list() {
 # CSV list function
 csv_list() {
 	echo "LANGUAGE"
+	echo "en"
 	for lang in $languages; do
 		echo "$lang"
 	done

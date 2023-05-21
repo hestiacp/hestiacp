@@ -5,7 +5,7 @@
 # example: v-add-user-composer user [version]
 #
 # This function adds support for composer (php dependency manager)
-# Homepage: https://getcomposer.org/
+# Homepage: <https://getcomposer.org/>
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

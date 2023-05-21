@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/mail/">
+			<a class="button button-secondary button-back js-button-back" href="/list/mail/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -26,17 +26,17 @@
 		id="vstobjects"
 		name="v_edit_mail"
 		method="post"
-		class="<?= $v_status ?>"
+		class="<?= $v_status ?> js-enable-inputs-on-submit"
 	>
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing Mail Domain") ?></h1>
+			<h1 class="form-title"><?= _("Edit Mail Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
-				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled>
+				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" disabled required>
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
@@ -56,12 +56,12 @@
 				</div>
 			<?php } ?>
 			<div class="u-mb10">
-				<label for="v_catchall" class="form-label"><?= _("Catchall email") ?></label>
+				<label for="v_catchall" class="form-label"><?= _("Catch-All Email") ?></label>
 				<input type="email" class="form-control" name="v_catchall" id="v_catchall" value="<?= htmlentities(trim($v_catchall, "'")) ?>">
 			</div>
 			<div class="u-mb20">
 				<label for="v_rate" class="form-label">
-					<?= _("Rate limit") ?> <span class="optional">(<?= _("Email / hour / account") ?>)</span>
+					<?= _("Rate Limit") ?> <span class="optional">(<?= _("email / hour / account") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
 			</div>
@@ -69,13 +69,13 @@
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_antispam" id="v_antispam" <?php if ($v_antispam == 'yes') echo 'checked'; ?>>
 					<label for="v_antispam">
-						<?= _("AntiSpam Support") ?>
+						<?= _("Spam Filter") ?>
 					</label>
 				</div>
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_reject" id="v_reject" <?php if ($v_reject == 'yes') echo 'checked'; ?>>
 					<label for="v_reject">
-						<?= _("Reject spam") ?>
+						<?= _("Reject Spam") ?>
 					</label>
 				</div>
 			<?php } ?>
@@ -83,7 +83,7 @@
 				<div class="form-check u-mb10">
 					<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ($v_antivirus == 'yes') echo 'checked'; ?>>
 					<label for="v_antivirus">
-						<?= _("AntiVirus Support") ?>
+						<?= _("Anti-Virus") ?>
 					</label>
 				</div>
 			<?php } ?>
@@ -96,14 +96,14 @@
 			<div class="form-check u-mb10">
 				<input x-model="sslEnabled" class="form-check-input" type="checkbox" name="v_ssl" id="v_ssl">
 				<label for="v_ssl">
-					<?= _("SSL Support") ?>
+					<?= _("Enable SSL for this domain") ?>
 				</label>
 			</div>
-			<div x-cloak x-show="sslEnabled" id="ssltable" class="u-pl30">
+			<div x-cloak x-show="sslEnabled" class="u-pl30">
 				<div class="form-check u-mb10">
 					<input x-model="letsEncryptEnabled" class="form-check-input" type="checkbox" name="v_letsencrypt" id="v_letsencrypt">
 					<label for="v_letsencrypt">
-						<?= _("Lets Encrypt Support") ?>
+						<?= _("Use Let's Encrypt to obtain SSL certificate") ?>
 					</label>
 				</div>
 				<div id="le-warning" class="u-mb20">
@@ -115,55 +115,55 @@
 						</div>
 					</div>
 				</div>
-				<div x-cloak x-show="letsEncryptEnabled" id="ssl-details">
+				<div x-cloak x-show="!letsEncryptEnabled">
 					<div class="u-mb10">
 						<label for="v_ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
-							<span x-cloak x-show="!letsEncryptEnabled" id="generate-csr" > / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate CSR") ?></a></span>
+							<span x-cloak x-show="!letsEncryptEnabled" id="generate-csr" > / <a class="form-link" target="_blank" href="/generate/ssl/?domain=<?= htmlentities($v_domain) ?>"><?= _("Generate Self-Signed SSL Certificate") ?></a></span>
 						</label>
-						<textarea x-bind:disabled="!letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
+						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_crt" id="v_ssl_crt"><?= htmlentities(trim($v_ssl_crt, "'")) ?></textarea>
 					</div>
 					<div class="u-mb10">
-						<label for="v_ssl_key" class="form-label"><?= _("SSL Key") ?></label>
-						<textarea x-bind:disabled="!letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
+						<label for="v_ssl_key" class="form-label"><?= _("SSL Private Key") ?></label>
+						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_key" id="v_ssl_key"><?= htmlentities(trim($v_ssl_key, "'")) ?></textarea>
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_ca" class="form-label">
-							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("optional") ?>)</span>
+							<?= _("SSL Certificate Authority / Intermediate") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 						</label>
-						<textarea x-bind:disabled="!letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
+						<textarea x-bind:disabled="letsEncryptEnabled" class="form-control u-min-height100 u-console" name="v_ssl_ca" id="v_ssl_ca"><?= htmlentities(trim($v_ssl_ca, "'")) ?></textarea>
 					</div>
 				</div>
 				<?php if ($v_ssl != "no") { ?>
 					<ul class="values-list">
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SUBJECT") ?></span>
+							<span class="values-list-label"><?= _("Issued To") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_subject) ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Aliases") ?></span>
+								<span class="values-list-label"><?= _("Alternate") ?></span>
 								<span class="values-list-value"><?= htmlentities($v_ssl_aliases) ?></span>
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_BEFORE") ?></span>
+							<span class="values-list-label"><?= _("Not Before") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_not_before) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_AFTER") ?></span>
+							<span class="values-list-label"><?= _("Not After") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_not_after) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SIGNATURE") ?></span>
+							<span class="values-list-label"><?= _("Signature") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_signature) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("PUB_KEY") ?></span>
+							<span class="values-list-label"><?= _("Key Size") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_pub_key) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("ISSUER") ?></span>
+							<span class="values-list-label"><?= _("Issued By") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_issuer) ?></span>
 						</li>
 					</ul>

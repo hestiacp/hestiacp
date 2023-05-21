@@ -29,9 +29,9 @@ function checkStrictness($level) {
 		return true;
 	} else {
 		http_response_code(400);
-		echo "<h1>Potential use CSRF detected</h1>\n" .
+		echo "<h1>Potential CSRF use detected</h1>\n" .
 			"<p>Please disable any plugins/add-ons inside your browser or contact your system administrator. If you are the system administrator you can run v-change-sys-config-value 'POLICY_CSRF_STRICTNESS' '0' as root to disable this check.<p>" .
-			"<p>If you followed a bookmark or an static link <a href='/'>please click here</a>";
+			"<p>If you followed a bookmark or an static link please <a href='/'>navigate to root</a>";
 		die();
 	}
 }
@@ -40,8 +40,19 @@ function prevent_post_csrf() {
 	if (!empty($_SERVER["REQUEST_METHOD"])) {
 		if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			if (!empty($_SERVER["HTTP_HOST"])) {
-				[$hostname, $port] = explode(":", $_SERVER["HTTP_HOST"] . ":");
-				if (empty($port)) {
+				$hostname = preg_replace(
+					"/(\[?[^]]*\]?):([0-9]{1,5})$/",
+					"$1",
+					$_SERVER["HTTP_HOST"],
+				);
+				$port_is_defined = preg_match("/\[?[^]]*\]?:[0-9]{1,5}$/", $_SERVER["HTTP_HOST"]);
+				if ($port_is_defined) {
+					$port = preg_replace(
+						"/(\[?[^]]*\]?):([0-9]{1,5})$/",
+						"$2",
+						$_SERVER["HTTP_HOST"],
+					);
+				} else {
 					$port = 443;
 				}
 			} else {
@@ -74,8 +85,19 @@ function prevent_get_csrf() {
 	if (!empty($_SERVER["REQUEST_METHOD"])) {
 		if ($_SERVER["REQUEST_METHOD"] === "GET") {
 			if (!empty($_SERVER["HTTP_HOST"])) {
-				[$hostname, $port] = explode(":", $_SERVER["HTTP_HOST"] . ":");
-				if (empty($port)) {
+				$hostname = preg_replace(
+					"/(\[?[^]]*\]?):([0-9]{1,5})$/",
+					"$1",
+					$_SERVER["HTTP_HOST"],
+				);
+				$port_is_defined = preg_match("/\[?[^]]*\]?:[0-9]{1,5}$/", $_SERVER["HTTP_HOST"]);
+				if ($port_is_defined) {
+					$port = preg_replace(
+						"/(\[?[^]]*\]?):([0-9]{1,5})$/",
+						"$2",
+						$_SERVER["HTTP_HOST"],
+					);
+				} else {
 					$port = 443;
 				}
 			} else {

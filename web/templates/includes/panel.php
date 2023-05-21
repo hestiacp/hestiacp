@@ -9,8 +9,8 @@
 			<div class="top-bar-left">
 
 				<!-- Logo / Home Button -->
-				<a href="<?= htmlspecialchars($home_url) ?>" class="top-bar-logo" title="<?= _("Hestia Control Panel") ?>">
-					<img src="/images/logo-header.svg" alt="<?= _("Hestia Control Panel") ?>" width="54" height="29">
+				<a href="/" class="top-bar-logo" title="<?= htmlentities($_SESSION['APP_NAME']);?>">
+					<img src="/images/logo-header.svg" alt="<?= htmlentities($_SESSION['APP_NAME']);?>" width="54" height="29">
 				</a>
 
 				<!-- Usage Statistics -->
@@ -69,12 +69,13 @@
 						<ul
 							x-cloak
 							x-show="open"
-							class="top-bar-notifications-list animate__animated animate__fadeIn"
+							x-on:click.outside="open = false"
+							class="top-bar-notifications-list"
 						>
 							<template x-if="initialized && notifications.length == 0">
 								<li class="top-bar-notification-item empty">
 									<i class="fas fa-bell-slash icon-dim"></i>
-									<p><?= _("no notifications") ?></p>
+									<p><?= _("No notifications") ?></p>
 								</li>
 							</template>
 							<template x-for="notification in notifications" :key="notification.ID">
@@ -95,10 +96,12 @@
 										</button>
 									</div>
 									<div x-html="notification.NOTICE"></div>
-									<p
-										x-text="`${notification.TIME} ${notification.DATE}`"
-										class="top-bar-notification-timestamp"
-									></p>
+									<p class="top-bar-notification-timestamp">
+										<time
+											:datetime="`${notification.DATE}T${notification.TIME}`"
+											x-text="`${notification.TIME} ${notification.DATE}`"
+										></time>
+									</p>
 								</li>
 							</template>
 							<template x-if="initialized && notifications.length > 2">
@@ -120,12 +123,17 @@
 				<!-- Menu -->
 				<nav x-data="{ open: false }" class="top-bar-menu">
 
-					<button x-on:click="open = !open" type="button" class="top-bar-menu-link u-hide-tablet" title="<?= _("Toggle menu") ?>">
+					<button
+						type="button"
+						class="top-bar-menu-link u-hide-tablet"
+						x-on:click="open = !open">
 						<i class="fas fa-bars"></i>
-						<span class="u-hidden"><?= _("Toggle menu") ?></span>
+						<span class="u-hidden" x-text="open ? '<?= _("Close menu") ?>' : '<?= _("Open menu") ?>'">
+							<?= _("Open menu") ?>
+						</span>
 					</button>
 
-					<ul x-cloak x-show="open" class="top-bar-menu-list animate__animated animate__fadeIn">
+					<ul x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-list">
 
 						<!-- File Manager -->
 						<?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>
@@ -182,15 +190,16 @@
 								<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Statistics") ?></span>
 							</a>
 						</li>
-
-						<!-- Help / Documentation -->
-						<li class="top-bar-menu-item">
-							<a title="<?= _("Help") ?>" class="top-bar-menu-link" href="https://docs.hestiacp.com/" target="_blank" rel="noopener">
-								<i class="fas fa-circle-question"></i>
-								<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Help") ?></span>
-							</a>
-						</li>
-
+						<?php if ( $_SESSION['HIDE_DOCS'] != 'yes'){
+						?>
+							<!-- Help / Documentation -->
+							<li class="top-bar-menu-item">
+								<a title="<?= _("Help") ?>" class="top-bar-menu-link" href="https://hestiacp.com/docs/server-administration/troubleshooting.html" target="_blank" rel="noopener">
+									<i class="fas fa-circle-question"></i>
+									<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Help") ?></span>
+								</a>
+							</li>
+						<?php } ?>
 						<!-- Logout -->
 						<?php if (isset($_SESSION["look"]) && !empty($_SESSION["look"])) { ?>
 							<li class="top-bar-menu-item">
@@ -224,6 +233,7 @@
 					x-text="open ? '<?= _("Collapse main menu") ?>' : '<?= _("Expand main menu") ?>'"
 					class="main-menu-toggle-label"
 				>
+					<?= _("Expand main menu") ?>
 				</span>
 			</button>
 			<ul x-cloak x-show="open" class="main-menu-list">
@@ -242,10 +252,10 @@
 							<p class="main-menu-item-label"><?= _("USER") ?><i class="fas fa-users"></i></p>
 							<ul class="main-menu-stats">
 								<li>
-									<?= _("users") ?>: <span><?= htmlspecialchars($user_count) ?></span>
+									<?= _("Users") ?>: <span><?= htmlspecialchars($user_count) ?></span>
 								</li>
 								<li>
-									<?= _("spnd") ?>: <span><?= $panel[$user]["SUSPENDED_USERS"] ?></span>
+									<?= _("Suspended") ?>: <span><?= $panel[$user]["SUSPENDED_USERS"] ?></span>
 								</li>
 							</ul>
 						</a>
@@ -260,10 +270,10 @@
 								<p class="main-menu-item-label"><?= _("WEB") ?><i class="fas fa-earth-americas"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("domains") ?>: <span><?= $panel[$user]["U_WEB_DOMAINS"] ?> / <?= $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["WEB_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_WEB"] ?>)</span>
+										<?= _("Domains") ?>: <span><?= $panel[$user]["U_WEB_DOMAINS"] ?> / <?= $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["WEB_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_WEB"] ?>)</span>
 									</li>
 									<li>
-										<?= _("aliases") ?>: <span><?= $panel[$user]["U_WEB_ALIASES"] ?> / <?= $panel[$user]["WEB_ALIASES"] == "unlimited" || $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["WEB_ALIASES"] * $panel[$user]["WEB_DOMAINS"] ?></span>
+										<?= _("Aliases") ?>: <span><?= $panel[$user]["U_WEB_ALIASES"] ?> / <?= $panel[$user]["WEB_ALIASES"] == "unlimited" || $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["WEB_ALIASES"] * $panel[$user]["WEB_DOMAINS"] ?></span>
 									</li>
 								</ul>
 							</a>
@@ -279,10 +289,10 @@
 								<p class="main-menu-item-label"><?= _("DNS") ?><i class="fas fa-book-atlas"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("zones") ?>: <span><?= $panel[$user]["U_DNS_DOMAINS"] ?> / <?= $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DNS_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_DNS"] ?>)</span>
+										<?= _("Zones") ?>: <span><?= $panel[$user]["U_DNS_DOMAINS"] ?> / <?= $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DNS_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_DNS"] ?>)</span>
 									</li>
 									<li>
-										<?= _("records") ?>: <span><?= $panel[$user]["U_DNS_RECORDS"] ?> / <?= $panel[$user]["DNS_RECORDS"] == "unlimited" || $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DNS_RECORDS"] * $panel[$user]["DNS_DOMAINS"] ?></span>
+										<?= _("Records") ?>: <span><?= $panel[$user]["U_DNS_RECORDS"] ?> / <?= $panel[$user]["DNS_RECORDS"] == "unlimited" || $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DNS_RECORDS"] * $panel[$user]["DNS_DOMAINS"] ?></span>
 									</li>
 								</ul>
 							</a>
@@ -298,10 +308,10 @@
 								<p class="main-menu-item-label"><?= _("MAIL") ?><i class="fas fa-envelopes-bulk"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("domains") ?>: <span><?= $panel[$user]["U_MAIL_DOMAINS"] ?> / <?= $panel[$user]["MAIL_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["MAIL_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_MAIL"] ?>)</span>
+										<?= _("Domains") ?>: <span><?= $panel[$user]["U_MAIL_DOMAINS"] ?> / <?= $panel[$user]["MAIL_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["MAIL_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_MAIL"] ?>)</span>
 									</li>
 									<li>
-										<?= _("accounts") ?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?> / <?=$panel[$user]['MAIL_ACCOUNTS']=='unlimited' || $panel[$user]['MAIL_DOMAINS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['MAIL_ACCOUNTS'] * $panel[$user]['MAIL_DOMAINS']?></span>
+										<?= _("Accounts") ?>: <span><?=$panel[$user]['U_MAIL_ACCOUNTS']?> / <?=$panel[$user]['MAIL_ACCOUNTS']=='unlimited' || $panel[$user]['MAIL_DOMAINS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['MAIL_ACCOUNTS'] * $panel[$user]['MAIL_DOMAINS']?></span>
 									</li>
 								</ul>
 							</a>
@@ -317,7 +327,7 @@
 								<p class="main-menu-item-label"><?= _("DB") ?><i class="fas fa-database"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("databases") ?>: <span><?= $panel[$user]["U_DATABASES"] ?> / <?= $panel[$user]["DATABASES"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DATABASES"] ?> (<?= $panel[$user]["SUSPENDED_DB"] ?>)</span>
+										<?= _("Databases") ?>: <span><?= $panel[$user]["U_DATABASES"] ?> / <?= $panel[$user]["DATABASES"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DATABASES"] ?> (<?= $panel[$user]["SUSPENDED_DB"] ?>)</span>
 									</li>
 								</ul>
 							</a>
@@ -333,7 +343,7 @@
 								<p class="main-menu-item-label"><?= _("CRON") ?><i class="fas fa-clock"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("jobs") ?>: <span><?= $panel[$user]["U_CRON_JOBS"] ?> / <?= $panel[$user]["CRON_JOBS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["CRON_JOBS"] ?> (<?= $panel[$user]["SUSPENDED_CRON"] ?>)</span>
+										<?= _("Jobs") ?>: <span><?= $panel[$user]["U_CRON_JOBS"] ?> / <?= $panel[$user]["CRON_JOBS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["CRON_JOBS"] ?> (<?= $panel[$user]["SUSPENDED_CRON"] ?>)</span>
 									</li>
 								</ul>
 							</a>
@@ -343,13 +353,13 @@
 
 				<!-- Backups tab -->
 				<?php if (isset($_SESSION["BACKUP_SYSTEM"]) && !empty($_SESSION["BACKUP_SYSTEM"])) { ?>
-					<?php if ($panel[$user]["BACKUPS"] != "0") { ?>
+					<?php if ($panel[$user]["BACKUPS"] != "0" || $panel[$user]["U_BACKUPS"] != "0") { ?>
 						<li class="main-menu-item">
 							<a class="main-menu-item-link <?php if($TAB == 'BACKUP') echo 'active' ?>" href="/list/backup/" title="<?= _("Backups") ?>: <?=$panel[$user]['U_BACKUPS']?>&#13;<?= _("Limit") ?>: <?=$panel[$user]['BACKUPS']=='unlimited' ? "∞" : $panel[$user]['BACKUPS']?>">
 								<p class="main-menu-item-label"><?= _("BACKUP") ?><i class="fas fa-file-zipper"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("backups") ?>: <span><?= $panel[$user]["U_BACKUPS"] ?> / <?= $panel[$user]["BACKUPS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["BACKUPS"] ?></span>
+										<?= _("Backups") ?>: <span><?= $panel[$user]["U_BACKUPS"] ?> / <?= $panel[$user]["BACKUPS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["BACKUPS"] ?></span>
 									</li>
 								</ul>
 							</a>

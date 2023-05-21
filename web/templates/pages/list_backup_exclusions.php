@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/edit/backup/exclusions/" class="button button-secondary"><i class="fas fa-pencil icon-orange"></i><?= _("Editing Backup Exclusions") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/list/backup/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/edit/backup/exclusions/" class="button button-secondary">
+				<i class="fas fa-pencil icon-orange"></i><?= _("Edit Backup Exclusions") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-search">
@@ -21,7 +25,7 @@
 <!-- End toolbar -->
 
 <div class="container units">
-	<div class="header table-header">
+	<div class="header units-header">
 		<div class="l-unit__col l-unit__col--right">
 			<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
 			<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Type") ?></b></div>
@@ -40,7 +44,7 @@
 					<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
 					<div class="clearfix l-unit__stat-col--left wide-3">
 						<?php
-							if (empty($value)) echo _('no exclusions');
+							if (empty($value)) echo _('No exclusions');
 							foreach ($value as $ex_key => $ex_value) {
 								echo '<b>'.$ex_key.' </b>'.$ex_value.'<br>';
 							}

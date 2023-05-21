@@ -32,7 +32,7 @@ Depending on the application you chose to install, this can take 30 seconds or l
 
 1. Hover over the domain whose logs you want to view.
 2. Click the <i class="fas fa-fw fa-binoculars"><span class="visually-hidden">logs</span></i> icon.
-3. At the top of the page, you have the possiblity to download the logs or view the error logs instead.
+3. At the top of the page, you have the possibility to download the logs or view the error logs instead.
 
 ## Suspending a web domain
 

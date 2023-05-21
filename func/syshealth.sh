@@ -52,7 +52,7 @@ function syshealth_update_web_config_format() {
 	# WEB DOMAINS
 	# Create array of known keys in configuration file
 	system="web"
-	known_keys="DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT REDIRECT REDIRECT_CODE AUTH_USER AUTH_HASH SUSPENDED TIME DATE"
+	known_keys="DOMAIN IP IP6 CUSTOM_DOCROOT CUSTOM_PHPROOT FASTCGI_CACHE FASTCGI_DURATION ALIAS TPL SSL SSL_FORCE SSL_HSTS SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 FTP_PATH BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT REDIRECT REDIRECT_CODE AUTH_USER AUTH_HASH SUSPENDED TIME DATE"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -198,7 +198,7 @@ function syshealth_update_system_config_format() {
 	# SYSTEM CONFIGURATION
 	# Create array of known keys in configuration file
 	system="system"
-	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION"
+	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION DISABLE_IP_CHECK"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -476,8 +476,40 @@ function syshealth_repair_system_config() {
 		$BIN/v-change-sys-config-value "POLICY_CSRF_STRICTNESS" "1"
 	fi
 	if [[ -z $(check_key_exists 'DNS_CLUSTER_SYSTEM') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: DNS_CLUSTER_SYSTEM ('')"
+		echo "[ ! ] Adding missing variable to hestia.conf: DNS_CLUSTER_SYSTEM ('hestia')"
 		$BIN/v-change-sys-config-value "DNS_CLUSTER_SYSTEM" "hestia"
+	fi
+	if [[ -z $(check_key_exists 'DISABLE_IP_CHECK') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: DISABLE_IP_CHECK ('no')"
+		$BIN/v-change-sys-config-value "DISABLE_IP_CHECK" "no"
+	fi
+	if [[ -z $(check_key_exists 'APP_NAME') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: APP_NAME ('Hestia Control Panel')"
+		$BIN/v-change-sys-config-value "APP_NAME" "Hestia Control Panel"
+	fi
+	if [[ -z $(check_key_exists 'FROM_NAME') ]]; then
+		# Default is always APP_NAME
+		echo "[ ! ] Adding missing variable to hestia.conf: FROM_NAME ('')"
+		$BIN/v-change-sys-config-value "FROM_NAME" ""
+	fi
+	if [[ -z $(check_key_exists 'FROM_EMAIL') ]]; then
+		# Default is always noreply@hostname.com
+		echo "[ ! ] Adding missing variable to hestia.conf: FROM_EMAIL ('')"
+		$BIN/v-change-sys-config-value "FROM_EMAIL" ""
+	fi
+	if [[ -z $(check_key_exists 'SUBJECT_EMAIL') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: SUBJECT_EMAIL ('{{subject}}')"
+		$BIN/v-change-sys-config-value "SUBJECT_EMAIL" "{{subject}}"
+	fi
+
+	if [[ -z $(check_key_exists 'TITLE') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: TITLE ('{{page}} - {{hostname}} - {{appname}}')"
+		$BIN/v-change-sys-config-value "TITLE" "{{page}} - {{hostname}} - {{appname}}"
+	fi
+
+	if [[ -z $(check_key_exists 'HIDE_DOCS') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: HIDE_DOCS ('no')"
+		$BIN/v-change-sys-config-value "HIDE_DOCS" "no"
 	fi
 
 	touch $HESTIA/conf/hestia.conf.new

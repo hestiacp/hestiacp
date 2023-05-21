@@ -1,9 +1,5 @@
 # CLI Reference
 
-::: info
-This page is work in progress. Information might be missing or misleading.
-:::
-
 ## v-acknowledge-user-notification
 
 update user notification
@@ -262,12 +258,12 @@ This function adds new rule to system firewall
 
 add firewall ipset
 
-**Options**: `NAME` `[SOURCE]` `[IPVERSION]` `[AUTOUPDATE]` `[FORCE]`
+**Options**: `NAME` `[SOURCE]` `[IPVERSION]` `[AUTOUPDATE]` `[REFRESH]`
 
 **Examples**:
 
 ```bash
-v-add-firewall-ipset country-nl 'http://ipverse.net/ipblocks/data/countries/nl.zone'
+v-add-firewall-ipset country-nl "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/nl/ipv4-aggregated.txt"
 ```
 
 This function adds new ipset to system firewall
@@ -861,7 +857,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
-www.domain.tld type will be automatically assigned to the domain unless
+<www.domain.tld> type will be automatically assigned to the domain unless
 "none" is transmited as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
@@ -1067,7 +1063,7 @@ add php fpm version
 v-add-web-php 8.0
 ```
 
-This function checks and delete a fpm php version if not used by any domain.
+Install php-fpm for provided version.
 
 ## v-backup-user
 
@@ -2029,7 +2025,7 @@ v-change-web-domain-sslhome admin acme.com single
 example: v-change-web-domain-sslhome admin acme.com same
 ```
 
-This function changes SSL home directory. Single will seperate the both public_html / public_shtml. Same will always point to public_shtml
+This function changes SSL home directory. Single will separate the both public_html / public_shtml. Same will always point to public_shtml
 
 ## v-change-web-domain-stats
 
@@ -2885,9 +2881,9 @@ for logging, notification and warn emails etc.
 
 disable system wide smtp relay support
 
-**Options**: ``
+**Options**:
 
-This function disables system wide smtp relay support.
+options:
 
 ## v-delete-user
 
@@ -3288,6 +3284,18 @@ v-download-backup admin admin.2020-11-05_05-10-21.tar
 
 This function download back-up from remote server
 
+## v-export-rrd
+
+export rrd charts as json
+
+**Options**: `[CHART]` `[TIMESPAN]`
+
+**Examples**:
+
+```bash
+v-export-rrd chart format
+```
+
 ## v-extract-fs-archive
 
 archive to directory
@@ -3326,7 +3334,7 @@ generate password hash
 **Examples**:
 
 ```php
-    v-generate-password-hash sha-512 rAnDom_string yourPassWord
+	v-generate-password-hash sha-512 rAnDom_string yourPassWord
 ```
 
 This function generates password hash
@@ -3450,6 +3458,22 @@ v-get-user-value admin FNAME
 ```
 
 This function for obtaining certain user's parameters.
+
+## v-import-cpanel
+
+Import Cpanel backup to a new user
+
+**Options**: `BACKUP` `[MX]`
+
+**Examples**:
+
+```bash
+v-import-cpanel /backup/backup.tar.gz yes
+```
+
+Based on sk-import-cpanel-backup-to-vestacp
+Credits: Maks Usmanov (skamasle) and contributors:
+Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
 
 ## v-insert-dns-domain
 
@@ -3963,33 +3987,33 @@ This function for obtaining the list of system parameters.
 
 list system cpu info
 
-**Options**: ``
+**Options**:
 
-This function lists cpu information
+options:
 
 ## v-list-sys-db-status
 
 list db status
 
-**Options**: ``
+**Options**:
 
-v-list-sys-db-status
+options:
 
 ## v-list-sys-disk-status
 
 list disk information
 
-**Options**: ``
+**Options**:
 
-This function lists disk information
+options:
 
 ## v-list-sys-dns-status
 
 list dns status
 
-**Options**: ``
+**Options**:
 
-This function lists dns server status
+options:
 
 ## v-list-sys-dovecot-config
 
@@ -4080,17 +4104,17 @@ Output is always in the ISO language code
 
 list mail status
 
-**Options**: ``
+**Options**:
 
-This function lists mail server status
+options:
 
 ## v-list-sys-memory-status
 
 list virtual memory info
 
-**Options**: ``
+**Options**:
 
-This function lists virtual memory information
+options:
 
 ## v-list-sys-mysql-config
 
@@ -4104,9 +4128,9 @@ This function for obtaining the list of mysql config parameters.
 
 list system network status
 
-**Options**: ``
+**Options**:
 
-This function lists network status
+options:
 
 ## v-list-sys-nginx-config
 
@@ -4126,7 +4150,7 @@ This function for obtaining the list of postgresql config parameters.
 
 ## v-list-sys-php
 
-listing availble PHP versions installed
+listing available PHP versions installed
 
 **Options**: `[FORMAT]`
 
@@ -4224,9 +4248,9 @@ This function for obtaining the list of vsftpd config parameters.
 
 list web status
 
-**Options**: ``
+**Options**:
 
-This function lists web server status
+options:
 
 ## v-list-sys-webmail
 
@@ -4339,7 +4363,7 @@ This function for getting the list notifications
 
 ## v-list-user-ns
 
-list user name servers
+list user nameservers
 
 **Options**: `USER` `[FORMAT]`
 

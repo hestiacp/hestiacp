@@ -53,12 +53,12 @@ $conf["servers"][0]["slony_sql"] = "/usr/share/pgsql";
 //$conf['servers'][1]['slony_sql'] = 'C:\\Program Files\\PostgreSQL\\8.0\\share';
 
 // Example of groups definition.
-// Groups allow administrators to logicaly group servers together under group nodes in the left browser tree
+// Groups allow administrators to logically group servers together under group nodes in the left browser tree
 //
 // The group '0' description
 //$conf['srv_groups'][0]['desc'] = 'group one';
 //
-// Add here servers indexes belonging to the group '0' seperated by comma
+// Add here server indexes belonging to the group '0' separated by comma
 //$conf['srv_groups'][0]['servers'] = '0,1,2';
 //
 // A server can belong to multi groups
@@ -77,6 +77,15 @@ $conf["default_lang"] = "auto";
 // 'default off' enables AutoComplete but turns it off by default.
 // 'disable' disables AutoComplete.
 $conf["autocomplete"] = "default on";
+
+// If extra session security is true, then PHP's session cookies will have
+// SameSite cookie flags set to prevent CSRF attacks.  If you're using
+// auto-start sessions, autostarted sessions will be destroyed and
+// restarted with SameSite on.  If this this solution is not acceptable for
+// your situation, you will need to either turn off auot-start sessions, or
+// turn off secure sessions.  Versions of PHP below 7.3 do not have access
+// to this feature and will be vulnerable to CSRF attacks.
+$conf["extra_session_security"] = true;
 
 // If extra login security is true, then logins via phpPgAdmin with no
 // password or certain usernames (pgsql, postgres, root, administrator)

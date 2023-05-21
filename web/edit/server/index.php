@@ -1043,11 +1043,7 @@ if (!empty($_POST["save"])) {
 
 	// Change remote backup host
 	if (empty($_SESSION["error_msg"])) {
-		if (
-			!empty($_POST["v_backup_host"]) &&
-			$_POST["v_backup_type"] == $v_backup_type &&
-			!isset($v_backup_new)
-		) {
+		if ($_POST["v_backup_type"] == $v_backup_type && !isset($v_backup_new)) {
 			if (in_array($_POST["v_backup_type"], ["ftp", "sftp"])) {
 				if (
 					$_POST["v_backup_host"] != $v_backup_host ||
@@ -1188,7 +1184,7 @@ if (!empty($_POST["save"])) {
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST["v_inactive_session_timeout"] != $_SESSION["INACTIVE_SESSION_TIMEOUT"]) {
 			if ($_POST["v_inactive_session_timeout"] < 1) {
-				$_SESSION["error_msg"] = _("Inactive session timeout can not lower than 1 minute");
+				$_SESSION["error_msg"] = _("Inactive session timeout can not lower than 1 minute.");
 			} else {
 				exec(
 					HESTIA_CMD .
@@ -1645,11 +1641,11 @@ if (!empty($_POST["save"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 	if ($require_refresh == true) {
 		$refresh = $_SERVER["REQUEST_URI"];
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 		header("Location: $refresh");
 		die();
 	}

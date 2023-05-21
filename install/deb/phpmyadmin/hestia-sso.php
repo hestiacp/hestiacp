@@ -117,6 +117,23 @@ class Hestia_API {
 	}
 }
 
+function verify_token($database, $user, $ip, $time, $token) {
+	if (!password_verify($database . $user . $ip . $time . PHPMYADMIN_KEY, $token)) {
+		if (
+			!password_verify(
+				$database . $user . $_SERVER["SERVER_ADDR"] . "|" . $ip . $time . PHPMYADMIN_KEY,
+				$token,
+			)
+		) {
+			trigger_error(
+				"Access denied: There is a security token mismatch " . $time,
+				E_USER_WARNING,
+			);
+			session_invalid();
+		}
+	}
+	return;
+}
 /* Need to have cookie visible from parent directory */
 session_set_cookie_params(0, "/", "", true, true);
 /* Create signon session */
@@ -132,6 +149,7 @@ function session_invalid() {
 	header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
 	die();
 }
+
 $api = new Hestia_API();
 if (!empty($_GET)) {
 	if (isset($_GET["logout"])) {
@@ -141,10 +159,8 @@ if (!empty($_GET)) {
 			$_SESSION["PMA_single_signon_user"],
 			$_SESSION["HESTIA_sso_host"],
 		);
-		//remove sessin
+		//remove session
 		session_invalid();
-		header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
-		die();
 	} else {
 		if (isset($_GET["user"]) && isset($_GET["hestia_token"])) {
 			$database = $_GET["database"];
@@ -160,34 +176,25 @@ if (!empty($_GET)) {
 			if ($time + 60 > time()) {
 				//note: Possible issues with cloudflare due to ip obfuscation
 				$ip = $api->get_user_ip();
-				if (!password_verify($database . $user . $ip . $time . PHPMYADMIN_KEY, $token)) {
-					trigger_error(
-						"Access denied: There is a security token mismatch " . $time,
-						E_USER_WARNING,
-					);
-					session_invalid();
-					die();
-					session_invalid();
-				} else {
-					$id = session_id();
-					//create a new temp user
-					$data = $api->create_temp_user($database, $user, $host);
-					if ($data) {
-						$_SESSION["PMA_single_signon_user"] = $data->login->user;
-						$_SESSION["PMA_single_signon_password"] = $data->login->password;
-						$_SESSION["PMA_single_signon_host"] = $host;
-						//save database / username to be used for sending logout notification.
-						$_SESSION["HESTIA_sso_user"] = $user;
-						$_SESSION["HESTIA_sso_database"] = $database;
-						$_SESSION["HESTIA_sso_host"] = $host;
+				verify_token($database, $user, $ip, $time, $token);
+				$id = session_id();
+				//create a new temp user
+				$data = $api->create_temp_user($database, $user, $host);
+				if ($data) {
+					$_SESSION["PMA_single_signon_user"] = $data->login->user;
+					$_SESSION["PMA_single_signon_password"] = $data->login->password;
+					$_SESSION["PMA_single_signon_host"] = $host;
+					//save database / username to be used for sending logout notification.
+					$_SESSION["HESTIA_sso_user"] = $user;
+					$_SESSION["HESTIA_sso_database"] = $database;
+					$_SESSION["HESTIA_sso_host"] = $host;
 
-						@session_write_close();
-						setcookie($session_name, $id, 0, "/");
-						header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
-					} else {
-						session_invalid();
-					}
+					@session_write_close();
+					setcookie($session_name, $id, 0, "/");
+					header("Location: " . dirname($_SERVER["PHP_SELF"]) . "/index.php");
 					die();
+				} else {
+					session_invalid();
 				}
 			} else {
 				trigger_error(
@@ -198,11 +205,9 @@ if (!empty($_GET)) {
 					E_USER_WARNING,
 				);
 				session_invalid();
-				die();
 			}
 		}
 	}
 } else {
 	session_invalid();
-	die();
 }

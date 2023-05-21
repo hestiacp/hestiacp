@@ -57,7 +57,7 @@ strong {
 	background-color: #fff;
 }
 
-.table-header {
+.units-header {
 	box-shadow: none;
 	background: #fafafa;
 }
@@ -80,6 +80,17 @@ strong {
 .l-unit:hover,
 .units .l-unit:hover {
 	box-shadow: none;
+}
+
+/* Statistics
+   ========================================================================== */
+
+.stats-item {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
+	}
 }
 
 /* Badge component
@@ -122,8 +133,7 @@ strong {
 		);
 	}
 
-	&:active,
-	&:focus {
+	&:active {
 		box-shadow: none;
 		background: linear-gradient(
 			to bottom,
@@ -145,8 +155,7 @@ strong {
 		border-color: #f27e71;
 	}
 
-	&:active,
-	:focus {
+	&:active {
 		background: #a91200;
 		color: #fff;
 		border-color: #f4301a;
@@ -156,12 +165,8 @@ strong {
 /* Modals
    ========================================================================== */
 
-.ui-dialog {
+.modal {
 	box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
-
-	& .ui-dialog-buttonpane button:nth-of-type(2) {
-		box-shadow: none;
-	}
 }
 
 /* Login

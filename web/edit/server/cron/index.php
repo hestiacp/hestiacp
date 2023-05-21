@@ -14,7 +14,7 @@ if ($_SESSION["userContext"] != "admin") {
 // Check POST request
 if (!empty($_POST["save"])) {
 	// Set success message
-	$_SESSION["ok_msg"] = _("Info (Read-only mode): Crontab can be edited only trough ssh");
+	$_SESSION["ok_msg"] = _("Info (read-only mode): Crontab can only be edited via SSH.");
 }
 
 $v_config_path = "/etc/crontab";

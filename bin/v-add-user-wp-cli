@@ -43,8 +43,8 @@ check_hestia_demo_mode
 WPCLI_DIR="/home/$user/.wp-cli"
 WPCLI_BIN="$WPCLI_DIR/wp"
 
-if [ -f "$WPCLI_DIR" ]; then
-	echo "WP-CLI already available"
+if [ -f "$WPCLI_BIN" ]; then
+	check_result "$E_EXISTS" "For user name '$user' WP-CLI already available!"
 	exit
 fi
 
@@ -56,6 +56,7 @@ chown $user:$user "$WPCLI_DIR"
 
 user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$WPCLI_BIN" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 user_exec chmod +x "$WPCLI_BIN"
+user_exec echo -e "#add wp-cli alias for user\nalias wp='php $WPCLI_BIN'" >> ~/.bashrc
 
 #----------------------------------------------------------#
 #                       Hestia                             #

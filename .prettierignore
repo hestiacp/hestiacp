@@ -23,6 +23,13 @@
 # Web templates (for now)
 web/templates/
 
+# Hestia Nginx.conf
+/src/deb/nginx/nginx.conf
+/src/rpm/nginx/nginx.conf
+
+# Email templates
+/install/common/templates/email/
+
 # Vendor/packages
 .pnp.*
 .yarn/*
@@ -34,6 +41,7 @@ web/templates/
 
 # vitepress build output
 **/.vitepress/dist/
+**/.vitepress/cache/
 
 # Logs
 logs

@@ -22,6 +22,7 @@ MODE=$1
 user="admin"
 
 PM_INSTALL_DIR="$HESTIA/web/inc"
+QUICK_INSTALL_DIR="$HESTIA/web/src"
 COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 
 #----------------------------------------------------------#
@@ -48,7 +49,7 @@ fi
 if [ ! -f "$COMPOSER_BIN" ]; then
 	$BIN/v-add-user-composer "$user"
 	if [ $? -ne 0 ]; then
-		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>Hestia will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-dependencies<br><br>If this continues, open an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>Hestia will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-dependencies<br><br>If this continues, <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.'
 		exit 1
 	fi
 fi
@@ -69,7 +70,7 @@ openssl_installed=$(/usr/local/hestia/php/bin/php -m | grep openssl)
 if [ -z "$openssl_installed" ]; then
 	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
 else
-	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/local/hestia/php/bin/php $COMPOSER_BIN --quiet --no-dev install
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
 fi
 
 # Check if installation was successful, if not abort script and throw error message notification and clean-up
@@ -77,7 +78,7 @@ if [ $? -ne 0 ]; then
 	echo "ERROR: PHPMailer installation failed!"
 	echo "Please report this to our development team:"
 	echo "https://github.com/hestiacp/hestiacp/issues"
-	$BIN/v-add-user-notification admin 'Hestia PHP dependencies installation failed!' 'Please report this to our development team on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.'
+	$BIN/v-add-user-notification admin 'Hestia PHP dependencies installation failed!' 'Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a> to report this to our development team.'
 	# Installation failed, clean up files
 	rm --recursive --force ${PM_INSTALL_DIR}/vendor
 	$BIN/v-change-sys-config-value 'USE_SERVER_SMTP' 'n'
@@ -85,8 +86,20 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
+cd "$QUICK_INSTALL_DIR"
+rm --recursive --force ${QUICK_INSTALL_DIR}/vendor
+mkdir -p ${QUICK_INSTALL_DIR}/vendor
+chown $user: -R ${QUICK_INSTALL_DIR}/vendor
+
+if [ -z "$openssl_installed" ]; then
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php $COMPOSER_BIN --quiet --no-dev install
+else
+	COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec $HESTIA_PHP $COMPOSER_BIN --quiet --no-dev install
+fi
+
 # Set permissions
 chown root: -R "${PM_INSTALL_DIR}/vendor"
+chown root: -R "${QUICK_INSTALL_DIR}/vendor"
 
 #----------------------------------------------------------#
 #                       Logging                            #

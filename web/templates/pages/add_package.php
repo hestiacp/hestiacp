@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/package/">
+			<a class="button button-secondary button-back js-button-back" href="/list/package/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -33,28 +33,32 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding Package") ?></h1>
+			<h1 class="form-title"><?= _("Add Package") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_package" class="form-label"><?= _("Package Name") ?></label>
-				<input type="text" class="form-control" name="v_package" id="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>">
+				<input type="text" class="form-control" name="v_package" id="v_package" value="<?= htmlentities(trim($v_package, "'")) ?>" required>
 			</div>
 			<div class="u-mb10">
 				<label for="v_disk_quota" class="form-label">
-					<?= _("Quota") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+					<?= _("Quota") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<input type="text" class="form-control" name="v_disk_quota" id="v_disk_quota" value="<?= htmlentities(trim($v_disk_quota, "'")) ?>">
-					<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+					<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+						<i class="fas fa-infinity"></i>
+					</button>
 				</div>
 			</div>
 			<div class="u-mb10">
 				<label for="v_bandwidth" class="form-label">
-					<?= _("Bandwidth") ?> <span class="optional">(<?= _("in megabytes") ?>)</span>
+					<?= _("Bandwidth") ?> <span class="optional">(<?= _("in MB") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<input type="text" class="form-control" name="v_bandwidth" id="v_bandwidth" value="<?= htmlentities(trim($v_bandwidth, "'")) ?>">
-					<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+					<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+						<i class="fas fa-infinity"></i>
+					</button>
 				</div>
 			</div>
 			<div class="u-mb10">
@@ -62,7 +66,7 @@
 				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= htmlentities(trim($v_backups, "'")) ?>">
 			</div>
 			<h2 x-on:click="showWebOptions = !showWebOptions" class="section-title">
-				<?= _("Web") ?>
+				<?= _("WEB") ?>
 				<i
 					x-bind:class="showWebOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"
@@ -73,7 +77,9 @@
 					<label for="v_web_domains" class="form-label"><?= _("Web Domains") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_web_domains" id="v_web_domains" value="<?= htmlentities(trim($v_web_domains, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
@@ -82,7 +88,9 @@
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_web_aliases" id="v_web_aliases" value="<?= htmlentities(trim($v_web_aliases, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
@@ -164,23 +172,27 @@
 					</select>
 				</div>
 				<div class="u-mb10">
-					<label for="v_dns_domains" class="form-label"><?= _("DNS domains") ?></label>
+					<label for="v_dns_domains" class="form-label"><?= _("DNS Zones") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_domains" id="v_dns_domains" value="<?= htmlentities(trim($v_dns_domains, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
 					<label for="v_dns_records" class="form-label">
-						<?= _("DNS records") ?> <span class="optional">(<?= _("per domain") ?>)</span>
+						<?= _("DNS Records") ?> <span class="optional">(<?= _("per domain") ?>)</span>
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_dns_records" id="v_dns_records" value="<?= htmlentities(trim($v_dns_records, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<?php if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) { ?>
-					<p class="form-label u-mb10"><?= _("Name servers") ?></p>
+					<p class="form-label u-mb10"><?= _("Name Servers") ?></p>
 					<div class="u-mb5">
 						<input type="text" class="form-control" name="v_ns1" value="<?= htmlentities(trim($v_ns1, "'")) ?>">
 					</div>
@@ -226,12 +238,12 @@
 						}
 					?>
 					<div class="u-pt18 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
-						<span class="form-link js-add-ns"><?= _("Add one more Name Server") ?></span>
+						<span class="form-link"><?= _("Add Name Server") ?></span>
 					</div>
 				<?php } ?>
 			</div>
 			<h2 x-on:click="showMailOptions = !showMailOptions" class="section-title">
-				<?= _("Mail") ?>
+				<?= _("MAIL") ?>
 				<i
 					x-bind:class="showMailOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"
@@ -242,7 +254,9 @@
 					<label for="v_mail_domains" class="form-label"><?= _("Mail Domains") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_mail_domains" id="v_mail_domains" value="<?= htmlentities(trim($v_mail_domains, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
@@ -251,18 +265,20 @@
 					</label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_mail_accounts" id="v_mail_accounts" value="<?= htmlentities(trim($v_mail_accounts, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">
 					<label for="v_ratelimit" class="form-label">
-						<?= _("Rate limit") ?> <span class="optional">(<?= _("per account / hour") ?>)</span>
+						<?= _("Rate Limit") ?> <span class="optional">(<?= _("per account / hour") ?>)</span>
 					</label>
 					<input type="text" class="form-control" name="v_ratelimit" id="v_ratelimit" value="<?= htmlentities(trim($v_ratelimit, "'")) ?>">
 				</div>
 			</div>
 			<h2 x-on:click="showDatabaseOptions = !showDatabaseOptions" class="section-title">
-				<?= _("Databases") ?>
+				<?= _("DB") ?>
 				<i
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
 					class="fas icon-dim icon-maroon js-section-toggle-icon"
@@ -273,7 +289,9 @@
 					<label for="v_databases" class="form-label"><?= _("Databases") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_databases" id="v_databases" value="<?= htmlentities(trim($v_databases, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -289,7 +307,9 @@
 					<label for="v_cron_jobs" class="form-label"><?= _("Cron Jobs") ?></label>
 					<div class="u-pos-relative">
 						<input type="text" class="form-control" name="v_cron_jobs" id="v_cron_jobs" value="<?= htmlentities(trim($v_cron_jobs, "'")) ?>">
-						<i class="unlim-trigger fas fa-infinity" title="<?= _("Unlimited") ?>"></i>
+						<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+							<i class="fas fa-infinity"></i>
+						</button>
 					</div>
 				</div>
 				<div class="u-mb10">

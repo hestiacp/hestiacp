@@ -62,7 +62,10 @@ fi
 
 # Deleting old certificate
 rm -f $HOMEDIR/$user/conf/web/$domain/ssl/$domain.*
-rm -f $USER_DATA/ssl/$domain.*
+rm -f $USER_DATA/ssl/$domain.ca
+rm -f $USER_DATA/ssl/$domain.crt
+rm -f $USER_DATA/ssl/$domain.key
+rm -f $USER_DATA/ssl/$domain.pem
 
 # Deleting force ssl
 $BIN/v-delete-web-domain-ssl-force "$user" "$domain" 'no' 'yes'

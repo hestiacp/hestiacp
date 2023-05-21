@@ -1,0 +1,64 @@
+#!/bin/bash
+# info: update white label logo's
+# options: [DOWNLOAD]
+#
+# example: v-update-white-label-logo
+#
+# Replace Hestia logos with User created logo's
+
+download=${1-no}
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+restart=$1
+skip=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ -f "$HESTIA/web/images/custom/logo.svg" ]; then
+	cp -f $HESTIA/web/images/custom/logo.svg $HESTIA/web/images/logo.svg
+elif [ ! -f "$HESTIA/web/images/custom/logo.svg" ] && [ "$download" = "yes" ]; then
+	download_file https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/images/logo.svg $HESTIA/web/images/logo.svg
+fi
+
+if [ -f "$HESTIA/web/images/custom/logo.png" ]; then
+	cp -f $HESTIA/web/images/custom/logo.png $HESTIA/web/images/logo.png
+elif [ ! -f "$HESTIA/web/images/custom/logo.png" ] && [ "$download" = "yes" ]; then
+	download_file https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/images/logo.png $HESTIA/web/images/logo.png
+fi
+
+if [ -f "$HESTIA/web/images/custom/logo-header.svg" ]; then
+	cp -f $HESTIA/web/images/custom/logo-header.svg $HESTIA/web/images/logo-header.svg
+elif [ ! -f "$HESTIA/web/images/custom/logo-header.svg" ] && [ "$download" = "yes" ]; then
+	download_file https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/images/logo-header.svg $HESTIA/web/images/logo-header.svg
+fi
+
+if [ -f "$HESTIA/web/images/custom/favicon.png" ]; then
+	cp -f $HESTIA/web/images/custom/favicon.png $HESTIA/web/images/favicon.png
+elif [ ! -f "$HESTIA/web/images/custom/favicon.png" ] && [ "$download" = "yes" ]; then
+	download_file https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/images/favicon.png $HESTIA/web/images/favicon.png
+fi
+
+if [ -f "$HESTIA/web/images/custom/favicon.ico" ]; then
+	cp -f $HESTIA/web/images/custom/favicon.ico $HESTIA/web/favicon.ico
+elif [ ! -f "$HESTIA/web/images/custom/favicon.ico" ] && [ "$download" = "yes" ]; then
+	download_file https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/favicon.ico $HESTIA/web/favicon.ico
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+exit

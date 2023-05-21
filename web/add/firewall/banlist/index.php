@@ -20,10 +20,10 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_chain"])) {
-		$errors[] = _("banlist");
+		$errors[] = _("Banlist");
 	}
 	if (empty($_POST["v_ip"])) {
-		$errors[] = _("ip address");
+		$errors[] = _("IP Address");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
@@ -49,7 +49,7 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("BANLIST_CREATED_OK");
+		$_SESSION["ok_msg"] = _("IP address has been banned successfully.");
 		unset($v_chain);
 		unset($v_ip);
 	}

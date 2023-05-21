@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/db/">
+			<a class="button button-secondary button-back js-button-back" href="/list/db/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -29,27 +29,27 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding database") ?></h1>
+			<h1 class="form-title"><?= _("Add Database") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<?php if ($user_plain == "admin" && $_GET["accept"] !== "true") { ?>
+			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">
 					<i class="fas fa-exclamation"></i>
-					<p><?= _("Avoid adding web domains on admin account") ?></p>
+					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a database')), '</a>', '<a href="/add/user/">'); ?></p>
 				</div>
 			<?php } ?>
-			<?php if ($user_plain == "admin" && empty($_GET["accept"])) { ?>
+			<?php if ($user_plain == "admin" && empty($accept)) { ?>
 				<div class="u-side-by-side u-pt18">
 					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
 					<a href="/add/db/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
 				</div>
 			<?php } ?>
-			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
+			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<p class="hint u-mb20">
 					<?= sprintf(_("Prefix %s will be automatically added to database name and database user"), "<b>" . $user_plain . "_</b>") ?>
 				</p>
 				<div class="u-mb10">
 					<label for="v_database" class="form-label"><?= _("Database") ?></label>
-					<input type="text" class="form-control" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>">
+					<input type="text" class="form-control js-db-hint-database-name" name="v_database" id="v_database" value="<?= htmlentities(trim($v_database, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
@@ -67,15 +67,17 @@
 				<div class="u-mb10">
 					<label for="v_dbuser" class="form-label u-side-by-side">
 						<?= _("Username") ?>
-						<em><small>(<?= sprintf(_("maximum characters length, including prefix"), 32) ?>)</small></em>
+						<em><small>(<?= sprintf(_("Maximum %s characters length, including prefix"), 32) ?>)</small></em>
 					</label>
-					<input type="text" class="form-control" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
+					<input type="text" class="form-control js-db-hint-username" name="v_dbuser" id="v_dbuser" value="<?= htmlentities(trim($v_dbuser, "'")) ?>">
 					<small class="hint"></small>
 				</div>
 				<div class="u-mb10">
 					<label for="v_password" class="form-label">
 						<?= _("Password") ?>
-						<a href="javascript:applyRandomPassword();" title="<?= _("generate") ?>" class="u-ml5"><i class="fas fa-arrows-rotate icon-green"></i></a>
+						<button type="button" title="<?= _("Generate") ?>" class="u-unstyled-button u-ml5 js-generate-password">
+							<i class="fas fa-arrows-rotate icon-green"></i>
+						</button>
 					</label>
 					<div class="u-pos-relative u-mb10">
 						<input type="text" class="form-control js-password-input" name="v_password" id="v_password">
@@ -92,13 +94,13 @@
 				</ul>
 				<div class="u-mb20">
 					<label for="v_db_email" class="form-label">
-						<?= _("Send login credentials to email address") ?>
+						<?= _("Email login credentials to:") ?>
 					</label>
 					<input type="email" class="form-control" name="v_db_email" id="v_db_email" value="<?= htmlentities(trim($v_db_email, "'")) ?>">
 				</div>
 				<div class="u-mb20">
 					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-						<?= _("Advanced options") ?>
+						<?= _("Advanced Options") ?>
 					</button>
 				</div>
 				<div x-cloak x-show="showAdvanced">
@@ -138,8 +140,8 @@
 							<option value=gbk <?php if ((!empty($v_charset)) && ( $v_charset == 'gbk')) echo 'selected';?>>gbk</option>
 							<option value=latin5 <?php if ((!empty($v_charset)) && ( $v_charset == 'latin5')) echo 'selected';?>>latin5</option>
 							<option value=armscii8 <?php if ((!empty($v_charset)) && ( $v_charset == 'armscii8')) echo 'selected';?>>armscii8</option>
-							<option value=utf8 <?php if ((!empty($v_charset)) && ( $v_charset == 'utf8')) echo 'selected';?> <?php if (empty($v_charset)) echo 'selected';?>>utf8</option>
-							<option value=utf8mb4 <?php if ((!empty($v_charset)) && ( $v_charset == 'utf8mb4')) echo 'selected';?>>utf8mb4</option>
+							<option value=utf8 <?php if ((!empty($v_charset)) && ( $v_charset == 'utf8')) echo 'selected';?>>utf8</option>
+							<option value=utf8mb4 <?php if ((!empty($v_charset)) && ( $v_charset == 'utf8mb4')) echo 'selected';?> <?php if (empty($v_charset)) echo 'selected';?>>utf8mb4</option>
 							<option value=ucs2 <?php if ((!empty($v_charset)) && ( $v_charset == 'ucs2')) echo 'selected';?>>ucs2</option>
 							<option value=cp866 <?php if ((!empty($v_charset)) && ( $v_charset == 'cp866')) echo 'selected';?>>cp866</option>
 							<option value=keybcs2 <?php if ((!empty($v_charset)) && ( $v_charset == 'keybcs2')) echo 'selected';?>>keybcs2</option>

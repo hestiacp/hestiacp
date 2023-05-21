@@ -14,9 +14,6 @@ source $HESTIA/func/syshealth.sh
 #######                Functions & Initialization             #######
 #####################################################################
 
-# Define version check function
-function version_ge() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
-
 add_upgrade_message() {
 	if [ -f "$HESTIA_BACKUP/message.log" ]; then
 		echo -e $1 >> $HESTIA_BACKUP/message.log
@@ -186,13 +183,13 @@ upgrade_send_notification_to_panel() {
 	# Add notification to panel if variable is set to true or is not set
 	if [[ "$new_version" =~ "alpha" ]]; then
 		# Send notifications for development releases
-		$BIN/v-add-user-notification admin 'Development snapshot installed' '<b>Version:</b> '$new_version'<br><b>Code Branch:</b> '$RELEASE_BRANCH'<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a> and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification admin 'Development snapshot installed' '<b>Version:</b> '$new_version'<br><b>Code Branch:</b> '$RELEASE_BRANCH'<br><br>Please report any bugs by <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">opening an issue on GitHub</a>, and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.<br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 	elif [[ "$new_version" =~ "beta" ]]; then
 		# Send feedback notification for beta releases
-		$BIN/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_new">discussion forum</a>.<br><br>Found a bug? Report it on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.<br><br>Found a bug? <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">Open an issue on GitHub</a>!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 	else
 		# Send normal upgrade complete notification for stable releases
-		$BIN/v-add-user-notification admin 'Upgrade complete' 'Hestia Control Panel has been updated to <b>v'$new_version'</b>.<br><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_new">View release notes</a><br><br>Please tell us about any bugs or issues by opening a new issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_new"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification admin 'Upgrade complete' 'Hestia Control Panel has been updated to <b>v'$new_version'</b>.<br><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_blank">View release notes</a><br><br>Please report any bugs by <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">opening an issue on GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 	fi
 }
 
@@ -324,6 +321,9 @@ upgrade_init_backup() {
 	fi
 	if [ -d "/etc/phpmyadmin/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/phpmyadmin/
+	fi
+	if [ -d "/etc/phppgadmin/" ]; then
+		mkdir -p $HESTIA_BACKUP/conf/phppgadmin/
 	fi
 }
 
@@ -467,6 +467,12 @@ upgrade_start_backup() {
 		fi
 		cp -fr /etc/phpmyadmin/* $HESTIA_BACKUP/conf/phpmyadmin
 	fi
+	if [ -d "/etc/phppgadmin" ]; then
+		if [ "$DEBUG_MODE" = "true" ]; then
+			echo "      ---- phppgadmin"
+		fi
+		cp -fr /etc/phppgadmin/* $HESTIA_BACKUP/conf/phppgadmin
+	fi
 }
 
 upgrade_refresh_config() {
@@ -534,9 +540,59 @@ upgrade_b2_tool() {
 			wget -O $b2cli $b2lnk > /dev/null 2>&1
 			chmod +x $b2cli > /dev/null 2>&1
 			if [ ! -f "$b2cli" ]; then
-				echo "Error: Binary download failed, b2 doesnt work as expected."
+				echo "Error: Binary download failed, b2 doesn't work as expected."
 				exit 3
 			fi
+		fi
+	fi
+}
+
+upgrade_cloudflare_ip() {
+	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
+		cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
+
+		if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
+			cf_inc="/etc/nginx/conf.d/cloudflare.inc"
+
+			echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
+			echo "# Cloudflare IP Ranges" > $cf_inc
+			echo "" >> $cf_inc
+			echo "# IPv4" >> $cf_inc
+			for ipv4 in $(echo "$cf_ips" | jq -r '.result.ipv4_cidrs[]//""' | sort); do
+				echo "set_real_ip_from $ipv4;" >> $cf_inc
+			done
+			echo "" >> $cf_inc
+			echo "# IPv6" >> $cf_inc
+			for ipv6 in $(echo "$cf_ips" | jq -r '.result.ipv6_cidrs[]//""' | sort); do
+				echo "set_real_ip_from $ipv6;" >> $cf_inc
+			done
+			echo "" >> $cf_inc
+			echo "real_ip_header CF-Connecting-IP;" >> $cf_inc
+		fi
+	fi
+}
+
+upgrade_phppgadmin() {
+	if [ -n "$(echo $DB_SYSTEM | grep -w 'pgsql')" ]; then
+		pga_release=$(cat /usr/share/phppgadmin/libraries/lib.inc.php | grep appVersion | head -n1 | cut -f2 -d\' | cut -f1 -d-)
+		if version_ge "$pga_release" "pga_v"; then
+			echo "[ * ] phppgadmin is up to date ($pga_release)..."
+		else
+			# Display upgrade information
+			echo "[ * ] Upgrading phppgadmin to version $pga_v..."
+			[ -d /usr/share/phppgadmin ] || mkdir -p /usr/share/phppgadmin
+			# Download latest phpMyAdmin release
+			wget --retry-connrefused --quiet https://github.com/hestiacp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
+			tar xzf phppgadmin-v$pga_v.tar.gz -C /usr/share/phppgadmin/
+
+			if ! version_ge "$pga_release" "7.14.0"; then
+				cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
+			fi
+			if [ ! -f /usr/share/phppgadmin/conf/config.inc.php ]; then
+				ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf
+			fi
+
+			rm -f phppgadmin-v$pga_v.tar.gz
 		fi
 	fi
 }
@@ -544,9 +600,9 @@ upgrade_b2_tool() {
 upgrade_phpmyadmin() {
 	# Check if MariaDB/MySQL is installed on the server before attempting to install or upgrade phpMyAdmin
 	if [ -n "$(echo $DB_SYSTEM | grep -w 'mysql')" ]; then
-		pma_release_file=$(ls /usr/share/phpmyadmin/RELEASE-DATE-* 2> /dev/null | tail -n 1)
-		if version_ge "${pma_release_file##*-}" "$pma_v"; then
-			echo "[ * ] phpMyAdmin is up to date (${pma_release_file##*-})..."
+		pma_version=$(jq -r .version /usr/share/phpmyadmin/package.json)
+		if version_ge "$pma_version" "$pma_v"; then
+			echo "[ * ] phpMyAdmin is up to date (${pma_version})..."
 			# Update permissions
 			if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
 				chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
@@ -600,7 +656,7 @@ upgrade_filemanager() {
 		else
 			fm_version="1.0.0"
 		fi
-		if version_ge "$fm_version" "$fm_v"; then
+		if ! version_ge "$fm_version" "$fm_v"; then
 			echo "[ ! ] Upgrading File Manager to version $fm_v..."
 			# Reinstall the File Manager
 			$BIN/v-delete-sys-filemanager quiet yes
@@ -628,7 +684,7 @@ upgrade_roundcube() {
 			echo "      To upgrade to the latest version of Roundcube directly from upstream, from please run the command migrate_roundcube.sh located in: /usr/local/hestia/install/upgrade/manual/"
 		else
 			rc_version=$(cat /var/lib/roundcube/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)
-			if version_ge "$rc_version" "$rc_v"; then
+			if ! version_ge "$rc_version" "$rc_v"; then
 				echo "[ ! ] Upgrading Roundcube to version $rc_v..."
 				$BIN/v-add-sys-roundcube
 			else
@@ -641,7 +697,7 @@ upgrade_roundcube() {
 upgrade_rainloop() {
 	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
 		rl_version=$(cat /var/lib/rainloop/data/VERSION)
-		if version_ge "$rl_version" "$rl_v"; then
+		if ! version_ge "$rl_version" "$rl_v"; then
 			echo "[ ! ] Upgrading Rainloop to version $rl_v..."
 			$BIN/v-add-sys-rainloop
 		else
@@ -651,7 +707,7 @@ upgrade_rainloop() {
 }
 
 upgrade_dependencies() {
-	echo "[ ! ] Update Hesita PHP dependencies"
+	echo "[ ! ] Update Hestia PHP dependencies..."
 	$BIN/v-add-sys-dependencies
 }
 
@@ -679,7 +735,7 @@ upgrade_rebuild_dns_templates() {
 upgrade_rebuild_users() {
 	if [ "$UPGRADE_REBUILD_USERS" = "true" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
-			echo "[ * ] Rebuilding user accounts and domains:"
+			echo "[ * ] Rebuilding user accounts and domains:..."
 		else
 			echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
 		fi
@@ -722,6 +778,10 @@ upgrade_rebuild_users() {
 			fi
 		done
 	fi
+}
+
+update_whitelabel_logo() {
+	$BIN/v-update-white-label-logo
 }
 
 upgrade_replace_default_config() {

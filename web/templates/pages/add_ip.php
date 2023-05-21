@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/ip/">
+			<a class="button button-secondary button-back js-button-back" href="/list/ip/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -19,7 +19,7 @@
 
 	<form
 		x-data="{
-			showUserTable: <?= empty($v_dedicated) ? "false" : "true" ?>
+			showUserTable: <?= empty($v_dedicated) ? "true" : "false" ?>
 		}"
 		id="vstobjects"
 		name="v_add_ip"
@@ -29,10 +29,10 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Adding IP address") ?></h1>
+			<h1 class="form-title"><?= _("Add IP Address") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
-				<label for="v_ip" class="form-label"><?= _("IP address") ?></label>
+				<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
 				<input type="text" class="form-control" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
 			</div>
 			<div class="u-mb10">
@@ -57,9 +57,9 @@
 					<?= _("Shared") ?>
 				</label>
 			</div>
-			<div x-cloak x-show="showUserTable" id="usrtable">
+			<div x-cloak x-show="!showUserTable" id="usrtable">
 				<div class="u-mb10">
-					<label for="v_owner" class="form-label"><?= _("Assigned user") ?></label>
+					<label for="v_owner" class="form-label"><?= _("Assigned User") ?></label>
 					<select class="form-select" name="v_owner" id="v_owner">
 						<?php
 							foreach ($users as $key => $value) {
@@ -73,13 +73,13 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_name" class="form-label">
-					<?= _("Assigned domain") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					<?= _("Assigned Domain") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_name" id="v_name" value="<?= htmlentities(trim($v_name, "'")) ?>">
 			</div>
 			<div class="u-mb10">
 				<label for="v_nat" class="form-label">
-					<?= _("NAT IP association") ?> <span class="optional">(<?= _("optional") ?>)</span>
+					<?= _("NAT IP Association") ?> <span class="optional">(<?= _("Optional") ?>)</span>
 				</label>
 				<input type="text" class="form-control" name="v_nat" id="v_nat" value="<?= htmlentities(trim($v_nat, "'")) ?>">
 			</div>

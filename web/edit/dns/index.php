@@ -231,7 +231,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 	// Restart dns server
 	if (empty($_SESSION["error_msg"])) {
@@ -322,7 +322,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["record_id
 
 	// Set success message
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("Changes has been saved.");
+		$_SESSION["ok_msg"] = _("Changes have been saved.");
 	}
 
 	// Change url if record id was changed
@@ -344,7 +344,7 @@ if (empty($_GET["record_id"])) {
 } else {
 	if (empty($data[$_GET["record_id"]])) {
 		header("Location: /list/dns/");
-		$_SESSION["error_msg"] = _("Unknown record ID");
+		$_SESSION["error_msg"] = _("Error: unknown record ID.");
 	}
 	// Display body for dns record
 	render_page($user, $TAB, "edit_dns_rec");

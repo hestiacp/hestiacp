@@ -205,7 +205,7 @@ strong {
 	}
 }
 
-.table-header {
+.units-header {
 	box-shadow: none;
 	background: #fafafa;
 	line-height: 1.2rem;
@@ -231,6 +231,23 @@ strong {
 .l-unit:hover,
 .units .l-unit:hover {
 	box-shadow: none;
+}
+
+/* Units table
+   ========================================================================== */
+
+.units-table-row {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
+	}
+}
+
+.units-table-cell {
+	& a:hover {
+		color: #ff6701;
+	}
 }
 
 /* Statistics

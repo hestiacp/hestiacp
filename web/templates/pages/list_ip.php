@@ -51,70 +51,72 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
-	<div class="header table-header">
-		<div class="l-unit__col l-unit__col--right">
-			<div>
-				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>">
+<div class="container">
+	<div class="units js-units-container">
+		<div class="header units-header">
+			<div class="l-unit__col l-unit__col--right">
+				<div>
+					<div class="clearfix l-unit__stat-col--left super-compact">
+						<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
+					</div>
+					<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP Address") ?></b></div>
+					<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Netmask") ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Interface") ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Status") ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Domains") ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Owner") ?></b></div>
 				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("IP Address") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><b><?= _("Netmask") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Interface") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Status") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Domains") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Owner") ?></b></div>
 			</div>
 		</div>
-	</div>
 
-	<!-- Begin IP address list item loop -->
-	<?php
-		foreach ($data as $key => $value) {
-			++$i;
-		?>
-		<div class="l-unit animate__animated animate__fadeIn js-sortable-unit"
-			data-sort-ip="<?=str_replace('.', '', $key)?>"
-			data-sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
-			data-sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>"
-			data-sort-interface="<?=$data[$key]['INTERFACE']?>"
-			data-sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
-			data-sort-owner="<?=$data[$key]['OWNER']?>">
+		<!-- Begin IP address list item loop -->
+		<?php
+			foreach ($data as $key => $value) {
+				++$i;
+			?>
+			<div class="l-unit animate__animated animate__fadeIn js-unit"
+				data-sort-ip="<?=str_replace('.', '', $key)?>"
+				data-sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
+				data-sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>"
+				data-sort-interface="<?=$data[$key]['INTERFACE']?>"
+				data-sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
+				data-sort-owner="<?=$data[$key]['OWNER']?>">
 
-			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="ip[]" value="<?= $key ?>">
-				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
-				</div>
-				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact u-text-right">
-					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
-						<div class="actions-panel clearfix">
-							<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
-							<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
-								<a
-									class="data-controls js-confirm-action"
-									href="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>"
-									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_('Are you sure you want to delete IP address %s?'), $key) ?>"
-								>
-									<i class="fas fa-trash icon-red icon-dim"></i>
-								</a>
+				<div class="l-unit__col l-unit__col--right">
+					<div class="clearfix l-unit__stat-col--left super-compact">
+						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="ip[]" value="<?= $key ?>">
+					</div>
+					<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
+					</div>
+					<!-- START QUICK ACTION TOOLBAR AREA -->
+					<div class="clearfix l-unit__stat-col--left compact u-text-right">
+						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
+							<div class="actions-panel clearfix">
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
+									<a
+										class="data-controls js-confirm-action"
+										href="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>"
+										data-confirm-title="<?= _("Delete") ?>"
+										data-confirm-message="<?= sprintf(_('Are you sure you want to delete IP address %s?'), $key) ?>"
+									>
+										<i class="fas fa-trash icon-red icon-dim"></i>
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
+					<!-- END QUICK ACTION TOOLBAR AREA -->
+					<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><?= $data[$key]["NETMASK"] ?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><?= $data[$key]["INTERFACE"] ?></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _($data[$key]["STATUS"]) ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></div>
+					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["OWNER"] ?></b></div>
 				</div>
-				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left u-text-center compact-5"><?= $data[$key]["NETMASK"] ?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><?= $data[$key]["INTERFACE"] ?></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _($data[$key]["STATUS"]) ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["U_WEB_DOMAINS"] ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["OWNER"] ?></b></div>
 			</div>
-		</div>
-	<?php } ?>
+		<?php } ?>
+	</div>
 </div>
 
 <footer class="app-footer">

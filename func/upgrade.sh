@@ -271,6 +271,9 @@ upgrade_init_backup() {
 	# Hestia Control Panel configuration files
 	mkdir -p $HESTIA_BACKUP/conf/hestia/
 
+	# OpenSSL configuration files
+	mkdir -p $HESTIA_BACKUP/conf/openssl/
+
 	# Hosting Packages
 	mkdir -p $HESTIA_BACKUP/packages/
 
@@ -352,12 +355,12 @@ upgrade_start_backup() {
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Packages"
 	fi
-	cp -rf $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
+	cp -fr $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
 
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Templates"
 	fi
-	cp -rf $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
+	cp -fr $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
 
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Configuration files:"
@@ -367,7 +370,13 @@ upgrade_start_backup() {
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      ---- hestia"
 	fi
-	cp -rf $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
+	cp -fr $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
+
+	# OpenSSL configuration files
+	if [ "$DEBUG_MODE" = "true" ]; then
+		echo "      ---- openssl"
+	fi
+	cp -f /etc/ssl/*.cnf $HESTIA_BACKUP/conf/openssl/
 
 	# System service configuration files (apache2, nginx, bind9, vsftpd, etc).
 	if [ -n "$WEB_SYSTEM" ]; then
@@ -424,7 +433,6 @@ upgrade_start_backup() {
 		if [ "$FTP_SYSTEM" = "vsftpd" ]; then
 			cp -f /etc/$FTP_SYSTEM.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
 		fi
-
 		if [ "$FTP_SYSTEM" = "proftpd" ]; then
 			cp -f /etc/proftpd/proftpd.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
 		fi
@@ -549,12 +557,12 @@ upgrade_b2_tool() {
 
 upgrade_cloudflare_ip() {
 	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
-		cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
+		cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"
 
 		if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
 			cf_inc="/etc/nginx/conf.d/cloudflare.inc"
 
-			echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
+			echo "[ * ] Updating Cloudflare IP Ranges for NGINX..."
 			echo "# Cloudflare IP Ranges" > $cf_inc
 			echo "" >> $cf_inc
 			echo "# IPv4" >> $cf_inc

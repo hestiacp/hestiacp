@@ -8,7 +8,7 @@ export default function handleListSorting() {
 
 	const toggleButton = document.querySelector('.js-toggle-sorting-menu');
 	const sortingMenu = document.querySelector('.js-sorting-menu');
-	const unitsContainer = document.querySelector('.units');
+	const unitsContainer = document.querySelector('.js-units-container');
 
 	if (!toggleButton || !sortingMenu || !unitsContainer) {
 		return;
@@ -56,7 +56,7 @@ export default function handleListSorting() {
 			faIcon.classList.add(span.classList.contains('up') ? 'fa-arrow-up-a-z' : 'fa-arrow-down-a-z');
 
 			// Sort units and reattach them to the DOM
-			const units = Array.from(document.querySelectorAll('.js-sortable-unit')).sort((a, b) => {
+			const units = Array.from(document.querySelectorAll('.js-unit')).sort((a, b) => {
 				const aAttr = a.getAttribute(`data-${state.sort_par}`);
 				const bAttr = b.getAttribute(`data-${state.sort_par}`);
 

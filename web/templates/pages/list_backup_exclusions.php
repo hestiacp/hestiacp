@@ -24,20 +24,20 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
-	<div class="header table-header">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
-			<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Type") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Value") ?></b></div>
+<div class="container">
+	<div class="units js-units-container">
+		<div class="header units-header">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
+				<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Type") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Value") ?></b></div>
+			</div>
 		</div>
-	</div>
 
-	<div class="container units animate__animated animate__fadeIn">
 		<!-- Begin list of backup exclusions by type -->
 		<?php foreach ($data as $key => $value) { ?>
-			<div class="l-unit header">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
 					<div class="clearfix l-unit__stat-col--left wide-1"><b><?= $key ?></b></div>

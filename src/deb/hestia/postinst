@@ -83,16 +83,16 @@ upgrade_rainloop | tee -a $LOG
 # Upgrade Roundcube if applicable
 upgrade_roundcube | tee -a $LOG
 
-# Upgrade PHP php dependencies
+# Upgrade PHP dependencies
 upgrade_dependencies | tee -a $LOG
 
-# Upgrade Cloudflare IPs if applicable
+# Update Cloudflare IPs if applicable
 upgrade_cloudflare_ip | tee -a $LOG
 
 # Upgrade phpMyAdmin if applicable
 upgrade_phpmyadmin | tee -a $LOG
 
-# Upgrade phpMyAdmin if applicable
+# Upgrade phpPgAdmin if applicable
 upgrade_phppgadmin | tee -a $LOG
 
 # Upgrade blackblaze-cli-took if applicable

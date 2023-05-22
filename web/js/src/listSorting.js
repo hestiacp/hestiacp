@@ -8,7 +8,7 @@ export default function handleListSorting() {
 
 	const toggleButton = document.querySelector('.js-toggle-sorting-menu');
 	const sortingMenu = document.querySelector('.js-sorting-menu');
-	const unitsContainer = document.querySelector('.units');
+	const unitsContainer = document.querySelector('.js-units-container');
 
 	if (!toggleButton || !sortingMenu || !unitsContainer) {
 		return;

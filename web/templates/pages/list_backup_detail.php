@@ -54,7 +54,7 @@
 				if (!empty($key)) {
 					++$i;
 			?>
-			<div class="l-unit animate__animated animate__fadeIn">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= $key ?>">

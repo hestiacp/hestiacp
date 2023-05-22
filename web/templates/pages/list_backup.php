@@ -70,7 +70,7 @@
 				if (!empty($data[$key]['CRON'])) $cron = _('Yes');
 				if (!empty($data[$key]['UDIR'])) $udir = _('Yes');
 			?>
-			<div class="l-unit animate__animated animate__fadeIn">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div>
 						<div class="clearfix l-unit__stat-col--left super-compact">

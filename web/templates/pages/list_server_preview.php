@@ -18,11 +18,10 @@
 				<div class="clearfix l-unit__stat-col--left"><b><?= _("Category") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("Name") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Status") ?></b></div>
-
 			</div>
 		</div>
 		<!-- Start of item element-->
-		<div class="l-unit header animate__animated animate__fadeIn">
+		<div class="l-unit header animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
 					<i class="fas fa-gear icon-blue"></i>

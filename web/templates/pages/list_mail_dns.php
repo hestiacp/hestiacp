@@ -29,7 +29,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 		</div>
 
-		<div class="l-unit animate__animated animate__fadeIn">
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left wide-3">
 					<input type="text" class="form-control" style="width:260px;" value="mail.<?= htmlspecialchars($_GET["domain"]) ?>">
@@ -43,7 +43,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 		</div>
 		<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
-			<div class="l-unit animate__animated animate__fadeIn">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left wide-3">
 						<input type="text" class="form-control" style="width:260px;" value="<?= $v_webmail_alias ?>.<?= htmlspecialchars($_GET["domain"]) ?>">
@@ -57,7 +57,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 			</div>
 		<?php } ?>
-		<div class="l-unit animate__animated animate__fadeIn">
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left wide-3">
 					<input type="text" class="form-control" style="width:260px;" value="<?= htmlspecialchars($_GET["domain"]) ?>">
@@ -70,7 +70,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 			</div>
 		</div>
-		<div class="l-unit animate__animated animate__fadeIn">
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left wide-3">
 					<input type="text" class="form-control" style="width:260px;" value="<?= htmlspecialchars($_GET["domain"]) ?>">
@@ -84,7 +84,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 			</div>
 		</div>
-		<div class="l-unit animate__animated animate__fadeIn">
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left wide-3">
 					<input type="text" class="form-control" style="width:260px;" value="_dmarc">
@@ -98,7 +98,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 		</div>
 		<?php foreach ($dkim as $key => $value) { ?>
-			<div class="l-unit animate__animated animate__fadeIn">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left wide-3">
 						<input type="text" class="form-control" style="width:260px;" value="<?= htmlspecialchars($key) ?>">

@@ -96,7 +96,7 @@
 					$level_icon = 'fa-circle-xmark icon-red';
 				}
 			?>
-			<div class="l-unit header animate__animated animate__fadeIn">
+			<div class="l-unit header animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
 						<i class="fas <?= $level_icon ?>"></i>

@@ -237,7 +237,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:N:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;      # Apache
 		w) phpfpm=$OPTARG ;;      # PHP-FPM
@@ -1927,7 +1927,7 @@ if [ "$nodejs" = "yes" ]; then
 	npm install pm2 -g > /dev/null 2>&1
 	if [ ! -f ~/.nvm/nvm.sh ]; then
 		# Get the latest nvm release
-		wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+		wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash > /dev/null 2>&1
 
 		mv ~/.nvm /opt/nvm
 		chmod -R 777 /opt/nvm
@@ -1935,7 +1935,7 @@ if [ "$nodejs" = "yes" ]; then
 		#update bashrc file
 		echo 'export NVM_DIR="/opt/nvm"
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> /root/.bashrc
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> /root/.bashrc > /dev/null 2>&1
 
 		source /opt/nvm/nvm.sh
 	fi

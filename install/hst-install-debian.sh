@@ -594,7 +594,7 @@ if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
 fi
 # NodeJS
 if [ "$nodejs" = 'yes' ]; then
-	echo '   - NodeJS'
+	echo -n '   - NodeJS'
 fi
 
 echo -e "\n"

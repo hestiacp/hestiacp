@@ -582,7 +582,7 @@ if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
 	echo -n ' + Fail2Ban Access Monitor'
 fi
 if [ "$nodejs" = 'yes' ]; then
-	echo '   - NodeJS'
+	echo -n '   - NodeJS'
 fi
 
 echo -e "\n"

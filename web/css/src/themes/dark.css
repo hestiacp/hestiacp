@@ -819,7 +819,9 @@ strong {
    ========================================================================== */
 
 .spinner-overlay {
-	background-color: rgb(0 0 0 / 50%);
+	& .fas {
+		box-shadow: 0 8px 25px rgb(0 0 0 / 90%);
+	}
 }
 
 /* Badge component

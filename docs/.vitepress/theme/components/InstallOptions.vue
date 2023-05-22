@@ -292,7 +292,7 @@ export default {
 	padding: 0;
 
 	&::backdrop {
-		background-color: rgb(0 0 0 / 60%);
+		background-color: rgb(0 0 0 / 50%);
 	}
 }
 .modal-close {

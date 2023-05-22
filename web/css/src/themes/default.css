@@ -2397,17 +2397,21 @@
 	justify-content: center;
 	align-items: center;
 	padding: 50px;
-	background-color: rgb(0 0 0 / 10%);
+	color: #fff;
+	background-color: rgb(0 0 0 / 50%);
 	font-size: 50px;
 	z-index: 4;
 	visibility: hidden;
 	opacity: 0;
-	transition: opacity 0.2s ease, visibility 0s 0.2s;
 
 	&.active {
 		visibility: visible;
 		opacity: 1;
-		transition: opacity 0.2s ease, visibility 0s 0s;
+	}
+
+	& .fas {
+		border-radius: 50%;
+		box-shadow: 0 8px 40px 0 rgb(0 0 0 / 35%);
 	}
 }
 

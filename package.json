@@ -52,7 +52,7 @@
 		"stylelint-config-standard": "^33.0.0",
 		"typescript": "^5.0.4",
 		"vitepress": "1.0.0-alpha.76",
-		"vue": "^3.3.2"
+		"vue": "^3.3.4"
 	},
 	"browserslist": [
 		"defaults"

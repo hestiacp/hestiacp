@@ -42,7 +42,7 @@
 		"postcss": "^8.4.23",
 		"postcss-import": "^15.1.0",
 		"postcss-path-replace": "^1.0.4",
-		"postcss-preset-env": "^8.3.2",
+		"postcss-preset-env": "^8.4.1",
 		"postcss-size": "^4.0.1",
 		"prettier": "^2.8.8",
 		"prettier-plugin-nginx": "^1.0.3",

@@ -29,7 +29,7 @@ export function enterFocused() {
 	}
 
 	const activeUnit = document.querySelector(
-		'.units .l-unit.focus .actions-panel__col.actions-panel__edit a'
+		'.js-units-container .l-unit.focus .actions-panel__col.actions-panel__edit a'
 	);
 	if (activeUnit) {
 		location.href = activeUnit.getAttribute('href');
@@ -78,9 +78,9 @@ function moveFocusLeftRight(direction) {
 }
 
 function moveFocusUpDown(direction) {
-	const unitSelector = '.units .l-unit:not(.header)';
+	const unitSelector = '.js-units-container .l-unit:not(.header)';
 	const units = Array.from(document.querySelectorAll(unitSelector));
-	const currentFocused = document.querySelector('.units .l-unit.focus');
+	const currentFocused = document.querySelector('.js-units-container .l-unit.focus');
 	let index = units.indexOf(currentFocused);
 
 	if (index === -1) {

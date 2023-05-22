@@ -25,7 +25,7 @@
 <!-- End toolbar -->
 
 <div class="container">
-	<div class="units">
+	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
 				<div>
@@ -54,7 +54,7 @@
 					$upd_status = 'outdated';
 				}
 			?>
-			<div class="l-unit<?php if ($status == 'suspended') echo ' l-unit--outdated';?> animate__animated animate__fadeIn">
+			<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--outdated'; ?> animate__animated animate__fadeIn js-unit">
 				<div class="l-unit-toolbar clearfix">
 					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 					</div>

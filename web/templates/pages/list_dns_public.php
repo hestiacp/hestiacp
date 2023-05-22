@@ -67,7 +67,7 @@
 <!-- End toolbar -->
 
 <div class="container">
-	<div class="units">
+	<div class="units js-units-container">
 		<div class="l-unit animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("DNSKEY Record") ?></b></div>

@@ -1944,7 +1944,7 @@ fi
 #----------------------------------------------------------#
 #                     Install NVM                          #
 #----------------------------------------------------------#
-if [ -f "$nodejs" = "yes" ]; then
+if [ "$nodejs" = "yes" ]; then
 	# Install pm2
 	npm install pm2 -g > /dev/null 2>&1
 	if [ ! -f ~/.nvm/nvm.sh ]; then

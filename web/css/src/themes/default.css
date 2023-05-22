@@ -1437,6 +1437,13 @@
    ========================================================================== */
 
 .stats {
+	padding-left: 20px;
+	padding-right: 20px;
+
+	@media (--viewport-large) {
+		padding-left: 0;
+		padding-right: 0;
+	}
 }
 
 .stats-item {

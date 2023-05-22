@@ -20,7 +20,7 @@
 <!-- End toolbar -->
 
 <div class="container">
-	<div class="units">
+	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("SSH ID") ?></b></div>
@@ -37,7 +37,7 @@
 				foreach ($data as $key => $value) {
 				++$i;
 			?>
-			<div class="l-unit header animate__animated animate__fadeIn" style="<?php if ($data[$key]['ID'] === 'filemanager.ssh.key') { echo 'display: none;'; } ?>">
+			<div class="l-unit header animate__animated animate__fadeIn js-unit" style="<?php if ($data[$key]['ID'] === 'filemanager.ssh.key') { echo 'display: none;'; } ?>">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left wide-3"><b><?= htmlspecialchars($data[$key]["ID"]) ?></b></div>
 					<div class="clearfix l-unit__stat-col--left text-left compact-2">

@@ -40,7 +40,7 @@
 <!-- End toolbar -->
 
 <div class="container">
-	<div class="units">
+	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left u-text-center">
@@ -66,14 +66,14 @@
 					}
 				}
 				if ($data[$key]['STATUS'] == 'success')	{
-						$status_icon = 'fa-circle-check icon-green';
-						$status_title = _('Success');
+					$status_icon = 'fa-circle-check icon-green';
+					$status_title = _('Success');
 				} else {
-						$status_icon = 'fa-circle-minus icon-red';
-						$status_title = _('Failed');
+					$status_icon = 'fa-circle-minus icon-red';
+					$status_title = _('Failed');
 				}
 			?>
-			<div class="l-unit header animate__animated animate__fadeIn">
+			<div class="l-unit header animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left u-text-center">
 						<i class="fas <?= $status_icon ?> u-mr5" title="<?= $status_title ?>"></i>

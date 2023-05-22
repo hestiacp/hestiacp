@@ -65,6 +65,7 @@ function setup() {
 
 @test "Web Config test" {
     for template in $(v-list-web-templates plain); do
+		chmod -x /usr/local/hestia/data/templates/web/nginx/php-fpm/*.sh
         run v-change-web-domain-tpl $user testhestiacp.com $template
         assert_success
         refute_output
@@ -73,6 +74,7 @@ function setup() {
 
 @test "Proxy Config test" {
     if [ "$PROXY_SYSTEM" = "nginx" ]; then
+		chmod -x /usr/local/hestia/data/templates/web/nginx/*.sh
         for template in $(v-list-web-templates-proxy plain); do
             run v-change-web-domain-proxy-tpl $user testhestiacp.com $template
             assert_success

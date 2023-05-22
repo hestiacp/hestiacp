@@ -653,9 +653,8 @@ if (!empty($_POST["save"])) {
 	// Update phpMyAdmin url
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST["v_mysql_url"] != $_SESSION["DB_PMA_ALIAS"]) {
-			$v_mysql_url = $_POST["v_mysql_url"] ?? "";
 			exec(
-				HESTIA_CMD . "v-change-sys-db-alias pma " . quoteshellarg($v_mysql_url),
+				HESTIA_CMD . "v-change-sys-db-alias pma " . quoteshellarg($_POST["v_mysql_url"]),
 				$output,
 				$return_var,
 			);

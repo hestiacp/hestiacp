@@ -592,9 +592,10 @@ fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
 	echo -n ' + Fail2Ban Access Monitor'
 fi
+echo ''
 # NodeJS
 if [ "$nodejs" = 'yes' ]; then
-	echo -n '   - NodeJS'
+	echo '   - NodeJS'
 fi
 
 echo -e "\n"
@@ -1935,7 +1936,7 @@ if [ "$nodejs" = "yes" ]; then
 		#update bashrc file
 		echo 'export NVM_DIR="/opt/nvm"
 	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> /root/.bashrc > /dev/null 2>&1
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> /root/.bashrc
 
 		source /opt/nvm/nvm.sh
 	fi

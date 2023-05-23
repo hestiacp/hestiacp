@@ -92,6 +92,11 @@ if [ "$WEBMAIL" == "roundcube" ]; then
 	if [ "$WEB_SYSTEM" = "nginx" ]; then
 		WEBMAIL_TEMPLATE="web_system"
 	fi
+elif [ "$WEBMAIL" == "snappymail" ]; then
+	WEBMAIL_TEMPLATE="snappymail"
+	if [ -n "$PROXY_SYSTEM" ]; then
+		PROXY_TEMPLATE="default_snappymail"
+	fi
 elif [ "$WEBMAIL" == "rainloop" ]; then
 	WEBMAIL_TEMPLATE="rainloop"
 	if [ -n "$PROXY_SYSTEM" ]; then

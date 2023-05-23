@@ -49,17 +49,17 @@ If you are unable to receive emails, make sure you have setup your DNS properly.
 
 When you are done you can check the configuration via [MXToolBox](https://mxtoolbox.com/MXLookup.aspx).
 
-## How do I install Rainloop?
+## How do I install SnappyMail?
 
-You can install Rainloop by running the following command:
+You can install SnappyMail by running the following command:
 
 ```bash
-v-add-sys-rainloop
+v-add-sys-snappymail
 ```
 
-## Can I login into the backend of Rainloop
+## Can I login into the backend of SnappyMail
 
-In the root folder, there is an file called `.rainloop` containing the username and password:
+In the root folder, there is a file called `.snappymail` containing the username and password:
 
 ```bash
 Username: admin_f0e5a5aa
@@ -97,9 +97,9 @@ During Hestia’s installation, use the `--sieve` flag. If Hestia is already ins
 
 Open port 4190 in the firewall. [Read the firewall documentation](./firewall.md).
 
-## How can I enable ManageSieve for Rainloop?
+## How can I enable ManageSieve for Snappymail?
 
-Edit `/etc/rainloop/data/_data_/_default_/domains/default.ini` and modify the following settings:
+Edit `/etc/snappymail/data/_data_/_default_/domains/default.ini` and modify the following settings:
 
 ```bash
 sieve_use = On

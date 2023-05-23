@@ -1,12 +1,15 @@
 server {
-listen      %ip%:%web_port%;
+listen      %ip%:%web_ssl_port% ssl http2;
 server_name %domain_idn% %alias_idn%;
-root        /var/lib/rainloop;
+root        /var/lib/snappymail;
 index       index.php index.html index.htm;
 access_log /var/log/nginx/domains/%domain%.log combined;
 error_log  /var/log/nginx/domains/%domain%.error.log error;
 
-include %home%/%user%/conf/mail/%root_domain%/nginx.forcessl.conf*;
+ssl_certificate     %ssl_pem%;
+ssl_certificate_key %ssl_key%;
+ssl_stapling on;
+ssl_stapling_verify on;
 
 location ~ /\.(?!well-known\/) {
     deny all;
@@ -42,5 +45,7 @@ location /error/ {
     alias /var/www/document_errors/;
 }
 
-include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;
+proxy_hide_header Upgrade;
+
+include %home%/%user%/conf/mail/%root_domain%/%web_system%.ssl.conf_*;
 }

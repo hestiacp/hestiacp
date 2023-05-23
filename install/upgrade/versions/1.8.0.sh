@@ -25,7 +25,13 @@ upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 	if ! grep -qw "^extra_groups = mail$" /etc/dovecot/conf.d/10-master.conf 2> /dev/null; then
-		sed -i "s/^service auth {/service auth {\n  extra_groups = mail\n/g" /etc/dovecot/conf.d/10-master.conf
+		sed -i "s/^service auth {/service auth {\n  extra_groups = mail/g" /etc/dovecot/conf.d/10-master.conf
+	fi
+
+	if [ -f /etc/dovecot/conf.d/90-sieve.conf ]; then
+		if ! grep -qw "^sieve_vacation_send_from_recipient$" /etc/dovecot/conf.d/90-sieve.conf 2> /dev/null; then
+			sed -i "s/^}/  # This setting determines whether vacation messages are sent with the SMTP MAIL FROM envelope address set to the recipient address of the Sieve script owner.\n  sieve_vacation_send_from_recipient = yes\n}/g" /etc/dovecot/conf.d/90-sieve.conf
+		fi
 	fi
 fi
 

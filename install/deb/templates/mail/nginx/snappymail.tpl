@@ -2,7 +2,7 @@ server {
 %<i4    listen      %web_ipv4%:%web_port%;i4>%
 %<i6    listen      %web_ipv6%:%web_port%;i6>%
 server_name %domain_idn% %alias_idn%;
-root        /var/lib/rainloop;
+root        /var/lib/snappymail;
 index       index.php index.html index.htm;
 access_log /var/log/nginx/domains/%domain%.log combined;
 error_log  /var/log/nginx/domains/%domain%.error.log error;

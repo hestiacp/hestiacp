@@ -11,7 +11,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
+ip="$1"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -42,7 +42,7 @@ check_hestia_demo_mode
 
 # Creating user_list
 if [ -z "$ip" ]; then
-	ip_list=$(ls $HESTIA/data/ips)
+	ip_list="$(ls $HESTIA/data/ips/)"
 else
 	ip_list="$ip"
 fi
@@ -51,10 +51,9 @@ fi
 for ip in $ip_list; do
 
 	# Calculate usage
-	ip_usage=$(grep -H $ip $HESTIA/data/users/*/web.conf)
-	web_domains=$(echo "$ip_usage" | sed '/^$/d' | wc -l)
-	sys_users=$(echo "$ip_usage" | cut -f7 -d/ | sort -u \
-		| tr '\n' ',' | sed "s/,$//g")
+	ip_usage="$(grep -H "$ip" $HESTIA/data/users/*/web.conf)"
+	web_domains="$(echo "$ip_usage" | sed '/^$/d' | wc -l)"
+	sys_users="$(echo "$ip_usage" | cut -f7 -d/ | sort -u | tr '\n' ',' | sed "s/,$//g")"
 
 	# Update counters
 	update_ip_value '$U_WEB_DOMAINS' "$web_domains"

@@ -3,7 +3,7 @@
 # options: USER DOMAIN [WEBMAIL] [RESTART] [QUIET]
 #
 # example: v-add-sys-webmail user domain.com
-# example: v-add-sys-webmail user domain.com rainloop
+# example: v-add-sys-webmail user domain.com snappymail
 # example: v-add-sys-webmail user domain.com roundcube
 #
 # This function enables webmail client for a mail domain.

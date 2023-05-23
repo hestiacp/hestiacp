@@ -82,6 +82,27 @@ strong {
 	box-shadow: none;
 }
 
+/* Units table
+   ========================================================================== */
+
+.units-table-row {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
+	}
+}
+
+.units-table-cell {
+	& a {
+		color: #5f7eb3;
+
+		&:hover {
+			color: #5f7eb3;
+		}
+	}
+}
+
 /* Statistics
    ========================================================================== */
 
@@ -90,6 +111,15 @@ strong {
 		&:hover {
 			box-shadow: none;
 		}
+	}
+}
+
+/* Spinner
+   ========================================================================== */
+
+.spinner-overlay {
+	& .fas {
+		box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
 	}
 }
 

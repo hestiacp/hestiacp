@@ -45,6 +45,13 @@ action   = hestia[name=WEB]
 logpath  = /var/log/roundcube/errors.log
 maxretry = 5
 
+[phpmyadmin-auth]
+enabled  = true
+filter   = phpmyadmin-syslog
+action   = hestia[name=WEB]
+logpath  = /var/log/auth.log
+maxretry = 5
+
 [recidive]
 enabled  = true
 filter   = recidive

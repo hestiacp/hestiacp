@@ -32,17 +32,27 @@ set -e
 . /etc/profile.d/hestia.sh
 
 adapt_nginx_config() {
-	ipv4_string="$(ip -4 addr show scope global | sed -ne '/^[ \t]*inet[6]*/p')"
-	ipv6_string="$(ip -6 addr show scope global | sed -ne '/^[ \t]*inet[6]*/p')"
-	if [ -n "$ipv4_string" ]; then
-		sed -i 's/#IPV4\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' ${NGINX_CONF}
+	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
+	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
+
+	for nic in $physical_nics; do
+		if [ -z "$ipv4_scope_global" ]; then
+			ipv4_scope_global="$(ip -4 -d -j addr show "$nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end')"
+		fi
+		if [ -z "$ipv6_scope_global" ]; then
+			ipv6_scope_global="$(ip -6 -d -j addr show "$nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end')"
+		fi
+	done
+
+	if [ -n "$ipv4_scope_global" ]; then
+		sed -i 's/#IPV4\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"
 	else
-		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#IPV4\1/' ${NGINX_CONF}
+		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#IPV4\1/' "$NGINX_CONF"
 	fi
-	if [ -n "$ipv6_string" ]; then
-		sed -i 's/#IPV6\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' ${NGINX_CONF}
+	if [ -n "$ipv6_scope_global" ]; then
+		sed -i 's/#IPV6\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"
 	else
-		sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#IPV6\1/' ${NGINX_CONF}
+		sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#IPV6\1/' "$NGINX_CONF"
 	fi
 }
 

@@ -1,18 +1,18 @@
 #!/bin/bash
-# info: list user ips
+# info: list user IPs
 # options: USER [FORMAT]
 #
 # example: v-list-user-ips admin
 #
-# This function for obtaining the list of available ip addresses.
+# This function for obtaining the list of available IP addresses.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-user=$1
-format=${2-shell}
+user="$1"
+format="${2-shell}"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -25,7 +25,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 # JSON list function
 json_list() {
 	echo '{'
-	ip_count=$(echo "$ips" | wc -l)
+	ip_count="$(echo "$ips" | wc -l)"
 	i=1
 	for IP in $ips; do
 		source_conf "$HESTIA/data/ips/$IP"
@@ -92,12 +92,12 @@ is_object_valid 'user' 'USER' "$user"
 
 # Defining fileds to select
 owner='admin'
-owner_ips=$(grep -A 1 -H "OWNER='$owner'" $HESTIA/data/ips/*)
-owner_ips=$(echo "$owner_ips" | grep "STATUS='shared'")
-owner_ips=$(echo "$owner_ips" | cut -f 7 -d / | cut -f 1 -d -)
-user_ips=$(grep -H "OWNER='$user'" $HESTIA/data/ips/*)
-user_ips=$(echo "$user_ips" | cut -f 7 -d / | cut -f 1 -d :)
-ips=$(echo -e "$user_ips\n$owner_ips" | sort -u | sed "/^$/d")
+owner_ips="$(grep -A 1 -H "OWNER='$owner'" $HESTIA/data/ips/*)"
+owner_ips="$(echo "$owner_ips" | grep "STATUS='shared'")"
+owner_ips="$(echo "$owner_ips" | cut -f 7 -d / | cut -f 1 -d -)"
+user_ips="$(grep -H "OWNER='$user'" $HESTIA/data/ips/*)"
+user_ips="$(echo "$user_ips" | cut -f 7 -d / | cut -f 1 -d :)"
+ips="$(echo -e "$user_ips\n$owner_ips" | sort -u | sed "/^$/d")"
 fields='$IP $OWNER $STATUS $NAME $NAT'
 
 # Listing data

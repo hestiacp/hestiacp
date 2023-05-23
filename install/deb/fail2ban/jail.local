@@ -45,6 +45,13 @@ action   = hestia[name=WEB]
 logpath  = /var/log/roundcube/errors.log
 maxretry = 5
 
+[phpmyadmin-auth]
+enabled  = true
+filter   = phpmyadmin-syslog
+action   = hestia[name=WEB]
+logpath  = /var/log/auth.log
+maxretry = 5
+
 [recidive]
 enabled  = true
 filter   = recidive
@@ -53,13 +60,6 @@ logpath  = /var/log/fail2ban.log
 maxretry = 5
 findtime = 86400
 bantime  = 864000
-
-[phpmyadmin]
-enabled  = true
-filter   = phpmyadmin-syslog
-action   = hestia[name=WEB]
-logpath  = /var/log/auth.log
-maxretry = 5
 
 #Uncomment and add your IPs and or domains to the Whitelist
 #[DEFAULT]

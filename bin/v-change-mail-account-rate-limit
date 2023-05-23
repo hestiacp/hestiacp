@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: change mail domain rate limit
+# info: change mail account rate limit
 # options: USER DOMAIN ACCOUNT RATE
 #
-# example: v-change-mail-domain-quota admin mydomain.tld user01 100
+# example: v-change-mail-account-rate-limit admin mydomain.tld user01 100
 #
 # This function changes email account rate limit. Use system to use domain or "server" setting
 

@@ -2,7 +2,7 @@
 # info: list user backup
 # options: USER BACKUP [FORMAT]
 #
-# example: v-list-user-backups admin admin.2019-05-19_03-31-30.tar
+# example: v-list-user-backup admin admin.2019-05-19_03-31-30.tar
 #
 # This function of obtaining the list of backup parameters. This call, just as
 # all v_list_* calls, supports 3 formats - json, shell and plain.

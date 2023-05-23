@@ -1,40 +1,38 @@
+%define debug_package %{nil}
 %global _hardened_build 1
 
 Name:           hestia
-Version:        1.8.0
-Release:        1%~alpha{dist}
+Version:        1.8.0~alpha
+Release:        1%{dist}
 Summary:        Hestia Control Panel
 Group:          System Environment/Base
 License:        GPLv3
 URL:            https://www.hestiacp.com
+Source0:        hestia-%{version}.tar.gz
+Source1:        hestia.service
 Vendor:         hestiacp.com
 Requires:       redhat-release >= 8
-Requires:       bash
-Requires:       chkconfig
-Requires:       gawk
-Requires:       sed
-Requires:       acl
-Requires:       sysstat
-Requires:       (setpriv or util-linux)
-Requires:       zstd
-Requires:       jq
+Requires:       bash, chkconfig, gawk, sed, acl, sysstat, (setpriv or util-linux), zstd, jq
 Conflicts:      vesta
 Provides:       hestia = %{version}
-BuildRequires:  systemd-rpm-macros
+BuildRequires:  systemd
 
 %description
 This package contains the Hestia Control Panel.
 
 %prep
+%autosetup -p1 -n hestiacp
 
 %build
 
 %install
-cp -rfa %{sourcedir}/usr %{buildroot}
-mkdir -p %{buildroot}%{_unitdir}
-%{__install} -m644 %{sourcedir}/hestia.service %{buildroot}%{_unitdir}/hestia.service
+%{__rm} -rf $RPM_BUILD_ROOT
+mkdir -p %{buildroot}%{_unitdir} %{buildroot}/usr/local/hestia
+cp -R %{_builddir}/hestiacp/* %{buildroot}/usr/local/hestia/
+%{__install} -m644 %{SOURCE1} %{buildroot}%{_unitdir}/hestia.service
 
 %clean
+%{__rm} -rf $RPM_BUILD_ROOT
 
 %pre
 # Run triggers only on updates
@@ -110,11 +108,14 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Upgrade PHPMailer if applicable
     upgrade_phpmailer | tee -a $LOG
 
+    # Update Cloudflare IPs if applicable
+    upgrade_cloudflare_ip | tee -a $LOG
+
     # Upgrade phpMyAdmin if applicable
     upgrade_phpmyadmin | tee -a $LOG
 
-	# Upgrade phpMyAdmin if applicable
-	upgrade_phppgadmin | tee -a $LOG
+    # Upgrade phpPgAdmin if applicable
+    upgrade_phppgadmin | tee -a $LOG
 
     # Upgrade blackblaze-cli-took if applicable
     upgrade_b2_tool | tee -a $LOG
@@ -147,5 +148,8 @@ fi
 %{_unitdir}/hestia.service
 
 %changelog
+* Sun May 14 2023 Istiak Ferdous <hello@istiak.com> - 1.8.0-1
+- HestiaCP RHEL 9 support
+
 * Thu Jun 25 2020 Ernesto Nicolás Carrea <equistango@gmail.com> - 1.2.0
 - HestiaCP CentOS 8 support

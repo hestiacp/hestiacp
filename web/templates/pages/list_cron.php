@@ -19,16 +19,20 @@
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
-				<button class="toolbar-sorting-toggle" type="button" title="<?= _("Sort items") ?>">
+				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
 					<b>
-						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
+						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Command'); } else { $label = _('Date'); } ?>
 						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn u-hidden">
-					<li entity="sort-name"><span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
-					<li entity="sort-date" sort_as_int="1"><span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span></li>
+				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+					<li data-entity="sort-name">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-date" data-sort-as-int="1">
+						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
 				</ul>
 				<?php if ($read_only !== "true") { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/cron/" method="post">
@@ -61,24 +65,24 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
-	<div class="header table-header">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all" title="<?= _("Select all") ?>" <?= $display_mode ?>>
-			</div>
-			<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Command") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-2 u-text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Minute") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Hour") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Day") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Month") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><b><?= _("Day of Week") ?></b></div>
-		</div>
-	</div>
+<div class="container">
 
-	<!-- Begin cron job list item loop -->
-	<?php
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+			</div>
+			<div class="units-table-cell"><?= _("Command") ?></div>
+			<div class="units-table-cell"></div>
+			<div class="units-table-cell"><?= _("Minute") ?></div>
+			<div class="units-table-cell"><?= _("Hour") ?></div>
+			<div class="units-table-cell"><?= _("Day") ?></div>
+			<div class="units-table-cell"><?= _("Month") ?></div>
+			<div class="units-table-cell"><?= _("Day of Week") ?></div>
+		</div>
+
+		<!-- Begin cron job list item loop -->
+		<?php
 		foreach ($data as $key => $value) {
 			++$i;
 			if ($data[$key]['SUSPENDED'] == 'yes') {
@@ -86,72 +90,102 @@
 				$spnd_action = 'unsuspend';
 				$spnd_action_title = _('Unsuspend');
 				$spnd_icon = 'fa-play';
-				$spnd_confirmation = _('Are you sure you want to unsuspend the cron job?') ;
+				$spnd_icon_class = 'icon-green';
+				$spnd_confirmation = _('Are you sure you want to unsuspend this cron job?') ;
 			} else {
 				$status = 'active';
 				$spnd_action = 'suspend';
 				$spnd_action_title = _('Suspend');
 				$spnd_icon = 'fa-pause';
-				$spnd_confirmation = _('Are you sure you want to suspend the cron job?') ;
+				$spnd_icon_class = 'icon-highlight';
+				$spnd_confirmation = _('Are you sure you want to suspend this cron job?') ;
 			}
 		?>
-		<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn" v_unit_id="<?=$key?>" v_section="cron"
-			sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>" sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
-			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input id="check<?= $i ?>" class="ch-toggle" type="checkbox" title="<?= _("Select") ?>" name="job[]" value="<?= $key ?>" <?= $display_mode ?>>
-				</div>
-				<div class="clearfix l-unit__stat-col--left wide-5 truncate">
-					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
-						<b><?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?></b>
-					<?php } else { ?>
-						<b><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>: <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>"><?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?></a></b>
-					<?php } ?>
-				</div>
-				<!-- START QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact-2 u-text-right">
-					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
-						<div class="actions-panel clearfix">
-							<?php if ($read_only === "true") { ?>
-								<!-- Restrict other administrators from editing, deleting, or suspending 'admin' user cron jobs -->
-								&nbsp;
-							<?php } else { ?>
-								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-									<div class="actions-panel__col actions-panel__download shortcut-enter" data-key-action="href"><a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
-								<?php } ?>
-								<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
-									<a
-										class="data-controls js-confirm-action"
-										href="/<?= $spnd_action ?>/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
-										data-confirm-title="<?= $spnd_action_title ?>"
-										data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-									>
-										<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
-									</a>
-								</div>
-								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
-									<a
-										class="data-controls js-confirm-action"
-										href="/delete/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
-										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_("Are you sure you want to delete the cron job?"), $key) ?>"
-									>
-										<i class="fas fa-trash icon-red icon-dim"></i>
-									</a>
-								</div>
-							<?php } ?>
-						</div>
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
+				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
+				data-sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
+				<div class="units-table-cell">
+					<div>
+						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="job[]" value="<?= $key ?>" <?= $display_mode ?>>
+						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
 				</div>
-				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["MIN"] ?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["HOUR"] ?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["DAY"] ?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["MONTH"] ?></div>
-				<div class="clearfix l-unit__stat-col--left compact-3 u-text-center"><?= $data[$key]["WDAY"] ?></div>
+				<div class="units-table-cell u-text-bold">
+					<span class="u-hide-desktop">Command:</span>
+					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+						<?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
+					<?php } else { ?>
+						<a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>: <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
+							<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>
+						</a>
+					<?php } ?>
+				</div>
+				<div class="units-table-cell">
+					<?php if (!$read_only) { ?>
+						<ul class="units-table-row-actions">
+							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
+								<li class="units-table-row-action shortcut-enter" data-key-action="href">
+									<a
+										class="units-table-row-action-link"
+										href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>"
+										title="<?= _("Edit") ?>"
+									>
+										<i class="fas fa-pencil icon-orange"></i>
+										<span class="u-hide-desktop"><?= _("Edit") ?></span>
+									</a>
+								</li>
+							<?php } ?>
+							<li class="units-table-row-action shortcut-s" data-key-action="js">
+								<a
+									class="units-table-row-action-link data-controls js-confirm-action"
+									href="/<?= $spnd_action ?>/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
+									title="<?= $spnd_action_title ?>"
+									data-confirm-title="<?= $spnd_action_title ?>"
+									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
+								>
+									<i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
+									<span class="u-hide-desktop"><?= $spnd_action_title ?></span>
+								</a>
+							</li>
+							<li class="units-table-row-action shortcut-delete" data-key-action="js">
+								<a
+									class="units-table-row-action-link data-controls js-confirm-action"
+									href="/delete/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
+									title="<?= _("Delete") ?>"
+									data-confirm-title="<?= _("Delete") ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete this cron job?"), $key) ?>"
+								>
+									<i class="fas fa-trash icon-red"></i>
+									<span class="u-hide-desktop"><?= _("Delete") ?></span>
+								</a>
+							</li>
+						</ul>
+					<?php } ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Minute") ?>:</span>
+					<?= $data[$key]["MIN"] ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Hour") ?>:</span>
+					<?= $data[$key]["HOUR"] ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Day") ?>:</span>
+					<?= $data[$key]["DAY"] ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Month") ?>:</span>
+					<?= $data[$key]["MONTH"] ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Day of Week") ?>:</span>
+					<?= $data[$key]["WDAY"] ?>
+				</div>
 			</div>
-		</div>
-	<?php } ?>
+		<?php } ?>
+	</div>
+
 </div>
 
 <footer class="app-footer">

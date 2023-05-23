@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: add mail domain reject spam
+# info: add mail domain reject spam support
 # options: USER DOMAIN
 # labels: mail
 #
-# example: v-add-mail-domain-antivirus admin mydomain.tld
+# example: v-add-mail-domain-reject admin mydomain.tld
 #
-# The function enables clamav scan for incoming emails.
+# The function enables spam rejection for incoming emails.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

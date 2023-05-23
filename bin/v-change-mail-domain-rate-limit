@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: change mail account rate limit
-# options: USER DOMAIN ACCOUNT RATE
+# info: change mail domain rate limit
+# options: USER DOMAIN RATE
 #
-# example: v-change-mail-account-quota admin mydomain.tld user01 100
+# example: v-change-mail-domain-rate-limit admin mydomain.tld 100
 #
-# This function changes email account rate limit for the domain. account specific setting will overwrite domain setting!
+# This function changes email account rate limit for the domain. Account specific setting will overwrite domain setting!
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

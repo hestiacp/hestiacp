@@ -29,6 +29,13 @@ if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 	fi
 fi
 
+if [ "$MAIL_SYSTEM" = "exim4" ]; then
+	echo "[ * ] Disable SMTPUTF8 for Exim for now"
+	if grep -qw "^smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template 2> /dev/null; then
+		sed -i "/^domainlist local_domains = dsearch;\/etc\/exim4\/domains\/i smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template
+	fi
+fi
+
 # Apply the update for existing users to enable the "Enhanced and Optimized TLS" feature
 echo '[ * ] Enable the "Enhanced and Optimized TLS" feature...'
 

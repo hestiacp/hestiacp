@@ -15,6 +15,7 @@ add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
 
+smtputf8_advertise_hosts =
 domainlist local_domains = dsearch;/etc/exim4/domains/
 domainlist relay_to_domains = dsearch;/etc/exim4/domains/
 hostlist relay_from_hosts = 127.0.0.1

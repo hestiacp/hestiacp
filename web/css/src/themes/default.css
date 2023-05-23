@@ -867,7 +867,12 @@
 
 		& .units-table-cell {
 			font-weight: bold;
-			padding: 15px;
+			padding: 14px 15px;
+
+			/* Checkbox cell */
+			&:nth-child(1) {
+				line-height: 1.1;
+			}
 		}
 	}
 }
@@ -962,11 +967,18 @@
 		display: table-cell;
 		padding: 10px 15px;
 
+		/* Checkbox cell */
+		&:nth-child(1) {
+			vertical-align: bottom;
+		}
+
+		/* Row heading cell */
 		&:nth-child(2) {
 			font-size: 0.8rem;
 		}
 
-		&:not(:nth-child(2)) {
+		/* Metadata cells */
+		&:not(:nth-child(1), :nth-child(2)) {
 			text-align: center;
 		}
 	}
@@ -974,6 +986,7 @@
 
 .units-table-row-actions {
 	display: flex;
+	flex-wrap: wrap;
 	padding-top: 5px;
 	padding-bottom: 5px;
 

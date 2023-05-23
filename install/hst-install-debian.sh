@@ -47,7 +47,7 @@ software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-util
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog spamassassin sudo sysstat unrar-free unzip util-linux vim-common vsftpd whois zip zstd"
+  proftpd-basic quota rrdtool rsyslog spamassassin sudo sysstat unrar-free unzip util-linux vim-common vsftpd whois zip zstd nodejs"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget"
 
@@ -75,6 +75,7 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
+  -N, --nodejs            Install NodeJS        [yes|no|  default: yes
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
@@ -219,6 +220,7 @@ for arg; do
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
 		--interactive) args="${args}-y " ;;
+		--nodejs) args="${args}-N " ;;
 		--api) args="${args}-d " ;;
 		--hostname) args="${args}-s " ;;
 		--email) args="${args}-e " ;;
@@ -235,7 +237,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:N:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;      # Apache
 		w) phpfpm=$OPTARG ;;      # PHP-FPM
@@ -257,6 +259,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
 		r) port=$OPTARG ;;        # Backend Port
 		l) lang=$OPTARG ;;        # Language
 		d) api=$OPTARG ;;         # Activate API
+		N) nodejs=$OPTARG ;;      # NodeJS
 		y) interactive=$OPTARG ;; # Interactive install
 		s) servername=$OPTARG ;;  # Hostname
 		e) email=$OPTARG ;;       # Admin email
@@ -297,6 +300,7 @@ set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
+set_default_value 'nodejs' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
 
@@ -588,6 +592,12 @@ fi
 if [ "$iptables" = 'yes' ] && [ "$fail2ban" = 'yes' ]; then
 	echo -n ' + Fail2Ban Access Monitor'
 fi
+echo ''
+# NodeJS
+if [ "$nodejs" = 'yes' ]; then
+	echo '   - NodeJS'
+fi
+
 echo -e "\n"
 echo "========================================================================"
 echo -e "\n"
@@ -753,6 +763,11 @@ if [ "$postgresql" = 'yes' ]; then
 	echo "[ * ] PostgreSQL"
 	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
 	curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg > /dev/null 2>&1
+fi
+
+if [ "$nodejs" = "yes" ]; then
+	echo "[ * ] NodeJS"
+	curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - > /dev/null 2>&1
 fi
 
 # Echo for a new line
@@ -941,6 +956,11 @@ if [ "$phpfpm" = 'yes' ]; then
 	software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
 	software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
 fi
+
+if [ "$nodejs" = 'no' ]; then
+	software=$(echo "$software" | sed -e "s/nodejs//")
+fi
+
 if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-nginx//")
 	software=$(echo "$software" | sed -e "s/hestia-php//")
@@ -1898,6 +1918,28 @@ fi
 # Configuring PostgreSQL host
 if [ "$postgresql" = 'yes' ]; then
 	$HESTIA/bin/v-add-database-host pgsql localhost postgres $ppass
+fi
+
+#----------------------------------------------------------#
+#                     Install NVM                          #
+#----------------------------------------------------------#
+if [ "$nodejs" = "yes" ]; then
+	# Install pm2
+	npm install pm2 -g > /dev/null 2>&1
+	if [ ! -f ~/.nvm/nvm.sh ]; then
+		# Get the latest nvm release
+		wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash > /dev/null 2>&1
+
+		mv ~/.nvm /opt/nvm
+		chmod -R 777 /opt/nvm
+
+		#update bashrc file
+		echo 'export NVM_DIR="/opt/nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> /root/.bashrc
+
+		source /opt/nvm/nvm.sh
+	fi
 fi
 
 #----------------------------------------------------------#

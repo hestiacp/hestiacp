@@ -50,7 +50,7 @@ fi
 # Check if php version is supported
 if [[ ! "$multiphp_v" =~ $version ]]; then
 	echo "ERROR: Specified PHP version is not supported or does not exist."
-	exit "$E_INVALID";
+	exit "$E_INVALID"
 fi
 
 # Perform verification if read-only mode is enabled

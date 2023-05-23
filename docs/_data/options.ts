@@ -174,5 +174,12 @@ export const options: OptionsListItem[] = [
 		desc: "Interactive install.",
 		selected: true,
 	},
+	{
+		name: " --nodejs",
+		id: "nodejs",
+		param: "--nodejs",
+		desc: "Install NodeJS.",
+		selected: true,
+	},
 	{ name: " --force", id: "force", param: "--force", desc: "Force installation.", selected: false },
 ];

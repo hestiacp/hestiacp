@@ -1,7 +1,7 @@
 server {
-listen      %ip%:%proxy_port%;
+listen      %ip%:%web_port%;
 server_name %domain_idn% %alias_idn%;
-root        /var/lib/rainloop;
+root        /var/lib/snappymail;
 index       index.php index.html index.htm;
 access_log /var/log/nginx/domains/%domain%.log combined;
 error_log  /var/log/nginx/domains/%domain%.error.log error;
@@ -24,12 +24,17 @@ location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRA
 }
 
 location / {
-    proxy_pass http://%ip%:%web_port%;
     try_files $uri $uri/ =404;
-    alias /var/lib/rainloop/;
     location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
         expires 7d;
         fastcgi_hide_header "Set-Cookie";
+    }
+
+    location ~ ^/(.*\.php)$ {
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $request_filename;
     }
 }
 
@@ -37,9 +42,5 @@ location /error/ {
     alias /var/www/document_errors/;
 }
 
-location @fallback {
-    proxy_pass http://%ip%:%web_port%;
-}
-
-include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.conf_*;
+include %home%/%user%/conf/mail/%root_domain%/%web_system%.conf_*;
 }

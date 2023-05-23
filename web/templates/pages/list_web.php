@@ -66,27 +66,27 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
-
-	<!-- Table header -->
-	<div class="header units-header">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact">
-				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+<div class="container">
+	<div class="units js-units-container">
+		<!-- Table header -->
+		<div class="header units-header">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left super-compact">
+					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
+				</div>
+				<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("Name") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IP Address") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Disk") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Bandwidth") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("SSL") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Statistics") ?></b></div>
 			</div>
-			<div class="clearfix l-unit__stat-col--left wide-4"><b><?= _("Name") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-4 u-text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("IP Address") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Disk") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Bandwidth") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("SSL") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Statistics") ?></b></div>
 		</div>
-	</div>
 
-	<!-- Begin web domain list item loop -->
-	<?php
-		foreach ($data as $key => $value) {
+		<!-- Begin web domain list item loop -->
+		<?php
+			foreach ($data as $key => $value) {
 				++$i;
 				if ($data[$key]['SUSPENDED'] == 'yes') {
 						$status = 'suspended';

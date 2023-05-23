@@ -45,8 +45,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
-
+<div class="container">
 	<!-- Begin statistics list item loop -->
 	<div class="stats">
 		<?php foreach ($data as $key => $value) {
@@ -228,7 +227,6 @@
 			</div>
 		<?php } ?>
 	</div>
-
 </div>
 
 <footer class="app-footer">

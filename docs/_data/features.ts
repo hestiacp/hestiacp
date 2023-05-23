@@ -53,7 +53,7 @@ export const mail: FeatureListItem[] = [
 	{ text: "Rate limit adjustable per user or email account" },
 	{ text: "Let’s Encrypt support for mail domains" },
 	{ text: "Latest version of Roundcube" },
-	{ text: "Optional Rainloop installation" },
+	{ text: "Optional SnappyMail installation" },
 ];
 
 export const dns: FeatureListItem[] = [

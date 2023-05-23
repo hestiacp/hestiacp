@@ -1,18 +1,18 @@
 #!/bin/bash
-# info: change ip status
+# info: change IP status
 # options: IP IP_STATUS
 #
-# example: v-change-sys-ip-status 91.198.136.14 yourstatus
+# example: v-change-sys-ip-status 203.0.113.1 yourstatus
 #
-# This function of changing an ip address's status.
+# This function of changing an IP address's status.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
-ip_status=$2
+ip="$1"
+ip_status="$2"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -38,9 +38,9 @@ web_domains=$(get_ip_value '$U_WEB_DOMAINS')
 sys_user=$(get_ip_value '$U_SYS_USERS')
 ip_owner=$(get_ip_value '$OWNER')
 if [ "$web_domains" -ne '0' ] && [ "$sys_user" != "$ip_owner" ]; then
-	check_result "$E_INUSE" "ip $ip is used"
+	check_result "$E_INUSE" "IP $ip is used"
 fi
-if [ "$ip_owner" != "admin" ] && [ "$ip_status" == "shared" ]; then
+if [ "$ip_owner" != "admin" ] && [ "$ip_status" = "shared" ]; then
 	$BIN/v-change-sys-ip-owner "$ip" "admin"
 fi
 
@@ -51,7 +51,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing ip name
+# Changing IP status
 update_ip_value '$STATUS' "$ip_status"
 
 #----------------------------------------------------------#

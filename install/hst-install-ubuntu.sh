@@ -49,7 +49,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
   proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd"
 
-installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg software-properties-common wget"
+installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget"
 
 # Defining help function
 help() {
@@ -674,7 +674,7 @@ if [ -z "$(swapon -s)" ] && [ "$memory" -lt 1000000 ]; then
 	chmod 600 /swapfile
 	mkswap /swapfile
 	swapon /swapfile
-	echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
+	echo "/swapfile	none	swap	sw	0	0" >> /etc/fstab
 fi
 
 #----------------------------------------------------------#
@@ -758,7 +758,10 @@ check_result $? 'apt-get upgrade failed'
 mkdir -p $hst_backups
 cd $hst_backups
 mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
-mkdir spamassassin mysql postgresql hestia
+mkdir spamassassin mysql postgresql openssl hestia
+
+# Backup OpenSSL configuration
+cp /etc/ssl/openssl.cnf $hst_backups/openssl > /dev/null 2>&1
 
 # Backup nginx configuration
 systemctl stop nginx > /dev/null 2>&1
@@ -771,7 +774,7 @@ rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
 systemctl stop php*-fpm > /dev/null 2>&1
-cp -r /etc/php/* $hst_backups/php/ > /dev/null 2>&1
+cp -r /etc/php/* $hst_backups/php > /dev/null 2>&1
 
 # Backup Bind configuration
 systemctl stop bind9 > /dev/null 2>&1
@@ -1292,6 +1295,22 @@ cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
+# Configuring global OpenSSL options
+echo "[ * ] Configuring OpenSSL to improve TLS performance..."
+tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
+if [ "$release" = "20.04" ]; then
+	if ! grep -qw "^openssl_conf = default_conf$" /etc/ssl/openssl.cnf 2> /dev/null; then
+		sed -i '/^oid_section		= new_oids$/a \\n# System default\nopenssl_conf = default_conf' /etc/ssl/openssl.cnf
+	fi
+	if ! grep -qw "^[default_conf]$" /etc/ssl/openssl.cnf 2> /dev/null; then
+		sed -i '$a [default_conf]\nssl_conf = ssl_sect\n\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
+		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+	fi
+elif [ "$release" = "22.04" ]; then
+	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
+fi
+
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
 $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
@@ -1374,12 +1393,12 @@ for ip in $dns_resolver; do
 	fi
 done
 if [ -n "$resolver" ]; then
-	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
-	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/
-cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
+cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"
 
 if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
 	cf_inc="/etc/nginx/conf.d/cloudflare.inc"
@@ -1518,7 +1537,7 @@ if [ "$vsftpd" = 'yes' ]; then
 	touch /var/log/xferlog
 	chown root:adm /var/log/xferlog
 	chmod 640 /var/log/xferlog
-	update-rc.d vsftpd defaults
+	update-rc.d vsftpd defaults > /dev/null 2>&1
 	systemctl start vsftpd >> $LOG
 	check_result $? "vsftpd start failed"
 fi
@@ -2014,9 +2033,14 @@ curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
-# Get main IP
-ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
-local_ip=$ip
+# Get primary IP
+default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
+# IPv4
+primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+# IPv6
+#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+ip="$primary_ipv4"
+local_ip="$primary_ipv4"
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
@@ -2024,8 +2048,8 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
-if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
+pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
+if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
 		sed -i '/exit 0/d' /etc/rc.local
 	else
@@ -2041,8 +2065,8 @@ if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
 	echo "exit 0" >> /etc/rc.local
 	chmod +x /etc/rc.local
 	systemctl enable rc-local > /dev/null 2>&1
-	$HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
-	ip=$pub_ip
+	$HESTIA/bin/v-change-sys-ip-nat "$ip" "$pub_ipv4" > /dev/null 2>&1
+	ip="$pub_ipv4"
 fi
 
 # Configuring libapache2-mod-remoteip
@@ -2050,14 +2074,14 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 	cd /etc/apache2/mods-available
 	echo "<IfModule mod_remoteip.c>" > remoteip.conf
 	echo "  RemoteIPHeader X-Real-IP" >> remoteip.conf
-	if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ip" != "127.0.0.1" ]; then
+	if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ipv4" != "127.0.0.1" ]; then
 		echo "  RemoteIPInternalProxy 127.0.0.1" >> remoteip.conf
 	fi
-	if [ -n "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
+	if [ -n "$local_ip" ] && [ "$local_ip" != "$pub_ipv4" ]; then
 		echo "  RemoteIPInternalProxy $local_ip" >> remoteip.conf
 	fi
-	if [ -n "$pub_ip" ]; then
-		echo "  RemoteIPInternalProxy $pub_ip" >> remoteip.conf
+	if [ -n "$pub_ipv4" ]; then
+		echo "  RemoteIPInternalProxy $pub_ipv4" >> remoteip.conf
 	fi
 	echo "</IfModule>" >> remoteip.conf
 	sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
@@ -2066,7 +2090,7 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 fi
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain admin $servername $ip
+$HESTIA/bin/v-add-web-domain admin "$servername" "$ip"
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs

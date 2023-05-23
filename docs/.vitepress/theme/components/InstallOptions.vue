@@ -27,12 +27,12 @@ export default {
 	},
 	methods: {
 		getOptionString(item: InstallOptions): string {
-			if (item.textField && item.selected) {
-				return item.text.length >= 2 ? `${item.param} '${item.text}'` : "";
+			if (item.textField) {
+				return item.selected ? `${item.param} '${item.text}'` : "";
 			}
 
 			if (item.selectField) {
-				return `${item.param} '${item.text}'`;
+				return item.selected ? `${item.param} '${item.text}'` : "";
 			}
 
 			return item.param.includes("force") && item.selected
@@ -107,7 +107,13 @@ export default {
 					<p>{{ item.desc }}</p>
 				</template>
 				<div v-if="item.textField">
-					<input type="text" class="form-control" v-model="item.text" :id="'input-' + item.id" />
+					<input
+						type="text"
+						class="form-control"
+						v-model="item.text"
+						:id="'input-' + item.id"
+						:type="'+item.type+'"
+					/>
 				</div>
 				<div v-if="item.selectField">
 					<select class="form-select" v-model="item.text" :id="'input-' + item.id">
@@ -286,7 +292,7 @@ export default {
 	padding: 0;
 
 	&::backdrop {
-		background-color: rgb(0 0 0 / 60%);
+		background-color: rgb(0 0 0 / 50%);
 	}
 }
 .modal-close {

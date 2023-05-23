@@ -1,18 +1,18 @@
 #!/bin/bash
-# info: change ip owner
+# info: change IP owner
 # options: IP USER
 #
-# example: v-change-sys-ip-owner 91.198.136.14 admin
+# example: v-change-sys-ip-owner 203.0.113.1 admin
 #
-# This function of changing ip address ownership.
+# This function of changing IP address ownership.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
-user=$2
+ip="$1"
+user="$2"
 
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -44,7 +44,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing ip owner
+# Changing IP owner
 ip_owner=$(get_ip_value '$OWNER')
 if [ "$ip_owner" != "$user" ]; then
 	update_ip_value '$OWNER' "$user"
@@ -79,7 +79,7 @@ fi
 
 # Set status to dedicated if owner is not admin
 ip_status="$(get_ip_value '$STATUS')"
-if [ "$user" != 'admin' ] && [ "$ip_status" == 'shared' ]; then
+if [ "$user" != 'admin' ] && [ "$ip_status" = 'shared' ]; then
 	$BIN/v-change-sys-ip-status "$ip" 'dedicated'
 fi
 

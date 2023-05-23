@@ -551,6 +551,7 @@ add webmail support for a domain
 
 ```bash
 v-add-sys-webmail user domain.com
+example: v-add-sys-webmail user domain.com snappymail
 example: v-add-sys-webmail user domain.com rainloop
 example: v-add-sys-webmail user domain.com roundcube
 ```
@@ -681,6 +682,14 @@ Install Rainloop webmail client
 **Options**: `[MODE]`
 
 This function installs the Rainloop webmail client.
+
+## v-add-sys-snappymail
+
+Install SnappyMail webmail client
+
+**Options**: `[MODE]`
+
+This function installs the SnappyMail webmail client.
 
 ## v-add-sys-roundcube
 

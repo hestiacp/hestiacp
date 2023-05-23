@@ -12,7 +12,7 @@
 
 # Argument definition
 PORT=$1
-NGINX_CONFIG="$HESTIA/nginx/conf/nginx.conf"									
+NGINX_CONFIG="$HESTIA/nginx/conf/nginx.conf"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -70,8 +70,8 @@ else
 	if [ -d /etc/roundcube/ ]; then
 		sed -i "/password_hestia_port/c\$rcmail_config['password_hestia_port'] = '$PORT';" /etc/roundcube/plugins/password/config.inc.php
 	fi
-	if [ -d /etc/rainloop/ ]; then
-		sed -i "/hestia_port/c\hestia_port = $PORT" /etc/rainloop/data/_data_/_default_/configs/plugin-hestia-change-password.ini
+	if [ -d /etc/snappymail/ ]; then
+		sed -i "/\"hestia_port\":/c\\\"hestia_host\": $PORT" /etc/snappymail/data/_data_/_default_/configs/plugin-change-password.json
 	fi
 
 	if [ -f "$HESTIA/data/firewall/rules.conf" ]; then

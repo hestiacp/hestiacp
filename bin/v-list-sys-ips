@@ -1,17 +1,17 @@
 #!/bin/bash
-# info: list system ips
+# info: list system IPs
 # options: [FORMAT]
 #
 # example: v-list-sys-ips
 #
-# This function for obtaining the list of system ip addresses.
+# This function for obtaining the list of system IP addresses.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-format=${1-shell}
+format="${1-shell}"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -26,7 +26,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 # JSON list function
 json_list() {
 	echo '{'
-	ip_count=$(ls $HESTIA/data/ips/ | wc -l)
+	ip_count="$(ls $HESTIA/data/ips/ | wc -l)"
 	i=1
 	while read IP; do
 		source_conf "$HESTIA/data/ips/$IP"

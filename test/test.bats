@@ -1479,16 +1479,16 @@ function check_ip_not_banned(){
     validate_webmail_domain $user $domain 'Welcome to Roundcube Webmail'
 }
 
-@test "MAIL: Add mail domain webmail client (Rainloop)" {
-    if [ -z "$(echo $WEBMAIL_SYSTEM | grep -w "rainloop")" ]; then
-        skip "Webmail client Rainloop not installed"
+@test "MAIL: Add mail domain webmail client (SnappyMail)" {
+    if [ -z "$(echo $WEBMAIL_SYSTEM | grep -w "snappymail")" ]; then
+        skip "Webmail client SnappyMail not installed"
     fi
-    run v-add-mail-domain-webmail $user $domain "rainloop" "yes"
+    run v-add-mail-domain-webmail $user $domain "snappymail" "yes"
     assert_success
     refute_output
     validate_mail_domain $user $domain
 
-    validate_webmail_domain $user $domain 'RainLoop Webmail'
+    validate_webmail_domain $user $domain 'SnappyMail Webmail'
 }
 
 @test "MAIL: Disable webmail client" {

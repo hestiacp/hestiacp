@@ -29,6 +29,19 @@ if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 	fi
 fi
 
+if [ -f /etc/fail2ban/jail.local ]; then
+	# Add phpmyadmin rule
+	if ! -qw "^[phpmyadmin]$" /etc/fail2ban/jail.local 2> /dev/null; then
+		echo "
+		[phpmyadmin]
+		enabled  = true
+		filter   = phpmyadmin-syslog
+		action   = hestia[name=WEB]
+		logpath  = /var/log/auth.log
+		maxretry = 5" >> /etc/fail2ban/jail.local
+	fi
+fi
+
 if [ "$MAIL_SYSTEM" = "exim4" ]; then
 	echo "[ * ] Disable SMTPUTF8 for Exim for now"
 	if grep -qw "^smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template 2> /dev/null; then

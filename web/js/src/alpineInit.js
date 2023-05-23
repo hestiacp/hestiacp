@@ -5,7 +5,7 @@ export default function alpineInit() {
 		/** @param {SubmitEvent} evt */
 		'@submit'(evt) {
 			evt.preventDefault();
-			document.querySelectorAll('.ch-toggle').forEach((el) => {
+			document.querySelectorAll('.js-unit-checkbox').forEach((el) => {
 				if (el.checked) {
 					const input = document.createElement('input');
 					input.type = 'hidden';

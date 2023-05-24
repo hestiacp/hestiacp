@@ -512,6 +512,16 @@ function syshealth_repair_system_config() {
 		$BIN/v-change-sys-config-value "HIDE_DOCS" "no"
 	fi
 
+	if [[ -z $(check_key_exists 'POLICY_SYNC_ERROR') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_ERROR ('yes')"
+		$BIN/v-change-sys-config-value "HIDE_DOCS" "no"
+	fi
+
+	if [[ -z $(check_key_exists 'POLICY_SYNC_SKELETON') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_SKELETON ('yes')"
+		$BIN/v-change-sys-config-value "HIDE_DOCS" "no"
+	fi
+
 	touch $HESTIA/conf/hestia.conf.new
 	while IFS='= ' read -r lhs rhs; do
 		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then

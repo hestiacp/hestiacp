@@ -2,7 +2,7 @@
 # info: change dns domain dnssec status
 # options: USER DOMAIN STATUS
 #
-# example: v-change-dns-domain-status admin domain.pp.ua yes
+# example: v-change-dns-domain-dnssec admin domain.pp.ua yes
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

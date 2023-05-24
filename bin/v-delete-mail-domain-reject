@@ -3,9 +3,9 @@
 # options: USER DOMAIN
 # labels: mail
 #
-# example: v-delete-mail-domain-antispam admin mydomain.tld
+# example: v-delete-mail-domain-reject admin mydomain.tld
 #
-# The function disable spamassasin for incoming emails.
+# The function disables spam rejection for incoming emails.
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

@@ -52,7 +52,11 @@ get_domain_values 'web'
 BACKEND="$template"
 
 # Defining pool directory
-pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
+if [ -f "/etc/redhat-release" ]; then
+	pool=$(find -L /etc/opt/remi/php80/ -name "$domain.conf" -exec dirname {} \;)
+else
+	pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
+fi
 if [ ! -e "$pool" ]; then
 	check_result "$E_NOTEXIST" "php-fpm pool doesn't exist"
 fi

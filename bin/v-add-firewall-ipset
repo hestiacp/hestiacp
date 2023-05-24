@@ -100,7 +100,11 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$refresh" = "yes" ]; then
 		# Advanced: execute script with the same basename for aditional pre-processing
 		# ex:
 		if [ -x "${IPSET_PATH}/${IPSET_FILE}.sh" ]; then
-			preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
+			if [ -e '/etc/redhat-release' ]; then
+				preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nobody -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
+			else
+				preprocess_output="$(cat "$iplist_tempfile" | setpriv --clear-groups --reuid nobody --regid nogroup -- ${IPSET_PATH}/${IPSET_FILE}.sh "$ip_name" "$iplist_tempfile")"
+			fi
 			check_result $? "Preprocessing script failed (${IPSET_FILE}.sh)"
 			[[ "$preprocess_output" ]] && echo "$preprocess_output" > "$iplist_tempfile"
 		fi
@@ -110,8 +114,11 @@ if [ ! -f "${IPSET_PATH}/${IPSET_FILE}.iplist" ] || [ "$refresh" = "yes" ]; then
 		# Generate the ip list file trough a external script
 		# ex: compiling a ip list from multiple sources on demand
 		if [ -x "${data_source#script:}" ]; then
-
-			setpriv --clear-groups --reuid nobody --regid nogroup -- ${data_source#script:} "$ip_name" > "$iplist_tempfile"
+			if [ -e '/etc/redhat-release' ]; then
+				setpriv --clear-groups --reuid nobody --regid nobody -- ${data_source#script:} "$ip_name" > "$iplist_tempfile"
+			else
+				setpriv --clear-groups --reuid nobody --regid nogroup -- ${data_source#script:} "$ip_name" > "$iplist_tempfile"
+			fi
 			check_result $? "Running custom ip list update script"
 
 		fi

@@ -31,6 +31,9 @@ mkdir -p %{buildroot}%{_unitdir} %{buildroot}/usr/local/hestia
 cp -R %{_builddir}/hestiacp/* %{buildroot}/usr/local/hestia/
 %{__install} -m644 %{SOURCE1} %{buildroot}%{_unitdir}/hestia.service
 
+# Cleanup not required files so package will be smaller
+rm -rf %{buildroot}/usr/local/hestia/src/deb %{buildroot}/usr/local/hestia/src/archive %{buildroot}/usr/local/hestia/test %{buildroot}/usr/local/hestia/docs
+
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 

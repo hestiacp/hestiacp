@@ -352,7 +352,11 @@ parse_object_kv_list() {
 	str=${str//$/\\$}
 	IFS=$'\n'
 
-	suboutput=$(setpriv --clear-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
+	if [ -e '/etc/redhat-release' ]; then
+		suboutput=$(setpriv --clear-groups --reuid nobody --regid nobody bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
+	else
+		suboutput=$(setpriv --clear-groups --reuid nobody --regid nogroup bash -c "PS4=''; set -xe; eval \"${str}\"" 2>&1)
+	fi
 	check_result $? "Invalid object format: ${str}" $E_INVALID
 
 	for objkv in $suboutput; do

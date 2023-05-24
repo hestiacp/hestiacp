@@ -65,7 +65,7 @@ phpmyadminkey=$(generate_password)
 apikey=$($BIN/v-add-access-key 'admin' 'phpmyadmin-sso' 'phpMyAdmin' 'plain')
 
 # copy config dir to /usr/share/phpmyadmin/
-cp -f $HESTIA_INSTALL_DIR/phpmyadmin/hestia-sso.php $PMA_INSTALL/hestia-sso.php
+cp -f $HESTIA_COMMON_DIR/phpmyadmin/hestia-sso.php $PMA_INSTALL/hestia-sso.php
 chmod 640 $PMA_INSTALL/hestia-sso.php
 chown root:www-data $PMA_INSTALL/hestia-sso.php
 

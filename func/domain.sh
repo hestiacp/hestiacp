@@ -102,16 +102,29 @@ prepare_web_backend() {
 	# Accept first function argument as backend template otherwise fallback to $template global variable
 	local backend_template=${1:-$template}
 
-	pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
+	if [ -f "/etc/redhat-release" ]; then
+		pool=$(find -L /etc/opt/remi/php80/ -name "$domain.conf" -exec dirname {} \;)
+	else
+		pool=$(find -L /etc/php/ -name "$domain.conf" -exec dirname {} \;)
+	fi
 	# Check if multiple-PHP installed
 	regex="socket-(\d+)_(\d+)"
 	if [[ $backend_template =~ ^.*PHP-([0-9])\_([0-9])$ ]]; then
-		backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
-		pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+		if [ -f "/etc/redhat-release" ]; then
+			backend_version="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+			pool=$(find -L /etc/opt/remi/php$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+		else
+			backend_version="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+			pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+		fi
 	else
 		backend_version=$(multiphp_default_version)
 		if [ -z "$pool" ] || [ -z "$BACKEND" ]; then
-			pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+			if [ -f "/etc/redhat-release" ]; then
+				pool=$(find -L /etc/opt/remi/php80 -type d \( -name "pool.d" -o -name "*fpm.d" \))
+			else
+				pool=$(find -L /etc/php/$backend_version -type d \( -name "pool.d" -o -name "*fpm.d" \))
+			fi
 		fi
 	fi
 

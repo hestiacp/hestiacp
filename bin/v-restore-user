@@ -486,9 +486,15 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 		if [ "$DNSSEC" = "yes" ]; then
 			format_domain_idn
 			# Probably need to change the cache dir for RHEL
-			cp $tmpdir/dns/$domain/conf/keys/* /var/cache/bind/
-			chown bind:bind /var/cache/bind/K$domain_idn*
-			chmod 644 /var/cache/bind/K$domain_idn*
+			if [ -f "/etc/redhat-release" ]; then
+				cp $tmpdir/dns/$domain/conf/keys/* /var/cache/named/
+				chown named:named /var/cache/named/K$domain_idn*
+				chmod 644 /var/cache/named/K$domain_idn*
+			else
+				cp $tmpdir/dns/$domain/conf/keys/* /var/cache/bind/
+				chown bind:bind /var/cache/bind/K$domain_idn*
+				chmod 644 /var/cache/bind/K$domain_idn*
+			fi
 		fi
 
 		# Restoring DNS records

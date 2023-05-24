@@ -124,6 +124,13 @@ if [ -f '/etc/redhat-release' ]; then
 	BUILD_RPM=true
 	BUILD_DEB=false
 	OSTYPE='rhel'
+	type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
+	DISTRO=$type
+	if [ "$type" = "rhel" ] || [ "$type" = "almalinux" ] || [ "$type" = "eurolinux" ]; then
+		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+	elif [ "$type" = "rocky" ]; then
+		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $4}')
+	fi
 else
 	BUILD_RPM=false
 	BUILD_DEB=true
@@ -461,8 +468,8 @@ if [ "$NGINX_B" = true ]; then
 		# Build the package
 		echo Building Nginx RPM
 		rpmbuild -bs ~/rpmbuild/SPECS/hestia-nginx.spec
-		mock -r rocky+epel-9-$(arch) ~/rpmbuild/SRPMS/hestia-nginx-$NGINX_V-1.el9.src.rpm
-		cp /var/lib/mock/rocky+epel-9-$(arch)/result/*.rpm $RPM_DIR
+		mock -r rocky+epel-$release-$(arch) ~/rpmbuild/SRPMS/hestia-nginx-$NGINX_V-1.el$release.src.rpm
+		cp /var/lib/mock/rocky+epel-$release-$(arch)/result/*.rpm $RPM_DIR
 		rm -rf ~/rpmbuild/SPECS/* ~/rpmbuild/SOURCES/* ~/rpmbuild/SRPMS/*
 	fi
 fi
@@ -601,8 +608,8 @@ if [ "$PHP_B" = true ]; then
 		# Build RPM package
 		echo Building PHP RPM
 		rpmbuild -bs ~/rpmbuild/SPECS/hestia-php.spec
-		mock -r rocky+epel-9-$(arch) ~/rpmbuild/SRPMS/hestia-php-$PHP_V-1.el9.src.rpm
-		cp /var/lib/mock/rocky+epel-9-$(arch)/result/*.rpm $RPM_DIR
+		mock -r rocky+epel-$release-$(arch) ~/rpmbuild/SRPMS/hestia-php-$PHP_V-1.el$release.src.rpm
+		cp /var/lib/mock/rocky+epel-$release-$(arch)/result/*.rpm $RPM_DIR
 		rm -rf ~/rpmbuild/SPECS/* ~/rpmbuild/SOURCES/* ~/rpmbuild/SRPMS/*
 	fi
 fi
@@ -701,8 +708,8 @@ if [ "$HESTIA_B" = true ]; then
 			# Build RPM package
 			echo Building Hestia RPM
 			rpmbuild -bs ~/rpmbuild/SPECS/hestia.spec
-			mock -r rocky+epel-9-$(arch) ~/rpmbuild/SRPMS/hestia-$BUILD_VER-1.el9.src.rpm
-			cp /var/lib/mock/rocky+epel-9-$(arch)/result/*.rpm $RPM_DIR
+			mock -r rocky+epel-$release-$(arch) ~/rpmbuild/SRPMS/hestia-$BUILD_VER-1.el$release.src.rpm
+			cp /var/lib/mock/rocky+epel-$release-$(arch)/result/*.rpm $RPM_DIR
 			rm -rf ~/rpmbuild/SPECS/* ~/rpmbuild/SOURCES/* ~/rpmbuild/SRPMS/*
 		fi
 

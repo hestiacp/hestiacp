@@ -3,5 +3,5 @@
     monthly
     missingok
     notifempty
-    create 644 www-data www-data
+    create 644 apache apache
 }

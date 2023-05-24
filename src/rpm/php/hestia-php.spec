@@ -62,7 +62,8 @@ rm -f TSRM/tsrm_win32.h \
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 mkdir -p %{buildroot}%{_unitdir} %{buildroot}/usr/local/hestia/php/{etc,lib}
-%make_install INSTALL_ROOT=$RPM_BUILD_ROOT/usr/local/hestia/php
+mkdir -p %{buildroot}%{_unitdir} %{buildroot}/usr/local/hestia/php/var/{log,run}
+%make_install INSTALL_ROOT=$RPM_BUILD_ROOT
 %{__install} -m644 %{SOURCE1} %{buildroot}%{_unitdir}/hestia-php.service
 cp %{SOURCE2} %{buildroot}/usr/local/hestia/php/etc/
 cp %{SOURCE3} %{buildroot}/usr/local/hestia/php/lib/

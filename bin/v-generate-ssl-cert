@@ -77,7 +77,9 @@ is_common_format_valid $state "state"
 is_common_format_valid $org "org"
 is_common_format_valid $unit "unit"
 
-release="$(lsb_release -s -r)"
+if [ ! -f '/etc/redhat-release' ]; then
+	release="$(lsb_release -s -r)"
+fi
 
 if [ -z "$email" ] && [ "$release" = "18.04" ]; then
 	echo "Email address is required"

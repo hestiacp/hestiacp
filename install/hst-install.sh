@@ -59,18 +59,11 @@ if [ -e "/etc/os-release" ] && [ ! -e "/etc/redhat-release" ]; then
 	fi
 elif [ -e "/etc/os-release" ] && [ -e "/etc/redhat-release" ]; then
 	type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
-	if [ "$type" = "rhel" ]; then
+	VERSION=$type
+	if [ "$type" = "rhel" ] || [ "$type" = "almalinux" ] || [ "$type" = "eurolinux" ]; then
 		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='rhel'
-	elif [ "$type" = "almalinux" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='almalinux'
-	elif [ "$type" = "eurolinux" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='eurolinux'
 	elif [ "$type" = "rocky" ]; then
-		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
-		VERSION='rockylinux'
+		release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $4}')
 	fi
 else
 	type="NoSupport"
@@ -97,7 +90,7 @@ check_wget_curl() {
 	# Check wget
 	if [ -e '/usr/bin/wget' ]; then
 		if [ -e '/etc/redhat-release' ]; then
-			wget -q https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh -O hst-install-rhel.sh
+			wget -q https://raw.githubusercontent.com/istiak101/hestiacp/hcp-rhel/install/hst-install-rhel.sh -O hst-install-rhel.sh
 			if [ "$?" -eq '0' ]; then
 				bash hst-install-rhel.sh $*
 				exit
@@ -120,7 +113,7 @@ check_wget_curl() {
 	# Check curl
 	if [ -e '/usr/bin/curl' ]; then
 		if [ -e '/etc/redhat-release' ]; then
-			curl -s -O https://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install-rhel.sh
+			curl -s -O https://raw.githubusercontent.com/istiak101/hestiacp/hcp-rhel/install/hst-install-rhel.sh
 			if [ "$?" -eq '0' ]; then
 				bash hst-install-rhel.sh $*
 				exit

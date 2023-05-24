@@ -2,11 +2,11 @@
 
 # ======================================================== #
 #
-# Hestia Control Panel Installer for Debian
+# Hestia Control Panel Installer for RHEL based OS
 # https://www.hestiacp.com/
 #
 # Currently Supported Versions:
-# Debian 10, 11
+# Red Hat Enterprise Linux, Rocky Linux, AlmaLinux, EuroLinux 8
 #
 # ======================================================== #
 
@@ -14,42 +14,53 @@
 #                  Variables&Functions                     #
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
-export DEBIAN_FRONTEND=noninteractive
-RHOST='apt.hestiacp.com'
+RHOST='rpm.hestiacp.com'
 GPG='gpg.hestiacp.com'
-VERSION='debian'
+VERSION='rhel'
 HESTIA='/usr/local/hestia'
 LOG="/root/hst_install_backups/hst_install-$(date +%d%m%Y%H%M).log"
 memory=$(grep 'MemTotal' /proc/meminfo | tr ' ' '\n' | grep [0-9])
 hst_backups="/root/hst_install_backups/$(date +%d%m%Y%H%M)"
 spinner="/-\|"
-os='debian'
-release="$(cat /etc/debian_version | tr "." "\n" | head -n1)"
-codename="$(cat /etc/os-release | grep VERSION= | cut -f 2 -d \( | cut -f 1 -d \))"
+os='rhel'
 architecture="$(arch)"
-HESTIA_INSTALL_DIR="$HESTIA/install/deb"
+type=$(grep "^ID=" /etc/os-release | cut -f 2 -d '"')
+VERSION=$type
+if [ "$type" = "rhel" ] || [ "$type" = "almalinux" ] || [ "$type" = "eurolinux" ]; then
+	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $3}')
+elif [ "$type" = "rocky" ]; then
+	release=$(cat /etc/redhat-release | cut -f 1 -d '.' | awk '{print $4}')
+fi
+HESTIA_INSTALL_DIR="$HESTIA/install/rpm"
 HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.8.0~alpha'
 # Dependencies
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
-fpm_v="8.1"
+multiphp_v=("70" "71" "72" "73" "74" "80" "81" "82")
+fpm_v="80"
 mariadb_v="10.11"
 
-# Defining software pack for all distros
-software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-utils awstats bc bind9 bsdmainutils bsdutils
-  clamav-daemon cron curl dnsutils dovecot-imapd dovecot-managesieved dovecot-pop3d dovecot-sieve e2fslibs e2fsprogs
-  exim4 exim4-daemon-heavy expect fail2ban flex ftp git hestia=${HESTIA_INSTALL_VER} hestia-nginx hestia-php idn2
-  imagemagick ipset jq libapache2-mod-fcgid libapache2-mod-php$fpm_v libapache2-mpm-itk libmail-dkim-perl lsb-release
-  lsof mariadb-client mariadb-common mariadb-server mc mysql-client mysql-common mysql-server net-tools nginx openssh-server
-  php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
-  php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
-  php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog spamassassin sudo sysstat unrar-free unzip util-linux vim-common vsftpd whois zip zstd"
+software="nginx httpd httpd-tools
+  libapache2-mod-php$fpm_v
+  php$fpm_v php$fpm_v-php-common php$fpm_v-php-cgi php$fpm_v-php-mysql php$fpm_v-php-curl
+  php$fpm_v-php-pgsql php$fpm_v-php-imagick php$fpm_v-php-imap php$fpm_v-php-ldap
+  php$fpm_v-php-apcu php$fpm_v-php-zip php$fpm_v-php-bz2 php$fpm_v-php-cli
+  php$fpm_v-php-gd php$fpm_v-php-intl php$fpm_v-php-mbstring
+  php$fpm_v-php-opcache php$fpm_v-php-pspell php$fpm_v-php-readline php$fpm_v-php-xml
+  awstats perl-Switch vsftpd proftpd-basic bind exim
+  clamav-daemon spamassassin dovecot dovecot-sieve dovecot-managesieved
+  net-tools MariaDB-client MariaDB-common MariaDB-server mysql-client mysql-common mysql-server
+  postgresql15-server mc flex whois git idn2 unzip zip sudo bc ftp lsof
+  rrdtool quota e2fsprogs curl ImageMagick fail2ban
+  dnsutils util-linux cronie hestia hestia-nginx
+  hestia-php expect perl-Mail-DKIM unrar-free vim-common acl sysstat
+  rsyslog openssh-server util-linux ipset libapache2-mpm-itk zstd
+  jq"
+# apache2-suexec-custom apache2-suexec-pristine libapache2-mod-fcgid exim4-daemon-heavy e2fslibs lsb-release
 
-installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget"
+installer_dependencies="curl dirmngr gnupg wget ca-certificates"
 
 # Defining help function
 help() {
@@ -61,7 +72,7 @@ help() {
   -j, --proftpd           Install ProFTPD       [yes|no]  default: no
   -k, --named             Install Bind          [yes|no]  default: yes
   -m, --mysql             Install MariaDB       [yes|no]  default: yes
-  -M, --mysql8            Install MySQL         [yes|no]  default: no
+  -M, --mysql-classic     Install MySQL         [yes|no]  default: no
   -g, --postgresql        Install PostgreSQL    [yes|no]  default: no
   -x, --exim              Install Exim          [yes|no]  default: yes
   -z, --dovecot           Install Dovecot       [yes|no]  default: yes
@@ -78,7 +89,7 @@ help() {
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
-  -D, --with-debs         Path to Hestia debs
+  -R, --with-rpms         Path to Hestia rpms
   -f, --force             Force installation
   -h, --help              Print this help
 
@@ -203,9 +214,7 @@ for arg; do
 		--proftpd) args="${args}-j " ;;
 		--named) args="${args}-k " ;;
 		--mysql) args="${args}-m " ;;
-		--mariadb) args="${args}-m " ;;
 		--mysql-classic) args="${args}-M " ;;
-		--mysql8) args="${args}-M " ;;
 		--postgresql) args="${args}-g " ;;
 		--exim) args="${args}-x " ;;
 		--dovecot) args="${args}-z " ;;
@@ -235,36 +244,36 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:R:fh" Option; do
 	case $Option in
-		a) apache=$OPTARG ;;      # Apache
-		w) phpfpm=$OPTARG ;;      # PHP-FPM
-		o) multiphp=$OPTARG ;;    # Multi-PHP
-		v) vsftpd=$OPTARG ;;      # Vsftpd
-		j) proftpd=$OPTARG ;;     # Proftpd
-		k) named=$OPTARG ;;       # Named
-		m) mysql=$OPTARG ;;       # MariaDB
-		M) mysql8=$OPTARG ;;      # MySQL
-		g) postgresql=$OPTARG ;;  # PostgreSQL
-		x) exim=$OPTARG ;;        # Exim
-		z) dovecot=$OPTARG ;;     # Dovecot
-		Z) sieve=$OPTARG ;;       # Sieve
-		c) clamd=$OPTARG ;;       # ClamAV
-		t) spamd=$OPTARG ;;       # SpamAssassin
-		i) iptables=$OPTARG ;;    # Iptables
-		b) fail2ban=$OPTARG ;;    # Fail2ban
-		q) quota=$OPTARG ;;       # FS Quota
-		r) port=$OPTARG ;;        # Backend Port
-		l) lang=$OPTARG ;;        # Language
-		d) api=$OPTARG ;;         # Activate API
-		y) interactive=$OPTARG ;; # Interactive install
-		s) servername=$OPTARG ;;  # Hostname
-		e) email=$OPTARG ;;       # Admin email
-		p) vpass=$OPTARG ;;       # Admin password
-		D) withdebs=$OPTARG ;;    # Hestia debs path
-		f) force='yes' ;;         # Force install
-		h) help ;;                # Help
-		*) help ;;                # Print help (default)
+		a) apache=$OPTARG ;;       # Apache
+		w) phpfpm=$OPTARG ;;       # PHP-FPM
+		o) multiphp=$OPTARG ;;     # Multi-PHP
+		v) vsftpd=$OPTARG ;;       # Vsftpd
+		j) proftpd=$OPTARG ;;      # Proftpd
+		k) named=$OPTARG ;;        # Named
+		m) mysql=$OPTARG ;;        # MariaDB
+		M) mysqlclassic=$OPTARG ;; # MySQL
+		g) postgresql=$OPTARG ;;   # PostgreSQL
+		x) exim=$OPTARG ;;         # Exim
+		z) dovecot=$OPTARG ;;      # Dovecot
+		Z) sieve=$OPTARG ;;        # Sieve
+		c) clamd=$OPTARG ;;        # ClamAV
+		t) spamd=$OPTARG ;;        # SpamAssassin
+		i) iptables=$OPTARG ;;     # Iptables
+		b) fail2ban=$OPTARG ;;     # Fail2ban
+		q) quota=$OPTARG ;;        # FS Quota
+		r) port=$OPTARG ;;         # Backend Port
+		l) lang=$OPTARG ;;         # Language
+		d) api=$OPTARG ;;          # Activate API
+		y) interactive=$OPTARG ;;  # Interactive install
+		s) servername=$OPTARG ;;   # Hostname
+		e) email=$OPTARG ;;        # Admin email
+		p) vpass=$OPTARG ;;        # Admin password
+		R) withrpms=$OPTARG ;;     # Hestia rpms path
+		f) force='yes' ;;          # Force install
+		h) help ;;                 # Help
+		*) help ;;                 # Print help (default)
 	esac
 done
 
@@ -277,7 +286,7 @@ set_default_value 'vsftpd' 'yes'
 set_default_value 'proftpd' 'no'
 set_default_value 'named' 'yes'
 set_default_value 'mysql' 'yes'
-set_default_value 'mysql8' 'no'
+set_default_value 'mysqlclassic' 'no'
 set_default_value 'postgresql' 'no'
 set_default_value 'exim' 'yes'
 set_default_value 'dovecot' 'yes'
@@ -318,12 +327,8 @@ fi
 if [ "$apache" = 'no' ]; then
 	phpfpm='yes'
 fi
-if [ "$mysql" = 'yes' ] && [ "$mysql8" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] && [ "$mysqlclassic" = 'yes' ]; then
 	mysql='no'
-fi
-
-if [ "$mysqlclassic" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
-	check_result 1 "Mysql 8 does not support ARM64 yet for Debian please use Ubuntu. Unable to continue"
 fi
 
 # Checking root permissions
@@ -347,9 +352,9 @@ fi
 clear
 
 # Configure apt to retry downloading on error
-if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
-	echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
-fi
+# if [ ! -f /etc/apt/apt.conf.d/80-retries ]; then
+# 	echo "APT::Acquire::Retries \"3\";" > /etc/apt/apt.conf.d/80-retries
+# fi
 
 # Welcome message
 echo "Welcome to the Hestia Control Panel installer!"
@@ -357,32 +362,30 @@ echo
 echo "Please wait, the installer is now checking for missing dependencies..."
 echo
 
-# Update apt repository
-apt-get -qq update
+# Install EPEL Repo
+dnf config-manager --set-enabled crb
+dnf config-manager --set-enabled powertools
+dnf install -y epel-release
 
 # Creating backup directory
 mkdir -p "$hst_backups"
 
 # Pre-install packages
 echo "[ * ] Installing dependencies..."
-apt-get -y install $installer_dependencies >> $LOG
+dnf -y install $installer_dependencies >> $LOG
 check_result $? "Package installation failed, check log file for more details."
 
 # Check if apparmor is installed
-if [ $(dpkg-query -W -f='${Status}' apparmor 2> /dev/null | grep -c "ok installed") -eq 0 ]; then
-	apparmor='no'
-else
-	apparmor='yes'
-fi
+# apparmor is a Debian thing
 
-# Check repository availability
-wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
-check_result $? "Unable to connect to the Hestia APT repository"
+# Checking repository availability
+# wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
+# check_result $? "Unable to connect to the Hestia RPM repository"
 
 # Check installed packages
 tmpfile=$(mktemp -p /tmp)
-dpkg --get-selections > $tmpfile
-conflicts_pkg="exim4 mariadb-server apache2 nginx hestia postfix"
+dnf list installed > $tmpfile
+conflicts_pkg="exim mariadb-server httpd nginx hestia postfix"
 
 # Drop postfix from the list if exim should not be installed
 if [ "$exim" = 'no' ]; then
@@ -407,8 +410,8 @@ if [ -n "$conflicts" ] && [ -z "$force" ]; then
 	echo
 	read -p 'Would you like to remove the conflicting packages? [y/n] ' answer
 	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
-		apt-get -qq purge $conflicts -y
-		check_result $? 'apt-get remove failed'
+		dnf remove $conflicts -y
+		check_result $? 'dnf remove failed'
 		unset $answer
 	else
 		check_result 1 "Hestia Control Panel should be installed on a clean server."
@@ -443,24 +446,24 @@ if [ -d /etc/netplan ] && [ -z "$force" ]; then
 fi
 
 # Validate whether installation script matches release version before continuing with install
-if [ -z "$withdebs" ] || [ ! -d "$withdebs" ]; then
-	release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control | grep "Version:" | awk '{print $2}')
-	if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
-		echo
-		echo -e "\e[91mInstallation aborted\e[0m"
-		echo "===================================================================="
-		echo -e "\e[33mERROR: Install script version does not match package version!\e[0m"
-		echo -e "\e[33mPlease download the installer from the release branch in order to continue:\e[0m"
-		echo ""
-		echo -e "\e[33mhttps://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh\e[0m"
-		echo ""
-		echo -e "\e[33mTo test pre-release versions, build the .deb packages and re-run the installer:\e[0m"
-		echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia branchname no\e[21m\e[0m"
-		echo -e "  \e[33m./hst-install.sh .. \e[1m--with-debs /tmp/hestiacp-src/debs\e[21m\e[0m"
-		echo ""
-		check_result 1 "Installation aborted"
-	fi
-fi
+# if [ -z "$withrpms" ] || [ ! -d "$withrpms" ]; then
+# 	release_branch_ver=$(curl -s https://raw.githubusercontent.com/hestiacp/hestiacp/release/src/deb/hestia/control |grep "Version:" |awk '{print $2}')
+# 	if [ "$HESTIA_INSTALL_VER" != "$release_branch_ver" ]; then
+# 		echo
+# 		echo -e "\e[91mInstallation aborted\e[0m"
+# 		echo "===================================================================="
+# 		echo -e "\e[33mERROR: Install script version does not match package version!\e[0m"
+# 		echo -e "\e[33mPlease download the installer from the release branch in order to continue:\e[0m"
+# 		echo ""
+# 		echo -e "\e[33mhttps://raw.githubusercontent.com/hestiacp/hestiacp/release/install/hst-install.sh\e[0m"
+# 		echo ""
+# 		echo -e "\e[33mTo test pre-release versions, build the .rpm packages and re-run the installer:\e[0m"
+# 		echo -e "  \e[33m./hst_autocompile.sh \e[1m--hestia branchname no\e[21m\e[0m"
+# 		echo -e "  \e[33m./hst-install.sh .. \e[1m--with-rpms /tmp/hestiacp-src/rpms\e[21m\e[0m"
+# 		echo ""
+# 		check_result 1 "Installation aborted"
+# 	fi
+# fi
 
 case $architecture in
 	x86_64)
@@ -534,6 +537,10 @@ fi
 # DNS stack
 if [ "$named" = 'yes' ]; then
 	echo '   - Bind DNS Server'
+	# RHEL 8 hack for bind9.16 conflict
+	if [ "$release" = "8" ]; then
+		dnf remove -y bind-utils
+	fi
 fi
 
 # Mail stack
@@ -566,7 +573,7 @@ echo
 if [ "$mysql" = 'yes' ]; then
 	echo '   - MariaDB Database Server'
 fi
-if [ "$mysql8" = 'yes' ]; then
+if [ "$mysqlclassic" = 'yes' ]; then
 	echo '   - MySQL8 Database Server'
 fi
 if [ "$postgresql" = 'yes' ]; then
@@ -685,15 +692,15 @@ if [ -z "$(swapon -s)" ] && [ "$memory" -lt 1000000 ]; then
 	chmod 600 /swapfile
 	mkswap /swapfile
 	swapon /swapfile
-	echo "/swapfile	none	swap	sw	0	0" >> /etc/fstab
+	echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
 fi
 
 #----------------------------------------------------------#
 #                   Install repository                     #
 #----------------------------------------------------------#
 
-# Define apt conf location
-apt=/etc/apt/sources.list.d
+# Define dnf conf location
+dnf=/etc/dnf/dnf.conf
 
 # Create new folder if not all-ready exists
 mkdir -p /root/.gnupg/ && chmod 700 /root/.gnupg/
@@ -705,54 +712,49 @@ echo
 # Installing Nginx repo
 
 echo "[ * ] NGINX"
-echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
+dnf config-manager --add-repo https://raw.githubusercontent.com/hestiacp/hestiacp/main/install/rpm/nginx/nginx.repo
 
-# Installing sury PHP repo
+# Installing Remi PHP repo
 echo "[ * ] PHP"
-echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
-curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
+dnf install -y https://rpms.remirepo.net/enterprise/remi-release-$release.rpm
 
 # Installing sury Apache2 repo
-if [ "$apache" = 'yes' ]; then
-	echo "[ * ] Apache2"
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
-fi
+# if [ "$apache" = 'yes' ]; then
+#     echo "[ * ] Apache2"
+# fi
 
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
 	echo "[ * ] MariaDB"
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
-	curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+	dnf config-manager --add-repo https://raw.githubusercontent.com/hestiacp/hestiacp/main/install/rpm/mysql/mariadb-$(arch).repo
 fi
 
 # Installing Mysql8 repo
-if [ "$mysql8" = 'yes' ]; then
+if [ "$mysqlclassic" = 'yes' ]; then
 	echo "[ * ] Mysql 8"
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-apt-config" >> /etc/apt/sources.list.d/mysql.list
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-tools" >> /etc/apt/sources.list.d/mysql.list
-	echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-tools-preview" >> /etc/apt/sources.list.d/mysql.list
-	echo "deb-src [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
+	dnf config-manager --add-repo https://raw.githubusercontent.com/hestiacp/hestiacp/main/install/rpm/mysql/mysql.repo
+fi
 
-	GNUPGHOME="$(mktemp -d)"
-	export GNUPGHOME
-	for keyserver in $(shuf -e ha.pool.sks-keyservers.net hkp://p80.pool.sks-keyservers.net:80 keyserver.ubuntu.com hkp://keyserver.ubuntu.com:80); do
-		gpg --no-default-keyring --keyring /usr/share/keyrings/mysql-keyring.gpg --keyserver "${keyserver}" --recv-keys "467B942D3A79BD29" > /dev/null 2>&1 && break
-	done
+# Installing Dovecot repo
+if [ "$dovecot" = 'yes' ]; then
+	echo "[ * ] Dovecot"
+	# dnf config-manager --add-repo https://raw.githubusercontent.com/hestiacp/hestiacp/main/install/rpm/dovecot/dovecot.repo
 fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+# dnf config-manager --add-repo https://raw.githubusercontent.com/istiak101/hestiacp/hcp-rhel/install/rpm/hestia/hestia.repo
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
 	echo "[ * ] PostgreSQL"
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-	curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg > /dev/null 2>&1
+	if [[ $ARCH == "amd64" ]]; then
+		dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-$release-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+	elif [[ $ARCH == "arm64" ]]; then
+		dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-$release-aarch64/pgdg-redhat-repo-latest.noarch.rpm
+	fi
+	# Disable the built-in PostgreSQL module:
+	dnf -qy module disable postgresql
 fi
 
 # Echo for a new line
@@ -760,8 +762,7 @@ echo
 
 # Updating system
 echo -ne "Updating currently installed packages, please wait... "
-apt-get -qq update
-apt-get -y upgrade >> $LOG &
+dnf -y upgrade >> $LOG &
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
@@ -776,7 +777,7 @@ echo
 
 # Check Installation result
 wait $BACK_PID
-check_result $? 'apt-get upgrade failed'
+check_result $? 'dnf upgrade failed'
 
 #----------------------------------------------------------#
 #                         Backup                           #
@@ -785,28 +786,25 @@ check_result $? 'apt-get upgrade failed'
 # Creating backup directory tree
 mkdir -p $hst_backups
 cd $hst_backups
-mkdir nginx apache2 php vsftpd proftpd bind exim4 dovecot clamd
-mkdir spamassassin mysql postgresql openssl hestia
-
-# Backup OpenSSL configuration
-cp /etc/ssl/openssl.cnf $hst_backups/openssl > /dev/null 2>&1
+mkdir nginx httpd php vsftpd proftpd bind exim dovecot clamd
+mkdir spamassassin mysql postgresql hestia
 
 # Backup nginx configuration
 systemctl stop nginx > /dev/null 2>&1
 cp -r /etc/nginx/* $hst_backups/nginx > /dev/null 2>&1
 
 # Backup Apache configuration
-systemctl stop apache2 > /dev/null 2>&1
-cp -r /etc/apache2/* $hst_backups/apache2 > /dev/null 2>&1
-rm -f /etc/apache2/conf.d/* > /dev/null 2>&1
+systemctl stop httpd > /dev/null 2>&1
+cp -r /etc/httpd/* $hst_backups/httpd > /dev/null 2>&1
+rm -f /etc/httpd/conf.d/* > /dev/null 2>&1
 
 # Backup PHP-FPM configuration
 systemctl stop php*-fpm > /dev/null 2>&1
-cp -r /etc/php/* $hst_backups/php > /dev/null 2>&1
+cp -r /etc/php/* $hst_backups/php/ > /dev/null 2>&1
 
 # Backup Bind configuration
-systemctl stop bind9 > /dev/null 2>&1
-cp -r /etc/bind/* $hst_backups/bind > /dev/null 2>&1
+systemctl stop named > /dev/null 2>&1
+cp -r /etc/named/* $hst_backups/named > /dev/null 2>&1
 
 # Backup Vsftpd configuration
 systemctl stop vsftpd > /dev/null 2>&1
@@ -817,8 +815,8 @@ systemctl stop proftpd > /dev/null 2>&1
 cp /etc/proftpd/* $hst_backups/proftpd > /dev/null 2>&1
 
 # Backup Exim configuration
-systemctl stop exim4 > /dev/null 2>&1
-cp -r /etc/exim4/* $hst_backups/exim4 > /dev/null 2>&1
+systemctl stop exim > /dev/null 2>&1
+cp -r /etc/exim/* $hst_backups/exim > /dev/null 2>&1
 
 # Backup ClamAV configuration
 systemctl stop clamav-daemon > /dev/null 2>&1
@@ -843,7 +841,7 @@ mv -f /root/.my.cnf $hst_backups/mysql > /dev/null 2>&1
 # Backup Hestia
 systemctl stop hestia > /dev/null 2>&1
 cp -r $HESTIA/* $hst_backups/hestia > /dev/null 2>&1
-apt-get -y purge hestia hestia-nginx hestia-php > /dev/null 2>&1
+dnf -y remove hestia hestia-nginx hestia-php > /dev/null 2>&1
 rm -rf $HESTIA > /dev/null 2>&1
 
 #----------------------------------------------------------#
@@ -851,11 +849,11 @@ rm -rf $HESTIA > /dev/null 2>&1
 #----------------------------------------------------------#
 
 if [ "$phpfpm" = 'yes' ]; then
-	fpm="php$fpm_v php$fpm_v-common php$fpm_v-bcmath php$fpm_v-cli
-         php$fpm_v-curl php$fpm_v-fpm php$fpm_v-gd php$fpm_v-intl
-         php$fpm_v-mysql php$fpm_v-soap php$fpm_v-xml php$fpm_v-zip
-         php$fpm_v-mbstring php$fpm_v-bz2 php$fpm_v-pspell
-         php$fpm_v-imagick"
+	fpm="php$fpm_v php$fpm_v-php-common php$fpm_v-php-bcmath php$fpm_v-php-cli
+			php$fpm_v-php-curl php$fpm_v-php-fpm php$fpm_v-php-gd php$fpm_v-php-intl
+			php$fpm_v-php-mysql php$fpm_v-php-soap php$fpm_v-php-xml php$fpm_v-php-zip
+			php$fpm_v-php-mbstring php$fpm_v-php-bz2 php$fpm_v-php-pspell
+			php$fpm_v-php-imagick"
 	software="$software $fpm"
 fi
 
@@ -867,9 +865,9 @@ fi
 software=$(echo "$software" | sed -e "s/apache2.2-common//")
 
 if [ "$apache" = 'no' ]; then
-	software=$(echo "$software" | sed -e "s/apache2 //")
+	software=$(echo "$software" | sed -e "s/httpd //")
 	software=$(echo "$software" | sed -e "s/apache2-bin//")
-	software=$(echo "$software" | sed -e "s/apache2-utils//")
+	software=$(echo "$software" | sed -e "s/httpd-tools//")
 	software=$(echo "$software" | sed -e "s/apache2-suexec-custom//")
 	software=$(echo "$software" | sed -e "s/apache2.2-common//")
 	software=$(echo "$software" | sed -e "s/libapache2-mod-rpaf//")
@@ -884,13 +882,12 @@ if [ "$proftpd" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/proftpd-mod-vroot//")
 fi
 if [ "$named" = 'no' ]; then
-	software=$(echo "$software" | sed -e "s/bind9//")
+	software=$(echo "$software" | sed -e "s/bind//")
 fi
 if [ "$exim" = 'no' ]; then
-	software=$(echo "$software" | sed -e "s/exim4 //")
+	software=$(echo "$software" | sed -e "s/exim //")
 	software=$(echo "$software" | sed -e "s/exim4-daemon-heavy//")
-	software=$(echo "$software" | sed -e "s/dovecot-imapd//")
-	software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
+	software=$(echo "$software" | sed -e "s/dovecot//")
 	software=$(echo "$software" | sed -e "s/clamav-daemon//")
 	software=$(echo "$software" | sed -e "s/spamassassin//")
 	software=$(echo "$software" | sed -e "s/dovecot-sieve//")
@@ -903,30 +900,29 @@ if [ "$spamd" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/spamassassin//")
 fi
 if [ "$dovecot" = 'no' ]; then
-	software=$(echo "$software" | sed -e "s/dovecot-imapd//")
-	software=$(echo "$software" | sed -e "s/dovecot-pop3d//")
+	software=$(echo "$software" | sed -e "s/dovecot//")
 fi
 if [ "$sieve" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/dovecot-sieve//")
 	software=$(echo "$software" | sed -e "s/dovecot-managesieved//")
 fi
 if [ "$mysql" = 'no' ]; then
-	software=$(echo "$software" | sed -e "s/mariadb-server//")
-	software=$(echo "$software" | sed -e "s/mariadb-client//")
-	software=$(echo "$software" | sed -e "s/mariadb-common//")
+	software=$(echo "$software" | sed -e "s/MariaDB-server//")
+	software=$(echo "$software" | sed -e "s/MariaDB-client//")
+	software=$(echo "$software" | sed -e "s/MariaDB-common//")
 fi
-if [ "$mysql8" = 'no' ]; then
+if [ "$mysqlclassic" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/mysql-server//")
 	software=$(echo "$software" | sed -e "s/mysql-client//")
 	software=$(echo "$software" | sed -e "s/mysql-common//")
 fi
-if [ "$mysql" = 'no' ] && [ "$mysql8" = 'no' ]; then
-	software=$(echo "$software" | sed -e "s/php$fpm_v-mysql//")
+if [ "$mysql" = 'no' ] && [ "$mysqlclassic" = 'no' ]; then
+	software=$(echo "$software" | sed -e "s/php$fpm_v-php-mysql//")
 fi
 if [ "$postgresql" = 'no' ]; then
-	software=$(echo "$software" | sed -e "s/postgresql-contrib//")
-	software=$(echo "$software" | sed -e "s/postgresql//")
-	software=$(echo "$software" | sed -e "s/php$fpm_v-pgsql//")
+	software=$(echo "$software" | sed -e "s/postgresql15-server//")
+	software=$(echo "$software" | sed -e "s/php$fpm_v-php-pgsql//")
+	software=$(echo "$software" | sed -e "s/phppgadmin//")
 fi
 if [ "$fail2ban" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/fail2ban//")
@@ -936,30 +932,34 @@ if [ "$iptables" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/fail2ban//")
 fi
 if [ "$phpfpm" = 'yes' ]; then
-	software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
+	software=$(echo "$software" | sed -e "s/php$fpm_v-php-cgi//")
 	software=$(echo "$software" | sed -e "s/libapache2-mpm-itk//")
 	software=$(echo "$software" | sed -e "s/libapache2-mod-ruid2//")
 	software=$(echo "$software" | sed -e "s/libapache2-mod-php$fpm_v//")
 fi
-if [ -d "$withdebs" ]; then
+if [ -d "$withrpms" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-nginx//")
 	software=$(echo "$software" | sed -e "s/hestia-php//")
-	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
+	software=$(echo "$software" | sed -e "s/hestia//")
 fi
 
 #----------------------------------------------------------#
 #                     Install packages                     #
 #----------------------------------------------------------#
 
-# Disabling daemon autostart on apt-get install
+# Disabling daemon autostart on dnf install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
 
-# Installing apt packages
+# Enable PHP 8.0 Module
+dnf module reset php:7.2
+dnf module enable php:8.0
+
+# Installing rpm packages
 echo "The installer is now downloading and installing all required packages."
 echo -ne "NOTE: This process may take 10 to 15 minutes to complete, please wait... "
 echo
-apt-get -y install $software > $LOG
+dnf -y install $software > $LOG
 BACK_PID=$!
 
 # Check if package installation is done, print a spinner
@@ -974,32 +974,35 @@ echo
 
 # Check Installation result
 wait $BACK_PID
-check_result $? "apt-get install failed"
+check_result $? "dnf install failed"
 
 echo
 echo "========================================================================"
 echo
 
+# Create PHP symlink
+ln -s /usr/bin/php80 /usr/bin/php
+
 # Install Hestia packages from local folder
-if [ -n "$withdebs" ] && [ -d "$withdebs" ]; then
+if [ -n "$withrpms" ] && [ -d "$withrpms" ]; then
 	echo "[ * ] Installing local package files..."
 	echo "    - hestia core package"
-	dpkg -i $withdebs/hestia_*.deb > /dev/null 2>&1
+	rpm -i $withrpms/hestia_*.rpm > /dev/null 2>&1
 
-	if [ -z $(ls $withdebs/hestia-php_*.deb 2> /dev/null) ]; then
-		echo "    - hestia-php backend package (from apt)"
-		apt-get -y install hestia-php > /dev/null 2>&1
+	if [ -z $(ls $withrpms/hestia-php_*.rpm 2> /dev/null) ]; then
+		echo "    - hestia-php backend package (from dnf)"
+		dnf -y install hestia-php > /dev/null 2>&1
 	else
 		echo "    - hestia-php backend package"
-		dpkg -i $withdebs/hestia-php_*.deb > /dev/null 2>&1
+		rpm -i $withrpms/hestia-php_*.rpm > /dev/null 2>&1
 	fi
 
-	if [ -z $(ls $withdebs/hestia-nginx_*.deb 2> /dev/null) ]; then
-		echo "    - hestia-nginx backend package (from apt)"
-		apt-get -y install hestia-nginx > /dev/null 2>&1
+	if [ -z $(ls $withrpms/hestia-nginx_*.deb 2> /dev/null) ]; then
+		echo "    - hestia-nginx backend package (from dnf)"
+		dnf -y install hestia-nginx > /dev/null 2>&1
 	else
 		echo "    - hestia-nginx backend package"
-		dpkg -i $withdebs/hestia-nginx_*.deb > /dev/null 2>&1
+		rpm -i $withrpms/hestia-nginx_*.rpm > /dev/null 2>&1
 	fi
 fi
 
@@ -1022,17 +1025,9 @@ fi
 sed -i "s/[#]LoginGraceTime [[:digit:]]m/LoginGraceTime 1m/g" /etc/ssh/sshd_config
 
 # Disable SSH suffix broadcast
-if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
-	sed -i '/^[#]Banner .*/a DebianBanner no' /etc/ssh/sshd_config
-	if [ -z "$(grep "^DebianBanner no" /etc/ssh/sshd_config)" ]; then
-		# If first attempt fails just add it
-		echo '' >> /etc/ssh/sshd_config
-		echo 'DebianBanner no' >> /etc/ssh/sshd_config
-	fi
-fi
 
 # Restart SSH daemon
-systemctl restart ssh
+systemctl restart sshd
 
 # Disable AWStats cron
 rm -f /etc/cron.d/awstats
@@ -1122,8 +1117,8 @@ write_config_value "BACKEND_PORT" "8083"
 
 # Web stack
 if [ "$apache" = 'yes' ]; then
-	write_config_value "WEB_SYSTEM" "apache2"
-	write_config_value "WEB_RGROUPS" "www-data"
+	write_config_value "WEB_SYSTEM" "httpd"
+	write_config_value "WEB_RGROUPS" "apache"
 	write_config_value "WEB_PORT" "8080"
 	write_config_value "WEB_SSL_PORT" "8443"
 	write_config_value "WEB_SSL" "mod_ssl"
@@ -1144,7 +1139,7 @@ if [ "$phpfpm" = 'yes' ]; then
 fi
 
 # Database stack
-if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	installed_db_types='mysql'
 fi
 if [ "$postgresql" = 'yes' ]; then
@@ -1169,12 +1164,12 @@ fi
 
 # DNS stack
 if [ "$named" = 'yes' ]; then
-	write_config_value "DNS_SYSTEM" "bind9"
+	write_config_value "DNS_SYSTEM" "named"
 fi
 
 # Mail stack
 if [ "$exim" = 'yes' ]; then
-	write_config_value "MAIL_SYSTEM" "exim4"
+	write_config_value "MAIL_SYSTEM" "exim"
 	if [ "$clamd" = 'yes' ]; then
 		write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
 	fi
@@ -1264,22 +1259,6 @@ cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
 # Configuring server hostname
 $HESTIA/bin/v-change-sys-hostname $servername > /dev/null 2>&1
 
-# Configuring global OpenSSL options
-echo "[ * ] Configuring OpenSSL to improve TLS performance..."
-tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
-if [ "$release" = "10" ] || [ "$release" = "11" ]; then
-	sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-elif [ "$release" = "12" ]; then
-	if ! grep -qw "^ssl_conf = ssl_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/providers = provider_sect$/a ssl_conf = ssl_sect' /etc/ssl/openssl.cnf
-	fi
-	if ! grep -qw "^[ssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '$a \\n[ssl_sect]\nsystem_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-	elif grep -qw "^system_default = system_default_sect$" /etc/ssl/openssl.cnf 2> /dev/null; then
-		sed -i '/^system_default = system_default_sect$/a system_default = hestia_openssl_sect\n\n[hestia_openssl_sect]\nCiphersuites = '"$tls13_ciphers"'\nOptions = PrioritizeChaCha' /etc/ssl/openssl.cnf
-	fi
-fi
-
 # Generating SSL certificate
 echo "[ * ] Generating default self-signed SSL certificate..."
 $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
@@ -1354,31 +1333,27 @@ for ip in $dns_resolver; do
 	fi
 done
 if [ -n "$resolver" ]; then
-	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
-	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+	sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/
-cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"
+CLOUDFLARE_FILE_PATH='/etc/nginx/conf.d/cloudflare.inc'
+echo "#Cloudflare" > $CLOUDFLARE_FILE_PATH
+echo "" >> $CLOUDFLARE_FILE_PATH
 
-if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
-	cf_inc="/etc/nginx/conf.d/cloudflare.inc"
+echo "# - IPv4" >> $CLOUDFLARE_FILE_PATH
+for i in $(curl -s -L https://www.cloudflare.com/ips-v4); do
+	echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
+done
+echo "" >> $CLOUDFLARE_FILE_PATH
+echo "# - IPv6" >> $CLOUDFLARE_FILE_PATH
+for i in $(curl -s -L https://www.cloudflare.com/ips-v6); do
+	echo "set_real_ip_from $i;" >> $CLOUDFLARE_FILE_PATH
+done
 
-	echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
-	echo "# Cloudflare IP Ranges" > $cf_inc
-	echo "" >> $cf_inc
-	echo "# IPv4" >> $cf_inc
-	for ipv4 in $(echo "$cf_ips" | jq -r '.result.ipv4_cidrs[]//""' | sort); do
-		echo "set_real_ip_from $ipv4;" >> $cf_inc
-	done
-	echo "" >> $cf_inc
-	echo "# IPv6" >> $cf_inc
-	for ipv6 in $(echo "$cf_ips" | jq -r '.result.ipv6_cidrs[]//""' | sort); do
-		echo "set_real_ip_from $ipv6;" >> $cf_inc
-	done
-	echo "" >> $cf_inc
-	echo "real_ip_header CF-Connecting-IP;" >> $cf_inc
-fi
+echo "" >> $CLOUDFLARE_FILE_PATH
+echo "real_ip_header CF-Connecting-IP;" >> $CLOUDFLARE_FILE_PATH
 
 update-rc.d nginx defaults > /dev/null 2>&1
 systemctl start nginx >> $LOG
@@ -1391,53 +1366,52 @@ check_result $? "nginx start failed"
 if [ "$apache" = 'yes' ]; then
 	echo "[ * ] Configuring Apache Web Server..."
 
-	mkdir -p /etc/apache2/conf.d
-	mkdir -p /etc/apache2/conf.d/domains
+	mkdir -p /etc/httpd/conf.d
+	mkdir -p /etc/httpd/conf.d/domains
 
 	# Copy configuration files
-	cp -f $HESTIA_INSTALL_DIR/apache2/apache2.conf /etc/apache2/
-	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
-	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
-	cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
+	cp -f $HESTIA_INSTALL_DIR/httpd/httpd.conf /etc/httpd/
+	cp -f $HESTIA_INSTALL_DIR/httpd/status.conf /etc/httpd/conf.modules.d/hestia-status.conf
+	cp -f /etc/httpd/conf.modules.d/status.load /etc/httpd/conf.modules.d/hestia-status.load
+	cp -f $HESTIA_INSTALL_DIR/logrotate/httpd /etc/logrotate.d/
 
 	# Enable needed modules
-	a2enmod rewrite > /dev/null 2>&1
-	a2enmod suexec > /dev/null 2>&1
-	a2enmod ssl > /dev/null 2>&1
-	a2enmod actions > /dev/null 2>&1
+	# rewrite
+	# suexec
+	dnf install -y mod_ssl
+	# actions
 	a2dismod --quiet status > /dev/null 2>&1
-	a2enmod --quiet hestia-status > /dev/null 2>&1
+	cp -f $HESTIA_INSTALL_DIR/httpd/00-hestia-status.conf /etc/httpd/conf.modules.d
 
-	# Enable mod_ruid/mpm_itk or mpm_event
 	if [ "$phpfpm" = 'yes' ]; then
 		# Disable prefork and php, enable event
 		a2dismod php$fpm_v > /dev/null 2>&1
 		a2dismod mpm_prefork > /dev/null 2>&1
-		a2enmod mpm_event > /dev/null 2>&1
-		cp -f $HESTIA_INSTALL_DIR/apache2/hestia-event.conf /etc/apache2/conf.d/
+		cp -f $HESTIA_INSTALL_DIR/httpd/00-mpm_event.conf /etc/httpd/conf.modules.d
+		cp -f $HESTIA_INSTALL_DIR/httpd/hestia-event.conf /etc/httpd/conf.d/
 	else
-		a2enmod mpm_itk > /dev/null 2>&1
+		cp -f $HESTIA_INSTALL_DIR/httpd/00-mpm_tik.conf /etc/httpd/conf.modules.d
 	fi
 
-	echo "# Powered by hestia" > /etc/apache2/sites-available/default
-	echo "# Powered by hestia" > /etc/apache2/sites-available/default-ssl
-	echo "# Powered by hestia" > /etc/apache2/ports.conf
-	echo -e "/home\npublic_html/cgi-bin" > /etc/apache2/suexec/www-data
-	touch /var/log/apache2/access.log /var/log/apache2/error.log
-	mkdir -p /var/log/apache2/domains
-	chmod a+x /var/log/apache2
-	chmod 640 /var/log/apache2/access.log /var/log/apache2/error.log
-	chmod 751 /var/log/apache2/domains
+	echo "# Powered by hestia" > /etc/httpd/sites-available/default
+	echo "# Powered by hestia" > /etc/httpd/sites-available/default-ssl
+	echo "# Powered by hestia" > /etc/httpd/ports.conf
+	echo -e "/home\npublic_html/cgi-bin" > /etc/httpd/suexec/www-data
+	touch /var/log/httpd/access.log /var/log/httpd/error.log
+	mkdir -p /var/log/httpd/domains
+	chmod a+x /var/log/httpd
+	chmod 640 /var/log/httpd/access.log /var/log/httpd/error.log
+	chmod 751 /var/log/httpd/domains
 
 	# Prevent remote access to server-status page
-	sed -i '/Allow from all/d' /etc/apache2/mods-available/hestia-status.conf
+	sed -i '/Allow from all/d' /etc/httpd/conf.modules.d/hestia-status.conf
 
-	update-rc.d apache2 defaults > /dev/null 2>&1
-	systemctl start apache2 >> $LOG
-	check_result $? "apache2 start failed"
+	chkconfig httpd on > /dev/null 2>&1
+	systemctl start httpd >> $LOG
+	check_result $? "httpd start failed"
 else
-	update-rc.d apache2 disable > /dev/null 2>&1
-	systemctl stop apache2 > /dev/null 2>&1
+	chkconfig httpd disable > /dev/null 2>&1
+	systemctl stop httpd > /dev/null 2>&1
 fi
 
 #----------------------------------------------------------#
@@ -1457,9 +1431,9 @@ if [ "$phpfpm" = "yes" ]; then
 
 	echo "[ * ] Configuring PHP $fpm_v..."
 	# Create www.conf for webmail and php(*)admin
-	cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
-	update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
-	systemctl start php$fpm_v-fpm >> $LOG
+	cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/opt/remi/php$fpm_v/php-fpm.d
+	chkconfig php$fpm_v-fpm on > /dev/null 2>&1
+	systemctl start php$fpm_v-php-fpm >> $LOG
 	check_result $? "php-fpm start failed"
 	# Set default php version to $fpm_v
 	update-alternatives --set php /usr/bin/php$fpm_v > /dev/null 2>&1
@@ -1498,8 +1472,8 @@ if [ "$vsftpd" = 'yes' ]; then
 	touch /var/log/xferlog
 	chown root:adm /var/log/xferlog
 	chmod 640 /var/log/xferlog
-	update-rc.d vsftpd defaults > /dev/null 2>&1
-	systemctl start vsftpd >> $LOG
+	chkconfig vsftpd on
+	systemctl start vsftpd
 	check_result $? "vsftpd start failed"
 fi
 
@@ -1517,7 +1491,7 @@ if [ "$proftpd" = 'yes' ]; then
 		sed -i 's|IdentLookups                  off|#IdentLookups                  off|g' /etc/proftpd/proftpd.conf
 	fi
 
-	update-rc.d proftpd defaults > /dev/null 2>&1
+	chkconfig proftpd on > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
 
@@ -1533,7 +1507,7 @@ fi
 #               Configure MariaDB / MySQL                  #
 #----------------------------------------------------------#
 
-if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	[ "$mysql" = 'yes' ] && mysql_type="MariaDB" || mysql_type="MySQL"
 	echo "[ * ] Configuring $mysql_type database server..."
 	mycnf="my-small.cnf"
@@ -1550,14 +1524,14 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	fi
 
 	# Remove symbolic link
-	rm -f /etc/mysql/my.cnf
+	rm -f /etc/my.cnf
 	# Configuring MariaDB
-	cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/mysql/my.cnf
+	cp -f $HESTIA_INSTALL_DIR/mysql/$mycnf /etc/my.cnf
 
 	# Switch MariaDB inclusions to the MySQL
 	if [ "$mysql_type" = 'MySQL' ]; then
-		sed -i '/query_cache_size/d' /etc/mysql/my.cnf
-		sed -i 's|mariadb.conf.d|mysql.conf.d|g' /etc/mysql/my.cnf
+		sed -i '/query_cache_size/d' /etc/my.cnf
+		sed -i 's|mariadb.conf.d|mysql.conf.d|g' /etc/my.cnf
 	fi
 
 	if [ "$mysql_type" = 'MariaDB' ]; then
@@ -1579,28 +1553,23 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	echo -e "[client]\npassword='$mpass'\n" > /root/.my.cnf
 	chmod 600 /root/.my.cnf
 
-	if [ -f '/usr/bin/mariadb' ]; then
-		mysql_server="mariadb"
-	else
-		mysql_server="mysql"
-	fi
 	# Alter root password
-	$mysql_server -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
+	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mpass'; FLUSH PRIVILEGES;"
 	if [ "$mysql_type" = 'MariaDB' ]; then
 		# Allow mysql access via socket for startup
-		$mysql_server -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
+		mysql -e "UPDATE mysql.global_priv SET priv=json_set(priv, '$.password_last_changed', UNIX_TIMESTAMP(), '$.plugin', 'mysql_native_password', '$.authentication_string', 'invalid', '$.auth_or', json_array(json_object(), json_object('plugin', 'unix_socket'))) WHERE User='root';"
 		# Disable anonymous users
-		$mysql_server -e "DELETE FROM mysql.global_priv WHERE User='';"
+		mysql -e "DELETE FROM mysql.global_priv WHERE User='';"
 	else
-		$mysql_server -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
-		$mysql_server -e "DELETE FROM mysql.user WHERE User='';"
-		$mysql_server -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
+		mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '$mpass';"
+		mysql -e "DELETE FROM mysql.user WHERE User='';"
+		mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
 	fi
 	# Drop test database
-	$mysql_server -e "DROP DATABASE IF EXISTS test"
-	$mysql_server -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
+	mysql -e "DROP DATABASE IF EXISTS test"
+	mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%'"
 	# Flush privileges
-	$mysql_server -e "FLUSH PRIVILEGES;"
+	mysql -e "FLUSH PRIVILEGES;"
 fi
 
 #----------------------------------------------------------#
@@ -1611,7 +1580,7 @@ fi
 # shellcheck source=/usr/local/hestia/install/upgrade/upgrade.conf
 source $HESTIA/install/upgrade/upgrade.conf
 
-if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	# Display upgrade information
 	echo "[ * ] Installing phpMyAdmin version v$pma_v..."
 
@@ -1629,7 +1598,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 
 	# Configuring Apache2 for PHPMYADMIN
 	if [ "$apache" = 'yes' ]; then
-		touch /etc/apache2/conf.d/phpmyadmin.inc
+		touch /etc/httpd/conf.d/phpmyadmin.inc
 	fi
 
 	# Overwrite old files
@@ -1639,14 +1608,14 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	cp -f $HESTIA_COMMON_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
 	mkdir -p /var/lib/phpmyadmin/tmp
 	chmod 770 /var/lib/phpmyadmin/tmp
-	chown root:www-data /usr/share/phpmyadmin/tmp
+	chown root:apache /usr/share/phpmyadmin/tmp
 
 	# Set config and log directory
 	sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
 	# Create temporary folder and change permission
 	chmod 770 /usr/share/phpmyadmin/tmp
-	chown root:www-data /usr/share/phpmyadmin/tmp
+	chown root:apache /usr/share/phpmyadmin/tmp
 
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
@@ -1665,7 +1634,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	source $HESTIA_COMMON_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 
 	# limit access to /etc/phpmyadmin/
-	chown -R root:www-data /etc/phpmyadmin/
+	chown -R root:apache /etc/phpmyadmin/
 	chmod -R 640 /etc/phpmyadmin/*
 	chmod 750 /etc/phpmyadmin/conf.d/
 fi
@@ -1690,11 +1659,11 @@ if [ "$postgresql" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
 	ln -s /etc/phppgadmin/config.inc.php /usr/share/phppgadmin/conf/
-
 	# Configuring phpPgAdmin
 	if [ "$apache" = 'yes' ]; then
-		cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/apache2/conf.d/phppgadmin.inc
+		cp -f $HESTIA_INSTALL_DIR/pga/phppgadmin.conf /etc/httpd/conf.d/phppgadmin.inc
 	fi
+	cp -f $HESTIA_INSTALL_DIR/pga/config.inc.php /etc/phppgadmin/
 
 	rm phppgadmin-v$pga_v.tar.gz
 	write_config_value "DB_PGA_ALIAS" "phppgadmin"
@@ -1707,28 +1676,22 @@ fi
 
 if [ "$named" = 'yes' ]; then
 	echo "[ * ] Configuring Bind DNS server..."
-	cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/bind/
-	cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/bind/
-	chown root:bind /etc/bind/named.conf
-	chown root:bind /etc/bind/named.conf.options
-	chown bind:bind /var/cache/bind
-	chmod 640 /etc/bind/named.conf
-	chmod 640 /etc/bind/named.conf.options
+	cp -f $HESTIA_INSTALL_DIR/bind/named.conf /etc/named/
+	cp -f $HESTIA_INSTALL_DIR/bind/named.conf.options /etc/named/
+	chown root:named /etc/named/named.conf
+	chown root:named /etc/named/named.conf.options
+	chown named:named /var/cache/named
+	chmod 640 /etc/named/named.conf
+	chmod 640 /etc/named/named.conf.options
 	aa-complain /usr/sbin/named 2> /dev/null
-	if [ "$apparmor" = 'yes' ]; then
-		echo "/home/** rwm," >> /etc/apparmor.d/local/usr.sbin.named 2> /dev/null
-		systemctl status apparmor > /dev/null 2>&1
-		if [ $? -ne 0 ]; then
-			systemctl restart apparmor >> $LOG
-		fi
-	fi
-	update-rc.d bind9 defaults > /dev/null 2>&1
-	systemctl start bind9
-	check_result $? "bind9 start failed"
+	# apparmor is a debian thing
+	chkconfig named on > /dev/null 2>&1
+	systemctl start named
+	check_result $? "bind start failed"
 
 	# Workaround for OpenVZ/Virtuozzo
 	if [ -e "/proc/vz/veinfo" ] && [ -e "/etc/rc.local" ]; then
-		sed -i "s/^exit 0/service bind9 restart\nexit 0/" /etc/rc.local
+		sed -i "s/^exit 0/service named restart\nexit 0/" /etc/rc.local
 	fi
 fi
 
@@ -1739,38 +1702,38 @@ fi
 if [ "$exim" = 'yes' ]; then
 	echo "[ * ] Configuring Exim mail server..."
 	gpasswd -a Debian-exim mail > /dev/null 2>&1
-	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
+	exim_version=$(exim --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
 	if [ "$exim_version" = "4.94" ]; then
-		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+		cp -f $HESTIA_INSTALL_DIR/exim/exim.conf.4.94.template /etc/exim/exim.conf.template
 	else
-		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+		cp -f $HESTIA_INSTALL_DIR/exim/exim.conf.template /etc/exim/
 	fi
-	cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
-	cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
-	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim4/
-	cp -f $HESTIA_INSTALL_DIR/exim/system.filter /etc/exim4/
-	touch /etc/exim4/white-blocks.conf
+	cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim/
+	cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim/
+	cp -f $HESTIA_INSTALL_DIR/exim/limit.conf /etc/exim/
+	cp -f $HESTIA_INSTALL_DIR/exim/system.filter /etc/exim/
+	touch /etc/exim/white-blocks.conf
 
 	if [ "$spamd" = 'yes' ]; then
-		sed -i "s/#SPAM/SPAM/g" /etc/exim4/exim4.conf.template
+		sed -i "s/#SPAM/SPAM/g" /etc/exim/exim.conf.template
 	fi
 	if [ "$clamd" = 'yes' ]; then
-		sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
+		sed -i "s/#CLAMD/CLAMD/g" /etc/exim/exim.conf.template
 	fi
 
-	chmod 640 /etc/exim4/exim4.conf.template
-	rm -rf /etc/exim4/domains
-	mkdir -p /etc/exim4/domains
+	chmod 640 /etc/exim/exim.conf.template
+	rm -rf /etc/exim/domains
+	mkdir -p /etc/exim/domains
 
 	rm -f /etc/alternatives/mta
-	ln -s /usr/sbin/exim4 /etc/alternatives/mta
-	update-rc.d -f sendmail remove > /dev/null 2>&1
+	ln -s /usr/sbin/exim /etc/alternatives/mta
+	chkconfig -f sendmail remove > /dev/null 2>&1
 	systemctl stop sendmail > /dev/null 2>&1
-	update-rc.d -f postfix remove > /dev/null 2>&1
+	chkconfig -f postfix remove > /dev/null 2>&1
 	systemctl stop postfix > /dev/null 2>&1
-	update-rc.d exim4 defaults
-	systemctl start exim4 >> $LOG
-	check_result $? "exim4 start failed"
+	chkconfig exim on
+	systemctl start exim
+	check_result $? "exim start failed"
 fi
 
 #----------------------------------------------------------#
@@ -1782,8 +1745,8 @@ if [ "$dovecot" = 'yes' ]; then
 	gpasswd -a dovecot mail > /dev/null 2>&1
 	cp -rf $HESTIA_COMMON_DIR/dovecot /etc/
 	cp -f $HESTIA_INSTALL_DIR/logrotate/dovecot /etc/logrotate.d/
-	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 	chown -R root:root /etc/dovecot*
+	rm -f /etc/dovecot/conf.d/15-mailboxes.conf
 
 	#Alter config for 2.2
 	version=$(dovecot --version | cut -f -2 -d .)
@@ -1794,8 +1757,8 @@ if [ "$dovecot" = 'yes' ]; then
 		sed -i 's|ssl_min_protocol = TLSv1.2|ssl_protocols = !SSLv3 !TLSv1 !TLSv1.1|g' /etc/dovecot/conf.d/10-ssl.conf
 	fi
 
-	update-rc.d dovecot defaults
-	systemctl start dovecot >> $LOG
+	chkconfig dovecot defaults
+	systemctl start dovecot
 	check_result $? "dovecot start failed"
 fi
 
@@ -1807,14 +1770,14 @@ if [ "$clamd" = 'yes' ]; then
 	gpasswd -a clamav mail > /dev/null 2>&1
 	gpasswd -a clamav Debian-exim > /dev/null 2>&1
 	cp -f $HESTIA_INSTALL_DIR/clamav/clamd.conf /etc/clamav/
-	update-rc.d clamav-daemon defaults
-	if [ ! -d "/run/clamav" ]; then
-		mkdir /run/clamav
+	chkconfig clamav-daemon on
+	if [ ! -d "/var/run/clamav" ]; then
+		mkdir /var/run/clamav
 	fi
-	chown -R clamav:clamav /run/clamav
+	chown -R clamav:clamav /var/run/clamav
 	if [ -e "/lib/systemd/system/clamav-daemon.service" ]; then
-		exec_pre1='ExecStartPre=-/bin/mkdir -p /run/clamav'
-		exec_pre2='ExecStartPre=-/bin/chown -R clamav:clamav /run/clamav'
+		exec_pre1='ExecStartPre=-/bin/mkdir -p /var/run/clamav'
+		exec_pre2='ExecStartPre=-/bin/chown -R clamav:clamav /var/run/clamav'
 		sed -i "s|\[Service\]/|[Service]\n$exec_pre1\n$exec_pre2|g" \
 			/lib/systemd/system/clamav-daemon.service
 		systemctl daemon-reload
@@ -1828,7 +1791,7 @@ if [ "$clamd" = 'yes' ]; then
 		sleep 0.5
 	done
 	echo
-	systemctl start clamav-daemon >> $LOG
+	systemctl start clamav-daemon
 	check_result $? "clamav-daemon start failed"
 fi
 
@@ -1838,7 +1801,7 @@ fi
 
 if [ "$spamd" = 'yes' ]; then
 	echo "[ * ] Configuring SpamAssassin..."
-	update-rc.d spamassassin defaults > /dev/null 2>&1
+	chkconfig spamassassin on > /dev/null 2>&1
 	sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
 	systemctl start spamassassin >> $LOG
 	check_result $? "spamassassin start failed"
@@ -1867,7 +1830,7 @@ if [ "$fail2ban" = 'yes' ]; then
 		sed -i "${fline}s/true/false/" /etc/fail2ban/jail.local
 	fi
 	if [ "$vsftpd" = 'yes' ]; then
-		# Create vsftpd Log File
+		#Create vsftpd Log File
 		if [ ! -f "/var/log/vsftpd.log" ]; then
 			touch /var/log/vsftpd.log
 		fi
@@ -1884,14 +1847,13 @@ if [ "$fail2ban" = 'yes' ]; then
 	if [ -f /etc/fail2ban/jail.d/defaults-debian.conf ]; then
 		rm -f /etc/fail2ban/jail.d/defaults-debian.conf
 	fi
-
-	update-rc.d fail2ban defaults
-	systemctl start fail2ban >> $LOG
+	chkconfig fail2ban on
+	systemctl start fail2ban
 	check_result $? "fail2ban start failed"
 fi
 
 # Configuring MariaDB/MySQL host
-if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
+if [ "$mysql" = 'yes' ] || [ "$mysqlclassic" = 'yes' ]; then
 	$HESTIA/bin/v-add-database-host mysql localhost root $mpass
 fi
 
@@ -1905,7 +1867,7 @@ fi
 #----------------------------------------------------------#
 
 # Min requirements Dovecot + Exim + Mysql
-if ([ "$mysql" == 'yes' ] || [ "$mysql8" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
+if ([ "$mysql" == 'yes' ] || [ "$mysqlclassic" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
 	echo "[ * ] Install Roundcube..."
 	$HESTIA/bin/v-add-sys-roundcube
 	write_config_value "WEBMAIL_ALIAS" "webmail"
@@ -1943,9 +1905,9 @@ if [ "$sieve" = 'yes' ]; then
 	# Dovecot default file install
 	echo -e "require [\"fileinto\"];\n# rule:[SPAM]\nif header :contains \"X-Spam-Flag\" \"YES\" {\n    fileinto \"INBOX.Spam\";\n}\n" > /etc/dovecot/sieve/default
 
-	# exim4 install
-	sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim4/exim4.conf.template
-	sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
+	# exim install
+	sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim/exim.conf.template
+	sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim\/domains\/}}\/passwd}}}}\n group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim/exim.conf.template
 
 	# Permission changes
 	chown -R dovecot:mail /var/log/dovecot.log
@@ -1956,16 +1918,15 @@ if [ "$sieve" = 'yes' ]; then
 		mkdir -p $RC_CONFIG_DIR/plugins/managesieve
 		cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
 		ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
-		chown -R root:www-data $RC_CONFIG_DIR/
+		chown -R root:apache $RC_CONFIG_DIR/
 		chmod 751 -R $RC_CONFIG_DIR
 		chmod 644 $RC_CONFIG_DIR/*.php
 		chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
 		sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
 	fi
-
-	# Restart Dovecot and exim4
+	# Restart Dovecot and exim
 	systemctl restart dovecot > /dev/null 2>&1
-	systemctl restart exim4 > /dev/null 2>&1
+	systemctl restart exim > /dev/null 2>&1
 fi
 
 #----------------------------------------------------------#
@@ -2009,14 +1970,9 @@ curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 echo "[ * ] Configuring System IP..."
 $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 
-# Get primary IP
-default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
-# IPv4
-primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
-# IPv6
-#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
-ip="$primary_ipv4"
-local_ip="$primary_ipv4"
+# Get main IP
+ip=$(ip addr | grep 'inet ' | grep global | head -n1 | awk '{print $2}' | cut -f1 -d/)
+local_ip=$ip
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
@@ -2024,34 +1980,35 @@ if [ "$iptables" = 'yes' ]; then
 fi
 
 # Get public IP
-pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
-if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
-	$HESTIA/bin/v-change-sys-ip-nat "$ip" "$pub_ipv4" > /dev/null 2>&1
-	ip="$pub_ipv4"
+pub_ip=$(curl --ipv4 -s https://ip.hestiacp.com/)
+
+if [ -n "$pub_ip" ] && [ "$pub_ip" != "$ip" ]; then
+	$HESTIA/bin/v-change-sys-ip-nat $ip $pub_ip > /dev/null 2>&1
+	ip=$pub_ip
 fi
 
 # Configuring libapache2-mod-remoteip
 if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
-	cd /etc/apache2/mods-available
+	cd /etc/httpd/conf.modules.d
 	echo "<IfModule mod_remoteip.c>" > remoteip.conf
 	echo "  RemoteIPHeader X-Real-IP" >> remoteip.conf
-	if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ipv4" != "127.0.0.1" ]; then
+	if [ "$local_ip" != "127.0.0.1" ] && [ "$pub_ip" != "127.0.0.1" ]; then
 		echo "  RemoteIPInternalProxy 127.0.0.1" >> remoteip.conf
 	fi
-	if [ -n "$local_ip" ] && [ "$local_ip" != "$pub_ipv4" ]; then
+	if [ -n "$local_ip" ] && [ "$local_ip" != "$pub_ip" ]; then
 		echo "  RemoteIPInternalProxy $local_ip" >> remoteip.conf
 	fi
-	if [ -n "$pub_ipv4" ]; then
-		echo "  RemoteIPInternalProxy $pub_ipv4" >> remoteip.conf
+	if [ -n "$pub_ip" ]; then
+		echo "  RemoteIPInternalProxy $pub_ip" >> remoteip.conf
 	fi
 	echo "</IfModule>" >> remoteip.conf
-	sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/apache2/apache2.conf
+	sed -i "s/LogFormat \"%h/LogFormat \"%a/g" /etc/httpd/conf/httpd.conf
 	a2enmod remoteip >> $LOG
-	systemctl restart apache2
+	systemctl restart httpd
 fi
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain admin "$servername" "$ip"
+$HESTIA/bin/v-add-web-domain admin $servername $ip
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
@@ -2100,13 +2057,14 @@ $HESTIA/bin/v-update-sys-defaults
 
 # Update remaining packages since repositories have changed
 echo -ne "[ * ] Installing remaining software updates..."
-apt-get -qq update
-apt-get -y upgrade >> $LOG &
+dnf clean all
+dnf makecache
+dnf -y upgrade >> $LOG &
 BACK_PID=$!
 echo
 
 # Starting Hestia service
-update-rc.d hestia defaults
+chkconfig hestia on
 systemctl start hestia
 check_result $? "hestia start failed"
 chown admin:admin $HESTIA/data/sessions
@@ -2123,10 +2081,31 @@ echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbi
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
-
-BIN="$HESTIA/bin"
-source $HESTIA/func/syshealth.sh
-syshealth_repair_system_config
+write_config_value "PHPMYADMIN_KEY" ""
+write_config_value "POLICY_USER_VIEW_SUSPENDED" "no"
+write_config_value "POLICY_USER_VIEW_LOGS" "yes"
+write_config_value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
+write_config_value "POLICY_USER_EDIT_DNS_TEMPLATES" "yes"
+write_config_value "POLICY_USER_EDIT_DETAILS" "yes"
+write_config_value "POLICY_USER_DELETE_LOGS" "yes"
+write_config_value "POLICY_USER_CHANGE_THEME" "yes"
+write_config_value "POLICY_SYSTEM_PROTECTED_ADMIN" "no"
+write_config_value "POLICY_SYSTEM_PASSWORD_RESET" "yes"
+write_config_value "POLICY_SYSTEM_HIDE_SERVICES" "no"
+write_config_value "POLICY_SYSTEM_ENABLE_BACON" "no"
+write_config_value "PLUGIN_APP_INSTALLER" "true"
+write_config_value "DEBUG_MODE" "no"
+write_config_value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
+write_config_value "USE_SERVER_SMTP" "false"
+write_config_value "SERVER_SMTP_PORT" ""
+write_config_value "SERVER_SMTP_HOST" ""
+write_config_value "SERVER_SMTP_SECURITY" ""
+write_config_value "SERVER_SMTP_USER" ""
+write_config_value "SERVER_SMTP_PASSWD" ""
+write_config_value "SERVER_SMTP_ADDR" ""
+write_config_value "POLICY_CSRF_STRICTNESS" "1"
+write_config_value "DISABLE_IP_CHECK" "no"
+write_config_value "DNS_CLUSTER_SYSTEM" "hestia"
 
 # Add /usr/local/hestia/bin/ to path variable
 echo 'if [ "${PATH#*/usr/local/hestia/bin*}" = "$PATH" ]; then
@@ -2167,7 +2146,7 @@ we hope that you enjoy using it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://hestiacp.com/docs/
+Documentation:  https://hestiacp.com/docs/introduction/getting-started.html
 Forum:          https://forum.hestiacp.com/
 Discord:        https://discord.gg/nXRUZch
 GitHub:         https://www.github.com/hestiacp/hestiacp
@@ -2194,7 +2173,7 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.<br><br>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+$HESTIA/bin/v-add-user-notification admin 'Welcome to Hestia Control Panel!' '<br>You are now ready to begin <a href="/add/user/">adding user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, view the <a href="https://hestiacp.com/docs/introduction/getting-started.html" target="_blank">documentation</a> or visit our <a href="https://forum.hestiacp.com/" target="_blank">user forum</a>.<br><br>Please report any bugs or issues via <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
 
 # Clean-up
 # Sort final configuration file

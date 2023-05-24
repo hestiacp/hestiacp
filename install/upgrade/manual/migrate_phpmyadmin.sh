@@ -77,7 +77,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	cp -rf phpMyAdmin-$pma_v-all-languages/* /usr/share/phpmyadmin
 
 	# Create copy of config file
-	cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
+	cp -f $HESTIA_COMMON_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
 	mkdir -p /var/lib/phpmyadmin/tmp
 	chmod 770 -R /var/lib/phpmyadmin/tmp
 
@@ -190,7 +190,7 @@ MYSQL_PMA1
 	fi
 
 	#MYSQL DB and TABLES ADDITION
-	mysql -uroot < $HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql
+	mysql -uroot < $HESTIA_COMMON_DIR/phpmyadmin/create_tables.sql
 
 	if [ "$sso" == "yes" ]; then
 		$BIN/v-add-sys-pma-sso

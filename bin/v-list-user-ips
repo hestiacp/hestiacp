@@ -1,31 +1,31 @@
 #!/bin/bash
-# info: list user ips
+# info: list user IPs
 # options: USER [FORMAT]
 #
 # example: v-list-user-ips admin
 #
-# This function for obtaining the list of available ip addresses.
+# This function for obtaining the list of available IP addresses.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-user=$1
+user=${1}
 format=${2-shell}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source ${HESTIA}/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
 # Read and filter IP config file
 read_ip_config() {
 	VERSION=""
-	source_conf "$HESTIA/data/ips/$1"
+	source_conf "${HESTIA}/data/ips/$1"
 	if [ -z "$VERSION" ]; then
 		VERSION=4
 	fi
@@ -105,7 +105,7 @@ is_object_valid 'user' 'USER' "$user"
 owner='admin'
 owner_ips="$(grep -A 1 -H "OWNER='$owner'" $HESTIA/data/ips/* | grep "STATUS='shared'" | sed 's/.*\/\([^\/*]\)/\1/;s/-STATUS.*//')"
 user_ips="$(grep -l "OWNER='$user'" $HESTIA/data/ips/* | sed 's/.*\/\([^\/*]\)/\1/')"
-ips=$(echo -e "$user_ips\n$owner_ips" | sort -u | sed "/^$/d")
+ips="$(echo -e "$user_ips\n$owner_ips" | sort -u | sed "/^$/d")"
 fields='$IP $OWNER $STATUS $NAME $NAT'
 
 # Listing data

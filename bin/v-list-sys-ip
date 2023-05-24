@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: list system ip
+# info: list system IP
 # options: IP [FORMAT]
 #
-# example: v-list-sys-ip 116.203.78.202
+# example: v-list-sys-ip 203.0.113.1
 # example: v-list-sys-ip 1234:55:66::1
 #
-# This function for getting the list of system ip parameters.
+# This function for getting the list of system IP parameters.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -19,9 +19,9 @@ format=${2-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source ${HESTIA}/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
+source ${HESTIA}/func/ip.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -77,7 +77,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'IP [FORMAT]'
-ip_format="$(get_ip_format ${ip46})"	#	ip verification and format identification
+ip_format="$(get_ip_format ${ip46})" #	ip verification and format identification
 if [ -n "$ip_format" ]; then
 	if [ $ip_format -eq 6 ]; then
 		ip=""
@@ -90,14 +90,14 @@ if [ -n "$ip_format" ]; then
 	fi
 fi
 if [ ! -e "$HESTIA/data/ips/${ip46}" ]; then
-	check_result $E_NOTEXIST "ip ${ip46} doesn't exist"
+	check_result $E_NOTEXIST "IP ${ip46} doesn't exist"
 fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing ip
+# Parsing IP
 source_conf "$HESTIA/data/ips/${ip46}"
 
 # Listing data

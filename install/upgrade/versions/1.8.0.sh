@@ -150,7 +150,8 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 			echo -e "[ ! ] Manual action required, please view:\n[ - ] $HESTIA_BACKUP/message.log"
 			add_upgrade_message "Manual Action Required [IMPORTANT]\n\nTo enable the \"Enhanced and Optimized TLS\" feature, we must update the NGINX configuration file (/etc/nginx/nginx.conf).\n\nBut for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.\n\nPlease follow the default configuration file to sync it:\n$HESTIA_INSTALL_DIR/nginx/nginx.conf\n\nBacked up configuration file:\n$HESTIA_BACKUP/conf/nginx/nginx.conf\n\nLearn more:\nhttps://github.com/hestiacp/hestiacp/pull/3555"
 			"$BIN"/v-add-user-notification admin "IMPORTANT: Manual Action Required" 'To enable the <b>Enhanced and Optimized TLS</b> feature, we must update the NGINX configuration file (/etc/nginx/nginx.conf).<br><br>But for unknown reason or you edited it, may not be fully apply all the changes in this upgrade.<br><br>Please follow the default configuration file to sync it:<br>'"$HESTIA_INSTALL_DIR"'/nginx/nginx.conf<br><br>Backed up configuration file:<br>'"$HESTIA_BACKUP"'/conf/nginx/nginx.conf<br><br>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3555" target="_blank">#3555</a> on GitHub to learn more.'
-			sed -i "s/""$(grep "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
+
+			sed -i "s/""$(grep -m 1 "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
 
 			cp -f /etc/nginx/nginx.conf /etc/nginx/nginx.conf-staging
 

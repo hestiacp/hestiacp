@@ -2047,7 +2047,8 @@ default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev
 primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 # IPv6
 primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
-ip="$primary_ipv4"
+ip=${primary_ipv4}
+ipv6=${primary_ipv6}
 local_ip=${primary_ipv4}
 local_ipv6=${primary_ipv6}
 

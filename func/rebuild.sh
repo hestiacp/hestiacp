@@ -248,7 +248,7 @@ rebuild_web_domain_conf() {
 
 	# Rebuilding domain directories
 	if [ -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
-		if [ "$POLICY_SYNC_ERROR_DOCUMENTS" != "no"]; then
+		if [ "$POLICY_SYNC_ERROR_DOCUMENTS" != "no" ]; then
 			$BIN/v-delete-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
 		fi
 	fi

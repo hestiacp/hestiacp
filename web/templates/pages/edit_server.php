@@ -1251,6 +1251,40 @@
 							</select>
 						</div>
 						<div class="u-mb10">
+							<label for="v_policy_sync_error_documents" class="form-label">
+								<?= _("Sync Error document templates on user rebuild") ?>
+							</label>
+							<select
+								class="form-select"
+								name="v_policy_sync_error_documents"
+								id="v_policy_sync_error_documents"
+							>
+								<option value="yes">
+									<?= _("Yes") ?>
+								</option>
+								<option value="no" <?= $_SESSION["POLICY_SYNC_ERROR_DOCUMENTS"] == "no" ? "selected" : "" ?>>
+									<?= _("No") ?>
+								</option>
+							</select>
+						</div>
+						<div class="u-mb10">
+							<label for="v_policy_sync_skeleton" class="form-label">
+								<?= _("Sync Skeleton templates") ?>
+							</label>
+							<select
+								class="form-select"
+								name="v_policy_sync_skeleton"
+								id="v_policy_sync_skeleton"
+							>
+								<option value="yes">
+									<?= _("Yes") ?>
+								</option>
+								<option value="no" <?= $_SESSION["POLICY_SYNC_SKELETON"] == "no" ? "selected" : "" ?>>
+									<?= _("No") ?>
+								</option>
+							</select>
+						</div>
+						<div class="u-mb10">
 							<label for="v_policy_user_view_logs" class="form-label">
 								<?= _("Allow users to view action and login history logs") ?>
 							</label>

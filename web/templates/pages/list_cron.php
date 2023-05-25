@@ -111,7 +111,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop">Command:</span>
+					<span class="u-hide-desktop"><?= _("Command") ?>:</span>
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
 					<?php } else { ?>

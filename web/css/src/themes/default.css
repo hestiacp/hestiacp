@@ -883,6 +883,10 @@
 	border: 1px solid #ddd;
 	border-radius: 6px;
 
+	&:last-child {
+		margin-bottom: 10px;
+	}
+
 	&.selected {
 		background-color: #f8f8f8;
 		box-shadow: 0 2px 10px rgb(150 150 150 / 20%);
@@ -915,6 +919,7 @@
 
 		&:last-child {
 			border-bottom-color: transparent;
+			margin-bottom: 0;
 		}
 
 		&:hover {
@@ -2148,6 +2153,7 @@
 	padding: 3px;
 
 	& .fas {
+		line-height: 1.1;
 		margin-right: 0;
 	}
 }

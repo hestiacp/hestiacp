@@ -262,7 +262,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:e:p:D:fOh" Option; 
 		l) lang=$OPTARG ;;         # Language
 		d) api=$OPTARG ;;          # Activate API
 		y) interactive=$OPTARG ;;  # Interactive install
-		6) ipv6=$OPTARG ;;         # IPv6
+		6) ipv6_support=$OPTARG ;; # IPv6
 		s) servername=$OPTARG ;;   # Hostname
 		e) email=$OPTARG ;;        # Admin email
 		p) vpass=$OPTARG ;;        # Admin password
@@ -302,7 +302,7 @@ set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
-set_default_value 'ipv6' 'yes'
+set_default_value 'ipv6_support' 'yes'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
@@ -651,7 +651,7 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
 		servername="example.com"
 	fi
 	echo "127.0.0.1 $servername" >> /etc/hosts
-	if [ "$ipv6" = 'yes' ]; then
+	if [ "$ipv6_support" = 'yes' ]; then
 		echo "::1 $servername" >> /etc/hosts
 	fi
 fi
@@ -1071,7 +1071,7 @@ if [ ! -e "/sbin/iptables" ]; then
 			ln -s "$autoiptables" /sbin/iptables
 		fi
 	fi
-	if [ "$ipv6" = 'yes' ]; then
+	if [ "$ipv6_support" = 'yes' ]; then
 		if which ip6tables; then
 			ln -s "$(which ip6tables)" /sbin/ip6tables
 		elif [ -e "/usr/sbin/ip6tables" ]; then
@@ -1096,7 +1096,7 @@ if [ ! -e "/sbin/iptables-save" ]; then
 			ln -s "$autoiptables_save" /sbin/iptables-save
 		fi
 	fi
-	if [ "$ipv6" = 'yes' ]; then
+	if [ "$ipv6_support" = 'yes' ]; then
 		if which ip6tables-save; then
 			ln -s "$(which ip6tables-save)" /sbin/ip6tables-save
 		elif [ -e "/usr/sbin/ip6tables-save" ]; then
@@ -1121,7 +1121,7 @@ if [ ! -e "/sbin/iptables-restore" ]; then
 			ln -s "$autoiptables_restore" /sbin/iptables-restore
 		fi
 	fi
-	if [ "$ipv6" = 'yes' ]; then
+	if [ "$ipv6_support" = 'yes' ]; then
 		if which ip6tables-restore; then
 			ln -s "$(which ip6tables-restore)" /sbin/ip6tables-restore
 		elif [ -e "/usr/sbin/ip6tables-restore" ]; then
@@ -1427,7 +1427,7 @@ cp -f ${HESTIA_INSTALL_DIR}/nginx/agents.conf /etc/nginx/conf.d/
 cp -f ${HESTIA_INSTALL_DIR}/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f ${HESTIA_INSTALL_DIR}/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f ${HESTIA_INSTALL_DIR}/logrotate/nginx /etc/logrotate.d/
-if [ "$ipv6" = 'yes' ]; then
+if [ "$ipv6_support" = 'yes' ]; then
 	cp -f ${HESTIA_INSTALL_DIR}/nginx/nginx-ipv6.conf /etc/nginx/nginx.conf
 	cp -f ${HESTIA_INSTALL_DIR}/nginx/status-ipv6.conf /etc/nginx/conf.d/status.conf
 fi
@@ -1441,14 +1441,14 @@ for ip in $dns_resolver; do
 	if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 		resolver="$ip $resolver"
 	fi
-	if [ "$ipv6" = 'yes' ]; then
+	if [ "$ipv6_support" = 'yes' ]; then
 		if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
 			resolver="[$ip] $resolver"
 		fi
 	fi
 done
 if [ -n "$resolver" ]; then
-	if [ "$ipv6" = 'yes' ]; then
+	if [ "$ipv6_support" = 'yes' ]; then
 		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /etc/nginx/nginx.conf
 		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /usr/local/hestia/nginx/
 	else
@@ -1499,7 +1499,7 @@ if [ "$apache" = 'yes' ]; then
 	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
 	cp -f ${HESTIA_INSTALL_DIR}/logrotate/apache2 /etc/logrotate.d/
 
-	if [ "$ipv6" = 'yes' ]; then
+	if [ "$ipv6_support" = 'yes' ]; then
 		cp -f ${HESTIA_INSTALL_DIR}/apache2/status-ipv6.conf /etc/apache2/mods-available/hestia-status.conf
 	fi
 
@@ -1595,7 +1595,7 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 if [ "$vsftpd" = 'yes' ]; then
 	echo "[ * ] Configuring Vsftpd server..."
 	cp -f ${HESTIA_INSTALL_DIR}/vsftpd/vsftpd.conf /etc/
-	if [ "$ipv6" = 'yes' ]; then
+	if [ "$ipv6_support" = 'yes' ]; then
 		cp -f ${HESTIA_INSTALL_DIR}/vsftpd/vsftpd-ipv6.conf /etc/vsftpd.conf
 	fi
 	touch /var/log/vsftpd.log
@@ -2257,9 +2257,17 @@ fi' >> /root/.bashrc
 #----------------------------------------------------------#
 
 # Comparing hostname and IP
-host_ip=$(host $servername | head -n 1 | awk '{print $NF}')
-if [ "$host_ip" = "$ip" ]; then
-	ip="$servername"
+host_ipv4=$(host -t A ${servername})
+if [ $? -eq 0 ]; then
+	host_ipv4=$(echo "$host_ipv4" | sed -e 's/[^ ]* .* \([^ ]*\)/\1/')
+else
+	host_ipv4=""
+fi
+host_ipv6=$(host -t AAAA ${servername})
+if [ $? -eq 0 ]; then
+	host_ipv6=$(echo "$host_ipv6" | sed -e 's/[^ ]* .* \([^ ]*\)/\1/')
+else
+	host_ipv6=""
 fi
 
 echo -e "\n"
@@ -2272,15 +2280,18 @@ echo -e "Congratulations!
 You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
-
-	Admin URL:  https://$servername:$port" > $tmpfile
-if [ "$host_ip" != "$ip" ]; then
-	if [ -n "$ip" ]; then
-		echo "	Backup URL: https://$ip:$port" >> $tmpfile
-	fi
-	if [ -n "$ipv6" ]; then
-		echo "	Backup URL: https://[$ipv6]:$port" >> $tmpfile
-	fi
+" > $tmpfile
+if [ "$host_ipv4" = "$ip" -o "$host_ipv6" = "$ipv6" ]; then
+	echo -e "	Admin URL:  https://${servername}:$port" >> $tmpfile
+else
+	echo -e "	${servername} is not accessible from internet!" >> $tmpfile
+	echo -e "	Use Backup URL for Admin login:" >> $tmpfile
+fi
+if [ -n "$ip" ]; then
+	echo "	Backup URL: https://$ip:$port" >> $tmpfile
+fi
+if [ -n "$ipv6" ]; then
+	echo "	Backup URL: https://[$ipv6]:$port" >> $tmpfile
 fi
 echo -e -n " 	Username:   admin
 	Password:   $displaypass

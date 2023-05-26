@@ -13,12 +13,12 @@
 		<?php
 		 } ?>
 		<div class="u-mb10">
-			<label for="user" class="form-label"><?= _("Username") ?></label>
-			<input type="text" class="form-control" name="user" id="user" required>
+			<label for="username" class="form-label"><?= _("Username") ?></label>
+			<input type="text" class="form-control" name="user" id="username" autocomplete="username" required autofocus>
 		</div>
 		<div class="u-mb20">
 			<label for="email" class="form-label"><?= _("Email") ?></label>
-			<input type="email" class="form-control" name="email" id="email" required>
+			<input type="email" class="form-control" name="email" id="email" autocomplete="email" required>
 		</div>
 		<div class="u-side-by-side">
 			<button type="submit" class="button">

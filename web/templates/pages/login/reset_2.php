@@ -15,7 +15,7 @@
 			<input type="hidden" name="token" value="<?= htmlentities($_SESSION["token"]) ?>">
 			<input type="hidden" name="user" value="<?= htmlentities($_GET["user"]) ?>">
 			<label for="code" class="form-label"><?= _("Reset Code") ?></label>
-			<input type="text" class="form-control" name="code" id="code" required>
+			<input type="text" class="form-control" name="code" id="code" required autofocus>
 		</div>
 		<div class="u-side-by-side">
 			<button type="submit" class="button">

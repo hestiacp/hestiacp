@@ -17,11 +17,11 @@
 			<input type="hidden" name="user" value="<?= htmlentities($_GET["user"]) ?>">
 			<input type="hidden" name="code" value="<?= htmlentities($_GET["code"]) ?>">
 			<label for="password" class="form-label"><?= _("New Password") ?></label>
-			<input type="password" class="form-control" name="password" id="password" required>
+			<input type="password" class="form-control" name="password" id="password" autocomplete="new-password" required autofocus>
 		</div>
 		<div class="u-mb20">
 			<label for="password_confirm" class="form-label"><?= _("Confirm Password") ?></label>
-			<input type="password" class="form-control" name="password_confirm" id="password_confirm" required>
+			<input type="password" class="form-control" name="password_confirm" id="password_confirm" autocomplete="new-password" required>
 		</div>
 		<div class="u-side-by-side">
 			<button type="submit" class="button">

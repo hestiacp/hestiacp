@@ -13,8 +13,8 @@
 		<?php
 		 } ?>
 		<div class="u-mb10">
-			<label for="user" class="form-label"><?= _("Username") ?></label>
-			<input type="text" class="form-control" name="user" id="user" required autofocus>
+			<label for="username" class="form-label"><?= _("Username") ?></label>
+			<input type="text" class="form-control" name="user" id="username" autocomplete="username" required autofocus>
 		</div>
 		<div class="u-mb20">
 			<label for="password" class="form-label u-side-by-side">
@@ -25,7 +25,7 @@
 					</a>
 				<?php } ?>
 			</label>
-			<input type="password" class="form-control" name="password" id="password" required autofocus>
+			<input type="password" class="form-control" name="password" id="password" autocomplete="current-password" required>
 		</div>
 		<button type="submit" class="button">
 			<i class="fas fa-right-to-bracket"></i><?= _("Next") ?>

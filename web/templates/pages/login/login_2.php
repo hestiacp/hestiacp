@@ -19,7 +19,7 @@
 					<?= _("Forgot Token") ?>
 				</a>
 			</label>
-			<input type="text" class="form-control" name="twofa" id="twofa" required autofocus>
+			<input type="text" class="form-control" name="twofa" id="twofa" autocomplete="one-time-code" required autofocus>
 		</div>
 		<div class="u-side-by-side">
 			<button type="submit" class="button">

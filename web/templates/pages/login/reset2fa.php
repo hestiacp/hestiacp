@@ -27,11 +27,11 @@
 			 } ?>
 			<div class="u-mb10">
 				<label for="user" class="form-label"><?= _("Username") ?></label>
-				<input type="text" class="form-control" name="user" id="user" required>
+				<input type="text" class="form-control" name="user" id="user" autocomplete="username" required autofocus>
 			</div>
 			<div class="u-mb20">
 				<label for="twofa" class="form-label"><?= _("2FA Reset Code") ?></label>
-				<input type="text" class="form-control" name="twofa" id="twofa" required>
+				<input type="text" class="form-control" name="twofa" id="twofa" autocomplete="off" required>
 			</div>
 			<div class="u-side-by-side">
 				<button type="submit" class="button">

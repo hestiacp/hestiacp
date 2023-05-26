@@ -6,11 +6,9 @@
 		<h1 class="login-title">
 			<?= _("Forgot Password") ?>
 		</h1>
-		<?php if(!empty($error)){
-		?>
-			<p class="error"><?=$error;?></p>
-		<?php
-		 } ?>
+		<?php if (!empty($error)) { ?>
+			<p class="error"><?= $error ?></p>
+		<?php } ?>
 		<div class="u-mb10">
 			<input type="hidden" name="action" value="confirm">
 			<input type="hidden" name="token" value="<?= htmlentities($_SESSION["token"]) ?>">

@@ -7,11 +7,9 @@
 		<h1 class="login-title">
 			<?= _("Forgot Password") ?>
 		</h1>
-		<?php if(!empty($error)){
-		?>
-			<p class="error"><?=$error;?></p>
-		<?php
-		 } ?>
+		<?php if (!empty($error)) { ?>
+			<p class="error"><?= $error ?></p>
+		<?php } ?>
 		<div class="u-mb10">
 			<label for="username" class="form-label"><?= _("Username") ?></label>
 			<input type="text" class="form-control" name="user" id="username" autocomplete="username" required autofocus>

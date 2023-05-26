@@ -96,23 +96,31 @@
 					$spnd_confirmation = _('Are you sure you want to unsuspend domain %s?');
 					if ($data[$key]['ANTIVIRUS'] == 'no') {
 						$antivirus_icon = 'fa-circle-xmark';
+						$antivirus_title = _('Disabled');
 					} else {
 						$antivirus_icon = 'fa-circle-check';
+						$antivirus_title = _('Enabled');
 					}
 					if ($data[$key]['ANTISPAM'] == 'no') {
 						$antispam_icon = 'fa-circle-xmark';
+						$antispam_title = _('Disabled');
 					} else {
 						$antispam_icon = 'fa-circle-check';
+						$antispam_title = _('Enabled');
 					}
 					if ($data[$key]['DKIM'] == 'no') {
 						$dkim_icon = 'fa-circle-xmark';
+						$dkim_title = _('Disabled');
 					} else {
 						$dkim_icon = 'fa-circle-check';
+						$dkim_title = _('Enabled');
 					}
 					if ($data[$key]['SSL'] == 'no') {
 						$ssl_icon = 'fa-circle-xmark';
+						$ssl_title = _('Disabled');
 					} else {
 						$ssl_icon = 'fa-circle-check';
+						$ssl_title = _('Enabled');
 					}
 				} else {
 					$status = 'active';
@@ -123,23 +131,31 @@
 					$spnd_confirmation = _('Are you sure you want to suspend domain %s?');
 					if ($data[$key]['ANTIVIRUS'] == 'no') {
 						$antivirus_icon = 'fa-circle-xmark icon-red';
+						$antivirus_title = _('Disabled');
 					} else {
 						$antivirus_icon = 'fa-circle-check icon-green';
+						$antivirus_title = _('Enabled');
 					}
 					if ($data[$key]['ANTISPAM'] == 'no') {
 						$antispam_icon = 'fa-circle-xmark icon-red';
+						$antispam_title = _('Disabled');
 					} else {
 						$antispam_icon = 'fa-circle-check icon-green';
+						$antispam_title = _('Enabled');
 					}
 					if ($data[$key]['DKIM'] == 'no') {
 						$dkim_icon = 'fa-circle-xmark icon-red';
+						$dkim_title = _('Disabled');
 					} else {
 						$dkim_icon = 'fa-circle-check icon-green';
+						$dkim_title = _('Enabled');
 					}
 					if ($data[$key]['SSL'] == 'no') {
 						$ssl_icon = 'fa-circle-xmark icon-red';
+						$ssl_title = _('Disabled');
 					} else {
 						$ssl_icon = 'fa-circle-check icon-green';
+						$ssl_title = _('Enabled');
 					}
 				}
 				if (empty($data[$key]['CATCHALL'])) {
@@ -303,19 +319,19 @@
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("Anti-Virus") ?>:</span>
-					<i class="fas <?= $antivirus_icon ?>"></i>
+					<i class="fas <?= $antivirus_icon ?>" title="<?= $antivirus_title ?>"></i>
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("Spam Filter") ?>:</span>
-					<i class="fas <?= $antispam_icon ?>"></i>
+					<i class="fas <?= $antispam_icon ?>" title="<?= $antispam_title ?>"></i>
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("DKIM") ?>:</span>
-					<i class="fas <?= $dkim_icon ?>"></i>
+					<i class="fas <?= $dkim_icon ?>" title="<?= $dkim_title ?>"></i>
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("SSL") ?>:</span>
-					<i class="fas <?= $ssl_icon ?>"></i>
+					<i class="fas <?= $ssl_icon ?>" title="<?= $ssl_title ?>"></i>
 				</div>
 			</div>
 		<?php } ?>

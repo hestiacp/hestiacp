@@ -26,7 +26,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
@@ -74,6 +74,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 <!-- End toolbar -->
 
 <div class="container">
+
 	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
@@ -217,6 +218,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 		<?php } ?>
 	</div>
+
 </div>
 
 <footer class="app-footer">

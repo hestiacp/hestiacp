@@ -231,13 +231,6 @@
 									<?php if (!empty($data[$key]['WEBMAIL'])) { ?>
 										<li class="units-table-row-action" data-key-action="href">
 											<a
-												href="http://<?=$webmail;?>.<?=$key?>/"
-												target="_blank"
-												title="<?= _("Open Webmail") ?>"
-											>
-												<i class="fas fa-paper-plane icon-lightblue icon-dim"></i>
-											</a>
-											<a
 												class="units-table-row-action-link"
 												href="http://<?=$webmail;?>.<?=$key?>/"
 												target="_blank"

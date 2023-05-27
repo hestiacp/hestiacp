@@ -65,7 +65,7 @@
 
 <div class="container">
 
-<div class="units-table js-units-container">
+	<div class="units-table js-units-container">
 		<div class="units-table-header">
 			<div class="units-table-cell">
 				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>

@@ -1,6 +1,6 @@
 <div class="login animate__animated animate__zoomIn">
 	<a href="/" class="u-block u-mb40">
-		<img src="/images/logo.svg" alt="<?= htmlentities($_SESSION['APP_NAME']); ?>" width="100" height="120">
+		<img src="/images/logo.svg" alt="<?= htmlentities($_SESSION["APP_NAME"]) ?>" width="100" height="120">
 	</a>
 	<?php if ($success) { ?>
 		<div>
@@ -20,18 +20,16 @@
 			<h1 class="login-title">
 				<?= _("Unlock Account") ?>
 			</h1>
-			<?php if(!empty($error)){
-			?>
-				<p class="error"><?=$error;?></p>
-			<?php
-			 } ?>
+			<?php if (!empty($error)) { ?>
+				<p class="error"><?= $error ?></p>
+			<?php } ?>
 			<div class="u-mb10">
 				<label for="user" class="form-label"><?= _("Username") ?></label>
-				<input type="text" class="form-control" name="user" id="user" required>
+				<input type="text" class="form-control" name="user" id="user" autocomplete="username" required autofocus>
 			</div>
 			<div class="u-mb20">
 				<label for="twofa" class="form-label"><?= _("2FA Reset Code") ?></label>
-				<input type="text" class="form-control" name="twofa" id="twofa" required>
+				<input type="text" class="form-control" name="twofa" id="twofa" autocomplete="off" required>
 			</div>
 			<div class="u-side-by-side">
 				<button type="submit" class="button">

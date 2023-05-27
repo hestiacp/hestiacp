@@ -23,7 +23,7 @@
 					<?= _("Sort by") ?>:
 					<b>
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Command'); } else { $label = _('Date'); } ?>
-						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
+						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
 					</b>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">

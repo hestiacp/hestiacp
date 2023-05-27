@@ -231,11 +231,9 @@
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("Expiration Date") ?>:</span>
-					<span class="u-text-bold">
-						<time datetime="<?= $data[$key]["EXP"] ?>">
-							<?= $data[$key]["EXP"] ?>
-						</time>
-					</span>
+					<time class="u-text-bold" datetime="<?= $data[$key]["EXP"] ?>">
+						<?= $data[$key]["EXP"] ?>
+					</time>
 				</div>
 			</div>
 		<?php } ?>

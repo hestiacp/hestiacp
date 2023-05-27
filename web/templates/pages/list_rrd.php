@@ -27,7 +27,7 @@
 				<h2 class="u-mb20"><?= htmlspecialchars($data[$key]["TITLE"]) ?></h2>
 				<canvas
 					class="u-max-height300 js-rrd-chart"
-					data-service="<?= $data[$key]["TYPE"] !== 'net' ? htmlspecialchars($data[$key]["RRD"]) : 'net_' . htmlspecialchars($data[$key]["RRD"]); ?>"
+					data-service="<?= $data[$key]["TYPE"] !== "net" ? htmlspecialchars($data[$key]["RRD"]) : "net_" . htmlspecialchars($data[$key]["RRD"]) ?>"
 					data-period="<?= htmlspecialchars($period) ?>"
 				></canvas>
 			</div>

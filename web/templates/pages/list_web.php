@@ -89,64 +89,63 @@
 			foreach ($data as $key => $value) {
 				++$i;
 				if ($data[$key]['SUSPENDED'] == 'yes') {
-						$status = 'suspended';
-						$spnd_action = 'unsuspend';
-						$spnd_action_title = _('Unsuspend');
-						$spnd_icon = 'fa-play';
-						$spnd_confirmation = _('Are you sure you want to unsuspend domain %s?');
+					$status = 'suspended';
+					$spnd_action = 'unsuspend';
+					$spnd_action_title = _('Unsuspend');
+					$spnd_icon = 'fa-play';
+					$spnd_confirmation = _('Are you sure you want to unsuspend domain %s?');
 				} else {
-						$status = 'active';
-						$spnd_action = 'suspend';
-						$spnd_action_title = _('Suspend');
-						$spnd_icon = 'fa-pause';
-						$spnd_confirmation = _('Are you sure you want to suspend domain %s?');
+					$status = 'active';
+					$spnd_action = 'suspend';
+					$spnd_action_title = _('Suspend');
+					$spnd_icon = 'fa-pause';
+					$spnd_confirmation = _('Are you sure you want to suspend domain %s?');
 				}
 				if (!empty($data[$key]['SSL_HOME'])) {
-						if ($data[$key]['SSL_HOME'] == 'same') {
-								$ssl_home = 'public_html';
-						} else {
-								$ssl_home = 'public_shtml';
-						}
+					if ($data[$key]['SSL_HOME'] == 'same') {
+						$ssl_home = 'public_html';
+					} else {
+						$ssl_home = 'public_shtml';
+					}
 				} else {
-						$ssl_home = '';
+					$ssl_home = '';
 				}
 				$web_stats='no';
 				if (!empty($data[$key]['STATS'])) {
-						$web_stats=$data[$key]['STATS'];
+					$web_stats=$data[$key]['STATS'];
 				}
 				$ftp_user='no';
 				if (!empty($data[$key]['FTP_USER'])) {
-						$ftp_user=$data[$key]['FTP_USER'];
-
+					$ftp_user=$data[$key]['FTP_USER'];
 				}
 				if (strlen($ftp_user) > 24 ) {
-						$ftp_user = str_replace(':', ', ', $ftp_user);
-						$ftp_user = substr($ftp_user, 0, 24);
-						$ftp_user = trim($ftp_user, ":");
-						$ftp_user = str_replace(':', ', ', $ftp_user);
-						$ftp_user = $ftp_user.", ...";
+					$ftp_user = str_replace(':', ', ', $ftp_user);
+					$ftp_user = substr($ftp_user, 0, 24);
+					$ftp_user = trim($ftp_user, ":");
+					$ftp_user = str_replace(':', ', ', $ftp_user);
+					$ftp_user = $ftp_user.", ...";
 				} else {
-						$ftp_user = str_replace(':', ', ', $ftp_user);
+					$ftp_user = str_replace(':', ', ', $ftp_user);
 				}
 
 				$backend_support='no';
 				if (!empty($data[$key]['BACKEND'])) {
-						$backend_support='yes';
+					$backend_support='yes';
 				}
 
 				$proxy_support='no';
 				if (!empty($data[$key]['PROXY'])) {
-						$proxy_support='yes';
+					$proxy_support='yes';
 				}
 				if (strlen($data[$key]['PROXY_EXT']) > 24 ) {
-						$proxy_ext_title = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
-						$proxy_ext = substr($data[$key]['PROXY_EXT'], 0, 24);
-						$proxy_ext = trim($proxy_ext, ",");
-						$proxy_ext = str_replace(',', ', ', $proxy_ext);
-						$proxy_ext = $proxy_ext.", ...";
+					$proxy_ext_title = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
+					$proxy_ext = substr($data[$key]['PROXY_EXT'], 0, 24);
+					$proxy_ext = trim($proxy_ext, ",");
+					$proxy_ext = str_replace(',', ', ', $proxy_ext);
+					$proxy_ext = $proxy_ext.", ...";
 				} else {
-						$proxy_ext_title = '';
-						$proxy_ext = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
+					$proxy_ext_title = '';
+					$proxy_ext = str_replace(',', ', ', $data[$key]['PROXY_EXT']);
 				}
 				if ($data[$key]['SUSPENDED'] === 'yes') {
 					if ($data[$key]['SSL'] == 'no') {

@@ -40,10 +40,10 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
-					<b>
+					<span class="u-text-bold">
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
-					</b>
+					</span>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-charset">
@@ -185,7 +185,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 										<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 											<a
 												class="data-controls js-confirm-action"
-												href="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+												href="/<?= $spnd_action ?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
 												data-confirm-title="<?= $spnd_action_title ?>"
 												data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 											>

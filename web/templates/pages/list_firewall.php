@@ -20,7 +20,10 @@
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
-					<?= _("Sort by") ?>: <b><?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i></b>
+					<?= _("Sort by") ?>:
+					<span class="u-text-bold">
+						<?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i>
+					</span>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-action">
@@ -121,7 +124,7 @@
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
-											href="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
+											href="/<?= $spnd_action ?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
 											data-confirm-title="<?= $spnd_action_title ?>"
 											data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 										>

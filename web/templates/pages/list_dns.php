@@ -12,10 +12,10 @@
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
-					<b>
+					<span class="u-text-bold">
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
 						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
-					</b>
+					</span>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
@@ -179,7 +179,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?=$spnd_action?>/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $spnd_action ?>/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
 									title="<?= $spnd_action_title ?>"
 									data-confirm-title="<?= $spnd_action_title ?>"
 									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"

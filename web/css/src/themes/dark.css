@@ -217,10 +217,10 @@ strong {
 
 .toolbar-sorting-toggle {
 	&:hover {
-		color: #bcbcbc;
+		color: #aaa;
 
-		& b {
-			color: #bcbcbc;
+		& span {
+			color: #aaa;
 		}
 	}
 }

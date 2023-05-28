@@ -627,7 +627,7 @@
 	&:hover {
 		color: #4b4b4b;
 
-		& b {
+		& span {
 			color: #4b4b4b;
 		}
 	}
@@ -635,12 +635,12 @@
 	&:active {
 		color: #3b9de8;
 
-		& b {
+		& span {
 			color: #3b9de8;
 		}
 	}
 
-	& b {
+	& span {
 		padding-left: 3px;
 	}
 

@@ -40,10 +40,10 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
-					<b>
+					<span class="u-text-bold">
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-					</b>
+						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
+					</span>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-charset">
@@ -98,6 +98,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 <!-- End toolbar -->
 
 <div class="container">
+
 	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
@@ -168,15 +169,23 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 										&nbsp;
 									<?php } else { ?>
 										<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-											<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Database") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+											<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href">
+												<a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Database") ?>">
+													<i class="fas fa-pencil icon-orange icon-dim"></i>
+												</a>
+											</div>
 										<?php } ?>
 										<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
-											<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a target="_blank" href="<?=$db_myadmin_link;?>hestia-sso.php?database=<?=$key;?>&user=<?=$user_plain;?>&exp=<?=$time;?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="phpMyAdmin"><i class="fas fa-right-to-bracket icon-orange icon-dim"></i></a></div>
+											<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href">
+												<a target="_blank" href="<?=$db_myadmin_link?>hestia-sso.php?database=<?=$key?>&user=<?=$user_plain?>&exp=<?=$time?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="phpMyAdmin">
+													<i class="fas fa-right-to-bracket icon-orange icon-dim"></i>
+												</a>
+											</div>
 										<?php } ?>
 										<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 											<a
 												class="data-controls js-confirm-action"
-												href="/<?=$spnd_action?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+												href="/<?= $spnd_action ?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
 												data-confirm-title="<?= $spnd_action_title ?>"
 												data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 											>
@@ -208,6 +217,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			</div>
 		<?php } ?>
 	</div>
+
 </div>
 
 <footer class="app-footer">

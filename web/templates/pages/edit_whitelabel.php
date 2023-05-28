@@ -80,7 +80,7 @@
 
 					<div class="u-mb10">
 						<label for="v_from_email" class="form-label">
-							<?= _("Sender Email Address") ?><span class="optional">(<?= _("Default") ?>: <?=sprintf('noreply@%s', htmlentities(trim(get_hostname(), "'")));?>)</span>
+							<?= _("Sender Email Address") ?><span class="optional">(<?= _("Default") ?>: <?= sprintf("noreply@%s", htmlentities(trim(get_hostname(), "'"))) ?>)</span>
 						</label>
 						<input
 							type="text"
@@ -107,8 +107,8 @@
 							<?= _("Hide link to Documentation") ?>
 						</label>
 						<select x-model="hide_docs" class="form-select" name="v_hide_docs" id="v_hide_docs">
-							<option value="yes"><?=_('Yes');?></option>
-							<option value="no"><?=_('No');?></option>
+							<option value="yes"><?= _("Yes") ?></option>
+							<option value="no"><?= _("No") ?></option>
 						</select>
 					</div>
 				</div>
@@ -126,7 +126,7 @@
 						</label>
 					</div>
 					<div class="u-mb10">
-						<p><?=sprintf(_("Upload the files to %s"), '/usr/local/hestia/web/images/custom/');?></p>
+						<p><?= sprintf(_("Upload the files to %s"), "/usr/local/hestia/web/images/custom/") ?></p>
 						<ul>
 							<li>logo.svg <small>(100px x 120px)</small></li>
 							<li>logo.png <small>(100px x 120px)</small></li>

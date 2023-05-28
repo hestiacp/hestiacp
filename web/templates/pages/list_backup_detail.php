@@ -86,7 +86,7 @@
 			foreach ($mail as $key) {
 				if (!empty($key)) {
 			?>
-			<div class="l-unit">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check2<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= $key ?>">
@@ -118,7 +118,7 @@
 			foreach ($dns as $key) {
 				if (!empty($key)) {
 			?>
-			<div class="l-unit">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check3<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= $key ?>">
@@ -150,7 +150,7 @@
 			foreach ($db as $key) {
 				if (!empty($key)) {
 			?>
-			<div class="l-unit">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check4<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= $key ?>">
@@ -179,7 +179,7 @@
 		<!-- List Cron Jobs -->
 		<?php if (!empty($data[$backup]["CRON"])) {
 		if (!empty($key)) { ?>
-			<div class="l-unit">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check5<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="check" value="<?= $key ?>">
@@ -211,7 +211,7 @@
 			foreach ($udir as $key) {
 				if (!empty($key)) {
 			?>
-			<div class="l-unit">
+			<div class="l-unit animate__animated animate__fadeIn js-unit">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check6<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="udir[]" value="<?= $key ?>">

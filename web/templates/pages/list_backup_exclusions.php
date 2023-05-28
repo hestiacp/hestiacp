@@ -44,9 +44,11 @@
 					<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
 					<div class="clearfix l-unit__stat-col--left wide-3">
 						<?php
-							if (empty($value)) echo _('No exclusions');
+							if (empty($value)) {
+								echo _("No exclusions");
+							}
 							foreach ($value as $ex_key => $ex_value) {
-								echo '<b>'.$ex_key.' </b>'.$ex_value.'<br>';
+								echo "<b>" . $ex_key . " </b>" . $ex_value . "<br>";
 							}
 						?>
 					</div>

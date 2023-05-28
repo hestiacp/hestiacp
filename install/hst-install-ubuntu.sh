@@ -159,7 +159,7 @@ sort_config_file() {
 	mv /tmp/updconf ${HESTIA}/conf/hestia.conf
 	rm -f ${HESTIA}/conf/hestia.conf.bak
 	if [ ! -d "$HESTIA/conf/defaults/" ]; then
-		mkdir -p "$HESTIA/conf/defaults/"
+		mkdir -p "${HESTIA}/conf/defaults/"
 	fi
 	cp ${HESTIA}/conf/hestia.conf ${HESTIA}/conf/defaults/hestia.conf
 }
@@ -658,6 +658,9 @@ fi
 
 if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
+	if [ "$ipv6_support" = 'yes' ]; then
+		echo "::1 $servername" >> /etc/hosts
+	fi
 fi
 
 # Set email if it wasn't set
@@ -2104,12 +2107,18 @@ ${HESTIA}/bin/v-update-sys-ip > /dev/null 2>&1
 default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
 # IPv4
 primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
-# IPv6
-primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 ip=${primary_ipv4}
-ipv6=${primary_ipv6}
 local_ip=${primary_ipv4}
-local_ipv6=${primary_ipv6}
+# IPv6
+if [ "$ipv6_support" = 'yes' ]; then
+	primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+	ipv6=${primary_ipv6}
+	local_ipv6=${primary_ipv6}
+else
+	primary_ipv6=""
+	ipv6=""
+	local_ipv6=""
+fi
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
@@ -2118,7 +2127,11 @@ fi
 
 # Get public IP
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
-pub_ipv6="$(curl -fsLm5 --retry 2 --ipv6 https://ip.hestiacp.com/)"
+if [ "$ipv6_support" = 'yes' ]; then
+	pub_ipv6="$(curl -fsLm5 --retry 2 --ipv6 https://ip.hestiacp.com/)"
+else
+	pub_ipv6=""
+fi
 
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
@@ -2263,9 +2276,13 @@ if [ $? -eq 0 ]; then
 else
 	host_ipv4=""
 fi
-host_ipv6=$(host -t AAAA ${servername})
-if [ $? -eq 0 ]; then
-	host_ipv6=$(echo "$host_ipv6" | sed -e 's/[^ ]* .* \([^ ]*\)/\1/')
+if [ "$ipv6_support" = 'yes' ]; then
+	host_ipv6=$(host -t AAAA ${servername})
+	if [ $? -eq 0 ]; then
+		host_ipv6=$(echo "$host_ipv6" | sed -e 's/[^ ]* .* \([^ ]*\)/\1/')
+	else
+		host_ipv6=""
+	fi
 else
 	host_ipv6=""
 fi
@@ -2281,7 +2298,17 @@ You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
 " > $tmpfile
-if [ "$host_ipv4" = "$ip" -o "$host_ipv6" = "$ipv6" ]; then
+if [ -n "$ip" -a "$host_ipv4" = "$ip" ]; then
+	ipv4_accessible=1
+else
+	ipv4_accessible=0
+fi
+if [ -n "$ipv6" -a "$host_ipv6" = "$ipv6" ]; then
+	ipv6_accessible=1
+else
+	ipv6_accessible=0
+fi
+if [ $ipv4_accessible -eq 1 -o $ipv6_accessible -eq 1 ]; then
 	echo -e "	Admin URL:  https://${servername}:$port" >> $tmpfile
 else
 	echo -e "	${servername} is not accessible from internet!" >> $tmpfile

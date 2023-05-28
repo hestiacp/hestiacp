@@ -56,39 +56,39 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ "$ipv6" != "no" ]; then
-    is_format_valid 'ipv6'
+	is_format_valid 'ipv6'
 fi
 if [ "$ipv6" != "no" ]; then
-    is_ipv6_valid "$ipv6" "$user"
+	is_ipv6_valid "$ipv6" "$user"
 else
-    ipv6=''
+	ipv6=''
 fi
 
 # Get old ip
 get_domain_values 'dns'
-if [ -z @"$ipv6" ] && [ -z "$IP" ]; then
-    check_result $E_INVALID "IP or IPv6 is required"
+if [ -z "$ipv6" ] && [ -z "$IP" ]; then
+	check_result $E_INVALID "IP or IPv6 is required"
 fi
 old=$IP6
 
 if [ -z "$old" ]; then
-    #Create new
-    # Generating timestamp
-    time_n_date=$(date +'%T %F')
-    time=$(echo "$time_n_date" |cut -f 1 -d \ )
-    date=$(echo "$time_n_date" |cut -f 2 -d \ )
-    ip=""
-    add_dns_config_records
+	#Create new
+	# Generating timestamp
+	time_n_date=$(date +'%T %F')
+	time=$(echo "$time_n_date" | cut -f 1 -d \ )
+	date=$(echo "$time_n_date" | cut -f 2 -d \ )
+	ip=""
+	add_dns_config_records
 else
-    if [ ! -z "$ipv6" ]; then
-        # Changing records
-        sed -i "s/$old/$ipv6/g" $USER_DATA/dns/$domain.conf
-    else
-        #Delete configs
-        ipv6=""
-        ip=$IP
-        remove_dns_config_records
-    fi
+	if [ ! -z "$ipv6" ]; then
+		# Changing records
+		sed -i "s/$old/$ipv6/g" $USER_DATA/dns/$domain.conf
+	else
+		#Delete configs
+		ipv6=""
+		ip=$IP
+		remove_dns_config_records
+	fi
 fi
 
 # Changing ip

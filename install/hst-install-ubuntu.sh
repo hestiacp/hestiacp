@@ -2175,13 +2175,13 @@ fi
 
 # Adding default domain
 if [ -n "$ip" ]; then
-	if [ -n "ipv6" ]; then
+	if [ -n "$ipv6" ]; then
 		${HESTIA}/bin/v-add-web-domain admin ${servername} ${ip} ${ipv6}
 	else
 		${HESTIA}/bin/v-add-web-domain admin ${servername} ${ip}
 	fi
 else
-	if [ -n "ipv6" ]; then
+	if [ -n "$ipv6" ]; then
 		${HESTIA}/bin/v-add-web-domain admin ${servername} "" ${ipv6}
 	fi
 fi

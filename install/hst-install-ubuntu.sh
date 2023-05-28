@@ -75,7 +75,7 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
-  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: yes
+  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: no
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -p, --password          Set admin password
@@ -302,7 +302,7 @@ set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'interactive' 'yes'
-set_default_value 'ipv6_support' 'yes'
+set_default_value 'ipv6_support' 'no'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'

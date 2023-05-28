@@ -868,11 +868,10 @@
 		& .units-table-cell {
 			font-weight: bold;
 			padding: 14px 15px;
+		}
 
-			/* Checkbox cell */
-			&:nth-child(1) {
-				line-height: 1.3;
-			}
+		& .fas {
+			font-size: 1rem;
 		}
 	}
 }
@@ -973,11 +972,12 @@
 
 	@media (--viewport-large) {
 		display: table-cell;
+		vertical-align: middle;
 		padding: 10px 15px;
 
 		/* Checkbox cell */
 		&:nth-child(1) {
-			vertical-align: bottom;
+			line-height: 0.6;
 		}
 
 		/* Row heading cell */
@@ -2499,10 +2499,10 @@
 	font-size: 0.75rem;
 	box-shadow: 0 1px 2px rgb(70 70 70 / 50%), inset 0 2px 2px #fff;
 	color: #6c6c6c;
+	text-align: center;
 	text-shadow: 0 1px #fafafa;
 	border: 1px solid #b8b8b8;
 	background-color: #eaeaea;
-	margin-top: -2px;
 }
 
 .l-unit--suspended .badge {

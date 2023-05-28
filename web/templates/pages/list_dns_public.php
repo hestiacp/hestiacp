@@ -12,10 +12,10 @@
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
-					<b>
+					<span class="u-text-bold">
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-					</b>
+						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
+					</span>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
@@ -67,6 +67,7 @@
 <!-- End toolbar -->
 
 <div class="container">
+
 	<div class="units js-units-container">
 		<div class="l-unit animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
@@ -99,4 +100,5 @@
 			</div>
 		</div>
 	</div>
+
 </div>

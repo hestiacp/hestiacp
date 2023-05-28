@@ -24,10 +24,10 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			<div class="toolbar-sorting">
 				<button class="toolbar-sorting-toggle js-toggle-sorting-menu" type="button" title="<?= _("Sort items") ?>">
 					<?= _("Sort by") ?>:
-					<b>
+					<span class="u-text-bold">
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = _('Name'); } else { $label = _('Date'); } ?>
-						<?=$label;?> <i class="fas fa-arrow-down-a-z"></i>
-					</b>
+						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
+					</span>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
@@ -74,6 +74,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 <!-- End toolbar -->
 
 <div class="container">
+
 	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
@@ -179,7 +180,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
-											href="/<?=$spnd_action?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"
+											href="/<?= $spnd_action ?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"
 											data-confirm-title="<?= $spnd_action_title ?>"
 											data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 										>
@@ -217,6 +218,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 		<?php } ?>
 	</div>
+
 </div>
 
 <footer class="app-footer">

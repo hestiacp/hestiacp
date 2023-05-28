@@ -627,7 +627,7 @@
 	&:hover {
 		color: #4b4b4b;
 
-		& b {
+		& span {
 			color: #4b4b4b;
 		}
 	}
@@ -635,12 +635,12 @@
 	&:active {
 		color: #3b9de8;
 
-		& b {
+		& span {
 			color: #3b9de8;
 		}
 	}
 
-	& b {
+	& span {
 		padding-left: 3px;
 	}
 
@@ -868,11 +868,10 @@
 		& .units-table-cell {
 			font-weight: bold;
 			padding: 14px 15px;
+		}
 
-			/* Checkbox cell */
-			&:nth-child(1) {
-				line-height: 1.1;
-			}
+		& .fas {
+			font-size: 1rem;
 		}
 	}
 }
@@ -882,6 +881,10 @@
 	margin-top: 10px;
 	border: 1px solid #ddd;
 	border-radius: 6px;
+
+	&:last-child {
+		margin-bottom: 10px;
+	}
 
 	&.selected {
 		background-color: #f8f8f8;
@@ -915,6 +918,7 @@
 
 		&:last-child {
 			border-bottom-color: transparent;
+			margin-bottom: 0;
 		}
 
 		&:hover {
@@ -951,8 +955,11 @@
 }
 
 .units-table-cell {
+	/* Row heading cell */
 	&:nth-child(2) {
 		font-size: 0.9rem;
+		padding-top: 5px;
+		padding-bottom: 5px;
 	}
 
 	& a {
@@ -965,16 +972,19 @@
 
 	@media (--viewport-large) {
 		display: table-cell;
+		vertical-align: middle;
 		padding: 10px 15px;
 
 		/* Checkbox cell */
 		&:nth-child(1) {
-			vertical-align: bottom;
+			line-height: 0.6;
 		}
 
 		/* Row heading cell */
 		&:nth-child(2) {
 			font-size: 0.8rem;
+			padding-top: 10px;
+			padding-bottom: 10px;
 		}
 
 		/* Metadata cells */
@@ -988,16 +998,16 @@
 	display: flex;
 	flex-wrap: wrap;
 	padding-top: 5px;
-	padding-bottom: 5px;
 
 	@media (--viewport-large) {
 		visibility: hidden;
-		padding: 0;
+		padding-top: 0;
 	}
 }
 
 .units-table-row-action {
-	margin-right: 10px;
+	margin-right: 5px;
+	margin-bottom: 5px;
 
 	&:last-child {
 		margin-right: 0;
@@ -1005,6 +1015,7 @@
 
 	@media (--viewport-large) {
 		margin-right: 0;
+		margin-bottom: 0;
 	}
 }
 
@@ -1954,10 +1965,10 @@
    ========================================================================== */
 
 .modal {
-	border-radius: var(--border-radius-base);
-	box-shadow: inset 0 1px 3px rgb(0 0 0 / 25%), 0 8px 40px 0 rgb(0 0 0 / 35%);
 	background-color: #f0efef;
 	border: 1px solid rgb(255 255 255 / 98%);
+	border-radius: var(--border-radius-base);
+	box-shadow: inset 0 1px 3px rgb(0 0 0 / 25%), 0 8px 40px 0 rgb(0 0 0 / 35%);
 
 	@media (--viewport-small) {
 		min-width: 360px;
@@ -1989,11 +2000,11 @@
    ========================================================================== */
 
 .shortcuts {
-	background: rgb(50 50 50 / 93%);
+	background-color: rgb(50 50 50 / 93%);
 	color: #eee;
 	border: 1px solid rgb(255 255 255 / 70%);
 	border-radius: 6px;
-	box-shadow: 0 4px 30px rgb(0 0 0 / 50%);
+	box-shadow: 0 8px 40px 0 rgb(0 0 0 / 35%);
 
 	& li {
 		padding: 5px 20px;
@@ -2142,6 +2153,7 @@
 	padding: 3px;
 
 	& .fas {
+		line-height: 1.1;
 		margin-right: 0;
 	}
 }
@@ -2487,10 +2499,10 @@
 	font-size: 0.75rem;
 	box-shadow: 0 1px 2px rgb(70 70 70 / 50%), inset 0 2px 2px #fff;
 	color: #6c6c6c;
+	text-align: center;
 	text-shadow: 0 1px #fafafa;
 	border: 1px solid #b8b8b8;
 	background-color: #eaeaea;
-	margin-top: -2px;
 }
 
 .l-unit--suspended .badge {

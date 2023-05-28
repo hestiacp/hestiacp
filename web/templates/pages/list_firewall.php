@@ -121,7 +121,7 @@
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
-											href="/<?=$spnd_action?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
+											href="/<?= $spnd_action ?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
 											data-confirm-title="<?= $spnd_action_title ?>"
 											data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 										>

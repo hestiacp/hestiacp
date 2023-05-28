@@ -2176,13 +2176,13 @@ fi
 # Adding default domain
 if [ -n "$ip" ]; then
 	if [ -n "$ipv6" ]; then
-		${HESTIA}/bin/v-add-web-domain admin ${servername} ${ip} ${ipv6}
+		${HESTIA}/bin/v-add-web-domain-ipv46 admin ${servername} ${ip} ${ipv6}
 	else
-		${HESTIA}/bin/v-add-web-domain admin ${servername} ${ip}
+		${HESTIA}/bin/v-add-web-domain-ipv46 admin ${servername} ${ip}
 	fi
 else
 	if [ -n "$ipv6" ]; then
-		${HESTIA}/bin/v-add-web-domain admin ${servername} "" ${ipv6}
+		${HESTIA}/bin/v-add-web-domain-ipv46 admin ${servername} "" ${ipv6}
 	fi
 fi
 check_result $? "can't create $servername domain"

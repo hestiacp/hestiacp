@@ -945,6 +945,25 @@ v-add-web-domain-httpauth admin acme.com user02 super_pass
 
 This function is used for securing web domain with http auth
 
+## v-add-web-domain-ipv46
+
+add web domain
+
+**Options**: `USER` `DOMAIN` `[IP]` `[IPV6]` `[RESTART]` `[ALIASES]` `[PROXY_EXTENSIONS]`
+
+**Examples**:
+
+```bash
+v-add-web-domain-ipv46 admin wonderland.com 192.18.22.43 1111:222:333:111:2 yes www.wonderland.com
+```
+
+This function adds virtual host to a server. In cases when ip is
+undefined in the script, "default" template will be used. The alias of
+<www.domain.tld> type will be automatically assigned to the domain unless
+"none" is transmited as argument. If ip have associated dns name, this
+domain will also get the alias domain-tpl.$ipname. An alias with the ip
+name is useful during the site testing while dns isn't moved to server yet.
+
 ## v-add-web-domain-proxy
 
 add webdomain proxy support

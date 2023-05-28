@@ -74,7 +74,7 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD .
-				"v-add-web-domain " .
+				"v-add-web-domain-ipv46 " .
 				$user .
 				" " .
 				quoteshellarg($v_domain) .

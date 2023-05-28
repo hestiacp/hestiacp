@@ -49,7 +49,7 @@ function setup() {
     assert_success
     refute_output
 
-    run v-add-web-domain $user 'testhestiacp.com'
+    run v-add-web-domain-ipv46 $user 'testhestiacp.com'
     assert_success
     refute_output
 

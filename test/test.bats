@@ -711,7 +711,7 @@ function check_ip_not_banned(){
 #                         WEB                              #
 #----------------------------------------------------------#
 
-@test "WEB: Add web domain" {
+@test "WEB: Add web domain. Wrapper Script for compatibility purposes" {
     run v-add-web-domain $user $domain 198.18.0.125
     assert_success
     refute_output
@@ -722,7 +722,7 @@ function check_ip_not_banned(){
 }
 
 @test "WEB: Add web domain (duplicate)" {
-    run v-add-web-domain $user $domain 198.18.0.125
+    run v-add-web-domain-ipv46 $user $domain 198.18.0.125
     assert_failure $E_EXISTS
 }
 
@@ -844,7 +844,7 @@ function check_ip_not_banned(){
 #----------------------------------------------------------#
 
 @test "WEB: Add IDN domain UTF idn-tést.eu" {
-   run v-add-web-domain $user idn-tést.eu 198.18.0.125
+   run v-add-web-domain-ipv46 $user idn-tést.eu 198.18.0.125
    assert_success
    refute_output
 
@@ -855,7 +855,7 @@ function check_ip_not_banned(){
 
 @test "WEB: Add IDN domain ASCII idn-tést.eu" {
    # Expected to fail due to utf exists
-   run v-add-web-domain $user "xn--idn-tst-fya.eu" 198.18.0.125
+   run v-add-web-domain-ipv46 $user "xn--idn-tst-fya.eu" 198.18.0.125
    assert_failure $E_EXISTS
 }
 
@@ -873,7 +873,7 @@ function check_ip_not_banned(){
 }
 
 @test "WEB: Add IDN domain UTF bløst.рф" {
-   run v-add-web-domain $user bløst.рф 198.18.0.125
+   run v-add-web-domain-ipv46 $user bløst.рф 198.18.0.125
    assert_success
    refute_output
 }
@@ -897,7 +897,7 @@ function check_ip_not_banned(){
     def_phpver=$(multiphp_default_version)
     multi_domain="multiphp.${domain}"
 
-    run v-add-web-domain $user $multi_domain 198.18.0.125
+    run v-add-web-domain-ipv46 $user $multi_domain 198.18.0.125
     assert_success
     refute_output
 
@@ -1143,7 +1143,7 @@ function check_ip_not_banned(){
 @test "Docroot: Self Subfolder" {
     docroot1_domain="docroot1.${domain}"
 
-    run v-add-web-domain $user $docroot1_domain 198.18.0.125
+    run v-add-web-domain-ipv46 $user $docroot1_domain 198.18.0.125
     assert_success
     refute_output
 
@@ -1164,7 +1164,7 @@ function check_ip_not_banned(){
     docroot1_domain="docroot1.${domain}"
     docroot2_domain="docroot2.${domain}"
 
-    run v-add-web-domain $user $docroot2_domain 198.18.0.125
+    run v-add-web-domain-ipv46 $user $docroot2_domain 198.18.0.125
     assert_success
     refute_output
 
@@ -1634,11 +1634,11 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
-    run v-add-web-domain $user2 $rootdomain
+    run v-add-web-domain-ipv46 $user2 $rootdomain
     assert_success
     refute_output
 
-    run v-add-web-domain $user $subdomain
+    run v-add-web-domain-ipv46 $user $subdomain
     assert_failure $E_EXISTS
 }
 
@@ -1667,7 +1667,7 @@ function check_ip_not_banned(){
 }
 
 @test "Allow Users: User can add user.user2.com" {
-    run v-add-web-domain $user $subdomain
+    run v-add-web-domain-ipv46 $user $subdomain
     assert_success
     refute_output
 }
@@ -1716,12 +1716,12 @@ function check_ip_not_banned(){
 }
 
 @test "Allow Users: User can't add user.user2.com again" {
-    run v-add-web-domain $user $subdomain
+    run v-add-web-domain-ipv46 $user $subdomain
     assert_failure $E_EXISTS
 }
 
 @test "Allow Users: user2 can add user.user2.com again" {
-    run v-add-web-domain $user2 $subdomain
+    run v-add-web-domain-ipv46 $user2 $subdomain
     assert_success
     refute_output
 }

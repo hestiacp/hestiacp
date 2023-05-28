@@ -871,7 +871,7 @@
 
 			/* Checkbox cell */
 			&:nth-child(1) {
-				line-height: 1.1;
+				line-height: 1.3;
 			}
 		}
 	}
@@ -1965,10 +1965,10 @@
    ========================================================================== */
 
 .modal {
-	border-radius: var(--border-radius-base);
-	box-shadow: inset 0 1px 3px rgb(0 0 0 / 25%), 0 8px 40px 0 rgb(0 0 0 / 35%);
 	background-color: #f0efef;
 	border: 1px solid rgb(255 255 255 / 98%);
+	border-radius: var(--border-radius-base);
+	box-shadow: inset 0 1px 3px rgb(0 0 0 / 25%), 0 8px 40px 0 rgb(0 0 0 / 35%);
 
 	@media (--viewport-small) {
 		min-width: 360px;
@@ -2000,11 +2000,11 @@
    ========================================================================== */
 
 .shortcuts {
-	background: rgb(50 50 50 / 93%);
+	background-color: rgb(50 50 50 / 93%);
 	color: #eee;
 	border: 1px solid rgb(255 255 255 / 70%);
 	border-radius: 6px;
-	box-shadow: 0 4px 30px rgb(0 0 0 / 50%);
+	box-shadow: 0 8px 40px 0 rgb(0 0 0 / 35%);
 
 	& li {
 		padding: 5px 20px;

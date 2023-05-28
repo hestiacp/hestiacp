@@ -30,8 +30,11 @@
 					<li data-entity="sort-name">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
-					<li data-entity="sort-ip" data-sort-as-int="1">
-						<span class="name"><?= _("IP Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					<li data-entity="sort-ipv4" data-sort-as-int="1">
+						<span class="name"><?= _("IPV4 Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
+					<li data-entity="sort-ipv6" data-sort-as-int="1">
+						<span class="name"><?= _("IPV6 Address") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
 				<?php if ($read_only !== "true") { ?>
@@ -183,7 +186,8 @@
 				}
 			?>
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
+				data-sort-ipv4="<?=str_replace('.', '', $data[$key]['IP'])?>"
+				data-sort-ipv6="<?=str_replace(':', '', $data[$key]['IP6'])?>"
 				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
 				data-sort-name="<?=$key?>"
 				data-sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>"
@@ -294,8 +298,12 @@
 					</ul>
 				</div>
 				<div class="units-table-cell">
-					<span class="u-hide-desktop u-text-bold"><?= _("IP Address") ?>:</span>
-					<?= empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?>
+					<span class="u-hide-desktop u-text-bold"><?= _("IPV4 Address") ?>:</span>
+					<?= empty($ips[$data[$key]['IP']]['NAT']) ? (empty($data[$key]['IP']) ? "&nbsp;" : $data[$key]['IP']) : "{$ips[$data[$key]['IP']]['NAT']}"; ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("IPV6 Address") ?>:</span>
+					<?=empty($ips[$data[$key]['IP6']]) ? "&nbsp;" : $data[$key]['IP6']; ?>
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>

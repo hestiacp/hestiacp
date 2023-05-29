@@ -31,7 +31,6 @@ awstats_patch=$(cat $HESTIA/data/templates/web/awstats/awstats.tpl | grep "LoadP
 
 # Update templates
 if [ -d "${WEBTPL}" ]; then
-	rm -rf "${WEBTPL}/skel" 2> /dev/null
 	rm -rf "${WEBTPL}/suspend" 2> /dev/null
 	rm -rf "${WEBTPL}/unassigned" 2> /dev/null
 fi
@@ -48,6 +47,7 @@ done
 
 # Skeleton, Unassinged and Suspended
 if [ "$POLICY_SYNC_SKELETON" != "no" ]; then
+	rm -rf "${WEBTPL}/skel" 2> /dev/null
 	for webtpl_folder in $(ls $HESTIA_COMMON_DIR/templates/web/* -d 2> /dev/null); do
 		cp -rf "${webtpl_folder}" "${WEBTPL}/"
 	done

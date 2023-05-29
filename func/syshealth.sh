@@ -136,7 +136,7 @@ function syshealth_update_ip_config_format() {
 	# IP ADDRESS
 	# Create array of known keys in configuration file
 	system="ip"
-	known_keys="OWNER STATUS NAME U_SYS_USERS U_WEB_DOMAINS INTERFACE NETMASK NAT TIME DATE"
+	known_keys="OWNER STATUS NAME U_SYS_USERS U_WEB_DOMAINS INTERFACE NETMASK NAT TIME DATE VERSION"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -198,7 +198,7 @@ function syshealth_update_system_config_format() {
 	# SYSTEM CONFIGURATION
 	# Create array of known keys in configuration file
 	system="system"
-	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION DISABLE_IP_CHECK"
+	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT IPV6_SUPPORT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION DISABLE_IP_CHECK"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -442,9 +442,9 @@ function syshealth_repair_system_config() {
 		$BIN/v-change-sys-config-value "USE_SERVER_SMTP" "false"
 	fi
 
-	if [[ -z $(check_key_exists 'SERVER_SMTP_HOST') ]]; then
+	if [[ -z $(check_key_exists 'SERVER_SMTP_PORT') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_PORT ('')"
-		$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" ""
+		$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" ""
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_HOST') ]]; then
@@ -520,6 +520,12 @@ function syshealth_repair_system_config() {
 	if [[ -z $(check_key_exists 'POLICY_SYNC_SKELETON') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_SKELETON ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_SYNC_SKELETON" "no"
+	fi
+
+	# IPV6 Support
+	if [[ -z $(check_key_exists 'IPV6_SUPPORT') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: IPV6_SUPPORT ('no')"
+		$BIN/v-change-sys-config-value "IPV6_SUPPORT" "no"
 	fi
 
 	touch $HESTIA/conf/hestia.conf.new

@@ -14,10 +14,10 @@ if (!empty($_POST["ok"])) {
 
 	// Check for empty fields
 	if (empty($_POST["v_domain"])) {
-		$errors[] = _("domain");
+		$errors[] = _("Domain");
 	}
 	if (empty($_POST["v_ip"]) && empty($_POST["v_ipv6"])) {
-		$errors[] = _("ipv4 and ipv6");
+		$errors[] = _("IPV4 and IPV6 Address");
 	}
 
 	if (!empty($errors[0])) {
@@ -130,10 +130,10 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("WEB_DOMAIN_CREATED_OK"),
-			htmlentities($v_domain),
-			htmlentities($v_domain),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(_("Domain {%s} has been created successfully."), htmlentities($v_domain)),
+			"</b></a>",
+			'<a href="/edit/web/?domain=' . htmlentities($v_domain) . '"><b>',
 		);
 		unset($v_domain);
 		unset($v_aliases);

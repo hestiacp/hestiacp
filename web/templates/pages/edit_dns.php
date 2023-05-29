@@ -22,7 +22,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Editing DNS Domain") ?></h1>
+			<h1 class="form-title"><?= _("Edit DNS Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
@@ -30,7 +30,7 @@
 				<input type="hidden" name="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_ip" class="form-label"><?= _("IPV4 address") ?></label>
+				<label for="v_ip" class="form-label"><?= _("IPV4 Address") ?></label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 						<option value="">clear</option>
@@ -48,7 +48,7 @@
 				</div>
 			</div>
 			<div class="u-mb10">
-				<label for="v_ipv6" class="form-label"><?= _("IPV6 address") ?></label>
+				<label for="v_ipv6" class="form-label"><?= _("IPV6 Address") ?></label>
 				<div class="u-pos-relative">
 					<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 						<option value="">clear</option>

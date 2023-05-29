@@ -514,12 +514,12 @@ function syshealth_repair_system_config() {
 
 	if [[ -z $(check_key_exists 'POLICY_SYNC_ERROR_DOCUMENTS') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_ERROR_DOCUMENTS ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_SYNC_ERROR_DOCUMENTS" "no"
+		$BIN/v-change-sys-config-value "POLICY_SYNC_ERROR_DOCUMENTS" "yes"
 	fi
 
 	if [[ -z $(check_key_exists 'POLICY_SYNC_SKELETON') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_SKELETON ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_SYNC_SKELETON" "no"
+		$BIN/v-change-sys-config-value "POLICY_SYNC_SKELETON" "yes"
 	fi
 
 	touch $HESTIA/conf/hestia.conf.new

@@ -20,6 +20,13 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
+@test "[ IPV6 ] Add IPV6 address" {
+	# Add IPV6 Address to be removed when merged with main
+	run v-add-sys-ip $ipv6 "/64"
+	assert_success
+	refute_output
+}
+
 @test "[ User ] Create new user" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
@@ -128,10 +135,15 @@ function setup() {
     refute_output
 }
 
-
-
 @test "Delete user" {
     run v-delete-user $user
     assert_success
     refute_output
+}
+
+@test "[ IPV6 ] Delete IPV6 address" {
+	# Remove IPV6 Address to be removed when merged with main
+	run v-delete-sys-ip $ipv6
+	assert_success
+	refute_output
 }

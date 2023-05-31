@@ -29,10 +29,12 @@ function setup() {
         echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
     fi
 
+	source /tmp/hestia-le-env.sh
     source /tmp/hestia-test-env.sh
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
     source $HESTIA/func/ip.sh
+
 }
 
 @test "Prepare for tests" {
@@ -42,6 +44,13 @@ function setup() {
 	run rm -f /usr/local/hestia/data/templates/web/apache2/*.*
 
 	run v-update-web-templates
+}
+
+@test "[ IPV6 ] Add IPV6 address" {
+	# Remove IPV6 Address to be removed when merged with main
+	run v-add-sys-ip $ipv6 "/64"
+	assert_success
+	refute_output
 }
 
 @test "Setup Test domain" {
@@ -87,4 +96,11 @@ function setup() {
     run v-delete-user $user
     assert_success
     refute_output
+}
+
+@test "[ IPV6 ] Delete IPV6 address" {
+	# Remove IPV6 Address to be removed when merged with main
+	run v-delete-sys-ip $ipv6
+	assert_success
+	refute_output
 }

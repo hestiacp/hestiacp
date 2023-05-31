@@ -232,7 +232,12 @@ rebuild_web_domain_conf() {
 
 	syshealth_repair_web_config
 	get_domain_values 'web'
-	is_ip_valid $IP
+	if [ -n "$IP" ]; then
+		is_ip_valid ${IP}
+	fi
+	if [ -n "$IP6" ]; then
+		is_ipv6_valid ${IP6}
+	fi
 	prepare_web_domain_values
 
 	# Remove old web configuration files

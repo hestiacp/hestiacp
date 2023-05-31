@@ -46,6 +46,7 @@ trigger:
     - refs/heads/beta
     - refs/heads/release
     - refs/heads/main
+    - refs/heads/ipv6
     - refs/pull/*/head
 
 ---
@@ -100,6 +101,7 @@ trigger:
     - refs/heads/beta
     - refs/heads/release
     - refs/heads/main
+    - refs/heads/ipv6
     - refs/pull/*/head
 
 ---

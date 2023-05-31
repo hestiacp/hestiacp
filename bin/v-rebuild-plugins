@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# info: rebuild plugin
+#
+# example: v-rebuild-plugins
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/plugins.sh
+source $HESTIA/func/plugins.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+mapfile -t plugins < <($HESTIA/bin/v-list-plugins plain | awk '{print $1}')
+if [[ "${plugins[@]}" ]]; then
+    for plugin in "${plugins[@]}"; do
+        $HESTIA/bin/v-rebuild-plugin "$plugin"
+    done
+fi

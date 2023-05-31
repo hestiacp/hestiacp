@@ -1,3 +1,4 @@
+<?php hst_do_action("init"); ?>
 <!doctype html>
 <html lang="en">
 
@@ -6,9 +7,11 @@
 	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/title.php"; ?>
 	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/css.php"; ?>
 	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/js.php"; ?>
+
+    <?php hst_do_action("head"); ?>
 </head>
 
-<body>
+<body class="<?php hst_do_action("body_class"); ?>">
 	<header class="app-header">
 		<div class="top-bar">
 			<div class="container top-bar-inner">

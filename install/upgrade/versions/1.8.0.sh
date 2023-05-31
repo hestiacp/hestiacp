@@ -28,3 +28,7 @@ if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 		sed -i "s/^service auth {/service auth {\n  extra_groups = mail\n/g" /etc/dovecot/conf.d/10-master.conf
 	fi
 fi
+
+if [[ -z "$(command -v jq)" ]]; then
+    apt-get -y install jq
+fi

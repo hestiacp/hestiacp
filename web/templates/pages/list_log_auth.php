@@ -39,52 +39,53 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
-	<div class="header table-header">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left u-text-center">
-				<b><?= _("Status") ?></b>
-			</div>
-			<div class="clearfix l-unit__stat-col--left"><b><?= _("Date") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact-2"><b><?= _("Time") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left"><b><?= _("IP Address") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("Browser") ?></b></div>
-		</div>
-	</div>
-
-	<!-- Begin log history entry loop -->
-	<?php
-		foreach ($data as $key => $value) {
-			++$i;
-
-			if ($data[$key]['ACTION'] == 'login') {
-				if ($data[$key]['ACTIVE'] === 'yes') {
-					$action_icon = 'fa-right-to-bracket icon-maroon';
-				} else {
-					$action_icon = ' fa-right-to-bracket icon-dim';
-				}
-			}
-			if ($data[$key]['STATUS'] == 'success')	{
-					$status_icon = 'fa-circle-check icon-green';
-					$status_title = _('Success');
-			} else {
-					$status_icon = 'fa-circle-minus icon-red';
-					$status_title = _('Failed');
-			}
-		?>
-		<div class="l-unit header animate__animated animate__fadeIn">
+<div class="container">
+	<div class="units js-units-container">
+		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left u-text-center">
-					<i class="fas <?= $status_icon ?> u-mr5" title="<?= $status_title ?>"></i>
+					<b><?= _("Status") ?></b>
 				</div>
-				<div class="clearfix l-unit__stat-col--left"><b><?= translate_date($data[$key]["DATE"]) ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact-2"><b><?= htmlspecialchars($data[$key]["TIME"]) ?></b></div>
-				<div class="clearfix l-unit__stat-col--left"><?= htmlspecialchars($data[$key]["IP"]) ?></div>
-				<div class="clearfix l-unit__stat-col--left wide-7"><?= htmlspecialchars($data[$key]["USER_AGENT"]) ?></b></div>
+				<div class="clearfix l-unit__stat-col--left"><b><?= _("Date") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact-2"><b><?= _("Time") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left"><b><?= _("IP Address") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-7"><b><?= _("Browser") ?></b></div>
 			</div>
 		</div>
-	<?php } ?>
 
+		<!-- Begin log history entry loop -->
+		<?php
+			foreach ($data as $key => $value) {
+				++$i;
+
+				if ($data[$key]['ACTION'] == 'login') {
+					if ($data[$key]['ACTIVE'] === 'yes') {
+						$action_icon = 'fa-right-to-bracket icon-maroon';
+					} else {
+						$action_icon = ' fa-right-to-bracket icon-dim';
+					}
+				}
+				if ($data[$key]['STATUS'] == 'success')	{
+					$status_icon = 'fa-circle-check icon-green';
+					$status_title = _('Success');
+				} else {
+					$status_icon = 'fa-circle-minus icon-red';
+					$status_title = _('Failed');
+				}
+			?>
+			<div class="l-unit header animate__animated animate__fadeIn js-unit">
+				<div class="l-unit__col l-unit__col--right">
+					<div class="clearfix l-unit__stat-col--left u-text-center">
+						<i class="fas <?= $status_icon ?> u-mr5" title="<?= $status_title ?>"></i>
+					</div>
+					<div class="clearfix l-unit__stat-col--left"><b><?= translate_date($data[$key]["DATE"]) ?></b></div>
+					<div class="clearfix l-unit__stat-col--left compact-2"><b><?= htmlspecialchars($data[$key]["TIME"]) ?></b></div>
+					<div class="clearfix l-unit__stat-col--left"><?= htmlspecialchars($data[$key]["IP"]) ?></div>
+					<div class="clearfix l-unit__stat-col--left wide-7"><?= htmlspecialchars($data[$key]["USER_AGENT"]) ?></b></div>
+				</div>
+			</div>
+		<?php } ?>
+	</div>
 </div>
 
 <footer class="app-footer">

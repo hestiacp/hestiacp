@@ -1565,6 +1565,41 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	if (empty($_SESSION["error_msg"])) {
+		if ($_POST["v_policy_sync_error_documents"] != $_SESSION["POLICY_SYNC_ERROR_DOCUMENTS"]) {
+			exec(
+				HESTIA_CMD .
+					"v-change-sys-config-value POLICY_SYNC_ERROR_DOCUMENTS " .
+					quoteshellarg($_POST["v_policy_sync_error_documents"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			if (empty($_SESSION["error_msg"])) {
+				$v_policy_system_hide_services = $_POST["v_policy_sync_error_documents"];
+			}
+			$v_security_adv = "yes";
+		}
+	}
+	if (empty($_SESSION["error_msg"])) {
+		if ($_POST["v_policy_sync_skeleton"] != $_SESSION["POLICY_SYNC_SKELETON"]) {
+			exec(
+				HESTIA_CMD .
+					"v-change-sys-config-value POLICY_SYNC_SKELETON " .
+					quoteshellarg($_POST["v_policy_sync_skeleton"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			if (empty($_SESSION["error_msg"])) {
+				$v_policy_system_hide_services = $_POST["v_policy_sync_skeleton"];
+			}
+			$v_security_adv = "yes";
+		}
+	}
+
 	// Change login style
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST["v_login_style"] != $_SESSION["LOGIN_STYLE"]) {

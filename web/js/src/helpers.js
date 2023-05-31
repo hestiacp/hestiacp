@@ -5,7 +5,7 @@ export function randomPassword(length = 16) {
 	const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	const lowercase = 'abcdefghijklmnopqrstuvwxyz';
 	const numbers = '0123456789';
-	const symbols = '!@#$%^&*()_+-=[]{}|;:,./<>?';
+	const symbols = '!@#$%^&*()_+-=[]{}|;:/?';
 	const allCharacters = uppercase + lowercase + numbers + symbols;
 	const generate = customAlphabet(allCharacters, length);
 

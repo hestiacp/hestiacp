@@ -99,8 +99,8 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Upgrade File Manager and update configuration
     upgrade_filemanager | tee -a $LOG
 
-    # Upgrade Rainloop if applicable
-    upgrade_rainloop | tee -a $LOG
+    # Upgrade SnappyMail if applicable
+    upgrade_snappymail | tee -a $LOG
 
     # Upgrade Roundcube if applicable
     upgrade_roundcube | tee -a $LOG
@@ -108,11 +108,14 @@ if [ -e "/usr/local/hestia/data/users/admin" ]; then
     # Upgrade PHPMailer if applicable
     upgrade_phpmailer | tee -a $LOG
 
+    # Update Cloudflare IPs if applicable
+    upgrade_cloudflare_ip | tee -a $LOG
+
     # Upgrade phpMyAdmin if applicable
     upgrade_phpmyadmin | tee -a $LOG
 
-	# Upgrade phpMyAdmin if applicable
-	upgrade_phppgadmin | tee -a $LOG
+    # Upgrade phpPgAdmin if applicable
+    upgrade_phppgadmin | tee -a $LOG
 
     # Upgrade blackblaze-cli-took if applicable
     upgrade_b2_tool | tee -a $LOG

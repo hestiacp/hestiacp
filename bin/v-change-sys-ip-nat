@@ -1,19 +1,19 @@
 #!/bin/bash
-# info: change ip nat address
+# info: change NAT IP address
 # options: IP NAT_IP [RESTART]
 #
-# example: v-change-sys-ip-nat 185.209.50.140 10.110.104.205
+# example: v-change-sys-ip-nat 10.0.0.1 203.0.113.1
 #
-# This function for changing nat ip associated with ip.
+# This function for changing NAT IP associated with IP.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
-nat_ip=$2
-restart=$3
+ip="$1"
+nat_ip="$2"
+restart="$3"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -45,13 +45,13 @@ check_hestia_demo_mode
 if [ -z "$(grep NAT= $HESTIA/data/ips/$ip)" ]; then
 	sed -i "s/^TIME/NAT='$nat_ip'\nTIME/g" $HESTIA/data/ips/$ip
 	old=''
-	new=$nat_ip
+	new="$nat_ip"
 else
-	old=$(get_ip_value '$NAT')
-	new=$nat_ip
+	old="$(get_ip_value '$NAT')"
+	new="$nat_ip"
 	sed -i "s/NAT=.*/NAT='$new'/" $HESTIA/data/ips/$ip
 	if [ -z "$nat_ip" ]; then
-		new=$ip
+		new="$ip"
 	fi
 fi
 
@@ -59,7 +59,7 @@ fi
 if [ -n "$old" ] && [ -n "$WEB_SYSTEM" ]; then
 	for user in $($BIN/v-list-sys-users plain); do
 		sed -i "s/$old/$new/" $HESTIA/data/users/$user/web.conf
-		$BIN/v-rebuild-web-domains $user no
+		$BIN/v-rebuild-web-domains "$user" no
 	done
 	$BIN/v-restart-dns "$restart"
 fi
@@ -67,37 +67,37 @@ fi
 # Updating DNS configs
 if [ -n "$old" ] && [ -n "$DNS_SYSTEM" ]; then
 	for user in $($BIN/v-list-sys-users plain); do
-		sed -i "s/$old/$new/" $HESTIA/data/users/$user/dns.conf
-		if ls $HESTIA/data/users/$user/dns/*.conf 1> /dev/null 2>&1; then
+		sed -i "s/$old/$new/" "$HESTIA/data/users/$user/dns.conf"
+		if ls $HESTIA/data/users/$user/dns/*.conf > /dev/null 2>&1; then
 			sed -i "s/$old/$new/" $HESTIA/data/users/$user/dns/*.conf
 		fi
-		$BIN/v-rebuild-dns-domains $user no
+		$BIN/v-rebuild-dns-domains "$user" no
 	done
 	$BIN/v-restart-dns "$restart"
 fi
 
 # Updating FTP
 if [ -n "$old" ] && [ -n "$FTP_SYSTEM" ]; then
-	conf=$(find /etc -name $FTP_SYSTEM.conf)
-	if [ -e "$conf" ]; then
-		sed -i "s/$old/$new/g" $conf
+	ftp_conf="$(find /etc -maxdepth 2 -name "$FTP_SYSTEM.conf")"
+	if [ -e "$ftp_conf" ]; then
+		sed -i "s/$old/$new/g" "$ftp_conf"
 		if [ "$FTP_SYSTEM" = 'vsftpd' ]; then
-			check_pasv=$(grep pasv_address $conf)
+			check_pasv="$(grep pasv_address "$ftp_conf")"
 			if [ -z "$check_pasv" ] && [ -n "$nat_ip" ]; then
-				echo "pasv_address=$nat_ip" >> $conf
+				echo "pasv_address=$nat_ip" >> "$ftp_conf"
 			fi
 			if [ -n "$check_pasv" ] && [ -z "$nat_ip" ]; then
-				sed -i "/pasv_address/d" $conf
+				sed -i "/pasv_address/d" "$ftp_conf"
 			fi
 			if [ -n "$check_pasv" ] && [ -n "$nat_ip" ]; then
-				sed -i "s/pasv_address=.*/pasv_address='$nat_ip'/g" $conf
+				sed -i "s/pasv_address=.*/pasv_address='$nat_ip'/g" "$ftp_conf"
 			fi
 		fi
 	fi
 	if [ "$FTP_SYSTEM" = 'proftpd' ]; then
-        	conf="/etc/$FTP_SYSTEM/conf.d/external_ip.conf"
+        	ext_ip_conf="/etc/$FTP_SYSTEM/conf.d/external_ip.conf"
         	content="MasqueradeAddress ${nat_ip}"
-        	echo "$content" > $conf
+        	echo "$content" > "$ext_ip_conf"
     	fi
 	$BIN/v-restart-ftp "$restart"
 fi

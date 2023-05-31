@@ -271,6 +271,9 @@ upgrade_init_backup() {
 	# Hestia Control Panel configuration files
 	mkdir -p $HESTIA_BACKUP/conf/hestia/
 
+	# OpenSSL configuration files
+	mkdir -p $HESTIA_BACKUP/conf/openssl/
+
 	# Hosting Packages
 	mkdir -p $HESTIA_BACKUP/packages/
 
@@ -316,8 +319,8 @@ upgrade_init_backup() {
 	if [ -d "/etc/roundcube/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/roundcube/
 	fi
-	if [ -d "/etc/rainloop/" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/rainloop/
+	if [ -d "/etc/snappymail/" ]; then
+		mkdir -p $HESTIA_BACKUP/conf/snappymail/
 	fi
 	if [ -d "/etc/phpmyadmin/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/phpmyadmin/
@@ -352,12 +355,12 @@ upgrade_start_backup() {
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Packages"
 	fi
-	cp -rf $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
+	cp -fr $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
 
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Templates"
 	fi
-	cp -rf $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
+	cp -fr $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
 
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Configuration files:"
@@ -367,7 +370,13 @@ upgrade_start_backup() {
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      ---- hestia"
 	fi
-	cp -rf $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
+	cp -fr $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
+
+	# OpenSSL configuration files
+	if [ "$DEBUG_MODE" = "true" ]; then
+		echo "      ---- openssl"
+	fi
+	cp -f /etc/ssl/*.cnf $HESTIA_BACKUP/conf/openssl/
 
 	# System service configuration files (apache2, nginx, bind9, vsftpd, etc).
 	if [ -n "$WEB_SYSTEM" ]; then
@@ -424,7 +433,6 @@ upgrade_start_backup() {
 		if [ "$FTP_SYSTEM" = "vsftpd" ]; then
 			cp -f /etc/$FTP_SYSTEM.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
 		fi
-
 		if [ "$FTP_SYSTEM" = "proftpd" ]; then
 			cp -f /etc/proftpd/proftpd.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
 		fi
@@ -455,11 +463,11 @@ upgrade_start_backup() {
 		fi
 		cp -fr /etc/roundcube/* $HESTIA_BACKUP/conf/roundcube
 	fi
-	if [ -d "/etc/rainloop" ]; then
+	if [ -d "/etc/snappymail" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
-			echo "      ---- Rainloop"
+			echo "      ---- SnappyMail"
 		fi
-		cp -fr /etc/rainloop/* $HESTIA_BACKUP/conf/rainloop
+		cp -fr /etc/snappymail/* $HESTIA_BACKUP/conf/snappymail
 	fi
 	if [ -d "/etc/phpmyadmin" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
@@ -549,12 +557,12 @@ upgrade_b2_tool() {
 
 upgrade_cloudflare_ip() {
 	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
-		cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
+		cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"
 
 		if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
 			cf_inc="/etc/nginx/conf.d/cloudflare.inc"
 
-			echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
+			echo "[ * ] Updating Cloudflare IP Ranges for NGINX..."
 			echo "# Cloudflare IP Ranges" > $cf_inc
 			echo "" >> $cf_inc
 			echo "# IPv4" >> $cf_inc
@@ -694,14 +702,14 @@ upgrade_roundcube() {
 	fi
 }
 
-upgrade_rainloop() {
-	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
-		rl_version=$(cat /var/lib/rainloop/data/VERSION)
-		if ! version_ge "$rl_version" "$rl_v"; then
-			echo "[ ! ] Upgrading Rainloop to version $rl_v..."
-			$BIN/v-add-sys-rainloop
+upgrade_snappymail() {
+	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
+		sm_version=$(cat /var/lib/snappymail/data/VERSION)
+		if ! version_ge "$sm_version" "$sm_v"; then
+			echo "[ ! ] Upgrading SnappyMail to version $sm_v..."
+			$BIN/v-add-sys-snappymail
 		else
-			echo "[ * ] Rainloop is up to date ($rl_v)..."
+			echo "[ * ] SnappyMail is up to date ($sm_v)..."
 		fi
 	fi
 }

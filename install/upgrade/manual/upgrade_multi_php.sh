@@ -1,6 +1,6 @@
 #!/bin/bash
 # Update www.conf to a different version so users can safely delete older php version.
-# www.conf is used for Roundcube, Rainloop and phpmyadmin
+# www.conf is used for Roundcube, Rainloop, SnappyMail and phpmyadmin
 # Removal of the "www.conf" php version will cause issues with Rainloop not working. Current script updates it to the latest version of PHP installed. If that is not wanted use this script
 
 version=$1

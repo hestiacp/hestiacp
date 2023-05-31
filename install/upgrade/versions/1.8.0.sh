@@ -296,3 +296,7 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 	fi
 
 fi
+
+if [[ -z "$(command -v jq)" ]]; then
+    apt-get -y install jq
+fi

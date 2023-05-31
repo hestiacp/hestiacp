@@ -768,7 +768,7 @@ function check_ip_not_banned(){
     refute_output
 
     validate_web_domain $user $domain 'This site is currently suspended'
-	validate_web_domain $user $domain 'This site is currently suspended' '/randompath.php'
+	validate_web_domain $user $domain 'This site is currently suspended' 'randompath.php'
 }
 
 @test "WEB: Unsuspend web domain" {

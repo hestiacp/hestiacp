@@ -97,6 +97,7 @@ if [ -n "$path" ]; then
 	lastchr=${path#${path%?}}
 	if [ "$lastchr" = "/" ]; then
 		requesturi=1
+		redirect=${redirect:0:-1}
 	fi
 else
 	requesturi=1

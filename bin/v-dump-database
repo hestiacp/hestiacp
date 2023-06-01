@@ -59,7 +59,12 @@ case $TYPE in
 	pgsql) dump_pgsql_database ;;
 esac
 
-if [ -z "$output" ]; then
+if [ "$output" = "file" ]; then
+	cp $dump $BACKUP/$user.$database.$TYPE.sql
+	echo $BACKUP/$user.$database.$TYPE.sql
+
+	echo "rm $BACKUP/$user.$database.$TYPE.sql" | at now + 1 hour
+else
 	cat $dump
 fi
 

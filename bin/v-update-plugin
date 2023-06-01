@@ -68,6 +68,7 @@ fi
 # Disable plugin
 $HESTIA/bin/v-disable-plugin "$plugin_name"
 
+# Install new version
 plugin_install_from_zip "$github_archive" "yes"
 
 # Check post_update hook

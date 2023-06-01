@@ -63,15 +63,15 @@
         if (isset($plugin['enabled']) && $plugin['enabled'] == true) {
             $status = "enabled";
             $status_action = "suspend";
-            $status_action_title = _('Disable');
-            $status_icon = 'fa-pause';
-            $status_confirmation = "Are you sure you want to disable %s?";
+			$status_icon = 'fa-pause';
+			$status_action_title = _('Disable');
+			$status_confirmation = _("Are you sure you want to disable %s?");
         } else {
             $status = "disabled";
             $status_action = "unsuspend";
-            $status_action_title = _('Enable');
-            $status_icon = 'fa-play';
-            $status_confirmation = "Are you sure you want to enable %s?";
+			$status_icon = 'fa-play';
+			$status_action_title = _('Enable');
+			$status_confirmation = _("Are you sure you want to enable %s?");
         }
 
         // Checks if the plugin has a web interface
@@ -129,7 +129,7 @@
                                 <a
                                         class="data-controls js-confirm-action"
                                         href="/<?= $status_action ?>/plugin/?plugin=<?= urlencode($plugin_name) ?>&token=<?= $_SESSION['token'] ?>"
-                                        title="<?= _($status_action_title) ?>"
+                                        title="<?= $status_action_title ?>"
                                         data-confirm-title="<?= $status_action_title ?>"
                                         data-confirm-message="<?= sprintf($status_confirmation, $plugin_name) ?>"
                                 >

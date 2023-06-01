@@ -53,6 +53,41 @@ plugin_check_hestia_min_version() {
 }
 
 ###
+## Looks for scripts that may conflict with existing scripts
+###
+plugin_check_conflicts() {
+	local plugin_name="$1"
+	local tmp_bin_dir="$2"
+
+	if [[ ! -d "$tmp_bin_dir" || -z "$(ls "$tmp_bin_dir/v-plugin-"* 2> /dev/null)" ]]; then
+		return
+	fi
+
+	local bin_name real_script_path error_msg
+	local bin_conflicts=""
+	for f in "$tmp_bin_dir/v-plugin-"*; do
+		bin_name="$(basename -- "$f")"
+
+		if [[ -e "$HESTIA/bin/$bin_name" ]]; then
+			# Checks if the script is from an already installed version of the same plugin
+			real_script_path="$(readlink -f "$HESTIA/bin/$bin_name")"
+			if [[ "$real_script_path" != "$HESTIA/plugins/$plugin_name/bin/$bin_name" ]]; then
+				if [[ -n "$bin_conflicts" ]]; then
+					bin_conflicts+=", "
+				fi
+
+				bin_conflicts+="$bin_name"
+			fi
+		fi
+	done
+
+	if [[ -n "$bin_conflicts" ]]; then
+		error_msg="The following scripts conflict with scripts that already exist on the system: $bin_conflicts"
+		check_result "$E_INVALID" "$error_msg"
+	fi
+}
+
+###
 ## Get information about a plugin using a github URL.
 ###
 plugin_get_from_github() {
@@ -160,6 +195,8 @@ plugin_install_from_path() {
 		check_result "$E_INVALID" "There is already a plugin with that name"
 	fi
 
+	plugin_check_conflicts "$plugin_name" "$plugin_source/bin"
+
 	# Remove old versions
 	if [[ -d "$HESTIA/plugins/$plugin_name" ]]; then
 		rm -rf "$HESTIA/plugins/$plugin_name"
@@ -224,6 +261,8 @@ plugin_install_from_zip() {
 	elif [[ "${update_if_exist,,}" != "yes" && -d "$HESTIA/plugins/$plugin_name" ]]; then
 		check_result "$E_INVALID" "There is already a plugin with that name"
 	fi
+
+	plugin_check_conflicts "$plugin_name" "$tmp_dir/bin"
 
 	# Remove old versions
 	if [[ -d "$HESTIA/plugins/$plugin_name" ]]; then

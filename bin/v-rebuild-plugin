@@ -44,32 +44,35 @@ fi
 mkdir -p $HESTIA/web/plugin
 
 if [[ ! -d "$plugin_path" ]]; then
-    plugin_repo="$(echo "$plugin_conf" | awk '{print $3}')"
-    if [[ "$plugin_repo" && "$plugin_repo" != "null" ]]; then
-        echo "Plugin $plugin_name not found, reinstalling via $plugin_repo"
-        $HESTIA/bin/v-add-plugin "$plugin_repo"
-    else
-        echo "Plugin $plugin_name not found and don't have a repository in their configs."
-    fi
+	plugin_repo="$(echo "$plugin_conf" | awk '{print $3}')"
+	if [[ "$plugin_repo" && "$plugin_repo" != "null" ]]; then
+		echo "Plugin $plugin_name not found, reinstalling via $plugin_repo"
+		$HESTIA/bin/v-add-plugin "$plugin_repo"
+	else
+		echo "Plugin $plugin_name not found and don't have a repository in their configs."
+	fi
 else
-    echo "Configuring plugin $plugin_name"
+	echo "Configuring plugin $plugin_name"
 
-    # Create symbolic links to executables
-    if [[ -d "$plugin_path/bin" ]]; then
-        for f in "$plugin_path/bin/"*; do
-            bin_name="$(basename -- "$f")"
+	# Create symbolic links to executables
+	if [[ -d "$plugin_path/bin" && -n "$(ls "$plugin_path/bin/v-plugin-"* 2> /dev/null)" ]]; then
+		for f in "$plugin_path/bin/v-plugin-"*; do
+			bin_name="$(basename -- "$f")"
 
-            chmod +x "$f"
-            ln -sf "$f" $HESTIA/bin
-        done
-    fi
+			# Check if already a script with that name
+			if [[ ! -e "$HESTIA/bin/$bin_name" ]]; then
+				chmod +x "$f"
+				ln -s "$f" $HESTIA/bin
+			fi
+		done
+	fi
 
-    # Create symbolic link to the web directory
-    if [[ -d "$plugin_path/web" ]]; then
-        if [[ -L "$HESTIA/web/plugin/$plugin_name" ]]; then
-            unlink "$HESTIA/web/plugin/$plugin_name"
-        fi
+	# Create symbolic link to the web directory
+	if [[ -d "$plugin_path/web" ]]; then
+		if [[ -L "$HESTIA/web/plugin/$plugin_name" ]]; then
+			unlink "$HESTIA/web/plugin/$plugin_name"
+		fi
 
-        ln -sf "$plugin_path/web" "$HESTIA/web/plugin/$plugin_name"
-    fi
+		ln -s "$plugin_path/web" "$HESTIA/web/plugin/$plugin_name"
+	fi
 fi

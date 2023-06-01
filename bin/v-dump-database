@@ -62,3 +62,14 @@ esac
 if [ -z "$output" ]; then
 	cat $dump
 fi
+
+rm -fr $tmpdir
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

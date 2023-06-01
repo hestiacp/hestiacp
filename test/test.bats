@@ -40,6 +40,53 @@ function setup() {
 }
 
 function validate_web_domain() {
+	local user=$1
+	local domain=$2
+	local webproof=$3
+	local webpath=${4}
+
+	refute [ -z "$user" ]
+	refute [ -z "$domain" ]
+	refute [ -z "$webproof" ]
+
+	source $HESTIA/func/ip.sh
+
+	run v-list-web-domain $user $domain
+	assert_success
+
+	USER_DATA=$HESTIA/data/users/$user
+	local domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+	SSL=$(get_object_value 'web' 'DOMAIN' "$domain" '$SSL')
+	domain_ip=$(get_real_ip "$domain_ip")
+
+	if [ ! -z $webpath ]; then
+		domain_docroot=$(get_object_value 'web' 'DOMAIN' "$domain" '$CUSTOM_DOCROOT')
+		if [ -n "$domain_docroot" ] && [ -d "$domain_docroot" ]; then
+			assert_file_exist "${domain_docroot}/${webpath}"
+		else
+			assert_file_exist "${HOMEDIR}/${user}/web/${domain}/public_html/${webpath}"
+		fi
+	fi
+
+	# Test HTTP
+	# Curl hates UTF domains so convert them to ascci.
+	domain_idn=$(idn2 $domain)
+	run curl --location --silent --show-error --insecure --resolve "${domain_idn}:80:${domain_ip}" "http://${domain_idn}/${webpath}"
+	assert_success
+	assert_output --partial "$webproof"
+
+	# Test HTTPS
+	if [ "$SSL" = "yes" ]; then
+		run v-list-web-domain-ssl $user $domain
+		assert_success
+
+		run curl --location --silent --show-error --insecure --resolve "${domain_idn}:443:${domain_ip}" "https://${domain_idn}/${webpath}"
+		assert_success
+		assert_output --partial "$webproof"
+	fi
+}
+
+function validate_web_domain() {
     local user=$1
     local domain=$2
     local webproof=$3
@@ -767,7 +814,10 @@ function check_ip_not_banned(){
     assert_success
     refute_output
 
+	echo -e "<?php\necho 'Hestia Test:'.(4*3);" > $HOMEDIR/$user/web/$domain/public_html/php-test.php
     validate_web_domain $user $domain 'This site is currently suspended'
+	validate_web_domain $user $domain 'This site is currently suspended' 'php-test.php'
+	rm $HOMEDIR/$user/web/$domain/public_html/php-test.php
 }
 
 @test "WEB: Unsuspend web domain" {

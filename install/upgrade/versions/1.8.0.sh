@@ -37,7 +37,7 @@ fi
 
 if [ -f /etc/fail2ban/jail.local ]; then
 	# Add phpmyadmin rule
-	if ! grep -qw "^[phpmyadmin-auth]$" /etc/fail2ban/jail.local 2> /dev/null; then
+	if ! grep -qw "^phpmyadmin-auth$" /etc/fail2ban/jail.local 2> /dev/null; then
 		sed -i '/\[recidive\]/i [phpmyadmin-auth]\nenabled  = true\nfilter   = phpmyadmin-syslog\naction   = hestia[name=WEB]\nlogpath  = /var/log/auth.log\nmaxretry = 5\n' /etc/fail2ban/jail.local
 	fi
 fi

@@ -37,6 +37,9 @@ elif [[ "$(echo "$plugin_conf" | awk '{print $4}')" == "true" ]]; then
 	check_result "$E_INVALID" "Plugin \"$plugin_name\" is already enabled"
 fi
 
+# Checks if plugin scripts will conflict with existing scripts
+plugin_check_conflicts "$plugin_name" "$plugin_path/bin"
+
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -51,5 +54,5 @@ $HESTIA/bin/v-rebuild-plugin "$plugin_name"
 
 # Check if plugin has additional configurations
 if [[ -f "$plugin_path/hook/post_enable" ]]; then
-    bash "$plugin_path/hook/post_enable"
+	bash "$plugin_path/hook/post_enable"
 fi

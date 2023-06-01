@@ -43,23 +43,23 @@ fi
 
 # Check if plugin has an uninstall script
 if [[ -f "$plugin_path/hook/pre_disable" ]]; then
-    bash "$plugin_path/hook/pre_disable"
+	bash "$plugin_path/hook/pre_disable"
 fi
 
 # Remove CLI files
-if [[ -d "$plugin_path/bin" ]]; then
-    for f in "$plugin_path/bin/"*; do
-        bin_name="$(basename -- "$f")"
+if [[ -d "$plugin_path/bin" && -n "$(ls "$plugin_path/bin/v-plugin-"* 2> /dev/null)" ]]; then
+	for f in "$plugin_path/bin/v-plugin-"*; do
+		bin_name="$(basename -- "$f")"
 
-        if [[ -L "$HESTIA/bin/$bin_name" ]]; then
-            unlink "$HESTIA/bin/$bin_name"
-        fi
-    done
+		if [[ -L "$HESTIA/bin/$bin_name" ]]; then
+			unlink "$HESTIA/bin/$bin_name"
+		fi
+	done
 fi
 
 # Remove from web
 if [[ -L "$HESTIA/web/plugin/$plugin_name" ]]; then
-    unlink "$HESTIA/web/plugin/$plugin_name"
+	unlink "$HESTIA/web/plugin/$plugin_name"
 fi
 
 # Change plugin status

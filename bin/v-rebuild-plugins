@@ -20,7 +20,12 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                       Action                             #
 #----------------------------------------------------------#
 
-mapfile -t plugins < <($HESTIA/bin/v-list-plugins plain | awk '{print $1}')
+mapfile -t plugins < <($HESTIA/bin/v-list-plugins plain)
 for plugin in "${plugins[@]}"; do
-	$HESTIA/bin/v-rebuild-plugin "$plugin"
+	plugin_name="$(echo "$plugin" | awk '{print $1}')"
+	plugin_enabled="$(echo "$plugin" | awk '{print $4}')"
+
+	if [[ "$plugin_enabled" == "true" ]]; then
+		$HESTIA/bin/v-rebuild-plugin "$plugin_name"
+	fi
 done

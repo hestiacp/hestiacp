@@ -106,7 +106,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 				</div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-right compact-3"><b>&nbsp;</b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-right"><b>&nbsp;</b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Disk") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Type") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?= _("Username") ?></b></div>
@@ -161,7 +161,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<?php } ?>
 						</div>
 						<!-- START QUICK ACTION TOOLBAR AREA -->
-						<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
+						<div class="clearfix l-unit__stat-col--left u-text-right">
 							<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 								<div class="actions-panel clearfix">
 									<?php if ($read_only === "true") { ?>
@@ -182,6 +182,11 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 												</a>
 											</div>
 										<?php } ?>
+										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href">
+											<a href="/download/database/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Download Database") ?>">
+												<i class="fas fa-download icon-orange icon-dim"></i>
+											</a>
+										</div>
 										<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 											<a
 												class="data-controls js-confirm-action"

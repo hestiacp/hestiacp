@@ -1,10 +1,11 @@
 #!/bin/bash
-# info: change database owner
-# options: DATABASE USER
+# info: Dumps database contents in STDIN / file
+# options: USER DATABASE [FILE]
 #
-# example: v-change-database-owner mydb alice
+# example: v-dump-database user user_databse > test.sql
+# example: v-dump-database user user_databse file
 #
-# This function for changing database owner.
+# Dumps database in STDIN or /backup/user.database.type.sql
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

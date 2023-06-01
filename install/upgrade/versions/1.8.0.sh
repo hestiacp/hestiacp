@@ -24,7 +24,7 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 if [[ -z "$(command -v jq)" ]]; then
-    apt-get -y install jq
+	apt-get -y install jq
 fi
 
 if [ "$IMAP_SYSTEM" = "dovecot" ]; then

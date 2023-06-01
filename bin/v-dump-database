@@ -1,0 +1,81 @@
+#!/bin/bash
+# info: Dumps database contents in STDIN / file
+# options: USER DATABASE [FILE]
+#
+# example: v-dump-database user user_databse > test.sql
+# example: v-dump-database user user_databse file
+#
+# Dumps database in STDIN or /backup/user.database.type.sql
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+database=$2
+output=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+check_args '2' "$#" 'USER DATABASE'
+is_format_valid 'user' 'database'
+is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Check db existence
+db_data=$(grep "DB='$database'" $HESTIA/data/users/$user/db.conf)
+if [ -z "$db_data" ]; then
+	echo "Error: database $database doesn't exist"
+	log_event "$E_NOTEXIST" "$ARGUMENTS"
+	exit "$E_NOTEXIST"
+fi
+
+parse_object_kv_list "$db_data"
+
+# Creating temporary directory
+tmpdir=$(mktemp -p $BACKUP -d "tmp.$database.XXXXXXXXXX")
+
+# Dump database
+dump="$tmpdir/$database.$TYPE.sql"
+grants="$tmpdir/$database.$TYPE.$DBUSER"
+case $TYPE in
+	mysql) dump_mysql_database ;;
+	pgsql) dump_pgsql_database ;;
+esac
+
+if [ "$output" = "file" ]; then
+	cp $dump $BACKUP/$user.$database.$TYPE.sql
+	echo $BACKUP/$user.$database.$TYPE.sql
+
+	echo "rm $BACKUP/$user.$database.$TYPE.sql" | at now + 1 hour
+else
+	cat $dump
+fi
+
+rm -fr $tmpdir
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -262,6 +262,11 @@ prepare_web_domain_values() {
 	if [ "$SUSPENDED" = 'yes' ]; then
 		docroot="$HESTIA/data/templates/web/suspend"
 		sdocroot="$HESTIA/data/templates/web/suspend"
+		if [ "$PROXY_SYSTEM" == "nginx" ]; then
+			PROXY="suspended"
+		else
+			TPL="suspended"
+		fi
 	fi
 }
 

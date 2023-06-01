@@ -38,7 +38,7 @@ if (!empty($_POST["ok"])) {
 
 	// Install plugin
 	if (empty($_SESSION["error_msg"])) {
-		exec(HESTIA_CMD . "v-add-plugin " . $v_plugin_url . " json",$output, $return_var,);
+		exec(HESTIA_CMD . "v-add-plugin " . $v_plugin_url . " json", $output, $return_var);
 		$plugin_data = json_decode(implode("", $output), true);
 		check_return_code($return_var, $output);
 		unset($output);
@@ -46,9 +46,9 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		if (is_dir(HESTIA_DIR_WEB."plugin/{$plugin_data['name']}/")) {
+		if (is_dir(HESTIA_DIR_WEB . "plugin/{$plugin_data["name"]}/")) {
 			$closing_tag = "</b></a>";
-			$open_tag = '<a href="/plugin/' . htmlentities($plugin_data['name']) . '/"><b>';
+			$open_tag = '<a href="/plugin/' . htmlentities($plugin_data["name"]) . '/"><b>';
 		} else {
 			$closing_tag = "</b>";
 			$open_tag = "<b>";

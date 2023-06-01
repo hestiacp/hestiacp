@@ -3,7 +3,7 @@ use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
 
-include $_SERVER["DOCUMENT_ROOT"]."/inc/main.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Check user
 if ($_SESSION["userContext"] != "admin") {
@@ -18,16 +18,16 @@ $plugin = $_POST["plugin"];
 $action = $_POST["action"];
 
 switch ($action) {
-	case 'delete':
-		$cmd = 'v-delete-plugin';
+	case "delete":
+		$cmd = "v-delete-plugin";
 		break;
 
-	case 'disable':
-		$cmd = 'v-disable-plugin';
+	case "disable":
+		$cmd = "v-disable-plugin";
 		break;
 
-	case 'enable':
-		$cmd = 'v-enable-plugin';
+	case "enable":
+		$cmd = "v-enable-plugin";
 		break;
 
 	default:

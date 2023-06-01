@@ -21,8 +21,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 mapfile -t plugins < <($HESTIA/bin/v-list-plugins plain | awk '{print $1}')
-if [[ "${plugins[@]}" ]]; then
-    for plugin in "${plugins[@]}"; do
-        $HESTIA/bin/v-rebuild-plugin "$plugin"
-    done
-fi
+for plugin in "${plugins[@]}"; do
+	$HESTIA/bin/v-rebuild-plugin "$plugin"
+done

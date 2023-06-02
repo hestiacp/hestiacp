@@ -1,5 +1,11 @@
 <script defer src="/js/dist/main.min.js?<?= JS_LATEST_UPDATE ?>"></script>
 <script defer src="/js/dist/alpinejs.min.js?<?= JS_LATEST_UPDATE ?>"></script>
+<?php
+$list_js = hst_apply_filters("js", []);
+foreach ($list_js as $link) {
+	echo "<script defer src=\"$link\"></script>\n";
+}
+?>
 <script>
 	document.documentElement.classList.replace('no-js', 'js');
 	document.addEventListener('alpine:init', () => {

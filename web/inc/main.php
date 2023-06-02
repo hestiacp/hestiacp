@@ -613,7 +613,8 @@ register_shutdown_function("unset_alerts");
  */
 function hst_render($template, $__args = []) {
 	$user = $GLOBALS["user"];
-	$TAB = isset($__args["tab"]) ? $__args["tab"] : $GLOBALS["TAB"];
+	$user_plain = $GLOBALS["user_plain"];
+	$TAB = !empty($__args["tab"]) ? $__args["tab"] : $GLOBALS["TAB"];
 	$__html = isset($__args["template_dir"]) && $__args["template_dir"] === false;
 	$__template_dir = null;
 
@@ -909,10 +910,13 @@ function hst_add_header_menu($name, $link, $icon = null, $page_tab = null, $prio
 	if (is_string($icon) && !empty($icon)) {
 		$item["icon"] = $icon;
 	}
-	if (!empty($page_tab) && is_array($page_tab)) {
-		$item["page_tab"] = array_map("strtoupper", $page_tab);
-	} elseif (!empty($page_tab) && is_string($page_tab)) {
-		$item["page_tab"] = strtoupper($page_tab);
+
+	if (!empty($page_tab)) {
+		if (is_array($page_tab)) {
+			$item["page_tab"] = array_map("strtoupper", $page_tab);
+		} elseif (is_string($page_tab)) {
+			$item["page_tab"] = strtoupper($page_tab);
+		}
 	}
 
 	hst_add_filter(
@@ -939,7 +943,7 @@ function hst_add_header_menu($name, $link, $icon = null, $page_tab = null, $prio
  *  * link  - (optional)
  * </p>
  * @param string $icon
- * @param string $page_tab Name will be used if not defined.
+ * @param string|string[] $page_tab Name will be used if not defined.
  * @param int $priority
  */
 function hst_add_menu(
@@ -961,12 +965,19 @@ function hst_add_menu(
 
 	$item["name"] = $name;
 	$item["link"] = $link;
+
 	if (is_string($icon) && !empty($icon)) {
 		$item["icon"] = $icon;
 	}
-	if (is_string($page_tab) && !empty($page_tab)) {
-		$item["page_tab"] = $page_tab;
+
+	if (!empty($page_tab)) {
+		if (is_array($page_tab)) {
+			$item["page_tab"] = array_map("strtoupper", $page_tab);
+		} elseif (is_string($page_tab)) {
+			$item["page_tab"] = strtoupper($page_tab);
+		}
 	}
+
 	if (is_array($sub_items) && !empty($sub_items)) {
 		$item["sub_items"] = $sub_items;
 	}
@@ -1115,19 +1126,6 @@ function get_plugin_data(string $plugin_name, bool $force_reload = false) {
 	return null;
 }
 
-// Insert additional elements in the head
-hst_add_action("head", function () {
-	$list_css = hst_apply_filters("css", []);
-	foreach ($list_css as $link) {
-		echo "<link rel=\"stylesheet\" href=\"$link\" />\n";
-	}
-
-	$list_js = hst_apply_filters("js", []);
-	foreach ($list_js as $link) {
-		echo "<script type=\"application/javascript\" src=\"$link\"></script>\n";
-	}
-});
-
 // Show items from filter "header_menu"
 hst_add_action("render_header_menu", function () {
 	global $TAB;
@@ -1153,9 +1151,9 @@ hst_add_action("render_header_menu", function () {
 					? " " . $item["classes"]
 					: "";
 			$is_active =
-				(!empty($item["page_tab"]) &&
-					(is_string($item["page_tab"]) && $TAB == $item["page_tab"])) ||
-				(is_array($item["page_tab"]) && in_array($TAB, $item["page_tab"]))
+				!empty($item["page_tab"]) &&
+				((is_string($item["page_tab"]) && $TAB == $item["page_tab"]) ||
+					(is_array($item["page_tab"]) && in_array($TAB, $item["page_tab"])))
 					? "active"
 					: "";
 
@@ -1201,9 +1199,9 @@ hst_add_action("render_menu", function () {
 					: "";
 
 			$is_active =
-				(!empty($item["page_tab"]) &&
-					(is_string($item["page_tab"]) && $TAB == $item["page_tab"])) ||
-				(is_array($item["page_tab"]) && in_array($TAB, $item["page_tab"]))
+				!empty($item["page_tab"]) &&
+				((is_string($item["page_tab"]) && $TAB == $item["page_tab"]) ||
+					(is_array($item["page_tab"]) && in_array($TAB, $item["page_tab"])))
 					? "active"
 					: "";
 

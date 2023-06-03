@@ -1369,21 +1369,21 @@ mkdir -p /var/log/nginx/domains
 dns_resolver="$(sed -ne '/^nameserver/s/^nameserver[ \t]*\(.*\)/\1/p' /etc/resolv.conf)"
 for ip in $dns_resolver; do
 	if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-		resolver_ipv4="$ip $resolver_ipv4"
+		resolver_ipv4="$resolver_ipv4 $ip"
 	fi
 	if [ "$ipv6_support" = 'yes' ]; then
 		if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
-			resolver_ipv6="[$ip] $resolver_ipv6"
+			resolver_ipv6="$resolver_ipv6 [$ip]"
 		fi
 	fi
 done
 if [ -n "$resolver_ipv4" ]; then
-	sed -i "s/1.1.1.1 8.8.8.8 /$resolver_ipv4/g" /etc/nginx/nginx.conf
-	sed -i "s/1.1.1.1 8.8.8.8 /$resolver_ipv4/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/ 1.1.1.1 8.8.8.8/$resolver_ipv4/g" /etc/nginx/nginx.conf
+	sed -i "s/ 1.1.1.1 8.8.8.8/$resolver_ipv4/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 if [ "$ipv6_support" = 'yes' -a -n "$resolver_ipv6" ]; then
-	sed -i "s/\[2606:4700:4700::1111\] \[2606:4700:4700::1001\] /$resolver_ipv6/g" /etc/nginx/nginx.conf
-	sed -i "s/\[2606:4700:4700::1111\] \[2606:4700:4700::1001\] /$resolver_ipv6/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/ \[2606:4700:4700::1111\] \[2606:4700:4700::1001\]/$resolver_ipv6/g" /etc/nginx/nginx.conf
+	sed -i "s/ \[2606:4700:4700::1111\] \[2606:4700:4700::1001\]/$resolver_ipv6/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/

@@ -1428,7 +1428,10 @@ if [ "$apache" = 'yes' ]; then
 	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
 	cp -f ${HESTIA_INSTALL_DIR}/logrotate/apache2 /etc/logrotate.d/
 	if [ "$ipv6_support" = 'yes' ]; then
-		cp -f ${HESTIA_INSTALL_DIR}/apache2/status-ipv6.conf /etc/apache2/mods-available/hestia-status.conf
+		listen_apache_ipv6="Listen [::1]:8081"
+		sed -i -e "/Listen 127\.0\.0\.1:8081.*/a$listen_apache_ipv6" /etc/apache2/mods-available/hestia-status.conf
+		allow_from_apache_ipv6="Allow from ::1"
+		sed -i -e "/Allow from 127\.0\.0\.1*/a\\\t$allow_from_apache_ipv6" /etc/apache2/mods-available/hestia-status.conf
 	fi
 	# Enable needed modules
 	a2enmod rewrite > /dev/null 2>&1

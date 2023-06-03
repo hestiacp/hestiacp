@@ -21,16 +21,23 @@ server {
     include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 
     location / {
+        client_max_body_size 512M;
         proxy_pass http://localhost:3000;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_max_temp_file_size 0;
+        proxy_redirect off;
+        proxy_read_timeout 120;
     }
 
     location /error/ {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
 
-    location ~ /\.(?!well-known\/) {
-       deny all;
-       return 404;
+    location ~ /.well-known {
+        allow all;
     }
 
     location /vstats/ {

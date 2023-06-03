@@ -1356,8 +1356,10 @@ cp -f ${HESTIA_INSTALL_DIR}/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f ${HESTIA_INSTALL_DIR}/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f ${HESTIA_INSTALL_DIR}/logrotate/nginx /etc/logrotate.d/
 if [ "$ipv6_support" = 'yes' ]; then
-	cp -f ${HESTIA_INSTALL_DIR}/nginx/nginx-ipv6.conf /etc/nginx/nginx.conf
-	cp -f ${HESTIA_INSTALL_DIR}/nginx/status-ipv6.conf /etc/nginx/conf.d/status.conf
+	resolver_ipv6="1.0.0.1 8.8.4.4 [2606:4700:4700::1111] 1.1.1.1 8.8.8.8 [2606:4700:4700::1001] valid=300s ipv6=on;"
+	sed -i -e "s/\(resolver[ \t]*\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*.*/\1$resolver_ipv6/" /etc/nginx/nginx.conf
+	listen_nginx_ipv6="listen	[::1]:8084 default;"
+	sed -i -e "/listen[ \t]*[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*.*/a\\\t$listen_nginx_ipv6" /etc/nginx/conf.d/status.conf
 fi
 mkdir -p /etc/nginx/conf.d/domains
 mkdir -p /etc/nginx/modules-enabled
@@ -1377,8 +1379,8 @@ for ip in $dns_resolver; do
 done
 if [ -n "$resolver" ]; then
 	if [ "$ipv6_support" = 'yes' ]; then
-		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /etc/nginx/nginx.conf
-		sed -i "s/1.1.1.1 \[2606:4700:4700::1111\] 1.1.1.1 \[2606:4700:4700::1001\]/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
+		sed -i "s/\[2606:4700:4700::1111\] 1.1.1.1 8.8.8.8 \[2606:4700:4700::1001\]/$resolver/g" /etc/nginx/nginx.conf
+		sed -i "s/\[2606:4700:4700::1111\] 1.1.1.1 8.8.8.8 \[2606:4700:4700::1001\]/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 	else
 		sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
 		sed -i "s/1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf

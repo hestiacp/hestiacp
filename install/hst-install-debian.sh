@@ -1526,7 +1526,7 @@ if [ "$vsftpd" = 'yes' ]; then
 	echo "[ * ] Configuring Vsftpd server..."
 	cp -f ${HESTIA_INSTALL_DIR}/vsftpd/vsftpd.conf /etc/
 	if [ "$ipv6_support" = 'yes' ]; then
-		cp -f ${HESTIA_INSTALL_DIR}/vsftpd/vsftpd-ipv6.conf /etc/vsftpd.conf
+		sed -i -e "s/\(listen\)\(=YES\)/\1_ipv6\2/" /etc/vsftpd.conf
 	fi
 	touch /var/log/vsftpd.log
 	chown root:adm /var/log/vsftpd.log

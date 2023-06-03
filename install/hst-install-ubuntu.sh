@@ -1453,12 +1453,12 @@ for ip in $dns_resolver; do
 	fi
 done
 if [ -n "$resolver_ipv4" ]; then
-	sed -i "s/1.1.1.1 8.8.8.8/$resolver_ipv4/g" /etc/nginx/nginx.conf
-	sed -i "s/1.1.1.1 8.8.8.8/$resolver_ipv4/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/1.1.1.1 8.8.8.8 /$resolver_ipv4/g" /etc/nginx/nginx.conf
+	sed -i "s/1.1.1.1 8.8.8.8 /$resolver_ipv4/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 if [ "$ipv6_support" = 'yes' -a -n "$resolver_ipv6" ]; then
-	sed -i "s/\[2606:4700:4700::1111\] \[2606:4700:4700::1001\]/$resolver_ipv6/g" /etc/nginx/nginx.conf
-	sed -i "s/\[2606:4700:4700::1111\] \[2606:4700:4700::1001\]/$resolver_ipv6/g" /usr/local/hestia/nginx/conf/nginx.conf
+	sed -i "s/\[2606:4700:4700::1111\] \[2606:4700:4700::1001\] /$resolver_ipv6/g" /etc/nginx/nginx.conf
+	sed -i "s/\[2606:4700:4700::1111\] \[2606:4700:4700::1001\] /$resolver_ipv6/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/

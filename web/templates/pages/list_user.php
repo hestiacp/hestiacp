@@ -144,14 +144,14 @@
 					<?php if ($key == $user_plain) { ?>
 						<a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit User") ?>">
 							<span class="u-text-bold">
-								<?=$key?>
+								<?= $key ?>
 							</span>
 							(<?=$data[$key]['NAME'];?>)
 						</a>
 					<?php } else { ?>
 						<a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Log in as") ?> <?=$key?>">
 							<span class="u-text-bold">
-								<?=$key?>
+								<?= $key ?>
 							</span>
 							(<?=$data[$key]['NAME'];?>)
 						</a>

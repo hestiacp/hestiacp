@@ -127,6 +127,12 @@
 	width: 100% !important;
 }
 
+.u-text-ellipsis {
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+}
+
 .u-min-height100 {
 	min-height: 100px !important;
 }
@@ -137,6 +143,10 @@
 
 .u-min-height600 {
 	min-height: 600px !important;
+}
+
+.u-max-width300 {
+	max-width: 300px !important;
 }
 
 .u-max-height300 {

@@ -200,22 +200,25 @@
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
-					<?php if ($read_only === 'true') {?>
-						<?=$key?>
+					<?php if ($read_only === 'true') { ?>
+						<?= $key ?>
 					<?php } else {
 						$aliases = explode(',', $data[$key]['ALIAS']);
 						$alias_new = array();
 						foreach($aliases as $alias){
-							if($alias != 'www.'.$key){
+							if ($alias != 'www.'.$key) {
 								$alias_new[] = trim($alias);
 							}
 						}
 						?>
 						<a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Domain") ?>: <?=$key?>">
 							<?= $key ?>
-							<?php if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
-								echo " <span class=\"hint\">(".implode(',',$alias_new).")";
-							} ?>
+							<?php
+								if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
+									$aliases = implode(', ', $alias_new);
+									echo "<p class='hint u-max-width300 u-text-ellipsis'>($aliases)</p>";
+								}
+							?>
 						</a>
 					<?php } ?>
 				</div>

@@ -1758,6 +1758,10 @@ if [ "$exim" = 'yes' ]; then
 		sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
 	fi
 
+	if [ "$release" = 10 ]; then
+		sed -i "/^smtputf8_advertise_hosts =/d" /etc/exim4/exim4.conf.template
+	fi
+
 	chmod 640 /etc/exim4/exim4.conf.template
 	rm -rf /etc/exim4/domains
 	mkdir -p /etc/exim4/domains

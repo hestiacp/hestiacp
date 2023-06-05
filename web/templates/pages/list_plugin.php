@@ -75,7 +75,7 @@
         }
 
         // Checks if the plugin has a web interface
-        if ($status == 'enabled' && file_exists("/usr/local/hestia/web/plugin/$plugin_name/index.php")) {
+        if ($status == 'enabled' && file_exists(HESTIA_DIR_WEB . "plugin/$plugin_name/index.php")) {
             $plugin_web = "/plugin/$plugin_name/";
         } else {
             $plugin_web = "";

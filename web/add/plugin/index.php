@@ -50,7 +50,8 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		if (is_dir(HESTIA_DIR_WEB . "plugin/{$plugin_data["name"]}/")) {
+		// Check if plugin has a web interface
+		if (file_exists(HESTIA_DIR_WEB . "plugin/{$plugin_data["name"]}/index.php")) {
 			$closing_tag = "</b></a>";
 			$open_tag = '<a href="/plugin/' . htmlentities($plugin_data["name"]) . '/"><b>';
 		} else {

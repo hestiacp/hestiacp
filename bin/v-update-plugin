@@ -58,11 +58,13 @@ fi
 #                       Action                             #
 #----------------------------------------------------------#
 
+old_version="$(echo "$plugin_conf" | awk '{print $2}')"
+
 echo "Updating $plugin_name plugin to version $new_version"
 
 # Check pre_update hook
 if [[ -f "$HESTIA/plugins/$plugin_name/hook/pre_update" ]]; then
-	bash "$HESTIA/plugins/$plugin_name/hook/pre_update"
+	bash "$HESTIA/plugins/$plugin_name/hook/pre_update" "$new_version" "$old_version"
 fi
 
 # Disable plugin
@@ -73,7 +75,7 @@ plugin_install_from_zip "$github_archive" "yes"
 
 # Check post_update hook
 if [[ -f "$HESTIA/plugins/$plugin_name/hook/post_update" ]]; then
-	bash "$HESTIA/plugins/$plugin_name/hook/post_update"
+	bash "$HESTIA/plugins/$plugin_name/hook/post_update" "$new_version" "$old_version"
 fi
 
 # Logging

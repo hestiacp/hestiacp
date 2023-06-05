@@ -284,16 +284,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/media-query-list-parser@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "@csstools/media-query-list-parser@npm:2.0.4"
-  peerDependencies:
-    "@csstools/css-parser-algorithms": ^2.1.1
-    "@csstools/css-tokenizer": ^2.1.1
-  checksum: 059b1e9bb78fc55888d5c51b55ae6a3aa89b7fde14d846a659bc2bc7f01b5a85d4baf02d36b59a44e5157a5a8eb283b24918d567eda34667e5776befbf122983
-  languageName: node
-  linkType: hard
-
 "@csstools/media-query-list-parser@npm:^2.1.0":
   version: 2.1.0
   resolution: "@csstools/media-query-list-parser@npm:2.1.0"

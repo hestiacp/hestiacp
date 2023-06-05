@@ -1086,7 +1086,9 @@ function get_plugins(bool $force_reload = false) {
 			$plugins = array_map(function ($plugin) {
 				$plugin["plugin_dir"] = HESTIA_DIR . "plugins/{$plugin["name"]}/";
 
-				if (is_dir(HESTIA_DIR_WEB . "plugin/{$plugin["name"]}/")) {
+				// This checks index.php to ensure the plugin has a page. The plugin can even have
+				// a "functions.php" to make changes to the panel without having an interface.
+				if (file_exists(HESTIA_DIR_WEB . "plugin/{$plugin["name"]}/index.php")) {
 					$plugin["has_web_ui"] = true;
 					$plugin["web_uri"] = "/plugin/{$plugin["name"]}/";
 					$plugin["web_dir"] = HESTIA_DIR_WEB . "plugin/{$plugin["name"]}/";

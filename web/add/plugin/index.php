@@ -33,6 +33,10 @@ if (!empty($_POST["ok"])) {
 		$_SESSION["error_msg"] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
 	}
 
+	if (!preg_match("/^https?:\/\/(github.com\/.+|.+\.zip$)/", $_POST["v_plugin_url"])) {
+		$_SESSION["error_msg"] = _("Plugin URL must be a Github repository or a ZIP");
+	}
+
 	// Protect input
 	$v_plugin_url = quoteshellarg($_POST["v_plugin_url"]);
 

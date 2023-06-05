@@ -1132,44 +1132,38 @@ hst_add_action("render_header_menu", function () {
 
 	$list_header_menu = hst_apply_filters("header_menu", []);
 	foreach ($list_header_menu as $item) {
-		if (is_array($item)) {
 
-			if (empty($item["name"]) || !is_string($item["name"])) {
-				continue;
-			}
-
-			$name = $item["name"];
-			$link =
-				!empty($item["link"]) && is_string($item["link"])
-					? $item["link"]
-					: "javascript:void(0);";
-			$external = ($item["external"] ?? false) === true;
-
-			$classes = "top-bar-menu-item";
-			$classes .=
-				!empty($item["classes"]) && is_string($item["classes"])
-					? " " . $item["classes"]
-					: "";
-			$is_active =
-				!empty($item["page_tab"]) &&
-				((is_string($item["page_tab"]) && $TAB == $item["page_tab"]) ||
-					(is_array($item["page_tab"]) && in_array($TAB, $item["page_tab"])))
-					? "active"
-					: "";
-
-			$icon = !empty($item["icon"]) && is_string($item["icon"]) ? $item["icon"] : "ghost";
-			?>
-			<li class="<?= $classes ?>">
-				<a title="<?= $name ?>" <?php if ($external) {
-	echo 'target="_blank" rel="noopener"';
-} ?>
-				   class="top-bar-menu-link <?= $is_active ?>" href="<?= $link ?>">
-					<i class="fas fa-<?= $icon ?>"></i>
-					<span class="top-bar-menu-link-label u-hide-desktop"><?= $name ?></span>
-				</a>
-			</li>
-			<?php
+		if (!is_array($item) || empty($item["name"]) || !is_string($item["name"])) {
+			continue;
 		}
+
+		$name = $item["name"];
+		$link =
+			!empty($item["link"]) && is_string($item["link"])
+				? $item["link"]
+				: "javascript:void(0);";
+		$external = ($item["external"] ?? false) === true;
+
+		$classes = "top-bar-menu-item";
+		$classes .=
+			!empty($item["classes"]) && is_string($item["classes"]) ? " " . $item["classes"] : "";
+		$is_active =
+			!empty($item["page_tab"]) &&
+			((is_string($item["page_tab"]) && strtoupper($TAB) == $item["page_tab"]) ||
+				(is_array($item["page_tab"]) && in_array(strtoupper($TAB), $item["page_tab"])))
+				? "active"
+				: "";
+
+		$icon = !empty($item["icon"]) && is_string($item["icon"]) ? $item["icon"] : "ghost";
+		?>
+		<li class="<?= $classes ?>">
+			<a title="<?= $name ?>" <?= $external ? 'target="_blank" rel="noopener"' : "" ?>
+			   class="top-bar-menu-link <?= $is_active ?>" href="<?= $link ?>">
+				<i class="fas fa-<?= $icon ?>"></i>
+				<span class="top-bar-menu-link-label u-hide-desktop"><?= $name ?></span>
+			</a>
+		</li>
+		<?php
 	}
 });
 
@@ -1180,72 +1174,68 @@ hst_add_action("render_menu", function () {
 	$list_menu = hst_apply_filters("menu", []);
 
 	foreach ($list_menu as $item) {
-		if (is_array($item)) {
 
-			if (!isset($item["name"]) || !is_string($item["name"]) || empty($item["name"])) {
-				continue;
-			}
-
-			$name = $item["name"];
-			$link =
-				isset($item["link"]) && is_string($item["link"]) && !empty($item["link"])
-					? $item["link"]
-					: "javascript:void(0);";
-
-			$classes = "main-menu-item";
-			$classes .=
-				!empty($item["classes"]) && is_string($item["classes"])
-					? " " . $item["classes"]
-					: "";
-
-			$is_active =
-				!empty($item["page_tab"]) &&
-				((is_string($item["page_tab"]) && $TAB == $item["page_tab"]) ||
-					(is_array($item["page_tab"]) && in_array($TAB, $item["page_tab"])))
-					? "active"
-					: "";
-
-			$icon = !empty($item["icon"]) && is_string($item["icon"]) ? $item["icon"] : "ghost";
-			?>
-		<li class="<?= $classes ?>">
-		<a href="<?= $link ?>" class="main-menu-item-link <?= $is_active ?>">
-			<p class="main-menu-item-label"><?= $name ?><i class="fas fa-<?= $icon ?>"></i></p>
-			<?php
-   if (isset($item["sub_items"]) && is_array($item["sub_items"])) {
-   	echo "<ul class=\"main-menu-stats\">";
-
-   	foreach ($item["sub_items"] as $sub_item) {
-   		if (
-   			isset($sub_item["name"]) &&
-   			is_string($sub_item["name"]) &&
-   			!empty($sub_item["name"])
-   		) {
-   			$sub_item_value = isset($sub_item["value"])
-   				? ": <span>{$sub_item["value"]}</span>"
-   				: "";
-
-   			if (
-   				isset($sub_item["link"]) &&
-   				is_string($sub_item["link"]) &&
-   				!empty($sub_item["link"])
-   			) {
-   				echo "<li><a href=\"{$sub_item["link"]}\">" .
-   					$sub_item["name"] .
-   					"$sub_item_value</a></li>";
-   			} else {
-   				echo "<li>" . $sub_item["name"] . "$sub_item_value</li>";
-   			}
-   		} elseif (is_string($sub_item) && !empty($sub_item)) {
-   			echo "<li>" . $sub_item . "</li>";
-   		}
-   	}
-
-   	echo "</ul>";
-   }
-
-   echo "</a></li>\n";
-
+		if (!is_array($item) || empty($item["name"]) || !is_string($item["name"])) {
+			continue;
 		}
+
+		$name = $item["name"];
+		$link =
+			isset($item["link"]) && is_string($item["link"]) && !empty($item["link"])
+				? $item["link"]
+				: "javascript:void(0);";
+
+		$classes = "main-menu-item";
+		$classes .=
+			!empty($item["classes"]) && is_string($item["classes"]) ? " " . $item["classes"] : "";
+
+		$is_active =
+			!empty($item["page_tab"]) &&
+			((is_string($item["page_tab"]) && strtoupper($TAB) == $item["page_tab"]) ||
+				(is_array($item["page_tab"]) && in_array(strtoupper($TAB), $item["page_tab"])))
+				? "active"
+				: "";
+
+		$icon = !empty($item["icon"]) && is_string($item["icon"]) ? $item["icon"] : "ghost";
+		?>
+	<li class="<?= $classes ?>">
+	<a href="<?= $link ?>" class="main-menu-item-link <?= $is_active ?>">
+		<p class="main-menu-item-label"><?= $name ?><i class="fas fa-<?= $icon ?>"></i></p>
+		<?php
+  if (isset($item["sub_items"]) && is_array($item["sub_items"])) {
+  	echo "<ul class=\"main-menu-stats\">";
+
+  	foreach ($item["sub_items"] as $sub_item) {
+  		if (
+  			isset($sub_item["name"]) &&
+  			is_string($sub_item["name"]) &&
+  			!empty($sub_item["name"])
+  		) {
+  			$sub_item_value = isset($sub_item["value"])
+  				? ": <span>{$sub_item["value"]}</span>"
+  				: "";
+
+  			if (
+  				isset($sub_item["link"]) &&
+  				is_string($sub_item["link"]) &&
+  				!empty($sub_item["link"])
+  			) {
+  				echo "<li><a href=\"{$sub_item["link"]}\">" .
+  					$sub_item["name"] .
+  					"$sub_item_value</a></li>";
+  			} else {
+  				echo "<li>" . $sub_item["name"] . "$sub_item_value</li>";
+  			}
+  		} elseif (is_string($sub_item) && !empty($sub_item)) {
+  			echo "<li>" . $sub_item . "</li>";
+  		}
+  	}
+
+  	echo "</ul>";
+  }
+
+  echo "</a></li>\n";
+
 	}
 });
 
@@ -1313,8 +1303,7 @@ hst_add_action(
 		// Help / Documentation
 		if (isset($_SESSION["HIDE_DOCS"]) && $_SESSION["HIDE_DOCS"] != "yes") {
 			$doc_link = [
-				"link",
-				"https://hestiacp.com/docs/server-administration/troubleshooting.html",
+				"link" => "https://hestiacp.com/docs/server-administration/troubleshooting.html",
 				"external" => true,
 			];
 			hst_add_header_menu(_("Help"), $doc_link, "circle-question", null, 5);

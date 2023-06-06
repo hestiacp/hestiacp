@@ -75,11 +75,11 @@
 			</div>
 			<div class="units-table-cell"><?= _("Name") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("IP Address") ?></div>
-			<div class="units-table-cell"><?= _("Disk") ?></div>
-			<div class="units-table-cell"><?= _("Bandwidth") ?></div>
-			<div class="units-table-cell"><?= _("SSL") ?></div>
-			<div class="units-table-cell"><?= _("Statistics") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("IP Address") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Disk") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Bandwidth") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("SSL") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Statistics") ?></div>
 		</div>
 
 		<!-- Begin web domain list item loop -->
@@ -295,11 +295,11 @@
 						<?php } ?>
 					</ul>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("IP Address") ?>:</span>
 					<?= empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
 					<span class="u-text-bold">
 						<?= humanize_usage_size($data[$key]['U_DISK']) ?>
@@ -308,7 +308,7 @@
 						<?= humanize_usage_measure($data[$key]['U_DISK']) ?>
 					</span>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Bandwidth") ?>:</span>
 					<span class="u-text-bold">
 						<?= humanize_usage_size($data[$key]['U_BANDWIDTH']) ?>
@@ -317,11 +317,11 @@
 						<?= humanize_usage_measure($data[$key]['U_BANDWIDTH']) ?>
 					</span>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("SSL") ?>:</span>
 					<i class="fas <?= $icon_ssl ?>" title="<?= $title_ssl ?>"></i>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Statistics") ?>:</span>
 					<i class="fas <?= $icon_webstats ?>" title="<?= $title_webstats ?>"></i>
 				</div>

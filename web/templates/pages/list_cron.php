@@ -74,11 +74,11 @@
 			</div>
 			<div class="units-table-cell"><?= _("Command") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("Minute") ?></div>
-			<div class="units-table-cell"><?= _("Hour") ?></div>
-			<div class="units-table-cell"><?= _("Day") ?></div>
-			<div class="units-table-cell"><?= _("Month") ?></div>
-			<div class="units-table-cell"><?= _("Day of Week") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Minute") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Hour") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Day") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Month") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Day of Week") ?></div>
 		</div>
 
 		<!-- Begin cron job list item loop -->
@@ -162,23 +162,23 @@
 						</ul>
 					<?php } ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Minute") ?>:</span>
 					<?= $data[$key]["MIN"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Hour") ?>:</span>
 					<?= $data[$key]["HOUR"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Day") ?>:</span>
 					<?= $data[$key]["DAY"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Month") ?>:</span>
 					<?= $data[$key]["MONTH"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Day of Week") ?>:</span>
 					<?= $data[$key]["WDAY"] ?>
 				</div>

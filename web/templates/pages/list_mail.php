@@ -72,12 +72,12 @@
 			</div>
 			<div class="units-table-cell"><?= _("Name") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("Accounts") ?></div>
-			<div class="units-table-cell"><?= _("Disk") ?></div>
-			<div class="units-table-cell"><?= _("Anti-Virus") ?></div>
-			<div class="units-table-cell"><?= _("Spam Filter") ?></div>
-			<div class="units-table-cell"><?= _("DKIM") ?></div>
-			<div class="units-table-cell"><?= _("SSL") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Accounts") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Disk") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Anti-Virus") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Spam Filter") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("DKIM") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("SSL") ?></div>
 		</div>
 
 		<!-- Begin mail domain list item loop -->
@@ -290,7 +290,7 @@
 						<?php } ?>
 					</ul>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Accounts") ?>:</span>
 					<?php
 						if ($data[$key]['ACCOUNTS']) {
@@ -301,7 +301,7 @@
 					?>
 					<?= $mail_accounts ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
 					<span class="u-text-bold">
 						<?= humanize_usage_size($data[$key]['U_DISK']) ?>
@@ -310,19 +310,19 @@
 						<?= humanize_usage_measure($data[$key]['U_DISK']) ?>
 					</span>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Anti-Virus") ?>:</span>
 					<i class="fas <?= $antivirus_icon ?>" title="<?= $antivirus_title ?>"></i>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Spam Filter") ?>:</span>
 					<i class="fas <?= $antispam_icon ?>" title="<?= $antispam_title ?>"></i>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("DKIM") ?>:</span>
 					<i class="fas <?= $dkim_icon ?>" title="<?= $dkim_title ?>"></i>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("SSL") ?>:</span>
 					<i class="fas <?= $ssl_icon ?>" title="<?= $ssl_title ?>"></i>
 				</div>

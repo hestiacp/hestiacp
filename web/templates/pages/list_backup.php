@@ -43,10 +43,10 @@
 			</div>
 			<div class="units-table-cell"><?= _("File Name") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("Date") ?></div>
-			<div class="units-table-cell"><?= _("Size") ?></div>
-			<div class="units-table-cell"><?= _("Type") ?></div>
-			<div class="units-table-cell"><?= _("Runtime") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Date") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Size") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Type") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Runtime") ?></div>
 		</div>
 
 		<!-- Begin user backup list item loop -->
@@ -124,13 +124,13 @@
 						</ul>
 					<?php } ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Date") ?>:</span>
 					<span class="u-text-bold">
 						<?= translate_date($data[$key]["DATE"]) ?>
 					</span>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Size") ?>:</span>
 					<span class="u-text-bold">
 						<?= humanize_usage_size($data[$key]["SIZE"]) ?>
@@ -139,11 +139,11 @@
 						<?= humanize_usage_measure($data[$key]["SIZE"]) ?>
 					</span>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
 					<?= $data[$key]["TYPE"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Runtime") ?>:</span>
 					<?= humanize_time($data[$key]["RUNTIME"]) ?>
 				</div>

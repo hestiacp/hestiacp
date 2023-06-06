@@ -75,12 +75,12 @@
 			</div>
 			<div class="units-table-cell"><?= _("Name") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("Records") ?></div>
-			<div class="units-table-cell"><?= _("Template") ?></div>
-			<div class="units-table-cell"><?= _("TTL") ?></div>
-			<div class="units-table-cell"><?= _("SOA") ?></div>
-			<div class="units-table-cell"><?= _("DNSSEC") ?></div>
-			<div class="units-table-cell"><?= _("Expiration Date") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Records") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Template") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("TTL") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("SOA") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("DNSSEC") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Expiration Date") ?></div>
 		</div>
 
 		<!-- Begin DNS zone list item loop -->
@@ -203,7 +203,7 @@
 						</ul>
 					<?php } ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Records") ?>:</span>
 					<?php if ($data[$key]['RECORDS']) {
 						echo '<span>'.$data[$key]['RECORDS'].'</span>';
@@ -211,25 +211,25 @@
 						echo '<span>0</span>';
 					} ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Template") ?>:</span>
 					<span class="u-text-bold">
 						<?= $data[$key]["TPL"] ?>
 					</span>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("TTL") ?>:</span>
 					<?= $data[$key]["TTL"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("SOA") ?>:</span>
 					<?= $data[$key]["SOA"] ?>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("DNSSEC") ?>:</span>
 					<i class="fas <?= $dnssec_icon ?>" title="<?= $dnssec_title ?>"></i>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Expiration Date") ?>:</span>
 					<time class="u-text-bold" datetime="<?= $data[$key]["EXP"] ?>">
 						<?= $data[$key]["EXP"] ?>

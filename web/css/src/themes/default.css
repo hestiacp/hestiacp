@@ -986,11 +986,6 @@
 			padding-top: 10px;
 			padding-bottom: 10px;
 		}
-
-		/* Metadata cells */
-		&:not(:nth-child(1), :nth-child(2)) {
-			text-align: center;
-		}
 	}
 }
 

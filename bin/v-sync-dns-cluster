@@ -107,7 +107,7 @@ for cluster in $hosts; do
 	done
 	if [ "$DNS_CLUSTER_SYSTEM" != "hestia-zone" ]; then
 		# Rebuilding dns zones
-		cluster_cmd v-rebuild-dns-domains "$DNS_USER"
+		cluster_cmd v-rebuild-dns-domains "$DNS_USER" "yes" "no"
 		check_result $? "$TYPE connection to $HOST failed" "$E_CONNECT"
 	fi
 done

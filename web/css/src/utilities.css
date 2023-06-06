@@ -41,6 +41,12 @@
 	text-align: center !important;
 }
 
+.u-text-center-desktop {
+	@media (--viewport-large) {
+		text-align: center !important;
+	}
+}
+
 .u-text-small {
 	font-size: 0.75rem !important;
 }

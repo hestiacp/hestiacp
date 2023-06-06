@@ -34,9 +34,9 @@
 			</div>
 			<div class="units-table-cell"><?= _("IP Address") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("Date") ?></div>
-			<div class="units-table-cell"><?= _("Time") ?></div>
-			<div class="units-table-cell"><?= _("Comment") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Date") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Time") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Comment") ?></div>
 		</div>
 
 		<!-- Begin banned IP address list item loop -->
@@ -72,15 +72,15 @@
 						</li>
 					</ul>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Date") ?>:</span>
 					<time datetime="<?= _($data[$key]["DATE"]) ?>"><?= _($data[$key]["DATE"]) ?></time>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Time") ?>:</span>
 					<?= $data[$key]["TIME"] ?>
 				</div>
-				<div class="units-table-cell u-text-bold">
+				<div class="units-table-cell u-text-center-desktop u-text-bold">
 					<span class="u-hide-desktop"><?= _("Comment") ?>:</span>
 					<?= _($value["CHAIN"]) ?>
 				</div>

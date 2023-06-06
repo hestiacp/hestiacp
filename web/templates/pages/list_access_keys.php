@@ -53,9 +53,9 @@
 			</div>
 			<div class="units-table-cell"><?= _("Access Key") ?></div>
 			<div class="units-table-cell"></div>
-			<div class="units-table-cell"><?= _("Comment") ?></div>
-			<div class="units-table-cell"><?= _("Date") ?></div>
-			<div class="units-table-cell"><?= _("Time") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Comment") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Date") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Time") ?></div>
 		</div>
 
 		<?php
@@ -100,15 +100,15 @@
 						</li>
 					</ul>
 				</div>
-				<div class="units-table-cell u-text-bold">
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Comment") ?>:</span>
 					<?= _($key_comment) ?>
 				</div>
-				<div class="units-table-cell u-text-bold">
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Date") ?>:</span>
 					<time datetime="<?= $key_date ?>"><?= $key_date ?></time>
 				</div>
-				<div class="units-table-cell u-text-bold">
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Time") ?>:</span>
 					<?= $key_time ?>
 				</div>

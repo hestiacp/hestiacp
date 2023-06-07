@@ -25,37 +25,35 @@
 <!-- End toolbar -->
 
 <div class="container">
-	<div class="units js-units-container">
-		<div class="header units-header">
-			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
-				<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Type") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Value") ?></b></div>
-			</div>
+
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell"><?= _("Type") ?></div>
+			<div class="units-table-cell"><?= _("Value") ?></div>
 		</div>
 
 		<!-- Begin list of backup exclusions by type -->
 		<?php foreach ($data as $key => $value) { ?>
-			<div class="l-unit animate__animated animate__fadeIn js-unit">
-				<div class="l-unit__col l-unit__col--right">
-					<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
-					<div class="clearfix l-unit__stat-col--left wide-1"><b><?= $key ?></b></div>
-					<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
-					<div class="clearfix l-unit__stat-col--left wide-3">
-						<?php
-							if (empty($value)) {
-								echo _("No exclusions");
-							}
-							foreach ($value as $ex_key => $ex_value) {
-								echo "<b>" . $ex_key . " </b>" . $ex_value . "<br>";
-							}
-						?>
-					</div>
+			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Type") ?>:</span>
+					<?= $key ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Value") ?>:</span>
+					<?php
+						if (empty($value)) {
+							echo _("No exclusions");
+						}
+						foreach ($value as $ex_key => $ex_value) {
+							echo "<span class='u-text-bold'>" . $ex_key . " </span>" . $ex_value . "<br>";
+						}
+					?>
 				</div>
 			</div>
 		<?php } ?>
 	</div>
+
 </div>
 
 <footer class="app-footer">

@@ -1827,7 +1827,7 @@ if [ "$clamd" = 'yes' ]; then
 		sed -i "s|\[Service\]|[Service]\n$exec_pre1\n$exec_pre2|g" \
 			/lib/systemd/system/clamav-daemon.service
 		systemctl daemon-reload
-		systemctl restart clamd
+		systemctl restart clamav-daemon
 	fi
 	echo -ne "[ * ] Installing ClamAV anti-virus definitions... "
 	/usr/bin/freshclam >> $LOG &

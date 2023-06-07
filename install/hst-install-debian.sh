@@ -1055,10 +1055,10 @@ if [ -z "$(grep ^/usr/sbin/nologin /etc/shells)" ]; then
 fi
 
 # Configuring NTP
-
-sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf > /dev/null 2>&1
-systemctl enable systemd-timesyncd > /dev/null 2>&1
-systemctl start systemd-timesyncd > /dev/null 2>&1
+# Know issue for Deb 12
+sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+systemctl enable systemd-timesyncd
+systemctl start systemd-timesyncd
 
 # Restrict access to /proc fs
 # - Prevent unpriv users from seeing each other running processes
@@ -1821,7 +1821,7 @@ if [ "$clamd" = 'yes' ]; then
 	if [ -e "/lib/systemd/system/clamav-daemon.service" ]; then
 		exec_pre1='ExecStartPre=-/bin/mkdir -p /run/clamav'
 		exec_pre2='ExecStartPre=-/bin/chown -R clamav:clamav /run/clamav'
-		sed -i "s|\[Service\]/|[Service]\n$exec_pre1\n$exec_pre2|g" \
+		sed -i "s|\[Service\]/|[Service]\test|g" \
 			/lib/systemd/system/clamav-daemon.service
 		systemctl daemon-reload
 	fi
@@ -1845,14 +1845,25 @@ fi
 if [ "$spamd" = 'yes' ]; then
 	echo "[ * ] Configuring SpamAssassin..."
 	update-rc.d spamassassin defaults > /dev/null 2>&1
-	sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
-	systemctl start spamassassin >> $LOG
-	check_result $? "spamassassin start failed"
-	unit_files="$(systemctl list-unit-files | grep spamassassin)"
-	if [[ "$unit_files" =~ "disabled" ]]; then
-		systemctl enable spamassassin > /dev/null 2>&1
+	if [ "$release" = "10" ] || [ "$release" = "11" ]; then
+		update-rc.d spamassassin enable > /dev/null 2>&1
+		systemctl start spamassassin >> $LOG
+		check_result $? "spamassassin start failed"
+		unit_files="$(systemctl list-unit-files | grep spamassassin)"
+		if [[ "$unit_files" =~ "disabled" ]]; then
+			systemctl enable spamassassin > /dev/null 2>&1
+		fi
+		sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
+	else
+		# Deb 12+ renamed to spamd
+		update-rc.d spamd enable > /dev/null 2>&1
+		systemctl start spamd >> $LOG
+		unit_files="$(systemctl list-unit-files | grep spamassassin)"
+		if [[ "$unit_files" =~ "disabled" ]]; then
+			systemctl enable spamassassin > /dev/null 2>&1
+		fi
+
 	fi
-	sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
 fi
 
 #----------------------------------------------------------#

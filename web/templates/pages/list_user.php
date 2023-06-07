@@ -139,7 +139,7 @@
 						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
 				</div>
-				<div class="units-table-cell">
+				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
 					<?php if ($key == $user_plain) { ?>
 						<a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit User") ?>">

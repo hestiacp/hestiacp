@@ -1286,10 +1286,14 @@ echo "[ * ] Generating default self-signed SSL certificate..."
 $HESTIA/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
-# Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
-key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
+if [ "$release" = "12" ]; then
+	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+else
+	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
+	key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
+fi
 
 # Adding SSL certificate
 echo "[ * ] Adding SSL certificate to Hestia Control Panel..."
@@ -1823,6 +1827,7 @@ if [ "$clamd" = 'yes' ]; then
 		sed -i "s|\[Service\]|[Service]\n$exec_pre1\n$exec_pre2|g" \
 			/lib/systemd/system/clamav-daemon.service
 		systemctl daemon-reload
+		systemctl restart clamd
 	fi
 	echo -ne "[ * ] Installing ClamAV anti-virus definitions... "
 	/usr/bin/freshclam >> $LOG &

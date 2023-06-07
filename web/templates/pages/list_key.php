@@ -20,6 +20,7 @@
 <!-- End toolbar -->
 
 <div class="container">
+
 	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
@@ -65,6 +66,7 @@
 			</div>
 		<?php } ?>
 	</div>
+
 </div>
 
 <footer class="app-footer">

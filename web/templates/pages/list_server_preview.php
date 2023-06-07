@@ -11,6 +11,7 @@
 <!-- End toolbar -->
 
 <div class="container">
+
 	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
@@ -20,7 +21,7 @@
 				<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Status") ?></b></div>
 			</div>
 		</div>
-		<!-- Start of item element-->
+
 		<div class="l-unit header animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
 				<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
@@ -31,8 +32,8 @@
 				<div class="clearfix l-unit__stat-col--left wide-2"><?= _("Partially implemented") ?></div>
 			</div>
 		</div>
-		<!-- End of item element-->
 	</div>
+
 </div>
 
 <footer class="app-footer">

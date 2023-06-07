@@ -16,6 +16,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 </div>
 
 <div class="container">
+
 	<div class="units js-units-container">
 		<div class="header units-header">
 			<div class="l-unit__col l-unit__col--right">
@@ -113,6 +114,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 		<?php } ?>
 	</div>
+
 </div>
 
 <footer class="app-footer">

@@ -78,7 +78,7 @@
 						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
 				</div>
-				<div class="units-table-cell u-text-bold">
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Access Key") ?>:</span>
 					<a href="/list/access-key/?key=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Access Key") ?>: <?= $key ?>">
 						<?= $key ?>

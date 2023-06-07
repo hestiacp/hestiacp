@@ -80,7 +80,7 @@
 					<span class="u-hide-desktop u-text-bold"><?= _("Time") ?>:</span>
 					<?= $data[$key]["TIME"] ?>
 				</div>
-				<div class="units-table-cell u-text-center-desktop u-text-bold">
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Comment") ?>:</span>
 					<?= _($value["CHAIN"]) ?>
 				</div>

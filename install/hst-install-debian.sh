@@ -1820,7 +1820,7 @@ if [ "$clamd" = 'yes' ]; then
 	if [ -e "/lib/systemd/system/clamav-daemon.service" ]; then
 		exec_pre1='ExecStartPre=-/bin/mkdir -p /run/clamav'
 		exec_pre2='ExecStartPre=-/bin/chown -R clamav:clamav /run/clamav'
-		sed -i "s|\[Service\]/|[Service]\test|g" \
+		sed -i "s|^\[Service\]/|[Service]\$exec_pre1\n$exec_pre2|g" \
 			/lib/systemd/system/clamav-daemon.service
 		systemctl daemon-reload
 	fi

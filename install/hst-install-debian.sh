@@ -1335,7 +1335,9 @@ $HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
-locale-gen "en_US.utf8" > /dev/null 2>&1
+# Enable en_US.UTF-8
+sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
+local-gen > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #

@@ -18,20 +18,20 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user="$1"
-domain="$2"
-ip="$3"
+user=${1}
+domain=${2}
+ip=${3}
 ipv6="" # EMPTY! Not used here, because of old IPV4 only mode
-ns1="$4"
-ns2="$5"
-ns3="$6"
-ns4="$7"
-ns5="$8"
-ns6="$9"
-ns7="$10"
-ns8="$11"
-restart="$12"
-dnssec="$13"
+ns1=${4}
+ns2=${5}
+ns3=${6}
+ns4=${7}
+ns5=${8}
+ns6=${9}
+ns7=${10}
+ns8=${11}
+restart=${12}
+dnssec=${13}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

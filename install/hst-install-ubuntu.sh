@@ -945,6 +945,10 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
+# Enable en_US.UTF-8
+sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
+locale-gen > /dev/null 2>&1
+
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
@@ -1365,10 +1369,6 @@ $HESTIA/bin/v-change-user-shell admin nologin
 $HESTIA/bin/v-change-user-role admin admin
 $HESTIA/bin/v-change-user-language admin $lang
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
-
-# Enable en_US.UTF-8
-sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
-local-gen > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #

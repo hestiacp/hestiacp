@@ -17,52 +17,52 @@ function list_network() {
 	ii=1
 	[ -n "$ip_type" ] && [ $ip_type -ne 4 -a $ip_type -ne 6 ] && ip_type=""
 	[ -n "$ip_type" ] && ip_filter=" -$ip_type"
-	ip_raw_string="$(/sbin/ip$ip_filter addr show scope global | sed -ne '/^[0-9]*\:/{h;d};G;s/^\(.*\)\n[0-9]*:\(.*\)/\1 \2/;/inet/s/[ \t]*inet[6]* \([0-9A-Fa-f.:]*\)\/\([0-9]*\).* \([0-9a-z]*\):[ \t]<.*>.*/\1 \/\2 \3/p')"
+	ip_raw_string="$(/sbin/ip$ip_filter addr show scope global | sed -ne '/^[0-9]*\:/{h;d};G;s/^\(.*\)\n[0-9]*:\(.*\)/\1 \2/;/inet/s/[ \t]*inet[6]* \([0-9A-Fa-f.:]*\)\/\([0-9]*\).* \([0-9a-z@]*\):[ \t]<.*>.*/\1 \/\2 \3/p')"
 	ip_count=$(echo "$ip_raw_string" | wc -l)
 	case $ip_view in
-	shell)
-		printf '%-25s%-5s%-8s\n' 'IP address' 'Mask' 'Interface'
-		echo "------------------------ ---- ---------"
-		;;
-	csv)
-		echo 'IP,MASK,INTERFACE'
-		;;
-	json)
-		echo '{'
-		;;
+		shell)
+			printf '%-25s%-5s%-8s\n' 'IP address' 'Mask' 'Interface'
+			echo "------------------------ ---- ---------"
+			;;
+		csv)
+			echo 'IP,MASK,INTERFACE'
+			;;
+		json)
+			echo '{'
+			;;
 	esac
 	echo "$ip_raw_string" | while read ip_addr ip_mask ip_iface; do
 		case $ip_view in
-		list)
-			echo "${ip_addr}"
-			;;
-		plain)
-			echo "${ip_addr} ${ip_mask} ${ip_iface}"
-			;;
-		shell)
-			printf '%-25s%-5s%-8s\n' ${ip_addr} ${ip_mask} ${ip_iface}
-			;;
-		csv)
-			echo "${ip_addr},${ip_mask},${ip_iface}"
-			;;
-		json)
-			echo -n '    "'$ip_addr'": {
+			list)
+				echo "${ip_addr}"
+				;;
+			plain)
+				echo "${ip_addr} ${ip_mask} ${ip_iface}"
+				;;
+			shell)
+				printf '%-25s%-5s%-8s\n' ${ip_addr} ${ip_mask} ${ip_iface}
+				;;
+			csv)
+				echo "${ip_addr},${ip_mask},${ip_iface}"
+				;;
+			json)
+				echo -n '    "'$ip_addr'": {
 			"MASK": "'$ip_mask'",
 			"INTERFACE": "'$ip_iface'"
 			}'
-			if [ "$ii" -lt "$ip_count" ]; then
-				echo ','
-			else
-				echo
-			fi
-			;;
+				if [ "$ii" -lt "$ip_count" ]; then
+					echo ','
+				else
+					echo
+				fi
+				;;
 		esac
-		(( ii++ ))
+		((ii++))
 	done
 	case $ip_view in
-	json)
-		echo '}'
-		;;
+		json)
+			echo '}'
+			;;
 	esac
 }
 

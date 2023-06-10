@@ -53,7 +53,7 @@ There is no limitation on how to chain DNS servers.
 
 1. Create a new user on the Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-user" or has the role `dns-cluster`
 2. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
-3. On the master server, open `/etc/bind/named.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
+3. On the master server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
    ```bash
    # Change this line
@@ -66,7 +66,7 @@ There is no limitation on how to chain DNS servers.
    also-notify { second.slave.ip.address; };
    ```
 
-4. On the slave server, open `/etc/bind/named.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
+4. On the slave server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
 
    ```bash
    # Change this line

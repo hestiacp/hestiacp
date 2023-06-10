@@ -708,36 +708,36 @@ echo
 # Installing Nginx repo
 
 echo "[ * ] NGINX"
-#echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
-#curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://nginx.org/packages/mainline/$VERSION/ $codename nginx" > $apt/nginx.list
+curl -s https://nginx.org/keys/nginx_signing.key | gpg --dearmor | tee /usr/share/keyrings/nginx-keyring.gpg > /dev/null 2>&1
 
 # Installing sury PHP repo
 echo "[ * ] PHP"
-#echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
-#curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/sury-keyring.gpg] https://packages.sury.org/php/ $codename main" > $apt/php.list
+curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/sury-keyring.gpg > /dev/null 2>&1
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
 	echo "[ * ] Apache2"
-#	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-#	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
 fi
 
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
 	echo "[ * ] MariaDB"
-#	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
-#	curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
+	curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
 fi
 
 # Installing Mysql8 repo
 if [ "$mysql8" = 'yes' ]; then
 	echo "[ * ] Mysql 8"
-	#	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-apt-config" >> /etc/apt/sources.list.d/mysql.list
-	#	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
-	#	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-tools" >> /etc/apt/sources.list.d/mysql.list
-	#	echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-tools-preview" >> /etc/apt/sources.list.d/mysql.list
-	#	echo "deb-src [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-apt-config" >> /etc/apt/sources.list.d/mysql.list
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-tools" >> /etc/apt/sources.list.d/mysql.list
+	echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-tools-preview" >> /etc/apt/sources.list.d/mysql.list
+	echo "deb-src [arch=$ARCH signed-by=/usr/share/keyrings/mysql-keyring.gpg] http://repo.mysql.com/apt/debian/ $codename mysql-8.0" >> /etc/apt/sources.list.d/mysql.list
 
 	GNUPGHOME="$(mktemp -d)"
 	export GNUPGHOME
@@ -755,8 +755,8 @@ curl -s "https://beta-apt.hestiacp.com/pubkey.gpg" | gpg --dearmor | tee /usr/sh
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then
 	echo "[ * ] PostgreSQL"
-#	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
-#	curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg > /dev/null 2>&1
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/postgresql-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/ $codename-pgdg main" > $apt/postgresql.list
+	curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql-keyring.gpg > /dev/null 2>&1
 fi
 
 # Echo for a new line

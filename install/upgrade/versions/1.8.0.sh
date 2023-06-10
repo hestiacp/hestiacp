@@ -23,6 +23,8 @@ upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
+os_release="$(lsb_release -s -i | tr "[:upper:]" "[:lower:]")-$(lsb_release -s -r)"
+
 if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 	if ! grep -qw "^extra_groups = mail$" /etc/dovecot/conf.d/10-master.conf 2> /dev/null; then
 		sed -i "s/^service auth {/service auth {\n  extra_groups = mail\n/g" /etc/dovecot/conf.d/10-master.conf
@@ -43,9 +45,12 @@ if [ -f /etc/fail2ban/jail.local ]; then
 fi
 
 if [ "$MAIL_SYSTEM" = "exim4" ]; then
-	echo "[ * ] Disable SMTPUTF8 for Exim for now"
-	if ! grep -qw "^smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template 2> /dev/null; then
-		sed -i "/^domainlist local_domains = dsearch;\/etc\/exim4\/domains/i smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template
+	if [ "$os_release" != "debian-10" ]; then
+		# Exclude Debian 10...
+		echo "[ * ] Disable SMTPUTF8 for Exim for now"
+		if ! grep -qw "^smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template 2> /dev/null; then
+			sed -i "/^domainlist local_domains = dsearch;\/etc\/exim4\/domains/i smtputf8_advertise_hosts =" /etc/exim4/exim4.conf.template
+		fi
 	fi
 fi
 
@@ -53,7 +58,7 @@ fi
 echo '[ * ] Enable the "Enhanced and Optimized TLS" feature...'
 
 # Configuring global OpenSSL options
-os_release="$(lsb_release -s -i | tr "[:upper:]" "[:lower:]")-$(lsb_release -s -r)"
+
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 
 if ! grep -qw "^[hestia_openssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then

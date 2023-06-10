@@ -12,10 +12,12 @@
 # - Importing certificates fails at the moment. Due to format changes of CPanel side
 # - It doesn't update DKIM
 
-# shellcheck source=/etc/hestiacp/hestia.conf
-source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
 
 if [ $# -lt 1 ]; then
 	echo "usage: bash $0 cpanel-backup.tar.gz"
@@ -107,7 +109,15 @@ fi
 # Create a new user
 tmp_passwd=$(generate_password)
 email=$(cat ./cp/$new_user | grep CONTACTEMAIL= | cut -f2 -d'=')
+if [ -z "$email" ]; then
+	# Hestia does not like email to be set to an empty string
+	email="info@"$(hostname)
+fi
 $BIN/v-add-user "$new_user" "$tmp_passwd" "$email" "$hestia_package"
+if [ "$?" -ne 0 ]; then
+	echo "Unable to create user"
+	exit 1
+fi
 # Restore user password
 update_user_value "$new_user" 'MD5' "$(cat shadow)"
 $BIN/v-rebuild-user "$new_user"
@@ -174,12 +184,11 @@ echo "Converting addons domains, subdomains and some other fun"
 cp sds hst_sds
 cp sds2 hst_sds2
 sed -i 's/_/./g' hst_sds
-cat addons | while read ddon_domain addon_sub
-do
-        echo "Converting default subdomain: $addon_sub in domain: $addon_domain"
-        sed -i -e "s/$addon_sub/$addon_domain/g" hst_sds
-        sed -i -e "s/$addon_sub/$addon_domain/g" hst_sds2
-        mv userdata/$addon_sub userdata/${addon_domain}
+cat addons | while read ddon_domain addon_sub; do
+	echo "Converting default subdomain: $addon_sub in domain: $addon_domain"
+	sed -i -e "s/$addon_sub/$addon_domain/g" hst_sds
+	sed -i -e "s/$addon_sub/$addon_domain/g" hst_sds2
+	mv userdata/$addon_sub userdata/${addon_domain}
 done
 sed -i 's/public_html/public@html/g; s/_/./g; s/public@html/public_html/g; s/=/ /g' hst_sds2
 
@@ -190,7 +199,11 @@ function get_domain_path() {
 	while read cp_domain path; do
 		echo "Import $cp_domain"
 		if [ -e userdata/$cp_domain ]; then
+			echo $cp_domain
 			$BIN/v-add-domain "$new_user" "$cp_domain"
+			if [ $? -ne 0 ]; then
+				check_result "1" "Unable to create domain it allready exists"
+			fi
 			rm -f /home/$new_user/web/$cp_domain/public_html/index.html
 			rm -f /home/$new_user/web/$cp_domain/public_html/robots.txt
 			sync_count=0
@@ -206,7 +219,13 @@ function get_domain_path() {
 }
 get_domain_path < hst_sds2
 
-/usr/local/hestia/bin/v-add-domain $new_user $main_domain1
+echo $main_domain1
+$BIN/v-add-domain $new_user $main_domain1
+
+if [ $? -ne 0 ]; then
+	check_result "1" "Unable to create domain it allready exists"
+fi
+
 # need it for restore main domain
 if [ ! -e exclude_path ]; then
 	touch exclude_path
@@ -238,7 +257,7 @@ for folder in *; do
 			echo "Domain: $folder"
 			cd $folder
 			for mail_account in *; do
-				echo "Import mail account: $mail_account@#$folder"
+				echo "Import mail account: $mail_account@$folder"
 				# Doesn't really matter but we don't know the unhashed one
 				tmp_pass=$(generate_password)
 				$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass

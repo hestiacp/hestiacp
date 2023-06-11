@@ -195,7 +195,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
-					<?php if ($read_only === 'true') { ?>
+					<?php if ($read_only === "true") { ?>
 						<?= $key ?>
 					<?php } else {
 						$aliases = explode(',', $data[$key]['ALIAS']);
@@ -219,11 +219,11 @@
 				</div>
 				<div class="units-table-cell">
 					<ul class="units-table-row-actions">
-						<?php if (!empty($data[$key]['STATS'])) { ?>
+						<?php if (!empty($data[$key]["STATS"])) { ?>
 							<li class="units-table-row-action shortcut-w" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="http://<?=$key?>/vstats/"
+									href="http://<?= $key ?>/vstats/"
 									target="_blank"
 									rel="noopener"
 									title="<?= _("Statistics") ?>"
@@ -236,7 +236,7 @@
 						<li class="units-table-row-action" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="http://<?=$key?>/"
+								href="http://<?= $key ?>/"
 								target="_blank"
 								rel="noopener"
 								title="<?= _("Visit") ?>"
@@ -246,11 +246,11 @@
 							</a>
 						</li>
 						<?php if ($read_only !== "true") { ?>
-							<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
+							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Edit Domain") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -261,7 +261,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/list/web-log/?domain=<?=$key?>&type=access#"
+									href="/list/web-log/?domain=<?= $key ?>&type=access#"
 									title="<?= _("Access Log") ?>"
 								>
 									<i class="fas fa-binoculars icon-purple"></i>
@@ -271,7 +271,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= $spnd_action ?>/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $spnd_action ?>/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= $spnd_action_title ?>"
 									data-confirm-title="<?= $spnd_action_title ?>"
 									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
@@ -283,10 +283,10 @@
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/delete/web/?domain=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("Delete") ?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_('Are you sure you want to delete domain %s?'), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete domain %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red"></i>
 									<span class="u-hide-desktop"><?= _("Delete") ?></span>
@@ -297,24 +297,24 @@
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("IP Address") ?>:</span>
-					<?= empty($ips[$data[$key]['IP']]['NAT']) ? $data[$key]['IP'] : "{$ips[$data[$key]['IP']]['NAT']}"; ?>
+					<?= empty($ips[$data[$key]["IP"]]["NAT"]) ? $data[$key]["IP"] : "{$ips[$data[$key]["IP"]]["NAT"]}" ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
 					<span class="u-text-bold">
-						<?= humanize_usage_size($data[$key]['U_DISK']) ?>
+						<?= humanize_usage_size($data[$key]["U_DISK"]) ?>
 					</span>
 					<span class="u-text-small">
-						<?= humanize_usage_measure($data[$key]['U_DISK']) ?>
+						<?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Bandwidth") ?>:</span>
 					<span class="u-text-bold">
-						<?= humanize_usage_size($data[$key]['U_BANDWIDTH']) ?>
+						<?= humanize_usage_size($data[$key]["U_BANDWIDTH"]) ?>
 					</span>
 					<span class="u-text-small">
-						<?= humanize_usage_measure($data[$key]['U_BANDWIDTH']) ?>
+						<?= humanize_usage_measure($data[$key]["U_BANDWIDTH"]) ?>
 					</span>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">

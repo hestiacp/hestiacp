@@ -54,7 +54,7 @@
 						class="form-select js-ip-list-select"
 						tabindex="-1"
 						onchange="this.nextElementSibling.value=this.value"
-						data-ipset-lists="<?= htmlspecialchars($ipset_lists_json, ENT_QUOTES, 'UTF-8') ?>"
+						data-ipset-lists="<?= htmlspecialchars($ipset_lists_json, ENT_QUOTES, "UTF-8") ?>"
 					>
 						<option value=""><?= _("Clear") ?></option>
 					</select>

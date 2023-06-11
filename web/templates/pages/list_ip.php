@@ -80,12 +80,12 @@
 				++$i;
 			?>
 			<div class="l-unit animate__animated animate__fadeIn js-unit"
-				data-sort-ip="<?=str_replace('.', '', $key)?>"
-				data-sort-date="<?=strtotime($data[$key]['DATE'] .' '. $data[$key]['TIME'] )?>"
-				data-sort-netmask="<?=str_replace('.', '', $data[$key]['NETMASK'])?>"
-				data-sort-interface="<?=$data[$key]['INTERFACE']?>"
-				data-sort-domains="<?=$data[$key]['U_WEB_DOMAINS']?>"
-				data-sort-owner="<?=$data[$key]['OWNER']?>">
+				data-sort-ip="<?= str_replace(".", "", $key) ?>"
+				data-sort-date="<?= strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"]) ?>"
+				data-sort-netmask="<?= str_replace(".", "", $data[$key]["NETMASK"]) ?>"
+				data-sort-interface="<?= $data[$key]["INTERFACE"] ?>"
+				data-sort-domains="<?= $data[$key]["U_WEB_DOMAINS"] ?>"
+				data-sort-owner="<?= $data[$key]["OWNER"] ?>">
 
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
@@ -101,9 +101,9 @@
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"
-										href="/delete/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/delete/ip/?ip=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										data-confirm-title="<?= _("Delete") ?>"
-										data-confirm-message="<?= sprintf(_('Are you sure you want to delete IP address %s?'), $key) ?>"
+										data-confirm-message="<?= sprintf(_("Are you sure you want to delete IP address %s?"), $key) ?>"
 									>
 										<i class="fas fa-trash icon-red icon-dim"></i>
 									</a>

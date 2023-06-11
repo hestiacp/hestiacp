@@ -164,8 +164,8 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
-					<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
-						<?= $key."@".htmlentities($_GET['domain']); ?>
+					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+						<?= $key . "@" . htmlentities($_GET["domain"]) ?>
 					<?php } else { ?>
 						<a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Mail Account") ?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>">
 							<?= $key."@".htmlentities($_GET['domain']); ?>
@@ -174,13 +174,13 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 				<div class="units-table-cell">
 					<ul class="units-table-row-actions">
-						<?php if ($read_only === 'true') { ?>
+						<?php if ($read_only === "true") { ?>
 							<!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' account -->
-							<?php if ($data[$key]['SUSPENDED'] != 'yes') { ?>
+							<?php if ($data[$key]["SUSPENDED"] != "yes") { ?>
 								<li class="units-table-row-action" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"
+										href="http://<?= $v_webmail_alias ?>.<?= htmlspecialchars($_GET["domain"]) ?>/?_user=<?= $key ?>@<?= htmlspecialchars($_GET["domain"]) ?>"
 										target="_blank"
 										title="<?= _("Open Webmail") ?>"
 									>
@@ -190,13 +190,13 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 								</li>
 							<?php } ?>
 						<?php } else { ?>
-							<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
-								<?php if ($_SESSION['WEBMAIL_SYSTEM']) { ?>
-									<?php if (!empty($data[$key]['WEBMAIL'])) { ?>
+							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
+								<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
+									<?php if (!empty($data[$key]["WEBMAIL"])) { ?>
 										<li class="units-table-row-action" data-key-action="href">
 											<a
 												class="units-table-row-action-link"
-												href="http://<?=$v_webmail_alias;?>.<?=htmlspecialchars($_GET['domain'])?>/?_user=<?=$key?>@<?=htmlspecialchars($_GET['domain'])?>"
+												href="http://<?= $v_webmail_alias ?>.<?= htmlspecialchars($_GET["domain"]) ?>/?_user=<?= $key ?>@<?= htmlspecialchars($_GET["domain"]) ?>"
 												target="_blank"
 												title="<?= _("Open Webmail") ?>"
 											>
@@ -209,7 +209,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/edit/mail/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&account=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Edit Mail Account") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -220,7 +220,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= $spnd_action ?>/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $spnd_action ?>/mail/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&account=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= $spnd_action_title ?>"
 									data-confirm-title="<?= $spnd_action_title ?>"
 									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
@@ -232,10 +232,10 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/delete/mail/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&account=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("Delete") ?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_('Are you sure you want to delete %s?'), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red"></i>
 									<span class="u-hide-desktop"><?= _("Delete") ?></span>

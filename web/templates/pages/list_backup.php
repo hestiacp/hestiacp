@@ -90,18 +90,18 @@
 							<li class="units-table-row-action shortcut-d" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/download/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/download/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("Download") ?>"
 								>
 									<i class="fas fa-file-arrow-down icon-lightblue"></i>
 									<span class="u-hide-desktop"><?= _("Download") ?></span>
 								</a>
 							</li>
-							<?php if ($read_only !== 'true') { ?>
+							<?php if ($read_only !== "true") { ?>
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link data-controls"
-										href="/list/backup/?backup=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/list/backup/?backup=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Restore") ?>"
 									>
 										<i class="fas fa-arrow-rotate-left icon-green"></i>

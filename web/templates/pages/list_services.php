@@ -133,9 +133,9 @@
 			?>
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
 				data-sort-name="<?= strtolower($key) ?>"
-				data-sort-memory="<?= $data[$key]['MEM'] ?>"
-				data-sort-cpu="<?= $cpu; ?>"
-				data-sort-uptime="<?= $data[$key]['RTIME'] ?>">
+				data-sort-memory="<?= $data[$key]["MEM"] ?>"
+				data-sort-cpu="<?= $cpu ?>"
+				data-sort-uptime="<?= $data[$key]["RTIME"] ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="service[]" value="<?= $key ?>">
@@ -167,7 +167,7 @@
 								href="/restart/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Restart") ?>"
 								data-confirm-title="<?= _("Restart") ?>"
-								data-confirm-message="<?= sprintf(_('Are you sure you want to restart %s?'), $key) ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to restart %s?"), $key) ?>"
 							>
 								<i class="fas fa-arrow-rotate-left icon-highlight"></i>
 								<span class="u-hide-desktop"><?= _("Restart") ?></span>
@@ -176,7 +176,7 @@
 						<li class="units-table-row-action shortcut-delete" data-key-action="js">
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
-								href="/<?= $action ?>/service/?srv=<?=$key?>&token=<?=$_SESSION['token']?>"
+								href="/<?= $action ?>/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _($action) ?>"
 								data-confirm-message="<?php if ($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service %s?'), $key); } else { echo sprintf(_('Are you sure you want to start service %s?'), $key); }?>"
 							>
@@ -188,11 +188,11 @@
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("Description") ?>:</span>
-					<?= _($data[$key]['SYSTEM']) ?>
+					<?= _($data[$key]["SYSTEM"]) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Uptime") ?>:</span>
-					<?= humanize_time($data[$key]['RTIME']) ?>
+					<?= humanize_time($data[$key]["RTIME"]) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("CPU") ?>:</span>
@@ -200,7 +200,7 @@
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Memory") ?>:</span>
-					<?= $data[$key]['MEM'] ?> <?= _("MB") ?>
+					<?= $data[$key]["MEM"] ?> <?= _("MB") ?>
 				</div>
 			</div>
 		<?php } ?>

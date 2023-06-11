@@ -54,10 +54,22 @@ check_hestia_demo_mode
 
 update_object_value "dns/$domain" 'ID' "$id" '$SUSPENDED' "yes"
 
+# Update serial
+update_domain_serial
 # Updating zone
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-	update_domain_serial
-	update_domain_zone
+	# Do full rebuild due DNS SEC
+	rebuild_dns_domain_conf
+fi
+
+# Updating dns-cluster queue
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	# Check for first sync
+	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+	if [ -z "$dlock" ]; then
+		cmd="$BIN/v-add-remote-dns-record $user $domain $id"
+		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+	fi
 fi
 
 #----------------------------------------------------------#

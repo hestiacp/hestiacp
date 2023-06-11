@@ -109,7 +109,34 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-cp -f "$tmpfile" "$HESTIA/data/packages/$package.pkg"
+# Generating timestamp
+time_n_date=$(date +'%T %F')
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+SHELL=$(basename $SHELL)
+echo "WEB_TEMPLATE='$WEB_TEMPLATE'
+PROXY_TEMPLATE='$PROXY_TEMPLATE'
+BACKEND_TEMPLATE='$BACKEND_TEMPLATE'
+DNS_TEMPLATE='$DNS_TEMPLATE'
+WEB_DOMAINS='$WEB_DOMAINS'
+WEB_ALIASES='$WEB_ALIASES'
+DNS_DOMAINS='$DNS_DOMAINS'
+DNS_RECORDS='$DNS_RECORDS'
+MAIL_DOMAINS='$MAIL_DOMAINS'
+MAIL_ACCOUNTS='$MAIL_ACCOUNTS'
+RATE_LIMIT='$RATE_LIMIT'
+DATABASES='$DATABASES'
+CRON_JOBS='$CRON_JOBS'
+DISK_QUOTA='$DISK_QUOTA'
+BANDWIDTH='$BANDWIDTH'
+NS='$NS'
+SHELL='$SHELL'
+BACKUPS='$BACKUPS'
+TIME='$time'
+DATE='$date'
+" > "$HESTIA/data/packages/$package.pkg"
+
 chmod 644 "$HESTIA/data/packages/$package.pkg"
 
 #----------------------------------------------------------#

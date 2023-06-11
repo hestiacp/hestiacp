@@ -13,7 +13,7 @@
 # Argument definition
 user=$1
 restart=$2
-update_serial=$3
+update_serial=${3-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

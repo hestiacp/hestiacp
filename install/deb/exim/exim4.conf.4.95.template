@@ -17,6 +17,7 @@ disable_ipv6 = true
 
 SRS_SECRET = readfile{/etc/exim4/srs.conf}
 
+smtputf8_advertise_hosts =
 domainlist local_domains = dsearch;/etc/exim4/domains/
 domainlist relay_to_domains = dsearch;/etc/exim4/domains/
 hostlist relay_from_hosts = 127.0.0.1
@@ -65,6 +66,7 @@ tls_privatekey = \
 
 daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465
+tls_require_ciphers = PERFORMANCE:-RSA:-VERS-ALL:+VERS-TLS1.2:+VERS-TLS1.3:%SERVER_PRECEDENCE
 never_users = root
 host_lookup = *
 rfc1413_hosts = *

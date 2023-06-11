@@ -6,11 +6,13 @@ ID='5' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns5%.' SUSPENDED='no' TIME='%tim
 ID='6' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns6%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='7' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns7%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='8' RECORD='@' TYPE='NS' PRIORITY='' VALUE='%ns8%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='9' RECORD='@' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='10' RECORD='www' TYPE='CNAME' PRIORITY='' VALUE='%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='11' RECORD='ftp' TYPE='CNAME' PRIORITY='' VALUE='%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='12' RECORD='mail' TYPE='A' PRIORITY='' VALUE='%ip%' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='13' RECORD='webmail' TYPE='CNAME' PRIORITY='' VALUE='mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='14' RECORD='@' TYPE='MX' PRIORITY='0' VALUE='mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='15' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% -all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
-ID='16' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='"v=DMARC1; p=quarantine; pct=100"' SUSPENDED='no' TIME='%time%' DATE='%date%'
+%<i4ID='9' RECORD='@' TYPE='A' PRIORITY='' VALUE='%ipv4%' SUSPENDED='no' TIME='%time%' DATE='%date%'i4>%
+%<i6ID='10' RECORD='@' TYPE='AAAA' PRIORITY='' VALUE='%ipv6%' SUSPENDED='no' TIME='%time%' DATE='%date%'i6>%
+ID='11' RECORD='www' TYPE='CNAME' PRIORITY='' VALUE='%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='12' RECORD='ftp' TYPE='CNAME' PRIORITY='' VALUE='%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+%<i4ID='13' RECORD='mail' TYPE='A' PRIORITY='' VALUE='%ipv4%' SUSPENDED='no' TIME='%time%' DATE='%date%'i4>%
+%<i6ID='14' RECORD='mail' TYPE='AAAA' PRIORITY='' VALUE='%ipv6%' SUSPENDED='no' TIME='%time%' DATE='%date%'i6>%
+ID='15' RECORD='webmail' TYPE='CNAME' PRIORITY='' VALUE='mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='16' RECORD='@' TYPE='MX' PRIORITY='0' VALUE='mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='17' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx %<i4ip4:%ipv4% i4>%%<i6ip6:%ipv6% i6>%-all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='18' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='"v=DMARC1; p=quarantine; pct=100"' SUSPENDED='no' TIME='%time%' DATE='%date%'

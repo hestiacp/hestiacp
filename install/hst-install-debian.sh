@@ -1756,10 +1756,14 @@ if [ "$exim" = 'yes' ]; then
 	gpasswd -a Debian-exim mail > /dev/null 2>&1
 	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
 	# if Exim version > 4.9.4 or greater!
-	if ! version_ge "4.9.3" "$exim_version"; then
-		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+	if ! version_ge "4.9.5" "$exim_version"; then
+		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
 	else
-		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+		if ! version_ge "4.9.3" "$exim_version"; then
+			cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+		else
+			cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.template /etc/exim4/
+		fi
 	fi
 	cp -f $HESTIA_INSTALL_DIR/exim/dnsbl.conf /etc/exim4/
 	cp -f $HESTIA_INSTALL_DIR/exim/spam-blocks.conf /etc/exim4/
@@ -1778,7 +1782,12 @@ if [ "$exim" = 'yes' ]; then
 		sed -i "/^smtputf8_advertise_hosts =/d" /etc/exim4/exim4.conf.template
 	fi
 
+	# Generate SRS KEY If not support just created it will get ignored anyway
+	srs=$(gen_pass)
+	echo $srs > /etc/exim4/srs.conf
+	chmod 640 /etc/exim4/srs.conf
 	chmod 640 /etc/exim4/exim4.conf.template
+
 	rm -rf /etc/exim4/domains
 	mkdir -p /etc/exim4/domains
 

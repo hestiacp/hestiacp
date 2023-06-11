@@ -15,6 +15,8 @@ add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
 
+SRS_SECRET = readfile{/etc/exim4/srs.conf}
+
 domainlist local_domains = dsearch;/etc/exim4/domains/
 domainlist relay_to_domains = dsearch;/etc/exim4/domains/
 hostlist relay_from_hosts = 127.0.0.1
@@ -322,10 +324,6 @@ autoreplay:
   transport = userautoreply
   unseen
 
-# TODO: Move SRS_SECRET out of the config and make it edible by the user
-# This is only provided for testing
-SRS_SECRET = IJYmgrf18zimR1sX
-
 inbound_srs:
     driver = redirect
     senders = :
@@ -342,7 +340,7 @@ inbound_srs_failure:
     condition = ${if inbound_srs {$local_part} {}}
     allow_fail
     data = :fail: Invalid SRS recipient address
-   
+
 aliases:
   driver = redirect
   headers_add = X-redirected: yes

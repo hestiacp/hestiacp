@@ -101,7 +101,7 @@ if (!empty($_POST["ok"])) {
 	if ($_POST["v_dns"] == "on" && empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD .
-				"v-add-dns-domain " .
+				"v-add-dns-domain-ipv46 " .
 				$user .
 				" " .
 				quoteshellarg($v_domain) .

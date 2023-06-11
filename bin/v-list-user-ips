@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list user IPs
-# options: USER [FORMAT]
+# options: USER [FORMAT] [FILTER]
 #
-# example: v-list-user-ips admin
+# example: v-list-user-ips admin 6
 #
 # This function for obtaining the list of available IP addresses.
 
@@ -13,6 +13,8 @@
 # Argument definition
 user=${1}
 format=${2-shell}
+filter=${3}
+filter_match=""
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -29,6 +31,15 @@ read_ip_config() {
 	if [ -z "$VERSION" ]; then
 		VERSION=4
 	fi
+	if [ -n "$filter" ]; then
+		if [ "$filter" = "$VERSION" ]; then
+			filter_match="y"
+		else
+			filter_match=""
+		fi
+	else
+		filter_match="y"
+	fi
 }
 
 # JSON list function
@@ -38,17 +49,19 @@ json_list() {
 	i=1
 	for IP in $ips; do
 		read_ip_config ${IP}
-		echo -n '    "'$IP'": {
-        "OWNER": "'$OWNER'",
-        "STATUS": "'$STATUS'",
-        "NAME": "'$NAME'",
-        "NAT": "'$NAT'",
-        "VERSION": "'$VERSION'"
-        }'
-		if [ "$i" -lt "$ip_count" ]; then
-			echo ','
-		else
-			echo
+		if [ -n "$filter_match" ]; then
+			echo -n '    "'$IP'": {
+			"OWNER": "'$OWNER'",
+			"STATUS": "'$STATUS'",
+			"NAME": "'$NAME'",
+			"NAT": "'$NAT'",
+			"VERSION": "'$VERSION'"
+			}'
+			if [ "$i" -lt "$ip_count" ]; then
+				echo ','
+			else
+				echo
+			fi
 		fi
 		((i++))
 	done
@@ -67,7 +80,9 @@ shell_list() {
 		if [ -z "$NAME" ]; then
 			NAME='no'
 		fi
-		echo "$IP $NAT $OWNER $STATUS $NAME $VERSION"
+		if [ -n "$filter_match" ]; then
+			echo "$IP $NAT $OWNER $STATUS $NAME $VERSION"
+		fi
 	done
 }
 
@@ -76,16 +91,20 @@ plain_list() {
 	for IP in $ips; do
 		VERSION=""
 		read_ip_config ${IP}
-		echo -e "$IP\t$OWNER\t$STATUS\t$NAME\t$NAT\t$VERSION"
+		if [ -n "$filter_match" ]; then
+			echo -e "$IP\t$OWNER\t$STATUS\t$NAME\t$NAT\t$VERSION"
+		fi
 	done
 }
 
 # CSV list function
 csv_list() {
-	echo "IP,OWNER,STATUS,NAME,NAT"
+	echo "IP,OWNER,STATUS,NAME,NAT,VERSION"
 	for IP in $ips; do
 		read_ip_config ${IP}
-		echo "$IP,$OWNER,$STATUS,$NAME,$NAT,$VERSION"
+		if [ -n "$filter_match" ]; then
+			echo "$IP,$OWNER,$STATUS,$NAME,$NAT,$VERSION"
+		fi
 	done
 }
 
@@ -93,7 +112,7 @@ csv_list() {
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [FORMAT]'
+check_args '1' "$#" 'USER [FORMAT] [FILTER]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
@@ -106,7 +125,7 @@ owner='admin'
 owner_ips="$(grep -A 1 -H "OWNER='$owner'" $HESTIA/data/ips/* | grep "STATUS='shared'" | sed 's/.*\/\([^\/*]\)/\1/;s/-STATUS.*//')"
 user_ips="$(grep -l "OWNER='$user'" $HESTIA/data/ips/* | sed 's/.*\/\([^\/*]\)/\1/')"
 ips="$(echo -e "$user_ips\n$owner_ips" | sort -u | sed "/^$/d")"
-fields='$IP $OWNER $STATUS $NAME $NAT'
+fields='$IP $OWNER $STATUS $NAME $NAT $VERSION'
 
 # Listing data
 case $format in

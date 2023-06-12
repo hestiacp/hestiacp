@@ -142,18 +142,18 @@
 				<div class="units-table-cell units-table-heading-cell">
 					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
 					<?php if ($key == $user_plain) { ?>
-						<a href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit User") ?>">
+						<a href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit User") ?>">
 							<span class="u-text-bold">
 								<?= $key ?>
 							</span>
-							(<?=$data[$key]['NAME'];?>)
+							(<?= $data[$key]["NAME"] ?>)
 						</a>
 					<?php } else { ?>
-						<a href="/login/?loginas=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Log in as") ?> <?=$key?>">
+						<a href="/login/?loginas=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Log in as") ?> <?= $key ?>">
 							<span class="u-text-bold">
 								<?= $key ?>
 							</span>
-							(<?=$data[$key]['NAME'];?>)
+							(<?= $data[$key]["NAME"] ?>)
 						</a>
 					<?php } ?>
 					<p>
@@ -184,7 +184,7 @@
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/edit/user/?user=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("Edit User") ?>"
 								>
 									<i class="fas fa-pencil icon-orange"></i>
@@ -211,7 +211,7 @@
 									href="/delete/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("Delete") ?>"
 									data-confirm-title="<?= _("Delete") ?>"
-									data-confirm-message="<?= sprintf(_('Are you sure you want to delete user %s?'), $key) ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete user %s?"), $key) ?>"
 								>
 									<i class="fas fa-trash icon-red"></i>
 									<span class="u-hide-desktop"><?= _("Delete") ?></span>

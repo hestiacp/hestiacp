@@ -80,7 +80,7 @@ if [ "$HAS_DOVECOT_SIEVE_INSTALLED" = "0" ]; then
 
 	chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
 
-	sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
+	sed -i "s/\"archive\"/\"archive\", \"managesieve\"/g" $RC_CONFIG_DIR/config.inc.php
 
 	#restart dovecot and exim4
 	systemctl restart dovecot > /dev/null 2>&1
@@ -118,7 +118,7 @@ else
 		# Roundcube
 		rm -f -r $RC_CONFIG_DIR/plugins/managesieve
 		rm -f $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
-		sed -i "s/'archive', 'managesieve'/'archive'/g" $RC_CONFIG_DIR/config.inc.php
+		sed -i "s/\"archive\", \"managesieve\"/\"archive\"/g" $RC_CONFIG_DIR/config.inc.php
 
 		#restart dovecot and exim4
 		systemctl restart dovecot > /dev/null 2>&1

@@ -1577,7 +1577,7 @@ if (!empty($_POST["save"])) {
 			check_return_code($return_var, $output);
 			unset($output);
 			if (empty($_SESSION["error_msg"])) {
-				$v_policy_system_hide_services = $_POST["v_policy_sync_error_documents"];
+				$v_policy_sync_error_documents = $_POST["v_policy_sync_error_documents"];
 			}
 			$v_security_adv = "yes";
 		}
@@ -1594,7 +1594,7 @@ if (!empty($_POST["save"])) {
 			check_return_code($return_var, $output);
 			unset($output);
 			if (empty($_SESSION["error_msg"])) {
-				$v_policy_system_hide_services = $_POST["v_policy_sync_skeleton"];
+				$v_policy_sync_skeleton = $_POST["v_policy_sync_skeleton"];
 			}
 			$v_security_adv = "yes";
 		}

@@ -1,3 +1,4 @@
+<?php hst_do_action("footer"); ?>
 	</main>
 <?php if (
 	$_SESSION["userContext"] === "admin" &&

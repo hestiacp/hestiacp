@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# info: install a plugin
+# options: PLUGIN_SOURCE
+#
+# example: v-add-plugin https://github...
+#
+# * PLUGIN_SOURCE can be:
+#   * The path to a local directory;
+#   * The path to a local zip or the URL of one;
+#   * The address of a github repository.
+# * The plugin will be installed in $HESTIA/plugins/
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+plugin_source="$1"
+format=${2-shell}
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/plugins.sh
+source $HESTIA/func/plugins.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'PLUGIN_SOURCE'
+
+init_plugins_conf_if_not_exists
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+mkdir -p $HESTIA/plugins
+mkdir -p $HESTIA/web/plugin
+
+# Ref for receive the name of the plugin
+final_plugin_name=""
+
+if [[ -d "$plugin_source" ]]; then
+    # Install from local source
+    plugin_install_from_path "$plugin_source" "no"
+elif [[ "$(echo "$plugin_source" | grep -E ".zip$")" ]]; then
+    # Install from zip local or in URL
+    plugin_install_from_zip "$plugin_source" "no"
+else
+    # Install from Github repository
+    github_archive="$(plugin_get_from_github "$plugin_source" "archive")"
+
+    if [[ "$github_archive" ]]; then
+        plugin_install_from_zip "$github_archive" "no"
+	else
+		check_result "$E_INVALID" "Plugin format not supported"
+    fi
+fi
+
+$BIN/v-list-plugin "$final_plugin_name" "$format"
+
+# Logging
+log_history "Plugin $final_plugin_name installed" "Info" "admin" "Plugin"
+log_event "$OK" "$ARGUMENTS"
+
+exit

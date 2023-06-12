@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+# info: enable plugin
+# options: PLUGIN_NAME
+#
+# example: v-enable-plugin pluginname
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+plugin_name="$1"
+
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/plugins.sh
+source $HESTIA/func/plugins.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'PLUGIN_NAME'
+
+init_plugins_conf_if_not_exists
+
+plugin_name="$(echo "$plugin_name" | awk '{gsub(/^[ \t]+| [ \t]+$/,""); print $0 }')"
+plugin_path="$HESTIA/plugins/$plugin_name"
+plugin_conf="$($HESTIA/bin/v-list-plugin "$plugin_name" plain)"
+
+if [[ ! -d "$plugin_path" ]]; then
+	check_result "$E_INVALID" "Plugin \"$plugin_name\" is not installed"
+elif [[ "$(echo "$plugin_conf" | awk '{print $4}')" == "true" ]]; then
+	check_result "$E_INVALID" "Plugin \"$plugin_name\" is already enabled"
+fi
+
+# Checks if plugin scripts will conflict with existing scripts
+plugin_check_conflicts "$plugin_name" "$plugin_path/bin"
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Change plugin status
+plugin_data="$(get_json_index "$plugin_name" $HESTIA/conf/plugins.json)"
+plugin_data="$(update_json_index "enabled" "true" "$plugin_data")"
+update_json_index "$plugin_name" "$plugin_data" $HESTIA/conf/plugins.json
+
+# Reconfigure plugin on hestia
+$HESTIA/bin/v-rebuild-plugin "$plugin_name"
+
+# Check if plugin has additional configurations
+if [[ -f "$plugin_path/hook/post_enable" ]]; then
+	bash "$plugin_path/hook/post_enable"
+fi

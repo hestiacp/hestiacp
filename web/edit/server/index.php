@@ -666,6 +666,9 @@ if (!empty($_POST["save"])) {
 
 	// Update phpPgAdmin url
 	if (empty($_SESSION["error_msg"])) {
+		if (empty($_POST["v_pgsql_url"])) {
+			$_POST["v_pgsql_url"] = "";
+		}
 		if ($_POST["v_pgsql_url"] != $_SESSION["DB_PGA_ALIAS"]) {
 			exec(
 				HESTIA_CMD . "v-change-sys-db-alias pga " . quoteshellarg($_POST["v_pgsql_url"]),

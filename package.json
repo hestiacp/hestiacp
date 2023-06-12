@@ -38,7 +38,7 @@
 		"eslint-plugin-import": "^2.27.5",
 		"husky": "^8.0.3",
 		"lint-staged": "^13.2.2",
-		"markdownlint-cli2": "^0.8.0",
+		"markdownlint-cli2": "^0.8.1",
 		"postcss": "^8.4.24",
 		"postcss-import": "^15.1.0",
 		"postcss-path-replace": "^1.0.4",

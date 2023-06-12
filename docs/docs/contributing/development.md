@@ -51,16 +51,21 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    sudo apt update && sudo apt install -y jq libjq1
    ```
 
-1. Install [Node JS](https://nodejs.org/)
+1. Outside of the VM (in a new terminal) ensure [Node.js](https://nodejs.org/)
+   16 or later is installed
 
-1. Build the theme files with
+   ```bash
+   node --version
+   ```
+
+1. Install dependencies and build the theme files:
 
    ```bash
    npm install
    npm run build
    ```
 
-1. Navigate to `/src` and build Hestia packages
+1. Back in the VM terminal, navigate to `/src` and build Hestia packages
 
    ```bash
    cd src
@@ -76,7 +81,7 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    bash hst-install-ubuntu.sh -D /tmp/hestiacp-src/deb/ --interactive no --email admin@example.com --password Password123 --hostname demo.hestiacp.com -f
    ```
 
-1. Reboot VM (and exit SSH session)
+1. Reboot the VM (and exit SSH session)
 
    ```bash
    reboot
@@ -90,21 +95,21 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 
 1. Visit the VM's IP address in your browser using the default Hestia port and login with `admin`/`Password123`
 
-   _(bypass any SSL errors you see when loading the page)_
+   _(proceed past any SSL errors you see when loading the page)_
 
    ```bash
    e.g. https://192.168.64.15:8083
    ```
 
-Hestia is now running in a virtual machine. If you'd like to make changes to the source code and test them, please continue to the next section.
+Hestia is now running in a virtual machine. If you'd like to make changes to the source code and test them in your browser, please continue to the next section.
 
 ## Making changes to Hestia
 
-After setting up Hestia in a VM you can now make changes to the source code in `$HOME/projects/hestiacp` on your local machine using your editor of choice.
+After setting up Hestia in a VM you can now make changes to the source code at `$HOME/projects/hestiacp` on your local machine (outside of the VM) using your editor of choice.
 
 The following are example instructions for making a change to Hestia's UI and testing it locally.
 
-1. At the root of the project on your local machine, install Node dependencies
+1. At the root of the project on your local machine, ensure the latest packages are installed
 
    ```bash
    npm install
@@ -142,7 +147,7 @@ Please refer to the [contributing guidelines](https://github.com/hestiacp/hestia
 
 ## Running automated tests
 
-For automated tests we currently use [Bats](https://github.com/bats-core/bats-core).
+We currently use [Bats](https://github.com/bats-core/bats-core) to run our automated tests.
 
 ### Install
 

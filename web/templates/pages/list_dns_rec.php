@@ -109,7 +109,7 @@
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?= $data[$key]["ID"] ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="record[]" value="<?= $data[$key]["ID"] ?>" <?= $display_mode ?>>
 					</div>
-					<div class="clearfix l-unit__stat-col--left u-truncate">
+					<div class="clearfix l-unit__stat-col--left u-text-truncate">
 						<b>
 						<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
 							<?=substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
@@ -148,7 +148,7 @@
 				<div class="clearfix l-unit__stat-col--left compact u-text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
 				<div class="clearfix l-unit__stat-col--left compact u-text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
 				<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left wide-6 truncate" style="word-break: break-word;"><?= htmlspecialchars($data[$key]["VALUE"], ENT_QUOTES, "UTF-8") ?></div>
+				<div class="clearfix l-unit__stat-col--left wide-6 truncate u-text-break"><?= htmlspecialchars($data[$key]["VALUE"], ENT_QUOTES, "UTF-8") ?></div>
 			</div>
 		</div>
 		<?php } ?>

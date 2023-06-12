@@ -722,6 +722,10 @@ if [ "$apache" = 'yes' ]; then
 		echo "[ * ] Apache2"
 		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
 		curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
+	else
+		echo "[ * ] Apache2"
+		echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+		curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
 	fi
 fi
 
@@ -730,6 +734,10 @@ if [ "$mysql" = 'yes' ]; then
 	if [ "$release" != '12' ]; then
 		echo "[ * ] MariaDB"
 		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
+		curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+	else
+		echo "[ * ] MariaDB"
+		echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
 		curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
 	fi
 fi
@@ -752,9 +760,8 @@ fi
 
 # Installing HestiaCP repo
 echo "[ * ] Hestia Control Panel"
-echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-beta-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
-curl -s "https://beta-apt.hestiacp.com/pubkey.gpg" | gpg --dearmor | tee /usr/share/keyrings/hestia-beta-keyring.gpg > /dev/null 2>&1
-#gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
+echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
+gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
 # Installing PostgreSQL repo
 if [ "$postgresql" = 'yes' ]; then

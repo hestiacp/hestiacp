@@ -82,9 +82,9 @@
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?= $key ?>">
 					</div>
 					<?php if ($key == "system") { ?>
-						<div class="clearfix l-unit__stat-col--left wide truncate"><b><?= $key ?></b></div>
+						<div class="clearfix l-unit__stat-col--left wide"><b><?= $key ?></b></div>
 					<?php } else { ?>
-						<div class="clearfix l-unit__stat-col--left wide truncate">
+						<div class="clearfix l-unit__stat-col--left wide">
 							<b><a href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Package") ?>: <?= $key ?>"><?= $key ?></a></b>
 						</div>
 					<?php } ?>

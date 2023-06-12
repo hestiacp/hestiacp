@@ -148,7 +148,7 @@
 				<div class="clearfix l-unit__stat-col--left compact u-text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
 				<div class="clearfix l-unit__stat-col--left compact u-text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
 				<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left wide-6 truncate u-text-break"><?= htmlspecialchars($data[$key]["VALUE"], ENT_QUOTES, "UTF-8") ?></div>
+				<div class="clearfix l-unit__stat-col--left wide-6 u-text-break"><?= htmlspecialchars($data[$key]["VALUE"], ENT_QUOTES, "UTF-8") ?></div>
 			</div>
 		</div>
 		<?php } ?>

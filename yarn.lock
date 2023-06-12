@@ -3570,7 +3570,7 @@ __metadata:
     eslint-plugin-import: ^2.27.5
     husky: ^8.0.3
     lint-staged: ^13.2.2
-    markdownlint-cli2: ^0.8.0
+    markdownlint-cli2: ^0.8.1
     nanoid: ^4.0.2
     normalize.css: ^8.0.1
     postcss: ^8.4.24
@@ -4360,9 +4360,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"markdownlint-cli2@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "markdownlint-cli2@npm:0.8.0"
+"markdownlint-cli2@npm:^0.8.1":
+  version: 0.8.1
+  resolution: "markdownlint-cli2@npm:0.8.1"
   dependencies:
     globby: 13.1.4
     markdownlint: 0.29.0
@@ -4374,7 +4374,7 @@ __metadata:
     markdownlint-cli2: markdownlint-cli2.js
     markdownlint-cli2-config: markdownlint-cli2-config.js
     markdownlint-cli2-fix: markdownlint-cli2-fix.js
-  checksum: 429997fdaa59fd86bb39545198147973493680846e964d23a7b08fba90738656a15cac3b225e3e1469805875690950d906a520344c49ef93ef65375317aac131
+  checksum: 38464d73d91a1abe1cc43f925112e567ee27eb20f536e4a0c1329e28cea4366db68e9c365127bbd95f2580bf2983ec8ea61e98ece1c868c17994b542e37e495d
   languageName: node
   linkType: hard
 

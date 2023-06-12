@@ -73,26 +73,26 @@
 				++$i;
 			?>
 			<div class="l-unit animate__animated animate__fadeIn js-unit"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-name="<?=$key?>"
-				data-sort-bandwidth="<?=$data[$key]['BANDWIDTH']?>"
-				data-sort-disk="<?=$data[$key]['DISK_QUOTA']?>">
+				data-sort-date="<?= strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"]) ?>"
+				data-sort-name="<?= $key ?>"
+				data-sort-bandwidth="<?= $data[$key]["BANDWIDTH"] ?>"
+				data-sort-disk="<?= $data[$key]["DISK_QUOTA"] ?>">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
-						<input id="check<?=$i?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?=$key?>">
+						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="package[]" value="<?= $key ?>">
 					</div>
-					<?php if ($key == 'system'){ ?>
-						<div class="clearfix l-unit__stat-col--left wide truncate"><b><?=$key?></b></div>
+					<?php if ($key == "system") { ?>
+						<div class="clearfix l-unit__stat-col--left wide truncate"><b><?= $key ?></b></div>
 					<?php } else { ?>
 						<div class="clearfix l-unit__stat-col--left wide truncate">
-							<b><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Package") ?>: <?=$key?>"><?=$key?></a></b>
+							<b><a href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Package") ?>: <?= $key ?>"><?= $key ?></a></b>
 						</div>
 					<?php } ?>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
 					<div class="clearfix l-unit__stat-col--left u-text-right compact-3">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix">
-								<?php if (($key == 'system')) { ?>
+								<?php if ($key == "system") { ?>
 									<!-- Restrict editing system package -->
 								<?php } else {?>
 									<div class="actions-panel__col actions-panel__edit shortcut-enter" data-key-action="href"><a href="/edit/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Package") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
@@ -100,13 +100,13 @@
 								<div class="actions-panel__col actions-panel__edit" data-key-action="href"><a href="/copy/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Duplicate") ?>"><i class="fas fa-clone icon-teal icon-dim"></i></a></div>
 								<?php if ($key == 'system') { ?>
 									<!-- Restrict deleting system package -->
-								<?php } else {?>
+								<?php } else { ?>
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
-											href="/delete/package/?package=<?=$key?>&token=<?=$_SESSION['token']?>"
+											href="/delete/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 											data-confirm-title="<?= _("Delete") ?>"
-											data-confirm-message="<?= sprintf(_('Are you sure you want to delete package %s?'), $key) ?>"
+											data-confirm-message="<?= sprintf(_("Are you sure you want to delete package %s?"), $key) ?>"
 										>
 											<i class="fas fa-trash icon-red icon-dim"></i>
 										</a>

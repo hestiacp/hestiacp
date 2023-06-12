@@ -80,8 +80,8 @@
 						class="form-select js-datasource-select"
 						tabindex="-1"
 						onchange="this.nextElementSibling.value=this.value"
-						data-country-iplists="<?= htmlspecialchars(json_encode($country_iplists), ENT_QUOTES, 'UTF-8') ?>"
-						data-blacklist-iplists="<?= htmlspecialchars(json_encode($blacklist_iplists), ENT_QUOTES, 'UTF-8') ?>"
+						data-country-iplists="<?= htmlspecialchars(json_encode($country_iplists), ENT_QUOTES, "UTF-8") ?>"
+						data-blacklist-iplists="<?= htmlspecialchars(json_encode($blacklist_iplists), ENT_QUOTES, "UTF-8") ?>"
 					>
 						<option value=""><?= _("Clear") ?></option>
 					</select>

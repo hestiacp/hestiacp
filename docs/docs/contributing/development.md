@@ -51,14 +51,13 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    sudo apt update && sudo apt install -y jq libjq1
    ```
 
-1. Install [Node JS](https://nodejs.org/en) and Yarn via `corepack enable`
+1. Install [Node JS](https://nodejs.org/)
 
 1. Build the theme files with
 
    ```bash
-   yarn set version stable
-   yarn install
-   yarn build
+   npm install
+   npm run build
    ```
 
 1. Navigate to `/src` and build Hestia packages
@@ -105,14 +104,10 @@ After setting up Hestia in a VM you can now make changes to the source code in `
 
 The following are example instructions for making a change to Hestia's UI and testing it locally.
 
-::: info
-Please ensure you have [Yarn](https://yarnpkg.com) v3 installed and are using [Node.js](https://nodejs.org/en/) v16 or higher.
-:::
-
 1. At the root of the project on your local machine, install Node dependencies
 
    ```bash
-   yarn install
+   npm install
    ```
 
 1. Make a change to a file that we can later test, then build the UI assets
@@ -120,7 +115,7 @@ Please ensure you have [Yarn](https://yarnpkg.com) v3 installed and are using [N
    _e.g. change the body background color to red in `web/css/src/base.css` then run:_
 
    ```bash
-   yarn build
+   npm run build
    ```
 
 1. SSH into the VM as root and navigate to `/src`

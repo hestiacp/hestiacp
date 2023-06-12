@@ -22,7 +22,7 @@ Additional information on how to contribute to Hestia Control Panel can be found
 
 We ask that you follow existing naming schemes and coding conventions where possible, and that you add comments in your source code where appropriate to aid other developers in debugging and understanding your code in the future.
 
-To ensure your changes meet our formatting requirements, please run `yarn install` from the root of the repository before committing your changes. This will set up pre-commit hooks for automatic formatting, which will help to get your changes merged as quickly as possible.
+To ensure your changes meet our formatting requirements, please run `npm install` from the root of the repository before committing your changes. This will set up pre-commit hooks for automatic formatting, which will help to get your changes merged as quickly as possible.
 
 ### Workflow and process
 

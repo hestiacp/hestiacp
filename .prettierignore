@@ -31,8 +31,6 @@ web/templates/
 /install/common/templates/email/
 
 # Vendor/packages
-.pnp.*
-.yarn/*
 **/node_modules/
 **/vendor/
 **/composer.phar
@@ -47,12 +45,7 @@ web/templates/
 logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
 
-# PNPM, NPM and YARN
-pnpm-lock.yaml
+# npm lock file
 package-lock.json
-yarn.lock

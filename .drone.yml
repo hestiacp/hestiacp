@@ -25,9 +25,8 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package and install
     commands:
-      - yarn set version stable
-      - yarn install
-      - yarn build
+      - npm ci
+      - npm run build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
   - name: Run system / user tests
     commands:
@@ -75,9 +74,8 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package install
     commands:
-      - yarn set version stable
-      - yarn install
-      - yarn build
+      - npm ci
+      - npm run build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
   - name: Run system / user tests
     commands:
@@ -115,9 +113,8 @@ steps:
   - name: Build JS/CSS
     image: node:current-slim
     commands:
-      - yarn set version stable
-      - yarn install
-      - yarn build
+      - npm ci
+      - npm run build
   - name: Build
     image: debian:bullseye
     commands:

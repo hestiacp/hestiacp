@@ -45,14 +45,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install Yarn v3
-        run: corepack enable && corepack prepare yarn@stable --activate
-
       - name: Install Node packages
-        run: yarn install --immutable
+        run: npm ci
 
       - name: Run Prettier
-        run: yarn prettier --check .
+        run: npx prettier --check .
 
   eslint:
     name: ESLint
@@ -66,14 +63,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install Yarn v3
-        run: corepack enable && corepack prepare yarn@stable --activate
-
       - name: Install Node packages
-        run: yarn install --immutable
+        run: npm ci
 
       - name: Run ESLint
-        run: yarn eslint .
+        run: npx eslint .
 
   stylelint:
     name: Stylelint
@@ -87,11 +81,8 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install Yarn v3
-        run: corepack enable && corepack prepare yarn@stable --activate
-
       - name: Install Node packages
-        run: yarn install --immutable
+        run: npm ci
 
       - name: Run Stylelint
-        run: yarn stylelint web/css/src/**/*.css
+        run: npx stylelint web/css/src/**/*.css

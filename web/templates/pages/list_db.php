@@ -99,20 +99,18 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 
 <div class="container">
 
-	<div class="units js-units-container">
-		<div class="header units-header">
-			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact">
-					<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
-				</div>
-				<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Name") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-right"><b>&nbsp;</b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Disk") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center compact"><b><?= _("Type") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?= _("Username") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Hostname") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Charset") ?></b></div>
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell">
+				<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>" <?= $display_mode ?>>
 			</div>
+			<div class="units-table-cell"><?= _("Name") ?></div>
+			<div class="units-table-cell"></div>
+			<div class="units-table-cell u-text-center"><?= _("Disk") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Type") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Username") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Hostname") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Charset") ?></div>
 		</div>
 
 		<!-- Begin database list item loop -->
@@ -125,12 +123,14 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 					$spnd_action = 'unsuspend';
 					$spnd_action_title = _('Unsuspend');
 					$spnd_icon = 'fa-play';
+					$spnd_icon_class = 'icon-green';
 					$spnd_confirmation = _('Are you sure you want to unsuspend database %s?') ;
 				} else {
 					$status = 'active';
 					$spnd_action = 'suspend';
 					$spnd_action_title = _('Suspend');
 					$spnd_icon = 'fa-pause';
+					$spnd_icon_class = 'icon-highlight';
 					$spnd_confirmation = _('Are you sure you want to suspend database %s?') ;
 				}
 				if ($data[$key]['HOST'] != 'localhost' ) $http_host = $data[$key]['HOST'];
@@ -141,83 +141,117 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 				if ($data[$key]['TYPE'] == 'pgsql') $db_admin_link = "https://".$http_host."/phppgadmin/";
 				if (($data[$key]['TYPE'] == 'pgsql') && (!empty($_SESSION['DB_PGA_ALIAS']))) $db_admin_link = $_SESSION['DB_PGA_ALIAS'];
 			?>
-			<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-name="<?=$key?>"
-				data-sort-disk="<?=$data[$key]['U_DISK']?>"
-				data-sort-user="<?=$data[$key]['DBUSER']?>"
-				data-sort-server="<?=$data[$key]['HOST']?>"
-				data-sort-charset="<?=$data[$key]['CHARSET']?>">
-				<div class="l-unit__col l-unit__col--right">
+			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
+				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-name="<?= $key ?>"
+				data-sort-disk="<?= $data[$key]['U_DISK'] ?>"
+				data-sort-user="<?= $data[$key]['DBUSER'] ?>"
+				data-sort-server="<?= $data[$key]['HOST'] ?>"
+				data-sort-charset="<?= $data[$key]['CHARSET'] ?>">
+				<div class="units-table-cell">
 					<div>
-						<div class="clearfix l-unit__stat-col--left super-compact">
-							<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="database[]" value="<?= $key ?>" <?= $display_mode ?>>
-						</div>
-						<div class="clearfix l-unit__stat-col--left wide-3 truncate">
-							<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
-								<b><?= $key ?></b>
-							<?php } else { ?>
-								<b><a href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Database") ?>: <?= $key ?>"><?= $key ?></a></b>
-							<?php } ?>
-						</div>
-						<!-- START QUICK ACTION TOOLBAR AREA -->
-						<div class="clearfix l-unit__stat-col--left u-text-right">
-							<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
-								<div class="actions-panel clearfix">
-									<?php if ($read_only === "true") { ?>
-										<!-- Restrict the ability to edit, delete, or suspend domain items when impersonating 'admin' user -->
-										&nbsp;
-									<?php } else { ?>
-										<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-											<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href">
-												<a href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Database") ?>">
-													<i class="fas fa-pencil icon-orange icon-dim"></i>
-												</a>
-											</div>
-										<?php } ?>
-										<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
-											<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href">
-												<a target="_blank" href="<?=$db_myadmin_link?>hestia-sso.php?database=<?=$key?>&user=<?=$user_plain?>&exp=<?=$time?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>" title="phpMyAdmin">
-													<i class="fas fa-right-to-bracket icon-orange icon-dim"></i>
-												</a>
-											</div>
-										<?php } ?>
-										<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href">
-											<a href="/download/database/?database=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Download Database") ?>">
-												<i class="fas fa-download icon-orange icon-dim"></i>
-											</a>
-										</div>
-										<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
-											<a
-												class="data-controls js-confirm-action"
-												href="/<?= $spnd_action ?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
-												data-confirm-title="<?= $spnd_action_title ?>"
-												data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
-											>
-												<i class="fas <?= $spnd_icon ?> icon-highlight icon-dim"></i>
-											</a>
-										</div>
-										<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
-											<a
-												class="data-controls js-confirm-action"
-												href="/delete/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-												data-confirm-title="<?= _("Delete") ?>"
-												data-confirm-message="<?= sprintf(_("Are you sure you want to delete database %s?"), $key) ?>"
-											>
-												<i class="fas fa-trash icon-red icon-dim"></i>
-											</a>
-										</div>
-									<?php } ?>
-								</div>
-							</div>
-						</div>
-						<!-- END QUICK ACTION TOOLBAR AREA -->
-						<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= humanize_usage_size($data[$key]["U_DISK"]) ?></b> <span class="u-text-small"><?= humanize_usage_measure($data[$key]["U_DISK"]) ?></span></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center compact"><?= $data[$key]["TYPE"] ?></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?= $data[$key]["DBUSER"] ?></b></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= $data[$key]["HOST"] ?></b></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center"><?= $data[$key]["CHARSET"] ?></div>
+						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="database[]" value="<?= $key ?>" <?= $display_mode ?>>
+						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
+				</div>
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
+					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
+						<?= $key ?>
+					<?php } else { ?>
+						<a href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Database") ?>: <?= $key ?>">
+							<?= $key ?>
+						</a>
+					<?php } ?>
+				</div>
+				<div class="units-table-cell">
+					<?php if (!$read_only) { ?>
+						<ul class="units-table-row-actions">
+							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
+								<li class="units-table-row-action shortcut-enter" data-key-action="href">
+									<a
+										class="units-table-row-action-link"
+										href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+										title="<?= _("Edit Database") ?>"
+									>
+										<i class="fas fa-pencil icon-orange"></i>
+										<span class="u-hide-desktop"><?= _("Edit Database") ?></span>
+									</a>
+								</li>
+							<?php } ?>
+							<?php if ($data[$key]['TYPE'] == 'mysql' && isset($_SESSION['PHPMYADMIN_KEY']) && $_SESSION['PHPMYADMIN_KEY'] != '' && !ipUsed()) { $time = time(); ?>
+								<li class="units-table-row-action shortcut-enter" data-key-action="href">
+									<a
+										class="units-table-row-action-link"
+										href="<?=$db_myadmin_link?>hestia-sso.php?database=<?=$key?>&user=<?=$user_plain?>&exp=<?=$time?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>"
+										title="phpMyAdmin"
+									>
+										<i class="fas fa-right-to-bracket icon-orange"></i>
+										<span class="u-hide-desktop">phpMyAdmin</span>
+									</a>
+								</li>
+							<?php } ?>
+							<li class="units-table-row-action shortcut-enter" data-key-action="href">
+								<a
+									class="units-table-row-action-link"
+									href="/download/database/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+									title="<?= _("Download Database") ?>"
+								>
+									<i class="fas fa-download icon-orange"></i>
+									<span class="u-hide-desktop"><?= _("Download Database") ?></span>
+								</a>
+							</li>
+							<li class="units-table-row-action shortcut-s" data-key-action="js">
+								<a
+									class="units-table-row-action-link data-controls js-confirm-action"
+									href="/<?= $spnd_action ?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+									title="<?= $spnd_action_title ?>"
+									data-confirm-title="<?= $spnd_action_title ?>"
+									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
+								>
+									<i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
+									<span class="u-hide-desktop"><?= $spnd_action_title ?></span>
+								</a>
+							</li>
+							<li class="units-table-row-action shortcut-delete" data-key-action="js">
+								<a
+									class="units-table-row-action-link data-controls js-confirm-action"
+									href="/delete/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
+									title="<?= _("Delete") ?>"
+									data-confirm-title="<?= _("Delete") ?>"
+									data-confirm-message="<?= sprintf(_("Are you sure you want to delete database %s?"), $key) ?>"
+								>
+									<i class="fas fa-trash icon-red"></i>
+									<span class="u-hide-desktop"><?= _("Delete") ?></span>
+								</a>
+							</li>
+						</ul>
+					<?php } ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
+					<span class="u-text-bold">
+						<?= humanize_usage_size($data[$key]["U_DISK"]) ?>
+					</span>
+					<span class="u-text-small">
+						<?= humanize_usage_measure($data[$key]["U_DISK"]) ?>
+					</span>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+					<?= $data[$key]["TYPE"] ?>
+				</div>
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
+					<span class="u-hide-desktop"><?= _("Username") ?>:</span>
+					<?= $data[$key]["DBUSER"] ?>
+				</div>
+				<div class="units-table-cell u-text-bold u-text-center-desktop">
+					<span class="u-hide-desktop"><?= _("Hostname") ?>:</span>
+					<?= $data[$key]["HOST"] ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Charset") ?>:</span>
+					<?= $data[$key]["CHARSET"] ?>
 				</div>
 			</div>
 		<?php } ?>

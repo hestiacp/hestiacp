@@ -1073,11 +1073,11 @@ if [ -z "$(grep ^/usr/sbin/nologin /etc/shells)" ]; then
 fi
 
 # Configuring NTP
-# Know issue for Deb 12
-sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
-systemctl enable systemd-timesyncd
-systemctl start systemd-timesyncd
-
+if [ ! -f "/etc/default/ntpsec-ntpdate " ]; then
+	sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+	systemctl enable systemd-timesyncd
+	systemctl start systemd-timesyncd
+fi
 # Restrict access to /proc fs
 # - Prevent unpriv users from seeing each other running processes
 mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1

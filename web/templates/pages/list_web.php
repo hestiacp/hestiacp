@@ -216,7 +216,7 @@
 							<?php
 								if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {
 									$aliases = implode(', ', $alias_new);
-									echo "<p class='hint u-max-width300 u-text-ellipsis'>($aliases)</p>";
+									echo "<p class='hint u-max-width300 u-text-truncate'>($aliases)</p>";
 								}
 							?>
 						</a>

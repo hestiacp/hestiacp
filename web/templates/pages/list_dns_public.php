@@ -89,8 +89,20 @@
 		</div>
 		<div class="l-unit animate__animated animate__fadeIn js-unit">
 			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag / Flag") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Type / Flag") ?></b></div>
 				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $flag; ?>"></b></div>
+			</div>
+		</div>
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Key Tag") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["KEYTAG"]; ?>"></b></div>
+			</div>
+		</div>
+		<div class="l-unit animate__animated animate__fadeIn js-unit">
+			<div class="l-unit__col l-unit__col--right">
+				<div class="clearfix l-unit__stat-col--left u-text-center u-pt10"><b><?= _("Flag") ?></b></div>
+				<div class="clearfix l-unit__stat-col--left wide-3"><b><input type="text" class="form-control" value="<?php echo $data[$domain]["FLAG"]; ?>"></b></div>
 			</div>
 		</div>
 		<div class="l-unit animate__animated animate__fadeIn js-unit">

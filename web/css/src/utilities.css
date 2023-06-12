@@ -59,10 +59,14 @@
 	font-weight: bold !important;
 }
 
-.u-truncate {
+.u-text-truncate {
 	overflow: hidden !important;
 	text-overflow: ellipsis !important;
 	white-space: nowrap !important;
+}
+
+.u-text-break {
+	word-break: break-word !important;
 }
 
 .u-overflow {
@@ -131,12 +135,6 @@
 
 .u-width-full {
 	width: 100% !important;
-}
-
-.u-text-ellipsis {
-	overflow: hidden !important;
-	text-overflow: ellipsis !important;
-	white-space: nowrap !important;
 }
 
 .u-min-height100 {

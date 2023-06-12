@@ -2,8 +2,6 @@
 *.min.js
 
 # Vendor/packages
-.pnp.*
-.yarn/*
 **/node_modules/
 **/vendor/
 

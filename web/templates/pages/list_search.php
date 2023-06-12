@@ -125,7 +125,7 @@
 							<?php } ?>
 						</b>
 					</div>
-					<div class="clearfix l-unit__stat-col--left wide-5 truncate">
+					<div class="clearfix l-unit__stat-col--left wide-5">
 						<?php
 							if ($value['KEY'] == 'RECORD') {
 								$edit_lnk = '/edit/'.$value['TYPE'].'/?domain='.$value['PARENT'].'&record_id='.$value['LINK'].'&user='.$value['USER'];

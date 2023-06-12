@@ -42,11 +42,12 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 json_list() {
 	echo '{'
 	echo '    "'$DOMAIN'": {
-       "RECORD": "'$record'",
-       "FLAG": "'$flag'",
-       "ALGORITHM": "'$algorithm'",
-       "KEY": "'$key'",
-       "DS":"'$ds'"
+		"RECORD": "'$record'",
+		"KEYTAG": "'$keytag'",
+		"FLAG": "'$flag'",
+		"ALGORITHM": "'$algorithm'",
+		"KEY": "'$key'",
+		"DS":"'$ds'"
     }'
 	echo '}'
 }
@@ -54,7 +55,8 @@ json_list() {
 # SHELL list function
 shell_list() {
 	echo "RECORD:    $record"
-	echo "DS:        $DS"
+	echo "DS:        $ds"
+	echo "KEYTAG:    $keytag"
 	echo "FLAG:      $flag"
 	echo "ALGORITHM: $algorithm"
 	echo "KEY:       $key"
@@ -77,10 +79,11 @@ parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 
 if [ -n "$KEY" ]; then
 	record=$(cat "/var/cache/bind/K$domain_idn.+013+$KEY.key" | grep DNSKEY)
+	ds=$(dnssec-dsfromkey "/var/cache/bind/K$domain_idn.+013+$KEY.key")
+	keytag=$(echo "$ds" | cut -d' ' -f4)
 	flag=$(echo "$record" | cut -d' ' -f5)
 	algorithm=$(echo "$record" | cut -d' ' -f7)
 	key="$(echo "$record" | cut -d' ' -f8) $(echo "$record" | cut -d' ' -f9)"
-	ds=$(dnssec-dsfromkey "/var/cache/bind/K$domain_idn.+013+$KEY.key")
 fi
 
 case $format in

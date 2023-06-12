@@ -52,7 +52,7 @@ if [ "$FORCE" != "yes" ] && [ ! -e "$FM_INSTALL_DIR" ]; then
 	exit 1
 fi
 
-if [ "$FORCE" != "yes" ] && [ "$FILE_MANGER" = "false" ]; then
+if [ "$FORCE" != "yes" ] && [ "$FILE_MANAGER" = "false" ]; then
 	echo "ERROR: File Manager is not enabled."
 	exit 1
 fi

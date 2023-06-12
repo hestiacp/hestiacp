@@ -1,6 +1,6 @@
 17a18,19
 > SRS_SECRET = readfile{/etc/exim4/srs.conf}
->
+>   
 326a332,348
 > inbound_srs:
 >     driver = redirect
@@ -9,7 +9,7 @@
 >     # detect inbound bounces which are SRS'd, and decode them
 >     condition = ${if inbound_srs {$local_part} {SRS_SECRET}}
 >     data = $srs_recipient
->
+>   
 > inbound_srs_failure:
 >     driver = redirect
 >     senders = :
@@ -18,7 +18,7 @@
 >     condition = ${if inbound_srs {$local_part} {}}
 >     allow_fail
 >     data = :fail: Invalid SRS recipient address
->
+>   
 358d379
 <   condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}
 387a409,422
@@ -35,4 +35,4 @@
 >   # modify the envelope from, for mails that we forward
 >   max_rcpt = 1
 >   return_path = ${srs_encode {SRS_SECRET} {$return_path} {$original_domain}}
->
+>   

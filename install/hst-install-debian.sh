@@ -16,7 +16,7 @@
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
 # For testing
-RHOST='-apt.hestiacp.com'
+RHOST='apt.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'
 LOG="/root/hst_install_backups/hst_install-$(date +%d%m%Y%H%M).log"

@@ -36,8 +36,7 @@
 						</div>
 					</div>
 				<?php } ?>
-				<?php
-				foreach ($WebappInstaller->getOptions() as $form_name => $form_control) {
+				<?php foreach ($WebappInstaller->getOptions() as $form_name => $form_control) {
 					$field_name = $WebappInstaller->formNs() . "_" . $form_name;
 					$field_type = $form_control;
 					$field_value = "";
@@ -68,11 +67,11 @@
 							</label>
 						<?php endif; ?>
 
-						<?php if ($field_type == 'select' && count($form_control['options'])): ?>
+						<?php if ($field_type == "select" && count($form_control["options"])): ?>
 							<select class="form-select" name="<?= $field_name ?>" id="<?= $field_name ?>">
-								<?php foreach ($form_control['options'] as $key => $option):
+								<?php foreach ($form_control["options"] as $key => $option):
 									$key = !is_numeric($key) ? $key : $option;
-									$selected = !empty($form_control['value'] && $key == $form_control['value']) ? 'selected' : ''; ?>
+									$selected = !empty($form_control["value"] && $key == $form_control["value"]) ? "selected" : ""; ?>
 									<option value="<?= $key ?>" <?= $selected ?>>
 										<?= htmlentities($option) ?>
 									</option>

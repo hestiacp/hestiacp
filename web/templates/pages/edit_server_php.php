@@ -27,11 +27,11 @@
 			<div class="js-basic-options">
 				<div class="u-mb10">
 					<label for="v_max_execution_time" class="form-label">max_execution_time</label>
-					<input type="text" class="form-control" data-regexp="max_execution_time" data-prev-value="<?=htmlentities($v_max_execution_time)?>" name="v_max_execution_time" id="v_max_execution_time" value="<?=htmlentities($v_max_execution_time)?>">
+					<input type="text" class="form-control" data-regexp="max_execution_time" data-prev-value="<?= htmlentities($v_max_execution_time) ?>" name="v_max_execution_time" id="v_max_execution_time" value="<?= htmlentities($v_max_execution_time) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_worker_connections" class="form-label">max_input_time</label>
-					<input type="text" class="form-control" data-regexp="max_input_time" data-prev-value="<?=htmlentities($v_max_input_time)?>" name="v_worker_connections" id="v_worker_connections" value="<?=htmlentities($v_max_input_time)?>">
+					<input type="text" class="form-control" data-regexp="max_input_time" data-prev-value="<?= htmlentities($v_max_input_time) ?>" name="v_worker_connections" id="v_worker_connections" value="<?= htmlentities($v_max_input_time) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_memory_limit" class="form-label">memory_limit</label>
@@ -39,19 +39,19 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_error_reporting" class="form-label">error_reporting</label>
-					<input type="text" class="form-control" data-regexp="error_reporting" data-prev-value="<?=htmlentities($v_error_reporting)?>" name="v_error_reporting" id="v_error_reporting" value="<?=htmlentities($v_error_reporting)?>">
+					<input type="text" class="form-control" data-regexp="error_reporting" data-prev-value="<?= htmlentities($v_error_reporting) ?>" name="v_error_reporting" id="v_error_reporting" value="<?= htmlentities($v_error_reporting) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_display_errors" class="form-label">display_errors</label>
-					<input type="text" class="form-control" data-regexp="display_errors" data-prev-value="<?=htmlentities($v_display_errors)?>" name="v_display_errors" id="v_display_errors" value="<?=htmlentities($v_display_errors)?>">
+					<input type="text" class="form-control" data-regexp="display_errors" data-prev-value="<?= htmlentities($v_display_errors) ?>" name="v_display_errors" id="v_display_errors" value="<?= htmlentities($v_display_errors) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_post_max_size" class="form-label">post_max_size</label>
-					<input type="text" class="form-control" data-regexp="post_max_size" data-prev-value="<?=htmlentities($v_post_max_size)?>" name="v_post_max_size" id="v_post_max_size" value="<?=htmlentities($v_post_max_size)?>">
+					<input type="text" class="form-control" data-regexp="post_max_size" data-prev-value="<?= htmlentities($v_post_max_size) ?>" name="v_post_max_size" id="v_post_max_size" value="<?= htmlentities($v_post_max_size) ?>">
 				</div>
 				<div class="u-mb20">
 					<label for="v_upload_max_filesize" class="form-label">upload_max_filesize</label>
-					<input type="text" class="form-control" data-regexp="upload_max_filesize" data-prev-value="<?=htmlentities($v_upload_max_filesize)?>" name="v_upload_max_filesize" id="v_upload_max_filesize" value="<?=htmlentities($v_upload_max_filesize)?>">
+					<input type="text" class="form-control" data-regexp="upload_max_filesize" data-prev-value="<?= htmlentities($v_upload_max_filesize) ?>" name="v_upload_max_filesize" id="v_upload_max_filesize" value="<?= htmlentities($v_upload_max_filesize) ?>">
 				</div>
 				<div class="u-mb20">
 					<button type="button" class="button button-secondary js-toggle-options">

@@ -6,7 +6,7 @@
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<?php
-				if($autoupdate == 'Enabled') {
+				if ($autoupdate == 'Enabled') {
 					$btn_url = '/delete/cron/autoupdate/?token='.$_SESSION['token'].'';
 					$btn_icon = 'fa-toggle-on icon-green';
 					$btn_label = _('Disable Automatic Updates');
@@ -16,8 +16,8 @@
 					$btn_label = _('Enable Automatic Updates');
 				}
 			?>
-			<a class="button button-secondary" href="<?=$btn_url;?>">
-				<i class="fas <?=$btn_icon;?>"></i><?= $btn_label; ?>
+			<a class="button button-secondary" href="<?= $btn_url ?>">
+				<i class="fas <?= $btn_icon ?>"></i><?= $btn_label ?>
 			</a>
 		</div>
 	</div>
@@ -26,20 +26,12 @@
 
 <div class="container">
 
-	<div class="units js-units-container">
-		<div class="header units-header">
-			<div class="l-unit__col l-unit__col--right">
-				<div>
-					<div class="clearfix l-unit__stat-col--left super-compact center">
-						<input type="checkbox" class="js-toggle-all-checkbox" title="<?= _("Select all") ?>">
-					</div>
-					<!-- Not a typo, to differentiate from User "Package Name" -->
-					<div class="clearfix l-unit__stat-col--left wide"><b><?= _("Package Names") ?></b></div>
-					<div class="clearfix l-unit__stat-col--left wide-5"><b><?= _("Description") ?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center wide"><b><?= _("Version") ?></b></div>
-					<div class="clearfix l-unit__stat-col--left u-text-center"><b><?= _("Status") ?></b></div>
-				</div>
-			</div>
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell"><?= _("Package") ?></div>
+			<div class="units-table-cell"><?= _("Description") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Version") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Status") ?></div>
 		</div>
 
 		<!-- Begin update list item loop -->
@@ -55,25 +47,23 @@
 					$upd_status = 'outdated';
 				}
 			?>
-			<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--outdated'; ?> animate__animated animate__fadeIn js-unit">
-				<div class="l-unit-toolbar clearfix">
-					<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
-					</div>
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit">
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Package") ?>:</span>
+					<?= $key ?>
 				</div>
-
-				<div class="l-unit__col l-unit__col--right">
-					<div>
-						<div class="clearfix l-unit__stat-col--left super-compact center">
-							<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="pkg[]" value="<?= $key ?>">
-						</div>
-						<div class="clearfix l-unit__stat-col--left wide"><b><?=$key?></b></div>
-						<div class="clearfix l-unit__stat-col--left wide-5"><?=_($data[$key]['DESCR'])?></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center wide"><?=$data[$key]['VERSION'] ?> (<?=$data[$key]['ARCH']?>)</div>
-						<div class="clearfix l-unit__stat-col--left u-text-center">
-							<?php if ($data[$key]['UPDATED'] == 'no') { echo '<i class="fas fa-triangle-exclamation" style="color: orange;"></i>'; } ?>
-							<?php if ($data[$key]['UPDATED'] == 'yes') { echo '<i class="fas fa-circle-check icon-green"></i>'; } ?>
-						</div>
-					</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Description") ?>:</span>
+					<?= _($data[$key]["DESCR"]) ?>
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Version") ?>:</span>
+					<?= $data[$key]["VERSION"] ?> (<?= $data[$key]["ARCH"] ?>)
+				</div>
+				<div class="units-table-cell u-text-center-desktop">
+					<span class="u-hide-desktop u-text-bold"><?= _("Status") ?>:</span>
+					<?php if ($data[$key]['UPDATED'] == 'no') { echo '<i class="fas fa-triangle-exclamation" style="color: orange;"></i>'; } ?>
+					<?php if ($data[$key]['UPDATED'] == 'yes') { echo '<i class="fas fa-circle-check icon-green"></i>'; } ?>
 				</div>
 			</div>
 		<?php } ?>

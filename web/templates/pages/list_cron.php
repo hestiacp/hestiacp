@@ -39,8 +39,8 @@
 						<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("Apply to selected") ?></option>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">' . _('Disable Notifications') . '</option>'; ?>
-							<?php if($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">' . _('Enable Notifications') . '</option>'; ?>
+							<?php if ($panel[$user_plain]['CRON_REPORTS'] == 'yes') echo '<option value="delete-cron-reports">' . _('Disable Notifications') . '</option>'; ?>
+							<?php if ($panel[$user_plain]['CRON_REPORTS'] == 'no') echo '<option value="add-cron-reports">' . _('Enable Notifications') . '</option>'; ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
 							<option value="delete"><?= _("Delete") ?></option>
@@ -102,8 +102,8 @@
 			}
 		?>
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-name="<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
+				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-name="<?= htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="job[]" value="<?= $key ?>" <?= $display_mode ?>>
@@ -115,19 +115,19 @@
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
 					<?php } else { ?>
-						<a href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Cron Job") ?>: <?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>">
-							<?=htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES)?>
+						<a href="/edit/cron/?job=<?= $data[$key]['JOB'] ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Cron Job") ?>: <?= htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?>">
+							<?= htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?>
 						</a>
 					<?php } ?>
 				</div>
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>
 						<ul class="units-table-row-actions">
-							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
+							<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/cron/?job=<?=$data[$key]['JOB']?>&token=<?=$_SESSION['token']?>"
+										href="/edit/cron/?job=<?= $data[$key]['JOB'] ?>&token=<?= $_SESSION['token'] ?>"
 										title="<?= _("Edit") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>

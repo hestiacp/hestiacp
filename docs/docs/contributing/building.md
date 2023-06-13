@@ -41,7 +41,7 @@ Any option can be appended to the installer command. [See the complete list](../
 
 ```bash
 # Only Hestia
-./scr/hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
+./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
 ```
 
 ```bash

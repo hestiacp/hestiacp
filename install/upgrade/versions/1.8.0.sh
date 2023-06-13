@@ -39,7 +39,7 @@ fi
 
 if [ -f /etc/fail2ban/jail.local ]; then
 	# Add phpmyadmin rule
-	if ! grep -qw "^phpmyadmin-auth$" /etc/fail2ban/jail.local 2> /dev/null; then
+	if ! grep -qw "phpmyadmin-auth" /etc/fail2ban/jail.local 2> /dev/null; then
 		sed -i '/\[recidive\]/i [phpmyadmin-auth]\nenabled  = true\nfilter   = phpmyadmin-syslog\naction   = hestia[name=WEB]\nlogpath  = /var/log/auth.log\nmaxretry = 5\n' /etc/fail2ban/jail.local
 	fi
 fi
@@ -196,3 +196,17 @@ fi
 
 unset commit nameserver nginx_conf_commit nginx_conf_compare nginx_conf_local os_release tls12_ciphers tls13_ciphers resolver
 # Finish configuring the "Enhanced and Optimized TLS" feature
+
+exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
+# if Exim version > 4.9.4 or greater!
+if ! version_ge "4.9.4" "$exim_version"; then
+	if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
+		srs=$(gen_pass)
+		echo $srs > /etc/exim4/srs.conf
+		chmod 640 /etc/exim4/srs.conf
+		echo "[ * ] Update exim4.conf.template ..."
+		patch /etc/exim4/exim4.conf.template $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch
+	fi
+else
+	echo $exim_version
+fi

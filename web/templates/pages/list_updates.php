@@ -54,11 +54,11 @@
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("Description") ?>:</span>
-					<?=_($data[$key]['DESCR'])?>
+					<?= _($data[$key]["DESCR"]) ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Version") ?>:</span>
-					<?= $data[$key]['VERSION'] ?> (<?= $data[$key]['ARCH'] ?>)
+					<?= $data[$key]["VERSION"] ?> (<?= $data[$key]["ARCH"] ?>)
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Status") ?>:</span>

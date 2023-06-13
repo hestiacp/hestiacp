@@ -91,13 +91,13 @@
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="ip[]" value="<?= $key ?>">
 					</div>
-					<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><?=$key?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
+					<div class="clearfix l-unit__stat-col--left wide-3"><b><a href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit IP Address") ?>"><?= $key ?> <?php if (!empty($data[$key]['NAT'])) echo ' → ' . $data[$key]['NAT'] . ''; ?></a></b>
 					</div>
 					<!-- START QUICK ACTION TOOLBAR AREA -->
 					<div class="clearfix l-unit__stat-col--left compact u-text-right">
 						<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 							<div class="actions-panel clearfix">
-								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/ip/?ip=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit IP Address") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 									<a
 										class="data-controls js-confirm-action"

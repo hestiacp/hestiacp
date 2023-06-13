@@ -144,10 +144,10 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
 				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
 				data-sort-name="<?= $key ?>"
-				data-sort-disk="<?= $data[$key]['U_DISK'] ?>"
-				data-sort-user="<?= $data[$key]['DBUSER'] ?>"
-				data-sort-server="<?= $data[$key]['HOST'] ?>"
-				data-sort-charset="<?= $data[$key]['CHARSET'] ?>">
+				data-sort-disk="<?= $data[$key]["U_DISK"] ?>"
+				data-sort-user="<?= $data[$key]["DBUSER"] ?>"
+				data-sort-server="<?= $data[$key]["HOST"] ?>"
+				data-sort-charset="<?= $data[$key]["CHARSET"] ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="database[]" value="<?= $key ?>" <?= $display_mode ?>>
@@ -171,7 +171,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/edit/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Edit Database") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -183,7 +183,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="<?=$db_myadmin_link?>hestia-sso.php?database=<?=$key?>&user=<?=$user_plain?>&exp=<?=$time?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT)?>"
+										href="<?= $db_myadmin_link?>hestia-sso.php?database=<?= $key ?>&user=<?= $user_plain?>&exp=<?= $time?>&hestia_token=<?=password_hash($key.$user_plain.$_SESSION['user_combined_ip'].$time.$_SESSION['PHPMYADMIN_KEY'], PASSWORD_DEFAULT) ?>"
 										title="phpMyAdmin"
 									>
 										<i class="fas fa-right-to-bracket icon-orange"></i>
@@ -194,7 +194,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/download/database/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/download/database/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("Download Database") ?>"
 								>
 									<i class="fas fa-download icon-orange"></i>
@@ -204,7 +204,7 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= $spnd_action ?>/db/?database=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $spnd_action ?>/db/?database=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= $spnd_action_title ?>"
 									data-confirm-title="<?= $spnd_action_title ?>"
 									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"

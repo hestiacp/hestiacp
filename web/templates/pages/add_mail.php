@@ -60,7 +60,7 @@
 								echo ">".htmlentities(ucfirst($client))."</option>\n";
 								}
 							?>
-							<option value="" <?php if (empty($v_webmail) || $v_webmail == 'disabled' ){ echo "selected";}?>><?= _("Disabled") ?></option>
+							<option value="" <?php if (empty($v_webmail) || $v_webmail == 'disabled' ){ echo "selected"; }?>><?= _("Disabled") ?></option>
 						</select>
 					</div>
 				<?php } ?>
@@ -78,7 +78,7 @@
 						</label>
 					</div>
 				<?php } ?>
-				<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) {?>
+				<?php if (!empty($_SESSION['ANTIVIRUS_SYSTEM'])) { ?>
 					<div class="form-check u-mb10">
 						<input class="form-check-input" type="checkbox" name="v_antivirus" id="v_antivirus" <?php if ((empty($v_antivirus)) || ($v_antivirus == 'yes')) echo 'checked'; ?>>
 						<label for="v_antivirus">

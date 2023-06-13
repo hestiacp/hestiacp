@@ -167,7 +167,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= $key . "@" . htmlentities($_GET["domain"]) ?>
 					<?php } else { ?>
-						<a href="/edit/mail/?domain=<?=htmlspecialchars($_GET['domain'])?>&account=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Mail Account") ?>: <?=$key?>@<?=htmlspecialchars($_GET['domain'])?>">
+						<a href="/edit/mail/?domain=<?= htmlspecialchars($_GET['domain']) ?>&account=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Mail Account") ?>: <?= $key ?>@<?= htmlspecialchars($_GET['domain']) ?>">
 							<?= $key."@".htmlentities($_GET['domain']); ?>
 						</a>
 					<?php } ?>

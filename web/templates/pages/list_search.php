@@ -82,14 +82,14 @@
 				}
 				$uniq_id .= sha1($value['RESULT']);
 			?>
-			<div class="l-unit <?php if($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
-				data-uniq-id="<?=$uniq_id?>"
-				data-sort-date="<?=strtotime($value['DATE'].' '.$value['TIME'])?>"
-				data-sort-name="<?=$value['RESULT']?>"
-				data-sort-type="<?=_($object)?>"
-				data-sort-owner="<?=$value['USER']?>"
-				data-sort-status="<?=$status?>"
-				style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value['USER']) === 'admin') { echo 'display: none;';}?>">
+			<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
+				data-uniq-id="<?= $uniq_id?>"
+				data-sort-date="<?= strtotime($value['DATE'].' '.$value['TIME']) ?>"
+				data-sort-name="<?= $value['RESULT'] ?>"
+				data-sort-type="<?= _($object) ?>"
+				data-sort-owner="<?= $value['USER'] ?>"
+				data-sort-status="<?= $status ?>"
+				style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value['USER']) === 'admin') { echo 'display: none;'; } ?>">
 
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
@@ -113,7 +113,7 @@
 									$icon = 'fa-clock';
 							}
 						?>
-						<i class="fa <?=$icon;?> icon-dim"></i>
+						<i class="fa <?= $icon ?> icon-dim"></i>
 					</div>
 					<div class="clearfix l-unit__stat-col--left compact-2 u-text-center">
 						<b>
@@ -168,9 +168,9 @@
 					<div class="clearfix l-unit__stat-col--left u-text-center"><?= translate_date($value["DATE"]) ?></div>
 					<div class="clearfix l-unit__stat-col--left u-text-center">
 						<b>
-							<a href="/search/?q=<?=htmlentities($_GET['q']); ?>&u=<?=$value['USER']; ?>&token=<?=$_SESSION['token']?>"><?=$value['USER']; ?></a>
+							<a href="/search/?q=<?= htmlentities($_GET['q']); ?>&u=<?= $value['USER']; ?>&token=<?= $_SESSION['token'] ?>"><?= $value['USER']; ?></a>
 							<?php if (!($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes' && $value['USER'] !== 'admin') && ($_SESSION['userContext'] === 'admin')) { ?>
-								<a href="/login/?loginas=<?=$value['USER']?>&token=<?=$_SESSION['token']?>" title="<?= _("Log in as") ?> <?=$value['USER']?>">
+								<a href="/login/?loginas=<?= $value['USER'] ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Log in as") ?> <?= $value['USER'] ?>">
 									<i class="fas fa-right-to-bracket icon-green icon-dim"></i>
 								</a>
 							<?php } ?>

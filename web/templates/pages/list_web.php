@@ -14,7 +14,7 @@
 					<?= _("Sort by") ?>:
 					<span class="u-text-bold">
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = ('Name'); } else { $label = _('Date'); } ?>
-						<?=$label?> <i class="fas fa-arrow-down-a-z"></i>
+						<?= $label?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
@@ -206,7 +206,7 @@
 							}
 						}
 						?>
-						<a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Domain") ?>: <?=$key?>">
+						<a href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Domain") ?>: <?= $key ?>">
 							<?= $key ?>
 							<?php
 								if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {

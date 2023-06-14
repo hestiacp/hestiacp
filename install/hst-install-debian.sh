@@ -1,4 +1,4 @@
-#!/bin/bash
+f#!/bin/bash
 
 # ======================================================== #
 #
@@ -325,8 +325,11 @@ if [ "$mysql" = 'yes' ] && [ "$mysql8" = 'yes' ]; then
 	mysql='no'
 fi
 
-if [ "$mysqlclassic" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
+if [ "$mysql8" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
 	check_result 1 "Mysql 8 does not support ARM64 yet for Debian please use Ubuntu. Unable to continue"
+fi
+if [ "$mysql8" = 'yes' ] && [ "$release" = '12' ]; then
+	check_result 1 "Mysql 8 does not support Bookworm yet for Debian Unable to continue"
 fi
 
 # Checking root permissions

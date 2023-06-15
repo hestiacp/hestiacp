@@ -94,11 +94,11 @@
 				}
 			?>
 			<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-action="<?=$data[$key]['ACTION']?>"
-				data-sort-protocol="<?=$data[$key]['PROTOCOL']?>"
-				data-sort-port="<?=$data[$key]['PORT']?>"
-				data-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
-				data-sort-comment="<?=$data[$key]['COMMENT']?>">
+				data-sort-action="<?= $data[$key]['ACTION'] ?>"
+				data-sort-protocol="<?= $data[$key]['PROTOCOL'] ?>"
+				data-sort-port="<?= $data[$key]['PORT'] ?>"
+				data-sort-ip="<?= str_replace('.', '', $data[$key]['IP']) ?>"
+				data-sort-comment="<?= $data[$key]['COMMENT'] ?>">
 				<div class="l-unit__col l-unit__col--right">
 					<div>
 						<div class="clearfix l-unit__stat-col--left super-compact">
@@ -121,11 +121,11 @@
 						<div class="clearfix l-unit__stat-col--left compact-2 u-text-right">
 							<div class="l-unit-toolbar__col l-unit-toolbar__col--right u-noselect">
 								<div class="actions-panel clearfix" style="padding-right: 10px;">
-									<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Firewall Rule") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+									<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Firewall Rule") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 									<div class="actions-panel__col actions-panel__suspend shortcut-s" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
-											href="/<?= $spnd_action ?>/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
+											href="/<?= $spnd_action ?>/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 											data-confirm-title="<?= $spnd_action_title ?>"
 											data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
 										>
@@ -135,9 +135,9 @@
 									<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 										<a
 											class="data-controls js-confirm-action"
-											href="/delete/firewall/?rule=<?=$key?>&token=<?=$_SESSION['token']?>"
+											href="/delete/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 											data-confirm-title="<?= _("Delete") ?>"
-											data-confirm-message="<?= sprintf(_('Are you sure you want to delete rule %s'), $key) ?>"
+											data-confirm-message="<?= sprintf(_("Are you sure you want to delete rule %s"), $key) ?>"
 										>
 											<i class="fas fa-trash icon-red icon-dim"></i>
 										</a>
@@ -147,9 +147,9 @@
 						</div>
 						<!-- END QUICK ACTION TOOLBAR AREA -->
 						<div class="clearfix l-unit__stat-col--left wide-3"><b><?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?></b></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center"><?=_($data[$key]['PROTOCOL'])?></div>
-						<div class="clearfix l-unit__stat-col--left wide-3 u-text-center"><b><?=$data[$key]['PORT']?></b></div>
-						<div class="clearfix l-unit__stat-col--left u-text-center"><?=$data[$key]['IP']?></div>
+						<div class="clearfix l-unit__stat-col--left u-text-center"><?= _($data[$key]['PROTOCOL']) ?></div>
+						<div class="clearfix l-unit__stat-col--left wide-3 u-text-center"><b><?= $data[$key]['PORT'] ?></b></div>
+						<div class="clearfix l-unit__stat-col--left u-text-center"><?= $data[$key]['IP'] ?></div>
 					</div>
 				</div>
 			</div>

@@ -14,7 +14,7 @@
 					<?= _("Sort by") ?>:
 					<span class="u-text-bold">
 						<?php if ($_SESSION['userSortOrder'] === 'name') { $label = ('Name'); } else { $label = _('Date'); } ?>
-						<?=$label?> <i class="fas fa-arrow-down-a-z"></i>
+						<?= $label?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
 				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
@@ -186,12 +186,12 @@
 				}
 			?>
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-ipv4="<?=str_replace('.', '', $data[$key]['IP'])?>"
-				data-sort-ipv6="<?=str_replace(':', '', $data[$key]['IP6'])?>"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-name="<?=$key?>"
-				data-sort-bandwidth="<?=$data[$key]['U_BANDWIDTH']?>"
-				data-sort-disk="<?=$data[$key]['U_DISK']?>">
+				data-sort-ipv4="<?= str_replace('.', '', $data[$key]['IP']) ?>"
+				data-sort-ipv6="<?= str_replace(':', '', $data[$key]['IP6']) ?>"
+				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-name="<?= $key ?>"
+				data-sort-bandwidth="<?= $data[$key]['U_BANDWIDTH'] ?>"
+				data-sort-disk="<?= $data[$key]['U_DISK'] ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
@@ -211,7 +211,7 @@
 							}
 						}
 						?>
-						<a href="/edit/web/?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit Domain") ?>: <?=$key?>">
+						<a href="/edit/web/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Domain") ?>: <?= $key ?>">
 							<?= $key ?>
 							<?php
 								if (!empty($alias_new) && !empty($data[$key]['ALIAS'])) {

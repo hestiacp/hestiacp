@@ -16,7 +16,6 @@
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
 RHOST='apt.hestiacp.com'
-GPG='gpg.hestiacp.com'
 VERSION='ubuntu'
 HESTIA='/usr/local/hestia'
 LOG="/root/hst_install_backups/hst_install-$(date +%d%m%Y%H%M).log"
@@ -187,6 +186,8 @@ validate_email() {
 		return 1
 	fi
 }
+
+version_ge() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -372,7 +373,7 @@ apt-get -y install $installer_dependencies >> $LOG
 check_result $? "Package installation failed, check log file for more details."
 
 # Check repository availability
-wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
+wget --quiet "https://$RHOST" -O /dev/null
 check_result $? "Unable to connect to the Hestia APT repository"
 
 # Check installed packages
@@ -959,6 +960,10 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
+# Enable en_US.UTF-8
+sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
+locale-gen > /dev/null 2>&1
+
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
@@ -1416,8 +1421,6 @@ ${HESTIA}/bin/v-change-user-role admin admin
 ${HESTIA}/bin/v-change-user-language admin $lang
 ${HESTIA}/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
-locale-gen "en_US.utf8" > /dev/null 2>&1
-
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
 #----------------------------------------------------------#
@@ -1850,9 +1853,11 @@ fi
 if [ "$exim" = 'yes' ]; then
 	echo "[ * ] Configuring Exim mail server..."
 	gpasswd -a Debian-exim mail > /dev/null 2>&1
-	if [ "$release" = "22.04" ]; then
+	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
+	# if Exim version > 4.9.4 or greater!
+	if ! version_ge "4.9.4" "$exim_version"; then
 		# Jammyy uses Exim 4.95 instead but config works with Exim4.94
-		cp -f ${HESTIA_INSTALL_DIR}/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+		cp -f ${HESTIA_INSTALL_DIR}/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
 	else
 		cp -f ${HESTIA_INSTALL_DIR}/exim/exim4.conf.template /etc/exim4/
 	fi
@@ -1868,6 +1873,11 @@ if [ "$exim" = 'yes' ]; then
 	if [ "$clamd" = 'yes' ]; then
 		sed -i "s/#CLAMD/CLAMD/g" /etc/exim4/exim4.conf.template
 	fi
+
+	# Generate SRS KEY If not support just created it will get ignored anyway
+	srs=$(gen_pass)
+	echo $srs > /etc/exim4/srs.conf
+	chmod 640 /etc/exim4/srs.conf
 
 	chmod 640 /etc/exim4/exim4.conf.template
 	rm -rf /etc/exim4/domains
@@ -2056,7 +2066,7 @@ if [ "$sieve" = 'yes' ]; then
 		chmod 751 -R $RC_CONFIG_DIR
 		chmod 644 $RC_CONFIG_DIR/*.php
 		chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
-		sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
+		sed -i "s/\"archive\"/\"archive\", \"managesieve\"/g" $RC_CONFIG_DIR/config.inc.php
 	fi
 
 	# Restart Dovecot and exim4

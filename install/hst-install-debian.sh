@@ -15,8 +15,8 @@
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
+# For testing
 RHOST='apt.hestiacp.com'
-GPG='gpg.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'
 LOG="/root/hst_install_backups/hst_install-$(date +%d%m%Y%H%M).log"
@@ -35,7 +35,8 @@ VERBOSE='no'
 HESTIA_INSTALL_VER='1.8.0~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
-fpm_v="8.1"
+#deb.sury not yet ready
+fpm_v="8.2"
 mariadb_v="10.11"
 
 # Defining software pack for all distros
@@ -47,7 +48,7 @@ software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-util
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog spamassassin sudo sysstat unrar-free unzip util-linux vim-common vsftpd whois zip zstd"
+  proftpd-basic quota rrdtool rsyslog spamassassin sudo sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget"
 
@@ -187,6 +188,8 @@ validate_email() {
 		return 1
 	fi
 }
+
+version_ge() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1" -o -n "$1" -a "$1" = "$2"; }
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -383,7 +386,7 @@ else
 fi
 
 # Check repository availability
-wget --quiet "https://$GPG/deb_signing.key" -O /dev/null
+wget --quiet "https://$RHOST" -O /dev/null
 check_result $? "Unable to connect to the Hestia APT repository"
 
 # Check installed packages
@@ -728,16 +731,28 @@ curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/k
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
-	echo "[ * ] Apache2"
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
+	if [ "$release" != '12' ]; then
+		echo "[ * ] Apache2"
+		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+		curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
+	else
+		echo "[ * ] Apache2"
+		echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+		curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
+	fi
 fi
 
 # Installing MariaDB repo
 if [ "$mysql" = 'yes' ]; then
-	echo "[ * ] MariaDB"
-	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
-	curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+	if [ "$release" != '12' ]; then
+		echo "[ * ] MariaDB"
+		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
+		curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+	else
+		echo "[ * ] MariaDB"
+		echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/mariadb-keyring.gpg] https://dlm.mariadb.com/repo/mariadb-server/$mariadb_v/repo/$VERSION $codename main" > $apt/mariadb.list
+		curl -s https://mariadb.org/mariadb_release_signing_key.asc | gpg --dearmor | tee /usr/share/keyrings/mariadb-keyring.gpg > /dev/null 2>&1
+	fi
 fi
 
 # Installing Mysql8 repo
@@ -964,6 +979,10 @@ fi
 #                     Install packages                     #
 #----------------------------------------------------------#
 
+# Enable en_US.UTF-8
+sed -i "s/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g" /etc/locale.gen
+locale-gen > /dev/null 2>&1
+
 # Disabling daemon autostart on apt-get install
 echo -e '#!/bin/sh\nexit 101' > /usr/sbin/policy-rc.d
 chmod a+x /usr/sbin/policy-rc.d
@@ -1067,10 +1086,11 @@ if [ -z "$(grep ^/usr/sbin/nologin /etc/shells)" ]; then
 fi
 
 # Configuring NTP
-sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
-systemctl enable systemd-timesyncd
-systemctl start systemd-timesyncd
-
+if [ ! -f "/etc/default/ntpsec-ntpdate " ]; then
+	sed -i 's/#NTP=/NTP=pool.ntp.org/' /etc/systemd/timesyncd.conf
+	systemctl enable systemd-timesyncd
+	systemctl start systemd-timesyncd
+fi
 # Restrict access to /proc fs
 # - Prevent unpriv users from seeing each other running processes
 mount -o remount,defaults,hidepid=2 /proc > /dev/null 2>&1
@@ -1192,7 +1212,11 @@ if [ "$exim" = 'yes' ]; then
 		write_config_value "ANTIVIRUS_SYSTEM" "clamav-daemon"
 	fi
 	if [ "$spamd" = 'yes' ]; then
-		write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		if [ "$release" = '10' ] || [ "$release" = '11' ]; then
+			write_config_value "ANTISPAM_SYSTEM" "spamassassin"
+		else
+			write_config_value "ANTISPAM_SYSTEM" "spamd"
+		fi
 	fi
 	if [ "$dovecot" = 'yes' ]; then
 		write_config_value "IMAP_SYSTEM" "dovecot"
@@ -1298,10 +1322,14 @@ echo "[ * ] Generating default self-signed SSL certificate..."
 ${HESTIA}/bin/v-generate-ssl-cert $(hostname) '' 'US' 'California' \
 	'San Francisco' 'Hestia Control Panel' 'IT' > /tmp/hst.pem
 
-# Parsing certificate file
 crt_end=$(grep -n "END CERTIFICATE-" /tmp/hst.pem | cut -f 1 -d:)
-key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
-key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
+if [ "$release" = "12" ]; then
+	key_start=$(grep -n "BEGIN PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+	key_end=$(grep -n "END PRIVATE KEY" /tmp/hst.pem | cut -f 1 -d:)
+else
+	key_start=$(grep -n "BEGIN RSA" /tmp/hst.pem | cut -f 1 -d:)
+	key_end=$(grep -n "END RSA" /tmp/hst.pem | cut -f 1 -d:)
+fi
 
 # Adding SSL certificate
 echo "[ * ] Adding SSL certificate to Hestia Control Panel..."
@@ -1340,8 +1368,6 @@ ${HESTIA}/bin/v-change-user-shell admin nologin
 ${HESTIA}/bin/v-change-user-role admin admin
 ${HESTIA}/bin/v-change-user-language admin $lang
 ${HESTIA}/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
-
-locale-gen "en_US.utf8" > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                     Configure Nginx                      #
@@ -1534,7 +1560,7 @@ if [ "$vsftpd" = 'yes' ]; then
 	touch /var/log/xferlog
 	chown root:adm /var/log/xferlog
 	chmod 640 /var/log/xferlog
-	update-rc.d vsftpd defaults
+	update-rc.d vsftpd defaults > /dev/null 2>&1
 	systemctl start vsftpd >> $LOG
 	check_result $? "vsftpd start failed"
 fi
@@ -1776,10 +1802,15 @@ if [ "$exim" = 'yes' ]; then
 	echo "[ * ] Configuring Exim mail server..."
 	gpasswd -a Debian-exim mail > /dev/null 2>&1
 	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
-	if [ "$exim_version" = "4.94" ]; then
-		cp -f ${HESTIA_INSTALL_DIR}/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+	# if Exim version > 4.9.4 or greater!
+	if ! version_ge "4.9.5" "$exim_version"; then
+		cp -f ${HESTIA_INSTALL_DIR}/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
 	else
-		cp -f ${HESTIA_INSTALL_DIR}/exim/exim4.conf.template /etc/exim4/
+		if ! version_ge "4.9.3" "$exim_version"; then
+			cp -f ${HESTIA_INSTALL_DIR}/exim/exim4.conf.4.94.template /etc/exim4/exim4.conf.template
+		else
+			cp -f ${HESTIA_INSTALL_DIR}/exim/exim4.conf.template /etc/exim4/
+		fi
 	fi
 	cp -f ${HESTIA_INSTALL_DIR}/exim/dnsbl.conf /etc/exim4/
 	cp -f ${HESTIA_INSTALL_DIR}/exim/spam-blocks.conf /etc/exim4/
@@ -1798,7 +1829,12 @@ if [ "$exim" = 'yes' ]; then
 		sed -i "/^smtputf8_advertise_hosts =/d" /etc/exim4/exim4.conf.template
 	fi
 
+	# Generate SRS KEY If not support just created it will get ignored anyway
+	srs=$(gen_pass)
+	echo $srs > /etc/exim4/srs.conf
+	chmod 640 /etc/exim4/srs.conf
 	chmod 640 /etc/exim4/exim4.conf.template
+
 	rm -rf /etc/exim4/domains
 	mkdir -p /etc/exim4/domains
 
@@ -1855,12 +1891,15 @@ if [ "$clamd" = 'yes' ]; then
 	if [ -e "/lib/systemd/system/clamav-daemon.service" ]; then
 		exec_pre1='ExecStartPre=-/bin/mkdir -p /run/clamav'
 		exec_pre2='ExecStartPre=-/bin/chown -R clamav:clamav /run/clamav'
-		sed -i "s|\[Service\]/|[Service]\n$exec_pre1\n$exec_pre2|g" \
+		sed -i "s|\[Service\]|[Service]\n$exec_pre1\n$exec_pre2|g" \
 			/lib/systemd/system/clamav-daemon.service
 		systemctl daemon-reload
 	fi
+	systemctl start clamav-daemon > /dev/null 2>&1
+	sleep 1
+	systemctl status clamav-daemon > /dev/null 2>&1
 	echo -ne "[ * ] Installing ClamAV anti-virus definitions... "
-	/usr/bin/freshclam >> $LOG &
+	/usr/bin/freshclam >> $LOG > /dev/null 2>&1
 	BACK_PID=$!
 	spin_i=1
 	while kill -0 $BACK_PID > /dev/null 2>&1; do
@@ -1879,14 +1918,25 @@ fi
 if [ "$spamd" = 'yes' ]; then
 	echo "[ * ] Configuring SpamAssassin..."
 	update-rc.d spamassassin defaults > /dev/null 2>&1
-	sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/spamassassin
-	systemctl start spamassassin >> $LOG
-	check_result $? "spamassassin start failed"
-	unit_files="$(systemctl list-unit-files | grep spamassassin)"
-	if [[ "$unit_files" =~ "disabled" ]]; then
-		systemctl enable spamassassin > /dev/null 2>&1
+	if [ "$release" = "10" ] || [ "$release" = "11" ]; then
+		update-rc.d spamassassin enable > /dev/null 2>&1
+		systemctl start spamassassin >> $LOG
+		check_result $? "spamassassin start failed"
+		unit_files="$(systemctl list-unit-files | grep spamassassin)"
+		if [[ "$unit_files" =~ "disabled" ]]; then
+			systemctl enable spamassassin > /dev/null 2>&1
+		fi
+		sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
+	else
+		# Deb 12+ renamed to spamd
+		update-rc.d spamd enable > /dev/null 2>&1
+		systemctl start spamd >> $LOG
+		unit_files="$(systemctl list-unit-files | grep spamassassin)"
+		if [[ "$unit_files" =~ "disabled" ]]; then
+			systemctl enable spamassassin > /dev/null 2>&1
+		fi
+
 	fi
-	sed -i "s/#CRON=1/CRON=1/" /etc/default/spamassassin
 fi
 
 #----------------------------------------------------------#
@@ -1985,7 +2035,7 @@ if [ "$sieve" = 'yes' ]; then
 
 	# exim4 install
 	sed -i "s/\stransport = local_delivery/ transport = dovecot_virtual_delivery/" /etc/exim4/exim4.conf.template
-	sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \$local_part@\$domain -f \$sender_address -a \$original_local_part@\$original_domain\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
+	sed -i "s/address_pipe:/dovecot_virtual_delivery:\n  driver = pipe\n  command = \/usr\/lib\/dovecot\/dovecot-lda -e -d \${extract{1}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/accounts}}}}@\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\n  delivery_date_add\n  envelope_to_add\n  return_path_add\n  log_output = true\n  log_defer_output = true\n  user = \${extract{2}{:}{\${lookup{\$local_part}lsearch{\/etc\/exim4\/domains\/\${lookup{\$domain}dsearch{\/etc\/exim4\/domains\/}}\/passwd}}}}\n  group = mail\n  return_output\n\naddress_pipe:/g" /etc/exim4/exim4.conf.template
 
 	# Permission changes
 	chown -R dovecot:mail /var/log/dovecot.log
@@ -2000,7 +2050,7 @@ if [ "$sieve" = 'yes' ]; then
 		chmod 751 -R $RC_CONFIG_DIR
 		chmod 644 $RC_CONFIG_DIR/*.php
 		chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
-		sed -i "s/'archive'/'archive', 'managesieve'/g" $RC_CONFIG_DIR/config.inc.php
+		sed -i "s/\"archive\"/\"archive\", \"managesieve\"/g" $RC_CONFIG_DIR/config.inc.php
 	fi
 
 	# Restart Dovecot and exim4
@@ -2188,6 +2238,7 @@ echo "@reboot root sleep 10 && rm /etc/cron.d/hestia-ssl && PATH='/usr/local/sbi
 #----------------------------------------------------------#
 
 echo "[ * ] Updating configuration files..."
+
 BIN="${HESTIA}/bin"
 source ${HESTIA}/func/syshealth.sh
 syshealth_repair_system_config

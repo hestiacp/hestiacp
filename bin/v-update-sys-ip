@@ -48,13 +48,13 @@ for nic in $physical_nics; do
 	if [ -z "$ips" ]; then
 		ips="$nic_ipv4s"
 	else
-		ips="$ips\n$nic_ipv4s"
+		ips="$ips $nic_ipv4s"
 	fi
 done
 
 v_ips="$(ls $HESTIA/data/ips/)"
-ip_num="$(echo "$ips" | wc -l)"
-v_ip_num="$(echo "$v_ips" | wc -l)"
+ip_num="$(echo "$ips" | wc -w)"
+v_ip_num="$(echo "$v_ips" | wc -w)"
 
 # Checking primary IP change
 if [ "$ip_num" -eq "1" ] && [ "$v_ip_num" -eq "1" ]; then

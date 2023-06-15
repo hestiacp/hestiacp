@@ -111,11 +111,11 @@
 				}
 			?>
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-ip="<?=str_replace('.', '', $data[$key]['IP'])?>"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-name="<?=htmlentities($key);?>"
-				data-sort-expire="<?=strtotime($data[$key]['EXP'])?>"
-				data-sort-records="<?=(int)$data[$key]['RECORDS']?>">
+				data-sort-ip="<?= str_replace('.', '', $data[$key]['IP']) ?>"
+				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-name="<?= htmlentities($key);?>"
+				data-sort-expire="<?= strtotime($data[$key]['EXP']) ?>"
+				data-sort-records="<?=(int)$data[$key]['RECORDS'] ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
@@ -132,11 +132,11 @@
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>
 						<ul class="units-table-row-actions">
-							<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
+							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
 								<li class="units-table-row-action shortcut-n" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/add/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+										href="/add/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Add DNS Record") ?>"
 									>
 										<i class="fas fa-circle-plus icon-green"></i>
@@ -146,18 +146,18 @@
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+										href="/edit/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Edit DNS Domain") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
 										<span class="u-hide-desktop"><?= _("Edit DNS Domain") ?></span>
 									</a>
 								</li>
-								<?php if ($data[$key]['DNSSEC'] == "yes") { ?>
+								<?php if ($data[$key]["DNSSEC"] == "yes") { ?>
 									<li class="units-table-row-action shortcut-enter" data-key-action="href">
 										<a
 											class="units-table-row-action-link"
-											href="/list/dns/?domain=<?=htmlentities($key);?>&action=dnssec&token=<?=$_SESSION['token']?>"
+											href="/list/dns/?domain=<?= htmlentities($key) ?>&action=dnssec&token=<?= $_SESSION["token"] ?>"
 											title="<?= _("View Public DNSSEC Key") ?>"
 										>
 											<i class="fas fa-key icon-orange"></i>
@@ -169,7 +169,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/list/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+									href="/list/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("DNS Records") ?>"
 								>
 									<i class="fas fa-list icon-lightblue"></i>
@@ -179,7 +179,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= $spnd_action ?>/dns/?domain=<?=htmlentities($key);?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $spnd_action ?>/dns/?domain=<?= htmlentities($key) ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= $spnd_action_title ?>"
 									data-confirm-title="<?= $spnd_action_title ?>"
 									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"

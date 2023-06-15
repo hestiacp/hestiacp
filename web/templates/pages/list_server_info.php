@@ -36,56 +36,56 @@
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if(isset($_GET['cpu'])) echo 'active' ?>" href="/list/server/?cpu">
+								<a class="top-bar-menu-link <?php if (isset($_GET['cpu'])) echo 'active' ?>" href="/list/server/?cpu">
 									<i class="fas fa-microchip"></i>
 									<span class="top-bar-menu-link-label"><?= _("CPU") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if(isset($_GET['mem'])) echo 'active' ?>" href="/list/server/?mem">
+								<a class="top-bar-menu-link <?php if (isset($_GET['mem'])) echo 'active' ?>" href="/list/server/?mem">
 									<i class="fas fa-memory"></i>
 									<span class="top-bar-menu-link-label"><?= _("RAM") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if(isset($_GET['disk'])) echo 'active' ?>" href="/list/server/?disk">
+								<a class="top-bar-menu-link <?php if (isset($_GET['disk'])) echo 'active' ?>" href="/list/server/?disk">
 									<i class="fas fa-hard-drive"></i>
 									<span class="top-bar-menu-link-label"><?= _("Disk") ?></span>
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if(isset($_GET['net'])) echo 'active' ?>" href="/list/server/?net">
+								<a class="top-bar-menu-link <?php if (isset($_GET['net'])) echo 'active' ?>" href="/list/server/?net">
 									<i class="fas fa-hard-drive"></i>
 									<span class="top-bar-menu-link-label"><?= _("Network") ?></span>
 								</a>
 							</li>
-							<?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) {?>
+							<?php if ((isset($_SESSION['WEB_SYSTEM'])) && (!empty($_SESSION['WEB_SYSTEM']))) { ?>
 								<li class="top-bar-menu-item">
-									<a class="top-bar-menu-link <?php if(isset($_GET['web'])) echo 'active' ?>" href="/list/server/?web">
+									<a class="top-bar-menu-link <?php if (isset($_GET['web'])) echo 'active' ?>" href="/list/server/?web">
 										<i class="fas fa-earth-europe"></i>
 										<span class="top-bar-menu-link-label"><?= _("Web") ?></span>
 									</a>
 								</li>
 							<?php } ?>
-							<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) {?>
+							<?php if ((isset($_SESSION['DNS_SYSTEM'])) && (!empty($_SESSION['DNS_SYSTEM']))) { ?>
 								<li class="top-bar-menu-item">
-									<a class="top-bar-menu-link <?php if(isset($_GET['dns'])) echo 'active' ?>" href="/list/server/?dns">
+									<a class="top-bar-menu-link <?php if (isset($_GET['dns'])) echo 'active' ?>" href="/list/server/?dns">
 										<i class="fas fa-book-atlas"></i>
 										<span class="top-bar-menu-link-label"><?= _("DNS") ?></span>
 									</a>
 								</li>
 							<?php } ?>
-							<?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) {?>
+							<?php if ((isset($_SESSION['MAIL_SYSTEM'])) && (!empty($_SESSION['MAIL_SYSTEM']))) { ?>
 								<li class="top-bar-menu-item">
-									<a class="top-bar-menu-link <?php if(isset($_GET['mail'])) echo 'active' ?>" href="/list/server/?mail">
+									<a class="top-bar-menu-link <?php if (isset($_GET['mail'])) echo 'active' ?>" href="/list/server/?mail">
 										<i class="fas fa-envelopes-bulk"></i>
 										<span class="top-bar-menu-link-label"><?= _("Mail") ?></span>
 									</a>
 								</li>
 							<?php } ?>
-							<?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) {?>
+							<?php if ((isset($_SESSION['DB_SYSTEM'])) && (!empty($_SESSION['DB_SYSTEM']))) { ?>
 								<li class="top-bar-menu-item">
-									<a class="top-bar-menu-link <?php if(isset($_GET['db'])) echo 'active' ?>" href="/list/server/?db">
+									<a class="top-bar-menu-link <?php if (isset($_GET['db'])) echo 'active' ?>" href="/list/server/?db">
 										<i class="fas fa-database"></i>
 										<span class="top-bar-menu-link-label"><?= _("DB") ?></span>
 									</a>
@@ -98,7 +98,7 @@
 								</a>
 							</li>
 							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?=$_SESSION['token']?>" title="<?= _("Log out") ?>">
+								<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?= $_SESSION["token"] ?>" title="<?= _("Log out") ?>">
 									<i class="fas fa-right-from-bracket"></i>
 									<span class="u-hidden"><?= _("Log out") ?></span>
 								</a>

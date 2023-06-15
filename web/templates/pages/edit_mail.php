@@ -51,7 +51,7 @@
 							echo ">".htmlentities(ucfirst($client))."</option>\n";
 							}
 						?>
-						<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected";}?>><?= _("Disabled") ?></option>
+						<option value="disabled" <?php if (htmlentities(trim($v_webmail,"'")) == 'disabled') { echo "selected"; }?>><?= _("Disabled") ?></option>
 					</select>
 				</div>
 			<?php } ?>
@@ -63,7 +63,7 @@
 				<label for="v_rate" class="form-label">
 					<?= _("Rate Limit") ?> <span class="optional">(<?= _("email / hour / account") ?>)</span>
 				</label>
-				<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+				<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= htmlentities(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
 			</div>
 			<?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
 				<div class="form-check u-mb10">

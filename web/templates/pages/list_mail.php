@@ -31,12 +31,12 @@
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
 				</ul>
-				<?php if ($read_only !== 'true') {?>
+				<?php if ($read_only !== 'true') { ?>
 					<form x-data x-bind="BulkEdit" action="/bulk/mail/" method="post">
-						<input type="hidden" name="token" value="<?=$_SESSION['token']?>">
+						<input type="hidden" name="token" value="<?= $_SESSION['token'] ?>">
 						<select class="form-select" name="action">
 							<option value=""><?= _("Apply to selected") ?></option>
-							<?php if ($_SESSION['userContext'] === 'admin') {?>
+							<?php if ($_SESSION['userContext'] === 'admin') { ?>
 								<option value="rebuild"><?= _("Rebuild All") ?></option>
 							<?php } ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
@@ -163,10 +163,10 @@
 				}
 			?>
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-name="<?=$key?>"
-				data-sort-disk="<?=$data[$key]['U_DISK']?>"
-				data-sort-accounts="<?=$data[$key]['ACCOUNTS']?>">
+				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-name="<?= $key ?>"
+				data-sort-disk="<?= $data[$key]['U_DISK'] ?>"
+				data-sort-accounts="<?= $data[$key]['ACCOUNTS'] ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
@@ -175,7 +175,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
-					<a href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>" title="<?= _("Mail Accounts") ?>: <?=$key?>">
+					<a href="?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Mail Accounts") ?>: <?= $key ?>">
 						<?= $key ?>
 					</a>
 				</div>
@@ -185,7 +185,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
 									title="<?= _("Mail Accounts") ?>"
 								>
 									<i class="fas fa-users icon-blue"></i>
@@ -195,7 +195,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>"
+									href="?domain=<?= $key ?>&dns=1&token=<?= $_SESSION['token'] ?>"
 									title="<?= _("DNS Records") ?>"
 								>
 									<i class="fas fa-book-atlas icon-blue"></i>
@@ -206,7 +206,7 @@
 								<li class="units-table-row-action" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="http://<?=$webmail;?>.<?=$key?>/"
+										href="http://<?= $webmail;?>.<?= $key ?>/"
 										target="_blank"
 										title="<?= _("Open Webmail") ?>"
 									>
@@ -220,7 +220,7 @@
 								<li class="units-table-row-action shortcut-n" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/add/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/add/mail/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
 										title="<?= _("Add Mail Account") ?>"
 									>
 										<i class="fas fa-circle-plus icon-green"></i>
@@ -232,7 +232,7 @@
 										<li class="units-table-row-action" data-key-action="href">
 											<a
 												class="units-table-row-action-link"
-												href="http://<?=$webmail;?>.<?=$key?>/"
+												href="http://<?= $webmail;?>.<?= $key ?>/"
 												target="_blank"
 												title="<?= _("Open Webmail") ?>"
 											>
@@ -245,7 +245,7 @@
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
+										href="/edit/mail/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
 										title="<?= _("Edit Mail Domain") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>
@@ -256,7 +256,7 @@
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="?domain=<?=$key?>&dns=1&token=<?=$_SESSION['token']?>"
+									href="?domain=<?= $key ?>&dns=1&token=<?= $_SESSION['token'] ?>"
 									title="<?= _("DNS Records") ?>"
 								>
 									<i class="fas fa-book-atlas icon-blue"></i>
@@ -266,7 +266,7 @@
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/<?= $spnd_action ?>/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/<?= $spnd_action ?>/mail/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
 									title="<?= $spnd_action_title ?>"
 									data-confirm-title="<?= $spnd_action_title ?>"
 									data-confirm-message="<?= sprintf($spnd_confirmation, $key) ?>"
@@ -278,7 +278,7 @@
 							<li class="units-table-row-action shortcut-delete" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"
-									href="/delete/mail/?domain=<?=$key?>&token=<?=$_SESSION['token']?>"
+									href="/delete/mail/?domain=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
 									title="<?= _("Delete") ?>"
 									data-confirm-title="<?= _("Delete") ?>"
 									data-confirm-message="<?= sprintf(_('Are you sure you want to delete domain %s?'), $key) ?>"

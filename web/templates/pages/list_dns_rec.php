@@ -100,21 +100,21 @@
 				}
 			?>
 			<div class="l-unit <?php if ($status == 'suspended') echo 'l-unit--suspended';?> animate__animated animate__fadeIn js-unit"
-				data-sort-date="<?=strtotime($data[$key]['DATE'].' '.$data[$key]['TIME'])?>"
-				data-sort-record="<?=$data[$key]['RECORD']?>"
-				data-sort-type="<?=$data[$key]['TYPE']?>"
-				data-sort-ttl="<?=$data[$key]['TTL']?>"
-				data-sort-value="<?=$data[$key]['VALUE']?>">
+				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-record="<?= $data[$key]['RECORD'] ?>"
+				data-sort-type="<?= $data[$key]['TYPE'] ?>"
+				data-sort-ttl="<?= $data[$key]['TTL'] ?>"
+				data-sort-value="<?= $data[$key]['VALUE'] ?>">
 				<div class="l-unit__col l-unit__col--right">
 					<div class="clearfix l-unit__stat-col--left super-compact">
 						<input id="check<?= $data[$key]["ID"] ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="record[]" value="<?= $data[$key]["ID"] ?>" <?= $display_mode ?>>
 					</div>
 					<div class="clearfix l-unit__stat-col--left u-text-truncate">
 						<b>
-						<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) {?>
-							<?=substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
+						<?php if (($read_only === 'true') || ($data[$key]['SUSPENDED'] == 'yes')) { ?>
+							<?= substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?>
 						<?php } else { ?>
-							<a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit DNS Record") . ': '.htmlspecialchars($data[$key]['RECORD'])?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a>
+							<a href="/edit/dns/?domain=<?= htmlspecialchars($_GET['domain']) ?>&record_id=<?= $data[$key]['ID'] ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit DNS Record") . ': '.htmlspecialchars($data[$key]['RECORD']) ?>"><? echo substr($data[$key]['RECORD'], 0, 12); if(strlen($data[$key]['RECORD']) > 12 ) echo '...'; ?></a>
 						<?php } ?>
 						</b>
 					</div>
@@ -126,8 +126,8 @@
 								<!-- Restrict editing of DNS records when impersonating 'admin' account -->
 								&nbsp;
 							<?php } else { ?>
-								<?php if ($data[$key]['SUSPENDED'] == 'no') {?>
-									<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/dns/?domain=<?=htmlspecialchars($_GET['domain'])?>&record_id=<?=$data[$key]['ID']?>&token=<?=$_SESSION['token']?>" title="<?= _("Edit DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
+								<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
+									<div class="actions-panel__col actions-panel__logs shortcut-enter" data-key-action="href"><a href="/edit/dns/?domain=<?= htmlspecialchars($_GET['domain']) ?>&record_id=<?= $data[$key]['ID'] ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit DNS Record") ?>"><i class="fas fa-pencil icon-orange icon-dim"></i></a></div>
 								<?php } ?>
 								<div class="actions-panel__col actions-panel__delete shortcut-delete" data-key-action="js">
 									<a
@@ -144,9 +144,9 @@
 					</div>
 				</div>
 				<!-- END QUICK ACTION TOOLBAR AREA -->
-				<div class="clearfix l-unit__stat-col--left compact u-text-center" style="padding-left: 32px;"><b><?=$data[$key]['TYPE']?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact u-text-center"><?=$data[$key]['PRIORITY']?>&nbsp;</div>
-				<div class="clearfix l-unit__stat-col--left compact u-text-center"><?php if($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
+				<div class="clearfix l-unit__stat-col--left compact u-text-center" style="padding-left: 32px;"><b><?= $data[$key]['TYPE'] ?></b></div>
+				<div class="clearfix l-unit__stat-col--left compact u-text-center"><?= $data[$key]['PRIORITY'] ?>&nbsp;</div>
+				<div class="clearfix l-unit__stat-col--left compact u-text-center"><?php if ($data[$key]['TTL'] == ''){ echo _('Default'); }else{ echo $data[$key]['TTL'];} ?></div>
 				<div class="clearfix l-unit__stat-col--left super-compact"><b>&nbsp;</b></div>
 				<div class="clearfix l-unit__stat-col--left wide-6 u-text-break"><?= htmlspecialchars($data[$key]["VALUE"], ENT_QUOTES, "UTF-8") ?></div>
 			</div>

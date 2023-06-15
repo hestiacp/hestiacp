@@ -89,7 +89,7 @@
 							<label for="v_fwd" class="form-label">
 								<?= _("Forward to") ?> <span class="optional">(<?= _("One or more email addresses") ?>)</span>
 							</label>
-							<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if($v_blackhole == 'yes') echo "disabled";?>><?=htmlentities(trim($v_fwd, "'"))?></textarea>
+							<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input js-discard-all-mail" type="checkbox" name="v_blackhole" id="v_blackhole" <?php if ($v_blackhole == 'yes') echo 'checked' ?>>
@@ -107,7 +107,7 @@
 							<label for="v_rate" class="form-label">
 								<?= _("Rate Limit") ?> <span class="optional">(<?= _("email / hour") ?>)</span>
 							</label>
-							<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?=htmlentities(trim($v_rate, "'"))?>" <?php if($_SESSION['userContext'] != "admin"){ echo "disabled";}?>>
+							<input type="text" class="form-control" name="v_rate" id="v_rate" value="<?= htmlentities(trim($v_rate, "'")) ?>" <?php if ($_SESSION['userContext'] != "admin"){ echo "disabled"; }?>>
 						</div>
 					</div>
 					<div class="u-mt15 u-mb20">

@@ -27,11 +27,11 @@
 			<div class="js-basic-options">
 				<div class="u-mb10">
 					<label for="v_max_connections" class="form-label">max_connections</label>
-					<input type="text" class="form-control" data-regexp="max_connections" data-prev-value="<?=htmlentities($v_max_connections)?>" name="v_max_connections" id="v_max_connections" value="<?=htmlentities($v_max_connections)?>">
+					<input type="text" class="form-control" data-regexp="max_connections" data-prev-value="<?= htmlentities($v_max_connections) ?>" name="v_max_connections" id="v_max_connections" value="<?= htmlentities($v_max_connections) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_max_user_connections" class="form-label">max_user_connections</label>
-					<input type="text" class="form-control" data-regexp="max_user_connections" data-prev-value="<?=htmlentities($v_max_user_connections)?>" name="v_max_user_connections" id="v_max_user_connections" value="<?=htmlentities($v_max_user_connections)?>">
+					<input type="text" class="form-control" data-regexp="max_user_connections" data-prev-value="<?= htmlentities($v_max_user_connections) ?>" name="v_max_user_connections" id="v_max_user_connections" value="<?= htmlentities($v_max_user_connections) ?>">
 				</div>
 				<div class="u-mb10">
 					<label for="v_wait_timeout" class="form-label">wait_timeout</label>
@@ -39,11 +39,11 @@
 				</div>
 				<div class="u-mb10">
 					<label for="v_interactive_timeout" class="form-label">interactive_timeout</label>
-					<input type="text" class="form-control" data-regexp="interactive_timeout" data-prev-value="<?=htmlentities($v_interactive_timeout)?>" name="v_interactive_timeout" id="v_interactive_timeout" value="<?=htmlentities($v_interactive_timeout)?>">
+					<input type="text" class="form-control" data-regexp="interactive_timeout" data-prev-value="<?= htmlentities($v_interactive_timeout) ?>" name="v_interactive_timeout" id="v_interactive_timeout" value="<?= htmlentities($v_interactive_timeout) ?>">
 				</div>
 				<div class="u-mb20">
 					<label for="v_display_errors" class="form-label">max_allowed_packet</label>
-					<input type="text" class="form-control" data-regexp="max_allowed_packet" data-prev-value="<?=htmlentities($v_max_allowed_packet)?>" name="v_display_errors" id="v_display_errors" value="<?=htmlentities($v_max_allowed_packet)?>">
+					<input type="text" class="form-control" data-regexp="max_allowed_packet" data-prev-value="<?= htmlentities($v_max_allowed_packet) ?>" name="v_display_errors" id="v_display_errors" value="<?= htmlentities($v_max_allowed_packet) ?>">
 				</div>
 				<div class="u-mb20">
 					<button type="button" class="button button-secondary js-toggle-options">

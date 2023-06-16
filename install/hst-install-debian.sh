@@ -15,7 +15,6 @@
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
-# For testing
 RHOST='apt.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'
@@ -35,8 +34,7 @@ VERBOSE='no'
 HESTIA_INSTALL_VER='1.8.0~beta'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
-#deb.sury not yet ready
-fpm_v="8.2"
+fpm_v="8.1"
 mariadb_v="10.11"
 
 # Defining software pack for all distros

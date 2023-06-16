@@ -71,15 +71,13 @@
 
 <div class="container">
 
-	<div class="units js-units-container">
-		<div class="header units-header">
-			<div class="l-unit__col l-unit__col--right">
-				<div class="clearfix l-unit__stat-col--left super-compact u-text-center">&nbsp;</div>
-				<div class="clearfix l-unit__stat-col--left"><b><?= _("Date") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left compact-2"><b><?= _("Time") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left"><b><?= _("Category") ?></b></div>
-				<div class="clearfix l-unit__stat-col--left"><b><?= _("Message") ?></b></div>
-			</div>
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell"></div>
+			<div class="units-table-cell"><?= _("Date") ?></div>
+			<div class="units-table-cell"><?= _("Time") ?></div>
+			<div class="units-table-cell"><?= _("Category") ?></div>
+			<div class="units-table-cell"><?= _("Message") ?></div>
 		</div>
 
 		<!-- Begin log history entry loop -->
@@ -89,23 +87,40 @@
 
 				if ($data[$key]['LEVEL'] === 'Info') {
 					$level_icon = 'fa-info-circle icon-blue';
+					$level_title = _('Information');
 				}
 				if ($data[$key]['LEVEL'] === 'Warning') {
 					$level_icon = 'fa-triangle-exclamation icon-orange';
+					$level_title = _('Warning');
 				}
 				if ($data[$key]['LEVEL'] === 'Error') {
 					$level_icon = 'fa-circle-xmark icon-red';
+					$level_title = _('Error');
 				}
 			?>
-			<div class="l-unit header animate__animated animate__fadeIn js-unit">
-				<div class="l-unit__col l-unit__col--right">
-					<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
-						<i class="fas <?= $level_icon ?>"></i>
-					</div>
-					<div class="clearfix l-unit__stat-col--left"><b><?= translate_date($data[$key]["DATE"]) ?></b></div>
-					<div class="clearfix l-unit__stat-col--left compact-2"><b><?= htmlspecialchars($data[$key]["TIME"]) ?></b></div>
-					<div class="clearfix l-unit__stat-col--left"><b><?= htmlspecialchars($data[$key]["CATEGORY"]) ?></b></div>
-					<div class="clearfix l-unit__stat-col--left wide-7"><?= htmlspecialchars($data[$key]["MESSAGE"], ENT_QUOTES) ?></div>
+			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+				<div class="units-table-cell u-text-center-desktop">
+					<i class="fas <?= $level_icon ?>" title="<?= $level_title ?>"></i>
+				</div>
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Date") ?>:</span>
+					<time datetime="<?= htmlspecialchars($data[$key]["DATE"]) ?>">
+						<?= translate_date($data[$key]["DATE"]) ?>
+					</time>
+				</div>
+				<div class="units-table-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Time") ?>:</span>
+					<time datetime="<?= htmlspecialchars($data[$key]["TIME"]) ?>">
+						<?= htmlspecialchars($data[$key]["TIME"]) ?>
+					</time>
+				</div>
+				<div class="units-table-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Category") ?>:</span>
+					<?= htmlspecialchars($data[$key]["CATEGORY"]) ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Message") ?>:</span>
+					<?= htmlspecialchars($data[$key]["MESSAGE"], ENT_QUOTES) ?>
 				</div>
 			</div>
 		<?php } ?>

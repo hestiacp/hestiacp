@@ -69,6 +69,10 @@
 	word-break: break-word !important;
 }
 
+.u-text-no-wrap {
+	white-space: nowrap !important;
+}
+
 .u-overflow {
 	overflow: auto !important;
 }

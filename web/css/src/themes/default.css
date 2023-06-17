@@ -2663,17 +2663,6 @@
 	padding: 10px 0 20px 20px;
 }
 
-.userlist-email {
-	font-size: 0.75rem;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.userlist-username {
-	margin-top: -2px;
-	line-height: 1.2rem;
-}
-
 /* App footer
    ========================================================================== */
 

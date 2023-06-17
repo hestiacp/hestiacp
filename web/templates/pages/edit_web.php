@@ -134,13 +134,13 @@
 					</label>
 				</div>
 				<div class="form-check">
-					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?= htmlentities($v_domain);?>" <?php if ( $v_redirect == $v_domain) echo 'checked';?> >
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-2" value="<?= htmlentities($v_domain);?>" <?php if ( $v_redirect == $v_domain) echo 'checked'; ?>>
 					<label for="v-redirect-radio-2">
 						<?= sprintf(_("Redirect visitors to %s"), htmlentities($v_domain)) ?>
 					</label>
 				</div>
 				<div class="form-check">
-					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if ( !empty($v_redirect_custom)) echo 'checked';?>>
+					<input class="form-check-input js-redirect-custom-value" type="radio" name="v-redirect" id="v-redirect-radio-3" value="custom" <?php if ( !empty($v_redirect_custom)) echo 'checked'; ?>>
 					<label for="v-redirect-radio-3">
 						<?= _("Redirect visitors to a custom domain or web address") ?>
 					</label>

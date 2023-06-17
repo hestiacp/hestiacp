@@ -114,37 +114,37 @@
 						<input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
 					</div>
 					<?php
-						if($v_ns3) {
+						if ($v_ns3) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns3" value="' . htmlentities(trim($v_ns3, "'")) . '">
 								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
-						if($v_ns4) {
+						if ($v_ns4) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns4" value="' . htmlentities(trim($v_ns4, "'")) . '">
 								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
-						if($v_ns5) {
+						if ($v_ns5) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns5" value="' . htmlentities(trim($v_ns5, "'")) . '">
 								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
-						if($v_ns6) {
+						if ($v_ns6) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns6" value="' . htmlentities(trim($v_ns6, "'")) . '">
 								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
-						if($v_ns7) {
+						if ($v_ns7) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns7" value="' . htmlentities(trim($v_ns7, "'")) . '">
 								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>
 							</div>';
 						}
-						if($v_ns8) {
+						if ($v_ns8) {
 							echo '<div class="u-side-by-side u-mb5">
 								<input type="text" class="form-control" name="v_ns8" value="' . htmlentities(trim($v_ns8, "'")) . '">
 								<span class="form-link form-link-danger u-ml10 js-remove-ns">' . _('Delete') . '</span>

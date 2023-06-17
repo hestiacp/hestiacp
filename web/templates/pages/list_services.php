@@ -19,16 +19,14 @@
 			<a href="/list/log/?user=system&token=<?= $_SESSION["token"] ?>" class="button button-secondary">
 				<i class="fas fa-binoculars icon-orange"></i><?= _("Logs") ?>
 			</a>
-			<div class="actions-panel" data-key-action="js">
-				<a
-					class="button button-secondary button-danger data-controls js-confirm-action"
-					href="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
-					data-confirm-title="<?= _("Restart") ?>"
-					data-confirm-message="<?= sprintf(_("Are you sure you want to restart %s?"), "Server") ?>"
-				>
-					<i class="fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
-				</a>
-			</div>
+			<a
+				class="button button-secondary button-danger data-controls js-confirm-action"
+				href="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
+				data-confirm-title="<?= _("Restart") ?>"
+				data-confirm-message="<?= sprintf(_("Are you sure you want to restart %s?"), "Server") ?>"
+			>
+				<i class="fas fa-arrow-rotate-left icon-red"></i><?= _("Restart") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<form x-data x-bind="BulkEdit" action="/bulk/service/" method="post">

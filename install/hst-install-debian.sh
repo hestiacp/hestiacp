@@ -1906,9 +1906,9 @@ if [ "$spamd" = 'yes' ]; then
 		# Deb 12+ renamed to spamd
 		update-rc.d spamd enable > /dev/null 2>&1
 		systemctl start spamd >> $LOG
-		unit_files="$(systemctl list-unit-files | grep spamassassin)"
+		unit_files="$(systemctl list-unit-files | grep spamd)"
 		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable spamassassin > /dev/null 2>&1
+			systemctl enable spamd > /dev/null 2>&1
 		fi
 
 	fi

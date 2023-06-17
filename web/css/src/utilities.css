@@ -1,16 +1,6 @@
 /* Utilities
    ========================================================================== */
 
-.clearfix::before,
-.clearfix::after {
-	content: " ";
-	display: table;
-}
-
-.clearfix::after {
-	clear: both;
-}
-
 .u-block {
 	display: block !important;
 }
@@ -49,10 +39,6 @@
 
 .u-text-small {
 	font-size: 0.75rem !important;
-}
-
-.u-text-italic {
-	font-style: italic !important;
 }
 
 .u-text-bold {

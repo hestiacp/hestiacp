@@ -57,31 +57,6 @@ strong {
 	background-color: #fff;
 }
 
-.units-header {
-	box-shadow: none;
-	background: #fafafa;
-}
-
-.l-unit:hover {
-	box-shadow: none;
-}
-
-.l-unit__stat-col--left {
-	& a,
-	& a:visited {
-		color: #5f7eb3;
-	}
-
-	& a:hover {
-		color: #5f7eb3;
-	}
-}
-
-.l-unit:hover,
-.units .l-unit:hover {
-	box-shadow: none;
-}
-
 /* Units table
    ========================================================================== */
 

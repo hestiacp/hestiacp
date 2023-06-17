@@ -94,6 +94,13 @@
 					$spnd_icon = 'fa-play';
 					$spnd_icon_class = 'icon-green';
 					$spnd_confirmation = _('Are you sure you want to unsuspend domain %s?');
+					if ($data[$key]['DNSSEC'] !== 'yes') {
+						$dnssec_icon = 'fa-circle-xmark';
+						$dnssec_title = _('Disabled');
+					} else {
+						$dnssec_icon = 'fa-circle-check';
+						$dnssec_title = _('Enabled');
+					}
 				} else {
 					$status = 'active';
 					$spnd_action = 'suspend';
@@ -102,10 +109,10 @@
 					$spnd_icon_class = 'icon-highlight';
 					$spnd_confirmation = _('Are you sure you want to suspend domain %s?');
 					if ($data[$key]['DNSSEC'] !== 'yes') {
-						$dnssec_icon = 'fa-circle-xmark';
+						$dnssec_icon = 'fa-circle-xmark icon-red';
 						$dnssec_title = _('Disabled');
 					} else {
-						$dnssec_icon = 'fa-circle-check';
+						$dnssec_icon = 'fa-circle-check icon-green';
 						$dnssec_title = _('Enabled');
 					}
 				}

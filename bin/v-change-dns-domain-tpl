@@ -64,44 +64,11 @@ for nameserver in ${ns//,/ }; do
 	((++i))
 done
 
-# Reading template
-template_data=$(cat "$DNSTPL/$template.tpl")
+time=${TIME}
+date=${DATE}
 
-# Deleting unused nameservers
-if [ -z "$ns3" ]; then
-	template_data=$(echo "$template_data" | grep -v %ns3%)
-fi
-if [ -z "$ns4" ]; then
-	template_data=$(echo "$template_data" | grep -v %ns4%)
-fi
-if [ -z "$ns5" ]; then
-	template_data=$(echo "$template_data" | grep -v %ns5%)
-fi
-if [ -z "$ns6" ]; then
-	template_data=$(echo "$template_data" | grep -v %ns6%)
-fi
-if [ -z "$ns7" ]; then
-	template_data=$(echo "$template_data" | grep -v %ns7%)
-fi
-if [ -z "$ns8" ]; then
-	template_data=$(echo "$template_data" | grep -v %ns8%)
-fi
-
-# Changing tpl
-echo "$template_data" \
-	| sed -e "s/%ip%/$IP/g" \
-		-e "s/%domain_idn%/$domain_idn/g" \
-		-e "s/%domain%/$domain/g" \
-		-e "s/%ns1%/$ns1/g" \
-		-e "s/%ns2%/$ns2/g" \
-		-e "s/%ns3%/$ns3/g" \
-		-e "s/%ns4%/$ns4/g" \
-		-e "s/%ns5%/$ns5/g" \
-		-e "s/%ns6%/$ns6/g" \
-		-e "s/%ns7%/$ns7/g" \
-		-e "s/%ns8%/$ns8/g" \
-		-e "s/%time%/$TIME/g" \
-		-e "s/%date%/$DATE/g" > $USER_DATA/dns/$domain.conf
+# Create DNS domain config
+create_dns_domain_config
 records="$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')"
 
 # Refresh DKIM records in DNS if signing key exists for domain

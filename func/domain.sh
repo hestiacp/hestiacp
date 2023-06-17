@@ -515,6 +515,70 @@ is_web_domain_cert_valid() {
 #                        DNS                               #
 #----------------------------------------------------------#
 
+# Create DNS domain config
+create_dns_domain_config() {
+	# Reading template
+	template_data=$(cat "$DNSTPL/$template.tpl")
+
+	# Deleting unused nameservers
+	if [ -z "$ns3" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns3%)
+	fi
+	if [ -z "$ns4" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns4%)
+	fi
+	if [ -z "$ns5" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns5%)
+	fi
+	if [ -z "$ns6" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns6%)
+	fi
+	if [ -z "$ns7" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns7%)
+	fi
+	if [ -z "$ns8" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns8%)
+	fi
+	if [ -z "$dnssec" ]; then
+		dnssec="no"
+	fi
+
+	# Marker deinition for IPV4 and IPV6 configuration
+	if [ -z "$ip" ]; then
+		i4mark=""
+	else
+		i4mark="\1"
+	fi
+	if [ -z "$ipv6" ]; then
+		i6mark=""
+	else
+		i6mark="\1"
+	fi
+
+	# Adding dns zone to the user config
+	echo "$template_data" \
+		| sed -e "s|%<i4\(.*\)i4>%|$i4mark|g" \
+			-e "s|%<i6\(.*\)i6>%|$i6mark|g" \
+			-e "s|%ipv4%|$ip|g" \
+			-e "s|%ipv6%|$ipv6|g" \
+			-e "s|%ip%|$ip|g" \
+			-e "s|%domain_idn%|$domain_idn|g" \
+			-e "s|%domain%|$domain|g" \
+			-e "s|%ns1%|$ns1|g" \
+			-e "s|%ns2%|$ns2|g" \
+			-e "s|%ns3%|$ns3|g" \
+			-e "s|%ns4%|$ns4|g" \
+			-e "s|%ns5%|$ns5|g" \
+			-e "s|%ns6%|$ns6|g" \
+			-e "s|%ns7%|$ns7|g" \
+			-e "s|%ns8%|$ns8|g" \
+			-e "s|%time%|$time|g" \
+			-e "s|%date%|$date|g" \
+			-e "/^[ \t]*$/d" > ${USER_DATA}/dns/${domain}.conf
+
+	chmod 660 ${USER_DATA}/dns/${domain}.conf
+}
+
 # DNS template check
 is_dns_template_valid() {
 	if [ ! -e "$DNSTPL/$1.tpl" ]; then

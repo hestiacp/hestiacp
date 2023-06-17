@@ -19,7 +19,7 @@
 
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'true'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'true'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
@@ -58,7 +58,6 @@ fi
 echo '[ * ] Enable the "Enhanced and Optimized TLS" feature...'
 
 # Configuring global OpenSSL options
-
 tls13_ciphers="TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384"
 
 if ! grep -qw "^[hestia_openssl_sect]$" /etc/ssl/openssl.cnf 2> /dev/null; then
@@ -175,11 +174,18 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 			# Apply the update
 			sed -i 's/client_max_body_size            256m;/client_max_body_size            1024m;/;s/keepalive_requests              100000;/keepalive_requests              10000;/;s/fastcgi_buffers                 8 256k;/fastcgi_buffers                 512 4k;/;s/proxy_pass_header               Set-Cookie;/proxy_pass_header               Set-Cookie;\n\tproxy_buffers                   256 4k;\n\tproxy_buffer_size               32k;\n\tproxy_busy_buffers_size         32k;\n\tproxy_temp_file_write_size      256k;/;s/# Log format/# Log format\n\tlog_format                      main '"'"'$remote_addr - $remote_user [$time_local] $request "$status" $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for"'"'"';\n\tlog_format                      bytes '"'"'$body_bytes_sent'"'"';/;s|# Compression|# Compression\n\tgzip                            on;\n\tgzip_vary                       on;\n\tgzip_static                     on;\n\tgzip_comp_level                 6;\n\tgzip_min_length                 1024;\n\tgzip_buffers                    128 4k;\n\tgzip_http_version               1.1;\n\tgzip_types                      text/css text/javascript text/js text/plain text/richtext text/shtml text/x-component text/x-java-source text/x-markdown text/x-script text/xml image/bmp image/svg+xml image/vnd.microsoft.icon image/x-icon font/otf font/ttf font/x-woff multipart/bag multipart/mixed application/eot application/font application/font-sfnt application/font-woff application/javascript application/javascript-binast application/json application/ld+json application/manifest+json application/opentype application/otf application/rss+xml application/ttf application/truetype application/vnd.api+json application/vnd.ms-fontobject application/wasm application/xhtml+xml application/xml application/xml+rss application/x-httpd-cgi application/x-javascript application/x-opentype application/x-otf application/x-perl application/x-protobuf application/x-ttf;\n\tgzip_proxied                    any;|;s/# Cloudflare ips/# Cloudflare IPs/;s|# SSL PCI compliance|# SSL PCI compliance\n\tssl_buffer_size                 1369;\n\tssl_ciphers                     "'"$tls12_ciphers"'";\n\tssl_dhparam                     /etc/ssl/dhparam.pem;\n\tssl_early_data                  on;\n\tssl_ecdh_curve                  auto;\n\tssl_prefer_server_ciphers       on;\n\tssl_protocols                   TLSv1.2 TLSv1.3;\n\tssl_session_cache               shared:SSL:20m;\n\tssl_session_tickets             on;\n\tssl_session_timeout             7d;\n\tresolver                        1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8 valid=300s ipv6=off;\n\tresolver_timeout                5s;|;s|# Error pages|# Error pages\n\terror_page                      403 /error/404.html;\n\terror_page                      404 /error/404.html;\n\terror_page                      410 /error/410.html;\n\terror_page                      500 501 502 503 504 505 /error/50x.html;|;s|# Proxy cache|# Proxy cache\n\tproxy_cache_path                /var/cache/nginx levels=2 keys_zone=cache:10m inactive=60m max_size=1024m;\n\tproxy_cache_key                 "$scheme$request_method$host$request_uri";\n\tproxy_temp_path                 /var/cache/nginx/temp;\n\tproxy_ignore_headers            Cache-Control Expires;\n\tproxy_cache_use_stale           error timeout invalid_header updating http_502;\n\tproxy_cache_valid               any 1d;|;s|# FastCGI cache|# FastCGI cache\n\tfastcgi_cache_path              /var/cache/nginx/micro levels=1:2 keys_zone=microcache:10m inactive=30m max_size=1024m;\n\tfastcgi_cache_key               "$scheme$request_method$host$request_uri";\n\tfastcgi_ignore_headers          Cache-Control Expires Set-Cookie;\n\tfastcgi_cache_use_stale         error timeout invalid_header updating http_500 http_503;\n\tadd_header                      X-FastCGI-Cache $upstream_cache_status;|;s/# File cache (static assets)/# File cache (static assets)\n\topen_file_cache                 max=10000 inactive=30s;\n\topen_file_cache_valid           60s;\n\topen_file_cache_min_uses        2;\n\topen_file_cache_errors          off;/' /etc/nginx/nginx.conf-staging
 
+			# Apply the update for implement TLS 1.3 0-RTT anti-replay and upcoming HTTP/3 support
+			sed -i '/pid                  \/run\/nginx.pid;/a include              /etc/nginx/conf.d/main/*.conf;' /etc/nginx/nginx.conf-staging
+			sed -i '/proxy_set_header                Host $host;/a \\tproxy_set_header                Early-Data $ssl_early_data;' /etc/nginx/nginx.conf-staging
+
 			# Verify new configuration file
 			if nginx -c /etc/nginx/nginx.conf-staging -t > /dev/null 2>&1; then
 				mv -f /etc/nginx/nginx.conf-staging /etc/nginx/nginx.conf
 			fi
 		fi
+
+		# Implement TLS 1.3 0-RTT anti-replay
+		cp -f "$HESTIA_INSTALL_DIR"/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d
 
 		# Update resolver for NGINX
 		for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do

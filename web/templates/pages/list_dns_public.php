@@ -25,69 +25,35 @@
 
 <div class="container">
 
-	<div class="units-table js-units-container">
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
-			<div class="units-table-cell u-text-bold">
-				<?= _("DNSKEY Record") ?>
-			</div>
-			<div class="units-table-cell">
-				<label class="u-hidden-visually"><?= _("DNSKEY Record") ?></label>
-				<input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>">
-			</div>
+	<div class="form-container">
+		<h1 class="form-title"><?= _("View Public DNSSEC Key") ?></h1>
+		<div class="u-mb10">
+			<label class="form-label"><?= _("DNSKEY Record") ?></label>
+			<input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>" readonly>
 		</div>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
-			<div class="units-table-cell u-text-bold">
-				<?= _("DS Record") ?>
-			</div>
-			<div class="units-table-cell">
-				<label class="u-hidden-visually"><?= _("DS Record") ?></label>
-				<input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>">
-			</div>
+		<div class="u-mb10">
+			<label class="form-label"><?= _("DS Record") ?></label>
+			<input type="text" class="form-control" value="<?php echo $data[$domain]["DS"]; ?>" readonly>
 		</div>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
-			<div class="units-table-cell u-text-bold">
-				<?= _("Public Key") ?>
-			</div>
-			<div class="units-table-cell">
-				<label class="u-hidden-visually"><?= _("Public Key") ?></label>
-				<input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>">
-			</div>
+		<div class="u-mb10">
+			<label class="form-label"><?= _("Public Key") ?></label>
+			<input type="text" class="form-control" value="<?php echo $data[$domain]["KEY"]; ?>" readonly>
 		</div>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
-			<div class="units-table-cell u-text-bold">
-				<?= _("Key Type / Flag") ?>
-			</div>
-			<div class="units-table-cell">
-				<label class="u-hidden-visually"><?= _("Key Type / Flag") ?></label>
-				<input type="text" class="form-control" value="<?php echo $flag; ?>">
-			</div>
+		<div class="u-mb10">
+			<label class="form-label"><?= _("Key Type / Flag") ?></label>
+			<input type="text" class="form-control" value="<?php echo $flag; ?>" readonly>
 		</div>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
-			<div class="units-table-cell u-text-bold">
-				<?= _("Key Tag") ?>
-			</div>
-			<div class="units-table-cell">
-				<label class="u-hidden-visually"><?= _("Key Tag") ?></label>
-				<input type="text" class="form-control" value="<?php echo $data[$domain]["KEYTAG"]; ?>">
-			</div>
+		<div class="u-mb10">
+			<label class="form-label"><?= _("Key Tag") ?></label>
+			<input type="text" class="form-control" value="<?php echo $data[$domain]["KEYTAG"]; ?>" readonly>
 		</div>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
-			<div class="units-table-cell u-text-bold">
-				<?= _("Flag") ?>
-			</div>
-			<div class="units-table-cell">
-				<label class="u-hidden-visually"><?= _("Flag") ?></label>
-				<input type="text" class="form-control" value="<?php echo $data[$domain]["FLAG"]; ?>">
-			</div>
+		<div class="u-mb10">
+			<label class="form-label"><?= _("Flag") ?></label>
+			<input type="text" class="form-control" value="<?php echo $data[$domain]["FLAG"]; ?>" readonly>
 		</div>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
-			<div class="units-table-cell u-text-bold">
-				<?= _("Algorithm") ?>
-			</div>
-			<div class="units-table-cell">
-				<label class="u-hidden-visually"><?= _("Algorithm") ?></label>
-				<input type="text" class="form-control" value="<?php echo $algorithm; ?>">
-			</div>
+		<div class="u-mb10">
+			<label class="form-label"><?= _("Algorithm") ?></label>
+			<input type="text" class="form-control" value="<?php echo $algorithm; ?>" readonly>
 		</div>
 	</div>
 

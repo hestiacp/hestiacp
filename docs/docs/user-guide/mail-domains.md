@@ -74,7 +74,7 @@ Enable DKIM for this domain.
 
 If you want to use your own SSL certificate you can enter the SSL certificate in the text area.
 
-If you are having issues with enabling Let’s Encrypt, please refer to our [SSL certicates](../server-administration/ssl-certificates.md) documentation.
+If you are having issues with enabling Let’s Encrypt, please refer to our [SSL certificates](../server-administration/ssl-certificates.md) documentation.
 
 ### SMTP relay
 

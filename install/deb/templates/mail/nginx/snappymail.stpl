@@ -1,5 +1,6 @@
 server {
-listen      %ip%:%web_ssl_port% ssl http2;
+    listen      %ip%:%web_ssl_port% ssl;
+    http2 on;
 server_name %domain_idn% %alias_idn%;
 root        /var/lib/snappymail;
 index       index.php index.html index.htm;

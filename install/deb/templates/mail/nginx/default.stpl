@@ -1,5 +1,6 @@
 server {
-    listen      %ip%:%proxy_ssl_port% ssl http2;
+    listen      %ip%:%proxy_ssl_port% ssl;
+	http2 on;
     server_name %domain_idn% %alias_idn%;
     root        /var/lib/roundcube;
     index       index.php index.html index.htm;

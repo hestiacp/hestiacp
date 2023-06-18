@@ -289,6 +289,13 @@ add_web_config() {
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
 
+	# For now we can't assume everybody is up to date
+	nginx_version=$(nginx -v 2>&1 | cut -d'/' -f2)
+	if ! version_ge "$nginx_version" "1.25.1"; then
+		sed -i '/http2 on;/d' $conf
+		sed -i 's/ssl;/ssl http2;/g' $conf
+	fi
+
 	chown root:$user $conf
 	chmod 640 $conf
 
@@ -854,6 +861,13 @@ add_webmail_config() {
 			-e "s|%ssl_ca_str%|$ssl_ca_str|g" \
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
+
+	# For now we can't assume everybody is up to date
+	nginx_version=$(nginx -v 2>&1 | cut -d'/' -f2)
+	if ! version_ge "$nginx_version" "1.25.1"; then
+		sed -i '/http2 on;/d' $conf
+		sed -i 's/ssl;/ssl http2;/g' $conf
+	fi
 
 	chown root:$user $conf
 	chmod 640 $conf

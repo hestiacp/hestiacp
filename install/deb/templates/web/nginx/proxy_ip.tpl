@@ -14,7 +14,8 @@ server {
 }
 
 server {
-    listen      %ip%:%proxy_ssl_port% ssl http2;
+    listen      %ip%:%proxy_ssl_port% ssl;
+	http2 on;
     server_name _;
     ssl_certificate      /usr/local/hestia/ssl/certificate.crt;
     ssl_certificate_key  /usr/local/hestia/ssl/certificate.key;

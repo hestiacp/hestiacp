@@ -168,8 +168,8 @@ if [ -n "$PROXY_SYSTEM" ]; then
 	# For now we can't assume everybody is up to date
 	nginx_version=$(nginx -v 2>&1 | cut -d'/' -f2)
 	if ! version_ge "$nginx_version" "1.25.1"; then
-		sed -i '/http2 on;/d' $conf
-		sed -i 's/ssl;/ssl http2;/g' $conf
+		sed -i '/http2 on;/d' /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+		sed -i 's/ssl;/ssl http2;/g' /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 	fi
 
 	# mod_extract_forwarded

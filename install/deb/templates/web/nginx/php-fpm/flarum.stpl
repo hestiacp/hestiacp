@@ -17,7 +17,7 @@ server {
 	ssl_certificate      %ssl_pem%;
 	ssl_certificate_key  %ssl_key%;
 	ssl_stapling on;
-    sl_stapling_verify on;
+	ssl_stapling_verify on;
 
 	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 

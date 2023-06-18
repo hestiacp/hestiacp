@@ -210,3 +210,10 @@ if ! version_ge "4.9.4" "$exim_version"; then
 else
 	echo $exim_version
 fi
+
+nginx_version=$(nginx -v 2>&1 | cut -d'/' -f2)
+if version_ge "$nginx_version" "1.25.1"; then
+	while read IP; do
+		sed -i "s/ssl http2;/ssl;\n	http2 on/g;" /etc/nginx/conf.d/$IP.conf
+	done < <(ls $HESTIA/data/ips/)
+fi

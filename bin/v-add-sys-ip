@@ -165,6 +165,13 @@ if [ -n "$PROXY_SYSTEM" ]; then
 			-e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
 			> /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 
+	# For now we can't assume everybody is up to date
+	nginx_version=$(nginx -v 2>&1 | cut -d'/' -f2)
+	if ! version_ge "$nginx_version" "1.25.1"; then
+		sed -i '/http2 on;/d' $conf
+		sed -i 's/ssl;/ssl http2;/g' $conf
+	fi
+
 	# mod_extract_forwarded
 	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
 	if [ -e "$fw_conf" ]; then

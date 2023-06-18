@@ -205,34 +205,6 @@ strong {
 	}
 }
 
-.units-header {
-	box-shadow: none;
-	background: #fafafa;
-	line-height: 1.2rem;
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
-.l-unit:hover {
-	box-shadow: none;
-}
-
-.l-unit__stat-col--left {
-	& a,
-	& a:visited {
-		color: #111;
-	}
-
-	& a:hover {
-		color: #ff6701;
-	}
-}
-
-.l-unit:hover,
-.units .l-unit:hover {
-	box-shadow: none;
-}
-
 /* Units table
    ========================================================================== */
 

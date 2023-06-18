@@ -130,7 +130,7 @@ export default function handleShortcuts() {
 			(_evt) => {
 				const checked = document.querySelector('.js-unit-checkbox:eq(0)').checked;
 				document
-					.querySelectorAll('.l-unit')
+					.querySelectorAll('.js-unit')
 					.forEach((el) => el.classList.toggle('selected'), !checked);
 				document.querySelectorAll('.js-unit-checkbox').forEach((el) => (el.checked = !checked));
 			},
@@ -347,7 +347,7 @@ export default function handleShortcuts() {
 		.register(
 			{ key: 'L' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-l');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-l');
 				if (element) {
 					executeShortcut(element);
 				}
@@ -357,7 +357,7 @@ export default function handleShortcuts() {
 		.register(
 			{ key: 'S' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-s');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-s');
 				if (element) {
 					executeShortcut(element);
 				}
@@ -367,7 +367,7 @@ export default function handleShortcuts() {
 		.register(
 			{ key: 'W' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-w');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-w');
 				if (element) {
 					executeShortcut(element);
 				}
@@ -377,7 +377,7 @@ export default function handleShortcuts() {
 		.register(
 			{ key: 'D' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-d');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-d');
 				if (element) {
 					executeShortcut(element);
 				}
@@ -387,7 +387,7 @@ export default function handleShortcuts() {
 		.register(
 			{ key: 'R' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-r');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-r');
 				if (element) {
 					executeShortcut(element);
 				}
@@ -397,7 +397,7 @@ export default function handleShortcuts() {
 		.register(
 			{ key: 'N' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-n');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-n');
 				if (element) {
 					executeShortcut(element);
 				}
@@ -407,7 +407,7 @@ export default function handleShortcuts() {
 		.register(
 			{ key: 'U' },
 			(_evt) => {
-				const element = document.querySelector('.js-units-container .l-unit.focus .shortcut-u');
+				const element = document.querySelector('.js-units-container .js-unit.focus .shortcut-u');
 				if (element) {
 					executeShortcut(element);
 				}
@@ -418,7 +418,7 @@ export default function handleShortcuts() {
 			{ code: 'Delete' },
 			(_evt) => {
 				const element = document.querySelector(
-					'.js-units-container .l-unit.focus .shortcut-delete'
+					'.js-units-container .js-unit.focus .shortcut-delete'
 				);
 				if (element) {
 					executeShortcut(element);
@@ -448,7 +448,7 @@ export default function handleShortcuts() {
 					dialog.querySelector('button[type="submit"]').click();
 				} else {
 					const element = document.querySelector(
-						'.js-units-container .l-unit.focus .shortcut-enter'
+						'.js-units-container .js-unit.focus .shortcut-enter'
 					);
 					if (element) {
 						executeShortcut(element);

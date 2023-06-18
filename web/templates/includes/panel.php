@@ -27,15 +27,23 @@
 					<div class="top-bar-usage-inner">
 						<span class="top-bar-usage-item">
 							<i class="fas <?= $user_icon ?>" title="<?= _("Logged in as") ?>: <?= htmlspecialchars($panel[$user]["NAME"]) ?>"></i>
-							<b><?= htmlspecialchars($user) ?></b>
+							<span class="u-text-bold">
+								<?= htmlspecialchars($user) ?>
+							</span>
 						</span>
 						<span class="top-bar-usage-item">
 							<i class="fas fa-hard-drive" title="<?= _("Disk") ?>: <?= humanize_usage_size($panel[$user]["U_DISK"]) ?> <?= humanize_usage_measure($panel[$user]["U_DISK"]) ?>"></i>
-							<b><?= humanize_usage_size($panel[$user]["U_DISK"]) ?></b> <?= humanize_usage_measure($panel[$user]["U_DISK"]) ?>
+							<span class="u-text-bold">
+								<?= humanize_usage_size($panel[$user]["U_DISK"]) ?>
+							</span>
+							<?= humanize_usage_measure($panel[$user]["U_DISK"]) ?>
 						</span>
 						<span class="top-bar-usage-item">
 							<i class="fas fa-right-left" title="<?= _("Bandwidth") ?>: <?= humanize_usage_size($panel[$user]["U_BANDWIDTH"]) ?> <?= humanize_usage_measure($panel[$user]["U_BANDWIDTH"]) ?>"></i>
-							<b><?= humanize_usage_size($panel[$user]["U_BANDWIDTH"]) ?></b> <?= humanize_usage_measure($panel[$user]["U_BANDWIDTH"]) ?>
+							<span class="u-text-bold">
+								<?= humanize_usage_size($panel[$user]["U_BANDWIDTH"]) ?>
+							</span>
+							<?= humanize_usage_measure($panel[$user]["U_BANDWIDTH"]) ?>
 						</span>
 					</div>
 				</div>

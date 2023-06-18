@@ -110,7 +110,10 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 				$v_domain .
 				" " .
 				$v_ip .
-				" 'no'",
+				" " .
+				"'no'" .
+				" " .
+				"4",
 			$output,
 			$return_var,
 		);
@@ -124,13 +127,16 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["record_id"
 		$v_ipv6 = quoteshellarg($_POST["v_ipv6"]);
 		exec(
 			HESTIA_CMD .
-				"v-change-dns-domain-ipv6 " .
+				"v-change-dns-domain-ip " .
 				$user .
 				" " .
 				$v_domain .
 				" " .
 				$v_ipv6 .
-				" 'no'",
+				" " .
+				"'no'" .
+				" " .
+				"6",
 			$output,
 			$return_var,
 		);

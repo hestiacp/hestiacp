@@ -261,7 +261,10 @@ if (!empty($_POST["save"])) {
 					quoteshellarg($v_domain) .
 					" " .
 					quoteshellarg($v_newip_public) .
-					" 'no'",
+					" " .
+					"'no'" .
+					" " .
+					"4",
 				$output,
 				$return_var,
 			);
@@ -281,13 +284,16 @@ if (!empty($_POST["save"])) {
 		if ($return_var == 0) {
 			exec(
 				HESTIA_CMD .
-					"v-change-dns-domain-ipv6 " .
+					"v-change-dns-domain-ip " .
 					$user .
 					" " .
 					quoteshellarg($v_domain) .
 					" " .
 					quoteshellarg($v_newipv6) .
-					" 'no'",
+					" " .
+					"'no'" .
+					" " .
+					"6",
 				$output,
 				$return_var,
 			);
@@ -314,7 +320,11 @@ if (!empty($_POST["save"])) {
 						" " .
 						quoteshellarg($v_alias) .
 						" " .
-						quoteshellarg($v_newip_public),
+						quoteshellarg($v_newip_public) .
+						" " .
+						"'no'" .
+						" " .
+						"4",
 					$output,
 					$return_var,
 				);
@@ -336,12 +346,16 @@ if (!empty($_POST["save"])) {
 			if ($return_var == 0) {
 				exec(
 					HESTIA_CMD .
-						"v-change-dns-domain-ipv6 " .
+						"v-change-dns-domain-ip " .
 						$user .
 						" " .
 						quoteshellarg($v_alias) .
 						" " .
-						quoteshellarg($v_newipv6),
+						quoteshellarg($v_newipv6) .
+						" " .
+						"'no'" .
+						" " .
+						"4",
 					$output,
 					$return_var,
 				);

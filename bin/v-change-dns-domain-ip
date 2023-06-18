@@ -1,8 +1,13 @@
 #!/bin/bash
 # info: change dns domain ip address
-# options: USER DOMAIN IP [RESTART]
+# options: USER DOMAIN IP [RESTART] [IP FORMAT]
 #
 # example: v-change-dns-domain-ip admin domain.com 123.212.111.222
+# example: v-change-dns-domain-ip admin domain.com 1234:55:66::1
+# example: v-change-dns-domain-ip admin domain.com 123.212.111.222 no 4
+# example: v-change-dns-domain-ip admin domain.com 1234:55:66::1 yes 6
+# example: v-change-dns-domain-ip admin domain.com '' '' 4
+# example: v-change-dns-domain-ip admin domain.com '' no 6
 #
 # This function for changing the main ip of DNS zone.
 
@@ -11,11 +16,12 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user=$1
-domain=$2
-domain_idn=$2
-ip=$3
-restart=$4
+user=${1}
+domain=${2}
+domain_idn=${2}
+ip46=${3}
+restart=${4}
+ip_format=${5}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -40,13 +46,38 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN IP [RESTART]'
-is_format_valid 'user' 'domain' 'ip'
+check_args '3' "$#" 'USER DOMAIN IP [RESTART] [IP FORMAT]'
+is_format_valid 'user' 'domain' 'ip46'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'dns' 'DOMAIN' "$domain"
 is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+
+if [ -z "$ip_format" ]; then
+	ip_format="$(get_ip_format ${ip46})" #	ip verification and automatic format identification
+fi
+if [ -n "$ip_format" ]; then
+	if [ $ip_format -ne 4 -a $ip_format -ne 6 ]; then
+		check_result "$E_INVALID" "invalid IP format :: $ip46 IPV$ip_format?? " # error in case of wrong or undefined IP format
+	fi
+else
+	check_result "$E_INVALID" "invalid or undefined IP format :: $ip46" # error in case of wrong or undefined IP format
+fi
+if [ $ip_format -eq 4 ]; then
+	ip=${ip46}
+	ipv6=''
+	if [ -n "$ip" ]; then
+		is_ip_format_valid "${ip}" 'ipv4' # check for correct ipv4 format if not empty
+	fi
+fi
+if [ $ip_format -eq 6 ]; then
+	ip=''
+	ipv6=${ip46}
+	if [ -n "$ipv6" ]; then
+		is_ip_format_valid "${ipv6}" 'ipv6' # check for correct ipv6 format if not empty
+	fi
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -57,13 +88,43 @@ check_hestia_demo_mode
 
 # Get old ip
 get_domain_values 'dns'
-old=$IP
 
 # Changing ip
-update_object_value 'dns' 'DOMAIN' "$domain" '$IP' "$ip"
+if [ $ip_format -eq 4 ]; then
+	old_ip46=${IP}
+	ipv6=${IP6}
+	update_object_value 'dns' 'DOMAIN' "$domain" '$IP' "$ip"
+fi
+if [ $ip_format -eq 6 ]; then
+	ip=${IP}
+	old_ip46=${IP6}
+	update_object_value 'dns' 'DOMAIN' "$domain" '$IP6' "$ipv6"
+fi
 
 # Changing records
-sed -i "s/$old/$ip/g" $USER_DATA/dns/$domain.conf
+if [ -n "$old_ip46" -a -n "$ip46" ]; then
+	sed -i "s/$old_ip46/$ip46/g" ${USER_DATA}/dns/${domain}.conf # simple find and replace only if old and new IPs both not empty
+else
+	# Reload DNS template if old or new IP is empty
+
+	i_ns=1
+	ns=$(get_user_value '$NS')
+	for nameserver in ${ns//,/ }; do
+		eval ns$i_ns=$nameserver
+		((++i_ns))
+	done
+
+	template=$(get_user_value '$DNS_TEMPLATE')
+	is_dns_template_valid "$template"
+
+	# Generating timestamp
+	time_n_date=$(date +'%T %F')
+	time=$(echo "$time_n_date" | cut -f 1 -d \ )
+	date=$(echo "$time_n_date" | cut -f 2 -d \ )
+
+	# Create DNS domain config
+	create_dns_domain_config
+fi
 
 # Update serial
 update_domain_serial
@@ -78,7 +139,7 @@ if [ "$DNS_CLUSTER" = "yes" ]; then
 	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
 	if [ -z "$dlock" ]; then
 		cmd="$BIN/v-add-remote-dns-domain $user $domain domain yes"
-		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+		echo "$cmd" >> ${HESTIA}/data/queue/dns-cluster.pipe
 	fi
 fi
 
@@ -87,11 +148,11 @@ fi
 #----------------------------------------------------------#
 
 # Restarting named
-$BIN/v-restart-dns "$restart"
+${BIN}/v-restart-dns "$restart"
 check_result $? "DNS restart failed" > /dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "DNS" "IP address for DNS domain changed (IP: $ip, Domain: $domain)."
+${BIN}/v-log-action "$user" "Info" "DNS" "IP address for DNS domain changed (IP: $ip46, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

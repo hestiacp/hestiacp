@@ -145,9 +145,11 @@ if [ -n "$WEB_SYSTEM" ]; then
 	elif [ "$WEB_SYSTEM" = 'nginx' ]; then
 		cp -f $HESTIA_INSTALL_DIR/nginx/unassigned.inc "$web_conf"
 		sed -i 's/directIP/'$ip'/g' "$web_conf"
-		sed -i '/http2 on;/d' /etc/$PROXY_SYSTEM/conf.d/$ip.conf
-		sed -i 's/ssl/ssl http2/g' /etc/$PROXY_SYSTEM/conf.d/$ip.conf
-
+		nginx_version=$(nginx -v 2>&1 | cut -d'/' -f2)
+		if ! version_ge "$nginx_version" "1.25.1"; then
+			sed -i '/http2 on;/d' $web_conf
+			sed -i 's/ssl/ssl http2/g' $web_conf
+		fi
 	fi
 
 	if [ "$WEB_SSL" = 'mod_ssl' ]; then

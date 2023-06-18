@@ -48,20 +48,18 @@
 				<!-- Hide delete buttons-->
 			<?php } else { ?>
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_DELETE_LOGS"] !== "no")) { ?>
-					<div class="actions-panel" data-key-action="js">
-						<a
-							class="button button-secondary button-danger data-controls js-confirm-action"
-							<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
-								href="/delete/log/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>"
-							<?php } else { ?>
-								href="/delete/log/?token=<?= $_SESSION["token"] ?>"
-							<?php } ?>
-							data-confirm-title="<?= _("Delete") ?>"
-							data-confirm-message="<?= _("Are you sure you want to delete the logs?") ?>"
-						>
-							<i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
-						</a>
-					</div>
+					<a
+						class="button button-secondary button-danger data-controls js-confirm-action"
+						<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"])) { ?>
+							href="/delete/log/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>"
+						<?php } else { ?>
+							href="/delete/log/?token=<?= $_SESSION["token"] ?>"
+						<?php } ?>
+						data-confirm-title="<?= _("Delete") ?>"
+						data-confirm-message="<?= _("Are you sure you want to delete the logs?") ?>"
+					>
+						<i class="fas fa-circle-xmark icon-red"></i><?= _("Delete") ?>
+					</a>
 				<?php } ?>
 			<?php } ?>
 		</div>

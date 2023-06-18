@@ -1,16 +1,6 @@
 /* Utilities
    ========================================================================== */
 
-.clearfix::before,
-.clearfix::after {
-	content: " ";
-	display: table;
-}
-
-.clearfix::after {
-	clear: both;
-}
-
 .u-block {
 	display: block !important;
 }
@@ -51,10 +41,6 @@
 	font-size: 0.75rem !important;
 }
 
-.u-text-italic {
-	font-style: italic !important;
-}
-
 .u-text-bold {
 	font-weight: bold !important;
 }
@@ -67,6 +53,10 @@
 
 .u-text-break {
 	word-break: break-word !important;
+}
+
+.u-text-no-wrap {
+	white-space: nowrap !important;
 }
 
 .u-overflow {

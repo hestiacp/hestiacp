@@ -56,14 +56,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Defining variables
-get_domain_values 'dns'
-i=1
-ns=$(get_user_value '$NS')
-for nameserver in ${ns//,/ }; do
-	eval ns$i=$nameserver
-	((++i))
-done
-
+get_dns_values # get DNS values, nameservers
 time=${TIME}
 date=${DATE}
 

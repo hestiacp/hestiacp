@@ -515,6 +515,17 @@ is_web_domain_cert_valid() {
 #                        DNS                               #
 #----------------------------------------------------------#
 
+# Get DNS values
+get_dns_values() {
+	get_domain_values 'dns'
+	i_ns=1
+	ns=$(get_user_value '$NS')
+	for nameserver in ${ns//,/ }; do
+		eval ns$i_ns=$nameserver
+		((++i_ns))
+	done
+}
+
 # Create DNS domain config
 create_dns_domain_config() {
 	# Reading template

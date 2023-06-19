@@ -107,12 +107,7 @@ if [ -n "$old_ip46" -a -n "$ip46" ]; then
 else
 	# Reload DNS template if old or new IP is empty
 
-	i_ns=1
-	ns=$(get_user_value '$NS')
-	for nameserver in ${ns//,/ }; do
-		eval ns$i_ns=$nameserver
-		((++i_ns))
-	done
+	get_dns_values # get DNS values, nameservers
 
 	template=$(get_user_value '$DNS_TEMPLATE')
 	is_dns_template_valid "$template"

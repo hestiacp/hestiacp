@@ -1,6 +1,7 @@
 name: Crowdin
 
 on:
+  pull_request:
   schedule:
     - cron: "20 4 * * *"
   workflow_dispatch:

@@ -607,6 +607,31 @@ add_dns_dkim_records() {
 	fi
 }
 
+# Add DNS webmail records
+add_dns_webmail_records() {
+	# Ensure DNS record exists if Hestia is hosting DNS zones
+	if [ -n "$DNS_SYSTEM" ]; then
+		dns_domain=$(${BIN}/v-list-dns-domains $user list)
+		webmail_records=$(${BIN}/v-list-dns-records $user $domain | sed -ne "/$WEBMAIL_ALIAS/s/^\([0-9]*\)[ \t]*$WEBMAIL_ALIAS.*/\1/gp")
+		if [ "$dns_domain" = "$domain" ]; then
+			if [ "$WEBMAIL_ALIAS" != "mail" ]; then
+				#Prevent mail.domain.com to be cycled
+				if [ -n "$webmail_records" ]; then
+					echo "$webmail_records" | while read webmail_record; do
+						${BIN}/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
+					done
+				fi
+				if [ -n "$ip" ]; then
+					${BIN}/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+				fi
+				if [ -n "$ipv6" ]; then
+					${BIN}/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" AAAA "$ipv6" '' '' "$restart" '' 'yes'
+				fi
+			fi
+		fi
+	fi
+}
+
 # DNS template check
 is_dns_template_valid() {
 	if [ ! -e "$DNSTPL/$1.tpl" ]; then

@@ -79,8 +79,8 @@ if (!empty($_POST["ok"])) {
 				_("Access key {%s} has been created successfully."),
 				htmlentities($key_data["ACCESS_KEY_ID"]),
 			),
-			"</b>",
-			"<b>",
+			"</code>",
+			"<code>",
 		);
 		unset($apis_selected);
 		unset($check_invalid_apis);

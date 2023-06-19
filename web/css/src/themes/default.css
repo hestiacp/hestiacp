@@ -2388,7 +2388,7 @@
 }
 
 .inline-alert-warning {
-	color: #ffd500;
+	color: #ecc500;
 }
 
 .inline-alert-success {
@@ -2464,7 +2464,7 @@
 	background-color: #ff0;
 
 	&:hover {
-		background-color: #ee0;
+		background-color: #f1f100;
 	}
 }
 

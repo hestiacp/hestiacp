@@ -163,7 +163,9 @@
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("IP or Value") ?>:</span>
-					<?= htmlspecialchars($data[$key]["VALUE"], ENT_QUOTES, "UTF-8") ?>
+					<span class="u-text-break">
+						<?= htmlspecialchars($data[$key]["VALUE"], ENT_QUOTES, "UTF-8") ?>
+					</span>
 				</div>
 			</div>
 		<?php } ?>

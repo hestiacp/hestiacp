@@ -45,7 +45,7 @@
 			<?php } ?>
 			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<p class="hint u-mb20">
-					<?= sprintf(_("Prefix %s will be automatically added to database name and database user"), "<b>" . $user_plain . "_</b>") ?>
+					<?= sprintf(_("Prefix %s will be automatically added to database name and database user"), "<span class=\"u-text-bold\">" . $user_plain . "_</span>") ?>
 				</p>
 				<div class="u-mb10">
 					<label for="v_database" class="form-label"><?= _("Database") ?></label>

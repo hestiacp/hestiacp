@@ -441,7 +441,9 @@
 					</div>
 
 					<div class="u-pt18 js-add-new-ftp-user-button" style="<?php if (empty($v_ftp_user)) echo 'display: none;' ?>">
-						<button type="button" class="form-link js-add-ftp-account"><?= _("Add FTP account") ?></button>
+						<button type="button" class="form-link js-add-ftp-account">
+							<?= _("Add FTP account") ?>
+						</button>
 					</div>
 				<?php } ?>
 			</div>

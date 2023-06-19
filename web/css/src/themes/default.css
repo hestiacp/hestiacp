@@ -994,6 +994,7 @@
 
 	@media (--viewport-large) {
 		visibility: hidden;
+		flex-wrap: nowrap;
 		padding-top: 0;
 	}
 }

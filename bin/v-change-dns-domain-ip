@@ -109,6 +109,9 @@ else
 
 	get_dns_values # get DNS values, nameservers
 
+	dkim_records="$(${BIN}/v-list-dns-records ${user} ${domain} | sed -ne '/DKIM/p')"
+	webmail_records="$(${BIN}/v-list-dns-records ${user} ${domain} | sed -ne "/${WEBMAIL_ALIAS}/p")"
+
 	template=$(get_user_value '$DNS_TEMPLATE')
 	is_dns_template_valid "$template"
 
@@ -119,6 +122,13 @@ else
 
 	# Create DNS domain config
 	create_dns_domain_config
+	if [ -n "$dkim_records" ]; then
+		dkim="yes"
+		add_dns_dkim_records
+	fi
+	if [ -n "$webmail_records" ]; then
+		add_dns_webmail_records
+	fi
 fi
 
 # Update serial

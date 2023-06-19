@@ -20,7 +20,7 @@ jobs:
         run: |
           sudo apt install gettext -y
           cd ./web/locale
-          bash /hst_scan_i18n.sh
+          bash ./hst_scan_i18n.sh
       - name: Commit new .pot file
         uses: stefanzweifel/git-auto-commit-action@v4
       - name: crowdin action

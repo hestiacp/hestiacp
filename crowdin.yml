@@ -1,5 +1,4 @@
 files:
   - source: /web/locale/hestiacp.pot
-    translation: /%two_letters_code%/LC_MESSAGES/hestiacp.mo
 project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_PERSONAL_TOKEN

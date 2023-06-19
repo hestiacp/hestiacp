@@ -590,6 +590,23 @@ create_dns_domain_config() {
 	chmod 660 ${USER_DATA}/dns/${domain}.conf
 }
 
+# Add DNS DKIM records
+add_dns_dkim_records() {
+	if [ -n "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
+		check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
+		if [ "$?" -eq 0 ]; then
+			p=$(cat $USER_DATA/mail/$domain.pub | grep -v ' KEY---' | tr -d '\n')
+			record='_domainkey'
+			policy="\"t=y; o=~;\""
+			$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no' '' 'yes'
+
+			record='mail._domainkey'
+			selector="\"v=DKIM1\; k=rsa\; p=$p\""
+			$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector" '' '' 'yes' '' 'yes'
+		fi
+	fi
+}
+
 # DNS template check
 is_dns_template_valid() {
 	if [ ! -e "$DNSTPL/$1.tpl" ]; then

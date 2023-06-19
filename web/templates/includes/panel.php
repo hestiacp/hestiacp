@@ -260,10 +260,10 @@
 							<p class="main-menu-item-label"><?= _("USER") ?><i class="fas fa-users"></i></p>
 							<ul class="main-menu-stats">
 								<li>
-									<?= _("Users") ?>: <span><?= htmlspecialchars($user_count) ?></span>
+									<?= _("Users") ?>: <?= htmlspecialchars($user_count) ?>
 								</li>
 								<li>
-									<?= _("Suspended") ?>: <span><?= $panel[$user]["SUSPENDED_USERS"] ?></span>
+									<?= _("Suspended") ?>: <?= $panel[$user]["SUSPENDED_USERS"] ?>
 								</li>
 							</ul>
 						</a>
@@ -278,10 +278,10 @@
 								<p class="main-menu-item-label"><?= _("WEB") ?><i class="fas fa-earth-americas"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Domains") ?>: <span><?= $panel[$user]["U_WEB_DOMAINS"] ?> / <?= $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["WEB_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_WEB"] ?>)</span>
+										<?= _("Domains") ?>: <?= $panel[$user]["U_WEB_DOMAINS"] ?> / <?= $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["WEB_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_WEB"] ?>)
 									</li>
 									<li>
-										<?= _("Aliases") ?>: <span><?= $panel[$user]["U_WEB_ALIASES"] ?> / <?= $panel[$user]["WEB_ALIASES"] == "unlimited" || $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["WEB_ALIASES"] * $panel[$user]["WEB_DOMAINS"] ?></span>
+										<?= _("Aliases") ?>: <?= $panel[$user]["U_WEB_ALIASES"] ?> / <?= $panel[$user]["WEB_ALIASES"] == "unlimited" || $panel[$user]["WEB_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["WEB_ALIASES"] * $panel[$user]["WEB_DOMAINS"] ?>
 									</li>
 								</ul>
 							</a>
@@ -297,10 +297,10 @@
 								<p class="main-menu-item-label"><?= _("DNS") ?><i class="fas fa-book-atlas"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Zones") ?>: <span><?= $panel[$user]["U_DNS_DOMAINS"] ?> / <?= $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DNS_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_DNS"] ?>)</span>
+										<?= _("Zones") ?>: <?= $panel[$user]["U_DNS_DOMAINS"] ?> / <?= $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["DNS_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_DNS"] ?>)
 									</li>
 									<li>
-										<?= _("Records") ?>: <span><?= $panel[$user]["U_DNS_RECORDS"] ?> / <?= $panel[$user]["DNS_RECORDS"] == "unlimited" || $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DNS_RECORDS"] * $panel[$user]["DNS_DOMAINS"] ?></span>
+										<?= _("Records") ?>: <?= $panel[$user]["U_DNS_RECORDS"] ?> / <?= $panel[$user]["DNS_RECORDS"] == "unlimited" || $panel[$user]["DNS_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["DNS_RECORDS"] * $panel[$user]["DNS_DOMAINS"] ?>
 									</li>
 								</ul>
 							</a>
@@ -316,10 +316,10 @@
 								<p class="main-menu-item-label"><?= _("MAIL") ?><i class="fas fa-envelopes-bulk"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Domains") ?>: <span><?= $panel[$user]["U_MAIL_DOMAINS"] ?> / <?= $panel[$user]["MAIL_DOMAINS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["MAIL_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_MAIL"] ?>)</span>
+										<?= _("Domains") ?>: <?= $panel[$user]["U_MAIL_DOMAINS"] ?> / <?= $panel[$user]["MAIL_DOMAINS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["MAIL_DOMAINS"] ?> (<?= $panel[$user]["SUSPENDED_MAIL"] ?>)
 									</li>
 									<li>
-										<?= _("Accounts") ?>: <span><?= $panel[$user]['U_MAIL_ACCOUNTS'] ?> / <?= $panel[$user]['MAIL_ACCOUNTS']=='unlimited' || $panel[$user]['MAIL_DOMAINS']=='unlimited' ? "<b>∞</b>" : $panel[$user]['MAIL_ACCOUNTS'] * $panel[$user]['MAIL_DOMAINS'] ?></span>
+										<?= _("Accounts") ?>: <?= $panel[$user]['U_MAIL_ACCOUNTS'] ?> / <?= $panel[$user]['MAIL_ACCOUNTS']=='unlimited' || $panel[$user]['MAIL_DOMAINS']=='unlimited' ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]['MAIL_ACCOUNTS'] * $panel[$user]['MAIL_DOMAINS'] ?>
 									</li>
 								</ul>
 							</a>
@@ -335,7 +335,7 @@
 								<p class="main-menu-item-label"><?= _("DB") ?><i class="fas fa-database"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Databases") ?>: <span><?= $panel[$user]["U_DATABASES"] ?> / <?= $panel[$user]["DATABASES"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["DATABASES"] ?> (<?= $panel[$user]["SUSPENDED_DB"] ?>)</span>
+										<?= _("Databases") ?>: <?= $panel[$user]["U_DATABASES"] ?> / <?= $panel[$user]["DATABASES"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["DATABASES"] ?> (<?= $panel[$user]["SUSPENDED_DB"] ?>)
 									</li>
 								</ul>
 							</a>
@@ -351,7 +351,7 @@
 								<p class="main-menu-item-label"><?= _("CRON") ?><i class="fas fa-clock"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Jobs") ?>: <span><?= $panel[$user]["U_CRON_JOBS"] ?> / <?= $panel[$user]["CRON_JOBS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["CRON_JOBS"] ?> (<?= $panel[$user]["SUSPENDED_CRON"] ?>)</span>
+										<?= _("Jobs") ?>: <?= $panel[$user]["U_CRON_JOBS"] ?> / <?= $panel[$user]["CRON_JOBS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["CRON_JOBS"] ?> (<?= $panel[$user]["SUSPENDED_CRON"] ?>)
 									</li>
 								</ul>
 							</a>
@@ -367,7 +367,7 @@
 								<p class="main-menu-item-label"><?= _("BACKUP") ?><i class="fas fa-file-zipper"></i></p>
 								<ul class="main-menu-stats">
 									<li>
-										<?= _("Backups") ?>: <span><?= $panel[$user]["U_BACKUPS"] ?> / <?= $panel[$user]["BACKUPS"] == "unlimited" ? "<b>∞</b>" : $panel[$user]["BACKUPS"] ?></span>
+										<?= _("Backups") ?>: <?= $panel[$user]["U_BACKUPS"] ?> / <?= $panel[$user]["BACKUPS"] == "unlimited" ? "<span class=\"u-text-bold\">∞</span>" : $panel[$user]["BACKUPS"] ?>
 									</li>
 								</ul>
 							</a>

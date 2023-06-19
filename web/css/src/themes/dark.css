@@ -528,14 +528,6 @@ strong {
 
 .form-link {
 	color: #09f;
-
-	&:hover {
-		background-color: #3b9de8;
-	}
-
-	&:active {
-		background-color: #54a6e5;
-	}
 }
 
 .form-link-danger {
@@ -783,10 +775,6 @@ strong {
 	&:hover,
 	&[aria-selected="true"] {
 		color: #ff3478;
-	}
-
-	&:active {
-		color: #3b9de8;
 	}
 }
 

@@ -38,7 +38,7 @@
 				</div>
 			<?php } ?>
 			<?php if ($user_plain == "admin" && empty($accept)) { ?>
-				<div class="u-side-by-side u-pt18">
+				<div class="u-side-by-side u-mt20">
 					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
 					<a href="/add/dns/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
 				</div>

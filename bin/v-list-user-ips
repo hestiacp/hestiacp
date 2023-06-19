@@ -50,6 +50,9 @@ json_list() {
 	for IP in $ips; do
 		read_ip_config ${IP}
 		if [ -n "$filter_match" ]; then
+			if [ "$i" -ne 1 ]; then
+				echo ','
+			fi
 			echo -n '    "'$IP'": {
 			"OWNER": "'$OWNER'",
 			"STATUS": "'$STATUS'",
@@ -57,15 +60,14 @@ json_list() {
 			"NAT": "'$NAT'",
 			"VERSION": "'$VERSION'"
 			}'
-			if [ "$i" -lt "$ip_count" ]; then
-				echo ','
-			else
-				echo
-			fi
+			((i++))
 		fi
-		((i++))
 	done
-	echo '}'
+	if [ "$i" -gt 1 ]; then
+		echo -e '\n}'
+	else
+		echo '}'
+	fi
 }
 
 # SHELL list function

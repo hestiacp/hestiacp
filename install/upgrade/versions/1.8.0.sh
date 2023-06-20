@@ -201,7 +201,7 @@ exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
 # if Exim version > 4.9.4 or greater!
 if ! version_ge "4.9.4" "$exim_version"; then
 	if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
-		srs=$(gen_pass)
+		srs=$(generate_password)
 		echo $srs > /etc/exim4/srs.conf
 		chmod 640 /etc/exim4/srs.conf
 		echo "[ * ] Update exim4.conf.template ..."

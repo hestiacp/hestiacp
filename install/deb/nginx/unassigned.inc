@@ -34,7 +34,7 @@ server {
 }
 
 server {
-	listen              directIP:443 ssl http2 default;
+	listen              directIP:443 ssl default;
 	server_name         _;
 	ssl_certificate     /usr/local/hestia/ssl/certificate.crt;
 	ssl_certificate_key /usr/local/hestia/ssl/certificate.key;

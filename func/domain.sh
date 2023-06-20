@@ -289,6 +289,32 @@ add_web_config() {
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
 
+	if [ -e /etc/nginx/conf.d/http2-directive.conf ]; then
+		while IFS= read -r old_param; do
+			new_param="$(echo "$old_param" | sed 's/\shttp2//')"
+			sed -i "s/$old_param/$new_param/" "$conf"
+		done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$conf")
+	else
+		if version_ge "$(nginx -v 2>&1 | cut -d'/' -f2)" "1.25.1"; then
+			echo "http2 on;" > /etc/nginx/conf.d/http2-directive.conf
+
+			while IFS= read -r old_param; do
+				new_param="$(echo "$old_param" | sed 's/\shttp2//')"
+				sed -i "s/$old_param/$new_param/" "$conf"
+			done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$conf")
+		else
+			listen_ssl="$(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$conf")"
+			listen_http2="$(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$conf")"
+
+			if [ -n "$listen_ssl" ] && [ -z "$listen_http2" ]; then
+				while IFS= read -r old_param; do
+					new_param="$(echo "$old_param" | sed 's/\sssl/ ssl http2/')"
+					sed -i "s/$old_param/$new_param/" "$conf"
+				done < <(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$conf")
+			fi
+		fi
+	fi
+
 	chown root:$user $conf
 	chmod 640 $conf
 
@@ -854,6 +880,32 @@ add_webmail_config() {
 			-e "s|%ssl_ca_str%|$ssl_ca_str|g" \
 			-e "s|%ssl_ca%|$ssl_ca|g" \
 			> $conf
+
+	if [ -e /etc/nginx/conf.d/http2-directive.conf ]; then
+		while IFS= read -r old_param; do
+			new_param="$(echo "$old_param" | sed 's/\shttp2//')"
+			sed -i "s/$old_param/$new_param/" "$conf"
+		done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$conf")
+	else
+		if version_ge "$(nginx -v 2>&1 | cut -d'/' -f2)" "1.25.1"; then
+			echo "http2 on;" > /etc/nginx/conf.d/http2-directive.conf
+
+			while IFS= read -r old_param; do
+				new_param="$(echo "$old_param" | sed 's/\shttp2//')"
+				sed -i "s/$old_param/$new_param/" "$conf"
+			done < <(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$conf")
+		else
+			listen_ssl="$(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$conf")"
+			listen_http2="$(grep -E "listen.*(\bssl\b(\s|.+){1,}\bhttp2\b|\bhttp2\b(\s|.+){1,}\bssl\b).*;" "$conf")"
+
+			if [ -n "$listen_ssl" ] && [ -z "$listen_http2" ]; then
+				while IFS= read -r old_param; do
+					new_param="$(echo "$old_param" | sed 's/\sssl/ ssl http2/')"
+					sed -i "s/$old_param/$new_param/" "$conf"
+				done < <(grep -E "listen.*\s\bssl\b(?:\s)*.*;" "$conf")
+			fi
+		fi
+	fi
 
 	chown root:$user $conf
 	chmod 640 $conf

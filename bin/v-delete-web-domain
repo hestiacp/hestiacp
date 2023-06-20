@@ -144,7 +144,7 @@ if [[ $BACKEND =~ ^.*PHP-([0-9])\_([0-9])$ ]]; then
 else
 	version=$(multiphp_default_version)
 fi
-# Restarting backend server
+# Restarting web server
 $BIN/v-restart-web "$restart" 
 check_result $? "Web restart failed" > /dev/null
 

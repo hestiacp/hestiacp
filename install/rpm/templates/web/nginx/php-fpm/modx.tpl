@@ -42,22 +42,28 @@ server {
 
 	location / {
 		try_files $uri $uri/ @rewrite;
+
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
 			expires 30d;
 			fastcgi_hide_header "Set-Cookie";
 		}
 
 		location ~ [^/]\.php(/|$) {
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
-			fastcgi_pass %backend_lsnr%;
-			fastcgi_index index.php;
+
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 
 			if ($request_uri ~* "/manager/|index.php") {
 				set $no_cache 1;
 			}
+
 			if ($http_cookie ~ SESS) {
 				set $no_cache 1;
 			}

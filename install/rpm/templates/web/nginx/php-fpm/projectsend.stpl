@@ -5,7 +5,7 @@
 #=========================================================================#
 
 server {
-	listen      %ip%:%web_ssl_port% ssl http2;
+	listen      %ip%:%web_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	root        %sdocroot%;
 	index       index.php index.html index.htm;
@@ -62,21 +62,27 @@ server {
 	}
 
 	location ~ \.php$ {
-		include fastcgi_params;
-		fastcgi_split_path_info ^(.+\.php)(/.*)$;
 		try_files $fastcgi_script_name =404;
-		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		fastcgi_param PATH_INFO $fastcgi_path_info;
+
+		include /etc/nginx/fastcgi_params;
+
+		fastcgi_intercept_errors on;
+		fastcgi_param HTTP_EARLY_DATA $ssl_early_data if_not_empty;
+		fastcgi_param front_controller_active true;
 		# Avoid sending the security headers twice
 		fastcgi_param modHeadersAvailable true;
-		fastcgi_param front_controller_active true;
-		fastcgi_pass unix:/run/php/php7.4-fpm.sock;
-		fastcgi_intercept_errors on;
+		fastcgi_param PATH_INFO $fastcgi_path_info;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 		fastcgi_request_buffering off;
+		fastcgi_split_path_info ^(.+\.php)(/.*)$;
+
+		fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+
 	}
 
 	location ~* \.(?:svg|gif|png|webp|html|ttf|woff|ico|jpg|jpeg)$ {
 		try_files $uri /index.php$uri$is_args$args;
+
 		# Optional: Don't log access to other assets
 		access_log off;
 	}

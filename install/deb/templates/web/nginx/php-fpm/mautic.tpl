@@ -1,7 +1,8 @@
-#=======================================================================#
-# Default Web Domain Template                                           #
-# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS #
-#=======================================================================#
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
+#=========================================================================#
 
 server {
 	listen      %ip%:%web_port%;
@@ -19,8 +20,8 @@ server {
 	}
 
 	location ~* "/\.(htaccess|htpasswd)$" {
-		deny    all;
-		return  404;
+		deny all;
+		return 404;
 	}
 
 	location /error/ {

@@ -22,21 +22,24 @@ server {
 
 	location / {
 		index doku.php;
+
 		try_files $uri $uri/ @dokuwiki;
 
 		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
-			expires     max;
+			expires max;
 			fastcgi_hide_header "Set-Cookie";
 		}
 
 		location ~ [^/]\.php(/|$) {
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
 
-			fastcgi_pass  %backend_lsnr%;
+			include /etc/nginx/fastcgi_params;
+
 			fastcgi_index index.php;
 			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-			include /etc/nginx/fastcgi_params;
+
+			fastcgi_pass %backend_lsnr%;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 		}
 	}
@@ -47,6 +50,7 @@ server {
 
 	location ^~ /conf/ { return 403; }
 	location ^~ /data/ { return 403; }
+
 	location @dokuwiki {
 		rewrite ^/_media/(.*) /lib/exe/fetch.php?media=$1 last;
 		rewrite ^/_detail/(.*) /lib/exe/detail.php?media=$1 last;

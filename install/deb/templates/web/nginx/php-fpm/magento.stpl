@@ -5,14 +5,13 @@
 #=========================================================================#
 
 server {
-	listen      %ip%:%web_ssl_port% ssl http2;
+	listen      %ip%:%web_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	root        %sdocroot%/pub;
 	index       index.php;
-	autoindex   off;
-	charset     UTF-8;
-	error_page  404 403 = /errors/404.php;
-	add_header  "X-UA-Compatible" "IE=Edge";
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
 	ssl_certificate     %ssl_pem%;
 	ssl_certificate_key %ssl_key%;
@@ -26,19 +25,22 @@ server {
 
 	include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 
-	access_log  /var/log/nginx/domains/%domain%.log combined;
-	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
-	error_log   /var/log/nginx/domains/%domain%.error.log error;
+	add_header "X-UA-Compatible" "IE=Edge";
+	error_page 404 403 = /errors/404.php;
 
 	# PHP entry point for setup application
 	location ~* ^/setup($|/) {
 		root %sdocroot%;
 
 		location ~ ^/setup/index.php {
-			fastcgi_pass   %backend_lsnr%;
-			fastcgi_index  index.php;
-			fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param HTTP_EARLY_DATA $ssl_early_data if_not_empty;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 		}
 
@@ -56,12 +58,16 @@ server {
 		root %sdocroot%;
 
 		location ~ ^/update/index.php {
-			fastcgi_split_path_info ^(/update/index.php)(/.+)$;
-			fastcgi_pass   %backend_lsnr%;
-			fastcgi_index  index.php;
-			fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-			fastcgi_param  PATH_INFO        $fastcgi_path_info;
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param HTTP_EARLY_DATA $ssl_early_data if_not_empty;
+			fastcgi_param PATH_INFO $fastcgi_path_info;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_split_path_info ^(/update/index.php)(/.+)$;
+
+			fastcgi_pass %backend_lsnr%;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 		}
 
@@ -110,7 +116,7 @@ server {
 		location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
 			add_header Cache-Control "no-store";
 			add_header X-Frame-Options "SAMEORIGIN";
-			expires    off;
+			expires off;
 
 			if (!-f $request_filename) {
 				rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
@@ -132,17 +138,19 @@ server {
 		}
 
 		location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+			try_files $uri $uri/ /get.php?$args;
+
 			add_header Cache-Control "public";
 			add_header X-Frame-Options "SAMEORIGIN";
 			expires +1y;
-			try_files $uri $uri/ /get.php?$args;
 		}
 
 		location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
+			try_files $uri $uri/ /get.php?$args;
+
 			add_header Cache-Control "no-store";
 			add_header X-Frame-Options "SAMEORIGIN";
-			expires    off;
-			try_files $uri $uri/ /get.php?$args;
+			expires off;
 		}
 
 		add_header X-Frame-Options "SAMEORIGIN";
@@ -164,14 +172,17 @@ server {
 	location ~ (index|get|static|report|404|503)\.php$ {
 		try_files $uri =404;
 
-		fastcgi_pass   %backend_lsnr%;
-		fastcgi_buffers 1024 4k;
-		fastcgi_read_timeout 600s;
-		fastcgi_connect_timeout 600s;
-
-		fastcgi_index  index.php;
-		fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
 		include /etc/nginx/fastcgi_params;
+
+		fastcgi_buffers 1024 4k;
+		fastcgi_connect_timeout 600s;
+		fastcgi_read_timeout 600s;
+		fastcgi_index index.php;
+		fastcgi_param HTTP_EARLY_DATA $ssl_early_data if_not_empty;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+		fastcgi_pass %backend_lsnr%;
+
 		include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 	}
 

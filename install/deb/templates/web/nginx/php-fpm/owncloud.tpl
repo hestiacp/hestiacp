@@ -50,22 +50,27 @@ server {
 		rewrite ^/.well-known/carddav /remote.php/carddav/ redirect;
 		rewrite ^/.well-known/caldav /remote.php/caldav/ redirect;
 		rewrite ^(/core/doc/[^\/]+/)$ $1/index.html;
+
 		try_files $uri $uri/ /index.php;
 
 		location ~ \.php(?:$|/) {
-			fastcgi_split_path_info ^(.+\.php)(/.+)$;
 			include /etc/nginx/fastcgi_params;
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-			fastcgi_param PATH_INFO $fastcgi_path_info;
+
 			#fastcgi_param HTTPS on;
-			fastcgi_pass    %backend_lsnr%;
+			fastcgi_param PATH_INFO $fastcgi_path_info;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_split_path_info ^(.+\.php)(/.+)$;
+
+			fastcgi_pass %backend_lsnr%;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 		}
 	}
 
 	location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
-		expires     max;
+		expires max;
 		fastcgi_hide_header "Set-Cookie";
+
 		# Some basic cache-control for static files to be sent to the browser
 		add_header Pragma public;
 		add_header Cache-Control "public, must-revalidate, proxy-revalidate";

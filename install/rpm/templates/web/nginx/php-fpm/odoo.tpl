@@ -16,17 +16,17 @@ server {
 	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
 	proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
-	proxy_redirect          off;
+	proxy_redirect off;
 
 	proxy_set_header X-Forwarded-Host $host;
 	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 	proxy_set_header X-Forwarded-Proto $scheme;
 	proxy_set_header X-Real-IP $remote_addr;
 
-	proxy_connect_timeout   720;
-	proxy_send_timeout      720;
-	proxy_read_timeout      720;
-	send_timeout            720;
+	proxy_connect_timeout 720;
+	proxy_send_timeout    720;
+	proxy_read_timeout    720;
+	send_timeout          720;
 
 	# Allow "Well-Known URIs" as per RFC 5785
 	location ~ /\.(?!well-known\/) {
@@ -43,9 +43,11 @@ server {
 	}
 
 	location ~* /web/static/ {
-		proxy_cache_valid 200 60m;
-		proxy_buffering on;
 		expires 864000;
+
+		proxy_buffering on;
+		proxy_cache_valid 200 60m;
+
 		proxy_pass http://127.0.0.1:8069;
 	}
 

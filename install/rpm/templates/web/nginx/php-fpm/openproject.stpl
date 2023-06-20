@@ -5,7 +5,7 @@
 #=========================================================================#
 
 server {
-	listen      %ip%:%web_ssl_port% ssl http2;
+	listen      %ip%:%web_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	root        %sdocroot%;
 	index       index.php index.html index.htm;
@@ -31,11 +31,12 @@ server {
 	}
 
 	location / {
+		proxy_set_header Host $host;
+		proxy_set_header X-Forwarded-Port 443;
+		proxy_set_header X-Forwarded-Proto https;
+		proxy_set_header X-Real-IP $remote_addr;
+
 		proxy_pass http://127.0.0.1:6000;
-		proxy_set_header Host               $host;
-		proxy_set_header X-Real-IP          $remote_addr;
-		proxy_set_header X-Forwarded-Port   443;
-		proxy_set_header X-Forwarded-Proto  https;
 	}
 
 	location /error/ {

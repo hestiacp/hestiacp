@@ -35,6 +35,7 @@ server {
 
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
 			try_files $uri @rewrite;
+
 			expires 30d;
 			fastcgi_hide_header "Set-Cookie";
 		}
@@ -50,13 +51,16 @@ server {
 		}
 
 		location ~ [^/]\.php(/|$)|^/update.php {
-			fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
-			fastcgi_pass %backend_lsnr%;
-			fastcgi_index index.php;
-			fastcgi_param SCRIPT_FILENAME $request_filename;
+
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
+
+			fastcgi_pass %backend_lsnr%;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 		}
 
@@ -84,4 +88,3 @@ server {
 	include /etc/nginx/conf.d/phppgadmin.inc*;
 	include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }
-

@@ -49,11 +49,14 @@ server {
 		}
 
 		location ~ [^/]\.php(/|$) {
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
-			fastcgi_pass %backend_lsnr%;
-			fastcgi_index index.php;
+
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
 		}
 	}
 

@@ -5,7 +5,7 @@
 #=========================================================================#
 
 server {
-	listen      %ip%:%proxy_ssl_port% ssl http2;
+	listen      %ip%:%proxy_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	error_log   /var/log/%web_system%/domains/%domain%.error.log error;
 
@@ -28,12 +28,15 @@ server {
 
 	location / {
 		proxy_pass https://%ip%:%web_ssl_port%;
+
 		location ~* ^.+\.(%proxy_extensions%)$ {
+			try_files  $uri @fallback;
+
 			root       %sdocroot%;
 			access_log /var/log/%web_system%/domains/%domain%.log combined;
 			access_log /var/log/%web_system%/domains/%domain%.bytes bytes;
+
 			expires    max;
-			try_files  $uri @fallback;
 		}
 	}
 

@@ -22,18 +22,21 @@ server {
 
 	location / {
 		try_files $uri $uri/ /index.php?$query_string;
+
 		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
-		expires     max;
-		fastcgi_hide_header "Set-Cookie";
+			expires max;
+			fastcgi_hide_header "Set-Cookie";
 		}
 
 		location ~ [^/]\.php(/|$) {
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
 
-			fastcgi_pass  %backend_lsnr%;
-			fastcgi_index index.php;
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
 		}
 	}
 
@@ -43,7 +46,7 @@ server {
 	location ~ /(LICENSE\.txt|composer\.lock|composer\.json|nginx\.conf|web\.config|htaccess\.txt|\.htaccess) { return 403; }
 
 	location /error/ {
-	alias %home%/%user%/web/%domain%/document_errors/;
+		alias %home%/%user%/web/%domain%/document_errors/;
 	}
 
 	location /vstats/ {

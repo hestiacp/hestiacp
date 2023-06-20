@@ -27,23 +27,29 @@ server {
 		proxy_no_cache $no_cache;
 
 		set $no_cache 0;
-			if ($request_uri ~* "/wp-admin/|/wp-json/|wp-.*.php|xmlrpc.php|/store.*|/cart.*|/my-account.*|/checkout.*|/user/|/admin/|/administrator/|/manager/|index.php") {
-				set $no_cache 1;
-			}
-			if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in|woocommerce_items_in_cart|woocommerce_cart_hash|PHPSESSID") {
-				set $no_cache 1;
-			}
-			if ($http_cookie ~ SESS) {
-				set $no_cache 1;
-			}
+
+		if ($request_uri ~* "/wp-admin/|/wp-json/|wp-.*.php|xmlrpc.php|/store.*|/cart.*|/my-account.*|/checkout.*|/user/|/admin/|/administrator/|/manager/|index.php") {
+			set $no_cache 1;
+		}
+
+		if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in|woocommerce_items_in_cart|woocommerce_cart_hash|PHPSESSID") {
+			set $no_cache 1;
+		}
+
+		if ($http_cookie ~ SESS) {
+			set $no_cache 1;
+		}
 
 		location ~* ^.+\.(%proxy_extensions%)$ {
-			proxy_cache off;
+			try_files   $uri @fallback;
+
 			root        %docroot%;
 			access_log  /var/log/%web_system%/domains/%domain%.log combined;
 			access_log  /var/log/%web_system%/domains/%domain%.bytes bytes;
+
 			expires     max;
-			try_files   $uri @fallback;
+
+			proxy_cache off;
 		}
 	}
 

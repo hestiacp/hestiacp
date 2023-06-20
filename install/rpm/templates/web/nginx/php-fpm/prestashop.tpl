@@ -109,13 +109,16 @@ server {
 		}
 
 		location ~ [^/]\.php(/|$) {
-	    try_files $fastcgi_script_name /index.php$uri&$args =404;
-	    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+			try_files $fastcgi_script_name /index.php$uri&$args =404;
+
+			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
 			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_split_path_info ^(.+\.php)(/.+)$;
 
 			fastcgi_pass %backend_lsnr%;
-			fastcgi_index index.php;
-			include /etc/nginx/fastcgi_params;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 		}
 	}

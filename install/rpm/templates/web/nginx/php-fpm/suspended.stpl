@@ -5,9 +5,9 @@
 #=========================================================================#
 
 server {
-	listen      %ip%:%web_ssl_port%;
+	listen      %ip%:%web_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
-	root        %docroot%;
+	root        %sdocroot%;
 	index       index.html;
 	access_log  /var/log/nginx/domains/%domain%.log combined;
 	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
@@ -31,12 +31,12 @@ server {
 	}
 
 	location / {
+		try_files $uri /index.html;
+
 		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
 			expires max;
 			fastcgi_hide_header "Set-Cookie";
 		}
-
-		try_files $uri /index.html;
 	}
 
 	location /error/ {

@@ -22,18 +22,22 @@ server {
 
 	location / {
 		try_files $uri $uri/ @opencart;
+
 		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
-			expires     max;
+			expires max;
 			fastcgi_hide_header "Set-Cookie";
 		}
 
 		location ~ [^/]\.php(/|$) {
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
 
-			fastcgi_pass  %backend_lsnr%;
-			fastcgi_index index.php;
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 		}
 	}
@@ -43,8 +47,8 @@ server {
 	}
 
 	location /storage/ {
-		deny    all;
-		return  404;
+		deny all;
+		return 404;
 	}
 
 	location /error/ {

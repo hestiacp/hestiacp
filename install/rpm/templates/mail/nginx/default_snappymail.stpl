@@ -1,5 +1,5 @@
 server {
-	listen      %ip%:%proxy_ssl_port% ssl http2;
+	listen      %ip%:%proxy_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	root        /var/lib/snappymail;
 	index       index.php index.html index.htm;
@@ -27,9 +27,12 @@ server {
 	}
 
 	location / {
-		proxy_pass https://%ip%:%web_ssl_port%;
-		try_files $uri $uri/ =404;
 		alias /var/lib/snappymail/;
+
+		try_files $uri $uri/ =404;
+
+		proxy_pass https://%ip%:%web_ssl_port%;
+
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
 			expires 7d;
 			fastcgi_hide_header "Set-Cookie";

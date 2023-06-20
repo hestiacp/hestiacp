@@ -21,12 +21,12 @@ server {
 	}
 
 	location / {
+		try_files $uri /index.html;
+
 		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
 			expires max;
 			fastcgi_hide_header "Set-Cookie";
 		}
-
-		try_files $uri /index.html;
 	}
 
 	location /error/ {

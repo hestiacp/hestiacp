@@ -17,15 +17,19 @@ server {
 
 	# Pass requests that don't refer directly to files in the filesystem to index.php
 	location / {
-	  try_files $uri $uri/ /index.php?$query_string;
+		try_files $uri $uri/ /index.php?$query_string;
 	}
 
 	location ~ \.php$ {
-		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 		try_files $uri =404;
-		fastcgi_pass %backend_lsnr%;
-		fastcgi_index index.php;
+
 		include /etc/nginx/fastcgi_params;
+
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+		fastcgi_pass %backend_lsnr%;
+
 		include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 	}
 
@@ -41,26 +45,26 @@ server {
 
 	# Expire rules for static content
 	location ~* \.(?:manifest|appcache|html?|xml|json)$ {
-	  add_header Cache-Control "max-age=0";
+		add_header Cache-Control "max-age=0";
 	}
 
 	location ~* \.(?:rss|atom)$ {
-	  add_header Cache-Control "max-age=3600";
+		add_header Cache-Control "max-age=3600";
 	}
 
 	location ~* \.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|mp4|ogg|ogv|webm|htc)$ {
-	  add_header Cache-Control "max-age=2592000";
-	  access_log off;
+		add_header Cache-Control "max-age=2592000";
+		access_log off;
 	}
 
 	location ~* \.(?:css|js)$ {
-	  add_header Cache-Control "max-age=31536000";
-	  access_log off;
+		add_header Cache-Control "max-age=31536000";
+		access_log off;
 	}
 
 	location ~* \.(?:ttf|ttc|otf|eot|woff|woff2)$ {
-	  add_header Cache-Control "max-age=2592000";
-	  access_log off;
+		add_header Cache-Control "max-age=2592000";
+		access_log off;
 	}
 
 	location /error/ {

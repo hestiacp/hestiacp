@@ -29,31 +29,36 @@ server {
 
 		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
 			valid_referers none blocked %domain_idn% %alias_idn%;
+
 			if ($invalid_referer)  {
 				return 444;
 			}
-			expires     max;
+
+			expires max;
 			fastcgi_hide_header "Set-Cookie";
 		}
 
 		location ~* ^/(?:index|piwik)\.php$ {
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
 
-			fastcgi_pass    %backend_lsnr%;
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
+
 			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
 		}
 	}
 
 	# Any other attempt to access PHP files returns a 404.
 	location ~* ^.+\.php$ {
-			return 404;
+		return 404;
 	}
 
 	# Return a 404 for all text files.
 	location ~* ^/(?:README|LICENSE[^.]*|LEGALNOTICE)(?:\.txt)*$ {
-			return 404;
+		return 404;
 	}
 
 	location /error/ {

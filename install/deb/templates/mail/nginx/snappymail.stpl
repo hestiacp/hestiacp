@@ -1,5 +1,5 @@
 server {
-	listen      %ip%:%web_ssl_port% ssl http2;
+	listen      %ip%:%web_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	root        /var/lib/snappymail;
 	index       index.php index.html index.htm;
@@ -33,6 +33,7 @@ server {
 
 	location / {
 		try_files $uri $uri/ =404;
+
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
 			expires 7d;
 			fastcgi_hide_header "Set-Cookie";
@@ -40,10 +41,12 @@ server {
 
 		location ~ ^/(.*\.php)$ {
 			include /etc/nginx/fastcgi_params;
-			fastcgi_param HTTP_EARLY_DATA $ssl_early_data;
-			fastcgi_param SCRIPT_FILENAME $request_filename;
-			fastcgi_pass  127.0.0.1:9000;
+
 			fastcgi_index index.php;
+			fastcgi_param HTTP_EARLY_DATA $ssl_early_data if_not_empty;
+			fastcgi_param SCRIPT_FILENAME $request_filename;
+
+			fastcgi_pass  127.0.0.1:9000;
 		}
 	}
 

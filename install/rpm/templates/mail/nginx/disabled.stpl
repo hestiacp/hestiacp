@@ -1,5 +1,5 @@
 server {
-	listen      %ip%:%web_ssl_port% ssl http2;
+	listen      %ip%:%web_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	root        /var/www/html;
 	index       index.php index.html index.htm;

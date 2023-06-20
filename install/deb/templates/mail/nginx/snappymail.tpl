@@ -25,6 +25,7 @@ server {
 
 	location / {
 		try_files $uri $uri/ =404;
+
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
 			expires 7d;
 			fastcgi_hide_header "Set-Cookie";
@@ -32,9 +33,11 @@ server {
 
 		location ~ ^/(.*\.php)$ {
 			include /etc/nginx/fastcgi_params;
-			fastcgi_param SCRIPT_FILENAME $request_filename;
-			fastcgi_pass  127.0.0.1:9000;
+
 			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $request_filename;
+
+			fastcgi_pass  127.0.0.1:9000;
 		}
 	}
 

@@ -19,9 +19,12 @@ server {
 	}
 
 	location / {
-		proxy_pass http://%ip%:%web_port%;
-		try_files $uri $uri/ =404;
 		alias /var/lib/roundcube/;
+
+		try_files $uri $uri/ =404;
+
+		proxy_pass http://%ip%:%web_port%;
+
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
 			expires 7d;
 			fastcgi_hide_header "Set-Cookie";

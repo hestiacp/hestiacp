@@ -1375,10 +1375,13 @@ mkdir -p /etc/nginx/modules-enabled
 mkdir -p /var/log/nginx/domains
 
 # Update dns servers in nginx.conf
-dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-for ip in $dns_resolver; do
-	if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-		resolver="$ip $resolver"
+for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+	if [[ $nameserver =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+		if [ -z "$resolver" ]; then
+			resolver="$nameserver"
+		else
+			resolver="$resolver $nameserver"
+		fi
 	fi
 done
 if [ -n "$resolver" ]; then

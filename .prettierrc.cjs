@@ -31,6 +31,7 @@ module.exports = {
 			files: ['**/nginx/*.inc', '**/nginx/*.conf'],
 			options: {
 				parser: 'nginx',
+				wrapParameters: false,
 			},
 		},
 	],

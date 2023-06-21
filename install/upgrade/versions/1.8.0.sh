@@ -185,29 +185,74 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		fi
 
 		# Implement TLS 1.3 0-RTT anti-replay
+		echo -e "[ * ] TLS 1.3 0-RTT anti-replay for NGINX, please view:\n[ - ] $HESTIA_BACKUP/message.log"
+		add_upgrade_message "About TLS 1.3 0-RTT anti-replay for NGINX\n\nIf you use custom templates, please update them (*.stpl) to apply this protection.\n\nFollow the usage or other default templates:\n/etc/nginx/conf.d/0rtt-anti-replay.conf\n\nLearn more:\nhttps://github.com/hestiacp/hestiacp/pull/3692"
+		"$BIN"/v-add-user-notification admin "About TLS 1.3 0-RTT anti-replay for NGINX" 'If you use custom templates, please update them (*.stpl) to apply this protection.<br><br>Follow the usage or other default templates:<br>/etc/nginx/conf.d/0rtt-anti-replay.conf<br><br>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3692" target="_blank">#3692</a> on GitHub to learn more.'
+
+		if grep -qw "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf 2> /dev/null; then
+			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$HESTIA"/data/users/admin/notifications.conf
+		else
+			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
+		fi
+
 		cp -f "$HESTIA_INSTALL_DIR"/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d
 
 		# Update resolver for NGINX
 		for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
 			if [[ "$nameserver" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-				resolver="$nameserver $resolver"
+				if [ -z "$resolver" ]; then
+					resolver="$nameserver"
+				else
+					resolver="$resolver $nameserver"
+				fi
 			fi
 		done
 
 		if [ -n "$resolver" ]; then
 			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
 		fi
+
+		# Update some configuration files
+		cp -f "$HESTIA_INSTALL_DIR"/nginx/phpmyadmin.inc "$HESTIA_INSTALL_DIR"/nginx/phppgadmin.inc "$HESTIA_INSTALL_DIR"/nginx/status.conf /etc/nginx/conf.d
+		[ -n "$DB_PMA_ALIAS" ] && sed -i "s|%pma_alias%|$DB_PMA_ALIAS|g" /etc/nginx/conf.d/phpmyadmin.inc
+		[ -n "$DB_PGA_ALIAS" ] && sed -i "s|%pga_alias%|$DB_PGA_ALIAS|g" /etc/nginx/conf.d/phppgadmin.inc
+
+		# Prepare for upcoming HTTP/3 support, also convenient for users to add directive to "main" context
+		mkdir -p /etc/nginx/conf.d/main
 	fi
 fi
 
 unset commit nameserver nginx_conf_commit nginx_conf_compare nginx_conf_local os_release tls12_ciphers tls13_ciphers resolver
 # Finish configuring the "Enhanced and Optimized TLS" feature
 
+# Update IPs configuration file
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+
+if [ "$WEB_SYSTEM" = "nginx" ]; then
+	while IFS= read -r IP; do
+		ip_conf="/etc/nginx/conf.d/$IP.conf"
+		cp -f "$HESTIA_INSTALL_DIR"/nginx/unassigned.inc "$ip_conf"
+		sed -i "s/directIP/$IP/g" "$ip_conf"
+		process_http2_directive "$ip_conf"
+	done < <(ls "$HESTIA"/data/ips/ 2> /dev/null)
+elif [ "$PROXY_SYSTEM" = "nginx" ]; then
+	while IFS= read -r IP; do
+		cat "$WEBTPL"/nginx/proxy_ip.tpl \
+			| sed -e "s/%ip%/$IP/g" \
+				-e "s/%web_port%/$WEB_PORT/g" \
+				-e "s/%proxy_port%/$PROXY_PORT/g" \
+				-e "s/%proxy_ssl_port%/$PROXY_SSL_PORT/g" \
+				> "/etc/nginx/conf.d/$IP.conf"
+		process_http2_directive "/etc/nginx/conf.d/$IP.conf"
+	done < <(ls "$HESTIA"/data/ips/ 2> /dev/null)
+fi
+
 exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
 # if Exim version > 4.9.4 or greater!
 if ! version_ge "4.9.4" "$exim_version"; then
 	if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
-		srs=$(gen_pass)
+		srs=$(generate_password)
 		echo $srs > /etc/exim4/srs.conf
 		chmod 640 /etc/exim4/srs.conf
 		echo "[ * ] Update exim4.conf.template ..."

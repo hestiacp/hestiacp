@@ -40,21 +40,23 @@
 	color: #909090;
 }
 
-.top-bar-notifications-list {
+.top-bar-notifications-panel {
 	background-color: rgb(50 50 50 / 99%);
 	border: 1px solid #404040;
+}
+
+.top-bar-notifications-empty {
+	color: #dadada;
+
+	& .fas {
+		color: #dadada;
+	}
 }
 
 .top-bar-notification-item {
 	text-shadow: 0 1px rgb(0 0 0 / 50%);
 	color: #dadada;
-	border-bottom: 1px solid #282828;
-
-	&.empty {
-		& .fas {
-			color: #dadada;
-		}
-	}
+	border-bottom-color: #282828;
 
 	&.unseen .top-bar-notification-title {
 		color: #fff;
@@ -65,6 +67,10 @@
 	& .fas {
 		color: #ff3478;
 	}
+}
+
+.top-bar-notifications-delete-all {
+	border-top-color: #282828;
 }
 
 .top-bar-menu-list {

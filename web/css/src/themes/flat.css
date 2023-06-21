@@ -24,9 +24,9 @@
 	text-shadow: none;
 }
 
-.top-bar-notifications-list {
+.top-bar-notifications-panel {
 	box-shadow: none;
-	border: 1px solid #ccc;
+	border-color: #ccc;
 }
 
 .top-bar-menu-link {

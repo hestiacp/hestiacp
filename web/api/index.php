@@ -271,7 +271,7 @@ function api_connection(array $request_data) {
 	);
 	if ($return_var > 0) {
 		//api_error($return_var, "Key $hst_access_key_id - authentication failed", $hst_return);
-		api_error($return_var, $output);
+		api_error($return_var, $output, $hst_return);
 	}
 	$key_data = json_decode(implode("", $output), true) ?? [];
 	unset($output, $return_var);
@@ -296,6 +296,7 @@ function api_connection(array $request_data) {
 		api_error(
 			E_FORBIDDEN,
 			"Key $hst_access_key_id - the \"user\" argument doesn\'t match the key\'s user",
+			$hst_return,
 		);
 	}
 
@@ -350,6 +351,7 @@ if (isset($_POST["access_key"]) || isset($_POST["user"]) || isset($_POST["hash"]
 	api_error(
 		405,
 		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
+		"",
 	);
 }
 
@@ -376,5 +378,6 @@ if (isset($request_data["access_key"]) && isset($request_data["secret_key"])) {
 	api_error(
 		405,
 		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
+		"",
 	);
 }

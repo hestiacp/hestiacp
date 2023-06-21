@@ -812,6 +812,7 @@ if [ "$cron" != 'no' ] && [ -n "$CRON_SYSTEM" ]; then
 		check_result "$E_PARSING" "$error"
 	fi
 
+	sed -i 's/\r//g' $tmpdir/cron/cron.conf
 	jobs=$(wc -l $tmpdir/cron/cron.conf | cut -f 1 -d' ')
 	if [ "$jobs" -eq 1 ]; then
 		echo -e "$(date "+%F %T") $jobs cron job" | tee -a $tmpdir/restore.log

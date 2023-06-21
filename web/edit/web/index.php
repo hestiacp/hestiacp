@@ -658,6 +658,8 @@ if (!empty($_POST["save"])) {
 								quoteshellarg($alias) .
 								" " .
 								quoteshellarg($v_newip_public ?: $v_ip_public) .
+								" " .
+								quoteshellarg($v_newipv6 ?: $v_ipv6) .
 								" no",
 							$output,
 							$return_var,

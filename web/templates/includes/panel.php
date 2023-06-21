@@ -103,7 +103,7 @@
 											<i class="fas fa-xmark"></i>
 										</button>
 									</div>
-									<div x-html="notification.NOTICE"></div>
+									<div class="top-bar-notification-content" x-html="notification.NOTICE"></div>
 									<p class="top-bar-notification-timestamp">
 										<time
 											:datetime="`${notification.DATE}T${notification.TIME}`"

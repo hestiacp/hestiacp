@@ -224,6 +224,18 @@
 	}
 }
 
+.top-bar-notification-content {
+	word-break: break-word;
+
+	& p {
+		margin-bottom: 15px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
 .top-bar-notification-delete {
 	display: none;
 	background-color: transparent;

@@ -202,8 +202,10 @@ if (!empty($_POST["ok"])) {
 				_("Package {%s} has been created successfully."),
 				htmlentities($_POST["v_package"]),
 			),
-			"</b></a>",
-			'<a href="/edit/package/?package=' . htmlentities($_POST["v_package"]) . '"><b>',
+			"</a>",
+			'<a class="u-text-bold" href="/edit/package/?package=' .
+				htmlentities($_POST["v_package"]) .
+				'">',
 		);
 		unset($v_package);
 	}

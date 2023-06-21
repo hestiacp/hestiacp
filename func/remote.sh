@@ -47,7 +47,6 @@ send_api_cmd() {
 			--data-urlencode "arg8=$9" \
 			https://$HOST:$PORT/api/)
 	fi
-	echo $answer
 	return $answer
 }
 

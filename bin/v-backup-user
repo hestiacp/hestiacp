@@ -142,7 +142,9 @@ check_args '1' "$#" 'USER [NOTIFY]'
 is_format_valid 'user'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
+if [ "$POLICY_BACKUP_SUSPENDED_USERS" != "yes" ]; then
+	is_object_unsuspended 'user' 'USER' "$user"
+fi
 is_backup_enabled
 
 # Perform verification if read-only mode is enabled

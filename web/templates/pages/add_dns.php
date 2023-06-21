@@ -38,7 +38,7 @@
 				</div>
 			<?php } ?>
 			<?php if ($user_plain == "admin" && empty($accept)) { ?>
-				<div class="u-side-by-side u-pt18">
+				<div class="u-side-by-side u-mt20">
 					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
 					<a href="/add/dns/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
 				</div>
@@ -166,9 +166,9 @@
 							</div>';
 						}
 					?>
-					<div class="u-pt18 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
-						<span class="form-link"><?= _("Add Name Server") ?></span>
-					</div>
+					<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
+						<?= _("Add Name Server") ?>
+					</button>
 				</div>
 			<?php } ?>
 		</div>

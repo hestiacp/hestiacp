@@ -521,6 +521,10 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_SKELETON ('yes')"
 		$BIN/v-change-sys-config-value "POLICY_SYNC_SKELETON" "yes"
 	fi
+	if [[ -z $(check_key_exists 'POLICY_BACKUP_SUSPENDED_USERS') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_BACKUP_SUSPENDED_USERS ('no')"
+		$BIN/v-change-sys-config-value "POLICY_BACKUP_SUSPENDED_USERS" "no"
+	fi
 
 	# IPV6 Support
 	if [[ -z $(check_key_exists 'IPV6_SUPPORT') ]]; then

@@ -458,9 +458,9 @@
 						<?php endforeach; ?>
 					</div>
 
-					<div class="u-pt18 js-add-new-ftp-user-button" style="<?php if (empty($v_ftp_user)) echo 'display: none;' ?>">
-						<button type="button" class="form-link js-add-ftp-account"><?= _("Add FTP account") ?></button>
-					</div>
+					<button type="button" class="form-link u-mt20 js-add-ftp-account" style="<?php if (empty($v_ftp_user)) echo 'display: none;' ?>">
+						<?= _("Add FTP account") ?>
+					</button>
 				<?php } ?>
 			</div>
 		</div>

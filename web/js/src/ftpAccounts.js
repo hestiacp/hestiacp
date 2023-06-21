@@ -93,7 +93,7 @@ function handleDeleteAccountClick() {
 			updateUserNumbers();
 
 			if (document.querySelectorAll('.js-active-ftp-accounts .js-ftp-account-nrm').length == 0) {
-				document.querySelector('.js-add-new-ftp-user-button').style.display = 'none';
+				document.querySelector('.js-add-ftp-account').style.display = 'none';
 				document.querySelector('input[name="v_ftp"]').checked = false;
 			}
 		});
@@ -116,10 +116,10 @@ function handleToggleFtpAccountsCheckbox() {
 
 	toggleFtpAccountsCheckbox.addEventListener('change', (evt) => {
 		const isChecked = evt.target.checked;
-		const addNewFtpUserButton = document.querySelector('.js-add-new-ftp-user-button');
+		const addFtpAccountButton = document.querySelector('.js-add-ftp-account');
 		const ftpAccounts = document.querySelectorAll('.js-ftp-account-nrm');
 
-		addNewFtpUserButton.style.display = isChecked ? 'block' : 'none';
+		addFtpAccountButton.style.display = isChecked ? 'block' : 'none';
 
 		ftpAccounts.forEach((ftpAccount) => {
 			const usernameInput = ftpAccount.querySelector('.js-ftp-user');

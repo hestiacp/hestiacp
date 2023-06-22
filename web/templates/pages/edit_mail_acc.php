@@ -55,12 +55,12 @@
 						</div>
 					</div>
 					<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
-					<ul class="u-list-bulleted">
+					<ul class="u-list-bulleted u-mb20">
 						<li><?= _("8 characters long") ?></li>
 						<li><?= _("1 uppercase & 1 lowercase character") ?></li>
 						<li><?= _("1 number") ?></li>
 					</ul>
-					<div class="u-pt18 u-mb10">
+					<div class="u-mb10">
 						<label for="v_send_email" class="form-label">
 							<?= _("Email login credentials to:") ?>
 						</label>

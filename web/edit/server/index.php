@@ -1567,6 +1567,26 @@ if (!empty($_POST["save"])) {
 			$v_security_adv = "yes";
 		}
 	}
+	// Change POLICY_SYSTEM_HIDE_SERVICES
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			$_POST["v_policy_backup_suspended_users"] != $_SESSION["POLICY_BACKUP_SUSPENDED_USERS"]
+		) {
+			exec(
+				HESTIA_CMD .
+					"v-change-sys-config-value POLICY_BACKUP_SUSPENDED_USERS " .
+					quoteshellarg($_POST["v_policy_backup_suspended_users"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			if (empty($_SESSION["error_msg"])) {
+				$v_policy_system_hide_services = $_POST["v_policy_backup_suspended_users"];
+			}
+			$v_security_adv = "yes";
+		}
+	}
 
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST["v_policy_sync_error_documents"] != $_SESSION["POLICY_SYNC_ERROR_DOCUMENTS"]) {

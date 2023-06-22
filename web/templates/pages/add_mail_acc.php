@@ -57,16 +57,14 @@
 						</div>
 					</div>
 					<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
-					<ul class="u-list-bulleted">
+					<ul class="u-list-bulleted u-mb20">
 						<li><?= _("8 characters long") ?></li>
 						<li><?= _("1 uppercase & 1 lowercase character") ?></li>
 						<li><?= _("1 number") ?></li>
 					</ul>
-					<div class="u-pt18 u-mb20">
-						<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary">
-							<?= _("Advanced Options") ?>
-						</button>
-					</div>
+					<button x-on:click="showAdvanced = !showAdvanced" type="button" class="button button-secondary u-mb20">
+						<?= _("Advanced Options") ?>
+					</button>
 					<div x-cloak x-show="showAdvanced" id="advtable">
 						<div class="u-mb10">
 							<label for="v_quota" class="form-label">

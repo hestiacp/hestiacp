@@ -16,7 +16,7 @@
 access_key_id="$(basename "$1")"
 secret_access_key=$2
 hst_command=$3
-ip=${4-127.0.0.1}
+ip46=${4-127.0.0.1}
 format=${5-shell}
 
 # Includes
@@ -56,11 +56,11 @@ shell_list() {
 # Callback to intercept invalid result validation
 abort_missmatch() {
 	echo "Error: $2"
-	echo "$date $time ${access_key_id:-api} $ip failed to login" >> $HESTIA/log/auth.log
+	echo "$date $time ${access_key_id:-api} $ip46 failed to login" >> $HESTIA/log/auth.log
 
 	# Add a log for user
 	if [[ "$1" == "$E_PASSWORD" && -n "$user" ]]; then
-		log_history "[$ip] $access_key_id $2" "Error" "$user" "API"
+		log_history "[$ip46] $access_key_id $2" "Error" "$user" "API"
 	fi
 
 	if [[ "$1" == "$E_FORBIDEN" ]]; then
@@ -78,7 +78,7 @@ abort_missmatch() {
 CHECK_RESULT_CALLBACK="abort_missmatch"
 
 check_args '3' "$#" 'ACCESS_KEY_ID SECRET_ACCESS_KEY COMMAND [IP] [FORMAT]'
-is_format_valid 'access_key_id' 'ip' 'command'
+is_format_valid 'access_key_id' 'ip46' 'command'
 is_object_valid 'key' 'KEY' "$access_key_id"
 is_format_valid 'secret_access_key'
 check_access_key_secret "$access_key_id" "$secret_access_key" user
@@ -108,7 +108,7 @@ esac
 #----------------------------------------------------------#
 
 # Logging
-log_history "[$ip] Access key $access_key_id successfully launched with command $hst_command" "Info" "$user" "API"
-echo "$date $time $access_key_id $ip $hst_command successfully launched" >> $HESTIA/log/auth.log
+log_history "[$ip46] Access key $access_key_id successfully launched with command $hst_command" "Info" "$user" "API"
+echo "$date $time $access_key_id $ip46 $hst_command successfully launched" >> $HESTIA/log/auth.log
 
 exit

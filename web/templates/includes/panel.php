@@ -74,57 +74,65 @@
 							></i>
 							<span class="u-hidden"><?= _("Notifications") ?></span>
 						</button>
-						<ul
+						<div
 							x-cloak
 							x-show="open"
 							x-on:click.outside="open = false"
-							class="top-bar-notifications-list"
+							class="top-bar-notifications-panel"
 						>
+							<template x-if="!initialized">
+								<div class="top-bar-notifications-empty">
+									<i class="fas fa-circle-notch fa-spin icon-dim"></i>
+									<p><?= _("Loading...") ?></p>
+								</div>
+							</template>
 							<template x-if="initialized && notifications.length == 0">
-								<li class="top-bar-notification-item empty">
+								<div class="top-bar-notifications-empty">
 									<i class="fas fa-bell-slash icon-dim"></i>
 									<p><?= _("No notifications") ?></p>
-								</li>
+								</div>
 							</template>
-							<template x-for="notification in notifications" :key="notification.ID">
-								<li
-									x-bind:id="`notification-${notification.ID}`"
-									x-bind:class="notification.ACK && 'unseen'"
-									class="top-bar-notification-item"
-								>
-									<div class="top-bar-notification-header">
-										<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
-										<button
-											x-on:click="remove(notification.ID)"
-											type="button"
-											class="top-bar-notification-delete"
-											title="<?= _("Delete notification") ?>"
+							<template x-if="initialized && notifications.length > 0">
+								<ul>
+									<template x-for="notification in notifications" :key="notification.ID">
+										<li
+											x-bind:id="`notification-${notification.ID}`"
+											x-bind:class="notification.ACK && 'unseen'"
+											class="top-bar-notification-item"
 										>
-											<i class="fas fa-xmark"></i>
-										</button>
-									</div>
-									<div x-html="notification.NOTICE"></div>
-									<p class="top-bar-notification-timestamp">
-										<time
-											:datetime="`${notification.DATE}T${notification.TIME}`"
-											x-text="`${notification.TIME} ${notification.DATE}`"
-										></time>
-									</p>
-								</li>
+											<div class="top-bar-notification-header">
+												<p x-text="notification.TOPIC" class="top-bar-notification-title"></p>
+												<button
+													x-on:click="remove(notification.ID)"
+													type="button"
+													class="top-bar-notification-delete"
+													title="<?= _("Delete notification") ?>"
+												>
+													<i class="fas fa-xmark"></i>
+												</button>
+											</div>
+											<div class="top-bar-notification-content" x-html="notification.NOTICE"></div>
+											<p class="top-bar-notification-timestamp">
+												<time
+													:datetime="`${notification.DATE}T${notification.TIME}`"
+													x-text="`${notification.TIME} ${notification.DATE}`"
+												></time>
+											</p>
+										</li>
+									</template>
+								</ul>
 							</template>
 							<template x-if="initialized && notifications.length > 2">
-								<li>
-									<button
-										x-on:click="removeAll()"
-										type="button"
-										class="top-bar-notification-delete-all"
-									>
-										<i class="fas fa-check"></i>
-										<?= _("Delete all notifications") ?>
-									</button>
-								</li>
+								<button
+									x-on:click="removeAll()"
+									type="button"
+									class="top-bar-notifications-delete-all"
+								>
+									<i class="fas fa-check"></i>
+									<?= _("Delete all notifications") ?>
+								</button>
 							</template>
-						</ul>
+						</div>
 					</div>
 				<?php } ?>
 

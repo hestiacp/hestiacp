@@ -916,7 +916,7 @@ subj="$user → restore has been completed"
 cat $tmpdir/restore.log | $SENDMAIL -s "$subj" $email $notify
 
 # Send notification to panel
-$BIN/v-add-user-notification "$user" "Backup restored successfully" "<b>Archive:</b> $backup"
+$BIN/v-add-user-notification "$user" "Backup restored successfully" "<p><span class='u-text-bold'>Archive:</span> <code>$backup</code></p>"
 
 # Deleting temporary data
 rm -rf $tmpdir

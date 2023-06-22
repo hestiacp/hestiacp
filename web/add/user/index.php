@@ -228,13 +228,15 @@ if (!empty($_POST["ok"])) {
 				htmlentities($_POST["v_username"]),
 				htmlentities($_POST["v_username"]),
 			),
-			"</b></a>",
-			'<a href="/edit/user/?user=' . htmlentities($_POST["v_username"]) . '"><b>',
-			'<a href="/login/?loginas=' .
+			"</a>",
+			'<a class="u-text-bold" href="/edit/user/?user=' .
+				htmlentities($_POST["v_username"]) .
+				'">',
+			'<a class="u-text-bold" href="/login/?loginas=' .
 				htmlentities($_POST["v_username"]) .
 				"&token=" .
 				htmlentities($_SESSION["token"]) .
-				'"><b>',
+				'">',
 		);
 		unset($v_username);
 		unset($v_password);

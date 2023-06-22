@@ -20,6 +20,8 @@ source /etc/hestiacp/hestia.conf
 source ${HESTIA}/func/main.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
 source ${HESTIA}/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -86,10 +88,12 @@ if [ -n "$old_ip" ]; then
 	# Updating WEB
 	if [ -n "$WEB_SYSTEM" ]; then
 		cd /etc/${WEB_SYSTEM}/conf.d
+
 		if [ -e "$old_ip.conf" ]; then
 			mv $old_ip.conf $new_ip.conf
 			sed -i "s/$old_ip/$new_ip/g" $new_ip.conf
 		fi
+
 		for user in $(${BIN}/v-list-sys-users plain); do
 			sed -i "s/$old_ip/$new_ip/g" ${HESTIA}/data/users/${user}/web.conf
 			${BIN}/v-rebuild-web-domains "$user" no
@@ -145,6 +149,8 @@ fi
 ${BIN}/v-list-network plain | while read listed_ip listed_mask listed_iface; do
 	if [ ! -e "$HESTIA/data/ips/${listed_ip}" ]; then
 		${BIN}/v-add-sys-ip ${listed_ip} ${listed_mask} ${listed_iface}
+	elif [ -e "/etc/nginx/conf.d/$ip.conf" ]; then
+		process_http2_directive "/etc/nginx/conf.d/${ip46}.conf"
 	fi
 done
 

@@ -139,7 +139,7 @@
 	position: relative;
 }
 
-.top-bar-notifications-list {
+.top-bar-notifications-panel {
 	background-color: #fff;
 	box-shadow: 0 3px 20px 0 rgb(0 0 0 / 40%);
 	max-height: 500px;
@@ -163,6 +163,18 @@
 	}
 }
 
+.top-bar-notifications-empty {
+	text-align: center;
+	padding: 20px;
+	font-size: 1rem;
+	color: #6f6f6f;
+
+	& .fas {
+		font-size: 3rem;
+		margin-bottom: 20px;
+	}
+}
+
 .top-bar-notification-item {
 	color: #6f6f6f;
 	font-size: 0.8rem;
@@ -171,18 +183,6 @@
 
 	&:last-child {
 		border-bottom: none;
-	}
-
-	&.empty {
-		text-align: center;
-		font-size: 1.2rem;
-		font-weight: normal;
-		padding: 4rem;
-
-		& .fas {
-			font-size: 4rem;
-			margin-bottom: 20px;
-		}
 	}
 
 	&.unseen {
@@ -224,6 +224,18 @@
 	}
 }
 
+.top-bar-notification-content {
+	word-break: break-word;
+
+	& p {
+		margin-bottom: 15px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
 .top-bar-notification-delete {
 	display: none;
 	background-color: transparent;
@@ -242,11 +254,12 @@
 	}
 }
 
-.top-bar-notification-delete-all {
+.top-bar-notifications-delete-all {
 	display: block;
+	border: 0;
+	border-top: 1px solid #e9e4e4;
 	background-color: transparent;
 	text-align: center;
-	border: 0;
 	padding: 10px 15px;
 	width: 100%;
 	background: none;

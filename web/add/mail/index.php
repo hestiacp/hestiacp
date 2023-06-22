@@ -189,8 +189,10 @@ if (!empty($_POST["ok"])) {
 				_("Mail domain {%s} has been created successfully."),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</b></a>",
-			'<a href="/list/mail/?domain=' . htmlentities($_POST["v_domain"]) . '"><b>',
+			"</a>",
+			'<a class="u-text-bold" href="/list/mail/?domain=' .
+				htmlentities($_POST["v_domain"]) .
+				'">',
 		);
 		unset($v_domain, $v_webmail);
 	}
@@ -509,12 +511,12 @@ if (!empty($_POST["ok_acc"])) {
 				htmlentities(strtolower($_POST["v_account"])),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</b></a>",
-			'<a href="/edit/mail/?account=' .
+			"</a>",
+			'<a class="u-text-bold" href="/edit/mail/?account=' .
 				htmlentities(strtolower($_POST["v_account"])) .
 				"&domain=" .
 				htmlentities($_POST["v_domain"]) .
-				'"><b>',
+				'">',
 		);
 		unset($v_account);
 		unset($v_password);

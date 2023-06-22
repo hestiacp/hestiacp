@@ -29,7 +29,7 @@ COMPOSER_BIN="$HOMEDIR/$user/.composer/composer"
 if [ ! -f "$COMPOSER_BIN" ]; then
 	$BIN/v-add-user-composer "$user"
 	if [ $? -ne 0 ]; then
-		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.'
+		$BIN/v-add-user-notification admin 'Composer installation failed!' '<p class="u-text-bold">The File Manager will not work without Composer.</p><p>Please try running the installer from a shell session:<br><code>bash $HESTIA/install/deb/filemanager/install-fm.sh</code></p><p>If this issue continues, please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.</p>'
 		fm_error='yes'
 	fi
 fi
@@ -54,11 +54,11 @@ if [ "$fm_error" != "yes" ]; then
 	if [ -f "/usr/bin/php7.3" ]; then
 		COMPOSER_HOME="$HOMEDIR/$user/.config/composer" user_exec /usr/bin/php7.3 $COMPOSER_BIN --quiet --no-dev install
 		if [ $? -ne 0 ]; then
-			$BIN/v-add-user-notification admin 'File Manager installation failed!' 'Please try running the installer from a shell session:<br>bash $HESTIA/install/deb/filemanager/install-fm.sh<br><br>If this issue continues, please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.'
+			$BIN/v-add-user-notification admin 'File Manager installation failed!' '<p>Please try running the installer from a shell session:<br><code>bash $HESTIA/install/deb/filemanager/install-fm.sh</code></p><p>If this issue continues, please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.</p>'
 			fm_error="yes"
 		fi
 	else
-		$BIN/v-add-user-notification admin 'File Manager installation failed!' '<b>Unable to proceed with installation of File Manager.</b><br><br>Package <b>php7.3-cli</b> is missing from your system. Please check your PHP installation and environment settings.'
+		$BIN/v-add-user-notification admin 'File Manager installation failed!' '<p class="u-text-bold">Unable to proceed with installation of File Manager.</p><p>Package <span class="u-text-bold">php7.3-cli</span> is missing from your system. Please check your PHP installation and environment settings.</p>'
 		fm_error="yes"
 	fi
 

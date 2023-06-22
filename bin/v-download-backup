@@ -83,7 +83,7 @@ if [ ! -e "$BACKUP/$backup" ]; then
 	fi
 	if [ -z "$downloaded" ]; then
 		subj="Download of $backup failed for $user"
-		$BIN/v-add-user-notification $user "$subj" "<b>Unable to retrieve backup file from remote server.</b><br><b>Error:</b> $backup file doesn't exist in '${BACKUP}' directory."
+		$BIN/v-add-user-notification $user "$subj" "<p class'u-text-bold'>Unable to retrieve backup file from remote server.</p><p><span class='u-text-bold'>Error:</span> $backup file doesn't exist in <code>'${BACKUP}'</code> directory.</p>"
 		sed -i "/v-download-backup $user /d" $HESTIA/data/queue/backup.pipe
 		check_result "$E_NOTEXIST" "backup file $backup doesn't exist in '${BACKUP}' folder"
 	else
@@ -105,7 +105,7 @@ if [ -e "$BACKUP/$backup" ]; then
 	subj="Download of $backup completed for $user"
 	email=$(get_user_value '$CONTACT')
 	echo "Backup file $backup was retrieved from the remote server and will be available to download for 12 hours." | $SENDMAIL -s "$subj" "$email" "$notify"
-	$BIN/v-add-user-notification "$user" "$subj" "Backup file <b>$backup</b> was retrieved from the remote server and will be available to download for <b>12 hours</b>."
+	$BIN/v-add-user-notification "$user" "$subj" "<p>Backup file <code>$backup</code> was retrieved from the remote server and will be available to download for 12 hours.</p>"
 fi
 
 # Cleaning restore queue

@@ -19,7 +19,7 @@ if ($return_var == 0) {
 
 	if ($return_var == 4) {
 		$_SESSION["error_msg"] = _(
-			"An existing backup is already running. Please wait for that backup to finish.",
+			"An existing backup task is already running, please wait for it to complete.",
 		);
 	}
 }

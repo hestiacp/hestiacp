@@ -51,6 +51,9 @@ echo "WEB_SSL='openssl'" >> $HESTIA/conf/hestia.conf
 echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
 echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
 
+rm $HESTIA/conf/defaults/hestia.conf
+cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+
 # Rebuild web config
 
 for user in $($BIN/v-list-users plain | cut -f1); do

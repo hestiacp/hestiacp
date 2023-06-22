@@ -149,8 +149,8 @@ fi
 ${BIN}/v-list-network plain | while read listed_ip listed_mask listed_iface; do
 	if [ ! -e "$HESTIA/data/ips/${listed_ip}" ]; then
 		${BIN}/v-add-sys-ip ${listed_ip} ${listed_mask} ${listed_iface}
-	elif [ -e "/etc/nginx/conf.d/$ip.conf" ]; then
-		process_http2_directive "/etc/nginx/conf.d/${ip46}.conf"
+	elif [ -e "/etc/nginx/conf.d/${listed_ip}.conf" ]; then
+		process_http2_directive "/etc/nginx/conf.d/${listed_ip}.conf"
 	fi
 done
 

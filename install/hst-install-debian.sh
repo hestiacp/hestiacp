@@ -129,7 +129,7 @@ set_default_lang() {
 	if [ -z "$lang" ]; then
 		eval lang=$1
 	fi
-	lang_list="ar az bg bn bs ckb cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
+	lang_list="ar az bg bn bs ca cs da de el en es fa fi fr hr hu id it ja ka ku ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
 	if ! (echo $lang_list | grep -w $lang > /dev/null 2>&1); then
 		eval lang=$1
 	fi
@@ -1364,19 +1364,24 @@ echo "[ * ] Configuring NGINX..."
 rm -f /etc/nginx/conf.d/*.conf
 cp -f $HESTIA_INSTALL_DIR/nginx/nginx.conf /etc/nginx/
 cp -f $HESTIA_INSTALL_DIR/nginx/status.conf /etc/nginx/conf.d/
+cp -f $HESTIA_INSTALL_DIR/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/agents.conf /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
 mkdir -p /etc/nginx/conf.d/domains
+mkdir -p /etc/nginx/conf.d/main
 mkdir -p /etc/nginx/modules-enabled
 mkdir -p /var/log/nginx/domains
 
 # Update dns servers in nginx.conf
-dns_resolver=$(cat /etc/resolv.conf | grep -i '^nameserver' | cut -d ' ' -f2 | tr '\r\n' ' ' | xargs)
-for ip in $dns_resolver; do
-	if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-		resolver="$ip $resolver"
+for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+	if [[ $nameserver =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+		if [ -z "$resolver" ]; then
+			resolver="$nameserver"
+		else
+			resolver="$resolver $nameserver"
+		fi
 	fi
 done
 if [ -n "$resolver" ]; then

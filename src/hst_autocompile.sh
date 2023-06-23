@@ -224,7 +224,7 @@ if [ -e "/etc/redhat-release" ]; then
 else
 	HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 fi
-OPENSSL_V='3.1.0'
+OPENSSL_V='3.1.1'
 PCRE_V='10.42'
 ZLIB_V='1.2.13'
 
@@ -366,6 +366,7 @@ if [ "$NGINX_B" = true ]; then
 
 			# configure nginx
 			./configure --prefix=/usr/local/hestia/nginx \
+				--with-http_v2_module \
 				--with-http_ssl_module \
 				--with-openssl=../openssl-$OPENSSL_V \
 				--with-openssl-opt=enable-ec_nistp_64_gcc_128 \

@@ -20,11 +20,6 @@ server {
 		access_log off;
 	}
 
-	location = /favicon.ico {
-		log_not_found off;
-		access_log off;
-	}
-
 	location = /robots.txt {
 		allow all;
 		log_not_found off;
@@ -44,25 +39,29 @@ server {
 		}
 
 		# Craft-specific location handlers to ensure AdminCP requests route through index.php
-		# If you change your `cpTrigger`, change it here as well
+		# If you change your "cpTrigger", change it here as well
 		location ^~ /admin {
 			try_files $uri $uri/ /index.php?$query_string;
 		}
+
 		location ^~ /cpresources {
 			try_files $uri $uri/ /index.php?$query_string;
 		}
 
 		location ~ [^/]\.php(/|$) {
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
-			fastcgi_pass %backend_lsnr%;
-			fastcgi_index index.php;
+
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
 		}
 	}
 
 	location /error/ {
-		alias   %home%/%user%/web/%domain%/document_errors/;
+		alias %home%/%user%/web/%domain%/document_errors/;
 	}
 
 	location /vstats/ {
@@ -70,9 +69,7 @@ server {
 		include %home%/%user%/web/%domain%/stats/auth.conf*;
 	}
 
-	proxy_hide_header Upgrade;
-
 	include /etc/nginx/conf.d/phpmyadmin.inc*;
 	include /etc/nginx/conf.d/phppgadmin.inc*;
-	include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
+	include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

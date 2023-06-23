@@ -5,7 +5,7 @@
 #=========================================================================#
 
 server {
-	listen      %ip%:%web_ssl_port% ssl http2;
+	listen      %ip%:%web_ssl_port% ssl;
 	server_name %domain_idn% %alias_idn%;
 	root        %sdocroot%/web;
 	index       index.php index.html index.htm;
@@ -13,10 +13,14 @@ server {
 	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
 	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-	ssl_certificate      %ssl_pem%;
-	ssl_certificate_key  %ssl_key%;
-	ssl_stapling on;
+	ssl_certificate     %ssl_pem%;
+	ssl_certificate_key %ssl_key%;
+	ssl_stapling        on;
 	ssl_stapling_verify on;
+
+	# TLS 1.3 0-RTT anti-replay
+	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
+	if ($anti_replay = 425) { return 425; }
 
 	include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 
@@ -38,31 +42,37 @@ server {
 
 	location / {
 		try_files $uri $uri/ /index.php?$args;
+
 		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
 			expires 30d;
 			fastcgi_hide_header "Set-Cookie";
 		}
 
 		# Craft-specific location handlers to ensure AdminCP requests route through index.php
-		# If you change your `cpTrigger`, change it here as well
+		# If you change your "cpTrigger", change it here as well
 		location ^~ /admin {
 			try_files $uri $uri/ /index.php?$query_string;
 		}
+
 		location ^~ /cpresources {
 			try_files $uri $uri/ /index.php?$query_string;
 		}
 
 		location ~ [^/]\.php(/|$) {
-			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 			try_files $uri =404;
-			fastcgi_pass %backend_lsnr%;
-			fastcgi_index index.php;
+
 			include /etc/nginx/fastcgi_params;
+
+			fastcgi_index index.php;
+			fastcgi_param HTTP_EARLY_DATA $rfc_early_data if_not_empty;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+			fastcgi_pass %backend_lsnr%;
 		}
 	}
 
 	location /error/ {
-		alias   %home%/%user%/web/%domain%/document_errors/;
+		alias %home%/%user%/web/%domain%/document_errors/;
 	}
 
 	location /vstats/ {

@@ -129,7 +129,7 @@ set_default_lang() {
 	if [ -z "$lang" ]; then
 		eval lang=$1
 	fi
-	lang_list="ar az bg bn bs ckb cs da de el en es fa fi fr hr hu id it ja ka ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
+	lang_list="ar az bg bn bs ca cs da de el en es fa fi fr hr hu id it ja ka ku ko nl no pl pt pt-br ro ru sk sr sv th tr uk ur vi zh-cn zh-tw"
 	if ! (echo $lang_list | grep -w $lang > /dev/null 2>&1); then
 		eval lang=$1
 	fi
@@ -1429,6 +1429,7 @@ echo "[ * ] Configuring NGINX..."
 rm -f /etc/nginx/conf.d/*.conf
 cp -f ${HESTIA_INSTALL_DIR}/nginx/nginx.conf /etc/nginx/
 cp -f ${HESTIA_INSTALL_DIR}/nginx/status.conf /etc/nginx/conf.d/
+cp -f ${HESTIA_INSTALL_DIR}/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d/
 cp -f ${HESTIA_INSTALL_DIR}/nginx/agents.conf /etc/nginx/conf.d/
 cp -f ${HESTIA_INSTALL_DIR}/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f ${HESTIA_INSTALL_DIR}/nginx/phppgadmin.inc /etc/nginx/conf.d/
@@ -1440,18 +1441,27 @@ if [ "$ipv6_support" = 'yes' ]; then
 	sed -i -e "/listen[ \t]*[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*.*/a\\\t$listen_nginx_ipv6" /etc/nginx/conf.d/status.conf
 fi
 mkdir -p /etc/nginx/conf.d/domains
+mkdir -p /etc/nginx/conf.d/main
 mkdir -p /etc/nginx/modules-enabled
 mkdir -p /var/log/nginx/domains
 
 # Update dns servers in nginx.conf
 dns_resolver="$(sed -ne '/^nameserver/s/^nameserver[ \t]*\(.*\)/\1/p' /etc/resolv.conf)"
-for ip in $dns_resolver; do
-	if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-		resolver_ipv4="$resolver_ipv4 $ip"
+for nameserver in $dns_resolver; do
+	if [[ $nameserver =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+		if [ -z "$resolver_ipv4" ]; then
+			resolver_ipv4="$nameserver"
+		else
+			resolver_ipv4="$resolver_ipv4 $nameserver"
+		fi
 	fi
 	if [ "$ipv6_support" = 'yes' ]; then
-		if [[ $ip =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
-			resolver_ipv6="$resolver_ipv6 [$ip]"
+		if [[ $nameserver =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
+			if [ -z "$resolver_ipv6" ]; then
+				resolver_ipv6="[$nameserver]"
+			else
+				resolver_ipv6="$resolver_ipv6 [$nameserver]"
+			fi
 		fi
 	fi
 done

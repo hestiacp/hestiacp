@@ -1,12 +1,6 @@
 <?php
 session_start();
 
-if ($_SERVER["HTTP_EARLY_DATA"] === "1") {
-	# Protection against early_data / 0-rrt
-	http_response_code(425);
-	exit();
-}
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;

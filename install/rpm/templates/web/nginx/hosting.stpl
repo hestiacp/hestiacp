@@ -1,41 +1,55 @@
+#=========================================================================#
+# Default Web Domain Template                                             #
+# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
+#=========================================================================#
+
 server {
-    listen      %ip%:%proxy_ssl_port% ssl http2;
-    server_name %domain_idn% %alias_idn%;
-    ssl_certificate      %ssl_pem%;
-    ssl_certificate_key  %ssl_key%;
-    ssl_stapling on;
-    ssl_stapling_verify on;
-    error_log  /var/log/%web_system%/domains/%domain%.error.log error;
+	listen      %ip%:%proxy_ssl_port% ssl;
+	server_name %domain_idn% %alias_idn%;
+	error_log   /var/log/%web_system%/domains/%domain%.error.log error;
 
-    include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+	ssl_certificate     %ssl_pem%;
+	ssl_certificate_key %ssl_key%;
+	ssl_stapling        on;
+	ssl_stapling_verify on;
 
-    location / {
-        proxy_pass      https://%ip%:%web_ssl_port%;
-        location ~* ^.+\.(%proxy_extensions%)$ {
-            root           %sdocroot%;
-            access_log     /var/log/%web_system%/domains/%domain%.log combined;
-            access_log     /var/log/%web_system%/domains/%domain%.bytes bytes;
-            expires        max;
-            try_files      $uri @fallback;
-        }
-    }
+	# TLS 1.3 0-RTT anti-replay
+	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
+	if ($anti_replay = 425) { return 425; }
 
-    location /error/ {
-        alias   %home%/%user%/web/%domain%/document_errors/;
-    }
+	include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 
-    location @fallback {
-        proxy_pass      https://%ip%:%web_ssl_port%;
-    }
+	location ~ /\.(?!well-known\/|file) {
+		deny all;
+		return 404;
+	}
 
-    location ~ /\.ht    {return 404;}
-    location ~ /\.svn/  {return 404;}
-    location ~ /\.git/  {return 404;}
-    location ~ /\.hg/   {return 404;}
-    location ~ /\.bzr/  {return 404;}
+	location / {
+		proxy_pass https://%ip%:%web_ssl_port%;
 
-    disable_symlinks if_not_owner from=%docroot%;
+		location ~* ^.+\.(%proxy_extensions%)$ {
+			try_files  $uri @fallback;
 
-    include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
+			root       %sdocroot%;
+			access_log /var/log/%web_system%/domains/%domain%.log combined;
+			access_log /var/log/%web_system%/domains/%domain%.bytes bytes;
+
+			expires    max;
+		}
+	}
+
+	location @fallback {
+		proxy_pass https://%ip%:%web_ssl_port%;
+	}
+
+	location /error/ {
+		alias %home%/%user%/web/%domain%/document_errors/;
+	}
+
+	disable_symlinks if_not_owner from=%sdocroot%;
+
+	proxy_hide_header Upgrade;
+
+	include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
 }
-

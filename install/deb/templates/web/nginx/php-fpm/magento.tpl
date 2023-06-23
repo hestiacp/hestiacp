@@ -5,200 +5,189 @@
 #=========================================================================#
 
 server {
-    listen      %ip%:%web_port%;
-    server_name %domain_idn% %alias_idn%;
+	listen      %ip%:%web_port%;
+	server_name %domain_idn% %alias_idn%;
+	root        %docroot%/pub;
+	index       index.php;
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-    root        %docroot%/pub;
-    index       index.php;
-    autoindex   off;
-    charset     UTF-8;
-    error_page  404 403 = /errors/404.php;
-    add_header  "X-UA-Compatible" "IE=Edge";
+	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
-    access_log  /var/log/nginx/domains/%domain%.log combined;
-    access_log  /var/log/nginx/domains/%domain%.bytes bytes;
-    error_log   /var/log/nginx/domains/%domain%.error.log error;
+	error_page 404 403 = /errors/404.php;
+	add_header "X-UA-Compatible" "IE=Edge";
 
-    include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+	# PHP entry point for setup application
+	location ~* ^/setup($|/) {
+		root %docroot%;
 
-    # PHP entry point for setup application
-    location ~* ^/setup($|/) {
-        root %docroot%;
+		location ~ ^/setup/index.php {
+			fastcgi_index index.php;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
-        location ~ ^/setup/index.php {
-            fastcgi_pass   %backend_lsnr%;
-            fastcgi_index  index.php;
-            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-            include /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
-        }
+			fastcgi_pass %backend_lsnr%;
 
-        location ~ ^/setup/(?!pub/). {
-            deny all;
-        }
+			include /etc/nginx/fastcgi_params;
+			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+		}
 
-        location ~ ^/setup/pub/ {
-            add_header X-Frame-Options "SAMEORIGIN";
-        }
-    }
+		location ~ ^/setup/(?!pub/). {
+			deny all;
+		}
 
-    # PHP entry point for update application
-    location ~* ^/update($|/) {
-        root %docroot%;
+		location ~ ^/setup/pub/ {
+			add_header X-Frame-Options "SAMEORIGIN";
+		}
+	}
 
-        location ~ ^/update/index.php {
-            fastcgi_split_path_info ^(/update/index.php)(/.+)$;
-            fastcgi_pass   %backend_lsnr%;
-            fastcgi_index  index.php;
-            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-            fastcgi_param  PATH_INFO        $fastcgi_path_info;
-            include /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
-        }
+	# PHP entry point for update application
+	location ~* ^/update($|/) {
+		root %docroot%;
 
-        # Deny everything but index.php
-        location ~ ^/update/(?!pub/). {
-            deny all;
-        }
+		location ~ ^/update/index.php {
+			include /etc/nginx/fastcgi_params;
 
-        location ~ ^/update/pub/ {
-            add_header X-Frame-Options "SAMEORIGIN";
-        }
-    }
+			fastcgi_index index.php;
+			fastcgi_param PATH_INFO $fastcgi_path_info;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+			fastcgi_split_path_info ^(/update/index.php)(/.+)$;
 
-    location / {
-        try_files $uri $uri/ /index.php?$args;
-    }
+			fastcgi_pass %backend_lsnr%;
 
-    location /pub/ {
-        location ~ ^/pub/media/(downloadable|customer|import|theme_customization/.*\.xml) {
-            deny all;
-        }
+			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+		}
 
-        alias %docroot%/pub/;
-        add_header X-Frame-Options "SAMEORIGIN";
-    }
+		# Deny everything but index.php
+		location ~ ^/update/(?!pub/). {
+			deny all;
+		}
 
-    location /static/ {
-        # Uncomment the following line in production mode
-        # expires max;
+		location ~ ^/update/pub/ {
+			add_header X-Frame-Options "SAMEORIGIN";
+		}
+	}
 
-        # Remove signature of the static files that is used to overcome the browser cache
-        location ~ ^/static/version {
-            rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
-        }
+	location / {
+		try_files $uri $uri/ /index.php?$args;
+	}
 
-        location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
-            add_header Cache-Control "public";
-            add_header X-Frame-Options "SAMEORIGIN";
-            expires +1y;
+	location /pub/ {
+		location ~ ^/pub/media/(downloadable|customer|import|theme_customization/.*\.xml) {
+			deny all;
+		}
 
-            if (!-f $request_filename) {
-                rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
-            }
-        }
+		alias %docroot%/pub/;
+		add_header X-Frame-Options "SAMEORIGIN";
+	}
 
-        location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
-            add_header Cache-Control "no-store";
-            add_header X-Frame-Options "SAMEORIGIN";
-            expires    off;
+	location /static/ {
+		# Uncomment the following line in production mode
+		# expires max;
 
-            if (!-f $request_filename) {
-                rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
-            }
-        }
+		# Remove signature of the static files that is used to overcome the browser cache
+		location ~ ^/static/version {
+			rewrite ^/static/(version\d*/)?(.*)$ /static/$2 last;
+		}
 
-        if (!-f $request_filename) {
-            rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
-        }
+		location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+			add_header Cache-Control "public";
+			add_header X-Frame-Options "SAMEORIGIN";
+			expires +1y;
 
-        add_header X-Frame-Options "SAMEORIGIN";
-    }
+			if (!-f $request_filename) {
+				rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
+			}
+		}
 
-    location /media/ {
-        try_files $uri $uri/ /get.php?$args;
+		location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
+			add_header Cache-Control "no-store";
+			add_header X-Frame-Options "SAMEORIGIN";
+			expires off;
 
-        location ~ ^/media/theme_customization/.*\.xml {
-            deny all;
-        }
+			if (!-f $request_filename) {
+				rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
+			}
+		}
 
-        location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
-            add_header Cache-Control "public";
-            add_header X-Frame-Options "SAMEORIGIN";
-            expires +1y;
-            try_files $uri $uri/ /get.php?$args;
-        }
+		if (!-f $request_filename) {
+			rewrite ^/static/(version\d*/)?(.*)$ /static.php?resource=$2 last;
+		}
 
-        location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
-            add_header Cache-Control "no-store";
-            add_header X-Frame-Options "SAMEORIGIN";
-            expires    off;
-            try_files $uri $uri/ /get.php?$args;
-        }
+		add_header X-Frame-Options "SAMEORIGIN";
+	}
 
-        add_header X-Frame-Options "SAMEORIGIN";
-    }
+	location /media/ {
+		try_files $uri $uri/ /get.php?$args;
 
-    location /media/customer/ {
-        deny all;
-    }
+		location ~ ^/media/theme_customization/.*\.xml {
+			deny all;
+		}
 
-    location /media/downloadable/ {
-        deny all;
-    }
+		location ~* \.(ico|jpg|jpeg|png|webp|gif|svg|js|css|swf|eot|ttf|otf|woff|woff2)$ {
+			try_files $uri $uri/ /get.php?$args;
 
-    location /media/import/ {
-        deny all;
-    }
+			add_header Cache-Control "public";
+			add_header X-Frame-Options "SAMEORIGIN";
+			expires +1y;
+		}
 
-    # PHP entry point for main application
-    location ~ (index|get|static|report|404|503)\.php$ {
-        try_files $uri =404;
+		location ~* \.(zip|gz|gzip|bz2|csv|xml)$ {
+			try_files $uri $uri/ /get.php?$args;
 
-        fastcgi_pass   %backend_lsnr%;
-        fastcgi_buffers 1024 4k;
-        fastcgi_read_timeout 600s;
-        fastcgi_connect_timeout 600s;
+			add_header Cache-Control "no-store";
+			add_header X-Frame-Options "SAMEORIGIN";
+			expires off;
+		}
 
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-        include /etc/nginx/fastcgi_params;
-        include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
-    }
+		add_header X-Frame-Options "SAMEORIGIN";
+	}
 
-    gzip on;
-    gzip_disable "msie6";
+	location /media/customer/ {
+		deny all;
+	}
 
-    gzip_comp_level 6;
-    gzip_min_length 1100;
-    gzip_buffers 16 8k;
-    gzip_proxied any;
-    gzip_types
-        text/plain
-        text/css
-        text/js
-        text/xml
-        text/javascript
-        application/javascript
-        application/x-javascript
-        application/json
-        application/xml
-        application/xml+rss
-        image/svg+xml;
-    gzip_vary on;
+	location /media/downloadable/ {
+		deny all;
+	}
 
-    # Banned locations (only reached if the earlier PHP entry point regexes don't match)
-    location ~ /\.(?!well-known\/) {
-       deny all;
-       return 404;
-    }
+	location /media/import/ {
+		deny all;
+	}
 
-    location /vstats/ {
-        alias   %home%/%user%/web/%domain%/stats/;
-        include %home%/%user%/web/%domain%/stats/auth.conf*;
-    }
+	# PHP entry point for main application
+	location ~ (index|get|static|report|404|503)\.php$ {
+		try_files $uri =404;
 
-    include     /etc/nginx/conf.d/phpmyadmin.inc*;
-    include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     %home%/%user%/conf/web/%domain%/nginx.conf_*;
+		include /etc/nginx/fastcgi_params;
+
+		fastcgi_buffers 1024 4k;
+		fastcgi_connect_timeout 600s;
+		fastcgi_read_timeout 600s;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+		fastcgi_pass %backend_lsnr%;
+
+		include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+	}
+
+	# Banned locations (only reached if the earlier PHP entry point regexes don't match)
+	location ~ /\.(?!well-known\/) {
+		deny all;
+		return 404;
+	}
+
+	location /error/ {
+		alias %home%/%user%/web/%domain%/document_errors/;
+	}
+
+	location /vstats/ {
+		alias   %home%/%user%/web/%domain%/stats/;
+		include %home%/%user%/web/%domain%/stats/auth.conf*;
+	}
+
+	include /etc/nginx/conf.d/phpmyadmin.inc*;
+	include /etc/nginx/conf.d/phppgadmin.inc*;
+	include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

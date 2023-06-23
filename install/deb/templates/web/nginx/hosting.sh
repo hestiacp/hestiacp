@@ -1,5 +1,6 @@
 #!/bin/bash
 # Changing public_html permission
+
 user="$1"
 domain="$2"
 ip="$3"

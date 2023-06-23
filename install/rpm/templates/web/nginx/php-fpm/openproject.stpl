@@ -19,7 +19,6 @@ server {
 	ssl_stapling_verify on;
 
 	# TLS 1.3 0-RTT anti-replay
-	if ($anti_replay = 302) { return 302 https://$host$request_uri; }
 	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
 	if ($anti_replay = 425) { return 425; }
 
@@ -32,6 +31,7 @@ server {
 
 	location / {
 		proxy_set_header Host $host;
+		proxy_set_header Early-Data $rfc_early_data;
 		proxy_set_header X-Forwarded-Port 443;
 		proxy_set_header X-Forwarded-Proto https;
 		proxy_set_header X-Real-IP $remote_addr;

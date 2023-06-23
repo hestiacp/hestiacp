@@ -187,7 +187,7 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		# Implement TLS 1.3 0-RTT anti-replay
 		echo -e "[ * ] TLS 1.3 0-RTT anti-replay for NGINX, please view:\n[ - ] $HESTIA_BACKUP/message.log"
 		add_upgrade_message "About TLS 1.3 0-RTT anti-replay for NGINX\n\nIf you use custom templates, please update them (*.stpl) to apply this protection.\n\nFollow the usage or other default templates:\n/etc/nginx/conf.d/0rtt-anti-replay.conf\n\nLearn more:\nhttps://github.com/hestiacp/hestiacp/pull/3692"
-		"$BIN"/v-add-user-notification admin "About TLS 1.3 0-RTT anti-replay for NGINX" 'If you use custom templates, please update them (*.stpl) to apply this protection.<br><br>Follow the usage or other default templates:<br>/etc/nginx/conf.d/0rtt-anti-replay.conf<br><br>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3692" target="_blank">#3692</a> on GitHub to learn more.'
+		"$BIN"/v-add-user-notification admin "About TLS 1.3 0-RTT anti-replay for NGINX" '<p>If you use custom templates, please update them (*.stpl) to apply this protection.</p><p>Follow the usage or other default templates:<br><code>/etc/nginx/conf.d/0rtt-anti-replay.conf</code></p><p>Visit PR <a href="https://github.com/hestiacp/hestiacp/pull/3692" target="_blank">#3692</a> on GitHub to learn more.</p>'
 
 		if grep -qw "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf 2> /dev/null; then
 			sed -i "s/""$(grep -m 1 "About TLS 1.3 0-RTT anti-replay for NGINX" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$HESTIA"/data/users/admin/notifications.conf

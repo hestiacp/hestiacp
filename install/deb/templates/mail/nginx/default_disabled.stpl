@@ -1,26 +1,30 @@
 server {
-%<i4    listen      %proxy_ipv4%:%proxy_ssl_port% ssl http2;i4>%
-%<i6    listen      %proxy_ipv6%:%proxy_ssl_port% ssl http2;i6>%
-    server_name  %domain_idn% %alias_idn%;
-    index       index.php index.html index.htm;
-    access_log /var/log/nginx/domains/%domain%.log combined;
-    error_log  /var/log/nginx/domains/%domain%.error.log error;
+%<i4	listen      %proxy_ipv4%:%proxy_ssl_port% ssl;i4>%
+%<i6	listen      %proxy_ipv6%:%proxy_ssl_port% ssl;i6>%
+	server_name %domain_idn% %alias_idn%;
+	index       index.php index.html index.htm;
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-    ssl_certificate     %ssl_pem%;
-    ssl_certificate_key %ssl_key%;
-    ssl_stapling on;
-    ssl_stapling_verify on;
+	ssl_certificate     %ssl_pem%;
+	ssl_certificate_key %ssl_key%;
+	ssl_stapling        on;
+	ssl_stapling_verify on;
 
-    location ~ /\.(?!well-known\/) {
-        deny all;
-        return 404;
-    }
+	# TLS 1.3 0-RTT anti-replay
+	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
+	if ($anti_replay = 425) { return 425; }
 
-    location / {
-        proxy_pass      http://%web_ip%:%web_port%;
-    }
+	location ~ /\.(?!well-known\/) {
+		deny all;
+		return 404;
+	}
 
-    proxy_hide_header Upgrade;
+	location / {
+		proxy_pass http://%web_ip%:%web_port%;
+	}
 
-    include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.ssl.conf_*;
+	proxy_hide_header Upgrade;
+
+	include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.ssl.conf_*;
 }

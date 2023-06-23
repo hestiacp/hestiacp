@@ -237,9 +237,9 @@
 							</div>';
 						}
 					?>
-					<div class="u-pt18 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
-						<span class="form-link"><?= _("Add Name Server") ?></span>
-					</div>
+					<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
+						<?= _("Add Name Server") ?>
+					</button>
 				<?php } ?>
 			</div>
 			<h2 x-on:click="showMailOptions = !showMailOptions" class="section-title">

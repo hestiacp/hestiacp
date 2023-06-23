@@ -144,8 +144,8 @@ if [[ $BACKEND =~ ^.*PHP-([0-9])\_([0-9])$ ]]; then
 else
 	version=$(multiphp_default_version)
 fi
-# Restarting backend server
-$BIN/v-restart-web-backend "$restart" "$version"
+# Restarting web server
+$BIN/v-restart-web "$restart" 
 check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
@@ -153,7 +153,7 @@ $BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
 # Restarting backend server
-$BIN/v-restart-web-backend "$restart"
+$BIN/v-restart-web-backend "$restart" "$version"
 check_result $? "Backend restart failed" > /dev/null
 
 # Logging

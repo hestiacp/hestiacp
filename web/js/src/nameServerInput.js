@@ -1,9 +1,9 @@
 // Attaches listeners to nameserver add and remove links to clone or remove the input
 export default function handleNameServerInput() {
 	// Add new name server input
-	const addNsElement = document.querySelector('.js-add-ns');
-	if (addNsElement) {
-		addNsElement.addEventListener('click', () => addNsInput(addNsElement));
+	const addNsButton = document.querySelector('.js-add-ns');
+	if (addNsButton) {
+		addNsButton.addEventListener('click', () => addNsInput(addNsButton));
 	}
 
 	// Remove name server input
@@ -12,7 +12,7 @@ export default function handleNameServerInput() {
 	});
 }
 
-function addNsInput(addNsElement) {
+function addNsInput(addNsButton) {
 	const currentNsInputs = document.querySelectorAll('input[name^=v_ns]');
 	const inputCount = currentNsInputs.length;
 
@@ -22,11 +22,11 @@ function addNsInput(addNsElement) {
 
 		templateNsInput.removeAttribute('value');
 		templateNsInput.name = `v_ns${inputCount + 1}`;
-		addNsElement.before(template);
+		addNsButton.before(template);
 	}
 
 	if (inputCount === 7) {
-		addNsElement.classList.add('u-hidden');
+		addNsButton.classList.add('u-hidden');
 	}
 }
 

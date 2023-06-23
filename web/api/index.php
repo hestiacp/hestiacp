@@ -27,7 +27,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/helpers.php";
  * @param string $user
  * @return void
  */
-function api_error($exit_code, $message, bool $add_log = false, $user = "system") {
+function api_error($exit_code, $message, $hst_return, bool $add_log = false, $user = "system") {
 	$message = trim(is_array($message) ? implode("\n", $message) : $message);
 
 	// Add log
@@ -56,20 +56,21 @@ function api_error($exit_code, $message, bool $add_log = false, $user = "system"
  * @return void
  */
 function api_legacy(array $request_data) {
+	$hst_return = ($request_data["returncode"] ?? "no") === "yes" ? "code" : "data";
 	exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
 	$settings = json_decode(implode("", $output), true);
 	unset($output);
 
 	if ($settings["config"]["API"] != "yes") {
 		echo "Error: API has been disabled";
-		api_error(E_DISABLED, "Error: API Disabled");
+		api_error(E_DISABLED, "Error: API Disabled", $hst_return);
 	}
 
 	if ($settings["config"]["API_ALLOWED_IP"] != "allow-all") {
 		$ip_list = explode(",", $settings["config"]["API_ALLOWED_IP"]);
 		$ip_list[] = "";
 		if (!in_array(get_real_user_ip(), $ip_list)) {
-			api_error(E_FORBIDDEN, "Error: IP is not allowed to connect with API");
+			api_error(E_FORBIDDEN, "Error: IP is not allowed to connect with API", $hst_return);
 		}
 	}
 
@@ -77,11 +78,11 @@ function api_legacy(array $request_data) {
 	// Authentication
 	if (empty($request_data["hash"])) {
 		if ($request_data["user"] != "admin") {
-			api_error(E_FORBIDDEN, "Error: authentication failed");
+			api_error(E_FORBIDDEN, "Error: authentication failed", $hst_return);
 		}
 		$password = $request_data["password"];
 		if (!isset($password)) {
-			api_error(E_PASSWORD, "Error: authentication failed");
+			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
 		$v_ip = quoteshellarg(get_real_user_ip());
 		unset($output);
@@ -135,7 +136,7 @@ function api_legacy(array $request_data) {
 
 		// Check API answer
 		if ($return_var > 0) {
-			api_error(E_PASSWORD, "Error: authentication failed");
+			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
 	} else {
 		$key = "/usr/local/hestia/data/keys/" . basename($request_data["hash"]);
@@ -148,11 +149,10 @@ function api_legacy(array $request_data) {
 		unset($output);
 		// Check API answer
 		if ($return_var > 0) {
-			api_error(E_PASSWORD, "Error: authentication failed");
+			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
 	}
 
-	$hst_return = ($request_data["returncode"] ?? "no") === "yes" ? "code" : "data";
 	$hst_cmd = trim($request_data["cmd"] ?? "");
 	$hst_cmd_args = [];
 	for ($i = 1; $i <= 9; $i++) {
@@ -162,9 +162,9 @@ function api_legacy(array $request_data) {
 	}
 
 	if (empty($hst_cmd)) {
-		api_error(E_INVALID, "Command not provided");
+		api_error(E_INVALID, "Command not provided", $hst_return);
 	} elseif (!preg_match('/^[a-zA-Z0-9_-]+$/', $hst_cmd)) {
-		api_error(E_INVALID, "$hst_cmd command invalid");
+		api_error(E_INVALID, "$hst_cmd command invalid", $hst_return);
 	}
 
 	// Check command
@@ -207,6 +207,7 @@ function api_legacy(array $request_data) {
  * @return void
  */
 function api_connection(array $request_data) {
+	$hst_return = ($request_data["returncode"] ?? "no") === "yes" ? "code" : "data";
 	$v_real_user_ip = get_real_user_ip();
 
 	exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
@@ -220,7 +221,7 @@ function api_connection(array $request_data) {
 			: 0;
 	if ($api_status == 0) {
 		// Check if API is disabled for all users
-		api_error(E_DISABLED, "API has been disabled");
+		api_error(E_DISABLED, "API has been disabled", $hst_return);
 	}
 
 	// Check if API access is enabled for the user
@@ -228,14 +229,13 @@ function api_connection(array $request_data) {
 		$ip_list = explode(",", $settings["config"]["API_ALLOWED_IP"]);
 		$ip_list[] = "";
 		if (!in_array($v_real_user_ip, $ip_list) && !in_array("0.0.0.0", $ip_list)) {
-			api_error(E_FORBIDDEN, "IP is not allowed to connect with API");
+			api_error(E_FORBIDDEN, "IP is not allowed to connect with API", $hst_return);
 		}
 	}
 
 	// Get POST Params
 	$hst_access_key_id = trim($request_data["access_key"] ?? "");
 	$hst_secret_access_key = trim($request_data["secret_key"] ?? "");
-	$hst_return = ($request_data["returncode"] ?? "no") === "yes" ? "code" : "data";
 	$hst_cmd = trim($request_data["cmd"] ?? "");
 	$hst_cmd_args = [];
 	for ($i = 1; $i <= 9; $i++) {
@@ -245,13 +245,13 @@ function api_connection(array $request_data) {
 	}
 
 	if (empty($hst_cmd)) {
-		api_error(E_INVALID, "Command not provided");
+		api_error(E_INVALID, "Command not provided", $hst_return);
 	} elseif (!preg_match('/^[a-zA-Z0-9_-]+$/', $hst_cmd)) {
-		api_error(E_INVALID, "$hst_cmd command invalid");
+		api_error(E_INVALID, "$hst_cmd command invalid", $hst_return);
 	}
 
 	if (empty($hst_access_key_id) || empty($hst_secret_access_key)) {
-		api_error(E_PASSWORD, "Authentication failed");
+		api_error(E_PASSWORD, "Authentication failed", $hst_return);
 	}
 
 	// Authenticates the key and checks permission to run the script
@@ -270,8 +270,8 @@ function api_connection(array $request_data) {
 		$return_var,
 	);
 	if ($return_var > 0) {
-		//api_error($return_var, "Key $hst_access_key_id - authentication failed");
-		api_error($return_var, $output);
+		//api_error($return_var, "Key $hst_access_key_id - authentication failed", $hst_return);
+		api_error($return_var, $output, $hst_return);
 	}
 	$key_data = json_decode(implode("", $output), true) ?? [];
 	unset($output, $return_var);
@@ -284,7 +284,7 @@ function api_connection(array $request_data) {
 
 	# Check if API access is enabled for nonadmin users
 	if ($key_user != "admin" && $api_status < 2) {
-		api_error(E_API_DISABLED, "API has been disabled");
+		api_error(E_API_DISABLED, "API has been disabled", $hst_return);
 	}
 
 	// Checks if the value entered in the "user" argument matches the user of the key
@@ -296,6 +296,7 @@ function api_connection(array $request_data) {
 		api_error(
 			E_FORBIDDEN,
 			"Key $hst_access_key_id - the \"user\" argument doesn\'t match the key\'s user",
+			$hst_return,
 		);
 	}
 
@@ -350,6 +351,7 @@ if (isset($_POST["access_key"]) || isset($_POST["user"]) || isset($_POST["hash"]
 	api_error(
 		405,
 		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
+		"",
 	);
 }
 
@@ -376,5 +378,6 @@ if (isset($request_data["access_key"]) && isset($request_data["secret_key"])) {
 	api_error(
 		405,
 		"Error: data received is null or invalid, check https://hestiacp.com/docs/server-administration/rest-api.html",
+		"",
 	);
 }

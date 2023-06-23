@@ -1,0 +1,38 @@
+name: Crowdin
+
+on:
+  schedule:
+    - cron: "20 4 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-pot:
+    name: Update .pot file
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        if: github.repository == 'hestiacp/hestiacp'
+      - name: Build hestiacp.pot
+        if: github.repository == 'hestiacp/hestiacp'
+        run: |
+          sudo apt install gettext -y
+          cd ./web/locale
+          bash ./hst_scan_i18n.sh
+      - name: Commit new .pot file
+        if: github.repository == 'hestiacp/hestiacp'
+        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: crowdin action
+        uses: crowdin/github-action@v1
+        if: github.repository == 'hestiacp/hestiacp'
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

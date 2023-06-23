@@ -199,8 +199,10 @@ if (!empty($_POST["ok"])) {
 				_("DNS zone {%s} has been created successfully."),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</b></a>",
-			'<a href="/edit/dns/?domain=' . htmlentities($_POST["v_domain"]) . '"><b>',
+			"</a>",
+			'<a class="u-text-bold" href="/edit/dns/?domain=' .
+				htmlentities($_POST["v_domain"]) .
+				'">',
 		);
 
 		unset($v_domain);
@@ -281,8 +283,8 @@ if (!empty($_POST["ok_rec"])) {
 				htmlentities($_POST["v_rec"]),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</b>",
-			"<b>",
+			"</span>",
+			"<span class='u-text-bold'>",
 		);
 		unset($v_domain);
 		unset($v_rec);

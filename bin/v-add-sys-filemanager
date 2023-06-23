@@ -51,7 +51,7 @@ fi
 if [ ! -f "$COMPOSER_BIN" ]; then
 	$BIN/v-add-user-composer "$user"
 	if [ $? -ne 0 ]; then
-		$BIN/v-add-user-notification admin 'Composer installation failed!' '<b>The File Manager will not work without Composer.</b><br><br>Please try running the installer manually from a shell session:<br>v-add-sys-filemanager<br><br>If this continues, <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.'
+		$BIN/v-add-user-notification admin 'Composer installation failed!' '<p class="u-text-bold">The File Manager will not work without Composer.</p><p>Please try running the installer manually from a shell session:<br><code>v-add-sys-filemanager</code></p><p>If this continues, <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a>.</p>'
 		exit 1
 	fi
 fi
@@ -91,7 +91,7 @@ if [ $? -ne 0 ]; then
 	echo "ERROR: File Manager installation failed!"
 	echo "Please report this to our development team:"
 	echo "https://github.com/hestiacp/hestiacp/issues"
-	$BIN/v-add-user-notification admin 'File Manager installation failed!' 'Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a> to report this to our development team.'
+	$BIN/v-add-user-notification admin 'File Manager installation failed!' '<p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">open an issue on GitHub</a> to report this to our development team.</p>'
 	# Installation failed, clean up files
 	rm --recursive --force ${FM_INSTALL_DIR}
 	$BIN/v-change-sys-config-value 'FILE_MANAGER' 'false'

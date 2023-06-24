@@ -13,8 +13,11 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Added support for Debian 12 (#3661)
-- [Feature] TLS 1.3 0-RTT with replay protection (#3692) @myrevery
+
+- Enhanced and Optimized TLS (#3555 @myrevery)
+- TLS 1.3 0-RTT with replay protection (#3692 @myrevery)
 - Add support for SRS in Exim >= 4.9.5 (#3197 @henri-hulski)
+- White label support and refactor translations (#3441 #3572)
 - Improve user notifications UI (#3709)
 - Continue work on UI improvements (#3700, #3693, #3691, #3685, #3682, #3680, #3672, #3668, #3662, #3659, #3651, #3634, #3629, #3628, #3619, #3615, #3608, #3606, #3602, #3600, #3598)
 - Allow option to enable/disable backup suspended users (#3696 )
@@ -22,7 +25,6 @@ All notable changes to this project will be documented in this file.
 - Allow users to create own document error / skeleton and do not overwrite them with updating (#3622)
 - Consistent overlay styles (#3617)
 - Integrate SnappyMail (#3590)
-- [Feature] Enhanced and Optimized TLS (#3555)
 
 ### Bugfixes
 
@@ -58,6 +60,19 @@ All notable changes to this project will be documented in this file.
 - Fix #3599 Disable SMTPUTF8 (#3603)
 - Fix content shift on stats row hover (#3614)
 - Fix issue with checkbox is not selected port return "no" (#3616)
+- Encode passwords in emails send (#3566)
+- Add support for PHPmyAdmin SSO support for Mysql 8 (#3539)
+- add alias to wp-cli to the user's .bashrc and fix error handling. (#3569 @aosmichenko)
+- Simplify suspend/unsuspend dialog translations (#3565)
+- Tidy notifications copy (#3561)
+- Predefined Ipset lists not loading #3552 (#3557)
+- Minor UI fixes to server console output (#3556 @myrevery)
+
+### Dependencies
+
+- Update hestia-php to 8.2.7
+- Update hestia-nginx to 1.25.1
+- Update Quick install apps versions
 
 ## [1.7.7] - Service release
 

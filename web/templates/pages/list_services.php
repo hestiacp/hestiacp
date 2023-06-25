@@ -64,7 +64,7 @@
 						<?php if ($sys["sysinfo"]["RELEASE"] == "release") { ?>
 							<i class="fas fa-cube" title="<?= _("Production Release") ?>"></i>
 						<?php } ?>
-						&nbsp;v<?= $sys["sysinfo"]["HESTIA"] ?>
+						v<?= $sys["sysinfo"]["HESTIA"] ?>
 					</span>
 				</li>
 				<li class="server-summary-item">

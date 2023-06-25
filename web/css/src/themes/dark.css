@@ -263,7 +263,6 @@
 		}
 
 		&.active {
-			background-color: #454545 !important;
 			color: #fff;
 			background: linear-gradient(
 				to bottom,
@@ -271,6 +270,7 @@
 				rgb(45 45 45 / 75%) 30%,
 				rgb(60 60 60 / 100%) 95%
 			);
+			background-color: #454545;
 			text-shadow: 0 1px rgb(0 0 0 / 80%);
 		}
 	}

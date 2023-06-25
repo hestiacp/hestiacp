@@ -81,7 +81,7 @@ for ((I = 3; I <= $#; I++)); do
 	cmdArgs="$cmdArgs ${all_scriptargs[${I} - 1]}"
 done
 
-runuser -u "$user" -- $clicmd $cmdArgs
+runuser -u "$user" -- $clicmd $cmdArgs 2>&1
 if [ $? -ne 0 ]; then
 	echo "Error: cmd exited with errors"
 	exit 3

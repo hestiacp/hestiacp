@@ -2117,6 +2117,7 @@
 	font-family: var(--font-family-monospace);
 	font-size: 0.92rem;
 	line-height: 1.15;
+	padding-bottom: 20px;
 }
 
 /* Badge component
@@ -2285,11 +2286,6 @@
 			max-width: 384px;
 		}
 	}
-}
-
-.server-console-output {
-	background-color: #fff;
-	padding: 10px 0 20px 20px;
 }
 
 /* App footer

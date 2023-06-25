@@ -89,6 +89,8 @@
 		</div>
 	</div>
 
+	<h1 class="u-text-center u-hide-desktop u-pr30 u-mb20 u-pl30"><?= _("Services") ?></h1>
+
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
 			<div class="units-table-cell">

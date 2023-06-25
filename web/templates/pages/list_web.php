@@ -306,7 +306,7 @@
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("IPV6 Address") ?>:</span>
-					<?= $ips[$data[$key]['IP6']] ?? $data[$key]['IP6'] ?>
+					<?= empty($ips[$data[$key]['IP6']]) ? '' : $data[$key]['IP6']; ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>

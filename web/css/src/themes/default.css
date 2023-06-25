@@ -674,6 +674,7 @@
 	box-shadow: 0 2px 14px 0 rgb(20 20 20 / 35%);
 
 	& li {
+		display: flex;
 		border-bottom: 1px solid #ddd;
 		color: #2e2e2e;
 		cursor: pointer;
@@ -684,20 +685,17 @@
 	}
 
 	& span {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
 		&.name {
-			display: inline-block;
 			padding: 11px;
 			width: 141px;
 			font-weight: 500;
-
-			& .fas.fa-arrow-down-a-z {
-				float: right;
-				margin-top: 2px;
-			}
 		}
 
 		&.up {
-			display: inline-block;
 			padding: 11px 14px;
 			width: 44px;
 		}

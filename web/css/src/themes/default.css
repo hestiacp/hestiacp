@@ -2114,14 +2114,14 @@
 .badge {
 	display: inline-block;
 	min-width: 26px;
-	min-height: 24px;
 	line-height: 24px;
-	border-radius: 50%;
+	border-radius: 13px;
 	font-weight: 700;
 	font-size: 0.75rem;
 	box-shadow: 0 1px 2px rgb(70 70 70 / 50%), inset 0 2px 2px #fff;
 	color: #6c6c6c;
-	text-align: center;
+	padding-left: 4px;
+	padding-right: 4px;
 	text-shadow: 0 1px #fafafa;
 	border: 1px solid #b8b8b8;
 	background-color: #eaeaea;

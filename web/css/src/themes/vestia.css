@@ -130,7 +130,7 @@
 		&.active {
 			background: none;
 			font-weight: bold;
-			color: #444;
+			color: #ff6701;
 		}
 	}
 }

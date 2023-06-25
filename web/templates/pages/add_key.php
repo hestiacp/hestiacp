@@ -28,7 +28,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add SSH Key") ?></h1>
+			<h1 class="u-mb20"><?= _("Add SSH Key") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div>
 				<label for="v_key" class="form-label"><?= _("SSH Key") ?></label>

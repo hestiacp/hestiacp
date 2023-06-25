@@ -22,7 +22,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit Database") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Database") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_database" class="form-label"><?= _("Database") ?></label>

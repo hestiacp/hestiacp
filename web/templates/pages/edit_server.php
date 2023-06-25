@@ -46,7 +46,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title">
+			<h1 class="u-mb20">
 				<?= _("Configure Server") ?>
 			</h1>
 			<?php show_alert_message($_SESSION); ?>

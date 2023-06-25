@@ -14,6 +14,7 @@
 	--color-text: #7c7c7c;
 	--color-text-link: #326b9b;
 	--color-text-link-hover: #c36;
+	--color-text-heading: #4b4b4b;
 	--color-background: #fff;
 	--border-radius-base: 4px;
 
@@ -1308,14 +1309,6 @@
 	}
 }
 
-.form-title {
-	color: #4b4b4b;
-	font-size: 1.4rem;
-	font-weight: 500;
-	padding-bottom: 30px;
-	letter-spacing: -0.01em;
-}
-
 .form-label {
 	margin-bottom: 5px;
 	display: inline-block;
@@ -1605,7 +1598,6 @@
 
 .section-title {
 	display: flex;
-	color: #4b4b4b;
 	cursor: pointer;
 	justify-content: space-between;
 	align-items: center;
@@ -1688,7 +1680,6 @@
 .shortcuts-title {
 	text-transform: uppercase;
 	color: #ff3478;
-	letter-spacing: -0.01em;
 	font-weight: 600;
 }
 
@@ -1902,7 +1893,6 @@
 }
 
 .server-summary-title {
-	color: #414141;
 	margin-bottom: 10px;
 
 	@media (--viewport-medium) {
@@ -2059,7 +2049,7 @@
 	margin-bottom: 30px;
 
 	@media (--viewport-small) {
-		color: #4b4b4b;
+		color: var(--color-text-heading);
 	}
 }
 

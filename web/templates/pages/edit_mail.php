@@ -32,7 +32,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit Mail Domain") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Mail Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>

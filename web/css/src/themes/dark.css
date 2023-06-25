@@ -10,6 +10,7 @@
 	--color-text: #cdcdcd;
 	--color-text-link: #4fabe9;
 	--color-text-link-hover: #ff3478;
+	--color-text-heading: #e8e8e8;
 	--color-background: #282828;
 	--alert-border-color: #212121;
 
@@ -328,10 +329,6 @@
 	color: #707070;
 }
 
-.server-summary-title {
-	color: #fafafa;
-}
-
 /* Panel component
 		========================================================================== */
 
@@ -462,10 +459,6 @@
 /* Forms
    ========================================================================== */
 
-.form-title {
-	color: #e8e8e8;
-}
-
 .form-label,
 .form-check label {
 	color: #d4d4d4;
@@ -552,7 +545,6 @@
 }
 
 .section-title {
-	color: #d4d4d4;
 	border-bottom-color: #484848;
 }
 

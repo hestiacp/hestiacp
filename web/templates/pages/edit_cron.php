@@ -22,7 +22,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Edit Cron Job") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Cron Job") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_cmd" class="form-label"><?= _("Command") ?></label>

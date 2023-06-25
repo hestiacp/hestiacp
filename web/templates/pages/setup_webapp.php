@@ -24,7 +24,7 @@
 			<input type="hidden" name="ok" value="true">
 
 			<div class="form-container">
-				<h1 class="form-title"><?= sprintf(_("Install %s"), $WebappInstaller->info()["name"]) ?></h1>
+				<h1 class="u-mb20"><?= sprintf(_("Install %s"), $WebappInstaller->info()["name"]) ?></h1>
 				<?php show_alert_message($_SESSION); ?>
 				<?php if (!$WebappInstaller->isDomainRootClean()) { ?>
 					<div class="alert alert-info" role="alert">

@@ -21,7 +21,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add Access Key") ?></h1>
+			<h1 class="u-mb20"><?= _("Add Access Key") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<p class="u-mb10"><?= _("Permissions") ?></p>
 			<?php foreach ($apis as $api_name => $api_data) { ?>

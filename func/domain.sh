@@ -615,7 +615,7 @@ add_dns_webmail_records() {
 	if [ -n "$DNS_SYSTEM" ]; then
 		dns_domain=$(${BIN}/v-list-dns-domains $user list)
 		# shellcheck disable=SC1087
-		webmail_records="$(${BIN}/v-list-dns-records ${user} ${domain} plain | sed -ne "/$WEBMAIL_ALIAS[ \t]*A/s/^\([0-9]*\)[ \t]*$WEBMAIL_ALIAS[ \t]*A.*/\1/gp")"
+		webmail_records="$(${BIN}/v-list-dns-records ${user} ${domain} plain | sed -ne "/$WEBMAIL_ALIAS/s/^\([0-9]*\)[ \t]*$WEBMAIL_ALIAS[ \t]*.*/\1/gp")"
 		if [ "$dns_domain" = "$domain" ]; then
 			if [ "$WEBMAIL_ALIAS" != "mail" ]; then
 				#Prevent mail.domain.com to be cycled

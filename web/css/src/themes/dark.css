@@ -41,6 +41,15 @@
 	color: #909090;
 }
 
+.top-bar-usage-item {
+	color: #cacaca;
+
+	& .fas {
+		color: #909090;
+		margin-right: 3px;
+	}
+}
+
 .top-bar-notifications-panel {
 	background-color: rgb(50 50 50 / 99%);
 	border: 1px solid #404040;

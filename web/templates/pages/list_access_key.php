@@ -21,10 +21,10 @@ if (!empty($_POST["ok"])) { ?>
 <!-- End toolbar -->
 
 <div class="container animate__animated animate__fadeIn">
-	<form id="vstobjects">
+	<form id="main-form">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Access Key") ?></h1>
+			<h1 class="u-mb20"><?= _("Access Key") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if (!empty($key_data["ACCESS_KEY_ID"])) { ?>
 				<div class="u-mt15 u-mb10">

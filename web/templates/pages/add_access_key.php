@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -16,12 +16,12 @@
 <!-- End toolbar -->
 
 <div class="container animate__animated animate__fadeIn">
-	<form id="vstobjects" name="v_add_access_key" method="post">
+	<form id="main-form" name="v_add_access_key" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add Access Key") ?></h1>
+			<h1 class="u-mb20"><?= _("Add Access Key") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<p class="u-mb10"><?= _("Permissions") ?></p>
 			<?php foreach ($apis as $api_name => $api_data) { ?>

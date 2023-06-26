@@ -9,11 +9,11 @@
 
 <!-- Begin form -->
 <div class="container animate__animated animate__fadeIn">
-	<form id="vstobjects" name="v_generate_csr" method="post">
+	<form id="main-form" name="v_generate_csr" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
+			<h1 class="u-mb20"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div
 				x-data="{

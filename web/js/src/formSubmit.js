@@ -3,14 +3,14 @@ import { updateAdvancedTextarea } from './toggleAdvanced';
 import { showSpinner } from './helpers';
 
 export default function handleFormSubmit() {
-	const pageForm = document.querySelector('#vstobjects');
-	if (pageForm) {
-		pageForm.addEventListener('submit', () => {
+	const mainForm = document.querySelector('#main-form');
+	if (mainForm) {
+		mainForm.addEventListener('submit', () => {
 			// Show loading spinner
 			showSpinner();
 
 			// Enable any disabled inputs to ensure all fields are submitted
-			if (pageForm.classList.contains('js-enable-inputs-on-submit')) {
+			if (mainForm.classList.contains('js-enable-inputs-on-submit')) {
 				document.querySelectorAll('input[disabled]').forEach((input) => {
 					input.disabled = false;
 				});

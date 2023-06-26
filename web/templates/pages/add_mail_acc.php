@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -21,7 +21,7 @@
 		x-data="{
 			showAdvanced: <?= empty($v_adv) ? "false" : "true" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_add_mail_acc"
 		method="post"
 	>
@@ -29,7 +29,7 @@
 		<input type="hidden" name="ok_acc" value="add">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Add Mail Account") ?></h1>
+			<h1 class="u-mb20"><?= _("Add Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="sidebar-right-grid">
 				<div class="sidebar-right-grid-content">

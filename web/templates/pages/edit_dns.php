@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -17,12 +17,12 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_edit_dns" method="post" class="<?= $v_status ?>">
+	<form id="main-form" name="v_edit_dns" method="post" class="<?= $v_status ?>">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit DNS Domain") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit DNS Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>

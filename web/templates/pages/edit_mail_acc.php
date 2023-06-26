@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -21,7 +21,7 @@
 		x-data="{
 			hasAutoReply: <?= $v_autoreply == "yes" ? "true" : "false" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_edit_mail_acc"
 		method="post"
 		class="<?= $v_status ?>"
@@ -30,7 +30,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Edit Mail Account") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="sidebar-right-grid">
 				<div class="sidebar-right-grid-content">

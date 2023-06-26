@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -19,7 +19,7 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<?php if (!empty($WebappInstaller->getOptions())) { ?>
-		<form id="vstobjects" method="POST" name="v_setup_webapp">
+		<form id="main-form" method="POST" name="v_setup_webapp">
 			<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 			<input type="hidden" name="ok" value="true">
 

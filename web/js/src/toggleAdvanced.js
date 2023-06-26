@@ -24,7 +24,7 @@ function toggleAdvancedOptions() {
 // Update the "advanced options" textarea with "basic options" input values
 export function updateAdvancedTextarea() {
 	const advancedTextarea = document.querySelector('.js-advanced-textarea');
-	const textInputs = document.querySelectorAll('#vstobjects input[type=text]');
+	const textInputs = document.querySelectorAll('#main-form input[type=text]');
 
 	textInputs.forEach((textInput) => {
 		const search = textInput.dataset.regexp;

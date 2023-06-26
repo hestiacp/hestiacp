@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -21,7 +21,7 @@
 		x-data="{
 			showAdvanced: <?= empty($v_adv) ? "false" : "true" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_add_dns"
 		method="post"
 	>

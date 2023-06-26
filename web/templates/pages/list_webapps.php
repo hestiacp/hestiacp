@@ -13,7 +13,7 @@
 <div class="container animate__animated animate__fadeIn">
 
 	<div class="form-container form-container-wide">
-		<h1 class="form-title"><?= _("Quick Install App") ?></h1>
+		<h1 class="u-mb20"><?= _("Quick Install App") ?></h1>
 		<?php show_alert_message($_SESSION); ?>
 		<div class="cards">
 			<!-- List available web apps -->

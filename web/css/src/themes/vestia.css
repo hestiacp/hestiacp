@@ -17,6 +17,10 @@
 	--alert-text-shadow: none;
 }
 
+h1 {
+	font-weight: 600;
+}
+
 /* Top bar
    ========================================================================== */
 
@@ -130,7 +134,7 @@
 		&.active {
 			background: none;
 			font-weight: bold;
-			color: #444;
+			color: #ff6701;
 		}
 	}
 }
@@ -327,10 +331,6 @@
 
 /* Forms
    ========================================================================== */
-
-.form-title {
-	font-weight: 600;
-}
 
 .form-control,
 .form-select {

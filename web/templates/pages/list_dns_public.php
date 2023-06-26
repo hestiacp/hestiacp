@@ -26,7 +26,7 @@
 <div class="container">
 
 	<div class="form-container">
-		<h1 class="form-title"><?= _("View Public DNSSEC Key") ?></h1>
+		<h1 class="u-mb20"><?= _("View Public DNSSEC Key") ?></h1>
 		<div class="u-mb10">
 			<label class="form-label"><?= _("DNSKEY Record") ?></label>
 			<input type="text" class="form-control" value="<?php echo $data[$domain]["RECORD"]; ?>" readonly>

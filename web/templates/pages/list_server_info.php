@@ -112,13 +112,12 @@
 
 	<a
 		href="#top"
-		class="button button-secondary button-circle button-floating button-floating-top "
+		class="button button-secondary button-circle button-floating button-floating-top"
 		title="<?= _("Top") ?>"
 	>
 		<i class="fas fa-arrow-up"></i>
 		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
 
-	<div class="server-console-output">&nbsp;</div>
 	<div class="container">
-		<pre class="console-output animate__animated animate__fadeIn">
+		<pre class="console-output animate__animated animate__fadeIn u-mt20">

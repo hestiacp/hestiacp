@@ -30,7 +30,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container form-container-wide">
-			<h1 class="form-title"><?= _("Edit Mail Account") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit Mail Account") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="sidebar-right-grid">
 				<div class="sidebar-right-grid-content">

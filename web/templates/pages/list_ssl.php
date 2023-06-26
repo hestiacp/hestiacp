@@ -13,7 +13,7 @@
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
+			<h1 class="u-mb20"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div
 				x-data="{

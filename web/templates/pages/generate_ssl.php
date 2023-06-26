@@ -13,7 +13,7 @@
 		<input type="hidden" name="generate" value="generate">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
+			<h1 class="u-mb20"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
 			<div class="u-mb10">
 				<label for="v_domain" class="form-label"><?= _("Domain") ?></label>
 				<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>">

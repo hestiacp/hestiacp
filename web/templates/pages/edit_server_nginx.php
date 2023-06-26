@@ -25,7 +25,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Configure Server") ?>: <?= $v_service_name ?></h1>
+			<h1 class="u-mb20"><?= _("Configure Server") ?>: <?= $v_service_name ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="js-basic-options">
 				<div class="u-mb10">

@@ -24,7 +24,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add Web Domain") ?></h1>
+			<h1 class="u-mb20"><?= _("Add Web Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">

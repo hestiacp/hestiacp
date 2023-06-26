@@ -2,8 +2,8 @@
 # info: add dns domain or dns record after web domain alias
 # options: USER ALIAS IPV4 [IPV6] [RESTART]
 #
-# example: v-add-dns-on-web-alias admin www.example.com 8.8.8.8 123.212.111.222 yes
-# example: v-add-dns-on-web-alias admin www.example.com '' 123.212.111.222 no
+# example: v-add-dns-on-web-alias admin www.example.com 8.8.8.8 1234:2123:1111:2 yes
+# example: v-add-dns-on-web-alias admin www.example.com '' 1234:2123:1111:2 no
 #
 # deprecated options: USER ALIAS IP [RESTART] (only for backwards compatibilty purposes)
 # depricated example: v-add-dns-on-web-alias admin www.example.com 8.8.8.8

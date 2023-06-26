@@ -236,7 +236,7 @@
 					<span class="u-hide-desktop u-text-bold"><?= _("IPs") ?>:</span>
 					<?= $data[$key]["IP_OWNED"] ?>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell u-text-center-desktop u-text-no-wrap">
 					<span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
 					<span class="u-text-bold">
 						<?= humanize_usage_size($data[$key]["U_DISK"], 1) ?>
@@ -251,7 +251,7 @@
 						<?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell u-text-center-desktop u-text-no-wrap">
 					<span class="u-hide-desktop u-text-bold"><?= _("Bandwidth") ?>:</span>
 					<span class="u-text-bold">
 						<?= humanize_usage_size($data[$key]["U_BANDWIDTH"], 1) ?>

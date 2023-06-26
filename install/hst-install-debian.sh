@@ -1557,6 +1557,11 @@ if [ "$proftpd" = 'yes' ]; then
 			systemctl enable proftpd
 		fi
 	fi
+
+	if [ "$release" -eq 12 ]; then
+		systemctl disable --now proftpd.socket
+		systemctl enable --now proftpd.service
+	fi
 fi
 
 #----------------------------------------------------------#

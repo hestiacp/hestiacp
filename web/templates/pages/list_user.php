@@ -158,9 +158,9 @@
 							(<?= $data[$key]["NAME"] ?>)
 						</a>
 					<?php } ?>
-					<p>
-						<span class="u-text-bold"><?= _("Email") ?>:</span>
-						<?= $data[$key]["CONTACT"] ?>
+					<p class="u-max-width250 u-text-truncate">
+						<span class="u-hide-desktop"><?= _("Email") ?>:</span>
+						<span title="<?= $data[$key]["CONTACT"] ?>"><?= $data[$key]["CONTACT"] ?></span>
 					</p>
 				</div>
 				<div class="units-table-cell">

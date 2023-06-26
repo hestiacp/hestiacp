@@ -99,6 +99,8 @@ if (!empty($_SESSION["DB_PGA_ALIAS"])) {
 
 <div class="container">
 
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Databases") ?></h1>
+
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
 			<div class="units-table-cell">

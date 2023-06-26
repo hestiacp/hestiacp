@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -21,7 +21,7 @@
 		x-data="{
 			showUserTable: <?= empty($v_dedicated) ? "true" : "false" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_edit_ip"
 		method="post"
 	>
@@ -29,7 +29,7 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Edit IP Address") ?></h1>
+			<h1 class="u-mb20"><?= _("Edit IP Address") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb10">
 				<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>

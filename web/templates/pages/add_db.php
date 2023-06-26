@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -21,7 +21,7 @@
 		x-data="{
 			showAdvanced: <?= empty($v_adv) ? "false" : "true" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_add_db"
 		method="post"
 	>
@@ -29,7 +29,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add Database") ?></h1>
+			<h1 class="u-mb20"><?= _("Add Database") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">

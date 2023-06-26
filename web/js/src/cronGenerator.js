@@ -7,7 +7,7 @@ export default function handleCronGenerator() {
 
 			inputNames.forEach((inputName) => {
 				const value = fieldset.querySelector(`[name=h_${inputName}]`).value;
-				const formInput = document.querySelector(`#vstobjects input[name=v_${inputName}]`);
+				const formInput = document.querySelector(`#main-form input[name=v_${inputName}]`);
 
 				formInput.value = value;
 				formInput.classList.add('highlighted');

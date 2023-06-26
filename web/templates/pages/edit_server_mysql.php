@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -17,12 +17,12 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_configure_server" method="post">
+	<form id="main-form" name="v_configure_server" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Configure Server") ?>: <?= $v_service_name ?></h1>
+			<h1 class="u-mb20"><?= _("Configure Server") ?>: <?= $v_service_name ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="js-basic-options">
 				<div class="u-mb10">

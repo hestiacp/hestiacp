@@ -14,6 +14,7 @@
 	--color-text: #7c7c7c;
 	--color-text-link: #326b9b;
 	--color-text-link-hover: #c36;
+	--color-text-heading: #4b4b4b;
 	--color-background: #fff;
 	--border-radius-base: 4px;
 
@@ -674,6 +675,7 @@
 	box-shadow: 0 2px 14px 0 rgb(20 20 20 / 35%);
 
 	& li {
+		display: flex;
 		border-bottom: 1px solid #ddd;
 		color: #2e2e2e;
 		cursor: pointer;
@@ -684,20 +686,17 @@
 	}
 
 	& span {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
 		&.name {
-			display: inline-block;
 			padding: 11px;
 			width: 141px;
 			font-weight: 500;
-
-			& .fas.fa-arrow-down-a-z {
-				float: right;
-				margin-top: 2px;
-			}
 		}
 
 		&.up {
-			display: inline-block;
 			padding: 11px 14px;
 			width: 44px;
 		}
@@ -1310,14 +1309,6 @@
 	}
 }
 
-.form-title {
-	color: #4b4b4b;
-	font-size: 1.4rem;
-	font-weight: 500;
-	padding-bottom: 30px;
-	letter-spacing: -0.01em;
-}
-
 .form-label {
 	margin-bottom: 5px;
 	display: inline-block;
@@ -1607,7 +1598,6 @@
 
 .section-title {
 	display: flex;
-	color: #4b4b4b;
 	cursor: pointer;
 	justify-content: space-between;
 	align-items: center;
@@ -1690,7 +1680,6 @@
 .shortcuts-title {
 	text-transform: uppercase;
 	color: #ff3478;
-	letter-spacing: -0.01em;
 	font-weight: 600;
 }
 
@@ -1904,7 +1893,6 @@
 }
 
 .server-summary-title {
-	color: #414141;
 	margin-bottom: 10px;
 
 	@media (--viewport-medium) {
@@ -2061,7 +2049,7 @@
 	margin-bottom: 30px;
 
 	@media (--viewport-small) {
-		color: #4b4b4b;
+		color: var(--color-text-heading);
 	}
 }
 
@@ -2117,6 +2105,7 @@
 	font-family: var(--font-family-monospace);
 	font-size: 0.92rem;
 	line-height: 1.15;
+	padding-bottom: 20px;
 }
 
 /* Badge component
@@ -2125,14 +2114,14 @@
 .badge {
 	display: inline-block;
 	min-width: 26px;
-	min-height: 24px;
 	line-height: 24px;
-	border-radius: 50%;
+	border-radius: 13px;
 	font-weight: 700;
 	font-size: 0.75rem;
 	box-shadow: 0 1px 2px rgb(70 70 70 / 50%), inset 0 2px 2px #fff;
 	color: #6c6c6c;
-	text-align: center;
+	padding-left: 4px;
+	padding-right: 4px;
 	text-shadow: 0 1px #fafafa;
 	border: 1px solid #b8b8b8;
 	background-color: #eaeaea;
@@ -2285,11 +2274,6 @@
 			max-width: 384px;
 		}
 	}
-}
-
-.server-console-output {
-	background-color: #fff;
-	padding: 10px 0 20px 20px;
 }
 
 /* App footer

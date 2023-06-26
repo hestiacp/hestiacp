@@ -10,6 +10,7 @@
 	--color-text: #cdcdcd;
 	--color-text-link: #4fabe9;
 	--color-text-link-hover: #ff3478;
+	--color-text-heading: #e8e8e8;
 	--color-background: #282828;
 	--alert-border-color: #212121;
 
@@ -38,6 +39,14 @@
 
 .top-bar-usage-inner {
 	color: #909090;
+}
+
+.top-bar-usage-item {
+	color: #cacaca;
+
+	& .fas {
+		color: #909090;
+	}
 }
 
 .top-bar-notifications-panel {
@@ -263,7 +272,6 @@
 		}
 
 		&.active {
-			background-color: #454545 !important;
 			color: #fff;
 			background: linear-gradient(
 				to bottom,
@@ -271,6 +279,7 @@
 				rgb(45 45 45 / 75%) 30%,
 				rgb(60 60 60 / 100%) 95%
 			);
+			background-color: #454545;
 			text-shadow: 0 1px rgb(0 0 0 / 80%);
 		}
 	}
@@ -326,10 +335,6 @@
 
 .server-summary-icon {
 	color: #707070;
-}
-
-.server-summary-title {
-	color: #fafafa;
 }
 
 /* Panel component
@@ -462,10 +467,6 @@
 /* Forms
    ========================================================================== */
 
-.form-title {
-	color: #e8e8e8;
-}
-
 .form-label,
 .form-check label {
 	color: #d4d4d4;
@@ -552,7 +553,6 @@
 }
 
 .section-title {
-	color: #d4d4d4;
 	border-bottom-color: #484848;
 }
 
@@ -777,10 +777,6 @@
 	&[aria-selected="true"] {
 		color: #ff3478;
 	}
-}
-
-.server-console-output {
-	background-color: #282828;
 }
 
 /* App footer

@@ -8,7 +8,7 @@
 		</div>
 		<div class="toolbar-buttons">
 			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
-				<button type="submit" class="button" form="vstobjects">
+				<button type="submit" class="button" form="main-form">
 					<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 				</button>
 			<?php } ?>
@@ -19,12 +19,12 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="vstobjects" name="v_add_web" method="post" class="js-enable-inputs-on-submit">
+	<form id="main-form" name="v_add_web" method="post" class="js-enable-inputs-on-submit">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Add Web Domain") ?></h1>
+			<h1 class="u-mb20"><?= _("Add Web Domain") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
 				<div class="alert alert-danger" role="alert">

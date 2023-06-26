@@ -135,7 +135,7 @@
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
+									href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("Edit Package") ?>"
 								>
 									<i class="fas fa-pencil icon-orange"></i>
@@ -146,7 +146,7 @@
 						<li class="units-table-row-action" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="/copy/package/?package=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
+								href="/copy/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Duplicate") ?>"
 							>
 								<i class="fas fa-clone icon-teal"></i>

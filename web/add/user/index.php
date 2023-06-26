@@ -229,10 +229,8 @@ if (!empty($_POST["ok"])) {
 				htmlentities($_POST["v_username"]),
 			),
 			"</a>",
-			'<a class="u-text-bold" href="/edit/user/?user=' .
-				htmlentities($_POST["v_username"]) .
-				'">',
-			'<a class="u-text-bold" href="/login/?loginas=' .
+			'<a href="/edit/user/?user=' . htmlentities($_POST["v_username"]) . '">',
+			'<a href="/login/?loginas=' .
 				htmlentities($_POST["v_username"]) .
 				"&token=" .
 				htmlentities($_SESSION["token"]) .

@@ -190,9 +190,7 @@ if (!empty($_POST["ok"])) {
 				htmlentities($_POST["v_domain"]),
 			),
 			"</a>",
-			'<a class="u-text-bold" href="/list/mail/?domain=' .
-				htmlentities($_POST["v_domain"]) .
-				'">',
+			'<a href="/list/mail/?domain=' . htmlentities($_POST["v_domain"]) . '">',
 		);
 		unset($v_domain, $v_webmail);
 	}
@@ -512,7 +510,7 @@ if (!empty($_POST["ok_acc"])) {
 				htmlentities($_POST["v_domain"]),
 			),
 			"</a>",
-			'<a class="u-text-bold" href="/edit/mail/?account=' .
+			'<a href="/edit/mail/?account=' .
 				htmlentities(strtolower($_POST["v_account"])) .
 				"&domain=" .
 				htmlentities($_POST["v_domain"]) .

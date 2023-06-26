@@ -127,7 +127,7 @@ if (!empty($_POST["ok"])) {
 		$_SESSION["ok_msg"] = htmlify_trans(
 			sprintf(_("Domain {%s} has been created successfully."), htmlentities($v_domain)),
 			"</a>",
-			'<a class="u-text-bold" href="/edit/web/?domain=' . htmlentities($v_domain) . '">',
+			'<a href="/edit/web/?domain=' . htmlentities($v_domain) . '">',
 		);
 		unset($v_domain);
 		unset($v_aliases);

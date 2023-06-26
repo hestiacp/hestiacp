@@ -201,12 +201,12 @@ if (!empty($_POST["ok"])) {
 				htmlentities($user_plain) . "_" . htmlentities($_POST["v_database"]),
 			),
 			"</a>",
-			'<a class="u-text-bold" href="/edit/db/?database=' .
+			'<a href="/edit/db/?database=' .
 				htmlentities($user_plain) .
 				"_" .
 				htmlentities($_POST["v_database"]) .
 				'">',
-			'<a class="u-text-bold" href="' . $db_admin_link . '" target="_blank">',
+			'<a href="' . $db_admin_link . '" target="_blank">',
 		);
 		unset($v_database);
 		unset($v_dbuser);

@@ -94,7 +94,7 @@ if (!empty($_POST["ok"])) {
 				htmlentities($_POST["v_ip"]),
 			),
 			"</a>",
-			'<a class="u-text-bold" href="/edit/ip/?ip=' . htmlentities($_POST["v_ip"]) . '">',
+			'<a href="/edit/ip/?ip=' . htmlentities($_POST["v_ip"]) . '">',
 		);
 		unset($v_ip);
 		unset($v_netmask);

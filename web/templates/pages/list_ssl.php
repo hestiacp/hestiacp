@@ -9,7 +9,7 @@
 
 <!-- Begin form -->
 <div class="container animate__animated animate__fadeIn">
-	<form id="vstobjects" name="v_generate_csr" method="post">
+	<form id="main-form" name="v_generate_csr" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 
 		<div class="form-container">

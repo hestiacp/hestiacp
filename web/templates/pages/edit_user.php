@@ -33,7 +33,7 @@
 			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -49,7 +49,7 @@
 			useIpAllowList: <?= $v_login_use_iplist === "yes" ? "true" : "false" ?>,
 			showAdvanced: false,
 		}"
-		id="vstobjects"
+		id="main-form"
 		method="post"
 		name="v_edit_user"
 		class="<?= $v_status ?>"

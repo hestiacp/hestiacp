@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -25,7 +25,7 @@
 			showDatabaseOptions: false,
 			showSystemOptions: false,
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_add_package"
 		method="post"
 	>

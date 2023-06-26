@@ -137,7 +137,7 @@ export default function handleShortcuts() {
 			{ disabledInInput: true }
 		)
 		.register({ code: 'Enter', ctrlKey: true }, (_evt) => {
-			document.querySelector('form#vstobjects').submit();
+			document.querySelector('#main-form').submit();
 		})
 		.register({ code: 'Backspace', ctrlKey: true }, (_evt) => {
 			const redirect = document.querySelector('a.js-button-back').href;
@@ -429,8 +429,8 @@ export default function handleShortcuts() {
 		.register(
 			{ code: 'Enter' },
 			(evt) => {
-				if (evt.target.tagName == 'INPUT' && evt.target.form.id == 'vstobjects') {
-					document.querySelector('form#vstobjects').submit();
+				if (evt.target.tagName === 'INPUT' && evt.target.form.id === 'main-form') {
+					evt.target.form.submit();
 				}
 
 				if (Alpine.store('form').dirty) {

@@ -4,8 +4,7 @@ export default function focusFirstInput() {
 	const openDialogs = document.querySelectorAll('dialog[open]');
 	if (openDialogs.length === 0) {
 		const input = document.querySelector(
-			'#vstobjects .form-control:not([disabled]),\
-		#vstobjects .form-select:not([disabled])'
+			'#main-form .form-control:not([disabled]), #main-form .form-select:not([disabled])'
 		);
 		if (input) {
 			input.focus();

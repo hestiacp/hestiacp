@@ -15,7 +15,7 @@
 					<i class="fas fa-magic icon-blue"></i><?= _("Quick Install App") ?>
 				</a>
 			<?php } ?>
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -37,7 +37,7 @@
 			proxySupportEnabled: <?= !empty($v_proxy) ? "true" : "false" ?>,
 			customDocumentRootEnabled: <?= !empty($v_custom_doc_root) ? "true" : "false" ?>
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_edit_web"
 		method="post"
 		class="<?= $v_status ?> js-enable-inputs-on-submit"

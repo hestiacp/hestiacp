@@ -984,6 +984,11 @@
 		&:nth-child(1) {
 			line-height: 0.6;
 		}
+
+		&.compact {
+			padding-left: 10px;
+			padding-right: 10px;
+		}
 	}
 }
 

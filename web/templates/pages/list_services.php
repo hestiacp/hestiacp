@@ -142,10 +142,10 @@
 						<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 					</div>
 				</div>
-				<div class="units-table-cell units-table-heading-cell">
-					<span class="u-hide-desktop u-text-bold"><?= _("Service") ?>:</span>
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Service") ?>:</span>
 					<i class="fas <?= $state_icon ?> u-mr5"></i>
-					<a class="u-text-bold" href="/edit/server/<? echo $edit_url ?>/" title="<?= _("Edit") ?>: <?= $key ?>">
+					<a href="/edit/server/<? echo $edit_url ?>/" title="<?= _("Edit") ?>: <?= $key ?>">
 						<?= $key ?>
 					</a>
 				</div>

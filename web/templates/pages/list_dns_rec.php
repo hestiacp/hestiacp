@@ -123,11 +123,11 @@
 					<?php if ($read_only !== "true") { ?>
 						<ul class="units-table-row-actions">
 							<?php if ($read_only !== "true") { ?>
-								<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
+								<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
 									<li class="units-table-row-action shortcut-enter" data-key-action="href">
 										<a
 											class="units-table-row-action-link"
-											href="/edit/dns/?domain=<?= htmlspecialchars($_GET['domain']) ?>&record_id=<?= $data[$key]['ID'] ?>&token=<?= $_SESSION['token'] ?>"
+											href="/edit/dns/?domain=<?= htmlspecialchars($_GET["domain"]) ?>&record_id=<?= $data[$key]["ID"] ?>&token=<?= $_SESSION["token"] ?>"
 											title="<?= _("Edit DNS Record") ?>"
 										>
 											<i class="fas fa-pencil icon-orange"></i>
@@ -153,11 +153,11 @@
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Type") ?>:</span>
-					<?= $data[$key]['TYPE'] ?>
+					<?= $data[$key]["TYPE"] ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Priority") ?>:</span>
-					<?= $data[$key]['PRIORITY'] ?>
+					<?= $data[$key]["PRIORITY"] ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("TTL") ?>:</span>

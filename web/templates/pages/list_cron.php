@@ -117,19 +117,19 @@
 					<?php if ($read_only === "true" || $data[$key]["SUSPENDED"] == "yes") { ?>
 						<?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
 					<?php } else { ?>
-						<a href="/edit/cron/?job=<?= $data[$key]['JOB'] ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Edit Cron Job") ?>: <?= htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?>">
-							<?= htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?>
+						<a href="/edit/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit Cron Job") ?>: <?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>">
+							<?= htmlspecialchars($data[$key]["CMD"], ENT_NOQUOTES) ?>
 						</a>
 					<?php } ?>
 				</div>
 				<div class="units-table-cell">
 					<?php if (!$read_only) { ?>
 						<ul class="units-table-row-actions">
-							<?php if ($data[$key]['SUSPENDED'] == 'no') { ?>
+							<?php if ($data[$key]["SUSPENDED"] == "no") { ?>
 								<li class="units-table-row-action shortcut-enter" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/edit/cron/?job=<?= $data[$key]['JOB'] ?>&token=<?= $_SESSION['token'] ?>"
+										href="/edit/cron/?job=<?= $data[$key]["JOB"] ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Edit") ?>"
 									>
 										<i class="fas fa-pencil icon-orange"></i>

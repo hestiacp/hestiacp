@@ -200,9 +200,7 @@ if (!empty($_POST["ok"])) {
 				htmlentities($_POST["v_domain"]),
 			),
 			"</a>",
-			'<a class="u-text-bold" href="/edit/dns/?domain=' .
-				htmlentities($_POST["v_domain"]) .
-				'">',
+			'<a href="/edit/dns/?domain=' . htmlentities($_POST["v_domain"]) . '">',
 		);
 
 		unset($v_domain);
@@ -283,8 +281,8 @@ if (!empty($_POST["ok_rec"])) {
 				htmlentities($_POST["v_rec"]),
 				htmlentities($_POST["v_domain"]),
 			),
-			"</span>",
-			"<span class='u-text-bold'>",
+			"</code>",
+			"<code>",
 		);
 		unset($v_domain);
 		unset($v_rec);

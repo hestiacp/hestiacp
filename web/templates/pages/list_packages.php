@@ -170,7 +170,7 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop"><?= _("Shell") ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= _("Shell") ?>:</span>
 					<?php if ($data[$key]["SHELL"] == "nologin") { ?>
 						<i class="fas fa-circle-minus icon-large" title="<?= _("SSH Access") ?>: <?= $data[$key]["SHELL"] ?>"> </i>
 					<?php } else { ?>

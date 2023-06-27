@@ -142,7 +142,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell">
-					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= _("Name") ?>:</span>
 					<?php if ($key == $user_plain) { ?>
 						<a href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit User") ?>">
 							<span class="u-text-bold">
@@ -159,7 +159,7 @@
 						</a>
 					<?php } ?>
 					<p class="u-max-width250 u-text-truncate">
-						<span class="u-hide-desktop"><?= _("Email") ?>:</span>
+						<span class="u-hide-desktop u-text-bold"><?= _("Email") ?>:</span>
 						<span title="<?= $data[$key]["CONTACT"] ?>"><?= $data[$key]["CONTACT"] ?></span>
 					</p>
 				</div>

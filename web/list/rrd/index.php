@@ -27,7 +27,7 @@ if (empty($_GET["period"])) {
 */
 if (empty($_GET["period"])) {
 	$period = "daily";
-} elseif (!in_array($_GET["period"], ["daily", "weekly", "monthly", "yearly" , "biennially" , "triennially"])) {
+} elseif (!in_array($_GET["period"], ["daily", "weekly", "monthly", "yearly", "biennially", "triennially"])) {
 	$period = "daily";
 } else {
 	$period = $_GET["period"];

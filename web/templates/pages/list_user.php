@@ -158,7 +158,7 @@
 							(<?= $data[$key]["NAME"] ?>)
 						</a>
 					<?php } ?>
-					<p class="u-max-width250 u-text-truncate">
+					<p class="u-max-width200 u-text-truncate">
 						<span class="u-hide-desktop u-text-bold"><?= _("Email") ?>:</span>
 						<span title="<?= $data[$key]["CONTACT"] ?>"><?= $data[$key]["CONTACT"] ?></span>
 					</p>

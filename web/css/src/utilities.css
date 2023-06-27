@@ -139,6 +139,10 @@
 	min-height: 600px !important;
 }
 
+.u-max-width200 {
+	max-width: 200px !important;
+}
+
 .u-max-width300 {
 	max-width: 300px !important;
 }

@@ -203,9 +203,7 @@ if (!empty($_POST["ok"])) {
 				htmlentities($_POST["v_package"]),
 			),
 			"</a>",
-			'<a class="u-text-bold" href="/edit/package/?package=' .
-				htmlentities($_POST["v_package"]) .
-				'">',
+			'<a href="/edit/package/?package=' . htmlentities($_POST["v_package"]) . '">',
 		);
 		unset($v_package);
 	}

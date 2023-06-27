@@ -124,7 +124,7 @@
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
+								href="/edit/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Edit Firewall Rule") ?>"
 							>
 								<i class="fas fa-pencil icon-orange"></i>
@@ -163,15 +163,15 @@
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Protocol") ?>:</span>
-					<?= _($data[$key]['PROTOCOL']) ?>
+					<?= _($data[$key]["PROTOCOL"]) ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Port") ?>:</span>
-					<?= $data[$key]['PORT'] ?>
+					<?= $data[$key]["PORT"] ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("IP Address") ?>:</span>
-					<?= $data[$key]['IP'] ?>
+					<?= $data[$key]["IP"] ?>
 				</div>
 			</div>
 		<?php } ?>

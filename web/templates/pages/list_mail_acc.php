@@ -156,8 +156,8 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
 				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
 				data-sort-name="<?= $key ?>"
-				data-sort-disk="<?= $data[$key]['U_DISK'] ?>"
-				data-sort-quota="<?= $data[$key]['QUOTA'] ?>">
+				data-sort-disk="<?= $data[$key]["U_DISK"] ?>"
+				data-sort-quota="<?= $data[$key]["QUOTA"] ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="account[]" value="<?= $key ?>" <?= $display_mode ?>>

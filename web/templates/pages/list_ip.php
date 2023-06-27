@@ -101,7 +101,7 @@
 						<li class="units-table-row-action shortcut-enter" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
+								href="/edit/ip/?ip=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Edit IP Address") ?>"
 							>
 								<i class="fas fa-pencil icon-orange"></i>

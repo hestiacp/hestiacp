@@ -84,7 +84,7 @@
 				data-sort-date="<?= strtotime($value['DATE'].' '.$value['TIME']) ?>"
 				data-sort-name="<?= $value['RESULT'] ?>"
 				data-sort-type="<?= _($object) ?>"
-				data-sort-owner="<?= $value['USER'] ?>"
+				data-sort-owner="<?= $value["USER"] ?>"
 				data-sort-status="<?= $status ?>"
 				style="<?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($value['USER']) === 'admin') { echo 'display: none;'; } ?>">
 				<div class="units-table-cell u-text-center-desktop">
@@ -159,13 +159,13 @@
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Owner") ?>:</span>
-					<a href="/search/?q=<?= htmlentities($_GET['q']); ?>&u=<?= $value['USER']; ?>&token=<?= $_SESSION['token'] ?>">
-						<?= $value['USER']; ?>
+					<a href="/search/?q=<?= htmlentities($_GET["q"]) ?>&u=<?= $value["USER"] ?>&token=<?= $_SESSION["token"] ?>">
+						<?= $value["USER"] ?>
 					</a>
-					<?php if (!($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes' && $value['USER'] !== 'admin') && ($_SESSION['userContext'] === 'admin')) { ?>
-						<a href="/login/?loginas=<?= $value['USER'] ?>&token=<?= $_SESSION['token'] ?>" title="<?= _("Log in as") ?> <?= $value['USER'] ?>">
+					<?php if (!($_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] === "yes" && $value["USER"] !== "admin") && $_SESSION["userContext"] === "admin") { ?>
+						<a href="/login/?loginas=<?= $value["USER"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Log in as") ?> <?= $value["USER"] ?>">
 							<i class="fas fa-right-to-bracket icon-green icon-dim"></i>
-							<span class="u-hidden-visually"><?= _("Log in as") ?> <?= $value['USER'] ?></span>
+							<span class="u-hidden-visually"><?= _("Log in as") ?> <?= $value["USER"] ?></span>
 						</a>
 					<?php } ?>
 				</div>

@@ -88,23 +88,23 @@
 				<i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Bandwidth") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Web Domains") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-book-atlas" title="<?= _("DNS Zones") ?>"></i>
 				<span class="u-hidden-visually"><?= _("DNS Zones") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Mail Domains") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-database" title="<?= _("Databases") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Databases") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-file-zipper" title="<?= _("Backups") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Backups") ?></span>
 			</div>
@@ -142,7 +142,7 @@
 					</div>
 				</div>
 				<div class="units-table-cell units-table-heading-cell">
-					<span class="u-hide-desktop"><?= _("Name") ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= _("Name") ?>:</span>
 					<?php if ($key == $user_plain) { ?>
 						<a href="/edit/user/?user=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Edit User") ?>">
 							<span class="u-text-bold">
@@ -158,9 +158,9 @@
 							(<?= $data[$key]["NAME"] ?>)
 						</a>
 					<?php } ?>
-					<p>
-						<span class="u-text-bold"><?= _("Email") ?>:</span>
-						<?= $data[$key]["CONTACT"] ?>
+					<p class="u-max-width200 u-text-truncate">
+						<span class="u-hide-desktop u-text-bold"><?= _("Email") ?>:</span>
+						<span title="<?= $data[$key]["CONTACT"] ?>"><?= $data[$key]["CONTACT"] ?></span>
 					</p>
 				</div>
 				<div class="units-table-cell">
@@ -236,7 +236,7 @@
 					<span class="u-hide-desktop u-text-bold"><?= _("IPs") ?>:</span>
 					<?= $data[$key]["IP_OWNED"] ?>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell u-text-center-desktop u-text-no-wrap">
 					<span class="u-hide-desktop u-text-bold"><?= _("Disk") ?>:</span>
 					<span class="u-text-bold">
 						<?= humanize_usage_size($data[$key]["U_DISK"], 1) ?>
@@ -251,7 +251,7 @@
 						<?= humanize_usage_measure($data[$key]["DISK_QUOTA"]) ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell u-text-center-desktop u-text-no-wrap">
 					<span class="u-hide-desktop u-text-bold"><?= _("Bandwidth") ?>:</span>
 					<span class="u-text-bold">
 						<?= humanize_usage_size($data[$key]["U_BANDWIDTH"], 1) ?>
@@ -266,31 +266,31 @@
 						<?= humanize_usage_measure($data[$key]["BANDWIDTH"]) ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Web Domains") ?>:</span>
 					<span class="badge">
 						<?= $data[$key]["U_WEB_DOMAINS"] ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("DNS Zones") ?>:</span>
 					<span class="badge">
 						<?= $data[$key]["U_DNS_DOMAINS"] ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Mail Domains") ?>:</span>
 					<span class="badge">
 						<?= $data[$key]["U_MAIL_DOMAINS"] ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Databases") ?>:</span>
 					<span class="badge">
 						<?= $data[$key]["U_DATABASES"] ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-center-desktop">
+				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Backups") ?>:</span>
 					<span class="badge">
 						<?= $data[$key]["U_BACKUPS"] ?>

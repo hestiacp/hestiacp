@@ -65,39 +65,39 @@
 				<i class="fas fa-right-left" title="<?= _("Bandwidth") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Bandwidth") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-earth-americas" title="<?= _("Web Domains") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Web Domains") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-link" title="<?= _("Web Aliases") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Web Aliases") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-book-atlas" title="<?= _("DNS Zones") ?>"></i>
 				<span class="u-hidden-visually"><?= _("DNS Zones") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-globe" title="<?= _("DNS Records") ?>"></i>
 				<span class="u-hidden-visually"><?= _("DNS Records") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-envelopes-bulk" title="<?= _("Mail Domains") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Mail Domains") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-inbox" title="<?= _("Mail Accounts") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Mail Accounts") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-database" title="<?= _("Databases") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Databases") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-clock" title="<?= _("Cron Jobs") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Cron Jobs") ?></span>
 			</div>
-			<div class="units-table-cell u-text-center">
+			<div class="units-table-cell compact u-text-center">
 				<i class="fas fa-file-zipper" title="<?= _("Backups") ?>"></i>
 				<span class="u-hidden-visually"><?= _("Backups") ?></span>
 			</div>
@@ -135,7 +135,7 @@
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
-									href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
+									href="/edit/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 									title="<?= _("Edit Package") ?>"
 								>
 									<i class="fas fa-pencil icon-orange"></i>
@@ -146,7 +146,7 @@
 						<li class="units-table-row-action" data-key-action="href">
 							<a
 								class="units-table-row-action-link"
-								href="/copy/package/?package=<?= $key ?>&token=<?= $_SESSION['token'] ?>"
+								href="/copy/package/?package=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Duplicate") ?>"
 							>
 								<i class="fas fa-clone icon-teal"></i>
@@ -170,7 +170,7 @@
 					</ul>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
-					<span class="u-hide-desktop"><?= _("Shell") ?>:</span>
+					<span class="u-hide-desktop u-text-bold"><?= _("Shell") ?>:</span>
 					<?php if ($data[$key]["SHELL"] == "nologin") { ?>
 						<i class="fas fa-circle-minus icon-large" title="<?= _("SSH Access") ?>: <?= $data[$key]["SHELL"] ?>"> </i>
 					<?php } else { ?>
@@ -211,7 +211,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Web Domains") ?>:</span>
 					<span class="badge" title="<?= _("Web Domains") ?>: <?= $data[$key]["WEB_DOMAINS"] ?>">
 						<?php if ($data[$key]["WEB_DOMAINS"] == "unlimited") { ?>
@@ -221,7 +221,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Web Aliases") ?>:</span>
 					<span class="badge" title="<?= _("Web Aliases") ?>: <?= $data[$key]["WEB_ALIASES"] ?>">
 						<?php if ($data[$key]["WEB_ALIASES"] == "unlimited") { ?>
@@ -231,7 +231,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("DNS Zones") ?>:</span>
 					<span class="badge" title="<?= _("DNS Zones") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
 						<?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
@@ -241,7 +241,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("DNS Records") ?>:</span>
 					<span class="badge" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
 						<?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
@@ -251,7 +251,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Mail Domains") ?>:</span>
 					<span class="badge" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
 						<?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
@@ -261,7 +261,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Mail Accounts") ?>:</span>
 					<span class="badge" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
 						<?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
@@ -271,7 +271,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Databases") ?>:</span>
 					<span class="badge" title="<?= _("Databases") ?>: <?= $data[$key]["DATABASES"] ?>">
 						<?php if ($data[$key]["DATABASES"] == "unlimited") { ?>
@@ -281,7 +281,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Cron Jobs") ?>:</span>
 					<span class="badge" title="<?= _("Cron Jobs") ?>: <?= $data[$key]["CRON_JOBS"] ?>">
 						<?php if ($data[$key]["CRON_JOBS"] == "unlimited") { ?>
@@ -291,7 +291,7 @@
 						<?php } ?>
 					</span>
 				</div>
-				<div class="units-table-cell u-text-bold u-text-center-desktop">
+				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Backups") ?>:</span>
 					<span class="badge" title="<?= _("Backups") ?>: <?= $data[$key]["BACKUPS"] ?>">
 						<?php if ($data[$key]["BACKUPS"] == "unlimited") { ?>

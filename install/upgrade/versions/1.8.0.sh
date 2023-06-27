@@ -249,8 +249,8 @@ elif [ "$PROXY_SYSTEM" = "nginx" ]; then
 fi
 
 exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
-# if Exim version > 4.9.4 or greater!
-if ! version_ge "4.9.4" "$exim_version"; then
+# if Exim version > 4.95 or greater!
+if  version_ge "$exim_version" "4.95"; then echo "jaap"; fi
 	if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
 		srs=$(generate_password)
 		echo $srs > /etc/exim4/srs.conf

@@ -55,7 +55,8 @@ export default function handleEditWebListeners() {
 	const clearCacheButton = document.querySelector('.js-clear-cache-button');
 	if (proxyTemplateSelect && clearCacheButton) {
 		proxyTemplateSelect.addEventListener('change', () => {
-			if (proxyTemplateSelect.value === 'caching') {
+			// NOTE: Match "caching" and "caching-*" values
+			if (proxyTemplateSelect.value === 'caching' || proxyTemplateSelect.value.match(/^caching-/)) {
 				clearCacheButton.classList.remove('u-hidden');
 			} else {
 				clearCacheButton.classList.add('u-hidden');

@@ -12,35 +12,35 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user=$1
-domain=$2
-ssl_dir=$3
-restart="$4"
+user=${1}
+domain=${2}
+ssl_dir=${3}
+restart=${4}
 
 # Additional argument formatting
 if [[ "$domain" =~ [[:upper:]] ]]; then
-	domain=$(echo "$domain" | tr '[:upper:]' '[:lower:]')
+	domain=$(echo ${domain} | tr '[:upper:]' '[:lower:]')
 fi
 if [[ "$domain" =~ ^www\..* ]]; then
-	domain=$(echo "$domain" | sed -e "s/^www.//")
+	domain=$(echo ${domain} | sed -e "s/^www.//")
 fi
 if [[ "$domain" =~ .*\.$ ]]; then
-	domain=$(echo "$domain" | sed -e "s/\.$//")
+	domain=$(echo ${domain} | sed -e "s/\.$//")
 fi
 
-domain_idn=$(idn2 --quiet "$domain")
+domain_idn=$(idn2 --quiet ${domain})
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source ${HESTIA}/func/main.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
-source $HESTIA/func/domain.sh
+source ${HESTIA}/func/domain.sh
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
+source ${HESTIA}/func/ip.sh
 # load config file
-source_conf "$HESTIA/conf/hestia.conf"
+source_conf ${HESTIA}/conf/hestia.conf
 
 # Additional argument formatting
 format_domain
@@ -53,11 +53,11 @@ format_domain_idn
 check_args '3' "$#" 'USER DOMAIN SSL_DIR [RESTART]'
 is_format_valid 'user' 'domain' 'ssl_dir'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
-is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
-is_object_valid 'mail' 'DOMAIN' "$domain"
-is_object_unsuspended 'mail' 'DOMAIN' "$domain"
-is_object_value_empty 'mail' 'DOMAIN' "$domain" '$SSL'
+is_object_valid 'user' 'USER' ${user}
+is_object_unsuspended 'user' 'USER' ${user}
+is_object_valid 'mail' 'DOMAIN' ${domain}
+is_object_unsuspended 'mail' 'DOMAIN' ${domain}
+is_object_value_empty 'mail' 'DOMAIN' ${domain} '$SSL'
 is_web_domain_cert_valid
 
 # Perform verification if read-only mode is enabled
@@ -71,12 +71,19 @@ fi
 #----------------------------------------------------------#
 
 # Inherit web domain local ip address
-domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+domain_ip=$(get_object_value 'web' 'DOMAIN' ${domain} '$IP')
+domain_ipv6=$(get_object_value 'web' 'DOMAIN' ${domain} '$IP6')
+if [ -n "$domain_ipv6" ]; then
+	local_ipv6=$(get_real_ip ${domain_ipv6})
+	is_ipv6_valid ${local_ipv6} ${user}
+fi
 if [ -n "$domain_ip" ]; then
-	local_ip=$(get_real_ip "$domain_ip")
-	is_ip_valid "$local_ip" "$user"
-else
-	get_user_ip
+	local_ip=$(get_real_ip ${domain_ip})
+	is_ip_valid ${local_ip} ${user}
+fi
+if [ -z "$local_ip" -a -z "$local_ipv6" ]; then
+	get_user_ipv6 #	get first available user ipv6 address as fallback, if none ip address was defined
+	get_user_ip   #	get first available user ipv4 address as fallback, if none ipv6 user address available
 fi
 
 # Call routine to add SSL configuration to mail domain
@@ -116,29 +123,29 @@ if [ -n "$PROXY_SYSTEM" ]; then
 fi
 
 # Increase value for domain
-increase_user_value "$user" '$U_MAIL_SSL'
+increase_user_value ${user} '$U_MAIL_SSL'
 
 # Set SSL as enabled in configuration
-update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
+update_object_value 'mail' 'DOMAIN' ${domain} '$SSL' "yes"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Restarting mail server
-$BIN/v-restart-mail "$restart"
+${BIN}/v-restart-mail "$restart"
 check_result $? "Mail restart failed" > /dev/null
 
 # Restarting web server
-$BIN/v-restart-web "$restart"
+${BIN}/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
-$BIN/v-restart-proxy "$restart"
+${BIN}/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Mail" "SSL enabled (Domain: $domain)."
+${BIN}/v-log-action ${user} "Info" "Mail" "SSL enabled (Domain: ${domain})."
 log_event "$OK" "$ARGUMENTS"
 
 exit

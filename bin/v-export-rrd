@@ -132,6 +132,12 @@ elif [ "$timespan" = "monthly" ]; then
 elif [ "$timespan" = "yearly" ]; then
 	start=$(date -d "1 year ago" +%s)
 	step=172800
+elif [ "$timespan" = "biennially" ]; then
+        start=$(date -d "2 year ago" +%s)
+        step=345600
+elif [ "$timespan" = "triennially" ]; then
+        start=$(date -d "3 year ago" +%s)
+        step=518400
 else
 	start=$(date -d "1 day ago" +%s)
 	# every 5min

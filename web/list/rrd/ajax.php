@@ -11,7 +11,7 @@ if ($_SESSION["userContext"] != "admin") {
 
 $requestPayload = json_decode(file_get_contents("php://input"), true);
 
-$allowedPeriods = ["daily", "weekly", "monthly", "yearly"];
+$allowedPeriods = ["daily", "weekly", "monthly", "yearly", "biennially", "triennially"];
 
 if (!empty($requestPayload["period"]) && in_array($requestPayload["period"], $allowedPeriods)) {
 	$period = $requestPayload["period"];

@@ -28,6 +28,9 @@
 					<li data-entity="sort-disk" data-sort-as-int="1">
 						<span class="name"><?= _("Disk") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
+					<li data-entity="sort-package">
+						<span class="name"><?= _("Package") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
+					</li>
 					<li data-entity="sort-name">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Name") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -133,6 +136,7 @@
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== 'admin') && ($key === 'admin')) { echo 'u-hidden'; } ?>"
 				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
 				data-sort-name="<?= strtolower($key) ?>"
+				data-sort-package="<?= strtolower($data[$key]['PACKAGE']) ?>"
 				data-sort-bandwidth="<?= $data[$key]["U_BANDWIDTH"] ?>"
 				data-sort-disk="<?= $data[$key]["U_DISK"] ?>">
 				<div class="units-table-cell">

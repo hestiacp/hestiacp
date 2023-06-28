@@ -250,7 +250,7 @@ fi
 
 exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
 # if Exim version > 4.95 or greater!
-if  version_ge "$exim_version" "4.95"; then echo "jaap"; fi
+if version_ge "$exim_version" "4.95"; then
 	if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
 		srs=$(generate_password)
 		echo $srs > /etc/exim4/srs.conf

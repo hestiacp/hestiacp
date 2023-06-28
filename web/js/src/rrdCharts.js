@@ -61,6 +61,8 @@ function formatLabel(date, period) {
 		weekly: { weekday: 'short', day: 'numeric' },
 		monthly: { month: 'short', day: 'numeric' },
 		yearly: { month: 'long' },
+		biennially: { month: 'long', year: 'numeric' },
+		triennially: { month: 'long', year: 'numeric' },
 	};
 
 	return date.toLocaleString([], options[period]);

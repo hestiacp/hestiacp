@@ -451,88 +451,92 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
-	// Change NameServers
-	if (empty($_POST["v_ns1"])) {
-		$_POST["v_ns1"] = "";
-	}
-	if (empty($_POST["v_ns2"])) {
-		$_POST["v_ns2"] = "";
-	}
-	if (empty($_POST["v_ns3"])) {
-		$_POST["v_ns3"] = "";
-	}
-	if (empty($_POST["v_ns4"])) {
-		$_POST["v_ns4"] = "";
-	}
-	if (empty($_POST["v_ns5"])) {
-		$_POST["v_ns5"] = "";
-	}
-	if (empty($_POST["v_ns6"])) {
-		$_POST["v_ns6"] = "";
-	}
-	if (empty($_POST["v_ns7"])) {
-		$_POST["v_ns7"] = "";
-	}
-	if (empty($_POST["v_ns8"])) {
-		$_POST["v_ns8"] = "";
-	}
+	if (!empty($_SESSION["DNS_SYSTEM"])) {
+		// Change NameServers
+		if (empty($_POST["v_ns1"])) {
+			$_POST["v_ns1"] = "";
+		}
+		if (empty($_POST["v_ns2"])) {
+			$_POST["v_ns2"] = "";
+		}
+		if (empty($_POST["v_ns3"])) {
+			$_POST["v_ns3"] = "";
+		}
+		if (empty($_POST["v_ns4"])) {
+			$_POST["v_ns4"] = "";
+		}
+		if (empty($_POST["v_ns5"])) {
+			$_POST["v_ns5"] = "";
+		}
+		if (empty($_POST["v_ns6"])) {
+			$_POST["v_ns6"] = "";
+		}
+		if (empty($_POST["v_ns7"])) {
+			$_POST["v_ns7"] = "";
+		}
+		if (empty($_POST["v_ns8"])) {
+			$_POST["v_ns8"] = "";
+		}
 
-	if (
-		$v_ns1 != $_POST["v_ns1"] ||
-		$v_ns2 != $_POST["v_ns2"] ||
-		$v_ns3 != $_POST["v_ns3"] ||
-		$v_ns4 != $_POST["v_ns4"] ||
-		$v_ns5 != $_POST["v_ns5"] ||
-		$v_ns6 != $_POST["v_ns6"] ||
-		$v_ns7 != $_POST["v_ns7"] ||
-		($v_ns8 != $_POST["v_ns8"] && empty($_SESSION["error_msg"]))
-	) {
-		$v_ns1 = quoteshellarg($_POST["v_ns1"]);
-		$v_ns2 = quoteshellarg($_POST["v_ns2"]);
-		$v_ns3 = quoteshellarg($_POST["v_ns3"]);
-		$v_ns4 = quoteshellarg($_POST["v_ns4"]);
-		$v_ns5 = quoteshellarg($_POST["v_ns5"]);
-		$v_ns6 = quoteshellarg($_POST["v_ns6"]);
-		$v_ns7 = quoteshellarg($_POST["v_ns7"]);
-		$v_ns8 = quoteshellarg($_POST["v_ns8"]);
-		$ns_cmd =
-			HESTIA_CMD .
-			"v-change-user-ns " .
-			quoteshellarg($v_username) .
-			" " .
-			$v_ns1 .
-			" " .
-			$v_ns2;
-		if (!empty($_POST["v_ns3"])) {
-			$ns_cmd = $ns_cmd . " " . $v_ns3;
-		}
-		if (!empty($_POST["v_ns4"])) {
-			$ns_cmd = $ns_cmd . " " . $v_ns4;
-		}
-		if (!empty($_POST["v_ns5"])) {
-			$ns_cmd = $ns_cmd . " " . $v_ns5;
-		}
-		if (!empty($_POST["v_ns6"])) {
-			$ns_cmd = $ns_cmd . " " . $v_ns6;
-		}
-		if (!empty($_POST["v_ns7"])) {
-			$ns_cmd = $ns_cmd . " " . $v_ns7;
-		}
-		if (!empty($_POST["v_ns8"])) {
-			$ns_cmd = $ns_cmd . " " . $v_ns8;
-		}
-		exec($ns_cmd, $output, $return_var);
-		check_return_code($return_var, $output);
-		unset($output);
+		if (
+			$v_ns1 != $_POST["v_ns1"] ||
+			$v_ns2 != $_POST["v_ns2"] ||
+			$v_ns3 != $_POST["v_ns3"] ||
+			$v_ns4 != $_POST["v_ns4"] ||
+			$v_ns5 != $_POST["v_ns5"] ||
+			$v_ns6 != $_POST["v_ns6"] ||
+			$v_ns7 != $_POST["v_ns7"] ||
+			($v_ns8 != $_POST["v_ns8"] &&
+				empty($_SESSION["error_msg"] && !empty($_POST["v_ns1"]) && $_POST["v_ns2"]))
+		) {
+			$v_ns1 = quoteshellarg($_POST["v_ns1"]);
+			$v_ns2 = quoteshellarg($_POST["v_ns2"]);
+			$v_ns3 = quoteshellarg($_POST["v_ns3"]);
+			$v_ns4 = quoteshellarg($_POST["v_ns4"]);
+			$v_ns5 = quoteshellarg($_POST["v_ns5"]);
+			$v_ns6 = quoteshellarg($_POST["v_ns6"]);
+			$v_ns7 = quoteshellarg($_POST["v_ns7"]);
+			$v_ns8 = quoteshellarg($_POST["v_ns8"]);
 
-		$v_ns1 = str_replace("'", "", $v_ns1);
-		$v_ns2 = str_replace("'", "", $v_ns2);
-		$v_ns3 = str_replace("'", "", $v_ns3);
-		$v_ns4 = str_replace("'", "", $v_ns4);
-		$v_ns5 = str_replace("'", "", $v_ns5);
-		$v_ns6 = str_replace("'", "", $v_ns6);
-		$v_ns7 = str_replace("'", "", $v_ns7);
-		$v_ns8 = str_replace("'", "", $v_ns8);
+			$ns_cmd =
+				HESTIA_CMD .
+				"v-change-user-ns " .
+				quoteshellarg($v_username) .
+				" " .
+				$v_ns1 .
+				" " .
+				$v_ns2;
+			if (!empty($_POST["v_ns3"])) {
+				$ns_cmd = $ns_cmd . " " . $v_ns3;
+			}
+			if (!empty($_POST["v_ns4"])) {
+				$ns_cmd = $ns_cmd . " " . $v_ns4;
+			}
+			if (!empty($_POST["v_ns5"])) {
+				$ns_cmd = $ns_cmd . " " . $v_ns5;
+			}
+			if (!empty($_POST["v_ns6"])) {
+				$ns_cmd = $ns_cmd . " " . $v_ns6;
+			}
+			if (!empty($_POST["v_ns7"])) {
+				$ns_cmd = $ns_cmd . " " . $v_ns7;
+			}
+			if (!empty($_POST["v_ns8"])) {
+				$ns_cmd = $ns_cmd . " " . $v_ns8;
+			}
+			exec($ns_cmd, $output, $return_var);
+			check_return_code($return_var, $output);
+			unset($output);
+
+			$v_ns1 = str_replace("'", "", $v_ns1);
+			$v_ns2 = str_replace("'", "", $v_ns2);
+			$v_ns3 = str_replace("'", "", $v_ns3);
+			$v_ns4 = str_replace("'", "", $v_ns4);
+			$v_ns5 = str_replace("'", "", $v_ns5);
+			$v_ns6 = str_replace("'", "", $v_ns6);
+			$v_ns7 = str_replace("'", "", $v_ns7);
+			$v_ns8 = str_replace("'", "", $v_ns8);
+		}
 	}
 
 	// Set success message

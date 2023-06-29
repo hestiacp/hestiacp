@@ -176,7 +176,7 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 
 			# Apply the update for implement TLS 1.3 0-RTT anti-replay and upcoming HTTP/3 support
 			sed -i '/pid                  \/run\/nginx.pid;/a include              /etc/nginx/conf.d/main/*.conf;' /etc/nginx/nginx.conf-staging
-			sed -i '/proxy_set_header                Host $host;/a \\tproxy_set_header                Early-Data $ssl_early_data;' /etc/nginx/nginx.conf-staging
+			sed -i '/proxy_set_header                Host $host;/a \\tproxy_set_header                Early-Data $rfc_early_data;' /etc/nginx/nginx.conf-staging
 
 			# Verify new configuration file
 			if nginx -c /etc/nginx/nginx.conf-staging -t > /dev/null 2>&1; then
@@ -198,8 +198,8 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		cp -f "$HESTIA_INSTALL_DIR"/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d
 
 		# Update resolver for NGINX
-		for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
-			if [[ "$nameserver" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if [[ "$nameserver" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
 				if [ -z "$resolver" ]; then
 					resolver="$nameserver"
 				else

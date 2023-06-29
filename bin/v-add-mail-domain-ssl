@@ -28,7 +28,7 @@ if [[ "$domain" =~ .*\.$ ]]; then
 	domain=$(echo ${domain} | sed -e "s/\.$//")
 fi
 
-domain_idn=$(idn2 --quiet ${domain})
+domain_idn=$(idn2 --quiet "$domain")
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -53,11 +53,11 @@ format_domain_idn
 check_args '3' "$#" 'USER DOMAIN SSL_DIR [RESTART]'
 is_format_valid 'user' 'domain' 'ssl_dir'
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
-is_object_valid 'user' 'USER' ${user}
-is_object_unsuspended 'user' 'USER' ${user}
-is_object_valid 'mail' 'DOMAIN' ${domain}
-is_object_unsuspended 'mail' 'DOMAIN' ${domain}
-is_object_value_empty 'mail' 'DOMAIN' ${domain} '$SSL'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
+is_object_value_empty 'mail' 'DOMAIN' "$domain" '$SSL'
 is_web_domain_cert_valid
 
 # Perform verification if read-only mode is enabled
@@ -71,15 +71,15 @@ fi
 #----------------------------------------------------------#
 
 # Inherit web domain local ip address
-domain_ip=$(get_object_value 'web' 'DOMAIN' ${domain} '$IP')
-domain_ipv6=$(get_object_value 'web' 'DOMAIN' ${domain} '$IP6')
+domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+domain_ipv6=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP6')
 if [ -n "$domain_ipv6" ]; then
-	local_ipv6=$(get_real_ip ${domain_ipv6})
-	is_ipv6_valid ${local_ipv6} ${user}
+	local_ipv6=$(get_real_ip "$domain_ipv6")
+	is_ipv6_valid "$local_ipv6" "$user"
 fi
 if [ -n "$domain_ip" ]; then
-	local_ip=$(get_real_ip ${domain_ip})
-	is_ip_valid ${local_ip} ${user}
+	local_ip=$(get_real_ip "$domain_ip")
+	is_ip_valid "$local_ip" "$user"
 fi
 if [ -z "$local_ip" -a -z "$local_ipv6" ]; then
 	get_user_ipv6 #	get first available user ipv6 address as fallback, if none ip address was defined
@@ -116,17 +116,17 @@ else
 	fi
 fi
 
-add_webmail_config "$WEB_SYSTEM" "${WEBMAIL_TEMPLATE}.stpl"
+add_webmail_config "$WEB_SYSTEM" ${WEBMAIL_TEMPLATE}.stpl
 
 if [ -n "$PROXY_SYSTEM" ]; then
-	add_webmail_config "$PROXY_SYSTEM" "${PROXY_TEMPLATE}.stpl"
+	add_webmail_config "$PROXY_SYSTEM" ${PROXY_TEMPLATE}.stpl
 fi
 
 # Increase value for domain
-increase_user_value ${user} '$U_MAIL_SSL'
+increase_user_value "$user" '$U_MAIL_SSL'
 
 # Set SSL as enabled in configuration
-update_object_value 'mail' 'DOMAIN' ${domain} '$SSL' "yes"
+update_object_value 'mail' 'DOMAIN' "$domain" '$SSL' "yes"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -145,7 +145,7 @@ ${BIN}/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-${BIN}/v-log-action ${user} "Info" "Mail" "SSL enabled (Domain: ${domain})."
+${BIN}/v-log-action "$user" "Info" "Mail" "SSL enabled (Domain: ${domain})."
 log_event "$OK" "$ARGUMENTS"
 
 exit

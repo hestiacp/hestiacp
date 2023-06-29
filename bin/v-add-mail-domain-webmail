@@ -64,11 +64,11 @@ check_args '2' "$#" 'USER DOMAIN [WEBMAIL] [RESTART]'
 is_format_valid 'user' 'domain' 'restart'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_system_enabled "$IMAP_SYSTEM" 'IMAP_SYSTEM'
-is_type_valid "$WEBMAIL_SYSTEM disabled" ${webmail}
-is_object_valid 'user' 'USER' ${user}
-is_object_unsuspended 'user' 'USER' ${user}
-is_object_valid 'mail' 'DOMAIN' ${domain}
-is_object_unsuspended 'mail' 'DOMAIN' ${domain}
+is_type_valid "$WEBMAIL_SYSTEM disabled" "$webmail"
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'mail' 'DOMAIN' "$domain"
+is_object_unsuspended 'mail' 'DOMAIN' "$domain"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -78,16 +78,16 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Inherit web domain local ip address
-domain_ip=$(get_object_value 'web' 'DOMAIN' ${domain} '$IP')
-domain_ipv6=$(get_object_value 'web' 'DOMAIN' ${domain} '$IP6')
+domain_ip=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP')
+domain_ipv6=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP6')
 if [ -n "$domain_ipv6" ]; then
-	local_ipv6=$(get_real_ip ${domain_ipv6})
-	is_ipv6_valid ${local_ipv6} ${user}
+	local_ipv6=$(get_real_ip "$domain_ipv6")
+	is_ipv6_valid "$local_ipv6" "$user"
 	ipv6=${local_ipv6}
 fi
 if [ -n "$domain_ip" ]; then
-	local_ip=$(get_real_ip ${domain_ip})
-	is_ip_valid ${local_ip} ${user}
+	local_ip=$(get_real_ip "$domain_ip")
+	is_ip_valid "$local_ip" "$user"
 
 	ip=${local_ip}
 	nat_ip=$(get_ip_value '$NAT')
@@ -128,29 +128,29 @@ else
 		fi
 	fi
 
-	add_webmail_config ${WEB_SYSTEM} ${WEBMAIL_TEMPLATE}.tpl
+	add_webmail_config "$WEB_SYSTEM" ${WEBMAIL_TEMPLATE}.tpl
 
 	if [ -n "$PROXY_SYSTEM" ]; then
-		add_webmail_config ${PROXY_SYSTEM} ${PROXY_TEMPLATE}.tpl
+		add_webmail_config "$PROXY_SYSTEM" ${PROXY_TEMPLATE}.tpl
 	fi
 
 	# Enable SSL for webmail if available
 	if [ -f ${HOMEDIR}/${user}/conf/mail/${domain}/ssl/${domain}.crt ] || [ "$SSL" = 'yes' ]; then
-		add_webmail_config ${WEB_SYSTEM} ${WEBMAIL_TEMPLATE}.stpl
+		add_webmail_config "$WEB_SYSTEM" ${WEBMAIL_TEMPLATE}.stpl
 
 		if [ -n "$PROXY_SYSTEM" ]; then
-			add_webmail_config ${PROXY_SYSTEM} ${PROXY_TEMPLATE}.stpl
+			add_webmail_config "$PROXY_SYSTEM" ${PROXY_TEMPLATE}.stpl
 		fi
 	fi
 fi
 
-WEBMAIL=$(get_object_value 'web' 'DOMAIN' ${domain} ${WEBMAIL})
+WEBMAIL=$(get_object_value 'web' 'DOMAIN' "$domain" "$WEBMAIL")
 if [ -z "$WEBMAIL" ]; then
-	add_object_key 'mail' 'DOMAIN' ${domain} 'WEBMAIL' 'SSL'
+	add_object_key 'mail' 'DOMAIN' "$domain" 'WEBMAIL' 'SSL'
 fi
 
 # Set SSL as enabled in configuration
-update_object_value 'mail' 'DOMAIN' ${domain} '$WEBMAIL' ${webmail}
+update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' "$webmail"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -167,7 +167,7 @@ fi
 
 # Logging
 if [ "$quiet" != 'yes' ]; then
-	${BIN}/v-log-action ${user} "Info" "Mail" "Webmail access enabled (Domain: ${domain})."
+	${BIN}/v-log-action "$user" "Info" "Mail" "Webmail access enabled (Domain: ${domain})."
 fi
 log_event "$OK" "$ARGUMENTS"
 

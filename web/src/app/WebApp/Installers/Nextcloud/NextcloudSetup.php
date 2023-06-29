@@ -77,9 +77,9 @@ class NextcloudSetup extends BaseSetup {
 		array_push($result->raw, "memory_limit=512M");
 		$tmp = $this->saveTempFile(implode("\r\n", $result->raw));
 		if (!$this->appcontext->runUser("v-move-fs-file", [$tmp, $file], $result)) {
-				throw new \Exception("Error updating file in: " . $tmp . " " . $result->text);
+			throw new \Exception("Error updating file in: " . $tmp . " " . $result->text);
 		}
-		
+
 		return $status->code === 0;
 	}
 }

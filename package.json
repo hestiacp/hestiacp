@@ -1,7 +1,7 @@
 {
 	"name": "hestia",
 	"private": true,
-	"version": "1.7.7",
+	"version": "1.7.8",
 	"description": "An open-source Linux web server control panel.",
 	"repository": "https://github.com/hestiacp/hestiacp",
 	"license": "GPL-3.0-or-later",
@@ -17,7 +17,7 @@
 		"preinstall": "npx only-allow yarn",
 		"postinstall": "husky install"
 	},
-	"packageManager": "yarn@3.5.1",
+	"packageManager": "yarn@3.6.0",
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^6.4.0",
 		"alpinejs": "^3.12.0",

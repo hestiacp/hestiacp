@@ -16,35 +16,31 @@
 user=${1}
 domain=${2}
 webmail=${3}
-restart=${4}
+restart=${4-yes}
 quiet=${5}
-
-if [ -z "$restart" ]; then
-	restart="yes"
-fi
 
 # Additional argument formatting
 if [[ "$domain" =~ [[:upper:]] ]]; then
-	domain=$(echo ${domain} | tr '[:upper:]' '[:lower:]')
+	domain=$(echo "$domain" | tr '[:upper:]' '[:lower:]')
 fi
 if [[ "$domain" =~ ^www\..* ]]; then
-	domain=$(echo ${domain} | sed -e "s/^www.//")
+	domain=$(echo "$domain" | sed -e "s/^www.//")
 fi
 if [[ "$domain" =~ .*\.$ ]]; then
-	domain=$(echo ${domain} | sed -e "s/\.$//")
+	domain=$(echo "$domain" | sed -e "s/\.$//")
 fi
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source ${HESTIA}/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/domain.sh
-source ${HESTIA}/func/domain.sh
+source "$HESTIA/func/domain.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source ${HESTIA}/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # load config file
-source_conf ${HESTIA}/conf/hestia.conf
+source_conf "$HESTIA/conf/hestia.conf"
 
 # Additional argument formatting
 format_domain
@@ -83,16 +79,16 @@ domain_ipv6=$(get_object_value 'web' 'DOMAIN' "$domain" '$IP6')
 if [ -n "$domain_ipv6" ]; then
 	local_ipv6=$(get_real_ip "$domain_ipv6")
 	is_ipv6_valid "$local_ipv6" "$user"
-	ipv6=${local_ipv6}
+	ipv6="$local_ipv6"
 fi
 if [ -n "$domain_ip" ]; then
 	local_ip=$(get_real_ip "$domain_ip")
 	is_ip_valid "$local_ip" "$user"
 
-	ip=${local_ip}
+	ip="$local_ip"
 	nat_ip=$(get_ip_value '$NAT')
 	if [ -n "$nat_ip" ]; then
-		ip=${nat_ip}
+		ip="$nat_ip"
 	fi
 fi
 if [ -z "$ip" -a -z "$ipv6" ]; then
@@ -102,7 +98,7 @@ fi
 
 # Verify that webmail alias variable exists and create it if it does not
 if [ -z "$WEBMAIL_ALIAS" ]; then
-	${BIN}/v-change-sys-config-value 'WEBMAIL_ALIAS' "webmail"
+	"$BIN/v-change-sys-config-value" 'WEBMAIL_ALIAS' "webmail"
 else
 	add_dns_webmail_records # Add DNS records for Webmail
 
@@ -116,10 +112,10 @@ else
 		if [ "$WEB_SYSTEM" = "nginx" ]; then
 			WEBMAIL_TEMPLATE="web_system"
 		fi
-	elif [ -f ${HESTIA}/data/templates/mail/${WEB_SYSTEM}/${webmail}.tpl ]; then
-		WEBMAIL_TEMPLATE=${webmail}
+	elif [ -f "$HESTIA/data/templates/mail/$WEB_SYSTEM/$webmail.tpl" ]; then
+		WEBMAIL_TEMPLATE="$webmail"
 		if [ -n "$PROXY_SYSTEM" ]; then
-			PROXY_TEMPLATE="default_${webmail}"
+			PROXY_TEMPLATE="default_$webmail"
 		fi
 	else
 		WEBMAIL_TEMPLATE="disabled"
@@ -128,18 +124,18 @@ else
 		fi
 	fi
 
-	add_webmail_config "$WEB_SYSTEM" ${WEBMAIL_TEMPLATE}.tpl
+	add_webmail_config "$WEB_SYSTEM" "$WEBMAIL_TEMPLATE.tpl"
 
 	if [ -n "$PROXY_SYSTEM" ]; then
-		add_webmail_config "$PROXY_SYSTEM" ${PROXY_TEMPLATE}.tpl
+		add_webmail_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.tpl"
 	fi
 
 	# Enable SSL for webmail if available
-	if [ -f ${HOMEDIR}/${user}/conf/mail/${domain}/ssl/${domain}.crt ] || [ "$SSL" = 'yes' ]; then
-		add_webmail_config "$WEB_SYSTEM" ${WEBMAIL_TEMPLATE}.stpl
+	if [ -f "$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt" ] || [ "$SSL" = 'yes' ]; then
+		add_webmail_config "$WEB_SYSTEM" "$WEBMAIL_TEMPLATE.stpl"
 
 		if [ -n "$PROXY_SYSTEM" ]; then
-			add_webmail_config "$PROXY_SYSTEM" ${PROXY_TEMPLATE}.stpl
+			add_webmail_config "$PROXY_SYSTEM" "$PROXY_TEMPLATE.stpl"
 		fi
 	fi
 fi
@@ -158,16 +154,16 @@ update_object_value 'mail' 'DOMAIN' "$domain" '$WEBMAIL' "$webmail"
 
 if [ "$restart" = 'yes' ]; then
 	# Restarting web server
-	${BIN}/v-restart-web "$restart"
+	"$BIN/v-restart-web" "$restart"
 	check_result $? "Web restart failed" > /dev/null
 
-	${BIN}/v-restart-proxy "$restart"
+	"$BIN/v-restart-proxy" "$restart"
 	check_result $? "Proxy restart failed" > /dev/null
 fi
 
 # Logging
 if [ "$quiet" != 'yes' ]; then
-	${BIN}/v-log-action "$user" "Info" "Mail" "Webmail access enabled (Domain: ${domain})."
+	"$BIN/v-log-action" "$user" "Info" "Mail" "Webmail access enabled (Domain: $domain)."
 fi
 log_event "$OK" "$ARGUMENTS"
 

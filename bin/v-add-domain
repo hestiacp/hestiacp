@@ -27,9 +27,9 @@ ipv6_par=\'\'
 
 if [ -n "$parameter4" ]; then
 	if [ "$parameter4" = "yes" -o "$parameter4" = "no" ]; then
-		restart=${parameter4}
+		restart="$parameter4"
 	else
-		ipv6=${parameter4}
+		ipv6="$parameter4"
 	fi
 fi
 
@@ -37,9 +37,9 @@ fi
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source ${HESTIA}/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source ${HESTIA}/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -49,10 +49,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_args '2' "$#" 'USER DOMAIN [IPV4] [IPV6] [RESTART]'
 is_format_valid 'user' 'domain' 'restart'
 if [ -n "$ip" ]; then
-	is_ip_format_valid "${ip}" 'ipv4' # check for correct ipv4 format if not empty
+	is_ip_format_valid "$ip" 'ipv4' # check for correct ipv4 format if not empty
 fi
 if [ -n "$ipv6" ]; then
-	is_ip_format_valid "${ipv6}" 'ipv6' # check for correct ipv6 format if not empty
+	is_ip_format_valid "$ipv6" 'ipv6' # check for correct ipv6 format if not empty
 fi
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
@@ -60,8 +60,8 @@ if [ -z "$ip" -a -z "$ipv6" ]; then
 	get_user_ip   #	get first available user ipv4 address as fallback
 	get_user_ipv6 #	get first available user ipv6 address as fallback
 fi
-ipv4_par=${ip}
-ipv6_par=${ipv6}
+ipv4_par=$ip
+ipv6_par=$ipv6
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -74,7 +74,7 @@ check_hestia_demo_mode
 if [ -n "$WEB_SYSTEM" ]; then
 	check1=$(is_package_full 'WEB_DOMAINS')
 	if [ $? -eq 0 ]; then
-		${BIN}/v-add-web-domain-ipv46 ${user} ${domain} ${ipv4_par} ${ipv6_par} 'no'
+		"$BIN/v-add-web-domain-ipv46" "$user" "$domain" "$ipv4_par" "$ipv6_par" 'no'
 		check_result $? "can't add web domain"
 	fi
 fi
@@ -83,7 +83,7 @@ fi
 if [ -n "$DNS_SYSTEM" ]; then
 	check2=$(is_package_full 'DNS_DOMAINS')
 	if [ $? -eq 0 ]; then
-		${BIN}/v-add-dns-domain-ipv46 ${user} ${domain} ${ipv4_par} ${ipv6_par} "" "" "" "" "" "" "" "" "no"
+		"$BIN/v-add-dns-domain-ipv46" "$user" "$domain" "$ipv4_par" "$ipv6_par" "" "" "" "" "" "" "" "" "no"
 		check_result $? "can't add dns domain"
 	fi
 fi
@@ -92,7 +92,7 @@ fi
 if [ -n "$MAIL_SYSTEM" ]; then
 	check3=$(is_package_full 'MAIL_DOMAINS')
 	if [ $? -eq 0 ]; then
-		${BIN}/v-add-mail-domain ${user} ${domain} 'no'
+		"$BIN/v-add-mail-domain" "$user" "$domain" 'no'
 		check_result $? "can't add mail domain"
 	fi
 fi
@@ -102,13 +102,13 @@ if [[ "$check1" != '' && "$check2" != '' && "$check3" != '' ]]; then
 fi
 
 # Restarting services
-${BIN}/v-restart-web "$restart"
+"$BIN/v-restart-web" "$restart"
 check_result $? "can't restart web" > /dev/null
 
-${BIN}/v-restart-proxy "$restart"
+"$BIN/v-restart-proxy" "$restart"
 check_result $? "can't restart proxy" > /dev/null
 
-${BIN}/v-restart-dns "$restart"
+"$BIN/v-restart-dns" "$restart"
 check_result $? "can't restart dns" > /dev/null
 
 #----------------------------------------------------------#

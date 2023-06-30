@@ -26,9 +26,9 @@ ipv6_par=\'\'
 
 if [ -n "$parameter4" ]; then
 	if [ "$parameter4" = "yes" -o "$parameter4" = "no" ]; then
-		restart=${parameter4}
+		restart="$parameter4"
 	else
-		ipv6=${parameter4}
+		ipv6="$parameter4"
 	fi
 fi
 
@@ -36,9 +36,9 @@ fi
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source ${HESTIA}/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/domain.sh
-source ${HESTIA}/func/domain.sh
+source "$HESTIA/func/domain.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -55,12 +55,12 @@ if [ -e "$USER_DATA/dns/$alias.conf" ]; then
 	exit
 fi
 if [ -n "$ip" ]; then
-	is_ip_format_valid "${ip}" 'ipv4' # check for correct ipv4 format if not empty
-	ipv4_par=${ip}
+	is_ip_format_valid "$ip" 'ipv4' # check for correct ipv4 format if not empty
+	ipv4_par=$ip
 fi
 if [ -n "$ipv6" ]; then
-	is_ip_format_valid "${ipv6}" 'ipv6' # check for correct ipv6 format if not empty
-	ipv6_par=${ipv6}
+	is_ip_format_valid "$ipv6" 'ipv6' # check for correct ipv6 format if not empty
+	ipv6_par=$ipv6
 fi
 
 # Perform verification if read-only mode is enabled
@@ -80,32 +80,32 @@ domain_lvl=$(echo "$alias" | grep -o "\." | wc -l)
 
 # Adding second level domain
 if [ "$domain_lvl" -eq 1 -o "${#top_domain}" -le 6 ]; then
-	${BIN}/v-add-dns-domain-ipv46 ${user} ${alias} ${ipv4_par} ${ipv6_par} '' '' '' '' '' '' '' '' ${restart} >> /dev/null
+	"$BIN/v-add-dns-domain-ipv46" "$user" "$alias" "$ipv4_par" "$ipv6_par" '' '' '' '' '' '' '' '' "$restart" >> /dev/null
 	exit
 fi
 
 # Adding top-level domain and then its sub
-${BIN}/v-add-dns-domain-ipv46 ${user} ${top_domain} ${ipv4_par} ${ipv6_par} '' '' '' '' '' '' '' '' ${restart} >> /dev/null
+"$BIN/v-add-dns-domain-ipv46" "$user" "$top_domain" "$ipv4_par" "$ipv6_par" '' '' '' '' '' '' '' '' "$restart" >> /dev/null
 
 # Checking top-level domain
-if [ ! -e ${USER_DATA}/dns/${top_domain}.conf ]; then
+if [ ! -e "$USER_DATA/dns/$top_domain.conf" ]; then
 	exit
 fi
 
 # Checking subdomain record
 if [ "$sub_domain" == '*' ]; then
-	check_record=$(grep -w "RECORD='\*'" ${USER_DATA}/dns/${top_domain}.conf)
+	check_record=$(grep -w "RECORD='\*'" "$USER_DATA/dns/$top_domain.conf")
 else
-	check_record=$(grep -w "RECORD=\'${sub_domain}\'" ${USER_DATA}/dns/${top_domain}.conf)
+	check_record=$(grep -w "RECORD=\'${sub_domain}\'" "$USER_DATA/dns/$top_domain.conf")
 fi
 
 # Adding subdomain record
 if [ -z "$check_record" ]; then
 	if [ -n "$ip" ]; then
-		${BIN}/v-add-dns-record ${user} ${top_domain} ${sub_domain} A ${ip} '' '' ${restart} >> /dev/null
+		"$BIN/v-add-dns-record" "$user" "$top_domain" "$sub_domain" A "$ip" '' '' "$restart" >> /dev/null
 	fi
 	if [ -n "$ipv6" ]; then
-		${BIN}/v-add-dns-record ${user} ${top_domain} ${sub_domain} AAAA ${ipv6} '' '' ${restart} >> /dev/null
+		"$BIN/v-add-dns-record" "$user" "$top_domain" "$sub_domain" AAAA "$ipv6" '' '' "$restart" >> /dev/null
 	fi
 fi
 

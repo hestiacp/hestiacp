@@ -613,7 +613,8 @@ if (!empty($_POST["save"])) {
 			if (
 				$_POST["v_smtp_relay_host"] != $v_smtp_relay_host ||
 				$_POST["v_smtp_relay_user"] != $v_smtp_relay_user ||
-				$_POST["v_smtp_relay_port"] != $v_smtp_relay_port
+				$_POST["v_smtp_relay_port"] != $v_smtp_relay_port ||
+				!empty($_POST["v_smtp_relay_pass"])
 			) {
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);

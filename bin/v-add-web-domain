@@ -31,4 +31,4 @@ proxy_ext="$6"
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 
-${HESTIA}/bin/v-add-web-domain-ipv46 "$user" "$domain" "$ip" "$ipv6" "$restart" "$aliases" "$proxy_ext"
+"$HESTIA/bin/v-add-web-domain-ipv46" "$user" "$domain" "$ip" "$ipv6" "$restart" "$aliases" "$proxy_ext"

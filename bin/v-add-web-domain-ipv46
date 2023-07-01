@@ -16,26 +16,26 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user=$1
-domain=$2
-domain_idn=$2
-ip=$3
-ipv6=$4
-restart=$5 # will be moved to the end soon
-aliases=$6
-proxy_ext=$7
+user=${1}
+domain=${2}
+domain_idn=${2}
+ip=${3}
+ipv6=${4}
+restart=${5} # will be moved to the end soon
+aliases=${6}
+proxy_ext=${7}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/domain.sh
-source $HESTIA/func/domain.sh
+source "$HESTIA/func/domain.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # shellcheck source=/usr/local/hestia/func/syshealth.sh
-source $HESTIA/func/syshealth.sh
+source "$HESTIA/func/syshealth.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -61,15 +61,17 @@ if [ "$aliases" != "none" ]; then
 	is_package_full 'WEB_ALIASES'
 fi
 
-if [ "$($BIN/v-list-web-domain $user $domain_utf shell | sed -n '/DOMAIN/s/DOMAIN:[\t ]*//p')" != "$domain" ]; then
+users_domain_utf=$("$BIN/v-list-web-domain" "$user" "$domain_utf" list)
+if [ "$users_domain_utf" != "$domain" ]; then
 	is_domain_new 'web' "$domain_utf,$aliases"
 fi
-if [ "$($BIN/v-list-web-domain $user $domain_idn shell | sed -n '/DOMAIN/s/DOMAIN:[\t ]*//p')" != "$domain" ]; then
+users_domain_idn=$("$BIN/v-list-web-domain" "$user" "$domain_idn" list)
+if [ "$users_domain_idn" != "$domain" ]; then
 	is_domain_new 'web' "$domain_idn,$aliases"
 else
 	is_domain_new 'web' "$domain,$aliases"
 fi
-if [ -z "$(is_ip_format_valid $domain)" ]; then
+if [ -z "$(is_ip_format_valid ${domain})" ]; then
 	echo "Error: Invalid domain format. IP address detected as input."
 	exit 1
 fi
@@ -105,37 +107,37 @@ source_conf "$USER_DATA/user.conf"
 [[ -e "$HOMEDIR/$user/web/$domain" ]] && check_result "$E_EXISTS" "Web domain folder for $domain should not exist"
 
 # Creating domain directories
-mkdir $HOMEDIR/$user/web/$domain
-chown $user:$user $HOMEDIR/$user/web/$domain
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/stats"
-$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/logs"
+mkdir "$HOMEDIR/$user/web/$domain"
+chown $user:$user "$HOMEDIR/$user/web/$domain"
+"$BIN/v-add-fs-directory" "$user" "$HOMEDIR/$user/web/$domain/public_html"
+"$BIN/v-add-fs-directory" "$user" "$HOMEDIR/$user/web/$domain/document_errors"
+"$BIN/v-add-fs-directory" "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
+"$BIN/v-add-fs-directory" "$user" "$HOMEDIR/$user/web/$domain/private"
+"$BIN/v-add-fs-directory" "$user" "$HOMEDIR/$user/web/$domain/stats"
+"$BIN/v-add-fs-directory" "$user" "$HOMEDIR/$user/web/$domain/logs"
 
 # Creating domain logs
-touch /var/log/$WEB_SYSTEM/domains/$domain.bytes \
-	/var/log/$WEB_SYSTEM/domains/$domain.log \
-	/var/log/$WEB_SYSTEM/domains/$domain.error.log
-ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.*log \
-	$HOMEDIR/$user/web/$domain/logs/
+touch "/var/log/$WEB_SYSTEM/domains/$domain.bytes" \
+	"/var/log/$WEB_SYSTEM/domains/$domain.log" \
+	"/var/log/$WEB_SYSTEM/domains/$domain.error.log"
+ln -f -s /var/log/"$WEB_SYSTEM"/domains/"$domain".*log \
+	"$HOMEDIR/$user/web/$domain/logs/"
 
 # Adding domain skeleton
-user_exec cp -r $WEBTPL/skel/* "$HOMEDIR/$user/web/$domain/" > /dev/null 2>&1
+user_exec cp -r "$WEBTPL"/skel/* "$HOMEDIR/$user/web/$domain/" > /dev/null 2>&1
 for file in $(find "$HOMEDIR/$user/web/$domain/" -type f); do
-	sed -i "s/%domain%/$domain/g" $file
+	sed -i "s/%domain%/${domain}/g" "$file"
 done
 
 # Changing file owner & permission
-chown -R $user:$user $HOMEDIR/$user/web/$domain
-chown root:$user /var/log/$WEB_SYSTEM/domains/$domain.* $conf
-chmod 640 /var/log/$WEB_SYSTEM/domains/$domain.*
-user_exec chmod 751 $HOMEDIR/$user/web/$domain/*
-user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
-user_exec chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
-user_exec chmod 551 $HOMEDIR/$user/web/$domain
-chown --no-dereference $user:www-data $HOMEDIR/$user/web/$domain/public_*html
+chown -R $user:$user "$HOMEDIR/$user/web/$domain"
+chown root:$user "/var/log/$WEB_SYSTEM/domains/$domain".* "$conf"
+chmod 640 "/var/log/$WEB_SYSTEM/domains/$domain".*
+user_exec chmod 751 "$HOMEDIR/$user/web/$domain/"*
+user_exec chmod 551 "$HOMEDIR/$user/web/$domain/stats" "$HOMEDIR/$user/web/$domain/logs"
+user_exec chmod 644 "$HOMEDIR/$user/web/$domain/"public_*html/*
+user_exec chmod 551 "$HOMEDIR/$user/web/$domain"
+chown --no-dereference $user:www-data "$HOMEDIR/$user/web/$domain/"public_*html
 
 # Adding PHP-FPM backend
 if [ -n "$WEB_BACKEND" ]; then
@@ -143,13 +145,13 @@ if [ -n "$WEB_BACKEND" ]; then
 		BACKEND_TEMPLATE='default'
 		if [ -z "$(grep BACKEND_TEMPLATE $USER_DATA/user.conf)" ]; then
 			sed -i "s/^DNS_TEMPL/BACKEND_TEMPLATE='default'\nDNS_TEMPL/g" \
-				$USER_DATA/user.conf
+				"$USER_DATA/user.conf"
 		else
 			update_user_value "$user" '$BACKEND_TEMPLATE' "default"
 		fi
 	fi
 	export BACKEND="$BACKEND_TEMPLATE"
-	$BIN/v-add-web-domain-backend "$user" "$domain" "$BACKEND_TEMPLATE" "$restart"
+	"$BIN/v-add-web-domain-backend" "$user" "$domain" "$BACKEND_TEMPLATE" "$restart"
 	check_result $? "Backend error" > /dev/null
 fi
 
@@ -236,20 +238,20 @@ echo "DOMAIN='$domain' IP='$ip' IP6='$ipv6' CUSTOM_DOCROOT='' ALIAS='$ALIAS' TPL
  SSL='no' SSL_FORCE='no' SSL_HOME='same' LETSENCRYPT='no' FTP_USER='' FTP_MD5=''\
  BACKEND='$BACKEND_TEMPLATE' PROXY='$PROXY_TEMPLATE' PROXY_EXT='$PROXY_EXT'\
  STATS='' STATS_USER='' STATS_CRYPT='' U_DISK='0' U_BANDWIDTH='0'\
- SUSPENDED='no' TIME='$time' DATE='$date'" >> $USER_DATA/web.conf
+ SUSPENDED='no' TIME='$time' DATE='$date'" >> "$USER_DATA/web.conf"
 
 syshealth_repair_web_config
 
 # Restarting web server
-$BIN/v-restart-web "$restart"
+"$BIN/v-restart-web" "$restart"
 check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
-$BIN/v-restart-proxy "$restart"
+"$BIN/v-restart-proxy" "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Added new web domain (Name: $domain)."
+"$BIN/v-log-action" "$user" "Info" "Web" "Added new web domain (Name: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

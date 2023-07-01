@@ -19,7 +19,7 @@ format=${3-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -123,6 +123,11 @@ csv_list() {
 	echo "$DATE"
 }
 
+# PLAIN list function
+only_domain_list() {
+	echo "$DOMAIN"
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -151,6 +156,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list ;;
+	list) only_domain_list ;;
 esac
 
 #----------------------------------------------------------#

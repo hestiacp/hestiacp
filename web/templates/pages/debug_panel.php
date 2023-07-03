@@ -25,11 +25,11 @@ if( !defined("HESTIA_DIR_BIN") ){
 			foreach ($_SESSION as $key => $val) {
 				if(is_string($val)){
 					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
-				}else if(is_array($value)){
+				}else if(is_array($val)){
 					array_walk_recursive($lang, function (&$value) {
 							$value = htmlentities($value);
 					});
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($array). " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($val). " ";
 				}
 			}
   	?>
@@ -38,11 +38,11 @@ if( !defined("HESTIA_DIR_BIN") ){
 			foreach ($_POST as $key => $val) {
 				if(is_string($val)){
 					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
-				}else if(is_array($value)){
+				}else if(is_array($val)){
 					array_walk_recursive($lang, function (&$value) {
 							$value = htmlentities($value);
 					});
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($array). " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($val). " ";
 				}
 			}
   	?>
@@ -51,11 +51,11 @@ if( !defined("HESTIA_DIR_BIN") ){
 			foreach ($_GET as $key => $val) {
 				if(is_string($val)){
 					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
-				}else if(is_array($value)){
+				}else if(is_array($val)){
 					array_walk_recursive($lang, function (&$value) {
 							$value = htmlentities($value);
 					});
-					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($array). " ";
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($val). " ";
 				}
 			}
   	?>

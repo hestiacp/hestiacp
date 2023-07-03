@@ -248,16 +248,18 @@ elif [ "$PROXY_SYSTEM" = "nginx" ]; then
 	done < <(ls "$HESTIA"/data/ips/ 2> /dev/null)
 fi
 
-exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
-# if Exim version > 4.95 or greater!
-if version_ge "$exim_version" "4.95"; then
-	if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
-		srs=$(generate_password)
-		echo $srs > /etc/exim4/srs.conf
-		chmod 640 /etc/exim4/srs.conf
-		echo "[ * ] Update exim4.conf.template ..."
-		patch /etc/exim4/exim4.conf.template $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch
+if [ "$MAIL_SYSTEM" = "exim4" ]; then
+	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
+	# if Exim version > 4.95 or greater!
+	if version_ge "$exim_version" "4.95"; then
+		if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
+			srs=$(generate_password)
+			echo $srs > /etc/exim4/srs.conf
+			chmod 640 /etc/exim4/srs.conf
+			echo "[ * ] Update exim4.conf.template ..."
+			patch /etc/exim4/exim4.conf.template $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch
+		else
+			sed -i "s/SRS_SECRET = readfile{\/etc\/exim4\/srs.conf}/SRS_SECRET = \${readfile{\/etc\/exim4\/srs.conf}}/g" /etc/exim4/exim4.conf.template
+		fi
 	fi
-else
-	echo $exim_version
 fi

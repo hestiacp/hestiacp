@@ -3,7 +3,6 @@ if( !defined("HESTIA_DIR_BIN") ){
 	die("Direct access disabled");
 }
 ?>
-
 <div x-data="{ open: false }" class="debug-panel">
 	<button
 		type="button"
@@ -16,25 +15,48 @@ if( !defined("HESTIA_DIR_BIN") ){
 		<?php
 			echo "<h3 class=\"u-mb10\">Server Variables</h3>";
 			foreach ($_SERVER as $key => $val) {
-				echo "<span class=\"u-text-bold\">" . htmlentities($key) . "= </span> " . htmlentities($val) . " ";
+				if(is_string($val)){
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
+				}
 			}
   	?>
 		<?php
 			echo "<h3 class=\"u-mb10 u-mt10\">Session Variables</h3>";
 			foreach ($_SESSION as $key => $val) {
-				echo "<span class=\"u-text-bold\">" . htmlentities($key) . "= </span> " . htmlentities($val) . " ";
+				if(is_string($val)){
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
+				}else if(is_array($value)){
+					array_walk_recursive($lang, function (&$value) {
+							$value = htmlentities($value);
+					});
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($array). " ";
+				}
 			}
   	?>
 		<?php
 			echo "<h3 class=\"u-mb10 u-mt10\">POST Variables</h3>";
 			foreach ($_POST as $key => $val) {
-				echo "<span class=\"u-text-bold\">" . htmlentities($key) . "= </span> " . htmlentities($val) . " ";
+				if(is_string($val)){
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
+				}else if(is_array($value)){
+					array_walk_recursive($lang, function (&$value) {
+							$value = htmlentities($value);
+					});
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($array). " ";
+				}
 			}
   	?>
 		<?php
 			echo "<h3 class=\"u-mb10 u-mt10\">GET Variables</h3>";
 			foreach ($_GET as $key => $val) {
-				echo "<span class=\"u-text-bold\">" . htmlentities($key) . "= </span> " . htmlentities($val) . " ";
+				if(is_string($val)){
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> " . $val . " ";
+				}else if(is_array($value)){
+					array_walk_recursive($lang, function (&$value) {
+							$value = htmlentities($value);
+					});
+					echo "<span class=\"u-text-bold\">" . $key . "= </span> "  .var_dump($array). " ";
+				}
 			}
   	?>
 	</div>

@@ -2,7 +2,7 @@
 %global _hardened_build 1
 
 Name:           hestia
-Version:        1.8.0~beta2
+Version:        1.8.0~beta3
 Release:        1%{dist}
 Summary:        Hestia Control Panel
 Group:          System Environment/Base

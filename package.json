@@ -27,7 +27,7 @@
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.19.6",
-		"@typescript-eslint/eslint-plugin": "^5.60.0",
+		"@typescript-eslint/eslint-plugin": "^5.60.1",
 		"@typescript-eslint/parser": "^5.60.1",
 		"cssnano": "^6.0.1",
 		"esbuild": "^0.18.9",

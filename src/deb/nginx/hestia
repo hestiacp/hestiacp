@@ -58,8 +58,27 @@ adapt_nginx_config() {
 	fi
 }
 
+update_nginx_resolver() {
+	if grep -qw "1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8" "$NGINX_CONF"; then
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if echo "$nameserver" | grep -Pq "^(\d{1,3}\.){3}\d{1,3}$"; then
+				if [ -z "$resolver" ]; then
+					resolver="$nameserver"
+				else
+					resolver="$resolver $nameserver"
+				fi
+			fi
+		done
+
+		if [ -n "$resolver" ]; then
+			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" "$NGINX_CONF"
+		fi
+	fi
+}
+
 start_nginx() {
 	adapt_nginx_config
+	update_nginx_resolver
 	start-stop-daemon --start --quiet --pidfile $NGINX_PID \
 		--retry 5 --exec $NGINX_DAEMON --oknodo
 }

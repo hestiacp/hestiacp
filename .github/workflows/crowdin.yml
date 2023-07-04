@@ -19,7 +19,7 @@ jobs:
       - name: Build hestiacp.pot
         if: github.repository == 'hestiacp/hestiacp'
         run: |
-          sudo apt install gettext -y
+          sudo apt-get -qq install gettext
           cd ./web/locale
           bash ./hst_scan_i18n.sh
       - name: Commit new .pot file

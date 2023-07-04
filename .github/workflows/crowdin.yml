@@ -1,8 +1,6 @@
 name: Crowdin
 
 on:
-  schedule:
-    - cron: "20 4 * * *"
   workflow_dispatch:
 
 jobs:
@@ -16,15 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         if: github.repository == 'hestiacp/hestiacp'
-      - name: Build hestiacp.pot
-        if: github.repository == 'hestiacp/hestiacp'
-        run: |
-          sudo apt-get -qq install gettext
-          cd ./web/locale
-          bash ./hst_scan_i18n.sh
-      - name: Commit new .pot file
-        if: github.repository == 'hestiacp/hestiacp'
-        uses: stefanzweifel/git-auto-commit-action@v4
       - name: crowdin action
         uses: crowdin/github-action@v1
         if: github.repository == 'hestiacp/hestiacp'

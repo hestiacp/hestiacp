@@ -5,24 +5,22 @@
 #=========================================================================#
 
 server {
-	listen      %ip%:%web_ssl_port% ssl;
+	listen      %ip%:%web_port%;
 	server_name %domain_idn% %alias_idn%;
-	root        %sdocroot%;
+	root        %docroot%;
 	index       index.php index.html index.htm;
 	access_log  /var/log/nginx/domains/%domain%.log combined;
 	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
 	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-	ssl_certificate     %ssl_pem%;
-	ssl_certificate_key %ssl_key%;
-	ssl_stapling        on;
-	ssl_stapling_verify on;
+	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
-	# TLS 1.3 0-RTT anti-replay
-	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
-	if ($anti_replay = 425) { return 425; }
-
-	include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+	# Rewrite requests to /wp-.* on subdirectory installs.
+	if (!-e $request_filename) {
+		rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+		rewrite ^/[_0-9a-zA-Z-]+(/wp-.*) $1 last;
+		rewrite ^/[_0-9a-zA-Z-]+(/.*\.php)$ $1 last;
+	}
 
 	location = /favicon.ico {
 		log_not_found off;
@@ -59,7 +57,6 @@ server {
 			include /etc/nginx/fastcgi_params;
 
 			fastcgi_index index.php;
-			fastcgi_param HTTP_EARLY_DATA $rfc_early_data if_not_empty;
 			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
 			fastcgi_pass %backend_lsnr%;
@@ -85,9 +82,7 @@ server {
 		include %home%/%user%/web/%domain%/stats/auth.conf*;
 	}
 
-	proxy_hide_header Upgrade;
-
 	include /etc/nginx/conf.d/phpmyadmin.inc*;
 	include /etc/nginx/conf.d/phppgadmin.inc*;
-	include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
+	include %home%/%user%/conf/web/%domain%/nginx.conf_*;
 }

@@ -167,11 +167,11 @@ if (!empty($_POST["ok"])) {
 						$v_domain .
 						" " .
 						$v_smtp_relay_host .
-						" '" .
+						" " .
 						$v_smtp_relay_user .
-						"' '" .
+						" " .
 						$v_smtp_relay_pass .
-						"' " .
+						" " .
 						$v_smtp_relay_port,
 					$output,
 					$return_var,

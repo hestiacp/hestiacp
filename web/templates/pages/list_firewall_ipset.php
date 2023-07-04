@@ -27,7 +27,7 @@
 
 <div class="container">
 
-	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("IP Lists") ?></h1>
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("IPset IP Lists") ?></h1>
 
 	<div class="units-table js-units-container">
 		<div class="units-table-header">

@@ -13,6 +13,8 @@ server {
 	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
 	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
+	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
+
 	# Rewrite requests to /wp-.* on subdirectory installs.
 	if (!-e $request_filename) {
 		rewrite /wp-admin$ $scheme://$host$uri/ permanent;
@@ -20,15 +22,13 @@ server {
 		rewrite ^/[_0-9a-zA-Z-]+(/.*\.php)$ $1 last;
 	}
 
-	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
-
 	location = /favicon.ico {
 		log_not_found off;
 		access_log off;
 	}
 
 	location = /robots.txt {
-		allow all;
+		try_files $uri $uri/ /index.php?$args;
 		log_not_found off;
 		access_log off;
 	}

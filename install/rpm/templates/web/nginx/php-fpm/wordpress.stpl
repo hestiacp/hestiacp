@@ -30,9 +30,9 @@ server {
 	}
 
 	location = /robots.txt {
-		allow all;
-		log_not_found off;
-		access_log off;
+			try_files $uri $uri/ /index.php?$args;
+			log_not_found off;
+			access_log off;
 	}
 
 	location ~ /\.(?!well-known\/) {

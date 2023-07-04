@@ -1,5 +1,10 @@
 # Documentation
 
+## Getting started
+
+- [Getting started](/docs/introduction/getting-started.md)
+- [Best practices](/docs/introduction/best-practices.md)
+
 ## User Guide
 
 - [Account](/docs/user-guide/account.md)
@@ -45,3 +50,8 @@
 - [Hestia Nginx Cache](/docs/community/hestia-nginx-cache.md)
 - [Ioncube installer for Hestia](/docs/community/ioncube-hestia-installer.md)
 - [Install script generator](/docs/community/install-script-generator.md)
+
+## Reference
+
+- [API](/docs/reference/api.md)
+- [CLI](/docs/reference/cli.md)

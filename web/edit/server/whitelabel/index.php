@@ -78,33 +78,6 @@ if (!empty($_POST)) {
 			$return_var,
 		);
 	}
-	if ($_SESSION["LOGO_LOGIN"] != $_POST["v_logo_login"]) {
-		exec(
-			HESTIA_CMD .
-				"v-change-sys-config-value LOGO_LOGIN " .
-				quoteshellarg($_POST["v_logo_login"]),
-			$output,
-			$return_var,
-		);
-	}
-	if ($_SESSION["LOGO_HEADER"] != $_POST["v_logo_header"]) {
-		exec(
-			HESTIA_CMD .
-				"v-change-sys-config-value LOGO_HEADER " .
-				quoteshellarg($_POST["v_logo_header"]),
-			$output,
-			$return_var,
-		);
-	}
-	if ($_SESSION["LOGO_FAVICON"] != $_POST["v_logo_favicon"]) {
-		exec(
-			HESTIA_CMD .
-				"v-change-sys-config-value LOGO_FAVICON " .
-				quoteshellarg($_POST["v_logo_favicon"]),
-			$output,
-			$return_var,
-		);
-	}
 }
 
 // Check system configuration
@@ -123,9 +96,6 @@ $v_hide_docs = $_SESSION["HIDE_DOCS"];
 $v_from_name = $_SESSION["FROM_NAME"];
 $v_from_email = $_SESSION["FROM_EMAIL"];
 $v_subject_email = $_SESSION["SUBJECT_EMAIL"];
-$v_logo_header = $_SESSION["LOGO_HEADER"];
-$v_logo_login = $_SESSION["LOGO_LOGIN"];
-$v_logo_favicon = $_SESSION["LOGO_FAVICON"];
 // Render page
 render_page($user, $TAB, "edit_whitelabel");
 

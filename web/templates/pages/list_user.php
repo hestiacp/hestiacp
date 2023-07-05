@@ -272,31 +272,31 @@
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Web Domains") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_WEB_DOMAINS"] ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("DNS Zones") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_DNS_DOMAINS"] ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Mail Domains") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_MAIL_DOMAINS"] ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Databases") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_DATABASES"] ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Backups") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_BACKUPS"] ?>
 					</span>
 				</div>

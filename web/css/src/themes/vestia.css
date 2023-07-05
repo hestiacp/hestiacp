@@ -221,6 +221,14 @@ h1 {
 	}
 }
 
+.units-table-badge {
+	@media (--viewport-large) {
+		border-color: #eaeaea;
+		box-shadow: none;
+		border-radius: 4px;
+	}
+}
+
 /* Statistics
    ========================================================================== */
 
@@ -358,15 +366,6 @@ h1 {
 	margin-right: 0;
 	border-radius: 0;
 	box-shadow: none;
-}
-
-/* Badge component
-   ========================================================================== */
-
-.badge {
-	border-color: #eaeaea;
-	box-shadow: none;
-	border-radius: 4px;
 }
 
 /* Shortcuts panel

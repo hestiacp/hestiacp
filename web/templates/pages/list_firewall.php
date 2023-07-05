@@ -159,7 +159,7 @@
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Comment") ?>:</span>
-					<?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?>
+					<?php if (!empty($data[$key]['COMMENT'])) { echo $data[$key]['COMMENT']; } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Protocol") ?>:</span>

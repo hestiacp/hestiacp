@@ -30,7 +30,7 @@
 
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
-			<div class="units-table-cell"><?= _("Package") ?></div>
+			<div class="units-table-cell"><?= _("Package Names") ?></div>
 			<div class="units-table-cell"><?= _("Description") ?></div>
 			<div class="units-table-cell u-text-center"><?= _("Version") ?></div>
 			<div class="units-table-cell u-text-center"><?= _("Status") ?></div>
@@ -51,7 +51,7 @@
 			?>
 			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit">
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
-					<span class="u-hide-desktop"><?= _("Package") ?>:</span>
+					<span class="u-hide-desktop"><?= _("Package Names") ?>:</span>
 					<?= $key ?>
 				</div>
 				<div class="units-table-cell">

@@ -41,7 +41,7 @@
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="action">
 						<option value=""><?= _("Apply to selected") ?></option>
-						<option value="reread IP"><?= _("Verify IP Address") ?></option>
+						<option value="reread IP"><?= _("Refresh IP Addresses") ?></option>
 						<option value="delete"><?= _("Delete") ?></option>
 					</select>
 					<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">

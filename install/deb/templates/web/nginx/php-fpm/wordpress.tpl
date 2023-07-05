@@ -21,7 +21,7 @@ server {
 	}
 
 	location = /robots.txt {
-		allow all;
+		try_files $uri $uri/ /index.php?$args;
 		log_not_found off;
 		access_log off;
 	}

@@ -153,7 +153,7 @@ if [ -n "$PROXY_SYSTEM" ]; then
 		sed -i "s/$ips/$new_ips/g" "$rpaf_conf"
 
 		# Remove RPAFproxy_ips line when ip list is empty
-		[ "$(grep RPAFproxy_ips "$rpaf_conf" | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" "$rpaf_conf"}
+		[ "$(grep RPAFproxy_ips "$rpaf_conf" | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" "$rpaf_conf"
 	fi
 
 	# mod_remoteip
@@ -174,7 +174,7 @@ fi
 
 if [ "$OWNER" = 'admin' ]; then
 	if [ "$STATUS" = 'shared' ]; then
-		for hestia_user in $("$BIN/v-list-sys-users plain"); do
+		for hestia_user in $("$BIN/v-list-sys-users" plain); do
 			decrease_user_value "$hestia_user" '$IP'$add_cap_string_ipv6'_AVAIL'
 		done
 	else

@@ -176,7 +176,7 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 
 			# Apply the update for implement TLS 1.3 0-RTT anti-replay and upcoming HTTP/3 support
 			sed -i '/pid                  \/run\/nginx.pid;/a include              /etc/nginx/conf.d/main/*.conf;' /etc/nginx/nginx.conf-staging
-			sed -i '/proxy_set_header                Host $host;/a \\tproxy_set_header                Early-Data $ssl_early_data;' /etc/nginx/nginx.conf-staging
+			sed -i '/proxy_set_header                Host $host;/a \\tproxy_set_header                Early-Data $rfc_early_data;' /etc/nginx/nginx.conf-staging
 
 			# Verify new configuration file
 			if nginx -c /etc/nginx/nginx.conf-staging -t > /dev/null 2>&1; then
@@ -198,8 +198,8 @@ if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
 		cp -f "$HESTIA_INSTALL_DIR"/nginx/0rtt-anti-replay.conf /etc/nginx/conf.d
 
 		# Update resolver for NGINX
-		for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
-			if [[ "$nameserver" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if [[ "$nameserver" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
 				if [ -z "$resolver" ]; then
 					resolver="$nameserver"
 				else
@@ -248,16 +248,18 @@ elif [ "$PROXY_SYSTEM" = "nginx" ]; then
 	done < <(ls "$HESTIA"/data/ips/ 2> /dev/null)
 fi
 
-exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
-# if Exim version > 4.95 or greater!
-if version_ge "$exim_version" "4.95"; then
-	if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
-		srs=$(generate_password)
-		echo $srs > /etc/exim4/srs.conf
-		chmod 640 /etc/exim4/srs.conf
-		echo "[ * ] Update exim4.conf.template ..."
-		patch /etc/exim4/exim4.conf.template $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch
+if [ "$MAIL_SYSTEM" = "exim4" ]; then
+	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
+	# if Exim version > 4.95 or greater!
+	if version_ge "$exim_version" "4.95"; then
+		if ! grep -q 'SRS_SECRET' /etc/exim4/exim4.conf.template; then
+			srs=$(generate_password)
+			echo $srs > /etc/exim4/srs.conf
+			chmod 640 /etc/exim4/srs.conf
+			echo "[ * ] Update exim4.conf.template ..."
+			patch /etc/exim4/exim4.conf.template $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch
+		else
+			sed -i "s/SRS_SECRET = readfile{\/etc\/exim4\/srs.conf}/SRS_SECRET = \${readfile{\/etc\/exim4\/srs.conf}}/g" /etc/exim4/exim4.conf.template
+		fi
 	fi
-else
-	echo $exim_version
 fi

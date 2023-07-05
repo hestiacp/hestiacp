@@ -6,7 +6,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_GET);
 
-if ($_SESSION["userContext"] === "admin") {
+if ($_SESSION["userContext"] === "admin" && $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] == "no") {
 	exec(HESTIA_CMD . "v-delete-cron-hestia-autoupdate", $output, $return_var);
 	unset($output);
 }

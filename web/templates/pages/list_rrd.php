@@ -15,7 +15,7 @@
 			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'monthly')) echo " selected" ?>" href="?period=monthly"><?= _("Monthly") ?></a>
 			<a class="toolbar-link<?php if ((!empty($period)) && ($period == 'yearly')) echo " selected" ?>" href="?period=yearly"><?= _("Yearly") ?></a>
                         <a class="toolbar-link<?php if ((!empty($period)) && ($period == 'biennially')) echo " selected" ?>" href="?period=biennially"><?= _("Biennially") ?></a>
-                        <a class="toolbar-link<?php if ((!empty($period)) && ($period == 'triennially')) echo " selected" ?>" href="?period=triennially"><?= _("Trienially") ?></a>
+                        <a class="toolbar-link<?php if ((!empty($period)) && ($period == 'triennially')) echo " selected" ?>" href="?period=triennially"><?= _("Triennially") ?></a>
 		</div>
 	</div>
 </div>

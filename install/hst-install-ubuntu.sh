@@ -1391,8 +1391,8 @@ mkdir -p /etc/nginx/modules-enabled
 mkdir -p /var/log/nginx/domains
 
 # Update dns servers in nginx.conf
-for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
-	if [[ $nameserver =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+	if [[ "$nameserver" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
 		if [ -z "$resolver" ]; then
 			resolver="$nameserver"
 		else
@@ -1402,7 +1402,6 @@ for nameserver in $(grep -i '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr 
 done
 if [ -n "$resolver" ]; then
 	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
-	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /usr/local/hestia/nginx/conf/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/

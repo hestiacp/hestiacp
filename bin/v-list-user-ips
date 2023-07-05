@@ -11,16 +11,18 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user=${1}
-format=${2-shell}
-filter=${3}
+user=$1
+format=$2
+filter=$3
 filter_match=""
+
+[ -z "$format" ] && format="shell"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source ${HESTIA}/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -48,7 +50,7 @@ json_list() {
 	ip_count=$(echo "$ips" | wc -l)
 	i=1
 	for IP in $ips; do
-		read_ip_config ${IP}
+		read_ip_config "$IP"
 		if [ -n "$filter_match" ]; then
 			if [ "$i" -ne 1 ]; then
 				echo ','
@@ -75,7 +77,7 @@ shell_list() {
 	echo "IP  NAT  OWNER   STATUS   NAME   VER"
 	echo "--  ---  -----   ------   ----   ---"
 	for IP in $ips; do
-		read_ip_config ${IP}
+		read_ip_config "$IP"
 		if [ -z "$NAT" ]; then
 			NAT='no'
 		fi
@@ -92,7 +94,7 @@ shell_list() {
 plain_list() {
 	for IP in $ips; do
 		VERSION=""
-		read_ip_config ${IP}
+		read_ip_config "$IP"
 		if [ -n "$filter_match" ]; then
 			echo -e "$IP\t$OWNER\t$STATUS\t$NAME\t$NAT\t$VERSION"
 		fi
@@ -103,9 +105,20 @@ plain_list() {
 csv_list() {
 	echo "IP,OWNER,STATUS,NAME,NAT,VERSION"
 	for IP in $ips; do
-		read_ip_config ${IP}
+		read_ip_config "$IP"
 		if [ -n "$filter_match" ]; then
 			echo "$IP,$OWNER,$STATUS,$NAME,$NAT,$VERSION"
+		fi
+	done
+}
+
+# ONLY IP list function
+plain_list() {
+	for IP in $ips; do
+		VERSION=""
+		read_ip_config "$IP"
+		if [ -n "$filter_match" ]; then
+			echo "$IP"
 		fi
 	done
 }
@@ -135,6 +148,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
+	list) only_ip_list ;;
 esac
 
 #----------------------------------------------------------#

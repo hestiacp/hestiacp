@@ -11,10 +11,11 @@
 #----------------------------------------------------------#
 
 function list_network() {
-	ip_view=${1-shell}
-	ip_type=${2}
+	ip_view=$1
+	ip_type=$2
 	ip_filter=""
 	ii=1
+	[ -z "$ip_view" ] && ip_view="shell"
 	[ -n "$ip_type" ] && [ $ip_type -ne 4 -a $ip_type -ne 6 ] && ip_type=""
 	[ -n "$ip_type" ] && ip_filter=" -$ip_type"
 	ip_raw_string="$(/sbin/ip$ip_filter addr show scope global | sed -ne '/^[0-9]*\:/{h;d};G;s/^\(.*\)\n[0-9]*:\(.*\)/\1 \2/;/inet/s/[ \t]*inet[6]* \([0-9A-Fa-f.:]*\)\/\([0-9]*\).* \([0-9a-z@]*\):[ \t]<.*>.*/\1 \/\2 \3/p')"
@@ -70,7 +71,7 @@ function list_network() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-list_network $1 $2
+list_network "$1" "$2"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

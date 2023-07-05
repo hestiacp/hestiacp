@@ -1,8 +1,9 @@
 #!/bin/bash
 # info: list system IPs
-# options: [FORMAT]
+# options: [FORMAT] [FILTER]
 #
 # example: v-list-sys-ips
+# example: v-list-sys-ips list 6
 #
 # This function for obtaining the list of system IP addresses.
 
@@ -11,7 +12,10 @@
 #----------------------------------------------------------#
 
 # Argument definition
-format=${1-shell}
+format=$1
+filter=$2
+
+[ -z "$format" ] && format="shell"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -23,12 +27,18 @@ source "$HESTIA/func/ip.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-# ONLY IP list function
+# ONLY IP list function with filtering
 only_ip_list() {
 	ls "$HESTIA/data/ips/" | while read IP; do
 		ip_format="$(get_ip_format $IP)"
 		if [ -n "$ip_format" ]; then
-			echo "$IP"
+			if [ -n "$filter" ]; then
+				if [ "$filter" = "$ip_format" ]; then
+					echo "$IP"
+				fi
+			else
+				echo "$IP"
+			fi
 		fi
 	done
 }

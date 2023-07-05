@@ -78,7 +78,7 @@ fi
 
 host_ip_check=$(hostname -i | sed -ne "/$ip46/p") # check, if IP address is primary (listed in /etc/hosts)
 # shellcheck disable=SC1087
-interface=$("$BIN/v-list-sys-network plain" | sed -ne "/$ip46/s/$ip46[ \t]*\/[0-9]*[ \t]*\(.*\)/\1/p") # interface for IP address
+interface=$("$BIN/v-list-sys-network" plain | sed -ne "/$ip46/s/$ip46[ \t]*\/[0-9]*[ \t]*\(.*\)/\1/p") # interface for IP address
 number_of_ips=$(/sbin/ip${check_ip_par} addr | grep -c global)                                         # number of global system IP addresses
 
 if [[ (-n "$host_ip_check" && -n "$interface") || ($number_of_ips -eq 1) ]]; then

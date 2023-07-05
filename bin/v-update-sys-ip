@@ -17,9 +17,9 @@
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source "$HESTIA"/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source "$HESTIA"/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source "$HESTIA/func/domain.sh"
 # load config file
@@ -47,8 +47,8 @@ v_ip_num=$(echo "$v_ips" | wc -l)
 # Checking primary IP change
 if [ "$ip_num" -eq 1 -a "$ipv6_num" -eq 0 -a "$v_ip_num" -eq 1 ]; then
 	if [ "$ips" != "$v_ips" ]; then
-		new_ip=$ips
-		old_ip=$v_ips
+		new_ip="$ips"
+		old_ip="$v_ips"
 	fi
 fi
 

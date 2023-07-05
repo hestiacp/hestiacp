@@ -10,7 +10,7 @@
 			</a>
 			<?php if (!empty($_SESSION["FIREWALL_EXTENSION"])): ?>
 				<a class="button button-secondary" href="/list/firewall/banlist/">
-					<i class="fas fa-eye icon-red"></i><?= _("Fail2ban Banlists") ?>
+					<i class="fas fa-eye icon-red"></i><?= _("Banned IP Addresses") ?>
 				</a>
 				<a class="button button-secondary" href="/list/firewall/ipset/">
 					<i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>

@@ -171,7 +171,7 @@
 					<ul class="units-table-row-actions">
 						<?php if ($key == $user_plain) { ?>
 							<li class="units-table-row-action">
-								<i class="fas fa-user-check icon-dim" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
+								<i class="fas fa-user-check" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
 								<span class="u-hide-desktop"><?= $key ?> (<?= $data[$key]["NAME"] ?>)</span>
 							</li>
 						<?php } else { ?>

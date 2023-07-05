@@ -1024,9 +1024,19 @@
 		margin-right: 0;
 	}
 
+	& .fas {
+		padding: 5px 5px 5px 10px;
+		font-size: 0.9rem;
+	}
+
 	@media (--viewport-large) {
 		margin-right: 0;
 		margin-bottom: 0;
+
+		& .fas {
+			color: silver;
+			padding: 4px;
+		}
 	}
 }
 
@@ -1038,20 +1048,10 @@
 	align-items: center;
 	padding-right: 10px;
 
-	& .fas {
-		padding: 5px 5px 5px 10px;
-		font-size: 0.9rem;
-	}
-
 	@media (--viewport-large) {
 		background-color: transparent;
 		border: 0;
 		padding-right: 0;
-
-		& .fas {
-			color: silver;
-			padding: 4px;
-		}
 	}
 }
 

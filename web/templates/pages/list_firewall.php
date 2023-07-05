@@ -12,10 +12,10 @@
 				<a class="button button-secondary" href="/list/firewall/banlist/">
 					<i class="fas fa-eye icon-red"></i><?= _("Fail2ban Banlists") ?>
 				</a>
-				<a class="button button-secondary" href="/list/firewall/ipset/">
-					<i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>
-				</a>
 			<?php endif; ?>
+			<a class="button button-secondary" href="/list/firewall/ipset/">
+				<i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">

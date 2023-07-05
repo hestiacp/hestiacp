@@ -334,10 +334,9 @@ check letsencrypt domain
 
 ```bash
 v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
-example: v-add-letsencrypt-domain admin wonderland.com '' yes
 ```
 
-This function check and validates domain with Let's Encrypt
+For mail domains
 
 ## v-add-letsencrypt-host
 
@@ -552,7 +551,6 @@ add webmail support for a domain
 ```bash
 v-add-sys-webmail user domain.com
 example: v-add-sys-webmail user domain.com snappymail
-example: v-add-sys-webmail user domain.com rainloop
 example: v-add-sys-webmail user domain.com roundcube
 ```
 
@@ -675,22 +673,6 @@ add system quota
 This function enables filesystem quota on /home partition
 Some kernels do require additional packages to be installed first
 
-## v-add-sys-rainloop
-
-Install Rainloop webmail client
-
-**Options**: `[MODE]`
-
-This function installs the Rainloop webmail client.
-
-## v-add-sys-snappymail
-
-Install SnappyMail webmail client
-
-**Options**: `[MODE]`
-
-This function installs the SnappyMail webmail client.
-
 ## v-add-sys-roundcube
 
 Install Roundcube webmail client
@@ -741,6 +723,14 @@ v-add-sys-smtp-relay srv.smtprelay.tld uname123 pass12345
 ```
 
 This function adds system wide smtp relay support.
+
+## v-add-sys-snappymail
+
+Install SnappyMail webmail client
+
+**Options**: `[MODE]`
+
+This function installs the SnappyMail webmail client.
 
 ## v-add-user
 
@@ -866,7 +856,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
-<www.domain.tld> type will be automatically assigned to the domain unless
+www.domain.tld type will be automatically assigned to the domain unless
 "none" is transmited as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
@@ -3293,6 +3283,21 @@ v-download-backup admin admin.2020-11-05_05-10-21.tar
 
 This function download back-up from remote server
 
+## v-dump-database
+
+Dumps database contents in STDIN / file
+
+**Options**: `USER` `DATABASE` `[FILE]`
+
+**Examples**:
+
+```bash
+v-dump-database user user_databse > test.sql
+example: v-dump-database user user_databse file
+```
+
+Dumps database in STDIN or /backup/user.database.type.sql
+
 ## v-export-rrd
 
 export rrd charts as json
@@ -3343,7 +3348,7 @@ generate password hash
 **Examples**:
 
 ```php
-	v-generate-password-hash sha-512 rAnDom_string yourPassWord
+		v-generate-password-hash sha-512 rAnDom_string yourPassWord
 ```
 
 This function generates password hash
@@ -5870,7 +5875,7 @@ This function of updating all hestia packages
 
 Install update from Git repository
 
-**Options**: `REPOSITORY` `BRANCH` `INSTALL` `[PACKAGES]`
+**Options**: `REPOSITORY` `BRANCH` `INSTALL`
 
 **Examples**:
 
@@ -6210,3 +6215,11 @@ update web templates
 **Options**: `[RESTART]` `[SKIP]`
 
 This function for obtaining updated web (Nginx/Apache2/PHP) templates from the Hestia package.
+
+## v-update-white-label-logo
+
+update white label logo's
+
+**Options**: `[DOWNLOAD]`
+
+Replace Hestia logos with User created logo's

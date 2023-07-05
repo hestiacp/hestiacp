@@ -164,6 +164,17 @@ csv_list() {
 	done < <(grep '@' /etc/passwd | cut -f1 -d:)
 }
 
+# USER ONLY list function
+only_user_list() {
+	while read USER; do
+		if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
+			continue
+		fi
+		source_conf "$HESTIA/data/users/$USER/user.conf"
+		echo "$USER"
+	done < <(grep '@' /etc/passwd | cut -f1 -d:)
+}
+
 # Raw list function
 raw_list() {
 	while read USER; do
@@ -185,6 +196,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
+	list) only_user_list ;;
 esac
 
 #----------------------------------------------------------#

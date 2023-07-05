@@ -91,7 +91,7 @@ csv_list() {
 	echo "$U_SMTP_RELAY,$U_SMTP_RELAY_HOST,$U_SMTP_RELAY_PORT,$U_SMTP_RELAY_USERNAME"
 }
 
-# PLAIN list function
+# ONLY DOMAIN list function
 only_domain_list() {
 	echo "$DOMAIN"
 }

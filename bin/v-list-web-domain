@@ -123,7 +123,7 @@ csv_list() {
 	echo "$DATE"
 }
 
-# PLAIN list function
+# ONLY DOMAIN list function
 only_domain_list() {
 	echo "$DOMAIN"
 }

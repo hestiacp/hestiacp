@@ -91,6 +91,15 @@ csv_list() {
 	done < <(cat $USER_DATA/mail.conf)
 }
 
+# ONLY DOMAIN list function
+only_domain_list() {
+	IFS=$'\n'
+	while read str; do
+		parse_object_kv_list "$str"
+		echo "$DOMAIN"
+	done < <(cat $USER_DATA/mail.conf)
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -109,6 +118,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
+	list) only_domain_list ;;
 esac
 
 #----------------------------------------------------------#

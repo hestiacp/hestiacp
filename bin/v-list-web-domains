@@ -119,6 +119,21 @@ csv_list() {
 	done < <(cat $USER_DATA/web.conf)
 }
 
+# ONLY DOMAIN list function
+only_domain_list() {
+	IFS=$'\n'
+	while read str; do
+		parse_object_kv_list "$str"
+		# Set correct document root path
+		if [ ! -z "$CUSTOM_DOCROOT" ]; then
+			DOCROOT="$CUSTOM_DOCROOT"
+		else
+			DOCROOT="$HOMEDIR/$user/web/$DOMAIN/public_html/"
+		fi
+		echo "$DOMAIN"
+	done < <(cat $USER_DATA/web.conf)
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -137,6 +152,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list ;;
+	list) only_domain_list ;;
 esac
 
 unset docroot

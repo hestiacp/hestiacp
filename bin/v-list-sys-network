@@ -2,7 +2,7 @@
 # info: list system network
 # options: [FORMAT] [FILTER]
 #
-# example: v-list-network list 6
+# example: v-list-sys-network list 6
 #
 # This function for obtaining the list of system ip addresses.
 
@@ -70,7 +70,7 @@ function list_network() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-list_network "$1" "$2"
+list_network $1 $2
 
 #----------------------------------------------------------#
 #                       Hestia                             #

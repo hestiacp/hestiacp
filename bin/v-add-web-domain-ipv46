@@ -131,7 +131,7 @@ done
 
 # Changing file owner & permission
 chown -R $user:$user "$HOMEDIR/$user/web/$domain"
-chown root:$user "/var/log/$WEB_SYSTEM/domains/$domain".* "$conf"
+chown root:$user "/var/log/$WEB_SYSTEM/domains/$domain".* $conf
 chmod 640 "/var/log/$WEB_SYSTEM/domains/$domain".*
 user_exec chmod 751 "$HOMEDIR/$user/web/$domain/"*
 user_exec chmod 551 "$HOMEDIR/$user/web/$domain/stats" "$HOMEDIR/$user/web/$domain/logs"

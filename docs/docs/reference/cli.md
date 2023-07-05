@@ -334,9 +334,10 @@ check letsencrypt domain
 
 ```bash
 v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
+example: v-add-letsencrypt-domain admin wonderland.com '' yes
 ```
 
-For mail domains
+This function check and validates domain with Let's Encrypt
 
 ## v-add-letsencrypt-host
 
@@ -856,7 +857,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
-www.domain.tld type will be automatically assigned to the domain unless
+`www.domain.tld` type will be automatically assigned to the domain unless
 "none" is transmited as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
@@ -4645,13 +4646,6 @@ rebuild all assets for a specified user
 **Options**: `USER` `[RESTART]`
 
 This function rebuilds all assets for a user account:
-
-- Web domains
-- DNS zones
-- Mail domains
-- Databases
-- Cron Jobs
-- User account configuration
 
 ## v-rebuild-cron-jobs
 

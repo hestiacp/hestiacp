@@ -17,16 +17,16 @@ format=${1-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source ${HESTIA}/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source ${HESTIA}/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
 # ONLY IP list function
 only_ip_list() {
-	ls ${HESTIA}/data/ips/ | while read IP; do
-		ip_format="$(get_ip_format ${IP})"
+	ls "$HESTIA/data/ips/" | while read IP; do
+		ip_format="$(get_ip_format $IP)"
 		if [ -n "$ip_format" ]; then
 			echo "$IP"
 		fi

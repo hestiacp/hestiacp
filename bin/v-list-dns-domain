@@ -74,6 +74,11 @@ csv_list() {
 	echo "$TIME,$DATE"
 }
 
+# DOMAIN ONLY list (Simple list, only domain names)
+only_domain_list() {
+	echo "$DOMAIN"
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -96,6 +101,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list ;;
+	list) only_domain_list ;;
 esac
 
 #----------------------------------------------------------#

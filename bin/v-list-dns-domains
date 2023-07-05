@@ -22,15 +22,6 @@ source ${HESTIA}/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-# Domain list (Simple list, only domain names)
-domain_list() {
-	IFS=$'\n'
-	while read str; do
-		parse_object_kv_list "$str"
-		echo -e "$DOMAIN"
-	done < <(cat ${USER_DATA}/dns.conf)
-}
-
 # JSON list function
 json_list() {
 	IFS=$'\n'
@@ -96,6 +87,15 @@ csv_list() {
 	done < <(cat ${USER_DATA}/dns.conf)
 }
 
+# DOMAIN ONLY list (Simple list, only domain names)
+only_domain_list() {
+	IFS=$'\n'
+	while read str; do
+		parse_object_kv_list "$str"
+		echo -e "$DOMAIN"
+	done < <(cat ${USER_DATA}/dns.conf)
+}
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -110,11 +110,11 @@ is_object_valid 'user' 'USER' "$user"
 
 # Listing data
 case $format in
-	list) domain_list ;;
 	json) json_list ;;
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
+	list) only_domain_list ;;
 esac
 
 #----------------------------------------------------------#

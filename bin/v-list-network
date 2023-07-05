@@ -2,7 +2,7 @@
 # info: list system network
 # options: [FORMAT] [FILTER]
 #
-# example: v-list-sys-network list 6
+# example: v-list-network list 6
 #
 # This function for obtaining the list of system ip addresses.
 
@@ -34,16 +34,16 @@ function list_network() {
 	echo "$ip_raw_string" | while read ip_addr ip_mask ip_iface; do
 		case $ip_view in
 			list)
-				echo "${ip_addr}"
+				echo "$ip_addr"
 				;;
 			plain)
-				echo "${ip_addr} ${ip_mask} ${ip_iface}"
+				echo "$ip_addr $ip_mask $ip_iface"
 				;;
 			shell)
-				printf '%-25s%-5s%-8s\n' ${ip_addr} ${ip_mask} ${ip_iface}
+				printf '%-25s%-5s%-8s\n' $ip_addr $ip_mask $ip_iface
 				;;
 			csv)
-				echo "${ip_addr},${ip_mask},${ip_iface}"
+				echo "$ip_addr,$ip_mask,$ip_iface"
 				;;
 			json)
 				echo -n '    "'$ip_addr'": {
@@ -70,7 +70,7 @@ function list_network() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-list_network $1 $2
+list_network "$1" "$2"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

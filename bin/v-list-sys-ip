@@ -19,16 +19,16 @@ format=${2-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source ${HESTIA}/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source ${HESTIA}/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
 	echo '{'
-	echo '    "'${ip46}'": {
+	echo '    "'$ip46'": {
         "OWNER": "'$OWNER'",
         "STATUS": "'$STATUS'",
         "NAME": "'$NAME'",
@@ -45,7 +45,7 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-	echo "IP:             ${ip46}"
+	echo "IP:             $ip46"
 	echo "NETMASK:        $NETMASK"
 	echo "INTERFACE:      $INTERFACE"
 	echo "NAT:            $NAT"
@@ -60,7 +60,7 @@ shell_list() {
 
 # PLAIN list function
 plain_list() {
-	echo -ne "${ip46}\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
+	echo -ne "$ip46\t$OWNER\t$STATUS\t$NAME\t$U_SYS_USERS\t$U_WEB_DOMAINS\t"
 	echo -e "$INTERFACE\t$NETMASK\t$NAT\t$TIME\t$DATE"
 }
 
@@ -68,7 +68,7 @@ plain_list() {
 csv_list() {
 	echo -n "IP,OWNER,STATUS,NAME,U_SYS_USERS,U_WEB_DOMAINS,INTERFACE"
 	echo "NETMASK,NAT,TIME,DATE"
-	echo -n "${ip46},$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
+	echo -n "$ip46,$OWNER,$STATUS,$NAME,\"$U_SYS_USERS\",$U_WEB_DOMAINS,"
 	echo "$INTERFACE, $NETMASK,$NAT,$TIME,$DATE"
 }
 
@@ -77,20 +77,20 @@ csv_list() {
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'IP [FORMAT]'
-ip_format="$(get_ip_format ${ip46})" #	ip verification and format identification
+ip_format="$(get_ip_format $ip46)" #	ip verification and format identification
 if [ -n "$ip_format" ]; then
 	if [ $ip_format -eq 6 ]; then
 		ip=""
-		ipv6="${ip46}"
+		ipv6="$ip46"
 		is_format_valid 'ipv6'
 	else
-		ip="${ip46}"
+		ip="$ip46"
 		ipv6=""
 		is_format_valid 'ip'
 	fi
 fi
-if [ ! -e "$HESTIA/data/ips/${ip46}" ]; then
-	check_result $E_NOTEXIST "IP ${ip46} doesn't exist"
+if [ ! -e "$HESTIA/data/ips/$ip46" ]; then
+	check_result $E_NOTEXIST "IP $ip46 doesn't exist"
 fi
 
 #----------------------------------------------------------#
@@ -98,7 +98,7 @@ fi
 #----------------------------------------------------------#
 
 # Parsing IP
-source_conf "$HESTIA/data/ips/${ip46}"
+source_conf "$HESTIA/data/ips/$ip46"
 
 # Listing data
 case $format in

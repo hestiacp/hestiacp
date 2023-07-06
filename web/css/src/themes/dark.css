@@ -440,6 +440,16 @@
 	}
 }
 
+.units-table-badge {
+	@media (--viewport-large) {
+		color: #dadada;
+		border-color: #212121;
+		box-shadow: 0 1px 2px rgb(70 70 70 / 50%), inset 0 2px 2px rgb(0 0 0 / 65%);
+		text-shadow: 0 1px rgb(0 0 0 / 70%);
+		background-color: #252525;
+	}
+}
+
 /* Statistics
    ========================================================================== */
 
@@ -698,17 +708,6 @@
 	& .fas {
 		box-shadow: 0 8px 25px rgb(0 0 0 / 90%);
 	}
-}
-
-/* Badge component
-   ========================================================================== */
-
-.badge {
-	color: #dadada;
-	border-color: #212121;
-	box-shadow: 0 1px 2px rgb(70 70 70 / 50%), inset 0 2px 2px rgb(0 0 0 / 65%);
-	text-shadow: 0 1px rgb(0 0 0 / 70%);
-	background-color: #252525;
 }
 
 /* Icon component

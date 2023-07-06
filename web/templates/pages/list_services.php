@@ -111,12 +111,14 @@
 				if ($data[$key]['STATE'] == 'running') {
 					$status = 'active';
 					$action = 'stop';
+					$action_text = _('Stop');
 					$spnd_icon = 'fa-stop';
 					$spnd_icon_class = 'icon-red';
 					$state_icon = 'fa-circle-check icon-green';
 				} else {
 					$status = 'suspended';
 					$action = 'start';
+					$action_text = _('Start');
 					$spnd_icon = 'fa-play';
 					$spnd_icon_class = 'icon-green';
 					$state_icon = 'fa-circle-minus icon-red';
@@ -177,11 +179,11 @@
 							<a
 								class="units-table-row-action-link data-controls js-confirm-action"
 								href="/<?= $action ?>/service/?srv=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
-								title="<?= _($action) ?>"
+								title="<?=$action_text ?>"
 								data-confirm-message="<?php if ($action == 'stop'){ echo sprintf(_('Are you sure you want to stop service %s?'), $key); } else { echo sprintf(_('Are you sure you want to start service %s?'), $key); }?>"
 							>
 								<i class="fas <?= $spnd_icon ?> <?= $spnd_icon_class ?>"></i>
-								<span class="u-hide-desktop"><?= _($action) ?></span>
+								<span class="u-hide-desktop"><?=$action_text ?></span>
 							</a>
 						</li>
 					</ul>

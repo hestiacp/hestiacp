@@ -213,7 +213,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Web Domains") ?>:</span>
-					<span class="badge" title="<?= _("Web Domains") ?>: <?= $data[$key]["WEB_DOMAINS"] ?>">
+					<span class="units-table-badge" title="<?= _("Web Domains") ?>: <?= $data[$key]["WEB_DOMAINS"] ?>">
 						<?php if ($data[$key]["WEB_DOMAINS"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>
@@ -223,7 +223,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Web Aliases") ?>:</span>
-					<span class="badge" title="<?= _("Web Aliases") ?>: <?= $data[$key]["WEB_ALIASES"] ?>">
+					<span class="units-table-badge" title="<?= _("Web Aliases") ?>: <?= $data[$key]["WEB_ALIASES"] ?>">
 						<?php if ($data[$key]["WEB_ALIASES"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>
@@ -233,7 +233,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("DNS Zones") ?>:</span>
-					<span class="badge" title="<?= _("DNS Zones") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
+					<span class="units-table-badge" title="<?= _("DNS Zones") ?>: <?= $data[$key]["DNS_DOMAINS"] ?>">
 						<?php if ($data[$key]["DNS_DOMAINS"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>
@@ -243,7 +243,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("DNS Records") ?>:</span>
-					<span class="badge" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
+					<span class="units-table-badge" title="<?= _("DNS Records") ?>: <?= $data[$key]["DNS_RECORDS"] ?>">
 						<?php if ($data[$key]["DNS_RECORDS"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>
@@ -253,7 +253,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Mail Domains") ?>:</span>
-					<span class="badge" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
+					<span class="units-table-badge" title="<?= _("Mail Domains") ?>: <?= $data[$key]["MAIL_DOMAINS"] ?>">
 						<?php if ($data[$key]["MAIL_DOMAINS"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>
@@ -263,7 +263,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Mail Accounts") ?>:</span>
-					<span class="badge" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
+					<span class="units-table-badge" title="<?= _("Mail Accounts") ?>: <?= $data[$key]["MAIL_ACCOUNTS"] ?>">
 						<?php if ($data[$key]["MAIL_ACCOUNTS"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>
@@ -273,7 +273,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Databases") ?>:</span>
-					<span class="badge" title="<?= _("Databases") ?>: <?= $data[$key]["DATABASES"] ?>">
+					<span class="units-table-badge" title="<?= _("Databases") ?>: <?= $data[$key]["DATABASES"] ?>">
 						<?php if ($data[$key]["DATABASES"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>
@@ -283,7 +283,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Cron Jobs") ?>:</span>
-					<span class="badge" title="<?= _("Cron Jobs") ?>: <?= $data[$key]["CRON_JOBS"] ?>">
+					<span class="units-table-badge" title="<?= _("Cron Jobs") ?>: <?= $data[$key]["CRON_JOBS"] ?>">
 						<?php if ($data[$key]["CRON_JOBS"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>
@@ -293,7 +293,7 @@
 				</div>
 				<div class="units-table-cell compact u-text-bold u-text-center-desktop">
 					<span class="u-hide-desktop"><?= _("Backups") ?>:</span>
-					<span class="badge" title="<?= _("Backups") ?>: <?= $data[$key]["BACKUPS"] ?>">
+					<span class="units-table-badge" title="<?= _("Backups") ?>: <?= $data[$key]["BACKUPS"] ?>">
 						<?php if ($data[$key]["BACKUPS"] == "unlimited") { ?>
 							&infin;
 						<?php } else { ?>

@@ -23,10 +23,18 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 is_language_valid() {
-	if [ ! -d "$HESTIA/web/locale/$language" ]; then
-		echo "Error: language file $language doesn't exist"
-		log_event "$E_NOTEXIST $ARGUMENTS"
-		exit "$E_NOTEXIST"
+	# English is always allowed
+	if [ "$1" != "en" ]; then
+		if ! [[ "$1" =~ ^[[:alnum:]_-]+$ ]]; then
+			echo "Error: language $1 is not valid"
+			log_event "$E_INVALID" "$ARGUMENTS"
+			exit $E_INVALID
+		fi
+		if [ ! -d "$HESTIA/web/locale/$1" ]; then
+			echo "Error: language $1 doesn't exist"
+			log_event "$E_NOTEXIST" "$ARGUMENTS"
+			exit $E_NOTEXIST
+		fi
 	fi
 }
 

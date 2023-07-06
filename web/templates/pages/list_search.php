@@ -163,7 +163,7 @@
 						<?= $value["USER"] ?>
 					</a>
 					<?php if (!($_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] === "yes" && $value["USER"] !== "admin") && $_SESSION["userContext"] === "admin") { ?>
-						<a href="/login/?loginas=<?= $value["USER"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Log in as") ?> <?= $value["USER"] ?>">
+						<a href="/login/?loginas=<?= $value["USER"] ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Log in as") ?> <?= $value["USER"] ?>" class="u-ml5">
 							<i class="fas fa-right-to-bracket icon-green icon-dim"></i>
 							<span class="u-hidden-visually"><?= _("Log in as") ?> <?= $value["USER"] ?></span>
 						</a>

@@ -171,7 +171,7 @@
 					<ul class="units-table-row-actions">
 						<?php if ($key == $user_plain) { ?>
 							<li class="units-table-row-action">
-								<i class="fas fa-user-check icon-dim" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
+								<i class="fas fa-user-check" title="<?= $key ?> (<?= $data[$key]["NAME"] ?>)"></i>
 								<span class="u-hide-desktop"><?= $key ?> (<?= $data[$key]["NAME"] ?>)</span>
 							</li>
 						<?php } else { ?>
@@ -272,31 +272,31 @@
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Web Domains") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_WEB_DOMAINS"] ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("DNS Zones") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_DNS_DOMAINS"] ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Mail Domains") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_MAIL_DOMAINS"] ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Databases") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_DATABASES"] ?>
 					</span>
 				</div>
 				<div class="units-table-cell compact u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Backups") ?>:</span>
-					<span class="badge">
+					<span class="units-table-badge">
 						<?= $data[$key]["U_BACKUPS"] ?>
 					</span>
 				</div>

@@ -73,6 +73,12 @@
 	}
 }
 
+.units-table-badge {
+	@media (--viewport-large) {
+		box-shadow: none;
+	}
+}
+
 /* Statistics
    ========================================================================== */
 
@@ -91,13 +97,6 @@
 	& .fas {
 		box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
 	}
-}
-
-/* Badge component
-   ========================================================================== */
-
-.badge {
-	box-shadow: none;
 }
 
 /* Collapse component

@@ -18,7 +18,7 @@ format=${2-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source ${HESTIA}/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -26,7 +26,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 json_list() {
 	IFS=$'\n'
 	i=1
-	objects=$(grep DOMAIN ${USER_DATA}/dns.conf | wc -l)
+	objects=$(grep DOMAIN "$USER_DATA/dns.conf" | wc -l)
 	echo "{"
 	while read str; do
 		parse_object_kv_list "$str"
@@ -51,7 +51,7 @@ json_list() {
 			echo
 		fi
 		((i++))
-	done < <(cat ${USER_DATA}/dns.conf)
+	done < <(cat "$USER_DATA/dns.conf")
 	echo '}'
 }
 
@@ -63,7 +63,7 @@ shell_list() {
 	while read str; do
 		parse_object_kv_list "$str"
 		echo "$DOMAIN $IP $IP6 $TPL $TTL $DNSSEC $RECORDS $SUSPENDED $DATE"
-	done < <(cat ${USER_DATA}/dns.conf)
+	done < <(cat "$USER_DATA/dns.conf")
 }
 
 # PLAIN list function
@@ -73,7 +73,7 @@ plain_list() {
 		parse_object_kv_list "$str"
 		echo -ne "$DOMAIN\t$IP\t$IP6\t$TPL\t$TTL\t$EXP\t$SOA\t$DNSSEC\t$SERIAL\t"
 		echo -e "$SRC\t$RECORDS\t$SUSPENDED\t$TIME\t$DATE"
-	done < <(cat ${USER_DATA}/dns.conf)
+	done < <(cat "$USER_DATA/dns.conf")
 }
 
 # CSV list function
@@ -84,7 +84,7 @@ csv_list() {
 		parse_object_kv_list "$str"
 		echo -n "$DOMAIN,$IP,$IP6,$TPL,$TTL,$EXP,$SOA,$SERIAL,"
 		echo "$SRC,$DNSSEC,$RECORDS,$SUSPENDED,$TIME,$DATE"
-	done < <(cat ${USER_DATA}/dns.conf)
+	done < <(cat "$USER_DATA/dns.conf")
 }
 
 # DOMAIN ONLY list (Simple list, only domain names)
@@ -93,7 +93,7 @@ only_domain_list() {
 	while read str; do
 		parse_object_kv_list "$str"
 		echo -e "$DOMAIN"
-	done < <(cat ${USER_DATA}/dns.conf)
+	done < <(cat "$USER_DATA/dns.conf")
 }
 
 #----------------------------------------------------------#

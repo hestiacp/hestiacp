@@ -19,7 +19,7 @@ format=${3-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -93,7 +93,7 @@ is_object_valid 'dns' 'DOMAIN' "$domain"
 #----------------------------------------------------------#
 
 # Parsing domain
-parse_object_kv_list $(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
+parse_object_kv_list $(grep "DOMAIN='$domain'" "$USER_DATA/dns.conf")
 
 # Listing data
 case $format in

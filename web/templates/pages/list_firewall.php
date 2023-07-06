@@ -10,12 +10,12 @@
 			</a>
 			<?php if (!empty($_SESSION["FIREWALL_EXTENSION"])): ?>
 				<a class="button button-secondary" href="/list/firewall/banlist/">
-					<i class="fas fa-eye icon-red"></i><?= _("Fail2ban Banlists") ?>
-				</a>
-				<a class="button button-secondary" href="/list/firewall/ipset/">
-					<i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>
+					<i class="fas fa-eye icon-red"></i><?= _("Banned IP Addresses") ?>
 				</a>
 			<?php endif; ?>
+			<a class="button button-secondary" href="/list/firewall/ipset/">
+				<i class="fas fa-list icon-blue"></i><?= _("IPset IP Lists") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-sorting">
@@ -159,7 +159,7 @@
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Comment") ?>:</span>
-					<?php if (!empty($data[$key]['COMMENT'])) echo '' . $data[$key]['COMMENT']; else echo "&nbsp;"; ?>
+					<?php if (!empty($data[$key]['COMMENT'])) { echo $data[$key]['COMMENT']; } ?>
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Protocol") ?>:</span>

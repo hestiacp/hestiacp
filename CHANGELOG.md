@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Allow users to create own document error / skeleton and do not overwrite them with updating (#3622)
 - Consistent overlay styles (#3617)
 - Integrate SnappyMail (#3590)
+- Allow sorting on package name (#3726)
 
 ### Bugfixes
 
@@ -67,6 +68,15 @@ All notable changes to this project will be documented in this file.
 - Tidy notifications copy (#3561)
 - Predefined Ipset lists not loading #3552 (#3557)
 - Minor UI fixes to server console output (#3556 @myrevery)
+- Fix #3745 Translations not loading (#3746)
+- Make IPset visible when F2B is not installed (#3750)
+- Fix: #3729 Missing robots.txt get redirected to WP (#3739) / Add WordPress Multisite subdir support (#3741 @hudokkow )
+- Fix issue with Global SMTP settings not updating (#3730)
+- Add phpbb Nginx template (#3732 #3731 @xchwarze)
+- Update Nextcloud template (#3725 @Steveorevo)
+- Fix php error when DNS disabled when updating user (#3726)
+- Fix: #3712 Unable to restore domain with custom doc root (#3726)
+- Add BIENNIALLY & TRIENNIALLY stats on TaskMonitor (#3721 @caos30)
 
 ### Dependencies
 

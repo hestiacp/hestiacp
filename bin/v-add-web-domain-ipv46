@@ -61,17 +61,17 @@ if [ "$aliases" != "none" ]; then
 	is_package_full 'WEB_ALIASES'
 fi
 
-users_domain_utf=$("$BIN/v-list-web-domain" "$user" "$domain_utf" list)
+users_domain_utf=$("$BIN/v-list-web-domains" "$user" list | sed -ne "/$domain_utf/p")
 if [ "$users_domain_utf" != "$domain" ]; then
 	is_domain_new 'web' "$domain_utf,$aliases"
 fi
-users_domain_idn=$("$BIN/v-list-web-domain" "$user" "$domain_idn" list)
+users_domain_idn=$("$BIN/v-list-web-domains" "$user" list | sed -ne "/$domain_idn/p")
 if [ "$users_domain_idn" != "$domain" ]; then
 	is_domain_new 'web' "$domain_idn,$aliases"
 else
 	is_domain_new 'web' "$domain,$aliases"
 fi
-if [ -z "$(is_ip_format_valid ${domain})" ]; then
+if [ -z "$(is_ip46_format_valid $domain)" ]; then
 	echo "Error: Invalid domain format. IP address detected as input."
 	exit 1
 fi

@@ -57,15 +57,17 @@ is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
-if [ "$($BIN/v-list-dns-domain $user $domain_utf plain | cut -f 1) " != "$domain" ]; then
+users_domain_utf=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain_utf/p")
+if [ "$users_domain_utf" != "$domain" ]; then
 	is_domain_new 'dns' "$domain_utf"
 fi
-if [ "$($BIN/v-list-dns-domain $user $domain_idn plain | cut -f 1) " != "$domain" ]; then
+users_domain_idn=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain_idn/p")
+if [ "$users_domain_idn" != "$domain" ]; then
 	is_domain_new 'dns' "$domain_idn"
 else
 	is_domain_new 'dns' "$domain"
 fi
-if [ -z "$(is_ip_format_valid $domain)" ]; then
+if [ -z "$(is_ip46_format_valid $domain)" ]; then
 	echo "Error: Invalid domain format. IP address detected as input."
 	exit 1
 fi

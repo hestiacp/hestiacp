@@ -50,6 +50,14 @@ export default {
 				(this.$refs.dialog as HTMLDialogElement).close();
 			}
 		},
+		checkNeedEnabled(e) {
+			if (e.target.value != "") {
+				let id = e.target.getAttribute("target");
+				if (!document.getElementById(id).checked) {
+					document.getElementById(id).click();
+				}
+			}
+		},
 		toggleOption(e) {
 			if (e.target.checked) {
 				let conflicts = e.target.getAttribute("conflicts");
@@ -108,9 +116,11 @@ export default {
 				</template>
 				<div v-if="item.textField">
 					<input
+						@change="checkNeedEnabled"
 						type="text"
 						class="form-control"
 						v-model="item.text"
+						:target="item.id"
 						:id="'input-' + item.id"
 						:type="'+item.type+'"
 					/>

@@ -18,7 +18,7 @@ format=${2-shell}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -26,7 +26,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 json_list() {
 	IFS=$'\n'
 	i=1
-	objects=$(grep DOMAIN $USER_DATA/web.conf | wc -l)
+	objects=$(grep DOMAIN "$USER_DATA/web.conf" | wc -l)
 	echo "{"
 	while read str; do
 		parse_object_kv_list "$str"
@@ -65,7 +65,7 @@ json_list() {
 			echo
 		fi
 		((i++))
-	done < <(cat $USER_DATA/web.conf)
+	done < <(cat "$USER_DATA/web.conf")
 	echo '}'
 }
 
@@ -77,7 +77,7 @@ shell_list() {
 	while read str; do
 		parse_object_kv_list "$str"
 		echo "$DOMAIN $IP $TPL $SSL $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
-	done < <(cat $USER_DATA/web.conf)
+	done < <(cat "$USER_DATA/web.conf")
 }
 
 # PLAIN list function
@@ -95,7 +95,7 @@ plain_list() {
 		echo -ne "$ALIAS\t$STATS\t$STATS_USER\t$SSL\t$SSL_HOME\t$LETSENCRYPT\t"
 		echo -ne "$FTP_USER\t$FTP_PATH\t$AUTH_USER\t$BACKEND\t$PROXY\t"
 		echo -e "$PROXY_EXT\t$SUSPENDED\t$TIME\t$DATE"
-	done < <(cat $USER_DATA/web.conf)
+	done < <(cat "$USER_DATA/web.conf")
 }
 
 # CSV list function
@@ -116,7 +116,7 @@ csv_list() {
 		echo -n "\"$ALIAS\",$STATS,\"$STATS_USER\",$SSL,$SSL_HOME,$LETSENCRYPT,"
 		echo -n "\"$FTP_USER\",\"$FTP_PATH\",\"$AUTH_USER\",$BACKEND,$PROXY,"
 		echo "\"$PROXY_EXT\",$SUSPENDED,$TIME,$DATE"
-	done < <(cat $USER_DATA/web.conf)
+	done < <(cat "$USER_DATA/web.conf")
 }
 
 # ONLY DOMAIN list function
@@ -131,7 +131,7 @@ only_domain_list() {
 			DOCROOT="$HOMEDIR/$user/web/$DOMAIN/public_html/"
 		fi
 		echo "$DOMAIN"
-	done < <(cat $USER_DATA/web.conf)
+	done < <(cat "$USER_DATA/web.conf")
 }
 
 #----------------------------------------------------------#

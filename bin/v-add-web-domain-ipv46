@@ -71,7 +71,7 @@ if [ "$users_domain_idn" != "$domain" ]; then
 else
 	is_domain_new 'web' "$domain,$aliases"
 fi
-if [ -z "$(is_ip46_format_valid $domain)" ]; then
+if [ -n "$(get_ip_format "$domain")" ]; then
 	echo "Error: Invalid domain format. IP address detected as input."
 	exit 1
 fi

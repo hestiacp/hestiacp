@@ -3,6 +3,7 @@
 # options: USER [RESTART]
 #
 # This function rebuilds all assets for a user account:
+#
 # - Web domains
 # - DNS zones
 # - Mail domains

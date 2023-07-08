@@ -35,7 +35,7 @@ The error message states (98) Address already in use: AG0072: make_sock: could n
 
 When a package update sometimes comes with a new config and probally it has been overwritten...
 
-```batch
+```bash
 Configuration file '/etc/apache2/apache2.conf'
  ==> Modified (by you or by a script) since installation.
  ==> Package distributor has shipped an updated version.
@@ -55,3 +55,70 @@ How ever if you entered Y or I. Then replace the config that can be found in /ro
 xxxxxx is the date/time the backup is made during the last update of HestiaCP
 
 If you don't have have a backup made you can also copy the config in /usr/local/hestia/install/deb/apache2/apache2.conf to /etc/apache2.conf and also empty /etc/apache2/ports.conf
+
+## Unable to bind adress
+
+In rare cases the network service might be slower than Apache2 and or Nginx. In that case Nginx or Apache2 will refuse to start up successfully start.
+
+```bash
+systemctl status nginx
+```
+
+Will create the error an error
+
+```bash
+nginx: [emerg] bind to x.x.x.x:80 failed (99: cannot assign requested address)
+```
+
+or in case of Aapche2
+
+```bash
+(99)Cannot assign requested address: AH00072: make_sock: could not bind to address x.x.x.x:8443
+```
+
+The following command should allow services to assign to non existing ip addresses
+
+```bash
+sysctl -w net.ipv4.ip_nonlocal_bind=1
+```
+
+## Error: 24: Too many open files
+
+```bash
+2022/02/21 15:04:38 [emerg] 51772#51772: open() "/var/log/apache2/domains/<redactedforprivacy>.error.log" failed (24: Too many open files)
+```
+
+or
+
+```bash
+2022/02/21 15:04:38 [emerg] 2724394#2724394: open() "/var/log/nginx/domains/xxx.error.log" failed (24: Too many open files)
+```
+
+This error means that there are to many open files with Nginx. To resolve this issue:
+
+/etc/systemd/system/nginx.service.d/override.conf
+
+```bash
+[Service]
+LimitNOFILE=65536
+```
+
+Then run:
+
+```bash
+systemctl daemon-reload
+```
+
+Add this to the Nginx config file (Needs to be smaller or equal to LimitNOFILE!)
+
+```bash
+worker_rlimit_nofile 16384
+```
+
+And then restart nginx with systemctl restart nginx
+
+To verifiy run:
+
+```bash
+cat /proc/ < nginx-pid > /limits
+```

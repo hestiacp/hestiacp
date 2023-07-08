@@ -27,13 +27,13 @@ ip_format=${5}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/domain.sh
-source $HESTIA/func/domain.sh
+source "$HESTIA/func/domain.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # shellcheck source=/usr/local/hestia/func/rebuild.sh
-source $HESTIA/func/rebuild.sh
+source "$HESTIA/func/rebuild.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -65,17 +65,17 @@ else
 	check_result "$E_INVALID" "invalid or undefined IP format :: $ip46" # error in case of wrong or undefined IP format
 fi
 if [ $ip_format -eq 4 ]; then
-	ip=${ip46}
+	ip="$ip46"
 	ipv6=''
 	if [ -n "$ip" ]; then
-		is_ip_format_valid "${ip}" 'ipv4' # check for correct ipv4 format if not empty
+		is_ip_format_valid "$ip" 'ipv4' # check for correct ipv4 format if not empty
 	fi
 fi
 if [ $ip_format -eq 6 ]; then
 	ip=''
-	ipv6=${ip46}
+	ipv6="$ip46"
 	if [ -n "$ipv6" ]; then
-		is_ip_format_valid "${ipv6}" 'ipv6' # check for correct ipv6 format if not empty
+		is_ip_format_valid "$ipv6" 'ipv6' # check for correct ipv6 format if not empty
 	fi
 fi
 
@@ -91,26 +91,26 @@ get_domain_values 'dns'
 
 # Changing ip
 if [ $ip_format -eq 4 ]; then
-	old_ip46=${IP}
-	ipv6=${IP6}
+	old_ip46="$IP"
+	ipv6="$IP6"
 	update_object_value 'dns' 'DOMAIN' "$domain" '$IP' "$ip"
 fi
 if [ $ip_format -eq 6 ]; then
-	ip=${IP}
-	old_ip46=${IP6}
+	ip="$IP"
+	old_ip46="$IP6"
 	update_object_value 'dns' 'DOMAIN' "$domain" '$IP6' "$ipv6"
 fi
 
 # Changing records
 if [ -n "$old_ip46" -a -n "$ip46" ]; then
-	sed -i "s/$old_ip46/$ip46/g" ${USER_DATA}/dns/${domain}.conf # simple find and replace only if old and new IPs both not empty
+	sed -i "s/$old_ip46/$ip46/g" "$USER_DATA/dns/$domain".conf # simple find and replace only if old and new IPs both not empty
 else
 	# Reload DNS template if old or new IP is empty
 
 	get_dns_values # get DNS values, nameservers
 
-	dkim_records="$(${BIN}/v-list-dns-records ${user} ${domain} | sed -ne '/DKIM/p')"
-	webmail_records="$(${BIN}/v-list-dns-records ${user} ${domain} | sed -ne "/${WEBMAIL_ALIAS}/p")"
+	dkim_records="$("$BIN/v-list-dns-records" "$user" "$domain" | sed -ne '/DKIM/p')"
+	webmail_records="$("$BIN/v-list-dns-records" "$user" "$domain" | sed -ne "/${WEBMAIL_ALIAS}/p")"
 
 	template=$(get_user_value '$DNS_TEMPLATE')
 	is_dns_template_valid "$template"
@@ -144,7 +144,7 @@ if [ "$DNS_CLUSTER" = "yes" ]; then
 	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
 	if [ -z "$dlock" ]; then
 		cmd="$BIN/v-add-remote-dns-domain $user $domain domain yes"
-		echo "$cmd" >> ${HESTIA}/data/queue/dns-cluster.pipe
+		echo "$cmd" >> "$HESTIA"/data/queue/dns-cluster.pipe
 	fi
 fi
 
@@ -153,11 +153,11 @@ fi
 #----------------------------------------------------------#
 
 # Restarting named
-${BIN}/v-restart-dns "$restart"
+"$BIN/v-restart-dns" "$restart"
 check_result $? "DNS restart failed" > /dev/null
 
 # Logging
-${BIN}/v-log-action "$user" "Info" "DNS" "IP address for DNS domain changed (IP: $ip46, Domain: $domain)."
+"$BIN/v-log-action" "$user" "Info" "DNS" "IP address for DNS domain changed (IP: $ip46, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

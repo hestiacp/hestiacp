@@ -613,22 +613,22 @@ add_dns_dkim_records() {
 add_dns_webmail_records() {
 	# Ensure DNS record exists if Hestia is hosting DNS zones
 	if [ -n "$DNS_SYSTEM" ]; then
-		dns_domain=$(${BIN}/v-list-dns-domains $user list)
+		dns_domain=$("$BIN/v-list-dns-domains" "$user" list)
 		# shellcheck disable=SC1087
-		webmail_records="$(${BIN}/v-list-dns-records ${user} ${domain} plain | sed -ne "/$WEBMAIL_ALIAS/s/^\([0-9]*\)[ \t]*$WEBMAIL_ALIAS[ \t]*.*/\1/gp")"
+		webmail_records="$("$BIN/v-list-dns-records" "$user" "$domain" plain | sed -ne "/$WEBMAIL_ALIAS/s/^\([0-9]*\)[ \t]*$WEBMAIL_ALIAS[ \t]*.*/\1/gp")"
 		if [ "$dns_domain" = "$domain" ]; then
 			if [ "$WEBMAIL_ALIAS" != "mail" ]; then
 				#Prevent mail.domain.com to be cycled
 				if [ -n "$webmail_records" ]; then
 					echo "$webmail_records" | while read webmail_record; do
-						${BIN}/v-delete-dns-record "$user" "$domain" "$webmail_record" "$restart" 'yes'
+						"$BIN/v-delete-dns-record" "$user" "$domain" "$webmail_record" "$restart" 'yes'
 					done
 				fi
 				if [ -n "$ip" ]; then
-					${BIN}/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+					"$BIN/v-add-dns-record" "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
 				fi
 				if [ -n "$ipv6" ]; then
-					${BIN}/v-add-dns-record "$user" "$domain" "$WEBMAIL_ALIAS" AAAA "$ipv6" '' '' "$restart" '' 'yes'
+					"$BIN/v-add-dns-record" "$user" "$domain" "$WEBMAIL_ALIAS" AAAA "$ipv6" '' '' "$restart" '' 'yes'
 				fi
 			fi
 		fi

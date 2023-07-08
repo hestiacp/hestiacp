@@ -77,8 +77,10 @@ fi
 
 # Set DNS CAA record retrieval commands
 if [ -n "$DNS_SYSTEM" ]; then
-	dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-	caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "CAA" | grep -i "letsencrypt.org" | cut -d' ' -f1)
+	dns_domain=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain/p")
+	if [ -n "$dns_domain" ]; then
+		caa_record=$("$BIN/v-list-dns-records" "$user" "$domain" | grep -i "CAA" | grep -i "letsencrypt.org" | cut -d' ' -f1)
+	fi
 fi
 
 if [ -z "$mail" ] || [ "$mail" = 'no' ]; then
@@ -272,8 +274,10 @@ for auth in $authz; do
 	if [[ "$status" -ne 200 ]]; then
 		# Delete DNS CAA record
 		if [ -n "$DNS_SYSTEM" ]; then
-			dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-			caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+			dns_domain=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain/p")
+			if [ -n "$dns_domain" ]; then
+				caa_record=$("$BIN/v-list-dns-records" "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+			fi
 
 			if [ "$dns_domain" = "$domain" ]; then
 				if [ -n "$caa_record" ]; then
@@ -288,11 +292,13 @@ for auth in $authz; do
 	if [ "$wildcard" = 'yes' ]; then
 		record=$(printf "%s" "$token.$THUMB" \
 			| openssl dgst -sha256 -binary | encode_base64)
-		old_records=$($BIN/v-list-dns-records "$user" "$domain" plain | grep 'TXT')
-		old_records=$(echo "$old_records" | grep _acme-challenge | cut -f 1)
-		for old_record in $old_records; do
-			$BIN/v-delete-dns-record "$user" "$domain" "$old_record"
-		done
+		if [ -n "$dns_domain" ]; then
+			old_records=$($BIN/v-list-dns-records "$user" "$domain" plain | grep 'TXT')
+			old_records=$(echo "$old_records" | grep _acme-challenge | cut -f 1)
+			for old_record in $old_records; do
+				$BIN/v-delete-dns-record "$user" "$domain" "$old_record"
+			done
+		fi
 		$BIN/v-add-dns-record "$user" "$domain" "_acme-challenge" "TXT" "$record"
 		check_result $? "DNS _acme-challenge record wasn't created ($domain)"
 	else
@@ -390,8 +396,10 @@ for auth in $authz; do
 		if [[ "$status" -ne 200 ]]; then
 			# Delete DNS CAA record
 			if [ -n "$DNS_SYSTEM" ]; then
-				dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-				caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+				dns_domain=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain/p")
+				if [ -n "$dns_domain" ]; then
+					caa_record=$("$BIN/v-list-dns-records" "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+				fi
 
 				if [ "$dns_domain" = "$domain" ]; then
 					if [ -n "$caa_record" ]; then
@@ -413,8 +421,10 @@ for auth in $authz; do
 		if [ "$i" -gt 10 ]; then
 			# Delete DNS CAA record
 			if [ -n "$DNS_SYSTEM" ]; then
-				dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-				caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+				dns_domain=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain/p")
+				if [ -n "$dns_domain" ]; then
+					caa_record=$("$BIN/v-list-dns-records" "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+				fi
 
 				if [ "$dns_domain" = "$domain" ]; then
 					if [ -n "$caa_record" ]; then
@@ -430,8 +440,10 @@ for auth in $authz; do
 	if [ "$validation" = 'invalid' ]; then
 		# Delete DNS CAA record
 		if [ -n "$DNS_SYSTEM" ]; then
-			dns_domain=$($BIN/v-list-dns-domains "$user" | grep "$domain" | cut -d' ' -f1)
-			caa_record=$($BIN/v-list-dns-records "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+			dns_domain=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain/p")
+			if [ -n "$dns_domain" ]; then
+				caa_record=$("$BIN/v-list-dns-records" "$user" "$domain" | grep -i "letsencrypt" | cut -d' ' -f1)
+			fi
 
 			if [ "$dns_domain" = "$domain" ]; then
 				if [ -n "$caa_record" ]; then

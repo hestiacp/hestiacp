@@ -84,6 +84,12 @@ All notable changes to this project will be documented in this file.
 - Update hestia-nginx to 1.25.1
 - Update Quick install apps versions
 
+## [1.7.8] - Service releae
+
+### Bugfixes
+
+- Fix reflected XXS in debug panel when debug mode was enabled or the user accessed directly the debug panel template. [CVE-2023-3479](https://nvd.nist.gov/vuln/detail/CVE-2023-3479)
+
 ## [1.7.7] - Service release
 
 ### Bugfixes

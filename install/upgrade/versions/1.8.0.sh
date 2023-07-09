@@ -256,10 +256,12 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 			srs=$(generate_password)
 			echo $srs > /etc/exim4/srs.conf
 			chmod 640 /etc/exim4/srs.conf
+			chown root:Debian-exim /etc/exim4/srs.conf
 			echo "[ * ] Update exim4.conf.template ..."
 			patch /etc/exim4/exim4.conf.template $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch
 		else
 			sed -i "s/SRS_SECRET = readfile{\/etc\/exim4\/srs.conf}/SRS_SECRET = \${readfile{\/etc\/exim4\/srs.conf}}/g" /etc/exim4/exim4.conf.template
+			chown root:Debian-exim /etc/exim4/srs.conf
 		fi
 	fi
 fi

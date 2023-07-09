@@ -1810,8 +1810,9 @@ if [ "$exim" = 'yes' ]; then
 	srs=$(gen_pass)
 	echo $srs > /etc/exim4/srs.conf
 	chmod 640 /etc/exim4/srs.conf
-
 	chmod 640 /etc/exim4/exim4.conf.template
+	chown root:Debian-exim /etc/exim4/srs.conf
+
 	rm -rf /etc/exim4/domains
 	mkdir -p /etc/exim4/domains
 

@@ -268,7 +268,7 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
 	# if Exim version > 4.95 or greater!
 	if version_ge "$exim_version" "4.95"; then
-		if [ -z "$(grep -e 'condition =  \${lookup{\$local_part@\$domain}lsearch{/etc/exim4/domains/\${lookup{\$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}' /etc/exim4/exim4.conf.template)" ]; then
+		if ! grep -q 'condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}' /etc/exim4/exim4.conf.template; then
 			for line in $(sed -n '/redirect_router = dnslookup/=' /etc/exim4/exim4.conf.template); do
 				testline=$((line - 1))
 				newline=$((line + 1))
@@ -279,4 +279,5 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 			done
 		fi
 	fi
+
 fi

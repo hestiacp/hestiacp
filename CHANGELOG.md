@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Consistent overlay styles (#3617)
 - Integrate SnappyMail (#3590)
 - Allow sorting on package name (#3726)
+- Add templates for yourls (#3755 @ediazmurillo)
 
 ### Bugfixes
 

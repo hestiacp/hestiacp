@@ -52,7 +52,7 @@ unset($_SESSION["ok_msg"]);
 
 // Set correct page reload target
 if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
-	header("Location: /list/log/auth/?user=$user&token=$token");
+	header("Location: /list/log/auth/?user=" . $_GET["user"] . "&token=$token");
 } else {
 	header("Location: /list/log/auth/");
 }

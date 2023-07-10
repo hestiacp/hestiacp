@@ -7,10 +7,10 @@
 			</a>
 			<?php
 				if (($_SESSION['userContext'] === 'admin') && (!isset($_SESSION['look'])) && ($_SESSION['user'] !== $v_username)) {
-					$ssh_key_url = "/list/key/?user=".htmlentities($user_plain)."&token=".$_SESSION['token']."";
-					$log_url = "/list/log/?user=".htmlentities($user_plain)."&token=".$_SESSION['token']."";
-					$keys_url = "/list/access-key/?user=".htmlentities($user_plain)."&token=".$_SESSION['token']."";
-				} else {
+					$ssh_key_url = "/list/key/?user=".htmlentities($_GET['user'])."&token=".$_SESSION['token']."";
+					$log_url = "/list/log/?user=".htmlentities($_GET['user'])."&token=".$_SESSION['token']."";
+					$keys_url = "/list/access-key/?user=".htmlentities($_GET['user'])."&token=".$_SESSION['token']."";
+				}else{
 					$ssh_key_url = "/list/key/";
 					$log_url = "/list/log/";
 					$keys_url = "/list/access-key/";

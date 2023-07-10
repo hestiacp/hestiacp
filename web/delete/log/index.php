@@ -23,7 +23,7 @@ if ($return_var > 0) {
 	// Set correct page reload target
 	if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 		if ($_GET["user"] != "system") {
-			header("Location: /list/log/?user=$user&token=$token");
+			header("Location: /list/log/?user=" . $_GET["user"] . "&token=$token");
 		} else {
 			header("Location: /list/log/?user=system&token=$token");
 		}

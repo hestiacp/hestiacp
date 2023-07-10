@@ -38,7 +38,7 @@
 		"husky": "^8.0.3",
 		"lint-staged": "^13.2.3",
 		"markdownlint-cli2": "^0.8.1",
-		"postcss": "^8.4.24",
+		"postcss": "^8.4.25",
 		"postcss-import": "^15.1.0",
 		"postcss-path-replace": "^1.0.4",
 		"postcss-preset-env": "^9.0.0",

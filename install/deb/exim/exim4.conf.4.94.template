@@ -362,8 +362,6 @@ terminate_alias:
   transport = devnull
   condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{true}{false}}
 
-
-
 ######################################################################
 #                      TRANSPORTS CONFIGURATION                      #
 ######################################################################

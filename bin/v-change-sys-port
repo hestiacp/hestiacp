@@ -56,7 +56,7 @@ check_hestia_demo_mode
 
 # Get original port
 LISTEN_ROWS=$(cat ${NGINX_CONFIG} | grep -c "listen")
-ORIGINAL_PORT=$(cat ${NGINX_CONFIG} | grep -m 1 "listen" | sed 's/[^0-9]*//g')
+ORIGINAL_PORT=$(cat ${NGINX_CONFIG} | sed 's/#IPV4[ \t\listen[ \t][^0-9]*//g' | sed 's/[^0-9]*//g')
 
 # Check if port is different to nginx.conf
 if [ "$ORIGINAL_PORT" = "$PORT" ]; then

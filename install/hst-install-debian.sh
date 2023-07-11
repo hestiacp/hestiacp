@@ -15,7 +15,6 @@
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
-# For testing
 RHOST='apt.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'
@@ -32,11 +31,10 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.8.0~alpha'
+HESTIA_INSTALL_VER='1.8.0'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
-#deb.sury not yet ready
-fpm_v="8.2"
+fpm_v="8.1"
 mariadb_v="10.11"
 
 # Defining software pack for all distros
@@ -48,7 +46,7 @@ software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-util
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog spamassassin sudo sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd"
+  proftpd-basic quota rrdtool rsyslog spamd sudo sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget"
 
@@ -325,8 +323,11 @@ if [ "$mysql" = 'yes' ] && [ "$mysql8" = 'yes' ]; then
 	mysql='no'
 fi
 
-if [ "$mysqlclassic" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
+if [ "$mysql8" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
 	check_result 1 "Mysql 8 does not support ARM64 yet for Debian please use Ubuntu. Unable to continue"
+fi
+if [ "$mysql8" = 'yes' ] && [ "$release" = '12' ]; then
+	check_result 1 "Mysql 8 does not support Bookworm yet for Debian Unable to continue"
 fi
 
 # Checking root permissions
@@ -718,15 +719,9 @@ curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/k
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
-	if [ "$release" != '12' ]; then
-		echo "[ * ] Apache2"
-		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-		curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
-	else
-		echo "[ * ] Apache2"
-		echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-		curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
-	fi
+	echo "[ * ] Apache2"
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
 fi
 
 # Installing MariaDB repo
@@ -881,6 +876,10 @@ fi
 # Excluding packages
 software=$(echo "$software" | sed -e "s/apache2.2-common//")
 
+if [ $release -lt 12 ]; then
+	software=$(echo "$software" | sed -e "s/spamd/spamassassin/g")
+fi
+
 if [ "$apache" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/apache2 //")
 	software=$(echo "$software" | sed -e "s/apache2-bin//")
@@ -916,6 +915,7 @@ if [ "$clamd" = 'no' ]; then
 fi
 if [ "$spamd" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/spamassassin//")
+	software=$(echo "$software" | sed -e "s/spamd//")
 fi
 if [ "$dovecot" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/dovecot-imapd//")
@@ -1557,6 +1557,11 @@ if [ "$proftpd" = 'yes' ]; then
 			systemctl enable proftpd
 		fi
 	fi
+
+	if [ "$release" -eq 12 ]; then
+		systemctl disable --now proftpd.socket
+		systemctl enable --now proftpd.service
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -1900,9 +1905,9 @@ if [ "$spamd" = 'yes' ]; then
 		# Deb 12+ renamed to spamd
 		update-rc.d spamd enable > /dev/null 2>&1
 		systemctl start spamd >> $LOG
-		unit_files="$(systemctl list-unit-files | grep spamassassin)"
+		unit_files="$(systemctl list-unit-files | grep spamd)"
 		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable spamassassin > /dev/null 2>&1
+			systemctl enable spamd > /dev/null 2>&1
 		fi
 
 	fi

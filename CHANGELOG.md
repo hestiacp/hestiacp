@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.1] - Service releae
+
+- Fixed Debian 10 not working with ip adresses check
+- Fixed Exim4 update config via patch was unreliable added few safety checks and add notice if failed.
+- Fixed hestia-nginx not loading with custom port
+
 ## [1.8.0] - Feature / Major release
 
 ### Notes

@@ -263,7 +263,11 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 			if [ "$?" -ne 0 ]; then
 				add_upgrade_message "Unable to successfully aply the SRS update patch for Exim.\n If you use SMTP relay with the SRS feature use the exim config found in /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template"
 				"$BIN"/v-add-user-notification admin "Unable to apply patch to Exim config" 'Unable to successfully apply the SRS update patch for Exim.<br /> If you use SMTP relay with the SRS feature use the exim config found in /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template'
-				sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
+				if grep -qw "IMPORTANT: Manual Action Required" "$HESTIA"/data/users/admin/notifications.conf 2> /dev/null; then
+					sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='3'/" "$HESTIA"/data/users/admin/notifications.conf
+				else
+					sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='2'/" "$HESTIA"/data/users/admin/notifications.conf
+				fi
 				echo "[ ! ] Unable to apply SRS update patch for SMTP relay"
 			else
 				echo "[ * ] Update exim4.conf.template ..."

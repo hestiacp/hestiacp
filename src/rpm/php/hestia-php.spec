@@ -2,7 +2,7 @@
 %global _prefix         /usr/local/hestia/php
 
 Name:           hestia-php
-Version:        8.2.7
+Version:        8.2.8
 Release:        1%{dist}
 Summary:        Hestia internal PHP
 Group:          System Environment/Base

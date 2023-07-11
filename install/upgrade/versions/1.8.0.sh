@@ -257,8 +257,18 @@ if [ "$MAIL_SYSTEM" = "exim4" ]; then
 			echo $srs > /etc/exim4/srs.conf
 			chmod 640 /etc/exim4/srs.conf
 			chown root:Debian-exim /etc/exim4/srs.conf
-			echo "[ * ] Update exim4.conf.template ..."
-			patch /etc/exim4/exim4.conf.template $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch
+			cp /etc/exim4/exim4.conf.template /etc/exim4/exim4.conf.template.staging
+			patch /etc/exim4/exim4.conf.template.staging $HESTIA/install/upgrade/patch/3661-exim-srs-support.patch
+			exim -C /etc/exim4/exim4.conf.template.staging
+			if [ "$?" -ne 0 ]; then
+				#add_upgrade_message "Unable to successfully aply the SRS update patch for Exim.\n If you use SMTP relay with the SRS feature use the exim config found in /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template"
+				"$BIN"/v-add-user-notification admin "Unable to apply patch to Exim config" 'Unable to successfully aply the SRS update patch for Exim.<br /> If you use SMTP relay with the SRS feature use the exim config found in /usr/local/hestia/install/deb/exim/exim4.conf.4.95.template'
+				sed -i "s/""$(grep -m 1 "Unable to apply patch to Exim config" "$HESTIA"/data/users/admin/notifications.conf | awk '{print $1}')""/NID='1'/" "$HESTIA"/data/users/admin/notifications.conf
+			else
+				echo "[ * ] Update exim4.conf.template ..."
+				cp /etc/exim4/exim4.conf.template.staging /etc/exim4/exim4.conf.template
+			fi
+			rm /etc/exim4/exim4.conf.template.staging
 		else
 			sed -i "s/SRS_SECRET = readfile{\/etc\/exim4\/srs.conf}/SRS_SECRET = \${readfile{\/etc\/exim4\/srs.conf}}/g" /etc/exim4/exim4.conf.template
 			chown root:Debian-exim /etc/exim4/srs.conf

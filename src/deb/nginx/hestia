@@ -39,10 +39,10 @@ adapt_nginx_config() {
 	fi
 	for nic in $physical_nics; do
 		if [ -z "$ipv4_scope_global" ]; then
-			ipv4_scope_global="$(ip -4 -d -j addr show "$nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end')"
+			ipv4_scope_global="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end');"
 		fi
 		if [ -z "$ipv6_scope_global" ]; then
-			ipv6_scope_global="$(ip -6 -d -j addr show "$nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end')"
+			ipv6_scope_global="$(ip -6 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end');"
 		fi
 	done
 

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.9] - Service release
+
+- This will be the final release for Ubuntu 18.04 please upgrade your servers to Ubuntu 20.04 or 22.04!
+
+### Security
+
+- Fixed an security issue when changing / adding mail domain relay
+
 ## [1.7.8] - Service release
 
 ### Security

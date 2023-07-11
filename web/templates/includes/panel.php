@@ -150,7 +150,7 @@
 					</button>
 
 					<div x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-panel">
-						<ul>
+						<ul class="top-bar-menu-list">
 
 							<!-- File Manager -->
 							<?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>

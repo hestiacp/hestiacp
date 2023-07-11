@@ -137,26 +137,32 @@
 
 .top-bar-notifications {
 	display: flex;
-	position: relative;
+
+	@media (--viewport-small) {
+		position: relative;
+	}
 }
 
 .top-bar-notifications-panel {
 	background-color: #fff;
 	box-shadow: 0 3px 20px 0 rgb(0 0 0 / 40%);
-	max-height: 500px;
+	max-height: 50vh;
 	overflow-y: auto;
 	position: absolute;
 	top: 100%;
-	right: 0;
-	width: 280px;
+	left: 0;
+	width: 100%;
 	z-index: 1;
-	border-bottom-left-radius: 6px;
-	border-bottom-right-radius: 6px;
-	border: 1px solid #fff;
-	border-top: none;
 
 	@media (--viewport-small) {
-		width: 330px;
+		left: initial;
+		right: 0;
+		width: 350px;
+		max-height: 500px;
+		border-bottom-left-radius: 6px;
+		border-bottom-right-radius: 6px;
+		border: 1px solid #fff;
+		border-top: none;
 	}
 
 	@media (--viewport-medium) {
@@ -180,7 +186,7 @@
 	color: #6f6f6f;
 	font-size: 0.8rem;
 	border-bottom: 1px solid #e9e4e4;
-	padding: 15px;
+	padding: 15px 20px;
 
 	&:last-child {
 		border-bottom: none;
@@ -198,6 +204,11 @@
 
 	& a {
 		font-weight: 600;
+	}
+
+	@media (--viewport-small) {
+		padding-left: 15px;
+		padding-right: 15px;
 	}
 }
 
@@ -279,7 +290,10 @@
 
 .top-bar-menu {
 	display: flex;
-	position: relative;
+
+	@media (--viewport-small) {
+		position: relative;
+	}
 }
 
 .top-bar-menu-panel {
@@ -288,15 +302,47 @@
 	box-shadow: 0 3px 20px 0 rgb(0 0 0 / 40%);
 	position: absolute;
 	top: 100%;
-	right: 0;
-	animation-duration: var(--animate-duration);
+	left: 0;
+	width: 100%;
+	z-index: 1;
+
+	@media (--viewport-small) {
+		left: initial;
+		right: 0;
+		width: 350px;
+		border-bottom-left-radius: 6px;
+		border-bottom-right-radius: 6px;
+	}
 
 	@media (--viewport-medium) {
 		display: flex !important; /* NOTE: Overrides inline style set by JS */
+		width: auto;
 		background-color: transparent;
 		box-shadow: none;
 		position: static;
-		animation-duration: 0s;
+	}
+}
+
+.top-bar-menu-list {
+	& .top-bar-menu-link {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	@media (--viewport-small) {
+		& .top-bar-menu-link {
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+	}
+
+	@media (--viewport-medium) {
+		display: flex;
+
+		& .top-bar-menu-link {
+			padding-left: 10px;
+			padding-right: 10px;
+		}
 	}
 }
 
@@ -371,7 +417,6 @@
 
 .top-bar-menu-link-label {
 	margin-left: 6px;
-	white-space: nowrap;
 
 	@media (--viewport-medium) {
 		display: none;

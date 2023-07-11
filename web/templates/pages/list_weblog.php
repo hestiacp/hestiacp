@@ -29,7 +29,7 @@
 							</span>
 						</button>
 						<div x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-panel">
-							<ul>
+							<ul class="top-bar-menu-list">
 								<li class="top-bar-menu-item">
 									<a class="top-bar-menu-link" href="/list/web/" title="<?= _("Back") ?>">
 										<i class="fas fa-circle-left"></i>

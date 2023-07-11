@@ -51,7 +51,10 @@
 
 .top-bar-notifications-panel {
 	background-color: rgb(50 50 50 / 99%);
-	border: 1px solid #404040;
+
+	@media (--viewport-small) {
+		border-color: #404040;
+	}
 }
 
 .top-bar-notifications-empty {

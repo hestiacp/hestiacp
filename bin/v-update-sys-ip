@@ -46,7 +46,7 @@ if [ -z "$physical_nics" ]; then
 fi
 
 for nic in $physical_nics; do
-	nic_ipv4s="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end');"
+	nic_ipv4s="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
 	if [ -z "$ips" ]; then
 		ips="$nic_ipv4s"
 	else

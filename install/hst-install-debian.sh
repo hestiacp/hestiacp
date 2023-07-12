@@ -1543,7 +1543,7 @@ if [ "$proftpd" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
 
- 	update-rc.d proftpd defaults > /dev/null 2>&1
+	update-rc.d proftpd defaults > /dev/null 2>&1
 	systemctl start proftpd >> $LOG
 	check_result $? "proftpd start failed"
 

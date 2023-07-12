@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.8.0'
+HESTIA_INSTALL_VER='1.8.1'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.1"
@@ -2076,9 +2076,9 @@ $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 # Get primary IP
 default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
 # IPv4
-primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 # IPv6
-#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 ip="$primary_ipv4"
 local_ip="$primary_ipv4"
 

@@ -1,5 +1,5 @@
 17a18,19
-> SRS_SECRET = readfile{/etc/exim4/srs.conf}
+> SRS_SECRET = ${readfile{/etc/exim4/srs.conf}}
 >   
 326a332,348
 > inbound_srs:

@@ -1,6 +1,6 @@
 <h1 align="center"><a href="https://www.hestiacp.com/">Hestia Control Panel</a></h1>
 
-![Hestia screenshot](https://storage.hestiacp.com/hestiascreen.png)
+![HestiaCP Web Interface screenshot](https://storage.hestiacp.com/hestiascreen.png)
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
@@ -8,9 +8,8 @@
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
-	<a href="https://hestiacp.com/docs/">Documentation</a> |
-	<a href="https://forum.hestiacp.com/">Forum</a> |
-	<a href="https://discord.gg/nXRUZch">Discord</a>
+	<a href="https://docs.hestiacp.com/">Documentation</a> |
+	<a href="https://forum.hestiacp.com/">Forum</a>
 	<br/><br/>
 	<a href="https://drone.hestiacp.com/hestiacp/hestiacp">
 		<img src="https://drone.hestiacp.com/api/badges/hestiacp/hestiacp/status.svg?ref=refs/heads/main" alt="Drone Status"/>
@@ -43,17 +42,16 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 - Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 
 ## Supported platforms and operating systems
+- **Debian:** 12, 11, or 10
+- **Ubuntu:** 22.04 LTS, 20.04 LTS
 
-- **NOTE:** Hestia Control Panel does not support 32 bit operating systems!
-
-- **Debian:** 11 or 10
-- **Ubuntu:** 22.04LTS, 20.04 LTS
-
-- **NOTE:** Hestia Control Panel in combination with OpenVZ 7 or lower might have issue Bind9 server not starting or issues with Firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
+**NOTES:**
+- Hestia Control Panel does not support 32 bit operating systems!
+- Hestia Control Panel in combination with OpenVZ 7 or lower might have issues with DNS and/or firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
 
 ## Installing Hestia Control Panel
 
-- **NOTE:** Hestia Control Panel must be installed on top of a fresh operating system installation to ensure proper functionality.
+- **NOTE:** You must install Hestia Control Panel on top of a fresh operating system installation to ensure proper functionality.
 
 While we have taken every effort to make the installation process and the control panel interface as friendly as possible (even for new users), it is assumed that you will have some prior knowledge and understanding in the basics how to set up a Linux server before continuing.
 

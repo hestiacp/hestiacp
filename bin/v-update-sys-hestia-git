@@ -20,13 +20,28 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+# define NodeJS version for download (required for building JS/CSS)
+nodejs_ver="20"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+# Detect and install NodeJS if necessary
 if [ -z $(which "node") ]; then
-	echo "Unable to locate Node.js  See https://hestiacp.com/docs/contributing/development.html"
-	exit 0
+	read -p "NodeJS not found. Install now to proceed? [Y/n] " answer
+	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
+		if [ "$OS_TYPE" = "Debian" ]; then
+			# Debian
+			curl -fsSL "https://deb.nodesource.com/setup_$nodejs_ver.x" | bash - &&\
+			apt-get install -y nodejs
+		else
+			# Ubuntu
+			curl -fsSL "https://deb.nodesource.com/setup_$nodejs_ver.x" | sudo -E bash - &&\
+			sudo apt-get install -y nodejs
+		fi
+	else
+		exit 0
+	fi
 fi
 
 # Define download function

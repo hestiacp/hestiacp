@@ -42,10 +42,12 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 - Firewall with brute-force attack detection and IP lists (iptables, fail2ban, and ipset).
 
 ## Supported platforms and operating systems
+
 - **Debian:** 12, 11, or 10
 - **Ubuntu:** 22.04 LTS, 20.04 LTS
 
 **NOTES:**
+
 - Hestia Control Panel does not support 32 bit operating systems!
 - Hestia Control Panel in combination with OpenVZ 7 or lower might have issues with DNS and/or firewall. If you use a Virtual Private Server we strongly advice you to use something based on KVM or LXC!
 

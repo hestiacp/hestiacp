@@ -2086,6 +2086,21 @@ fi
 # Get public IP
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
+	if [ -e /etc/rc.local ]; then
+		sed -i '/exit 0/d' /etc/rc.local
+	else
+		touch /etc/rc.local
+	fi
+
+	check_rclocal=$(cat /etc/rc.local | grep "#!")
+	if [ -z "$check_rclocal" ]; then
+		echo "#!/bin/sh" >> /etc/rc.local
+	fi
+
+	echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
+	echo "exit 0" >> /etc/rc.local
+	chmod +x /etc/rc.local
+	systemctl enable rc-local > /dev/null 2>&1
 	$HESTIA/bin/v-change-sys-ip-nat "$ip" "$pub_ipv4" > /dev/null 2>&1
 	ip="$pub_ipv4"
 fi

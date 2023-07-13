@@ -28,56 +28,58 @@
 								<?= _("Open menu") ?>
 							</span>
 						</button>
-						<ul x-cloak x-show="open" class="top-bar-menu-list">
-							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="/list/web/" title="<?= _("Back") ?>">
-									<i class="fas fa-circle-left"></i>
-									<span class="top-bar-menu-link-label"><?= _("Back") ?></span>
-								</a>
-							</li>
-							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=access&token=<?= $_SESSION['token'] ?>" title="<?= _("Access Log") ?>">
-									<i class="fas fa-eye"></i>
-									<span class="top-bar-menu-link-label"><?= _("Access Log") ?></span>
-								</a>
-							</li>
-							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/download/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=access&&token=<?= $_SESSION['token'] ?>" title="<?= _("Download") ?>">
-									<i class="fas fa-download"></i>
-									<span class="u-hidden"><?= _("Download") ?></span>
-								</a>
-							</li>
-							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if ($_GET['type'] == 'error') echo 'active' ?>" href="/list/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=error&token=<?= $_SESSION['token'] ?>" title="<?= _("Error Log") ?>">
-									<i class="fas fa-circle-exclamation"></i>
-									<span class="top-bar-menu-link-label"><?= _("Error Log") ?></span>
-								</a>
-							</li>
-							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link <?php if ($_GET['type'] == 'error') echo 'active' ?>" href="/download/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=error&token=<?= $_SESSION['token'] ?>" title="<?= _("Download") ?>">
-									<i class="fas fa-download"></i>
-									<span class="u-hidden"><?= _("Download") ?></span>
-								</a>
-							</li>
-							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="javascript:location.reload();" title="<?= _("Refresh") ?>">
-									<i class="fas fa-arrow-rotate-right"></i>
-									<span class="u-hidden"><?= _("Refresh") ?></span>
-								</a>
-							</li>
-							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link" href="/list/user/" title="<?= htmlentities($user) ?>">
-									<i class="fas fa-circle-user"></i>
-									<span class="u-hidden"><?= htmlentities($user) ?></span>
-								</a>
-							</li>
-							<li class="top-bar-menu-item">
-								<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?= $_SESSION["token"] ?>" title="<?= _("Log out") ?>">
-									<i class="fas fa-right-from-bracket"></i>
-									<span class="u-hidden"><?= _("Log out") ?></span>
-								</a>
-							</li>
-						</ul>
+						<div x-cloak x-show="open" x-on:click.outside="open = false" class="top-bar-menu-panel">
+							<ul class="top-bar-menu-list">
+								<li class="top-bar-menu-item">
+									<a class="top-bar-menu-link" href="/list/web/" title="<?= _("Back") ?>">
+										<i class="fas fa-circle-left"></i>
+										<span class="top-bar-menu-link-label"><?= _("Back") ?></span>
+									</a>
+								</li>
+								<li class="top-bar-menu-item">
+									<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=access&token=<?= $_SESSION['token'] ?>" title="<?= _("Access Log") ?>">
+										<i class="fas fa-eye"></i>
+										<span class="top-bar-menu-link-label"><?= _("Access Log") ?></span>
+									</a>
+								</li>
+								<li class="top-bar-menu-item">
+									<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/download/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=access&&token=<?= $_SESSION['token'] ?>" title="<?= _("Download") ?>">
+										<i class="fas fa-download"></i>
+										<span class="u-hidden"><?= _("Download") ?></span>
+									</a>
+								</li>
+								<li class="top-bar-menu-item">
+									<a class="top-bar-menu-link <?php if ($_GET['type'] == 'error') echo 'active' ?>" href="/list/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=error&token=<?= $_SESSION['token'] ?>" title="<?= _("Error Log") ?>">
+										<i class="fas fa-circle-exclamation"></i>
+										<span class="top-bar-menu-link-label"><?= _("Error Log") ?></span>
+									</a>
+								</li>
+								<li class="top-bar-menu-item">
+									<a class="top-bar-menu-link <?php if ($_GET['type'] == 'error') echo 'active' ?>" href="/download/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=error&token=<?= $_SESSION['token'] ?>" title="<?= _("Download") ?>">
+										<i class="fas fa-download"></i>
+										<span class="u-hidden"><?= _("Download") ?></span>
+									</a>
+								</li>
+								<li class="top-bar-menu-item">
+									<a class="top-bar-menu-link" href="javascript:location.reload();" title="<?= _("Refresh") ?>">
+										<i class="fas fa-arrow-rotate-right"></i>
+										<span class="u-hidden"><?= _("Refresh") ?></span>
+									</a>
+								</li>
+								<li class="top-bar-menu-item">
+									<a class="top-bar-menu-link" href="/list/user/" title="<?= htmlentities($user) ?>">
+										<i class="fas fa-circle-user"></i>
+										<span class="u-hidden"><?= htmlentities($user) ?></span>
+									</a>
+								</li>
+								<li class="top-bar-menu-item">
+									<a class="top-bar-menu-link top-bar-menu-link-logout" href="/logout/?token=<?= $_SESSION["token"] ?>" title="<?= _("Log out") ?>">
+										<i class="fas fa-right-from-bracket"></i>
+										<span class="u-hidden"><?= _("Log out") ?></span>
+									</a>
+								</li>
+							</ul>
+						</div>
 					</nav>
 				</div>
 			</div>

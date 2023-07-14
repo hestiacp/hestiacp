@@ -520,7 +520,7 @@ rebuild_dns_domain_conf() {
 	fi
 
 	if [ -e '/etc/bind/named.conf' ]; then
-		dns_conf='/etc/bind/named.conf.local'
+		dns_conf='/etc/bind/named.conf'
 	fi
 
 	# Bind config creation

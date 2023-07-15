@@ -192,11 +192,9 @@ if (!empty($_POST["ok"])) {
 			if ($host == $hostname) {
 				$port_is_defined = preg_match("/\[?[^]]*\]?:[0-9]{1,5}$/", $_SERVER["HTTP_HOST"]);
 				if ($port_is_defined) {
-					$port = preg_replace(
-						"/(\[?[^]]*\]?):([0-9]{1,5})$/",
-						"$2",
-						$_SERVER["HTTP_HOST"],
-					);
+					$port =
+						":" .
+						preg_replace("/(\[?[^]]*\]?):([0-9]{1,5})$/", "$2", $_SERVER["HTTP_HOST"]);
 				} else {
 					$port = "";
 				}

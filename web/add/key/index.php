@@ -2,7 +2,6 @@
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
-session_start();
 $TAB = "USER";
 
 // Main include

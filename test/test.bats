@@ -1585,10 +1585,17 @@ function check_ip_not_banned(){
 	refute_output
 }
 
-@test "MAIL: Add account alias2" {
+@test "MAIL: Add account alias 2" {
 	run v-add-mail-account-alias $user $domain test hestiacprocks2
 	assert_success
 	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacprocks2@$domain"
+	refute_output
+}
+
+@test "MAIL: Add account alias 3" {
+	run v-add-mail-account-alias $user $domain test hestiacp
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacp@$domain"
 	refute_output
 }
 

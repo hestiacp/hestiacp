@@ -682,11 +682,13 @@ is_mail_new() {
 		check_result "$E_EXISTS" "mail account $1 is already exists"
 	fi
 	check_als=$(awk -F "ALIAS='" '{print $2}' $USER_DATA/mail/$domain.conf)
-	match=$(echo $check_als | cut -d "'" -f1)
-	parse_object_kv_list $(grep "ALIAS='$match'" $USER_DATA/mail/$domain.conf)
-	check_als=$(echo ",$ALIAS," | grep ",$1,")
-	if [ -n "$check_als" ]; then
-		check_result "$E_EXISTS" "mail alias $1 is already exists"
+	match=$(echo "$check_als" | cut -f 1 -d "'" | grep $1)
+	if [ -n "$match" ]; then
+		parse_object_kv_list $(grep "ALIAS='$match'" $USER_DATA/mail/$domain.conf)
+		check_als=$(echo ",$ALIAS," | grep ",$1,")
+		if [ -n "$check_als" ]; then
+			check_result "$E_EXISTS" "mail alias $1 is already exists"
+		fi
 	fi
 }
 

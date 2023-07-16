@@ -238,34 +238,34 @@ eval set -- "$args"
 # Parsing arguments
 while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
 	case $Option in
-		a) apache=$OPTARG ;;       # Apache
-		w) phpfpm=$OPTARG ;;       # PHP-FPM
-		o) multiphp=$OPTARG ;;     # Multi-PHP
-		v) vsftpd=$OPTARG ;;       # Vsftpd
-		j) proftpd=$OPTARG ;;      # Proftpd
-		k) named=$OPTARG ;;        # Named
-		m) mysql=$OPTARG ;;        # MariaDB
-		M) mysqlclassic=$OPTARG ;; # MySQL
-		g) postgresql=$OPTARG ;;   # PostgreSQL
-		x) exim=$OPTARG ;;         # Exim
-		z) dovecot=$OPTARG ;;      # Dovecot
-		Z) sieve=$OPTARG ;;        # Sieve
-		c) clamd=$OPTARG ;;        # ClamAV
-		t) spamd=$OPTARG ;;        # SpamAssassin
-		i) iptables=$OPTARG ;;     # Iptables
-		b) fail2ban=$OPTARG ;;     # Fail2ban
-		q) quota=$OPTARG ;;        # FS Quota
-		r) port=$OPTARG ;;         # Backend Port
-		l) lang=$OPTARG ;;         # Language
-		d) api=$OPTARG ;;          # Activate API
-		y) interactive=$OPTARG ;;  # Interactive install
-		s) servername=$OPTARG ;;   # Hostname
-		e) email=$OPTARG ;;        # Admin email
-		p) vpass=$OPTARG ;;        # Admin password
-		D) withdebs=$OPTARG ;;     # Hestia debs path
-		f) force='yes' ;;          # Force install
-		h) help ;;                 # Help
-		*) help ;;                 # Print help (default)
+		a) apache=$OPTARG ;;      # Apache
+		w) phpfpm=$OPTARG ;;      # PHP-FPM
+		o) multiphp=$OPTARG ;;    # Multi-PHP
+		v) vsftpd=$OPTARG ;;      # Vsftpd
+		j) proftpd=$OPTARG ;;     # Proftpd
+		k) named=$OPTARG ;;       # Named
+		m) mysql=$OPTARG ;;       # MariaDB
+		M) mysql8=$OPTARG ;;      # MySQL
+		g) postgresql=$OPTARG ;;  # PostgreSQL
+		x) exim=$OPTARG ;;        # Exim
+		z) dovecot=$OPTARG ;;     # Dovecot
+		Z) sieve=$OPTARG ;;       # Sieve
+		c) clamd=$OPTARG ;;       # ClamAV
+		t) spamd=$OPTARG ;;       # SpamAssassin
+		i) iptables=$OPTARG ;;    # Iptables
+		b) fail2ban=$OPTARG ;;    # Fail2ban
+		q) quota=$OPTARG ;;       # FS Quota
+		r) port=$OPTARG ;;        # Backend Port
+		l) lang=$OPTARG ;;        # Language
+		d) api=$OPTARG ;;         # Activate API
+		y) interactive=$OPTARG ;; # Interactive install
+		s) servername=$OPTARG ;;  # Hostname
+		e) email=$OPTARG ;;       # Admin email
+		p) vpass=$OPTARG ;;       # Admin password
+		D) withdebs=$OPTARG ;;    # Hestia debs path
+		f) force='yes' ;;         # Force install
+		h) help ;;                # Help
+		*) help ;;                # Print help (default)
 	esac
 done
 

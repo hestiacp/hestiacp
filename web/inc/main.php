@@ -148,6 +148,7 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 }
 if (empty($user_plain)) {
 	$user_plain = "";
+	$_SESSION["look"] = "";
 }
 
 require_once dirname(__FILE__) . "/i18n.php";

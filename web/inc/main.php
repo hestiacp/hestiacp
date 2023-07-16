@@ -364,11 +364,6 @@ function humanize_usage_size($usage, $round = 2) {
 		}
 		$display_usage = number_format($usage, $round);
 	}
-	if (strlen($display_usage) > 4) {
-		if (is_float($display_usage)) {
-			return number_format($usage, $round - 1);
-		}
-	}
 	return $display_usage;
 }
 

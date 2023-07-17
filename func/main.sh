@@ -1025,7 +1025,7 @@ is_int_format_valid() {
 
 # Interface validator
 is_interface_format_valid() {
-	nic_names="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" //  then empty else .ifname, if .altnames then .altnames[] else empty end end')"
+	nic_names="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname, if .altnames then .altnames[] else empty end end')"
 	if [ -z "$(echo "$nic_names" | grep -x "$1")" ]; then
 		check_result "$E_INVALID" "invalid interface format :: $1"
 	fi

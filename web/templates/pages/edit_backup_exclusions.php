@@ -17,7 +17,7 @@
 
 <div class="container animate__animated animate__fadeIn">
 
-	<form id="main-form" name="v_edit_backup_exclusions" method="post" class="<?= _($v_status) ?>">
+	<form id="main-form" name="v_edit_backup_exclusions" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 

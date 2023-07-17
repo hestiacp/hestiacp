@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<?php if (($user_plain == "admin" && $_$accept === "true") || $user_plain !== "admin") { ?>
+			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<button type="submit" class="button" form="main-form">
 					<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 				</button>

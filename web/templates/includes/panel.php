@@ -181,7 +181,7 @@
 							<?php } ?>
 
 							<!-- Edit User -->
-							<?php if ($_SESSION["userContext"] === "admin" && (isset($_SESSION["look"]) && $user == "admin")) { ?>
+							<?php if ($_SESSION["userContext"] === "admin" && ($_SESSION["look"] != '' && $user == "admin")) { ?>
 								<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
 								<li class="top-bar-menu-item">
 									<a title="<?= _("Logs") ?>" class="top-bar-menu-link <?php if ($TAB == 'LOG') echo 'active' ?>" href="/list/log/">

@@ -148,6 +148,8 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 }
 if (empty($user_plain)) {
 	$user_plain = "";
+}
+if (empty($_SESSION["look"])) {
 	$_SESSION["look"] = "";
 }
 

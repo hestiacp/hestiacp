@@ -30,7 +30,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.61.0",
 		"@typescript-eslint/parser": "^5.62.0",
 		"cssnano": "^6.0.1",
-		"esbuild": "^0.18.11",
+		"esbuild": "^0.18.13",
 		"eslint": "^8.45.0",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-editorconfig": "^4.0.3",

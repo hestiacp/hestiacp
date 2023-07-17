@@ -33,11 +33,11 @@ if [ -z $(which "node") ]; then
 		if [ "$OS_TYPE" = "Debian" ]; then
 			# Debian
 			curl -fsSL "https://deb.nodesource.com/setup_$nodejs_ver.x" | bash - &&\
-			apt-get install -y nodejs
+			apt-get install -y nodejs npm
 		else
 			# Ubuntu
 			curl -fsSL "https://deb.nodesource.com/setup_$nodejs_ver.x" | sudo -E bash - &&\
-			sudo apt-get install -y nodejs
+			sudo apt-get install -y nodejs npm
 		fi
 	else
 		exit 0

@@ -30,15 +30,8 @@ check_hestia_demo_mode
 if [ -z $(which "node") ]; then
 	read -p "NodeJS not found. Install now to proceed? [Y/n] " answer
 	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
-		if [ "$OS_TYPE" = "Debian" ]; then
-			# Debian
-			curl -fsSL "https://deb.nodesource.com/setup_$nodejs_ver.x" | bash - &&\
-			apt-get install -y nodejs npm
-		else
-			# Ubuntu
-			curl -fsSL "https://deb.nodesource.com/setup_$nodejs_ver.x" | sudo -E bash - &&\
-			sudo apt-get install -y nodejs npm
-		fi
+		curl -fsSL "https://deb.nodesource.com/setup_$nodejs_ver.x" | bash - &&\
+		sudo apt-get install -y nodejs
 	else
 		exit 0
 	fi

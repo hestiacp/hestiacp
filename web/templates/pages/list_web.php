@@ -259,6 +259,16 @@
 										<span class="u-hide-desktop"><?= _("Edit Domain") ?></span>
 									</a>
 								</li>
+								<li class="units-table-row-action" data-key-action="href">
+									<a
+										class="units-table-row-action-link"
+										href="/download/site/?site=<?=$key?>&token=<?= $_SESSION['token'] ?>"
+										title="<?= _("Download Site") ?>"
+									>
+										<i class="fas fa-download icon-orange"></i>
+										<span class="u-hide-desktop"><?= _("Download Site") ?></span>
+									</a>
+								</li>
 							<?php } ?>
 							<li class="units-table-row-action shortcut-l" data-key-action="href">
 								<a

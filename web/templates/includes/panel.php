@@ -257,7 +257,7 @@
 			<ul x-cloak x-show="open" class="main-menu-list">
 
 				<!-- Users tab -->
-				<?php if (($_SESSION['userContext'] == 'admin') && ($_SESSION['look'] !== '')) { ?>
+				<?php if (($_SESSION['userContext'] == 'admin') && ($_SESSION['look'] === '')) { ?>
 					<?php
 						if (($_SESSION['user'] !== 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes')) {
 							$user_count = $panel[$user]['U_USERS'] - 1;

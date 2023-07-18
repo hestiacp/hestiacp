@@ -32,9 +32,6 @@ $data = json_decode(implode("", $output), true);
 if (is_array($data)) {
 	$data = array_reverse($data);
 	unset($output);
-	if (empty($_SESSION["look"])) {
-		unset($_SESSION["look"]);
-	}
 
 	// Render page
 	if ($user === "system") {

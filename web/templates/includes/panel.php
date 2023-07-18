@@ -55,7 +55,7 @@
 
 				<!-- Notifications -->
 				<?php
-				$impersonatingAdmin = ($_SESSION['userContext'] === 'admin') && (isset($_SESSION['look']) && ($user == 'admin'));
+				$impersonatingAdmin = ($_SESSION['userContext'] === 'admin') && ($_SESSION['look'] !== '' && ($user == 'admin'));
 				// Do not show notifications panel when impersonating 'admin' user
 				if (!$impersonatingAdmin) { ?>
 					<div x-data="notifications" class="top-bar-notifications">
@@ -154,7 +154,7 @@
 
 							<!-- File Manager -->
 							<?php if (isset($_SESSION["FILE_MANAGER"]) && !empty($_SESSION["FILE_MANAGER"]) && $_SESSION["FILE_MANAGER"] == "true") { ?>
-								<?php if ($_SESSION["userContext"] === "admin" && (isset($_SESSION["look"]) && $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes")) { ?>
+								<?php if ($_SESSION["userContext"] === "admin" &&  $_SESSION["look"] === "admin" && $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] == "yes") { ?>
 									<!-- Hide file manager when impersonating admin-->
 								<?php } else { ?>
 									<li class="top-bar-menu-item">
@@ -168,7 +168,7 @@
 
 							<!-- Server Settings -->
 							<?php if (($_SESSION["userContext"] === "admin" && $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes") || $_SESSION["user"] === "admin") { ?>
-								<?php if ($_SESSION["userContext"] === "admin" && !empty($_SESSION["look"])) { ?>
+								<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] !== '') { ?>
 									<!-- Hide 'Server Settings' button when impersonating 'admin' or other users -->
 								<?php } else { ?>
 									<li class="top-bar-menu-item">
@@ -181,7 +181,7 @@
 							<?php } ?>
 
 							<!-- Edit User -->
-							<?php if ($_SESSION["userContext"] === "admin" && (isset($_SESSION["look"]) && $user == "admin")) { ?>
+							<?php if ($_SESSION["userContext"] === "admin" && ($_SESSION["look"] !== '' && $user == "admin")) { ?>
 								<!-- Hide 'edit user' entry point from other administrators for default 'admin' account-->
 								<li class="top-bar-menu-item">
 									<a title="<?= _("Logs") ?>" class="top-bar-menu-link <?php if ($TAB == 'LOG') echo 'active' ?>" href="/list/log/">
@@ -207,7 +207,7 @@
 									<span class="top-bar-menu-link-label u-hide-desktop"><?= _("Statistics") ?></span>
 								</a>
 							</li>
-							<?php if ( $_SESSION['HIDE_DOCS'] != 'yes'){
+							<?php if ( $_SESSION['HIDE_DOCS'] !== 'yes'){
 							?>
 								<!-- Help / Documentation -->
 								<li class="top-bar-menu-item">
@@ -257,7 +257,7 @@
 			<ul x-cloak x-show="open" class="main-menu-list">
 
 				<!-- Users tab -->
-				<?php if (($_SESSION['userContext'] == 'admin') && (empty($_SESSION['look']))) { ?>
+				<?php if (($_SESSION['userContext'] == 'admin') && ($_SESSION['look'] === '')) { ?>
 					<?php
 						if (($_SESSION['user'] !== 'admin') && ($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes')) {
 							$user_count = $panel[$user]['U_USERS'] - 1;

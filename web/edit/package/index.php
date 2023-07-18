@@ -224,7 +224,11 @@ if (!empty($_POST["save"])) {
 		$v_proxy_template = quoteshellarg($_POST["v_proxy_template"]);
 	}
 	$v_dns_template = quoteshellarg($_POST["v_dns_template"]);
-	$v_shell = quoteshellarg($_POST["v_shell"]);
+	if (!empty($_POST["v_shell"])) {
+		$v_shell = quoteshellarg($_POST["v_shell"]);
+	} else {
+		$v_shell = "nologin";
+	}
 	$v_web_domains = quoteshellarg($_POST["v_web_domains"]);
 	$v_web_aliases = quoteshellarg($_POST["v_web_aliases"]);
 	$v_dns_domains = quoteshellarg($_POST["v_dns_domains"]);
@@ -237,14 +241,14 @@ if (!empty($_POST["save"])) {
 	$v_backups = quoteshellarg($_POST["v_backups"]);
 	$v_disk_quota = quoteshellarg($_POST["v_disk_quota"]);
 	$v_bandwidth = quoteshellarg($_POST["v_bandwidth"]);
-	$v_ns1 = trim($_POST["v_ns1"], ".");
-	$v_ns2 = trim($_POST["v_ns2"], ".");
-	$v_ns3 = trim($_POST["v_ns3"], ".");
-	$v_ns4 = trim($_POST["v_ns4"], ".");
-	$v_ns5 = trim($_POST["v_ns5"], ".");
-	$v_ns6 = trim($_POST["v_ns6"], ".");
-	$v_ns7 = trim($_POST["v_ns7"], ".");
-	$v_ns8 = trim($_POST["v_ns8"], ".");
+	$v_ns1 = !empty($_POST["v_ns1"]) ? trim($_POST["v_ns1"], ".") : "";
+	$v_ns2 = !empty($_POST["v_ns2"]) ? trim($_POST["v_ns2"], ".") : "";
+	$v_ns3 = !empty($_POST["v_ns3"]) ? trim($_POST["v_ns3"], ".") : "";
+	$v_ns4 = !empty($_POST["v_ns4"]) ? trim($_POST["v_ns4"], ".") : "";
+	$v_ns5 = !empty($_POST["v_ns5"]) ? trim($_POST["v_ns5"], ".") : "";
+	$v_ns6 = !empty($_POST["v_ns6"]) ? trim($_POST["v_ns6"], ".") : "";
+	$v_ns7 = !empty($_POST["v_ns7"]) ? trim($_POST["v_ns7"], ".") : "";
+	$v_ns8 = !empty($_POST["v_ns8"]) ? trim($_POST["v_ns8"], ".") : "";
 	$v_ns = $v_ns1 . "," . $v_ns2;
 	if (!empty($v_ns3)) {
 		$v_ns .= "," . $v_ns3;

@@ -129,8 +129,8 @@ log_history() {
 	fi
 	touch $log
 
-	if [ '750' -lt "$(wc -l $log | cut -f 1 -d ' ')" ]; then
-		tail -n 499 $log > $log.moved
+	if [ '300' -lt "$(wc -l $log | cut -f 1 -d ' ')" ]; then
+		tail -n 250 $log > $log.moved
 		mv -f $log.moved $log
 		chmod 660 $log
 	fi

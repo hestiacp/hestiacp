@@ -149,6 +149,9 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 if (empty($user_plain)) {
 	$user_plain = "";
 }
+if (empty($_SESSION["look"])) {
+	$_SESSION["look"] = "";
+}
 
 require_once dirname(__FILE__) . "/i18n.php";
 
@@ -363,11 +366,6 @@ function humanize_usage_size($usage, $round = 2) {
 			$usage = $usage / 1024;
 		}
 		$display_usage = number_format($usage, $round);
-	}
-	if (strlen($display_usage) > 4) {
-		if (is_float($display_usage)) {
-			return number_format($usage, $round - 1);
-		}
 	}
 	return $display_usage;
 }

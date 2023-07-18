@@ -397,7 +397,7 @@ if (empty($_GET["domain"])) {
 	if (empty($v_dnssec)) {
 		$v_dnssec = "";
 	}
-
+	$accept = $_GET["accept"] ?? "";
 	render_page($user, $TAB, "add_dns_rec");
 }
 

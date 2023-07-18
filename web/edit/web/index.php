@@ -343,6 +343,9 @@ if (!empty($_POST["save"])) {
 		if (empty($_POST["v_nginx_cache_check"])) {
 			$_POST["v_nginx_cache_check"] = "";
 		}
+		if (empty($v_nginx_cache_duration)) {
+			$v_nginx_cache_duration = "";
+		}
 		if (
 			($_SESSION["WEB_SYSTEM"] == "nginx" &&
 				$v_nginx_cache_check != $_POST["v_nginx_cache_check"]) ||

@@ -18,6 +18,8 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue with TLS connections when using ProFTPD (#3790)
 - Fixed an issue where vlan or virtual NIC connections would fail the adapter validity check when adding an IP address (#3797)
 - Fixed several PHP 500 errors and warnings in the Control Panel backend (#3789)
+- Fixed an issue with v-change-dns-domain-ip and DNS cluster (#3803)
+- Update Multiple Quick install apps (#3800 and #3801)
 - Updated language translations
 
 ## [1.8.1] - Service release

@@ -30,11 +30,10 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Add cron job
-cmd="sudo $BIN/v-update-sys-queue restart"
-check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
+cmd="v-update-sys-queue restart"
+check_cron=$(grep "$cmd" "/etc/cron.d/hestiaweb" 2> /dev/null)
 if [ -n "$check_cron" ]; then
-	parse_object_kv_list "$check_cron"
-	$BIN/v-delete-cron-job admin "$JOB"
+	sed -i "/v-update-sys-queue restart/d" /etc/cron.d/hestiaweb
 fi
 
 #----------------------------------------------------------#

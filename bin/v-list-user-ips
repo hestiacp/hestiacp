@@ -91,7 +91,7 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Defining fileds to select
-owner='admin'
+owner="$ROOT_USER"
 owner_ips="$(grep -A 1 -H "OWNER='$owner'" $HESTIA/data/ips/*)"
 owner_ips="$(echo "$owner_ips" | grep "STATUS='shared'")"
 owner_ips="$(echo "$owner_ips" | cut -f 7 -d / | cut -f 1 -d -)"

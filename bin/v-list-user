@@ -179,8 +179,8 @@ is_object_valid 'user' 'USER' "$user"
 USER=$user
 HOME=$HOMEDIR/$user
 source_conf "$HESTIA/data/users/$user/user.conf"
-U_USERS=$(cat $HESTIA/data/users/admin/user.conf | grep "U_USERS" | cut -d'=' -f2 | sed "s/'//g")
-SUSPENDED_USERS=$(cat $HESTIA/data/users/admin/user.conf | grep "SUSPENDED_USERS" | cut -d'=' -f2 | sed "s/'//g")
+U_USERS=$(cat "$HESTIA/data/users/$ROOT_USER/user.conf" | grep "U_USERS" | cut -d'=' -f2 | sed "s/'//g")
+SUSPENDED_USERS=$(cat "$HESTIA/data/users/$ROOT_USER/user.conf" | grep "SUSPENDED_USERS" | cut -d'=' -f2 | sed "s/'//g")
 
 # Listing data
 case $format in

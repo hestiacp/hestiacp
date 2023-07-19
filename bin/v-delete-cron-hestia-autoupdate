@@ -8,9 +8,6 @@
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
-# Argument definition
-user=admin
-
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -24,8 +21,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
-check_cron_apt=$(grep 'v-update-sys-hestia-all' $USER_DATA/cron.conf)
-check_cron_git=$(grep 'v-update-sys-hestia-git' $USER_DATA/cron.conf)
+sed -i "/v-update-sys-hestia-all/d" /etc/cron.d/hestiaweb
+sed -i "/v-update-sys-hestia-git/d" /etc/cron.d/hestiaweb
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -34,28 +31,12 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Deleting job
-if [ -n "$check_cron_apt" ]; then
-	job=$(echo $check_cron_apt | tr ' ' "\n" | grep JOB | cut -f 2 -d "'")
-fi
-if [ -n "$check_cron_git" ]; then
-	job=$(echo $check_cron_git | tr ' ' "\n" | grep JOB | cut -f 2 -d "'")
-fi
-
-sed -i "/JOB='$job' /d" $USER_DATA/cron.conf
-
-# Sorting jobs by id
-sort_cron_jobs
-
-# Sync system cron with user
-sync_cron_jobs
+sed -i "/v-update-sys-hestia-all/d" /etc/cron.d/hestiaweb
+sed -i "/v-update-sys-hestia-git/d" /etc/cron.d/hestiaweb
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Decreasing cron value
-decrease_user_value "$user" '$U_CRON_JOBS'
 
 # Restarting crond
 $BIN/v-restart-cron

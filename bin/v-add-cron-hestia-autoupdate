@@ -10,7 +10,6 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user=admin
 mode=$1
 
 # Includes
@@ -26,10 +25,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
-is_package_full 'CRON_JOBS'
-get_next_cronjob
-check_cron_apt=$(grep 'v-update-sys-hestia-all' $USER_DATA/cron.conf)
-check_cron_git=$(grep 'v-update-sys-hestia-git' $USER_DATA/cron.conf)
+check_cron_apt=$(grep 'v-update-sys-hestia-all' $/etc/cron.d/hestiaweb)
+check_cron_git=$(grep 'v-update-sys-hestia-git' /etc/cron.d/hestiaweb)
 if [ -n "$check_cron_apt" ] || [ -n "$check_cron_git" ]; then
 	exit
 fi
@@ -53,7 +50,7 @@ if [ -z "$mode" ] || [ "$mode" = "apt" ]; then
 	day='*'
 	month='*'
 	wday='*'
-	command="sudo $BIN/v-update-sys-hestia-all"
+	command='v-update-sys-hestia-all'
 fi
 
 if [ "$mode" = "git" ]; then
@@ -62,32 +59,14 @@ if [ "$mode" = "git" ]; then
 	day='*'
 	month='*'
 	wday='*'
-	command="sudo $BIN/v-update-sys-hestia-git"
+	command='v-update-sys-hestia-git'
 fi
 
-# Concatenating cron string
-str="JOB='$job' MIN='$min' HOUR='$hour' DAY='$day' MONTH='$month' WDAY='$wday'"
-str="$str CMD='$command' SUSPENDED='no' TIME='$time' DATE='$date'"
-
-# Adding to crontab
-echo "$str" >> $HESTIA/data/users/$user/cron.conf
-
-# Changing permissions
-chmod 660 $HESTIA/data/users/$user/cron.conf
-
-# Sort jobs by id number
-sort_cron_jobs
-
-# Sync cronjobs with system cron
-sync_cron_jobs
+echo "$min $hour * * * sudo /usr/local/hestia/bin/$command" > /etc/cron.d/hestiaweb
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Increasing cron value
-increase_user_value "$user" '$U_CRON_JOBS'
-
 # Restarting cron
 $BIN/v-restart-cron
 check_result $? "Cron restart failed" > /dev/null

@@ -58,7 +58,7 @@ fi
 # Validating opensshd config
 if [ "$restart" = 'yes' ]; then
 	subj="OpenSSH restart failed"
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f 2 -d \')
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 	/usr/sbin/sshd -t > /dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		mail_text="OpenSSH can not be restarted. Please check config:

@@ -569,11 +569,10 @@ if [ "$?" -ne '0' ]; then
 fi
 
 # Adding LE autorenew cronjob
-if [ -z "$(grep v-update-lets $HESTIA/data/users/admin/cron.conf)" ]; then
+if [ -z "$(grep v-update-letsen "$HESTIA/data/users/$ROOT_USER/cron.conf")" ]; then
 	min=$(generate_password '012345' '2')
 	hour=$(generate_password '1234567' '1')
-	cmd="sudo $BIN/v-update-letsencrypt-ssl"
-	$BIN/v-add-cron-job admin "$min" "$hour" '*' '*' '*' "$cmd" > /dev/null
+	echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" > /etc/cron.d/hestiaweb
 fi
 
 # Updating letsencrypt key

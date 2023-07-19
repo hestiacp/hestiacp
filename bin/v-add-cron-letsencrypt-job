@@ -30,10 +30,10 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Add cron job
-cmd="sudo $BIN/v-update-sys-queue letsencrypt"
-check_cron=$(grep "$cmd" $HESTIA/data/users/admin/cron.conf 2> /dev/null)
+cmd="bin/v-update-sys-queue letsencrypt"
+check_cron=$(grep "$cmd" "/etc/cron.d/hestiaweb" 2> /dev/null)
 if [ -z "$check_cron" ] && [ -n "$CRON_SYSTEM" ]; then
-	$BIN/v-add-cron-job admin '*/5' '*' '*' '*' '*' "$cmd"
+	echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue letsencrypt" >> /etc/cron.d/hestiaweb
 fi
 
 #----------------------------------------------------------#

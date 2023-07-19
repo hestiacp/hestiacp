@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.8.1'
+HESTIA_INSTALL_VER='1.8.2'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.1"
@@ -1343,12 +1343,12 @@ if [ -n "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
 fi
 
 # Enable sftp jail
-echo "[ * ] Enable SFTP jail..."
+echo "[ * ] Enabling SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
-echo "[ * ] Create admin account..."
+echo "[ * ] Creating default admin account..."
 $HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
@@ -1477,15 +1477,15 @@ fi
 if [ "$phpfpm" = "yes" ]; then
 	if [ "$multiphp" = 'yes' ]; then
 		for v in "${multiphp_v[@]}"; do
-			echo "[ * ] Install PHP $v..."
+			echo "[ * ] Installing PHP $v..."
 			$HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
 		done
 	else
-		echo "[ * ] Install  PHP $fpm_v..."
+		echo "[ * ] Installing PHP $fpm_v..."
 		$HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
 	fi
 
-	echo "[ * ] Configuring PHP $fpm_v..."
+	echo "[ * ] Configuring PHP-FPM $fpm_v..."
 	# Create www.conf for webmail and php(*)admin
 	cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
 	update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
@@ -1543,8 +1543,9 @@ if [ "$proftpd" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
 
-	if [ "$release" -eq 11 ]; then
-		sed -i 's|IdentLookups                  off|#IdentLookups                  off|g' /etc/proftpd/proftpd.conf
+	# Disable TLS 1.3 support for ProFTPD versions older than v1.3.7a
+	if [ "$release" -eq 10 ]; then
+		sed -i 's/TLSProtocol                             TLSv1.2 TLSv1.3/TLSProtocol                             TLSv1.2/' /etc/proftpd/tls.conf
 	fi
 
 	update-rc.d proftpd defaults > /dev/null 2>&1
@@ -1970,7 +1971,7 @@ fi
 
 # Min requirements Dovecot + Exim + Mysql
 if ([ "$mysql" == 'yes' ] || [ "$mysql8" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
-	echo "[ * ] Install Roundcube..."
+	echo "[ * ] Installing Roundcube..."
 	$HESTIA/bin/v-add-sys-roundcube
 	write_config_value "WEBMAIL_ALIAS" "webmail"
 else
@@ -1988,7 +1989,7 @@ if [ "$sieve" = 'yes' ]; then
 	RC_INSTALL_DIR="/var/lib/roundcube"
 	RC_CONFIG_DIR="/etc/roundcube"
 
-	echo "[ * ] Install Sieve..."
+	echo "[ * ] Installing Sieve Mail Filter..."
 
 	# dovecot.conf install
 	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
@@ -2062,7 +2063,7 @@ $HESTIA/bin/v-add-sys-filemanager quiet
 echo "[ * ] Configuring PHP dependencies..."
 $HESTIA/bin/v-add-sys-dependencies quiet
 
-echo "[ * ] Install Rclone"
+echo "[ * ] Installing Rclone..."
 curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 
 #----------------------------------------------------------#
@@ -2090,6 +2091,27 @@ fi
 # Get public IP
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
+	if [ -e /etc/rc.local ]; then
+		sed -i '/exit 0/d' /etc/rc.local
+	else
+		touch /etc/rc.local
+	fi
+
+	check_rclocal=$(cat /etc/rc.local | grep "#!")
+	if [ -z "$check_rclocal" ]; then
+		echo "#!/bin/sh" >> /etc/rc.local
+	fi
+
+	# Fix for Proxmox VE containers where hostname is reset to non-FQDN format on reboot
+	check_pve=$(uname -r | grep pve)
+	if [ ! -z "$check_pve" ]; then
+		echo 'hostname=$(hostname --fqdn)' >> /etc/rc.local
+		echo ""$HESTIA/bin/v-change-sys-hostname" "'"$hostname"'"" >> /etc/rc.local
+	fi
+	echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
+	echo "exit 0" >> /etc/rc.local
+	chmod +x /etc/rc.local
+	systemctl enable rc-local > /dev/null 2>&1
 	$HESTIA/bin/v-change-sys-ip-nat "$ip" "$pub_ipv4" > /dev/null 2>&1
 	ip="$pub_ipv4"
 fi
@@ -2231,9 +2253,8 @@ we hope that you enjoy using it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://hestiacp.com/docs/
+Documentation:  https://docs.hestiacp.com/
 Forum:          https://forum.hestiacp.com/
-Discord:        https://discord.gg/nXRUZch
 GitHub:         https://www.github.com/hestiacp/hestiacp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,

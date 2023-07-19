@@ -31,8 +31,8 @@ if [ "$IMAP_SYSTEM" = "dovecot" ]; then
 	fi
 
 	if [ -f /etc/dovecot/conf.d/90-sieve.conf ]; then
-		if ! grep -qw "^sieve_vacation_send_from_recipient$" /etc/dovecot/conf.d/90-sieve.conf 2> /dev/null; then
-			sed -i "s/^}/  # This setting determines whether vacation messages are sent with the SMTP MAIL FROM envelope address set to the recipient address of the Sieve script owner.\n  sieve_vacation_send_from_recipient = yes\n}/g" /etc/dovecot/conf.d/90-sieve.conf
+		if ! grep -q "sieve_vacation_send_from_recipient" /etc/dovecot/conf.d/90-sieve.conf 2> /dev/null; then
+			sed -i "s/^plugin {/plugin {\n  # This setting determines whether vacation messages are sent with the SMTP MAIL FROM envelope address set to the recipient address of the Sieve script owner.\n  sieve_vacation_send_from_recipient = yes\n/g" /etc/dovecot/conf.d/90-sieve.conf
 		fi
 	fi
 fi

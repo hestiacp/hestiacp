@@ -37,15 +37,13 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Listing system IP addresses
-# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
-physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
+nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
 
-# Proxmox return empty value for $physical_nics.
-if [ -z "$physical_nics" ]; then
-	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
-fi
-
-for nic in $physical_nics; do
+for nic in $nics; do
+	nic_type="$(ip -d -j link show "$nic" | jq -r '.[].linkinfo.info_kind')"
+	if [ "$nic_type" = "bridge" ]; then
+		break
+	fi
 	nic_ipv4s="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
 	if [ -z "$ips" ]; then
 		ips="$nic_ipv4s"

@@ -24,7 +24,7 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 
 // Prevent other users with admin privileges from editing properties of default 'admin' user
 if (
-	($_SESSION["userContext"] === "admin" && isset($_SESSION["look"]) && $user == "admin") ||
+	($_SESSION["userContext"] === "admin" && $_SESSION["look"] != "" && $user == "admin") ||
 	($_SESSION["userContext"] === "admin" &&
 		!isset($_SESSION["look"]) &&
 		$user == "admin" &&
@@ -361,19 +361,25 @@ if (!empty($_POST["save"])) {
 			}
 		}
 		// Change shell (admin only)
-		if (
-			$v_shell != $_POST["v_shell"] &&
-			$_SESSION["userContext"] === "admin" &&
-			empty($_SESSION["error_msg"])
-		) {
-			$v_shell = quoteshellarg($_POST["v_shell"]);
-			exec(
-				HESTIA_CMD . "v-change-user-shell " . quoteshellarg($v_username) . " " . $v_shell,
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
+		if (!empty($_POST["v_shell"])) {
+			if (
+				$v_shell != $_POST["v_shell"] &&
+				$_SESSION["userContext"] === "admin" &&
+				empty($_SESSION["error_msg"])
+			) {
+				$v_shell = quoteshellarg($_POST["v_shell"]);
+				exec(
+					HESTIA_CMD .
+						"v-change-user-shell " .
+						quoteshellarg($v_username) .
+						" " .
+						$v_shell,
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+			}
 		}
 	}
 	// Change language

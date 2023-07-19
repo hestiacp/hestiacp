@@ -56,7 +56,7 @@ else
 	hstsconf="$HOMEDIR/$user/conf/web/$domain/$PROXY_SYSTEM.hsts.conf"
 fi
 
-echo 'add_header Strict-Transport-Security "max-age=15768000;" always;' > $hstsconf
+echo 'add_header Strict-Transport-Security "max-age=31536000;" always;' > $hstsconf
 
 chown root:$user $hstsconf
 chmod 640 $hstsconf

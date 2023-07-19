@@ -8,7 +8,7 @@ $TAB = "LOG";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // Edit as someone else?
-if ($_SESSION["userContext"] === "admin" && isset($_SESSION["look"])) {
+if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] != "") {
 	$user = quoteshellarg($_SESSION["look"]);
 } elseif ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 	$user = quoteshellarg($_GET["user"]);

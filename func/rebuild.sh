@@ -78,8 +78,8 @@ rebuild_user_conf() {
 	fi
 
 	# Add membership to hestia-users group to non-admin users
-	if [ "$user" = "admin" ]; then
-		setfacl -m "g:admin:r-x" "$HOMEDIR/$user"
+	if [ "$user" = "$ROOT_USER" ]; then
+		setfacl -m "g:$ROOT_USER:r-x" "$HOMEDIR/$user"
 	else
 		usermod -a -G "hestia-users" "$user"
 		setfacl -m "u:$user:r-x" "$HOMEDIR/$user"

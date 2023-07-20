@@ -120,7 +120,7 @@ log_history() {
 
 	# Log system events to system log file
 	if [ "$log_user" = "system" ]; then
-		log=$HESTIA/data/users/admin/system.log
+		log=$HESTIA/log/activity.log
 	else
 		if ! $BIN/v-list-user "$log_user" > /dev/null; then
 			return $E_NOTEXIST
@@ -208,11 +208,11 @@ is_package_full() {
 # User owner for reseller plugin
 get_user_owner() {
 	if [ -z "$RESELLER_KEY" ]; then
-		owner='admin'
+		owner="$ROOT_USER"
 	else
 		owner=$(grep "^OWNER" $USER_DATA/user.conf | cut -f 2 -d \')
 		if [ -z "$owner" ]; then
-			owner='admin'
+			owner="$ROOT_USER"
 		fi
 	fi
 }
@@ -1347,7 +1347,7 @@ check_access_key_cmd() {
 			if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
 				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
 			fi
-		elif [[ -z "$PERMISSIONS" && "$USER" != "admin" ]]; then
+		elif [[ -z "$PERMISSIONS" && "$USER" != "$ROOT_USER" ]]; then
 			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
 		fi
 		user_arg_position="0"
@@ -1363,11 +1363,11 @@ check_access_key_cmd() {
 			if [[ -z "$(echo ",${allowed_commands}," | grep ",${hst_command},")" ]]; then
 				check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
 			fi
-		elif [[ -z "$PERMISSIONS" && "$USER" != "admin" ]]; then
+		elif [[ -z "$PERMISSIONS" && "$USER" != "$ROOT_USER" ]]; then
 			check_result "$E_FORBIDEN" "Key $access_key_id don't have permission to run the command $hst_command"
 		fi
 
-		if [[ "$USER" == "admin" ]]; then
+		if [[ "$USER" == "$ROOT_USER" ]]; then
 			# Admin can run commands for any user
 			user_arg_position="0"
 		else
@@ -1605,7 +1605,7 @@ is_key_permissions_format_valid() {
 	local permissions="$1"
 	local user="$2"
 
-	if [[ "$user" != "admin" && -z "$permissions" ]]; then
+	if [[ "$user" != "$ROOT_USER" && -z "$permissions" ]]; then
 		check_result "$E_INVALID" "Non-admin users need a permission list"
 	fi
 
@@ -1619,7 +1619,7 @@ is_key_permissions_format_valid() {
 			fi
 
 			source_conf "$HESTIA/data/api/$permission"
-			if [ "$ROLE" = "admin" ] && [ "$user" != "admin" ]; then
+			if [ "$ROLE" = "admin" ] && [ "$user" != "$ROOT_USER" ]; then
 				check_result "$E_INVALID" "Only the admin can run this API"
 			fi
 			#            elif [[ ! -e "$BIN/$permission" ]]; then

@@ -1081,7 +1081,7 @@ echo "[ * ] Configuring system settings..."
 # Generate a random password
 random_password=$(gen_pass '32')
 # Create the new hestiaweb user
-/usr/sbin/useradd "hestiaweb" -s "$shell" -c "$email" -m --no-create-home -U
+/usr/sbin/useradd "hestiaweb" -c "$email" --no-create-home
 # do not allow login into hestiaweb user
 echo hestiaweb:$random_password | sudo chpasswd -e
 
@@ -1148,7 +1148,7 @@ fi
 echo "[ * ] Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
-cp -f $HESTIA_INSTALL_DIR/sudo/hestiaweb /etc/sudoers.d/
+cp -f $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
 chmod 440 /etc/sudoers.d/hestiaweb
 
 # Add Hestia global config

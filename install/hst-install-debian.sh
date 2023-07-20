@@ -1387,18 +1387,6 @@ rm /tmp/hst.pem
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
-# Deleting old admin user
-if [ -n "$(grep ^$user: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
-	chattr -i "/home/$user/conf" > /dev/null 2>&1
-	userdel -f "$user" > /dev/null 2>&1
-	chattr -i "/home/$user/conf" > /dev/null 2>&1
-	mv -f "/home/$user" $hst_backups/home/ > /dev/null 2>&1
-	rm -f "/tmp/sess_*" > /dev/null 2>&1
-fi
-if [ -n "$(grep ^$user: /etc/group)" ] && [ "$force" = 'yes' ]; then
-	groupdel "$user" > /dev/null 2>&1
-fi
-
 # Enable sftp jail
 echo "[ * ] Enabling SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1

@@ -76,6 +76,7 @@ help() {
   -y, --interactive       Interactive install   [yes|no]  default: yes
   -s, --hostname          Set hostname
   -e, --email             Set admin email
+	-u, --username          Set admin user
   -p, --password          Set admin password
   -D, --with-debs         Path to Hestia debs
   -f, --force             Force installation
@@ -161,6 +162,24 @@ sort_config_file() {
 	cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
 }
 
+# todo add check for usernames that are blocked
+validate_username() {
+	if [[ "$username" =~ ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ]]; then
+		# Username valid
+		return 1
+	else
+		return 0
+	fi
+}
+
+validate_password() {
+	if [ -z "$vpass" ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
 # Validate hostname according to RFC1178
 validate_hostname() {
 	# remove extra .
@@ -223,6 +242,7 @@ for arg; do
 		--api) args="${args}-d " ;;
 		--hostname) args="${args}-s " ;;
 		--email) args="${args}-e " ;;
+		--username) args="${args}-u " ;;
 		--password) args="${args}-p " ;;
 		--force) args="${args}-f " ;;
 		--with-debs) args="${args}-D " ;;
@@ -261,6 +281,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
 		y) interactive=$OPTARG ;; # Interactive install
 		s) servername=$OPTARG ;;  # Hostname
 		e) email=$OPTARG ;;       # Admin email
+		u) username=$OPTARG ;;    # Admin username
 		p) vpass=$OPTARG ;;       # Admin password
 		D) withdebs=$OPTARG ;;    # Hestia debs path
 		f) force='yes' ;;         # Force install
@@ -591,7 +612,20 @@ if [ "$interactive" = 'yes' ]; then
 	fi
 fi
 
-# Validate Email / Hostname even when interactive = no
+#Validate Username / Password / Email / Hostname even when interactive = no
+# Asking for contact email
+if [ -z "$username" ]; then
+	while validate_username; do
+		echo -e "\nPlease use a valid username (ex. user)."
+		read -p 'Please enter administrator username: ' username
+	done
+else
+	if validate_username; then
+		echo "Please use a valid username (ex. user)."
+		exit 1
+	fi
+fi
+
 # Asking for contact email
 if [ -z "$email" ]; then
 	while validate_email; do
@@ -1012,6 +1046,13 @@ rm -f /usr/sbin/policy-rc.d
 
 echo "[ * ] Configuring system settings..."
 
+# Generate a random password
+random_password=$(gen_pass '32')
+# Create the new hestiaweb user
+/usr/sbin/useradd "hestiaweb" -c "$email" --no-create-home
+# do not allow login into hestiaweb user
+echo hestiaweb:$random_password | sudo chpasswd -e
+
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ -n "$sftp_subsys_enabled" ]; then
@@ -1110,8 +1151,8 @@ fi
 echo "[ * ] Configuring Hestia Control Panel..."
 # Installing sudo configuration
 mkdir -p /etc/sudoers.d
-cp -f $HESTIA_INSTALL_DIR/sudo/admin /etc/sudoers.d/
-chmod 440 /etc/sudoers.d/admin
+cp -f $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
+chmod 440 /etc/sudoers.d/hestiaweb
 
 # Add Hestia global config
 if [[ ! -e /etc/hestiacp/hestia.conf ]]; then
@@ -1268,6 +1309,9 @@ write_config_value "RELEASE_BRANCH" "release"
 write_config_value "UPGRADE_SEND_EMAIL" "true"
 write_config_value "UPGRADE_SEND_EMAIL_LOG" "false"
 
+# Set "root" user
+write_config_value "ROOT_USER" "$username"
+
 # Installing hosting packages
 cp -rf $HESTIA_COMMON_DIR/packages $HESTIA/data/
 
@@ -1343,21 +1387,6 @@ rm /tmp/hst.pem
 # Install dhparam.pem
 cp -f $HESTIA_INSTALL_DIR/ssl/dhparam.pem /etc/ssl
 
-# Deleting old admin user
-if [ -n "$(grep ^admin: /etc/passwd)" ] && [ "$force" = 'yes' ]; then
-	chattr -i /home/admin/conf > /dev/null 2>&1
-	userdel -f admin > /dev/null 2>&1
-	chattr -i /home/admin/conf > /dev/null 2>&1
-	mv -f /home/admin $hst_backups/home/ > /dev/null 2>&1
-	rm -f /tmp/sess_* > /dev/null 2>&1
-fi
-if [ -n "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
-	groupdel admin > /dev/null 2>&1
-fi
-
-# Remove sudo "default" sudo permission admin user group should not exists any way
-sed -i "s/%admin ALL=(ALL) ALL/#%admin ALL=(ALL) ALL/g" /etc/sudoers
-
 # Enable sftp jail
 echo "[ * ] Enabling SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
@@ -1365,11 +1394,11 @@ check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
 echo "[ * ] Creating default admin account..."
-$HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
+$HESTIA/bin/v-add-user $username $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell admin nologin
-$HESTIA/bin/v-change-user-role admin admin
-$HESTIA/bin/v-change-user-language admin $lang
+$HESTIA/bin/v-change-user-shell $username nologin
+$HESTIA/bin/v-change-user-role $username admin
+$HESTIA/bin/v-change-user-language $username $lang
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
 
 #----------------------------------------------------------#
@@ -2112,35 +2141,27 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 fi
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain admin "$servername" "$ip"
+$HESTIA/bin/v-add-web-domain "$username" "$servername" "$ip"
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
 export SCHEDULED_RESTART="yes"
-command="sudo $HESTIA/bin/v-update-sys-queue restart"
-$HESTIA/bin/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "$command"
-systemctl restart cron
 
-command="sudo $HESTIA/bin/v-update-sys-queue daily"
-$HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-update-sys-queue disk"
-$HESTIA/bin/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-update-sys-queue traffic"
-$HESTIA/bin/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-update-sys-queue webstats"
-$HESTIA/bin/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-update-sys-queue backup"
-$HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-backup-users"
-$HESTIA/bin/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-update-user-stats"
-$HESTIA/bin/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-update-sys-rrd"
-$HESTIA/bin/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "$command"
-command="sudo $HESTIA/bin/v-update-letsencrypt-ssl"
 min=$(gen_pass '012345' '2')
 hour=$(gen_pass '1234567' '1')
-$HESTIA/bin/v-add-cron-job 'admin' "$min" "$hour" '*' '*' '*' "$command"
+echo "MAILTO=$email" > /var/spool/cron/crontabs/hestiaweb
+echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
+echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart" >> /var/spool/cron/crontabs/hestiaweb
+echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily" >> /var/spool/cron/crontabs/hestiaweb
+echo "15 02 * * * sudo /usr/local/hestia/bin/v-update-sys-queue disk" >> /var/spool/cron/crontabs/hestiaweb
+echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue traffic" >> /var/spool/cron/crontabs/hestiaweb
+echo "30 03 * * * sudo /usr/local/hestia/bin/v-update-sys-queue webstats" >> /var/spool/cron/crontabs/hestiaweb
+echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue backup" >> /var/spool/cron/crontabs/hestiaweb
+echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users" >> /var/spool/cron/crontabs/hestiaweb
+echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
+echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
+echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
+echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
 
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate apt
@@ -2170,7 +2191,7 @@ echo
 update-rc.d hestia defaults
 systemctl start hestia
 check_result $? "hestia start failed"
-chown admin:admin $HESTIA/data/sessions
+chown hestiaweb:hestiaweb $HESTIA/data/sessions
 
 # Create backup folder and set correct permission
 mkdir -p /backup/
@@ -2218,7 +2239,7 @@ Ready to get started? Log in using the following credentials:
 if [ "$host_ip" != "$ip" ]; then
 	echo "	Backup URL: https://$ip:$port" >> $tmpfile
 fi
-echo -e -n " 	Username:   admin
+echo -e -n " 	Username:   $username
 	Password:   $displaypass
 
 Thank you for choosing Hestia Control Panel to power your full stack web server,

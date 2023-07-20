@@ -11,8 +11,8 @@
 #----------------------------------------------------------#
 
 whoami=$(whoami)
-if [ "$whoami" != "root" ] && [ "$whoami" != "admin" ]; then
-	echo "Error: this script must be run as root or admin."
+if [ "$whoami" != "root" ]; then
+	echo "Error: this script must be run as root."
 	exit 1
 fi
 

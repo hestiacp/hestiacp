@@ -74,7 +74,7 @@
 					</span>
 				</li>
 				<li class="server-summary-item">
-					<span class="server-summary-list-label"><?= _("Load Average") ?></span>
+					<span class="server-summary-list-label"><?= _("Load Average") ?> (1m / 5m / 15m)</span>
 					<span class="server-summary-list-value">
 						<?= $sys["sysinfo"]["LOADAVERAGE"] ?>
 					</span>

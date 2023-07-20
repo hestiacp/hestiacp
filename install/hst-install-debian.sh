@@ -173,7 +173,7 @@ validate_username() {
 }
 
 validate_password() {
-	if [ $vpass -ge 7 ]; then
+	if [ -z "$vpass" ]; then
 		return 0
 	else
 		return 1

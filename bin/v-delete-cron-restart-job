@@ -31,9 +31,9 @@ check_hestia_demo_mode
 
 # Add cron job
 cmd="v-update-sys-queue restart"
-check_cron=$(grep "$cmd" "/etc/cron.d/hestiaweb" 2> /dev/null)
+check_cron=$(grep "$cmd" "/var/spool/cron/crontabs/hestiaweb" 2> /dev/null)
 if [ -n "$check_cron" ]; then
-	sed -i "/v-update-sys-queue restart/d" /etc/cron.d/hestiaweb
+	sed -i "/v-update-sys-queue restart/d" "/var/spool/cron/crontabs/hestiaweb"
 fi
 
 #----------------------------------------------------------#

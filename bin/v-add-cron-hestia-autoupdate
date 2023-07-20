@@ -25,8 +25,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
-check_cron_apt=$(grep 'v-update-sys-hestia-all' /etc/cron.d/hestiaweb)
-check_cron_git=$(grep 'v-update-sys-hestia-git' /etc/cron.d/hestiaweb)
+check_cron_apt=$(grep 'v-update-sys-hestia-all' "/var/spool/cron/crontabs/hestiaweb")
+check_cron_git=$(grep 'v-update-sys-hestia-git' "/var/spool/cron/crontabs/hestiaweb")
 if [ -n "$check_cron_apt" ] || [ -n "$check_cron_git" ]; then
 	exit
 fi
@@ -62,7 +62,7 @@ if [ "$mode" = "git" ]; then
 	command='v-update-sys-hestia-git'
 fi
 
-echo "$min $hour * * * sudo /usr/local/hestia/bin/$command" > /etc/cron.d/hestiaweb
+echo "$min $hour * * * sudo /usr/local/hestia/bin/$command" > "/var/spool/cron/crontabs/hestiaweb"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

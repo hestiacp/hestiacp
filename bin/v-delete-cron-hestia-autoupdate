@@ -21,8 +21,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 is_system_enabled "$CRON_SYSTEM" 'CRON_SYSTEM'
-sed -i "/v-update-sys-hestia-all/d" /etc/cron.d/hestiaweb
-sed -i "/v-update-sys-hestia-git/d" /etc/cron.d/hestiaweb
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -31,8 +29,8 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-sed -i "/v-update-sys-hestia-all/d" /etc/cron.d/hestiaweb
-sed -i "/v-update-sys-hestia-git/d" /etc/cron.d/hestiaweb
+sed -i "/v-update-sys-hestia-all/d" "/var/spool/cron/crontabs/hestiaweb"
+sed -i "/v-update-sys-hestia-git/d" "/var/spool/cron/crontabs/hestiaweb"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

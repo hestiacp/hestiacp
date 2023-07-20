@@ -66,7 +66,7 @@ csv_list() {
 #----------------------------------------------------------#
 
 # Check cron tab
-check_cron=$(grep 'v-update-sys-hestia-all' /etc/cron.d/hestiaweb)
+check_cron=$(grep 'v-update-sys-hestia-all' /var/spool/cron/crontabs/hestiaweb)
 
 # Listing data
 case $format in

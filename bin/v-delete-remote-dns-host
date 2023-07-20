@@ -53,9 +53,9 @@ if [ "$check_cluster" -eq '0' ]; then
 
 	# Delete cron job
 	cmd="v-update-sys-queue dns-cluster"
-	check_cron=$(grep "$cmd" "/etc/cron.d/hestiaweb" 2> /dev/null)
+	check_cron=$(grep "$cmd" "/var/spool/cron/crontabs/hestiaweb" 2> /dev/null)
 	if [ -n "$check_cron" ]; then
-		sed -i "/v-update-sys-queue dns-cluster/d" /etc/cron.d/hestiaweb
+		sed -i "/v-update-sys-queue dns-cluster/d" "/var/spool/cron/crontabs/hestiaweb"
 	fi
 fi
 

@@ -105,9 +105,9 @@ cp -f $HESTIA_INSTALL_DIR/filemanager/filegator/configuration.php $HESTIA/web/fm
 echo "$fm_v" > "${FM_INSTALL_DIR}/version"
 # Set permissions
 chown root: -R "${FM_INSTALL_DIR}"
-chown $user: "${FM_INSTALL_DIR}/private"
-chown $user: "${FM_INSTALL_DIR}/private/logs"
-chown $user: "${FM_INSTALL_DIR}/repository"
+chown hestiaweb: "${FM_INSTALL_DIR}/private"
+chown hestiaweb: "${FM_INSTALL_DIR}/private/logs"
+chown hestiaweb: "${FM_INSTALL_DIR}/repository"
 
 $BIN/v-change-sys-config-value 'FILE_MANAGER' 'true'
 

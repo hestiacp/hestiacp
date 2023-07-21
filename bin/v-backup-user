@@ -425,7 +425,7 @@ if [ -n "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
 	for domain in $dns_list; do
 		((i++))
 		echo -e "$(date "+%F %T") $domain" | tee -a $BACKUP/$user.log
-
+		domain_idn="$domain"
 		# Building directory tree
 		mkdir -p $tmpdir/dns/$domain/conf
 		mkdir -p $tmpdir/dns/$domain/conf/keys

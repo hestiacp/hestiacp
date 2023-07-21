@@ -40,20 +40,23 @@ check_hestia_demo_mode
 # Create timestamp in Y-M-D_h-m-s format
 timestamp=$(date +'%G-%m-%d_%H-%M-%S')
 
-# echo filename for use in the php
-echo "$user.$domain.$timestamp.zip"
-
 if [ "$type" = "full" ]; then
 	cd /home/$user/web/$domain/
 else
 	cd /home/$user/web/$domain/public_html/
 fi
 
-zip -rq $BACKUP/$user.$domain.$timestamp.zip .
+zip -rq $BACKUP/${user}_${domain}_${timestamp}.zip .
 
-if [[ -f "$BACKUP/$user.$domain.$timestamp.zip" ]]; then
-	echo "$BACKUP/$user.$domain.$timestamp.zip"
-	echo "rm $BACKUP/$user.$domain.$timestamp.zip" | at now + 1 hour
+if [[ -f "$BACKUP/${user}_${domain}_${timestamp}.zip" ]]; then
+	# echo filename for use in the php
+	echo "${user}_${domain}_${timestamp}.zip"
+
+	# echo file location for use in the php
+	echo "$BACKUP/${user}_${domain}_${timestamp}.zip"
+
+	# cleanup
+	echo "rm $BACKUP/${user}_${domain}_${timestamp}.zip" | at now + 1 hour
 fi
 
 #----------------------------------------------------------#

@@ -2,7 +2,7 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/list/server/" class="button button-secondary" id="btn-back">
+			<a href="/edit/server/" class="button button-secondary" id="btn-back">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>

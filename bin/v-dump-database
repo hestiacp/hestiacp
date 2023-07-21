@@ -39,6 +39,9 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Create timestamp in Y-M-D_h-m-s format
+timestamp=$(date +'%G-%m-%d_%H-%M-%S')
+
 # Check db existence
 db_data=$(grep "DB='$database'" $HESTIA/data/users/$user/db.conf)
 if [ -z "$db_data" ]; then
@@ -61,10 +64,16 @@ case $TYPE in
 esac
 
 if [ "$output" = "file" ]; then
-	cp $dump $BACKUP/$user.$database.$TYPE.sql
-	echo $BACKUP/$user.$database.$TYPE.sql
+	# echo filename for use in the php
+	echo "${user}_${database}_${TYPE}_${timestamp}.sql"
 
-	echo "rm $BACKUP/$user.$database.$TYPE.sql" | at now + 1 hour
+	cp $dump $BACKUP/${user}_${database}_${TYPE}_${timestamp}.sql
+
+	# echo file location for use in the php
+	echo "$BACKUP/${user}_${database}_${TYPE}_${timestamp}.sql"
+
+	# cleanup
+	echo "rm $BACKUP/${user}_${database}_${TYPE}_${timestamp}.sql" | at now + 1 hour
 else
 	cat $dump
 fi

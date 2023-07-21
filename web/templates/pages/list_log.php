@@ -11,12 +11,12 @@
 					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 				</a>
 			<?php } else { ?>
-				<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
-					<a href="/edit/user/?user=<?= htmlentities($_GET["user"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
+				<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
+					<a href="/edit/user/?user=<?= htmlentities($_SESSION["look"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
 						<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 					</a>
 				<?php } else { ?>
-					<a href="/edit/user/?token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
+					<a href="/edit/user/?user=<?= htmlentities($_SESSION["user"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
 						<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 					</a>
 				<?php } ?>

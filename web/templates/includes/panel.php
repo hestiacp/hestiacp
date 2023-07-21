@@ -16,7 +16,7 @@
 				<!-- Usage Statistics -->
 				<div class="top-bar-usage">
 					<?php
-						if (isset($_SESSION['look'])) {
+						if ($_SESSION['look'] !== '') {
 							$user_icon = 'fa-binoculars';
 						} else if ($_SESSION['userContext'] === 'admin') {
 							$user_icon = 'fa-user-tie';

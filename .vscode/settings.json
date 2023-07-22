@@ -2,5 +2,12 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[php]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	// Optional nesting patterns, set explorer.fileNesting.enabled to true to enable
+	"explorer.fileNesting.patterns": {
+		"*.css": "${capture}.css.map",
+		"*.js": "${capture}.js.map",
+		"package.json": ".editorconfig, .eslint*, .lintstaged*, .markdownlint-cli2*, .prettier*, .stylelint*, jsconfig.json, package-lock.json",
+		"readme*": "changelog*, contributing*, license*, security*"
 	}
 }

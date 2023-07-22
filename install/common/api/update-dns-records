@@ -1,0 +1,2 @@
+ROLE='user'
+COMMANDS='v-list-dns-records,v-change-dns-record'

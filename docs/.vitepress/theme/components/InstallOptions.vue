@@ -1,18 +1,11 @@
-<script lang="ts">
-import { InstallOptions } from "../../../_data/options";
-import { LanguagesOptions } from "../../../_data/languages";
-import { ref } from "vue";
-const slot = ref(null);
-
+<script>
 export default {
 	props: {
 		languages: {
-			type: Array<LanguagesOptions>,
 			required: true,
 			selected: "en",
 		},
 		items: {
-			type: Array<InstallOptions>,
 			required: true,
 		},
 	},
@@ -26,7 +19,7 @@ export default {
 		};
 	},
 	methods: {
-		getOptionString(item: InstallOptions): string {
+		getOptionString(item) {
 			if (item.textField) {
 				return item.selected ? `${item.param} '${item.text}'` : "";
 			}
@@ -43,11 +36,11 @@ export default {
 			const installStr = this.items.map(this.getOptionString).filter(Boolean);
 
 			this.installStr = `${this.hestia_install} ${installStr.join(" ")}`;
-			(this.$refs.dialog as HTMLDialogElement).showModal();
+			this.$refs.dialog.showModal();
 		},
 		closeDialog(e) {
 			if (e.target === this.$refs.dialogClose || e.target === this.$refs.dialog) {
-				(this.$refs.dialog as HTMLDialogElement).close();
+				this.$refs.dialog.close();
 			}
 		},
 		checkNeedEnabled(e) {
@@ -74,7 +67,7 @@ export default {
 				}
 			}
 		},
-		copyToClipboard(text: string, button: HTMLButtonElement) {
+		copyToClipboard(text, button) {
 			navigator.clipboard.writeText(text).then(
 				() => {
 					button.textContent = "Copied!";

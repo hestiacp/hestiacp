@@ -1,6 +1,6 @@
-@import url("normalize.css");
-@import url("@fortawesome/fontawesome-free/css/fontawesome");
-@import url("@fortawesome/fontawesome-free/css/solid");
+@import url("node:normalize.css/normalize.css");
+@import url("node:@fortawesome/fontawesome-free/css/fontawesome");
+@import url("node:@fortawesome/fontawesome-free/css/solid");
 @import url("../dependencies/animate");
 @import url("../media_queries");
 @import url("../fonts");

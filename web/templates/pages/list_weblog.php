@@ -98,4 +98,4 @@
 	<p class="container u-text-center u-mt20 u-mb20">
 		<?= sprintf(_("Last 70 lines of %s.%s.log"), htmlentities($_GET["domain"]), htmlentities($type)) ?>
 	</p>
-	<pre class="console-output animate__animated animate__fadeIn u-pl30 u-pr30">
+	<pre class="console-output u-pl30 u-pr30">

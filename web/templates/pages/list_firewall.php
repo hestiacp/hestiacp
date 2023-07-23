@@ -25,7 +25,7 @@
 						<?= _("Action") ?> <i class="fas fa-arrow-up-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-action">
 						<span class="name"><?= _("Action") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up active"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -95,7 +95,7 @@
 					$spnd_confirmation = _('Are you sure you want to suspend rule #%s?') ;
 				}
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
 				data-sort-action="<?= $data[$key]['ACTION'] ?>"
 				data-sort-protocol="<?= $data[$key]['PROTOCOL'] ?>"
 				data-sort-port="<?= $data[$key]['PORT'] ?>"

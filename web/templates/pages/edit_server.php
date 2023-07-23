@@ -22,7 +22,7 @@
 <!-- End toolbar -->
 
 <!-- Begin form -->
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 	<form
 		x-data="{
 			timezone: '<?= $v_timezone ?? "" ?>',

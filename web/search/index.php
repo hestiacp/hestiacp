@@ -21,7 +21,7 @@ if (empty($_GET["q"])) {
 $q = quoteshellarg($_GET["q"]);
 $u = quoteshellarg($_GET["u"]);
 
-if ($_SESSION["userContext"] === "admin" && !isset($_SESSION["look"])) {
+if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == "") {
 	if (!empty($_GET["u"])) {
 		$user = $u;
 		exec(

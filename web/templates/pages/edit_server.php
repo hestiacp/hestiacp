@@ -238,7 +238,7 @@
 					<?php } ?>
 					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<p>
-							<?= _("Backend Server") ?>:
+							<?= _("PHP Interpreter") ?>:
 							<span class="u-ml5">
 								<?= $_SESSION["WEB_BACKEND"] ?>
 							</span>

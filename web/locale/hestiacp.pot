@@ -4194,7 +4194,7 @@ msgid "Proxy Server"
 msgstr ""
 
 #: ../../web/templates/pages/edit_server.php:241
-msgid "Backend Server"
+msgid "PHP Interpreter"
 msgstr ""
 
 #: ../../web/templates/pages/edit_server.php:252
@@ -4735,7 +4735,7 @@ msgid "web server"
 msgstr ""
 
 #: ../../bin/v-list-sys-services:172
-msgid "backend server"
+msgid "php interpreter"
 msgstr ""
 
 #: ../../bin/v-list-sys-services:180

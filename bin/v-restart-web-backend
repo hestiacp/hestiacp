@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: restart backend server
+# info: restart php interpreter
 # options: NONE
 #
 # example: v-restart-web-backend
 #
-# This function reloads backend server configuration.
+# This function reloads php interpreter configuration.
 
 restart=$1
 # For backward compatibility might change in the feature

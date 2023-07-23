@@ -124,7 +124,7 @@ shell_list() {
 		echo "SSL Support:                      $WEB_SSL:$WEB_SSL_PORT"
 	fi
 	if [ -n "$WEB_BACKEND" ]; then
-		echo "Web Backend:                      $WEB_BACKEND"
+		echo "PHP Intepreter:                   $WEB_BACKEND"
 	fi
 	if [ -n "$PROXY_SYSTEM" ]; then
 		echo "Proxy Server:                     $PROXY_SYSTEM:$PROXY_PORT"

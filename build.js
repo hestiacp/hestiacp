@@ -64,51 +64,6 @@ function getOutputPath(pkg) {
 	return `./web/js/dist/${pkgName}.min.js`;
 }
 
-/** @type {lightningcss.Visitor} */
-const sizeToWidthHeight = {
-	Declaration: {
-		custom: (declaration) => {
-			if (declaration.name !== 'size') {
-				return;
-			}
-			const [width, _, height] = declaration.value.map((value) => {
-				if (value.type === 'token') {
-					if (value.value === 'white-space') return value;
-					return value.value;
-				}
-				if (value.type === 'length') {
-					return { type: 'dimension', value: value.value };
-				}
-			});
-
-			return [
-				{
-					property: 'width',
-					value: { type: 'length-percentage', value: width },
-				},
-				{
-					property: 'height',
-					value: { type: 'length-percentage', value: height || width },
-				},
-			];
-		},
-	},
-};
-
-/** @type {lightningcss.Visitor} */
-const replaceRelativeWebFonts = {
-	Url: (node) => {
-		// Fix relative paths for webfonts
-		if (node.url.startsWith('../webfonts/')) {
-			return {
-				url: node.url.replace('../webfonts/', '/webfonts/'),
-				loc: node.loc,
-			};
-		}
-		return node;
-	},
-};
-
 // Process a CSS file
 async function processCSS(inputFile, outputFile) {
 	try {
@@ -121,7 +76,18 @@ async function processCSS(inputFile, outputFile) {
 			minify: true,
 			targets: lightningcss.browserslistToTargets(browserslist()),
 			drafts: { customMedia: true, nesting: true },
-			visitor: lightningcss.composeVisitors([sizeToWidthHeight, replaceRelativeWebFonts]),
+			visitor: {
+				Url: (node) => {
+					// Fix relative paths for webfonts
+					if (node.url.startsWith('../webfonts/')) {
+						return {
+							url: node.url.replace('../webfonts/', '/webfonts/'),
+							loc: node.loc,
+						};
+					}
+					return node;
+				},
+			},
 			resolver: {
 				resolve(specifier, from) {
 					if (!specifier.endsWith('.css')) {

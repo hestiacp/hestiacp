@@ -2,5 +2,6 @@
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"reviewers": ["jaapmarcus"],
 	"enabledManagers": ["npm", "composer", "github-actions"],
+	"ignorePaths": ["**/node_modules/**", "install/deb/filemanager/filegator/composer.json"],
 	"extends": ["config:recommended", "group:allNonMajor", "schedule:earlyMondays"]
 }

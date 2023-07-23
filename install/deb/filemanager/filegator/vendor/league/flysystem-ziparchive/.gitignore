@@ -1,0 +1,6 @@
+vendor
+bin
+composer.lock
+coverage
+coverage.xml
+tests/files

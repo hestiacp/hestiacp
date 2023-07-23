@@ -1,0 +1,48 @@
+name: Tests
+
+on:
+  pull_request: null
+  push:
+    branches:
+      - 1.x
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php:
+          - '7.0'
+          - '7.1'
+          - '7.2'
+          - '7.3'
+          - '7.4'
+          - '8.0'
+
+    name: PHP ${{ matrix.php }} tests
+    steps:
+      # checkout git
+      - uses: actions/checkout@v2
+      # cache
+      - uses: actions/cache@v2
+        with:
+          path: ~/.composer/cache/files
+          key: ${{ matrix.php }}
+      # setup PHP
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: xdebug
+      - run: composer install --no-progress --ansi
+        if: matrix.php != '8.0'
+      - run: composer install --no-progress --ansi --ignore-platform-reqs
+        if: matrix.php == '8.0'
+      - run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        if: matrix.php != '8.0'
+      - run: vendor/bin/phpunit
+        if: matrix.php == '8.0'
+      - uses: codecov/codecov-action@v1
+        if: matrix.php != '8.0'
+        with:
+          file: './coverage.xml'
+          fail_ci_if_error: true

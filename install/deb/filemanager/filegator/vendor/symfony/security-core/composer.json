@@ -1,0 +1,56 @@
+{
+    "name": "symfony/security-core",
+    "type": "library",
+    "description": "Symfony Security Component - Core Library",
+    "keywords": [],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/event-dispatcher-contracts": "^1.1|^2",
+        "symfony/polyfill-php80": "^1.16",
+        "symfony/service-contracts": "^1.1.6|^2",
+        "symfony/deprecation-contracts": "^2.1"
+    },
+    "require-dev": {
+        "psr/container": "^1.0|^2.0",
+        "symfony/event-dispatcher": "^4.4|^5.0",
+        "symfony/expression-language": "^4.4|^5.0",
+        "symfony/http-foundation": "^4.4|^5.0",
+        "symfony/ldap": "^4.4|^5.0",
+        "symfony/translation": "^4.4|^5.0",
+        "symfony/validator": "^5.2",
+        "psr/log": "^1|^2|^3"
+    },
+    "conflict": {
+        "symfony/event-dispatcher": "<4.4",
+        "symfony/security-guard": "<4.4",
+        "symfony/ldap": "<4.4",
+        "symfony/validator": "<5.2"
+    },
+    "suggest": {
+        "psr/container-implementation": "To instantiate the Security class",
+        "symfony/event-dispatcher": "",
+        "symfony/http-foundation": "",
+        "symfony/validator": "For using the user password constraint",
+        "symfony/expression-language": "For using the expression voter",
+        "symfony/ldap": "For using LDAP integration"
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\Component\\Security\\Core\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "minimum-stability": "dev"
+}

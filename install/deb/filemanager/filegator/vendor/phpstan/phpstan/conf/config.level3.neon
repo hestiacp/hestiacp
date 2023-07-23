@@ -1,0 +1,78 @@
+includes:
+	- config.level2.neon
+
+rules:
+	- PHPStan\Rules\Arrays\AppendedArrayItemTypeRule
+	- PHPStan\Rules\Arrays\IterableInForeachRule
+	- PHPStan\Rules\Arrays\OffsetAccessAssignmentRule
+	- PHPStan\Rules\Arrays\OffsetAccessAssignOpRule
+	- PHPStan\Rules\Functions\ArrowFunctionReturnTypeRule
+	- PHPStan\Rules\Functions\ClosureReturnTypeRule
+	- PHPStan\Rules\Functions\ReturnTypeRule
+	- PHPStan\Rules\Methods\ReturnTypeRule
+	- PHPStan\Rules\Properties\DefaultValueTypesAssignedToPropertiesRule
+	- PHPStan\Rules\Properties\TypesAssignedToPropertiesRule
+	- PHPStan\Rules\Variables\ThrowTypeRule
+	- PHPStan\Rules\Variables\VariableCloningRule
+
+parameters:
+	featureToggles:
+		yieldRules: false
+
+conditionalTags:
+	PHPStan\Rules\Generators\YieldFromTypeRule:
+		phpstan.rules.rule: %featureToggles.yieldRules%
+	PHPStan\Rules\Generators\YieldInGeneratorRule:
+		phpstan.rules.rule: %featureToggles.yieldRules%
+	PHPStan\Rules\Generators\YieldTypeRule:
+		phpstan.rules.rule: %featureToggles.yieldRules%
+
+services:
+	-
+		class: PHPStan\Rules\Arrays\AppendedArrayKeyTypeRule
+		arguments:
+			checkUnionTypes: %checkUnionTypes%
+		tags:
+			- phpstan.rules.rule
+
+	-
+		class: PHPStan\Rules\Arrays\InvalidKeyInArrayDimFetchRule
+		arguments:
+			reportMaybes: %reportMaybes%
+		tags:
+			- phpstan.rules.rule
+
+	-
+		class: PHPStan\Rules\Arrays\InvalidKeyInArrayItemRule
+		arguments:
+			reportMaybes: %reportMaybes%
+		tags:
+			- phpstan.rules.rule
+
+	-
+		class: PHPStan\Rules\Arrays\NonexistentOffsetInArrayDimFetchRule
+		arguments:
+			reportMaybes: %reportMaybes%
+		tags:
+			- phpstan.rules.rule
+
+	-
+		class: PHPStan\Rules\Generators\YieldFromTypeRule
+		arguments:
+			reportMaybes: %reportMaybes%
+
+	-
+		class: PHPStan\Rules\Generators\YieldInGeneratorRule
+		arguments:
+			reportMaybes: %reportMaybes%
+
+	-
+		class: PHPStan\Rules\Generators\YieldTypeRule
+
+	-
+		class: PHPStan\Rules\Methods\MethodSignatureRule
+		arguments:
+			reportMaybes: %reportMaybesInMethodSignatures%
+			reportStatic: %reportStaticMethodSignatures%
+		tags:
+			- phpstan.rules.rule

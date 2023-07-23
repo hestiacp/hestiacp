@@ -1,0 +1,57 @@
+{
+	"name": "nette/bootstrap",
+	"description": "🅱  Nette Bootstrap: the simple way to configure and bootstrap your Nette application.",
+	"keywords": ["nette", "configurator", "bootstrapping"],
+	"homepage": "https://nette.org",
+	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
+	"authors": [
+		{
+			"name": "David Grudl",
+			"homepage": "https://davidgrudl.com"
+		},
+		{
+			"name": "Nette Community",
+			"homepage": "https://nette.org/contributors"
+		}
+	],
+	"require": {
+		"php": ">=7.2 <8.3",
+		"nette/di": "^3.0.5",
+		"nette/utils": "^3.2.1 || ^4.0"
+	},
+	"suggest": {
+		"nette/robot-loader": "to use Configurator::createRobotLoader()",
+		"tracy/tracy": "to use Configurator::enableTracy()"
+	},
+	"require-dev": {
+		"nette/application": "^3.1",
+		"nette/caching": "^3.0",
+		"nette/database": "^3.0",
+		"nette/forms": "^3.0",
+		"nette/http": "^3.0",
+		"nette/mail": "^3.0",
+		"nette/robot-loader": "^3.0",
+		"nette/safe-stream": "^2.2",
+		"nette/security": "^3.0",
+		"nette/tester": "^2.0",
+		"latte/latte": "^2.8",
+		"tracy/tracy": "^2.6",
+		"phpstan/phpstan-nette": "^0.12"
+	},
+	"conflict": {
+		"tracy/tracy": "<2.6"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	},
+	"minimum-stability": "dev",
+	"scripts": {
+		"phpstan": "phpstan analyse",
+		"tester": "tester tests -s"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "3.1-dev"
+		}
+	}
+}

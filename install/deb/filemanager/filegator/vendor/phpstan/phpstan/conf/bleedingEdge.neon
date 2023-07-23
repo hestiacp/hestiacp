@@ -1,0 +1,13 @@
+parameters:
+	featureToggles:
+		deadCatchesRule: true
+		invalidVarTag: true
+		missingReturnRule: true
+		noopRule: true
+		subtractableTypes: true
+		tooWideTypehints: true
+		unreachableStatement: true
+		yieldRules: true
+		validateParameters: true
+		allowVarTagAboveStatements: true
+		newStatic: true

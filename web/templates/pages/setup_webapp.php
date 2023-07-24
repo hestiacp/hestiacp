@@ -16,7 +16,7 @@
 <!-- End toolbar -->
 
 <!-- Begin form -->
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
 	<?php if (!empty($WebappInstaller->getOptions())) { ?>
 		<form id="main-form" method="POST" name="v_setup_webapp">

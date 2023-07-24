@@ -70,7 +70,7 @@
 					$status_title = _('Failed');
 				}
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell u-text-center-desktop">
 					<i class="fas <?= $status_icon ?> u-mr5" title="<?= $status_title ?>"></i>
 				</div>

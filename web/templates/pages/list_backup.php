@@ -69,7 +69,7 @@
 				if (!empty($data[$key]['CRON'])) $cron = _('Yes');
 				if (!empty($data[$key]['UDIR'])) $udir = _('Yes');
 		?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="backup[]" value="<?= $key ?>" <?= $display_mode ?>>

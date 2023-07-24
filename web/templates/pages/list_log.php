@@ -98,7 +98,7 @@
 					$level_title = _('Error');
 				}
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell u-text-center-desktop">
 					<i class="fas <?= $level_icon ?>" title="<?= $level_title ?>"></i>
 				</div>

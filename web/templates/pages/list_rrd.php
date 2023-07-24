@@ -21,7 +21,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 	<div class="form-container form-container-wide">
 		<!-- Begin graph list item loop -->
 		<?php foreach ($data as $key => $value) { ?>

@@ -17,7 +17,7 @@
 						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-accounts" data-sort-as-int="1">
 						<span class="name"><?= _("Accounts") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -164,7 +164,7 @@
 					$data[$key]['CATCHALL'] = '/dev/null';
 				}
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
 				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
 				data-sort-name="<?= $key ?>"
 				data-sort-disk="<?= $data[$key]["U_DISK"] ?>"

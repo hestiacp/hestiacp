@@ -133,7 +133,7 @@
 				$cpu = number_format($cpu, 1);
 				if ($cpu == '0.0')	$cpu = 0;
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
 				data-sort-name="<?= strtolower($key) ?>"
 				data-sort-memory="<?= $data[$key]["MEM"] ?>"
 				data-sort-cpu="<?= $cpu ?>"

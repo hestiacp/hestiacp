@@ -20,7 +20,7 @@ if (!empty($_POST["ok"])) { ?>
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 	<form id="main-form">
 
 		<div class="form-container">

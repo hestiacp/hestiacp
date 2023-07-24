@@ -15,42 +15,58 @@ bash /usr/local/hestia/install/upgrade/manual/configure-server-smtp.sh
 Example: Receive email to [MAIN] email address hello@test.mail if someone send email to hello+new@test.mail OR hello.new@test.mail OR hello-new@test.mail OR hello_new@test.mail
 
 **Step 1:** Log in to ssh with root
+
 **Step 2:** Edit Mail server configuration file
+
 ```bash
 nano /etc/exim4/exim4.conf.template
 ```
+
 **Step 3:** Finding a section "localuser:"
+
 > Ctrl+W > Type: "localuser:" > enter
 
 **Step 4:** Enabling suffix based subaddresing
 <br> Add following lines after "transport = local_delivery" line inside "localuser:" section of exim4.conf.template file
+
 > for signle subaddresing
+
 ```bash
   local_part_suffix = +*
   local_part_suffix_optional
 ```
+
 > for multiple subaddresing [Supported suffix: + . - _]
+
 ```bash
   local_part_suffix = +* : [whatever]* : [whatever]*
   local_part_suffix_optional
 ```
+
 **Step 5:** Save the configuration file
+
 > Ctrl+X > Y > Enter
 
 **Step 6:** Updating and generating new configuration files for email server
+
 ```bash
 sudo update-exim4.conf
 ```
+
 **Step 7:** Restarting the mail server
+
 ```bash
 sudo service exim4 restart
 ```
+
 **Step 8 [Optional]:** Check email server running or not
+
 ```bash
 systemctl status exim4.service
 ```
 
 ### Note:
+
 Adding more than 2 suffix OR excluding "+" & "." suffix may disable Catch-all mails feature of HestiaCP. Always recommend to add max two stuffix [Recommend suffix: "+ ." which is enabled in Gmail also]
 
 ## I am unable to send email

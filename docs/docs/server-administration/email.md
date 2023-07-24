@@ -12,7 +12,7 @@ bash /usr/local/hestia/install/upgrade/manual/configure-server-smtp.sh
 
 ## How do I enable email subaddresing?
 
-Example: Receive email to [MAIN] email address hello@test.mail if someone send email to hello+new@test.mail OR hello.new@test.mail OR hello-new@test.mail OR hello_new@test.mail
+Example: Receive email to [MAIN] email address <yesbhautik@hestia.cp> if someone send email to <hello+new@hestia.cp> OR <yesbhautik.new@hestia.cp> OR <yesbhautik-new@hestia.cp> OR <yesbhautik_new@hestia.cp>
 
 **Step 1:** Log in to ssh with root
 

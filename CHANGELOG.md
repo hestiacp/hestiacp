@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.3] - Service release
+
+- [UI] Fixed an issue where the wrong user type icon was displayed the top menu bar (#3810)
+- [UI] Fixed back button links on SSH, API, Logs, and White Label pages (#3811)
+- [UI] Fixed "No IPset lists defined" even when lists are defined (#3812)
+- [UI] Removed animation effect from login screen (#3822)
+- [UI] Fixed an issue where search results were not being returned for all users when logged in as `admin` (#3833)
+- [UI] Removed animations from all page loads to improve performance (#3836)
+- [UI] Moved debug mode enablement switch to a more logical place (#3838)
+- [DNS] Ensure domain is formatted properly with DNSSEC (#3814)
+- [API] Added update-dns-record permission to the API (#3819)
+
 ## [1.8.2] - Service release
 
 - Added more files to default proxy extensions (#3768)

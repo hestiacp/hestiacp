@@ -1,9 +1,14 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"reviewers": ["jaapmarcus"],
+	"extends": [
+		"config:best-practices",
+		":pinAllExceptPeerDependencies",
+		":disableDependencyDashboard",
+		"group:allNonMajor",
+		"schedule:earlyMondays"
+	],
 	"enabledManagers": ["npm", "composer", "github-actions"],
 	"ignorePaths": ["**/node_modules/**", "install/deb/filemanager/filegator/composer.json"],
-	"branchPrefix": "dependencies",
-	"bumpVersion": "patch",
-	"extends": ["config:recommended", "group:allNonMajor", "schedule:earlyMondays"]
+	"reviewers": ["jaapmarcus"],
+	"branchPrefix": "dependencies"
 }

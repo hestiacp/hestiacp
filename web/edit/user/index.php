@@ -342,6 +342,9 @@ if (!empty($_POST["save"])) {
 			check_return_code($return_var, $output);
 			unset($output);
 		}
+
+		$_POST["v_role"] = $_POST["v_role"] ?? "";
+
 		if (
 			$v_role != $_POST["v_role"] &&
 			$_SESSION["userContext"] === "admin" &&

@@ -49,7 +49,7 @@
 					$upd_status = 'outdated';
 				}
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit">
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Package Names") ?>:</span>
 					<?= $key ?>

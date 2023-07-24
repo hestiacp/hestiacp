@@ -2,9 +2,15 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/edit/user/">
-				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-			</a>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
+				<a href="/edit/user/?user=<?= htmlentities($_SESSION["look"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				</a>
+			<?php } else { ?>
+				<a href="/edit/user/?user=<?= htmlentities($_SESSION["user"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				</a>
+			<?php } ?>
 			<a href="/add/access-key/" class="button button-secondary js-button-create">
 				<i class="fas fa-circle-plus icon-green"></i><?= _("Add Access Key") ?>
 			</a>
@@ -17,7 +23,7 @@
 						<?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-date" data-sort-as-int="1">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'date') { echo 'active'; } ?>"><?= _("Date") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -70,7 +76,7 @@
 				$key_date = !empty($value['DATE']) ? $value['DATE'] : '-';
 				$key_time = !empty($value['TIME']) ? $value['TIME'] : '-';
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit"
+			<div class="units-table-row js-unit"
 				data-sort-key="<?= strtolower($key) ?>"
 				data-sort-comment="<?= strtolower($key_comment) ?>"
 				data-sort-date="<?= strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"]) ?>">

@@ -429,7 +429,7 @@ if [ "$dns" != 'no' ] && [ -n "$DNS_SYSTEM" ]; then
 	# Restoring DNS domain
 	for domain in $domains; do
 		echo -e "$(date "+%F %T") $domain" | tee -a $tmpdir/restore.log
-
+		domain_idn="$domain"
 		# Cleanup previous config keys
 		unset -v DOMAIN IP TPL TTL EXP SOA RECORDS DNSSEC KEY SLAVE MASTER
 

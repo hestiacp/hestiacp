@@ -28,7 +28,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			<div class="units-table-cell"><?= _("IP or Value") ?></div>
 		</div>
 
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
+		<div class="units-table-row js-unit">
 			<div class="units-table-cell">
 				<label class="u-hide-desktop u-text-bold"><?= _("Record") ?>:</label>
 				<input type="text" class="form-control" value="mail.<?= htmlspecialchars($_GET["domain"]) ?>">
@@ -50,7 +50,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 		</div>
 		<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<label class="u-hide-desktop u-text-bold"><?= _("Record") ?>:</label>
 					<input type="text" class="form-control" value="<?= $v_webmail_alias ?>.<?= htmlspecialchars($_GET["domain"]) ?>">
@@ -72,7 +72,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				</div>
 			</div>
 		<?php } ?>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
+		<div class="units-table-row js-unit">
 			<div class="units-table-cell">
 				<label class="u-hide-desktop u-text-bold"><?= _("Record") ?>:</label>
 				<input type="text" class="form-control" value="<?= htmlspecialchars($_GET["domain"]) ?>">
@@ -94,7 +94,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				<input type="text" class="form-control" value="mail.<?= htmlspecialchars($_GET["domain"]) ?>.">
 			</div>
 		</div>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
+		<div class="units-table-row js-unit">
 			<div class="units-table-cell">
 				<label class="u-hide-desktop u-text-bold"><?= _("Record") ?>:</label>
 				<input type="text" class="form-control" value="<?= htmlspecialchars($_GET["domain"]) ?>">
@@ -116,7 +116,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 				<input type="text" class="form-control" value="<?= htmlspecialchars("v=spf1 a mx ip4:" . $ip . " -all") ?>">
 			</div>
 		</div>
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
+		<div class="units-table-row js-unit">
 			<div class="units-table-cell">
 				<label class="u-hide-desktop u-text-bold"><?= _("Record") ?>:</label>
 				<input type="text" class="form-control" value="_dmarc">
@@ -138,7 +138,7 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 			</div>
 		</div>
 		<?php foreach ($dkim as $key => $value) { ?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<label class="u-hide-desktop u-text-bold"><?= _("Record") ?>:</label>
 					<input type="text" class="form-control" value="<?= htmlspecialchars($key) ?>">

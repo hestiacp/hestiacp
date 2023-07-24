@@ -22,7 +22,7 @@
 <!-- End toolbar -->
 
 <!-- Begin form -->
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 	<form
 		x-data="{
 			timezone: '<?= $v_timezone ?? "" ?>',
@@ -115,7 +115,7 @@
 							<?php } ?>
 						</select>
 					</div>
-					<div class="form-check">
+					<div class="form-check u-mb10">
 						<input
 							class="form-check-input"
 							type="checkbox"
@@ -124,6 +124,18 @@
 						>
 						<label for="v_language_update">
 							<?= _("Set as default language for all users") ?>
+						</label>
+					</div>
+					<div class="form-check">
+						<input
+							class="form-check-input"
+							type="checkbox"
+							name="v_debug_mode"
+							id="v_debug_mode"
+							<?= $_SESSION["DEBUG_MODE"] == "true" ? "checked" : "" ?>
+						>
+						<label for="v_debug_mode">
+							<?= _("Enable debug mode") ?>
 						</label>
 					</div>
 				</div>
@@ -152,18 +164,6 @@
 					<p class="u-mb5">
 						<?= _("Options") ?>
 					</p>
-					<div class="form-check">
-						<input
-							class="form-check-input"
-							type="checkbox"
-							name="v_debug_mode"
-							id="v_debug_mode"
-							<?= $_SESSION["DEBUG_MODE"] == "true" ? "checked" : "" ?>
-						>
-						<label for="v_debug_mode">
-							<?= _("Enable debug mode") ?>
-						</label>
-					</div>
 					<div class="form-check">
 						<input
 							class="form-check-input"

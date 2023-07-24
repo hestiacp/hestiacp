@@ -3,7 +3,7 @@ layout: page
 title: Features
 ---
 
-<script setup lang="ts">
+<script setup>
   import FeaturePageTitle from "./.vitepress/theme/components/FeaturePageTitle.vue";
   import FeaturePageSection from "./.vitepress/theme/components/FeaturePageSection.vue";
   import FeatureList from "./.vitepress/theme/components/FeatureList.vue";

@@ -27,8 +27,6 @@
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.19.6",
-		"@typescript-eslint/eslint-plugin": "^6.0.0",
-		"@typescript-eslint/parser": "^6.0.0",
 		"cssnano": "^6.0.1",
 		"esbuild": "^0.18.13",
 		"eslint": "^8.45.0",
@@ -49,7 +47,6 @@
 		"prettier-plugin-sql": "^0.14.0",
 		"stylelint": "^15.10.1",
 		"stylelint-config-standard": "^34.0.0",
-		"typescript": "^5.1.6",
 		"vitepress": "1.0.0-beta.5",
 		"vue": "^3.3.4"
 	},

@@ -7,7 +7,16 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_POST);
 
+if (empty($_POST["job"])) {
+	header("Location: /list/cron/");
+	exit();
+}
 $job = $_POST["job"];
+
+if (empty($_POST["action"])) {
+	header("Location: /list/cron/");
+	exit();
+}
 $action = $_POST["action"];
 
 if ($_SESSION["userContext"] === "admin") {

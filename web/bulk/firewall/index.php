@@ -15,6 +15,15 @@ if ($_SESSION["userContext"] != "admin") {
 	exit();
 }
 
+if (empty($_POST["rule"])) {
+	header("Location: /list/firewall/");
+	exit();
+}
+if (empty($_POST["action"])) {
+	header("Location: /list/firewall/");
+	exit();
+}
+
 $rule = $_POST["rule"];
 $action = $_POST["action"];
 

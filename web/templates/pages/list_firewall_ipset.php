@@ -48,7 +48,7 @@
 				++$i;
 				$listname = $key;
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="setname[]" value="<?= $listname ?>">

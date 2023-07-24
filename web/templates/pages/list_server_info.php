@@ -122,4 +122,4 @@
 	</a>
 
 	<div class="container">
-		<pre class="console-output animate__animated animate__fadeIn u-mt20">
+		<pre class="console-output u-mt20">

@@ -36,7 +36,7 @@
 
 		<!-- Begin list of backup exclusions by type -->
 		<?php foreach ($data as $key => $value) { ?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Type") ?>:</span>
 					<?= $key ?>

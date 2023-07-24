@@ -23,7 +23,7 @@ if (($user_plain == "admin" && $api_status < 1) || ($user_plain != "admin" && $a
 	exit();
 }
 
-if (!is_array($_POST["key"])) {
+if (empty($_POST["key"])) {
 	header("Location: /list/access-key/");
 	exit();
 }

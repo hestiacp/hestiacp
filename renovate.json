@@ -5,10 +5,10 @@
 		":pinAllExceptPeerDependencies",
 		":disableDependencyDashboard",
 		"group:allNonMajor",
-		"schedule:earlyMondays"
+		"schedule:weekdays"
 	],
 	"enabledManagers": ["npm", "composer", "github-actions"],
 	"ignorePaths": ["**/node_modules/**", "install/deb/filemanager/filegator/composer.json"],
-	"reviewers": ["jaapmarcus"],
+	"reviewers": ["jaapmarcus", "krismkenn"],
 	"branchPrefix": "dependencies"
 }

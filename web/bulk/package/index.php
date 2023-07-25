@@ -8,6 +8,15 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_POST);
 
+if (empty($_POST["package"])) {
+	header("Location: /list/package");
+	exit();
+}
+if (empty($_POST["action"])) {
+	header("Location: /list/package");
+	exit();
+}
+
 $package = $_POST["package"];
 $action = $_POST["action"];
 

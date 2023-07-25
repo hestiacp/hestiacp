@@ -440,6 +440,9 @@ if (!empty($_POST["save"])) {
 
 	// Update theme
 	if (empty($_SESSION["error_msg"])) {
+		if (empty($_SESSION["userTheme"])) {
+			$_SESSION["userTheme"] = "";
+		}
 		if ($_POST["v_user_theme"] != $_SESSION["userTheme"]) {
 			exec(
 				HESTIA_CMD .

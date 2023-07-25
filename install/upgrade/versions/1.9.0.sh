@@ -82,3 +82,11 @@ done
 
 $BIN/v-add-user-notification 'admin' 'Hestia securirty has been upgraded' 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'
 add_upgrade_message 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'
+
+packages=$(ls --sort=time $HESTIA/data/packages | grep .pkg)
+echo "[ * ] Update existing packages to support add support for incremental backups"
+for package in $packages; do
+	if [ -z "$(grep -e 'BACKUPS_INCREMENTAL' $HESTIA/data/packages/$package)" ]; then
+		echo "BACKUPS_INCREMENTAL='no'" >> $HESTIA/data/packages/$package
+	fi
+done

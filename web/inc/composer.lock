@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fcce2f37970fb875fb1c1b5602dc522",
+    "content-hash": "24120ce0805a1d5a5dc016ce0240c465",
     "packages": [
         {
             "name": "hestiacp/phpquoteshellarg",

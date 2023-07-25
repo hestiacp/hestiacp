@@ -342,6 +342,9 @@ if (!empty($_POST["save"])) {
 			check_return_code($return_var, $output);
 			unset($output);
 		}
+
+		$_POST["v_role"] = $_POST["v_role"] ?? "";
+
 		if (
 			$v_role != $_POST["v_role"] &&
 			$_SESSION["userContext"] === "admin" &&
@@ -437,6 +440,9 @@ if (!empty($_POST["save"])) {
 
 	// Update theme
 	if (empty($_SESSION["error_msg"])) {
+		if (empty($_SESSION["userTheme"])) {
+			$_SESSION["userTheme"] = "";
+		}
 		if ($_POST["v_user_theme"] != $_SESSION["userTheme"]) {
 			exec(
 				HESTIA_CMD .

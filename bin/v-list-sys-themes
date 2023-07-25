@@ -22,6 +22,35 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Define array for available themes
+available_themes=()
+
+# Function to process CSS theme files
+get_themes() {
+	# Retrieve list of system themes
+	if [ -d "$HESTIA_THEMES" ]; then
+		for file in "$HESTIA_THEMES"/*.min.css; do
+			filename=$(basename "$file" .min.css)
+			available_themes+=("${filename%.*}")
+		done
+	fi
+
+	# Check for existence of custom themes folder and iterate through items
+	if [ -d "$HESTIA_THEMES_CUSTOM" ] && [ "$(ls -A "$HESTIA_THEMES_CUSTOM")" ]; then
+		for file in "$HESTIA_THEMES_CUSTOM"/*.css; do
+			filename=$(basename "$file" .css)
+			available_themes+=("${filename%.*}")
+		done
+	fi
+
+	# Sort theme list alphabetically
+	IFS=$'\n' available_themes=($(sort <<< "${available_themes[*]}"))
+	unset IFS
+
+	# Get count of themes (for proper JSON formatting)
+	theme_count="${#available_themes[@]}"
+}
+
 # JSON list function
 json_list() {
 	i=1
@@ -65,21 +94,7 @@ csv_list() {
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parse system provided themes
-provided_themes=$(ls -v $HESTIA/web/css/themes | grep '\.min.css' | sed 's/\.min.css$//')
-
-# Parse custom themes
-if [ -d "$HESTIA/web/css/themes/custom" ]; then
-	custom_themes=$(ls -v $HESTIA/web/css/themes/custom/ | grep '\.css' | sed 's/\.css$//')
-fi
-
-# Create array with all available themes
-for theme in $provided_themes $custom_themes; do
-	available_themes+=("$theme")
-done
-
-# Get count of themes (for proper JSON formatting)
-theme_count="${#available_themes[@]}"
+get_themes
 
 # Listing data
 case $format in

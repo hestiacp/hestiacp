@@ -77,7 +77,11 @@ function api_legacy(array $request_data) {
 	//This exists, so native JSON can be used without the repeating the code twice, so future code changes are easier and don't need to be replicated twice
 	// Authentication
 	if (empty($request_data["hash"])) {
-		if ($request_data["user"] != "admin") {
+		exec(HESTIA_CMD . "v-list-sys-config json", $output, $return_var);
+		$data = json_decode(implode("", $output), true);
+		$root_user = $data["config"]["ROOT_USER"];
+
+		if ($request_data["user"] != "$root_user") {
 			api_error(E_FORBIDDEN, "Error: authentication failed", $hst_return);
 		}
 		$password = $request_data["password"];
@@ -85,11 +89,12 @@ function api_legacy(array $request_data) {
 			api_error(E_PASSWORD, "Error: authentication failed", $hst_return);
 		}
 		$v_ip = quoteshellarg(get_real_user_ip());
+		$user = quoteshellarg($root_user);
 		unset($output);
-		exec(HESTIA_CMD . "v-get-user-salt admin " . $v_ip . " json", $output, $return_var);
+		exec(HESTIA_CMD . "v-get-user-salt " . $user . " " . $v_ip . " json", $output, $return_var);
 		$pam = json_decode(implode("", $output), true);
-		$salt = $pam["admin"]["SALT"];
-		$method = $pam["admin"]["METHOD"];
+		$salt = $pam[$root_user]["SALT"];
+		$method = $pam[$root_user]["METHOD"];
 
 		if ($method == "md5") {
 			$hash = crypt($password, '$1$' . $salt . '$');
@@ -128,7 +133,11 @@ function api_legacy(array $request_data) {
 		fclose($fp);
 
 		// Check user hash
-		exec(HESTIA_CMD . "v-check-user-hash admin " . $v_hash . " " . $v_ip, $output, $return_var);
+		exec(
+			HESTIA_CMD . "v-check-user-hash " . $user . " " . $v_hash . " " . $v_ip,
+			$output,
+			$return_var,
+		);
 		unset($output);
 
 		// Remove tmp file

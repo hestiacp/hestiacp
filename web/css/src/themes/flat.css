@@ -57,6 +57,10 @@
 /* Units table
    ========================================================================== */
 
+.units-table-header {
+	box-shadow: none;
+}
+
 .units-table-row {
 	@media (--viewport-large) {
 		&:hover {

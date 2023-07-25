@@ -7,8 +7,22 @@
 		"group:allNonMajor",
 		"schedule:weekdays"
 	],
+	"packageRules": [
+		{
+			"groupName": "Linters",
+			"matchPackagePrefixes": ["@prettier/", "prettier"]
+		},
+		{
+			"groupName": "ESLint",
+			"extends": ["packages:eslint"]
+		},
+		{
+			"groupName": "StyleLint",
+			"extends": ["packages:stylelint"]
+		}
+	],
 	"enabledManagers": ["npm", "composer", "github-actions"],
 	"ignorePaths": ["**/node_modules/**", "install/deb/filemanager/filegator/composer.json"],
 	"reviewers": ["jaapmarcus", "krismkenn"],
-	"branchPrefix": "dependencies"
+	"branchPrefix": "dependencies/"
 }

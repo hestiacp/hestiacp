@@ -34,9 +34,8 @@ config='/etc/ssh/sshd_config'
 sftp_n=$(grep -n "Subsystem.*sftp" $config | grep -v internal | grep ":#")
 sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
-date=$("date +%s")
 # Backing up config
-cp $config $config.bak-$(date +%s)
+cp $config $config.bak
 
 # Enabling normal sftp
 if [ -n "$sftp_n" ]; then
@@ -61,10 +60,10 @@ if [ "$restart" = 'yes' ]; then
 	if [ "$?" -ne 0 ]; then
 		mail_text="OpenSSH can not be restarted. Please check config:
             \n\n$(/usr/sbin/sshd -t)"
-        echo -e "$mail_text" |$SENDMAIL -s "$subj" $email
-    else
-        service sshd restart >/dev/null 2>&1
-    fi
+		echo -e "$mail_text" | $SENDMAIL -s "$subj" $email
+	else
+		service sshd restart > /dev/null 2>&1
+	fi
 fi
 
 # Remove v-add-sys-sftp-jail to startup

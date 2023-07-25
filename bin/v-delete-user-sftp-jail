@@ -68,6 +68,9 @@ sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
 if [ -d "/home/$user" ]; then
 	chown $user:$user /home/$user
 fi
+
+# Deleting chroot jail for SFTP and FTP
+delete_chroot_jail $user
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

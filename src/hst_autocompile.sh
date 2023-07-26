@@ -666,6 +666,11 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 		get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package-lock.json"
 		get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
 
+		# Init file
+		mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/init.d
+		get_branch_file 'src/deb/web-terminal/hestia-web-terminal' "$BUILD_DIR_HESTIA_TERMINAL/etc/init.d/hestia-web-terminal"
+		chmod +x "$BUILD_DIR_HESTIA_TERMINAL/etc/init.d/hestia-web-terminal"
+
 		chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
 		# Install node dependencies
 		cd $BUILD_DIR_HESTIA_TERMINAL/usr/local/hestia/web-terminal

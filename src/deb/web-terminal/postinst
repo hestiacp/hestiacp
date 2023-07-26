@@ -27,7 +27,7 @@ source /usr/local/hestia/func/upgrade.sh
 source /usr/local/hestia/conf/hestia.conf
 source /usr/local/hestia/install/upgrade/upgrade.conf
 
-# Restart hestia service
-if [ -f "/etc/init.d/hestia" ]; then
-	systemctl restart hestia > /dev/null 2>&1
+# Restart hestia-web-terminal service
+if [ -f "/etc/init.d/hestia-web-terminal" ]; then
+	systemctl restart hestia-web-terminal > /dev/null 2>&1
 fi

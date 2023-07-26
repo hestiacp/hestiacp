@@ -38,7 +38,7 @@ wss.on('connection', (ws, req) => {
 	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${sessionID}`);
 	if (!file) {
 		console.error(`Invalid session ID ${sessionID}, refusing connection`);
-		ws.close();
+		ws.close(401, 'Your session has expired.');
 		return;
 	}
 	const session = file.toString();
@@ -53,14 +53,14 @@ wss.on('connection', (ws, req) => {
 	const userline = passwd.split('\n').find((line) => line.startsWith(`${username}:`));
 	if (!userline) {
 		console.error(`User ${username} not found, refusing connection`);
-		ws.close();
+		ws.close(401, 'You are not allowed to access this server.');
 		return;
 	}
 	const [, , uid, gid, , homedir, shell] = userline.split(':');
 
 	if (shell.endsWith('nologin')) {
 		console.error(`User ${username} has no shell, refusing connection`);
-		ws.close();
+		ws.close(403, 'You have no shell access.');
 		return;
 	}
 

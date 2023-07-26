@@ -15,12 +15,12 @@ export default async function initWebTerminal() {
 	});
 	socket.addEventListener('error', (_) => {
 		terminal.reset();
-		terminal.writeln('Connection error');
+		terminal.writeln('Connection error.');
 	});
 	socket.addEventListener('close', (evt) => {
 		if (evt.wasClean) {
 			terminal.reset();
-			terminal.writeln('Connection closed');
+			terminal.writeln(evt.reason ?? 'Connection closed.');
 		}
 	});
 }

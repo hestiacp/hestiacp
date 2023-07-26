@@ -33,10 +33,10 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Updating FIREWALL_SYSTEM value
-$BIN/v-change-sys-config-value "WEB_TERMINAL" ""
+# Updating WEB_TERMINAL value
+$BIN/v-change-sys-config-value "WEB_TERMINAL" "false"
 
-# Stopping firewall
+# Stopping web terminal websocket server
 $BIN/v-stop-service "hestia-web-terminal"
 
 #----------------------------------------------------------#

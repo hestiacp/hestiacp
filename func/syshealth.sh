@@ -375,6 +375,11 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: PLUGIN_APP_INSTALLER ('true')"
 		$BIN/v-change-sys-config-value "PLUGIN_APP_INSTALLER" "true"
 	fi
+	# Web Terminal
+	if [[ -z $(check_key_exists 'WEB_TERMINAL') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: WEB_TERMINAL ('false')"
+		$BIN/v-change-sys-config-value "WEB_TERMINAL" "false"
+	fi
 	# Enable preview mode
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_ENABLE_BACON') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_ENABLE_BACON ('false')"

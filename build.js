@@ -9,7 +9,7 @@ import esbuild from 'esbuild';
 import * as lightningcss from 'lightningcss';
 
 // Packages to build but exclude from bundle
-const externalPackages = ['chart.js/auto', 'alpinejs/dist/cdn.min.js'];
+const externalPackages = ['chart.js/auto', 'alpinejs/dist/cdn.min.js', 'xterm'];
 
 // Build main bundle
 async function buildJS() {

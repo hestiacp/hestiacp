@@ -44,7 +44,8 @@
 		"stylelint": "15.10.2",
 		"stylelint-config-standard": "34.0.0",
 		"vitepress": "1.0.0-beta.6",
-		"vue": "3.3.4"
+		"vue": "3.3.4",
+		"xterm": "5.2.1"
 	},
 	"browserslist": [
 		"defaults"

@@ -1,3 +1,4 @@
+@import url("node:xterm/css/xterm.css");
 @import url("node:normalize.css/normalize.css");
 @import url("node:@fortawesome/fontawesome-free/css/fontawesome");
 @import url("node:@fortawesome/fontawesome-free/css/solid");

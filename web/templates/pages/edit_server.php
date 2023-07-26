@@ -1392,6 +1392,19 @@
 						</select>
 					</div>
 					<div class="u-mb10">
+						<label for="v_web_terminal" class="form-label">
+							<?= _("Terminal") ?>
+						</label>
+						<select class="form-select" name="v_web_terminal" id="v_web_terminal">
+							<option value="false">
+								<?= _("No") ?>
+							</option>
+							<option value="true" <?= $_SESSION["WEB_TERMINAL"] == "true" ? "selected" : "" ?>>
+								<?= _("Yes") ?>
+							</option>
+						</select>
+					</div>
+					<div class="u-mb10">
 						<label for="v_quota" class="form-label">
 							<?= _("File System Disk Quota") ?>
 						</label>

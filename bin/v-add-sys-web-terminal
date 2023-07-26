@@ -1,0 +1,50 @@
+#!/bin/bash
+# info: add system web terminal
+# options: NONE
+#
+# example: v-add-sys-web-terminal
+#
+# This function enables the web terminal.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+if [ "$WEB_TERMINAL" = 'true' ]; then
+	exit
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Updating FIREWAL_SYSTEM value
+$BIN/v-change-sys-config-value "WEB_TERMINAL" "true"
+
+# Updating firewall rules
+$BIN/v-start-service "hestia-web-terminal"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Web Terminal" "Web terminal enabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -30,5 +30,5 @@ async function loadXterm() {
 	// the import on build (xterm is a separate bundle)
 	const xtermBundlePath = '/js/dist/xterm.min.js';
 	const xtermModule = await import(`${xtermBundlePath}`);
-	return xtermModule.Terminal;
+	return xtermModule.default.Terminal;
 }

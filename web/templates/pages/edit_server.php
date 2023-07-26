@@ -1393,7 +1393,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_web_terminal" class="form-label">
-							<?= _("Terminal") ?>
+							<?= _("Web Terminal") ?>
 						</label>
 						<select class="form-select" name="v_web_terminal" id="v_web_terminal">
 							<option value="false">

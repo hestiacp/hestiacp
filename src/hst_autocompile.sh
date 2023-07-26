@@ -566,6 +566,13 @@ if [ "$PHP_B" = true ]; then
 			sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
 		fi
 
+		os=$(lsb_release -is)
+		release=$(lsb_release -rs)
+		if [[ "$os" = "Ubuntu" ]] && [[ "$release" = "20.04" ]]; then
+			sed -i "/Conflicts: libzip5/d" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+			sed -i "s/libzip4/libzip5/g" "$BUILD_DIR_HESTIAPHP/DEBIAN/control"
+		fi
+
 		get_branch_file 'src/deb/php/copyright' "$BUILD_DIR_HESTIAPHP/DEBIAN/copyright"
 		get_branch_file 'src/deb/php/postinst' "$BUILD_DIR_HESTIAPHP/DEBIAN/postinst"
 		chmod +x $BUILD_DIR_HESTIAPHP/DEBIAN/postinst

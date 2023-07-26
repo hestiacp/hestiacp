@@ -46,16 +46,16 @@ wss.on('connection', (ws, req) => {
 		ws.close();
 		return;
 	}
-	const [, , uid, gid, , homedir] = userline.split(':');
+	const [, , uid, gid, , homedir, shell] = userline.split(':');
 
 	// Spawn shell as logged in user
-	const pty = spawn('bash', [], {
+	const pty = spawn(shell, [], {
 		name: 'xterm-color',
 		uid: parseInt(uid, 10),
 		gid: parseInt(gid, 10),
 		cwd: homedir,
 		env: {
-			SHELL: '/bin/bash',
+			SHELL: shell,
 			TERM: 'xterm-color',
 			USER: username,
 			HOME: homedir,

@@ -15,7 +15,6 @@
 #----------------------------------------------------------#
 export PATH=$PATH:/sbin
 export DEBIAN_FRONTEND=noninteractive
-# For testing
 RHOST='apt.hestiacp.com'
 VERSION='debian'
 HESTIA='/usr/local/hestia'
@@ -32,10 +31,9 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.8.0~alpha'
+HESTIA_INSTALL_VER='1.9.0~alpha'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
-#deb.sury not yet ready
 fpm_v="8.2"
 mariadb_v="10.11"
 
@@ -48,7 +46,7 @@ software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-util
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog spamassassin sudo sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd"
+  proftpd-basic quota rrdtool rsyslog spamd sudo sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget"
 
@@ -332,8 +330,11 @@ if [ "$mysql" = 'yes' ] && [ "$mysql8" = 'yes' ]; then
 	mysql='no'
 fi
 
-if [ "$mysqlclassic" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
+if [ "$mysql8" = 'yes' ] && [ "$architecture" = 'aarch64' ]; then
 	check_result 1 "Mysql 8 does not support ARM64 yet for Debian please use Ubuntu. Unable to continue"
+fi
+if [ "$mysql8" = 'yes' ] && [ "$release" = '12' ]; then
+	check_result 1 "Mysql 8 does not support Bookworm yet for Debian Unable to continue"
 fi
 
 # Checking root permissions
@@ -731,15 +732,9 @@ curl -s https://packages.sury.org/php/apt.gpg | gpg --dearmor | tee /usr/share/k
 
 # Installing sury Apache2 repo
 if [ "$apache" = 'yes' ]; then
-	if [ "$release" != '12' ]; then
-		echo "[ * ] Apache2"
-		echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-		curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
-	else
-		echo "[ * ] Apache2"
-		echo "#deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
-		curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
-	fi
+	echo "[ * ] Apache2"
+	echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/apache2-keyring.gpg] https://packages.sury.org/apache2/ $codename main" > $apt/apache2.list
+	curl -s https://packages.sury.org/apache2/apt.gpg | gpg --dearmor | tee /usr/share/keyrings/apache2-keyring.gpg > /dev/null 2>&1
 fi
 
 # Installing MariaDB repo
@@ -894,6 +889,10 @@ fi
 # Excluding packages
 software=$(echo "$software" | sed -e "s/apache2.2-common//")
 
+if [ $release -lt 12 ]; then
+	software=$(echo "$software" | sed -e "s/spamd/spamassassin/g")
+fi
+
 if [ "$apache" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/apache2 //")
 	software=$(echo "$software" | sed -e "s/apache2-bin//")
@@ -929,6 +928,7 @@ if [ "$clamd" = 'no' ]; then
 fi
 if [ "$spamd" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/spamassassin//")
+	software=$(echo "$software" | sed -e "s/spamd//")
 fi
 if [ "$dovecot" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/dovecot-imapd//")
@@ -1356,12 +1356,12 @@ if [ -n "$(grep ^admin: /etc/group)" ] && [ "$force" = 'yes' ]; then
 fi
 
 # Enable sftp jail
-echo "[ * ] Enable SFTP jail..."
+echo "[ * ] Enabling SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
 # Adding Hestia admin account
-echo "[ * ] Create admin account..."
+echo "[ * ] Creating default admin account..."
 $HESTIA/bin/v-add-user admin $vpass $email "system" "System Administrator"
 check_result $? "can't create admin user"
 $HESTIA/bin/v-change-user-shell admin nologin
@@ -1514,15 +1514,15 @@ fi
 if [ "$phpfpm" = "yes" ]; then
 	if [ "$multiphp" = 'yes' ]; then
 		for v in "${multiphp_v[@]}"; do
-			echo "[ * ] Install PHP $v..."
+			echo "[ * ] Installing PHP $v..."
 			$HESTIA/bin/v-add-web-php "$v" > /dev/null 2>&1
 		done
 	else
-		echo "[ * ] Install  PHP $fpm_v..."
+		echo "[ * ] Installing PHP $fpm_v..."
 		$HESTIA/bin/v-add-web-php "$fpm_v" > /dev/null 2>&1
 	fi
 
-	echo "[ * ] Configuring PHP $fpm_v..."
+	echo "[ * ] Configuring PHP-FPM $fpm_v..."
 	# Create www.conf for webmail and php(*)admin
 	cp -f $HESTIA_INSTALL_DIR/php-fpm/www.conf /etc/php/$fpm_v/fpm/pool.d/www.conf
 	update-rc.d php$fpm_v-fpm defaults > /dev/null 2>&1
@@ -1583,8 +1583,9 @@ if [ "$proftpd" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/proftpd/proftpd.conf /etc/proftpd/
 	cp -f $HESTIA_INSTALL_DIR/proftpd/tls.conf /etc/proftpd/
 
-	if [ "$release" -eq 11 ]; then
-		sed -i 's|IdentLookups                  off|#IdentLookups                  off|g' /etc/proftpd/proftpd.conf
+	# Disable TLS 1.3 support for ProFTPD versions older than v1.3.7a
+	if [ "$release" -eq 10 ]; then
+		sed -i 's/TLSProtocol                             TLSv1.2 TLSv1.3/TLSProtocol                             TLSv1.2/' /etc/proftpd/tls.conf
 	fi
 
 	update-rc.d proftpd defaults > /dev/null 2>&1
@@ -1596,6 +1597,11 @@ if [ "$proftpd" = 'yes' ]; then
 		if [[ "$unit_files" =~ "disabled" ]]; then
 			systemctl enable proftpd
 		fi
+	fi
+
+	if [ "$release" -eq 12 ]; then
+		systemctl disable --now proftpd.socket
+		systemctl enable --now proftpd.service
 	fi
 fi
 
@@ -1842,6 +1848,7 @@ if [ "$exim" = 'yes' ]; then
 	echo $srs > /etc/exim4/srs.conf
 	chmod 640 /etc/exim4/srs.conf
 	chmod 640 /etc/exim4/exim4.conf.template
+	chown root:Debian-exim /etc/exim4/srs.conf
 
 	rm -rf /etc/exim4/domains
 	mkdir -p /etc/exim4/domains
@@ -1939,9 +1946,9 @@ if [ "$spamd" = 'yes' ]; then
 		# Deb 12+ renamed to spamd
 		update-rc.d spamd enable > /dev/null 2>&1
 		systemctl start spamd >> $LOG
-		unit_files="$(systemctl list-unit-files | grep spamassassin)"
+		unit_files="$(systemctl list-unit-files | grep spamd)"
 		if [[ "$unit_files" =~ "disabled" ]]; then
-			systemctl enable spamassassin > /dev/null 2>&1
+			systemctl enable spamd > /dev/null 2>&1
 		fi
 
 	fi
@@ -2004,7 +2011,7 @@ fi
 
 # Min requirements Dovecot + Exim + Mysql
 if ([ "$mysql" == 'yes' ] || [ "$mysql8" == 'yes' ]) && [ "$dovecot" == "yes" ]; then
-	echo "[ * ] Install Roundcube..."
+	echo "[ * ] Installing Roundcube..."
 	$HESTIA/bin/v-add-sys-roundcube
 	write_config_value "WEBMAIL_ALIAS" "webmail"
 else
@@ -2022,7 +2029,7 @@ if [ "$sieve" = 'yes' ]; then
 	RC_INSTALL_DIR="/var/lib/roundcube"
 	RC_CONFIG_DIR="/etc/roundcube"
 
-	echo "[ * ] Install Sieve..."
+	echo "[ * ] Installing Sieve Mail Filter..."
 
 	# dovecot.conf install
 	sed -i "s/namespace/service stats \{\n  unix_listener stats-writer \{\n    group = mail\n    mode = 0660\n    user = dovecot\n  \}\n\}\n\nnamespace/g" /etc/dovecot/dovecot.conf
@@ -2096,7 +2103,7 @@ $HESTIA/bin/v-add-sys-filemanager quiet
 echo "[ * ] Configuring PHP dependencies..."
 $HESTIA/bin/v-add-sys-dependencies quiet
 
-echo "[ * ] Install Rclone"
+echo "[ * ] Installing Rclone..."
 curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
 
 #----------------------------------------------------------#
@@ -2110,12 +2117,12 @@ $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 # Get primary IP
 default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
 # IPv4
-primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 ip="$primary_ipv4"
 local_ip="$primary_ipv4"
 # IPv6
 if [ "$ipv6_support" = 'yes' ]; then
-	primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+	primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 	ipv6="$primary_ipv6"
 	local_ipv6="$primary_ipv6"
 else
@@ -2138,6 +2145,27 @@ else
 fi
 
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
+	if [ -e /etc/rc.local ]; then
+		sed -i '/exit 0/d' /etc/rc.local
+	else
+		touch /etc/rc.local
+	fi
+
+	check_rclocal=$(cat /etc/rc.local | grep "#!")
+	if [ -z "$check_rclocal" ]; then
+		echo "#!/bin/sh" >> /etc/rc.local
+	fi
+
+	# Fix for Proxmox VE containers where hostname is reset to non-FQDN format on reboot
+	check_pve=$(uname -r | grep pve)
+	if [ ! -z "$check_pve" ]; then
+		echo 'hostname=$(hostname --fqdn)' >> /etc/rc.local
+		echo ""$HESTIA/bin/v-change-sys-hostname" "'"$hostname"'"" >> /etc/rc.local
+	fi
+	echo "$HESTIA/bin/v-update-sys-ip" >> /etc/rc.local
+	echo "exit 0" >> /etc/rc.local
+	chmod +x /etc/rc.local
+	systemctl enable rc-local > /dev/null 2>&1
 	$HESTIA/bin/v-change-sys-ip-nat "$ip" "$pub_ipv4" > /dev/null 2>&1
 	ip="$pub_ipv4"
 fi
@@ -2320,9 +2348,8 @@ we hope that you enjoy using it as much as we do!
 Please feel free to contact us at any time if you have any questions,
 or if you encounter any bugs or problems:
 
-Documentation:  https://hestiacp.com/docs/
+Documentation:  https://docs.hestiacp.com/
 Forum:          https://forum.hestiacp.com/
-Discord:        https://discord.gg/nXRUZch
 GitHub:         https://www.github.com/hestiacp/hestiacp
 
 Note: Automatic updates are enabled by default. If you would like to disable them,

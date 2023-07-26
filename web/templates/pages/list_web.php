@@ -17,7 +17,7 @@
 						<?= $label?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-bandwidth" data-sort-as-int="1">
 						<span class="name"><?= _("Bandwidth") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -187,7 +187,7 @@
 					}
 				}
 			?>
-			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
+			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> js-unit"
 				data-sort-ipv4="<?= str_replace('.', '', $data[$key]['IP']) ?>"
 				data-sort-ipv6="<?= str_replace(':', '', $data[$key]['IP6']) ?>"
 				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
@@ -262,6 +262,16 @@
 									>
 										<i class="fas fa-pencil icon-orange"></i>
 										<span class="u-hide-desktop"><?= _("Edit Domain") ?></span>
+									</a>
+								</li>
+								<li class="units-table-row-action" data-key-action="href">
+									<a
+										class="units-table-row-action-link"
+										href="/download/site/?site=<?=$key?>&token=<?= $_SESSION['token'] ?>"
+										title="<?= _("Download Site") ?>"
+									>
+										<i class="fas fa-download icon-orange"></i>
+										<span class="u-hide-desktop"><?= _("Download Site") ?></span>
 									</a>
 								</li>
 							<?php } ?>

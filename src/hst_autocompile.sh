@@ -633,6 +633,14 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	if [ "$BUILD_DEB" = true ]; then
 		BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
 
+		# Check if target directory exist
+		if [ -d $BUILD_DIR_HESTIA_TERMINAL ]; then
+			rm -r $BUILD_DIR_HESTIA_TERMINAL
+		fi
+
+		# Create directory
+		mkdir -p $BUILD_DIR_HESTIA_TERMINAL
+
 		# Change permissions and build the package
 		chown -R root:root $BUILD_DIR_HESTIA_TERMINAL
 		# Get Debian package files

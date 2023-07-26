@@ -6,7 +6,8 @@ After=network.target
 [Service]
 User=root
 Environment=NODE_ENV=production
-ExecStart=/usr/local/hestia/web-terminal/server.js
+Environment=HESTIA=/usr/local/hestia
+ExecStart=$HESTIA/web-terminal/server.js
 ExecStop=/bin/kill -s TERM $MAINPID
 Restart=on-failure
 

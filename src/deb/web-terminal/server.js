@@ -6,7 +6,9 @@ import { spawn } from 'node-pty';
 import { WebSocketServer } from 'ws';
 
 const hostname = execSync('hostname', { silent: true }).toString().trim();
-const { config } = JSON.parse(execSync('v-list-sys-config json', { silent: true }).toString());
+const { config } = JSON.parse(
+	execSync(`${process.env.HESTIA}/bin/v-list-sys-config json`, { silent: true }).toString()
+);
 
 const wss = new WebSocketServer({
 	port: 8085,

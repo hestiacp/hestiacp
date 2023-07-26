@@ -270,7 +270,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		fi
 	else
 		# Set package dependencies for compiling
-		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
+		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl nodejs libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
 
 		echo "Updating system APT repositories..."
 		apt-get -qq update > /dev/null 2>&1
@@ -633,7 +633,20 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	if [ "$BUILD_DEB" = true ]; then
 		BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
 
+		# Check if target directory exist
+		if [ -d $BUILD_DIR_HESTIA_TERMINAL ]; then
+			rm -r $BUILD_DIR_HESTIA_TERMINAL
+		fi
+
+		# Create directory
 		mkdir -p $BUILD_DIR_HESTIA_TERMINAL
+
+		if [ -d "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal" ]; then
+			rm -r "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
+		fi
+
+		mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
+
 		# Change permissions and build the package
 		chown -R root:root $BUILD_DIR_HESTIA_TERMINAL
 		# Get Debian package files
@@ -648,7 +661,6 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 		get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst"
 		chmod +x $BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst
 
-		mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/"
 		# Get custom config
 		get_branch_file 'src/deb/web-terminal/package.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package.json"
 		get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package-lock.json"

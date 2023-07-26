@@ -51,8 +51,8 @@ wss.on('connection', (ws, req) => {
 	// Spawn shell as logged in user
 	const pty = spawn('bash', [], {
 		name: 'xterm-color',
-		uid: uid,
-		gid: gid,
+		uid: parseInt(uid, 10),
+		gid: parseInt(gid, 10),
 		cwd: homedir,
 		env: {
 			SHELL: '/bin/bash',

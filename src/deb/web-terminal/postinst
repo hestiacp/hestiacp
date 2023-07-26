@@ -28,6 +28,8 @@ source /usr/local/hestia/conf/hestia.conf
 source /usr/local/hestia/install/upgrade/upgrade.conf
 
 # Restart hestia-web-terminal service
-if [ -f "/etc/init.d/hestia-web-terminal" ]; then
+if [ -f "/etc/systemd/system/hestia-web-terminal.service" ]; then
+	systemctl daemon-reload > /dev/null 2>&1
+	systemctl enable hestia-web-terminal > /dev/null 2>&1
 	systemctl restart hestia-web-terminal > /dev/null 2>&1
 fi

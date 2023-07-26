@@ -33,13 +33,14 @@ wss.on('connection', (ws, req) => {
 
 	// Check if session is valid
 	const sessionID = req.headers.cookie.split('=')[1];
+	console.log(`New connection from ${remoteIP} (${sessionID})`);
+
 	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${sessionID}`);
 	if (!file) {
-		console.error(`Invalid session ID ${sessionID}`);
+		console.error(`Invalid session ID ${sessionID}, refusing connection`);
 		ws.close();
 		return;
 	}
-	console.log(`New connection from ${remoteIP} (${sessionID})`);
 	const session = file.toString();
 
 	// Get username
@@ -51,14 +52,14 @@ wss.on('connection', (ws, req) => {
 	const passwd = readFileSync('/etc/passwd').toString();
 	const userline = passwd.split('\n').find((line) => line.startsWith(`${username}:`));
 	if (!userline) {
-		console.error(`User ${username} not found`);
+		console.error(`User ${username} not found, refusing connection`);
 		ws.close();
 		return;
 	}
 	const [, , uid, gid, , homedir, shell] = userline.split(':');
 
 	if (shell.endsWith('nologin')) {
-		console.error(`User ${username} has no shell`);
+		console.error(`User ${username} has no shell, refusing connection`);
 		ws.close();
 		return;
 	}

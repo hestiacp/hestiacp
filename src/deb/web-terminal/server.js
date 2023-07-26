@@ -25,6 +25,8 @@ const wss = new WebSocketServer({
 });
 
 wss.on('connection', (ws, req) => {
+	wss.clients.add(ws);
+
 	// Check if session is valid
 	const session_id = req.headers.cookie.split('=')[1];
 	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${session_id}`);
@@ -82,5 +84,6 @@ wss.on('connection', (ws, req) => {
 	ws.on('close', () => {
 		console.log(`Ended connection from ${req.socket.remoteAddress} (${session_id})`);
 		pty.kill();
+		wss.clients.delete(ws);
 	});
 });

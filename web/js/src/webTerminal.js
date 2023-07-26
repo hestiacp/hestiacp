@@ -19,6 +19,7 @@ export default async function initWebTerminal() {
 	});
 	socket.addEventListener('close', (_) => {
 		terminal.reset();
+		terminal.write('Connection closed');
 	});
 }
 

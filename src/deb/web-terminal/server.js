@@ -29,15 +29,17 @@ const wss = new WebSocketServer({
 wss.on('connection', (ws, req) => {
 	wss.clients.add(ws);
 
+	const remoteIP = req.headers['x-real-ip'] || req.socket.remoteAddress;
+
 	// Check if session is valid
-	const session_id = req.headers.cookie.split('=')[1];
-	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${session_id}`);
+	const sessionID = req.headers.cookie.split('=')[1];
+	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${sessionID}`);
 	if (!file) {
-		console.error(`Invalid session ID ${session_id}`);
+		console.error(`Invalid session ID ${sessionID}`);
 		ws.close();
 		return;
 	}
-	console.log(`New connection from ${req.socket.remoteAddress} (${session_id})`);
+	console.log(`New connection from ${remoteIP} (${sessionID})`);
 	const session = file.toString();
 
 	// Get username
@@ -54,6 +56,12 @@ wss.on('connection', (ws, req) => {
 		return;
 	}
 	const [, , uid, gid, , homedir, shell] = userline.split(':');
+
+	if (shell.endsWith('nologin')) {
+		console.error(`User ${username} has no shell`);
+		ws.close();
+		return;
+	}
 
 	// Spawn shell as logged in user
 	const pty = spawn(shell, [], {
@@ -84,7 +92,7 @@ wss.on('connection', (ws, req) => {
 		}
 	});
 	ws.on('close', () => {
-		console.log(`Ended connection from ${req.socket.remoteAddress} (${session_id})`);
+		console.log(`Ended connection from ${remoteIP} (${sessionID})`);
 		pty.kill();
 		wss.clients.delete(ws);
 	});

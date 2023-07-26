@@ -633,6 +633,7 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 	if [ "$BUILD_DEB" = true ]; then
 		BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
 
+		mkdir -p $BUILD_DIR_HESTIA_TERMINAL
 		# Change permissions and build the package
 		chown -R root:root $BUILD_DIR_HESTIA_TERMINAL
 		# Get Debian package files
@@ -647,11 +648,13 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 		get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst"
 		chmod +x $BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst
 
+		mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/"
 		# Get custom config
 		get_branch_file 'src/deb/web-terminal/package.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package.json"
 		get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package-lock.json"
 		get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
 
+		chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
 		# Install node dependencies
 		cd $BUILD_DIR_HESTIA_TERMINAL/usr/local/hestia/web-terminal
 		npm ci --omit=dev

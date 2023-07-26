@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fcce2f37970fb875fb1c1b5602dc522",
+    "content-hash": "bd5fba3223573f480531e48f5e3ce14e",
     "packages": [
         {
             "name": "hestiacp/phpquoteshellarg",
-            "version": "v1.0.1-p3",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hestiacp/phpquoteshellarg.git",
-                "reference": "89cbab9b81b4482127a7bd521ccb6394dd8cda37"
+                "reference": "7fd1a3a648cdc39a3fe2aab78a1a3a0267f92f49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hestiacp/phpquoteshellarg/zipball/89cbab9b81b4482127a7bd521ccb6394dd8cda37",
-                "reference": "89cbab9b81b4482127a7bd521ccb6394dd8cda37",
+                "url": "https://api.github.com/repos/hestiacp/phpquoteshellarg/zipball/7fd1a3a648cdc39a3fe2aab78a1a3a0267f92f49",
+                "reference": "7fd1a3a648cdc39a3fe2aab78a1a3a0267f92f49",
                 "shasum": ""
             },
             "require": {
@@ -40,9 +40,9 @@
                 "quoteshellarg"
             ],
             "support": {
-                "source": "https://github.com/hestiacp/phpquoteshellarg/tree/v1.0.1-p3"
+                "source": "https://github.com/hestiacp/phpquoteshellarg/tree/v1.0.2"
             },
-            "time": "2022-07-17T14:48:05+00:00"
+            "time": "2023-07-23T09:16:27+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -214,5 +214,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -53,7 +53,7 @@
 				if (!empty($key)) {
 					++$i;
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= $key ?>">
@@ -91,7 +91,7 @@
 			foreach ($mail as $key) {
 				if (!empty($key)) {
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check2<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= $key ?>">
@@ -129,7 +129,7 @@
 			foreach ($dns as $key) {
 				if (!empty($key)) {
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check3<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= $key ?>">
@@ -167,7 +167,7 @@
 			foreach ($db as $key) {
 				if (!empty($key)) {
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check4<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= $key ?>">
@@ -202,7 +202,7 @@
 		<!-- List Cron Jobs -->
 		<?php if (!empty($data[$backup]["CRON"])) {
 		if (!empty($key)) { ?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check5<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="check" value="<?= $key ?>">
@@ -240,7 +240,7 @@
 			foreach ($udir as $key) {
 				if (!empty($key)) {
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check6<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="udir[]" value="<?= $key ?>">

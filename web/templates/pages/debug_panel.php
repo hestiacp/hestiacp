@@ -11,7 +11,7 @@ if( !defined("HESTIA_DIR_BIN") ){
 		x-text="open ? '<?= _("Close debug panel") ?>' : '<?= _("Open debug panel") ?>'">
 		<?= _("Open debug panel") ?>
 	</button>
-	<div x-cloak x-show="open" class="debug-panel-content animate__animated animate__fadeIn">
+	<div x-cloak x-show="open" class="debug-panel-content">
 		<?php
 			echo "<h3 class=\"u-mb10\">Server Variables</h3>";
 			foreach ($_SERVER as $key => $val) {

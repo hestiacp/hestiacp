@@ -1571,12 +1571,48 @@ function check_ip_not_banned(){
 	assert_failure $E_EXISTS
 }
 
+@test "MAIL: Add account 2" {
+	run v-add-mail-account $user $domain random "$userpass2"
+	assert_success
+	assert_file_contains  /etc/exim4/domains/$domain/limits "random@$domain"
+	refute_output
+}
+
 @test "MAIL: Add account alias" {
 	run v-add-mail-account-alias $user $domain test hestiacprocks
 	assert_success
 	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacprocks@$domain"
 	refute_output
 }
+
+@test "MAIL: Add account alias 2" {
+	run v-add-mail-account-alias $user $domain test hestiacprocks2
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacprocks2@$domain"
+	refute_output
+}
+
+@test "MAIL: Add account alias 3" {
+	run v-add-mail-account-alias $user $domain test hestiacp
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacp@$domain"
+	refute_output
+}
+
+@test "MAIL: Add account 3" {
+	run v-add-mail-account $user $domain hestia "$userpass2"
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/limits "hestia@$domain"
+	refute_output
+}
+
+@test "MAIL: Add account 4" {
+	run v-add-mail-account $user $domain hestiarocks3 "$userpass2"
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/limits "hestiarocks3@$domain"
+	refute_output
+}
+
 
 @test "MAIL: Add account alias Invalid length" {
 	run v-add-mail-account-alias $user $domain test 'hestiacp-realy-rocks-but-i-want-to-have-feature-xyz-and-i-want-it-now'

@@ -147,16 +147,16 @@ else
 	version=$(multiphp_default_version)
 fi
 # Restarting web server
-$BIN/v-restart-web "$restart" 
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
 $BIN/v-restart-proxy "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
-# Restarting backend server
+# Restarting php interpreter
 $BIN/v-restart-web-backend "$restart" "$version"
-check_result $? "Backend restart failed" > /dev/null
+check_result $? "PHP restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Deleted web domain (Name: $domain)."

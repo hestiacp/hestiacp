@@ -407,11 +407,16 @@ if (!empty($_POST["save"])) {
 
 	// Update debug mode status
 	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_debug_mode"] == "on") {
-			$_POST["v_debug_mode"] = "true";
+		if (!empty($_POST["v_debug_mode"])) {
+			if ($_POST["v_debug_mode"] == "on") {
+				$_POST["v_debug_mode"] = "true";
+			} else {
+				$_POST["v_debug_mode"] = "false";
+			}
 		} else {
 			$_POST["v_debug_mode"] = "false";
 		}
+
 		if ($_POST["v_debug_mode"] != $_SESSION["DEBUG_MODE"]) {
 			exec(
 				HESTIA_CMD .
@@ -689,6 +694,10 @@ if (!empty($_POST["save"])) {
 		} else {
 			$ugrade_send_mail = "";
 		}
+		if (empty($_POST["v_upgrade_send_notification_email"])) {
+			$_POST["v_upgrade_send_notification_email"] = "";
+		}
+
 		if ($_POST["v_upgrade_send_notification_email"] != $ugrade_send_mail) {
 			if ($_POST["v_upgrade_send_notification_email"] == "on") {
 				$_POST["v_upgrade_send_notification_email"] = "true";

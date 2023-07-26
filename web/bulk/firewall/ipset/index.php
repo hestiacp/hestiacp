@@ -15,6 +15,15 @@ if ($_SESSION["userContext"] != "admin") {
 	exit();
 }
 
+if (empty($_POST["setname"])) {
+	header("Location: /list/firewall/ipset/");
+	exit();
+}
+if (empty($_POST["action"])) {
+	header("Location: /list/firewall/ipset/");
+	exit();
+}
+
 $setname = $_POST["setname"];
 $action = $_POST["action"];
 switch ($action) {

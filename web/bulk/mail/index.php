@@ -8,12 +8,25 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_POST);
 
+if (empty($_POST["domain"])) {
+	header("Location: /list/mail");
+	exit();
+}
+if (empty($_POST["action"])) {
+	header("Location: /list/mail");
+	exit();
+}
+
 $domain = $_POST["domain"];
-$account = $_POST["account"];
+if (empty($_POST["account"])) {
+	$account = "";
+} else {
+	$account = $_POST["account"];
+}
 $action = $_POST["action"];
 
 if ($_SESSION["userContext"] === "admin") {
-	if (empty($account)) {
+	if (empty($_POST["account"])) {
 		switch ($action) {
 			case "rebuild":
 				$cmd = "v-rebuild-mail-domain";
@@ -32,7 +45,7 @@ if ($_SESSION["userContext"] === "admin") {
 				exit();
 		}
 	} else {
-		switch ($action) {
+		switch ($_POST["account"]) {
 			case "delete":
 				$cmd = "v-delete-mail-account";
 				break;
@@ -48,7 +61,7 @@ if ($_SESSION["userContext"] === "admin") {
 		}
 	}
 } else {
-	if (empty($account)) {
+	if (empty($_POST["account"])) {
 		switch ($action) {
 			case "delete":
 				$cmd = "v-delete-mail-domain";
@@ -64,7 +77,7 @@ if ($_SESSION["userContext"] === "admin") {
 				exit();
 		}
 	} else {
-		switch ($action) {
+		switch ($_POST["account"]) {
 			case "delete":
 				$cmd = "v-delete-mail-account";
 				break;
@@ -81,12 +94,17 @@ if ($_SESSION["userContext"] === "admin") {
 	}
 }
 
-if (empty($account)) {
-	foreach ($domain as $value) {
-		// Mail
-		$value = quoteshellarg($value);
-		exec(HESTIA_CMD . $cmd . " " . $user . " " . $value, $output, $return_var);
-		$restart = "yes";
+if (empty($_POST["account"])) {
+	if (is_array($domain)) {
+		foreach ($domain as $value) {
+			// Mail
+			$value = quoteshellarg($value);
+			exec(HESTIA_CMD . $cmd . " " . $user . " " . $value, $output, $return_var);
+			$restart = "yes";
+		}
+	} else {
+		header("Location: /list/mail/?domain=" . $domain);
+		exit();
 	}
 } else {
 	foreach ($account as $value) {

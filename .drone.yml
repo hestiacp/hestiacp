@@ -41,9 +41,9 @@ steps:
 trigger:
   event: [pull_request, push]
   ref:
-    - refs/heads/staging/*
-    - refs/heads/beta
     - refs/heads/release
+    - refs/heads/prerelease
+    - refs/heads/servicing
     - refs/heads/main
     - refs/heads/ipv6
     - refs/pull/*/head
@@ -95,9 +95,9 @@ steps:
 trigger:
   event: [pull_request, push]
   ref:
-    - refs/heads/staging/*
-    - refs/heads/beta
     - refs/heads/release
+    - refs/heads/prerelease
+    - refs/heads/servicing
     - refs/heads/main
     - refs/heads/ipv6
     - refs/pull/*/head

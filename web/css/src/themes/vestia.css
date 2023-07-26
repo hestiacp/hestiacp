@@ -30,10 +30,12 @@ h1 {
 }
 
 .top-bar-notifications-panel {
-	border-color: #ccc;
-	border-bottom-left-radius: 2px;
-	border-bottom-right-radius: 2px;
-	box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%);
+	@media (--viewport-small) {
+		box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%);
+		border-color: #ccc;
+		border-bottom-left-radius: 2px;
+		border-bottom-right-radius: 2px;
+	}
 }
 
 .top-bar-notification-item {
@@ -48,7 +50,7 @@ h1 {
 	}
 }
 
-.top-bar-menu-list {
+.top-bar-menu-panel {
 	background-color: #5d5d5d;
 }
 

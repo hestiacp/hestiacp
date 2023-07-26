@@ -2,6 +2,121 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.2] - Service release
+
+- Added more files to default proxy extensions (#3768)
+- Increased width of menu bar dropdowns on mobile (#3765)
+- Increased HSTS max-age to 31536000 (#3762)
+- Add prompt to `v-update-sys-hestia-git` to install NodeJS if not present (#3779)
+- Fixed an issue where `v-update-sys-ip` was not run on boot on Debian systems
+- Fixed an issue where the system hostname would lose its FQDN format on reboot when using Proxmox VE containers
+- Fixed an issue ith `v-generate-ssl-cert` (#3783)
+- Fixed an issue where the port was missing in welcome email (#3784)
+- Fixed an issue with the `is_mail_new` function (#3785)
+- Fixed an issue where the "Save" button would appear before warning was dismissed when attempting to add a domain or database as admin (#3786)
+- Fixed an issue where MySQL 8 could not be installed on Ubuntu (#3788)
+- Fixed an issue with TLS connections when using ProFTPD (#3790)
+- Fixed an issue where vlan or virtual NIC connections would fail the adapter validity check when adding an IP address (#3797)
+- Fixed several PHP 500 errors and warnings in the Control Panel backend (#3789)
+- Fixed an issue with v-change-dns-domain-ip and DNS cluster (#3803)
+- Update Multiple Quick install apps (#3800 and #3801)
+- Updated language translations
+
+## [1.8.1] - Service release
+
+- Fixed Debian 10 not working with IP addresses check
+- Fixed Exim4 update config via patch was unreliable added few safety checks and add notice if failed.
+- Fixed hestia-nginx not loading with custom port
+
+## [1.8.0] - Feature / Major release
+
+### Notes
+
+- Dropped support for Ubuntu 18.04 Bionic due to EOL Please upgrade to 20.04 or 22.04.
+- Custom nginx templates require some changes due to deprecated http2 parameter for the listen directive by Nginx 1.25.1 (#3684, #3704) and 0-RRT Protection introduced in (#3692)
+- Dropped support for Rainloop and replaced by Snappymail (#3590)
+
+### Features
+
+- Added support for Debian 12 (#3661)
+
+- Enhanced and Optimized TLS (#3555 @myrevery)
+- TLS 1.3 0-RTT with replay protection (#3692 @myrevery)
+- Add support for SRS in Exim >= 4.9.5 (#3197 @henri-hulski)
+- White label support and refactor translations (#3441 #3572)
+- Improve user notifications UI (#3709)
+- Continue work on UI improvements (#3700, #3693, #3691, #3685, #3682, #3680, #3672, #3668, #3662, #3659, #3651, #3634, #3629, #3628, #3619, #3615, #3608, #3606, #3602, #3600, #3598)
+- Allow option to enable/disable backup suspended users (#3696 )
+- Feature: v-dump-database (#3644)
+- Allow users to create own document error / skeleton and do not overwrite them with updating (#3622)
+- Consistent overlay styles (#3617)
+- Integrate SnappyMail (#3590)
+- Allow sorting on package name (#3726)
+- Add templates for yourls (#3755 @ediazmurillo)
+
+### Bugfixes
+
+- Fix: DNS cluster expected return code instead of string (#3706)
+- Resolve #3684 Process "http2" directive for NGINX (#3704 @myrevery)
+- Upload hestiacp.pot file directly to Crowdin (#3702)
+- Refactor add ns buttons (#3701)
+- Remove \r chars from VestaCP cron.conf (#3708 @maunklana)
+- Unable to edit password domain smtp relay (#3690)
+- Fix: #3687 Improve check if alias already exists (#3689)
+- Fixed bug in v-update-sys-ip when multiple interfaces / ip addresses are available (#3688)
+- Prevent empty ns1 / ns2 to be used (#3683)
+- Reload web server up on deleting web domain. #3705
+- Fix sed for installing sieve (#3679)
+- Tidy development docs (#3677)
+- Fix typo in v-delete-sys-filemanager (#3678)
+- Improve DNS SEC Public key information display (#3676)
+- Switch from Yarn v3 to npm (#3675)
+- Fix #3643: SOA updating on rebuild command from main server (#3660)
+- Fix: Import CPanel when account email is non existing (#3670 #3667)
+- Fix: Import CPanel when mail domain and or web domain already exists (#3670 #3667)
+- Normalize v-add-user-package input (#3671 #3669)
+- smtputf8_advertise_hosts is not supported by deb10 (#3652)
+- fix Gitea template (#3650 @asessa)
+- Fix issue with redirect to subfolder (#3623)
+- Replace current nginx template with suspended template (#3641)
+- Fix issue with duplicated phpmyadmin-auth blocks in jail.local (#3642)
+- Fix error in rebuild script (#3639)
+- Fix bug in syshealth script
+- Refactor and fixes for handling system IP/Interfaces (#3605 @myrevery)
+- Fix #3496 Fix issue with Sieve and SMTP relay (#3581 @s4069b)
+- Add jail rule for incorrect for phpmyadmin (#3596)
+- Fix #3599 Disable SMTPUTF8 (#3603)
+- Fix content shift on stats row hover (#3614)
+- Fix issue with checkbox is not selected port return "no" (#3616)
+- Encode passwords in emails send (#3566)
+- Add support for PHPmyAdmin SSO support for Mysql 8 (#3539)
+- add alias to wp-cli to the user's .bashrc and fix error handling. (#3569 @aosmichenko)
+- Simplify suspend/unsuspend dialog translations (#3565)
+- Tidy notifications copy (#3561)
+- Predefined Ipset lists not loading #3552 (#3557)
+- Minor UI fixes to server console output (#3556 @myrevery)
+- Fix #3745 Translations not loading (#3746)
+- Make IPset visible when F2B is not installed (#3750)
+- Fix: #3729 Missing robots.txt get redirected to WP (#3739) / Add WordPress Multisite subdir support (#3741 @hudokkow )
+- Fix issue with Global SMTP settings not updating (#3730)
+- Add phpbb Nginx template (#3732 #3731 @xchwarze)
+- Update Nextcloud template (#3725 @Steveorevo)
+- Fix php error when DNS disabled when updating user (#3726)
+- Fix: #3712 Unable to restore domain with custom doc root (#3726)
+- Add BIENNIALLY & TRIENNIALLY stats on TaskMonitor (#3721 @caos30)
+
+### Dependencies
+
+- Update hestia-php to 8.2.7
+- Update hestia-nginx to 1.25.1
+- Update Quick install apps versions
+
+## [1.7.8] - Service releae
+
+### Bugfixes
+
+- Fix reflected XXS in debug panel when debug mode was enabled or the user accessed directly the debug panel template. [CVE-2023-3479](https://nvd.nist.gov/vuln/detail/CVE-2023-3479)
+
 ## [1.7.7] - Service release
 
 ### Bugfixes

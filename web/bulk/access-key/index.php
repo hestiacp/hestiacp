@@ -23,6 +23,15 @@ if (($user_plain == "admin" && $api_status < 1) || ($user_plain != "admin" && $a
 	exit();
 }
 
+if (empty($_POST["key"])) {
+	header("Location: /list/access-key/");
+	exit();
+}
+if (empty($_POST["action"])) {
+	header("Location: /list/access-key/");
+	exit();
+}
+
 $key = $_POST["key"];
 $action = $_POST["action"];
 

@@ -13,7 +13,7 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 
 if (!empty($_GET["key"])) {
 	$v_key = quoteshellarg(trim($_GET["key"]));
-	exec(HESTIA_CMD . "v-delete-user-ssh-key " . $user . " " . $v_key);
+	exec(HESTIA_CMD . "v-delete-user-ssh-key " . $user . " " . $v_key, $output, $return_var);
 	check_return_code($return_var, $output);
 }
 

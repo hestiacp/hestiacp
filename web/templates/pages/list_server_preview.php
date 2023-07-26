@@ -22,7 +22,7 @@
 			<div class="units-table-cell"><?= _("Status") ?></div>
 		</div>
 
-		<div class="units-table-row animate__animated animate__fadeIn js-unit">
+		<div class="units-table-row js-unit">
 			<div class="units-table-cell u-text-center-desktop">
 				<i class="fas fa-gear icon-blue"></i>
 			</div>

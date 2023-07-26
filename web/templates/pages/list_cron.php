@@ -26,7 +26,7 @@
 						<?= $label ?> <i class="fas fa-arrow-down-a-z"></i>
 					</span>
 				</button>
-				<ul class="toolbar-sorting-menu animate__animated animate__fadeIn js-sorting-menu u-hidden">
+				<ul class="toolbar-sorting-menu js-sorting-menu u-hidden">
 					<li data-entity="sort-name">
 						<span class="name <?php if ($_SESSION['userSortOrder'] === 'name') { echo 'active'; } ?>"><?= _("Command") ?> <i class="fas fa-arrow-down-a-z"></i></span><span class="up"><i class="fas fa-arrow-up-a-z"></i></span>
 					</li>
@@ -103,7 +103,7 @@
 				$spnd_confirmation = _('Are you sure you want to suspend this cron job?') ;
 			}
 		?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
 				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
 				data-sort-name="<?= htmlspecialchars($data[$key]['CMD'], ENT_NOQUOTES) ?>">
 				<div class="units-table-cell">

@@ -36,8 +36,14 @@ check_hestia_demo_mode
 # Updating WEB_TERMINAL value
 $BIN/v-change-sys-config-value "WEB_TERMINAL" "true"
 
-# Starting web terminal websocket server
-$BIN/v-start-service "hestia-web-terminal"
+# Check if nodejs and hestia-web-terminal are installed
+if [ ! -f "/usr/bin/node" ] || [ ! -f "$HESTIA/web-terminal/server.js" ]; then
+	apt-get -qq update
+	apt-get -qq install nodejs hestia-web-terminal -y
+else
+	# Starting web terminal websocket server
+	$BIN/v-start-service "hestia-web-terminal"
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

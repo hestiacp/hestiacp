@@ -23,7 +23,8 @@
 		"chart.js": "4.3.0",
 		"check-password-strength": "2.0.7",
 		"nanoid": "4.0.2",
-		"normalize.css": "8.0.1"
+		"normalize.css": "8.0.1",
+		"xterm": "5.2.1"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "0.19.6",
@@ -44,8 +45,7 @@
 		"stylelint": "15.10.2",
 		"stylelint-config-standard": "34.0.0",
 		"vitepress": "1.0.0-beta.6",
-		"vue": "3.3.4",
-		"xterm": "5.2.1"
+		"vue": "3.3.4"
 	},
 	"browserslist": [
 		"defaults"

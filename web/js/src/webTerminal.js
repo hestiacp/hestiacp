@@ -1,5 +1,5 @@
 export default async function initWebTerminal() {
-	const container = document.querySelector('#web-terminal');
+	const container = document.querySelector('.js-web-terminal');
 	if (!container) {
 		return;
 	}

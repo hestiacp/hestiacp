@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="form-container form-container-wide">
-		<div id="web-terminal"></div>
+		<div class="js-web-terminal"></div>
 	</div>
 </div>
 

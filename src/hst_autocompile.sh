@@ -667,9 +667,8 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 		get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
 
 		# Init file
-		mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/init.d
-		get_branch_file 'src/deb/web-terminal/hestia-web-terminal' "$BUILD_DIR_HESTIA_TERMINAL/etc/init.d/hestia-web-terminal"
-		chmod +x "$BUILD_DIR_HESTIA_TERMINAL/etc/init.d/hestia-web-terminal"
+		mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system
+		get_branch_file 'src/deb/web-terminal/hestia-web-terminal.service' "$BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system/hestia-web-terminal.service"
 
 		chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
 		# Install node dependencies

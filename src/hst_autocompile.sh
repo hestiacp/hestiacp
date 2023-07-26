@@ -641,6 +641,12 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 		# Create directory
 		mkdir -p $BUILD_DIR_HESTIA_TERMINAL
 
+		if [ -d "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal" ]; then
+			rm -r "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
+		fi
+
+		mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
+
 		# Change permissions and build the package
 		chown -R root:root $BUILD_DIR_HESTIA_TERMINAL
 		# Get Debian package files

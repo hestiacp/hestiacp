@@ -24,10 +24,7 @@ upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
 
 # Installing NodeJS 18.x repo
-echo "[ * ] Installing NodeJS 18.x and hestia-web-terminal..."
+echo "[ * ] Adding NodeJS 18 repo"
 echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x $codename main" > $apt/nodesource.list
 echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x $codename main" >> $apt/nodesource.list
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
-
-apt-get -qq update
-apt-get -y install hestia-web-terminal nodejs

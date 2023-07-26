@@ -20,9 +20,9 @@ export const projectManagers = [
 		links: [{ icon: 'github', link: 'https://github.com/Lupul' }],
 	},
 	{
-		avatar:
-			'https://cdn.discordapp.com/avatars/737720562482151485/bac8f56f0a909032efaf60c1aa4047e5.webp',
+		avatar: 'https://www.github.com/krismkenn.png',
 		name: 'Kristan Kenney 🇨🇦',
+		links: [{ icon: 'github', link: 'https://github.com/krismkenn' }],
 	},
 ];
 

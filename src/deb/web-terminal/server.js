@@ -29,9 +29,11 @@ wss.on('connection', (ws, req) => {
 	const session_id = req.headers.cookie.split('=')[1];
 	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${session_id}`);
 	if (!file) {
+		console.error(`Invalid session ID ${session_id}`);
 		ws.close();
 		return;
 	}
+	console.log(`New connection from ${req.socket.remoteAddress} (${session_id})`);
 	const session = file.toString();
 
 	// Get username
@@ -43,6 +45,7 @@ wss.on('connection', (ws, req) => {
 	const passwd = readFileSync('/etc/passwd').toString();
 	const userline = passwd.split('\n').find((line) => line.startsWith(`${username}:`));
 	if (!userline) {
+		console.error(`User ${username} not found`);
 		ws.close();
 		return;
 	}
@@ -63,12 +66,21 @@ wss.on('connection', (ws, req) => {
 			HESTIA: process.env.HESTIA,
 		},
 	});
+	console.log(`New pty (${pty.pid}): ${shell} as ${username} (${uid}:${gid}) in ${homedir}`);
 
 	// Send/receive data from websocket/pty
 	pty.on('data', (data) => ws.send(data));
 	ws.on('message', (data) => pty.write(data));
 
 	// Ensure pty is killed when websocket is closed and vice versa
-	pty.on('exit', () => ws.close());
-	ws.on('close', () => pty.kill());
+	pty.on('exit', () => {
+		console.log(`Ended pty (${pty.pid})`);
+		if (ws.OPEN) {
+			ws.close();
+		}
+	});
+	ws.on('close', () => {
+		console.log(`Ended connection from ${req.socket.remoteAddress} (${session_id})`);
+		pty.kill();
+	});
 });

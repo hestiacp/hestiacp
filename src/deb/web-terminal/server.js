@@ -2,15 +2,11 @@
 
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
-import { userInfo } from 'node:os';
-import { seteuid } from 'node:process';
 import { spawn } from 'node-pty';
 import { WebSocketServer } from 'ws';
 
 const hostname = execSync('hostname', { silent: true }).toString().trim();
-const hestia = JSON.parse(execSync('v-list-sys-config json', { silent: true }).toString());
-
-const allowedOrigin = `https://${hostname}:${hestia.config.BACKEND_PORT}`;
+const { config } = JSON.parse(execSync('v-list-sys-config json', { silent: true }).toString());
 
 const wss = new WebSocketServer({
 	port: 8085,
@@ -20,7 +16,7 @@ const wss = new WebSocketServer({
 			return;
 		}
 		const origin = info.origin || info.req.headers.origin;
-		if (origin === allowedOrigin) {
+		if (origin === `https://${hostname}:${config.BACKEND_PORT}`) {
 			cb(true);
 			return;
 		}
@@ -29,48 +25,50 @@ const wss = new WebSocketServer({
 });
 
 wss.on('connection', (ws, req) => {
-	console.log('A new client connected.');
-
-	// Get user info from PHP session
-	const session = readFileSync(
-		`${process.env.HESTIA}/data/sessions/sess_${req.headers.cookie.split('=')[1]}`
-	);
-	if (!session) {
-		console.log('No session found.');
+	// Check if session is valid
+	const session_id = req.headers.cookie.split('=')[1];
+	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${session_id}`);
+	if (!file) {
 		ws.close();
 		return;
 	}
+	const session = file.toString();
 
-	const username = session.toString().split('user|s:')[1].split('"')[1];
-	const impersonating = session.toString().split('look|s:')[1].split('"')[1];
-	const oldUid = process.getuid();
-	seteuid(impersonating.length > 0 ? impersonating : username);
-	const user = userInfo();
-	seteuid(oldUid);
+	// Get username
+	const login = session.split('user|s:')[1].split('"')[1];
+	const impersonating = session.split('look|s:')[1].split('"')[1];
+	const username = impersonating.length > 0 ? impersonating : login;
 
+	// Get user info
+	const passwd = readFileSync('/etc/passwd').toString();
+	const userline = passwd.split('\n').find((line) => line.startsWith(`${username}:`));
+	if (!userline) {
+		ws.close();
+		return;
+	}
+	const [, , uid, gid, , homedir] = userline.split(':');
+
+	// Spawn shell as logged in user
 	const pty = spawn('bash', [], {
 		name: 'xterm-color',
-		uid: user.uid,
-		gid: user.gid,
-		cwd: user.homedir,
+		uid: uid,
+		gid: gid,
+		cwd: homedir,
 		env: {
 			SHELL: '/bin/bash',
 			TERM: 'xterm-color',
-			USER: user.username,
-			HOME: user.homedir,
-			PWD: user.homedir,
+			USER: username,
+			HOME: homedir,
+			PWD: homedir,
 			HESTIA: process.env.HESTIA,
 		},
 	});
 
+	// Send/receive data from websocket/pty
 	pty.on('data', (data) => ws.send(data));
 	ws.on('message', (data) => pty.write(data));
 
+	// Ensure pty is killed when websocket is closed and vice versa
 	pty.on('exit', () => ws.close());
-	ws.on('close', () => {
-		pty.kill();
-		console.log('Client disconnected.');
-	});
+	ws.on('close', () => pty.kill());
 });
-
-console.log('WebSocket server is running on port 8085.');

@@ -85,6 +85,10 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
+# Restarting mail server
+$BIN/v-restart-mail "$restart"
+check_result $? "Mail restart failed" > /dev/null
+
 # Restarting web server
 $BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null

@@ -1,6 +1,6 @@
-@import url("normalize.css");
-@import url("@fortawesome/fontawesome-free/css/fontawesome");
-@import url("@fortawesome/fontawesome-free/css/solid");
+@import url("node:normalize.css/normalize.css");
+@import url("node:@fortawesome/fontawesome-free/css/fontawesome");
+@import url("node:@fortawesome/fontawesome-free/css/solid");
 @import url("../dependencies/animate");
 @import url("../media_queries");
 @import url("../fonts");
@@ -75,7 +75,8 @@
 	border-bottom: 1px solid #fff;
 	position: fixed;
 	display: flex;
-	size: 100% 40px;
+	width: 100%;
+	height: 40px;
 	z-index: 2;
 	top: 0;
 }
@@ -137,26 +138,32 @@
 
 .top-bar-notifications {
 	display: flex;
-	position: relative;
+
+	@media (--viewport-small) {
+		position: relative;
+	}
 }
 
 .top-bar-notifications-panel {
 	background-color: #fff;
 	box-shadow: 0 3px 20px 0 rgb(0 0 0 / 40%);
-	max-height: 500px;
+	max-height: 50vh;
 	overflow-y: auto;
 	position: absolute;
 	top: 100%;
-	right: 0;
-	width: 280px;
+	left: 0;
+	width: 100%;
 	z-index: 1;
-	border-bottom-left-radius: 6px;
-	border-bottom-right-radius: 6px;
-	border: 1px solid #fff;
-	border-top: none;
 
 	@media (--viewport-small) {
-		width: 330px;
+		left: initial;
+		right: 0;
+		width: 350px;
+		max-height: 500px;
+		border-bottom-left-radius: 6px;
+		border-bottom-right-radius: 6px;
+		border: 1px solid #fff;
+		border-top: none;
 	}
 
 	@media (--viewport-medium) {
@@ -180,7 +187,7 @@
 	color: #6f6f6f;
 	font-size: 0.8rem;
 	border-bottom: 1px solid #e9e4e4;
-	padding: 15px;
+	padding: 15px 20px;
 
 	&:last-child {
 		border-bottom: none;
@@ -198,6 +205,11 @@
 
 	& a {
 		font-weight: 600;
+	}
+
+	@media (--viewport-small) {
+		padding-left: 15px;
+		padding-right: 15px;
 	}
 }
 
@@ -279,24 +291,59 @@
 
 .top-bar-menu {
 	display: flex;
-	position: relative;
+
+	@media (--viewport-small) {
+		position: relative;
+	}
 }
 
-.top-bar-menu-list {
+.top-bar-menu-panel {
 	display: block;
 	background-color: #4673b6;
 	box-shadow: 0 3px 20px 0 rgb(0 0 0 / 40%);
 	position: absolute;
 	top: 100%;
-	right: 0;
-	animation-duration: var(--animate-duration);
+	left: 0;
+	width: 100%;
+	z-index: 1;
+
+	@media (--viewport-small) {
+		left: initial;
+		right: 0;
+		width: 350px;
+		border-bottom-left-radius: 6px;
+		border-bottom-right-radius: 6px;
+	}
 
 	@media (--viewport-medium) {
 		display: flex !important; /* NOTE: Overrides inline style set by JS */
+		width: auto;
 		background-color: transparent;
 		box-shadow: none;
 		position: static;
-		animation-duration: 0s;
+	}
+}
+
+.top-bar-menu-list {
+	& .top-bar-menu-link {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	@media (--viewport-small) {
+		& .top-bar-menu-link {
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+	}
+
+	@media (--viewport-medium) {
+		display: flex;
+
+		& .top-bar-menu-link {
+			padding-left: 10px;
+			padding-right: 10px;
+		}
 	}
 }
 
@@ -371,7 +418,6 @@
 
 .top-bar-menu-link-label {
 	margin-left: 6px;
-	white-space: nowrap;
 
 	@media (--viewport-medium) {
 		display: none;
@@ -1509,7 +1555,8 @@
 .password-meter-input {
 	appearance: none;
 	display: block;
-	size: 100%;
+	width: 100%;
+	height: 100%;
 	background: #e7e7e7;
 
 	&[value="1"] {
@@ -1992,7 +2039,8 @@
 		background-size: 22px auto;
 		background-repeat: no-repeat;
 		background-position: center;
-		size: 22px 100%;
+		width: 22px;
+		height: 100%;
 		position: absolute;
 		top: 0;
 		right: 15px;
@@ -2330,7 +2378,8 @@
 
 	& .fas {
 		flex-shrink: 0;
-		size: 32px;
+		width: 32px;
+		height: 32px;
 		font-size: 1.3rem;
 		font-weight: 600;
 		line-height: 30px;

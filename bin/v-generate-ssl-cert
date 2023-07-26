@@ -173,7 +173,7 @@ esac
 # Don't allow non root users view folder
 chmod 660 $workdir
 # Clean up the mess
-echo "rm -rf $workdir" | at "now +15 minute" > /dev/null 2>&1
+echo "rm -rf $workdir" | at -M "now +15 minute" > /dev/null 2>&1
 # Delete tmp dir
 #rm -rf $workdir
 

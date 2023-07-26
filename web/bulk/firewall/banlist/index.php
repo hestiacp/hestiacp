@@ -15,6 +15,15 @@ if ($_SESSION["userContext"] != "admin") {
 	exit();
 }
 
+if (empty($_POST["ipchain"])) {
+	header("Location: /list/firewall/banlist/");
+	exit();
+}
+if (empty($_POST["action"])) {
+	header("Location: /list/firewall/banlist/");
+	exit();
+}
+
 $ipchain = $_POST["ipchain"];
 $action = $_POST["action"];
 

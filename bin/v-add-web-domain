@@ -188,9 +188,22 @@ add_web_config "$WEB_SYSTEM" "$WEB_TEMPLATE.tpl"
 if [ -n "$PROXY_SYSTEM" ]; then
 	PROXY_EXT="$proxy_ext"
 	if [ -z "$proxy_ext" ]; then
-		PROXY_EXT="jpg,jpeg,webp,gif,png,ico,svg,css,zip,tgz,gz,rar,bz2,doc,xls"
-		PROXY_EXT="$PROXY_EXT,exe,pdf,ppt,txt,odt,ods,odp,odf,tar,wav,bmp"
-		PROXY_EXT="$PROXY_EXT,rtf,js,mp3,avi,mpeg,flv,html,htm,woff,woff2,ttf"
+		# Code
+		PROXY_EXT="css,htm,html,js,json,xml"
+		# Image (from https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types)
+		PROXY_EXT="$PROXY_EXT,apng,avif,bmp,cur,gif,ico,jfif,jpg,jpeg,pjp,pjpeg,png,svg,tif,tiff,webp"
+		# Audio from (https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Audio_codecs)
+		PROXY_EXT="$PROXY_EXT,aac,caf,flac,m4a,midi,mp3,ogg,opus,wav"
+		# Video (from https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Video_codecs)
+		PROXY_EXT="$PROXY_EXT,3gp,av1,avi,m4v,mkv,mov,mpg,mpeg,mp4,mp4v,webm"
+		# Fonts
+		PROXY_EXT="$PROXY_EXT,otf,ttf,woff,woff2"
+		# Productivity
+		PROXY_EXT="$PROXY_EXT,doc,docx,odf,odp,ods,odt,pdf,ppt,pptx,rtf,txt,xls,xlsx"
+		# Archive
+		PROXY_EXT="$PROXY_EXT,7z,bz2,gz,rar,tar,tgz,zip"
+		# Binaries
+		PROXY_EXT="$PROXY_EXT,apk,appx,bin,dmg,exe,img,iso,jar,msi"
 	fi
 	if [ -z "$PROXY_TEMPLATE" ]; then
 		PROXY_TEMPLATE='default'

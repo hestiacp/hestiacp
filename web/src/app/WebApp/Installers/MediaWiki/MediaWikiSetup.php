@@ -10,7 +10,7 @@ class MediaWikiSetup extends BaseSetup {
 		"name" => "MediaWiki",
 		"group" => "cms",
 		"enabled" => true,
-		"version" => "1.39.2",
+		"version" => "1.40.0",
 		"thumbnail" => "MediaWiki-2020-logo.svg", //Max size is 300px by 300px
 	];
 
@@ -26,7 +26,7 @@ class MediaWikiSetup extends BaseSetup {
 		"database" => true,
 		"resources" => [
 			"archive" => [
-				"src" => "https://releases.wikimedia.org/mediawiki/1.39/mediawiki-1.39.2.zip",
+				"src" => "https://releases.wikimedia.org/mediawiki/1.40/mediawiki-1.40.0.zip",
 			],
 		],
 		"server" => [

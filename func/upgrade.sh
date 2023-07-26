@@ -131,8 +131,8 @@ upgrade_complete_message() {
 	echo "The Hestia Control Panel development team                                    "
 	echo
 	echo "Web:      https://www.hestiacp.com/                                          "
+	echo "Docs:     https://docs.hestiacp.com/										   "
 	echo "Forum:    https://forum.hestiacp.com/                                        "
-	echo "Discord:  https://discord.gg/nXRUZch                                         "
 	echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
 	echo
 	echo "Help support the Hestia Control Panel project by donating via PayPal:        "

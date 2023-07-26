@@ -11,7 +11,7 @@ class LaravelSetup extends BaseSetup {
 		"name" => "Laravel",
 		"group" => "framework",
 		"enabled" => true,
-		"version" => "9.x",
+		"version" => "10.x",
 		"thumbnail" => "laravel-thumb.png",
 	];
 
@@ -26,7 +26,7 @@ class LaravelSetup extends BaseSetup {
 				"template" => "laravel",
 			],
 			"php" => [
-				"supported" => ["8.0", "8.1", "8.2"],
+				"supported" => ["8.1", "8.2"],
 			],
 		],
 	];

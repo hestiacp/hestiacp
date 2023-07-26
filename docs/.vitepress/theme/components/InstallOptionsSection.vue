@@ -1,5 +1,3 @@
-<script lang="ts"></script>
-
 <template>
 	<form class="InstallForm" id="form">
 		<div class="InstallOptionsSection">

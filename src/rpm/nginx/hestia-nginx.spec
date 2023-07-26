@@ -7,7 +7,7 @@
 
 
 Name:           hestia-nginx
-Version:        1.25.1
+Version:        1.25.1-2
 Release:        1%{dist}
 Summary:        Hestia internal nginx web server
 Group:          System Environment/Base

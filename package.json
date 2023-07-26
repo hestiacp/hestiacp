@@ -20,7 +20,7 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "6.4.0",
 		"alpinejs": "3.12.3",
-		"chart.js": "4.3.0",
+		"chart.js": "4.3.1",
 		"check-password-strength": "2.0.7",
 		"nanoid": "4.0.2",
 		"normalize.css": "8.0.1"
@@ -28,7 +28,7 @@
 	"devDependencies": {
 		"@prettier/plugin-php": "0.19.6",
 		"browserslist": "4.21.9",
-		"esbuild": "0.18.16",
+		"esbuild": "0.18.17",
 		"eslint": "8.45.0",
 		"eslint-config-prettier": "8.8.0",
 		"eslint-plugin-editorconfig": "4.0.3",

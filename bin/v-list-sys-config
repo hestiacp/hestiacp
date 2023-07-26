@@ -56,7 +56,7 @@ json_list() {
 			"FROM_EMAIL": "'$FROM_EMAIL'",
 			"FROM_NAME": "'$FROM_NAME'",
 			"FTP_SYSTEM": "'$FTP_SYSTEM'",
-			"HIDE_DOCS": "'$HIDE_DOCS'"
+			"HIDE_DOCS": "'$HIDE_DOCS'",
 			"IMAP_SYSTEM": "'$IMAP_SYSTEM'",
 			"INACTIVE_SESSION_TIMEOUT": "'$INACTIVE_SESSION_TIMEOUT'",
 			"LANGUAGE": "'$LANGUAGE'",
@@ -113,7 +113,7 @@ json_list() {
 			"WEB_RGROUPS": "'$WEB_RGROUPS'",
 			"WEB_SSL": "'$WEB_SSL'",
 			"WEB_SSL_PORT": "'$WEB_SSL_PORT'",
-			"WEB_SYSTEM": "'$WEB_SYSTEM'",
+			"WEB_SYSTEM": "'$WEB_SYSTEM'"
 		}
 	}'
 }

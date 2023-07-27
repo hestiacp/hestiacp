@@ -38,6 +38,7 @@ $BIN/v-change-sys-config-value "WEB_TERMINAL" "false"
 
 # Stopping web terminal websocket server
 $BIN/v-stop-service "hestia-web-terminal"
+systemctl disable hestia-web-terminal
 
 #----------------------------------------------------------#
 #                       Hestia                             #

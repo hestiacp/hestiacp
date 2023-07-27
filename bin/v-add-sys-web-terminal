@@ -43,6 +43,7 @@ if [ ! -f "/usr/bin/node" ] || [ ! -f "$HESTIA/web-terminal/server.js" ]; then
 else
 	# Starting web terminal websocket server
 	$BIN/v-start-service "hestia-web-terminal"
+	systemctl enable hestia-web-terminal
 fi
 
 #----------------------------------------------------------#

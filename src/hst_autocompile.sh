@@ -728,8 +728,10 @@ if [ "$HESTIA_B" = true ]; then
 
 			mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 
-			# Move needed directories
+			# Build web and move needed directories
 			cd $BUILD_DIR/hestiacp-$branch_dash
+			npm ci
+			npm run build
 			cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
 
 			# Set permissions

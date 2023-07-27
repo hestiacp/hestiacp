@@ -106,8 +106,9 @@ if (isset($_SESSION["user"])) {
 		$return_var,
 	);
 	$data = json_decode(implode("", $output), true);
-	unset($output);
+	unset($output, $return_var);
 	$_SESSION["login_shell"] = $data[$v_username]["SHELL"];
+	unset($data);
 }
 
 if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {

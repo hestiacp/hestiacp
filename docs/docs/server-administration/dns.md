@@ -31,7 +31,7 @@ If you have just set up your slave, check that the host name resolves and that y
 
 A Master server is where DNS zones are created, and a Slave server recieves the zone via the API. Hestia can be configured as Master <-> Master or Master -> Slave. With a Master <-> Master configuration, each Master is also a Slave, so it could be considered as Master/Slave <-> Master/Slave.
 
-On each Slave server, a unique user is required who will be assigned the zones, who must be assigned the "Sync DNS User" or "dns-cluster" role.
+On each Slave server, a unique user is required who will be assigned the zones, and must be assigned the "Sync DNS User" or "dns-cluster" role.
 
 ::: info
 With the release of 1.6.0, we have implemented a new API Access Key authentication system. We strongly suggest using this method instead of the previous username/password system, as it is more secure due to the length of the access key and secret key!
@@ -70,10 +70,9 @@ Preparing your **Slave** server(s):
 2. Enable API access for admins (or all users).
 3. Create an API key under the **admin** user with at least the **sync-dns-cluster** permission.
 4. Create a new DNS sync user as follows:
-    - Username of "dns-user"
     - Has email address (something generic)
     - Has the role `dns-cluster`
-    - Set 'Do not allow user to log in to Control Panel'
+    - You may want to set 'Do not allow user to log in to Control Panel' if they are not a regular user
 5. Edit `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
 6. Edit `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
 
@@ -104,7 +103,7 @@ Preparing your **Master** server:
 2. Run the following command to enable each Slave DNS server, and wait a short while for it to complete zone transfers:
 
    ```bash
-   v-add-remote-dns-host slave.yourhost.com 8083 'accesskey:secretkey' '' 'api' 'user-name'
+   v-add-remote-dns-host <your slave host name> <port number> '<accesskey>:<secretkey>' '' 'api' '<your chosen slave user name>'
    ```
 
    If you still want to use admin and password authentication (not recommended):

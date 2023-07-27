@@ -100,15 +100,15 @@ if (isset($_SESSION["user"])) {
 		$token = bin2hex(random_bytes(16));
 		$_SESSION["token"] = $token;
 	}
-	exec(
-		HESTIA_CMD . "v-list-user " . quoteshellarg($_SESSION["user"]) . " json",
-		$output,
-		$return_var,
-	);
+	$username = $_SESSION["user"];
+	if (isset($_SESSION["look"])) {
+		$username = $_SESSION["look"];
+	}
+	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	unset($output, $return_var);
-	$_SESSION["login_shell"] = $data[$_SESSION["user"]]["SHELL"];
-	unset($data);
+	$_SESSION["login_shell"] = $data[$username]["SHELL"];
+	unset($data, $username);
 }
 
 if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {

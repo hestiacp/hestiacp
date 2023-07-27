@@ -24,6 +24,16 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+# Detect and install NodeJS if necessary
+if [ -z $(which "node") ]; then
+	read -p "NodeJS not found. Install now to proceed? [Y/n] " answer
+	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
+		sudo apt-get install -y nodejs
+	else
+		exit 0
+	fi
+fi
+
 # Define download function
 download_file() {
 	local url=$1

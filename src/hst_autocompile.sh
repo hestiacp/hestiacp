@@ -272,6 +272,14 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		# Set package dependencies for compiling
 		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl nodejs libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
 
+		# Installing NodeJS 20.x repo
+		if [ ! -f $apt/nodesource.list ] && [ ! -z $(which "node") ]; then
+			echo "Adding NodeJS 20.x repo..."
+			echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
+			echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
+			curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
+		fi
+
 		echo "Updating system APT repositories..."
 		apt-get -qq update > /dev/null 2>&1
 		echo "Installing dependencies for compilation..."

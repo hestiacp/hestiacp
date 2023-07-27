@@ -324,6 +324,13 @@ if [ -n "$FIREWALL_EXTENSION" ]; then
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
+# Checking WEB_TERMINAL
+if [ -n "$WEB_TERMINAL" ] && [ "$WEB_TERMINAL" != 'false' ]; then
+	get_srv_state hestia-web-terminal
+	data="$data\nNAME='hestia-web-terminal' SYSTEM='web terminal backend'"
+	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+fi
+
 # Listing data
 case $format in
 	json) json_list ;;

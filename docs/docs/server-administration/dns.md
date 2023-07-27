@@ -27,7 +27,6 @@ If DNSSEC matters to you, then you must use Master -> Slave. However if you woul
 If you have just set up your slave, check that the host name resolves and that you have a valid SSL certificate
 :::
 
-
 ## DNS Cluster setup
 
 A Master server is where DNS zones are created, and a Slave server recieves the zone via the API. Hestia can be configured as Master <-> Master or Master -> Slave. With a Master <-> Master configuration, each Master is also a Slave, so it could be considered as Master/Slave <-> Master/Slave.
@@ -40,7 +39,7 @@ With the release of 1.6.0, we have implemented a new API Access Key authenticati
 If you still want to use the legacy API to authenticate with **admin** username and the password make sure **Enable legacy API** access is set to **yes**.
 :::
 
-### Master <-> Master DNS cluster (Default setup) with the Hestia API 
+### Master <-> Master DNS cluster (Default setup) with the Hestia API
 
 ::: warning
 This method does not support DNSSEC!
@@ -63,7 +62,7 @@ This way you can set up Master -> Slave or Master <-> Master <-> Master cluster.
 
 There is no limitation on how to chain DNS servers.
 
-### Master -> Slave DNS cluster with the Hestia API 
+### Master -> Slave DNS cluster with the Hestia API
 
 Preparing your **Slave** server(s):
 
@@ -71,10 +70,12 @@ Preparing your **Slave** server(s):
 2. Enable API access for admins (or all users).
 3. Create an API key under the **admin** user with at least the **sync-dns-cluster** permission.
 4. Create a new DNS sync user as follows:
--  Username of "dns-user"
--  Has email address (something generic)
--  Has the role `dns-cluster`
+
+- Username of "dns-user"
+- Has email address (something generic)
+- Has the role `dns-cluster`
 - Set 'Do not allow user to log in to Control Panel'
+
 5. Edit `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
 6. Edit `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
 

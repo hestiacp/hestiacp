@@ -77,7 +77,7 @@ update_nginx_resolver() {
 }
 
 start_nginx() {
-	#adapt_nginx_config
+	adapt_nginx_config
 	update_nginx_resolver
 	start-stop-daemon --start --quiet --pidfile $NGINX_PID \
 		--retry 5 --exec $NGINX_DAEMON --oknodo

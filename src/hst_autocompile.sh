@@ -640,15 +640,8 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 
 		# Create directory
 		mkdir -p $BUILD_DIR_HESTIA_TERMINAL
-
-		if [ -d "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal" ]; then
-			rm -r "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
-		fi
-
-		mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
-
-		# Change permissions and build the package
 		chown -R root:root $BUILD_DIR_HESTIA_TERMINAL
+
 		# Get Debian package files
 		[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIA_TERMINAL/DEBIAN
 		mkdir -p $BUILD_DIR_HESTIA_TERMINAL/DEBIAN
@@ -661,19 +654,21 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 		get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst"
 		chmod +x $BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst
 
-		# Get custom config
+		# Get server files
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
+		mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
 		get_branch_file 'src/deb/web-terminal/package.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package.json"
 		get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package-lock.json"
 		get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
-
-		# Init file
-		mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system
-		get_branch_file 'src/deb/web-terminal/hestia-web-terminal.service' "$BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system/hestia-web-terminal.service"
-
 		chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
-		# Install node dependencies
+
 		cd $BUILD_DIR_HESTIA_TERMINAL/usr/local/hestia/web-terminal
 		npm ci --omit=dev
+
+		# Systemd service
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system
+		mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system
+		get_branch_file 'src/deb/web-terminal/hestia-web-terminal.service' "$BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system/hestia-web-terminal.service"
 
 		# Build the package
 		echo Building Web Terminal DEB

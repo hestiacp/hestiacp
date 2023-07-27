@@ -72,7 +72,7 @@ Preparing your **Slave** server(s):
 3. Create an API key under the **admin** user with at least the **sync-dns-cluster** permission.
 4. Create a new DNS sync user as follows:
 -  Username of "dns-user"
--  Has email addres (something generic)
+-  Has email address (something generic)
 -  Has the role `dns-cluster`
 - Set 'Do not allow user to log in to Control Panel'
 5. Edit `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.

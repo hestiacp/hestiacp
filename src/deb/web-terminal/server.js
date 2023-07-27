@@ -6,6 +6,9 @@ import { spawn } from 'node-pty';
 import { WebSocketServer } from 'ws';
 
 const hostname = execSync('hostname', { silent: true }).toString().trim();
+const systemIPs = JSON.parse(
+	execSync(`${process.env.HESTIA}/bin/v-list-sys-config json`, { silent: true }).toString()
+);
 const { config } = JSON.parse(
 	execSync(`${process.env.HESTIA}/bin/v-list-sys-config json`, { silent: true }).toString()
 );
@@ -17,8 +20,20 @@ const wss = new WebSocketServer({
 			cb(false, 401, 'Unauthorized');
 			return;
 		}
+
 		const origin = info.origin || info.req.headers.origin;
-		if (origin === `https://${hostname}:${config.BACKEND_PORT}`) {
+		let matches = origin === `https://${hostname}:${config.BACKEND_PORT}`;
+
+		if (!matches) {
+			for (const ip of Object.keys(systemIPs)) {
+				if (origin === `https://${ip}:${config.BACKEND_PORT}`) {
+					matches = true;
+					break;
+				}
+			}
+		}
+
+		if (matches) {
 			cb(true);
 			return;
 		}

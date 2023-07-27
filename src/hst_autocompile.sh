@@ -682,7 +682,6 @@ if [ "$WEB_TERMINAL_B" = true ]; then
 
 		# clear up the source folder
 		if [ "$KEEPBUILD" != 'true' ]; then
-			rm -r $BUILD_DIR/web-terminal-$(echo $WEB_TERMINAL_V | cut -d"~" -f1)
 			rm -r $BUILD_DIR_HESTIA_TERMINAL
 			if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
 				rm -r $BUILD_DIR/hestiacp-$branch_dash

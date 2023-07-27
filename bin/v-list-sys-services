@@ -96,7 +96,7 @@ get_srv_state() {
 	fi
 
 	# Correctly handle hestia-web-terminal service
-	if [ "$name" == 'web-terminal' ] && [ "$(systemctl show $name.service | grep 'SubState=' | cut -f2 -d=)" == "running" ]; then
+	if [ "$name" == 'hestia-web-terminal' ] && [ "$(systemctl show $name.service | grep 'SubState=' | cut -f2 -d=)" == "running" ]; then
 		pids=$(systemctl show $name.service | grep '^MainPID=' | cut -f2 -d=)
 	fi
 

@@ -70,6 +70,7 @@ help() {
   -i, --iptables          Install Iptables      [yes|no]  default: yes
   -b, --fail2ban          Install Fail2ban      [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
+  -W, --webterminal       Web terminal          [yes|no]  default: no
   -d, --api               Activate API          [yes|no]  default: yes
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
@@ -217,6 +218,7 @@ for arg; do
 		--fail2ban) args="${args}-b " ;;
 		--multiphp) args="${args}-o " ;;
 		--quota) args="${args}-q " ;;
+		--webterminal) args="${args}-W " ;;
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
 		--interactive) args="${args}-y " ;;
@@ -255,6 +257,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
 		i) iptables=$OPTARG ;;    # Iptables
 		b) fail2ban=$OPTARG ;;    # Fail2ban
 		q) quota=$OPTARG ;;       # FS Quota
+		W) webterminal=$OPTARG ;; # Web Terminal
 		r) port=$OPTARG ;;        # Backend Port
 		l) lang=$OPTARG ;;        # Language
 		d) api=$OPTARG ;;         # Activate API
@@ -296,6 +299,7 @@ fi
 set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
+set_default_value 'webterminal' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
 set_default_port '8083'
@@ -956,6 +960,10 @@ if [ "$iptables" = 'no' ]; then
 	software=$(echo "$software" | sed -e "s/ipset//")
 	software=$(echo "$software" | sed -e "s/fail2ban//")
 fi
+if [ "$webterminal" = 'no' ]; then
+	software=$(echo "$software" | sed -e "s/nodejs//")
+	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
+fi
 if [ "$phpfpm" = 'yes' ]; then
 	software=$(echo "$software" | sed -e "s/php$fpm_v-cgi//")
 	software=$(echo "$software" | sed -e "s/libapache2-mpm-itk//")
@@ -965,6 +973,7 @@ fi
 if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-nginx//")
 	software=$(echo "$software" | sed -e "s/hestia-php//")
+	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
 	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
 
@@ -1236,6 +1245,14 @@ if [ "$quota" = 'yes' ]; then
 else
 	write_config_value "DISK_QUOTA" "no"
 fi
+
+# Web terminal
+if [ "$webterminal" = 'yes' ]; then
+	write_config_value "WEB_TERMINAL" "true"
+else
+	write_config_value "WEB_TERMINAL" "false"
+fi
+write_config_value "WEB_TERMINAL_PORT" "8085"
 
 # Backups
 write_config_value "BACKUP_SYSTEM" "local"

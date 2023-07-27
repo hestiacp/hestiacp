@@ -11,7 +11,7 @@ const { config } = JSON.parse(
 );
 
 const wss = new WebSocketServer({
-	port: 8085,
+	port: parseInt(config.WEB_TERMINAL_PORT, 10),
 	verifyClient: async (info, cb) => {
 		if (!info.req.headers.cookie.includes('PHPSESSID')) {
 			cb(false, 401, 'Unauthorized');

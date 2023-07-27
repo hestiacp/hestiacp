@@ -70,12 +70,10 @@ Preparing your **Slave** server(s):
 2. Enable API access for admins (or all users).
 3. Create an API key under the **admin** user with at least the **sync-dns-cluster** permission.
 4. Create a new DNS sync user as follows:
-
-- Username of "dns-user"
-- Has email address (something generic)
-- Has the role `dns-cluster`
-- Set 'Do not allow user to log in to Control Panel'
-
+    - Username of "dns-user"
+    - Has email address (something generic)
+    - Has the role `dns-cluster`
+    - Set 'Do not allow user to log in to Control Panel'
 5. Edit `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
 6. Edit `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
 
@@ -102,6 +100,7 @@ Preparing your **Master** server:
    # Add this line, if adding multiple slaves
    also-notify { second.slave.ip.address; };
    ```
+
 2. Run the following command to enable each Slave DNS server, and wait a short while for it to complete zone transfers:
 
    ```bash
@@ -114,7 +113,7 @@ Preparing your **Master** server:
    v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'user-name'
    ```
 
-6. Check it worked by listing the DNS zones on the **Slave** for the dns-user with the CLI command ``v-list-dns-domains dns-user`` or by connecting to the web iterface as dns-user and reviewing the DNS zones.
+3. Check it worked by listing the DNS zones on the **Slave** for the dns-user with the CLI command ``v-list-dns-domains dns-user`` or by connecting to the web iterface as dns-user and reviewing the DNS zones.
 
 ### Converting an existing DNS cluster to Master -> Slave
 

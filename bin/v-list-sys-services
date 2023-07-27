@@ -95,6 +95,11 @@ get_srv_state() {
 		pids=$(pgrep $name | tr '\n' '|')
 	fi
 
+	# Correctly handle hestia-web-terminal service
+	if [ "$name" == 'hestia-web-terminal' ] && [ "$(systemctl show $name.service | grep 'SubState=' | cut -f2 -d=)" == "running" ]; then
+		pids=$(systemctl show $name.service | grep '^MainPID=' | cut -f2 -d=)
+	fi
+
 	# Prevent from an SSH false positive when there is a TTY or SFTP connection but service is down
 	if [ "$name" == 'ssh' ] && [ "$(systemctl show sshd.service | grep 'SubState=' | cut -f2 -d=)" != "running" ]; then
 		pids=''

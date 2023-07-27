@@ -5,6 +5,7 @@ After=network.target
 
 [Service]
 User=root
+Group=hestia-users
 Environment=NODE_ENV=production
 Environment=HESTIA=/usr/local/hestia
 ExecStart=/usr/local/hestia/web-terminal/server.js

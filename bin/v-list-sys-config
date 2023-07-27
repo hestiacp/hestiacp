@@ -113,7 +113,9 @@ json_list() {
 			"WEB_RGROUPS": "'$WEB_RGROUPS'",
 			"WEB_SSL": "'$WEB_SSL'",
 			"WEB_SSL_PORT": "'$WEB_SSL_PORT'",
-			"WEB_SYSTEM": "'$WEB_SYSTEM'"
+			"WEB_SYSTEM": "'$WEB_SYSTEM'",
+			"WEB_TERMINAL": "'$WEB_TERMINAL'",
+			"WEB_TERMINAL_PORT": "'$WEB_TERMINAL_PORT'"
 		}
 	}'
 }

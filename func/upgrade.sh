@@ -858,7 +858,7 @@ upgrade_restart_services() {
 		fi
 		if [ "$WEB_TERMINAL" = "true" ]; then
 			if [ "$DEBUG_MODE" = "true" ]; then
-				echo "      - Web Terminal"
+				echo "      - hestia-web-terminal"
 			fi
 			$BIN/v-restart-service "hestia-web-terminal"
 		fi

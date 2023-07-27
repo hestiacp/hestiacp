@@ -4,42 +4,56 @@
 With the release of version 1.7.0, we have implemented support for DNSSEC. DNSSEC requires a Master -> Slave setup. IF the existing implementation is a Master <-> Master setup, it is not supported. DNSSEC also requires at least Ubuntu 22.04 or Debian 11!
 :::
 
-## Host your DNS on Hestia
+## Host DNS for your domain on Hestia
 
-[Create a DNS Zone](../user-guide/dns.md#adding-a-dns-zone) with the **child-ns** template, then login to your domain registrar’s panel and change the name servers of the domain. Depending your registrar panel, you could be able to create glue records. You may need to wait for up to 24 hours before the name servers become active.
+Pre-requisites
+
+These steps require that you configure the DNS servers of your domain to use your Hestia servers.
+
+- Note that most domain providers require two or more DNS servers to be configured.
+- The name servers will most likely be required to be registered as 'Glue records'
+- You may need to wait for up to 24 hours before the name servers become available
+
+Preparing the domain and DNS
+
+1. On your Hestia master, [create a DNS Zone](../user-guide/dns.md#adding-a-dns-zone) with the **child-ns** template
+2. On your domain registrar panel, set the name servers of the domain to the Hestia servers
+
+If you are looking at options to minimise DNS-related downtime or for a way to automatically synchronise DNS zones across all your servers, you might consider setting up a DNS cluster.
+
+If DNSSEC matters to you, then you must use Master -> Slave. However if you would like to add zones to either server and have them replicate to the other, then configure as Master <-> Master.
+
+::: tip
+If you have just set up your slave, check that the host name resolves and that you have a valid SSL certificate
+:::
+
 
 ## DNS Cluster setup
 
-::: tip
-Create for each server a unique user and assing them the "Sync DNS User" or "dns-cluster" role!
-:::
+A Master server is where DNS zones are created, and a Slave server recieves the zone via the API. Hestia can be configured as Master <-> Master and Master -> Slave. With a Master <-> Master configuration, each Master is also a Slave, so it could be considered as Master/Slave <-> Master/Slave.
 
-If you are looking at options to minimise DNS-related downtime or for a way to manage DNS across all your servers, you might consider setting up a DNS cluster.
-
-1. Whitelist your master server IP in **Configure Server** -> **Security** -> **Allowed IP addresses for API**, otherwise you will get an error when adding the slave server to the cluster.
-2. Enable API access for admins (or all users).
-3. Create an API key under the **admin** user with at least the **sync-dns-cluster** permission.
+On each Slave server, a unique user is required who will be assigned the zones, who must be assigned the "Sync DNS User" or "dns-cluster" role.
 
 ::: info
-With the release of 1.6.0, we have implemented a new API authentication system. We strongly suggest using this method instead of the old system, as it is more secure due to the length of the access key and secret key!
+With the release of 1.6.0, we have implemented a new API Access Key authentication system. We strongly suggest using this method instead of the previous username/password system, as it is more secure due to the length of the access key and secret key!
 
 If you still want to use the legacy API to authenticate with **admin** username and the password make sure **Enable legacy API** access is set to **yes**.
 :::
 
-### DNS Cluster with the Hestia API (Master <-> Master) "Default setup!"
+### Master <-> Master DNS cluster (Default setup) with the Hestia API 
 
 ::: warning
 This method does not support DNSSEC!
 :::
 
-1. Create a new user on the Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-cluster" or has the role `dns-cluster`
+1. Create a new user on each Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-cluster" or has the role `dns-cluster`
 2. Run the following command to enable the DNS server.
 
 ```bash
 v-add-remote-dns-host slave.yourhost.com 8083 'accesskey:secretkey' '' 'api' 'username'
 ```
 
-Or if you still want to use admin and password authentication
+Or if you still want to use admin and password authentication (not recommended)
 
 ```bash
 v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'username'
@@ -49,11 +63,33 @@ This way you can set up Master -> Slave or Master <-> Master <-> Master cluster.
 
 There is no limitation on how to chain DNS servers.
 
-### DNS Cluster with the Hestia API (Master -> Slave)
+### Master -> Slave DNS cluster with the Hestia API 
 
-1. Create a new user on the Hestia server that will act as a “Slave”. Make sure it uses the username of "dns-user" or has the role `dns-cluster`
-2. In `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
-3. On the master server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
+Preparing your **Slave** server(s):
+
+1. Whitelist your master server IP in **Configure Server** -> **Security** -> **Allowed IP addresses for API**
+2. Enable API access for admins (or all users).
+3. Create an API key under the **admin** user with at least the **sync-dns-cluster** permission.
+4. Create a new DNS sync user as follows:
+-  Username of "dns-user"
+-  Has email addres (something generic)
+-  Has the role `dns-cluster`
+- Set 'Do not allow user to log in to Control Panel'
+5. Edit `/usr/local/hestia/conf/hestia.conf`, change `DNS_CLUSTER_SYSTEM='hestia'` to `DNS_CLUSTER_SYSTEM='hestia-zone'`.
+6. Edit `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
+
+   ```bash
+   # Change this line
+   allow-recursion { 127.0.0.1; ::1; };
+   # To this
+   allow-recursion { 127.0.0.1; ::1; your.master.ip.address; };
+   # Add this line
+   allow-notify{ your.master.ip.address; };
+   ```
+
+Preparing your **Master** server:
+
+1. On the **Master** server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`.
 
    ```bash
    # Change this line
@@ -65,29 +101,19 @@ There is no limitation on how to chain DNS servers.
    # Add this line, if adding multiple slaves
    also-notify { second.slave.ip.address; };
    ```
-
-4. On the slave server, open `/etc/bind/named.conf.options`, do the following changes, then restart bind9 with `systemctl restart bind9`:
-
-   ```bash
-   # Change this line
-   allow-recursion { 127.0.0.1; ::1; };
-   # To this
-   allow-recursion { 127.0.0.1; ::1; your.master.ip.address; };
-   # Add this line
-   allow-notify{ your.master.ip.address; };
-   ```
-
-5. Run the following command to enable the DNS server:
+2. Run the following command to enable each Slave DNS server, and wait a short while for it to complete zone transfers:
 
    ```bash
    v-add-remote-dns-host slave.yourhost.com 8083 'accesskey:secretkey' '' 'api' 'user-name'
    ```
 
-   If you still want to use admin and password authentication:
+   If you still want to use admin and password authentication (not recommended):
 
    ```bash
    v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'user-name'
    ```
+
+6. Check it worked by listing the DNS zones on the ***Slave*** for the dns-user with the CLI command ``v-list-dns-domains dns-user`` or by connecting to the web iterface as dns-user and reviewing the DNS zones.
 
 ### Converting an existing DNS cluster to Master -> Slave
 
@@ -134,7 +160,9 @@ Depending on your registrar, you will either be able to create a new record base
 Removing or disabling the private key in Hestia will make the domain inaccessble.
 :::
 
-## Can I separate DNS accounts by users
+## FAQ & troubleshooting
+
+### Can I separate DNS accounts by users
 
 Yes, you can just supply the user variable at the end of the command.
 
@@ -154,7 +182,7 @@ With the new API system, you can also replace `api_key` with `access_key:secret_
 By default the user `dns-cluster` or user with the role `dns-cluster` are exempted from syncing to other DNS servers!
 :::
 
-## I am not able to add a server as DNS host
+### I am not able to add a server as DNS host
 
 When trying to add a DNS server for a cluster I get the following error:
 
@@ -163,4 +191,4 @@ When trying to add a DNS server for a cluster I get the following error:
 Error: api connection to slave.domain.tld failed
 ```
 
-By default, API access has been disabled for non-local IP addresses. Please add your IP address to the **Allowed IP addresses for API** field in the server settings.
+By default, API access is disabled for non-local IP addresses. On your **Slave**, add ther IP address of your **Master** to the **Allowed IP addresses for API** field in Server settings -> Configure -> Security -> System -> Allowed IP addresses for API and press Save.

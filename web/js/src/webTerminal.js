@@ -6,7 +6,6 @@ export default async function initWebTerminal() {
 
 	const Terminal = await loadXterm();
 	const terminal = new Terminal();
-	terminal.open(container);
 	let Addon = null;
 	if (typeof WebGL2RenderingContext !== 'undefined') {
 		Addon = await loadWebGLAddon();
@@ -14,6 +13,7 @@ export default async function initWebTerminal() {
 		Addon = await loadCanvasAddon();
 	}
 	terminal.loadAddon(new Addon());
+	terminal.open(container);
 
 	const socket = new WebSocket(`wss://${window.location.host}/_shell/`);
 	socket.addEventListener('open', (_) => {

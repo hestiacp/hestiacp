@@ -24,7 +24,9 @@
 		"check-password-strength": "2.0.7",
 		"nanoid": "4.0.2",
 		"normalize.css": "8.0.1",
-		"xterm": "5.2.1"
+		"xterm": "5.2.1",
+		"xterm-addon-canvas": "0.4.0",
+		"xterm-addon-webgl": "0.15.0"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "0.19.6",

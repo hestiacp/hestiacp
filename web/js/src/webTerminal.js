@@ -7,6 +7,13 @@ export default async function initWebTerminal() {
 	const Terminal = await loadXterm();
 	const terminal = new Terminal();
 	terminal.open(container);
+	let Addon = null;
+	if (typeof WebGL2RenderingContext !== 'undefined') {
+		Addon = await loadWebGLAddon();
+	} else {
+		Addon = await loadCanvasAddon();
+	}
+	terminal.loadAddon(new Addon());
 
 	const socket = new WebSocket(`wss://${window.location.host}/_shell/`);
 	socket.addEventListener('open', (_) => {
@@ -32,4 +39,22 @@ async function loadXterm() {
 	const xtermBundlePath = '/js/dist/xterm.min.js';
 	const xtermModule = await import(`${xtermBundlePath}`);
 	return xtermModule.default.Terminal;
+}
+
+/** @returns {Promise<typeof import("xterm-addon-webgl").WebglAddon>} */
+async function loadWebGLAddon() {
+	// NOTE: String expression used to prevent ESBuild from resolving
+	// the import on build (xterm-addon-webgl is a separate bundle)
+	const xtermBundlePath = '/js/dist/xterm-addon-webgl.min.js';
+	const xtermModule = await import(`${xtermBundlePath}`);
+	return xtermModule.default.WebglAddon;
+}
+
+/** @returns {Promise<typeof import("xterm-addon-canvas").CanvasAddon>} */
+async function loadCanvasAddon() {
+	// NOTE: String expression used to prevent ESBuild from resolving
+	// the import on build (xterm-addon-canvas is a separate bundle)
+	const xtermBundlePath = '/js/dist/xterm-addon-canvas.min.js';
+	const xtermModule = await import(`${xtermBundlePath}`);
+	return xtermModule.default.CanvasAddon;
 }

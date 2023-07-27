@@ -94,12 +94,20 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 	exit();
 }
 
-// Generate CSRF Token
+// Generate CSRF Token and set user shell variable
 if (isset($_SESSION["user"])) {
 	if (!isset($_SESSION["token"])) {
 		$token = bin2hex(random_bytes(16));
 		$_SESSION["token"] = $token;
 	}
+	exec(
+		HESTIA_CMD . "v-list-user " . quoteshellarg($_SESSION["user"]) . " json",
+		$output,
+		$return_var,
+	);
+	$data = json_decode(implode("", $output), true);
+	unset($output);
+	$_SESSION["login_shell"] = $data[$v_username]["SHELL"];
 }
 
 if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {

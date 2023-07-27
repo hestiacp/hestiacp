@@ -113,7 +113,7 @@ Preparing your **Master** server:
    v-add-remote-dns-host slave.yourhost.com 8083 'admin' 'strongpassword' 'api' 'user-name'
    ```
 
-6. Check it worked by listing the DNS zones on the ***Slave*** for the dns-user with the CLI command ``v-list-dns-domains dns-user`` or by connecting to the web iterface as dns-user and reviewing the DNS zones.
+6. Check it worked by listing the DNS zones on the **Slave** for the dns-user with the CLI command ``v-list-dns-domains dns-user`` or by connecting to the web iterface as dns-user and reviewing the DNS zones.
 
 ### Converting an existing DNS cluster to Master -> Slave
 

@@ -20,8 +20,12 @@
 upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
-upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
+upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'yes'
 upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+
+# update config sftp jail
+$BIN/v-delete-sys-sftp-jail
+$BIN/v-add-sys-sftp-jail
 
 codename="$(lsb_release -s -c)"
 apt=/etc/apt/sources.list.d

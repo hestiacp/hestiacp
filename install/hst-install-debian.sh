@@ -1282,6 +1282,25 @@ cp -rf $HESTIA_COMMON_DIR/templates/web/skel/document_errors/* /var/www/document
 cp -rf $HESTIA_COMMON_DIR/firewall $HESTIA/data/
 rm -f $HESTIA/data/firewall/ipset/blacklist.sh $HESTIA/data/firewall/ipset/blacklist.ipv6.sh
 
+# Delete rules for services that are not installed
+if [ "$vsftpd" = "no" ] && [ "$proftpd" = "no" ]; then
+	# Remove FTP
+	sed -i "/COMMENT='FTP'/d" rules.conf
+fi
+if [ "$exim" = "no" ]; then
+	# Remove SMTP
+	sed -i "/COMMENT='SMTP'/d" rules.conf
+fi
+if [ "$dovecot" = "no" ]; then
+	# Remove IMAP / Dovecot
+	sed -i "/COMMENT='IMAP'/d" rules.conf
+	sed -i "/COMMENT='POP3'/d" rules.conf
+fi
+if [ "$named" = "no" ]; then
+	# Remove IMAP / Dovecot
+	sed -i "/COMMENT='DNS'/d" rules.conf
+fi
+
 # Installing apis
 cp -rf $HESTIA_COMMON_DIR/api $HESTIA/data/
 

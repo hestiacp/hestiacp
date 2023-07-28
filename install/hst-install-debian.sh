@@ -1285,20 +1285,20 @@ rm -f $HESTIA/data/firewall/ipset/blacklist.sh $HESTIA/data/firewall/ipset/black
 # Delete rules for services that are not installed
 if [ "$vsftpd" = "no" ] && [ "$proftpd" = "no" ]; then
 	# Remove FTP
-	sed -i "/COMMENT='FTP'/d" rules.conf
+	sed -i "/COMMENT='FTP'/d" $HESTIA/data/firewall/rules.conf
 fi
 if [ "$exim" = "no" ]; then
 	# Remove SMTP
-	sed -i "/COMMENT='SMTP'/d" rules.conf
+	sed -i "/COMMENT='SMTP'/d" $HESTIA/data/firewall/rules.conf
 fi
 if [ "$dovecot" = "no" ]; then
 	# Remove IMAP / Dovecot
-	sed -i "/COMMENT='IMAP'/d" rules.conf
-	sed -i "/COMMENT='POP3'/d" rules.conf
+	sed -i "/COMMENT='IMAP'/d" $HESTIA/data/firewall/rules.conf
+	sed -i "/COMMENT='POP3'/d" $HESTIA/data/firewall/rules.conf
 fi
 if [ "$named" = "no" ]; then
 	# Remove IMAP / Dovecot
-	sed -i "/COMMENT='DNS'/d" rules.conf
+	sed -i "/COMMENT='DNS'/d" $HESTIA/data/firewall/rules.conf
 fi
 
 # Installing apis

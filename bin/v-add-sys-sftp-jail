@@ -45,14 +45,14 @@ fi
 
 # Enabling jailed sftp
 if [ -z "$sftp_i" ]; then
-	echo " " >> $config
-	echo "# Hestia SFTP Chroot" >> $config
-	echo "Match User sftp_dummy99" >> $config
-	echo "ChrootDirectory %h" >> $config
-	echo "    X11Forwarding no" >> $config
-	echo "    AllowTCPForwarding no" >> $config
-	echo "    ForceCommand internal-sftp" >> $config
-	restart='yes'
+    echo " " >> $config
+    echo "# Hestia SFTP Chroot" >> $config
+    echo "Match User sftp_dummy99" >> $config
+    echo "    ChrootDirectory /srv/jail/%u" >> $config
+    echo "    X11Forwarding no" >> $config
+    echo "    AllowTCPForwarding no" >> $config
+    echo "    ForceCommand internal-sftp -d /home" >> $config
+    restart='yes'
 fi
 
 # Validating opensshd config
@@ -63,10 +63,10 @@ if [ "$restart" = 'yes' ]; then
 	if [ "$?" -ne 0 ]; then
 		mail_text="OpenSSH can not be restarted. Please check config:
             \n\n$(/usr/sbin/sshd -t)"
-		echo -e "$mail_text" | $SENDMAIL -s "$subj" $email
-	else
-		service ssh restart > /dev/null 2>&1
-	fi
+        echo -e "$mail_text" |$SENDMAIL -s "$subj" $email
+    else
+        service sshd restart >/dev/null 2>&1
+    fi
 fi
 
 # Checking users

@@ -283,12 +283,13 @@ if (!empty($_POST["save"])) {
 		unset($output);
 		$v_hostname = $_POST["v_hostname"];
 	}
-
 	if ($_SESSION["WEB_BACKEND"] == "php-fpm") {
 		// Install/remove php versions
 		if (empty($_SESSION["error_msg"])) {
 			if (!empty($v_php_versions)) {
-				$post_php = $_POST["v_php_versions"];
+				if (!empty($_POST["v_php_versions"])) {
+					$post_php = $_POST["v_php_versions"];
+				}
 				if (empty($post_php)) {
 					$post_php = [];
 				}
@@ -600,15 +601,17 @@ if (!empty($_POST["save"])) {
 
 	// Update webmail url
 	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_webmail_alias"] != $_SESSION["WEBMAIL_ALIAS"]) {
-			exec(
-				HESTIA_CMD . "v-change-sys-webmail " . quoteshellarg($_POST["v_webmail_alias"]),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			$v_mail_adv = "yes";
+		if ($_SESSION["WEBMAIL_SYSTEM"] != "") {
+			if ($_POST["v_webmail_alias"] != $_SESSION["WEBMAIL_ALIAS"]) {
+				exec(
+					HESTIA_CMD . "v-change-sys-webmail " . quoteshellarg($_POST["v_webmail_alias"]),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$v_mail_adv = "yes";
+			}
 		}
 	}
 

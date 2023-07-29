@@ -6,7 +6,13 @@ if ($_REQUEST["ajax"] == 1 && $_REQUEST["token"] == $_SESSION["token"]) {
 	// Data
 	exec(HESTIA_CMD . "v-list-user-notifications $user json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
+
+	function sort_priorty_id($element1, $element2) {
+		return $element2["PRIORITY"] - $element1["PRIORITY"];
+	}
 	$data = array_reverse($data, true);
+	usort($data, "sort_priorty_id");
+
 	foreach ($data as $key => $note) {
 		$note["ID"] = $key;
 		$data[$key] = $note;

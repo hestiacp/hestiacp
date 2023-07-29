@@ -1,17 +1,14 @@
 #!/bin/bash
-# info: delete user sftp jail
-# options: USER
+# info: add system web terminal
+# options: NONE
 #
-# example: v-delete-user-sftp-jail whistler
+# example: v-add-sys-web-terminal
 #
-# This function disables sftp jailed environment for USER
+# This function enables the web terminal.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
-
-# Argument definition
-user=$1
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -25,21 +22,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER'
-is_format_valid 'user'
-user_str=$(grep "^$user:" /etc/passwd)
-if [ -z "$user_str" ]; then
+if [ "$WEB_TERMINAL" = 'true' ]; then
 	exit
-fi
-
-# Get current users and split into array
-ssh_users=$(grep -A1 "^# Hestia SFTP Chroot" /etc/ssh/sshd_config | sed -n 2p | sed 's/Match User //')
-IFS=',' read -r -a users <<< "$ssh_users"
-
-match_string="$ssh_users,"
-# Check if jail exist
-if [[ ! "$match_string" =~ ,$user, ]]; then
-	exit 2
 fi
 
 # Perform verification if read-only mode is enabled
@@ -49,36 +33,25 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Remove user from array
-for sftp_user in "${users[@]}"; do
-	if [ "$sftp_user" != "$user" ]; then
-		new_users+=($sftp_user)
-	fi
-done
+# Updating WEB_TERMINAL value
+$BIN/v-change-sys-config-value "WEB_TERMINAL" "true"
 
-# Write new user list to config
-users=$(
-	IFS=','
-	echo "${new_users[*]// /|}"
-	IFS=$' \t\n'
-)
-sed -i "s/$ssh_users/$users/g" /etc/ssh/sshd_config
-
-# chown permissions back to user:user
-if [ -d "/home/$user" ]; then
-	chown $user:$user /home/$user
+# Check if nodejs and hestia-web-terminal are installed
+if [ ! -f "/usr/bin/node" ] || [ ! -f "$HESTIA/web-terminal/server.js" ]; then
+	apt-get -qq update
+	apt-get -qq install nodejs hestia-web-terminal -y
+else
+	# Starting web terminal websocket server
+	$BIN/v-start-service "hestia-web-terminal"
+	systemctl enable hestia-web-terminal
 fi
 
-# Deleting chroot jail for SFTP and FTP
-delete_chroot_jail $user
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Restart ssh service
-service sshd restart > /dev/null 2>&1
-
 # Logging
+$BIN/v-log-action "system" "Info" "Web Terminal" "Web terminal enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

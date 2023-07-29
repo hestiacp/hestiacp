@@ -46,7 +46,7 @@ jobs:
           node-version: 16
 
       - name: Install Node packages
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Run Prettier
         run: npx prettier --check .
@@ -64,7 +64,7 @@ jobs:
           node-version: 16
 
       - name: Install Node packages
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Run ESLint
         run: npx eslint .
@@ -82,7 +82,7 @@ jobs:
           node-version: 16
 
       - name: Install Node packages
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Run Stylelint
         run: npx stylelint web/css/src/**/*.css

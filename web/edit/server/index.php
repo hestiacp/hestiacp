@@ -513,6 +513,29 @@ if (!empty($_POST["save"])) {
 			}
 		}
 	}
+	// Set Web Terminal support
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			!empty($_POST["v_web_terminal"]) &&
+			$_SESSION["WEB_TERMINAL"] != $_POST["v_web_terminal"]
+		) {
+			if ($_POST["v_web_terminal"] == "true") {
+				exec(HESTIA_CMD . "v-add-sys-web-terminal", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["WEB_TERMINAL"] = "true";
+				}
+			} else {
+				exec(HESTIA_CMD . "v-delete-sys-web-terminal", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["WEB_TERMINAL"] = "false";
+				}
+			}
+		}
+	}
 	// Set phpMyAdmin SSO key
 	if (empty($_SESSION["error_msg"])) {
 		if (!empty($_POST["v_phpmyadmin_key"])) {

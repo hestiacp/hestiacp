@@ -1210,6 +1210,7 @@ is_format_valid() {
 				object) is_object_name_format_valid "$arg" 'object' ;;
 				package) is_object_format_valid "$arg" "$arg_name" ;;
 				password) is_password_format_valid "$arg" ;;
+				priority) is_int_format_valid $arg ;;
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
@@ -1707,4 +1708,48 @@ search_command_arg_position() {
 	done <<< "$command_options"
 
 	echo "$position"
+}
+
+add_chroot_jail() {
+	local user=$1
+
+	mkdir -p /srv/jail/$user
+	chown 0:0 /srv /srv/jail /srv/jail/$user
+	chmod 755 /srv /srv/jail /srv/jail/$user
+	if [ ! -d /srv/jail/$user/home ]; then
+		mkdir -p /srv/jail/$user/home
+		chown 0:0 /srv/jail/$user/home
+		chmod 755 /srv/jail/$user/home
+	fi
+
+	cat > /etc/systemd/system/srv-jail-$user-home.mount << EOF
+[Unit]
+Description=Mount $user's home directory to the jail chroot
+Before=local-fs.target
+
+[Mount]
+What=$(getent passwd $user | cut -d : -f 6)
+Where=/srv/jail/$user/home
+Type=none
+Options=bind
+LazyUnmount=yes
+
+[Install]
+RequiredBy=local-fs.target
+EOF
+
+	systemctl daemon-reload > /dev/null 2>&1
+	systemctl enable srv-jail-$user-home.mount > /dev/null 2>&1
+	systemctl start srv-jail-$user-home.mount > /dev/null 2>&1
+}
+
+delete_chroot_jail() {
+	local user=$1
+
+	systemctl stop srv-jail-$user-home.mount > /dev/null 2>&1
+	systemctl disable srv-jail-$user-home.mount > /dev/null 2>&1
+	rm -f /etc/systemd/system/srv-jail-$user-home.mount
+	systemctl daemon-reload > /dev/null 2>&1
+	rmdir /srv/jail/$user/home > /dev/null 2>&1
+	rmdir /srv/jail/$user > /dev/null 2>&1
 }

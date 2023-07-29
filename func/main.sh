@@ -740,7 +740,7 @@ get_ip_format() {
 	else
 		ret_code=1 # BIT 0: invalid IPV4 format
 	fi
-	if [ $1 != "$ip_clean" ]; then
+	if [ "$1" != "$ip_clean" ]; then
 		ret_string=""
 		ip_cidr="$ip_clean/"
 		ip_cidr=$(echo "${1#$ip_cidr}")

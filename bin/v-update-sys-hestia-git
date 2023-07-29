@@ -20,8 +20,6 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-# define NodeJS version for download (required for building JS/CSS)
-nodejs_ver="20"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -30,7 +28,6 @@ check_hestia_demo_mode
 if [ -z $(which "node") ]; then
 	read -p "NodeJS not found. Install now to proceed? [Y/n] " answer
 	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
-		curl -fsSL "https://deb.nodesource.com/setup_$nodejs_ver.x" | bash - &&\
 		sudo apt-get install -y nodejs
 	else
 		exit 0
@@ -308,7 +305,7 @@ mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 # Move needed directories
 cd $BUILD_DIR/hestiacp-$branch_dash
 
-npm install
+npm ci
 npm run build
 
 cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/

@@ -1,0 +1,16 @@
+[Unit]
+Description=HestiaCP Web Terminal
+Documentation=https://hestiacp.com/docs/
+After=network.target
+
+[Service]
+User=root
+Group=hestia-users
+Environment=NODE_ENV=production
+Environment=HESTIA=/usr/local/hestia
+ExecStart=/usr/local/hestia/web-terminal/server.js
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

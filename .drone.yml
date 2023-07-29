@@ -25,7 +25,7 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package and install
     commands:
-      - npm ci
+      - npm ci --ignore-scripts
       - npm run build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
   - name: Reset Web templates
@@ -83,7 +83,7 @@ steps:
       - git submodule update --init --recursive
   - name: Build Hestia package install
     commands:
-      - npm ci
+      - npm ci --ignore-scripts
       - npm run build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
   - name: Reset Web templates
@@ -131,7 +131,7 @@ steps:
   - name: Build JS/CSS
     image: node:current-slim
     commands:
-      - npm ci
+      - npm ci --ignore-scripts
       - npm run build
   - name: Build
     image: debian:bullseye

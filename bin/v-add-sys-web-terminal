@@ -1,0 +1,57 @@
+#!/bin/bash
+# info: add system web terminal
+# options: NONE
+#
+# example: v-add-sys-web-terminal
+#
+# This function enables the web terminal.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+if [ "$WEB_TERMINAL" = 'true' ]; then
+	exit
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Updating WEB_TERMINAL value
+$BIN/v-change-sys-config-value "WEB_TERMINAL" "true"
+
+# Check if nodejs and hestia-web-terminal are installed
+if [ ! -f "/usr/bin/node" ] || [ ! -f "$HESTIA/web-terminal/server.js" ]; then
+	apt-get -qq update
+	apt-get -qq install nodejs hestia-web-terminal -y
+else
+	# Starting web terminal websocket server
+	$BIN/v-start-service "hestia-web-terminal"
+	systemctl enable hestia-web-terminal
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Info" "Web Terminal" "Web terminal enabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

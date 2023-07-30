@@ -178,8 +178,6 @@ $user_domains = json_decode(implode("", $output), true);
 $user_domains = array_keys($user_domains);
 unset($output);
 
-$accept = $_GET["accept"] ?? "";
-
 $v_domain = $_POST["domain"] ?? "";
 
 // Render page

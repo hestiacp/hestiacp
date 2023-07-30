@@ -373,7 +373,6 @@ if (empty($_GET["domain"])) {
 		$v_ns8 = str_replace("'", "", $nameservers[7]);
 		unset($output);
 	}
-	$accept = $_GET["accept"] ?? "";
 
 	render_page($user, $TAB, "add_dns");
 } else {
@@ -397,7 +396,7 @@ if (empty($_GET["domain"])) {
 	if (empty($v_dnssec)) {
 		$v_dnssec = "";
 	}
-	$accept = $_GET["accept"] ?? "";
+
 	render_page($user, $TAB, "add_dns_rec");
 }
 

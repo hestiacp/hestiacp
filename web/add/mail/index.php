@@ -534,9 +534,6 @@ if (empty($_GET["domain"])) {
 		$v_webmail = "roundcube";
 	}
 
-	if (empty($_GET["accept"])) {
-		$_GET["accept"] = false;
-	}
 	if (empty($v_domain)) {
 		$v_domain = "";
 	}
@@ -556,7 +553,6 @@ if (empty($_GET["domain"])) {
 		$v_smtp_relay_port = "";
 	}
 
-	$accept = $_GET["accept"] ?? "";
 	render_page($user, $TAB, "add_mail");
 } else {
 	// Display body for mail account

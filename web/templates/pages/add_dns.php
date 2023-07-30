@@ -33,18 +33,10 @@
 		<div class="form-container">
 			<h1 class="u-mb20"><?= _("Add DNS Zone") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
-				<div class="alert alert-danger" role="alert">
-					<i class="fas fa-exclamation"></i>
-					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a dns domain')), '</a>', '<a href="/add/user/">'); ?></p>
-				</div>
-			<?php } ?>
-			<?php if ($user_plain == "admin" && empty($accept)) { ?>
-				<div class="u-side-by-side u-mt20">
-					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
-					<a href="/add/dns/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
-				</div>
-			<?php } ?>
+			<div class="u-side-by-side u-mt20">
+				<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
+				<a href="/add/dns/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
+			</div>
 			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<div class="u-mb10">
 					<label for="v_domain" class="form-label"><?= _("Domain") ?></label>

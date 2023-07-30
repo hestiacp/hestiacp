@@ -239,8 +239,6 @@ unset($output);
 unset($db_hosts_tmp1);
 unset($db_hosts_tmp2);
 
-$accept = $_GET["accept"] ?? "";
-
 render_page($user, $TAB, "add_db");
 
 // Flush session messages

@@ -14,3 +14,8 @@ ID='13' RECORD='webmail' TYPE='CNAME' PRIORITY='' VALUE='mail.%domain%.' SUSPEND
 ID='14' RECORD='@' TYPE='MX' PRIORITY='0' VALUE='mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='15' RECORD='@' TYPE='TXT' PRIORITY='' VALUE='"v=spf1 a mx ip4:%ip% -all"' SUSPENDED='no' TIME='%time%' DATE='%date%'
 ID='16' RECORD='_dmarc' TYPE='TXT' PRIORITY='' VALUE='"v=DMARC1; p=quarantine; pct=100"' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='17' RECORD='_submission._tcp' TYPE='SRV' PRIORITY='0 1' VALUE='587 mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='18' RECORD='_imap._tcp' TYPE='SRV' PRIORITY='0 1' VALUE='143 mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='19' RECORD='_imaps._tcp' TYPE='SRV' PRIORITY='0 1' VALUE='993 mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='20' RECORD='_pop3._tcp' TYPE='SRV' PRIORITY='0 1' VALUE='110 mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'
+ID='21' RECORD='_pop3s._tcp' TYPE='SRV' PRIORITY='0 1' VALUE='995 mail.%domain%.' SUSPENDED='no' TIME='%time%' DATE='%date%'

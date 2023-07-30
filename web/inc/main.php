@@ -108,6 +108,7 @@ if (isset($_SESSION["user"])) {
 	$data = json_decode(implode("", $output), true);
 	unset($output, $return_var);
 	$_SESSION["login_shell"] = $data[$username]["SHELL"];
+	$_SESSION["role"] = $data[$username]["ROLE"];
 	unset($data, $username);
 }
 

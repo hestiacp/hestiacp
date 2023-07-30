@@ -46,6 +46,7 @@ if [ -z "$(grep ^hestiaweb: /etc/passwd)" ]; then
 	/usr/sbin/useradd "hestiaweb" -c "$email" --no-create-home
 	# do not allow login into hestiaweb user
 	echo hestiaweb:$random_password | sudo chpasswd -e
+	cp $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
 fi
 
 # Check if cronjobs have been migrated
@@ -55,6 +56,7 @@ if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
 	while read line; do
 		parse_object_kv_list "$line"
 		if [ -n "$(echo "$CMD" | grep ^sudo)" ]; then
+			echo $CMD >> /var/spool/cron/crontabs/hestiaweb
 			$BIN/v-delete-cron-job admin "$JOB"
 		fi
 	done < $HESTIA/data/users/admin/cron.conf

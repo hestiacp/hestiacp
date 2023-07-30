@@ -621,19 +621,22 @@ if (!empty($_POST["save"])) {
 			$v_db_adv = "yes";
 		}
 	}
-
-	// Update webmail url
-	if (empty($_SESSION["error_msg"])) {
-		if ($_SESSION["WEBMAIL_SYSTEM"] != "") {
-			if ($_POST["v_webmail_alias"] != $_SESSION["WEBMAIL_ALIAS"]) {
-				exec(
-					HESTIA_CMD . "v-change-sys-webmail " . quoteshellarg($_POST["v_webmail_alias"]),
-					$output,
-					$return_var,
-				);
-				check_return_code($return_var, $output);
-				unset($output);
-				$v_mail_adv = "yes";
+	if (!empty($_SESSION["MAIL_SYSTEM"])) {
+		// Update webmail url
+		if (empty($_SESSION["error_msg"])) {
+			if ($_SESSION["WEBMAIL_SYSTEM"] != "") {
+				if ($_POST["v_webmail_alias"] != $_SESSION["WEBMAIL_ALIAS"]) {
+					exec(
+						HESTIA_CMD .
+							"v-change-sys-webmail " .
+							quoteshellarg($_POST["v_webmail_alias"]),
+						$output,
+						$return_var,
+					);
+					check_return_code($return_var, $output);
+					unset($output);
+					$v_mail_adv = "yes";
+				}
 			}
 		}
 	}

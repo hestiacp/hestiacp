@@ -56,7 +56,9 @@ if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
 	while read line; do
 		parse_object_kv_list "$line"
 		if [ -n "$(echo "$CMD" | grep ^sudo)" ]; then
-			echo $CMD >> /var/spool/cron/crontabs/hestiaweb
+			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
+				| sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
+					/var/spool/cron/crontabs/hestiaweb >> $crontab
 			$BIN/v-delete-cron-job admin "$JOB"
 		fi
 	done < $HESTIA/data/users/admin/cron.conf

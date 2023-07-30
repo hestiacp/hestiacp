@@ -33,10 +33,18 @@
 		<div class="form-container">
 			<h1 class="u-mb20"><?= _("Add Database") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
-			<div class="u-side-by-side u-mt20">
-				<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
-				<a href="/add/db/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
+			<?php if ($user_plain == "admin" && $accept !== "true") { ?>
+				<div class="alert alert-danger" role="alert">
+					<i class="fas fa-exclamation"></i>
+					<p><?= htmlify_trans(sprintf(_("It is strongly advised to {create a standard user account} before adding %s to the server due to the increased privileges the admin account possesses and potential security risks."), _('a database')), '</a>', '<a href="/add/user/">'); ?></p>
 				</div>
+			<?php } ?>
+			<?php if ($user_plain == "admin" && empty($accept)) { ?>
+				<div class="u-side-by-side u-mt20">
+					<a href="/add/user/" class="button u-width-full u-mr10"><?= _("Add User") ?></a>
+					<a href="/add/db/?accept=true" class="button button-danger u-width-full u-ml10"><?= _("Continue") ?></a>
+				</div>
+			<?php } ?>
 			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<p class="hint u-mb20">
 					<?= sprintf(_("Prefix %s will be automatically added to database name and database user"), "<span class=\"u-text-bold\">" . $user_plain . "_</span>") ?>

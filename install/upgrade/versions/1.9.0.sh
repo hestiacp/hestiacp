@@ -58,7 +58,7 @@ if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
 		if [ -n "$(echo "$CMD" | grep ^sudo)" ]; then
 			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
 				| sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
-					/var/spool/cron/crontabs/hestiaweb >> $crontab
+					>> /var/spool/cron/crontabs/hestiaweb
 			$BIN/v-delete-cron-job admin "$JOB"
 		fi
 	done < $HESTIA/data/users/admin/cron.conf

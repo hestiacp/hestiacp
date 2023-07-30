@@ -47,8 +47,9 @@ if [ -z "$(grep ^hestiaweb: /etc/passwd)" ]; then
 	# do not allow login into hestiaweb user
 	echo hestiaweb:$random_password | sudo chpasswd -e
 	cp $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
+	# Keep enabled for now
 	# Remove sudo permissions admin user
-	rm /etc/sudoers.d/admin/
+	#rm /etc/sudoers.d/admin/
 fi
 
 # Check if cronjobs have been migrated
@@ -67,3 +68,6 @@ if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
 fi
 
 chown hestiaweb:hestiaweb /usr/local/hestia/data/sessions
+
+$BIN/v-add-user-notification 'admin' 'Hestia securirty has been upgraded' 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'
+add_upgrade_message 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'

@@ -1210,6 +1210,7 @@ is_format_valid() {
 				object) is_object_name_format_valid "$arg" 'object' ;;
 				package) is_object_format_valid "$arg" "$arg_name" ;;
 				password) is_password_format_valid "$arg" ;;
+				priority) is_int_format_valid $arg ;;
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;

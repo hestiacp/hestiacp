@@ -13,6 +13,7 @@ user=$1
 topic=$(echo $2 | sed "s/'/%quote%/g")
 notice=$(echo $3 | sed "s/'/%quote%/g")
 type=$4
+priority=$5
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -26,9 +27,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER TOPIC NOTICE [TYPE]'
-is_format_valid 'user' 'topic' 'notice'
+check_args '2' "$#" 'USER TOPIC NOTICE TYPE [PRIORITY]'
+is_format_valid 'user' 'topic' 'notice' 'priority'
 is_object_valid 'user' 'USER' "$user"
+is_common_format_valid "$type"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -56,7 +58,7 @@ time=$(echo "$time_n_date" | cut -f 1 -d \ )
 date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Concatenating string
-str="NID='$nid' TOPIC='$topic' NOTICE='$notice' TYPE='$type'"
+str="NID='$nid' TOPIC='$topic' NOTICE='$notice' TYPE='$type' PRIORITY='$priority'"
 str="$str ACK='no' TIME='$time' DATE='$date'"
 
 # Adding to config

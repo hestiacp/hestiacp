@@ -37,3 +37,28 @@ if [ ! -f $apt/nodesource.list ] && [ ! -z $(which "node") ]; then
 	echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
 fi
+
+# Check if hestiaweb exists
+if [ -z "$(grep ^$username: /etc/passwd)" ]; then
+	# Generate a random password
+	generate_password=$(gen_pass '32')
+	# Create the new hestiaweb user
+	/usr/sbin/useradd "hestiaweb" -c "$email" --no-create-home
+	# do not allow login into hestiaweb user
+	echo hestiaweb:$random_password | sudo chpasswd -e
+fi
+
+# Check if cronjobs have been migrated
+if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
+	echo "MAILTO=\"\"" > /var/spool/cron/crontabs/hestiaweb
+	echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
+	sudo /var/spool/cron/crontabs/admin >> /var/spool/cron/crontabs/hestiaweb
+	while read line; do
+		parse_object_kv_list "$line"
+		if [ -n "$(echo "$CMD" | grep ^sudo)" ]; then
+			$BIN/v-delete-cron-job admin "$ID"
+		fi
+	done < $HESTIA/data/users/admin/cron.conf
+fi
+
+chown hestiaweb:hestiaweb /usr/local/hestia/data/sessions

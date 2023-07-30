@@ -2192,7 +2192,7 @@ export SCHEDULED_RESTART="yes"
 
 min=$(gen_pass '012345' '2')
 hour=$(gen_pass '1234567' '1')
-echo "MAILTO=$email" > /var/spool/cron/crontabs/hestiaweb
+echo "MAILTO=\"\"" > /var/spool/cron/crontabs/hestiaweb
 echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
 echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart" >> /var/spool/cron/crontabs/hestiaweb
 echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily" >> /var/spool/cron/crontabs/hestiaweb

@@ -39,7 +39,7 @@ if [ ! -f $apt/nodesource.list ] && [ ! -z $(which "node") ]; then
 fi
 
 # Check if hestiaweb exists
-if [ -z "$(grep ^$username: /etc/passwd)" ]; then
+if [ -z "$(grep ^hestiaweb: /etc/passwd)" ]; then
 	# Generate a random password
 	random_password=$(generate_password '32')
 	# Create the new hestiaweb user

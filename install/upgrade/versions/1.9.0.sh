@@ -47,6 +47,8 @@ if [ -z "$(grep ^hestiaweb: /etc/passwd)" ]; then
 	# do not allow login into hestiaweb user
 	echo hestiaweb:$random_password | sudo chpasswd -e
 	cp $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
+	# Remove sudo permissions admin user
+	rm /etc/sudoers.d/admin/
 fi
 
 # Check if cronjobs have been migrated

@@ -42,6 +42,8 @@ source $HESTIA/func/main.sh
 source $HESTIA/func/ip.sh
 # shellcheck source=/usr/local/hestia/func/domain.sh
 source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source "$HESTIA/func/syshealth.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -193,6 +195,9 @@ if [ -n "$PROXY_SYSTEM" ]; then
 	fi
 fi
 
+# Adapt Port Listing in HESTIA NGINX Backend
+syshealth_adapt_hestia_nginx_listen_ports
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
@@ -225,6 +230,12 @@ fi
 # Restarting firewall
 if [ -n "$FIREWALL_SYSTEM" ]; then
 	$BIN/v-update-firewall
+fi
+
+# Restarting hestia service if nginx backend config was changed
+if [ "$NGINX_BCONF_CHANGED" = "yes" -a -f "/etc/init.d/hestia" ]; then
+	systemctl restart hestia > /dev/null 2>&1
+	check_result $? "Hestia backend restart failed" > /dev/null
 fi
 
 # Logging

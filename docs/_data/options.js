@@ -37,6 +37,15 @@ export const options = [
 		textField: true,
 	},
 	{
+		name: ' --username',
+		id: 'username',
+		param: '--username',
+		desc: 'Set admin username',
+		selected: false,
+		text: '',
+		textField: true,
+	},
+	{
 		name: ' --password',
 		id: 'password',
 		param: '--password',
@@ -158,6 +167,13 @@ export const options = [
 		param: '--fail2ban',
 		desc: 'Provides Bruteforce protection for SSH, Email, FTP, database.',
 		selected: true,
+	},
+	{
+		name: ' --webterminal',
+		id: 'webterminal',
+		param: '--webterminal',
+		desc: 'Provide terminal / shell to the users via Hestia control panel',
+		selected: false,
 	},
 	{
 		name: ' --quota',

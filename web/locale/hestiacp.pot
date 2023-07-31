@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-06 11:24+0000\n"
+"POT-Creation-Date: 2023-07-30 05:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,31 +23,31 @@ msgstr ""
 msgid "Stop \"%s\" failed"
 msgstr ""
 
-#: ../../web/inc/main.php:166 ../../web/inc/main.php:175
-#: ../../web/generate/ssl/index.php:121
+#: ../../web/inc/main.php:169 ../../web/inc/main.php:178
+#: ../../web/generate/ssl/index.php:123
 #, php-format
 msgid "Error code: %s"
 msgstr ""
 
-#: ../../web/inc/main.php:253 ../../web/inc/main.php:264
+#: ../../web/inc/main.php:256 ../../web/inc/main.php:267
 msgid "You are logged out, please log in again."
 msgstr ""
 
-#: ../../web/inc/main.php:326
+#: ../../web/inc/main.php:329
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../web/inc/main.php:329
+#: ../../web/inc/main.php:332
 #, php-format
 msgid "%d hour"
 msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../web/inc/main.php:333
+#: ../../web/inc/main.php:336
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
@@ -112,7 +112,7 @@ msgstr ""
 
 #: ../../web/download/backup/index.php:24 ../../web/unsuspend/mail/index.php:18
 #: ../../web/unsuspend/mail/index.php:45 ../../web/unsuspend/dns/index.php:18
-#: ../../web/unsuspend/dns/index.php:44 ../../web/bulk/restore/index.php:69
+#: ../../web/unsuspend/dns/index.php:44 ../../web/bulk/restore/index.php:78
 #: ../../web/schedule/restore/index.php:70
 #: ../../web/schedule/backup/index.php:17
 msgid "Error: Hestia did not return any output."
@@ -121,10 +121,10 @@ msgstr ""
 #: ../../web/edit/cron/index.php:89 ../../web/edit/db/index.php:100
 #: ../../web/edit/mail/index.php:736 ../../web/edit/mail/index.php:1166
 #: ../../web/edit/dns/index.php:234 ../../web/edit/dns/index.php:325
-#: ../../web/edit/web/index.php:1600 ../../web/edit/ip/index.php:97
-#: ../../web/edit/user/index.php:544
-#: ../../web/edit/backup/exclusions/index.php:132
-#: ../../web/edit/firewall/index.php:134 ../../web/edit/package/index.php:323
+#: ../../web/edit/web/index.php:1603 ../../web/edit/ip/index.php:97
+#: ../../web/edit/user/index.php:558
+#: ../../web/edit/backup/exclusions/index.php:124
+#: ../../web/edit/firewall/index.php:134 ../../web/edit/package/index.php:327
 #: ../../web/edit/server/spamassassin/index.php:44
 #: ../../web/edit/server/nginx/index.php:44
 #: ../../web/edit/server/clamav-daemon/index.php:44
@@ -135,7 +135,7 @@ msgstr ""
 #: ../../web/edit/server/spamd/index.php:44
 #: ../../web/edit/server/bind9/index.php:61
 #: ../../web/edit/server/exim4/index.php:44
-#: ../../web/edit/server/index.php:1714 ../../web/edit/server/index.php:1718
+#: ../../web/edit/server/index.php:1726 ../../web/edit/server/index.php:1730
 #: ../../web/edit/server/php/index.php:44
 #: ../../web/edit/server/ssh/index.php:44
 #: ../../web/edit/server/mysqld/index.php:44
@@ -151,15 +151,15 @@ msgstr ""
 msgid "Changes have been saved."
 msgstr ""
 
-#: ../../web/edit/db/index.php:74 ../../web/edit/mail/index.php:775
+#: ../../web/edit/db/index.php:74 ../../web/edit/mail/index.php:774
 #: ../../web/edit/user/index.php:159 ../../web/add/db/index.php:55
 #: ../../web/add/mail/index.php:246 ../../web/add/user/index.php:56
 msgid "Password does not match the minimum requirements."
 msgstr ""
 
-#: ../../web/edit/mail/index.php:598 ../../web/edit/web/index.php:860
-#: ../../web/edit/web/index.php:1081 ../../web/edit/web/index.php:1121
-#: ../../web/edit/web/index.php:1183 ../../web/edit/web/index.php:1337
+#: ../../web/edit/mail/index.php:598 ../../web/edit/web/index.php:863
+#: ../../web/edit/web/index.php:1084 ../../web/edit/web/index.php:1124
+#: ../../web/edit/web/index.php:1186 ../../web/edit/web/index.php:1340
 #: ../../web/edit/firewall/index.php:89 ../../web/edit/package/index.php:213
 #: ../../web/add/cron/index.php:42 ../../web/add/db/index.php:42
 #: ../../web/add/mail/index.php:49 ../../web/add/mail/index.php:233
@@ -169,14 +169,14 @@ msgstr ""
 #: ../../web/add/firewall/ipset/index.php:43
 #: ../../web/add/firewall/index.php:61
 #: ../../web/add/firewall/banlist/index.php:36
-#: ../../web/add/package/index.php:103 ../../web/add/key/index.php:28
-#: ../../web/generate/ssl/index.php:67
+#: ../../web/add/package/index.php:103 ../../web/add/key/index.php:27
+#: ../../web/generate/ssl/index.php:69
 #, php-format
 msgid "Field \"%s\" can not be blank."
 msgstr ""
 
-#: ../../web/edit/mail/index.php:748 ../../web/edit/web/index.php:1170
-#: ../../web/edit/user/index.php:402 ../../web/add/db/index.php:48
+#: ../../web/edit/mail/index.php:748 ../../web/edit/web/index.php:1173
+#: ../../web/edit/user/index.php:411 ../../web/add/db/index.php:48
 #: ../../web/add/mail/index.php:239 ../../web/add/user/index.php:50
 msgid "Please enter a valid email address."
 msgstr ""
@@ -224,14 +224,14 @@ msgstr ""
 msgid "Error: unknown record ID."
 msgstr ""
 
-#: ../../web/edit/web/index.php:1071 ../../web/edit/web/index.php:1111
-#: ../../web/edit/web/index.php:1327 ../../web/add/db/index.php:20
+#: ../../web/edit/web/index.php:1074 ../../web/edit/web/index.php:1114
+#: ../../web/edit/web/index.php:1330 ../../web/add/db/index.php:20
 #: ../../web/add/user/index.php:23 ../../web/templates/pages/edit_mail.php:188
-#: ../../web/templates/pages/add_mail.php:111
+#: ../../web/templates/pages/add_mail.php:113
 #: ../../web/templates/pages/add_user.php:35
 #: ../../web/templates/pages/edit_mail_acc.php:128
 #: ../../web/templates/pages/edit_user.php:64
-#: ../../web/templates/pages/add_db.php:69
+#: ../../web/templates/pages/add_db.php:71
 #: ../../web/templates/pages/list_db.php:65
 #: ../../web/templates/pages/list_db.php:113
 #: ../../web/templates/pages/list_db.php:247
@@ -249,7 +249,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: ../../web/edit/web/index.php:1242 ../../web/edit/web/index.php:1390
+#: ../../web/edit/web/index.php:1245 ../../web/edit/web/index.php:1393
 msgid ""
 "FTP account has been created and ready to use.\n"
 "\n"
@@ -263,12 +263,12 @@ msgid ""
 "{{appname}}"
 msgstr ""
 
-#: ../../web/edit/web/index.php:1259 ../../web/edit/web/index.php:1407
+#: ../../web/edit/web/index.php:1262 ../../web/edit/web/index.php:1410
 #, php-format
 msgid "FTP Account Credentials: %s"
 msgstr ""
 
-#: ../../web/edit/user/index.php:418
+#: ../../web/edit/user/index.php:427
 msgid "Please enter a valid contact name."
 msgstr ""
 
@@ -294,7 +294,7 @@ msgstr ""
 
 #: ../../web/edit/firewall/index.php:76 ../../web/add/firewall/index.php:48
 #: ../../web/templates/pages/edit_mail.php:184
-#: ../../web/templates/pages/add_mail.php:107
+#: ../../web/templates/pages/add_mail.php:109
 #: ../../web/templates/pages/add_firewall.php:44
 #: ../../web/templates/pages/edit_firewall.php:44
 #: ../../web/templates/pages/edit_mail_acc.php:154
@@ -334,7 +334,7 @@ msgstr ""
 #: ../../web/templates/pages/list_firewall.php:75
 #: ../../web/templates/pages/list_firewall.php:173
 #: ../../web/templates/pages/add_firewall_banlist.php:29
-#: ../../web/templates/pages/add_dns.php:52
+#: ../../web/templates/pages/add_dns.php:54
 #: ../../web/templates/pages/list_log_auth.php:49
 #: ../../web/templates/pages/list_log_auth.php:90
 #: ../../web/templates/pages/edit_dns.php:33
@@ -514,8 +514,8 @@ msgstr ""
 #: ../../web/templates/pages/edit_backup_exclusions.php:36
 #: ../../web/templates/pages/list_stats.php:114
 #: ../../web/templates/pages/list_stats.php:185
-#: ../../web/templates/includes/panel.php:342
-#: ../../web/templates/includes/panel.php:346
+#: ../../web/templates/includes/panel.php:344
+#: ../../web/templates/includes/panel.php:348
 msgid "Databases"
 msgstr ""
 
@@ -545,8 +545,8 @@ msgstr ""
 #: ../../web/templates/pages/add_package.php:65
 #: ../../web/templates/pages/edit_server.php:655
 #: ../../web/templates/pages/list_stats.php:217
-#: ../../web/templates/includes/panel.php:374
-#: ../../web/templates/includes/panel.php:378
+#: ../../web/templates/includes/panel.php:376
+#: ../../web/templates/includes/panel.php:380
 msgid "Backups"
 msgstr ""
 
@@ -598,7 +598,7 @@ msgstr ""
 msgid "Info (read-only mode): Crontab can only be edited via SSH."
 msgstr ""
 
-#: ../../web/edit/server/index.php:1191
+#: ../../web/edit/server/index.php:1203
 msgid "Inactive session timeout can not lower than 1 minute."
 msgstr ""
 
@@ -619,25 +619,25 @@ msgstr ""
 msgid "Restart \"%s\" failed"
 msgstr ""
 
-#: ../../web/restart/system/index.php:26 ../../web/bulk/service/index.php:31
+#: ../../web/restart/system/index.php:26 ../../web/bulk/service/index.php:40
 msgid "The system is going down for reboot NOW!"
 msgstr ""
 
-#: ../../web/bulk/cron/index.php:27 ../../web/bulk/cron/index.php:52
+#: ../../web/bulk/cron/index.php:36 ../../web/bulk/cron/index.php:61
 msgid "Cron job email reporting has been successfully disabled."
 msgstr ""
 
-#: ../../web/bulk/cron/index.php:35 ../../web/bulk/cron/index.php:60
+#: ../../web/bulk/cron/index.php:44 ../../web/bulk/cron/index.php:69
 msgid "Cron job email reporting has been successfully enabled."
 msgstr ""
 
-#: ../../web/bulk/restore/index.php:64 ../../web/schedule/restore/index.php:65
+#: ../../web/bulk/restore/index.php:73 ../../web/schedule/restore/index.php:65
 msgid ""
 "Task has been added to the queue. You will receive an email notification "
 "when your restore has been completed."
 msgstr ""
 
-#: ../../web/bulk/restore/index.php:73 ../../web/schedule/restore/index.php:74
+#: ../../web/bulk/restore/index.php:82 ../../web/schedule/restore/index.php:74
 msgid ""
 "An existing restoration task is already running. Please wait for it to "
 "finish before launching it again."
@@ -709,19 +709,19 @@ msgstr ""
 
 #: ../../web/add/db/index.php:17
 #: ../../web/templates/pages/list_backup_detail.php:179
-#: ../../web/templates/pages/add_db.php:51
+#: ../../web/templates/pages/add_db.php:53
 #: ../../web/templates/pages/edit_db.php:28
 msgid "Database"
 msgstr ""
 
 #: ../../web/add/db/index.php:23 ../../web/add/mail/index.php:222
 #: ../../web/add/user/index.php:26 ../../web/templates/pages/edit_mail.php:192
-#: ../../web/templates/pages/add_mail.php:115
+#: ../../web/templates/pages/add_mail.php:117
 #: ../../web/templates/pages/add_user.php:48
 #: ../../web/templates/pages/edit_mail_acc.php:45
 #: ../../web/templates/pages/edit_mail_acc.php:132
 #: ../../web/templates/pages/edit_user.php:84
-#: ../../web/templates/pages/add_db.php:77
+#: ../../web/templates/pages/add_db.php:79
 #: ../../web/templates/pages/edit_web.php:112
 #: ../../web/templates/pages/edit_web.php:418
 #: ../../web/templates/pages/edit_web.php:471
@@ -758,7 +758,7 @@ msgstr ""
 #: ../../web/templates/pages/list_backup_detail.php:178
 #: ../../web/templates/pages/list_backup_detail.php:213
 #: ../../web/templates/pages/list_backup_detail.php:251
-#: ../../web/templates/pages/add_db.php:56
+#: ../../web/templates/pages/add_db.php:58
 #: ../../web/templates/pages/list_db.php:112
 #: ../../web/templates/pages/list_db.php:243
 #: ../../web/templates/pages/add_dns_rec.php:38
@@ -770,8 +770,8 @@ msgid "Type"
 msgstr ""
 
 #: ../../web/add/db/index.php:29 ../../web/templates/pages/edit_mail.php:180
-#: ../../web/templates/pages/add_mail.php:103
-#: ../../web/templates/pages/add_db.php:108
+#: ../../web/templates/pages/add_mail.php:105
+#: ../../web/templates/pages/add_db.php:110
 #: ../../web/templates/pages/list_db.php:62
 #: ../../web/templates/pages/edit_db.php:65
 #: ../../web/templates/pages/edit_server.php:346
@@ -783,7 +783,7 @@ msgstr ""
 msgid "Host"
 msgstr ""
 
-#: ../../web/add/db/index.php:32 ../../web/templates/pages/add_db.php:120
+#: ../../web/add/db/index.php:32 ../../web/templates/pages/add_db.php:122
 #: ../../web/templates/pages/list_db.php:50
 #: ../../web/templates/pages/list_db.php:115
 #: ../../web/templates/pages/list_db.php:255
@@ -818,11 +818,11 @@ msgstr ""
 
 #: ../../web/add/mail/index.php:39 ../../web/add/mail/index.php:215
 #: ../../web/add/dns/index.php:22 ../../web/add/dns/index.php:220
-#: ../../web/add/web/index.php:17 ../../web/generate/ssl/index.php:36
+#: ../../web/add/web/index.php:17 ../../web/generate/ssl/index.php:38
 #: ../../web/templates/pages/edit_mail.php:38
-#: ../../web/templates/pages/add_mail.php:48
+#: ../../web/templates/pages/add_mail.php:50
 #: ../../web/templates/pages/add_web.php:43
-#: ../../web/templates/pages/add_dns.php:48
+#: ../../web/templates/pages/add_dns.php:50
 #: ../../web/templates/pages/edit_dns.php:28
 #: ../../web/templates/pages/edit_web.php:52
 #: ../../web/templates/pages/add_dns_rec.php:28
@@ -984,7 +984,7 @@ msgstr ""
 msgid "Welcome to %s"
 msgstr ""
 
-#: ../../web/add/user/index.php:227
+#: ../../web/add/user/index.php:225
 #, php-format
 msgid "User {%s} has been created successfully. / {Log in as %s}"
 msgstr ""
@@ -1029,14 +1029,14 @@ msgstr ""
 
 #: ../../web/add/firewall/ipset/index.php:29
 #: ../../web/templates/pages/list_firewall_ipset.php:40
-#: ../../web/templates/pages/list_firewall_ipset.php:84
+#: ../../web/templates/pages/list_firewall_ipset.php:87
 #: ../../web/templates/pages/add_firewall_ipset.php:92
 msgid "IP Version"
 msgstr ""
 
 #: ../../web/add/firewall/ipset/index.php:32
 #: ../../web/templates/pages/list_firewall_ipset.php:39
-#: ../../web/templates/pages/list_firewall_ipset.php:76
+#: ../../web/templates/pages/list_firewall_ipset.php:79
 #: ../../web/templates/pages/add_firewall_ipset.php:99
 msgid "Auto Update"
 msgstr ""
@@ -1058,45 +1058,45 @@ msgstr ""
 msgid "IP address has been banned successfully."
 msgstr ""
 
-#: ../../web/add/package/index.php:202
+#: ../../web/add/package/index.php:203
 #, php-format
 msgid "Package {%s} has been created successfully."
 msgstr ""
 
-#: ../../web/add/key/index.php:18 ../../web/templates/pages/list_key.php:30
-#: ../../web/templates/pages/list_key.php:67
+#: ../../web/add/key/index.php:17 ../../web/templates/pages/list_key.php:37
+#: ../../web/templates/pages/list_key.php:74
 #: ../../web/templates/pages/add_key.php:34
 msgid "SSH Key"
 msgstr ""
 
-#: ../../web/add/key/index.php:58 ../../web/add/key/index.php:61
+#: ../../web/add/key/index.php:57 ../../web/add/key/index.php:60
 msgid "SSH Key already exists."
 msgstr ""
 
-#: ../../web/add/key/index.php:74
+#: ../../web/add/key/index.php:73
 msgid "SSH Key has been created successfully."
 msgstr ""
 
-#: ../../web/generate/ssl/index.php:39
+#: ../../web/generate/ssl/index.php:41
 #: ../../web/templates/pages/add_firewall_ipset.php:49
 #: ../../web/templates/pages/generate_ssl.php:34
 msgid "Country"
 msgstr ""
 
-#: ../../web/generate/ssl/index.php:42
+#: ../../web/generate/ssl/index.php:44
 msgid "State"
 msgstr ""
 
-#: ../../web/generate/ssl/index.php:45
+#: ../../web/generate/ssl/index.php:47
 msgid "City"
 msgstr ""
 
-#: ../../web/generate/ssl/index.php:48
+#: ../../web/generate/ssl/index.php:50
 #: ../../web/templates/pages/generate_ssl.php:53
 msgid "Organization"
 msgstr ""
 
-#: ../../web/generate/ssl/index.php:130
+#: ../../web/generate/ssl/index.php:132
 msgid "Certificate has been generated successfully."
 msgstr ""
 
@@ -1170,10 +1170,10 @@ msgid "Move down through elements list"
 msgstr ""
 
 #: ../../web/templates/footer.php:68 ../../web/templates/footer.php:71
-#: ../../web/templates/pages/list_server_info.php:116
-#: ../../web/templates/pages/list_server_info.php:119
-#: ../../web/templates/pages/list_weblog.php:90
-#: ../../web/templates/pages/list_weblog.php:93
+#: ../../web/templates/pages/list_server_info.php:118
+#: ../../web/templates/pages/list_server_info.php:121
+#: ../../web/templates/pages/list_weblog.php:92
+#: ../../web/templates/pages/list_weblog.php:95
 msgid "Top"
 msgstr ""
 
@@ -1196,8 +1196,8 @@ msgstr ""
 #: ../../web/templates/pages/edit_ip.php:6
 #: ../../web/templates/pages/edit_server_service.php:6
 #: ../../web/templates/pages/list_mail_acc.php:12
-#: ../../web/templates/pages/list_server_info.php:33
-#: ../../web/templates/pages/list_server_info.php:35
+#: ../../web/templates/pages/list_server_info.php:34
+#: ../../web/templates/pages/list_server_info.php:36
 #: ../../web/templates/pages/list_log.php:7
 #: ../../web/templates/pages/list_log.php:11
 #: ../../web/templates/pages/list_log.php:16
@@ -1207,7 +1207,8 @@ msgstr ""
 #: ../../web/templates/pages/edit_package.php:6
 #: ../../web/templates/pages/edit_mail_acc.php:6
 #: ../../web/templates/pages/edit_server_nginx.php:6
-#: ../../web/templates/pages/list_key.php:6
+#: ../../web/templates/pages/list_key.php:7
+#: ../../web/templates/pages/list_key.php:11
 #: ../../web/templates/pages/edit_user.php:6
 #: ../../web/templates/pages/edit_server_httpd.php:6
 #: ../../web/templates/pages/list_firewall.php:6
@@ -1240,15 +1241,16 @@ msgstr ""
 #: ../../web/templates/pages/edit_server_php.php:6
 #: ../../web/templates/pages/edit_server.php:6
 #: ../../web/templates/pages/edit_backup_exclusions.php:6
-#: ../../web/templates/pages/list_access_keys.php:6
+#: ../../web/templates/pages/list_access_keys.php:7
+#: ../../web/templates/pages/list_access_keys.php:11
 #: ../../web/templates/pages/list_firewall_banlist.php:6
 #: ../../web/templates/pages/list_ip.php:6
 #: ../../web/templates/pages/edit_server_pgsql.php:6
 #: ../../web/templates/pages/edit_server_mysql.php:6
 #: ../../web/templates/pages/add_cron.php:6
 #: ../../web/templates/pages/list_search.php:6
-#: ../../web/templates/pages/list_weblog.php:33
-#: ../../web/templates/pages/list_weblog.php:35
+#: ../../web/templates/pages/list_weblog.php:34
+#: ../../web/templates/pages/list_weblog.php:36
 #: ../../web/templates/pages/edit_dns_rec.php:6
 msgid "Back"
 msgstr ""
@@ -1283,8 +1285,8 @@ msgstr ""
 #: ../../web/templates/pages/list_cron.php:48
 #: ../../web/templates/pages/list_web.php:41
 #: ../../web/templates/pages/list_web.php:49
-#: ../../web/templates/pages/list_access_keys.php:34
-#: ../../web/templates/pages/list_access_keys.php:37
+#: ../../web/templates/pages/list_access_keys.php:40
+#: ../../web/templates/pages/list_access_keys.php:43
 #: ../../web/templates/pages/list_firewall_banlist.php:16
 #: ../../web/templates/pages/list_firewall_banlist.php:19
 #: ../../web/templates/pages/list_ip.php:43
@@ -1296,9 +1298,9 @@ msgid "Apply to selected"
 msgstr ""
 
 #: ../../web/templates/pages/list_firewall_ipset.php:17
-#: ../../web/templates/pages/list_firewall_ipset.php:65
-#: ../../web/templates/pages/list_firewall_ipset.php:66
-#: ../../web/templates/pages/list_firewall_ipset.php:70
+#: ../../web/templates/pages/list_firewall_ipset.php:68
+#: ../../web/templates/pages/list_firewall_ipset.php:69
+#: ../../web/templates/pages/list_firewall_ipset.php:73
 #: ../../web/templates/pages/list_mail.php:44
 #: ../../web/templates/pages/list_mail.php:284
 #: ../../web/templates/pages/list_mail.php:285
@@ -1317,9 +1319,9 @@ msgstr ""
 #: ../../web/templates/pages/list_mail_acc.php:243
 #: ../../web/templates/pages/list_log.php:58
 #: ../../web/templates/pages/list_log.php:61
-#: ../../web/templates/pages/list_key.php:56
-#: ../../web/templates/pages/list_key.php:57
-#: ../../web/templates/pages/list_key.php:61
+#: ../../web/templates/pages/list_key.php:63
+#: ../../web/templates/pages/list_key.php:64
+#: ../../web/templates/pages/list_key.php:68
 #: ../../web/templates/pages/list_firewall.php:49
 #: ../../web/templates/pages/list_firewall.php:150
 #: ../../web/templates/pages/list_firewall.php:151
@@ -1328,12 +1330,12 @@ msgstr ""
 #: ../../web/templates/pages/list_dns_rec.php:142
 #: ../../web/templates/pages/list_dns_rec.php:143
 #: ../../web/templates/pages/list_dns_rec.php:147
-#: ../../web/templates/pages/add_dns.php:120
-#: ../../web/templates/pages/add_dns.php:126
-#: ../../web/templates/pages/add_dns.php:132
-#: ../../web/templates/pages/add_dns.php:138
-#: ../../web/templates/pages/add_dns.php:144
-#: ../../web/templates/pages/add_dns.php:150
+#: ../../web/templates/pages/add_dns.php:122
+#: ../../web/templates/pages/add_dns.php:128
+#: ../../web/templates/pages/add_dns.php:134
+#: ../../web/templates/pages/add_dns.php:140
+#: ../../web/templates/pages/add_dns.php:146
+#: ../../web/templates/pages/add_dns.php:152
 #: ../../web/templates/pages/list_log_auth.php:28
 #: ../../web/templates/pages/list_log_auth.php:31
 #: ../../web/templates/pages/list_db.php:78
@@ -1354,10 +1356,10 @@ msgstr ""
 #: ../../web/templates/pages/list_web.php:289
 #: ../../web/templates/pages/list_web.php:290
 #: ../../web/templates/pages/list_web.php:294
-#: ../../web/templates/pages/list_access_keys.php:35
-#: ../../web/templates/pages/list_access_keys.php:95
-#: ../../web/templates/pages/list_access_keys.php:96
-#: ../../web/templates/pages/list_access_keys.php:100
+#: ../../web/templates/pages/list_access_keys.php:41
+#: ../../web/templates/pages/list_access_keys.php:101
+#: ../../web/templates/pages/list_access_keys.php:102
+#: ../../web/templates/pages/list_access_keys.php:106
 #: ../../web/templates/pages/list_firewall_banlist.php:17
 #: ../../web/templates/pages/list_firewall_banlist.php:67
 #: ../../web/templates/pages/list_firewall_banlist.php:68
@@ -1391,7 +1393,7 @@ msgstr ""
 #: ../../web/templates/pages/list_services.php:97
 #: ../../web/templates/pages/list_cron.php:75
 #: ../../web/templates/pages/list_web.php:76
-#: ../../web/templates/pages/list_access_keys.php:54
+#: ../../web/templates/pages/list_access_keys.php:60
 #: ../../web/templates/pages/list_firewall_banlist.php:35
 #: ../../web/templates/pages/list_ip.php:64
 #: ../../web/templates/pages/list_dns.php:76
@@ -1399,13 +1401,13 @@ msgid "Select all"
 msgstr ""
 
 #: ../../web/templates/pages/list_firewall_ipset.php:37
-#: ../../web/templates/pages/list_firewall_ipset.php:56
+#: ../../web/templates/pages/list_firewall_ipset.php:59
 #: ../../web/templates/pages/add_firewall_ipset.php:71
 msgid "IP List Name"
 msgstr ""
 
 #: ../../web/templates/pages/list_firewall_ipset.php:41
-#: ../../web/templates/pages/list_firewall_ipset.php:88
+#: ../../web/templates/pages/list_firewall_ipset.php:91
 #: ../../web/templates/pages/list_mail.php:16
 #: ../../web/templates/pages/list_mail.php:25
 #: ../../web/templates/pages/list_backup.php:48
@@ -1429,10 +1431,10 @@ msgstr ""
 #: ../../web/templates/pages/list_cron.php:34
 #: ../../web/templates/pages/list_web.php:16
 #: ../../web/templates/pages/list_web.php:25
-#: ../../web/templates/pages/list_access_keys.php:17
-#: ../../web/templates/pages/list_access_keys.php:22
-#: ../../web/templates/pages/list_access_keys.php:59
-#: ../../web/templates/pages/list_access_keys.php:110
+#: ../../web/templates/pages/list_access_keys.php:23
+#: ../../web/templates/pages/list_access_keys.php:28
+#: ../../web/templates/pages/list_access_keys.php:65
+#: ../../web/templates/pages/list_access_keys.php:116
 #: ../../web/templates/pages/list_firewall_banlist.php:39
 #: ../../web/templates/pages/list_firewall_banlist.php:78
 #: ../../web/templates/pages/list_ip.php:17
@@ -1447,20 +1449,20 @@ msgid "Date"
 msgstr ""
 
 #: ../../web/templates/pages/list_firewall_ipset.php:42
-#: ../../web/templates/pages/list_firewall_ipset.php:92
+#: ../../web/templates/pages/list_firewall_ipset.php:95
 #: ../../web/templates/pages/list_log.php:78
 #: ../../web/templates/pages/list_log.php:112
 #: ../../web/templates/pages/list_log_auth.php:48
 #: ../../web/templates/pages/list_log_auth.php:84
-#: ../../web/templates/pages/list_access_keys.php:60
-#: ../../web/templates/pages/list_access_keys.php:114
+#: ../../web/templates/pages/list_access_keys.php:66
+#: ../../web/templates/pages/list_access_keys.php:120
 #: ../../web/templates/pages/list_firewall_banlist.php:40
 #: ../../web/templates/pages/list_firewall_banlist.php:82
 msgid "Time"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall_ipset.php:51
-#: ../../web/templates/pages/list_firewall_ipset.php:52
+#: ../../web/templates/pages/list_firewall_ipset.php:54
+#: ../../web/templates/pages/list_firewall_ipset.php:55
 #: ../../web/templates/pages/list_mail.php:174
 #: ../../web/templates/pages/list_mail.php:175
 #: ../../web/templates/pages/list_backup.php:75
@@ -1489,8 +1491,8 @@ msgstr ""
 #: ../../web/templates/pages/list_cron.php:112
 #: ../../web/templates/pages/list_web.php:194
 #: ../../web/templates/pages/list_web.php:195
-#: ../../web/templates/pages/list_access_keys.php:79
-#: ../../web/templates/pages/list_access_keys.php:80
+#: ../../web/templates/pages/list_access_keys.php:85
+#: ../../web/templates/pages/list_access_keys.php:86
 #: ../../web/templates/pages/list_firewall_banlist.php:53
 #: ../../web/templates/pages/list_firewall_banlist.php:54
 #: ../../web/templates/pages/list_ip.php:89
@@ -1500,12 +1502,12 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall_ipset.php:67
+#: ../../web/templates/pages/list_firewall_ipset.php:70
 #, php-format
 msgid "Are you sure you want to delete IP list %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall_ipset.php:78
+#: ../../web/templates/pages/list_firewall_ipset.php:81
 #: ../../web/templates/pages/list_mail.php:101
 #: ../../web/templates/pages/list_mail.php:108
 #: ../../web/templates/pages/list_mail.php:115
@@ -1515,7 +1517,7 @@ msgstr ""
 #: ../../web/templates/pages/list_mail.php:150
 #: ../../web/templates/pages/list_mail.php:157
 #: ../../web/templates/pages/edit_mail.php:54
-#: ../../web/templates/pages/add_mail.php:63
+#: ../../web/templates/pages/add_mail.php:65
 #: ../../web/templates/pages/list_mail_acc.php:114
 #: ../../web/templates/pages/list_mail_acc.php:121
 #: ../../web/templates/pages/list_mail_acc.php:142
@@ -1532,7 +1534,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall_ipset.php:80
+#: ../../web/templates/pages/list_firewall_ipset.php:83
 #: ../../web/templates/pages/list_mail.php:104
 #: ../../web/templates/pages/list_mail.php:111
 #: ../../web/templates/pages/list_mail.php:118
@@ -1556,11 +1558,11 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall_ipset.php:106
+#: ../../web/templates/pages/list_firewall_ipset.php:109
 msgid "There are currently no IP lists defined."
 msgstr ""
 
-#: ../../web/templates/pages/list_firewall_ipset.php:108
+#: ../../web/templates/pages/list_firewall_ipset.php:111
 #, php-format
 msgid "%d IP list"
 msgid_plural "%d IP lists"
@@ -1577,7 +1579,7 @@ msgstr ""
 
 #: ../../web/templates/pages/list_updates.php:29
 #: ../../web/templates/pages/list_services.php:12
-#: ../../web/templates/pages/edit_server.php:135
+#: ../../web/templates/pages/edit_server.php:147
 msgid "Updates"
 msgstr ""
 
@@ -1596,7 +1598,7 @@ msgstr ""
 #: ../../web/templates/pages/list_updates.php:35
 #: ../../web/templates/pages/list_updates.php:62
 #: ../../web/templates/pages/list_webapps.php:27
-#: ../../web/templates/pages/edit_server.php:139
+#: ../../web/templates/pages/edit_server.php:151
 msgid "Version"
 msgstr ""
 
@@ -1613,7 +1615,7 @@ msgid "Status"
 msgstr ""
 
 #: ../../web/templates/pages/list_mail.php:7
-#: ../../web/templates/pages/add_mail.php:32
+#: ../../web/templates/pages/add_mail.php:34
 msgid "Add Mail Domain"
 msgstr ""
 
@@ -1626,7 +1628,7 @@ msgstr ""
 #: ../../web/templates/pages/list_packages.php:14
 #: ../../web/templates/pages/list_cron.php:22
 #: ../../web/templates/pages/list_web.php:13
-#: ../../web/templates/pages/list_access_keys.php:14
+#: ../../web/templates/pages/list_access_keys.php:20
 #: ../../web/templates/pages/list_ip.php:14
 #: ../../web/templates/pages/list_search.php:14
 #: ../../web/templates/pages/list_dns.php:13
@@ -1642,7 +1644,7 @@ msgstr ""
 #: ../../web/templates/pages/list_packages.php:15
 #: ../../web/templates/pages/list_cron.php:23
 #: ../../web/templates/pages/list_web.php:14
-#: ../../web/templates/pages/list_access_keys.php:15
+#: ../../web/templates/pages/list_access_keys.php:21
 #: ../../web/templates/pages/list_ip.php:15
 #: ../../web/templates/pages/list_search.php:15
 #: ../../web/templates/pages/list_dns.php:14
@@ -1652,7 +1654,7 @@ msgstr ""
 #: ../../web/templates/pages/list_mail.php:22
 #: ../../web/templates/pages/list_mail.php:77
 #: ../../web/templates/pages/list_mail.php:296
-#: ../../web/templates/includes/panel.php:330
+#: ../../web/templates/includes/panel.php:332
 msgid "Accounts"
 msgstr ""
 
@@ -1666,7 +1668,7 @@ msgstr ""
 #: ../../web/templates/pages/list_mail_acc.php:37
 #: ../../web/templates/pages/list_mail_acc.php:87
 #: ../../web/templates/pages/list_mail_acc.php:250
-#: ../../web/templates/pages/list_server_info.php:53
+#: ../../web/templates/pages/list_server_info.php:54
 #: ../../web/templates/pages/list_db.php:56
 #: ../../web/templates/pages/list_db.php:111
 #: ../../web/templates/pages/list_db.php:234
@@ -1754,7 +1756,7 @@ msgstr ""
 #: ../../web/templates/pages/list_mail.php:79
 #: ../../web/templates/pages/list_mail.php:316
 #: ../../web/templates/pages/edit_mail.php:86
-#: ../../web/templates/pages/add_mail.php:85
+#: ../../web/templates/pages/add_mail.php:87
 #: ../../web/templates/pages/edit_server.php:380
 msgid "Anti-Virus"
 msgstr ""
@@ -1762,7 +1764,7 @@ msgstr ""
 #: ../../web/templates/pages/list_mail.php:80
 #: ../../web/templates/pages/list_mail.php:320
 #: ../../web/templates/pages/edit_mail.php:72
-#: ../../web/templates/pages/add_mail.php:71
+#: ../../web/templates/pages/add_mail.php:73
 #: ../../web/templates/pages/edit_server.php:391
 msgid "Spam Filter"
 msgstr ""
@@ -1953,10 +1955,10 @@ msgstr ""
 #: ../../web/templates/pages/list_ssl.php:62
 #: ../../web/templates/pages/list_ssl.php:86
 #: ../../web/templates/pages/list_ssl.php:89
-#: ../../web/templates/pages/list_weblog.php:45
-#: ../../web/templates/pages/list_weblog.php:47
-#: ../../web/templates/pages/list_weblog.php:57
-#: ../../web/templates/pages/list_weblog.php:59
+#: ../../web/templates/pages/list_weblog.php:46
+#: ../../web/templates/pages/list_weblog.php:48
+#: ../../web/templates/pages/list_weblog.php:58
+#: ../../web/templates/pages/list_weblog.php:60
 msgid "Download"
 msgstr ""
 
@@ -1973,7 +1975,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../../web/templates/pages/edit_mail.php:11
-#: ../../web/templates/pages/add_mail.php:11
+#: ../../web/templates/pages/add_mail.php:12
 #: ../../web/templates/pages/add_ip.php:11
 #: ../../web/templates/pages/add_web.php:12
 #: ../../web/templates/pages/edit_cron.php:11
@@ -1992,8 +1994,8 @@ msgstr[1] ""
 #: ../../web/templates/pages/edit_user.php:37
 #: ../../web/templates/pages/edit_server_httpd.php:14
 #: ../../web/templates/pages/add_firewall_banlist.php:11
-#: ../../web/templates/pages/add_dns.php:11
-#: ../../web/templates/pages/add_db.php:11
+#: ../../web/templates/pages/add_dns.php:12
+#: ../../web/templates/pages/add_db.php:12
 #: ../../web/templates/pages/add_firewall_ipset.php:11
 #: ../../web/templates/pages/add_package.php:11
 #: ../../web/templates/pages/add_key.php:17
@@ -2014,7 +2016,7 @@ msgid "Save"
 msgstr ""
 
 #: ../../web/templates/pages/edit_mail.php:44
-#: ../../web/templates/pages/add_mail.php:53
+#: ../../web/templates/pages/add_mail.php:55
 msgid "Webmail Client"
 msgstr ""
 
@@ -2027,12 +2029,12 @@ msgid "email / hour / account"
 msgstr ""
 
 #: ../../web/templates/pages/edit_mail.php:78
-#: ../../web/templates/pages/add_mail.php:77
+#: ../../web/templates/pages/add_mail.php:79
 msgid "Reject Spam"
 msgstr ""
 
 #: ../../web/templates/pages/edit_mail.php:93
-#: ../../web/templates/pages/add_mail.php:92
+#: ../../web/templates/pages/add_mail.php:94
 msgid "DKIM Support"
 msgstr ""
 
@@ -2141,14 +2143,14 @@ msgid "Issued By"
 msgstr ""
 
 #: ../../web/templates/pages/edit_mail.php:175
-#: ../../web/templates/pages/add_mail.php:98
+#: ../../web/templates/pages/add_mail.php:100
 msgid "SMTP Relay"
 msgstr ""
 
-#: ../../web/templates/pages/add_mail.php:37
+#: ../../web/templates/pages/add_mail.php:39
 #: ../../web/templates/pages/add_web.php:32
-#: ../../web/templates/pages/add_dns.php:37
-#: ../../web/templates/pages/add_db.php:37
+#: ../../web/templates/pages/add_dns.php:39
+#: ../../web/templates/pages/add_db.php:39
 #, php-format
 msgid ""
 "It is strongly advised to {create a standard user account} before adding %s "
@@ -2156,23 +2158,23 @@ msgid ""
 "and potential security risks."
 msgstr ""
 
-#: ../../web/templates/pages/add_mail.php:37
+#: ../../web/templates/pages/add_mail.php:39
 msgid "a mail domain"
 msgstr ""
 
-#: ../../web/templates/pages/add_mail.php:42
+#: ../../web/templates/pages/add_mail.php:44
 #: ../../web/templates/pages/add_web.php:37
 #: ../../web/templates/pages/list_user.php:6
 #: ../../web/templates/pages/add_user.php:32
-#: ../../web/templates/pages/add_dns.php:42
-#: ../../web/templates/pages/add_db.php:42
+#: ../../web/templates/pages/add_dns.php:44
+#: ../../web/templates/pages/add_db.php:44
 msgid "Add User"
 msgstr ""
 
-#: ../../web/templates/pages/add_mail.php:43
+#: ../../web/templates/pages/add_mail.php:45
 #: ../../web/templates/pages/add_web.php:38
-#: ../../web/templates/pages/add_dns.php:43
-#: ../../web/templates/pages/add_db.php:43
+#: ../../web/templates/pages/add_dns.php:45
+#: ../../web/templates/pages/add_db.php:45
 msgid "Continue"
 msgstr ""
 
@@ -2297,7 +2299,7 @@ msgstr ""
 #: ../../web/templates/pages/add_user.php:49
 #: ../../web/templates/pages/edit_mail_acc.php:46
 #: ../../web/templates/pages/edit_user.php:85
-#: ../../web/templates/pages/add_db.php:78
+#: ../../web/templates/pages/add_db.php:80
 #: ../../web/templates/pages/edit_web.php:113
 #: ../../web/templates/pages/edit_web.php:419
 #: ../../web/templates/pages/edit_web.php:472
@@ -2532,9 +2534,9 @@ msgstr ""
 #: ../../web/templates/pages/list_firewall.php:161
 #: ../../web/templates/pages/list_access_key.php:53
 #: ../../web/templates/pages/add_access_key.php:37
-#: ../../web/templates/pages/list_access_keys.php:28
-#: ../../web/templates/pages/list_access_keys.php:58
-#: ../../web/templates/pages/list_access_keys.php:106
+#: ../../web/templates/pages/list_access_keys.php:34
+#: ../../web/templates/pages/list_access_keys.php:64
+#: ../../web/templates/pages/list_access_keys.php:112
 #: ../../web/templates/pages/list_firewall_banlist.php:41
 #: ../../web/templates/pages/list_firewall_banlist.php:86
 msgid "Comment"
@@ -2575,8 +2577,8 @@ msgstr ""
 
 #: ../../web/templates/pages/list_user.php:75
 #: ../../web/templates/pages/edit_server.php:1184
-#: ../../web/templates/includes/panel.php:267
-#: ../../web/templates/includes/panel.php:271
+#: ../../web/templates/includes/panel.php:269
+#: ../../web/templates/includes/panel.php:273
 msgid "Users"
 msgstr ""
 
@@ -2766,7 +2768,7 @@ msgstr ""
 #: ../../web/templates/pages/list_dns_rec.php:37
 #: ../../web/templates/pages/list_dns_rec.php:86
 #: ../../web/templates/pages/list_dns_rec.php:163
-#: ../../web/templates/pages/add_dns.php:106
+#: ../../web/templates/pages/add_dns.php:108
 #: ../../web/templates/pages/edit_dns.php:86
 #: ../../web/templates/pages/add_dns_rec.php:80
 #: ../../web/templates/pages/list_dns.php:82
@@ -2828,8 +2830,8 @@ msgstr ""
 #: ../../web/templates/pages/edit_web.php:57
 #: ../../web/templates/pages/add_mail_acc.php:82
 #: ../../web/templates/pages/generate_ssl.php:22
-#: ../../web/templates/includes/panel.php:285
-#: ../../web/templates/includes/panel.php:292
+#: ../../web/templates/includes/panel.php:287
+#: ../../web/templates/includes/panel.php:294
 msgid "Aliases"
 msgstr ""
 
@@ -2903,65 +2905,65 @@ msgstr ""
 msgid "Open menu"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:41
+#: ../../web/templates/pages/list_server_info.php:42
 #: ../../web/templates/pages/list_services.php:103
 #: ../../web/templates/pages/list_services.php:200
 msgid "CPU"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:47
+#: ../../web/templates/pages/list_server_info.php:48
 msgid "RAM"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:59
+#: ../../web/templates/pages/list_server_info.php:60
 #: ../../web/templates/pages/edit_server.php:9
 msgid "Network"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:66
+#: ../../web/templates/pages/list_server_info.php:67
 #: ../../web/templates/pages/list_stats.php:105
 msgid "Web"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:74
+#: ../../web/templates/pages/list_server_info.php:75
 #: ../../web/templates/pages/edit_package.php:152
 #: ../../web/templates/pages/add_firewall_banlist.php:39
 #: ../../web/templates/pages/add_package.php:151
-#: ../../web/templates/includes/panel.php:305
+#: ../../web/templates/includes/panel.php:307
 msgid "DNS"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:82
+#: ../../web/templates/pages/list_server_info.php:83
 #: ../../web/templates/pages/list_stats.php:123
 msgid "Mail"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:90
+#: ../../web/templates/pages/list_server_info.php:91
 #: ../../web/templates/pages/edit_package.php:285
 #: ../../web/templates/pages/add_firewall_banlist.php:41
 #: ../../web/templates/pages/add_package.php:281
-#: ../../web/templates/includes/panel.php:343
+#: ../../web/templates/includes/panel.php:345
 msgid "DB"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:95
-#: ../../web/templates/pages/list_server_info.php:97
+#: ../../web/templates/pages/list_server_info.php:96
+#: ../../web/templates/pages/list_server_info.php:98
 #: ../../web/templates/pages/list_log.php:46
 #: ../../web/templates/pages/list_log_auth.php:16
 #: ../../web/templates/pages/list_search.php:9
-#: ../../web/templates/pages/list_weblog.php:63
-#: ../../web/templates/pages/list_weblog.php:65
+#: ../../web/templates/pages/list_weblog.php:64
+#: ../../web/templates/pages/list_weblog.php:66
 msgid "Refresh"
 msgstr ""
 
-#: ../../web/templates/pages/list_server_info.php:101
-#: ../../web/templates/pages/list_server_info.php:103
-#: ../../web/templates/pages/list_weblog.php:75
-#: ../../web/templates/pages/list_weblog.php:77
-#: ../../web/templates/includes/panel.php:222
-#: ../../web/templates/includes/panel.php:224
-#: ../../web/templates/includes/panel.php:229
-#: ../../web/templates/includes/panel.php:231
+#: ../../web/templates/pages/list_server_info.php:102
+#: ../../web/templates/pages/list_server_info.php:104
+#: ../../web/templates/pages/list_weblog.php:76
+#: ../../web/templates/pages/list_weblog.php:78
+#: ../../web/templates/includes/panel.php:223
+#: ../../web/templates/includes/panel.php:225
+#: ../../web/templates/includes/panel.php:230
+#: ../../web/templates/includes/panel.php:232
 msgid "Log out"
 msgstr ""
 
@@ -2983,8 +2985,8 @@ msgstr ""
 #: ../../web/templates/pages/edit_user.php:23
 #: ../../web/templates/pages/edit_user.php:24
 #: ../../web/templates/pages/list_services.php:20
-#: ../../web/templates/includes/panel.php:186
-#: ../../web/templates/includes/panel.php:188
+#: ../../web/templates/includes/panel.php:187
+#: ../../web/templates/includes/panel.php:189
 msgid "Logs"
 msgstr ""
 
@@ -3037,7 +3039,7 @@ msgstr ""
 #: ../../web/templates/pages/add_user.php:60
 #: ../../web/templates/pages/edit_mail_acc.php:57
 #: ../../web/templates/pages/edit_user.php:97
-#: ../../web/templates/pages/add_db.php:89
+#: ../../web/templates/pages/add_db.php:91
 #: ../../web/templates/pages/edit_db.php:54
 #: ../../web/templates/pages/add_mail_acc.php:59
 msgid "Your password must have at least"
@@ -3046,7 +3048,7 @@ msgstr ""
 #: ../../web/templates/pages/add_user.php:62
 #: ../../web/templates/pages/edit_mail_acc.php:59
 #: ../../web/templates/pages/edit_user.php:99
-#: ../../web/templates/pages/add_db.php:91
+#: ../../web/templates/pages/add_db.php:93
 #: ../../web/templates/pages/edit_db.php:56
 #: ../../web/templates/pages/add_mail_acc.php:61
 msgid "8 characters long"
@@ -3055,7 +3057,7 @@ msgstr ""
 #: ../../web/templates/pages/add_user.php:63
 #: ../../web/templates/pages/edit_mail_acc.php:60
 #: ../../web/templates/pages/edit_user.php:100
-#: ../../web/templates/pages/add_db.php:92
+#: ../../web/templates/pages/add_db.php:94
 #: ../../web/templates/pages/edit_db.php:57
 #: ../../web/templates/pages/add_mail_acc.php:62
 msgid "1 uppercase & 1 lowercase character"
@@ -3064,7 +3066,7 @@ msgstr ""
 #: ../../web/templates/pages/add_user.php:64
 #: ../../web/templates/pages/edit_mail_acc.php:61
 #: ../../web/templates/pages/edit_user.php:101
-#: ../../web/templates/pages/add_db.php:93
+#: ../../web/templates/pages/add_db.php:95
 #: ../../web/templates/pages/edit_db.php:58
 #: ../../web/templates/pages/add_mail_acc.php:63
 msgid "1 number"
@@ -3106,7 +3108,7 @@ msgstr ""
 
 #: ../../web/templates/pages/add_user.php:127
 #: ../../web/templates/pages/edit_mail_acc.php:65
-#: ../../web/templates/pages/add_db.php:97
+#: ../../web/templates/pages/add_db.php:99
 #: ../../web/templates/pages/add_mail_acc.php:113
 msgid "Email login credentials to:"
 msgstr ""
@@ -3154,7 +3156,7 @@ msgstr ""
 #: ../../web/templates/pages/edit_package.php:71
 #: ../../web/templates/pages/add_firewall_banlist.php:37
 #: ../../web/templates/pages/add_package.php:69
-#: ../../web/templates/includes/panel.php:286
+#: ../../web/templates/includes/panel.php:288
 msgid "WEB"
 msgstr ""
 
@@ -3168,14 +3170,14 @@ msgid "per domain"
 msgstr ""
 
 #: ../../web/templates/pages/edit_package.php:199
-#: ../../web/templates/pages/add_dns.php:109
+#: ../../web/templates/pages/add_dns.php:111
 #: ../../web/templates/pages/add_package.php:195
 msgid "Name Servers"
 msgstr ""
 
 #: ../../web/templates/pages/edit_package.php:245
 #: ../../web/templates/pages/edit_user.php:295
-#: ../../web/templates/pages/add_dns.php:155
+#: ../../web/templates/pages/add_dns.php:157
 #: ../../web/templates/pages/add_package.php:241
 msgid "Add Name Server"
 msgstr ""
@@ -3183,7 +3185,7 @@ msgstr ""
 #: ../../web/templates/pages/edit_package.php:250
 #: ../../web/templates/pages/add_firewall_banlist.php:40
 #: ../../web/templates/pages/add_package.php:246
-#: ../../web/templates/includes/panel.php:324
+#: ../../web/templates/includes/panel.php:326
 msgid "MAIL"
 msgstr ""
 
@@ -3296,8 +3298,8 @@ msgstr ""
 
 #: ../../web/templates/pages/edit_server_nginx.php:73
 #: ../../web/templates/pages/edit_user.php:210
-#: ../../web/templates/pages/add_dns.php:87
-#: ../../web/templates/pages/add_db.php:103
+#: ../../web/templates/pages/add_dns.php:89
+#: ../../web/templates/pages/add_db.php:105
 #: ../../web/templates/pages/edit_web.php:259
 #: ../../web/templates/pages/add_mail_acc.php:66
 #: ../../web/templates/pages/edit_server_php.php:58
@@ -3312,27 +3314,27 @@ msgstr ""
 msgid "Basic Options"
 msgstr ""
 
-#: ../../web/templates/pages/list_key.php:10
-#: ../../web/templates/pages/list_key.php:14
+#: ../../web/templates/pages/list_key.php:17
+#: ../../web/templates/pages/list_key.php:21
 #: ../../web/templates/pages/add_key.php:31
 msgid "Add SSH Key"
 msgstr ""
 
-#: ../../web/templates/pages/list_key.php:24
+#: ../../web/templates/pages/list_key.php:31
 msgid "SSH Keys"
 msgstr ""
 
-#: ../../web/templates/pages/list_key.php:28
-#: ../../web/templates/pages/list_key.php:41
+#: ../../web/templates/pages/list_key.php:35
+#: ../../web/templates/pages/list_key.php:48
 msgid "SSH ID"
 msgstr ""
 
-#: ../../web/templates/pages/list_key.php:58
+#: ../../web/templates/pages/list_key.php:65
 #, php-format
 msgid "Are you sure you want to delete SSH key %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_key.php:81
+#: ../../web/templates/pages/list_key.php:88
 #, php-format
 msgid "%d SSH key"
 msgid_plural "%d SSH keys"
@@ -3346,7 +3348,7 @@ msgstr ""
 
 #: ../../web/templates/pages/edit_user.php:30
 #: ../../web/templates/pages/edit_user.php:31
-#: ../../web/templates/pages/list_access_keys.php:49
+#: ../../web/templates/pages/list_access_keys.php:55
 msgid "Access Keys"
 msgstr ""
 
@@ -3488,8 +3490,8 @@ msgid "DNS Zone"
 msgstr ""
 
 #: ../../web/templates/pages/list_backup_detail.php:218
-#: ../../web/templates/includes/panel.php:358
-#: ../../web/templates/includes/panel.php:362
+#: ../../web/templates/includes/panel.php:360
+#: ../../web/templates/includes/panel.php:364
 msgid "Jobs"
 msgstr ""
 
@@ -3563,54 +3565,54 @@ msgstr ""
 msgid "Algorithm"
 msgstr ""
 
-#: ../../web/templates/pages/add_dns.php:32
+#: ../../web/templates/pages/add_dns.php:34
 msgid "Add DNS Zone"
 msgstr ""
 
-#: ../../web/templates/pages/add_dns.php:37
+#: ../../web/templates/pages/add_dns.php:39
 msgid "a dns domain"
 msgstr ""
 
-#: ../../web/templates/pages/add_dns.php:69
+#: ../../web/templates/pages/add_dns.php:71
 #: ../../web/templates/pages/edit_dns.php:51
 #: ../../web/templates/pages/list_dns.php:81
 #: ../../web/templates/pages/list_dns.php:224
 msgid "Template"
 msgstr ""
 
-#: ../../web/templates/pages/add_dns.php:95
+#: ../../web/templates/pages/add_dns.php:97
 #: ../../web/templates/pages/edit_dns.php:71
 msgid "Enable DNSSEC"
 msgstr ""
 
-#: ../../web/templates/pages/add_dns.php:101
+#: ../../web/templates/pages/add_dns.php:103
 #: ../../web/templates/pages/edit_dns.php:77
 #: ../../web/templates/pages/list_dns.php:85
 #: ../../web/templates/pages/list_dns.php:242
 msgid "Expiration Date"
 msgstr ""
 
-#: ../../web/templates/pages/add_dns.php:101
+#: ../../web/templates/pages/add_dns.php:103
 #: ../../web/templates/pages/edit_dns.php:77
 msgid "YYYY-MM-DD"
 msgstr ""
 
-#: ../../web/templates/pages/add_db.php:32
+#: ../../web/templates/pages/add_db.php:34
 #: ../../web/templates/pages/list_db.php:20
 msgid "Add Database"
 msgstr ""
 
-#: ../../web/templates/pages/add_db.php:37
+#: ../../web/templates/pages/add_db.php:39
 msgid "a database"
 msgstr ""
 
-#: ../../web/templates/pages/add_db.php:48
+#: ../../web/templates/pages/add_db.php:50
 #, php-format
 msgid ""
 "Prefix %s will be automatically added to database name and database user"
 msgstr ""
 
-#: ../../web/templates/pages/add_db.php:70
+#: ../../web/templates/pages/add_db.php:72
 #: ../../web/templates/pages/edit_db.php:35
 #, php-format
 msgid "Maximum %s characters length, including prefix"
@@ -3850,10 +3852,10 @@ msgid "SOA"
 msgstr ""
 
 #: ../../web/templates/pages/list_access_key.php:27
-#: ../../web/templates/pages/list_access_keys.php:25
-#: ../../web/templates/pages/list_access_keys.php:56
-#: ../../web/templates/pages/list_access_keys.php:84
-#: ../../web/templates/pages/list_access_keys.php:85
+#: ../../web/templates/pages/list_access_keys.php:31
+#: ../../web/templates/pages/list_access_keys.php:62
+#: ../../web/templates/pages/list_access_keys.php:90
+#: ../../web/templates/pages/list_access_keys.php:91
 msgid "Access Key"
 msgstr ""
 
@@ -3999,8 +4001,8 @@ msgstr ""
 #: ../../web/templates/pages/list_web.php:231
 #: ../../web/templates/pages/list_web.php:234
 #: ../../web/templates/pages/list_web.php:327
-#: ../../web/templates/includes/panel.php:204
-#: ../../web/templates/includes/panel.php:206
+#: ../../web/templates/includes/panel.php:205
+#: ../../web/templates/includes/panel.php:207
 msgid "Statistics"
 msgstr ""
 
@@ -4017,8 +4019,8 @@ msgstr ""
 
 #: ../../web/templates/pages/list_web.php:267
 #: ../../web/templates/pages/list_web.php:270
-#: ../../web/templates/pages/list_weblog.php:39
-#: ../../web/templates/pages/list_weblog.php:41
+#: ../../web/templates/pages/list_weblog.php:40
+#: ../../web/templates/pages/list_weblog.php:42
 msgid "Access Log"
 msgstr ""
 
@@ -4030,7 +4032,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../../web/templates/pages/add_access_key.php:24
-#: ../../web/templates/pages/list_access_keys.php:9
+#: ../../web/templates/pages/list_access_keys.php:15
 msgid "Add Access Key"
 msgstr ""
 
@@ -4156,16 +4158,16 @@ msgstr ""
 msgid "Set as default language for all users"
 msgstr ""
 
-#: ../../web/templates/pages/edit_server.php:146
+#: ../../web/templates/pages/edit_server.php:138
+msgid "Enable debug mode"
+msgstr ""
+
+#: ../../web/templates/pages/edit_server.php:158
 msgid "Release"
 msgstr ""
 
-#: ../../web/templates/pages/edit_server.php:153
+#: ../../web/templates/pages/edit_server.php:165
 msgid "Options"
-msgstr ""
-
-#: ../../web/templates/pages/edit_server.php:164
-msgid "Enable debug mode"
 msgstr ""
 
 #: ../../web/templates/pages/edit_server.php:176
@@ -4407,11 +4409,11 @@ msgstr ""
 #: ../../web/templates/pages/list_ip.php:34
 #: ../../web/templates/pages/list_ip.php:71
 #: ../../web/templates/pages/list_ip.php:138
-#: ../../web/templates/includes/panel.php:285
-#: ../../web/templates/includes/panel.php:289
-#: ../../web/templates/includes/panel.php:304
-#: ../../web/templates/includes/panel.php:323
-#: ../../web/templates/includes/panel.php:327
+#: ../../web/templates/includes/panel.php:287
+#: ../../web/templates/includes/panel.php:291
+#: ../../web/templates/includes/panel.php:306
+#: ../../web/templates/includes/panel.php:325
+#: ../../web/templates/includes/panel.php:329
 msgid "Domains"
 msgstr ""
 
@@ -4456,12 +4458,12 @@ msgstr ""
 msgid "Type directory name, one per line. To exlude all dirs use *"
 msgstr ""
 
-#: ../../web/templates/pages/list_access_keys.php:97
+#: ../../web/templates/pages/list_access_keys.php:103
 #, php-format
 msgid "Are you sure you want to delete access key %s?"
 msgstr ""
 
-#: ../../web/templates/pages/list_access_keys.php:126
+#: ../../web/templates/pages/list_access_keys.php:132
 #, php-format
 msgid "%d access key"
 msgid_plural "%d access keys"
@@ -4552,7 +4554,7 @@ msgstr ""
 #: ../../web/templates/pages/list_dns.php:34
 #: ../../web/templates/pages/list_dns.php:80
 #: ../../web/templates/pages/list_dns.php:216
-#: ../../web/templates/includes/panel.php:311
+#: ../../web/templates/includes/panel.php:313
 msgid "Records"
 msgstr ""
 
@@ -4568,12 +4570,12 @@ msgid_plural "%d DNS zones"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../web/templates/pages/list_weblog.php:51
-#: ../../web/templates/pages/list_weblog.php:53
+#: ../../web/templates/pages/list_weblog.php:52
+#: ../../web/templates/pages/list_weblog.php:54
 msgid "Error Log"
 msgstr ""
 
-#: ../../web/templates/pages/list_weblog.php:97
+#: ../../web/templates/pages/list_weblog.php:99
 #, php-format
 msgid "Last 70 lines of %s.%s.log"
 msgstr ""
@@ -4605,62 +4607,62 @@ msgstr ""
 msgid "Delete all notifications"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:160
-#: ../../web/templates/includes/panel.php:162
+#: ../../web/templates/includes/panel.php:161
+#: ../../web/templates/includes/panel.php:163
 msgid "File manager"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:174
-#: ../../web/templates/includes/panel.php:176
+#: ../../web/templates/includes/panel.php:175
+#: ../../web/templates/includes/panel.php:177
 msgid "Server settings"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:213
-#: ../../web/templates/includes/panel.php:215
+#: ../../web/templates/includes/panel.php:214
+#: ../../web/templates/includes/panel.php:216
 msgid "Help"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:249
+#: ../../web/templates/includes/panel.php:251
 msgid "Collapse main menu"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:249
-#: ../../web/templates/includes/panel.php:252
+#: ../../web/templates/includes/panel.php:251
+#: ../../web/templates/includes/panel.php:254
 msgid "Expand main menu"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:267
-#: ../../web/templates/includes/panel.php:274
-#: ../../web/templates/includes/panel.php:285
-#: ../../web/templates/includes/panel.php:304
-#: ../../web/templates/includes/panel.php:323
-#: ../../web/templates/includes/panel.php:342
-#: ../../web/templates/includes/panel.php:358
+#: ../../web/templates/includes/panel.php:269
+#: ../../web/templates/includes/panel.php:276
+#: ../../web/templates/includes/panel.php:287
+#: ../../web/templates/includes/panel.php:306
+#: ../../web/templates/includes/panel.php:325
+#: ../../web/templates/includes/panel.php:344
+#: ../../web/templates/includes/panel.php:360
 msgid "Suspended"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:268
+#: ../../web/templates/includes/panel.php:270
 msgid "USER"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:285
-#: ../../web/templates/includes/panel.php:304
-#: ../../web/templates/includes/panel.php:323
-#: ../../web/templates/includes/panel.php:342
-#: ../../web/templates/includes/panel.php:358
-#: ../../web/templates/includes/panel.php:374
+#: ../../web/templates/includes/panel.php:287
+#: ../../web/templates/includes/panel.php:306
+#: ../../web/templates/includes/panel.php:325
+#: ../../web/templates/includes/panel.php:344
+#: ../../web/templates/includes/panel.php:360
+#: ../../web/templates/includes/panel.php:376
 msgid "Limit"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:308
+#: ../../web/templates/includes/panel.php:310
 msgid "Zones"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:359
+#: ../../web/templates/includes/panel.php:361
 msgid "CRON"
 msgstr ""
 
-#: ../../web/templates/includes/panel.php:375
+#: ../../web/templates/includes/panel.php:377
 msgid "BACKUP"
 msgstr ""
 

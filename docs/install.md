@@ -3,7 +3,7 @@ layout: page
 title: Install
 ---
 
-<script setup lang="ts">
+<script setup>
   import InstallPageTitle from "./.vitepress/theme/components/InstallPageTitle.vue";
   import InstallOptions from "./.vitepress/theme/components/InstallOptions.vue";
   import InstallOptionsSection from "./.vitepress/theme/components/InstallOptionsSection.vue";

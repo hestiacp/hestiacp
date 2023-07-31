@@ -1,10 +1,7 @@
-<script lang="ts">
-import { FeatureListItem } from "../../../_data/features";
-
+<script>
 export default {
 	props: {
 		items: {
-			type: Array<FeatureListItem>,
 			required: true,
 		},
 	},

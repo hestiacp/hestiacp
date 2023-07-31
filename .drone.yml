@@ -28,6 +28,14 @@ steps:
       - npm ci
       - npm run build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+  - name: Reset Web templates
+    commands:
+      - rm /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
+      - rm /usr/local/hestia/data/templates/web/nginx/*.*
+      - rm /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
+      - rm /usr/local/hestia/data/templates/web/apache2/*.*
+      - rm /usr/local/hestia/data/templates/web/php-fpm/*.*
+      - /usr/local/hestia/bin/v-update-web-templates
   - name: Run system / user tests
     commands:
       - bats ./test/test.bats
@@ -44,6 +52,7 @@ trigger:
     - refs/heads/release
     - refs/heads/prerelease
     - refs/heads/servicing
+    - refs/heads/tests/*
     - refs/heads/main
     - refs/pull/*/head
 
@@ -77,6 +86,14 @@ steps:
       - npm ci
       - npm run build
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+  - name: Reset Web templates
+    commands:
+      - rm /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
+      - rm /usr/local/hestia/data/templates/web/nginx/*.*
+      - rm /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
+      - rm /usr/local/hestia/data/templates/web/apache2/*.*
+      - rm /usr/local/hestia/data/templates/web/php-fpm/*.*
+      - /usr/local/hestia/bin/v-update-web-templates
   - name: Run system / user tests
     commands:
       - bats ./test/test.bats
@@ -97,6 +114,7 @@ trigger:
     - refs/heads/release
     - refs/heads/prerelease
     - refs/heads/servicing
+    - refs/heads/tests/*
     - refs/heads/main
     - refs/pull/*/head
 

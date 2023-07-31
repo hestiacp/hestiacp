@@ -57,6 +57,11 @@
 /* Units table
    ========================================================================== */
 
+.units-table-header {
+	box-shadow: none;
+	border-top: 1px solid var(--chart-grid-color);
+}
+
 .units-table-row {
 	@media (--viewport-large) {
 		&:hover {

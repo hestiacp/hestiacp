@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.4] - Service release
+
+### Bugfixes
+
+- Fixed an issue where logs entries would be duplicated when calling return_hash (#3869)
+- Modified installer behavior so that firewall rules are only added for necessary services (#3871)
+- Minor adjustments to styling and classes (#3843)
+- Improved robustness of v-list-sys-themes (#3842)
+- Minor updates to v-update-mail-domain-ssl (#3850)
+- Changed default PHP-FPM version to 8.2 (#3861)
+- Minor updates to v-generate-password-hash (#3874)
+- Fixed an issue that would occur during installation if Cloudflare IP address range could not be updated (#3876)
+- Fixed multiple PHP warnings and 500 error when mail was not installed (#3841, #3877)
+
+### Dependencies
+
+- Removed typescript from the project for simplicity (#3821)
+- Removed PostCSS and move to Lightning CSS (#3820)
+- Updated translations (#3878)
+- Updated dependency eslint to v8.46.0 (#3881)
+- Updated dependency esbuild to v0.18.16 (#3826)
+- Updated dependency stylelint to v15.10.2 (#3829)
+- Updated dependency chart.js to v4.3.2 (#3866)
+- Updated dependency hestiacp/phpquoteshellarg to v1.0.1 (#3827)
+- Pinned dependency @fortawesome/fontawesome-free to 6.4.0 (#3862)
+- Updated renovate config (#3840)
+- Updated all non-major dependencies (#3880)
+
 ## [1.8.3] - Service release
 
 - [UI] Fixed an issue where the wrong user type icon was displayed the top menu bar (#3810)

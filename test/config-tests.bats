@@ -27,6 +27,7 @@ function setup() {
         echo 'subdomain=cdn.testhestiacp.com' >> /tmp/hestia-test-env.sh
         echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
         echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
+        echo 'ipv6="fe80::9400:ff:feca:468b"' >> /tmp/hestia-test-env.sh
     fi
 
     source /tmp/hestia-test-env.sh

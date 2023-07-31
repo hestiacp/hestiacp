@@ -449,7 +449,6 @@ if [ "$NGINX_B" = true ]; then
 
 		# Custom config
 		get_branch_file 'src/deb/nginx/nginx.conf' "${BUILD_DIR_HESTIANGINX}/usr/local/hestia/nginx/conf/nginx.conf"
-		cp "${BUILD_DIR_HESTIANGINX}/usr/local/hestia/nginx/conf/nginx.conf" "${BUILD_DIR_HESTIANGINX}/usr/local/hestia/nginx/conf/nginx_hestia_orig.conf"
 
 		# Build the package
 		echo Building Nginx DEB

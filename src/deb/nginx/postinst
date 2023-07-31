@@ -25,12 +25,16 @@ for nic in $physical_nics; do
 done
 
 # Adapt port listing in nginx.conf depended on availability of IPV4 and IPV6 network interface
-NGINX_CONF=/usr/local/hestia/nginx/conf/nginx.conf
+NGINX_CONF="/usr/local/hestia/nginx/conf/nginx.conf"
 if [ -z "$ipv4_scope_global" ]; then
-	sed -i '/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/d' "$NGINX_CONF"
+	sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#\1/' "$NGINX_CONF"
+else
+	sed -i 's/#\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"
 fi
 if [ -z "$ipv6_scope_global" ]; then
-	sed -i '/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/d' "$NGINX_CONF"
+	sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#\1/' "$NGINX_CONF"
+else
+	sed -i 's/#\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"
 fi
 
 # Run triggers only on updates
@@ -60,7 +64,7 @@ source /usr/local/hestia/conf/hestia.conf
 source /usr/local/hestia/install/upgrade/upgrade.conf
 
 # Reset backend port
-if [ ! -z "$BACKEND_PORT" ]; then
+if [ -n "$BACKEND_PORT" ]; then
 	/usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
 fi
 

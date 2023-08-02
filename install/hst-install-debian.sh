@@ -2166,7 +2166,7 @@ ip="$primary_ipv4"
 local_ip="$primary_ipv4"
 # IPv6
 if [ "$ipv6_support" = 'yes' ]; then
-	primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+	primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | tail -1)"
 	ipv6="$primary_ipv6"
 	local_ipv6="$primary_ipv6"
 else

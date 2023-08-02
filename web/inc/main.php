@@ -101,9 +101,10 @@ if (isset($_SESSION["user"])) {
 		$_SESSION["token"] = $token;
 	}
 	$username = $_SESSION["user"];
-	if (isset($_SESSION["look"])) {
+	if ($_SESSION["look"] != "") {
 		$username = $_SESSION["look"];
 	}
+
 	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
 	$data = json_decode(implode("", $output), true);
 	unset($output, $return_var);

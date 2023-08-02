@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.10] - Service release
+
+- Fixed an issue with v-change-dns-domain-ip and DNS cluster (#3803)
+
 ## [1.7.9] - Service release
 
 - This will be the final release for Ubuntu 18.04 please upgrade your servers to Ubuntu 20.04 or 22.04!

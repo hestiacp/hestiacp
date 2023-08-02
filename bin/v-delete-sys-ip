@@ -28,6 +28,10 @@ source "$HESTIA/func/domain.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+# Variables
+NETPLAN_FILE="/etc/netplan/60-hestia.yaml"
+NETWORK_IF_FILE="/etc/network/interfaces"
+
 #----------------------------------------------------------#
 #                    Verifications                         #
 #----------------------------------------------------------#
@@ -79,10 +83,23 @@ fi
 host_ip_check=$(hostname -i | sed -ne "/$ip46/p") # check, if IP address is primary (listed in /etc/hosts)
 # shellcheck disable=SC1087
 interface=$("$BIN/v-list-sys-network" plain | sed -ne "/$ip46/s/$ip46[ \t]*\/[0-9]*[ \t]*\(.*\)/\1/p") # interface for IP address
-number_of_ips=$(/sbin/ip${check_ip_par} addr | grep -c global)                                         # number of global system IP addresses
+number_of_ips=$("$BIN/v-list-sys-network" list "$check_ip_par" | wc -l)                                # number of global system IP addresses
 
 if [[ (-n "$host_ip_check" && -n "$interface") || ($number_of_ips -eq 1) ]]; then
 	echo "Error: can't delete primary IP address"
+	log_event "$E_FORBIDEN" "$ARGUMENTS"
+	exit "$E_FORBIDEN"
+fi
+
+# Check if IP is managed by HESTIA and not by system
+if [ -f "$NETPLAN_FILE" ]; then
+	NETPLAN_MATCH="$(sed -ne "/$ip46/p" "$NETPLAN_FILE")"
+fi
+if [ -f "$NETWORK_IF_FILE" ]; then
+	NETWORK_IF_MATCH="$(sed -ne "/$ip46/p" "$NETWORK_IF_FILE")"
+fi
+if [ -z "$NETPLAN_MATCH" -a -z "$NETWORK_IF_MATCH" ]; then
+	echo "Error: can't delete system managed IP address"
 	log_event "$E_FORBIDEN" "$ARGUMENTS"
 	exit "$E_FORBIDEN"
 fi

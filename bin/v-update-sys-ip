@@ -37,9 +37,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Listing system IP addresses
-ips=$(ip -4 addr | sed -ne '/inet.*global/s/[ \t]*inet[ \t]*\([^ ^\t^\/]*\)\/[ \t]*.*/\1/p')
-ipv6s=$(ip -6 addr | sed -ne '/inet6.*global/s/[ \t]*inet6[ \t]*\([^ ^\t^\/]*\)\/[ \t]*.*/\1/p')
-v_ips="$($HESTIA/bin/v-list-sys-ips list)"
+ips="$($BIN/v-list-sys-network list 4)"
+ipv6s="$($BIN/v-list-sys-network list 6)"
+v_ips="$($BIN/v-list-sys-ips list)"
 ip_num=$(echo "$ips" | wc -l)
 ipv6_num=$(echo "$ipv6s" | wc -l)
 v_ip_num=$(echo "$v_ips" | wc -l)
@@ -146,7 +146,7 @@ if [ -n "$old_ip" ]; then
 fi
 
 # Adding system IP
-"$BIN/v-list-sys-network" plain | while read listed_ip listed_mask listed_iface; do
+"$BIN/v-list-sys-network" plain | while read listed_ip listed_mask listed_iface listed_family; do
 	if [ ! -e "$HESTIA/data/ips/$listed_ip" ]; then
 		"$BIN/v-add-sys-ip" "$listed_ip" "$listed_mask" "$listed_iface"
 	elif [ -e "/etc/nginx/conf.d/$listed_ip.conf" ]; then

@@ -575,6 +575,10 @@ if [ "$proftpd" = 'yes' ]; then
 	echo '   - ProFTPD FTP Server'
 fi
 
+if [ "$webterminal" = 'yes' ]; then
+	echo '   - Web terminal'
+fi
+
 # Firewall stack
 if [ "$iptables" = 'yes' ]; then
 	echo -n '   - Firewall (iptables)'
@@ -936,6 +940,7 @@ fi
 if [ -d "$withdebs" ]; then
 	software=$(echo "$software" | sed -e "s/hestia-nginx//")
 	software=$(echo "$software" | sed -e "s/hestia-php//")
+	software=$(echo "$software" | sed -e "s/hestia-web-terminal//")
 	software=$(echo "$software" | sed -e "s/hestia=${HESTIA_INSTALL_VER}//")
 fi
 if [ "$release" = '20.04' ]; then
@@ -1014,6 +1019,16 @@ if [ -n "$withdebs" ] && [ -d "$withdebs" ]; then
 	else
 		echo "    - hestia-nginx backend package"
 		dpkg -i $withdebs/hestia-nginx_*.deb > /dev/null 2>&1
+	fi
+
+	if [ "$webterminal" = "yes" ]; then
+		if [ -z $(ls $withdebs/hestia-web-terminal_*.deb 2> /dev/null) ]; then
+			echo "    - hestia-web-terminal package (from apt)"
+			apt-get -y install hestia-web-terminal > /dev/null 2>&1
+		else
+			echo "    - hestia-web-terminal"
+			dpkg -i $withdebs/hestia-web-terminal_*.deb > /dev/null 2>&1
+		fi
 	fi
 fi
 
@@ -1257,12 +1272,6 @@ else
 	write_config_value "DISK_QUOTA" "no"
 fi
 
-# Web terminal
-if [ "$webterminal" = 'yes' ]; then
-	write_config_value "WEB_TERMINAL" "true"
-else
-	write_config_value "WEB_TERMINAL" "false"
-fi
 write_config_value "WEB_TERMINAL_PORT" "8085"
 
 # Backups
@@ -2073,6 +2082,20 @@ fi
 
 echo "[ * ] Configuring File Manager..."
 $HESTIA/bin/v-add-sys-filemanager quiet
+
+#----------------------------------------------------------#
+#              Configure Web terminal                      #
+#----------------------------------------------------------#
+
+# Web terminal
+if [ "$webterminal" = 'yes' ]; then
+	write_config_value "WEB_TERMINAL" "true"
+	systemctl daemon-reload > /dev/null 2>&1
+	systemctl enable hestia-web-terminal > /dev/null 2>&1
+	systemctl restart hestia-web-terminal > /dev/null 2>&1
+else
+	write_config_value "WEB_TERMINAL" "false"
+fi
 
 #----------------------------------------------------------#
 #                  Configure dependencies                  #

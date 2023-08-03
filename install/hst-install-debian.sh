@@ -238,7 +238,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:e:p:W:D:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;      # Apache
 		w) phpfpm=$OPTARG ;;      # PHP-FPM
@@ -587,6 +587,10 @@ if [ "$vsftpd" = 'yes' ]; then
 fi
 if [ "$proftpd" = 'yes' ]; then
 	echo '   - ProFTPD FTP Server'
+fi
+
+if [ "$webterminal" = 'yes' ]; then
+	echo '   - Web terminal'
 fi
 
 # Firewall stack
@@ -1035,6 +1039,16 @@ if [ -n "$withdebs" ] && [ -d "$withdebs" ]; then
 		echo "    - hestia-nginx backend package"
 		dpkg -i $withdebs/hestia-nginx_*.deb > /dev/null 2>&1
 	fi
+
+	if [ "$webterminal" = "yes" ]; then
+		if [ -z $(ls $withdebs/hestia-web-terminal_*.deb 2> /dev/null) ]; then
+			echo "    - hestia-web-terminal package (from apt)"
+			apt-get -y install hestia-web-terminal > /dev/null 2>&1
+		else
+			echo "    - hestia-web-terminal"
+			dpkg -i $withdebs/hestia-web-terminal_*.deb > /dev/null 2>&1
+		fi
+	fi
 fi
 
 # Restoring autostart policy
@@ -1246,12 +1260,6 @@ else
 	write_config_value "DISK_QUOTA" "no"
 fi
 
-# Web terminal
-if [ "$webterminal" = 'yes' ]; then
-	write_config_value "WEB_TERMINAL" "true"
-else
-	write_config_value "WEB_TERMINAL" "false"
-fi
 write_config_value "WEB_TERMINAL_PORT" "8085"
 
 # Backups
@@ -2091,6 +2099,20 @@ else
 	write_config_value "API_SYSTEM" "0"
 	write_config_value "API_ALLOWED_IP" ""
 	$HESTIA/bin/v-change-sys-api disable
+fi
+
+#----------------------------------------------------------#
+#              Configure Web terminal                      #
+#----------------------------------------------------------#
+
+# Web terminal
+if [ "$webterminal" = 'yes' ]; then
+	write_config_value "WEB_TERMINAL" "true"
+	systemctl daemon-reload > /dev/null 2>&1
+	systemctl enable hestia-web-terminal > /dev/null 2>&1
+	systemctl restart hestia-web-terminal > /dev/null 2>&1
+else
+	write_config_value "WEB_TERMINAL" "false"
 fi
 
 #----------------------------------------------------------#

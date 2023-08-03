@@ -1356,7 +1356,7 @@
 	.sidebar-right-grid {
 		display: grid;
 		gap: 50px;
-		grid-template-columns: 2fr 1.3fr;
+		grid-template-columns: 2fr 350px;
 	}
 
 	.sidebar-right-grid-content {

@@ -12,12 +12,14 @@
 	--animate-duration: 300ms;
 	--font-family: "Exo", system-ui;
 	--font-family-monospace: "Inconsolata", "Lucida Console", "Monaco", monospace;
+	--border-radius-base: 4px;
+
+	/* Colors */
 	--color-text: #7c7c7c;
 	--color-text-link: #326b9b;
 	--color-text-link-hover: #c36;
 	--color-text-heading: #4b4b4b;
 	--color-background: #fff;
-	--border-radius-base: 4px;
 
 	/* Alerts */
 	--alert-border-color: #fff;
@@ -36,6 +38,17 @@
 	--icon-color-orange: #ffc043;
 	--icon-color-blue: #326b9b;
 	--icon-color-lightblue: #6eb6f0;
+
+	/* Top Bar */
+	--top-bar-background: linear-gradient(
+			to bottom,
+			rgb(104 145 196 / 100%) 0%,
+			rgb(69 114 181 / 100%) 50%,
+			rgb(65 90 149 / 100%) 100%
+		),
+		#5070a6;
+	--top-bar-box-shadow: 0 4px 10px rgb(100 100 100 / 40%);
+	--top-bar-border-bottom: 1px solid #fff;
 
 	/* Charts */
 	--chart-label-color: #7c7c7c;
@@ -65,15 +78,9 @@
    ========================================================================== */
 
 .top-bar {
-	background: linear-gradient(
-		to bottom,
-		rgb(104 145 196 / 100%) 0%,
-		rgb(69 114 181 / 100%) 50%,
-		rgb(65 90 149 / 100%) 100%
-	);
-	background-color: #5070a6;
-	box-shadow: 0 4px 10px rgb(100 100 100 / 40%);
-	border-bottom: 1px solid #fff;
+	background: var(--top-bar-background);
+	box-shadow: var(--top-bar-box-shadow);
+	border-bottom: var(--top-bar-border-bottom);
 	position: fixed;
 	display: flex;
 	width: 100%;
@@ -749,14 +756,14 @@
 		}
 
 		&.active {
-			background-color: #4f8bbc;
 			color: #4686b8;
 			background: linear-gradient(
-				to bottom,
-				rgb(255 255 255 / 60%) 0%,
-				rgb(255 255 255 / 75%) 50%,
-				rgb(255 255 255 / 95%) 95%
-			);
+					to bottom,
+					rgb(255 255 255 / 60%) 0%,
+					rgb(255 255 255 / 75%) 50%,
+					rgb(255 255 255 / 95%) 95%
+				),
+				#4f8bbc;
 			text-shadow: 0 1px rgb(255 255 255 / 80%);
 		}
 
@@ -1356,7 +1363,7 @@
 	.sidebar-right-grid {
 		display: grid;
 		gap: 50px;
-		grid-template-columns: 2fr 1.3fr;
+		grid-template-columns: 2fr 350px;
 	}
 
 	.sidebar-right-grid-content {
@@ -1805,13 +1812,13 @@
 	text-shadow: 0 1px 1px rgb(255 255 255 / 85%);
 	border: 1px solid #0083db;
 	border-radius: 3px;
-	background-color: #3b9de8;
 	background: linear-gradient(
-		to bottom,
-		rgb(235 243 249 / 100%) 0%,
-		rgb(192 216 236 / 100%) 51%,
-		rgb(223 235 245 / 100%) 100%
-	);
+			to bottom,
+			rgb(235 243 249 / 100%) 0%,
+			rgb(192 216 236 / 100%) 51%,
+			rgb(223 235 245 / 100%) 100%
+		),
+		#3b9de8;
 	box-shadow: 0 1px 3px rgb(0 0 0 / 25%), inset 0 0 1px #fff, inset 0 0 3px rgb(255 255 255 / 50%);
 
 	&:hover {
@@ -2076,8 +2083,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: rgb(102 158 231);
-	background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%);
+	background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%),
+		rgb(102 158 231);
 
 	& .debug-panel {
 		display: none;

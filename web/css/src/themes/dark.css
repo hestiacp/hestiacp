@@ -24,6 +24,11 @@
 	--icon-color-green: #37cf39;
 	--icon-color-blue: #0092f4;
 
+	/* Top Bar */
+	--top-bar-background: #454545;
+	--top-bar-box-shadow: 0 8px 15px rgb(0 0 0 / 25%);
+	--top-bar-border-bottom: 1px solid #505050;
+
 	/* Charts */
 	--chart-label-color: #cdcdcd;
 	--chart-grid-color: #434343;
@@ -31,12 +36,6 @@
 
 /* Top bar
    ========================================================================== */
-
-.top-bar {
-	background: #454545;
-	border-bottom: 1px solid #505050;
-	box-shadow: 0 8px 15px rgb(0 0 0 / 25%);
-}
 
 .top-bar-usage-inner {
 	color: #909090;
@@ -87,7 +86,7 @@
 }
 
 .top-bar-menu-panel {
-	background-color: #454545;
+	background-color: var(--top-bar-background);
 }
 
 .top-bar-menu-link {

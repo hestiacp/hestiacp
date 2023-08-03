@@ -39,6 +39,17 @@
 	--icon-color-blue: #326b9b;
 	--icon-color-lightblue: #6eb6f0;
 
+	/* Top Bar */
+	--top-bar-background: linear-gradient(
+			to bottom,
+			rgb(104 145 196 / 100%) 0%,
+			rgb(69 114 181 / 100%) 50%,
+			rgb(65 90 149 / 100%) 100%
+		),
+		#5070a6;
+	--top-bar-box-shadow: 0 4px 10px rgb(100 100 100 / 40%);
+	--top-bar-border-bottom: 1px solid #fff;
+
 	/* Charts */
 	--chart-label-color: #7c7c7c;
 	--chart-grid-color: #e9e9e9;
@@ -67,15 +78,9 @@
    ========================================================================== */
 
 .top-bar {
-	background: linear-gradient(
-			to bottom,
-			rgb(104 145 196 / 100%) 0%,
-			rgb(69 114 181 / 100%) 50%,
-			rgb(65 90 149 / 100%) 100%
-		),
-		#5070a6;
-	box-shadow: 0 4px 10px rgb(100 100 100 / 40%);
-	border-bottom: 1px solid #fff;
+	background: var(--top-bar-background);
+	box-shadow: var(--top-bar-box-shadow);
+	border-bottom: var(--top-bar-border-bottom);
 	position: fixed;
 	display: flex;
 	width: 100%;

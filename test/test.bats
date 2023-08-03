@@ -708,7 +708,7 @@ function check_ip_not_banned(){
     assert_file_not_exist $HESTIA/data/ips/$ip
 
 		if [ $(lsb_release -s -i) = "Ubuntu" ]; then
-			assert_file_exsits /etc/netplan/60-hestia.yaml
+			assert_file_exist /etc/netplan/60-hestia.yaml
 		fi
 
     ip="198.18.0.121"

@@ -215,7 +215,10 @@ if (!empty($_POST["save"])) {
 				quoteshellarg($v_domain) .
 				" " .
 				quoteshellarg($_POST["v_ip"]) .
-				" 'no'",
+				" " .
+				"'no'" .
+				" " .
+				"4",
 			$output,
 			$return_var,
 		);
@@ -234,7 +237,10 @@ if (!empty($_POST["save"])) {
 				quoteshellarg($v_domain) .
 				" " .
 				quoteshellarg($_POST["v_ipv6"]) .
-				" 'no'",
+				" " .
+				"'no'" .
+				" " .
+				"6",
 			$output,
 			$return_var,
 		);

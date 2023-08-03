@@ -1,31 +1,37 @@
 #!/bin/bash
 # info: change web domain ip
-# options: USER DOMAIN DOMAIN [RESTART]
+# options: USER DOMAIN IP [RESTART] [IP FORMAT]
 #
-# example: v-change-web-domain-ip admin example.com 167.86.105.230 yes
+# example: v-change-web-domain-ip admin domain.com 123.212.111.222
+# example: v-change-web-domain-ip admin domain.com 1234:55:66::1
+# example: v-change-web-domain-ip admin domain.com 123.212.111.222 no 4
+# example: v-change-web-domain-ip admin domain.com 1234:55:66::1 yes 6
+# example: v-change-web-domain-ip admin domain.com '' '' 4
+# example: v-change-web-domain-ip admin domain.com '' no 6
 #
-# This function is used for changing domain ip
+# This function is used for changing web domain ip
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-user=$1
-domain=$2
-domain_idn=$2
-ip=$3
-restart=$4
+user="$1"
+domain="$2"
+domain_idn="$2"
+ip46="$3"
+restart="$4"
+ip_format="$5"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/domain.sh
-source $HESTIA/func/domain.sh
+source "$HESTIA/func/domain.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -38,16 +44,40 @@ format_domain_idn
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN IP [RESTART]'
-if [ -n "$ip" ]; then
-	is_format_valid 'user' 'domain' 'ip'
-	is_ip_valid "$ip" "$user"
-fi
+check_args '3' "$#" 'USER DOMAIN IP [RESTART] [IP FORMAT]'
+is_format_valid 'user' 'domain' 'ip46'
 is_system_enabled "$WEB_SYSTEM" 'WEB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
+
+if [ -z "$ip_format" ]; then
+	ip_format="$(get_ip_format ${ip46})" #	ip verification and automatic format identification
+fi
+if [ -n "$ip_format" ]; then
+	if [ $ip_format -ne 4 -a $ip_format -ne 6 ]; then
+		check_result "$E_INVALID" "invalid IP format :: $ip46 IPV$ip_format?? " # error in case of wrong or undefined IP format
+	fi
+else
+	check_result "$E_INVALID" "invalid or undefined IP format :: $ip46" # error in case of wrong or undefined IP format
+fi
+if [ $ip_format -eq 4 ]; then
+	ip="$ip46"
+	ipv6=''
+	if [ -n "$ip" ]; then
+		is_ip_format_valid "$ip" 'ipv4' # check for correct ipv4 format if not empty
+		is_ip_valid "$ip" "$user"
+	fi
+fi
+if [ $ip_format -eq 6 ]; then
+	ip=''
+	ipv6="$ip46"
+	if [ -n "$ipv6" ]; then
+		is_ip_format_valid "$ipv6" 'ipv6' # check for correct ipv6 format if not empty
+		is_ipv6_valid "$ipv6" "$user"
+	fi
+fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -58,10 +88,18 @@ check_hestia_demo_mode
 
 # Preparing variables for vhost replace
 get_domain_values 'web'
-old=$(get_real_ip "$IP")
-new=$(get_real_ip "$ip")
-ipv6="$IP6"
-local_ipv6="$ipv6"
+if [ $ip_format -eq 4 ]; then
+	old=$(get_real_ip "$IP")
+	new=$(get_real_ip "$ip")
+	ipv6="$IP6"
+	local_ipv6="$ipv6"
+fi
+if [ $ip_format -eq 6 ]; then
+	old=$(get_real_ip "$IP6")
+	new=$(get_real_ip "$ipv6")
+	ip=$(get_real_ip "$IP")
+	local_ip="$ip"
+fi
 
 # Replacing vhost
 replace_web_config "$WEB_SYSTEM" "$TPL.tpl"
@@ -85,7 +123,7 @@ DOMAIN="$WEBDOMAIN"
 
 # Check for webmail
 if [ -n "$IMAP_SYSTEM" -a -n "$MAILDOMAIN" ]; then
-	$BIN/v-rebuild-mail-domain "$user" "$domain"
+	"$BIN/v-rebuild-mail-domain" "$user" "$domain"
 fi
 
 #----------------------------------------------------------#
@@ -93,21 +131,26 @@ fi
 #----------------------------------------------------------#
 
 # Update config
-update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$3"
+if [ $ip_format -eq 4 ]; then
+	update_object_value 'web' 'DOMAIN' "$domain" '$IP' "$3"
+fi
+if [ $ip_format -eq 6 ]; then
+	update_object_value 'web' 'DOMAIN' "$domain" '$IP6' "$3"
+fi
 
 # Update counters
 [ -n "$new" ] && increase_ip_value "$new"
 [ -n "$old" ] && decrease_ip_value "$old"
 
 # Restart web server
-$BIN/v-restart-web "$restart"
+"$BIN/v-restart-web" "$restart"
 check_result $? "WEB restart failed" > /dev/null
 
-$BIN/v-restart-proxy "$restart"
+"$BIN/v-restart-proxy" "$restart"
 check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
-$BIN/v-log-action "$user" "Info" "Web" "Web domain IP address changed (IP: $3, Domain: $domain)."
+"$BIN/v-log-action" "$user" "Info" "Web" "Web domain IP address changed (IP: $3, Domain: $domain)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

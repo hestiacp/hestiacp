@@ -228,7 +228,7 @@ if (!empty($_POST["save"])) {
 	if ($v_ipv6 != $_POST["v_ipv6"] && empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD .
-				"v-change-web-domain-ipv6 " .
+				"v-change-web-domain-ip " .
 				$user .
 				" " .
 				quoteshellarg($v_domain) .

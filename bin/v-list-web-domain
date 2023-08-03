@@ -61,47 +61,64 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-	echo "DOMAIN:         $DOMAIN"
-	echo "ALIAS:          ${ALIAS//,/ }"
-	echo "IP:             $IP"
-	echo "DOCUMENT_ROOT:  $DOCROOT"
+	echo "DOMAIN:           $DOMAIN"
+	echo "ALIAS:            ${ALIAS//,/ }"
+	echo "IP:               $IP"
+	echo "DOCUMENT_ROOT:    $DOCROOT"
 	if [ -n "$IP6" ]; then
-		echo "IP6:            $IP6"
+		echo "IP6:              $IP6"
 	fi
 	if [ -n "$SSL" ] && [ "$SSL" != 'no' ]; then
-		echo "SSL:            $SSL / $SSL_HOME"
+		echo "SSL:              $SSL / $SSL_HOME"
 		if [ -n "$LETSENCRYPT" ] && [ "$LETSENCRYPT" != 'no' ]; then
-			echo "LETSENCRYPT:    $LETSENCRYPT"
+			echo "LETSENCRYPT:      $LETSENCRYPT"
 		fi
 		if [ -n "$SSL_FORCE" ]; then
-			echo "SSL_FORCE:       $SSL_FORCE"
+			echo "SSL_FORCE:        $SSL_FORCE"
 		fi
 		if [ -n "$SSL_HSTS" ]; then
-			echo "SSL_HSTS:       $SSL_HSTS"
+			echo "SSL_HSTS:         $SSL_HSTS"
 		fi
 	fi
-	echo "TEMPLATE:       $TPL"
+	echo "TEMPLATE:         $TPL"
 	if [ -n "$WEB_BACKEND" ]; then
-		echo "BACKEND:        $BACKEND"
+		echo "BACKEND:          $BACKEND"
 	fi
 	if [ -n "$PROXY_SYSTEM" ]; then
-		echo "PROXY:          $PROXY"
-		echo "PROXY EXT:      ${PROXY_EXT//,/ }"
+		echo "PROXY:            $PROXY"
+		echo "PROXY EXT:        ${PROXY_EXT//,/ }"
 	fi
 	if [ -n "$STATS" ]; then
-		echo "STATS:          $STATS"
+		echo "STATS:            $STATS"
+	fi
+	if [ "$FASTCGI_CACHE" = "yes" ]; then
+		echo "FASTCGI_CACHE:    $FASTCGI_CACHE"
+		echo "FASTCGI_DURATION: $FASTCGI_DURATION"
+	fi
+	if [ -n "$REDIRECT" ]; then
+		echo "REDIRECT:         $REDIRECT"
+		echo "REDIRECT_CODE:    $REDIRECT_CODE"
+	fi
+	if [ -n "$CUSTOM_DOCROOT" ]; then
+		echo "CUSTOM_DOCROOT:   $CUSTOM_DOCROOT"
+	fi
+	if [ -n "$STATS_USER" ]; then
+		echo "STATS_USER:       $STATS_USER"
 	fi
 	if [ -n "$FTP_USER" ]; then
-		echo "FTP_USER:       ${FTP_USER//,/, }"
+		echo "FTP_USER:         ${FTP_USER//,/, }"
+	fi
+	if [ -n "$FTP_PATH" ]; then
+		echo "FTP_PATH:         ${FTP_PATH}"
 	fi
 	if [ -n "$AUTH_USER" ]; then
-		echo "HTTP_AUTH:      $AUTH_USER"
+		echo "HTTP_AUTH:        $AUTH_USER"
 	fi
-	echo "DISK:           $U_DISK"
-	echo "BW:             $U_BANDWIDTH"
-	echo "SUSPENDED:      $SUSPENDED"
-	echo "TIME:           $TIME"
-	echo "DATE:           $DATE"
+	echo "DISK:             $U_DISK"
+	echo "BW:               $U_BANDWIDTH"
+	echo "SUSPENDED:        $SUSPENDED"
+	echo "TIME:             $TIME"
+	echo "DATE:             $DATE"
 }
 
 # PLAIN list function

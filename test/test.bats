@@ -664,9 +664,9 @@ function check_ip_not_banned(){
 
 @test "Ip: [Debian] Netplan file updated" {
    # Skip with netplan
-   if [ -f /etc/netplan/60-hestia.yaml ]; then
-   skip
-   fi
+   if [ $(lsb_release -s -i) = "Ubuntu" ]; then
+	 skip
+	 fi
 
    assert_file_exist  /etc/network/interfaces
    assert_file_contains  /etc/network/interfaces "$ip"
@@ -699,7 +699,7 @@ function check_ip_not_banned(){
 }
 
 @test "Ip: Delete ips" {
-    local ip="198.18.0.12"
+    local ip="198.18.0.121"
     run v-delete-sys-ip $ip
     assert_success
     refute_output
@@ -707,6 +707,9 @@ function check_ip_not_banned(){
     assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
     assert_file_not_exist $HESTIA/data/ips/$ip
 
+		if [ $(lsb_release -s -i) = "Ubuntu" ]; then
+			assert_file_exsits /etc/netplan/60-hestia.yaml
+		fi
 
     ip="198.18.0.121"
     run v-delete-sys-ip $ip

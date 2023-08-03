@@ -27,7 +27,7 @@
 				<h1 class="u-mb20"><?= sprintf(_("Install %s"), $WebappInstaller->info()["name"]) ?></h1>
 				<?php show_alert_message($_SESSION); ?>
 				<?php if (!$WebappInstaller->isDomainRootClean()) { ?>
-					<div class="alert alert-info" role="alert">
+					<div class="alert alert-info u-mb10" role="alert">
 						<i class="fas fa-info"></i>
 						<div>
 							<p class="u-mb10"><?= _("Data Loss Warning!") ?></p>

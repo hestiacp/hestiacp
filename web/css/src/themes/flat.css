@@ -10,15 +10,14 @@
 	/* Alerts */
 	--alert-box-shadow: none;
 	--alert-text-shadow: none;
+
+	/* Top Bar */
+	--top-bar-background: #5070a6;
+	--top-bar-box-shadow: none;
 }
 
 /* Top bar
    ========================================================================== */
-
-.top-bar {
-	box-shadow: none;
-	background: #5070a6;
-}
 
 .top-bar-usage-inner {
 	text-shadow: none;

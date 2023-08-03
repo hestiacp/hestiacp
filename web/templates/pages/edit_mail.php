@@ -106,13 +106,11 @@
 						<?= _("Use Let's Encrypt to obtain SSL certificate") ?>
 					</label>
 				</div>
-				<div id="le-warning" class="u-mb20">
-					<div class="alert alert-info" role="alert">
-						<i class="fas fa-exclamation"></i>
-						<div>
-							<p><?php echo $v_webmail_alias; ?></p>
-							<p><?= sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias) ?></p>
-						</div>
+				<div class="alert alert-info u-mb20" role="alert">
+					<i class="fas fa-exclamation"></i>
+					<div>
+						<p><?php echo $v_webmail_alias; ?></p>
+						<p><?= sprintf(_("To enable Let's Encrypt SSL, ensure that DNS records exist for mail.%s and %s!"), $v_domain, $v_webmail_alias) ?></p>
 					</div>
 				</div>
 				<div x-cloak x-show="!letsEncryptEnabled">

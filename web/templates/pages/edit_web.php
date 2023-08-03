@@ -58,11 +58,9 @@
 				<textarea class="form-control" name="v_aliases" id="v_aliases"><?= htmlentities(trim($v_aliases, "'")) ?></textarea>
 			</div>
 			<?php if ($v_letsencrypt == "yes" || $v_letsencrypt == "on") { ?>
-				<div class="u-mb10">
-					<div class="alert alert-info" role="alert">
-						<i class="fas fa-exclamation"></i>
-						<p><?= _("If the aliases changes, Let's Encrypt will obtain a new SSL certificate.") ?></p>
-					</div>
+				<div class="alert alert-info u-mb10" role="alert">
+					<i class="fas fa-exclamation"></i>
+					<p><?= _("If the aliases changes, Let's Encrypt will obtain a new SSL certificate.") ?></p>
 				</div>
 			<?php } ?>
 			<div class="u-mb20">

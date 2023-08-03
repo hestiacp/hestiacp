@@ -7,14 +7,15 @@
 @import url("../media_queries");
 
 :root {
+	/* Colors */
 	--color-text: #cdcdcd;
 	--color-text-link: #4fabe9;
 	--color-text-link-hover: #ff3478;
 	--color-text-heading: #e8e8e8;
 	--color-background: #282828;
-	--alert-border-color: #212121;
 
 	/* Alerts */
+	--alert-border-color: #212121;
 	--alert-danger-color: #d13535;
 
 	/* Icons */
@@ -277,12 +278,12 @@
 		&.active {
 			color: #fff;
 			background: linear-gradient(
-				to bottom,
-				rgb(15 15 15 / 60%) 0%,
-				rgb(45 45 45 / 75%) 30%,
-				rgb(60 60 60 / 100%) 95%
-			);
-			background-color: #454545;
+					to bottom,
+					rgb(15 15 15 / 60%) 0%,
+					rgb(45 45 45 / 75%) 30%,
+					rgb(60 60 60 / 100%) 95%
+				),
+				#454545;
 			text-shadow: 0 1px rgb(0 0 0 / 80%);
 		}
 	}
@@ -577,13 +578,13 @@
 	text-shadow: 0 1px 1px rgb(0 0 0 / 35%);
 	font-weight: 400;
 	border-color: #707070;
-	background: #303030;
 	background: linear-gradient(
-		0deg,
-		rgb(48 48 48 / 100%) 0%,
-		rgb(53 53 53 / 100%) 35%,
-		rgb(69 69 69 / 100%) 100%
-	);
+			0deg,
+			rgb(48 48 48 / 100%) 0%,
+			rgb(53 53 53 / 100%) 35%,
+			rgb(69 69 69 / 100%) 100%
+		),
+		#303030;
 	box-shadow: 0 1px 4px rgb(0 0 0 / 20%), inset 0 0 1px rgb(20 20 20 / 100%),
 		inset 0 0 3px rgb(0 0 0 / 50%);
 
@@ -592,12 +593,12 @@
 		text-shadow: 1px 1px rgb(0 0 0 / 25%);
 		border-color: #0098ff;
 		background: linear-gradient(
-			0deg,
-			rgb(58 58 58 / 100%) 0%,
-			rgb(68 68 68 / 100%) 35%,
-			rgb(79 79 79 / 100%) 100%
-		);
-		background-color: #454545;
+				0deg,
+				rgb(58 58 58 / 100%) 0%,
+				rgb(68 68 68 / 100%) 35%,
+				rgb(79 79 79 / 100%) 100%
+			),
+			#454545;
 		box-shadow: 0 1px 3px rgb(0 0 0 / 35%), inset 0 0 1px rgb(0 0 0 / 100%),
 			inset 0 0 3px rgb(0 0 0 / 65%);
 	}
@@ -619,29 +620,29 @@
 
 .button-secondary {
 	border-color: #454545;
-	background-color: #343434;
 	background: linear-gradient(
-		0deg,
-		rgb(48 48 48 / 100%) 0%,
-		rgb(53 53 53 / 100%) 100%,
-		rgb(69 69 69 / 100%) 100%
-	);
-
-	&:hover {
-		background-color: #343434;
-		background: linear-gradient(
 			0deg,
 			rgb(48 48 48 / 100%) 0%,
 			rgb(53 53 53 / 100%) 100%,
 			rgb(69 69 69 / 100%) 100%
-		);
+		),
+		#343434;
+
+	&:hover {
+		background: linear-gradient(
+				0deg,
+				rgb(48 48 48 / 100%) 0%,
+				rgb(53 53 53 / 100%) 100%,
+				rgb(69 69 69 / 100%) 100%
+			),
+			#343434;
 	}
 }
 
 .button-danger {
 	&:hover {
-		background: rgb(133 0 0);
-		background: linear-gradient(0deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%);
+		background: linear-gradient(0deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%),
+			rgb(133 0 0);
 		color: #fff;
 		text-shadow: 0 1px rgb(0 0 0 / 45%);
 		border-color: rgb(170 0 0);
@@ -649,8 +650,8 @@
 
 	&:active,
 	&:focus {
-		background: rgb(133 0 0);
-		background: linear-gradient(180deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%);
+		background: linear-gradient(180deg, rgb(133 0 0 / 100%) 0%, rgb(203 0 0 / 100%) 100%),
+			rgb(133 0 0);
 		color: #4d0000;
 		text-shadow: 0 -1px 1px rgb(255 255 255 / 30%);
 		border-color: rgb(251 71 51);
@@ -662,8 +663,7 @@
 
 .body-login,
 .body-reset {
-	background: #303030;
-	background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%);
+	background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%), #303030;
 }
 
 .login {

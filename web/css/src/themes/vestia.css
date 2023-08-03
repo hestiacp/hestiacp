@@ -9,6 +9,8 @@
 :root {
 	--animate-duration: 0s;
 	--font-family: "Arial", system-ui;
+
+	/* Colors */
 	--color-text-link: #444;
 	--color-text-link-hover: #ff791f;
 
@@ -166,13 +168,11 @@ h1 {
 		text-transform: uppercase;
 		text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
 		background: #a0c105;
-		background-color: #a0c105;
 
 		&:hover {
 			border-color: transparent;
 			color: #fff;
 			background: #a9cc06;
-			background-color: #a9cc06;
 			text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
 		}
 	}
@@ -263,7 +263,6 @@ h1 {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	background: #a0c105;
-	background-color: #a0c105;
 	border-radius: 2px;
 	box-shadow: none;
 
@@ -271,7 +270,6 @@ h1 {
 		border-color: transparent;
 		color: #fff;
 		background: #a9cc06;
-		background-color: #a9cc06;
 		text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
 		transition: none;
 		box-shadow: none;
@@ -281,7 +279,6 @@ h1 {
 		border-color: transparent;
 		color: #fff;
 		background: #809c00;
-		background-color: #809c00;
 		text-shadow: 0 0 2px rgb(0 0 0 / 20%);
 		box-shadow: none;
 	}

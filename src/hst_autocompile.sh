@@ -273,7 +273,10 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl nodejs libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
 
 		# Installing NodeJS 20.x repo
-		if [ ! -f $apt/nodesource.list ] && [ ! -z $(which "node") ]; then
+		apt="/etc/apt/sources.list.d"
+		codename="$(lsb_release -s -c)"
+
+		if [ -z $(which "node") ]; then
 			echo "Adding NodeJS 20.x repo..."
 			echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
 			echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
@@ -285,6 +288,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		echo "Installing dependencies for compilation..."
 		apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
+		nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
+		if [ "$nodejs_version" -lt 18 ]; then
+			echo "Requires NodeJS 18.x or higher"
+			exit 1
+		fi
 		# Fix for Debian PHP Envroiment
 		if [ $BUILD_ARCH == "amd64" ]; then
 			if [ ! -L /usr/local/include/curl ]; then
@@ -738,7 +746,7 @@ if [ "$HESTIA_B" = true ]; then
 
 			# Build web and move needed directories
 			cd $BUILD_DIR/hestiacp-$branch_dash
-			npm ci
+			npm ci --ignore-scripts
 			npm run build
 			cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
 

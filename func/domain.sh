@@ -613,7 +613,7 @@ add_dns_dkim_records() {
 add_dns_webmail_records() {
 	# Ensure DNS record exists if Hestia is hosting DNS zones
 	if [ -n "$DNS_SYSTEM" ]; then
-		dns_domain=$("$BIN/v-list-dns-domains" "$user" list)
+		dns_domain=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain/p")
 		# shellcheck disable=SC1087
 		webmail_records="$("$BIN/v-list-dns-records" "$user" "$domain" plain | sed -ne "/$WEBMAIL_ALIAS/s/^\([0-9]*\)[ \t]*$WEBMAIL_ALIAS[ \t]*.*/\1/gp")"
 		if [ "$dns_domain" = "$domain" ]; then

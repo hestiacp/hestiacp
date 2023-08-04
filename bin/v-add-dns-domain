@@ -37,4 +37,4 @@ dnssec=${13}
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 
-${HESTIA}/bin/v-add-dns-domain-ipv46 "$user" "$domain" "$ip" "$ipv6" "$ns1" "$ns2" "$ns3" "$ns4" "$ns5" "$ns6" "$ns7" "$ns8" "$restart" "$dnssec"
+"$HESTIA/bin/v-add-dns-domain-ipv46" "$user" "$domain" "$ip" "$ipv6" "$ns1" "$ns2" "$ns3" "$ns4" "$ns5" "$ns6" "$ns7" "$ns8" "$restart" "$dnssec"

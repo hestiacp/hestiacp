@@ -80,7 +80,7 @@ fi
 
 # Updating DNS configs
 if [ -n "$old" ] && [ -n "$DNS_SYSTEM" ]; then
-	for user in $(${BIN}/v-list-sys-users plain); do
+	for user in $("$BIN/v-list-sys-users" plain); do
 		sed -i "s/$old/$new/" "$HESTIA/data/users/$user/dns.conf"
 		if ls "$HESTIA/data/users/$user/dns/"*.conf 1> /dev/null 2>&1; then
 			sed -i "s/$old/$new/" "$HESTIA/data/users/$user/dns/"*.conf
@@ -92,7 +92,7 @@ fi
 
 # Updating FTP
 if [ -n "$old" ] && [ -n "$FTP_SYSTEM" ]; then
-	ftp_conf="$(find /etc -maxdepth 2 -name ${FTP_SYSTEM}.conf)"
+	ftp_conf="$(find /etc -maxdepth 2 -name "$FTP_SYSTEM.conf")"
 	if [ -e "$ftp_conf" ]; then
 		sed -i "s/$old/$new/g" "$ftp_conf"
 		if [ "$FTP_SYSTEM" = 'vsftpd' ]; then

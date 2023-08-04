@@ -61,8 +61,8 @@ check_args '1' "$#" 'IP [NETMASK] [INTERFACE] [USER] [STATUS] [NAME] [NATED_IP]'
 ip_format=$(get_ip_format "$ip46") # ip verification and format identification
 if [ -n "$second_parameter" -a -n "$ip_format" ]; then
 	[ -n "$ip_cidr" ] && check_result 1 "cidr / prefix length double defined as IP address suffix and as separate argument!"                        # wrong parameters
-	netmask="$(echo ${second_parameter} | sed -nr ''/$REGEX_IPV4/p'')"                                                                              # extract netmask from second parameter if available
-	cidr_prefixlen="$(echo ${second_parameter} | sed -ne '/^\/[0-9]\{1,3\}$/p')"                                                                    # extract cidr/prefix_length from second parameter if available
+	netmask="$(echo "$second_parameter" | sed -nr ''/$REGEX_IPV4/p'')"                                                                              # extract netmask from second parameter if available
+	cidr_prefixlen="$(echo "$second_parameter" | sed -ne '/^\/[0-9]\{1,3\}$/p')"                                                                    # extract cidr/prefix_length from second parameter if available
 	[ -z "$netmask" -a -z "$cidr_prefixlen" ] && check_result 2 "Wrong netmask / cidr / prefix length definition!"                                  # wrong parameters
 	[ -n "$netmask" -a $ip_format -ne 4 ] && check_result 3 "Netmask definition for a not IPV4 address! Define a prefix lenght instead of netmask!" # wrong parameters
 fi
@@ -74,23 +74,23 @@ netmask_prelen=""
 closed_ip=""
 if [ -n "$ip_format" ]; then
 	if [ $ip_format -eq 4 ]; then
-		ip=${ip46}
+		ip="$ip46"
 		ipv6=''
 		if [ -n "$netmask" ]; then
 			is_ip_format_valid "$netmask" 'netmask' # check for correct netmask
-			cidr=$(convert_netmask ${netmask})      # convert netmask to cidr
+			cidr=$(convert_netmask "$netmask")      # convert netmask to cidr
 		fi
 		if [ -n "$cidr_prefixlen" ]; then
-			cidr=${cidr_prefixlen}
+			cidr="$cidr_prefixlen"
 		fi
 		if [ -n "$ip_cidr" ]; then
-			cidr=${ip_cidr}
+			cidr="$ip_cidr"
 		else
 			[ -z "$cidr" ] && cidr="/32"
 		fi
 		if [ -z "$netmask" ]; then
 			is_ip_format_valid "$cidr" 'cidr' # check for correct cidr
-			netmask=$(convert_cidr ${cidr})   # convert cidr to netmask
+			netmask=$(convert_cidr "$cidr")   # convert cidr to netmask
 		fi
 		is_ip_format_valid "$ip" 'ipv4'             # check for correct ipv4 format
 		broadcast=$(get_broadcast "$ip" "$netmask") # generate broadcast
@@ -100,9 +100,9 @@ if [ -n "$ip_format" ]; then
 	fi
 	if [ $ip_format -eq 6 ]; then
 		ip=''
-		ipv6=${ip46}
+		ipv6="$ip46"
 		add_string_ipv6="6"
-		[ -n "$cidr_prefixlen" ] && prefix_length=${cidr_prefixlen}
+		[ -n "$cidr_prefixlen" ] && prefix_length="$cidr_prefixlen"
 		if [ -n "$ip_cidr" ]; then
 			prefix_length="$ip_cidr"
 		else
@@ -147,7 +147,7 @@ sys_ip_check=$(ip$check_ip_par addr | sed -ne "/inet[6]*[ \t]${ip46}\//p")
 if [ -z "$sys_ip_check" ]; then
 	# Adding system IP
 	if [ -n "$ip_format" ] && [ $ip_format -eq 6 ]; then
-		/sbin/ip addr add "$full_ip46" dev "${iface%:*}" label "${iface}"
+		/sbin/ip addr add "$full_ip46" dev "${iface%:*}" label "$iface"
 	else
 		ip addr add "$full_ip46" dev "$iface" broadcast "$broadcast" label "$iface"
 	fi
@@ -166,7 +166,7 @@ if [ -z "$sys_ip_check" ]; then
 
 	if [ "$netplan" = "true" ]; then
 		if [ -f "/etc/netplan/60-hestia.yaml" ]; then
-			sys_ip="        - ${full_ip46}"
+			sys_ip="        - $full_ip46"
 		else
 			sys_ip="# Added by Hestia, please do not edit the file manually!"
 			sys_ip="$sys_ip\nnetwork:"
@@ -175,22 +175,22 @@ if [ -z "$sys_ip_check" ]; then
 			sys_ip="$sys_ip\n  ethernets:"
 			sys_ip="$sys_ip\n    $iface:"
 			sys_ip="$sys_ip\n      addresses:"
-			sys_ip="$sys_ip\n        - ${full_ip46}"
+			sys_ip="$sys_ip\n        - $full_ip46"
 		fi
 		IFS='%'
-		echo -e $sys_ip >> /etc/netplan/60-hestia.yaml
+		echo -e "$sys_ip" >> /etc/netplan/60-hestia.yaml
 		unset IFS
 	else
 		sys_ip="\n# Added by Hestia Control Panel"
-		sys_ip="$sys_ip\nauto ${iface}"
-		sys_ip="$sys_ip\niface ${iface} inet${add_string_ipv6} static"
+		sys_ip="$sys_ip\nauto $iface"
+		sys_ip="$sys_ip\niface $iface inet${add_string_ipv6} static"
 		if [ -n "$ip_format" ] && [ $ip_format -eq 6 ]; then
-			sys_ip="$sys_ip\naddress ${full_ip46}"
+			sys_ip="$sys_ip\naddress $full_ip46"
 		else
 			sys_ip="$sys_ip\naddress $ip"
 			sys_ip="$sys_ip\nnetmask $netmask"
 		fi
-		echo -e $sys_ip >> /etc/network/interfaces
+		echo -e "$sys_ip" >> /etc/network/interfaces
 	fi
 fi
 
@@ -204,23 +204,23 @@ NAME='$ip_name'
 U_SYS_USERS=''
 U_WEB_DOMAINS='0'
 INTERFACE='$iface'
-NETMASK='${netmask_prelen}'
+NETMASK='$netmask_prelen'
 NAT='$nat_ip'
 TIME='$time'
 DATE='$date'
-VERSION='${ip_format}'" > "$HESTIA/data/ips/$ip46"
+VERSION='$ip_format'" > "$HESTIA/data/ips/$ip46"
 chmod 660 "$HESTIA/data/ips/$ip46"
 
 # WEB support
 if [ -n "$WEB_SYSTEM" ]; then
-	web_conf="/etc/$WEB_SYSTEM/conf.d/${ip46}.conf"
+	web_conf="/etc/$WEB_SYSTEM/conf.d/$ip46.conf"
 	rm -f "$web_conf"
 
 	if [ "$WEB_SYSTEM" = 'httpd' ] || [ "$WEB_SYSTEM" = 'apache2' ]; then
 		if [ -z "$(/usr/sbin/apachectl -v | grep Apache/2.4)" ]; then
 			echo "NameVirtualHost ${closed_ip}:$WEB_PORT" > "$web_conf"
 		fi
-		echo "Listen ${closed_ip}:$WEB_PORT" >> "$web_conf"
+		echo "Listen $closed_ip:$WEB_PORT" >> "$web_conf"
 		cat "$HESTIA_INSTALL_DIR/apache2/unassigned.conf" >> "$web_conf"
 		[ -n "$ip_format" ] && [ $ip_format -eq 6 ] && sed -i 's/\(VirtualHost \)directIP/\1'${closed_ip}'/g' "$web_conf"
 		sed -i 's/directIP/'${ip46}'/g' "$web_conf"
@@ -255,16 +255,16 @@ if [ -n "$PROXY_SYSTEM" ]; then
 	# mod_extract_forwarded
 	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
 	if [ -e "$fw_conf" ]; then
-		ips=$(grep 'MEFaccept ' ${fw_conf} | grep -v '#' | head -n1)
-		sed -i "s/$ips/$ips $ip46/g" ${fw_conf}
+		ips=$(grep 'MEFaccept ' $fw_conf | grep -v '#' | head -n1)
+		sed -i "s/$ips/$ips $ip46/g" "$fw_conf"
 	fi
 
 	# mod_rpaf
 	rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
 	if [ -e "$rpaf_conf" ]; then
-		rpaf_str=$(grep RPAFproxy_ips ${rpaf_conf})
-		[ -z "$rpaf_str" ] && sed -i 's|</IfModule>|RPAFproxy_ips\n</IfModule>|' ${rpaf_conf} && rpaf_str='RPAFproxy_ips'
-		rpaf_str="$rpaf_str ${ip46}"
+		rpaf_str=$(grep RPAFproxy_ips $rpaf_conf)
+		[ -z "$rpaf_str" ] && sed -i 's|</IfModule>|RPAFproxy_ips\n</IfModule>|' "$rpaf_conf" && rpaf_str='RPAFproxy_ips'
+		rpaf_str="$rpaf_str $ip46"
 		sed -i "s/.*RPAFproxy_ips.*/$rpaf_str/" "$rpaf_conf"
 	fi
 

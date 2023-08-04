@@ -53,7 +53,7 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
 if [ -z "$ip_format" ]; then
-	ip_format="$(get_ip_format ${ip46})" #	ip verification and automatic format identification
+	ip_format="$(get_ip_format "$ip46")" #	ip verification and automatic format identification
 fi
 if [ -n "$ip_format" ]; then
 	if [ $ip_format -ne 4 -a $ip_format -ne 6 ]; then
@@ -117,7 +117,7 @@ fi
 
 WEBDOMAIN="$DOMAIN"
 DOMAIN=''
-get_object_value 'mail' 'DOMAIN' ${domain}
+get_object_value 'mail' 'DOMAIN' "$domain"
 MAILDOMAIN="$DOMAIN"
 DOMAIN="$WEBDOMAIN"
 

@@ -37,7 +37,7 @@ NETWORK_IF_FILE="/etc/network/interfaces"
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'IP'
-ip_format="$(get_ip_format $ip46)" #	ip verification and format identification
+ip_format="$(get_ip_format "$ip46")" #	ip verification and format identification
 retval=$?
 check_ip_par=""
 add_cap_string_ipv6=""
@@ -93,10 +93,10 @@ fi
 
 # Check if IP is managed by HESTIA and not by system
 if [ -f "$NETPLAN_FILE" ]; then
-	NETPLAN_MATCH="$(sed -ne "/$ip46/p" "$NETPLAN_FILE")"
+	NETPLAN_MATCH="$(sed -ne "/[ \t]*-[ \t]*$ip46\//p" "$NETPLAN_FILE")"
 fi
 if [ -f "$NETWORK_IF_FILE" ]; then
-	NETWORK_IF_MATCH="$(sed -ne "/$ip46/p" "$NETWORK_IF_FILE")"
+	NETWORK_IF_MATCH="$(sed -ne "/address[ \t]*$ip46\//p" "$NETWORK_IF_FILE")"
 fi
 if [ -z "$NETPLAN_MATCH" -a -z "$NETWORK_IF_MATCH" ]; then
 	echo "Error: can't delete system managed IP address"

@@ -664,9 +664,9 @@ function check_ip_not_banned(){
 
 @test "Ip: [Debian] Netplan file updated" {
    # Skip with netplan
-   if [ -f /etc/netplan/60-hestia.yaml ]; then
-   skip
-   fi
+   if [ $(lsb_release -s -i) = "Ubuntu" ]; then
+	 skip
+	 fi
 
    assert_file_exist  /etc/network/interfaces
    assert_file_contains  /etc/network/interfaces "$ip"
@@ -698,7 +698,7 @@ function check_ip_not_banned(){
     fi
 }
 
-@test "Ip: Delete ips" {
+@test "Ip: Delete ip 198.18.0.12" {
     local ip="198.18.0.12"
     run v-delete-sys-ip $ip
     assert_success
@@ -706,31 +706,43 @@ function check_ip_not_banned(){
 
     assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
     assert_file_not_exist $HESTIA/data/ips/$ip
+}
 
+@test "Ip: [Ubuntu] Netplan file changed" {
+	 # Skip if Debian
+	 if [ $(lsb_release -s -i) != "Ubuntu" ]; then
+	 skip
+	 fi
 
-    ip="198.18.0.121"
-    run v-delete-sys-ip $ip
-    assert_success
-    refute_output
+	 ip="198.18.0.121"
+	 assert_file_exist /etc/netplan/60-hestia.yaml
+	 assert_file_contains /etc/netplan/60-hestia.yaml "$ip"
+}
 
-    assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
-    assert_file_not_exist $HESTIA/data/ips/$ip
+@test "Ip: Delete ip 198.18.0.121" {
+	ip="198.18.0.121"
+	run v-delete-sys-ip $ip
+	assert_success
+	refute_output
 
-    if [ -n "$PROXY_SYSTEM" ]; then
-        assert_file_not_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
-    fi
+	assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+	assert_file_not_exist $HESTIA/data/ips/$ip
 
-    # remoteip and rpaf config hashes must match the initial one
-    if [ ! -z "$a2_rpaf_hash" ]; then
-        local a2_rpaf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
-        file_hash=$(cat $a2_rpaf |md5sum |cut -d" " -f1)
-        assert_equal "$file_hash" "$a2_rpaf_hash"
-    fi
-    if [ ! -z "$a2_remoteip_hash" ]; then
-        local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
-        file_hash=$(cat $a2_remoteip |md5sum |cut -d" " -f1)
-        assert_equal "$file_hash" "$a2_remoteip_hash"
-    fi
+	if [ -n "$PROXY_SYSTEM" ]; then
+			assert_file_not_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+	fi
+
+	# remoteip and rpaf config hashes must match the initial one
+	if [ ! -z "$a2_rpaf_hash" ]; then
+			local a2_rpaf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+			file_hash=$(cat $a2_rpaf |md5sum |cut -d" " -f1)
+			assert_equal "$file_hash" "$a2_rpaf_hash"
+	fi
+	if [ ! -z "$a2_remoteip_hash" ]; then
+			local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+			file_hash=$(cat $a2_remoteip |md5sum |cut -d" " -f1)
+			assert_equal "$file_hash" "$a2_remoteip_hash"
+	fi
 }
 
 @test "Ip: Add IP for rest of the test" {

@@ -13,11 +13,13 @@
 #----------------------------------------------------------#
 
 # Argument definition
-user=${1}
-domain=${2}
-webmail=${3}
-restart=${4-yes}
-quiet=${5}
+user="$1"
+domain="$2"
+webmail="$3"
+restart="$4"
+quiet="$5"
+
+[ -z "$restart" ] && restart="yes"
 
 # Additional argument formatting
 if [[ "$domain" =~ [[:upper:]] ]]; then

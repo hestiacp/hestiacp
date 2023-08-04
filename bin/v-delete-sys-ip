@@ -96,7 +96,10 @@ if [ -f "$NETPLAN_FILE" ]; then
 	NETPLAN_MATCH="$(sed -ne "/[ \t]*-[ \t]*$ip46\//p" "$NETPLAN_FILE")"
 fi
 if [ -f "$NETWORK_IF_FILE" ]; then
-	NETWORK_IF_MATCH="$(sed -ne "/address[ \t]*$ip46\//p" "$NETWORK_IF_FILE")"
+	NETWORK_IF_MATCH="$(sed -ne "/address[ \t]*$ip46\//p" "$NETWORK_IF_FILE")" # first attempt for address/preflen definition
+	if [ -z "$NETWORK_IF_MATCH" ]; then
+		NETWORK_IF_MATCH="$(sed -ne "/address[ \t]*$ip46$/p" "$NETWORK_IF_FILE")" # second attempt, if address and netmask are defined in separate lines
+	fi
 fi
 if [ -z "$NETPLAN_MATCH" -a -z "$NETWORK_IF_MATCH" ]; then
 	echo "Error: can't delete system managed IP address"

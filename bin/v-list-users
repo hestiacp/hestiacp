@@ -56,6 +56,7 @@ json_list() {
         "CONTACT": "'$CONTACT'",
         "CRON_REPORTS": "'$CRON_REPORTS'",
         "RKEY": "'$RKEY'",
+        "ROLE": "'$ROLE'",
         "SUSPENDED": "'$SUSPENDED'",
         "SUSPENDED_USERS": "'$SUSPENDED_USERS'",
         "SUSPENDED_WEB": "'$SUSPENDED_WEB'",
@@ -94,14 +95,14 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-	echo "USER   PKG   WEB   DNS   MAIL   DB   DISK   BW   SPND   DATE"
-	echo "----   ---   ---   ---   ---    --   ----   --   ----   ----"
+	echo "USER   ROLE   PKG   WEB   DNS   MAIL   DB   DISK   BW   SPND   DATE"
+	echo "----   ----   ---   ---   ---   ---    --   ----   --   ----   ----"
 	while read USER; do
 		if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
 			continue
 		fi
 		source_conf "$HESTIA/data/users/$USER/user.conf"
-		echo -n "$USER $PACKAGE $U_WEB_DOMAINS $U_DNS_DOMAINS $U_MAIL_DOMAINS"
+		echo -n "$USER $ROLE $PACKAGE $U_WEB_DOMAINS $U_DNS_DOMAINS $U_MAIL_DOMAINS"
 		echo " $U_DATABASES $U_DISK $U_BANDWIDTH $SUSPENDED $DATE"
 	done < <(grep '@' /etc/passwd | cut -f1 -d:)
 }
@@ -118,7 +119,7 @@ plain_list() {
 		echo -ne "$WEB_DOMAINS\t$WEB_ALIASES\t$DNS_DOMAINS\t$DNS_RECORDS\t"
 		echo -ne "$MAIL_DOMAINS\t$MAIL_ACCOUNTS\t$DATABASES\t$CRON_JOBS\t"
 		echo -ne "$DISK_QUOTA\t$BANDWIDTH\t$NS\t$SHELL\t$BACKUPS\t"
-		echo -ne "$CONTACT\t$CRON_REPORTS\t$RKEY\t$SUSPENDED\t"
+		echo -ne "$CONTACT\t$CRON_REPORTS\t$RKEY\t$ROLE\t$SUSPENDED\t"
 		echo -ne "$SUSPENDED_USERS\t$SUSPENDED_WEB\t$SUSPENDED_DNS\t"
 		echo -ne "$SUSPENDED_MAIL\t$SUSPENDED_DB\t$SUSPENDED_CRON\t"
 		echo -ne "$IP_AVAIL\t$IP_OWNED\t$U_USERS\t$U_DISK\t$U_DISK_DIRS\t"
@@ -136,7 +137,7 @@ csv_list() {
 	echo -n "PROXY_TEMPLATE,DNS_TEMPLATE,WEB_DOMAINS,WEB_ALIASES,"
 	echo -n "DNS_DOMAINS,DNS_RECORDS,MAIL_DOMAINS,MAIL_ACCOUNTS,"
 	echo -n "DATABASES,CRON_JOBS,DISK_QUOTA,BANDWIDTH,NS,HOME,SHELL,"
-	echo -n "BACKUPS,CONTACT,CRON_REPORTS,RKEY,SUSPENDED,SUSPENDED_USERS,"
+	echo -n "BACKUPS,CONTACT,CRON_REPORTS,RKEY,ROLE,SUSPENDED,SUSPENDED_USERS,"
 	echo -n "SUSPENDED_WEB,SUSPENDED_DNS,SUSPENDED_MAIL,SUSPENDED_DB,"
 	echo -n "SUSPENDED_CRON,IP_AVAIL,IP_OWNED,U_USERS,U_DISK,U_DISK_DIRS,"
 	echo -n "U_DISK_WEB,U_DISK_MAIL,U_DISK_DB,U_BANDWIDTH,U_WEB_DOMAINS,"
@@ -153,7 +154,7 @@ csv_list() {
 		echo -n "$WEB_DOMAINS,$WEB_ALIASES,$DNS_DOMAINS,$DNS_RECORDS,"
 		echo -n "$MAIL_DOMAINS,$MAIL_ACCOUNTS,$DATABASES,$CRON_JOBS,"
 		echo -n "$DISK_QUOTA,$BANDWIDTH,\"$NS\",$HOME,$SHELL,$BACKUPS,"
-		echo -n "$CONTACT,$CRON_REPORTS,\"$RKEY\",$SUSPENDED,"
+		echo -n "$CONTACT,$CRON_REPORTS,\"$RKEY\",$ROLE,$SUSPENDED,"
 		echo -n "$SUSPENDED_USERS,$SUSPENDED_WEB,$SUSPENDED_DNS,"
 		echo -n "$SUSPENDED_MAIL,$SUSPENDED_DB,$SUSPENDED_CRON,$IP_AVAIL,"
 		echo -n "$IP_OWNED,$U_USERS,$U_DISK,$U_DISK_DIRS,$U_DISK_WEB,"

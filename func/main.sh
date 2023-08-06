@@ -1054,6 +1054,10 @@ is_dns_record_format_valid() {
 		is_domain_format_valid "${1::-1}" 'mx_record'
 		is_int_format_valid "$priority" 'priority_record'
 	fi
+	if [ "$rtype" = 'SRV' ]; then
+		format_no_quotes "$priority" 'priority_record'
+	fi
+
 	is_no_new_line_format "$1"
 }
 

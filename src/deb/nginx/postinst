@@ -10,6 +10,10 @@ fi
 update-rc.d hestia defaults > /dev/null
 invoke-rc.d hestia start || true
 
+# Adapt Port Listing in HESTIA NGINX Backend
+source /usr/local/hestia/func/syshealth.sh # Load syshealth functions
+syshealth_adapt_hestia_nginx_listen_ports  # Adapt port listing
+
 # Run triggers only on updates
 if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
 	exit
@@ -37,7 +41,7 @@ source /usr/local/hestia/conf/hestia.conf
 source /usr/local/hestia/install/upgrade/upgrade.conf
 
 # Reset backend port
-if [ ! -z "$BACKEND_PORT" ]; then
+if [ -n "$BACKEND_PORT" ]; then
 	/usr/local/hestia/bin/v-change-sys-port $BACKEND_PORT
 fi
 

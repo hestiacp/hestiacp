@@ -31,33 +31,6 @@ set -e
 
 . /etc/profile.d/hestia.sh
 
-adapt_nginx_config() {
-	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
-	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
-	if [ -z "$physical_nics" ]; then
-		physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
-	fi
-	for nic in $physical_nics; do
-		if [ -z "$ipv4_scope_global" ]; then
-			ipv4_scope_global="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
-		fi
-		if [ -z "$ipv6_scope_global" ]; then
-			ipv6_scope_global="$(ip -6 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
-		fi
-	done
-
-	if [ -n "$ipv4_scope_global" ]; then
-		sed -i 's/#IPV4\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"
-	else
-		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#IPV4\1/' "$NGINX_CONF"
-	fi
-	if [ -n "$ipv6_scope_global" ]; then
-		sed -i 's/#IPV6\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' "$NGINX_CONF"
-	else
-		sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#IPV6\1/' "$NGINX_CONF"
-	fi
-}
-
 update_nginx_resolver() {
 	if grep -qw "1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8" "$NGINX_CONF"; then
 		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
@@ -77,7 +50,6 @@ update_nginx_resolver() {
 }
 
 start_nginx() {
-	#adapt_nginx_config
 	update_nginx_resolver
 	start-stop-daemon --start --quiet --pidfile $NGINX_PID \
 		--retry 5 --exec $NGINX_DAEMON --oknodo

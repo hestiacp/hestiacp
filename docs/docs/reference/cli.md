@@ -147,7 +147,7 @@ This function creates an temporary database user mysql_sso_db_XXXXXXXX and a ran
 The user has an limited validity and only granted access to the specific database
 Returns json to be read SSO Script
 
-## v-add-dns-domain
+## v-add-dns-domain-ipv46
 
 add dns domain
 
@@ -156,7 +156,25 @@ add dns domain
 **Examples**:
 
 ```bash
-v-add-dns-domain admin example.com ns1.example.com ns2.example.com '' '' '' '' '' '' yes
+v-add-dns-domain admin example.com 192.168.0.1 ns1.example.com ns2.example.com '' '' '' '' '' '' yes
+```
+
+!!! WRAPPER SCRIPT FOR COMPATIBILITY PURPOSES WITH OLD IPV4 SCRIPTS AND EXTERNAL CALLS !!!
+This function adds DNS zone with records defined in the template. If the exp
+argument isn't stated, the expiration date value will be set to next year.
+The soa argument is responsible for the relevant record. By default the first
+user's NS server is used. TTL is set as common for the zone and for all of
+its records with a default value of 14400 seconds.
+
+## v-add-dns-domain-ipv46
+
+add dns domain
+
+**Options**: `USER` `DOMAIN` `IPV4` `[IPV6]` `[NS1]` `[NS2]` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]` `[RESTART]` `[DNSSEC]`
+**Examples**:
+
+```bash
+v-add-dns-domain-ipv46 admin example.com 192.168.0.1 1111:2222:3333:111 ns1.example.com ns2.example.com '' '' '' '' '' '' yes
 ```
 
 This function adds DNS zone with records defined in the template. If the exp
@@ -169,12 +187,14 @@ its records with a default value of 14400 seconds.
 
 add dns domain or dns record after web domain alias
 
-**Options**: `USER` `ALIAS` `IP` `[RESTART]`
+**Options**: `USER` `ALIAS` `IPV4` `[IPV6]` `[RESTART]`
 
 **Examples**:
 
 ```bash
-v-add-dns-on-web-alias admin www.example.com 8.8.8.8
+v-add-dns-on-web-alias admin www.example.com 8.8.8.8 1234:2123:1111:2 yes
+v-add-dns-on-web-alias admin www.example.com '' 1234:2123:1111:2 no
+v-add-dns-on-web-alias admin www.example.com 8.8.8.8 yes # DEPRICATED but possible call option
 ```
 
 This function adds dns domain or dns record based on web domain alias.
@@ -642,15 +662,20 @@ This function enables the system firewall.
 
 add system IP address
 
-**Options**: `IP` `NETMASK` `[INTERFACE]` `[USER]` `[IP_STATUS]` `[IP_NAME]` `[NAT_IP]`
+**Options**: `IP` `[NETMASK]` `[INTERFACE]` `[USER]` `[IP_STATUS]` `[IP_NAME]` `[NAT_IP]`
 
 **Examples**:
 
 ```bash
-v-add-sys-ip 203.0.113.1 255.255.255.0
+v-add-sys-ip 216.239.32.21 255.255.255.0
+v-add-sys-ip 216.239.32.21 /24
+v-add-sys-ip 216.239.32.21/24
+v-add-sys-ip 1234:55:66::1 /64
+v-add-sys-ip 1234:55:66::1/64
 ```
 
-This function adds IP address into a system. It also creates rc scripts. You
+This function adds IP address into a system. It also creates rc scripts. Both
+IPV4 and IPV6 addresses with CIDR, prefix length or netmask are allowed. You
 can specify IP name which will be used as root domain for temporary aliases.
 For example, if you set a1.myhosting.com as name, each new domain created on
 this IP will automatically receive alias $domain.a1.myhosting.com. Of course
@@ -855,6 +880,7 @@ add web domain
 v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 ```
 
+!!! WRAPPER SCRIPT FOR COMPATIBILITY PURPOSES WITH OLD IPV4 SCRIPTS AND EXTERNAL CALLS !!!
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
 `www.domain.tld` type will be automatically assigned to the domain unless
@@ -940,7 +966,7 @@ This function is used for securing web domain with http auth
 
 add web domain
 
-**Options**: `USER` `DOMAIN` `[IP]` `[IPV6]` `[RESTART]` `[ALIASES]` `[PROXY_EXTENSIONS]`
+**Options**: `USER` `DOMAIN` `[IPV4]` `[IPV6]` `[RESTART]` `[ALIASES]` `[PROXY_EXTENSIONS]`
 
 **Examples**:
 
@@ -1209,12 +1235,17 @@ serial number will be refreshed automatically during update.
 
 change dns domain ip address
 
-**Options**: `USER` `DOMAIN` `IP` `[RESTART]`
+**Options**: `USER` `DOMAIN` `IP` `[RESTART]` `[IP FORMAT]`
 
 **Examples**:
 
 ```bash
 v-change-dns-domain-ip admin domain.com 123.212.111.222
+v-change-dns-domain-ip admin domain.com 1234:55:66::1
+v-change-dns-domain-ip admin domain.com 123.212.111.222 no 4
+v-change-dns-domain-ip admin domain.com 1234:55:66::1 yes 6
+v-change-dns-domain-ip admin domain.com '' '' 4
+v-change-dns-domain-ip admin domain.com '' no 6
 ```
 
 This function for changing the main ip of DNS zone.
@@ -1552,6 +1583,7 @@ change IP name
 
 ```bash
 v-change-sys-ip-name 203.0.113.1 acme.com
+v-change-sys-ip-name 1111:2222:3333::1 acme.com
 ```
 
 This function for changing dns domain associated with IP.
@@ -1566,6 +1598,7 @@ change NAT IP address
 
 ```bash
 v-change-sys-ip-nat 10.0.0.1 203.0.113.1
+v-change-sys-ip-nat 1111:2222:3333::1 ''
 ```
 
 This function for changing NAT IP associated with IP.
@@ -1580,6 +1613,7 @@ change IP owner
 
 ```bash
 v-change-sys-ip-owner 203.0.113.1 admin
+v-change-sys-ip-owner 1111:2222:3333::1 admin
 ```
 
 This function of changing IP address ownership.
@@ -1594,6 +1628,7 @@ change IP status
 
 ```bash
 v-change-sys-ip-status 203.0.113.1 yourstatus
+v-change-sys-ip-status 1111:2222:3333::1 yourstatus
 ```
 
 This function of changing an IP address's status.
@@ -1978,15 +2013,20 @@ This function is used for changing http auth user password
 
 change web domain ip
 
-**Options**: `USER` `DOMAIN` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `IP` `[RESTART]` `[IP FORMAT]`
 
 **Examples**:
 
 ```bash
-v-change-web-domain-ip admin example.com 167.86.105.230 yes
+v-change-web-domain-ip admin domain.com 123.212.111.222
+v-change-web-domain-ip admin domain.com 1234:55:66::1
+v-change-web-domain-ip admin domain.com 123.212.111.222 no 4
+v-change-web-domain-ip admin domain.com 1234:55:66::1 yes 6
+v-change-web-domain-ip admin domain.com '' '' 4
+v-change-web-domain-ip admin domain.com '' no 6
 ```
 
-This function is used for changing domain ip
+This function is used for changing web domain ip
 
 ## v-change-web-domain-name
 
@@ -2849,9 +2889,11 @@ delete system IP
 
 ```bash
 v-delete-sys-ip 203.0.113.1
+v-delete-sys-ip 1234:5678:abcd:ef90::1
 ```
 
-This function for deleting a system IP. It does not allow to delete first IP
+This function for deleting a system IP. Both kind of IP addresses, IPV4
+and IPV6 are allowed. It does not allow to delete system IP, first IP
 on interface and do not allow to delete IP which is used by a web domain.
 
 ## v-delete-sys-mail-queue
@@ -4158,6 +4200,25 @@ list mysql config parameters
 
 This function for obtaining the list of mysql config parameters.
 
+## v-list-sys-network
+
+list system network
+
+**Options**: `[FORMAT]` `[FILTER]`
+
+**Examples**:
+
+```bash
+v-list-sys-network
+v-list-sys-network list 6
+v-list-sys-network plain 4
+v-list-sys-network shell
+v-list-sys-network csv
+v-list-sys-network json
+```
+
+This function for obtaining the list of system ip addresses.
+
 ## v-list-sys-network-status
 
 list system network status
@@ -4363,12 +4424,13 @@ This function for obtaining the list of available user backups.
 
 list user IPs
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` `[FILTER]`
 
 **Examples**:
 
 ```bash
 v-list-user-ips admin
+v-list-user-ips admin 6
 ```
 
 This function for obtaining the list of available IP addresses.

@@ -563,6 +563,8 @@ function syshealth_repair_system_config() {
 		cp $HESTIA/conf/hestia.conf.new $HESTIA/conf/hestia.conf
 		rm $HESTIA/conf/hestia.conf.new
 	fi
+
+	source_conf "$HESTIA/conf/hestia.conf"
 }
 
 # Repair System Cron Jobs

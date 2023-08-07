@@ -28,7 +28,7 @@
 	"devDependencies": {
 		"@prettier/plugin-php": "0.19.6",
 		"browserslist": "4.21.10",
-		"esbuild": "0.18.17",
+		"esbuild": "0.18.19",
 		"eslint": "8.46.0",
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-editorconfig": "4.0.3",

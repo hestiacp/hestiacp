@@ -1,5 +1,5 @@
 export const languages = [
-	{ text: 'AlAlbanian', value: 'sq' },
+	{ text: 'Albanian', value: 'sq' },
 	{ text: 'Arabic', value: 'ar' },
 	{ text: 'Armenian', value: 'hy' },
 	{ text: 'Azerbaijani', value: 'az' },

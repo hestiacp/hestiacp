@@ -197,7 +197,8 @@ fi
 
 # Adapt Port Listing in HESTIA NGINX Backend
 syshealth_adapt_hestia_nginx_listen_ports
-
+# Also update resolver
+syshealth_adapt_nginx_resolver
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -38,7 +38,7 @@
 			<div class="units-table-cell"></div>
 			<div class="units-table-cell u-text-center"><?= _("Date") ?></div>
 			<div class="units-table-cell u-text-center"><?= _("Time") ?></div>
-			<div class="units-table-cell u-text-center"><?= _("Comment") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Chain") ?></div>
 		</div>
 
 		<!-- Begin banned IP address list item loop -->
@@ -83,7 +83,7 @@
 					<?= $data[$key]["TIME"] ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= _("Comment") ?>:</span>
+					<span class="u-hide-desktop"><?= _("Chain") ?>:</span>
 					<?= _($value["CHAIN"]) ?>
 				</div>
 			</div>

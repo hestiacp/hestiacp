@@ -180,6 +180,10 @@ upgrade_set_branch() {
 }
 
 upgrade_send_notification_to_panel() {
+	# If ROOT_USER is not set fallback to admin
+	if [ -z "$ROOT_USER" ]; then
+		ROOT_USER="admin"
+	fi
 	# Add notification to panel if variable is set to true or is not set
 	if [[ "$new_version" =~ "alpha" ]]; then
 		# Send notifications for development releases
@@ -194,6 +198,10 @@ upgrade_send_notification_to_panel() {
 }
 
 upgrade_send_notification_to_email() {
+	# If ROOT_USER is not set fallback to admin
+	if [ -z "$ROOT_USER" ]; then
+		ROOT_USER="admin"
+	fi
 	if [ "$UPGRADE_SEND_EMAIL" = "true" ]; then
 		# Retrieve admin email address, sendmail path, and message temp file path
 		admin_email=$($BIN/v-list-user "$ROOT_USER" json | grep "CONTACT" | cut -d'"' -f4)
@@ -238,7 +246,7 @@ upgrade_send_notification_to_email() {
 
 upgrade_send_log_to_email() {
 	if [ "$UPGRADE_SEND_EMAIL_LOG" = "true" ]; then
-		admin_email=$($BIN/v-list-user "$ROOT_USER" json | grep "CONTACT" | cut -d'"' -f4)
+		admin_email=$($BIN/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
 		send_mail="$HESTIA/web/inc/mail-wrapper.php"
 		cat $LOG | $send_mail -s "Update Installation Log - v${new_version}" $admin_email
 	fi

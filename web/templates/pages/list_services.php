@@ -74,7 +74,7 @@
 					</span>
 				</li>
 				<li class="server-summary-item">
-					<span class="server-summary-list-label"><?= _("Load Average") ?></span>
+					<span class="server-summary-list-label"><?= _("Load Average") ?> <span class="hint">(1m / 5m / 15m)</span></span>
 					<span class="server-summary-list-value">
 						<?= $sys["sysinfo"]["LOADAVERAGE"] ?>
 					</span>
@@ -133,7 +133,7 @@
 				$cpu = number_format($cpu, 1);
 				if ($cpu == '0.0')	$cpu = 0;
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> animate__animated animate__fadeIn js-unit"
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit"
 				data-sort-name="<?= strtolower($key) ?>"
 				data-sort-memory="<?= $data[$key]["MEM"] ?>"
 				data-sort-cpu="<?= $cpu ?>"

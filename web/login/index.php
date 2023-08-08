@@ -73,7 +73,7 @@ if (isset($_SESSION["user"])) {
 		// Obtain account properties
 		$v_user = quoteshellarg(
 			$_SESSION[
-				$_SESSION["userContext"] === "admin" && isset($_SESSION["look"]) ? "look" : "user"
+				$_SESSION["userContext"] === "admin" && $_SESSION["look"] !== "" ? "look" : "user"
 			],
 		);
 

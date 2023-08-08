@@ -198,7 +198,7 @@ function syshealth_update_system_config_format() {
 	# SYSTEM CONFIGURATION
 	# Create array of known keys in configuration file
 	system="system"
-	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION DISABLE_IP_CHECK"
+	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM WEB_TERMINAL WEB_TERMINAL_PORT VERSION DISABLE_IP_CHECK"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -285,7 +285,7 @@ function syshealth_repair_system_config() {
 
 	# Backend port
 	if [[ -z $(check_key_exists 'BACKEND_PORT') ]]; then
-		ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep -m 1 "listen" | sed 's/[^0-9]*//g')
+		ORIGINAL_PORT=$(sed -ne "/listen/{s/.*listen[^0-9]*\([0-9][0-9]*\)[ \t]*ssl\;/\1/p;q}" "$HESTIA/nginx/conf/nginx.conf")
 		echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
 		$BIN/v-change-sys-config-value 'BACKEND_PORT' $ORIGINAL_PORT
 	fi
@@ -375,6 +375,15 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: PLUGIN_APP_INSTALLER ('true')"
 		$BIN/v-change-sys-config-value "PLUGIN_APP_INSTALLER" "true"
 	fi
+	# Web Terminal
+	if [[ -z $(check_key_exists 'WEB_TERMINAL') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: WEB_TERMINAL ('false')"
+		$BIN/v-change-sys-config-value "WEB_TERMINAL" "false"
+	fi
+	if [[ -z $(check_key_exists 'WEB_TERMINAL_PORT') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: WEB_TERMINAL_PORT ('8085')"
+		$BIN/v-change-sys-config-value "WEB_TERMINAL_PORT" "8085"
+	fi
 	# Enable preview mode
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_ENABLE_BACON') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_ENABLE_BACON ('false')"
@@ -442,9 +451,9 @@ function syshealth_repair_system_config() {
 		$BIN/v-change-sys-config-value "USE_SERVER_SMTP" "false"
 	fi
 
-	if [[ -z $(check_key_exists 'SERVER_SMTP_HOST') ]]; then
+	if [[ -z $(check_key_exists 'SERVER_SMTP_PORT') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_PORT ('')"
-		$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" ""
+		$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" ""
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_HOST') ]]; then
@@ -565,4 +574,41 @@ function syshealth_repair_system_cronjobs() {
 	$BIN/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $BIN/v-update-user-stats" '' 'no'
 	$BIN/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $BIN/v-update-sys-rrd" '' 'no'
 	$BIN/v-restart-cron
+}
+
+# Adapt Port Listing in HESTIA NGINX Backend
+# Activates or deactivates port listing on IPV4 or/and IPV6 network interfaces
+function syshealth_adapt_hestia_nginx_listen_ports() {
+	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
+	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
+	if [ -z "$physical_nics" ]; then
+		physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
+	fi
+	for nic in $physical_nics; do
+		if [ -z "$ipv4_scope_global" ]; then
+			ipv4_scope_global="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
+		fi
+		if [ -z "$ipv6_scope_global" ]; then
+			ipv6_scope_global="$(ip -6 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
+		fi
+	done
+
+	# Adapt port listing in nginx.conf depended on availability of IPV4 and IPV6 network interface
+	NGINX_BCONF_CHANGED=""
+	NGINX_BCONF="/usr/local/hestia/nginx/conf/nginx.conf"
+	NGINX_BCONF_TEMP="/tmp/nginx.conf"
+	cp "$NGINX_BCONF" "$NGINX_BCONF_TEMP"
+	if [ -z "$ipv4_scope_global" ]; then
+		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#\1/' "$NGINX_BCONF"
+	else
+		sed -i 's/#\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' "$NGINX_BCONF"
+	fi
+	if [ -z "$ipv6_scope_global" ]; then
+		sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#\1/' "$NGINX_BCONF"
+	else
+		sed -i 's/#\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' "$NGINX_BCONF"
+	fi
+	cmp --silent "$NGINX_BCONF" "$NGINX_BCONF_TEMP"
+	[ $? -ne 0 ] && NGINX_BCONF_CHANGED="yes"
+	rm -f "$NGINX_BCONF_TEMP" > /dev/null 2>&1
 }

@@ -2,9 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.8.1] - Service releae
+## [1.8.2] - Service release
 
-- Fixed Debian 10 not working with ip adresses check
+- Added more files to default proxy extensions (#3768)
+- Increased width of menu bar dropdowns on mobile (#3765)
+- Increased HSTS max-age to 31536000 (#3762)
+- Add prompt to `v-update-sys-hestia-git` to install NodeJS if not present (#3779)
+- Fixed an issue where `v-update-sys-ip` was not run on boot on Debian systems
+- Fixed an issue where the system hostname would lose its FQDN format on reboot when using Proxmox VE containers
+- Fixed an issue ith `v-generate-ssl-cert` (#3783)
+- Fixed an issue where the port was missing in welcome email (#3784)
+- Fixed an issue with the `is_mail_new` function (#3785)
+- Fixed an issue where the "Save" button would appear before warning was dismissed when attempting to add a domain or database as admin (#3786)
+- Fixed an issue where MySQL 8 could not be installed on Ubuntu (#3788)
+- Fixed an issue with TLS connections when using ProFTPD (#3790)
+- Fixed an issue where vlan or virtual NIC connections would fail the adapter validity check when adding an IP address (#3797)
+- Fixed several PHP 500 errors and warnings in the Control Panel backend (#3789)
+- Fixed an issue with v-change-dns-domain-ip and DNS cluster (#3803)
+- Update Multiple Quick install apps (#3800 and #3801)
+- Updated language translations
+
+## [1.8.1] - Service release
+
+- Fixed Debian 10 not working with IP addresses check
 - Fixed Exim4 update config via patch was unreliable added few safety checks and add notice if failed.
 - Fixed hestia-nginx not loading with custom port
 

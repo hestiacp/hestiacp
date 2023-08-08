@@ -7,7 +7,7 @@
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<?php if (($user_plain == "admin" && $_GET["accept"] === "true") || $user_plain !== "admin") { ?>
+			<?php if (($user_plain == "admin" && $accept === "true") || $user_plain !== "admin") { ?>
 				<button type="submit" class="button" form="main-form">
 					<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 				</button>
@@ -17,7 +17,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
 	<form id="main-form" name="v_add_web" method="post" class="js-enable-inputs-on-submit">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">

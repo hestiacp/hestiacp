@@ -131,8 +131,8 @@ upgrade_complete_message() {
 	echo "The Hestia Control Panel development team                                    "
 	echo
 	echo "Web:      https://www.hestiacp.com/                                          "
+	echo "Docs:     https://docs.hestiacp.com/										   "
 	echo "Forum:    https://forum.hestiacp.com/                                        "
-	echo "Discord:  https://discord.gg/nXRUZch                                         "
 	echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
 	echo
 	echo "Help support the Hestia Control Panel project by donating via PayPal:        "
@@ -855,6 +855,12 @@ upgrade_restart_services() {
 				echo "      - $FIREWALL_EXTENSION"
 			fi
 			$BIN/v-restart-service "$FIREWALL_EXTENSION"
+		fi
+		if [ "$WEB_TERMINAL" = "true" ]; then
+			if [ "$DEBUG_MODE" = "true" ]; then
+				echo "      - hestia-web-terminal"
+			fi
+			$BIN/v-restart-service "hestia-web-terminal"
 		fi
 		# Restart SSH daemon service
 		if [ "$DEBUG_MODE" = "true" ]; then

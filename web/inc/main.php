@@ -94,12 +94,22 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 	exit();
 }
 
-// Generate CSRF Token
+// Generate CSRF Token and set user shell variable
 if (isset($_SESSION["user"])) {
 	if (!isset($_SESSION["token"])) {
 		$token = bin2hex(random_bytes(16));
 		$_SESSION["token"] = $token;
 	}
+	$username = $_SESSION["user"];
+	if ($_SESSION["look"] != "") {
+		$username = $_SESSION["look"];
+	}
+
+	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
+	$data = json_decode(implode("", $output), true);
+	unset($output, $return_var);
+	$_SESSION["login_shell"] = $data[$username]["SHELL"];
+	unset($data, $username);
 }
 
 if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {
@@ -148,6 +158,9 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 }
 if (empty($user_plain)) {
 	$user_plain = "";
+}
+if (empty($_SESSION["look"])) {
+	$_SESSION["look"] = "";
 }
 
 require_once dirname(__FILE__) . "/i18n.php";
@@ -363,11 +376,6 @@ function humanize_usage_size($usage, $round = 2) {
 			$usage = $usage / 1024;
 		}
 		$display_usage = number_format($usage, $round);
-	}
-	if (strlen($display_usage) > 4) {
-		if (is_float($display_usage)) {
-			return number_format($usage, $round - 1);
-		}
 	}
 	return $display_usage;
 }

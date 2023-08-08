@@ -75,7 +75,7 @@ if [ "$DNS_CLUSTER" = "yes" ]; then
 	# Check for first sync
 	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
 	if [ -z "$dlock" ]; then
-		cmd="$BIN/v-add-remote-dns-domain $user $domain domain yes"
+		cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
 		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 	fi
 fi

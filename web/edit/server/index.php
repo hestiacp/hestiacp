@@ -283,12 +283,13 @@ if (!empty($_POST["save"])) {
 		unset($output);
 		$v_hostname = $_POST["v_hostname"];
 	}
-
 	if ($_SESSION["WEB_BACKEND"] == "php-fpm") {
 		// Install/remove php versions
 		if (empty($_SESSION["error_msg"])) {
 			if (!empty($v_php_versions)) {
-				$post_php = $_POST["v_php_versions"];
+				if (!empty($_POST["v_php_versions"])) {
+					$post_php = $_POST["v_php_versions"];
+				}
 				if (empty($post_php)) {
 					$post_php = [];
 				}
@@ -407,11 +408,16 @@ if (!empty($_POST["save"])) {
 
 	// Update debug mode status
 	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_debug_mode"] == "on") {
-			$_POST["v_debug_mode"] = "true";
+		if (!empty($_POST["v_debug_mode"])) {
+			if ($_POST["v_debug_mode"] == "on") {
+				$_POST["v_debug_mode"] = "true";
+			} else {
+				$_POST["v_debug_mode"] = "false";
+			}
 		} else {
 			$_POST["v_debug_mode"] = "false";
 		}
+
 		if ($_POST["v_debug_mode"] != $_SESSION["DEBUG_MODE"]) {
 			exec(
 				HESTIA_CMD .
@@ -508,6 +514,29 @@ if (!empty($_POST["save"])) {
 			}
 		}
 	}
+	// Set Web Terminal support
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			!empty($_POST["v_web_terminal"]) &&
+			$_SESSION["WEB_TERMINAL"] != $_POST["v_web_terminal"]
+		) {
+			if ($_POST["v_web_terminal"] == "true") {
+				exec(HESTIA_CMD . "v-add-sys-web-terminal", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["WEB_TERMINAL"] = "true";
+				}
+			} else {
+				exec(HESTIA_CMD . "v-delete-sys-web-terminal", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["WEB_TERMINAL"] = "false";
+				}
+			}
+		}
+	}
 	// Set phpMyAdmin SSO key
 	if (empty($_SESSION["error_msg"])) {
 		if (!empty($_POST["v_phpmyadmin_key"])) {
@@ -592,18 +621,23 @@ if (!empty($_POST["save"])) {
 			$v_db_adv = "yes";
 		}
 	}
-
-	// Update webmail url
-	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_webmail_alias"] != $_SESSION["WEBMAIL_ALIAS"]) {
-			exec(
-				HESTIA_CMD . "v-change-sys-webmail " . quoteshellarg($_POST["v_webmail_alias"]),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			$v_mail_adv = "yes";
+	if (!empty($_SESSION["MAIL_SYSTEM"])) {
+		// Update webmail url
+		if (empty($_SESSION["error_msg"])) {
+			if ($_SESSION["WEBMAIL_SYSTEM"] != "") {
+				if ($_POST["v_webmail_alias"] != $_SESSION["WEBMAIL_ALIAS"]) {
+					exec(
+						HESTIA_CMD .
+							"v-change-sys-webmail " .
+							quoteshellarg($_POST["v_webmail_alias"]),
+						$output,
+						$return_var,
+					);
+					check_return_code($return_var, $output);
+					unset($output);
+					$v_mail_adv = "yes";
+				}
+			}
 		}
 	}
 
@@ -689,6 +723,10 @@ if (!empty($_POST["save"])) {
 		} else {
 			$ugrade_send_mail = "";
 		}
+		if (empty($_POST["v_upgrade_send_notification_email"])) {
+			$_POST["v_upgrade_send_notification_email"] = "";
+		}
+
 		if ($_POST["v_upgrade_send_notification_email"] != $ugrade_send_mail) {
 			if ($_POST["v_upgrade_send_notification_email"] == "on") {
 				$_POST["v_upgrade_send_notification_email"] = "true";

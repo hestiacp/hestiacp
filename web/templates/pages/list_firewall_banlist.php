@@ -38,7 +38,7 @@
 			<div class="units-table-cell"></div>
 			<div class="units-table-cell u-text-center"><?= _("Date") ?></div>
 			<div class="units-table-cell u-text-center"><?= _("Time") ?></div>
-			<div class="units-table-cell u-text-center"><?= _("Comment") ?></div>
+			<div class="units-table-cell u-text-center"><?= _("Chain") ?></div>
 		</div>
 
 		<!-- Begin banned IP address list item loop -->
@@ -47,7 +47,7 @@
 				++$i;
 				$ip = $key;
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit">
+			<div class="units-table-row js-unit">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="ipchain[]" value="<?= $ip . ":" . $value["CHAIN"] ?>">
@@ -83,7 +83,7 @@
 					<?= $data[$key]["TIME"] ?>
 				</div>
 				<div class="units-table-cell u-text-bold u-text-center-desktop">
-					<span class="u-hide-desktop"><?= _("Comment") ?>:</span>
+					<span class="u-hide-desktop"><?= _("Chain") ?>:</span>
 					<?= _($value["CHAIN"]) ?>
 				</div>
 			</div>

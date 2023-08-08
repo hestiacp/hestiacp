@@ -12,6 +12,8 @@ if (!empty($_GET["domain"])) {
 } else {
 	$v_domain = "example.tld";
 }
+
+$v_aliases = "";
 $v_email = "";
 $v_country = "US";
 $v_state = "California";

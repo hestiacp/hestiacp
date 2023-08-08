@@ -2,9 +2,16 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary button-back js-button-back" href="/edit/user/?token=<?= $_SESSION["token"] ?>">
-				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
-			</a>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION['look'] !== '' && $_GET["user"] !== "admin") { ?>
+				<a href="/edit/user/?user=<?= htmlentities($_SESSION["look"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				</a>
+			<?php } else { ?>
+				<a href="/edit/user/?user=<?= htmlentities($_SESSION["user"]) ?>&token=<?= $_SESSION["token"] ?>" class="button button-secondary button-back js-button-back">
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				</a>
+			<?php } ?>
+
 			<?php if ($_SESSION["userContext"] === "admin" && isset($_GET["user"]) && $_GET["user"] !== "admin") { ?>
 				<a href="/add/key/?user=<?= htmlentities($_GET["user"]) ?>" class="button button-secondary js-button-create">
 					<i class="fas fa-circle-plus icon-green"></i><?= _("Add SSH Key") ?>
@@ -36,7 +43,7 @@
 				foreach ($data as $key => $value) {
 				++$i;
 			?>
-			<div class="units-table-row animate__animated animate__fadeIn js-unit" style="<?php if ($data[$key]['ID'] === 'filemanager.ssh.key') { echo 'display: none;'; } ?>">
+			<div class="units-table-row js-unit" style="<?php if ($data[$key]['ID'] === 'filemanager.ssh.key') { echo 'display: none;'; } ?>">
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("SSH ID") ?>:</span>
 					<span class="u-text-break">

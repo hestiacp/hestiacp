@@ -8,12 +8,26 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 // Check token
 verify_csrf($_POST);
 
+if (empty($_POST["domain"])) {
+	header("Location: /list/dns/");
+	exit();
+}
+
+if (empty($_POST["action"])) {
+	header("Location: /list/dns/");
+	exit();
+}
+
 $domain = $_POST["domain"];
-$record = $_POST["record"];
+if (empty($_POST["record"])) {
+	$record = "";
+} else {
+	$record = $_POST["record"];
+}
 $action = $_POST["action"];
 
 if ($_SESSION["userContext"] === "admin") {
-	if (empty($record)) {
+	if (empty($_POST["record"])) {
 		switch ($action) {
 			case "rebuild":
 				$cmd = "v-rebuild-dns-domain";
@@ -48,7 +62,7 @@ if ($_SESSION["userContext"] === "admin") {
 		}
 	}
 } else {
-	if (empty($record)) {
+	if (empty($_POST["record"])) {
 		switch ($action) {
 			case "delete":
 				$cmd = "v-delete-dns-domain";
@@ -69,12 +83,16 @@ if ($_SESSION["userContext"] === "admin") {
 	}
 }
 
-if (empty($record)) {
-	foreach ($domain as $value) {
-		// DNS
-		$value = quoteshellarg($value);
-		exec(HESTIA_CMD . $cmd . " " . $user . " " . $value . " no", $output, $return_var);
-		$restart = "yes";
+if (empty($_POST["record"])) {
+	if (is_array($_POST["domain"])) {
+		foreach ($domain as $value) {
+			// DNS
+			$value = quoteshellarg($value);
+			exec(HESTIA_CMD . $cmd . " " . $user . " " . $value . " no", $output, $return_var);
+			$restart = "yes";
+		}
+	} else {
+		header("Location: /list/dns/?domain=" . $domain);
 	}
 } else {
 	foreach ($record as $value) {
@@ -94,7 +112,7 @@ if (!empty($restart)) {
 	exec(HESTIA_CMD . "v-restart-dns", $output, $return_var);
 }
 
-if (empty($record)) {
+if (empty($_POST["record"])) {
 	header("Location: /list/dns/");
 	exit();
 } else {

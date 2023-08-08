@@ -85,12 +85,13 @@ get_branch_file() {
 
 usage() {
 	echo "Usage:"
-	echo "    $0 (--all|--hestia|--nginx|--php) [options] [branch] [Y]"
+	echo "    $0 (--all|--hestia|--nginx|--php|--web-terminal) [options] [branch] [Y]"
 	echo ""
 	echo "    --all           Build all hestia packages."
 	echo "    --hestia        Build only the Control Panel package."
 	echo "    --nginx         Build only the backend nginx engine package."
 	echo "    --php           Build only the backend php engine package"
+	echo "    --web-terminal  Build only the backend web terminal websocket package"
 	echo "  Options:"
 	echo "    --install       Install generated packages"
 	echo "    --keepbuild     Don't delete downloaded source and build folders"
@@ -136,6 +137,7 @@ for i in $*; do
 		--all)
 			NGINX_B='true'
 			PHP_B='true'
+			WEB_TERMINAL_B='true'
 			HESTIA_B='true'
 			;;
 		--nginx)
@@ -143,6 +145,9 @@ for i in $*; do
 			;;
 		--php)
 			PHP_B='true'
+			;;
+		--web-terminal)
+			WEB_TERMINAL_B='true'
 			;;
 		--hestia)
 			HESTIA_B='true'
@@ -206,10 +211,12 @@ if [ -f "$SRC_DIR/src/deb/hestia/control" ] && [ "$use_src_folder" == 'true' ]; 
 	BUILD_VER=$(cat $SRC_DIR/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
 	NGINX_V=$(cat $SRC_DIR/src/deb/nginx/control | grep "Version:" | cut -d' ' -f2)
 	PHP_V=$(cat $SRC_DIR/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
+	WEB_TERMINAL_V=$(cat $SRC_DIR/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
 else
 	BUILD_VER=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/hestia/control | grep "Version:" | cut -d' ' -f2)
 	NGINX_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/nginx/control | grep "Version:" | cut -d' ' -f2)
 	PHP_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/php/control | grep "Version:" | cut -d' ' -f2)
+	WEB_TERMINAL_V=$(curl -s https://raw.githubusercontent.com/$REPO/$branch/src/deb/web-terminal/control | grep "Version:" | cut -d' ' -f2)
 fi
 
 if [ -z "$BUILD_VER" ]; then
@@ -217,14 +224,14 @@ if [ -z "$BUILD_VER" ]; then
 	exit 1
 fi
 
-echo "Build version $BUILD_VER, with Nginx version $NGINX_V and PHP version $PHP_V"
+echo "Build version $BUILD_VER, with Nginx version $NGINX_V, PHP version $PHP_V and Web Terminal version $WEB_TERMINAL_V"
 
 if [ -e "/etc/redhat-release" ]; then
 	HESTIA_V="${BUILD_VER}"
 else
 	HESTIA_V="${BUILD_VER}_${BUILD_ARCH}"
 fi
-OPENSSL_V='3.1.1'
+OPENSSL_V='3.1.2'
 PCRE_V='10.42'
 ZLIB_V='1.2.13'
 
@@ -263,13 +270,29 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		fi
 	else
 		# Set package dependencies for compiling
-		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
+		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl nodejs libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
+
+		# Installing NodeJS 20.x repo
+		apt="/etc/apt/sources.list.d"
+		codename="$(lsb_release -s -c)"
+
+		if [ -z $(which "node") ]; then
+			echo "Adding NodeJS 20.x repo..."
+			echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
+			echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
+			curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
+		fi
 
 		echo "Updating system APT repositories..."
 		apt-get -qq update > /dev/null 2>&1
 		echo "Installing dependencies for compilation..."
 		apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
+		nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
+		if [ "$nodejs_version" -lt 18 ]; then
+			echo "Requires NodeJS 18.x or higher"
+			exit 1
+		fi
 		# Fix for Debian PHP Envroiment
 		if [ $BUILD_ARCH == "amd64" ]; then
 			if [ ! -L /usr/local/include/curl ]; then
@@ -295,6 +318,7 @@ if [ "$HESTIA_DEBUG" ]; then
 	echo "Hestia version   : $BUILD_VER"
 	echo "Nginx version    : $NGINX_V"
 	echo "PHP version      : $PHP_V"
+	echo "Web Term version : $WEB_TERMINAL_V"
 	echo "Architecture     : $BUILD_ARCH"
 	echo "Debug mode       : $HESTIA_DEBUG"
 	echo "Source directory : $SRC_DIR"
@@ -330,7 +354,7 @@ branch_dash=$(echo "$branch" | sed 's/\//-/g')
 if [ "$NGINX_B" = true ]; then
 	echo "Building hestia-nginx package..."
 	if [ "$CROSS" = "true" ]; then
-		echo "Cross compile not supported for hestia-nginx or hestia-php"
+		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
 
@@ -476,7 +500,7 @@ fi
 
 if [ "$PHP_B" = true ]; then
 	if [ "$CROSS" = "true" ]; then
-		echo "Cross compile not supported for hestia-nginx or hestia-php"
+		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
 		exit 1
 	fi
 
@@ -610,6 +634,75 @@ fi
 
 #################################################################################
 #
+# Building hestia-web-terminal
+#
+#################################################################################
+
+if [ "$WEB_TERMINAL_B" = true ]; then
+	if [ "$CROSS" = "true" ]; then
+		echo "Cross compile not supported for hestia-nginx, hestia-php or hestia-web-terminal"
+		exit 1
+	fi
+
+	echo "Building hestia-web-terminal package..."
+
+	if [ "$BUILD_DEB" = true ]; then
+		BUILD_DIR_HESTIA_TERMINAL=$BUILD_DIR/hestia-web-terminal_$WEB_TERMINAL_V
+
+		# Check if target directory exist
+		if [ -d $BUILD_DIR_HESTIA_TERMINAL ]; then
+			rm -r $BUILD_DIR_HESTIA_TERMINAL
+		fi
+
+		# Create directory
+		mkdir -p $BUILD_DIR_HESTIA_TERMINAL
+		chown -R root:root $BUILD_DIR_HESTIA_TERMINAL
+
+		# Get Debian package files
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIA_TERMINAL/DEBIAN
+		mkdir -p $BUILD_DIR_HESTIA_TERMINAL/DEBIAN
+		get_branch_file 'src/deb/web-terminal/control' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
+		if [ "$BUILD_ARCH" != "amd64" ]; then
+			sed -i "s/amd64/${BUILD_ARCH}/g" "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/control"
+		fi
+
+		get_branch_file 'src/deb/web-terminal/copyright' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/copyright"
+		get_branch_file 'src/deb/web-terminal/postinst' "$BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst"
+		chmod +x $BUILD_DIR_HESTIA_TERMINAL/DEBIAN/postinst
+
+		# Get server files
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
+		mkdir -p "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal"
+		get_branch_file 'src/deb/web-terminal/package.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package.json"
+		get_branch_file 'src/deb/web-terminal/package-lock.json' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/package-lock.json"
+		get_branch_file 'src/deb/web-terminal/server.js' "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
+		chmod +x "${BUILD_DIR_HESTIA_TERMINAL}/usr/local/hestia/web-terminal/server.js"
+
+		cd $BUILD_DIR_HESTIA_TERMINAL/usr/local/hestia/web-terminal
+		npm ci --omit=dev
+
+		# Systemd service
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system
+		mkdir -p $BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system
+		get_branch_file 'src/deb/web-terminal/hestia-web-terminal.service' "$BUILD_DIR_HESTIA_TERMINAL/etc/systemd/system/hestia-web-terminal.service"
+
+		# Build the package
+		echo Building Web Terminal DEB
+		[ "$HESTIA_DEBUG" ] && echo DEBUG: dpkg-deb -Zxz --build $BUILD_DIR_HESTIA_TERMINAL $DEB_DIR
+		dpkg-deb -Zxz --build $BUILD_DIR_HESTIA_TERMINAL $DEB_DIR
+
+		# clear up the source folder
+		if [ "$KEEPBUILD" != 'true' ]; then
+			rm -r $BUILD_DIR_HESTIA_TERMINAL
+			if [ "$use_src_folder" == 'true' ] && [ -d $BUILD_DIR/hestiacp-$branch_dash ]; then
+				rm -r $BUILD_DIR/hestiacp-$branch_dash
+			fi
+		fi
+	fi
+fi
+
+#################################################################################
+#
 # Building hestia
 #
 #################################################################################
@@ -651,8 +744,10 @@ if [ "$HESTIA_B" = true ]; then
 
 			mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 
-			# Move needed directories
+			# Build web and move needed directories
 			cd $BUILD_DIR/hestiacp-$branch_dash
+			npm ci --ignore-scripts
+			npm run build
 			cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
 
 			# Set permissions

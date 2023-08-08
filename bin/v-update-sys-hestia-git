@@ -24,9 +24,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
+# Detect and install NodeJS if necessary
 if [ -z $(which "node") ]; then
-	echo "Unable to locate Node.js  See https://hestiacp.com/docs/contributing/development.html"
-	exit 0
+	read -p "NodeJS not found. Install now to proceed? [Y/n] " answer
+	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
+		sudo apt-get install -y nodejs
+	else
+		exit 0
+	fi
 fi
 
 # Define download function
@@ -300,7 +305,7 @@ mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 # Move needed directories
 cd $BUILD_DIR/hestiacp-$branch_dash
 
-npm install
+npm ci
 npm run build
 
 cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/

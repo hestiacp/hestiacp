@@ -15,7 +15,7 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
 	<form id="main-form" name="v_add_ipset" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">

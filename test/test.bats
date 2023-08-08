@@ -664,9 +664,9 @@ function check_ip_not_banned(){
 
 @test "Ip: [Debian] Netplan file updated" {
    # Skip with netplan
-   if [ -f /etc/netplan/60-hestia.yaml ]; then
-   skip
-   fi
+   if [ $(lsb_release -s -i) = "Ubuntu" ]; then
+	 skip
+	 fi
 
    assert_file_exist  /etc/network/interfaces
    assert_file_contains  /etc/network/interfaces "$ip"
@@ -698,7 +698,7 @@ function check_ip_not_banned(){
     fi
 }
 
-@test "Ip: Delete ips" {
+@test "Ip: Delete ip 198.18.0.12" {
     local ip="198.18.0.12"
     run v-delete-sys-ip $ip
     assert_success
@@ -706,31 +706,43 @@ function check_ip_not_banned(){
 
     assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
     assert_file_not_exist $HESTIA/data/ips/$ip
+}
 
+@test "Ip: [Ubuntu] Netplan file changed" {
+	 # Skip if Debian
+	 if [ $(lsb_release -s -i) != "Ubuntu" ]; then
+	 skip
+	 fi
 
-    ip="198.18.0.121"
-    run v-delete-sys-ip $ip
-    assert_success
-    refute_output
+	 ip="198.18.0.121"
+	 assert_file_exist /etc/netplan/60-hestia.yaml
+	 assert_file_contains /etc/netplan/60-hestia.yaml "$ip"
+}
 
-    assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
-    assert_file_not_exist $HESTIA/data/ips/$ip
+@test "Ip: Delete ip 198.18.0.121" {
+	ip="198.18.0.121"
+	run v-delete-sys-ip $ip
+	assert_success
+	refute_output
 
-    if [ -n "$PROXY_SYSTEM" ]; then
-        assert_file_not_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
-    fi
+	assert_file_not_exist /etc/$WEB_SYSTEM/conf.d/$ip.conf
+	assert_file_not_exist $HESTIA/data/ips/$ip
 
-    # remoteip and rpaf config hashes must match the initial one
-    if [ ! -z "$a2_rpaf_hash" ]; then
-        local a2_rpaf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
-        file_hash=$(cat $a2_rpaf |md5sum |cut -d" " -f1)
-        assert_equal "$file_hash" "$a2_rpaf_hash"
-    fi
-    if [ ! -z "$a2_remoteip_hash" ]; then
-        local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
-        file_hash=$(cat $a2_remoteip |md5sum |cut -d" " -f1)
-        assert_equal "$file_hash" "$a2_remoteip_hash"
-    fi
+	if [ -n "$PROXY_SYSTEM" ]; then
+			assert_file_not_exist /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+	fi
+
+	# remoteip and rpaf config hashes must match the initial one
+	if [ ! -z "$a2_rpaf_hash" ]; then
+			local a2_rpaf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+			file_hash=$(cat $a2_rpaf |md5sum |cut -d" " -f1)
+			assert_equal "$file_hash" "$a2_rpaf_hash"
+	fi
+	if [ ! -z "$a2_remoteip_hash" ]; then
+			local a2_remoteip="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+			file_hash=$(cat $a2_remoteip |md5sum |cut -d" " -f1)
+			assert_equal "$file_hash" "$a2_remoteip_hash"
+	fi
 }
 
 @test "Ip: Add IP for rest of the test" {
@@ -1571,12 +1583,48 @@ function check_ip_not_banned(){
 	assert_failure $E_EXISTS
 }
 
+@test "MAIL: Add account 2" {
+	run v-add-mail-account $user $domain random "$userpass2"
+	assert_success
+	assert_file_contains  /etc/exim4/domains/$domain/limits "random@$domain"
+	refute_output
+}
+
 @test "MAIL: Add account alias" {
 	run v-add-mail-account-alias $user $domain test hestiacprocks
 	assert_success
 	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacprocks@$domain"
 	refute_output
 }
+
+@test "MAIL: Add account alias 2" {
+	run v-add-mail-account-alias $user $domain test hestiacprocks2
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacprocks2@$domain"
+	refute_output
+}
+
+@test "MAIL: Add account alias 3" {
+	run v-add-mail-account-alias $user $domain test hestiacp
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/aliases "hestiacp@$domain"
+	refute_output
+}
+
+@test "MAIL: Add account 3" {
+	run v-add-mail-account $user $domain hestia "$userpass2"
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/limits "hestia@$domain"
+	refute_output
+}
+
+@test "MAIL: Add account 4" {
+	run v-add-mail-account $user $domain hestiarocks3 "$userpass2"
+	assert_success
+	assert_file_contains /etc/exim4/domains/$domain/limits "hestiarocks3@$domain"
+	refute_output
+}
+
 
 @test "MAIL: Add account alias Invalid length" {
 	run v-add-mail-account-alias $user $domain test 'hestiacp-realy-rocks-but-i-want-to-have-feature-xyz-and-i-want-it-now'

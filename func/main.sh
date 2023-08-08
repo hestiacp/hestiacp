@@ -129,8 +129,8 @@ log_history() {
 	fi
 	touch $log
 
-	if [ '750' -lt "$(wc -l $log | cut -f 1 -d ' ')" ]; then
-		tail -n 499 $log > $log.moved
+	if [ '300' -lt "$(wc -l $log | cut -f 1 -d ' ')" ]; then
+		tail -n 250 $log > $log.moved
 		mv -f $log.moved $log
 		chmod 660 $log
 	fi
@@ -977,6 +977,10 @@ is_dns_record_format_valid() {
 		is_domain_format_valid "${1::-1}" 'mx_record'
 		is_int_format_valid "$priority" 'priority_record'
 	fi
+	if [ "$rtype" = 'SRV' ]; then
+		format_no_quotes "$priority" 'priority_record'
+	fi
+
 	is_no_new_line_format "$1"
 }
 
@@ -1025,12 +1029,7 @@ is_int_format_valid() {
 
 # Interface validator
 is_interface_format_valid() {
-	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
-	nic_names="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname, if .altnames then .altnames[] else empty end end')"
-	# Proxmox return empty value for $physical_nics
-	if [ -z "$nic_names" ]; then
-		nic_names="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname, if .altnames then .altnames[] else empty end end')"
-	fi
+	nic_names="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname, if .altnames then .altnames[] else empty end end')"
 	if [ -z "$(echo "$nic_names" | grep -x "$1")" ]; then
 		check_result "$E_INVALID" "invalid interface format :: $1"
 	fi
@@ -1215,6 +1214,7 @@ is_format_valid() {
 				object) is_object_name_format_valid "$arg" 'object' ;;
 				package) is_object_format_valid "$arg" "$arg_name" ;;
 				password) is_password_format_valid "$arg" ;;
+				priority) is_int_format_valid $arg ;;
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
@@ -1712,4 +1712,48 @@ search_command_arg_position() {
 	done <<< "$command_options"
 
 	echo "$position"
+}
+
+add_chroot_jail() {
+	local user=$1
+
+	mkdir -p /srv/jail/$user
+	chown 0:0 /srv /srv/jail /srv/jail/$user
+	chmod 755 /srv /srv/jail /srv/jail/$user
+	if [ ! -d /srv/jail/$user/home ]; then
+		mkdir -p /srv/jail/$user/home
+		chown 0:0 /srv/jail/$user/home
+		chmod 755 /srv/jail/$user/home
+	fi
+
+	cat > /etc/systemd/system/srv-jail-$user-home.mount << EOF
+[Unit]
+Description=Mount $user's home directory to the jail chroot
+Before=local-fs.target
+
+[Mount]
+What=$(getent passwd $user | cut -d : -f 6)
+Where=/srv/jail/$user/home
+Type=none
+Options=bind
+LazyUnmount=yes
+
+[Install]
+RequiredBy=local-fs.target
+EOF
+
+	systemctl daemon-reload > /dev/null 2>&1
+	systemctl enable srv-jail-$user-home.mount > /dev/null 2>&1
+	systemctl start srv-jail-$user-home.mount > /dev/null 2>&1
+}
+
+delete_chroot_jail() {
+	local user=$1
+
+	systemctl stop srv-jail-$user-home.mount > /dev/null 2>&1
+	systemctl disable srv-jail-$user-home.mount > /dev/null 2>&1
+	rm -f /etc/systemd/system/srv-jail-$user-home.mount
+	systemctl daemon-reload > /dev/null 2>&1
+	rmdir /srv/jail/$user/home > /dev/null 2>&1
+	rmdir /srv/jail/$user > /dev/null 2>&1
 }

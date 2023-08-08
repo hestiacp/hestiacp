@@ -48,7 +48,7 @@ if [ -e '/etc/bind/named.conf' ]; then
 fi
 
 # create new transfer-key
-hostkey = $(openssl rand -base64 64)
+hostkey=$(openssl rand -base64 64)
 
 # Insert values into transferkeys file
 transkey="key \"$host\" {"
@@ -59,13 +59,11 @@ echo "$transkey" >> transfer_keys
 srv="server \"$ip\" { keys { $host; }; };"
 echo "srv" >> $dns_conf
 
-
 tmp_file="/tmp/vst-sync.$transfer_keys"
 cluster_file "/etc/bind/transferkeys.conf" "$tmp_file"
 check_result $? "$HOST connection failed" "$E_CONNECT"
 
 cluster_cmd v-add-dns-transfer-key $transkey "transferkeys.conf" $host $ip
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #

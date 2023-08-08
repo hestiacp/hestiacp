@@ -26,7 +26,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -38,7 +37,7 @@ check_hestia_demo_mode
 
 # Insert values
 if [ -e "$data_file" ]; then
-	mv -f ""/etc/bind/$data_file_name.conf"" "/etc/bind/$data_file_name.old""
+	mv -f "/etc/bind/$data_file_name.conf" "/etc/bind/$data_file_name.old"
 	mv -f $data_file /etc/bind/$data_file_name.conf
 	chmod 660 /etc/bind/$data_file_name.conf
 fi

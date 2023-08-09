@@ -68,10 +68,7 @@ csv_list() {
 
 # Defining interface list
 # Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
-physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
-if [ -z "$physical_nics" ]; then
-	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
-fi
+physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
 
 # Listing data
 case $format in

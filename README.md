@@ -4,7 +4,7 @@
 
 <h2 align="center">A lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.8.5~beta | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.8.5 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |

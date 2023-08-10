@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.5] - Service release
+
+### Bugfixes
+
+- Fixed an error that could occur when adding a new package (#3883)
+- Fixed an issue in `v-list-sys-interfaces` (#3912)
+- Minor refactoring of user interface code (#3893)
+- Improved shell output of `v-list-web-domain` (#3888, thanks #hudokkow)
+- Fixed a bug in `v-delete-sys-ip` on Ubuntu systems (#3894)
+- Add user role details to `v-list-users` (#3898)
+- Rename "Comment" to "Chain" in Firewall UI to better reflect the fields purpose (#3901)
+- Updated translations (#3907)
+
 ## [1.8.4] - Service release
 
 ### Bugfixes

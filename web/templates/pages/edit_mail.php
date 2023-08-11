@@ -138,7 +138,8 @@
 							<span class="values-list-label"><?= _("Issued To") ?></span>
 							<span class="values-list-value"><?= htmlentities($v_ssl_subject) ?></span>
 						</li>
-						<?php if ($v_ssl_aliases) { ?>
+						<?php if ($v_ssl_aliases) {
+							$v_ssl_aliases = str_replace(",", ", ", $v_ssl_aliases); ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Alternate") ?></span>
 								<span class="values-list-value"><?= htmlentities($v_ssl_aliases) ?></span>

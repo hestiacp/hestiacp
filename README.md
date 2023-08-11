@@ -4,7 +4,7 @@
 
 <h2 align="center">Lightweight and powerful control panel for the modern web</h2>
 
-<p align="center"><strong>Latest stable release:</strong> Version 1.8.4 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
+<p align="center"><strong>Latest stable release:</strong> Version 1.8.5 | <a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md">View Changelog</a></p>
 
 <p align="center">
 	<a href="https://www.hestiacp.com/">HestiaCP.com</a> |
@@ -34,7 +34,7 @@ Smart Chain: 0xfF3Dd2c889bd0Ff73d8085B84A314FC7c88e5D51<br>
 ## Features and Services
 
 - Apache2 and NGINX with PHP-FPM
-- Multiple PHP versions (5.6 - 8.2, 8.0 as default)
+- Multiple PHP versions (5.6 - 8.2, 8.1 as default)
 - DNS Server (Bind) with clustering capabilities
 - POP/IMAP/SMTP mail services with Anti-Virus, Anti-Spam, and Webmail (ClamAV, SpamAssassin, Sieve, Roundcube)
 - MariaDB/MySQL and/or PostgreSQL databases

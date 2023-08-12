@@ -39,7 +39,7 @@ check_hestia_demo_mode
 
 # Starting unsuspend loop
 for database in $(search_objects 'db' 'SUSPENDED' "yes" 'DB'); do
-    $BIN/v-unsuspend-database "$user" "$database"
+	$BIN/v-unsuspend-database "$user" "$database"
 done
 
 #----------------------------------------------------------#

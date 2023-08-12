@@ -1,0 +1,89 @@
+#!/bin/bash
+# info: change system web terminal backend port
+# options: PORT
+#
+# example: v-change-sys-web-terminal-port 5678
+#
+# This function for changing the system's web terminal backend port in NGINX configuration.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+PORT=$1
+NGINX_CONFIG="$HESTIA/nginx/conf/nginx.conf"
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Functions
+is_port_valid() {
+	# Check if PORT is numeric
+	if [[ ! "$PORT" =~ ^[0-9]+$ ]]; then
+		echo "Port should contains a numeric value only!"
+		log_event "$E_INVALID" "$ARGUMENTS"
+		exit "$E_INVALID"
+	fi
+
+	# Check if PORT is already used
+	BUSY_PORT=$(lsof -i:"$PORT")
+	if [ -n "$BUSY_PORT" ] && [ "$PORT" != "$BACKEND_PORT" ]; then
+		echo "Port is already used by Hestia, please set another one!"
+		log_event "$E_INUSE" "$ARGUMENTS"
+		exit "$E_INUSE"
+	fi
+}
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'PORT'
+is_port_valid
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get original port
+ORIGINAL_PORT=$(cat ${NGINX_CONFIG} | grep -m1 "proxy_pass http://localhost:" | sed 's/[^0-9]*//g')
+
+# Check if port is different to nginx.conf
+if [ "$ORIGINAL_PORT" = "$PORT" ]; then
+	# Nothing to do, exit
+	exit
+else
+	# Set new port in config via v-change-sys-config-value
+	$BIN/v-change-sys-config-value "WEB_TERMINAL_PORT" "$PORT"
+	# Replace port in config files.
+	sed -i "s/\(proxy_pass http:\/\/localhost:\)[0-9][0-9]*\([^0-9]*\;$\)/\1$PORT\2/" ${NGINX_CONFIG}
+
+	# Check if the web terminal backend is running
+	if [[ $(ps -eaf | grep -i hestia/web-terminal | sed '/^$/d' | wc -l) -gt 1 ]]; then
+		$BIN/v-restart-service hestia-web-terminal
+	fi
+
+	# Check if Hestia is running
+	if [[ $(ps -eaf | grep -i hestia | sed '/^$/d' | wc -l) -gt 1 ]]; then
+		$BIN/v-restart-service hestia
+	fi
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Warning" "System" "Hestia Control Panel web terminal port changed (New Value: $PORT, Old Value: $ORIGINAL_PORT)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

@@ -1,0 +1,512 @@
+######################################################################
+#                                                                    #
+#          Exim configuration file for Hestia Control Panel          #
+#                                                                    #
+######################################################################
+
+#SPAMASSASSIN = yes
+#SPAM_SCORE = 50
+#SPAM_REJECT_SCORE = 100
+#CLAMD = yes
+
+smtp_banner = $smtp_active_hostname
+smtp_active_hostname = ${lookup dnsdb{>: defer_never,ptr=$interface_address}{${listextract{1}{$value}}}{$primary_hostname}}
+add_environment = <; PATH=/bin:/usr/bin
+keep_environment =
+disable_ipv6 = true
+
+SRS_SECRET = ${readfile{/etc/exim4/srs.conf}}
+
+smtputf8_advertise_hosts =
+domainlist local_domains = dsearch;/etc/exim4/domains/
+domainlist relay_to_domains = dsearch;/etc/exim4/domains/
+hostlist relay_from_hosts = 127.0.0.1
+hostlist whitelist = net-iplsearch;/etc/exim4/white-blocks.conf
+hostlist spammers = net-iplsearch;/etc/exim4/spam-blocks.conf
+no_local_from_check
+untrusted_set_sender = *
+acl_smtp_connect = acl_check_spammers
+acl_smtp_mail = acl_check_mail
+acl_smtp_rcpt = acl_check_rcpt
+acl_smtp_data = acl_check_data
+acl_smtp_mime = acl_check_mime
+
+.ifdef SPAMASSASSIN
+spamd_address = 127.0.0.1 783
+.endif
+
+.ifdef CLAMD
+av_scanner = clamd: /run/clamav/clamd.ctl
+.endif
+
+log_selector = +tls_sni
+
+tls_advertise_hosts = *
+
+# We test that $tls_in_sni is a valid domain, by an arbitrary email address foo@domain.tld .
+# Then, we extract the domain with a function that would fail if the email address is invalid.
+# If the certificate exists, we will use it, otherwise the default certificate in /etc/ssl will be used.
+tls_certificate = \
+        ${if and {\
+                     { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
+                     { exists{/usr/local/hestia/ssl/mail/$tls_in_sni.crt} }\
+                 }\
+                 {/usr/local/hestia/ssl/mail/$tls_in_sni.crt}\
+                 {/usr/local/hestia/ssl/certificate.crt}\
+         }
+
+tls_privatekey = \
+        ${if and {\
+                     { eq {${domain:foo@$tls_in_sni}} {$tls_in_sni}}\
+                     { exists{/usr/local/hestia/ssl/mail/$tls_in_sni.key} }\
+                 }\
+                 {/usr/local/hestia/ssl/mail/$tls_in_sni.key}\
+                 {/usr/local/hestia/ssl/certificate.key}\
+         }
+
+daemon_smtp_ports = 25 : 465 : 587
+tls_on_connect_ports = 465
+tls_require_ciphers = PERFORMANCE:-RSA:-VERS-ALL:+VERS-TLS1.2:+VERS-TLS1.3:%SERVER_PRECEDENCE
+never_users = root
+host_lookup = *
+rfc1413_hosts = *
+rfc1413_query_timeout = 0s
+ignore_bounce_errors_after = 2d
+timeout_frozen_after = 7d
+
+DKIM_DOMAIN = ${lc:${domain:$h_from:}}
+DKIM_FILE = /etc/exim4/domains/${lookup{${lc:${domain:$h_from:}}}dsearch{/etc/exim4/domains/}}/dkim.pem
+DKIM_PRIVATE_KEY = ${if exists{DKIM_FILE}{DKIM_FILE}{0}}
+
+OUTGOING_IP = /etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/ip
+
+SMTP_RELAY_FILE = ${if exists{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/smtp_relay.conf}{/etc/exim4/domains/${lookup{$sender_address_domain}dsearch{/etc/exim4/domains}}/smtp_relay.conf}{/etc/exim4/smtp_relay.conf}}
+SMTP_RELAY_HOST = ${lookup{host}lsearch{SMTP_RELAY_FILE}}
+SMTP_RELAY_PORT = ${lookup{port}lsearch{SMTP_RELAY_FILE}}
+SMTP_RELAY_USER = ${lookup{user}lsearch{SMTP_RELAY_FILE}}
+SMTP_RELAY_PASS = ${lookup{pass}lsearch{SMTP_RELAY_FILE}}
+
+# Custom Filter
+system_filter = /etc/exim4/system.filter
+system_filter_user = Debian-exim
+
+######################################################################
+#                       ACL CONFIGURATION                            #
+#         Specifies access control lists for incoming SMTP mail      #
+######################################################################
+
+acl_not_smtp = acl_not_smtp
+
+begin acl
+
+# Limit per user for PHP scripts
+acl_not_smtp:
+  deny    message       = Website of user $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
+  ratelimit             = 200 / 1h / $authenticated_id
+
+  warn    ratelimit     = 100 / 1h / strict / $authenticated_id
+  log_message           = Sender rate [limitlog]: log / account / $authenticated_id / $sender_rate / $sender_rate_period
+
+  accept
+
+acl_check_spammers:
+  accept  hosts         = +whitelist
+
+  drop    message       = Your host in blacklist on this server.
+          log_message   = Host in blacklist
+          hosts         = +spammers
+
+  accept
+
+
+acl_check_mail:
+	deny    condition     = ${if eq{$sender_helo_name}{}}
+			message       = HELO required before MAIL
+
+	drop    !authenticated = *
+			message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
+			condition     = ${if match{$sender_helo_name}{\N((\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3})|([0-9a-f]{8})|([0-9A-F]{8}))\N}{yes}{no}}
+			condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\}{$sender_helo_name}{no}{yes}}
+			delay         = 45s
+
+	drop    !authenticated = *
+			condition     = ${if isip{$sender_helo_name}}
+			message       = Access denied - Invalid HELO name (See RFC2821 4.1.3)
+
+	drop    !authenticated = *
+			condition    = ${if eq{[$interface_address]}{$sender_helo_name}}
+			message       = $interface_address is _my_ address
+
+	accept
+
+
+acl_check_rcpt:
+  accept  hosts         = :
+
+# Limit per email account for SMTP auhenticated users
+  deny    message       = Email account $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
+          set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} }
+          ratelimit     = $acl_c_msg_limit / 1h / strict/ $authenticated_id
+
+  warn    ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
+  log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
+
+  deny    message       = Restricted characters in address
+          domains       = +local_domains
+          local_parts   = ^[.] : ^.*[@%!/|]
+
+  deny    message       = Restricted characters in address
+          domains       = !+local_domains
+          local_parts   = ^[./|] : ^.*[@%!] : ^.*/\\.\\./
+
+  require verify        = sender
+
+  accept  hosts         = +relay_from_hosts
+          control       = submission
+
+  accept  authenticated = *
+          control       = submission/domain=
+
+  deny    message       = Rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text
+          hosts         = !+whitelist
+          dnslists      = ${readfile {/etc/exim4/dnsbl.conf}{:}}
+
+  require message       = relay not permitted
+          domains       = +local_domains : +relay_to_domains
+
+  deny    message       = smtp auth required
+         sender_domains = +local_domains
+         !authenticated = *
+
+  require verify        = recipient
+
+.ifdef CLAMD
+  warn    set acl_m0    = no
+
+  warn    condition     = ${if exists {/etc/exim4/domains/$domain/antivirus}{yes}{no}}
+          set acl_m0    = yes
+.endif
+
+.ifdef SPAMASSASSIN
+ warn    set acl_m1    = no
+         set acl_m3    = no
+ warn    condition     = ${if exists {/etc/exim4/domains/$domain/antispam}{yes}{no}}
+         set acl_m1    = yes
+ warn    condition     = ${if exists {/etc/exim4/domains/$domain/reject_spam}{yes}{no}}
+         set acl_m3    = yes
+.endif
+
+  accept
+
+
+acl_check_data:
+.ifdef CLAMD
+  deny   message        = Message contains a virus ($malware_name) and has been rejected
+         malware        = */defer_ok
+         condition      = ${if eq{$acl_m0}{yes}{yes}{no}}
+.endif
+
+.ifdef SPAMASSASSIN
+ warn   !authenticated = *
+        hosts          = !+relay_from_hosts
+        condition      = ${if < {$message_size}{1024K}}
+        condition      = ${if eq{$acl_m1}{yes}{yes}{no}}
+        spam           = debian-spamd:true/defer_ok
+        add_header     = X-Spam-Score: $spam_score_int
+        add_header     = X-Spam-Bar: $spam_bar
+        add_header     = X-Spam-Report: $spam_report
+        set acl_m2     = $spam_score_int
+
+ warn   condition      = ${if !eq{$acl_m2}{} {yes}{no}}
+        condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
+        add_header     = X-Spam-Status: Yes
+        message        = SpamAssassin detected spam (from $sender_address to $recipients).
+
+  # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled
+  deny   message        = This message scored $spam_score spam points
+         spam           = debian-spamd:true
+         condition      = ${if eq{$acl_m3}{yes}{yes}{no}}
+         condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}
+.endif
+
+  accept
+
+
+acl_check_mime:
+  deny   message        = Blacklisted file extension detected
+         condition      = ${if match {${lc:$mime_filename}}{\N(\.ace|\.ade|\.adp|\.app|\.arj|\.asp|\.aspx|\.asx|\.bas|\.bat|\.cab|\.cer|\.chm|\.cmd|\.cnt|\.com|\.cpl|\.crt|\.csh|\.der|\.diagcab|\.dll|\.efi|\.exe|\.fla|\.fon|\.fxp|\.gadget|\.grp|\.hlp|\.hpj|\.hta|\.htc|\.img|\.inf|\.ins|\.iso|\.isp|\.its|\.jar|\.jnlp|\.js|\.jse|\.ksh|\.lib|\.lnk|\.mad|\.maf|\.mag|\.mam|\.maq|\.mar|\.mas|\.mat|\.mau|\.mav|\.maw|\.mcf|\.mda|\.mdb|\.mde|\.mdt|\.mdw|\.mdz|\.msc|\.msh|\.msh1|\.msh1xml|\.msh2|\.msh2xml|\.mshxml|\.msi|\.msp|\.mst|\.msu|\.ops|\.osd|\.pcd|\.pif|\.pl|\.plg|\.prf|\.prg|\.printerexport|\.ps1|\.ps1xml|\.ps2|\.ps2xml|\.psc1|\.psc2|\.psd1|\.psdm1|\.pst|\.py|\.pyc|\.pyo|\.pyw|\.pyz|\.pyzw|\.reg|\.scf|\.scr|\.sct|\.sfx|\.shb|\.shs|\.swf|\.sys|\.theme|\.tmp|\.ttf|\.url|\.vb|\.vba|\.vbe|\.vbp|\.vbs|\.vhd|\.vhdx|\.vsmacros|\.vsw|\.vxd|\.webpnp|\.website|\.wim|\.ws|\.wsc|\.wsf|\.wsh|\.xbap|\.xll|\.xnk)$\N}{1}{0}}
+
+  accept
+
+
+
+######################################################################
+#                   AUTHENTICATION CONFIGURATION                     #
+######################################################################
+begin authenticators
+
+smtp_relay_login:
+  driver = plaintext
+  public_name = LOGIN
+  hide client_send = : SMTP_RELAY_USER : SMTP_RELAY_PASS
+
+dovecot_plain:
+  driver = dovecot
+  public_name = PLAIN
+  server_socket = /run/dovecot/auth-client
+  server_set_id = $auth1
+
+dovecot_login:
+  driver = dovecot
+  public_name = LOGIN
+  server_socket = /run/dovecot/auth-client
+  server_set_id = $auth1
+
+
+
+######################################################################
+#                      ROUTERS CONFIGURATION                         #
+#               Specifies how addresses are handled                  #
+######################################################################
+begin routers
+
+send_via_unauthenticated_smtp_relay:
+  driver = manualroute
+  address_data = SMTP_RELAY_HOST:SMTP_RELAY_PORT
+  domains = !+local_domains
+  require_files = SMTP_RELAY_FILE
+  condition = ${if eq{SMTP_RELAY_USER}{}}
+  transport = remote_smtp
+  route_list = * ${extract{1}{:}{$address_data}}::${extract{2}{:}{$address_data}}
+  no_more
+  no_verify
+
+send_via_smtp_relay:
+  driver = manualroute
+  address_data = SMTP_RELAY_HOST:SMTP_RELAY_PORT
+  domains = !+local_domains
+  require_files = SMTP_RELAY_FILE
+  transport = smtp_relay_smtp
+  route_list = * ${extract{1}{:}{$address_data}}::${extract{2}{:}{$address_data}}
+  no_more
+  no_verify
+
+dnslookup:
+  driver = dnslookup
+  # if outbound, and forwarding has been done, use an alternate transport
+  domains = ! +local_domains
+  transport = ${if eq {$local_part@$domain} \
+                      {$original_local_part@$original_domain} \
+                      {remote_smtp} {remote_forwarded_smtp}}
+  no_more
+
+userforward:
+  driver = redirect
+  check_local_user
+  file = $home/.forward
+  require_files = ${local_part}:+${home}/.forward
+  domains = +local_domains
+  allow_filter
+  no_verify
+  no_expn
+  check_ancestor
+  file_transport = address_file
+  pipe_transport = address_pipe
+  reply_transport = address_reply
+
+procmail:
+  driver = accept
+  check_local_user
+  require_files = ${local_part}:+${home}/.procmailrc:/usr/bin/procmail
+  transport = procmail
+  no_verify
+
+autoreplay:
+  driver = accept
+  require_files = /etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${local_part}.msg
+  condition = ${if exists{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${local_part}.msg}{yes}{no}}
+  retry_use_local_part
+  transport = userautoreply
+  unseen
+
+inbound_srs:
+    driver = redirect
+    senders = :
+    domains = +local_domains
+    # detect inbound bounces which are SRS'd, and decode them
+    condition = ${if inbound_srs {$local_part} {SRS_SECRET}}
+    data = $srs_recipient
+
+inbound_srs_failure:
+    driver = redirect
+    senders = :
+    domains = +local_domains
+    # detect inbound bounces which look SRS'd but are invalid
+    condition = ${if inbound_srs {$local_part} {}}
+    allow_fail
+    data = :fail: Invalid SRS recipient address
+
+aliases:
+  driver = redirect
+  headers_add = X-redirected: yes
+  data = ${extract{1}{:}{${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}}}}
+  require_files = /etc/exim4/domains/$domain/aliases
+  redirect_router = dnslookup
+  pipe_transport = address_pipe
+  unseen
+
+localuser_fwd_only:
+  driver = accept
+  transport = devnull
+  condition = ${if exists{/etc/exim4/domains/$domain/fwd_only}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/fwd_only}{true}{false}}}}
+
+localuser_spam:
+  driver = accept
+  transport = local_spam_delivery
+  condition = ${if eq {${if match{$h_X-Spam-Status:}{\N^Yes\N}{yes}{no}}} {${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}{yes}{no_such_user}}}}
+
+localuser:
+  driver = accept
+  transport = local_delivery
+  condition = ${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}{true}{false}}
+
+catchall:
+  driver = redirect
+  headers_add = X-redirected: yes
+  require_files = /etc/exim4/domains/$domain/aliases
+  data = ${extract{1}{:}{${lookup{*@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}}}}
+  file_transport = local_delivery
+  redirect_router = dnslookup
+  condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}
+
+terminate_alias:
+  driver = accept
+  transport = devnull
+  condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{true}{false}}
+
+######################################################################
+#                      TRANSPORTS CONFIGURATION                      #
+######################################################################
+begin transports
+
+smtp_relay_smtp:
+  driver = smtp
+  hosts_require_auth = $host_address
+  hosts_require_tls = $host_address
+
+remote_smtp:
+  driver = smtp
+  helo_data = ${lookup dnsdb{>: defer_never,ptr=$sending_ip_address}{${listextract{1}{$value}}}{$primary_hostname}}
+  dkim_domain = DKIM_DOMAIN
+  dkim_selector = mail
+  dkim_private_key = DKIM_PRIVATE_KEY
+  dkim_canon = relaxed
+  dkim_strict = 0
+  hosts_try_fastopen = !*.l.google.com
+  interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
+
+remote_forwarded_smtp:
+  driver = smtp
+  helo_data = ${lookup dnsdb{>: defer_never,ptr=$sending_ip_address}{${listextract{1}{$value}}}{$primary_hostname}}
+  dkim_domain = DKIM_DOMAIN
+  dkim_selector = mail
+  dkim_private_key = DKIM_PRIVATE_KEY
+  dkim_canon = relaxed
+  dkim_strict = 0
+  hosts_try_fastopen = !*.l.google.com
+  interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
+  # modify the envelope from, for mails that we forward
+  max_rcpt = 1
+  return_path = ${srs_encode {SRS_SECRET} {$return_path} {$original_domain}}
+
+procmail:
+  driver = pipe
+  command = "/usr/bin/procmail -d $local_part"
+  return_path_add
+  delivery_date_add
+  envelope_to_add
+  user = $local_part
+  initgroups
+  return_output
+
+local_delivery:
+  driver = appendfile
+  maildir_format
+  maildir_use_size_file
+  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}
+  group = mail
+  create_directory
+  directory_mode = 770
+  mode = 660
+  use_lockfile = no
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"
+  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}M
+  quota_warn_threshold = 75%
+
+local_spam_delivery:
+  driver = appendfile
+  maildir_format
+  maildir_use_size_file
+  user = ${extract{2}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}
+  group = mail
+  create_directory
+  directory_mode = 770
+  mode = 660
+  use_lockfile = no
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+  directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}/.Spam"
+  quota = ${extract{6}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}M
+  quota_directory = "${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}/${lookup{$local_part}dsearch{${extract{5}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/passwd}}}}/mail/${lookup{$domain}dsearch{/etc/exim4/domains/}}}}"
+  quota_warn_threshold = 75%
+
+address_pipe:
+  driver = pipe
+  return_output
+
+address_file:
+  driver = appendfile
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+
+address_reply:
+  driver = autoreply
+
+userautoreply:
+  driver = autoreply
+  file = /etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/autoreply.${extract{1}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/accounts}}}}.msg
+  from = "${extract{1}{:}{${lookup{$local_part}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/accounts}}}}@${lookup{$domain}dsearch{/etc/exim4/domains/}}"
+  headers = Content-Type: text/plain; charset=utf-8;\nContent-Transfer-Encoding: 8bit
+  subject = "${if def:h_Subject: {Autoreply: \"${rfc2047:$h_Subject:}\"} {Autoreply Message}}"
+  to = "${sender_address}"
+
+devnull:
+  driver = appendfile
+  file = /dev/null
+
+
+
+######################################################################
+#                      RETRY CONFIGURATION                           #
+######################################################################
+begin retry
+
+# Address or Domain    Error       Retries
+# -----------------    -----       -------
+*                      *           F,2h,15m; G,16h,1h,1.5; F,4d,6h
+
+
+
+######################################################################
+#                      REWRITE CONFIGURATION                         #
+######################################################################
+begin rewrite
+
+
+
+######################################################################

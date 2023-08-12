@@ -52,8 +52,8 @@ check_hestia_demo_mode
 
 # Adding catchall alias
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    sed -i "/*@$domain_idn:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
-    echo "*@$domain_idn:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+	sed -i "/*@$domain_idn:/d" $HOMEDIR/$user/conf/mail/$domain/aliases
+	echo "*@$domain_idn:$email" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 
 #----------------------------------------------------------#

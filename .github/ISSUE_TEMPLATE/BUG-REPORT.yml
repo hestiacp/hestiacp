@@ -22,7 +22,7 @@ body:
     attributes:
       label: Tell us how to replicate the bug
       description: |
-        What steps did you take when the bug occured or things did not work as you expected?
+        What steps did you take when the bug occurred or things did not work as you expected?
       placeholder: |
         1. Click on the Web tab.
         2. Click on Add Web Domain.
@@ -40,11 +40,11 @@ body:
         - Control Panel Installation or Upgrade
         - Control Panel Web Interface
         - (Backend) Web Server (Nginx, Apache2)
-        - Database (MariaDB, PostgreSQL)
+        - Database (MariaDB, MySQL, PostgreSQL)
         - Let's Encrypt SSL
         - Mail (Exim, Dovecot)
         - Mail Security (Antivirus, Antispam)
-        - Webmail (Roundcube, Rainloop)
+        - Webmail (Roundcube, SnappyMail)
         - Firewall (Iptables, Fail2ban)
     validations:
       required: true

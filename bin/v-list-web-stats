@@ -3,7 +3,7 @@
 # options: [FORMAT]
 # labels: web panel
 #
-# example: v-list-web-stats 
+# example: v-list-web-stats
 #
 # This function for obtaining the list of web statistics analyzer.
 
@@ -24,42 +24,42 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    objects=$(echo "$stats" | wc -w)
-    i=1
-    echo '['
-    for str in $stats; do
-        if [ "$i" -lt "$objects" ]; then
-            echo -e  "\t\"$str\","
-        else
-            echo -e  "\t\"$str\""
-        fi
-        (( ++i))
-    done
-    echo "]"
+	objects=$(echo "$stats" | wc -w)
+	i=1
+	echo '['
+	for str in $stats; do
+		if [ "$i" -lt "$objects" ]; then
+			echo -e "\t\"$str\","
+		else
+			echo -e "\t\"$str\""
+		fi
+		((++i))
+	done
+	echo "]"
 }
 
 # SHELL list function
 shell_list() {
-    echo "PARSER"
-    echo "------"
-    for parser in $stats; do
-        echo "$parser"
-    done
+	echo "PARSER"
+	echo "------"
+	for parser in $stats; do
+		echo "$parser"
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    for parser in $stats; do
-        echo "$parser"
-    done
+	for parser in $stats; do
+		echo "$parser"
+	done
 }
 
 # CSV list function
 csv_list() {
-    echo "PARSER"
-    for parser in $stats; do
-        echo "$parser"
-    done
+	echo "PARSER"
+	for parser in $stats; do
+		echo "$parser"
+	done
 }
 
 #----------------------------------------------------------#
@@ -71,10 +71,10 @@ stats=$(echo "none ${STATS_SYSTEM//,/ }")
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

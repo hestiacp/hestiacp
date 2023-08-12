@@ -53,11 +53,10 @@ rm -f "$stats_dir/.htaccess"
 
 # Deleting nginx auth config
 if [ "$WEB_SYSTEM" = 'nginx' ]; then
-    rm -f $stats_dir/auth.conf 2>/dev/null
-    $BIN/v-restart-web "$restart"
-    check_result $? "Web restart failed" >/dev/null
+	rm -f $stats_dir/auth.conf 2> /dev/null
+	$BIN/v-restart-web "$restart"
+	check_result $? "Web restart failed" > /dev/null
 fi
-
 
 #----------------------------------------------------------#
 #                       Hestia                             #
@@ -66,7 +65,6 @@ fi
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS_USER' ''
 update_object_value 'web' 'DOMAIN' "$domain" '$STATS_CRYPT' ''
-
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Web traffic analyzer password enabled (Domain: $domain)."

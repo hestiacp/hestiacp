@@ -24,13 +24,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(grep DOMAIN $USER_DATA/mail.conf |wc -l)
-    echo "{"
-    while read str; do
-        parse_object_kv_list "$str"
-        echo -n '    "'$DOMAIN'": {
+	IFS=$'\n'
+	i=1
+	objects=$(grep DOMAIN $USER_DATA/mail.conf | wc -l)
+	echo "{"
+	while read str; do
+		parse_object_kv_list "$str"
+		echo -n '    "'$DOMAIN'": {
         "ANTIVIRUS": "'$ANTIVIRUS'",
         "ANTISPAM": "'$ANTISPAM'",
         "REJECT": "'$REJECT'",
@@ -46,49 +46,49 @@ json_list() {
         "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS'",
         "WEBMAIL": "'$WEBMAIL'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done < <(cat $USER_DATA/mail.conf)
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < <(cat $USER_DATA/mail.conf)
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    echo "DOMAIN   ANTIVIRUS   ANTISPAM   DKIM  SSL   ACC   DISK   SPND   DATE"
-    echo "------   ---------   --------   ----  ---   ---   ----   ---   ----"
-    while read str; do
-        parse_object_kv_list "$str"
-        echo -n "$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $SSL $ACCOUNTS $U_DISK "
-        echo "$SUSPENDED $DATE"
-    done < <(cat $USER_DATA/mail.conf)
+	IFS=$'\n'
+	echo "DOMAIN   ANTIVIRUS   ANTISPAM   DKIM  SSL   ACC   DISK   SPND   DATE"
+	echo "------   ---------   --------   ----  ---   ---   ----   ---   ----"
+	while read str; do
+		parse_object_kv_list "$str"
+		echo -n "$DOMAIN $ANTIVIRUS $ANTISPAM $DKIM $SSL $ACCOUNTS $U_DISK "
+		echo "$SUSPENDED $DATE"
+	done < <(cat $USER_DATA/mail.conf)
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    while read str; do
-        parse_object_kv_list "$str"
-        echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$SSL\$CATCHALL\t"
-        echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS\t$WEBMAIL"
-    done < <(cat $USER_DATA/mail.conf)
+	IFS=$'\n'
+	while read str; do
+		parse_object_kv_list "$str"
+		echo -ne "$DOMAIN\t$ANTIVIRUS\t$ANTISPAM\t$DKIM\t$SSL\$CATCHALL\t"
+		echo -e "$ACCOUNTS\t$U_DISK\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS\t$WEBMAIL"
+	done < <(cat $USER_DATA/mail.conf)
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,SSL,CATCHALL,ACCOUNTS,U_DISK,"
-    echo "SUSPENDED,TIME,DATE,WEBMAIL_ALIAS,WEBMAIL"
-    while read str; do
-        parse_object_kv_list "$str"
-        echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$SSL,$CATCHALL,$ACCOUNTS,"
-        echo "'$U_DISK,$SUSPENDED,$TIME,$DATE,$WEBMAIL_ALIAS,$WEBMAIL"
-        echo
-    done < <(cat $USER_DATA/mail.conf)
+	IFS=$'\n'
+	echo -n "DOMAIN,ANTIVIRUS,ANTISPAM,DKIM,SSL,CATCHALL,ACCOUNTS,U_DISK,"
+	echo "SUSPENDED,TIME,DATE,WEBMAIL_ALIAS,WEBMAIL"
+	while read str; do
+		parse_object_kv_list "$str"
+		echo -n "$DOMAIN,$ANTIVIRUS,$ANTISPAM,$DKIM,$SSL,$CATCHALL,$ACCOUNTS,"
+		echo "'$U_DISK,$SUSPENDED,$TIME,$DATE,$WEBMAIL_ALIAS,$WEBMAIL"
+		echo
+	done < <(cat $USER_DATA/mail.conf)
 }
 
 #----------------------------------------------------------#
@@ -105,10 +105,10 @@ is_object_valid 'user' 'USER' "$user"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

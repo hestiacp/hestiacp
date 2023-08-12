@@ -35,27 +35,27 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$service" = "php-fpm" ];then
-    for php_ver in $(multiphp_versions); do
-        service_list="${service_list} php${php_ver}-fpm"
-    done
+if [ "$service" = "php-fpm" ]; then
+	for php_ver in $(multiphp_versions); do
+		service_list="${service_list} php${php_ver}-fpm"
+	done
 else
-    service_list="$service"
+	service_list="$service"
 fi
 
 for service in $service_list; do
-    if [ "$service" = "iptables" ]; then
-        $BIN/v-stop-firewall
-    else
-        systemctl stop "$service"
-        result=$?
-        if [ "$result" -ne 0 ]; then
-            $BIN/v-log-action "system" "Error" "System" "Service failed to stop (Name: $service)."
-        else
-            $BIN/v-log-action "system" "Info" "System" "Service stopped (Name: $service)."
-        fi
-    fi
-    check_result $? "ERROR: $service stop failed" "$E_RESTART"
+	if [ "$service" = "iptables" ]; then
+		$BIN/v-stop-firewall
+	else
+		systemctl stop "$service"
+		result=$?
+		if [ "$result" -ne 0 ]; then
+			$BIN/v-log-action "system" "Error" "System" "Service failed to stop (Name: $service)."
+		else
+			$BIN/v-log-action "system" "Info" "System" "Service stopped (Name: $service)."
+		fi
+	fi
+	check_result $? "ERROR: $service stop failed" "$E_RESTART"
 
 done
 

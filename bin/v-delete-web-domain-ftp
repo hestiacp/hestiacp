@@ -42,9 +42,9 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 get_domain_values 'web'
 if [ -z "$(echo $FTP_USER | tr ':' '\n' | grep ^$ftp_user$)" ]; then
-    echo "Error: account $ftp_user doesn't exist"
-    log_event "$E_NOTEXIST" "$ARGUMENTS"
-    exit "$E_NOTEXIST"
+	echo "Error: account $ftp_user doesn't exist"
+	log_event "$E_NOTEXIST" "$ARGUMENTS"
+	exit "$E_NOTEXIST"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -59,8 +59,8 @@ $BIN/v-delete-user-sftp-jail "$ftp_user"
 # Deleting ftp user
 /usr/sbin/userdel $ftp_user >> /dev/null 2>&1
 if [ "$?" != 0 ]; then
-    sed -i "/^$ftp_user:/d" /etc/passwd
-    sed -i "/^$ftp_user:/d" /etc/shadow
+	sed -i "/^$ftp_user:/d" /etc/passwd
+	sed -i "/^$ftp_user:/d" /etc/shadow
 fi
 
 #----------------------------------------------------------#
@@ -68,14 +68,14 @@ fi
 #----------------------------------------------------------#
 
 # Rebuilding FTP variables
-position=$(echo $FTP_USER |tr ':' '\n' |grep -n '' |grep ":$ftp_user$" |\
-    cut -f 1 -d:)
-ftp_user=$(echo $FTP_USER |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
-    cut -f 2 -d :| sed -e "/^$/d"| sed -e ':a;N;$!ba;s/\n/:/g')
-ftp_md5=$(echo $FTP_MD5 |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
-    cut -f 2 -d :| sed -e ':a;N;$!ba;s/\n/:/g')
-ftp_path=$(echo $FTP_PATH |tr ':' '\n' |grep -n '' |grep -v "^$position:" |\
-    cut -f 2 -d :| sed -e ':a;N;$!ba;s/\n/:/g')
+position=$(echo $FTP_USER | tr ':' '\n' | grep -n '' | grep ":$ftp_user$" \
+	| cut -f 1 -d:)
+ftp_user=$(echo $FTP_USER | tr ':' '\n' | grep -n '' | grep -v "^$position:" \
+	| cut -f 2 -d : | sed -e "/^$/d" | sed -e ':a;N;$!ba;s/\n/:/g')
+ftp_md5=$(echo $FTP_MD5 | tr ':' '\n' | grep -n '' | grep -v "^$position:" \
+	| cut -f 2 -d : | sed -e ':a;N;$!ba;s/\n/:/g')
+ftp_path=$(echo $FTP_PATH | tr ':' '\n' | grep -n '' | grep -v "^$position:" \
+	| cut -f 2 -d : | sed -e ':a;N;$!ba;s/\n/:/g')
 
 # Update config
 update_object_value 'web' 'DOMAIN' "$domain" '$FTP_USER' "$ftp_user"

@@ -22,12 +22,12 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    local COMMANDS_ARR='[]'
-    if [[ -n "$COMMANDS" ]]; then
-        COMMANDS_ARR="[\"$(echo "$COMMANDS" | sed -E 's|,|", "|g')\"]"
-    fi
+	local COMMANDS_ARR='[]'
+	if [[ -n "$COMMANDS" ]]; then
+		COMMANDS_ARR="[\"$(echo "$COMMANDS" | sed -E 's|,|", "|g')\"]"
+	fi
 
-    echo '{
+	echo '{
     "API": "'$api'",
     "ROLE": "'$ROLE'",
     "COMMANDS": '$COMMANDS_ARR'
@@ -36,9 +36,9 @@ json_list() {
 
 # SHELL list function
 shell_list() {
-    echo "API:           $api"
-    echo "ROLE:          $ROLE"
-    echo "COMMANDS:      $COMMANDS"
+	echo "API:           $api"
+	echo "ROLE:          $ROLE"
+	echo "COMMANDS:      $COMMANDS"
 }
 
 #----------------------------------------------------------#
@@ -48,9 +48,8 @@ shell_list() {
 check_args '1' "$#" 'API [FORMAT]'
 
 if [[ -z "$api" || ! -f "$HESTIA/data/api/${api}" ]]; then
-    check_result "$E_INVALID" "API $api doesn't exist"
+	check_result "$E_INVALID" "API $api doesn't exist"
 fi
-
 
 #----------------------------------------------------------#
 #                       Action                             #
@@ -60,8 +59,8 @@ source_conf "${HESTIA}/data/api/${api}"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

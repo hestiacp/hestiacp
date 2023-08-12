@@ -30,6 +30,9 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
+format_domain
+format_domain_idn
+
 check_args '2' "$#" 'USER DOMAIN'
 is_format_valid 'user' 'domain'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
@@ -43,26 +46,35 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-suspended=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf |grep "SUSPENDED='yes'")
+suspended=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf | grep "SUSPENDED='yes'")
+
+dnssec=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf | grep "DNSSEC='yes'")
 
 records=$(wc -l $USER_DATA/dns/$domain.conf | cut -f 1 -d ' ')
 
 # Deleting system configs
 if [[ "$DNS_SYSTEM" =~ named|bind ]]; then
-    if [ -e '/etc/named.conf' ]; then
-        dns_conf='/etc/named.conf'
-    else
-        dns_conf='/etc/bind/named.conf'
-    fi
+	if [ -e '/etc/named.conf' ]; then
+		dns_conf='/etc/named.conf'
+	else
+		dns_conf='/etc/bind/named.conf'
+	fi
 
-    sed -i "/\/$user\/conf\/dns\/$domain.db\"/d" $dns_conf
-    rm -f $HOMEDIR/$user/conf/dns/$domain.db
+	sed -i "/\/$user\/conf\/dns\/$domain.db\"/d" $dns_conf
+	rm -f $HOMEDIR/$user/conf/dns/$domain.db
+fi
+
+if [ -n "$dnssec" ]; then
+	# Delete existing keys
+	rm -fr $HOMEDIR/$user/conf/dns/$domain.db.*
+	rm -fr /var/cache/bind/K$domain_idn.*
+	rm -fr $USER_DATA/keys/K$domain_idn.*
 fi
 
 # Updating dns-cluster queue
-if [ -n "$DNS_CLUSTER" ]; then
-    cmd="$BIN/v-delete-remote-dns-domain $user $domain"
-    echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	cmd="$BIN/v-delete-remote-dns-domain $user $domain"
+	echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
 fi
 
 #----------------------------------------------------------#
@@ -79,13 +91,12 @@ decrease_user_value "$user" '$U_DNS_RECORDS' "$records"
 
 # Restarting named
 $BIN/v-restart-dns "$restart"
-check_result $? "Bind restart failed" >/dev/null
+check_result $? "Bind restart failed" > /dev/null
 
 # Check if is suspended to decrease the suspended value
 if [ -n "$suspended" ]; then
-    decrease_user_value "$user" '$SUSPENDED_DNS'
+	decrease_user_value "$user" '$SUSPENDED_DNS'
 fi
-
 
 # Logging
 $BIN/v-log-action "$user" "Info" "DNS" "Deleted DNS zone (Name: $domain)."

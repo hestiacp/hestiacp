@@ -52,7 +52,7 @@ check_hestia_demo_mode
 
 # Adding antivirus flag
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    touch $HOMEDIR/$user/conf/mail/$domain/antivirus
+	touch $HOMEDIR/$user/conf/mail/$domain/antivirus
 fi
 
 #----------------------------------------------------------#

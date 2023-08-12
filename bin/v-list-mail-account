@@ -26,8 +26,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo '    "'$account'": {
+	echo '{'
+	echo '    "'$account'": {
         "ALIAS": "'$ALIAS'",
         "FWD": "'$FWD'",
         "FWD_ONLY": "'$FWD_ONLY'",
@@ -40,36 +40,36 @@ json_list() {
         "DATE": "'$DATE'",
         "WEBMAIL_ALIAS": "'$WEBMAIL_ALIAS.$domain'"
     }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "ACCOUNT:        $account"
-    echo "ALIAS:          $ALIAS"
-    echo "FORWARD:        $FWD"
-    echo "FORWARD_ONLY:   $FWD_ONLY"
-    echo "AUTOREPLY:      $AUTOREPLY"
-    echo "QUOTA:          $QUOTA"
-    echo "DISK:           $U_DISK"
-    echo "SUSPENDED:      $SUSPENDED"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
-    echo "WEBMAIL_ALIAS:  $WEBMAIL_ALIAS.$domain"
+	echo "ACCOUNT:        $account"
+	echo "ALIAS:          $ALIAS"
+	echo "FORWARD:        $FWD"
+	echo "FORWARD_ONLY:   $FWD_ONLY"
+	echo "AUTOREPLY:      $AUTOREPLY"
+	echo "QUOTA:          $QUOTA"
+	echo "DISK:           $U_DISK"
+	echo "SUSPENDED:      $SUSPENDED"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
+	echo "WEBMAIL_ALIAS:  $WEBMAIL_ALIAS.$domain"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$account\t$ALIAS\t$FWD\t$FWD_ONLY\t$AUTOREPLY\t$QUOTA\t"
-    echo -e "$U_DISK\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS.$domain"
+	echo -ne "$account\t$ALIAS\t$FWD\t$FWD_ONLY\t$AUTOREPLY\t$QUOTA\t"
+	echo -e "$U_DISK\t$SUSPENDED\t$TIME\t$DATE\t$WEBMAIL_ALIAS.$domain"
 }
 
 # CSV list function
 csv_list() {
-    echo -n  "ACCOUNT,ALIAS,FWD,FWD_ONLY,AUTOREPLY,QUOTA,U_DISK"
-    echo "SUSPENDED,TIME,DATE"
-    echo -n "$ACCOUNT,\"$ALIAS\",\"$FWD\",$FWD_ONLY,$AUTOREPLY,$QUOTA,"
-    echo "$U_DISK,$SUSPENDED,$TIME,$DATE\t$WEBMAIL_ALIAS.$domain"
+	echo -n "ACCOUNT,ALIAS,FWD,FWD_ONLY,AUTOREPLY,QUOTA,U_DISK"
+	echo "SUSPENDED,TIME,DATE"
+	echo -n "$ACCOUNT,\"$ALIAS\",\"$FWD\",$FWD_ONLY,$AUTOREPLY,$QUOTA,"
+	echo "$U_DISK,$SUSPENDED,$TIME,$DATE\t$WEBMAIL_ALIAS.$domain"
 }
 
 #----------------------------------------------------------#
@@ -82,7 +82,6 @@ is_object_valid 'user' 'USER' "$user"
 is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 
-
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
@@ -92,10 +91,10 @@ parse_object_kv_list $(grep "ACCOUNT='$account'" $USER_DATA/mail/$domain.conf)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

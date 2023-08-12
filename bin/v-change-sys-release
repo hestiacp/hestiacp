@@ -34,33 +34,33 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 if [ -z "$branch" ]; then
-    echo "Error: no release branch specified."
-    echo "Usage: v-change-sys-release branchname"
-    echo ""
-    echo "Release branches:"
-    echo "- release:            the latest stable release"
-    echo "- beta:               beta and release candidate test releases"
-    echo "- main:               work-in-progress code for the next release"
-    echo ""
-    echo "You can also specify another branch name from the"
-    echo "GitHub repository to install the code from that branch."
-    echo ""
-    exit
+	echo "Error: no release branch specified."
+	echo "Usage: v-change-sys-release branchname"
+	echo ""
+	echo "Release branches:"
+	echo "- release:            the latest stable release"
+	echo "- beta:               beta and release candidate test releases"
+	echo "- main:               work-in-progress code for the next release"
+	echo ""
+	echo "You can also specify another branch name from the"
+	echo "GitHub repository to install the code from that branch."
+	echo ""
+	exit
 else
-    # Check that requested branch exists
-    echo "Checking for existence of $branch branch..."
-    branch_check=$(curl -s --head -w %{http_code} "https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control" -o /dev/null)
-    if [ "$branch_check" -ne "200" ]; then
-        echo "Error: invalid branch name specified."
-        exit 1
-    fi
+	# Check that requested branch exists
+	echo "Checking for existence of $branch branch..."
+	branch_check=$(curl -s --head -w %{http_code} "https://raw.githubusercontent.com/hestiacp/hestiacp/$branch/src/deb/hestia/control" -o /dev/null)
+	if [ "$branch_check" -ne "200" ]; then
+		echo "Error: invalid branch name specified."
+		exit 1
+	fi
 
-    # Remove old branch variable
-    sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
-    
-    # Set new branch variable
-    echo "RELEASE_BRANCH='$branch'" >> $HESTIA/conf/hestia.conf
-    echo "Updated system to update from Git using branch: $branch"
+	# Remove old branch variable
+	sed -i "/RELEASE_BRANCH/d" $HESTIA/conf/hestia.conf
+
+	# Set new branch variable
+	echo "RELEASE_BRANCH='$branch'" >> $HESTIA/conf/hestia.conf
+	echo "Updated system to update from Git using branch: $branch"
 fi
 
 #----------------------------------------------------------#

@@ -24,14 +24,14 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(grep JOB $USER_DATA/cron.conf |wc -l)
-    echo "{"
-    while read str; do
-        parse_object_kv_list "$str"
-        CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-        echo -n '    "'$JOB'": {
+	IFS=$'\n'
+	i=1
+	objects=$(grep JOB $USER_DATA/cron.conf | wc -l)
+	echo "{"
+	while read str; do
+		parse_object_kv_list "$str"
+		CMD=$(echo "$CMD" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+		echo -n '    "'$JOB'": {
         "MIN": "'$MIN'",
         "HOUR": "'$HOUR'",
         "DAY": "'$DAY'",
@@ -43,50 +43,49 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done < <(cat $USER_DATA/cron.conf)
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < <(cat $USER_DATA/cron.conf)
+	echo '}'
 }
-
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    echo "JOB^MIN^HOUR^MONTH^WDAY^COMMAND"
-    echo "---^---^----^-----^----^-------"
-    while read str; do
-        parse_object_kv_list "$str"
-        CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-        echo "$JOB^$MIN^$HOUR^$MONTH^$WDAY^$CMD"
-    done < <(cat $USER_DATA/cron.conf)
+	IFS=$'\n'
+	echo "JOB^MIN^HOUR^MONTH^WDAY^COMMAND"
+	echo "---^---^----^-----^----^-------"
+	while read str; do
+		parse_object_kv_list "$str"
+		CMD=$(echo "$CMD" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+		echo "$JOB^$MIN^$HOUR^$MONTH^$WDAY^$CMD"
+	done < <(cat $USER_DATA/cron.conf)
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    while read str; do
-        parse_object_kv_list "$str"
-        CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-        echo -ne "$JOB\t$MIN\t$HOUR\t$MONTH\t$WDAY\t$CMD\t"
-        echo -e "$SUSPENDED\t$TIME\t$DATE"
-    done < <(cat $USER_DATA/cron.conf)
+	IFS=$'\n'
+	while read str; do
+		parse_object_kv_list "$str"
+		CMD=$(echo "$CMD" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+		echo -ne "$JOB\t$MIN\t$HOUR\t$MONTH\t$WDAY\t$CMD\t"
+		echo -e "$SUSPENDED\t$TIME\t$DATE"
+	done < <(cat $USER_DATA/cron.conf)
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo  "MIN,HOUR,DAY,WDAY,CMD,SUSPENDED,TIME,DATE"
-    while read str; do
-        parse_object_kv_list "$str"
-        CMD=$(echo "$CMD" |sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
-        echo -n "$JOB,$MIN,$HOUR,$MONTH,$WDAY,\"$CMD\","
-        echo "$SUSPENDED,$TIME,$DATE"
-    done < <(cat $USER_DATA/cron.conf)
+	IFS=$'\n'
+	echo "MIN,HOUR,DAY,WDAY,CMD,SUSPENDED,TIME,DATE"
+	while read str; do
+		parse_object_kv_list "$str"
+		CMD=$(echo "$CMD" | sed -e 's/"/\\"/g' -e "s/%quote%/'/g")
+		echo -n "$JOB,$MIN,$HOUR,$MONTH,$WDAY,\"$CMD\","
+		echo "$SUSPENDED,$TIME,$DATE"
+	done < <(cat $USER_DATA/cron.conf)
 }
 
 #----------------------------------------------------------#
@@ -103,10 +102,10 @@ is_object_valid 'user' 'USER' "$user"
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t -s '^';;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t -s '^' ;;
 esac
 
 #----------------------------------------------------------#

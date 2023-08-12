@@ -41,9 +41,7 @@ check_hestia_demo_mode
 
 # Adding backup task to  the queue
 log=$HESTIA/log/backup.log
-echo "$BIN/v-backup-user $user yes >> $log 2>&1" >>\
-    $HESTIA/data/queue/backup.pipe
-
+echo "$BIN/v-backup-user $user yes >> $log 2>&1" >> $HESTIA/data/queue/backup.pipe
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,7 +1,12 @@
 ; origin-src: deb/templates/web/php-fpm/socket.tpl
+;#=========================================================================#
+;# Default Web Domain Template                                             #
+;# DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
+;# https://hestiacp.com/docs/server-administration/web-templates.html      #
+;#=========================================================================#
 
 [%backend%]
-listen = /var/run/php/%backend%.sock
+listen = /run/php/%backend%.sock
 listen.owner = %user%
 listen.group = www-data
 listen.mode = 0660

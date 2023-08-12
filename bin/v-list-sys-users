@@ -2,7 +2,7 @@
 # info: list system users
 # options: [FORMAT]
 #
-# example: v-list-sys-users 
+# example: v-list-sys-users
 #
 # This function for obtaining the list of system users without
 # detailed information.
@@ -24,42 +24,42 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    objects=$(grep @ /etc/passwd |wc -l)
-    i=1
-    echo '['
-    while read user; do
-        if [ "$i" -lt "$objects" ]; then
-            echo -e  "\t\"$user\","
-        else
-            echo -e  "\t\"$user\""
-        fi
-        (( ++i))
-    done < <(grep @ /etc/passwd |cut -f 1 -d :)
-    echo "]"
+	objects=$(grep @ /etc/passwd | wc -l)
+	i=1
+	echo '['
+	while read user; do
+		if [ "$i" -lt "$objects" ]; then
+			echo -e "\t\"$user\","
+		else
+			echo -e "\t\"$user\""
+		fi
+		((++i))
+	done < <(grep @ /etc/passwd | cut -f 1 -d :)
+	echo "]"
 }
 
 # SHELL list function
 shell_list() {
-    echo "USER"
-    echo "----"
-    while read user; do
-        echo "$user"
-    done < <(grep @ /etc/passwd |cut -f 1 -d :)
+	echo "USER"
+	echo "----"
+	while read user; do
+		echo "$user"
+	done < <(grep @ /etc/passwd | cut -f 1 -d :)
 }
 
 # PLAIN list function
 plain_list() {
-    while read user; do
-        echo "$user"
-    done < <(grep @ /etc/passwd |cut -f 1 -d :)
+	while read user; do
+		echo "$user"
+	done < <(grep @ /etc/passwd | cut -f 1 -d :)
 }
 
 # CSV list function
 csv_list() {
-    echo "USER"
-    while read user; do
-        echo "$user"
-    done < <(grep @ /etc/passwd |cut -f 1 -d :)
+	echo "USER"
+	while read user; do
+		echo "$user"
+	done < <(grep @ /etc/passwd | cut -f 1 -d :)
 }
 
 #----------------------------------------------------------#
@@ -68,10 +68,10 @@ csv_list() {
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

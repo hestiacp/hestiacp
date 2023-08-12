@@ -20,14 +20,13 @@ source $HESTIA/func/main.sh
 # shellcheck source=/usr/local/hestia/conf/hestia.conf
 source $HESTIA/conf/hestia.conf
 
-function setupFiles
-{
+function setupFiles {
 	echo "Use SMTP account for server communication (Y/n): "
 	read use_smtp_prompt
 
 	use_smtp="${use_smtp_prompt:-y}"
 	use_smtp="${use_smtp,,}"
-	if [ "${use_smtp}" == "y" ] ; then
+	if [ "${use_smtp}" == "y" ]; then
 		use_smtp=true
 
 		echo "Enter SMTP Host:"
@@ -40,7 +39,7 @@ function setupFiles
 		read -i $SERVER_SMTP_USER -e smtp_server_user_name
 		echo "Enter SMTP Password (stored as plaintext):"
 		read -i $SERVER_SMTP_PASSWD -e smtp_server_password
-		echo "Enter SMTP Address:"
+		echo "Enter Email Address:"
 		read -i $SERVER_SMTP_ADDR -e smtp_server_addr
 	else
 		use_smtp=false
@@ -53,17 +52,17 @@ function setupFiles
 	SMTP Security: $smtp_server_security
 	SMTP Username: $smtp_server_user_name
 	SMTP Password: $smtp_server_password
-	SMTP Address: $smtp_server_addr
+	Email Address: $smtp_server_addr
 	Are these values correct? (y/N)"
 	read correct_validation
 	correct="${correct_validation:-n}"
 	correct="${correct,,}"
-	if [ "${correct}" != "y" ] ; then
+	if [ "${correct}" != "y" ]; then
 		echo "Not Proceeding. Restart or Quit (r/Q)?"
 		read restart_quit_prompt
 		restart_quit="${restart_quit_prompt:-q}"
 		restart_quit="${restart_quit,,}"
-		if [ "${restart_quit}" == "r" ] ; then
+		if [ "${restart_quit}" == "r" ]; then
 			clear
 			setupFiles
 		else

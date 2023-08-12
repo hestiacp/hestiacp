@@ -26,21 +26,21 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 keygen() {
-    local LENGTH=${1:-20}
-    local USE_SPECIAL_CHARACTERS="${2:-no}"
+	local LENGTH=${1:-20}
+	local USE_SPECIAL_CHARACTERS="${2:-no}"
 
-    local MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-    if [[ "$USE_SPECIAL_CHARACTERS" == "yes" ]]; then
-        MATRIX+='_-='
-    fi
+	local MATRIX='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+	if [[ "$USE_SPECIAL_CHARACTERS" == "yes" ]]; then
+		MATRIX+='_-='
+	fi
 
-    local PASS N
-    while [ ${N:=1} -le $LENGTH ]; do
-        PASS="$PASS${MATRIX:$(($RANDOM%${#MATRIX})):1}"
-        let N+=1
-    done
+	local PASS N
+	while [ ${N:=1} -le $LENGTH ]; do
+		PASS="$PASS${MATRIX:$(($RANDOM % ${#MATRIX})):1}"
+		let N+=1
+	done
 
-    echo "$PASS"
+	echo "$PASS"
 }
 
 access_key_id="$(keygen)"
@@ -53,8 +53,8 @@ check_hestia_demo_mode
 permissions="$(cleanup_key_permissions "$permissions")"
 
 time_n_date=$(date +'%T %F')
-time=$(echo "$time_n_date" |cut -f 1 -d \ )
-date=$(echo "$time_n_date" |cut -f 2 -d \ )
+time=$(echo "$time_n_date" | cut -f 1 -d \ )
+date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -70,26 +70,26 @@ is_key_permissions_format_valid "$permissions" "$user"
 #----------------------------------------------------------#
 
 if [ ! -d "$HESTIA/data/access-keys/" ]; then
-    mkdir -p $HESTIA/data/access-keys/
-    chown root:root $HESTIA/data/access-keys/
-    chmod 750 $HESTIA/data/access-keys/
+	mkdir -p $HESTIA/data/access-keys/
+	chown root:root $HESTIA/data/access-keys/
+	chmod 750 $HESTIA/data/access-keys/
 fi
 
 if [[ -e "$HESTIA/data/access-keys/${access_key_id}" ]]; then
-    while [[ -e "$HESTIA/data/access-keys/${access_key_id}" ]]; do
-        access_key_id=$(keygen)
-    done
+	while [[ -e "$HESTIA/data/access-keys/${access_key_id}" ]]; do
+		access_key_id=$(keygen)
+	done
 fi
 
-echo "SECRET_ACCESS_KEY='$secret_access_key'" >"$HESTIA/data/access-keys/${access_key_id}"
-echo "USER='$user'" >>"$HESTIA/data/access-keys/${access_key_id}"
-echo "PERMISSIONS='$permissions'" >>"$HESTIA/data/access-keys/${access_key_id}"
-echo "COMMENT='$comment'" >>"$HESTIA/data/access-keys/${access_key_id}"
-echo "TIME='$time'" >>"$HESTIA/data/access-keys/${access_key_id}"
-echo "DATE='$date'" >>"$HESTIA/data/access-keys/${access_key_id}"
+echo "SECRET_ACCESS_KEY='$secret_access_key'" > "$HESTIA/data/access-keys/${access_key_id}"
+echo "USER='$user'" >> "$HESTIA/data/access-keys/${access_key_id}"
+echo "PERMISSIONS='$permissions'" >> "$HESTIA/data/access-keys/${access_key_id}"
+echo "COMMENT='$comment'" >> "$HESTIA/data/access-keys/${access_key_id}"
+echo "TIME='$time'" >> "$HESTIA/data/access-keys/${access_key_id}"
+echo "DATE='$date'" >> "$HESTIA/data/access-keys/${access_key_id}"
 # TODO Index reserved for future implementation
-echo "EXPIRES_IN=''" >>"$HESTIA/data/access-keys/${access_key_id}"
-echo "IP=''" >>"$HESTIA/data/access-keys/${access_key_id}"
+echo "EXPIRES_IN=''" >> "$HESTIA/data/access-keys/${access_key_id}"
+echo "IP=''" >> "$HESTIA/data/access-keys/${access_key_id}"
 
 chmod 640 "$HESTIA/data/access-keys/${access_key_id}"
 

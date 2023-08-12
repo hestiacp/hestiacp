@@ -51,7 +51,7 @@ check_hestia_demo_mode
 
 # Deleting symbolic link
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    rm -f /etc/$MAIL_SYSTEM/domains/$domain
+	rm -f /etc/$MAIL_SYSTEM/domains/$domain
 fi
 
 # Removing webmail configuration

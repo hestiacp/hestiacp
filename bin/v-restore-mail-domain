@@ -3,7 +3,7 @@
 # options: USER BACKUP DOMAIN [NOTIFY]
 #
 # example: v-restore-mail-domain USER BACKUP DOMAIN [NOTIFY]
-# 
+#
 # This function allows the user to restore a single mail domain
 # from a backup archive.
 

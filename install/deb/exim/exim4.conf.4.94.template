@@ -15,6 +15,7 @@ add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
 
+smtputf8_advertise_hosts =
 domainlist local_domains = dsearch;/etc/exim4/domains/
 domainlist relay_to_domains = dsearch;/etc/exim4/domains/
 hostlist relay_from_hosts = 127.0.0.1
@@ -33,7 +34,7 @@ spamd_address = 127.0.0.1 783
 .endif
 
 .ifdef CLAMD
-av_scanner = clamd: /var/run/clamav/clamd.ctl
+av_scanner = clamd: /run/clamav/clamd.ctl
 .endif
 
 log_selector = +tls_sni
@@ -63,6 +64,7 @@ tls_privatekey = \
 
 daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465
+tls_require_ciphers = PERFORMANCE:-RSA:-VERS-ALL:+VERS-TLS1.2:+VERS-TLS1.3:%SERVER_PRECEDENCE
 never_users = root
 host_lookup = *
 rfc1413_hosts = *
@@ -119,15 +121,18 @@ acl_check_mail:
   deny    condition     = ${if eq{$sender_helo_name}{}}
           message       = HELO required before MAIL
 
-  drop    message       = Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
+  drop    !authenticated = *
+    	  message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
           condition     = ${if match{$sender_helo_name}{\N((\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3})|([0-9a-f]{8})|([0-9A-F]{8}))\N}{yes}{no}}
           condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\}{$sender_helo_name}{no}{yes}}
           delay         = 45s
 
-  drop    condition     = ${if isip{$sender_helo_name}}
+  drop    !authenticated = *
+		  condition     = ${if isip{$sender_helo_name}}
           message       = Access denied - Invalid HELO name (See RFC2821 4.1.3)
 
-  drop    condition     = ${if eq{[$interface_address]}{$sender_helo_name}}
+  drop    !authenticated = *
+		  condition    = ${if eq{[$interface_address]}{$sender_helo_name}}
           message       = $interface_address is _my_ address
 
   accept
@@ -138,9 +143,9 @@ acl_check_rcpt:
 
 # Limit per email account for SMTP auhenticated users
   deny    message       = Email account $authenticated_id is sending too many emails - rate overlimit = $sender_rate / $sender_rate_period
-          set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} } 
+          set acl_c_msg_limit  = ${if exists{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{${lookup {$authenticated_id} lsearch{/etc/exim4/domains/${lookup{${domain:$authenticated_id}}dsearch{/etc/exim4/domains/}}/limits}{$value}{${readfile{/etc/exim4/limit.conf}}}}}{${readfile{/etc/exim4/limit.conf}}} }
           ratelimit     = $acl_c_msg_limit / 1h / strict/ $authenticated_id
-  
+
   warn    ratelimit     = ${eval:$acl_c_msg_limit / 2} / 1h / strict / $authenticated_id
   log_message           = Sender rate [limitlog]: log / email / $authenticated_id / $sender_rate / $sender_rate_period
 
@@ -214,12 +219,12 @@ acl_check_data:
         condition      = ${if >{$acl_m2}{SPAM_SCORE} {yes}{no}}
         add_header     = X-Spam-Status: Yes
         message        = SpamAssassin detected spam (from $sender_address to $recipients).
- 
+
   # Deny spam at high score if spam score > SPAM_REJECT_SCORE and delete_spam is enabled
   deny   message        = This message scored $spam_score spam points
          spam           = debian-spamd:true
          condition      = ${if eq{$acl_m3}{yes}{yes}{no}}
-         condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}	
+         condition      = ${if >{$spam_score_int}{SPAM_REJECT_SCORE}{1}{0}}
 .endif
 
   accept
@@ -246,13 +251,13 @@ smtp_relay_login:
 dovecot_plain:
   driver = dovecot
   public_name = PLAIN
-  server_socket = /var/run/dovecot/auth-client
+  server_socket = /run/dovecot/auth-client
   server_set_id = $auth1
 
 dovecot_login:
   driver = dovecot
   public_name = LOGIN
-  server_socket = /var/run/dovecot/auth-client
+  server_socket = /run/dovecot/auth-client
   server_set_id = $auth1
 
 
@@ -350,13 +355,12 @@ catchall:
   data = ${extract{1}{:}{${lookup{*@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}}}}
   file_transport = local_delivery
   redirect_router = dnslookup
+  condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}
 
 terminate_alias:
   driver = accept
   transport = devnull
   condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{true}{false}}
-
-
 
 ######################################################################
 #                      TRANSPORTS CONFIGURATION                      #
@@ -376,6 +380,7 @@ remote_smtp:
   dkim_private_key = DKIM_PRIVATE_KEY
   dkim_canon = relaxed
   dkim_strict = 0
+  hosts_try_fastopen = !*.l.google.com
   interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
 
 procmail:

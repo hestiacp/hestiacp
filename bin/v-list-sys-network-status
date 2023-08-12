@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list system network status
-# options: [FORMAT]
+# options:
 #
-# example: v-list-sys-network-status json
+# example: v-list-sys-network-status
 #
 # This function lists network status
 
@@ -11,14 +11,14 @@
 #----------------------------------------------------------#
 
 # Displaying network stats
-ss -s 
-echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+ss -s
+echo -en "\n---------------------------------------------"
+echo -en "---------------------------------------------\n\n"
 
 # Displaying network usage
-lsof -itcp -n -P
-echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+lsof -iudp -itcp -n -P
+echo -en "\n---------------------------------------------"
+echo -en "---------------------------------------------\n\n"
 
 # Displaying network interfaces
 ip addr list

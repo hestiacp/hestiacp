@@ -1,0 +1,54 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Minified files
+*.min.css
+*.min.js
+
+# Husky
+.husky/_/
+
+# Exclude bats submodules if present
+/test/test_helper/*
+
+# Bats seems to break Prettier
+*.bats
+
+# Exclude bats submodules if present
+/test/test_helper/*
+
+# Web templates (for now)
+web/templates/
+
+# Patch files
+/install/upgrade/patch/*
+
+# Hestia Nginx.conf
+/src/deb/nginx/nginx.conf
+/src/rpm/nginx/nginx.conf
+
+# Email templates
+/install/common/templates/email/
+
+# Vendor/packages
+**/node_modules/
+**/vendor/
+**/composer.phar
+**/composer.json
+**/composer.lock
+
+# vitepress build output
+**/.vitepress/dist/
+**/.vitepress/cache/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+lerna-debug.log*
+
+# npm lock file
+package-lock.json

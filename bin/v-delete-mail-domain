@@ -49,33 +49,33 @@ check_hestia_demo_mode
 
 # Get domain values
 get_domain_values 'mail'
-accounts=$(wc -l "$USER_DATA/mail/$domain.conf"|cut -f 1 -d ' ')
+accounts=$(wc -l "$USER_DATA/mail/$domain.conf" | cut -f 1 -d ' ')
 
 # Deleting exim configuration files
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
-    rm -rf $HOMEDIR/$user/conf/mail/$domain
-    rm -rf $HOMEDIR/$user/mail/$domain_idn
+	rm -f /etc/$MAIL_SYSTEM/domains/$domain_idn
+	rm -rf $HOMEDIR/$user/conf/mail/$domain
+	rm -rf $HOMEDIR/$user/mail/$domain_idn
 fi
 
 # Deleting dkim dns record
 if [ "$DKIM" = 'yes' ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
-    dkim_records=$($BIN/v-list-dns-records "$user" "$domain" | grep -E "\s(mail\._domainkey|_domainkey)\s" | cut -f 1 -d ' ')
-    for id in $dkim_records; do
-        $BIN/v-delete-dns-record "$user" "$domain" "$id" '' 'yes'
-    done
+	dkim_records=$($BIN/v-list-dns-records "$user" "$domain" | grep -E "\s(mail\._domainkey|_domainkey)\s" | cut -f 1 -d ' ')
+	for id in $dkim_records; do
+		$BIN/v-delete-dns-record "$user" "$domain" "$id" '' 'yes'
+	done
 fi
 
 # Delete SSL certificates and configuration
 if [ "$SSL" = 'yes' ] || [ -e "$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt" ]; then
-    $BIN/v-delete-mail-domain-ssl "$user" "$domain" 
+	$BIN/v-delete-mail-domain-ssl "$user" "$domain"
 fi
 
 # Delete webmail configuration if it exists
 if [ -n "$WEB_SYSTEM" ] || [ -n "$PROXY_SYSTEM" ]; then
-    if [ -n "$IMAP_SYSTEM" ]; then
-        $BIN/v-delete-mail-domain-webmail "$user" "$domain" 'yes'    
-    fi
+	if [ -n "$IMAP_SYSTEM" ]; then
+		$BIN/v-delete-mail-domain-webmail "$user" "$domain" 'yes'
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -92,16 +92,16 @@ rm -f $USER_DATA/mail/*@$domain.msg
 # Decreasing domain value
 decrease_user_value "$user" '$U_MAIL_DOMAINS'
 if [ "$DKIM" = 'yes' ]; then
-    decrease_user_value "$user" '$U_MAIL_DKIM'
+	decrease_user_value "$user" '$U_MAIL_DKIM'
 fi
 
 decrease_user_value "$user" '$U_MAIL_ACCOUNTS' "$accounts"
 
 # Check if is suspended to decrease the suspended value
 if [ -n "$SUSPENDED" ]; then
-    if [ "$SUSPENDED" == "yes" ]; then
-        decrease_user_value "$user" '$SUSPENDED_MAIL'
-    fi
+	if [ "$SUSPENDED" == "yes" ]; then
+		decrease_user_value "$user" '$SUSPENDED_MAIL'
+	fi
 fi
 
 # Logging

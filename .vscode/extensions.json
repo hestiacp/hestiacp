@@ -1,0 +1,13 @@
+{
+	"recommendations": [
+		"editorconfig.editorconfig",
+		"esbenp.prettier-vscode",
+		"DavidAnson.vscode-markdownlint",
+		"dbaeumer.vscode-eslint",
+		"stylelint.vscode-stylelint",
+		"timonwong.shellcheck",
+		"mrmlnc.vscode-apache",
+		"william-voyek.vscode-nginx",
+		"bmewburn.vscode-intelephense-client"
+	]
+}

@@ -36,13 +36,13 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [ ! -d "$HESTIA/data/keys/" ]; then
-  exit "$E_NOTEXIST"
+	exit "$E_NOTEXIST"
 fi
 
-if [[ -e "$HESTIA/data/keys/$hash" ]] ; then
-   rm $HESTIA/data/keys/$hash
+if [[ -e "$HESTIA/data/keys/$hash" ]]; then
+	rm $HESTIA/data/keys/$hash
 else
-  exit "$E_NOTEXIST"
+	exit "$E_NOTEXIST"
 fi
 
 #----------------------------------------------------------#

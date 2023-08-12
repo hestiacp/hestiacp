@@ -25,8 +25,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo '    "'$database'": {
+	echo '{'
+	echo '    "'$database'": {
         "DATABASE": "'$DB'",
         "DBUSER": "'$DBUSER'",
         "HOST": "'$HOST'",
@@ -37,32 +37,32 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-    echo '}'
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    echo "DATABASE:       $DB"
-    echo "DB USER:        $DBUSER"
-    echo "HOST:           $HOST"
-    echo "TYPE:           $TYPE"
-    echo "CHARSET:        $CHARSET"
-    echo "DISK:           $U_DISK"
-    echo "SUSPENDED:      $SUSPENDED"
-    echo "TIME:           $TIME"
-    echo "DATE:           $DATE"
+	echo "DATABASE:       $DB"
+	echo "DB USER:        $DBUSER"
+	echo "HOST:           $HOST"
+	echo "TYPE:           $TYPE"
+	echo "CHARSET:        $CHARSET"
+	echo "DISK:           $U_DISK"
+	echo "SUSPENDED:      $SUSPENDED"
+	echo "TIME:           $TIME"
+	echo "DATE:           $DATE"
 }
 
 # PLAIN list function
 plain_list() {
-    echo -ne "$DB\t$DBUSER\t$HOST\t$TYPE\t$CHARSET\t$U_DISK\t"
-    echo -e "$SUSPENDED\t$TIME\t$DATE"
+	echo -ne "$DB\t$DBUSER\t$HOST\t$TYPE\t$CHARSET\t$U_DISK\t"
+	echo -e "$SUSPENDED\t$TIME\t$DATE"
 }
 
 # CSV list function
 csv_list() {
-    echo "DATABASE,DBUSER,HOST,TYPE,CHARSET,U_DISK,SUSPENDED,TIME,DATE"
-    echo "$DB,$DBUSER,$HOST,$TYPE,$CHARSET,$U_DISK,$SUSPENDED,$TIME,$DATE"
+	echo "DATABASE,DBUSER,HOST,TYPE,CHARSET,U_DISK,SUSPENDED,TIME,DATE"
+	echo "$DB,$DBUSER,$HOST,$TYPE,$CHARSET,$U_DISK,$SUSPENDED,$TIME,$DATE"
 }
 
 #----------------------------------------------------------#
@@ -83,10 +83,10 @@ parse_object_kv_list $(grep "DB='$database'" $USER_DATA/db.conf)
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

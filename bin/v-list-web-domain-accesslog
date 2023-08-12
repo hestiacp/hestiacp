@@ -26,35 +26,35 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    i=1
-    objects=$(echo "$lines" |wc -l)
-    echo '['
-    for str in $lines; do
-        str=$(echo "$str" |sed -e 's/"/\\"/g')
-        if [ "$i" -lt "$objects" ]; then
-            echo -e  "\t\"$str\","
-        else
-            echo -e  "\t\"$str\""
-        fi
-        (( ++i))
-    done
-    echo "]"
+	i=1
+	objects=$(echo "$lines" | wc -l)
+	echo '['
+	for str in $lines; do
+		str=$(echo "$str" | sed -e 's/"/\\"/g')
+		if [ "$i" -lt "$objects" ]; then
+			echo -e "\t\"$str\","
+		else
+			echo -e "\t\"$str\""
+		fi
+		((++i))
+	done
+	echo "]"
 }
 
 # SHELL list function
 shell_list() {
-    echo "$lines"
+	echo "$lines"
 }
 
 # PLAIN list function
 plain_list() {
-    echo "$lines"
+	echo "$lines"
 }
 
 # CSV list function
 csv_list() {
-    echo "LOG"
-    echo "$lines"
+	echo "LOG"
+	echo "$lines"
 }
 
 #----------------------------------------------------------#
@@ -72,9 +72,9 @@ is_object_valid 'web' 'DOMAIN' "$domain"
 
 # Check number of output lines
 if [ "$ttl" -gt '3000' ]; then
-    read_cmd="cat"
+	read_cmd="cat"
 else
-    read_cmd="tail -n $ttl"
+	read_cmd="tail -n $ttl"
 fi
 
 lines=$($read_cmd /var/log/$WEB_SYSTEM/domains/$domain.log)
@@ -82,10 +82,10 @@ IFS=$'\n'
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

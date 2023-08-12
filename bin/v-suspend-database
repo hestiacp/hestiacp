@@ -48,8 +48,8 @@ get_database_values
 
 # Switching on db type
 case $TYPE in
-    mysql) suspend_mysql_database ;;
-    pgsql) suspend_pgsql_database ;;
+	mysql) suspend_mysql_database ;;
+	pgsql) suspend_pgsql_database ;;
 esac
 
 #----------------------------------------------------------#

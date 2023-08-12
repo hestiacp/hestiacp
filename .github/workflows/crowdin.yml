@@ -1,0 +1,27 @@
+name: Crowdin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-pot:
+    name: Update .pot file
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3
+        if: github.repository == 'hestiacp/hestiacp'
+      - name: crowdin action
+        uses: crowdin/github-action@ecdf564895766b8a6b4b581559b3c6cd955467d1 # v1
+        if: github.repository == 'hestiacp/hestiacp'
+        with:
+          upload_sources: true
+          upload_translations: false
+          download_translations: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}

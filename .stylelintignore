@@ -1,0 +1,10 @@
+# Minified files
+web/css/src/dependencies
+*.min.css
+
+# Vendor/packages
+**/node_modules/
+**/vendor/
+
+# vitepress
+**/.vitepress/dist/

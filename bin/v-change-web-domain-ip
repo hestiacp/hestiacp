@@ -62,20 +62,20 @@ new=$(get_real_ip "$ip")
 # Replacing vhost
 replace_web_config "$WEB_SYSTEM" "$TPL.tpl"
 if [ "$SSL" = 'yes' ]; then
-    replace_web_config "$WEB_SYSTEM" "$TPL.stpl"
+	replace_web_config "$WEB_SYSTEM" "$TPL.stpl"
 fi
 
 # Replacing proxy vhost
 if [ -n "$PROXY_SYSTEM" ] && [ -n "$PROXY" ]; then
-    replace_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
-    if [ "$SSL" = 'yes' ]; then
-        replace_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
-    fi
+	replace_web_config "$PROXY_SYSTEM" "$PROXY.tpl"
+	if [ "$SSL" = 'yes' ]; then
+		replace_web_config "$PROXY_SYSTEM" "$PROXY.stpl"
+	fi
 fi
 
 # Check for webmail
 if [ -n "$IMAP_SYSTEM" ]; then
-    $BIN/v-rebuild-mail-domain "$user" "$domain"
+	$BIN/v-rebuild-mail-domain "$user" "$domain"
 fi
 
 #----------------------------------------------------------#
@@ -91,10 +91,10 @@ decrease_ip_value "$old"
 
 # Restart web server
 $BIN/v-restart-web "$restart"
-check_result $? "WEB restart failed" >/dev/null
+check_result $? "WEB restart failed" > /dev/null
 
 $BIN/v-restart-proxy "$restart"
-check_result $? "Proxy restart failed" >/dev/null
+check_result $? "Proxy restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Web domain IP address changed (IP: $3, Domain: $domain)."

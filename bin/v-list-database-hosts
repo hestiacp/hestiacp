@@ -25,24 +25,24 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=0
-    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$HESTIA/conf/$type.conf" ]; then
-            # Set default port values if they don't exist in database configuration file.
-            database_set_default_ports
-            db_hosts=$(grep HOST $HESTIA/conf/$type.conf |wc -l)
-            objects=$((objects + db_hosts))
-        fi
-    done
+	IFS=$'\n'
+	i=1
+	objects=0
+	for type in $(echo $DB_SYSTEM | sed -e 's/,/\n/'); do
+		if [ -e "$HESTIA/conf/$type.conf" ]; then
+			# Set default port values if they don't exist in database configuration file.
+			database_set_default_ports
+			db_hosts=$(grep HOST $HESTIA/conf/$type.conf | wc -l)
+			objects=$((objects + db_hosts))
+		fi
+	done
 
-    echo "["
-    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$HESTIA/conf/$type.conf" ]; then
-            for str in $(cat $HESTIA/conf/$type.conf); do
-                parse_object_kv_list "$str"
-        echo -n '    {
+	echo "["
+	for type in $(echo $DB_SYSTEM | sed -e 's/,/\n/'); do
+		if [ -e "$HESTIA/conf/$type.conf" ]; then
+			for str in $(cat $HESTIA/conf/$type.conf); do
+				parse_object_kv_list "$str"
+				echo -n '    {
         "HOST": "'$HOST'",
         "PORT": "'$PORT'",
         "TYPE": "'$type'",
@@ -55,75 +55,75 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-                if [ "$i" -lt "$objects" ]; then
-                    echo ','
-                else
-                    echo
-                fi
-                ((i++))
-            done
-        fi
-    done
-    echo ']'
+				if [ "$i" -lt "$objects" ]; then
+					echo ','
+				else
+					echo
+				fi
+				((i++))
+			done
+		fi
+	done
+	echo ']'
 }
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    echo "HOST   PORT   TYPE   MAX_DB   DB_USED   SPND   TIME   DATE"
-    echo "----   ----   ----   ------   -------   ----   ----   ----"
-    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$HESTIA/conf/$type.conf" ]; then
-            # Set default port values if they don't exist in database configuration file.
-            database_set_default_ports
-            for str in $(cat $HESTIA/conf/$type.conf); do
-                parse_object_kv_list "$str"
-                echo "$HOST $PORT $type $MAX_DB $U_DB_BASES $SUSPENDED $TIME $DATE"
-            done
-        fi
-    done
+	IFS=$'\n'
+	echo "HOST   PORT   TYPE   MAX_DB   DB_USED   SPND   TIME   DATE"
+	echo "----   ----   ----   ------   -------   ----   ----   ----"
+	for type in $(echo $DB_SYSTEM | sed -e 's/,/\n/'); do
+		if [ -e "$HESTIA/conf/$type.conf" ]; then
+			# Set default port values if they don't exist in database configuration file.
+			database_set_default_ports
+			for str in $(cat $HESTIA/conf/$type.conf); do
+				parse_object_kv_list "$str"
+				echo "$HOST $PORT $type $MAX_DB $U_DB_BASES $SUSPENDED $TIME $DATE"
+			done
+		fi
+	done
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$HESTIA/conf/$type.conf" ]; then
-            # Set default port values if they don't exist in database configuration file.
-            database_set_default_ports
-            for str in $(cat $HESTIA/conf/$type.conf); do
-                parse_object_kv_list "$str"
-                echo -ne "$HOST\t$PORT\t$type\t$CHARSETS\t$MAX_DB\t$U_SYS_USERS\t"
-                echo -e "$U_DB_BASES\t$TPL\t$SUSPENDED\t$TIME\t$DATE"
-            done
-        fi
-    done
+	IFS=$'\n'
+	for type in $(echo $DB_SYSTEM | sed -e 's/,/\n/'); do
+		if [ -e "$HESTIA/conf/$type.conf" ]; then
+			# Set default port values if they don't exist in database configuration file.
+			database_set_default_ports
+			for str in $(cat $HESTIA/conf/$type.conf); do
+				parse_object_kv_list "$str"
+				echo -ne "$HOST\t$PORT\t$type\t$CHARSETS\t$MAX_DB\t$U_SYS_USERS\t"
+				echo -e "$U_DB_BASES\t$TPL\t$SUSPENDED\t$TIME\t$DATE"
+			done
+		fi
+	done
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo -n "HOST,PORT,TYPE,CHARSETS,MAX_DB,U_SYS_USERS,"
-    echo "U_DB_BASES,TPL,SUSPENDED,TIME,DATE"
-    for type in $(echo $DB_SYSTEM |sed -e 's/,/\n/'); do
-        if [ -e "$HESTIA/conf/$type.conf" ]; then
-            # Set default port values if they don't exist in database configuration file.
-            database_set_default_ports
-            for str in $(cat $HESTIA/conf/$type.conf); do
-                parse_object_kv_list "$str"
-                echo -n "$HOST,$PORT,$type,\"$CHARSETS\",$MAX_DB,\"$U_SYS_USERS\","
-                echo "$U_DB_BASES,$TPL,$SUSPENDED,$TIME,$DATE"
-            done
-        fi
-    done
+	IFS=$'\n'
+	echo -n "HOST,PORT,TYPE,CHARSETS,MAX_DB,U_SYS_USERS,"
+	echo "U_DB_BASES,TPL,SUSPENDED,TIME,DATE"
+	for type in $(echo $DB_SYSTEM | sed -e 's/,/\n/'); do
+		if [ -e "$HESTIA/conf/$type.conf" ]; then
+			# Set default port values if they don't exist in database configuration file.
+			database_set_default_ports
+			for str in $(cat $HESTIA/conf/$type.conf); do
+				parse_object_kv_list "$str"
+				echo -n "$HOST,$PORT,$type,\"$CHARSETS\",$MAX_DB,\"$U_SYS_USERS\","
+				echo "$U_DB_BASES,$TPL,$SUSPENDED,$TIME,$DATE"
+			done
+		fi
+	done
 }
 
 # Type format validator
 is_type_format_valid() {
-    exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
-    if [[ "$1" =~ $exclude ]]; then
-        check_result $E_INVALID "invalid type extention format :: $1"
-    fi
+	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]|\."
+	if [[ "$1" =~ $exclude ]]; then
+		check_result $E_INVALID "invalid type extention format :: $1"
+	fi
 }
 
 #----------------------------------------------------------#
@@ -132,10 +132,10 @@ is_type_format_valid() {
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

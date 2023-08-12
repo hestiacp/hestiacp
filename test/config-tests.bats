@@ -28,26 +28,26 @@ function setup() {
         echo 'database=test-5285_database' >> /tmp/hestia-test-env.sh
         echo 'dbuser=test-5285_dbuser' >> /tmp/hestia-test-env.sh
     fi
-    
+
     source /tmp/hestia-test-env.sh
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
     source $HESTIA/func/ip.sh
 }
 
-@test "Setup" {
+@test "Setup Test domain" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
     refute_output
-    
-    run run v-add-web-domain $user 'testhestiacp.com'
+
+    run v-add-web-domain $user 'testhestiacp.com'
     assert_success
     refute_output
-    
+
     ssl=$(v-generate-ssl-cert "testhestiacp.com" "info@testhestiacp.com" US CA "Orange County" HestiaCP IT "mail.$domain" | tail -n1 | awk '{print $2}')
     mv $ssl/testhestiacp.com.crt /tmp/testhestiacp.com.crt
     mv $ssl/testhestiacp.com.key /tmp/testhestiacp.com.key
-    
+
     # Use self signed certificates during last test
     run v-add-web-domain-ssl $user testhestiacp.com /tmp
     assert_success
@@ -64,7 +64,7 @@ function setup() {
 
 @test "Proxy Config test" {
     if [ "$PROXY_SYSTEM" = "nginx" ]; then
-        for template in $(v-list-web-templates plain); do
+        for template in $(v-list-proxy-templates plain); do
             run v-change-web-domain-proxy-tpl $user testhestiacp.com $template
             assert_success
             refute_output

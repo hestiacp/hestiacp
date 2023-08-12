@@ -1,18 +1,18 @@
 #!/bin/bash
-# info: change ip name
+# info: change IP name
 # options: IP NAME
 #
-# example: v-change-sys-ip-name 80.122.52.70 acme.com
+# example: v-change-sys-ip-name 203.0.113.1 acme.com
 #
-# This function for changing dns domain associated with ip.
+# This function for changing dns domain associated with IP.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
-ip_name=$2
+ip="$1"
+ip_name="$2"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -40,7 +40,7 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Changing ip name
+# Changing IP name
 update_ip_value '$NAME' "$ip_name"
 
 #----------------------------------------------------------#

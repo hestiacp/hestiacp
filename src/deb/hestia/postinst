@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
-    exit
+if [ ! -e "/usr/local/hestia/data/users/" ]; then
+	exit
 fi
 
 ###############################################################
@@ -11,10 +11,10 @@ fi
 source /etc/hestiacp/hestia.conf
 
 # Load upgrade functions and variables
-# shellcheck source=/usr/local/hestia/func/upgrade.sh
-source $HESTIA/func/upgrade.sh
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/upgrade.sh
+source $HESTIA/func/upgrade.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 ###############################################################
@@ -44,7 +44,7 @@ upgrade_init_logging
 
 # Check if preinstall hook exists
 if [ -e "/etc/hestiacp/hooks/pre_install.sh" ]; then
-/etc/hestiacp/hooks/pre_install.sh
+	/etc/hestiacp/hooks/pre_install.sh
 fi
 
 # Set up console display and welcome message
@@ -77,20 +77,29 @@ upgrade_rebuild_dns_templates | tee -a $LOG
 # Upgrade File Manager and update configuration
 upgrade_filemanager | tee -a $LOG
 
-# Upgrade Rainloop if applicable
-upgrade_rainloop | tee -a $LOG
+# Upgrade SnappyMail if applicable
+upgrade_snappymail | tee -a $LOG
 
 # Upgrade Roundcube if applicable
 upgrade_roundcube | tee -a $LOG
 
-# Upgrade PHPMailer if applicable
-upgrade_phpmailer | tee -a $LOG
+# Upgrade PHP dependencies
+upgrade_dependencies | tee -a $LOG
+
+# Update Cloudflare IPs if applicable
+upgrade_cloudflare_ip | tee -a $LOG
 
 # Upgrade phpMyAdmin if applicable
 upgrade_phpmyadmin | tee -a $LOG
 
+# Upgrade phpPgAdmin if applicable
+upgrade_phppgadmin | tee -a $LOG
+
 # Upgrade blackblaze-cli-took if applicable
 upgrade_b2_tool | tee -a $LOG
+
+# update whitelabel logo's
+update_whitelabel_logo | tee -a $LOG
 
 # Set new version number in hestia.conf
 upgrade_set_version $new_version
@@ -111,7 +120,7 @@ upgrade_send_notification_to_email
 upgrade_send_log_to_email
 
 if [ -e "/etc/hestiacp/hooks/post_install.sh" ]; then
-    /etc/hestiacp/hooks/post_install.sh
+	/etc/hestiacp/hooks/post_install.sh
 fi
 
 exit 0

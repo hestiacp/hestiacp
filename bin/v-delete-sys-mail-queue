@@ -29,11 +29,11 @@ message_count=$(exim -bpc)
 #----------------------------------------------------------#
 
 if [ "$message_count" -gt 0 ]; then
-    read -p "Are you sure you want to delete $message_count messages from the exim queue? [y/N] " answer
+	read -p "Are you sure you want to delete $message_count messages from the exim queue? [y/N] " answer
 
-    if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
-        exiqgrep -i | xargs exim -Mrm
-    fi
+	if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
+		exiqgrep -i | xargs exim -Mrm
+	fi
 fi
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list virtual memory info
-# options: [FORMAT]
+# options:
 #
-# example: v-list-sys-memory-status json
+# example: v-list-sys-memory-status
 #
 # This function lists virtual memory information
 
@@ -12,16 +12,16 @@
 
 # Displaying memory and swap usage
 free -t -m
-echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+echo -en "\n---------------------------------------------"
+echo -en "---------------------------------------------\n\n"
 
 # Displaying memory stats
 vmstat -S m -s
-echo -en "\n-------------------------------------"
-echo -en  "-------------------------------------\n\n"
+echo -en "\n---------------------------------------------"
+echo -en "---------------------------------------------\n\n"
 
 # Displaying ram information
-dmidecode -t 17 2>/dev/null
+dmidecode -t 17 2> /dev/null
 
 #----------------------------------------------------------#
 #                       Hestia                             #

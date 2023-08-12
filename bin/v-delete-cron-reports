@@ -51,7 +51,7 @@ sync_cron_jobs
 
 # Restarting cron
 $BIN/v-restart-cron
-check_result $? "Cron restart failed" >/dev/null
+check_result $? "Cron restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Warning" "Cron job notifications and reporting disabled."

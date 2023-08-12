@@ -1,0 +1,201 @@
+#!/bin/bash
+# info: export rrd charts as json
+# options: [CHART] [TIMESPAN]
+#
+# example: v-export-rrd chart format
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+chart=$1
+timespan=${2-daily}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'chart'
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+function generate_load_table() {
+	rrdtool xport --json -s $start -e $end --step $step \
+		DEF:la=$RRD/la/la.rrd:LA:AVERAGE \
+		DEF:pr=$RRD/la/la.rrd:PR:AVERAGE \
+		XPORT:la:Load \
+		XPORT:pr:Processes
+}
+
+function generate_mem_table() {
+	rrdtool xport --json -s $start -e $end --step $step \
+		DEF:used=$RRD/mem/mem.rrd:RAM:AVERAGE \
+		DEF:swap=$RRD/mem/mem.rrd:SWAP:AVERAGE \
+		DEF:free=$RRD/mem/mem.rrd:FREE:AVERAGE \
+		XPORT:used:Used \
+		XPORT:swap:Swap \
+		XPORT:free:Free
+}
+
+function generate_apache2_table() {
+	rrdtool xport --json -s $start -e $end --step $step \
+		DEF:a=$RRD/web/apache2.rrd:A:AVERAGE \
+		XPORT:a:Connections
+}
+
+function generate_httpd_table() {
+	rrdtool xport --json -s $start -e $end --step $step \
+		DEF:a=$RRD/web/httpd.rrd:A:AVERAGE \
+		XPORT:a:Connections
+}
+
+function generate_nginx_table() {
+	rrdtool xport --json -s $start -e $end --step $step \
+		DEF:a=$RRD/web/nginx.rrd:A:AVERAGE \
+		XPORT:a:Connections
+}
+
+function generate_ftp_table() {
+	rrdtool xport --json -s $start -e $end --step $step \
+		DEF:a=$RRD/ftp/ftp.rrd:A:AVERAGE \
+		XPORT:a:Connections
+}
+
+function generate_ssh_table() {
+	rrdtool xport --json -s $start -e $end --step $step \
+		DEF:a=$RRD/ssh/ssh.rrd:A:AVERAGE \
+		XPORT:a:Connections
+}
+
+function generate_mysql_table() {
+	if [ -f "$RRD/db/mysql_$host.rrd" ]; then
+		rrdtool xport --json -s $start -e $end --step $step \
+			DEF:a=$RRD/db/mysql_$host.rrd:A:AVERAGE \
+			DEF:s=$RRD/db/mysql_$host.rrd:S:AVERAGE \
+			XPORT:a:Queries \
+			XPORT:s:Slow
+	else
+		echo "Does not exists"
+		exit 1
+	fi
+}
+
+function generate_pgsql_table() {
+	if [ -f "$RRD/db/pgsql_$host.rrd" ]; then
+		rrdtool xport --json -s $start -e $end --step $step \
+			DEF:a=$RRD/db/pgsql_$host.rrd:A:AVERAGE \
+			DEF:t=$RRD/db/pgsql_$host.rrd:T:AVERAGE \
+			XPORT:a:Queries \
+			XPORT:t:Transactions
+	else
+		echo "Does not exists"
+		exit 1
+	fi
+}
+
+function generate_mail_table() {
+	rrdtool xport --json -s $start -e $end --step $step \
+		DEF:a=$RRD/mail/mail.rrd:A:AVERAGE \
+		XPORT:a:Emails
+}
+
+function generate_net_table() {
+	if [ -f "$RRD/net/$host.rrd" ]; then
+		rrdtool xport --json -s $start -e $end --step $step \
+			DEF:inoctets=$RRD/net/$host.rrd:RX:AVERAGE \
+			DEF:outoctets=$RRD/net/$host.rrd:TX:AVERAGE \
+			XPORT:inoctets:"Input (rx)" \
+			XPORT:outoctets:"Output (tx)"
+	else
+		echo "Does not exists"
+		exit 1
+	fi
+}
+
+if [ "$timespan" = "weekly" ]; then
+	start=$(date -d "7 days ago" +%s)
+	# every 30 min
+	step=3600
+elif [ "$timespan" = "monthly" ]; then
+	start=$(date -d "1 month ago" +%s)
+	step=21600
+elif [ "$timespan" = "yearly" ]; then
+	start=$(date -d "1 year ago" +%s)
+	step=172800
+elif [ "$timespan" = "biennially" ]; then
+        start=$(date -d "2 year ago" +%s)
+        step=345600
+elif [ "$timespan" = "triennially" ]; then
+        start=$(date -d "3 year ago" +%s)
+        step=518400
+else
+	start=$(date -d "1 day ago" +%s)
+	# every 5min
+	step=300
+fi
+end=$(date +%s)
+
+host=$(echo $chart | cut -d'_' -f2)
+chart=$(echo $chart | cut -d'_' -f1)
+
+case $chart in
+	"la")
+		generate_load_table
+		;;
+
+	"mem")
+		generate_mem_table
+		;;
+
+	"apache2")
+		generate_apache2_table
+		;;
+
+	"httpd")
+		generate_httpd_table
+		;;
+
+	"nginx")
+		generate_nginx_table
+		;;
+
+	"ftp")
+		generate_ftp_table
+		;;
+
+	"ssh")
+		generate_ssh_table
+		;;
+
+	"mysql")
+		generate_mysql_table
+		;;
+
+	"pgsql")
+		generate_pgsql_table
+		;;
+
+	"mail")
+		generate_mail_table
+		;;
+
+	"net")
+		generate_net_table
+		;;
+
+	\
+		*)
+		echo "Does not exists"
+		exit 1
+		;;
+esac

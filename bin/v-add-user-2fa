@@ -41,12 +41,12 @@ source $USER_DATA/user.conf
 
 # Check if 2FA is already enabled
 if [ -n "$TWOFA" ]; then
-    echo "Error: 2FA already enabled"
-    exit "$E_EXIST"
+	echo "Error: 2FA already enabled"
+	exit "$E_EXISTS"
 fi
 
-# Get secret and qr code from 2fa libary
-data=$($HESTIA/php/bin/php $HESTIA/web/inc/2fa/secret.php)
+# Get secret and qr code from 2fa library
+data=$($HESTIA_PHP $HESTIA/web/inc/2fa/secret.php)
 
 # Split to secret and qrcode using delimiter
 IFS='-' read -r -a array <<< "$data"

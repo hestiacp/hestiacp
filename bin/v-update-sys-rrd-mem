@@ -27,97 +27,114 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Switching on time period
 case $period in
-    daily)   start='-1d'; end='now'; grid='MINUTE:30:HOUR:1:HOUR:4:0:%H:%M';;
-    weekly)  start='-7d'; end='now'; grid='HOUR:8:DAY:1:DAY:1:0:%a %d';;
-    monthly) start='-1m'; end='now'; grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d';;
-    yearly)  start='-1y'; end='now'; grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b';;
-    *) exit "$E_RRD" ;;
+	daily)
+		start='-1d'
+		end='now'
+		grid='MINUTE:30:HOUR:1:HOUR:4:0:%H:%M'
+		;;
+	weekly)
+		start='-7d'
+		end='now'
+		grid='HOUR:8:DAY:1:DAY:1:0:%a %d'
+		;;
+	monthly)
+		start='-1m'
+		end='now'
+		grid='WEEK:1:WEEK:1:WEEK:1:0:%b %d'
+		;;
+	yearly)
+		start='-1y'
+		end='now'
+		grid='MONTH:1:YEAR:1:MONTH:2:2419200:%b'
+		;;
+	*) exit "$E_RRD" ;;
 esac
 
 # Checking directory
 if [ ! -d "$RRD/mem" ]; then
-    mkdir $RRD/mem
+	mkdir $RRD/mem
 fi
 
 # Checking database
 if [ -e "$RRD/mem/mem.rrd" ]; then
-    rrd_check=$(rrdtool info $RRD/mem/mem.rrd |grep "FREE")
-    if [ -z "$rrd_check" ]; then
-        rm -f $RRD/mem/mem.rrd
-    fi
+	rrd_check=$(rrdtool info $RRD/mem/mem.rrd | grep "FREE")
+	if [ -z "$rrd_check" ]; then
+		rm -f $RRD/mem/mem.rrd
+	fi
 fi
 if [ ! -e "$RRD/mem/mem.rrd" ]; then
-    # Adding database
-    rrdtool create $RRD/mem/mem.rrd --step $RRD_STEP \
-        DS:RAM:GAUGE:600:U:U \
-        DS:SWAP:GAUGE:600:U:U \
-        DS:FREE:GAUGE:600:U:U \
-        RRA:AVERAGE:0.5:1:600 \
-        RRA:AVERAGE:0.5:6:700 \
-        RRA:AVERAGE:0.5:24:775 \
-        RRA:AVERAGE:0.5:288:797 \
-        RRA:MAX:0.5:1:600 \
-        RRA:MAX:0.5:6:700 \
-        RRA:MAX:0.5:24:775 \
-        RRA:MAX:0.5:288:797
+	# Adding database
+	rrdtool create $RRD/mem/mem.rrd --step $RRD_STEP \
+		DS:RAM:GAUGE:600:U:U \
+		DS:SWAP:GAUGE:600:U:U \
+		DS:FREE:GAUGE:600:U:U \
+		RRA:AVERAGE:0.5:1:600 \
+		RRA:AVERAGE:0.5:6:700 \
+		RRA:AVERAGE:0.5:24:775 \
+		RRA:AVERAGE:0.5:288:797 \
+		RRA:MAX:0.5:1:600 \
+		RRA:MAX:0.5:6:700 \
+		RRA:MAX:0.5:24:775 \
+		RRA:MAX:0.5:288:797
 fi
 
 # Parsing data
 if [ "$period" = 'daily' ]; then
-    mem=$(LC_ALL=C free -m)
-    used=$(echo "$mem" |grep Mem |awk '{print $3}')
-    if [ -z "$(echo "$mem" | grep available)" ]; then
-        free=$(echo "$mem" |grep buffers/cache |awk '{print $4}')
-    else
-        free=$(echo "$mem" |grep Mem |awk '{print $7}')
-    fi
-    swap=$(echo "$mem" |grep Swap |awk '{print $3}')
+	mem=$(LC_ALL=C free -m)
+	used=$(echo "$mem" | grep Mem | awk '{print $3}')
+	if [ -z "$(echo "$mem" | grep available)" ]; then
+		free=$(echo "$mem" | grep buffers/cache | awk '{print $4}')
+	else
+		free=$(echo "$mem" | grep Mem | awk '{print $7}')
+	fi
+	swap=$(echo "$mem" | grep Swap | awk '{print $3}')
 
-    # Updating rrd
-    rrdtool update $RRD/mem/mem.rrd N:$used:$swap:$free
+	# Updating rrd
+	rrdtool update $RRD/mem/mem.rrd N:$used:$swap:$free
 fi
 
 # Updating rrd graph
 rrdtool graph $RRD/mem/$period-mem.png \
-    --imgformat PNG \
-    --height="150" \
-    --width="670" \
-    --start "$start" \
-    --end "$end" \
-    --vertical-label "Mbytes" \
-    --x-grid "$grid" \
-    -c "BACK#ffffff" \
-    -c "SHADEA#ffffff" \
-    -c "SHADEB#ffffff" \
-    -c "FONT#555555" \
-    -c "CANVAS#302c2d" \
-    -c "GRID#666666" \
-    -c "MGRID#AAAAAA" \
-    -c "FRAME#302c2d" \
-    -c "ARROW#FFFFFF" \
-    DEF:used=$RRD/mem/mem.rrd:RAM:AVERAGE \
-    DEF:swap=$RRD/mem/mem.rrd:SWAP:AVERAGE \
-    DEF:free=$RRD/mem/mem.rrd:FREE:AVERAGE \
-    COMMENT:'\r' \
-    AREA:used#867995:"USED"\
-    GPRINT:used:'LAST: Current\:''%8.0lf'  \
-    GPRINT:used:'MIN: Min\:''%8.0lf'  \
-    GPRINT:used:'MAX: Max\:''%8.0lf\j'  \
-    LINE1:free#1c74cd:"FREE" \
-    GPRINT:free:'LAST: Current\:''%8.0lf'  \
-    GPRINT:free:'MIN: Min\:''%8.0lf'  \
-    GPRINT:free:'MAX: Max\:''%8.0lf\j'\
-    LINE2:swap#f57900:"SWAP" \
-    GPRINT:swap:'LAST:Current\:''%8.0lf' \
-    GPRINT:swap:'MIN:Min\:''%8.0lf' \
-    GPRINT:swap:'MAX:Max\:''%8.0lf\j' &>/dev/null; result=$?
+	--imgformat PNG \
+	--height="150" \
+	--width="670" \
+	--start "$start" \
+	--end "$end" \
+	--vertical-label "Mbytes" \
+	--x-grid "$grid" \
+	-c "BACK#ffffff" \
+	-c "SHADEA#ffffff" \
+	-c "SHADEB#ffffff" \
+	-c "FONT#555555" \
+	-c "CANVAS#302c2d" \
+	-c "GRID#666666" \
+	-c "MGRID#AAAAAA" \
+	-c "FRAME#302c2d" \
+	-c "ARROW#FFFFFF" \
+	DEF:used=$RRD/mem/mem.rrd:RAM:AVERAGE \
+	DEF:swap=$RRD/mem/mem.rrd:SWAP:AVERAGE \
+	DEF:free=$RRD/mem/mem.rrd:FREE:AVERAGE \
+	COMMENT:'\r' \
+	AREA:used#867995:"USED" \
+	GPRINT:used:'LAST: Current\:''%8.0lf' \
+	GPRINT:used:'MIN: Min\:''%8.0lf' \
+	GPRINT:used:'MAX: Max\:''%8.0lf\j' \
+	LINE1:free#1c74cd:"FREE" \
+	GPRINT:free:'LAST: Current\:''%8.0lf' \
+	GPRINT:free:'MIN: Min\:''%8.0lf' \
+	GPRINT:free:'MAX: Max\:''%8.0lf\j' \
+	LINE2:swap#f57900:"SWAP" \
+	GPRINT:swap:'LAST:Current\:''%8.0lf' \
+	GPRINT:swap:'MIN:Min\:''%8.0lf' \
+	GPRINT:swap:'MAX:Max\:''%8.0lf\j' &> /dev/null
+result=$?
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 if [ "$result" -ne 0 ]; then
-    exit "$E_RRD"
+	exit "$E_RRD"
 fi
 
 exit

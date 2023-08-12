@@ -1,7 +1,7 @@
 #=========================================================================#
 # Default Web Domain Template                                             #
 # DO NOT MODIFY THIS FILE! CHANGES WILL BE LOST WHEN REBUILDING DOMAINS   #
-# https://docs.hestiacp.com/admin_docs/web.html#how-do-web-templates-work #
+# https://hestiacp.com/docs/server-administration/web-templates.html      #
 #=========================================================================#
 
 <VirtualHost %ip%:%web_port%>
@@ -17,9 +17,9 @@
     CustomLog /var/log/%web_system%/domains/%domain%.bytes bytes
     CustomLog /var/log/%web_system%/domains/%domain%.log combined
     ErrorLog /var/log/%web_system%/domains/%domain%.error.log
-        
+
     IncludeOptional %home%/%user%/conf/web/%domain%/forcessl.apache2.conf*
-    
+
     <Directory %docroot%>
         AllowOverride All
         Options +Includes -Indexes +ExecCGI
@@ -50,4 +50,3 @@
     IncludeOptional %home%/%user%/conf/web/%domain%/%web_system%.conf_*
     IncludeOptional /etc/apache2/conf.d/*.inc
 </VirtualHost>
-

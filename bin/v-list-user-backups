@@ -24,13 +24,13 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-    IFS=$'\n'
-    i=1
-    objects=$(grep BACKUP $USER_DATA/backup.conf |wc -l)
-    echo "{"
-    while read -r str; do
-        parse_object_kv_list "$str"
-        echo -n '    "'$BACKUP'": {
+	IFS=$'\n'
+	i=1
+	objects=$(grep BACKUP $USER_DATA/backup.conf | wc -l)
+	echo "{"
+	while read -r str; do
+		parse_object_kv_list "$str"
+		echo -n '    "'$BACKUP'": {
         "TYPE": "'$TYPE'",
         "SIZE": "'$SIZE'",
         "WEB": "'$WEB'",
@@ -43,46 +43,46 @@ json_list() {
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'
-        if [ "$i" -lt "$objects" ]; then
-            echo ','
-        else
-            echo
-        fi
-        ((i++))
-    done < <(cat $USER_DATA/backup.conf)
-    echo '}'
+		if [ "$i" -lt "$objects" ]; then
+			echo ','
+		else
+			echo
+		fi
+		((i++))
+	done < <(cat $USER_DATA/backup.conf)
+	echo '}'
 }
 
 # SHELL list function
 shell_list() {
-    IFS=$'\n'
-    echo "BACKUP   TYPE   SIZE  TIME  DATE"
-    echo "------   ----   ---   ----  ----"
-    while read -r str; do
-        parse_object_kv_list "$str"
-        echo "$BACKUP $TYPE $SIZE $RUNTIME $DATE"
-    done < <(cat $USER_DATA/backup.conf)
+	IFS=$'\n'
+	echo "BACKUP   TYPE   SIZE  TIME  DATE"
+	echo "------   ----   ---   ----  ----"
+	while read -r str; do
+		parse_object_kv_list "$str"
+		echo "$BACKUP $TYPE $SIZE $RUNTIME $DATE"
+	done < <(cat $USER_DATA/backup.conf)
 }
 
 # PLAIN list function
 plain_list() {
-    IFS=$'\n'
-    while read -r str; do
-        parse_object_kv_list "$str"
-        echo -ne "$BACKUP\t$TYPE\t$SIZE\t$WEB\t$DNS\t$MAIL\t$CRON\t$UDIR\t"
-        echo -e "$RUNTIME\t$TIME\t$DATE"
-    done < <(cat $USER_DATA/backup.conf)
+	IFS=$'\n'
+	while read -r str; do
+		parse_object_kv_list "$str"
+		echo -ne "$BACKUP\t$TYPE\t$SIZE\t$WEB\t$DNS\t$MAIL\t$CRON\t$UDIR\t"
+		echo -e "$RUNTIME\t$TIME\t$DATE"
+	done < <(cat $USER_DATA/backup.conf)
 }
 
 # CSV list function
 csv_list() {
-    IFS=$'\n'
-    echo "BACKUP,TYPE,SIZE,WEB,DNS,MAIL,CRON,UDIR,RUNTIME,TIME,DATE"
-    while read -r str; do
-        parse_object_kv_list "$str"
-        echo -n "$BACKUP,$TYPE,$SIZE,\"$WEB\",\"$DNS\",\"$MAIL\",\"$CRON\","
-        echo "\"$UDIR\",$RUNTIME,$TIME,$DATE"
-    done < <(cat $USER_DATA/backup.conf)
+	IFS=$'\n'
+	echo "BACKUP,TYPE,SIZE,WEB,DNS,MAIL,CRON,UDIR,RUNTIME,TIME,DATE"
+	while read -r str; do
+		parse_object_kv_list "$str"
+		echo -n "$BACKUP,$TYPE,$SIZE,\"$WEB\",\"$DNS\",\"$MAIL\",\"$CRON\","
+		echo "\"$UDIR\",$RUNTIME,$TIME,$DATE"
+	done < <(cat $USER_DATA/backup.conf)
 }
 
 #----------------------------------------------------------#
@@ -100,15 +100,15 @@ is_object_valid 'user' 'USER' "$user"
 # Checking config
 conf=$USER_DATA/backup.conf
 if [ ! -e "$conf" ]; then
-    touch $conf
+	touch $conf
 fi
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list |column -t ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list | column -t ;;
 esac
 
 #----------------------------------------------------------#

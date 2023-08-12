@@ -28,7 +28,7 @@ logpath  = /var/log/dovecot.log
 enabled  = false
 filter   = mysqld-auth
 action   = hestia[name=DB]
-logpath  = /var/log/mysql.log
+logpath  = /var/log/mysql/error.log
 maxretry = 5
 
 [hestia-iptables]
@@ -45,6 +45,13 @@ action   = hestia[name=WEB]
 logpath  = /var/log/roundcube/errors.log
 maxretry = 5
 
+[phpmyadmin-auth]
+enabled  = true
+filter   = phpmyadmin-syslog
+action   = hestia[name=WEB]
+logpath  = /var/log/auth.log
+maxretry = 5
+
 [recidive]
 enabled  = true
 filter   = recidive
@@ -53,3 +60,7 @@ logpath  = /var/log/fail2ban.log
 maxretry = 5
 findtime = 86400
 bantime  = 864000
+
+#Uncomment and add your IPs and or domains to the Whitelist
+#[DEFAULT]
+#ignoreip = 111.111.111.111 222.222.222.222 subdomain.example.tld example.tld 333.333.333.333

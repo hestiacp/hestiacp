@@ -27,7 +27,7 @@ check_hestia_demo_mode
 
 # Starting update loop
 for package in hestia hestia-nginx hestia-php; do
-    $BIN/v-update-sys-hestia "$package"
+	$BIN/v-update-sys-hestia "$package"
 done
 
 #----------------------------------------------------------#

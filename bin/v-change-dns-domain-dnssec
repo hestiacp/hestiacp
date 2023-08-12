@@ -1,0 +1,107 @@
+#!/bin/bash
+# info: change dns domain dnssec status
+# options: USER DOMAIN STATUS
+#
+# example: v-change-dns-domain-dnssec admin domain.pp.ua yes
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+domain=$2
+domain_idn=$2
+status=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+# Additional argument formatting
+format_domain
+format_domain_idn
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '3' "$#" 'USER DOMAIN STATUS'
+is_format_valid 'user' 'domain' ''
+is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
+is_object_valid 'user' 'USER' "$user"
+is_object_unsuspended 'user' 'USER' "$user"
+is_object_valid 'dns' 'DOMAIN' "$domain"
+is_object_unsuspended 'dns' 'DOMAIN' "$domain"
+
+if [ -n "$status" ]; then
+	is_boolean_format_valid "$status" 'status'
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+if [ "$DNS_CLUSTER_SYSTEM" != 'hestia-zone' ]; then
+	check_result "$E_DISABLED" "DNSSEC is not supported when DNS_CLUSTER_SYSTEM is not set to hestia-zone"
+fi
+
+version=$(named -v | awk 'NR==1{print $2}')
+if version_ge '9.16.18' $version; then
+	check_result "$E_DISABLED" "DNSSEC is not supported when bind / named version <= 9.16.18"
+fi
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+if [ -f "$HESTIA/data/queue/dns-cluster.pipe" ]; then
+	bash $HESTIA/data/queue/dns-cluster.pipe
+fi
+
+syshealth_repair_dns_config
+
+# Changing exp
+update_object_value 'dns' 'DOMAIN' "$domain" '$DNSSEC' "$status"
+
+# Update serial
+update_domain_serial
+# Rebuild DNS config
+rebuild_dns_domain_conf
+
+if [ $status = "no" ]; then
+	update_object_value 'dns' 'DOMAIN' "$domain" '$KEY' ""
+	# Delete existing keys
+	rm -fr $HOMEDIR/$user/conf/dns/$domain.db.*
+	rm -fr /var/cache/bind/K$domain_idn.*
+	rm -fr $USER_DATA/keys/K$domain_idn.*
+fi
+
+# Updating dns-cluster queue
+if [ "$DNS_CLUSTER" = "yes" ]; then
+	# Check for first sync
+	dlock=$(grep "domain $user $domain" $HESTIA/data/queue/dns-cluster.pipe)
+	if [ -z "$dlock" ]; then
+		cmd="$BIN/v-add-remote-dns-domain $user $domain yes"
+		echo "$cmd" >> $HESTIA/data/queue/dns-cluster.pipe
+	fi
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "$user" "Info" "DNS" "Updated DNS SOA expiration date (Domain: $domain, Value: $exp)."
+log_event "$OK" "$ARGUMENTS"
+
+exit

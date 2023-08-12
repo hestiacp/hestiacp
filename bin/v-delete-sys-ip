@@ -1,18 +1,18 @@
 #!/bin/bash
-# info: delete system ip
+# info: delete system IP
 # options: IP
 #
-# example: v-delete-sys-ip 212.42.76.210
+# example: v-delete-sys-ip 203.0.113.1
 #
-# This function for deleting a system ip. It does not allow to delete first ip
-# on interface and do not allow to delete ip which is used by a web domain.
+# This function for deleting a system IP. It does not allow to delete first IP
+# on interface and do not allow to delete IP which is used by a web domain.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
+ip="$1"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -43,85 +43,89 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Import ip variables
-source $HESTIA/data/ips/$ip
-cidr=$(convert_netmask "$NETMASK")
-main_ip=$(hostname -i)
+# Import IP variables
+source "$HESTIA/data/ips/$ip"
+cidr="$(convert_netmask "$NETMASK")"
 
-# Checking main ip on the interface
-interface=$(/sbin/ip addr | grep "$ip/$cidr" | awk '{print $NF}')
-if [ -n "$interface" ] && [ "$ip" = "$main_ip" ]; then
-    echo "Error: can't delete main IP address"
-    log_event "$E_FORBIDEN" "$ARGUMENTS"
-    exit "$E_FORBIDEN"
+# Get primary IP
+default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
+primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[].addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
+
+# Checking primary IP on the interface
+interface="$(ip -d -j addr show | jq --arg IP "$ip" -r '.[] | if .addr_info[].local == $IP then .ifname else empty end')"
+if [ -n "$interface" ] && [ "$ip" = "$primary_ipv4" ]; then
+	echo "Error: can't delete primary IP address"
+	log_event "$E_FORBIDEN" "$ARGUMENTS"
+	exit "$E_FORBIDEN"
 fi
 
-# Deleting system ip
+# Deleting system IP
 if [ -n "$interface" ]; then
-    /sbin/ip addr del "$ip/$cidr" dev "$INTERFACE"
-    if [ "$?" -ne 0 ]; then
-        echo "Error: can't delete system ip"
-        log_event "$E_FORBIDEN" "$ARGUMENTS"
-        exit $E_FORBIDEN
-    fi
+	ip addr del "$ip/$cidr" dev "$interface" 2> /dev/null
+	if [ "$?" -ne "0" ]; then
+		echo "Error: can't delete system IP address"
+		log_event "$E_FORBIDEN" "$ARGUMENTS"
+		exit "$E_FORBIDEN"
+	fi
 fi
 
 # Deleting startup conf on RHEL/CentOS/Fedora
+# Need RHEL experts to fix me
 if [ -e "/etc/sysconfig/network-scripts/ifcfg-$interface" ]; then
-    rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
+	rm -f /etc/sysconfig/network-scripts/ifcfg-$interface
 fi
 
 # Deleting startup conf on Debian/Ubuntu
 if [ -f "/etc/netplan/60-hestia.yaml" ]; then
-    sed -i "/$ip/d" /etc/netplan/60-hestia.yaml
-    if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
-        rm /etc/netplan/60-hestia.yaml
-    fi
+	sed -i "/$ip\//d" /etc/netplan/60-hestia.yaml
+	if ! grep -q '-' /etc/netplan/60-hestia.yaml; then
+		rm /etc/netplan/60-hestia.yaml
+	fi
 elif [ -e "/etc/network/interfaces" ]; then
-    ip_str=$(grep -n $ip$ /etc/network/interfaces |cut -f1 -d:)
-    if [ -n "$ip_str" ]; then
-        first_str=$((ip_str - 3))
-        last_str=$((ip_str + 1))
-        sed -i "$first_str,$last_str d" /etc/network/interfaces
-    fi
+	ip_str="$(grep -n "$ip$" /etc/network/interfaces | cut -f1 -d:)"
+	if [ -n "$ip_str" ]; then
+		first_str="$((ip_str - 3))"
+		last_str="$((ip_str + 1))"
+		sed -i "$first_str,$last_str d" /etc/network/interfaces
+	fi
 fi
 
-# Deleting hestia ip
+# Deleting Hestia IP
 rm -f $HESTIA/data/ips/$ip
 
 # Deleting web config
 if [ -n "$WEB_SYSTEM" ]; then
-    rm -f /etc/$WEB_SYSTEM/conf.d/$ip.conf
+	rm -f /etc/$WEB_SYSTEM/conf.d/$ip.conf
 fi
 
 # Deleting proxy config
 if [ -n "$PROXY_SYSTEM" ]; then
-    rm -f /etc/$PROXY_SYSTEM/conf.d/$ip.conf
+	rm -f /etc/$PROXY_SYSTEM/conf.d/$ip.conf
 
-    # mod_extract_forwarded
-    fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
-    if [ -e "$fw_conf" ]; then
-        ips=$(grep 'MEFaccept 127.0.0.1' $fw_conf)
-        new_ips=$(echo "$ips" | sed "s/$ip//" )
-        sed -i "s/$ips/$new_ips/g" $fw_conf
-    fi
+	# mod_extract_forwarded
+	fw_conf="/etc/$WEB_SYSTEM/conf.d/mod_extract_forwarded.conf"
+	if [ -e "$fw_conf" ]; then
+		ips="$(grep 'MEFaccept 127.0.0.1' "$fw_conf")"
+		new_ips="$(echo "$ips" | sed "s/$ip//")"
+		sed -i "s/$ips/$new_ips/g" "$fw_conf"
+	fi
 
-    # mod_rpaf
-    rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
-    if [ -e "$rpaf_conf" ]; then
-        ips=$(grep RPAFproxy_ips "$rpaf_conf")
-        new_ips=$(echo "$ips" | sed "s/ $ip//")
-        sed -i "s/$ips/$new_ips/g" "$rpaf_conf"
+	# mod_rpaf
+	rpaf_conf="/etc/$WEB_SYSTEM/mods-enabled/rpaf.conf"
+	if [ -e "$rpaf_conf" ]; then
+		ips="$(grep RPAFproxy_ips "$rpaf_conf")"
+		new_ips="$(echo "$ips" | sed "s/ $ip//")"
+		sed -i "s/$ips/$new_ips/g" "$rpaf_conf"
 
-        # Remove RPAFproxy_ips line when ip list is empty
-        [ "$(grep RPAFproxy_ips $rpaf_conf | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" $rpaf_conf
-    fi
-    
-    #mod_remoteip
-    remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
-    if [ -e "$remoteip_conf" ]; then
-        sed -i "/RemoteIPInternalProxy $ip\$/d" "$remoteip_conf"
-    fi
+		# Remove RPAFproxy_ips line when ip list is empty
+		[ "$(grep RPAFproxy_ips "$rpaf_conf" | sed 's/^[[:space:]]*//g')" = "RPAFproxy_ips" ] && sed -i "/RPAFproxy_ips/d" "$rpaf_conf"
+	fi
+
+	# mod_remoteip
+	remoteip_conf="/etc/$WEB_SYSTEM/mods-enabled/remoteip.conf"
+	if [ -e "$remoteip_conf" ]; then
+		sed -i "/RemoteIPInternalProxy $ip\$/d" "$remoteip_conf"
+	fi
 fi
 
 #----------------------------------------------------------#
@@ -130,34 +134,34 @@ fi
 
 # Updating user conf
 if [ -n "$OWNER" ]; then
-    decrease_user_value "$OWNER" '$IP_OWNED'
+	decrease_user_value "$OWNER" '$IP_OWNED'
 fi
 
-if [ "$OWNER" = 'admin' ]; then
-    if [ "$STATUS" = 'shared' ]; then
-        for hestia_user in $($HESTIA/bin/v-list-sys-users plain); do
-            decrease_user_value "$hestia_user" '$IP_AVAIL'
-        done
-    else
-        decrease_user_value "$OWNER" '$IP_AVAIL'
-    fi
+if [ "$OWNER" = "$ROOT_USER" ]; then
+	if [ "$STATUS" = 'shared' ]; then
+		for hestia_user in $($BIN/v-list-sys-users plain); do
+			decrease_user_value "$hestia_user" '$IP_AVAIL'
+		done
+	else
+		decrease_user_value "$OWNER" '$IP_AVAIL'
+	fi
 else
-    decrease_user_value "$OWNER" '$IP_AVAIL'
+	decrease_user_value "$OWNER" '$IP_AVAIL'
 fi
 
 # Restarting web server
 $BIN/v-restart-web
-check_result $? "Web restart failed" >/dev/null
+check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server
 if [ -n "$PROXY_SYSTEM" ]; then
-    $BIN/v-restart-proxy
-    check_result $? "Proxy restart failed" >/dev/null
+	$BIN/v-restart-proxy
+	check_result $? "Proxy restart failed" > /dev/null
 fi
 
 # Restarting firewall
 if [ -n "$FIREWALL_SYSTEM" ]; then
-    $BIN/v-update-firewall
+	$BIN/v-update-firewall
 fi
 
 # Logging

@@ -1,3 +1,4 @@
+# Packages
 *.tar
 *.zip
 *.gzip
@@ -5,15 +6,46 @@
 *.bz2
 *.deb
 
-.vscode
+# Editors
+.vs/
+.nova/
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
 .env
+
+# Distribution CSS
+web/css/themes/
+
+# Distribution JS
+web/js/dist/
+
+# Composer
 composer.phar
 test/vendor/
-test/node_modules/
-npm-debug.log
+# PHPMailer
+web/inc/vendor/
+# Quick install
+web/src/vendor/
 .phpunit.result.cache
-.vs
-.nova
-/.idea/
+
+# vitepress build output
+**/.vitepress/dist/
+**/.vitepress/cache/
+# Node
+**/node_modules/
+npm-debug.log
+
+# optional eslint cache
+.eslintcache

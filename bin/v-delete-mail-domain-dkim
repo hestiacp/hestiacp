@@ -45,18 +45,18 @@ check_hestia_demo_mode
 
 # Deleting dkim
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    rm -f $USER_DATA/mail/$domain.pem
-    rm -f $USER_DATA/mail/$domain.pub
-    rm -f $HOMEDIR/$user/conf/mail/$domain/dkim.pem
+	rm -f $USER_DATA/mail/$domain.pem
+	rm -f $USER_DATA/mail/$domain.pub
+	rm -f $HOMEDIR/$user/conf/mail/$domain/dkim.pem
 fi
 
 # Deleting dns record
 if [ -n "$DNS_SYSTEM" ] && [ -e "$USER_DATA/dns/$domain.conf" ]; then
-    records=$($BIN/v-list-dns-records "$user" "$domain")
-    dkim_records=$(echo "$records" |grep -E "\s(mail\._domainkey|_domainkey)\s" | cut -f 1 -d ' ')
-    for id in $dkim_records; do
-        $BIN/v-delete-dns-record "$user" "$domain" "$id" 'yes'
-    done
+	records=$($BIN/v-list-dns-records "$user" "$domain")
+	dkim_records=$(echo "$records" | grep -E "\s(mail\._domainkey|_domainkey)\s" | cut -f 1 -d ' ')
+	for id in $dkim_records; do
+		$BIN/v-delete-dns-record "$user" "$domain" "$id" 'yes'
+	done
 fi
 
 #----------------------------------------------------------#

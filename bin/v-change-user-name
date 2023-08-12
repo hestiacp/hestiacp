@@ -32,7 +32,7 @@ is_format_valid 'user' 'name'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 if [ -n "$lname" ]; then
-    is_common_format_valid "$name $lname" "last name"
+	is_common_format_valid "$name $lname" "last name"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -44,9 +44,9 @@ check_hestia_demo_mode
 
 # Changing ns values
 if [ -n "$lname" ]; then
-    update_user_value "$user" '$NAME' "$name $lname"
+	update_user_value "$user" '$NAME' "$name $lname"
 else
-    update_user_value "$user" '$NAME' "$name"
+	update_user_value "$user" '$NAME' "$name"
 fi
 
 #----------------------------------------------------------#

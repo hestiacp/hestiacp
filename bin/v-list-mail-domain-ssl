@@ -29,76 +29,76 @@ format_domain_idn
 
 # JSON list function
 json_list() {
-    echo '{'
-    echo -e "\t\"$domain\": {"
-    echo "        \"CRT\": \"$crt\","
-    echo "        \"KEY\": \"$key\","
-    echo "        \"CA\": \"$ca\","
-    echo "        \"SUBJECT\": \"$subj\","
-    echo "        \"ALIASES\": \"$alt_dns\","
-    echo "        \"NOT_BEFORE\": \"$before\","
-    echo "        \"NOT_AFTER\": \"$after\","
-    echo "        \"SIGNATURE\": \"$signature\","
-    echo "        \"PUB_KEY\": \"$pub_key\","
-    echo "        \"ISSUER\": \"$issuer\""
-    echo -e "\t}\n}"
+	echo '{'
+	echo -e "\t\"$domain\": {"
+	echo "        \"CRT\": \"$crt\","
+	echo "        \"KEY\": \"$key\","
+	echo "        \"CA\": \"$ca\","
+	echo "        \"SUBJECT\": \"$subj\","
+	echo "        \"ALIASES\": \"$alt_dns\","
+	echo "        \"NOT_BEFORE\": \"$before\","
+	echo "        \"NOT_AFTER\": \"$after\","
+	echo "        \"SIGNATURE\": \"$signature\","
+	echo "        \"PUB_KEY\": \"$pub_key\","
+	echo "        \"ISSUER\": \"$issuer\""
+	echo -e "\t}\n}"
 }
 
 # SHELL list function
 shell_list() {
-    if [ -n "$crt" ]; then
-        echo -e "$crt"
-    fi
-    if [ -n "$key" ]; then
-        echo -e "\n$key"
-    fi
-    if [ -n "$ca" ]; then
-        echo -e "\n$ca"
-    fi
-    if [ -n "$crt" ]; then
-        echo
-        echo
-        echo "SUBJECT:        $subj"
-        if [ -n "$alt_dns" ]; then
-            echo "ALIASES:        ${alt_dns//,/ }"
-        fi
-        echo "VALID FROM:     $before"
-        echo "VALID TIL:      $after"
-        echo "SIGNATURE:      $signature"
-        echo "PUB_KEY:        $pub_key"
-        echo "ISSUER:         $issuer"
-    fi
+	if [ -n "$crt" ]; then
+		echo -e "$crt"
+	fi
+	if [ -n "$key" ]; then
+		echo -e "\n$key"
+	fi
+	if [ -n "$ca" ]; then
+		echo -e "\n$ca"
+	fi
+	if [ -n "$crt" ]; then
+		echo
+		echo
+		echo "SUBJECT:        $subj"
+		if [ -n "$alt_dns" ]; then
+			echo "ALIASES:        ${alt_dns//,/ }"
+		fi
+		echo "VALID FROM:     $before"
+		echo "VALID TIL:      $after"
+		echo "SIGNATURE:      $signature"
+		echo "PUB_KEY:        $pub_key"
+		echo "ISSUER:         $issuer"
+	fi
 }
 
 # PLAIN list function
 plain_list() {
-    if [ -n "$crt" ]; then
-        echo -e "$crt"
-    fi
-    if [ -n "$key" ]; then
-        echo -e "\n$key"
-    fi
-    if [ -n "$ca" ]; then
-        echo -e "\n$ca"
-    fi
-    if [ -n "$crt" ]; then
-        echo "$subj"
-        echo "${alt_dns//,/ }"
-        echo "$before"
-        echo "$after"
-        echo "$signature"
-        echo "$pub_key"
-        echo "$issuer"
-    fi
+	if [ -n "$crt" ]; then
+		echo -e "$crt"
+	fi
+	if [ -n "$key" ]; then
+		echo -e "\n$key"
+	fi
+	if [ -n "$ca" ]; then
+		echo -e "\n$ca"
+	fi
+	if [ -n "$crt" ]; then
+		echo "$subj"
+		echo "${alt_dns//,/ }"
+		echo "$before"
+		echo "$after"
+		echo "$signature"
+		echo "$pub_key"
+		echo "$issuer"
+	fi
 
 }
 
 # CSV list function
 csv_list() {
-    echo -n "CRT,KEY,CA,SUBJECT,ALIASES,NOT_BEFORE,NOT_AFTER,SIGNATURE,"
-    echo "PUB_KEY,ISSUER"
-    echo -n "\"$crt\",\"$key\",\"$ca\",\"$subj\",\"${alt_dns//,/ }\","
-    echo "\"$before\",\"$after\",\"$signature\",\"$pub_key\",\"$issuer\""
+	echo -n "CRT,KEY,CA,SUBJECT,ALIASES,NOT_BEFORE,NOT_AFTER,SIGNATURE,"
+	echo "PUB_KEY,ISSUER"
+	echo -n "\"$crt\",\"$key\",\"$ca\",\"$subj\",\"${alt_dns//,/ }\","
+	echo "\"$before\",\"$after\",\"$signature\",\"$pub_key\",\"$issuer\""
 }
 
 #----------------------------------------------------------#
@@ -116,35 +116,35 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 
 # Parsing domain SSL certificate
 if [ -e "$USER_DATA/ssl/mail.$domain.crt" ]; then
-    crt=$(cat $USER_DATA/ssl/mail.$domain.crt |sed ':a;N;$!ba;s/\n/\\n/g')
+	crt=$(cat $USER_DATA/ssl/mail.$domain.crt | sed ':a;N;$!ba;s/\n/\\n/g')
 
-    info=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
-    subj=$(echo "$info" |grep Subject: |sed -e "s/\"//g" -e "s/.*= //")
-    before=$(echo "$info" |grep Before: |sed -e "s/.*Before: //")
-    after=$(echo "$info" |grep "After :" |sed -e "s/.*After : //")
-    signature=$(echo "$info" |grep "Algorithm:" |head -n1 )
-    signature=$(echo "$signature"| sed -e "s/.*Algorithm: //")
-    pub_key=$(echo "$info" |grep Public-Key: |cut -f2 -d \( | tr -d \))
-    issuer=$(echo "$info" |grep Issuer: |sed -e "s/.*Issuer: //")
-    alt_dns=$(echo "$info" |grep DNS |sed -e 's/DNS:/\n/g' |tr -d ',')
-    alt_dns=$(echo "$alt_dns" |tr -d ' ' |sed -e "/^$/d")
-    alt_dns=$(echo "$alt_dns" |sed -e ':a;N;$!ba;s/\n/,/g')
+	info=$(openssl x509 -text -in $USER_DATA/ssl/mail.$domain.crt)
+	subj=$(echo "$info" | grep Subject: | sed -e "s/\"//g" -e "s/.*= //")
+	before=$(echo "$info" | grep Before: | sed -e "s/.*Before: //")
+	after=$(echo "$info" | grep "After :" | sed -e "s/.*After : //")
+	signature=$(echo "$info" | grep "Algorithm:" | head -n1)
+	signature=$(echo "$signature" | sed -e "s/.*Algorithm: //")
+	pub_key=$(echo "$info" | grep Public-Key: | cut -f2 -d \( | tr -d \))
+	issuer=$(echo "$info" | grep Issuer: | sed -e "s/.*Issuer: //")
+	alt_dns=$(echo "$info" | grep DNS | sed -e 's/DNS:/\n/g' | tr -d ',')
+	alt_dns=$(echo "$alt_dns" | tr -d ' ' | sed -e "/^$/d")
+	alt_dns=$(echo "$alt_dns" | sed -e ':a;N;$!ba;s/\n/,/g')
 fi
 
 if [ -e "$USER_DATA/ssl/mail.$domain.key" ]; then
-    key=$(cat $USER_DATA/ssl/mail.$domain.key |sed ':a;N;$!ba;s/\n/\\n/g')
+	key=$(cat $USER_DATA/ssl/mail.$domain.key | sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
-    ca=$(cat $USER_DATA/ssl/mail.$domain.ca |sed ':a;N;$!ba;s/\n/\\n/g')
+	ca=$(cat $USER_DATA/ssl/mail.$domain.ca | sed ':a;N;$!ba;s/\n/\\n/g')
 fi
 
 # Listing data
 case $format in
-    json)   json_list ;;
-    plain)  plain_list ;;
-    csv)    csv_list ;;
-    shell)  shell_list ;;
+	json) json_list ;;
+	plain) plain_list ;;
+	csv) csv_list ;;
+	shell) shell_list ;;
 esac
 
 #----------------------------------------------------------#

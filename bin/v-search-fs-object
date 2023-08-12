@@ -30,31 +30,30 @@ check_args '2' "$#" 'USER OBJECT [PATH]'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
 
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
 # Checking user homedir
 homedir=$(grep "^$user:" /etc/passwd | cut -f 6 -d :)
 if [ -z $homedir ]; then
-    echo "Error: user home directory doesn't exist"
-    exit 12
+	echo "Error: user home directory doesn't exist"
+	exit 12
 fi
 
 # Checking path
 if [ -n "$path" ]; then
-    rpath=$(readlink -f "$path")
-    if [ -z "$(echo $rpath |grep $homedir)" ]; then
-    echo "Error: invalid path $path"
-        exit 2
-    fi
+	rpath=$(readlink -f "$path")
+	if [ -z "$(echo $rpath | grep $homedir)" ]; then
+		echo "Error: invalid path $path"
+		exit 2
+	fi
 else
-    path=$homedir
+	path=$homedir
 fi
 
 # Listing directory
 user_exec find "$path" -name "$object" \
-    -printf "%y|%m|%TY-%Tm-%Td|%TH:%TM|%u|%g|%s|%P\n" 2>/dev/null
+	-printf "%y|%m|%TY-%Tm-%Td|%TH:%TM|%u|%g|%s|%P\n" 2> /dev/null
 #    -printf "%y|%m|%TY-%Tm-%Td|%TH:%TM:%TS|%u|%g|%s|%P\n" 2>/dev/null
 
 # Exiting

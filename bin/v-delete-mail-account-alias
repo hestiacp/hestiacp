@@ -43,9 +43,9 @@ is_object_valid 'mail' 'DOMAIN' "$domain"
 is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 aliases=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS')
 if [ -z "$(echo $aliases | grep -w $malias)" ]; then
-    echo "Error: alias $malias doesn't exist"
-    log_event "$E_NOTEXIST $ARGUMENTS"
-    exit "$E_NOTEXIST"
+	echo "Error: alias $malias doesn't exist"
+	log_event "$E_NOTEXIST $ARGUMENTS"
+	exit "$E_NOTEXIST"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -56,22 +56,22 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    sed -i "/^$malias@$domain_idn:$account/d" \
-        $HOMEDIR/$user/conf/mail/$domain/aliases
+	sed -i "/^$malias@$domain_idn:$account/d" \
+		$HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 
-aliases=$(echo "$aliases" |\
-    sed "s/,/\n/g"|\
-    sed "s/^$malias$//g"|\
-    sed "/^$/d"|\
-    sed ':a;N;$!ba;s/\n/,/g')
+aliases=$(echo "$aliases" \
+	| sed "s/,/\n/g" \
+	| sed "s/^$malias$//g" \
+	| sed "/^$/d" \
+	| sed ':a;N;$!ba;s/\n/,/g')
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Update config
-update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$ALIAS' "$aliases"
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$ALIAS' "$aliases"
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Mail" "Mail account alias removed (Alias: $malias, User: $account@$domain)."

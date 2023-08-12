@@ -37,8 +37,8 @@ format_domain_idn
 
 check_args '4' "$#" 'USER DOMAIN ACCOUNT FORWARD'
 is_format_valid 'user' 'domain' 'account'
-if [ "$email_forward"  != ':blackhole:' ]; then
-    is_format_valid 'email_forward'
+if [ "$email_forward" != ':blackhole:' ]; then
+	is_format_valid 'email_forward'
 fi
 is_system_enabled "$MAIL_SYSTEM" 'MAIL_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -49,9 +49,9 @@ is_object_valid "mail/$domain" 'ACCOUNT' "$account"
 is_object_unsuspended "mail/$domain" 'ACCOUNT' "$account"
 fwd=$(get_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD')
 if [ -n "$(echo $fwd | grep -w "$email_forward")" ]; then
-    echo "Error: forward $email_forward exists"
-    log_event "$E_EXISTS" "$ARGUMENTS"
-    exit $E_EXISTS
+	echo "Error: forward $email_forward exists"
+	log_event "$E_EXISTS" "$ARGUMENTS"
+	exit $E_EXISTS
 fi
 
 # Perform verification if read-only mode is enabled
@@ -63,15 +63,15 @@ check_hestia_demo_mode
 
 # Define fwd string
 if [ -z "$fwd" ]; then
-    fwd="$email_forward"
+	fwd="$email_forward"
 else
-    fwd="$fwd,$email_forward"
+	fwd="$fwd,$email_forward"
 fi
 
 # Adding forward to exim
 if [[ "$MAIL_SYSTEM" =~ exim ]]; then
-    sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
-    echo "$account@$domain_idn:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
+	sed -i "/^$account@$domain_idn:/ d" $HOMEDIR/$user/conf/mail/$domain/aliases
+	echo "$account@$domain_idn:$fwd" >> $HOMEDIR/$user/conf/mail/$domain/aliases
 fi
 
 #----------------------------------------------------------#
@@ -79,7 +79,7 @@ fi
 #----------------------------------------------------------#
 
 # Updating config
-update_object_value "mail/$domain" 'ACCOUNT' "$account"  '$FWD' "$fwd"
+update_object_value "mail/$domain" 'ACCOUNT' "$account" '$FWD' "$fwd"
 
 # Logging
 $BIN/v-log-action "$user" "Warning" "Mail" "Mail forwarding on mail account $account@$domain enabled (send to: $email_forward)."

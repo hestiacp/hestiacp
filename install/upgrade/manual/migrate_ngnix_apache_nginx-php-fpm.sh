@@ -19,14 +19,14 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-if [ "$WEB_BACKEND"  != "php-fpm" ]; then 
-    check_result $E_NOTEXISTS "PHP-FPM is not enabled" >/dev/null
-    exit 1; 
+if [ "$WEB_BACKEND" != "php-fpm" ]; then
+	check_result $E_NOTEXISTS "PHP-FPM is not enabled" > /dev/null
+	exit 1
 fi
 
-if [ "$WEB_SYSTEM"  != "apache2" ]; then 
-    check_result $E_NOTEXISTS "Apache2 is not enabled" >/dev/null
-    exit 1; 
+if [ "$WEB_SYSTEM" != "apache2" ]; then
+	check_result $E_NOTEXISTS "Apache2 is not enabled" > /dev/null
+	exit 1
 fi
 
 #----------------------------------------------------------#
@@ -51,14 +51,17 @@ echo "WEB_SSL='openssl'" >> $HESTIA/conf/hestia.conf
 echo "WEB_SSL_PORT='443'" >> $HESTIA/conf/hestia.conf
 echo "WEB_SYSTEM='nginx'" >> $HESTIA/conf/hestia.conf
 
+rm $HESTIA/conf/defaults/hestia.conf
+cp $HESTIA/conf/hestia.conf $HESTIA/conf/defaults/hestia.conf
+
 # Rebuild web config
 
-for user in $($HESTIA/bin/v-list-users plain | cut -f1); do
-    echo $user
-    for domain in $($HESTIA/bin/v-list-web-domains $user plain | cut -f1 ); do
-        $HESTIA/bin/v-change-web-domain-tpl $user $domain 'default'
-        $HESTIA/bin/v-rebuild-web-domain $user $domain no;
-    done
+for user in $($BIN/v-list-users plain | cut -f1); do
+	echo $user
+	for domain in $($BIN/v-list-web-domains $user plain | cut -f1); do
+		$BIN/v-change-web-domain-tpl $user $domain 'default'
+		$BIN/v-rebuild-web-domain $user $domain no
+	done
 done
 
 systemctl restart nginx

@@ -623,3 +623,22 @@ function syshealth_adapt_hestia_nginx_listen_ports() {
 	[ $? -ne 0 ] && NGINX_BCONF_CHANGED="yes"
 	rm -f "$NGINX_BCONF_TEMP" > /dev/null 2>&1
 }
+
+syshealth_adapt_nginx_resolver() {
+	NGINX_CONF="/usr/local/hestia/nginx/conf/nginx.conf"
+	if grep -qw "1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8" "$NGINX_CONF"; then
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if echo "$nameserver" | grep -Pq "^(\d{1,3}\.){3}\d{1,3}$"; then
+				if [ -z "$resolver" ]; then
+					resolver="$nameserver"
+				else
+					resolver="$resolver $nameserver"
+				fi
+			fi
+		done
+
+		if [ -n "$resolver" ]; then
+			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" "$NGINX_CONF"
+		fi
+	fi
+}

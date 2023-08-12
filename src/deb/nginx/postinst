@@ -13,7 +13,7 @@ invoke-rc.d hestia start || true
 # Adapt Port Listing in HESTIA NGINX Backend
 source /usr/local/hestia/func/syshealth.sh # Load syshealth functions
 syshealth_adapt_hestia_nginx_listen_ports  # Adapt port listing
-syshealth_adapt_nginx_resolve
+syshealth_adapt_nginx_resolver
 
 # Run triggers only on updates
 if [ ! -e "/usr/local/hestia/data/users/admin" ]; then

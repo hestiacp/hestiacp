@@ -15,7 +15,7 @@ source /usr/local/hestia/func/syshealth.sh # Load syshealth functions
 syshealth_adapt_hestia_nginx_listen_ports  # Adapt port listing
 
 # Run triggers only on updates
-if [ ! -e "/usr/local/hestia/data/users/admin" ]; then
+if [ ! -e "/usr/local/hestia/data/users/" ]; then
 	exit
 fi
 

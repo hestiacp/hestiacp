@@ -82,7 +82,7 @@ for user in $user_list; do
 	IFS=$'\n'
 
 	# Checking users
-	if [ "$user" = 'admin' ]; then
+	if [ "$user" = "$ROOT_USER" ]; then
 		spnd=$(grep "SUSPENDED='yes'" $HESTIA/data/users/*/user.conf | wc -l)
 		SUSPENDED_USERS=$spnd
 		U_USERS=$($BIN/v-list-sys-users plain | wc -l)
@@ -96,11 +96,11 @@ for user in $user_list; do
 			IP_OWNED=$((IP_OWNED + 1))
 			IP_AVAIL=$((IP_AVAIL + 1))
 		fi
-		if [ "$OWNER" = 'admin' ] && [ "$STATUS" = 'shared' ]; then
+		if [ "$OWNER" = "$ROOT_USER" ] && [ "$STATUS" = 'shared' ]; then
 			IP_AVAIL=$((IP_AVAIL + 1))
 		fi
 	done
-	if [ "$user" = 'admin' ]; then
+	if [ "$user" = "$ROOT_USER" ]; then
 		IP_AVAIL=$(ls $HESTIA/data/ips | wc -l)
 	fi
 

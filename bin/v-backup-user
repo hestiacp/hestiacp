@@ -174,7 +174,7 @@ start_time=$(date '+%s')
 
 # Set notification email and subject
 subj="$user → backup failed"
-email=$(grep CONTACT "$HESTIA/data/users/admin/user.conf" | cut -f 2 -d \')
+email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 
 # Validate available disk space (take usage * 2, due to the backup handling)
 let u_disk=$(($(get_user_disk_usage) * 2))

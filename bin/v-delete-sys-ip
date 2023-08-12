@@ -137,7 +137,7 @@ if [ -n "$OWNER" ]; then
 	decrease_user_value "$OWNER" '$IP_OWNED'
 fi
 
-if [ "$OWNER" = 'admin' ]; then
+if [ "$OWNER" = "$ROOT_USER" ]; then
 	if [ "$STATUS" = 'shared' ]; then
 		for hestia_user in $($BIN/v-list-sys-users plain); do
 			decrease_user_value "$hestia_user" '$IP_AVAIL'

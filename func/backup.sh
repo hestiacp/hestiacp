@@ -41,7 +41,7 @@ local_backup() {
 	cd $tmpdir
 	tar -cf $BACKUP/$user.$backup_new_date.tar .
 	chmod 640 $BACKUP/$user.$backup_new_date.tar
-	chown admin:$user $BACKUP/$user.$backup_new_date.tar
+	chown "$ROOT_USER":"$user" $BACKUP/$user.$backup_new_date.tar
 	localbackup='yes'
 	echo -e "$(date "+%F %T") Local: $BACKUP/$user.$backup_new_date.tar" \
 		| tee -a $BACKUP/$user.log

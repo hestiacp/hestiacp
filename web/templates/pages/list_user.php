@@ -133,7 +133,7 @@
 					$spnd_confirmation = _('Are you sure you want to suspend user %s?');
 				}
 			?>
-			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== 'admin') && ($key === 'admin')) { echo 'u-hidden'; } ?>"
+			<div class="units-table-row <?php if ($status == 'suspended') echo 'disabled'; ?> js-unit <?php if (($_SESSION['POLICY_SYSTEM_HIDE_ADMIN'] === 'yes') && ($_SESSION['user'] !== $_SESSION['ROOT_USER']) && ($key === 'admin')) { echo 'u-hidden'; } ?>"
 				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
 				data-sort-name="<?= strtolower($key) ?>"
 				data-sort-package="<?= strtolower($data[$key]['PACKAGE']) ?>"
@@ -186,7 +186,7 @@
 								</a>
 							</li>
 						<?php } ?>
-						<?php if (!($_SESSION["userContext"] === "admin" && $key == "admin" && $_SESSION["user"] != "admin")) { ?>
+						<?php if (!($_SESSION["userContext"] === "admin" && $key == $_SESSION['ROOT_USER'] && $_SESSION["user"] != $_SESSION['ROOT_USER'])) { ?>
 							<li class="units-table-row-action shortcut-enter" data-key-action="href">
 								<a
 									class="units-table-row-action-link"
@@ -198,7 +198,7 @@
 								</a>
 							</li>
 						<?php } ?>
-						<?php if (!($key == "admin" || $key == $user_plain)) { ?>
+						<?php if (!($key == $_SESSION['ROOT_USER'] || $key == $user_plain)) { ?>
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
 								<a
 									class="units-table-row-action-link data-controls js-confirm-action"

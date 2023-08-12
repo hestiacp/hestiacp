@@ -40,8 +40,8 @@ ip_owner=$(get_ip_value '$OWNER')
 if [ "$web_domains" -ne '0' ] && [ "$sys_user" != "$ip_owner" ]; then
 	check_result "$E_INUSE" "IP $ip is used"
 fi
-if [ "$ip_owner" != "admin" ] && [ "$ip_status" = "shared" ]; then
-	$BIN/v-change-sys-ip-owner "$ip" "admin"
+if [ "$ip_owner" != "$ROOT_USER" ] && [ "$ip_status" = "shared" ]; then
+	$BIN/v-change-sys-ip-owner "$ip" "$ROOT_USER"
 fi
 
 # Perform verification if read-only mode is enabled

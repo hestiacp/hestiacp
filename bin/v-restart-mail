@@ -21,7 +21,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 send_email_report() {
 	local mail_service="$1"
 	journalctl --no-pager --reverse --since=-1m --unit "$mail_service" >> "$tmpfile" 2>&1
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf")
 	email=$(echo "$email" | cut -f 2 -d "'")
 	subj="$(hostname): $mail_service restart failed"
 	cat "$tmpfile" | $SENDMAIL -s "$subj" $email

@@ -40,7 +40,7 @@ fi
 
 # Set correct path for log file (system or user)
 if [ "$user" = "system" ]; then
-	log_file="$HESTIA/data/users/admin/system.log"
+	log_file="$HESTIA/log/activity.log"
 else
 	log_file="$HESTIA/data/users/$user/history.log"
 fi

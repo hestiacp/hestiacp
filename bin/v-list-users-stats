@@ -23,7 +23,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 json_list() {
 	IFS=$'\n'
 	i=1
-	objects=$(grep DATE $HESTIA/data/users/admin/overall_stats.log | wc -l)
+	objects=$(grep DATE "$HESTIA/data/users/$ROOT_USER/overall_stats.log" | wc -l)
 	echo "{"
 	while read str; do
 		parse_object_kv_list "$str"
@@ -58,7 +58,7 @@ json_list() {
 			echo
 		fi
 		((i++))
-	done < <(cat $HESTIA/data/users/admin/overall_stats.log)
+	done < <(cat "$HESTIA/data/users/$ROOT_USER/overall_stats.log")
 	echo '}'
 }
 
@@ -75,7 +75,7 @@ shell_list() {
 		echo -n "$DATE $U_USERS $U_WEB_DOMAINS $U_DNS_DOMAINS "
 		echo -n "$U_MAIL_DOMAINS $U_DATABASES $U_BACKUPS $IP_OWNED "
 		echo "$U_DISK $U_BANDWIDTH"
-	done < <(cat $HESTIA/data/users/admin/overall_stats.log)
+	done < <(cat "$HESTIA/data/users/$ROOT_USER/overall_stats.log")
 }
 
 # PLAIN list function
@@ -89,7 +89,7 @@ plain_list() {
 		echo -ne "$U_WEB_ALIASES\t$U_DNS_DOMAINS\t$U_DNS_RECORDS\t"
 		echo -ne "$U_MAIL_DOMAINS\t$U_MAIL_DKIM\t$U_MAIL_ACCOUNTS\t"
 		echo -e "$U_DATABASES\t$U_CRON_JOBS\t$U_BACKUPS\t$U_USERS"
-	done < <(cat $HESTIA/data/users/admin/overall_stats.log)
+	done < <(cat "$HESTIA/data/users/$ROOT_USER/overall_stats.log")
 }
 
 # CSV list function
@@ -110,7 +110,7 @@ csv_list() {
 		echo -n "$U_WEB_ALIASES,$U_DNS_DOMAINS,$U_DNS_RECORDS,"
 		echo -n "$U_MAIL_DOMAINS,$U_MAIL_DKIM,$U_MAIL_ACCOUNTS,"
 		echo "$U_DATABASES,$U_CRON_JOBS,$U_BACKUPS,$U_USERS"
-	done < <(cat $HESTIA/data/users/admin/overall_stats.log)
+	done < <(cat "$HESTIA/data/users/$ROOT_USER/overall_stats.log")
 }
 
 #----------------------------------------------------------#

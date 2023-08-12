@@ -56,8 +56,8 @@ heal_iptables_links
 
 # Checking known chains
 case $chain in
-	SSH) # Get ssh port by reading ssh config file.
-		sshport=$(grep '^Port ' /etc/ssh/sshd_config | head -1 | cut -d ' ' -f 2)
+        SSH) # Get ssh port using v-list-sys-sshd-port.
+                sshport="$($BIN/v-list-sys-sshd-port plain)"
 		if [ -z "$sshport" ]; then
 			sshport=22
 		fi

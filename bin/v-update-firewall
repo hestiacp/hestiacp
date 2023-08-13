@@ -60,9 +60,9 @@ if [ $? -ne 0 ]; then
 	conntrack_ftp='no'
 fi
 
-# Checking custom OpenSSH port
-sshport="$($BIN/v-list-sys-sshd-port plain)"
-if [[ "$sshport" =~ ^[0-9]+$ ]] && [ "$sshport" -ne "22" ]; then
+# Checking custom OpenSSH port (or ports)
+sshport="$($BIN/v-list-sys-sshd-port plain | sed ':a;N;$!ba;s/\n/,/g')"
+if echo "$sshport" | grep -E '^[0-9]+(,[0-9]+)*$' &>/dev/null && [[ "$sshport" -ne "22" ]]; then
 	sed -i "s/PORT='22'/PORT=\'$sshport\'/" $rules
 fi
 

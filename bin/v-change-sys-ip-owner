@@ -49,37 +49,37 @@ ip_owner=$(get_ip_value '$OWNER')
 if [ "$ip_owner" != "$user" ]; then
 	update_ip_value '$OWNER' "$user"
 	decrease_user_value "$ip_owner" '$IP_OWNED'
-	if [ "$ip_owner" = 'admin' ]; then
+	if [ "$ip_owner" = "$ROOT_USER" ]; then
 		if [ "$ip_status" = 'shared' ]; then
 			for hestia_user in $($BIN/v-list-sys-users plain); do
 				decrease_user_value "$hestia_user" '$IP_AVAIL'
 			done
 		else
-			decrease_user_value 'admin' '$IP_AVAIL'
+			decrease_user_value "$ROOT_USER" '$IP_AVAIL'
 		fi
 	else
 		decrease_user_value "$ip_owner" '$IP_AVAIL'
-		decrease_user_value 'admin' '$IP_AVAIL'
+		decrease_user_value "$ROOT_USER" '$IP_AVAIL'
 	fi
 
 	increase_user_value "$user" '$IP_OWNED'
-	if [ "$user" = 'admin' ]; then
+	if [ "$user" = "$ROOT_USER" ]; then
 		if [ "$ip_status" = 'shared' ]; then
 			for hestia_user in $($BIN/v-list-sys-users plain); do
 				increase_user_value "$hestia_user" '$IP_AVAIL'
 			done
 		else
-			increase_user_value 'admin' '$IP_AVAIL'
+			increase_user_value "$ROOT_USER" '$IP_AVAIL'
 		fi
 	else
 		increase_user_value "$user" '$IP_AVAIL'
-		increase_user_value 'admin' '$IP_AVAIL'
+		increase_user_value "$ROOT_USER" '$IP_AVAIL'
 	fi
 fi
 
 # Set status to dedicated if owner is not admin
 ip_status="$(get_ip_value '$STATUS')"
-if [ "$user" != 'admin' ] && [ "$ip_status" = 'shared' ]; then
+if [ "$user" != "$ROOT_USER" ] && [ "$ip_status" = 'shared' ]; then
 	$BIN/v-change-sys-ip-status "$ip" 'dedicated'
 fi
 

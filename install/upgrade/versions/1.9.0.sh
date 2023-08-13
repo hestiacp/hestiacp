@@ -37,3 +37,37 @@ if [ ! -f $apt/nodesource.list ] && [ ! -z $(which "node") ]; then
 	echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
 fi
+
+# Check if hestiaweb exists
+if [ -z "$(grep ^hestiaweb: /etc/passwd)" ]; then
+	# Generate a random password
+	random_password=$(generate_password '32')
+	# Create the new hestiaweb user
+	/usr/sbin/useradd "hestiaweb" -c "$email" --no-create-home
+	# do not allow login into hestiaweb user
+	echo hestiaweb:$random_password | sudo chpasswd -e
+	cp $HESTIA_COMMON_DIR/sudo/hestiaweb /etc/sudoers.d/
+	# Keep enabled for now
+	# Remove sudo permissions admin user
+	#rm /etc/sudoers.d/admin/
+fi
+
+# Check if cronjobs have been migrated
+if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
+	echo "MAILTO=\"\"" > /var/spool/cron/crontabs/hestiaweb
+	echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
+	while read line; do
+		parse_object_kv_list "$line"
+		if [ -n "$(echo "$CMD" | grep ^sudo)" ]; then
+			echo "$MIN $HOUR $DAY $MONTH $WDAY $CMD" \
+				| sed -e "s/%quote%/'/g" -e "s/%dots%/:/g" \
+					>> /var/spool/cron/crontabs/hestiaweb
+			$BIN/v-delete-cron-job admin "$JOB"
+		fi
+	done < $HESTIA/data/users/admin/cron.conf
+fi
+
+chown hestiaweb:hestiaweb /usr/local/hestia/data/sessions
+
+$BIN/v-add-user-notification 'admin' 'Hestia securirty has been upgraded' 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'
+add_upgrade_message 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'

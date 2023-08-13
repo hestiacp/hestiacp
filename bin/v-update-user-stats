@@ -133,7 +133,7 @@ done
 
 if [ "$update_overall_stats" = 'yes' ]; then
 	# Updating overall stats
-	stats="$HESTIA/data/users/admin/overall_stats.log"
+	stats="$HESTIA/data/users/$ROOT_USER/overall_stats.log"
 
 	s="DATE='$DATE' TIME='$TIME' PACKAGE='default' IP_OWNED='$TOTAL_IP_OWNED'"
 	s="$s DISK_QUOTA='0' U_DISK='$TOTAL_U_DISK' U_DISK_DIRS='$TOTAL_U_DISK_DIRS'"

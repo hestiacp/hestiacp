@@ -2,6 +2,59 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.5] - Service release
+
+### Bugfixes
+
+- Fixed an error that could occur when adding a new package (#3883)
+- Fixed an issue in `v-list-sys-interfaces` (#3912)
+- Minor refactoring of user interface code (#3893)
+- Improved shell output of `v-list-web-domain` (#3888, thanks #hudokkow)
+- Fixed a bug in `v-delete-sys-ip` on Ubuntu systems (#3894)
+- Add user role details to `v-list-users` (#3898)
+- Rename "Comment" to "Chain" in Firewall UI to better reflect the fields purpose (#3901)
+- Updated translations (#3907)
+
+## [1.8.4] - Service release
+
+### Bugfixes
+
+- Fixed an issue where logs entries would be duplicated when calling return_hash (#3869)
+- Modified installer behavior so that firewall rules are only added for necessary services (#3871)
+- Minor adjustments to styling and classes (#3843)
+- Improved robustness of v-list-sys-themes (#3842)
+- Minor updates to v-update-mail-domain-ssl (#3850)
+- Changed default PHP-FPM version to 8.2 (#3861)
+- Minor updates to v-generate-password-hash (#3874)
+- Fixed an issue that would occur during installation if Cloudflare IP address range could not be updated (#3876)
+- Fixed multiple PHP warnings and 500 error when mail was not installed (#3841, #3877)
+
+### Dependencies
+
+- Removed typescript from the project for simplicity (#3821)
+- Removed PostCSS and move to Lightning CSS (#3820)
+- Updated translations (#3878)
+- Updated dependency eslint to v8.46.0 (#3881)
+- Updated dependency esbuild to v0.18.16 (#3826)
+- Updated dependency stylelint to v15.10.2 (#3829)
+- Updated dependency chart.js to v4.3.2 (#3866)
+- Updated dependency hestiacp/phpquoteshellarg to v1.0.1 (#3827)
+- Pinned dependency @fortawesome/fontawesome-free to 6.4.0 (#3862)
+- Updated renovate config (#3840)
+- Updated all non-major dependencies (#3880)
+
+## [1.8.3] - Service release
+
+- [UI] Fixed an issue where the wrong user type icon was displayed the top menu bar (#3810)
+- [UI] Fixed back button links on SSH, API, Logs, and White Label pages (#3811)
+- [UI] Fixed "No IPset lists defined" even when lists are defined (#3812)
+- [UI] Removed animation effect from login screen (#3822)
+- [UI] Fixed an issue where search results were not being returned for all users when logged in as `admin` (#3833)
+- [UI] Removed animations from all page loads to improve performance (#3836)
+- [UI] Moved debug mode enablement switch to a more logical place (#3838)
+- [DNS] Ensure domain is formatted properly with DNSSEC (#3814)
+- [API] Added update-dns-record permission to the API (#3819)
+
 ## [1.8.2] - Service release
 
 - Added more files to default proxy extensions (#3768)

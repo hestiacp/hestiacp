@@ -113,7 +113,7 @@ fi
 
 # Parsing history log
 if [ "$user" = "system" ]; then
-	log_file="$HESTIA/data/users/admin/system.log"
+	log_file="$HESTIA/log/activity.log"
 else
 	log_file="$USER_DATA/history.log"
 fi

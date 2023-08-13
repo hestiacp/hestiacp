@@ -36,7 +36,7 @@ cp -R %{_builddir}/hestiacp/* %{buildroot}/usr/local/hestia/
 
 %pre
 # Run triggers only on updates
-if [ -e "/usr/local/hestia/data/users/admin" ]; then
+if [ -e "/usr/local/hestia/data/users/" ]; then
     # Validate version number and replace if different
     HESTIA_V=$(rpm --queryformat="%{VERSION}" -q hestia)
     if [ ! "$HESTIA_V" = "%{version}" ]; then
@@ -56,7 +56,7 @@ if [ ! -e /etc/profile.d/hestia.sh ]; then
     source /etc/profile.d/hestia.sh
 fi
 
-if [ -e "/usr/local/hestia/data/users/admin" ]; then
+if [ -e "/usr/local/hestia/data/users/" ]; then
     ###############################################################
     #                Initialize functions/variables               #
     ###############################################################

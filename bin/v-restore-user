@@ -102,7 +102,7 @@ if [ -z "$check_user" ]; then
 	email=$(get_user_value '$CONTACT')
 else
 	create_user="yes"
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f2 -d \')
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f2 -d \')
 fi
 
 # Checking available disk space
@@ -821,7 +821,7 @@ if [ "$cron" != 'no' ] && [ -n "$CRON_SYSTEM" ]; then
 	fi
 
 	# Replace paths from vesta to hestia
-	if [ "$backup_system" == 'vesta' ] && [ "$user" == 'admin' ]; then
+	if [ "$backup_system" == 'vesta' ] && [ "$user" == "$ROOT_USER" ]; then
 		sed -i 's/vesta/hestia/g' $tmpdir/cron/cron.conf
 	fi
 
@@ -929,8 +929,8 @@ sed -i "/v-restore-user $user /d" $HESTIA/data/queue/backup.pipe
 #----------------------------------------------------------#
 
 # Update user counters
-$BIN/v-update-user-counters $user
-$BIN/v-update-user-counters admin
+$BIN/v-update-user-counters "$user"
+$BIN/v-update-user-counters "$ROOT_USER"
 $BIN/v-update-sys-ip-counters
 
 # Logging

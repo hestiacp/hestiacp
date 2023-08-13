@@ -99,8 +99,11 @@ send_ssh_cmd() {
 }
 
 send_scp_file() {
+	if [ -z "$IDENTITY_FILE" ] && [ "$USER" = 'root' ]; then
+		IDENTITY_FILE="/root/.ssh/id_rsa"
+	fi
 	if [ -z "$IDENTITY_FILE" ]; then
-		IDENTITY_FILE="/home/admin/.ssh/id_rsa"
+		IDENTITY_FILE="/home/$USER/.ssh/id_rsa"
 	fi
 	scp -P $PORT -i $IDENTITY_FILE $1 $USER@$HOST:$2 > /dev/null 2>&1
 	if [ "$?" -ne '0' ]; then
@@ -159,7 +162,7 @@ remote_dns_health_check() {
 				cat $tmpfile
 			else
 				subj="DNS sync failed"
-				email=$($BIN/v-get-user-value admin CONTACT)
+				email=$($BIN/v-get-user-value "$ROOT_USER" CONTACT)
 				cat $tmpfile | $SENDMAIL -s "$subj" $email
 			fi
 

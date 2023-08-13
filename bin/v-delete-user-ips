@@ -52,10 +52,10 @@ for ip in $ip_list; do
 	is_ip_key_empty '$U_SYS_USERS'
 
 	# Assig ip to main account
-	update_ip_value '$OWNER' 'admin'
+	update_ip_value '$OWNER' "$ROOT_USER"
 	update_ip_value '$STATUS' 'dedicated'
-	increase_user_value 'admin' '$IP_OWNED'
-	increase_user_value 'admin' '$IP_AVAIL'
+	increase_user_value "$ROOT_USER" '$IP_OWNED'
+	increase_user_value "$ROOT_USER" '$IP_AVAIL'
 	$BIN/v-log-action "system" "Info" "System" "Removed IP address from user (IP: $ip, User: $user)."
 done
 

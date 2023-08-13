@@ -24,11 +24,13 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 
 // Prevent other users with admin privileges from editing properties of default 'admin' user
 if (
-	($_SESSION["userContext"] === "admin" && $_SESSION["look"] != "" && $user == "admin") ||
+	($_SESSION["userContext"] === "admin" &&
+		$_SESSION["look"] != "" &&
+		$user == $_SESSION["ROOT_USER"]) ||
 	($_SESSION["userContext"] === "admin" &&
 		!isset($_SESSION["look"]) &&
 		$user == "admin" &&
-		$_SESSION["user"] != "admin")
+		$_SESSION["user"] != $_SESSION["ROOT_USER"])
 ) {
 	header("Location: /list/user/");
 	exit();

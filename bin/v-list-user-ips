@@ -136,7 +136,7 @@ is_object_valid 'user' 'USER' "$user"
 #----------------------------------------------------------#
 
 # Defining fileds to select
-owner='admin'
+owner="$ROOT_USER"
 owner_ips="$(grep -A 1 -H "OWNER='$owner'" $HESTIA/data/ips/* | grep "STATUS='shared'" | sed 's/.*\/\([^\/*]\)/\1/;s/-STATUS.*//')"
 user_ips="$(grep -l "OWNER='$user'" $HESTIA/data/ips/* | sed 's/.*\/\([^\/*]\)/\1/')"
 ips="$(echo -e "$user_ips\n$owner_ips" | sort -u | sed "/^$/d")"

@@ -33,7 +33,7 @@ if [ -z "$iface" ]; then
 fi
 
 iface="${3-$iface}"
-user="${4-admin}"
+user="$4"
 ip_status="${5-shared}"
 ip_name="$6"
 nat_ip="$7"
@@ -51,6 +51,10 @@ source "$HESTIA/func/domain.sh"
 source "$HESTIA/func/syshealth.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+if [ -z "$4" ]; then
+	user="$ROOT_USER"
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #
@@ -130,7 +134,7 @@ fi
 if [ -n "$nat_ip" -a $ip_format -eq 4 ]; then
 	is_format_valid 'nat_ip'
 fi
-if [ "$user" != "admin" ]; then
+if [ "$user" != "$ROOT_USER" ]; then
 	ip_status="dedicated"
 fi
 
@@ -279,24 +283,25 @@ fi
 
 # Adapt Port Listing in HESTIA NGINX Backend
 syshealth_adapt_hestia_nginx_listen_ports
-
+# Also update resolver
+syshealth_adapt_nginx_resolver
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Updating user counters
 increase_user_value "$user" '$IP'$add_cap_string_ipv6'_OWNED'
-if [ "$user" = 'admin' ]; then
+if [ "$user" = $ROOT_USER ]; then
 	if [ "$ip_status" = 'shared' ]; then
 		for hestia_user in $("$BIN/v-list-sys-users" plain); do
 			increase_user_value "$hestia_user" '$IP'$add_cap_string_ipv6'_AVAIL'
 		done
 	else
-		increase_user_value 'admin' '$IP'$add_cap_string_ipv6'_AVAIL'
+		increase_user_value $ROOT_USER '$IP'$add_cap_string_ipv6'_AVAIL'
 	fi
 else
 	increase_user_value "$user" '$IP'$add_cap_string_ipv6'_AVAIL'
-	increase_user_value 'admin' '$IP'$add_cap_string_ipv6'_AVAIL'
+	increase_user_value $ROOT_USER '$IP'$add_cap_string_ipv6'_AVAIL'
 fi
 
 # Restarting web server

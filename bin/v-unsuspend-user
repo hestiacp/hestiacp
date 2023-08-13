@@ -29,7 +29,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
-if [ "$user" = 'admin' ]; then
+if [ "$user" = "$ROOT_USER" ]; then
 	exit
 fi
 
@@ -53,7 +53,7 @@ fi
 
 # Changing suspend value
 update_user_value "$user" '$SUSPENDED' 'no'
-decrease_user_value 'admin' '$SUSPENDED_USERS'
+decrease_user_value "$ROOT_USER" '$SUSPENDED_USERS'
 
 # Unsuspending web domains
 if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'no' ]; then

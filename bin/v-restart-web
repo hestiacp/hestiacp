@@ -21,7 +21,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 date=$(date +"%Y-%m-%d %H:%M:%S")
 
 send_email_report() {
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf")
 	email=$(echo "$email" | cut -f 2 -d "'")
 	tmpfile=$(mktemp)
 	subj="$(hostname): $WEB_SYSTEM restart failed"

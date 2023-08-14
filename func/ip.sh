@@ -329,7 +329,7 @@ get_ipv6_iface() {
 get_user_ip6s() {
 	dedicated=$(grep -H -A10 "OWNER='$user'" $HESTIA/data/ips/* | grep "VERSION='6'")
 	dedicated=$(echo "$dedicated" | cut -f 1 -d '-' | sed 's=.*/==')
-	shared=$(grep -H -A10 "OWNER='admin'" $HESTIA/data/ips/* | grep -A10 shared | grep "VERSION='6'")
+	shared=$(grep -H -A10 "OWNER='$ROOT_USER'" $HESTIA/data/ips/* | grep -A10 shared | grep "VERSION='6'")
 	shared=$(echo "$shared" | cut -f 1 -d '-' | sed 's=.*/==' | cut -f 1 -d \-)
 	for dedicated_ip in $dedicated; do
 		shared=$(echo "$shared" | grep -v $dedicated_ip)

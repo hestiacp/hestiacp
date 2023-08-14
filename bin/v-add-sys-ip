@@ -38,10 +38,6 @@ ip_status="${5-shared}"
 ip_name="$6"
 nat_ip="$7"
 
-if [ -z "$4" ]; then
-	user="$ROOT_USER"
-fi
-
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -55,6 +51,10 @@ source "$HESTIA/func/domain.sh"
 source "$HESTIA/func/syshealth.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+if [ -z "$4" ]; then
+	user="$ROOT_USER"
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #

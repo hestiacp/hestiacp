@@ -78,11 +78,10 @@ help() {
   -6, --ipv6              Enable IPv6 Support   [yes|no]  default: no
   -s, --hostname          Set hostname
   -e, --email             Set admin email
-	-u, --username          Set admin user
+  -u, --username          Set admin user
   -p, --password          Set admin password
   -D, --with-debs         Path to Hestia debs
   -f, --force             Force installation
-  -O, --override          Override checks (dangerous!)
   -h, --help              Print this help
 
   Example: bash $0 -e demo@hestiacp.com -p p4ssw0rd --multiphp yes"
@@ -250,7 +249,6 @@ for arg; do
 		--username) args="${args}-u " ;;
 		--password) args="${args}-p " ;;
 		--force) args="${args}-f " ;;
-		--override) args="${args}-O " ;;
 		--with-debs) args="${args}-D " ;;
 		--help) args="${args}-h " ;;
 		*)
@@ -262,7 +260,7 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:u:e:p:W:D:fOh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:u:e:p:W:D:fh" Option; do
 	case $Option in
 		a) apache=$OPTARG ;;       # Apache
 		w) phpfpm=$OPTARG ;;       # PHP-FPM
@@ -293,7 +291,6 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:u:e:p:W:D:fOh" Opti
 		p) vpass=$OPTARG ;;        # Admin password
 		D) withdebs=$OPTARG ;;     # Hestia debs path
 		f) force='yes' ;;          # Force install
-		O) override='yes' ;;       # Override checks
 		h) help ;;                 # Help
 		*) help ;;                 # Print help (default)
 	esac
@@ -360,7 +357,7 @@ if [ "x$(id -u)" != 'x0' ]; then
 	check_result 1 "Script can be run executed only by root"
 fi
 
-if [ -d "/usr/local/hestia" -a -z "$override" ]; then
+if [ -d "/usr/local/hestia" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
 fi
 

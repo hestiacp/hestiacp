@@ -194,7 +194,7 @@ fi
 
 if [ "$OWNER" = "$ROOT_USER" ]; then
 	if [ "$STATUS" = 'shared' ]; then
-		for hestia_user in $("$BIN/v-list-sys-users" plain); do
+		for hestia_user in $("$BIN/v-list-users" list); do
 			decrease_user_value "$hestia_user" '$IP'$add_cap_string_ipv6'_AVAIL'
 		done
 	else

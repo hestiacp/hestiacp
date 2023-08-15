@@ -293,7 +293,7 @@ syshealth_adapt_nginx_resolver
 increase_user_value "$user" '$IP'$add_cap_string_ipv6'_OWNED'
 if [ "$user" = $ROOT_USER ]; then
 	if [ "$ip_status" = 'shared' ]; then
-		for hestia_user in $("$BIN/v-list-sys-users" plain); do
+		for hestia_user in $("$BIN/v-list-users" list); do
 			increase_user_value "$hestia_user" '$IP'$add_cap_string_ipv6'_AVAIL'
 		done
 	else

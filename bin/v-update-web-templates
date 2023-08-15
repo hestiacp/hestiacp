@@ -64,7 +64,7 @@ fi
 
 # Rebuilding web domains
 if [ -z "$skip" ]; then
-	for user in $($BIN/v-list-sys-users plain); do
+	for user in $("$BIN/v-list-users" list); do
 		$BIN/v-rebuild-web-domains "$user" "no"
 	done
 fi

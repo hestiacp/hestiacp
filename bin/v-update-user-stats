@@ -43,7 +43,7 @@ fi
 
 # Creating user_list
 if [ -z "$user" ]; then
-	user_list=$($BIN/v-list-sys-users plain)
+	user_list=$("$BIN/v-list-users" list)
 	update_overall_stats='yes'
 else
 	user_list="$user"

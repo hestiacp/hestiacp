@@ -52,7 +52,7 @@ is_format_valid 'action' 'protocol' 'port_ext'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 get_next_fw_rule
 is_format_valid 'rule'
-is_object_new '../../data/firewall/rules' 'RULE' "$rule"
+is_object_new '../../../data/firewall/rules' 'RULE' "$rule"
 if [ -n "$comment" ]; then
 	is_format_valid 'comment'
 fi

@@ -102,7 +102,7 @@ else
 fi
 
 UPDATED='yes'
-if [ -n "$hesta_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
+if [ -n "$hestia_v" ] && [ "$hestia_v" \> "$VERSION" ]; then
 	UPDATED='no'
 fi
 

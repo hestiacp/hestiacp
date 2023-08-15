@@ -38,7 +38,7 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 check_hestia_demo_mode
 
 # Define variables for ipset configuration
-ipset_hstobject='../../data/firewall/ipset'
+ipset_hstobject='../../../data/firewall/ipset'
 IPSET_BIN="$(command -v ipset)"
 IPSET_PATH="$HESTIA/data/firewall/ipset"
 

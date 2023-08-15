@@ -43,7 +43,7 @@ check_hestia_demo_mode
 
 # Updating notification
 if [ "$id" = 'all' ]; then
-	for id in $(v-list-user-notifications admin plain | cut -f1); do
+	for id in $(v-list-user-notifications "$user" plain | cut -f1); do
 		update_object_value 'notifications' 'NID' "$id" '$ACK' 'yes' 2> /dev/null
 	done
 else

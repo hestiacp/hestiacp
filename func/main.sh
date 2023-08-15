@@ -6,6 +6,30 @@
 #                                                                           #
 #===========================================================================#
 
+# Source conf function for correct variable initialisation
+source_conf() {
+	while IFS='= ' read -r lhs rhs; do
+		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+			rhs="${rhs%%^\#*}" # Del in line right comments
+			rhs="${rhs%%*( )}" # Del trailing spaces
+			rhs="${rhs%\'*}"   # Del opening string quotes
+			rhs="${rhs#\'*}"   # Del closing string quotes
+			declare -g $lhs="$rhs"
+		fi
+	done < $1
+}
+
+if [ -z "$user" ]; then
+	if [ -z "$ROOT_USER" ]; then
+		if [ -z "$HESTIA" ]; then
+			# shellcheck source=/etc/hestiacp/hestia.conf
+			source /etc/hestiacp/hestia.conf
+		fi
+		source_conf "$HESTIA/conf/hestia.conf" # load config file
+	fi
+	user="$ROOT_USER"
+fi
+
 # Internal variables
 HOMEDIR='/home'
 BACKUP='/backup'
@@ -1568,18 +1592,6 @@ no_symlink_chmod() {
 
 		chmod "${filemode}" "${i}"
 	done
-}
-
-source_conf() {
-	while IFS='= ' read -r lhs rhs; do
-		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
-			rhs="${rhs%%^\#*}" # Del in line right comments
-			rhs="${rhs%%*( )}" # Del trailing spaces
-			rhs="${rhs%\'*}"   # Del opening string quotes
-			rhs="${rhs#\'*}"   # Del closing string quotes
-			declare -g $lhs="$rhs"
-		fi
-	done < $1
 }
 
 format_no_quotes() {

@@ -14,7 +14,7 @@
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -165,14 +165,25 @@ csv_list() {
 	done < <(grep '@' /etc/passwd | cut -f1 -d:)
 }
 
+# USER ONLY list function
+only_user_list() {
+	while read USER; do
+		if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
+			continue
+		fi
+		source_conf "$HESTIA/data/users/$USER/user.conf"
+		echo "$USER"
+	done < <(grep '@' /etc/passwd | cut -f1 -d:)
+}
+
 # Raw list function
 raw_list() {
 	while read USER; do
 		if [ ! -f "$HESTIA/data/users/$USER/user.conf" ]; then
 			continue
 		fi
-		echo $HESTIA/data/users/$USER/user.conf
-		cat $HESTIA/data/users/$USER/user.conf
+		echo "$HESTIA/data/users/$USER/user.conf"
+		cat "$HESTIA/data/users/$USER/user.conf"
 	done < <(grep '@' /etc/passwd | cut -f1 -d:)
 }
 
@@ -186,6 +197,7 @@ case $format in
 	plain) plain_list ;;
 	csv) csv_list ;;
 	shell) shell_list | column -t ;;
+	list) only_user_list ;;
 esac
 
 #----------------------------------------------------------#

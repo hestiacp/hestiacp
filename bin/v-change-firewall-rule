@@ -46,7 +46,7 @@ if [ ! -z "$comment" ]; then
 	is_format_valid 'comment'
 fi
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
-is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
+is_object_valid '../../../data/firewall/rules' 'RULE' "$rule"
 
 if [[ "$ip" =~ ^ipset: ]]; then
 	ipset_name="${ip#ipset:}"

@@ -90,8 +90,8 @@ else
 fi
 
 # Rebuilding user quota
-for user in $($BIN/v-list-sys-users plain); do
-	$BIN/v-update-user-quota "$user"
+for user in $("$BIN/v-list-users" list); do
+	"$BIN/v-update-user-quota" "$user"
 done
 
 #----------------------------------------------------------#

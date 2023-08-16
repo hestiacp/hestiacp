@@ -755,7 +755,7 @@ upgrade_rebuild_users() {
 		else
 			echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
 		fi
-		for user in $($BIN/v-list-sys-users plain); do
+		for user in $("$BIN/v-list-users" list); do
 			export restart="no"
 			if [ "$DEBUG_MODE" = "true" ]; then
 				echo "      - $user:"

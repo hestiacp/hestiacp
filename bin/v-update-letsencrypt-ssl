@@ -37,7 +37,7 @@ if [ "$LE_STAGING" = "yes" ]; then
 fi
 
 # Checking user certificates
-for user in $($BIN/v-list-sys-users plain); do
+for user in $("$BIN/v-list-users" list); do
 	USER_DATA=$HESTIA/data/users/$user
 
 	for domain in $(search_objects 'web' 'LETSENCRYPT' 'yes' 'DOMAIN'); do

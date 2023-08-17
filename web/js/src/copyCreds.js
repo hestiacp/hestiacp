@@ -21,7 +21,7 @@ function monitorAndUpdate(inputSelector, outputSelector) {
 
 	inputElement.addEventListener(
 		'input',
-		debounce((evt) => updateOutput(evt.target.value))
+		debounce((evt) => updateOutput(evt.target.value)),
 	);
 	updateOutput(inputElement.value);
 }

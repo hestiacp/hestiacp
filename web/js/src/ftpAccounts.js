@@ -25,7 +25,7 @@ function handlePasswordInputChange() {
 	document.querySelectorAll('.js-ftp-user-psw').forEach((ftpPasswordInput) => {
 		ftpPasswordInput.addEventListener(
 			'input',
-			debounce((evt) => insertEmailField(evt.target))
+			debounce((evt) => insertEmailField(evt.target)),
 		);
 	});
 }

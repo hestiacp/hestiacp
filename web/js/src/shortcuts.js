@@ -97,14 +97,14 @@ export default function handleShortcuts() {
 		 */
 		unregister(combination) {
 			const shortcut = this.registeredShortcuts.find(
-				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination)
+				(shortcut) => JSON.stringify(shortcut.combination) == JSON.stringify(combination),
 			);
 			if (!shortcut) {
 				return;
 			}
 
 			this.registeredShortcuts = this.registeredShortcuts.filter(
-				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination)
+				(shortcut) => JSON.stringify(shortcut.combination) != JSON.stringify(combination),
 			);
 			shortcut.target.removeEventListener(shortcut.event, shortcut.callback, false);
 
@@ -123,7 +123,7 @@ export default function handleShortcuts() {
 
 				location.href = createButton.href;
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'A', ctrlKey: true, shiftKey: true },
@@ -134,7 +134,7 @@ export default function handleShortcuts() {
 					.forEach((el) => el.classList.toggle('selected'), !checked);
 				document.querySelectorAll('.js-unit-checkbox').forEach((el) => (el.checked = !checked));
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register({ code: 'Enter', ctrlKey: true }, (_evt) => {
 			document.querySelector('#main-form').submit();
@@ -162,7 +162,7 @@ export default function handleShortcuts() {
 					searchBox.focus();
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit1' },
@@ -181,7 +181,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit2' },
@@ -200,7 +200,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit3' },
@@ -219,7 +219,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit4' },
@@ -238,7 +238,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit5' },
@@ -257,7 +257,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit6' },
@@ -276,7 +276,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Digit7' },
@@ -295,7 +295,7 @@ export default function handleShortcuts() {
 					location.href = target.href;
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'H' },
@@ -307,7 +307,7 @@ export default function handleShortcuts() {
 					shortcutsDialog.showModal();
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register({ code: 'Escape' }, (_evt) => {
 			const openDialog = document.querySelector('dialog[open]');
@@ -321,28 +321,28 @@ export default function handleShortcuts() {
 			(_evt) => {
 				moveFocusLeft();
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'ArrowRight' },
 			(_evt) => {
 				moveFocusRight();
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'ArrowDown' },
 			(_evt) => {
 				moveFocusDown();
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'ArrowUp' },
 			(_evt) => {
 				moveFocusUp();
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'L' },
@@ -352,7 +352,7 @@ export default function handleShortcuts() {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'S' },
@@ -362,7 +362,7 @@ export default function handleShortcuts() {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'W' },
@@ -372,7 +372,7 @@ export default function handleShortcuts() {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'D' },
@@ -382,7 +382,7 @@ export default function handleShortcuts() {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'R' },
@@ -392,7 +392,7 @@ export default function handleShortcuts() {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'N' },
@@ -402,7 +402,7 @@ export default function handleShortcuts() {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ key: 'U' },
@@ -412,19 +412,19 @@ export default function handleShortcuts() {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Delete' },
 			(_evt) => {
 				const element = document.querySelector(
-					'.js-units-container .js-unit.focus .shortcut-delete'
+					'.js-units-container .js-unit.focus .shortcut-delete',
 				);
 				if (element) {
 					executeShortcut(element);
 				}
 			},
-			{ disabledInInput: true }
+			{ disabledInInput: true },
 		)
 		.register(
 			{ code: 'Enter' },
@@ -448,7 +448,7 @@ export default function handleShortcuts() {
 					dialog.querySelector('button[type="submit"]').click();
 				} else {
 					const element = document.querySelector(
-						'.js-units-container .js-unit.focus .shortcut-enter'
+						'.js-units-container .js-unit.focus .shortcut-enter',
 					);
 					if (element) {
 						executeShortcut(element);
@@ -457,6 +457,6 @@ export default function handleShortcuts() {
 					}
 				}
 			},
-			{ propagate: true }
+			{ propagate: true },
 		);
 }

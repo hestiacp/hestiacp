@@ -29,7 +29,7 @@
 		"xterm-addon-webgl": "0.15.0"
 	},
 	"devDependencies": {
-		"@prettier/plugin-php": "0.19.6",
+		"@prettier/plugin-php": "0.20.0",
 		"browserslist": "4.21.10",
 		"esbuild": "0.19.2",
 		"eslint": "8.47.0",
@@ -42,8 +42,8 @@
 		"markdownlint-cli2": "0.8.1",
 		"prettier": "2.8.8",
 		"prettier-plugin-nginx": "1.0.3",
-		"prettier-plugin-sh": "0.12.8",
-		"prettier-plugin-sql": "0.14.0",
+		"prettier-plugin-sh": "0.13.1",
+		"prettier-plugin-sql": "0.15.1",
 		"stylelint": "15.10.2",
 		"stylelint-config-standard": "34.0.0",
 		"vitepress": "1.0.0-rc.4",

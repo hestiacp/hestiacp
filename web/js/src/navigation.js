@@ -29,7 +29,7 @@ export function enterFocused() {
 	}
 
 	const activeUnit = document.querySelector(
-		'.js-unit.focus .units-table-row-actions .shortcut-enter a'
+		'.js-unit.focus .units-table-row-actions .shortcut-enter a',
 	);
 	if (activeUnit) {
 		location.href = activeUnit.getAttribute('href');

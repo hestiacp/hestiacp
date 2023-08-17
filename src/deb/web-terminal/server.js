@@ -7,10 +7,10 @@ import { WebSocketServer } from 'ws';
 
 const hostname = execSync('hostname', { silent: true }).toString().trim();
 const systemIPs = JSON.parse(
-	execSync(`${process.env.HESTIA}/bin/v-list-sys-ips json`, { silent: true }).toString()
+	execSync(`${process.env.HESTIA}/bin/v-list-sys-ips json`, { silent: true }).toString(),
 );
 const { config } = JSON.parse(
-	execSync(`${process.env.HESTIA}/bin/v-list-sys-config json`, { silent: true }).toString()
+	execSync(`${process.env.HESTIA}/bin/v-list-sys-config json`, { silent: true }).toString(),
 );
 
 const wss = new WebSocketServer({

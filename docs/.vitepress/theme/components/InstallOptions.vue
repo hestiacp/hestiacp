@@ -77,7 +77,7 @@ export default {
 				},
 				(err) => {
 					console.error("Could not copy to clipboard:", err);
-				}
+				},
 			);
 		},
 	},
@@ -256,7 +256,10 @@ export default {
 	border: 1px solid transparent;
 	display: inline-block;
 	font-weight: 600;
-	transition: color 0.25s, border-color 0.25s, background-color 0.25s;
+	transition:
+		color 0.25s,
+		border-color 0.25s,
+		background-color 0.25s;
 	border-radius: 20px;
 	font-size: 16px;
 	padding: 10px 20px;

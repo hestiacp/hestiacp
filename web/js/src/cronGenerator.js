@@ -17,7 +17,7 @@ export default function handleCronGenerator() {
 					() => {
 						formInput.classList.remove('highlighted');
 					},
-					{ once: true }
+					{ once: true },
 				);
 			});
 		});

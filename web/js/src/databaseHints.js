@@ -29,7 +29,7 @@ function attachUpdateHintListener(input) {
 
 	input.addEventListener(
 		'input',
-		debounce((evt) => updateHint(evt.target))
+		debounce((evt) => updateHint(evt.target)),
 	);
 }
 

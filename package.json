@@ -38,7 +38,7 @@
 		"eslint-plugin-import": "2.28.0",
 		"husky": "8.0.3",
 		"lightningcss": "1.21.5",
-		"lint-staged": "13.3.0",
+		"lint-staged": "14.0.0",
 		"markdownlint-cli2": "0.8.1",
 		"prettier": "2.8.8",
 		"prettier-plugin-nginx": "1.0.3",

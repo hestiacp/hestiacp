@@ -14,6 +14,9 @@ function random() {
 }
 
 function setup() {
+    if [ $BATS_TEST_NUMBER = 1 ]; then
+        echo 'ipv6="fd66:69b9:9537:6ce3:11:22:33:44"' >> /tmp/hestia-le-env.sh
+    fi
     source /tmp/hestia-le-env.sh
     source $HESTIA/func/main.sh
     source $HESTIA/conf/hestia.conf
@@ -22,7 +25,7 @@ function setup() {
 
 @test "[ IPV6 ] Add IPV6 address" {
 	# Add IPV6 Address to be removed when merged with main
-	run v-add-sys-ip $ipv6 "/64"
+	run v-add-sys-ip "$ipv6" "/64"
 	assert_success
 	refute_output
 }
@@ -143,7 +146,7 @@ function setup() {
 
 @test "[ IPV6 ] Delete IPV6 address" {
 	# Remove IPV6 Address to be removed when merged with main
-	run v-delete-sys-ip $ipv6
+	run v-delete-sys-ip "$ipv6"
 	assert_success
 	refute_output
 }

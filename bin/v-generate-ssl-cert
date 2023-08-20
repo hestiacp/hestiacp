@@ -67,7 +67,6 @@ if [[ "$email" = *[![:ascii:]]* ]]; then
 	email_domain_idn=$(idn2 --quiet $email_domain)
 	email="$local"@"$email_domain_idn"
 fi
-echo $email
 
 #----------------------------------------------------------#
 #                    Verifications                         #

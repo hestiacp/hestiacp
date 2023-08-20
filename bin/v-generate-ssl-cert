@@ -61,6 +61,12 @@ shell_list_ssl() {
 
 # Additional argument formatting
 format_domain_idn
+if [[ "$email" = *[![:ascii:]]* ]]; then
+	local=$(echo "$email" | cut -f1 -d'@')
+	email_domain=$(echo "$email" | cut -f2 -d'@')
+	email_domain_idn=$(idn2 --quiet $email_domain)
+	email="$local"@"$email_domain_idn"
+fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #

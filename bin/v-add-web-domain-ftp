@@ -80,9 +80,10 @@ else
 		log_event "$E_INVALID" "$ARGUMENTS"
 		exit "$E_INVALID"
 	fi
+
 	# Creating ftp user home directory
 	if [ ! -e "$ftp_path_a" ]; then
-		$BIN/v-add-fs-directory "$user" "$ftp_path_a"
+		mkdir "$ftp_path_a"
 		chown $user:$user "$ftp_path_a"
 		chmod 751 "$ftp_path_a"
 	fi

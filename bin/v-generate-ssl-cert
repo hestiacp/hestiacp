@@ -61,9 +61,6 @@ shell_list_ssl() {
 
 # Additional argument formatting
 format_domain_idn
-if [[ "$email" = *[![:ascii:]]* ]]; then
-	email=$(idn2 --quiet $email)
-fi
 
 #----------------------------------------------------------#
 #                    Verifications                         #

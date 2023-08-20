@@ -415,6 +415,8 @@ function check_ip_not_banned(){
 
     run stat -c '%U' /home/$user
     assert_output --partial "$user"
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+		assert_file_not_exist /etc/systemd/system/$mount_file
 }
 
 @test "User: Change user invalid shell" {
@@ -430,6 +432,8 @@ function check_ip_not_banned(){
 
     run stat -c '%U' /home/$user
     assert_output --partial 'root'
+		mount_file=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+		assert_file_exist /etc/systemd/system/$mount_file
 }
 
 

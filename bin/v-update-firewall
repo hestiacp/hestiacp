@@ -20,9 +20,9 @@ source /etc/profile.d/hestia.sh
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/firewall.sh
-source $HESTIA/func/firewall.sh
+source "$HESTIA/func/firewall.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -47,49 +47,56 @@ if [ ! -e "$rules" ]; then
 fi
 
 # Checking conntrack module avaiabilty
-$modprobe nf_conntrack > /dev/null 2>&1
+"$modprobe" nf_conntrack > /dev/null 2>&1
 if [ $? -ne 0 ]; then
-	$sysctl net.netfilter.nf_conntrack_max > /dev/null 2>&1
+	"$sysctl" net.netfilter.nf_conntrack_max > /dev/null 2>&1
 	if [ $? -ne 0 ]; then
 		conntrack='no'
 	fi
 fi
 
-$modprobe nf_conntrack_ftp > /dev/null 2>&1
+"$modprobe" nf_conntrack_ftp > /dev/null 2>&1
 if [ $? -ne 0 ]; then
 	conntrack_ftp='no'
 fi
 
+chains="$HESTIA/data/firewall/chains.conf"
+banlist="$HESTIA/data/firewall/banlist.conf"
+
 # Checking custom OpenSSH port (or ports)
 sshport="$($BIN/v-list-sys-sshd-port plain | sed ':a;N;$!ba;s/\n/,/g')"
-if echo "$sshport" | grep -E '^[0-9]+(,[0-9]+)*$' &>/dev/null; then
-        sed -i -E "s/(PORT=')[0-9]+(,[0-9]+)*('.*COMMENT='SSH')/\1$sshport\3/" $rules
-        sed -i "/CHAIN='SSH'/c\CHAIN='SSH' PORT='$sshport' PROTOCOL='TCP'" "$HESTIA/data/firewall/chains.conf"
+if echo "$sshport" | grep -E '^[0-9]+(,[0-9]+)*$' &> /dev/null; then
+	sed -i -E "s/(PORT=')[0-9]+(,[0-9]+)*('.*COMMENT='SSH')/\1$sshport\3/" "$rules"
+	if [ -f "$chains" ]; then
+		sed -i "/CHAIN='SSH'/c\CHAIN='SSH' PORT='$sshport' PROTOCOL='TCP'" "$chains"
+	else
+		"$BIN/v-add-firewall-chain" 'SSH' "$sshport" 'TCP'
+	fi
 fi
 
 # Load ipset lists before adding Hestia iptables rules
-$BIN/v-update-firewall-ipset load
+"$BIN/v-update-firewall-ipset" load
 
 # Creating temporary file
 tmp="$(mktemp)"
 
 # Flushing INPUT chain
-echo "$iptables -P INPUT ACCEPT" >> $tmp
-echo "$iptables -F INPUT" >> $tmp
+echo "$iptables -P INPUT ACCEPT" >> "$tmp"
+echo "$iptables -F INPUT" >> "$tmp"
 
 # Enabling stateful support
 if [ "$conntrack" != 'no' ] || grep --quiet container=lxc /proc/1/environ; then
 	str="$iptables -A INPUT -m state"
 	str="$str --state ESTABLISHED,RELATED -j ACCEPT"
-	echo "$str" >> $tmp
+	echo "$str" >> "$tmp"
 fi
 
 ips="$(ls $HESTIA/data/ips)"
 # Handling local traffic
 for ip in $ips; do
-	echo "$iptables -A INPUT -s $ip -j ACCEPT" >> $tmp
+	echo "$iptables -A INPUT -s $ip -j ACCEPT" >> "$tmp"
 done
-echo "$iptables -A INPUT -s 127.0.0.1 -j ACCEPT" >> $tmp
+echo "$iptables -A INPUT -s 127.0.0.1 -j ACCEPT" >> "$tmp"
 
 # Pasring iptables rules
 IFS=$'\n'
@@ -103,7 +110,7 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 
 		if [[ "$IP" =~ ^ipset: ]]; then
 			ipset_name="${IP#ipset:}"
-			$(v-list-firewall-ipset plain | grep "^$ipset_name\s" > /dev/null) || log_event $E_NOTEXIST "IPset IP list ($ipset_name) not found"
+			$("$BIN/v-list-firewall-ipset" plain | grep "^$ipset_name\s" > /dev/null) || log_event $E_NOTEXIST "IPset IP list ($ipset_name) not found"
 			ip="-m set --match-set '${ipset_name}' src"
 		else
 			ip="-s $IP"
@@ -130,51 +137,55 @@ for line in $(sort -r -n -k 2 -t \' $rules); do
 		fi
 
 		# Adding firewall rule
-		echo "$iptables -A INPUT $proto $port $ip $state $action" >> $tmp
+		echo "$iptables -A INPUT $proto $port $ip $state $action" >> "$tmp"
 	fi
 done
 
 # Switching chain policy to DROP
-echo "$iptables -P INPUT DROP" >> $tmp
+echo "$iptables -P INPUT DROP" >> "$tmp"
 
 # Adding hestia chain
-echo "$iptables -N hestia" >> $tmp
+echo "$iptables -N hestia" >> "$tmp"
 
 # Applying rules
-bash $tmp 2> /dev/null
+bash "$tmp" 2> /dev/null
 
 # Deleting temporary file
-rm -f $tmp
+rm -f "$tmp"
 
 # Checking custom trigger
 if [ -x "$HESTIA/data/firewall/custom.sh" ]; then
-	bash $HESTIA/data/firewall/custom.sh
+	bash "$HESTIA/data/firewall/custom.sh"
 fi
 
 # Checking fail2ban support
 if [ -n "$FIREWALL_EXTENSION" ]; then
-	for chain in $(cat $HESTIA/data/firewall/chains.conf 2> /dev/null); do
-		parse_object_kv_list "$chain"
-		if [[ "$PORT" =~ ,|-|: ]]; then
-			port="-m multiport --dports $PORT"
-		else
-			port="--dport $PORT"
-		fi
-		echo "$iptables -N fail2ban-$CHAIN" >> $tmp
-		echo "$iptables -F fail2ban-$CHAIN" >> $tmp
-		echo "$iptables -I fail2ban-$CHAIN -s 0.0.0.0/0 -j RETURN" >> $tmp
-		echo "$iptables -I INPUT -p $PROTOCOL $port -j fail2ban-$CHAIN" >> $tmp
-	done
-	bash $tmp 2> /dev/null
-	rm -f $tmp
+	if [ -f "$chains" ]; then
+		for chain in $(cat "$chains"); do
+			parse_object_kv_list "$chain"
+			if [[ "$PORT" =~ ,|-|: ]]; then
+				port="-m multiport --dports $PORT"
+			else
+				port="--dport $PORT"
+			fi
+			echo "$iptables -N fail2ban-$CHAIN" >> "$tmp"
+			echo "$iptables -F fail2ban-$CHAIN" >> "$tmp"
+			echo "$iptables -I fail2ban-$CHAIN -s 0.0.0.0/0 -j RETURN" >> "$tmp"
+			echo "$iptables -I INPUT -p $PROTOCOL $port -j fail2ban-$CHAIN" >> "$tmp"
+		done
+		bash "$tmp" 2> /dev/null
+		rm -f "$tmp"
+	fi
 
-	for ban in $(cat $HESTIA/data/firewall/banlist.conf 2> /dev/null); do
-		parse_object_kv_list "$ban"
-		echo -n "$iptables -I fail2ban-$CHAIN 1 -s $IP" >> $tmp
-		echo " -j REJECT --reject-with icmp-port-unreachable" >> $tmp
-	done
-	bash $tmp 2> /dev/null
-	rm -f $tmp
+	if [ -f "$banlist" ]; then
+		for ban in $(cat "$banlist"); do
+			parse_object_kv_list "$ban"
+			echo -n "$iptables -I fail2ban-$CHAIN 1 -s $IP" >> "$tmp"
+			echo " -j REJECT --reject-with icmp-port-unreachable" >> "$tmp"
+		done
+		bash "$tmp" 2> /dev/null
+		rm -f "$tmp"
+	fi
 fi
 
 # Clean up and saving rules to the master iptables file

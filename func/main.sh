@@ -1751,7 +1751,8 @@ add_chroot_jail() {
 		chmod 755 /srv/jail/$user/home
 	fi
 
-	cat > /etc/systemd/system/srv-jail-$user-home.mount << EOF
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+	cat > "/etc/systemd/system/$systemd" << EOF
 [Unit]
 Description=Mount $user's home directory to the jail chroot
 Before=local-fs.target
@@ -1768,16 +1769,17 @@ RequiredBy=local-fs.target
 EOF
 
 	systemctl daemon-reload > /dev/null 2>&1
-	systemctl enable srv-jail-$user-home.mount > /dev/null 2>&1
-	systemctl start srv-jail-$user-home.mount > /dev/null 2>&1
+	systemctl enable "$systemd" > /dev/null 2>&1
+	systemctl start "$systemd" > /dev/null 2>&1
 }
 
 delete_chroot_jail() {
 	local user=$1
 
-	systemctl stop srv-jail-$user-home.mount > /dev/null 2>&1
-	systemctl disable srv-jail-$user-home.mount > /dev/null 2>&1
-	rm -f /etc/systemd/system/srv-jail-$user-home.mount
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+	systemctl stop "$systemd" > /dev/null 2>&1
+	systemctl disable "$systemd" > /dev/null 2>&1
+	rm -f "/etc/systemd/system/$systemd"
 	systemctl daemon-reload > /dev/null 2>&1
 	rmdir /srv/jail/$user/home > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1

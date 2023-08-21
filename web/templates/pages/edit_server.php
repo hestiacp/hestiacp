@@ -512,7 +512,7 @@
 									class="form-control"
 									name="v_mysql_url"
 									id="v_mysql_url"
-									value="<?= $_SESSION["DB_PMA_ALIAS"] ?>"
+									value="<?= htmlentities($_SESSION["DB_PMA_ALIAS"]); ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -618,7 +618,7 @@
 								<label for="v_pgsql_url" class="form-label">
 									<?= _("phpPgAdmin Alias") ?>
 								</label>
-								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?= $_SESSION["DB_PGA_ALIAS"] ?>">
+								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?= htmlentities($_SESSION["DB_PGA_ALIAS"]) ?>">
 							</div>
 						<?php } ?>
 						<?php if ($v_pgsql == "yes") {
@@ -727,7 +727,7 @@
 							class="form-control"
 							name="v_backup_dir"
 							id="v_backup_dir"
-							value="<?= trim($v_backup_dir, "'") ?>"
+							value="<?= htmlentities(trim($v_backup_dir, "'")) ?>"
 							disabled
 						>
 					</div>
@@ -785,7 +785,7 @@
 									class="form-control"
 									name="v_backup_host"
 									id="v_backup_host"
-									value="<?= trim($v_backup_host, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_host, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb20">
@@ -797,7 +797,7 @@
 									class="form-control"
 									name="v_backup_port"
 									id="v_backup_port"
-									value="<?= trim($v_backup_port, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_port, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -809,7 +809,7 @@
 									class="form-control"
 									name="v_backup_username"
 									id="v_backup_username"
-									value="<?= trim($v_backup_username, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_username, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb20">
@@ -822,7 +822,7 @@
 										class="form-control js-password-input"
 										name="v_backup_password"
 										id="v_backup_password"
-										value="<?= trim($v_backup_password, "'") ?>"
+										value="<?= htmlentities(trim($v_backup_password, "'")) ?>"
 									>
 								</div>
 							</div>
@@ -835,7 +835,7 @@
 									class="form-control"
 									name="v_backup_bpath"
 									id="v_backup_bpath"
-									value="<?= trim($v_backup_bpath, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_bpath, "'")) ?>"
 								>
 							</div>
 						</div>
@@ -849,7 +849,7 @@
 									class="form-control"
 									name="v_backup_bucket"
 									id="v_backup_bucket"
-									value="<?= trim($v_backup_bucket, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_bucket, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -861,7 +861,7 @@
 									class="form-control"
 									name="v_backup_application_id"
 									id="v_backup_application_id"
-									value="<?= trim($v_backup_application_id, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_application_id, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -873,7 +873,7 @@
 									class="form-control"
 									name="v_backup_application_key"
 									id="v_backup_application_key"
-									value="<?= trim($v_backup_application_key, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_application_key, "'")) ?>"
 								>
 							</div>
 						</div>
@@ -887,7 +887,7 @@
 									class="form-control"
 									name="v_rclone_host"
 									id="v_rclone_host"
-									value="<?= trim($v_rclone_host, "'") ?>"
+									value="<?= htmlentities(trim($v_rclone_host, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -899,7 +899,7 @@
 									class="form-control"
 									name="v_rclone_path"
 									id="v_rclone_path"
-									value="<?= trim($v_rclone_path, "'") ?>"
+									value="<?= htmlentities(trim($v_rclone_path, "'")) ?>"
 								>
 							</div>
 						</div>

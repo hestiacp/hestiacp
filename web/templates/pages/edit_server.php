@@ -946,33 +946,33 @@
 					<ul class="values-list">
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("Issued To") ?></span>
-							<span class="values-list-value"><?= $v_ssl_subject ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_subject) ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Alternate") ?></span>
-								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
+								<span class="values-list-value"><?= htmlentities($v_ssl_aliases) ?></span>
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("Not Before") ?></span>
-							<span class="values-list-value"><?= $v_ssl_not_before ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_not_before) ?></span>
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("Not After") ?></span>
-							<span class="values-list-value"><?= $v_ssl_not_after ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_not_after) ?></span>
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("Signature") ?></span>
-							<span class="values-list-value"><?= $v_ssl_signature ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_signature) ?></span>
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("Key Size") ?></span>
-							<span class="values-list-value"><?= $v_ssl_pub_key ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_pub_key) ?></span>
 						</li>
 						<li class="values-list-item">
 							<span class="values-list-label"><?= _("Issued By") ?></span>
-							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_issuer) ?></span>
 						</li>
 					</ul>
 				</div>

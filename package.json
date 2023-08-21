@@ -29,7 +29,7 @@
 		"xterm-addon-webgl": "0.15.0"
 	},
 	"devDependencies": {
-		"@prettier/plugin-php": "0.20.0",
+		"@prettier/plugin-php": "0.20.1",
 		"browserslist": "4.21.10",
 		"esbuild": "0.19.2",
 		"eslint": "8.47.0",
@@ -40,7 +40,7 @@
 		"lightningcss": "1.21.5",
 		"lint-staged": "14.0.0",
 		"markdownlint-cli2": "0.8.1",
-		"prettier": "3.0.1",
+		"prettier": "3.0.2",
 		"prettier-plugin-nginx": "1.0.3",
 		"prettier-plugin-sh": "0.13.1",
 		"prettier-plugin-sql": "0.15.1",

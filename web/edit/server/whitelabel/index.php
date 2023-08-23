@@ -78,6 +78,12 @@ if (!empty($_POST)) {
 			$return_var,
 		);
 	}
+	if (!empty($_POST["v_update_logo"])) {
+		exec(HESTIA_CMD . "v-update-white-label-logo");
+	}
+	if (!empty($_POST["v_reset_whitelabel"])) {
+		exec(HESTIA_CMD . "v-update-white-label-logo yes " . quoteshellarg($_POST["v_reset_whitelabel"]));
+	}
 }
 
 // Check system configuration

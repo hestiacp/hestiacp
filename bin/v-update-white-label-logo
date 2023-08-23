@@ -7,6 +7,7 @@
 # Replace Hestia logos with User created logo's
 
 download=${1-no}
+reset=${2-no}
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
@@ -26,6 +27,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+if [ "$reset" = "yes" ]; then
+	rm -rf $HESTIA/web/images/custom/
+fi
 
 if [ -f "$HESTIA/web/images/custom/logo.svg" ]; then
 	cp -f $HESTIA/web/images/custom/logo.svg $HESTIA/web/images/logo.svg

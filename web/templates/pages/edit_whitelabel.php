@@ -142,8 +142,8 @@
 						</label>
 					</div>
 					<div class="u-mb10">
-						<input type="checkbox" id="v_reset_whitelabel" name="v_reset_whitelabel" value="yes">
-						<label for="v_reset_whitelabel" class="form-label">
+						<input type="checkbox" id="v_reset_logo" name="v_reset_logo" value="yes">
+						<label for="v_reset_logo" class="form-label">
 							<?= _("Reset Logo") ?>
 						</label>
 					</div>

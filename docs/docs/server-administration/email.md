@@ -49,6 +49,32 @@ If you are unable to receive emails, make sure you have setup your DNS properly.
 
 When you are done you can check the configuration via [MXToolBox](https://mxtoolbox.com/MXLookup.aspx).
 
+## How do I disable internal lookup for email
+
+If you use an SMTP relay or want to use DKIM on your web server but host email on gmail you need to disable internal lookup in Exim4.
+
+```bash
+nano /etc/exim4/exim4.conf.template
+```
+
+```bash
+dnslookup:
+driver = dnslookup
+domains = !+local_domains
+transport = remote_smtp
+no_more
+```
+
+Replace with:
+
+```bash
+dnslookup:
+driver = dnslookup
+domains = *
+transport = remote_smtp
+no_more
+```
+
 ## How do I install SnappyMail?
 
 You can install SnappyMail by running the following command:

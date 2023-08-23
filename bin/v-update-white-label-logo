@@ -6,15 +6,13 @@
 #
 # Replace Hestia logos with User created logo's
 
-download=${1-no}
-reset=${2-no}
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-restart=$1
-skip=$2
+download=${1-no}
+reset=${2-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -28,7 +26,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                       Action                             #
 #----------------------------------------------------------#
 
-if [ "$reset" = "yes" ]; then
+if [ $reset = "yes" ]; then
 	rm -rf $HESTIA/web/images/custom/
 fi
 

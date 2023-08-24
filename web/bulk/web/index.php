@@ -34,6 +34,9 @@ if ($_SESSION["userContext"] === "admin") {
 		case "unsuspend":
 			$cmd = "v-unsuspend-web-domain";
 			break;
+		case "purge":
+			$cmd = "v-purge-nginx-cache";
+			break;
 		default:
 			header("Location: /list/web/");
 			exit();
@@ -48,6 +51,9 @@ if ($_SESSION["userContext"] === "admin") {
 			break;
 		case "unsuspend":
 			$cmd = "v-unsuspend-web-domain";
+			break;
+		case "purge":
+			$cmd = "v-purge-nginx-cache";
 			break;
 		default:
 			header("Location: /list/web/");

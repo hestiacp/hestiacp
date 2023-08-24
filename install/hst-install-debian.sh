@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.8.5'
+HESTIA_INSTALL_VER='1.8.6'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.2"
@@ -109,6 +109,19 @@ check_result() {
 		echo "Error: $2"
 		exit $1
 	fi
+}
+
+# Source conf in installer
+source_conf() {
+	while IFS='= ' read -r lhs rhs; do
+		if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+			rhs="${rhs%%^\#*}" # Del in line right comments
+			rhs="${rhs%%*( )}" # Del trailing spaces
+			rhs="${rhs%\'*}"   # Del opening string quotes
+			rhs="${rhs#\'*}"   # Del closing string quotes
+			declare -g $lhs="$rhs"
+		fi
+	done < $1
 }
 
 # Defining function to set default value

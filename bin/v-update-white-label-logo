@@ -37,7 +37,7 @@ elif [ ! -f "$HESTIA/web/images/custom/logo.svg" ] && [ "$download" = "yes" ]; t
 fi
 
 if [ -f "$HESTIA/web/images/custom/logo.png" ]; then
-	cp -f $"HESTIA/web/images/custom/logo.png" "$HESTIA/web/images/logo.png"
+	cp -f "$HESTIA/web/images/custom/logo.png" "$HESTIA/web/images/logo.png"
 elif [ ! -f "$HESTIA/web/images/custom/logo.png" ] && [ "$download" = "yes" ]; then
 	download_file "https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/images/logo.png" "$HESTIA/web/images/logo.png"
 fi
@@ -49,7 +49,7 @@ elif [ ! -f "$HESTIA/web/images/custom/logo-header.svg" ] && [ "$download" = "ye
 fi
 
 if [ -f "$HESTIA/web/images/custom/favicon.png" ]; then
-	cp -f" $HESTIA/web/images/custom/favicon.png" "$HESTIA/web/images/favicon.png"
+	cp -f "$HESTIA/web/images/custom/favicon.png" "$HESTIA/web/images/favicon.png"
 elif [ ! -f "$HESTIA/web/images/custom/favicon.png" ] && [ "$download" = "yes" ]; then
 	download_file "https://raw.githubusercontent.com/hestiacp/hestiacp/release/web/images/favicon.png" "$HESTIA/web/images/favicon.png"
 fi

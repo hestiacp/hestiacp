@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [1.8.5] - Service release
 
+### Features
+
+- Advertise auth only on localhost and TLS connections (#3935)
+- Added functionality to reset custom log. (#3952)
+
+### Security
+
+- Security patch for XSS in Edit server (#3946)
+
+### Bugfixes
+
+- Fixed an issue with v-generate-ssl-cert and IDN domains (#3942)
+- Add source_conf to the installers
+- Fixed White label Descriptions (#3952)
+- Update v-change-mail-domain-sslcert (#3920)
+- Improve v-list-sys-sshd-port to check custom ssh port (#3922)
+- Fixed Open PHPMyAdmin in new Window (#3196)
+- Add line breaks SSL Aliases / Allow purge cache via drop down (#3917)
+- Clarify Rclone instructions in docs (#3948)
+
+## [1.8.5] - Service release
+
 ### Bugfixes
 
 - Fixed an error that could occur when adding a new package (#3883)

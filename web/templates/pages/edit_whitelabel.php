@@ -113,7 +113,7 @@
 					</div>
 				</div>
 			</details>
-			<!-- Basic options section -->
+			<!-- Custom Logo options section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
 					<i class="fas fa-gear u-mr15"></i>
@@ -130,15 +130,21 @@
 						<ul>
 							<li>logo.svg <small>(100px x 120px)</small></li>
 							<li>logo.png <small>(100px x 120px)</small></li>
-							<li>logo-header.png <small>(54x x 29px)</small></li>
+							<li>logo-header.svg <small>(54x x 29px)</small></li>
 							<li>favicon.png <small>(64px x 64px)</small></li>
-							<li>favicon.ico<<small>(16px x 16px)</small></li>
+							<li>favicon.ico<small>(16px x 16px)</small></li>
 						</ul>
 					</div>
 					<div class="u-mb10">
-						<input type="checkbox" id="v_update_logo" name="v_update_logo">
+						<input type="checkbox" id="v_update_logo" name="v_update_logo" value="yes">
 						<label for="v_update_logo" class="form-label">
 							<?= _("Update logo") ?>
+						</label>
+					</div>
+					<div class="u-mb10">
+						<input type="checkbox" id="v_reset_logo" name="v_reset_logo" value="yes">
+						<label for="v_reset_logo" class="form-label">
+							<?= _("Reset Logo") ?>
 						</label>
 					</div>
 			</details>

@@ -67,7 +67,7 @@ csv_list() {
 
 check_args '1' "$#" 'RULE [FORMAT]'
 is_number_format_valid "$rule" "rule id"
-is_object_valid '../../data/firewall/rules' 'RULE' "$rule"
+is_object_valid '../../../data/firewall/rules' 'RULE' "$rule"
 
 #----------------------------------------------------------#
 #                       Action                             #

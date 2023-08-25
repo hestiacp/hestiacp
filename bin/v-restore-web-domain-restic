@@ -66,7 +66,7 @@ parse_object_kv_list $(cat $tmpdir/backup.conf)
 IFS=','
 read -a domains_array <<< "$web"
 read -a domains <<< "$WEB"
-for domain in ${domains[@]}; do
+for domain in $domains; do
 	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$web" = '*' ]]; then
 		# Cleanup previous domain keys
 		unset -v DOMAIN IP IP6 ALIAS TPL SSL SSL_HOME LETSENCRYPT FTP_USER FTP_MD5 BACKEND PROXY PROXY_EXT STATS STATS_USER STATS_CRYPT U_DISK CUSTOM_DOCROOT CUSTOM_PHPROOT

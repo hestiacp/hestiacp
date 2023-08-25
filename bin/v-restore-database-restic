@@ -61,7 +61,7 @@ IFS=','
 read -a databases_array <<< "$database"
 read -a databases <<< "$DB"
 
-for db in ${databases[@]}; do
+for db in $databases; do
 	if [[ "${IFS}${databases_array[*]}${IFS}" =~ "${IFS}${db}${IFS}" || "$databases_array" = '*' ]]; then
 		check_config=$(grep "DB='$db'" $USER_DATA/db.conf)
 		if [ -z "$check_config" ]; then

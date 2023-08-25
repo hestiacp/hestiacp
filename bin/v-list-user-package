@@ -43,7 +43,7 @@ json_list() {
         "SHELL": "'$SHELL'",
         "SHELL_JAIL_ENABLED": "'$SHELL_JAIL_ENABLED'",
         "BACKUPS": "'$BACKUPS'",
-		"BACKUPS_INCREMENTAL": "'$BACKUPS_INCREMENTAL'",
+				"BACKUPS_INCREMENTAL": "'$BACKUPS_INCREMENTAL'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'

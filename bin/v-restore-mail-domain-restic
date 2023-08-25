@@ -69,7 +69,7 @@ if [ "$check_exim_username" -eq 1 ]; then
 	exim_user="Debian-exim"
 fi
 
-for domain in ${domains[@]}; do
+for domain in $domains; do
 	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$mail" = '*' ]]; then
 		# Checking domain existance
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)

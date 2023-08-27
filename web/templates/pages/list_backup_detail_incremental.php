@@ -46,7 +46,7 @@
 		<div class="units-table-cell"><?= _("Type") ?></div>
 		<div class="units-table-cell"><?= _("Details") ?></div>
 		<div class="units-table-cell"><?= _("Restore") ?></div>
-	</div>	<!-- List web domains -->
+	</div>
 	<?php
 		$web = explode(',',$data['snapshot']['WEB']);
 		foreach ($web as $key) {
@@ -59,25 +59,26 @@
 					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="web[]" value="<?= $key ?>">
 					<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 				</div>
-				<div class="units-table-cell units-table-heading-cell">
-					<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-					<?= _("Web Domain") ?>
-				</div>
-				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= _("Details") ?>:</span>
-					<?= $key ?>
-				</div>
-				<div class="units-table-cell">
-					<ul class="units-table-row-actions">
-						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=web&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-							<i class="fas fa-arrow-rotate-left icon-green"></i>
-							<span class="u-hide-desktop"><?= _("Restore") ?></span>
-							</a>
-						</li>
-					</ul>
-				</div>
 			</div>
+			<div class="units-table-cell units-table-heading-cell">
+				<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+				<?= _("Web Domain") ?>
+			</div>
+			<div class="units-table-cell u-text-bold">
+				<span class="u-hide-desktop"><?= _("Details") ?>:</span>
+				<?= $key ?>
+			</div>
+			<div class="units-table-cell">
+				<ul class="units-table-row-actions">
+					<li class="units-table-row-action shortcut-enter" data-key-action="href">
+						<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=web&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
+						<i class="fas fa-arrow-rotate-left icon-green"></i>
+						<span class="u-hide-desktop"><?= _("Restore") ?></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<?php }} ?>
 
 		<?php
@@ -92,25 +93,26 @@
 					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="mail[]" value="<?= $key ?>">
 					<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 				</div>
-				<div class="units-table-cell units-table-heading-cell">
-					<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-					<?= _("Mail Domain") ?>
-				</div>
-				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= _("Details") ?>:</span>
-					<?= $key ?>
-				</div>
-				<div class="units-table-cell">
-					<ul class="units-table-row-actions">
-						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=mail&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-							<i class="fas fa-arrow-rotate-left icon-green"></i>
-							<span class="u-hide-desktop"><?= _("Restore") ?></span>
-							</a>
-						</li>
-					</ul>
-				</div>
 			</div>
+			<div class="units-table-cell units-table-heading-cell">
+				<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+				<?= _("Mail Domain") ?>
+			</div>
+			<div class="units-table-cell u-text-bold">
+				<span class="u-hide-desktop"><?= _("Details") ?>:</span>
+				<?= $key ?>
+			</div>
+			<div class="units-table-cell">
+				<ul class="units-table-row-actions">
+					<li class="units-table-row-action shortcut-enter" data-key-action="href">
+						<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=mail&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
+						<i class="fas fa-arrow-rotate-left icon-green"></i>
+						<span class="u-hide-desktop"><?= _("Restore") ?></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<?php }} ?>
 
 		<?php
@@ -125,25 +127,26 @@
 					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="dns[]" value="<?= $key ?>">
 					<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 				</div>
-				<div class="units-table-cell units-table-heading-cell">
-					<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-					<?= _("DNS Domain") ?>
-				</div>
-				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= _("Details") ?>:</span>
-					<?= $key ?>
-				</div>
-				<div class="units-table-cell">
-					<ul class="units-table-row-actions">
-						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=dns&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-							<i class="fas fa-arrow-rotate-left icon-green"></i>
-							<span class="u-hide-desktop"><?= _("Restore") ?></span>
-							</a>
-						</li>
-					</ul>
-				</div>
 			</div>
+			<div class="units-table-cell units-table-heading-cell">
+				<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+				<?= _("DNS Domain") ?>
+			</div>
+			<div class="units-table-cell u-text-bold">
+				<span class="u-hide-desktop"><?= _("Details") ?>:</span>
+				<?= $key ?>
+			</div>
+			<div class="units-table-cell">
+				<ul class="units-table-row-actions">
+					<li class="units-table-row-action shortcut-enter" data-key-action="href">
+						<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=dns&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
+						<i class="fas fa-arrow-rotate-left icon-green"></i>
+						<span class="u-hide-desktop"><?= _("Restore") ?></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<?php }} ?>
 
 		<?php
@@ -158,25 +161,26 @@
 					<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="db[]" value="<?= $key ?>">
 					<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 				</div>
-				<div class="units-table-cell units-table-heading-cell">
-					<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-					<?= _("Database") ?>
-				</div>
-				<div class="units-table-cell u-text-bold">
-					<span class="u-hide-desktop"><?= _("Details") ?>:</span>
-					<?= $key ?>
-				</div>
-				<div class="units-table-cell">
-					<ul class="units-table-row-actions">
-						<li class="units-table-row-action shortcut-enter" data-key-action="href">
-							<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=db&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-							<i class="fas fa-arrow-rotate-left icon-green"></i>
-							<span class="u-hide-desktop"><?= _("Restore") ?></span>
-							</a>
-						</li>
-					</ul>
-				</div>
 			</div>
+			<div class="units-table-cell units-table-heading-cell">
+				<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+				<?= _("Database") ?>
+			</div>
+			<div class="units-table-cell u-text-bold">
+				<span class="u-hide-desktop"><?= _("Details") ?>:</span>
+				<?= $key ?>
+			</div>
+			<div class="units-table-cell">
+				<ul class="units-table-row-actions">
+					<li class="units-table-row-action shortcut-enter" data-key-action="href">
+						<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=db&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
+						<i class="fas fa-arrow-rotate-left icon-green"></i>
+						<span class="u-hide-desktop"><?= _("Restore") ?></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
 		<?php }} ?>
 
 	<?php
@@ -191,25 +195,26 @@
 				<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" name="cron[]" value="<?= $key ?>">
 				<label for="check<?= $i ?>" class="u-hide-desktop"><?= _("Select") ?></label>
 			</div>
-			<div class="units-table-cell units-table-heading-cell">
-				<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
-				<?= _("Cronjobs") ?>
-			</div>
-			<div class="units-table-cell u-text-bold">
-				<span class="u-hide-desktop"><?= _("Details") ?>:</span>
-				<?= $key ?>
-			</div>
-			<div class="units-table-cell">
-				<ul class="units-table-row-actions">
-					<li class="units-table-row-action shortcut-enter" data-key-action="href">
-						<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=cron&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
-						<i class="fas fa-arrow-rotate-left icon-green"></i>
-						<span class="u-hide-desktop"><?= _("Restore") ?></span>
-						</a>
-					</li>
-				</ul>
-			</div>
 		</div>
+		<div class="units-table-cell units-table-heading-cell">
+			<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>
+			<?= _("Cronjob") ?>
+		</div>
+		<div class="units-table-cell u-text-bold">
+			<span class="u-hide-desktop"><?= _("Details") ?>:</span>
+			<?= $key ?>
+		</div>
+		<div class="units-table-cell">
+			<ul class="units-table-row-actions">
+				<li class="units-table-row-action shortcut-enter" data-key-action="href">
+					<a href="/schedule/restore/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&type=cron&object=<?= $key ?>&token=<?= $_SESSION["token"] ?>" title="<?= _("Restore") ?>">
+					<i class="fas fa-arrow-rotate-left icon-green"></i>
+					<span class="u-hide-desktop"><?= _("Restore") ?></span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
 	<?php }} ?>
 </div>
 

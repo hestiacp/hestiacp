@@ -1280,6 +1280,13 @@ if (!empty($_POST["save"])) {
 				);
 				check_return_code($return_var, $output);
 				unset($output);
+
+				$v_repo = $_POST["v_repo"];
+				$v_snapshots = $_POST["v_snapshots"];
+				$v_keep_daily = $_POST["v_keep_daily"];
+				$v_keep_weekly = $_POST["v_keep_weekly"];
+				$v_keep_monthly = $_POST["v_keep_monthly"];
+				$v_keep_yearly = $_POST["v_keep_yearly"];
 			}
 		}
 	}
@@ -1288,6 +1295,13 @@ if (!empty($_POST["save"])) {
 			exec(HESTIA_CMD . "v-delete-backup-host-restic ", $output, $return);
 			check_return_code($return_var, $output);
 			unset($output);
+
+			$v_repo = "";
+			$v_snapshots = "";
+			$v_keep_daily = "";
+			$v_keep_weekly = "";
+			$v_keep_monthly = "";
+			$v_keep_yearly = "";
 		}
 	}
 	if (empty($_SESSION["error_msg"])) {
@@ -1325,6 +1339,15 @@ if (!empty($_POST["save"])) {
 				$output,
 				$return_var,
 			);
+			check_return_code($return_var, $output);
+			unset($output);
+
+			$v_repo = $_POST["v_repo"];
+			$v_snapshots = $_POST["v_snapshots"];
+			$v_keep_daily = $_POST["v_keep_daily"];
+			$v_keep_weekly = $_POST["v_keep_weekly"];
+			$v_keep_monthly = $_POST["v_keep_monthly"];
+			$v_keep_yearly = $_POST["v_keep_yearly"];
 		}
 	}
 	// Change INACTIVE_SESSION_TIMEOUT

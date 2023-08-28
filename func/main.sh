@@ -1010,8 +1010,8 @@ is_fw_port_format_valid() {
 			check_result "$E_INVALID" "invalid port format :: $1"
 		fi
 	else
-		if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,30}[0-9]$ ]]; then
-			check_result "$E_INVALID" "invalid port format :: $1"
+		if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,76}[0-9]$ ]]; then
+			check_result "$E_INVALID" "invalid port format and/or more than 78 chars used :: $1"
 		fi
 	fi
 }

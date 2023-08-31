@@ -65,6 +65,10 @@ if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
 			$BIN/v-delete-cron-job admin "$JOB"
 		fi
 	done < $HESTIA/data/users/admin/cron.conf
+	# Update permissions
+	chmod 600 /var/spool/cron/crontabs/hestiaweb
+	chown hestiaweb:hestiaweb /var/spool/cron/crontabs/hestiaweb
+
 fi
 
 chown hestiaweb:hestiaweb /usr/local/hestia/data/sessions

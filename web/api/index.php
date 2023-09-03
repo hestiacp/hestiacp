@@ -51,7 +51,7 @@ function api_error($exit_code, $message, $hst_return, bool $add_log = false, $us
 /**
  * Legacy connection format using hash or user and password.
  *
- * @param array{user: string?, pass: string?, hash?: string, cmd: string, arg1?: string, arg2?: string, arg3?: string, arg4?: string, arg5?: string, arg6?: string, arg7?: string, arg8?: string, arg9?: string, returncode?: string} $request_data
+ * @param array{user: string?, pass: string?, hash?: string, cmd: string, arg1?: string, arg2?: string, arg3?: string, arg4?: string, arg5?: string, arg6?: string, arg7?: string, arg8?: string, arg9?: string, arg10?: string, arg11?: string, arg12?: string, arg13?: string, returncode?: string} $request_data
  * @return void
  * @return void
  */
@@ -155,7 +155,7 @@ function api_legacy(array $request_data) {
 
 	$hst_cmd = trim($request_data["cmd"] ?? "");
 	$hst_cmd_args = [];
-	for ($i = 1; $i <= 9; $i++) {
+	for ($i = 1; $i <= 13; $i++) {
 		if (isset($request_data["arg{$i}"])) {
 			$hst_cmd_args["arg{$i}"] = trim($request_data["arg{$i}"]);
 		}
@@ -203,7 +203,7 @@ function api_legacy(array $request_data) {
 /**
  * Connection using access key.
  *
- * @param array{access_key: string, secret_key: string, cmd: string, arg1?: string, arg2?: string, arg3?: string, arg4?: string, arg5?: string, arg6?: string, arg7?: string, arg8?: string, arg9?: string, returncode?: string} $request_data
+ * @param array{access_key: string, secret_key: string, cmd: string, arg1?: string, arg2?: string, arg3?: string, arg4?: string, arg5?: string, arg6?: string, arg7?: string, arg8?: string, arg9?: string, arg10?: string, arg11?: string, arg12?: string, arg13?: string, returncode?: string} $request_data
  * @return void
  */
 function api_connection(array $request_data) {
@@ -238,7 +238,7 @@ function api_connection(array $request_data) {
 	$hst_secret_access_key = trim($request_data["secret_key"] ?? "");
 	$hst_cmd = trim($request_data["cmd"] ?? "");
 	$hst_cmd_args = [];
-	for ($i = 1; $i <= 9; $i++) {
+	for ($i = 1; $i <= 13; $i++) {
 		if (isset($request_data["arg{$i}"])) {
 			$hst_cmd_args["arg{$i}"] = trim($request_data["arg{$i}"]);
 		}

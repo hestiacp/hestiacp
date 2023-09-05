@@ -11,6 +11,9 @@
 			<a href="/edit/server/whitelabel/" class="button button-secondary">
 				<i class="fas fa-paint-brush icon-blue"></i><?= _("White Label") ?>
 			</a>
+			<a href="/edit/server/hestiaweb/" class="button button-secondary">
+				<i class="fas fa-clock icon-blue"></i><?= _("Panel Cronjobs") ?>
+			</a>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="main-form">

@@ -2,9 +2,18 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
+			<?php if($v_config_path == "/var/spool/cron/crontabs/hestiaweb"){
+				?>
+				<a class="button button-secondary button-back js-button-back" href="/edit/server/">
+					<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+				</a>
+			<?php
+			}else{
+				?>
 			<a class="button button-secondary button-back js-button-back" href="/list/server/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
+			<?php } ?>
 		</div>
 		<div class="toolbar-buttons">
 			<button type="submit" class="button" form="main-form">

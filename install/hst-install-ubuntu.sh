@@ -2242,6 +2242,9 @@ echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cro
 echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
 echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
 
+chmod 600 /var/spool/cron/crontabs/hestiaweb
+chown hestiaweb:hestiaweb /var/spool/cron/crontabs/hestiaweb
+
 # Enable automatic updates
 $HESTIA/bin/v-add-cron-hestia-autoupdate apt
 

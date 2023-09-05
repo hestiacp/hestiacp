@@ -19,11 +19,6 @@ export const projectManagers = [
 		name: 'Robert Zollner 🇷🇴',
 		links: [{ icon: 'github', link: 'https://github.com/Lupul' }],
 	},
-	{
-		avatar: 'https://www.github.com/krismkenn.png',
-		name: 'Kristan Kenney 🇨🇦',
-		links: [{ icon: 'github', link: 'https://github.com/krismkenn' }],
-	},
 ];
 
 /** @type {import("vitepress").DefaultTheme.TeamMember[]} */

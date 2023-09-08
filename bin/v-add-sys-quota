@@ -22,8 +22,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #----------------------------------------------------------#
 
 # Ensure that quota kernel modules are installed
-kernel_module_check=$(find /lib/modules/$(uname -r) -type f -name '*quota_v*.ko*' | egrep '.*' && [ $? -eq 0 ])
-if [ -z "$kernel_module_check" ]; then
+if ! find "/lib/modules/$(uname -r)" -type f -name '*quota_v*.ko*' | grep -q '.*'; then
 	# Install kernel modules for quota support.
 	# Requires reboot to activate updated kernel.
 	echo "Installing required kernel modules for quota support..."
@@ -33,8 +32,7 @@ if [ -z "$kernel_module_check" ]; then
 fi
 
 # Checking quota package
-quota=$(which --skip-alias --skip-functions quota 2> /dev/null)
-if [ $? -ne 0 ]; then
+if ! type -P quota &>/dev/null; then
 	if [ -f "/etc/redhat-release" ]; then
 		dnf -y install quota > /dev/null 2>&1
 	else
@@ -56,7 +54,7 @@ mnt=$(df -P /home | awk '{print $6}' | tail -n1)
 lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
 opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
 fnd='usrquota\|grpquota\|usrjquota=aquota.user\|grpjquota=aquota.group\|jqfmt=vfsv0'
-if [ $(echo $opt | tr ',' '\n' | grep -x $fnd | wc -l) -ne 5 ]; then
+if [ "$(echo "$opt" | tr ',' '\n' | grep -c -x $fnd)" -eq 5 ]; then
 	old=$(echo $(echo $opt | tr ',' '\n' | grep -v 'usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt=') | tr ' ' ',')
 	new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
 	sed -i "$lnr s/$opt/$old,$new/" /etc/fstab

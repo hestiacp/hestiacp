@@ -31,7 +31,7 @@ check_hestia_demo_mode
 
 # Deleting group and user quota on /home partition
 mnt=$(df -P /home | awk '{print $6}' | tail -n1)
-lnr=$(cat -n /etc/fstab | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
+lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
 opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
 fnd='usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt='
 if [ -n "$(echo $opt | grep $fnd)" ]; then
@@ -41,15 +41,14 @@ if [ -n "$(echo $opt | grep $fnd)" ]; then
 fi
 
 # Disabling group and user quota
-quotaoff=$(which --skip-alias --skip-functions quotaoff 2> /dev/null)
-if [ $? -eq 0 ]; then
-	if [ -n "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is on')" ]; then
-		$quotaoff $mnt
+f quotaon="$(type -P quotaon 2>/dev/null)" && quotaoff="$(type -P quotaoff 2>/dev/null)"; then
+        if "${quotaon}" -pa | grep " $mnt " | grep 'user\|group' | grep -q 'is on' &>/dev/null; then
+		"$quotaoff" "$mnt"
 	fi
 fi
 
 # Deleting v1 + v2 group and user quota index
-for idx in $(echo 'quota.user quota.group aquota.user aquota.group'); do
+for idx in quota.user quota.group aquota.user aquota.group; do
 	[ -e "$mnt/$idx" ] && rm -f "$mnt/$idx"
 done
 
@@ -57,10 +56,10 @@ done
 rm -f /etc/cron.daily/quotacheck
 
 # Updating hestia.conf value
-if [ -z "$(grep DISK_QUOTA $HESTIA/conf/hestia.conf)" ]; then
-	echo "DISK_QUOTA='no'" >> $HESTIA/conf/hestia.conf
+if ! grep -q DISK_QUOTA "$HESTIA/conf/hestia.conf"; then
+	echo "DISK_QUOTA='no'" >> "$HESTIA/conf/hestia.conf"
 else
-	sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='no'/g" $HESTIA/conf/hestia.conf
+	sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='no'/g" "$HESTIA/conf/hestia.conf"
 fi
 
 #----------------------------------------------------------#

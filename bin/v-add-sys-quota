@@ -54,7 +54,7 @@ mnt=$(df -P /home | awk '{print $6}' | tail -n1)
 lnr=$(cat -n /etc/fstab | grep -v "#" | awk '{print $1,$3}' | grep "$mnt$" | cut -f 1 -d ' ')
 opt=$(sed -n ${lnr}p /etc/fstab | awk '{print $4}')
 fnd='usrquota\|grpquota\|usrjquota=aquota.user\|grpjquota=aquota.group\|jqfmt=vfsv0'
-if [ "$(echo "$opt" | tr ',' '\n' | grep -c -x $fnd)" -eq 5 ]; then
+if [ "$(echo "$opt" | tr ',' '\n' | grep -c -x $fnd)" -ne 5 ]; then
 	old=$(echo $(echo $opt | tr ',' '\n' | grep -v 'usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt=') | tr ' ' ',')
 	new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
 	sed -i "$lnr s/$opt/$old,$new/" /etc/fstab

@@ -62,11 +62,7 @@ if [[ -f "/forcequotacheck" ]]; then
 fi
 
 # Updating hestia.conf value
-if ! grep -q DISK_QUOTA "$HESTIA/conf/hestia.conf"; then
-	echo "DISK_QUOTA='no'" >> "$HESTIA/conf/hestia.conf"
-else
-	$BIN/v-change-sys-config-value "DISK_QUOTA" "no"
-fi
+$BIN/v-change-sys-config-value "DISK_QUOTA" "no"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

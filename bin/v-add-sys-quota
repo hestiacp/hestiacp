@@ -58,6 +58,7 @@ if [ "$(echo "$opt" | tr ',' '\n' | grep -c -x $fnd)" -ne 5 ]; then
 	old=$(echo $(echo $opt | tr ',' '\n' | grep -v 'usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt=') | tr ' ' ',')
 	new='usrquota,grpquota,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0'
 	sed -i "$lnr s/$opt/$old,$new/" /etc/fstab
+	systemctl daemon-reload
 	mount -o remount "$mnt"
 fi
 
@@ -84,7 +85,7 @@ fi
 if [ -z "$(grep DISK_QUOTA $HESTIA/conf/hestia.conf)" ]; then
 	echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
 else
-	sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='yes'/g" $HESTIA/conf/hestia.conf
+	$BIN/v-change-sys-config-value "DISK_QUOTA" "yes"
 fi
 
 # Rebuilding user quota

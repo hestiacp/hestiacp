@@ -37,6 +37,7 @@ fnd='usrquota\|grpquota\|usrjquota=\|grpjquota=\|jqfmt='
 if [ -n "$(echo $opt | grep $fnd)" ]; then
 	rep=$(echo $(echo $opt | tr ',' '\n' | grep -v $fnd) | tr ' ' ',')
 	sed -i "$lnr s/$opt/$rep/" /etc/fstab
+	systemctl daemon-reload
 	mount -o remount "$mnt"
 fi
 
@@ -64,7 +65,7 @@ fi
 if ! grep -q DISK_QUOTA "$HESTIA/conf/hestia.conf"; then
 	echo "DISK_QUOTA='no'" >> "$HESTIA/conf/hestia.conf"
 else
-	sed -i "s/DISK_QUOTA=.*/DISK_QUOTA='no'/g" "$HESTIA/conf/hestia.conf"
+	$BIN/v-change-sys-config-value "DISK_QUOTA" "no"
 fi
 
 #----------------------------------------------------------#

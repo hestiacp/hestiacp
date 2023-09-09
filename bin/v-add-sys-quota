@@ -82,11 +82,7 @@ if [ -n "$(quotaon -pa | grep " $mnt " | grep 'user\|group' | grep 'is off')" ];
 fi
 
 # Updating hestia.conf value
-if [ -z "$(grep DISK_QUOTA $HESTIA/conf/hestia.conf)" ]; then
-	echo "DISK_QUOTA='yes'" >> $HESTIA/conf/hestia.conf
-else
-	$BIN/v-change-sys-config-value "DISK_QUOTA" "yes"
-fi
+$BIN/v-change-sys-config-value "DISK_QUOTA" "yes"
 
 # Rebuilding user quota
 for user in $("$BIN/v-list-users" list); do

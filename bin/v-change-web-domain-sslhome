@@ -6,6 +6,11 @@
 # example: v-change-web-domain-sslhome admin acme.com same
 #
 # This function changes SSL home directory. Single will separate the both public_html / public_shtml. Same will always point to public_shtml
+#
+# v-change-web-domain-sslhome is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

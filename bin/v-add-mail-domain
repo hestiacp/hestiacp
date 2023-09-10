@@ -5,6 +5,22 @@
 # example: v-add-mail-domain admin mydomain.tld
 #
 # This function adds MAIL domain.
+#
+# v-add-mail-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-record
+# bin/v-add-domain
+# bin/v-add-letsencrypt-domain
+# bin/v-change-sys-webmail
+# bin/v-rebuild-mail-domain
+# bin/v-unsuspend-mail-domain
+# func/rebuild.sh
+# test/letsencrypt.bats
+# test/test.bats
+# web/add/mail/index.php
+# web/add/web/index.php
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

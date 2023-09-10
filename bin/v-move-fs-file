@@ -6,6 +6,17 @@
 #
 # This function moved file or directory on the file system. This function
 # can also be used to rename files just like normal mv command.
+#
+# v-move-fs-file is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/src/app/WebApp/Installers/DokuWiki/DokuWikiSetup.php
+# web/src/app/WebApp/Installers/Drupal/DrupalSetup.php
+# web/src/app/WebApp/Installers/Flarum/FlarumSetup.php
+# web/src/app/WebApp/Installers/Laravel/LaravelSetup.php
+# web/src/app/WebApp/Installers/Nextcloud/NextcloudSetup.php
+# web/src/app/WebApp/Installers/Symfony/SymfonySetup.php
+# web/src/app/WebApp/Installers/WordPress/WordPressSetup.php
 
 user=$1
 src_file=$2

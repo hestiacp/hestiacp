@@ -3,6 +3,11 @@
 # options: USER [TTL]
 #
 # This function creates and updates SSH keys for used with the File Manager.
+#
+# v-add-user-sftp-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -2,6 +2,11 @@
 # info: Delete auth log file for user
 #
 # This function for deleting a users auth log file
+#
+# v-delete-user-auth-log is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/delete/log/auth/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

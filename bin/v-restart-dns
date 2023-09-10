@@ -5,6 +5,39 @@
 # example: v-restart-dns
 #
 # This function tells BIND service to reload dns zone files.
+#
+# v-restart-dns is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-domain
+# bin/v-add-dns-record
+# bin/v-add-domain
+# bin/v-change-dns-domain-ip
+# bin/v-change-dns-domain-soa
+# bin/v-change-dns-domain-tpl
+# bin/v-change-dns-domain-ttl
+# bin/v-change-dns-record
+# bin/v-change-dns-record-id
+# bin/v-change-sys-ip-nat
+# bin/v-delete-dns-domain
+# bin/v-delete-dns-domains
+# bin/v-delete-dns-domains-src
+# bin/v-delete-dns-record
+# bin/v-delete-domain
+# bin/v-rebuild-dns-domain
+# bin/v-rebuild-dns-domains
+# bin/v-restore-user
+# bin/v-suspend-domain
+# bin/v-suspend-user
+# bin/v-unsuspend-domain
+# bin/v-unsuspend-user
+# bin/v-update-sys-ip
+# func/upgrade.sh
+# web/add/dns/index.php
+# web/bulk/dns/index.php
+# web/bulk/web/index.php
+# web/edit/dns/index.php
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

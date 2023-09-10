@@ -6,6 +6,40 @@
 #
 # This function is for changing main config settings such as COMPANY_NAME or
 # COMPANY_EMAIL and so on.
+#
+# v-change-sys-config-value is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-mail-domain-webmail
+# bin/v-add-sys-api-ip
+# bin/v-add-sys-dependencies
+# bin/v-add-sys-filemanager
+# bin/v-add-sys-firewall
+# bin/v-add-sys-pma-sso
+# bin/v-add-sys-quota
+# bin/v-add-sys-roundcube
+# bin/v-add-sys-snappymail
+# bin/v-add-sys-web-terminal
+# bin/v-change-sys-api
+# bin/v-change-sys-db-alias
+# bin/v-change-sys-demo-mode
+# bin/v-change-sys-port
+# bin/v-change-sys-webmail
+# bin/v-change-sys-web-terminal-port
+# bin/v-delete-sys-api-ip
+# bin/v-delete-sys-filemanager
+# bin/v-delete-sys-firewall
+# bin/v-delete-sys-pma-sso
+# bin/v-delete-sys-quota
+# bin/v-delete-sys-web-terminal
+# bin/v-generate-debug-report
+# bin/v-update-sys-hestia-git
+# func/syshealth.sh
+# func/upgrade.sh
+# test/lint_script.sh
+# web/edit/server/index.php
+# web/edit/server/whitelabel/index.php
+# web/inc/prevent_csrf.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

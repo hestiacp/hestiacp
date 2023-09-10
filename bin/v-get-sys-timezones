@@ -5,6 +5,11 @@
 # example: v-get-sys-timezones json
 #
 # This function checks system timezone settings
+#
+# v-get-sys-timezones is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

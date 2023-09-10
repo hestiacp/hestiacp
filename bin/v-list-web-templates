@@ -5,6 +5,16 @@
 # example: v-list-web-templates
 #
 # This function for obtaining the list of web templates available to a user.
+#
+# v-list-web-templates is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/config-tests.bats
+# web/add/package/index.php
+# web/add/web/index.php
+# web/edit/package/index.php
+# web/edit/server/index.php
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

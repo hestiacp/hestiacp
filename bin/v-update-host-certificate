@@ -5,6 +5,17 @@
 # example: v-update-host-certificate admin example.com
 #
 # This function updates the SSL certificate used for Hestia Control Panel.
+#
+# v-update-host-certificate is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-host
+# bin/v-add-web-domain-ssl
+# bin/v-log-action
+# bin/v-restart-ftp
+# bin/v-restart-mail
+# bin/v-restart-service
+# bin/v-update-letsencrypt-ssl
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

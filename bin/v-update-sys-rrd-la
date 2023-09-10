@@ -5,6 +5,11 @@
 # example: v-update-sys-rrd-la
 #
 # This function is for updating load average rrd database and graphic.
+#
+# v-update-sys-rrd-la is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-sys-rrd
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,16 @@
 # example: v-list-sys-ips
 #
 # This function for obtaining the list of system IP addresses.
+#
+# v-list-sys-ips is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-remote-dns-domain-exp
+# bin/v-change-remote-dns-domain-soa
+# bin/v-change-remote-dns-domain-ttl
+# web/list/ip/index.php
+# web/list/web/index.php
+# web/reset/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

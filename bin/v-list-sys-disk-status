@@ -5,6 +5,11 @@
 # example: v-list-sys-disk-status
 #
 # This function lists disk information
+#
+# v-list-sys-disk-status is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/list/server/index.php
 
 #----------------------------------------------------------#
 #                       Action                             #

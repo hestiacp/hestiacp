@@ -6,6 +6,12 @@
 #
 # This function adds one or more aliases to a domain (it is also called
 # "domain parking"). This function supports wildcards *.domain.tpl.
+#
+# v-add-web-domain-alias is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

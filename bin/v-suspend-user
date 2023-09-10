@@ -5,6 +5,21 @@
 # example: v-suspend-user alice yes
 #
 # This function suspends a certain user and all his objects.
+#
+# v-suspend-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-log-action
+# bin/v-restart-cron
+# bin/v-restart-dns
+# bin/v-restart-proxy
+# bin/v-restart-web
+# bin/v-suspend-cron-jobs
+# bin/v-suspend-databases
+# bin/v-suspend-dns-domains
+# bin/v-suspend-mail-domains
+# web/bulk/user/index.php
+# web/suspend/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -3,6 +3,12 @@
 # options: USER [FORMAT]
 #
 # Lists $user/.ssh/authorized_keys
+#
+# v-list-user-ssh-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/key/index.php
+# web/list/key/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,15 @@
 # example: v-unsuspend-database admin mydb
 #
 # This function for unsuspending database.
+#
+# v-unsuspend-database is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-database-owner
+# bin/v-log-action
+# test/test.bats
+# web/bulk/db/index.php
+# web/unsuspend/db/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

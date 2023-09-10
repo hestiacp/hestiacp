@@ -5,6 +5,15 @@
 # example: v-add-web-domain-ssl-force admin acme.com
 #
 # This function forces SSL for the requested domain.
+#
+# v-add-web-domain-ssl-force is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# bin/v-add-letsencrypt-host
+# bin/v-add-web-domain-ssl
+# func/rebuild.sh
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

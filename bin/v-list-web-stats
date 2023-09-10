@@ -6,6 +6,11 @@
 # example: v-list-web-stats
 #
 # This function for obtaining the list of web statistics analyzer.
+#
+# v-list-web-stats is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

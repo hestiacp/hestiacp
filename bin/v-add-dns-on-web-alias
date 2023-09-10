@@ -5,6 +5,12 @@
 # example: v-add-dns-on-web-alias admin www.example.com 8.8.8.8
 #
 # This function adds dns domain or dns record based on web domain alias.
+#
+# v-add-dns-on-web-alias is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-domain
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,12 @@
 # example: v-schedule-user-backup-download admin 2019-04-22_01-00-00.tar
 #
 # This function for scheduling user backup creation.
+#
+# v-schedule-user-backup-download is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-download-backup
+# web/download/backup/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -9,6 +9,12 @@
 # This function adds remote dns server to the dns cluster.
 # As alternative api_key generated on the slave server.
 # See v-generate-api-key can be used to connect the remote dns server
+#
+# v-add-remote-dns-host is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-cron-restart-job
+# test/api.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

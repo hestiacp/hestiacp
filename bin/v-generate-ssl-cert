@@ -5,6 +5,14 @@
 # example: v-generate-ssl-cert example.com mail@yahoo.com USA California Monterey ACME.COM IT
 #
 # This function generates self signed SSL certificate and CSR request
+#
+# v-generate-ssl-cert is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# test/config-tests.bats
+# test/test.bats
+# web/generate/ssl/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

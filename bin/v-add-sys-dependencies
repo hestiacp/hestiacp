@@ -3,6 +3,13 @@
 # options: [MODE]
 #
 # This function install PHPMailer and quoteshellarg as via composer
+#
+# v-add-sys-dependencies is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/upgrade.sh
+# web/api/index.php
+# web/inc/main.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

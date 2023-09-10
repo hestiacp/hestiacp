@@ -3,6 +3,11 @@
 # options: NONE
 #
 # This function adds a new cron job for Let's Encrypt.
+#
+# v-add-cron-letsencrypt-job is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-schedule-letsencrypt-domain
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

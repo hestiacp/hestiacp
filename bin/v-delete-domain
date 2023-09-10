@@ -5,6 +5,11 @@
 # example: v-delete-domain admin domain.tld
 #
 # This function deletes web/dns/mail domain.
+#
+# v-delete-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-dns-domain
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

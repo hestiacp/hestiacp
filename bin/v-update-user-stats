@@ -5,6 +5,16 @@
 # example: v-update-user-stats admin
 #
 # Function logs user parameters into statistics database.
+#
+# v-update-user-stats is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-dns-domain-tpl
+# bin/v-list-users
+# bin/v-list-users-stats
+# bin/v-list-user-stats
+# bin/v-rebuild-user
+# func/syshealth.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

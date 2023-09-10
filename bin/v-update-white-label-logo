@@ -5,6 +5,12 @@
 # example: v-update-white-label-logo
 #
 # Replace Hestia logos with User created logo's
+#
+# v-update-white-label-logo is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/upgrade.sh
+# web/edit/server/whitelabel/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

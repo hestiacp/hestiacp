@@ -8,6 +8,24 @@
 # This function scans configured IP in the system and register them with Hestia
 # internal database. This call is intended for use on vps servers, where IP is
 # set by hypervisor.
+#
+# v-update-sys-ip is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-sys-ip
+# bin/v-change-sys-ip-nat
+# bin/v-list-users
+# bin/v-rebuild-dns-domains
+# bin/v-rebuild-mail-domains
+# bin/v-rebuild-web-domains
+# bin/v-restart-dns
+# bin/v-restart-ftp
+# bin/v-restart-mail
+# bin/v-restart-proxy
+# bin/v-restart-web
+# bin/v-restore-user
+# bin/v-update-firewall
+# web/bulk/ip/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

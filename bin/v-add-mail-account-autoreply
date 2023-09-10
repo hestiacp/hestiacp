@@ -5,6 +5,11 @@
 # example: v-add-mail-account-autoreply admin example.com user Hello from e-mail!
 #
 # This function add new email account.
+#
+# v-add-mail-account-autoreply is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

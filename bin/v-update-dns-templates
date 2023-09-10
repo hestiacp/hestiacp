@@ -5,6 +5,12 @@
 # example: v-update-dns-templates
 #
 # This function for obtaining updated dns templates from Hestia package.
+#
+# v-update-dns-templates is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-log-action
+# func/upgrade.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

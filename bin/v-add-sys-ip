@@ -10,6 +10,13 @@
 # this IP will automatically receive alias $domain.a1.myhosting.com. Of course
 # you must have wildcard record *.a1.myhosting.com pointed to IP. This feature
 # is very handy when customer wants to test domain before dns migration.
+#
+# v-add-sys-ip is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-sys-ip
+# test/test.bats
+# web/add/ip/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

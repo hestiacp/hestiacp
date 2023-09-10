@@ -5,6 +5,11 @@
 # example: v-add-mail-domain-catchall admin example.com master@example.com
 #
 # This function enables catchall account for incoming emails.
+#
+# v-add-mail-domain-catchall is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

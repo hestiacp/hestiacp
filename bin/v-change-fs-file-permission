@@ -5,6 +5,11 @@
 # example: v-change-fs-file-permission admin readme.txt 0777
 #
 # This function changes file access permissions on the file system
+#
+# v-change-fs-file-permission is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/src/app/WebApp/Installers/Opencart/OpencartSetup.php
 
 user=$1
 src_file=$2

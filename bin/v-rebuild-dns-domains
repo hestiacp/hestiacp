@@ -5,6 +5,21 @@
 # example: v-rebuild-dns-domains alice
 #
 # This function rebuilds DNS configuration files.
+#
+# v-rebuild-dns-domains is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-domain-owner
+# bin/v-change-sys-ip-nat
+# bin/v-delete-remote-dns-domains
+# bin/v-log-action
+# bin/v-rebuild-all
+# bin/v-sync-dns-cluster
+# bin/v-update-sys-ip
+# func/rebuild.sh
+# func/upgrade.sh
+# test/test.bats
+# web/bulk/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

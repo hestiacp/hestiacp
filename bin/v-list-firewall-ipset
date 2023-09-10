@@ -5,6 +5,16 @@
 # example: v-list-firewall-ipset json
 #
 # This function prints defined ipset lists
+#
+# v-list-firewall-ipset is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-firewall-rule
+# bin/v-change-firewall-rule
+# bin/v-update-firewall
+# web/add/firewall/index.php
+# web/edit/firewall/index.php
+# web/list/firewall/ipset/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

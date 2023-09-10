@@ -5,6 +5,13 @@
 # example: v-update-firewall-ipset
 #
 # This function creates ipset lists and updates the lists if they are expired or ondemand
+#
+# v-update-firewall-ipset is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-firewall-ipset
+# bin/v-stop-firewall
+# bin/v-update-firewall
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

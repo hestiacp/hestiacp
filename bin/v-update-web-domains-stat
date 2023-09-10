@@ -5,6 +5,11 @@
 # example: v-update-web-domains-stat admin
 #
 # This function runs log analyser usage for all user webdomains.
+#
+# v-update-web-domains-stat is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

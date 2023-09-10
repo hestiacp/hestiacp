@@ -5,6 +5,11 @@
 # example: v-list-user-log
 #
 # This function of obtaining the list of 100 last users commands.
+#
+# v-list-user-log is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/list/log/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,13 @@
 # example: v-change-domain-owner www.example.com bob
 #
 # This function of changing domain ownership.
+#
+# v-change-domain-owner is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# bin/v-add-user-notification
+# test/test.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

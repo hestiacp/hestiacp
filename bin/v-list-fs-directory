@@ -5,6 +5,11 @@
 # example: v-list-fs-directory /home/admin/web
 #
 # This function lists directory on the file system
+#
+# v-list-fs-directory is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/src/app/WebApp/Installers/Flarum/FlarumSetup.php
 
 user=$1
 path=$2

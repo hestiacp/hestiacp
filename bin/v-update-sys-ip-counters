@@ -5,6 +5,12 @@
 # example: v-update-sys-ip-counters
 #
 # Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
+#
+# v-update-sys-ip-counters is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-restore-user
+# bin/v-update-sys-ip
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,19 @@
 # example: v-restart-web-backend
 #
 # This function reloads php interpreter configuration.
+#
+# v-restart-web-backend is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-web-domain-backend
+# bin/v-change-sys-php
+# bin/v-change-web-domain-backend-tpl
+# bin/v-delete-web-domain
+# bin/v-delete-web-domain-backend
+# bin/v-delete-web-php
+# bin/v-list-sys-php
+# bin/v-restart-service
+# web/bulk/web/index.php
 
 restart=$1
 # For backward compatibility might change in the feature

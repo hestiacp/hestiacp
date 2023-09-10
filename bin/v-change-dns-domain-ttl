@@ -5,6 +5,12 @@
 # example: v-change-dns-domain-ttl alice example.com 14400
 #
 # This function for changing the time to live TTL parameter for all records.
+#
+# v-change-dns-domain-ttl is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/dns/index.php
+# web/edit/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

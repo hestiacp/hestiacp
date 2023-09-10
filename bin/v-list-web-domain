@@ -5,6 +5,26 @@
 # example: v-list-web-domain admin example.com
 #
 # This function to obtain web domain parameters.
+#
+# v-list-web-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-host
+# bin/v-add-web-domain
+# bin/v-change-domain-owner
+# test/restore.bats
+# test/test.bats
+# web/add/webapp/index.php
+# web/download/web-log/index.php
+# web/edit/web/index.php
+# web/list/web-log/index.php
+# web/src/app/System/HestiaApp.php
+# web/src/app/WebApp/Installers/DokuWiki/DokuWikiSetup.php
+# web/src/app/WebApp/Installers/Flarum/FlarumSetup.php
+# web/src/app/WebApp/Installers/MediaWiki/MediaWikiSetup.php
+# web/src/app/WebApp/Installers/Opencart/OpencartSetup.php
+# web/src/app/WebApp/Installers/Prestashop/PrestashopSetup.php
+# web/src/app/WebApp/Installers/WordPress/WordPressSetup.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

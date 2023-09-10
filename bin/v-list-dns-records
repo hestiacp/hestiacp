@@ -5,6 +5,18 @@
 # example: v-list-dns-records admin example.com
 #
 # This function for getting all DNS domain records.
+#
+# v-list-dns-records is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# bin/v-add-mail-domain-webmail
+# bin/v-delete-letsencrypt-domain
+# bin/v-delete-mail-domain
+# bin/v-delete-mail-domain-dkim
+# bin/v-delete-mail-domain-webmail
+# web/edit/dns/index.php
+# web/list/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

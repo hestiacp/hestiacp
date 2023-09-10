@@ -5,6 +5,11 @@
 # example: v-delete-user-log user
 #
 # This function for deleting a users log file
+#
+# v-delete-user-log is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/delete/log/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -6,6 +6,13 @@
 #
 # This function for obtaining the list of themes in the theme
 # library and displaying them in the backend or user interface.
+#
+# v-list-sys-themes is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-user-theme
+# web/edit/server/index.php
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

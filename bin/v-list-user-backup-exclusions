@@ -5,6 +5,12 @@
 # example: v-list-user-backup-exclusions admin
 #
 # This function for obtaining the backup exclusion list
+#
+# v-list-user-backup-exclusions is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/backup/exclusions/index.php
+# web/list/backup/exclusions/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -6,6 +6,11 @@
 #
 # This function for deleting the database host from hestia configuration. It will
 # be deleted if there are no databases created on it only.
+#
+# v-delete-database-host is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

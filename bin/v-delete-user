@@ -6,6 +6,34 @@
 #
 # This function deletes a certain user and all his resources such as domains,
 # databases, cron jobs, etc.
+#
+# v-delete-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-user-package
+# bin/v-change-user-shell
+# bin/v-delete-databases
+# bin/v-delete-dns-domains
+# bin/v-delete-mail-domains
+# bin/v-delete-web-domain-ftp
+# test/api.bats
+# test/config-tests.bats
+# test/letsencrypt.bats
+# test/restore.bats
+# test/test.bats
+# web/bulk/backup/index.php
+# web/bulk/package/index.php
+# web/bulk/user/index.php
+# web/delete/backup/exclusion/index.php
+# web/delete/backup/index.php
+# web/delete/key/index.php
+# web/delete/log/auth/index.php
+# web/delete/log/index.php
+# web/delete/notification/index.php
+# web/delete/package/index.php
+# web/delete/user/index.php
+# web/edit/user/index.php
+# web/reset2fa/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

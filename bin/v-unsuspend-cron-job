@@ -5,6 +5,15 @@
 # example: v-unsuspend-cron-job admin 7 yes
 #
 # This function unsuspend certain cron job.
+#
+# v-unsuspend-cron-job is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-log-action
+# bin/v-restart-cron
+# test/test.bats
+# web/bulk/cron/index.php
+# web/unsuspend/cron/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

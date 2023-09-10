@@ -5,6 +5,11 @@
 # example: v-list-user-stats admin
 #
 # This function for listing user statistics
+#
+# v-list-user-stats is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/list/stats/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

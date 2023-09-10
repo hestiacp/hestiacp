@@ -3,6 +3,13 @@
 # options: tmpfile PACKAGE [REWRITE]
 #
 # This function adds new user package to the system.
+#
+# v-add-user-package is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/add/package/index.php
+# web/edit/package/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

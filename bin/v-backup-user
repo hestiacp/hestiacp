@@ -5,6 +5,14 @@
 # example: v-backup-user admin yes
 #
 # This function is used for backing up user with all its domains and databases.
+#
+# v-backup-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# bin/v-add-user-notification
+# bin/v-schedule-user-backup
+# test/test.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

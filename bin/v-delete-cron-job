@@ -5,6 +5,13 @@
 # example: v-delete-cron-job admin 9
 #
 # This function deletes cron job.
+#
+# v-delete-cron-job is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/bulk/cron/index.php
+# web/delete/cron/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

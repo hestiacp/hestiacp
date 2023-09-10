@@ -5,6 +5,12 @@
 # example: v-change-sys-ip-status 203.0.113.1 yourstatus
 #
 # This function of changing an IP address's status.
+#
+# v-change-sys-ip-status is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-ip-owner
+# web/edit/ip/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

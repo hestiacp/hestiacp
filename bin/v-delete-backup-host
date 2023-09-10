@@ -5,6 +5,11 @@
 # example: v-delete-backup-host sftp
 #
 # This function deletes ftp backup host
+#
+# v-delete-backup-host is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -10,6 +10,29 @@
 # "none" is transmited as argument. If ip have associated dns name, this
 # domain will also get the alias domain-tpl.$ipname. An alias with the ip
 # name is useful during the site testing while dns isn't moved to server yet.
+#
+# v-add-web-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-domain
+# bin/v-add-fs-directory
+# bin/v-add-letsencrypt-domain
+# bin/v-add-letsencrypt-host
+# bin/v-add-user
+# bin/v-add-user-sftp-jail
+# bin/v-delete-web-domain-redirect
+# bin/v-rebuild-web-domain
+# bin/v-rebuild-web-domains
+# bin/v-restore-user
+# bin/v-unsuspend-web-domain
+# func/rebuild.sh
+# test/config-tests.bats
+# test/letsencrypt.bats
+# test/test.bats
+# test/wildcard.bats
+# web/add/web/index.php
+# web/edit/web/index.php
+# web/templates/pages/edit_web.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

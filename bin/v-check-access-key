@@ -8,6 +8,11 @@
 # * Checks if the secret belongs to the key;
 # * Checks if the key user is suspended;
 # * Checks if the key has permission to run the command.
+#
+# v-check-access-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/api/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

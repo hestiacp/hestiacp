@@ -5,6 +5,13 @@
 # example: v-add-web-domain-stats-user admin example.com watchdog your_password
 #
 # This function is used for securing the web statistics page.
+#
+# v-add-web-domain-stats-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/web/index.php
+# web/templates/pages/edit_web.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

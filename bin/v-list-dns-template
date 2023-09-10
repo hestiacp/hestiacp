@@ -5,6 +5,11 @@
 # example: v-list-dns-template zoho
 #
 # This function for obtaining the DNS template parameters.
+#
+# v-list-dns-template is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

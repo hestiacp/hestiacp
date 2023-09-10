@@ -3,6 +3,11 @@
 # options: IP
 #
 # example: v-add-sys-api-ip 1.1.1.1
+#
+# v-add-sys-api-ip is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-sys-pma-sso
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -3,6 +3,11 @@
 # options: [FORMAT]
 #
 # This function for listing overall user statistics
+#
+# v-list-users-stats is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/list/stats/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

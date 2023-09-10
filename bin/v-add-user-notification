@@ -3,6 +3,18 @@
 # options: USER TOPIC NOTICE [TYPE]
 #
 # This function adds a new user notification to the panel.
+#
+# v-add-user-notification is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-sys-dependencies
+# bin/v-add-sys-filemanager
+# bin/v-backup-user
+# bin/v-change-domain-owner
+# bin/v-download-backup
+# bin/v-restore-user
+# func/upgrade.sh
+# test/test.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

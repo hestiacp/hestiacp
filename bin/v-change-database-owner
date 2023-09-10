@@ -5,6 +5,11 @@
 # example: v-change-database-owner mydb alice
 #
 # This function for changing database owner.
+#
+# v-change-database-owner is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

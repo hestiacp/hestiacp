@@ -6,6 +6,12 @@
 #
 # This function for enabling reports on cron tasks and administrative
 # notifications.
+#
+# v-add-cron-reports is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/cron/reports/index.php
+# web/bulk/cron/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

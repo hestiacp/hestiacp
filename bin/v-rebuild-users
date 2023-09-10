@@ -5,6 +5,11 @@
 # example: v-rebuild-users
 #
 # This function rebuilds user configuration for all users.
+#
+# v-rebuild-users is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-list-users
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

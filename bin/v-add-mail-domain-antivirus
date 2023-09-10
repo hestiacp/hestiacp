@@ -5,6 +5,11 @@
 # example: v-add-mail-domain-antivirus admin mydomain.tld
 #
 # This function enables clamav scan for incoming emails.
+#
+# v-add-mail-domain-antivirus is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

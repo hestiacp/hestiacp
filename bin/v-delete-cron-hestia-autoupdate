@@ -3,6 +3,11 @@
 # options: NONE
 #
 # This function deletes hestia autoupdate cron job.
+#
+# v-delete-cron-hestia-autoupdate is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/delete/cron/autoupdate/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

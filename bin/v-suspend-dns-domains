@@ -5,6 +5,11 @@
 # example: v-suspend-dns-domains admin yes
 #
 # This function suspends all user's DNS domains.
+#
+# v-suspend-dns-domains is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-suspend-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,16 @@
 # example: v-rebuild-databases admin
 #
 # This function for rebuilding of all databases of a single user.
+#
+# v-rebuild-databases is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-database-owner
+# bin/v-import-cpanel
+# bin/v-log-action
+# bin/v-rebuild-all
+# func/rebuild.sh
+# web/bulk/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

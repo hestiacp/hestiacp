@@ -6,6 +6,11 @@
 #
 # This function of deleting site's system of statistics. Its type is
 # automatically chooses from client's configuration file.
+#
+# v-change-web-domain-stats is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

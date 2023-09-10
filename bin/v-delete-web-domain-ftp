@@ -5,6 +5,15 @@
 # example: v-delete-web-domain-ftp admin wonderland.com bob_ftp
 #
 # This function deletes additional ftp account.
+#
+# v-delete-web-domain-ftp is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-user
+# bin/v-delete-user-sftp-jail
+# bin/v-delete-web-domain
+# func/rebuild.sh
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

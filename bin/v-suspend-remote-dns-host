@@ -5,6 +5,11 @@
 # example: v-suspend-remote-dns-host hostname.tld
 #
 # This function for suspending remote dns server.
+#
+# v-suspend-remote-dns-host is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

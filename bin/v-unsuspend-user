@@ -5,6 +5,22 @@
 # example: v-unsuspend-user bob
 #
 # This function unsuspends user and all his objects.
+#
+# v-unsuspend-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-user
+# bin/v-log-action
+# bin/v-restart-cron
+# bin/v-restart-dns
+# bin/v-restart-proxy
+# bin/v-restart-web
+# bin/v-unsuspend-cron-jobs
+# bin/v-unsuspend-databases
+# bin/v-unsuspend-dns-domains
+# bin/v-unsuspend-mail-domains
+# web/bulk/user/index.php
+# web/unsuspend/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

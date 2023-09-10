@@ -6,6 +6,11 @@
 # example: v-update-sys-defaults user
 #
 # This function updates the known key/value pair database
+#
+# v-update-sys-defaults is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

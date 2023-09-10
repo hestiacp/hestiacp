@@ -5,6 +5,15 @@
 # example: v-unsuspend-domain admin acme.com
 #
 # This function unsuspends web/dns/mail domain.
+#
+# v-unsuspend-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-restart-dns
+# bin/v-restart-proxy
+# bin/v-restart-web
+# bin/v-unsuspend-dns-domain
+# web/unsuspend/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

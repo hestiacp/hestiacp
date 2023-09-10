@@ -6,6 +6,11 @@
 #
 # add line to .bash_aliases to set default php command line
 # version when multi-php is enabled.
+#
+# v-change-user-php-cli is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

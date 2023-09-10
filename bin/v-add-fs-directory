@@ -5,6 +5,16 @@
 # example: v-add-fs-directory admin mybar
 #
 # This function creates new directory on the file system
+#
+# v-add-fs-directory is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-web-domain
+# func/domain.sh
+# func/rebuild.sh
+# test/test.bats
+# web/src/app/WebApp/Installers/BaseSetup.php
+# web/src/app/WebApp/Installers/WordPress/WordPressSetup.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

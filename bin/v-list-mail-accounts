@@ -5,6 +5,14 @@
 # example: v-list-mail-accounts admin acme.com
 #
 # This function of obtaining the list of all user domains.
+#
+# v-list-mail-accounts is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-access-key
+# bin/v-update-mail-domain-disk
+# bin/v-update-mail-domains-disk
+# web/list/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

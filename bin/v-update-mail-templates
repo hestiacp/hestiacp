@@ -5,6 +5,16 @@
 # example: v-update-mail-templates
 #
 # This function for obtaining updated webmail templates from Hestia package.
+#
+# v-update-mail-templates is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-list-users
+# bin/v-log-action
+# bin/v-rebuild-mail-domains
+# bin/v-restart-proxy
+# bin/v-restart-web
+# func/upgrade.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

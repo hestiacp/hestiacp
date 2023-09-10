@@ -5,6 +5,16 @@
 # example: v-update-web-templates
 #
 # This function for obtaining updated web (Nginx/Apache2/PHP) templates from the Hestia package.
+#
+# v-update-web-templates is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-list-users
+# bin/v-log-action
+# bin/v-rebuild-web-domains
+# bin/v-restart-proxy
+# bin/v-restart-web
+# func/upgrade.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

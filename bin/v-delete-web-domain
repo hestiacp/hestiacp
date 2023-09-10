@@ -8,6 +8,25 @@
 # (statistics, folders contents, ssl certificates, etc.). This operation is
 # not fully supported by "undo" function, so the data recovery is possible
 # only with a help of reserve copy.
+#
+# v-delete-web-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# bin/v-add-web-domain
+# bin/v-add-web-domain-redirect
+# bin/v-delete-domain
+# bin/v-delete-fastcgi-cache
+# bin/v-delete-letsencrypt-domain
+# bin/v-delete-user
+# bin/v-delete-user-sftp-jail
+# func/rebuild.sh
+# test/letsencrypt.bats
+# test/test.bats
+# test/wildcard.bats
+# web/bulk/web/index.php
+# web/delete/web/index.php
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

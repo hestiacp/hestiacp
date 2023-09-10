@@ -9,6 +9,17 @@
 # The soa argument is responsible for the relevant record. By default the first
 # user's NS server is used. TTL is set as common for the zone and for all of
 # its records with a default value of 14400 seconds.
+#
+# v-add-dns-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-on-web-alias
+# bin/v-add-domain
+# test/api.bats
+# test/letsencrypt.bats
+# test/test.bats
+# web/add/dns/index.php
+# web/add/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

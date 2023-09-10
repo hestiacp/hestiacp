@@ -8,6 +8,14 @@
 #
 # If the package is in use, users will be updated to
 # use the default package.
+#
+# v-delete-user-package is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-user-package
+# test/test.bats
+# web/bulk/package/index.php
+# web/delete/package/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

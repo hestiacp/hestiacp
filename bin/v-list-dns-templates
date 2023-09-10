@@ -5,6 +5,14 @@
 # example: v-list-dns-templates json
 #
 # This function for obtaining the list of all DNS templates available.
+#
+# v-list-dns-templates is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/dns/index.php
+# web/add/package/index.php
+# web/edit/dns/index.php
+# web/edit/package/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

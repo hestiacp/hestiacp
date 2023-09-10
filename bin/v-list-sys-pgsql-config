@@ -5,6 +5,12 @@
 # example: v-list-sys-pgsql-config
 #
 # This function for obtaining the list of postgresql config parameters.
+#
+# v-list-sys-pgsql-config is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-service-config
+# web/edit/server/postgresql/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

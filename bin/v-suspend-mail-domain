@@ -5,6 +5,17 @@
 # example: v-suspend-mail-domain admin domain.com
 #
 # This function suspends mail domain.
+#
+# v-suspend-mail-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-domain-owner
+# bin/v-delete-mail-domain
+# bin/v-delete-mail-domain-webmail
+# bin/v-log-action
+# bin/v-suspend-domain
+# web/bulk/mail/index.php
+# web/suspend/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

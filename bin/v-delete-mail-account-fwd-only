@@ -5,6 +5,11 @@
 # example: v-delete-mail-account-fwd-only admin example.com jack
 #
 # This function deletes fwd-only flag
+#
+# v-delete-mail-account-fwd-only is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

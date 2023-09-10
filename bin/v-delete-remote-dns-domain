@@ -5,6 +5,11 @@
 # example: v-delete-remote-dns-domain admin example.tld
 #
 # This function synchronise dns with the remote server.
+#
+# v-delete-remote-dns-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-dns-domain
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

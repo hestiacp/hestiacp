@@ -5,6 +5,14 @@
 # example: v-schedule-user-restore 2019-04-22_01-00-00.tar
 #
 # This function for scheduling user backup restoration.
+#
+# v-schedule-user-restore is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-log-action
+# bin/v-restore-user
+# web/bulk/restore/index.php
+# web/schedule/restore/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,27 @@
 # example: v-restart-service apache2
 #
 # This function restarts system service.
+#
+# v-restart-service is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-db-alias
+# bin/v-change-sys-port
+# bin/v-change-sys-service-config
+# bin/v-change-sys-web-terminal-port
+# bin/v-list-sys-php
+# bin/v-log-action
+# bin/v-restart-cron
+# bin/v-restart-dns
+# bin/v-restart-ftp
+# bin/v-restart-mail
+# bin/v-restart-proxy
+# bin/v-restart-web
+# bin/v-restart-web-backend
+# bin/v-update-host-certificate
+# func/upgrade.sh
+# web/bulk/service/index.php
+# web/restart/service/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

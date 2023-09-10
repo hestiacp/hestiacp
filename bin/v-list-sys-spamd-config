@@ -5,6 +5,13 @@
 # example: v-list-sys-spamd-config
 #
 # This function for obtaining the list of spamassassin config parameters.
+#
+# v-list-sys-spamd-config is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-service-config
+# web/edit/server/spamassassin/index.php
+# web/edit/server/spamd/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

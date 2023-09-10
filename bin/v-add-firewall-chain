@@ -5,6 +5,12 @@
 # example: v-add-firewall-chain CRM 5678 TCP
 #
 # This function adds new rule to system firewall
+#
+# v-add-firewall-chain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-firewall-ban
+# bin/v-update-firewall
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-list-sys-hestia-autoupdate
 #
 # This function for obtaining autoupdate settings.
+#
+# v-list-sys-hestia-autoupdate is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/list/updates/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-update-sys-rrd-mysql
 #
 # This function is for updating mysql rrd database and graphic.
+#
+# v-update-sys-rrd-mysql is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-sys-rrd
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

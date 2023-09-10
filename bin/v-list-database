@@ -5,6 +5,14 @@
 # example: v-list-database wp_db
 #
 # This function for obtaining of all database's parameters.
+#
+# v-list-database is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/restore.bats
+# web/add/db/index.php
+# web/edit/db/index.php
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

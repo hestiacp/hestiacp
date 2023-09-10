@@ -3,6 +3,13 @@
 # options: USER DOMAIN [RESTART] [QUIET]
 #
 # This function enables HSTS for the requested domain.
+#
+# v-add-web-domain-ssl-hsts is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-host
+# func/rebuild.sh
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

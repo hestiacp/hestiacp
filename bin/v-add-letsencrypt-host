@@ -6,6 +6,11 @@
 #
 # This function check and validates the backend certificate and generate
 # a new let's encrypt certificate.
+#
+# v-add-letsencrypt-host is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

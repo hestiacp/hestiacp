@@ -5,6 +5,11 @@
 # example: v-generate-api-key
 #
 # This function creates a key file in $HESTIA/data/keys/
+#
+# v-generate-api-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-remote-dns-host
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

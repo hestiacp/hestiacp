@@ -5,6 +5,11 @@
 # example: v-list-remote-dns-hosts json
 #
 # This function for obtaining the list of remote dns host.
+#
+# v-list-remote-dns-hosts is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

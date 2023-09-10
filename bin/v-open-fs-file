@@ -5,6 +5,13 @@
 # example: v-open-fs-file admin README.md
 #
 # This function opens/reads files on the file system
+#
+# v-open-fs-file is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/src/app/WebApp/Installers/Flarum/FlarumSetup.php
+# web/src/app/WebApp/Installers/Nextcloud/NextcloudSetup.php
+# web/src/app/WebApp/Installers/WordPress/WordPressSetup.php
 
 user=$1
 src_file=$2

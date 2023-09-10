@@ -5,6 +5,15 @@
 # example: v-suspend-dns-domain alice acme.com
 #
 # This function suspends a certain user's domain.
+#
+# v-suspend-dns-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-log-action
+# bin/v-suspend-domain
+# test/test.bats
+# web/bulk/dns/index.php
+# web/suspend/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

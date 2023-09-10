@@ -5,6 +5,12 @@
 # example: v-change-database-user admin my_db joe_user
 #
 # This function for changing database user. It uses the
+#
+# v-change-database-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/db/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

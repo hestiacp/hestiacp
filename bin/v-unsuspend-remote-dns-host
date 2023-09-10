@@ -5,6 +5,11 @@
 # example: v-unsuspend-remote-dns-host hosname.com
 #
 # This function for unsuspending remote dns server.
+#
+# v-unsuspend-remote-dns-host is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/remote.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

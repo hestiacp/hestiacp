@@ -6,6 +6,21 @@
 #
 # This function for deleting MAIL domain. By deleting it all accounts will
 # also be deleted.
+#
+# v-delete-mail-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-webmail
+# bin/v-delete-dns-record
+# bin/v-delete-domain
+# bin/v-delete-letsencrypt-domain
+# bin/v-rebuild-mail-domain
+# bin/v-suspend-mail-domain
+# test/test.bats
+# web/add/mail/index.php
+# web/bulk/mail/index.php
+# web/delete/mail/index.php
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

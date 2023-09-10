@@ -5,6 +5,15 @@
 # example: v-delete-fs-directory admin report1
 #
 # This function deletes directory on the file system
+#
+# v-delete-fs-directory is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/rebuild.sh
+# web/src/app/WebApp/Installers/BaseSetup.php
+# web/src/app/WebApp/Installers/Flarum/FlarumSetup.php
+# web/src/app/WebApp/Installers/Opencart/OpencartSetup.php
+# web/src/app/WebApp/Installers/Prestashop/PrestashopSetup.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

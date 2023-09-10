@@ -6,6 +6,16 @@
 #
 # This function runs as apt update trigger. It pulls shell script from hestia
 # server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
+#
+# v-update-sys-hestia is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-cron-hestia-autoupdate
+# bin/v-change-sys-config-value
+# bin/v-delete-cron-hestia-autoupdate
+# bin/v-list-sys-hestia-autoupdate
+# func/syshealth.sh
+# web/update/hestia/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

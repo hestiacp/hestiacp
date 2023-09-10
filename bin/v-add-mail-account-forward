@@ -5,6 +5,12 @@
 # example: v-add-mail-account-forward admin acme.com alice bob
 #
 # This function add new email account.
+#
+# v-add-mail-account-forward is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/mail/index.php
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

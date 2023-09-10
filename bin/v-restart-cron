@@ -5,6 +5,26 @@
 # example: v-restart-cron
 #
 # This function tells crond service to reread its configuration files.
+#
+# v-restart-cron is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-cron-hestia-autoupdate
+# bin/v-add-cron-job
+# bin/v-add-cron-reports
+# bin/v-change-cron-job
+# bin/v-delete-cron-hestia-autoupdate
+# bin/v-delete-cron-job
+# bin/v-delete-cron-reports
+# bin/v-rebuild-cron-jobs
+# bin/v-restore-user
+# bin/v-suspend-cron-job
+# bin/v-suspend-cron-jobs
+# bin/v-suspend-user
+# bin/v-unsuspend-cron-job
+# bin/v-unsuspend-cron-jobs
+# bin/v-unsuspend-user
+# web/bulk/cron/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,12 @@
 # example: v-change-sys-ip-nat 10.0.0.1 203.0.113.1
 #
 # This function for changing NAT IP associated with IP.
+#
+# v-change-sys-ip-nat is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-sys-ip
+# web/edit/ip/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

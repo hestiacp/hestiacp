@@ -7,6 +7,19 @@
 # example: v-add-sys-webmail user domain.com roundcube
 #
 # This function enables webmail client for a mail domain.
+#
+# v-add-mail-domain-webmail is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-record
+# bin/v-add-mail-domain
+# bin/v-change-sys-webmail
+# bin/v-rebuild-mail-domain
+# bin/v-unsuspend-mail-domain
+# func/rebuild.sh
+# test/test.bats
+# web/add/mail/index.php
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

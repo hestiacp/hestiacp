@@ -6,6 +6,11 @@
 #
 # This function allows the user to restore a single mail domain
 # from a backup archive.
+#
+# v-restore-mail-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

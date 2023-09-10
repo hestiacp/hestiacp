@@ -12,6 +12,12 @@
 #
 # This call changes the document root of a chosen web domain
 # to another available domain under the user context.
+#
+# v-change-web-domain-docroot is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

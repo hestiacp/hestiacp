@@ -5,6 +5,11 @@
 # example: v-list-letsencrypt-user admin
 #
 # This function for obtaining the letsencrypt key thumbprint
+#
+# v-list-letsencrypt-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

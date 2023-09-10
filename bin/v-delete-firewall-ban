@@ -5,6 +5,13 @@
 # example: v-delete-firewall-ban 198.11.130.250 MAIL
 #
 # This function deletes blocking rule from system firewall
+#
+# v-delete-firewall-ban is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/bulk/firewall/banlist/index.php
+# web/delete/firewall/banlist/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

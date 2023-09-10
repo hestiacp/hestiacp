@@ -5,6 +5,12 @@
 # example: v-list-cron-jobs admin
 #
 # This function for obtaining the list of all users cron jobs.
+#
+# v-list-cron-jobs is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/list/cron/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

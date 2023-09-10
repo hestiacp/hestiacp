@@ -3,6 +3,11 @@
 # options: [MODE]
 #
 # This function installs the Roundcube webmail client.
+#
+# v-add-sys-roundcube is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/upgrade.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

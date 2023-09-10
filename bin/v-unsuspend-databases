@@ -3,6 +3,12 @@
 # options: USER
 #
 # This function for unsuspending all user's databases.
+#
+# v-unsuspend-databases is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-user
+# bin/v-unsuspend-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

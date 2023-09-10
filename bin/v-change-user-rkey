@@ -3,6 +3,11 @@
 # options: USER [HASH]
 #
 # This function changes user's RKEY value thats has been used for security value to be used forgot password function only.
+#
+# v-change-user-rkey is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/reset/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

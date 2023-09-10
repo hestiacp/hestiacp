@@ -5,6 +5,18 @@
 # example: v-run-cli-cmd user composer require package
 #
 # This function runs a limited list of cli commands with dropped privileges as the specific hestia user
+#
+# v-run-cli-cmd is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/src/app/System/HestiaApp.php
+# web/src/app/WebApp/AppWizard.php
+# web/src/app/WebApp/Installers/Drupal/DrupalSetup.php
+# web/src/app/WebApp/Installers/Grav/GravSetup.php
+# web/src/app/WebApp/Installers/MediaWiki/MediaWikiSetup.php
+# web/src/app/WebApp/Installers/Nextcloud/NextcloudSetup.php
+# web/src/app/WebApp/Installers/Opencart/OpencartSetup.php
+# web/src/app/WebApp/Installers/Prestashop/PrestashopSetup.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

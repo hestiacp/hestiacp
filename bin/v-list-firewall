@@ -5,6 +5,19 @@
 # example: v-list-firewall json
 #
 # This function of obtaining the list of all iptables rules.
+#
+# v-list-firewall is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-firewall-rule
+# bin/v-change-firewall-rule
+# bin/v-update-firewall
+# test/test.bats
+# web/add/firewall/index.php
+# web/edit/firewall/index.php
+# web/list/firewall/banlist/index.php
+# web/list/firewall/index.php
+# web/list/firewall/ipset/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

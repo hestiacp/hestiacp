@@ -5,6 +5,11 @@
 # example: v-list-sys-rrd
 #
 # List available rrd graphics, its titles and paths.
+#
+# v-list-sys-rrd is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/list/rrd/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

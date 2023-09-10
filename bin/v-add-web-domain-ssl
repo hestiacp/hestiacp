@@ -10,6 +10,16 @@
 # authority domain.tld.ca file is optional. If home directory parameter
 # (ssl_home) is not set, https domain uses public_shtml as separate
 # documentroot directory.
+#
+# v-add-web-domain-ssl is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# bin/v-add-letsencrypt-host
+# func/rebuild.sh
+# test/config-tests.bats
+# test/test.bats
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

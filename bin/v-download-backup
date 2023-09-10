@@ -5,6 +5,13 @@
 # example: v-download-backup admin admin.2020-11-05_05-10-21.tar
 #
 # This function download back-up from remote server
+#
+# v-download-backup is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# bin/v-add-user-notification
+# bin/v-schedule-user-backup-download
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

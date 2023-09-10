@@ -5,6 +5,11 @@
 # example: v-list-sys-dovecot-config
 #
 # This function for obtaining the list of dovecot config parameters.
+#
+# v-list-sys-dovecot-config is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/server/dovecot/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

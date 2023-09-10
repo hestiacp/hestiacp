@@ -5,6 +5,11 @@
 # example: v-check-fs-permission admin readme.txt
 #
 # This function opens/reads files on the file system
+#
+# v-check-fs-permission is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

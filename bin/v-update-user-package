@@ -5,6 +5,13 @@
 # example: v-update-user-package default
 #
 # This function propagates package to connected users.
+#
+# v-update-user-package is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-user-package
+# bin/v-list-users
+# web/edit/package/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

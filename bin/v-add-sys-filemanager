@@ -4,6 +4,13 @@
 #
 # This function installs the File Manager on the server
 # for access through the Web interface.
+#
+# v-add-sys-filemanager is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/syshealth.sh
+# func/upgrade.sh
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

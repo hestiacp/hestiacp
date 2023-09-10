@@ -5,6 +5,13 @@
 # example: v-add-mail-domain-smtp-relay user domain.tld srv.smtprelay.tld uname123 pass12345
 #
 # This function adds mail domain smtp relay support.
+#
+# v-add-mail-domain-smtp-relay is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/rebuild.sh
+# web/add/mail/index.php
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

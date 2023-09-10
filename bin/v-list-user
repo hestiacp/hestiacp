@@ -5,6 +5,40 @@
 # example: v-list-user admin
 #
 # This function to obtain user parameters.
+#
+# v-list-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-acknowledge-user-notification
+# bin/v-add-user
+# func/main.sh
+# func/remote.sh
+# func/upgrade.sh
+# test/test.bats
+# web/add/dns/index.php
+# web/add/key/index.php
+# web/add/user/index.php
+# web/add/web/index.php
+# web/edit/backup/exclusions/index.php
+# web/edit/dns/index.php
+# web/edit/package/index.php
+# web/edit/user/index.php
+# web/edit/web/index.php
+# web/inc/main.php
+# web/list/backup/exclusions/index.php
+# web/list/backup/index.php
+# web/list/key/index.php
+# web/list/log/auth/index.php
+# web/list/log/index.php
+# web/list/mail/index.php
+# web/list/notifications/index.php
+# web/list/package/index.php
+# web/list/stats/index.php
+# web/list/user/index.php
+# web/login/index.php
+# web/reset2fa/index.php
+# web/reset/index.php
+# web/src/app/System/HestiaApp.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

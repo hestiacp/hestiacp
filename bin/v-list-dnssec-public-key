@@ -5,6 +5,11 @@
 # example: v-list-dns-public-key admin acme.com
 #
 # This function list the public key to be used with DNSSEC and needs to be added to the domain register.
+#
+# v-list-dnssec-public-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/list/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

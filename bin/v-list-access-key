@@ -3,6 +3,14 @@
 # options: ACCESS_KEY_ID [FORMAT]
 #
 # example: v-list-access-key 1234567890ABCDefghij json
+#
+# v-list-access-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-access-key
+# web/bulk/access-key/index.php
+# web/delete/access-key/index.php
+# web/list/access-key/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

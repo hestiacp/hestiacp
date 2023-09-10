@@ -5,6 +5,12 @@
 # example: v-change-user-ns ns1.domain.tld ns2.domain.tld
 #
 # This function for changing default name servers for specific user.
+#
+# v-change-user-ns is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

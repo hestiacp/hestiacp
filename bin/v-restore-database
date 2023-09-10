@@ -6,6 +6,11 @@
 #
 # This function allows the user to restore a single database
 # from a backup archive.
+#
+# v-restore-database is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -10,6 +10,11 @@
 # - Databases
 # - Cron Jobs
 # - User account configuration
+#
+# v-rebuild-all is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/bulk/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

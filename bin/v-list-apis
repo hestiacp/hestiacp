@@ -3,6 +3,12 @@
 # options: [FORMAT]
 #
 # example: v-list-apis json
+#
+# v-list-apis is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/access-key/index.php
+# web/list/access-key/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -9,6 +9,13 @@
 #          # install-auto: installs package and schedules automatic updates from Git
 #
 # Downloads and compiles/installs packages from GitHub repositories
+#
+# v-update-sys-hestia-git is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-cron-hestia-autoupdate
+# bin/v-change-sys-config-value
+# bin/v-delete-cron-hestia-autoupdate
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

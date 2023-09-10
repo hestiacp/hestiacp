@@ -5,6 +5,15 @@
 # example: v-change-user-shell admin nologin
 #
 # This function changes system shell of a user. Shell gives ability to use ssh.
+#
+# v-change-user-shell is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# bin/v-add-user-sftp-jail
+# bin/v-change-user-package
+# test/test.bats
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-add-user-2fa admin
 #
 # This function creates a new 2fa token for user.
+#
+# v-add-user-2fa is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

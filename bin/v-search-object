@@ -5,6 +5,12 @@
 # example: v-search-object example.com json
 #
 # This function that allows to find system objects.
+#
+# v-search-object is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-list-users
+# web/search/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

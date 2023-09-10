@@ -5,6 +5,12 @@
 # example: v-list-sys-sshd-port
 #
 # This function for obtainings the port of sshd listens to
+#
+# v-list-sys-sshd-port is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-firewall-chain
+# bin/v-update-firewall
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

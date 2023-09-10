@@ -5,6 +5,14 @@
 # example: v-delete-sys-pma-sso
 #
 # Disables support for SSO to phpMyAdmin
+#
+# v-delete-sys-pma-sso is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-sys-pma-sso
+# bin/v-change-sys-config-value
+# bin/v-delete-access-key
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

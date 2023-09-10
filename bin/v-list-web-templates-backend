@@ -5,6 +5,15 @@
 # example: v-list-web-templates-backend
 #
 # This function for obtaining the list of available backend templates.
+#
+# v-list-web-templates-backend is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/package/index.php
+# web/add/web/index.php
+# web/edit/package/index.php
+# web/edit/server/index.php
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

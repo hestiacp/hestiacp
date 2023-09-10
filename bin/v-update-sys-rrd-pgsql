@@ -5,6 +5,11 @@
 # example: v-update-sys-rrd-pgsql
 #
 # This function is for updating postgresql rrd database and graphic.
+#
+# v-update-sys-rrd-pgsql is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-sys-rrd
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

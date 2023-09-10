@@ -5,6 +5,15 @@
 # example: v-add-web-domain-backend admin example.com default yes
 #
 # This function is used to add the web backend configuration.
+#
+# v-add-web-domain-backend is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-web-domain
+# bin/v-rebuild-web-domain
+# bin/v-rebuild-web-domains
+# bin/v-restore-user
+# bin/v-unsuspend-web-domain
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

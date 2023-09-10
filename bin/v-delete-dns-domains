@@ -5,6 +5,13 @@
 # example: v-delete-dns-domains bob
 #
 # This function for deleting all users DNS domains.
+#
+# v-delete-dns-domains is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-remote-dns-domains
+# bin/v-delete-user
+# bin/v-sync-dns-cluster
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

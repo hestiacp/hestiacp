@@ -5,6 +5,11 @@
 # example: v-change-web-domain-ftp-path admin example.com /home/admin/example.com
 #
 # This function changes ftp user path.
+#
+# v-change-web-domain-ftp-path is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

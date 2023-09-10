@@ -3,6 +3,11 @@
 # options: USER [FORMAT]
 #
 # This function of obtaining the list of 10 last users commands.
+#
+# v-list-user-auth-log is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/list/log/auth/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

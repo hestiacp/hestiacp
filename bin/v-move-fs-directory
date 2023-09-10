@@ -6,6 +6,12 @@
 #
 # This function moved file or directory on the file system. This function
 # can also be used to rename files just like normal mv command.
+#
+# v-move-fs-directory is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/src/app/WebApp/Installers/Flarum/FlarumSetup.php
+# web/src/app/WebApp/Installers/Opencart/OpencartSetup.php
 
 user=$1
 src_dir=$2

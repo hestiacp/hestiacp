@@ -5,6 +5,11 @@
 # example: v-add-fs-file admin readme.md
 #
 # This function creates new files on file system
+#
+# v-add-fs-file is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user-ssh-key
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

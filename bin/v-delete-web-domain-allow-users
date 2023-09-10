@@ -8,6 +8,11 @@
 # Enforce subdomain ownership setting in /edit/server/ set to no will always overwrite this behaviour
 # eg: admin adds admin.com
 # user can create user.admin.com
+#
+# v-delete-web-domain-allow-users is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

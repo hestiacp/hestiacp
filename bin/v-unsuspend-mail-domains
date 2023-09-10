@@ -5,6 +5,12 @@
 # example: v-unsuspend-mail-domains admin
 #
 # This function unsuspends all user's MAIL domains.
+#
+# v-unsuspend-mail-domains is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-user
+# bin/v-unsuspend-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

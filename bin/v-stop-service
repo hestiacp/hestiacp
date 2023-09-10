@@ -5,6 +5,15 @@
 # example: v-stop-service apache2
 #
 # This function stops system service.
+#
+# v-stop-service is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-sys-web-terminal
+# bin/v-log-action
+# bin/v-stop-firewall
+# web/bulk/service/index.php
+# web/stop/service/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

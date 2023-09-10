@@ -3,6 +3,13 @@
 # options: [FORMAT]
 #
 # This function for obtaining the list of available hosting packages.
+#
+# v-list-user-packages is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/user/index.php
+# web/edit/user/index.php
+# web/list/package/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

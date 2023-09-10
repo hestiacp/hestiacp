@@ -5,6 +5,11 @@
 # example: v-update-sys-rrd-net
 #
 # This function is for updating network usage rrd database and graphic.
+#
+# v-update-sys-rrd-net is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-sys-rrd
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

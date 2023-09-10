@@ -5,6 +5,14 @@
 # example: v-delete-fastcgi-cache user domain.tld
 #
 # This function disables FastCGI cache for nginx
+#
+# v-delete-fastcgi-cache is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-web-domain
+# func/rebuild.sh
+# test/test.bats
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

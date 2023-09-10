@@ -5,6 +5,23 @@
 # example: v-delete-dns-record bob acme.com 42 yes
 #
 # This function for deleting a certain record of DNS zone.
+#
+# v-delete-dns-record is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# bin/v-add-mail-domain-webmail
+# bin/v-delete-dns-on-web-alias
+# bin/v-delete-letsencrypt-domain
+# bin/v-delete-mail-domain
+# bin/v-delete-mail-domain-dkim
+# bin/v-delete-mail-domain-webmail
+# bin/v-delete-remote-dns-record
+# bin/v-import-cpanel
+# test/api.bats
+# test/test.bats
+# web/bulk/dns/index.php
+# web/delete/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

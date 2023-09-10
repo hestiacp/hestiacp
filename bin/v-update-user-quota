@@ -5,6 +5,14 @@
 # example: v-update-user-quota alice
 #
 # The functions upates disk quota for specific user
+#
+# v-update-user-quota is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-sys-quota
+# bin/v-add-user
+# bin/v-change-user-package
+# bin/v-rebuild-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

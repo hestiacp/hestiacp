@@ -5,6 +5,12 @@
 # example: v-add-mail-account-fwd-only admin example.com user
 #
 # This function adds fwd-only flag
+#
+# v-add-mail-account-fwd-only is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/mail/index.php
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

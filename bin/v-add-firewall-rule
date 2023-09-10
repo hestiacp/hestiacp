@@ -5,6 +5,12 @@
 # example: v-add-firewall-rule DROP 185.137.111.77 25
 #
 # This function adds new rule to system firewall
+#
+# v-add-firewall-rule is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/add/firewall/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -6,6 +6,11 @@
 #
 # This function for changing SOA record. This type of records can not be
 # modified by v-change-dns-record call.
+#
+# v-change-dns-domain-soa is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -6,6 +6,12 @@
 #
 # This function allows configuring a SMTP account for the server to use
 # for logging, notification and warn emails etc.
+#
+# v-add-sys-smtp is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,12 @@
 # example: v-add-domain admin example.com
 #
 # This function adds web/dns/mail domain to a server.
+#
+# v-add-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-domain
+# bin/v-import-cpanel
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

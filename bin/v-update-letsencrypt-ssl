@@ -5,6 +5,20 @@
 # example: v-update-letsencrypt-ssl
 #
 # This function for renew letsencrypt expired ssl certificate for all users
+#
+# v-update-letsencrypt-ssl is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# bin/v-list-users
+# bin/v-log-action
+# bin/v-restart-mail
+# bin/v-restart-proxy
+# bin/v-restart-web
+# bin/v-update-host-certificate
+# func/syshealth.sh
+# test/letsencrypt.bats
+# test/wildcard.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

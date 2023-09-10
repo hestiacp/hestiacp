@@ -10,6 +10,12 @@
 #
 # This function changes the database editor url in
 # apache2 or nginx configuration.
+#
+# v-change-sys-db-alias is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-config-value
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

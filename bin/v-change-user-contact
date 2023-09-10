@@ -5,6 +5,12 @@
 # example: v-change-user-contact admin admin@yahoo.com
 #
 # This function for changing of e-mail associated with a certain user.
+#
+# v-change-user-contact is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

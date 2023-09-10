@@ -5,6 +5,20 @@
 # example: v-unsuspend-web-domain admin acme.com
 #
 # This function of unsuspending the domain.
+#
+# v-unsuspend-web-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-web-domain
+# bin/v-add-web-domain-backend
+# bin/v-change-domain-owner
+# bin/v-log-action
+# bin/v-rebuild-web-domain
+# bin/v-restart-proxy
+# bin/v-restart-web
+# bin/v-unsuspend-domain
+# test/test.bats
+# web/bulk/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

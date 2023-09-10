@@ -6,6 +6,13 @@
 #
 # This function of deleting the alias domain (parked domain). By this call
 # default www aliase can be removed as well.
+#
+# v-delete-web-domain-alias is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/letsencrypt.bats
+# test/test.bats
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

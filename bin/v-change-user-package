@@ -5,6 +5,15 @@
 # example: v-change-user-package admin yourpackage
 #
 # This function changes user's hosting package.
+#
+# v-change-user-package is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-user-package
+# bin/v-rename-user-package
+# bin/v-update-user-package
+# test/test.bats
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

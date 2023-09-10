@@ -5,6 +5,11 @@
 # example: v-change-remote-dns-domain-ttl admin domain.tld
 #
 # This function synchronise dns domain with the remote server.
+#
+# v-change-remote-dns-domain-ttl is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-dns-domain-ttl
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

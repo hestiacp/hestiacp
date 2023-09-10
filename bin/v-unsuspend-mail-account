@@ -5,6 +5,13 @@
 # example: v-unsuspend-mail-account admin acme.com tester
 #
 # This function unsuspends mail account.
+#
+# v-unsuspend-mail-account is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-log-action
+# web/bulk/mail/index.php
+# web/unsuspend/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

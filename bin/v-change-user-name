@@ -5,6 +5,12 @@
 # example: v-change-user-name admin John Smith
 #
 # This function allow to change user's full name.
+#
+# v-change-user-name is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

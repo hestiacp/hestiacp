@@ -3,6 +3,20 @@
 # options: HOST
 #
 # This function synchronise all dns domains.
+#
+# v-sync-dns-cluster is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-remote-dns-host
+# bin/v-change-domain-owner
+# bin/v-delete-dns-domains
+# bin/v-delete-dns-domains-src
+# bin/v-insert-dns-domain
+# bin/v-insert-dns-records
+# bin/v-rebuild-dns-domain
+# bin/v-rebuild-dns-domains
+# func/remote.sh
+# test/api.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

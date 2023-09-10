@@ -5,6 +5,15 @@
 # example: v-rename-package package package2
 #
 # This function changes the name of an existing package.
+#
+# v-rename-user-package is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-user-package
+# bin/v-get-user-value
+# bin/v-list-users
+# bin/v-log-action
+# web/edit/package/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

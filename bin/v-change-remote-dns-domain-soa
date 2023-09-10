@@ -5,6 +5,11 @@
 # example: v-change-remote-dns-domain-soa admin example.org.uk
 #
 # This function synchronise dns domain with the remote server.
+#
+# v-change-remote-dns-domain-soa is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-dns-domain-soa
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-delete-web-domain-httpauth admin example.com alice
 #
 # This function is used for deleting http auth user
+#
+# v-delete-web-domain-httpauth is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

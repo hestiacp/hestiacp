@@ -6,6 +6,13 @@
 #
 # This function of changing the term of expiration domain's registration. The
 # serial number will be refreshed automatically during update.
+#
+# v-change-dns-domain-exp is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/add/dns/index.php
+# web/edit/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

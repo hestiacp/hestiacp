@@ -5,6 +5,11 @@
 # example: v-refresh-sys-theme
 #
 # This function for changing the currently active system theme.
+#
+# v-refresh-sys-theme is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

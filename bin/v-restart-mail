@@ -5,6 +5,20 @@
 # example: v-restart-mail
 #
 # This function tells exim or dovecot services to reload configuration files.
+#
+# v-restart-mail is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-mail-domain-ssl
+# bin/v-change-mail-domain-sslcert
+# bin/v-change-sys-hestia-ssl
+# bin/v-delete-letsencrypt-domain
+# bin/v-delete-mail-domain-ssl
+# bin/v-update-host-certificate
+# bin/v-update-letsencrypt-ssl
+# bin/v-update-mail-domain-ssl
+# bin/v-update-sys-ip
+# func/upgrade.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -6,6 +6,11 @@
 # example: v-delete-mail-domain-reject admin mydomain.tld
 #
 # The function disables spam rejection for incoming emails.
+#
+# v-delete-mail-domain-reject is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                    Variable&Function                     #

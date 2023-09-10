@@ -5,6 +5,12 @@
 # example: v-add-firewall-ban 37.120.129.20 MAIL
 #
 # This function adds new blocking rule to system firewall
+#
+# v-add-firewall-ban is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/add/firewall/banlist/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,12 @@
 # example: v-change-sys-ip-owner 203.0.113.1 admin
 #
 # This function of changing IP address ownership.
+#
+# v-change-sys-ip-owner is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-ip-status
+# web/edit/ip/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

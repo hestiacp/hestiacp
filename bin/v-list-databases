@@ -5,6 +5,12 @@
 # example: v-list-databases user json
 #
 # This function for obtaining the list of all user's databases.
+#
+# v-list-databases is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-databases-disk
+# web/list/db/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

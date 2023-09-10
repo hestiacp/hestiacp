@@ -6,6 +6,11 @@
 #
 # This function is wrapper for all rrd functions. It updates all
 # v-update-sys-rrd_* at once.
+#
+# v-update-sys-rrd is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/syshealth.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

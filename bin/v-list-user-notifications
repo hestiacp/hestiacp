@@ -5,6 +5,13 @@
 # example: v-list-user-notifications admin
 #
 # This function for getting the list notifications
+#
+# v-list-user-notifications is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-acknowledge-user-notification
+# test/test.bats
+# web/list/notifications/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

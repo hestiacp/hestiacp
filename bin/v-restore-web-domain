@@ -6,6 +6,11 @@
 #
 # This function allows the user to restore a single web domain
 # from a backup archive.
+#
+# v-restore-web-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-restore-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

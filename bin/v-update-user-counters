@@ -5,6 +5,20 @@
 # example: v-update-user-counters admin
 #
 # Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
+#
+# v-update-user-counters is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-database-owner
+# bin/v-change-dns-domain-tpl
+# bin/v-change-domain-owner
+# bin/v-list-users
+# bin/v-rebuild-mail-domain
+# bin/v-rebuild-user
+# bin/v-rebuild-web-domain
+# bin/v-rebuild-web-domains
+# bin/v-restore-user
+# web/bulk/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

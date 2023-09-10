@@ -5,6 +5,20 @@
 # example: v-rebuild-mail-domains admin
 #
 # This function rebuilds EXIM configuration files for all mail domains.
+#
+# v-rebuild-mail-domains is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-domain-owner
+# bin/v-change-sys-php
+# bin/v-log-action
+# bin/v-rebuild-all
+# bin/v-update-mail-templates
+# bin/v-update-sys-ip
+# func/rebuild.sh
+# func/upgrade.sh
+# test/test.bats
+# web/bulk/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-delete-mail-domain-smtp-relay user domain.tld
 #
 # This function removes mail domain smtp relay support.
+#
+# v-delete-mail-domain-smtp-relay is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

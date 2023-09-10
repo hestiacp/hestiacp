@@ -5,6 +5,11 @@
 # example: v-change-web-domain-httpauth admin acme.com alice white_rA$$bIt
 #
 # This function is used for changing http auth user password
+#
+# v-change-web-domain-httpauth is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

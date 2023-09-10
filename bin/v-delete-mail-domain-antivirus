@@ -5,6 +5,11 @@
 # example: v-delete-mail-domain-antivirus admin mydomain.tld
 #
 # This function disables clamav scan for incoming emails.
+#
+# v-delete-mail-domain-antivirus is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

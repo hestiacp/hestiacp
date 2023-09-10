@@ -8,6 +8,20 @@
 # SRV types can be used by a filling in the 'value' argument. This function also
 # gets an ID parameter for definition of certain record identifiers or for the
 # regulation of records.
+#
+# v-add-dns-record is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-on-web-alias
+# bin/v-add-letsencrypt-domain
+# bin/v-add-mail-domain
+# bin/v-add-mail-domain-dkim
+# bin/v-add-mail-domain-webmail
+# bin/v-change-dns-domain-tpl
+# bin/v-import-cpanel
+# test/api.bats
+# test/test.bats
+# web/add/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

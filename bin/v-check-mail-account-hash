@@ -5,6 +5,11 @@
 # example: v-check-mail-account-hash ARGONID2 PASS HASH
 #
 # This function verifies email account password hash
+#
+# v-check-mail-account-hash is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

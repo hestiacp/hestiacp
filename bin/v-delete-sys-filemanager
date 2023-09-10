@@ -5,6 +5,13 @@
 # example: v-delete-sys-filemanager
 #
 # This function removes the File Manager and its entry points
+#
+# v-delete-sys-filemanager is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-config-value
+# func/upgrade.sh
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

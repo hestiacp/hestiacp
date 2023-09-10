@@ -5,6 +5,13 @@
 # example: v-suspend-mail-account admin acme.com bob
 #
 # This function suspends mail account.
+#
+# v-suspend-mail-account is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-log-action
+# web/bulk/mail/index.php
+# web/suspend/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

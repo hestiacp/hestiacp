@@ -5,6 +5,76 @@
 # example: v-restart-web
 #
 # This function reloads web server configuration.
+#
+# v-restart-web is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-domain
+# bin/v-add-fastcgi-cache
+# bin/v-add-letsencrypt-domain
+# bin/v-add-mail-domain
+# bin/v-add-mail-domain-ssl
+# bin/v-add-mail-domain-webmail
+# bin/v-add-sys-ip
+# bin/v-add-web-domain
+# bin/v-add-web-domain-alias
+# bin/v-add-web-domain-backend
+# bin/v-add-web-domain-httpauth
+# bin/v-add-web-domain-redirect
+# bin/v-add-web-domain-ssl
+# bin/v-add-web-domain-ssl-force
+# bin/v-add-web-domain-ssl-hsts
+# bin/v-add-web-domain-stats-user
+# bin/v-add-web-php
+# bin/v-change-sys-demo-mode
+# bin/v-change-sys-php
+# bin/v-change-sys-webmail
+# bin/v-change-web-domain-backend-tpl
+# bin/v-change-web-domain-dirlist
+# bin/v-change-web-domain-ip
+# bin/v-change-web-domain-sslcert
+# bin/v-change-web-domain-tpl
+# bin/v-delete-domain
+# bin/v-delete-fastcgi-cache
+# bin/v-delete-letsencrypt-domain
+# bin/v-delete-mail-domain-webmail
+# bin/v-delete-sys-ip
+# bin/v-delete-web-domain
+# bin/v-delete-web-domain-alias
+# bin/v-delete-web-domain-backend
+# bin/v-delete-web-domain-httpauth
+# bin/v-delete-web-domain-redirect
+# bin/v-delete-web-domains
+# bin/v-delete-web-domain-ssl
+# bin/v-delete-web-domain-ssl-force
+# bin/v-delete-web-domain-ssl-hsts
+# bin/v-delete-web-domain-stats-user
+# bin/v-delete-web-php
+# bin/v-list-sys-php
+# bin/v-purge-nginx-cache
+# bin/v-rebuild-web-domain
+# bin/v-rebuild-web-domains
+# bin/v-restart-service
+# bin/v-restore-user
+# bin/v-suspend-domain
+# bin/v-suspend-user
+# bin/v-suspend-web-domain
+# bin/v-suspend-web-domains
+# bin/v-unsuspend-domain
+# bin/v-unsuspend-user
+# bin/v-unsuspend-web-domain
+# bin/v-unsuspend-web-domains
+# bin/v-update-letsencrypt-ssl
+# bin/v-update-mail-domain-ssl
+# bin/v-update-mail-templates
+# bin/v-update-sys-ip
+# bin/v-update-web-domain-ssl
+# bin/v-update-web-templates
+# func/upgrade.sh
+# test/test.bats
+# test/wildcard.bats
+# web/bulk/web/index.php
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

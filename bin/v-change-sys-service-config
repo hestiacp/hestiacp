@@ -5,6 +5,33 @@
 # example: v-change-sys-service-config /home/admin/dovecot.conf dovecot yes
 #
 # This function for changing service confguration.
+#
+# v-change-sys-service-config is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/server/apache2/index.php
+# web/edit/server/bind9/index.php
+# web/edit/server/clamav-daemon/index.php
+# web/edit/server/dovecot/index.php
+# web/edit/server/exim4/index.php
+# web/edit/server/exim/index.php
+# web/edit/server/fail2ban/index.php
+# web/edit/server/hestiaweb/index.php
+# web/edit/server/httpd/index.php
+# web/edit/server/mariadb/index.php
+# web/edit/server/mysqld/index.php
+# web/edit/server/mysql/index.php
+# web/edit/server/named/index.php
+# web/edit/server/nginx/index.php
+# web/edit/server/php5-fpm/index.php
+# web/edit/server/php-fpm/index.php
+# web/edit/server/php/index.php
+# web/edit/server/postgresql/index.php
+# web/edit/server/proftpd/index.php
+# web/edit/server/spamassassin/index.php
+# web/edit/server/spamd/index.php
+# web/edit/server/ssh/index.php
+# web/edit/server/vsftpd/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

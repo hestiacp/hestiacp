@@ -6,6 +6,13 @@
 #
 # This function of obtaining the list of backup parameters. This call, just as
 # all v_list_* calls, supports 3 formats - json, shell and plain.
+#
+# v-list-user-backup is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/backup/exclusions/index.php
+# web/list/backup/exclusions/index.php
+# web/list/backup/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

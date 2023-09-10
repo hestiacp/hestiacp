@@ -6,6 +6,29 @@
 #
 # This function for restoring user from backup. To be able to restore the backup,
 # the archive needs to be placed in /backup.
+#
+# v-restore-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-remote-dns-domain
+# bin/v-add-user
+# bin/v-add-user-notification
+# bin/v-add-web-domain
+# bin/v-add-web-domain-backend
+# bin/v-extract-fs-archive
+# bin/v-log-action
+# bin/v-rebuild-mail-domain
+# bin/v-restart-cron
+# bin/v-restart-dns
+# bin/v-restart-proxy
+# bin/v-restart-web
+# bin/v-restore-cron-job
+# bin/v-restore-database
+# bin/v-restore-dns-domain
+# bin/v-restore-mail-domain
+# bin/v-restore-web-domain
+# bin/v-schedule-user-restore
+# test/restore.bats
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

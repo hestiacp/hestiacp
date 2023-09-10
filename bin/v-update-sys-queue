@@ -9,6 +9,17 @@
 # operations are handled by this script. It helps to optimize system behaviour.
 # In a nutshell Apache will be restarted only once even if 10 domains are
 # added or deleted.
+#
+# v-update-sys-queue is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-cron-letsencrypt-job
+# bin/v-add-cron-restart-job
+# bin/v-add-letsencrypt-domain
+# bin/v-add-remote-dns-host
+# bin/v-delete-cron-restart-job
+# bin/v-delete-remote-dns-host
+# func/syshealth.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

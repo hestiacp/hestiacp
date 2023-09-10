@@ -7,6 +7,11 @@
 # This function creates an temporary database user mysql_sso_db_XXXXXXXX and a random password
 # The user has an limited validity and only granted access to the specific database
 # Returns json to be read SSO Script
+#
+# v-add-database-temp-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-database-temp-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

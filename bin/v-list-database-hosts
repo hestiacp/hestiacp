@@ -5,6 +5,12 @@
 # example: v-list-database-hosts json
 #
 # This function for obtaining the list of all configured database hosts.
+#
+# v-list-database-hosts is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/db/index.php
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

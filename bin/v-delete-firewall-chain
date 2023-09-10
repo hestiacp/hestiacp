@@ -5,6 +5,11 @@
 # example: v-delete-firewall-chain WEB
 #
 # This function adds new rule to system firewall
+#
+# v-delete-firewall-chain is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

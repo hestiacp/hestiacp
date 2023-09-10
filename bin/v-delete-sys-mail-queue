@@ -6,6 +6,11 @@
 #
 # This function checks for messages stuck in the exim mail queue
 # and prompts the user to clear the queue if desired.
+#
+# v-delete-sys-mail-queue is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

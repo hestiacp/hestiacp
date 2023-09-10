@@ -5,6 +5,12 @@
 # example: v-suspend-cron-jobs admin
 #
 # This function suspends all user cron jobs.
+#
+# v-suspend-cron-jobs is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-restart-cron
+# bin/v-suspend-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

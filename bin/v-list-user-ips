@@ -5,6 +5,16 @@
 # example: v-list-user-ips admin
 #
 # This function for obtaining the list of available IP addresses.
+#
+# v-list-user-ips is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# web/add/dns/index.php
+# web/add/web/index.php
+# web/edit/dns/index.php
+# web/edit/web/index.php
+# web/list/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-add-sys-sftp-jail yes
 #
 # This function enables sftp jailed environment.
+#
+# v-add-sys-sftp-jail is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-sys-sftp-jail
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

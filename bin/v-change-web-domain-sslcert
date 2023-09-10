@@ -6,6 +6,11 @@
 #
 # This function changes SSL domain certificate and the key. If ca file present
 # it will be replaced as well.
+#
+# v-change-web-domain-sslcert is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

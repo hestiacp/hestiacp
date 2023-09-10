@@ -5,6 +5,12 @@
 # example: v-revoke-api-key mykey
 #
 # This function removes a key from in $HESTIA/data/keys/
+#
+# v-revoke-api-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-sys-pma-sso
+# bin/v-log-action
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

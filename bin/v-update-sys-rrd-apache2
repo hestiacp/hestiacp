@@ -5,6 +5,11 @@
 # example: v-update-sys-rrd-apache2
 #
 # This function is for updating apache rrd database and graphic.
+#
+# v-update-sys-rrd-apache2 is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

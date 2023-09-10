@@ -5,6 +5,11 @@
 # example: v-list-web-domain-errorlog admin acme.com
 #
 # This function of obtaining raw error web domain logs.
+#
+# v-list-web-domain-errorlog is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

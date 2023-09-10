@@ -6,6 +6,13 @@
 #
 # This function for obtaining the list of system users without
 # detailed information.
+#
+# v-list-sys-users is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/add/ip/index.php
+# web/edit/ip/index.php
+# web/list/stats/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

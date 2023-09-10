@@ -5,6 +5,16 @@
 # example: v-rebuild-cron-jobs admin yes
 #
 # This function rebuilds system cron config file for specified user.
+#
+# v-rebuild-cron-jobs is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-user-contact
+# bin/v-log-action
+# bin/v-rebuild-all
+# func/rebuild.sh
+# test/test.bats
+# web/bulk/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

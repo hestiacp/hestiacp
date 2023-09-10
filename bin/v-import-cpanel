@@ -7,6 +7,15 @@
 # Based on sk-import-cpanel-backup-to-vestacp
 # Credits: Maks Usmanov (skamasle) and contributors:
 # Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
+#
+# v-import-cpanel is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-record
+# bin/v-add-domain
+# bin/v-add-mail-account
+# bin/v-add-user
+# bin/v-delete-dns-record
 
 # Known issue
 # - Importing certificates fails at the moment. Due to format changes of CPanel side

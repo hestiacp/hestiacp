@@ -5,6 +5,11 @@
 # example: v-get-mail-account-value admin example.tld tester QUOTA
 #
 # This function for getting a certain mail account parameter.
+#
+# v-get-mail-account-value is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/reset/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# v-generate-debug-report is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# bin/v-change-sys-config-value
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

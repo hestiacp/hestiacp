@@ -5,6 +5,11 @@
 # example: v-delete-web-domain-proxy alice lookinglass.com
 #
 # This function of deleting the virtualhost proxy configuration.
+#
+# v-delete-web-domain-proxy is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

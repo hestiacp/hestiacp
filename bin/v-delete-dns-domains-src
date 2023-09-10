@@ -5,6 +5,12 @@
 # example: v-delete-dns-domains-src admin '' yes
 #
 # This function for deleting DNS domains related to a certain host.
+#
+# v-delete-dns-domains-src is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-remote-dns-domains
+# bin/v-sync-dns-cluster
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

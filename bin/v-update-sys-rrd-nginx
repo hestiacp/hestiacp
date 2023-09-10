@@ -5,6 +5,11 @@
 # example: v-update-sys-rrd-nginx
 #
 # This function is for updating nginx rrd database and graphic.
+#
+# v-update-sys-rrd-nginx is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

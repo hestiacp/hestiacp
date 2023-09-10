@@ -5,6 +5,14 @@
 # example: v-update-databases-disk admin
 #
 # This function recalculates disk usage for all user databases.
+#
+# v-update-databases-disk is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# bin/v-list-databases
+# bin/v-update-database-disk
+# func/rebuild.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

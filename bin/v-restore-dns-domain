@@ -6,6 +6,11 @@
 #
 # This function allows the user to restore a single DNS domain
 # from a backup archive.
+#
+# v-restore-dns-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

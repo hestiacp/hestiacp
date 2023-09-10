@@ -6,6 +6,13 @@
 #
 # This function for deleting a system IP. It does not allow to delete first IP
 # on interface and do not allow to delete IP which is used by a web domain.
+#
+# v-delete-sys-ip is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/bulk/ip/index.php
+# web/delete/ip/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

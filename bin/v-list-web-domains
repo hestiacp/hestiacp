@@ -5,6 +5,17 @@
 # example: v-list-web-domains alice
 #
 # This function to obtain the list of all user web domains.
+#
+# v-list-web-domains is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-generate-debug-report
+# bin/v-rebuild-web-domains
+# bin/v-update-web-domains-disk
+# web/add/web/index.php
+# web/edit/web/index.php
+# web/inc/main.php
+# web/list/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

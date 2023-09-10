@@ -6,6 +6,11 @@
 # example: v-delete-user-stats admin overall
 #
 # This function deletes user statistics data.
+#
+# v-delete-user-stats is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

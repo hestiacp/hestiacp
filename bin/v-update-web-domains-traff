@@ -5,6 +5,13 @@
 # example: v-update-web-domains-traff bob
 #
 # This function recalculates bandwidth usage for all user webdomains.
+#
+# v-update-web-domains-traff is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# bin/v-restore-user
+# func/rebuild.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

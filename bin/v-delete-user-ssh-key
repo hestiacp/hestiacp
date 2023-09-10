@@ -5,6 +5,11 @@
 # example: v-delete-user-ssh-key user unique_id
 #
 # Delete user ssh key from authorized_keys
+#
+# v-delete-user-ssh-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/delete/key/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

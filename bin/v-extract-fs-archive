@@ -5,6 +5,12 @@
 # example: v-extract-fs-archive admin latest.tar.gz /home/admin
 #
 # This function extracts archive into directory on the file system
+#
+# v-extract-fs-archive is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-restore-user
+# web/src/app/System/HestiaApp.php
 
 user=$1
 src_file=$2

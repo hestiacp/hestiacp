@@ -5,6 +5,11 @@
 # example: v-change-sys-hostname mydomain.tld
 #
 # This function for changing system hostname.
+#
+# v-change-sys-hostname is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/server/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

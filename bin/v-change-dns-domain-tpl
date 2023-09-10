@@ -7,6 +7,14 @@
 # This function for changing the template of records. By updating old records
 # will be removed and new records will be generated in accordance with
 # parameters of new template.
+#
+# v-change-dns-domain-tpl is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-dns-record
+# bin/v-add-remote-dns-domain
+# web/add/dns/index.php
+# web/edit/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -11,6 +11,14 @@
 # the first host in the list. "Random" will chose the host by a chance.
 # "Weight" will distribute new database through hosts evenly. Algorithm and
 # types of supported databases is designated in the main configuration file.
+#
+# v-add-database is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-database-temp-user
+# test/test.bats
+# web/add/db/index.php
+# web/src/app/System/HestiaApp.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

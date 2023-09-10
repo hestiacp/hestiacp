@@ -5,6 +5,13 @@
 # example: v-list-sys-php-config
 #
 # This function for obtaining the list of php config parameters.
+#
+# v-list-sys-php-config is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/server/php5-fpm/index.php
+# web/edit/server/php-fpm/index.php
+# web/edit/server/php/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

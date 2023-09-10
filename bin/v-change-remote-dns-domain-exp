@@ -3,6 +3,11 @@
 # options: USER DOMAIN
 #
 # This function synchronise dns domain with the remote server.
+#
+# v-change-remote-dns-domain-exp is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-dns-domain-exp
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

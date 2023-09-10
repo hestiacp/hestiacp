@@ -5,6 +5,14 @@
 # example: v-update-mail-domains-disk admin
 #
 # This function calculates disk usage for all mail domains.
+#
+# v-update-mail-domains-disk is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-user
+# bin/v-list-mail-accounts
+# bin/v-list-mail-domains
+# func/rebuild.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

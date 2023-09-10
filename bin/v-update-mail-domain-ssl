@@ -8,6 +8,15 @@
 # to directory where 2 or 3 ssl files can be found. Certificate file
 # domain.tld.crt and its key domain.tld.key are mandatory. Certificate
 # authority domain.tld.ca file is optional.
+#
+# v-update-mail-domain-ssl is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# bin/v-log-action
+# bin/v-restart-mail
+# bin/v-restart-proxy
+# bin/v-restart-web
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

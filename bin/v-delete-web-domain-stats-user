@@ -8,6 +8,11 @@
 # called without naming a certain user, all users will be removed. After
 # deleting all of them statistics will be accessible for view without an
 # authentication.
+#
+# v-delete-web-domain-stats-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

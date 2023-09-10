@@ -5,6 +5,15 @@
 # example: v-add-user-sftp-jail admin
 #
 # This function enables sftp jailed environment
+#
+# v-add-user-sftp-jail is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-sys-sftp-jail
+# bin/v-add-user
+# bin/v-add-web-domain-ftp
+# bin/v-change-user-shell
+# func/rebuild.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

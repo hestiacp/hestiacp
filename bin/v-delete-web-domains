@@ -5,6 +5,11 @@
 # example: v-delete-web-domains admin
 #
 # This function deletes all user's webdomains.
+#
+# v-delete-web-domains is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-list-web-domain-accesslog admin example.com
 #
 # This function of obtaining raw access web domain logs.
+#
+# v-list-web-domain-accesslog is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

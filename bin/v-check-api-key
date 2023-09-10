@@ -5,6 +5,11 @@
 # example: v-check-api-key random_key 127.0.0.1
 #
 # This function checks a key file in $HESTIA/data/keys/
+#
+# v-check-api-key is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/api/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

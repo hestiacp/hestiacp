@@ -5,6 +5,11 @@
 # example: v-search-fs-object admin hello.txt
 #
 # This function search files and directories on the file system
+#
+# v-search-fs-object is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -11,6 +11,12 @@
 #          # Disable API
 #
 # Enabled / Disable API
+#
+# v-change-sys-api is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-demo-mode
+# web/edit/server/index.php
 
 status=$1
 version=$2

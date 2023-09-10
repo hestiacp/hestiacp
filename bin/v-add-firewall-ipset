@@ -5,6 +5,13 @@
 # example: v-add-firewall-ipset country-nl "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/nl/ipv4-aggregated.txt"
 #
 # This function adds new ipset to system firewall
+#
+# v-add-firewall-ipset is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-firewall-ipset
+# test/test.bats
+# web/add/firewall/ipset/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,18 @@
 # example: v-rebuild-user admin yes
 #
 # This function rebuilds system user account.
+#
+# v-rebuild-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-user-config-value
+# bin/v-change-user-theme
+# bin/v-import-cpanel
+# bin/v-log-action
+# bin/v-rebuild-all
+# func/upgrade.sh
+# web/bulk/user/index.php
+# web/src/app/System/HestiaApp.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

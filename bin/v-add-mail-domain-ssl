@@ -6,6 +6,13 @@
 # is a path to a directory where 2 or 3 ssl files can be found. Certificate file
 # mail.domain.tld.crt and its key mail.domain.tld.key are mandatory. Certificate
 # authority mail.domain.tld.ca file is optional.
+#
+# v-add-mail-domain-ssl is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-letsencrypt-domain
+# test/test.bats
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

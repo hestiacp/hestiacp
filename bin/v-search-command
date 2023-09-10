@@ -8,6 +8,11 @@
 # and returns results based on the specified criteria.
 # Originally developed for VestaCP by Federico Krum
 # <https://github.com/FastDigitalOceanDroplets/VestaCP/blob/master/files/v-search-command>
+#
+# v-search-command is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

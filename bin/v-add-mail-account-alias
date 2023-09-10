@@ -5,6 +5,13 @@
 # example: v-add-mail-account-alias admin acme.com alice alicia
 #
 # This function add new email alias.
+#
+# v-add-mail-account-alias is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/add/mail/index.php
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

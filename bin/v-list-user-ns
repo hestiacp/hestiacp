@@ -5,6 +5,12 @@
 # example: v-list-user-ns admin
 #
 # Function for obtaining the list of user's DNS servers.
+#
+# v-list-user-ns is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/add/dns/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

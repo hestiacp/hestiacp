@@ -2,6 +2,17 @@
 # info: insert dns domain
 # options: USER DATA [SRC] [FLUSH] #
 # This function inserts raw record to the dns.conf
+#
+# v-insert-dns-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-remote-dns-domain
+# bin/v-add-remote-dns-record
+# bin/v-change-remote-dns-domain-exp
+# bin/v-change-remote-dns-domain-soa
+# bin/v-change-remote-dns-domain-ttl
+# bin/v-delete-remote-dns-record
+# bin/v-sync-dns-cluster
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

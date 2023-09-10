@@ -5,6 +5,11 @@
 # example: v-change-mail-domain-rate-limit admin mydomain.tld 100
 #
 # This function changes email account rate limit for the domain. Account specific setting will overwrite domain setting!
+#
+# v-change-mail-domain-rate-limit is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

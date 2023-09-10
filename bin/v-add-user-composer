@@ -6,6 +6,12 @@
 #
 # This function adds support for composer (php dependency manager)
 # Homepage: <https://getcomposer.org/>
+#
+# v-add-user-composer is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-sys-dependencies
+# bin/v-add-sys-filemanager
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

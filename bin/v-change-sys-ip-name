@@ -5,6 +5,11 @@
 # example: v-change-sys-ip-name 203.0.113.1 acme.com
 #
 # This function for changing dns domain associated with IP.
+#
+# v-change-sys-ip-name is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/ip/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

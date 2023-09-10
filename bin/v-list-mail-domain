@@ -5,6 +5,18 @@
 # example: v-list-mail-domain user01 mydomain.com
 #
 # This function of obtaining the list of domain parameters.
+#
+# v-list-mail-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-mail-domain
+# func/domain.sh
+# test/restore.bats
+# test/test.bats
+# web/add/mail/index.php
+# web/edit/mail/index.php
+# web/edit/web/index.php
+# web/list/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

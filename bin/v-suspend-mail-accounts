@@ -5,6 +5,11 @@
 # example: v-suspend-mail-accounts admin example.com
 #
 # This function suspends all mail domain accounts.
+#
+# v-suspend-mail-accounts is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,13 @@
 # example: v-rebuild-database user user_wordpress
 #
 # This function for rebuilding a single database for a user
+#
+# v-rebuild-database is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-log-action
+# test/test.bats
+# web/bulk/db/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

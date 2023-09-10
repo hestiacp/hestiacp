@@ -3,6 +3,11 @@
 # options: [MODE]
 #
 # This function installs the SnappyMail webmail client.
+#
+# v-add-sys-snappymail is called from the following files:
+# (please keep in alphabetical order)
+#
+# func/upgrade.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -6,6 +6,12 @@
 #
 # This function adds a job to cron daemon. When executing commands, any output
 # is mailed to user's email if parameter REPORTS is set to 'yes'.
+#
+# v-add-cron-job is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/add/cron/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,14 @@
 # example: v-change-user-language admin en
 #
 # This function for changing language.
+#
+# v-change-user-language is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-change-sys-language
+# test/test.bats
+# web/add/user/index.php
+# web/edit/user/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

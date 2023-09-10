@@ -1,6 +1,12 @@
 #!/bin/bash
 # info: Log User logout event
 # options: USER FINGERPRINT
+#
+# v-log-user-logout is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/inc/main.php
+# web/logout/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

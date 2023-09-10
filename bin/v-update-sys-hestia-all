@@ -5,6 +5,14 @@
 # example: v-update-sys-hestia-all
 #
 # This function of updating all hestia packages
+#
+# v-update-sys-hestia-all is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-cron-hestia-autoupdate
+# bin/v-delete-cron-hestia-autoupdate
+# bin/v-list-sys-hestia-autoupdate
+# func/syshealth.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

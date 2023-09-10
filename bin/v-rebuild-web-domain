@@ -5,6 +5,18 @@
 # example: v-rebuild-web-domain user domain.tld
 #
 # This function rebuilds web configuration files.
+#
+# v-rebuild-web-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-web-domain
+# bin/v-add-web-domain-backend
+# bin/v-change-web-domain-docroot
+# bin/v-change-web-domain-sslhome
+# bin/v-log-action
+# bin/v-suspend-web-domain
+# bin/v-unsuspend-web-domain
+# web/bulk/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

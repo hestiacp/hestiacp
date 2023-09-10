@@ -6,6 +6,12 @@
 #
 # Revokes "temp user" access to a database and removes the user
 # To be used in combination with v-add-database-temp-user
+#
+# v-delete-database-temp-user is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-database
+# bin/v-add-database-temp-user
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,13 @@
 # example: v-change-web-domain-backend-tpl admin acme.com PHP-7_4
 #
 # This function changes backend template
+#
+# v-change-web-domain-backend-tpl is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/edit/web/index.php
+# web/src/app/System/HestiaApp.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

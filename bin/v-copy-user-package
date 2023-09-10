@@ -6,6 +6,12 @@
 #
 # This function allows the user to duplicate an existing
 # package file to facilitate easier configuration.
+#
+# v-copy-user-package is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/test.bats
+# web/copy/package/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-delete-web-domain-backend admin acme.com
 #
 # This function of deleting the virtualhost backend configuration.
+#
+# v-delete-web-domain-backend is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-delete-web-domain
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

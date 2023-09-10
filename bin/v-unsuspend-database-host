@@ -5,6 +5,11 @@
 # example: v-unsuspend-database-host mysql localhost
 #
 # This function for unsuspending a database server.
+#
+# v-unsuspend-database-host is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

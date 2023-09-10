@@ -5,6 +5,11 @@
 # example: v-delete-mail-domain-catchall admin mydomain.tld
 #
 # This function disables mail domain cathcall.
+#
+# v-delete-mail-domain-catchall is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/mail/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

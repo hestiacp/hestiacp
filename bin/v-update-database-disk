@@ -5,6 +5,11 @@
 # example: v-update-database-disk admin wp_db
 #
 # This function recalculates disk usage for specific database.
+#
+# v-update-database-disk is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-databases-disk
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -5,6 +5,11 @@
 # example: v-check-user-2fa admin 493690
 #
 # This function verifies user 2fa token.
+#
+# v-check-user-2fa is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/login/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

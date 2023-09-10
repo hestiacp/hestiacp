@@ -5,6 +5,21 @@
 # example: v-rebuild-mail-domain user domain.tld
 #
 # This function rebuilds configuration files for a single domain.
+#
+# v-rebuild-mail-domain is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-mail-domain
+# bin/v-add-mail-domain-webmail
+# bin/v-change-mail-domain-rate-limit
+# bin/v-change-web-domain-ip
+# bin/v-delete-mail-domain
+# bin/v-delete-mail-domain-webmail
+# bin/v-import-cpanel
+# bin/v-log-action
+# bin/v-restore-user
+# web/bulk/mail/index.php
+# web/edit/web/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

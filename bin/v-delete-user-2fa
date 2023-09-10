@@ -5,6 +5,12 @@
 # example: v-delete-user-2fa admin
 #
 # This function deletes 2fa token of a user.
+#
+# v-delete-user-2fa is called from the following files:
+# (please keep in alphabetical order)
+#
+# web/edit/user/index.php
+# web/reset2fa/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

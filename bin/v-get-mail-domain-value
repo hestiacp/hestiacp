@@ -5,6 +5,11 @@
 # example: v-get-mail-domain-value admin example.com DKIM
 #
 # This function for getting a certain mail domain parameter.
+#
+# v-get-mail-domain-value is called from the following files:
+# (please keep in alphabetical order)
+#
+# Not used anywhere
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

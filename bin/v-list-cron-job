@@ -5,6 +5,12 @@
 # example: v-list-cron-job admin 7
 #
 # This function of obtaining cron job parameters.
+#
+# v-list-cron-job is called from the following files:
+# (please keep in alphabetical order)
+#
+# test/restore.bats
+# web/edit/cron/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -4,6 +4,12 @@
 #
 # This function adds a cronjob for hestia automatic updates
 # that can be downloaded from apt or git.
+#
+# v-add-cron-hestia-autoupdate is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-update-sys-hestia-git
+# web/add/cron/autoupdate/index.php
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

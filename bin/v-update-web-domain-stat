@@ -5,6 +5,14 @@
 # example: v-update-web-domain-stat alice acme.com
 #
 # This function runs log analyser for specific webdomain.
+#
+# v-update-web-domain-stat is called from the following files:
+# (please keep in alphabetical order)
+#
+# bin/v-add-web-domain-stats
+# bin/v-change-web-domain-stats
+# bin/v-update-web-domains-stat
+# func/rebuild.sh
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

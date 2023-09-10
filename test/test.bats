@@ -1312,7 +1312,7 @@ function check_ip_not_banned(){
     refute_output
 }
 
-@test "DNS: Add domain record *.domain.com" {
+@test "DNS: Add domain record *.domain.com with ID 0" {
 		run v-add-dns-record $user $domain '*' A 198.18.0.125 '' 0
 		assert_failure $E_INVALID
 }

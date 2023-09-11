@@ -394,7 +394,7 @@ function syshealth_repair_system_config() {
 	# Theme editor
 	if [[ -z $(check_key_exists 'POLICY_USER_CHANGE_THEME') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "yes"
 	fi
 	# Protect admin user
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_PROTECTED_ADMIN') ]]; then
@@ -419,12 +419,12 @@ function syshealth_repair_system_config() {
 	# Allow users to edit web templates
 	if [[ -z $(check_key_exists 'POLICY_USER_EDIT_WEB_TEMPLATES') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "yes"
 	fi
 	# View user logs
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_LOGS') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_LOGS ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "yes"
 	fi
 	# Allow users to login (read only) when suspended
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_SUSPENDED') ]]; then

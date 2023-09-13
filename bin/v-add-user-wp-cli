@@ -56,7 +56,7 @@ chown $user:$user "$WPCLI_DIR"
 
 user_exec wget --tries=3 --timeout=15 --read-timeout=15 --waitretry=3 --no-dns-cache --quiet -O "$WPCLI_BIN" https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 user_exec chmod +x "$WPCLI_BIN"
-user_exec echo -e "#add wp-cli alias for user\nalias wp='php $WPCLI_BIN'" >> ~/.bashrc
+echo "alias wp=/home/"$user"/.wp-cli/wp" >> /home/$user/.bash_aliases
 
 #----------------------------------------------------------#
 #                       Hestia                             #

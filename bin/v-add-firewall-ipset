@@ -81,7 +81,7 @@ if ! echo "$data_source" | egrep -q '^(https?|script|file):'; then
 fi
 
 IPSET_FILE="${ip_name}.${ip_version}"
-IPSET_MIN_SIZE=10
+IPSET_MIN_SIZE=5
 
 #----------------------------------------------------------#
 #                       Action                             #

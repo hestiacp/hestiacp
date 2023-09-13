@@ -1016,6 +1016,13 @@ is_fw_port_format_valid() {
 	fi
 }
 
+# DNS record id validator
+is_id_format_valid() {
+	if ! echo "$1" | grep -qE '^[1-9][0-9]{0,}$'; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
 # Integer validator
 is_int_format_valid() {
 	if ! [[ "$1" =~ ^[0-9]+$ ]]; then
@@ -1182,7 +1189,7 @@ is_format_valid() {
 				hash) is_hash_format_valid "$arg" "$arg_name" ;;
 				host) is_object_format_valid "$arg" "$arg_name" ;;
 				hour) is_cron_format_valid "$arg" $arg_name ;;
-				id) is_int_format_valid "$arg" 'id' ;;
+				id) is_id_format_valid "$arg" 'id' ;;
 				iface) is_interface_format_valid "$arg" ;;
 				ip) is_ip_format_valid "$arg" ;;
 				ipv6) is_ipv6_format_valid "$arg" ;;

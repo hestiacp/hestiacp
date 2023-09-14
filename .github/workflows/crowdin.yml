@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         if: github.repository == 'hestiacp/hestiacp'
       - name: crowdin action
-        uses: crowdin/github-action@ecdf564895766b8a6b4b581559b3c6cd955467d1 # v1
+        uses: crowdin/github-action@ce5235f7e587746e03d6f7fe80b10a74ead2b120 # v1
         if: github.repository == 'hestiacp/hestiacp'
         with:
           upload_sources: true

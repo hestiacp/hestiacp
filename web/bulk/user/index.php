@@ -27,11 +27,11 @@ if ($_SESSION["userContext"] === "admin") {
 			break;
 		case "suspend":
 			$cmd = "v-suspend-user";
-			$restart = "no";
+			$restart = "yes";
 			break;
 		case "unsuspend":
 			$cmd = "v-unsuspend-user";
-			$restart = "no";
+			$restart = "yes";
 			break;
 		case "update counters":
 			$cmd = "v-update-user-counters";

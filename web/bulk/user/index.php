@@ -46,11 +46,9 @@ if ($_SESSION["userContext"] === "admin") {
 			break;
 		case "rebuild web":
 			$cmd = "v-rebuild-web-domains";
-			$restart = "no";
 			break;
 		case "rebuild dns":
 			$cmd = "v-rebuild-dns-domains";
-			$restart = "no";
 			break;
 		case "rebuild mail":
 			$cmd = "v-rebuild-mail-domains";

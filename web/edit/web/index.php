@@ -1332,6 +1332,7 @@ if (!empty($_POST["save"])) {
 				}
 
 				// Add ftp account
+				$v_ftp_username_for_emailing = $v_ftp_user_data["v_ftp_user"];
 				$v_ftp_username = $v_ftp_user_data["v_ftp_user"];
 				$v_ftp_username_full = $user . "_" . $v_ftp_user_data["v_ftp_user"];
 				$v_ftp_user = quoteshellarg($v_ftp_username);

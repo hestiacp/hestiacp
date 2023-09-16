@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import { spawn } from 'node-pty';
 import { WebSocketServer } from 'ws';
 
+const sessionName = 'HESTIASID';
 const hostname = execSync('hostname', { silent: true }).toString().trim();
 const systemIPs = JSON.parse(
 	execSync(`${process.env.HESTIA}/bin/v-list-sys-ips json`, { silent: true }).toString(),
@@ -16,7 +17,7 @@ const { config } = JSON.parse(
 const wss = new WebSocketServer({
 	port: parseInt(config.WEB_TERMINAL_PORT, 10),
 	verifyClient: async (info, cb) => {
-		if (!info.req.headers.cookie.includes('PHPSESSID')) {
+		if (!info.req.headers.cookie.includes(sessionName)) {
 			cb(false, 401, 'Unauthorized');
 			return;
 		}
@@ -47,7 +48,7 @@ wss.on('connection', (ws, req) => {
 	const remoteIP = req.headers['x-real-ip'] || req.socket.remoteAddress;
 
 	// Check if session is valid
-	const sessionID = req.headers.cookie.split('=')[1];
+	const sessionID = req.headers.cookie.split(`${sessionName}=`)[1].split(';')[0];
 	console.log(`New connection from ${remoteIP} (${sessionID})`);
 
 	const file = readFileSync(`${process.env.HESTIA}/data/sessions/sess_${sessionID}`);

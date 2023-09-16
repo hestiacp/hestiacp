@@ -77,8 +77,8 @@ is_package_available() {
 change_user_package() {
 	source_conf "$USER_DATA/user.conf"
 	# Keep user creation date and time saved
-	time="$TIME"
-	date="$DATE"
+	creation_time="$TIME"
+	creation_date="$DATE"
 	source_conf "$HESTIA/data/packages/$package.pkg"
 	echo "NAME='$NAME'
 PACKAGE='$package'
@@ -142,8 +142,8 @@ PREF_UI_SORT='$PREF_UI_SORT'
 LOGIN_DISABLED='$LOGIN_DISABLED'
 LOGIN_USE_IPLIST='$LOGIN_USE_IPLIST'
 LOGIN_ALLOW_IPS='$LOGIN_ALLOW_IPS'
-TIME='$time'
-DATE='$date'" > $USER_DATA/user.conf
+TIME='$creation_time'
+DATE='$creation_date'" > $USER_DATA/user.conf
 }
 
 #----------------------------------------------------------#

@@ -15,8 +15,9 @@ server {
 
 	include %home%/%user%/conf/web/%domain%/nginx.forcessl.conf*;
 
-	location ~ /.well-known {
-		allow all;
+	location ~ /\.(?!well-known\/) {
+		deny all;
+		return 404;
 	}
 
 	location / {

@@ -358,7 +358,9 @@ if (!empty($_POST["save"])) {
 					$return_var,
 				);
 				check_return_code($return_var, $output);
-				$v_timezone = $_POST["v_timezone"];
+				if (in_array($_POST["v_timezone"], $v_timezones)) {
+					$v_timezone = $_POST["v_timezone"];
+				}
 				unset($output);
 			}
 		}

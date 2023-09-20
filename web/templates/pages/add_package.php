@@ -117,7 +117,6 @@
 						<select class="form-select" name="v_backend_template" id="v_backend_template">
 							<?php
 								foreach ($backend_templates as $key => $value) {
-								echo $v_backend_template;
 									echo "\t\t\t\t<option value=\"".$value."\"";
 									if ((!empty($v_backend_template)) && ( $value == trim($v_backend_template, "'"))){
 										echo ' selected' ;

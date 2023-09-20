@@ -2,12 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<?php if ($_SESSION["userContext"] === "admin" && !isset($_SESSION["look"])) { ?>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == '') { ?>
 				<a class="button button-secondary" href='/list/stats/'><i class="fas fa-binoculars icon-lightblue"></i><?= _("Overall Statistics") ?></a>
 			<?php } ?>
 		</div>
 		<div class="toolbar-right">
-			<?php if ($_SESSION["userContext"] === "admin" && !isset($_SESSION["look"])) { ?>
+			<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["look"] == '') { ?>
 				<form x-data x-bind="BulkEdit" action="/list/stats/" method="get">
 					<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 					<select class="form-select" name="user">

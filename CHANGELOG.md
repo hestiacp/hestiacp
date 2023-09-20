@@ -15,7 +15,8 @@ All notable changes to this project will be documented in this file.
 - default value true to yes for three POLICY_USER directives (#3998)
 - Update v-delete-sys-api-ip (#3994)
 - Fix v-add-sys-quota and v-delete-sys-quota (#3991)
-- Allow up to 13 arguments for the api instead of 9 (
+- Allow up to 13 arguments for the api instead of 9
+- Fix an issue with listing overall stats admin user (#4001)
 
 ## [1.8.7] - Service release
 

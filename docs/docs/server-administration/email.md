@@ -51,10 +51,11 @@ When you are done you can check the configuration via [MXToolBox](https://mxtool
 
 ## Rejected because [ip] is in black list at zen.spamhaus.org. Error open resolver: `https://www.spamhaus.org/returnc/pub/65.1.174.102`
 
-1. Go to[Spamhaus free data query account](https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account/)
+1. Go to [Spamhaus free data query account](https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account/)
 1. Fill in the form and verify your email address by via the link in the email you recive.
-1. Once logged, go to Products → DQS and you will see your Query Key and below you will see the exactly fqdn that you will need to use ZEN Spamhaus black list. Something like: `HereYourQueryKey.zen.dq.spamhaus.net`
+1. Once logged, go to Products → DQS and you will see your Query Key and below you will see the exactly fqdn that you will need to use Zen Spamhaus black list. Something like: `HereYourQueryKey.zen.dq.spamhaus.net`
 1. Edit /etc/exim4/dnsbl.conf and replace `zen.spamhaus.org` with `HereYourQueryKey.zen.dq.spamhaus.net`
+1. Also edit /etc/exim4/exim4.conf.template on the line: `deny    message       = Rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text` to `deny    message       = Rejected because $sender_host_address is in a black list` to prevent your Query key from leaking
 1. Restart exim4 with systemctl restart exim4
 
 ## How do I disable internal lookup for email

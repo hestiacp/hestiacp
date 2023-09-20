@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [1.8.8] - Service release
 
+### Security
+
+- Security patch for XSS in Edit server (#4013)
+
 ### Bugfixes
 
 - Improve Gitea template with SSL support (#4012 @asessa)
@@ -17,6 +21,12 @@ All notable changes to this project will be documented in this file.
 - Fix v-add-sys-quota and v-delete-sys-quota (#3991)
 - Allow up to 13 arguments for the api instead of 9
 - Fix an issue with listing overall stats admin user (#4001)
+
+### Dependencies
+
+- Update Roundcube to 1.6.3
+- Update Blackblaze CLI to 3.10.0
+- Update Phppgadmin to 7.4.16
 
 ## [1.8.7] - Service release
 

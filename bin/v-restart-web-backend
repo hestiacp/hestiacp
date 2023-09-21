@@ -1,10 +1,10 @@
 #!/bin/bash
-# info: restart backend server
+# info: restart php interpreter
 # options: NONE
 #
 # example: v-restart-web-backend
 #
-# This function reloads backend server configuration.
+# This function reloads php interpreter configuration.
 
 restart=$1
 # For backward compatibility might change in the feature
@@ -23,7 +23,7 @@ source $HESTIA/func/main.sh
 source_conf "$HESTIA/conf/hestia.conf"
 
 send_email_report() {
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf")
 	email=$(echo "$email" | cut -f 2 -d "'")
 	subj="$(hostname): $WEB_BACKEND restart failed"
 	cat $tmpfile | $SENDMAIL -s "$subj" $email

@@ -49,17 +49,52 @@ If you are unable to receive emails, make sure you have setup your DNS properly.
 
 When you are done you can check the configuration via [MXToolBox](https://mxtoolbox.com/MXLookup.aspx).
 
-## How do I install Rainloop?
+## Rejected because [ip] is in black list at zen.spamhaus.org. Error open resolver: `https://www.spamhaus.org/returnc/pub/65.1.174.102`
 
-You can install Rainloop by running the following command:
+1. Go to [Spamhaus free data query account](https://www.spamhaus.com/free-trial/sign-up-for-a-free-data-query-service-account/)
+1. Fill in the form and verify your email address by via the link in the email you recive.
+1. Once logged, go to Products → DQS and you will see your Query Key and below you will see the exactly fqdn that you will need to use Zen Spamhaus black list. Something like: `HereYourQueryKey.zen.dq.spamhaus.net`
+1. Edit /etc/exim4/dnsbl.conf and replace `zen.spamhaus.org` with `HereYourQueryKey.zen.dq.spamhaus.net`
+1. Also edit /etc/exim4/exim4.conf.template on the line: `deny    message       = Rejected because $sender_host_address is in a black list at $dnslist_domain\n$dnslist_text` to `deny    message       = Rejected because $sender_host_address is in a black list` to prevent your Query key from leaking
+1. Restart exim4 with systemctl restart exim4
+
+## How do I disable internal lookup for email
+
+If you use an SMTP relay or want to use DKIM on your web server but host email on gmail you need to disable internal lookup in Exim4.
 
 ```bash
-v-add-sys-rainloop
+nano /etc/exim4/exim4.conf.template
 ```
 
-## Can I login into the backend of Rainloop
+```bash
+dnslookup:
+driver = dnslookup
+domains = !+local_domains
+transport = remote_smtp
+no_more
+```
 
-In the root folder, there is an file called `.rainloop` containing the username and password:
+Replace with:
+
+```bash
+dnslookup:
+driver = dnslookup
+domains = *
+transport = remote_smtp
+no_more
+```
+
+## How do I install SnappyMail?
+
+You can install SnappyMail by running the following command:
+
+```bash
+v-add-sys-snappymail
+```
+
+## Can I login into the backend of SnappyMail
+
+In the root folder, there is a file called `.snappymail` containing the username and password:
 
 ```bash
 Username: admin_f0e5a5aa
@@ -97,9 +132,9 @@ During Hestia’s installation, use the `--sieve` flag. If Hestia is already ins
 
 Open port 4190 in the firewall. [Read the firewall documentation](./firewall.md).
 
-## How can I enable ManageSieve for Rainloop?
+## How can I enable ManageSieve for Snappymail?
 
-Edit `/etc/rainloop/data/_data_/_default_/domains/default.ini` and modify the following settings:
+Edit `/etc/snappymail/data/_data_/_default_/domains/default.ini` and modify the following settings:
 
 ```bash
 sieve_use = On

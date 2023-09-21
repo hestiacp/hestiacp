@@ -2,12 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/server/">
+			<a class="button button-secondary button-back js-button-back" href="/list/server/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
+			<button type="submit" class="button" form="main-form">
 				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
@@ -15,14 +15,14 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 
-	<form id="vstobjects" name="v_configure_server" method="post">
+	<form id="main-form" name="v_configure_server" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Configuring Server") ?>: <?= $v_service_name ?></h1>
+			<h1 class="u-mb20"><?= _("Configure Server") ?>: <?= $v_service_name ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
 				<label for="v_options" class="form-label"><?= $v_options_path ?></label>
@@ -35,7 +35,7 @@
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" name="v_restart" id="v_restart" checked>
 				<label for="v_restart">
-					<?= _("restart") ?>
+					<?= _("Restart") ?>
 				</label>
 			</div>
 		</div>

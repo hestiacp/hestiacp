@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
       - name: Run markdownlint
-        uses: DavidAnson/markdownlint-cli2-action@v9
+        uses: DavidAnson/markdownlint-cli2-action@8f3516061301755c97ff833a8e933f09282cc5b5 # v11
         with:
           globs: |
             *.md
@@ -26,10 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
       - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@2.0.0
+        uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 # 2.0.0
         with:
           severity: error
 
@@ -38,60 +38,51 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3
         with:
           node-version: 16
 
-      - name: Install yarn v3
-        run: corepack enable && corepack prepare yarn@stable --activate
-
       - name: Install Node packages
-        uses: ./.github/actions/yarn-nm-install
+        run: npm ci --ignore-scripts
 
       - name: Run Prettier
-        run: yarn prettier --check .
+        run: npx prettier --check .
 
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3
         with:
           node-version: 16
 
-      - name: Install yarn v3
-        run: corepack enable && corepack prepare yarn@stable --activate
-
       - name: Install Node packages
-        uses: ./.github/actions/yarn-nm-install
+        run: npm ci --ignore-scripts
 
       - name: Run ESLint
-        run: yarn eslint .
+        run: npx eslint .
 
   stylelint:
     name: Stylelint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3
         with:
           node-version: 16
 
-      - name: Install yarn v3
-        run: corepack enable && corepack prepare yarn@stable --activate
-
       - name: Install Node packages
-        uses: ./.github/actions/yarn-nm-install
+        run: npm ci --ignore-scripts
 
       - name: Run Stylelint
-        run: yarn stylelint web/css/src/**/*.css
+        run: npx stylelint web/css/src/**/*.css

@@ -73,6 +73,7 @@ case $service in
 	clamd) dst=$($BIN/v-list-sys-clamd-config plain) ;;
 	fail2ban) dst='/etc/fail2ban/jail.local' ;;
 	ssh) dst='/etc/ssh/sshd_config' ;;
+	hestiaweb) dst='/var/spool/cron/crontabs/hestiaweb' ;;
 	*) check_result $E_NOTEXIST "service $service doesn't exist" ;;
 esac
 

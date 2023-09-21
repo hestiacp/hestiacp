@@ -8,12 +8,12 @@
 <!-- End toolbar -->
 
 <!-- Begin form -->
-<div class="container animate__animated animate__fadeIn">
-	<form id="vstobjects" name="v_generate_csr" method="post">
+<div class="container">
+	<form id="main-form" name="v_generate_csr" method="post">
 		<input type="hidden" name="token" value="<?= $_SESSION["token"] ?>">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Generating CSR") ?></h1>
+			<h1 class="u-mb20"><?= _("Generate Self-Signed SSL Certificate") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div
 				x-data="{
@@ -24,12 +24,16 @@
 				}"
 				class="u-mb20"
 			>
-				<label for="v_crt" class="form-label">
+				<label for="v_crt" class="form-label u-side-by-side">
 					<?= _("SSL Certificate") ?>
 					<a
 						x-bind:href="blob()"
 						download="<?= htmlentities($v_domain) ?>.crt"
-					><i class="fas fa-download"></i></a>
+						title="<?= _("Download") ?>"
+					>
+						<i class="fas fa-download"></i>
+						<span class="u-hidden"><?= _("Download") ?></span>
+					</a>
 				</label>
 				<textarea
 					x-model="atob(text)"
@@ -47,12 +51,16 @@
 				}"
 				class="u-mb20"
 			>
-				<label for="v_key" class="form-label">
-					<?= _("SSL Key") ?>
+				<label for="v_key" class="form-label u-side-by-side">
+					<?= _("SSL Private Key") ?>
 					<a
 						x-bind:href="blob()"
 						download="<?= htmlentities($v_domain) ?>.key"
-					><i class="fas fa-download"></i></a>
+						title="<?= _("Download") ?>"
+					>
+						<i class="fas fa-download"></i>
+						<span class="u-hidden"><?= _("Download") ?></span>
+					</a>
 				</label>
 				<textarea
 					x-model="atob(text)"
@@ -70,12 +78,16 @@
 				}"
 				class="u-mb20"
 			>
-				<label for="v_csr" class="form-label">
+				<label for="v_csr" class="form-label u-side-by-side">
 					<?= _("SSL CSR") ?>
 					<a
 						x-bind:href="blob()"
 						download="<?= htmlentities($v_domain) ?>.csr"
-					><i class="fas fa-download"></i></a>
+						title="<?= _("Download") ?>"
+					>
+						<i class="fas fa-download"></i>
+						<span class="u-hidden"><?= _("Download") ?></span>
+					</a>
 				</label>
 				<textarea
 					x-model="atob(text)"
@@ -83,11 +95,6 @@
 					name="v_csr"
 					id="v_csr"
 				></textarea>
-			</div>
-			<div>
-				<button type="button" class="button button-secondary" onclick="<?= $back ?>">
-					<?= _("Back") ?>
-				</button>
 			</div>
 		</div>
 	</form>

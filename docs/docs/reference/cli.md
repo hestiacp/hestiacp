@@ -504,17 +504,17 @@ This function adds DKIM signature to outgoing domain emails.
 
 ## v-add-mail-domain-reject
 
-add mail domain reject spam
+add mail domain reject spam support
 
 **Options**: `USER` `DOMAIN`
 
 **Examples**:
 
 ```bash
-v-add-mail-domain-antivirus admin mydomain.tld
+v-add-mail-domain-reject admin mydomain.tld
 ```
 
-The function enables clamav scan for incoming emails.
+The function enables spam rejection for incoming emails.
 
 ## v-add-mail-domain-smtp-relay
 
@@ -551,7 +551,7 @@ add webmail support for a domain
 
 ```bash
 v-add-sys-webmail user domain.com
-example: v-add-sys-webmail user domain.com rainloop
+example: v-add-sys-webmail user domain.com snappymail
 example: v-add-sys-webmail user domain.com roundcube
 ```
 
@@ -640,21 +640,21 @@ This function enables the system firewall.
 
 ## v-add-sys-ip
 
-add system ip address
+add system IP address
 
 **Options**: `IP` `NETMASK` `[INTERFACE]` `[USER]` `[IP_STATUS]` `[IP_NAME]` `[NAT_IP]`
 
 **Examples**:
 
 ```bash
-v-add-sys-ip 216.239.32.21 255.255.255.0
+v-add-sys-ip 203.0.113.1 255.255.255.0
 ```
 
-This function adds ip address into a system. It also creates rc scripts. You
-can specify ip name which will be used as root domain for temporary aliases.
+This function adds IP address into a system. It also creates rc scripts. You
+can specify IP name which will be used as root domain for temporary aliases.
 For example, if you set a1.myhosting.com as name, each new domain created on
-this ip will automatically receive alias $domain.a1.myhosting.com. Of course
-you must have wildcard record \*.a1.myhosting.com pointed to ip. This feature
+this IP will automatically receive alias $domain.a1.myhosting.com. Of course
+you must have wildcard record \*.a1.myhosting.com pointed to IP. This feature
 is very handy when customer wants to test domain before dns migration.
 
 ## v-add-sys-pma-sso
@@ -673,14 +673,6 @@ add system quota
 
 This function enables filesystem quota on /home partition
 Some kernels do require additional packages to be installed first
-
-## v-add-sys-rainloop
-
-Install Rainloop webmail client
-
-**Options**: `[MODE]`
-
-This function installs the Rainloop webmail client.
 
 ## v-add-sys-roundcube
 
@@ -732,6 +724,14 @@ v-add-sys-smtp-relay srv.smtprelay.tld uname123 pass12345
 ```
 
 This function adds system wide smtp relay support.
+
+## v-add-sys-snappymail
+
+Install SnappyMail webmail client
+
+**Options**: `[MODE]`
+
+This function installs the SnappyMail webmail client.
 
 ## v-add-user
 
@@ -857,7 +857,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
-www.domain.tld type will be automatically assigned to the domain unless
+`www.domain.tld` type will be automatically assigned to the domain unless
 "none" is transmited as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
@@ -1168,7 +1168,7 @@ change dns domain dnssec status
 **Examples**:
 
 ```bash
-v-change-dns-domain-status admin domain.pp.ua yes
+v-change-dns-domain-dnssec admin domain.pp.ua yes
 ```
 
 ## v-change-dns-domain-exp
@@ -1346,14 +1346,14 @@ This function changes email account disk quota.
 
 ## v-change-mail-account-rate-limit
 
-change mail domain rate limit
+change mail account rate limit
 
 **Options**: `USER` `DOMAIN` `ACCOUNT` `RATE`
 
 **Examples**:
 
 ```bash
-v-change-mail-domain-quota admin mydomain.tld user01 100
+v-change-mail-account-rate-limit admin mydomain.tld user01 100
 ```
 
 This function changes email account rate limit. Use system to use domain or "server" setting
@@ -1374,17 +1374,17 @@ This function changes mail domain catchall.
 
 ## v-change-mail-domain-rate-limit
 
-change mail account rate limit
+change mail domain rate limit
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `RATE`
+**Options**: `USER` `DOMAIN` `RATE`
 
 **Examples**:
 
 ```bash
-v-change-mail-account-quota admin mydomain.tld user01 100
+v-change-mail-domain-rate-limit admin mydomain.tld 100
 ```
 
-This function changes email account rate limit for the domain. account specific setting will overwrite domain setting!
+This function changes email account rate limit for the domain. Account specific setting will overwrite domain setting!
 
 ## v-change-mail-domain-sslcert
 
@@ -1525,59 +1525,59 @@ This function for changing system hostname.
 
 ## v-change-sys-ip-name
 
-change ip name
+change IP name
 
 **Options**: `IP` `NAME`
 
 **Examples**:
 
 ```bash
-v-change-sys-ip-name 80.122.52.70 acme.com
+v-change-sys-ip-name 203.0.113.1 acme.com
 ```
 
-This function for changing dns domain associated with ip.
+This function for changing dns domain associated with IP.
 
 ## v-change-sys-ip-nat
 
-change ip nat address
+change NAT IP address
 
 **Options**: `IP` `NAT_IP` `[RESTART]`
 
 **Examples**:
 
 ```bash
-v-change-sys-ip-nat 185.209.50.140 10.110.104.205
+v-change-sys-ip-nat 10.0.0.1 203.0.113.1
 ```
 
-This function for changing nat ip associated with ip.
+This function for changing NAT IP associated with IP.
 
 ## v-change-sys-ip-owner
 
-change ip owner
+change IP owner
 
 **Options**: `IP` `USER`
 
 **Examples**:
 
 ```bash
-v-change-sys-ip-owner 91.198.136.14 admin
+v-change-sys-ip-owner 203.0.113.1 admin
 ```
 
-This function of changing ip address ownership.
+This function of changing IP address ownership.
 
 ## v-change-sys-ip-status
 
-change ip status
+change IP status
 
 **Options**: `IP` `IP_STATUS`
 
 **Examples**:
 
 ```bash
-v-change-sys-ip-status 91.198.136.14 yourstatus
+v-change-sys-ip-status 203.0.113.1 yourstatus
 ```
 
-This function of changing an ip address's status.
+This function of changing an IP address's status.
 
 ## v-change-sys-language
 
@@ -2025,7 +2025,7 @@ v-change-web-domain-sslhome admin acme.com single
 example: v-change-web-domain-sslhome admin acme.com same
 ```
 
-This function changes SSL home directory. Single will seperate the both public_html / public_shtml. Same will always point to public_shtml
+This function changes SSL home directory. Single will separate the both public_html / public_shtml. Same will always point to public_shtml
 
 ## v-change-web-domain-stats
 
@@ -2680,10 +2680,10 @@ delete mail domain reject spam support
 **Examples**:
 
 ```bash
-v-delete-mail-domain-antispam admin mydomain.tld
+v-delete-mail-domain-reject admin mydomain.tld
 ```
 
-The function disable spamassasin for incoming emails.
+The function disables spam rejection for incoming emails.
 
 ## v-delete-mail-domain-smtp-relay
 
@@ -2822,18 +2822,18 @@ This function disables firewall support
 
 ## v-delete-sys-ip
 
-delete system ip
+delete system IP
 
 **Options**: `IP`
 
 **Examples**:
 
 ```bash
-v-delete-sys-ip 212.42.76.210
+v-delete-sys-ip 203.0.113.1
 ```
 
-This function for deleting a system ip. It does not allow to delete first ip
-on interface and do not allow to delete ip which is used by a web domain.
+This function for deleting a system IP. It does not allow to delete first IP
+on interface and do not allow to delete IP which is used by a web domain.
 
 ## v-delete-sys-mail-queue
 
@@ -3284,6 +3284,21 @@ v-download-backup admin admin.2020-11-05_05-10-21.tar
 
 This function download back-up from remote server
 
+## v-dump-database
+
+Dumps database contents in STDIN / file
+
+**Options**: `USER` `DATABASE` `[FILE]`
+
+**Examples**:
+
+```bash
+v-dump-database user user_databse > test.sql
+example: v-dump-database user user_databse file
+```
+
+Dumps database in STDIN or /backup/user.database.type.sql
+
 ## v-export-rrd
 
 export rrd charts as json
@@ -3334,7 +3349,7 @@ generate password hash
 **Examples**:
 
 ```php
-	v-generate-password-hash sha-512 rAnDom_string yourPassWord
+		v-generate-password-hash sha-512 rAnDom_string yourPassWord
 ```
 
 This function generates password hash
@@ -4065,25 +4080,25 @@ This function for obtaining the list of network interfaces.
 
 ## v-list-sys-ip
 
-list system ip
+list system IP
 
 **Options**: `IP` `[FORMAT]`
 
 **Examples**:
 
 ```bash
-v-list-sys-ip 116.203.78.202
+v-list-sys-ip 203.0.113.1
 ```
 
-This function for getting the list of system ip parameters.
+This function for getting the list of system IP parameters.
 
 ## v-list-sys-ips
 
-list system ips
+list system IPs
 
 **Options**: `[FORMAT]`
 
-This function for obtaining the list of system ip addresses.
+This function for obtaining the list of system IP addresses.
 
 ## v-list-sys-languages
 
@@ -4150,7 +4165,7 @@ This function for obtaining the list of postgresql config parameters.
 
 ## v-list-sys-php
 
-listing availble PHP versions installed
+listing available PHP versions installed
 
 **Options**: `[FORMAT]`
 
@@ -4291,7 +4306,7 @@ list user backup
 **Examples**:
 
 ```bash
-v-list-user-backups admin admin.2019-05-19_03-31-30.tar
+v-list-user-backup admin admin.2019-05-19_03-31-30.tar
 ```
 
 This function of obtaining the list of backup parameters. This call, just as
@@ -4327,7 +4342,7 @@ This function for obtaining the list of available user backups.
 
 ## v-list-user-ips
 
-list user ips
+list user IPs
 
 **Options**: `USER` `[FORMAT]`
 
@@ -4337,7 +4352,7 @@ list user ips
 v-list-user-ips admin
 ```
 
-This function for obtaining the list of available ip addresses.
+This function for obtaining the list of available IP addresses.
 
 ## v-list-user-log
 
@@ -4631,13 +4646,6 @@ rebuild all assets for a specified user
 **Options**: `USER` `[RESTART]`
 
 This function rebuilds all assets for a user account:
-
-- Web domains
-- DNS zones
-- Mail domains
-- Databases
-- Cron Jobs
-- User account configuration
 
 ## v-rebuild-cron-jobs
 
@@ -5861,7 +5869,7 @@ This function of updating all hestia packages
 
 Install update from Git repository
 
-**Options**: `REPOSITORY` `BRANCH` `INSTALL` `[PACKAGES]`
+**Options**: `REPOSITORY` `BRANCH` `INSTALL`
 
 **Examples**:
 
@@ -5877,7 +5885,7 @@ Downloads and compiles/installs packages from GitHub repositories
 
 ## v-update-sys-ip
 
-update system ip
+update system IP
 
 **Options**: –
 
@@ -5888,8 +5896,8 @@ v-update-sys-ip
 # Intended for internal usage
 ```
 
-This function scans configured ip in the system and register them with hestia
-internal database. This call is intended for use on vps servers, where ip is
+This function scans configured IP in the system and register them with Hestia
+internal database. This call is intended for use on vps servers, where IP is
 set by hypervisor.
 
 ## v-update-sys-ip-counters
@@ -6201,3 +6209,11 @@ update web templates
 **Options**: `[RESTART]` `[SKIP]`
 
 This function for obtaining updated web (Nginx/Apache2/PHP) templates from the Hestia package.
+
+## v-update-white-label-logo
+
+update white label logo's
+
+**Options**: `[DOWNLOAD]`
+
+Replace Hestia logos with User created logo's

@@ -1,0 +1,38 @@
+17a18,19
+> SRS_SECRET = ${readfile{/etc/exim4/srs.conf}}
+>   
+326a332,348
+> inbound_srs:
+>     driver = redirect
+>     senders = :
+>     domains = +local_domains
+>     # detect inbound bounces which are SRS'd, and decode them
+>     condition = ${if inbound_srs {$local_part} {SRS_SECRET}}
+>     data = $srs_recipient
+>   
+> inbound_srs_failure:
+>     driver = redirect
+>     senders = :
+>     domains = +local_domains
+>     # detect inbound bounces which look SRS'd but are invalid
+>     condition = ${if inbound_srs {$local_part} {}}
+>     allow_fail
+>     data = :fail: Invalid SRS recipient address
+>   
+358d379
+<   condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{false}{true}}
+387a409,422
+> remote_forwarded_smtp:
+>   driver = smtp
+>   helo_data = ${lookup dnsdb{>: defer_never,ptr=$sending_ip_address}{${listextract{1}{$value}}}{$primary_hostname}}
+>   dkim_domain = DKIM_DOMAIN
+>   dkim_selector = mail
+>   dkim_private_key = DKIM_PRIVATE_KEY
+>   dkim_canon = relaxed
+>   dkim_strict = 0
+>   hosts_try_fastopen = !*.l.google.com
+>   interface = ${if exists{OUTGOING_IP}{${readfile{OUTGOING_IP}}}}
+>   # modify the envelope from, for mails that we forward
+>   max_rcpt = 1
+>   return_path = ${srs_encode {SRS_SECRET} {$return_path} {$original_domain}}
+>   

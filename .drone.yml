@@ -26,6 +26,14 @@ steps:
   - name: Build Hestia package and install
     commands:
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+  - name: Reset Web templates
+    commands:
+      - rm /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
+      - rm /usr/local/hestia/data/templates/web/nginx/*.*
+      - rm /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
+      - rm /usr/local/hestia/data/templates/web/apache2/*.*
+      - rm /usr/local/hestia/data/templates/web/php-fpm/*.*
+      - /usr/local/hestia/bin/v-update-web-templates
   - name: Run system / user tests
     commands:
       - bats ./test/test.bats
@@ -39,9 +47,10 @@ steps:
 trigger:
   event: [pull_request, push]
   ref:
-    - refs/heads/staging/*
-    - refs/heads/beta
     - refs/heads/release
+    - refs/heads/prerelease
+    - refs/heads/servicing
+    - refs/heads/tests/*
     - refs/heads/main
     - refs/pull/*/head
 
@@ -73,6 +82,14 @@ steps:
   - name: Build Hestia package install
     commands:
       - ./src/hst_autocompile.sh --hestia --install '~localsrc'
+  - name: Reset Web templates
+    commands:
+      - rm /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
+      - rm /usr/local/hestia/data/templates/web/nginx/*.*
+      - rm /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
+      - rm /usr/local/hestia/data/templates/web/apache2/*.*
+      - rm /usr/local/hestia/data/templates/web/php-fpm/*.*
+      - /usr/local/hestia/bin/v-update-web-templates
   - name: Run system / user tests
     commands:
       - bats ./test/test.bats
@@ -82,13 +99,18 @@ steps:
   - name: Run config tests
     commands:
       - bats ./test/config-tests.bats
+  - name: Run Letsencrypt test against Staging
+    commands:
+      - cp /root/le-env.sh /tmp/hestia-le-env.sh
+      - bats ./test/letsencrypt.bats
 
 trigger:
   event: [pull_request, push]
   ref:
-    - refs/heads/staging/*
-    - refs/heads/beta
     - refs/heads/release
+    - refs/heads/prerelease
+    - refs/heads/servicing
+    - refs/heads/tests/*
     - refs/heads/main
     - refs/pull/*/head
 
@@ -102,11 +124,16 @@ platform:
   arch: amd64
 
 steps:
+  - name: Build JS/CSS
+    image: node:current-slim
+    commands:
+      - npm ci --ignore-scripts
+      - npm run build
   - name: Build
     image: debian:bullseye
     commands:
       - ln -snf /etc/localtime && echo CET > /etc/timezone
-      - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild --debug '~localsrc'
+      - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild '~localsrc'
       - mkdir -p ./hestia/
       - mv /tmp/hestiacp-src/deb/*.deb ./hestia/
   - name: Upload

@@ -25,6 +25,12 @@
 
 .env
 
+# Distribution CSS
+web/css/themes/
+
+# Distribution JS
+web/js/dist/
+
 # Composer
 composer.phar
 test/vendor/
@@ -43,15 +49,3 @@ npm-debug.log
 
 # optional eslint cache
 .eslintcache
-
-# Yarn Integrity file
-.yarn-integrity
-
-# yarn v2+
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-.pnp.*

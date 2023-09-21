@@ -29,14 +29,22 @@ if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 exec(HESTIA_CMD . "v-list-user-log $user json", $output, $return_var);
 check_error($return_var);
 $data = json_decode(implode("", $output), true);
-$data = array_reverse($data);
-unset($output);
-if (empty($_SESSION["look"])) {
-	unset($_SESSION["look"]);
-}
+if (is_array($data)) {
+	$data = array_reverse($data);
+	unset($output);
 
-// Render page
-if ($user === "system") {
-	$user = "'" . $_SESSION["user"] . "'";
+	// Render page
+	if ($user === "system") {
+		$user = "'" . $_SESSION["user"] . "'";
+	}
+} else {
+	$data = [];
+	$data[] = [
+		"LEVEL" => "error",
+		"DATE" => date("Y-m-d"),
+		"TIME" => date("H:i:s"),
+		"MESSAGE" => "Unable to load logs",
+		"CATEGORY" => "system",
+	];
 }
 render_page($user, $TAB, "list_log");

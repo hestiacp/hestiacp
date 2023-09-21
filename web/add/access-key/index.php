@@ -11,7 +11,10 @@ $api_status =
 	!empty($_SESSION["API_SYSTEM"]) && is_numeric($_SESSION["API_SYSTEM"])
 		? $_SESSION["API_SYSTEM"]
 		: 0;
-if (($user_plain == "admin" && $api_status < 1) || ($user_plain != "admin" && $api_status < 2)) {
+if (
+	($user_plain == $_SESSION["ROOT_USER"] && $api_status < 1) ||
+	($_SESSION["ROOT_USER"] != "admin" && $api_status < 2)
+) {
 	header("Location: /edit/user/");
 	exit();
 }
@@ -41,7 +44,7 @@ if (!empty($_POST["ok"])) {
 	} elseif (count($check_invalid_apis) > 0) {
 		//$errors[] = sprintf("%d apis not allowed", count($check_invalid_apis));
 		foreach ($check_invalid_apis as $api_name) {
-			$errors[] = sprintf("api %s not allowed", $api_name);
+			$errors[] = sprintf("API %s not allowed", $api_name);
 		}
 	}
 
@@ -74,9 +77,13 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("Access key %s has been created"),
-			htmlentities($key_data["ACCESS_KEY_ID"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("Access key {%s} has been created successfully."),
+				htmlentities($key_data["ACCESS_KEY_ID"]),
+			),
+			"</code>",
+			"<code>",
 		);
 		unset($apis_selected);
 		unset($check_invalid_apis);

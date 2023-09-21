@@ -10,28 +10,24 @@
 	/* Alerts */
 	--alert-box-shadow: none;
 	--alert-text-shadow: none;
-}
 
-b,
-strong {
-	font-weight: 600;
+	/* Top Bar */
+	--top-bar-background: #5070a6;
+	--top-bar-box-shadow: none;
 }
 
 /* Top bar
    ========================================================================== */
 
-.top-bar {
-	box-shadow: none;
-	background: #5070a6;
-}
-
 .top-bar-usage-inner {
 	text-shadow: none;
 }
 
-.top-bar-notifications-list {
-	box-shadow: none;
-	border: 1px solid #ccc;
+.top-bar-notifications-panel {
+	@media (--viewport-small) {
+		box-shadow: none;
+		border-color: #ccc;
+	}
 }
 
 .top-bar-menu-link {
@@ -57,36 +53,56 @@ strong {
 	background-color: #fff;
 }
 
-.table-header {
-	box-shadow: none;
-	background: #fafafa;
-}
-
-.l-unit:hover {
-	box-shadow: none;
-}
-
-.l-unit__stat-col--left {
-	& a,
-	& a:visited {
-		color: #5f7eb3;
-	}
-
-	& a:hover {
-		color: #5f7eb3;
-	}
-}
-
-.l-unit:hover,
-.units .l-unit:hover {
-	box-shadow: none;
-}
-
-/* Badge component
+/* Units table
    ========================================================================== */
 
-.badge {
+.units-table-header {
 	box-shadow: none;
+	border-top: 1px solid var(--chart-grid-color);
+}
+
+.units-table-row {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
+	}
+}
+
+.units-table-cell {
+	& a {
+		color: #5f7eb3;
+
+		&:hover {
+			color: #5f7eb3;
+		}
+	}
+}
+
+.units-table-badge {
+	@media (--viewport-large) {
+		box-shadow: none;
+	}
+}
+
+/* Statistics
+   ========================================================================== */
+
+.stats-item {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
+	}
+}
+
+/* Spinner
+   ========================================================================== */
+
+.spinner-overlay {
+	& .fas {
+		box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
+	}
 }
 
 /* Collapse component
@@ -169,6 +185,8 @@ strong {
 .login {
 	@media (--viewport-small) {
 		background-color: rgb(255 255 255 / 80%);
-		box-shadow: 0 2px 10px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255 / 100%);
+		box-shadow:
+			0 2px 10px rgb(0 0 0 / 30%),
+			inset 0 0 2px rgb(255 255 255 / 100%);
 	}
 }

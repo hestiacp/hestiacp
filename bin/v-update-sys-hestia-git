@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Install update from Git repository
-# options: REPOSITORY BRANCH INSTALL [PACKAGES]
+# options: REPOSITORY BRANCH INSTALL
 #
 # example: v-update-sys-hestia-git hestiacp staging/beta install
 #          # Will download from the hestiacp repository
@@ -23,6 +23,16 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
+
+# Detect and install NodeJS if necessary
+if [ -z $(which "node") ]; then
+	read -p "NodeJS not found. Install now to proceed? [Y/n] " answer
+	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
+		sudo apt-get install -y nodejs
+	else
+		exit 0
+	fi
+fi
 
 # Define download function
 download_file() {
@@ -294,6 +304,10 @@ mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 
 # Move needed directories
 cd $BUILD_DIR/hestiacp-$branch_dash
+
+npm ci
+npm run build
+
 cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/
 
 # Set permissions

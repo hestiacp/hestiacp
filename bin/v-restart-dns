@@ -24,7 +24,7 @@ send_email_report() {
 	else
 		dns_conf='/etc/bind/named.conf'
 	fi
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf)
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf")
 	email=$(echo "$email" | cut -f 2 -d "'")
 	tmpfile=$(mktemp)
 	subj="$(hostname): "$DNS_SYSTEM" restart failed"

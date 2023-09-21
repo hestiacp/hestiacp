@@ -1,18 +1,18 @@
 #!/bin/bash
-# info: list system ip
+# info: list system IP
 # options: IP [FORMAT]
 #
-# example: v-list-sys-ip 116.203.78.202
+# example: v-list-sys-ip 203.0.113.1
 #
-# This function for getting the list of system ip parameters.
+# This function for getting the list of system IP parameters.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#
 
 # Argument definition
-ip=$1
-format=${2-shell}
+ip="$1"
+format="${2-shell}"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -78,14 +78,14 @@ csv_list() {
 check_args '1' "$#" 'IP [FORMAT]'
 is_format_valid 'ip'
 if [ ! -e "$HESTIA/data/ips/$ip" ]; then
-	check_result $E_NOTEXIST "ip $ip doesn't exist"
+	check_result $E_NOTEXIST "IP $ip doesn't exist"
 fi
 
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Parsing ip
+# Parsing IP
 source_conf "$HESTIA/data/ips/$ip"
 
 # Listing data

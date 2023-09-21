@@ -2,7 +2,7 @@
 # info: change dns domain dnssec status
 # options: USER DOMAIN STATUS
 #
-# example: v-change-dns-domain-status admin domain.pp.ua yes
+# example: v-change-dns-domain-dnssec admin domain.pp.ua yes
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -56,8 +56,8 @@ if [ "$DNS_CLUSTER_SYSTEM" != 'hestia-zone' ]; then
 fi
 
 version=$(named -v | awk 'NR==1{print $2}')
-if version_ge '9.18' $version; then
-	check_result "$E_DISABLED" "DNSSEC is not supported when bind / named < 9.18"
+if version_ge '9.16.18' $version; then
+	check_result "$E_DISABLED" "DNSSEC is not supported when bind / named version <= 9.16.18"
 fi
 
 #----------------------------------------------------------#

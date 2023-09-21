@@ -134,71 +134,71 @@ if (!empty($_POST["save"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_package"])) {
-		$errors[] = _("package");
+		$errors[] = _("Package");
 	}
 	if (empty($_POST["v_web_template"])) {
-		$errors[] = _("web template");
+		$errors[] = _("Web Template");
 	}
 	if (!empty($_SESSION["WEB_BACKEND"])) {
 		if (empty($_POST["v_backend_template"])) {
-			$errors[] = _("backend template");
+			$errors[] = _("Backend Template");
 		}
 	}
 	if (!empty($_SESSION["PROXY_SYSTEM"])) {
 		if (empty($_POST["v_proxy_template"])) {
-			$errors[] = _("proxy template");
+			$errors[] = _("Proxy Template");
 		}
 	}
 	if (empty($_POST["v_dns_template"])) {
-		$errors[] = _("dns template");
+		$errors[] = _("DNS Template");
 	}
 	if (empty($_POST["v_shell"])) {
-		$errrors[] = _("shell");
+		$errrors[] = _("Shell");
 	}
 	if (!isset($_POST["v_web_domains"])) {
-		$errors[] = _("web domains");
+		$errors[] = _("Web Domains");
 	}
 	if (!isset($_POST["v_web_aliases"])) {
-		$errors[] = _("web aliases");
+		$errors[] = _("Web Aliases");
 	}
 	if (!isset($_POST["v_dns_domains"])) {
-		$errors[] = _("dns domains");
+		$errors[] = _("DNS Zones");
 	}
 	if (!isset($_POST["v_dns_records"])) {
-		$errors[] = _("dns records");
+		$errors[] = _("DNS Records");
 	}
 	if (!isset($_POST["v_mail_domains"])) {
-		$errors[] = _("mail domains");
+		$errors[] = _("Mail Domains");
 	}
 	if (!isset($_POST["v_mail_accounts"])) {
-		$errors[] = _("mail accounts");
+		$errors[] = _("Mail Accounts");
 	}
 	if (!isset($_POST["v_ratelimit"])) {
-		$errors[] = _("rate limit");
+		$errors[] = _("Rate Limit");
 	}
 	if (!isset($_POST["v_databases"])) {
-		$errors[] = _("databases");
+		$errors[] = _("Databases");
 	}
 	if (!isset($_POST["v_cron_jobs"])) {
-		$errors[] = _("cron jobs");
+		$errors[] = _("Cron Jobs");
 	}
 	if (!isset($_POST["v_backups"])) {
-		$errors[] = _("backups");
+		$errors[] = _("Backups");
 	}
 	if (!isset($_POST["v_disk_quota"])) {
-		$errors[] = _("quota");
+		$errors[] = _("Quota");
 	}
 	if (!isset($_POST["v_bandwidth"])) {
-		$errors[] = _("bandwidth");
+		$errors[] = _("Bandwidth");
 	}
 
 	// Check if name server entries are blank if DNS server is installed
 	if (isset($_SESSION["DNS_SYSTEM"]) && !empty($_SESSION["DNS_SYSTEM"])) {
 		if (empty($_POST["v_ns1"])) {
-			$errors[] = _("ns1");
+			$errors[] = _("Nameserver 1");
 		}
 		if (empty($_POST["v_ns2"])) {
-			$errors[] = _("ns2");
+			$errors[] = _("Nameserver 2");
 		}
 	}
 
@@ -224,7 +224,11 @@ if (!empty($_POST["save"])) {
 		$v_proxy_template = quoteshellarg($_POST["v_proxy_template"]);
 	}
 	$v_dns_template = quoteshellarg($_POST["v_dns_template"]);
-	$v_shell = quoteshellarg($_POST["v_shell"]);
+	if (!empty($_POST["v_shell"])) {
+		$v_shell = quoteshellarg($_POST["v_shell"]);
+	} else {
+		$v_shell = "nologin";
+	}
 	$v_web_domains = quoteshellarg($_POST["v_web_domains"]);
 	$v_web_aliases = quoteshellarg($_POST["v_web_aliases"]);
 	$v_dns_domains = quoteshellarg($_POST["v_dns_domains"]);
@@ -237,14 +241,14 @@ if (!empty($_POST["save"])) {
 	$v_backups = quoteshellarg($_POST["v_backups"]);
 	$v_disk_quota = quoteshellarg($_POST["v_disk_quota"]);
 	$v_bandwidth = quoteshellarg($_POST["v_bandwidth"]);
-	$v_ns1 = trim($_POST["v_ns1"], ".");
-	$v_ns2 = trim($_POST["v_ns2"], ".");
-	$v_ns3 = trim($_POST["v_ns3"], ".");
-	$v_ns4 = trim($_POST["v_ns4"], ".");
-	$v_ns5 = trim($_POST["v_ns5"], ".");
-	$v_ns6 = trim($_POST["v_ns6"], ".");
-	$v_ns7 = trim($_POST["v_ns7"], ".");
-	$v_ns8 = trim($_POST["v_ns8"], ".");
+	$v_ns1 = !empty($_POST["v_ns1"]) ? trim($_POST["v_ns1"], ".") : "";
+	$v_ns2 = !empty($_POST["v_ns2"]) ? trim($_POST["v_ns2"], ".") : "";
+	$v_ns3 = !empty($_POST["v_ns3"]) ? trim($_POST["v_ns3"], ".") : "";
+	$v_ns4 = !empty($_POST["v_ns4"]) ? trim($_POST["v_ns4"], ".") : "";
+	$v_ns5 = !empty($_POST["v_ns5"]) ? trim($_POST["v_ns5"], ".") : "";
+	$v_ns6 = !empty($_POST["v_ns6"]) ? trim($_POST["v_ns6"], ".") : "";
+	$v_ns7 = !empty($_POST["v_ns7"]) ? trim($_POST["v_ns7"], ".") : "";
+	$v_ns8 = !empty($_POST["v_ns8"]) ? trim($_POST["v_ns8"], ".") : "";
 	$v_ns = $v_ns1 . "," . $v_ns2;
 	if (!empty($v_ns3)) {
 		$v_ns .= "," . $v_ns3;
@@ -304,7 +308,7 @@ if (!empty($_POST["save"])) {
 	fclose($fp);
 	unlink($tmpfile);
 
-	// Propogate new package
+	// Propagate new package
 	exec(HESTIA_CMD . "v-update-user-package " . $v_package . " 'json'", $output, $return_var);
 	check_return_code($return_var, $output);
 	unset($output);

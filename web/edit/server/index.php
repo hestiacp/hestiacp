@@ -283,12 +283,13 @@ if (!empty($_POST["save"])) {
 		unset($output);
 		$v_hostname = $_POST["v_hostname"];
 	}
-
 	if ($_SESSION["WEB_BACKEND"] == "php-fpm") {
 		// Install/remove php versions
 		if (empty($_SESSION["error_msg"])) {
 			if (!empty($v_php_versions)) {
-				$post_php = $_POST["v_php_versions"];
+				if (!empty($_POST["v_php_versions"])) {
+					$post_php = $_POST["v_php_versions"];
+				}
 				if (empty($post_php)) {
 					$post_php = [];
 				}
@@ -357,7 +358,9 @@ if (!empty($_POST["save"])) {
 					$return_var,
 				);
 				check_return_code($return_var, $output);
-				$v_timezone = $_POST["v_timezone"];
+				if (in_array($_POST["v_timezone"], $v_timezones)) {
+					$v_timezone = $_POST["v_timezone"];
+				}
 				unset($output);
 			}
 		}
@@ -407,11 +410,16 @@ if (!empty($_POST["save"])) {
 
 	// Update debug mode status
 	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_debug_mode"] == "on") {
-			$_POST["v_debug_mode"] = "true";
+		if (!empty($_POST["v_debug_mode"])) {
+			if ($_POST["v_debug_mode"] == "on") {
+				$_POST["v_debug_mode"] = "true";
+			} else {
+				$_POST["v_debug_mode"] = "false";
+			}
 		} else {
 			$_POST["v_debug_mode"] = "false";
 		}
+
 		if ($_POST["v_debug_mode"] != $_SESSION["DEBUG_MODE"]) {
 			exec(
 				HESTIA_CMD .
@@ -508,6 +516,29 @@ if (!empty($_POST["save"])) {
 			}
 		}
 	}
+	// Set Web Terminal support
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			!empty($_POST["v_web_terminal"]) &&
+			$_SESSION["WEB_TERMINAL"] != $_POST["v_web_terminal"]
+		) {
+			if ($_POST["v_web_terminal"] == "true") {
+				exec(HESTIA_CMD . "v-add-sys-web-terminal", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["WEB_TERMINAL"] = "true";
+				}
+			} else {
+				exec(HESTIA_CMD . "v-delete-sys-web-terminal", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["WEB_TERMINAL"] = "false";
+				}
+			}
+		}
+	}
 	// Set phpMyAdmin SSO key
 	if (empty($_SESSION["error_msg"])) {
 		if (!empty($_POST["v_phpmyadmin_key"])) {
@@ -592,18 +623,23 @@ if (!empty($_POST["save"])) {
 			$v_db_adv = "yes";
 		}
 	}
-
-	// Update webmail url
-	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_webmail_alias"] != $_SESSION["WEBMAIL_ALIAS"]) {
-			exec(
-				HESTIA_CMD . "v-change-sys-webmail " . quoteshellarg($_POST["v_webmail_alias"]),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			$v_mail_adv = "yes";
+	if (!empty($_SESSION["MAIL_SYSTEM"])) {
+		// Update webmail url
+		if (empty($_SESSION["error_msg"])) {
+			if ($_SESSION["WEBMAIL_SYSTEM"] != "") {
+				if ($_POST["v_webmail_alias"] != $_SESSION["WEBMAIL_ALIAS"]) {
+					exec(
+						HESTIA_CMD .
+							"v-change-sys-webmail " .
+							quoteshellarg($_POST["v_webmail_alias"]),
+						$output,
+						$return_var,
+					);
+					check_return_code($return_var, $output);
+					unset($output);
+					$v_mail_adv = "yes";
+				}
+			}
 		}
 	}
 
@@ -613,7 +649,8 @@ if (!empty($_POST["save"])) {
 			if (
 				$_POST["v_smtp_relay_host"] != $v_smtp_relay_host ||
 				$_POST["v_smtp_relay_user"] != $v_smtp_relay_user ||
-				$_POST["v_smtp_relay_port"] != $v_smtp_relay_port
+				$_POST["v_smtp_relay_port"] != $v_smtp_relay_port ||
+				!empty($_POST["v_smtp_relay_pass"])
 			) {
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);
@@ -666,6 +703,9 @@ if (!empty($_POST["save"])) {
 
 	// Update phpPgAdmin url
 	if (empty($_SESSION["error_msg"])) {
+		if (empty($_POST["v_pgsql_url"])) {
+			$_POST["v_pgsql_url"] = "";
+		}
 		if ($_POST["v_pgsql_url"] != $_SESSION["DB_PGA_ALIAS"]) {
 			exec(
 				HESTIA_CMD . "v-change-sys-db-alias pga " . quoteshellarg($_POST["v_pgsql_url"]),
@@ -685,6 +725,10 @@ if (!empty($_POST["save"])) {
 		} else {
 			$ugrade_send_mail = "";
 		}
+		if (empty($_POST["v_upgrade_send_notification_email"])) {
+			$_POST["v_upgrade_send_notification_email"] = "";
+		}
+
 		if ($_POST["v_upgrade_send_notification_email"] != $ugrade_send_mail) {
 			if ($_POST["v_upgrade_send_notification_email"] == "on") {
 				$_POST["v_upgrade_send_notification_email"] = "true";
@@ -1184,7 +1228,7 @@ if (!empty($_POST["save"])) {
 	if (empty($_SESSION["error_msg"])) {
 		if ($_POST["v_inactive_session_timeout"] != $_SESSION["INACTIVE_SESSION_TIMEOUT"]) {
 			if ($_POST["v_inactive_session_timeout"] < 1) {
-				$_SESSION["error_msg"] = _("Inactive session timeout can not lower than 1 minute");
+				$_SESSION["error_msg"] = _("Inactive session timeout can not lower than 1 minute.");
 			} else {
 				exec(
 					HESTIA_CMD .
@@ -1456,44 +1500,49 @@ if (!empty($_POST["save"])) {
 
 	// Change POLICY_SYSTEM_PROTECTED_ADMIN
 	if (empty($_SESSION["error_msg"])) {
-		if (
-			$_POST["v_policy_system_protected_admin"] != $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"]
-		) {
-			exec(
-				HESTIA_CMD .
-					"v-change-sys-config-value POLICY_SYSTEM_PROTECTED_ADMIN " .
-					quoteshellarg($_POST["v_policy_system_protected_admin"]),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			if (empty($_SESSION["error_msg"])) {
-				$v_policy_system_protected_admin = $_POST["v_policy_system_protected_admin"];
+		if (!empty($_POST["v_policy_system_protected_admin"])) {
+			if (
+				$_POST["v_policy_system_protected_admin"] !=
+				$_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"]
+			) {
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value POLICY_SYSTEM_PROTECTED_ADMIN " .
+						quoteshellarg($_POST["v_policy_system_protected_admin"]),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$v_policy_system_protected_admin = $_POST["v_policy_system_protected_admin"];
+				}
+				$v_security_adv = "yes";
 			}
-			$v_security_adv = "yes";
 		}
 	}
 
 	// Change POLICY_USER_VIEW_SUSPENDED
 	if (empty($_SESSION["error_msg"])) {
-		if (
-			$_POST["v_policy_user_view_suspended"] != $_SESSION["POLICY_USER_VIEW_SUSPENDED"] &&
-			!empty($_SESSION["POLICY_USER_VIEW_SUSPENDED"])
-		) {
-			exec(
-				HESTIA_CMD .
-					"v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED " .
-					quoteshellarg($_POST["v_policy_user_view_suspended"]),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			if (empty($_SESSION["error_msg"])) {
-				$v_policy_system_hide_admin = $_POST["v_policy_user_view_suspended"];
+		if (!empty($_POST["v_policy_user_view_suspended"])) {
+			if (
+				$_POST["v_policy_user_view_suspended"] != $_SESSION["POLICY_USER_VIEW_SUSPENDED"] &&
+				!empty($_SESSION["POLICY_USER_VIEW_SUSPENDED"])
+			) {
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value POLICY_USER_VIEW_SUSPENDED " .
+						quoteshellarg($_POST["v_policy_user_view_suspended"]),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$v_policy_user_view_suspended = $_POST["v_policy_user_view_suspended"];
+				}
+				$v_security_adv = "yes";
 			}
-			$v_security_adv = "yes";
 		}
 	}
 
@@ -1529,37 +1578,98 @@ if (!empty($_POST["save"])) {
 
 	// Change POLICY_SYSTEM_HIDE_ADMIN
 	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_policy_system_hide_admin"] != $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"]) {
-			exec(
-				HESTIA_CMD .
-					"v-change-sys-config-value POLICY_SYSTEM_HIDE_ADMIN " .
-					quoteshellarg($_POST["v_policy_system_hide_admin"]),
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			if (empty($_SESSION["error_msg"])) {
-				$v_policy_system_hide_admin = $_POST["v_policy_system_hide_admin"];
+		if (!empty($_POST["v_policy_system_hide_admin"])) {
+			if ($_POST["v_policy_system_hide_admin"] != $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"]) {
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value POLICY_SYSTEM_HIDE_ADMIN " .
+						quoteshellarg($_POST["v_policy_system_hide_admin"]),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$v_policy_system_hide_admin = $_POST["v_policy_system_hide_admin"];
+				}
+				$v_security_adv = "yes";
 			}
-			$v_security_adv = "yes";
 		}
 	}
 
 	// Change POLICY_SYSTEM_HIDE_SERVICES
 	if (empty($_SESSION["error_msg"])) {
-		if ($_POST["v_policy_system_hide_services"] != $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"]) {
+		if (!empty($_POST["v_policy_system_hide_services"])) {
+			if (
+				$_POST["v_policy_system_hide_services"] != $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"]
+			) {
+				exec(
+					HESTIA_CMD .
+						"v-change-sys-config-value POLICY_SYSTEM_HIDE_SERVICES " .
+						quoteshellarg($_POST["v_policy_system_hide_services"]),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$v_policy_system_hide_services = $_POST["v_policy_system_hide_services"];
+				}
+				$v_security_adv = "yes";
+			}
+		}
+	}
+	// Change POLICY_SYSTEM_HIDE_SERVICES
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			$_POST["v_policy_backup_suspended_users"] != $_SESSION["POLICY_BACKUP_SUSPENDED_USERS"]
+		) {
 			exec(
 				HESTIA_CMD .
-					"v-change-sys-config-value POLICY_SYSTEM_HIDE_SERVICES " .
-					quoteshellarg($_POST["v_policy_system_hide_services"]),
+					"v-change-sys-config-value POLICY_BACKUP_SUSPENDED_USERS " .
+					quoteshellarg($_POST["v_policy_backup_suspended_users"]),
 				$output,
 				$return_var,
 			);
 			check_return_code($return_var, $output);
 			unset($output);
 			if (empty($_SESSION["error_msg"])) {
-				$v_policy_system_hide_services = $_POST["v_policy_system_hide_services"];
+				$v_policy_system_hide_services = $_POST["v_policy_backup_suspended_users"];
+			}
+			$v_security_adv = "yes";
+		}
+	}
+
+	if (empty($_SESSION["error_msg"])) {
+		if ($_POST["v_policy_sync_error_documents"] != $_SESSION["POLICY_SYNC_ERROR_DOCUMENTS"]) {
+			exec(
+				HESTIA_CMD .
+					"v-change-sys-config-value POLICY_SYNC_ERROR_DOCUMENTS " .
+					quoteshellarg($_POST["v_policy_sync_error_documents"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			if (empty($_SESSION["error_msg"])) {
+				$v_policy_sync_error_documents = $_POST["v_policy_sync_error_documents"];
+			}
+			$v_security_adv = "yes";
+		}
+	}
+	if (empty($_SESSION["error_msg"])) {
+		if ($_POST["v_policy_sync_skeleton"] != $_SESSION["POLICY_SYNC_SKELETON"]) {
+			exec(
+				HESTIA_CMD .
+					"v-change-sys-config-value POLICY_SYNC_SKELETON " .
+					quoteshellarg($_POST["v_policy_sync_skeleton"]),
+				$output,
+				$return_var,
+			);
+			check_return_code($return_var, $output);
+			unset($output);
+			if (empty($_SESSION["error_msg"])) {
+				$v_policy_sync_skeleton = $_POST["v_policy_sync_skeleton"];
 			}
 			$v_security_adv = "yes";
 		}

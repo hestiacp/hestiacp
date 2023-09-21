@@ -29,7 +29,7 @@ is_format_valid 'ip_name'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Define variables for ipset configuration
-ipset_hstobject='../../data/firewall/ipset'
+ipset_hstobject='../../../data/firewall/ipset'
 is_object_valid "$ipset_hstobject" 'LISTNAME' "$ip_name"
 ip_version="$(get_object_value "$ipset_hstobject" 'LISTNAME' "$ip_name" '$IP_VERSION')"
 

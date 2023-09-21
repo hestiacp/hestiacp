@@ -78,8 +78,8 @@ rebuild_user_conf() {
 	fi
 
 	# Add membership to hestia-users group to non-admin users
-	if [ "$user" = "admin" ]; then
-		setfacl -m "g:admin:r-x" "$HOMEDIR/$user"
+	if [ "$user" = "$ROOT_USER" ]; then
+		setfacl -m "g:$ROOT_USER:r-x" "$HOMEDIR/$user"
 	else
 		usermod -a -G "hestia-users" "$user"
 		setfacl -m "u:$user:r-x" "$HOMEDIR/$user"
@@ -248,7 +248,9 @@ rebuild_web_domain_conf() {
 
 	# Rebuilding domain directories
 	if [ -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
-		$BIN/v-delete-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
+		if [ "$POLICY_SYNC_ERROR_DOCUMENTS" != "no" ]; then
+			$BIN/v-delete-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
+		fi
 	fi
 
 	if [ ! -d $HOMEDIR/$user/web/$domain ]; then
@@ -256,7 +258,11 @@ rebuild_web_domain_conf() {
 	fi
 	chown --no-dereference $user:$user $HOMEDIR/$user/web/$domain
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/public_html"
-	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
+	if [ ! -d "$HOMEDIR/$user/web/$domain/document_errors" ]; then
+		$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/document_errors"
+		# Propagating html skeleton
+		user_exec cp -r "$WEBTPL/skel/document_errors/" "$HOMEDIR/$user/web/$domain/"
+	fi
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/cgi-bin"
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/private"
 	$BIN/v-add-fs-directory "$user" "$HOMEDIR/$user/web/$domain/stats"
@@ -276,11 +282,6 @@ rebuild_web_domain_conf() {
 	ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.log .
 	ln -f -s /var/log/$WEB_SYSTEM/domains/$domain.error.log .
 	cd /
-
-	# Propagating html skeleton
-	if [ -d "$WEBTPL/skel/document_errors/" ]; then
-		user_exec cp -r "$WEBTPL/skel/document_errors/" "$HOMEDIR/$user/web/$domain/"
-	fi
 
 	# Set ownership
 	chown --no-dereference $user:$user \
@@ -893,8 +894,12 @@ import_mysql_database() {
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
+	if [ -f '/usr/bin/mariadb' ]; then
+		mariadb -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
+	else
+		mysql -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
+	fi
 
-	mysql -h $HOST -u $USER -p$PASSWORD $DB < $1 > /dev/null 2>&1
 }
 
 # Import PostgreSQL dump

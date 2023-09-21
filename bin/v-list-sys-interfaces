@@ -11,7 +11,7 @@
 #----------------------------------------------------------#
 
 # Argument definition
-format=${1-shell}
+format="${1-shell}"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -23,10 +23,10 @@ source_conf "$HESTIA/conf/hestia.conf"
 
 # JSON list function
 json_list() {
-	objects=$(echo "$interfaces" | wc -l)
+	objects=$(echo "$physical_nics" | wc -l)
 	i=1
 	echo '['
-	for interface in $interfaces; do
+	for interface in $physical_nics; do
 		echo -n '    "'$interface'"'
 		if [ "$i" -lt "$objects" ]; then
 			echo ','
@@ -42,14 +42,14 @@ json_list() {
 shell_list() {
 	echo "INTERFACE"
 	echo "---------"
-	for interface in $interfaces; do
+	for interface in $physical_nics; do
 		echo "$interface"
 	done
 }
 
 # PLAIN list function
 plain_list() {
-	for interface in $interfaces; do
+	for interface in $physical_nics; do
 		echo "$interface"
 	done
 }
@@ -57,7 +57,7 @@ plain_list() {
 # CSV list function
 csv_list() {
 	echo "INTERFACE"
-	for interface in $interfaces; do
+	for interface in $physical_nics; do
 		echo "$interface"
 	done
 }
@@ -67,7 +67,8 @@ csv_list() {
 #----------------------------------------------------------#
 
 # Defining interface list
-interfaces=$(cat /proc/net/dev | grep : | cut -f 1 -d : | tr -d ' ' | grep -v lo)
+# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
+physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
 
 # Listing data
 case $format in

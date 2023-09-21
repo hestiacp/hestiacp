@@ -2,37 +2,45 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/edit/server/" class="button button-secondary" id="btn-back"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-		</div>
-		<div class="toolbar-buttons">
+			<a href="/edit/server/" class="button button-secondary button-back js-button-back">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
 		</div>
 	</div>
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
+<div class="container">
 
-	<div class="header table-header">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact u-text-center">&nbsp;</div>
-			<div class="clearfix l-unit__stat-col--left"><b><?= _("Category") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("Name") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-2"><b><?= _("Status") ?></b></div>
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Preview Features") ?></h1>
 
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell"></div>
+			<div class="units-table-cell"><?= _("Category") ?></div>
+			<div class="units-table-cell"><?= _("Name") ?></div>
+			<div class="units-table-cell"><?= _("Status") ?></div>
 		</div>
-	</div>
-	<!-- Start of item element-->
-	<div class="l-unit header animate__animated animate__fadeIn">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact u-text-center">
+
+		<div class="units-table-row js-unit">
+			<div class="units-table-cell u-text-center-desktop">
 				<i class="fas fa-gear icon-blue"></i>
 			</div>
-			<div class="clearfix l-unit__stat-col--left"><b><?= _("System") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-6"><b><?= _("Policy") ?>: <?= _("Allow suspended users to log in with read-only access") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left wide-2">Partially implemented.</div>
+			<div class="units-table-cell units-table-heading-cell u-text-bold">
+				<span class="u-hide-desktop"><?= _("Category") ?>:</span>
+				<?= _("System") ?>
+			</div>
+			<div class="units-table-cell u-text-bold">
+				<span class="u-hide-desktop"><?= _("Name") ?>:</span>
+				<?= _("Policy") ?>: <?= _("Allow suspended users to log in with read-only access") ?>
+			</div>
+			<div class="units-table-cell">
+				<span class="u-hide-desktop u-text-bold"><?= _("Status") ?>:</span>
+				<?= _("Partially implemented") ?>
+			</div>
 		</div>
 	</div>
-	<!-- End of item element-->
+
 </div>
 
 <footer class="app-footer">

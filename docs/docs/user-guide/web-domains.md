@@ -32,7 +32,7 @@ Depending on the application you chose to install, this can take 30 seconds or l
 
 1. Hover over the domain whose logs you want to view.
 2. Click the <i class="fas fa-fw fa-binoculars"><span class="visually-hidden">logs</span></i> icon.
-3. At the top of the page, you have the possiblity to download the logs or view the error logs instead.
+3. At the top of the page, you have the possibility to download the logs or view the error logs instead.
 
 ## Suspending a web domain
 
@@ -71,7 +71,7 @@ If your domain is an [internationalized domain name (IDN)](https://en.wikipedia.
 
 If you want to use your own SSL certificate you can enter the SSL certificate in the text area.
 
-If you are having issues with enabling Let’s Encrypt, please refer to our [SSL certicates](../server-administration/ssl-certificates.md) documentation.
+If you are having issues with enabling Let’s Encrypt, please refer to our [SSL certificates](../server-administration/ssl-certificates.md) documentation.
 
 ### Changing PHP version
 

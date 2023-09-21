@@ -10,7 +10,7 @@ class DokuWikiSetup extends BaseSetup {
 		"name" => "DokuWiki",
 		"group" => "wiki",
 		"enabled" => true,
-		"version" => "stable_2022-07-31a",
+		"version" => "2023-04-04a",
 		"thumbnail" => "dokuwiki-logo.svg",
 	];
 
@@ -49,7 +49,7 @@ class DokuWikiSetup extends BaseSetup {
 		"resources" => [
 			"archive" => [
 				"src" =>
-					"https://github.com/dokuwiki/dokuwiki/archive/refs/tags/release-2022-07-31a.zip",
+					"https://github.com/dokuwiki/dokuwiki/releases/download/release-2023-04-04a/dokuwiki-2023-04-04a.zip",
 			],
 		],
 		"server" => [
@@ -79,7 +79,7 @@ class DokuWikiSetup extends BaseSetup {
 		$this->appcontext->runUser(
 			"v-copy-fs-directory",
 			[
-				$this->getDocRoot($this->extractsubdir . "/dokuwiki-release_stable_2022-07-31a/."),
+				$this->getDocRoot($this->extractsubdir . "/dokuwiki-2023-04-04/."),
 				$this->getDocRoot(),
 			],
 			$status,

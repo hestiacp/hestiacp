@@ -1,8 +1,6 @@
-<script lang="ts">
+<script>
 export default {
-	props: {
-		image: String,
-	},
+	props: ["image"],
 };
 </script>
 

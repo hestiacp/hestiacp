@@ -36,7 +36,7 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_domain"])) {
-		$errors[] = _("domain");
+		$errors[] = _("Domain");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
@@ -167,11 +167,11 @@ if (!empty($_POST["ok"])) {
 						$v_domain .
 						" " .
 						$v_smtp_relay_host .
-						" '" .
+						" " .
 						$v_smtp_relay_user .
-						"' '" .
+						" " .
 						$v_smtp_relay_pass .
-						"' " .
+						" " .
 						$v_smtp_relay_port,
 					$output,
 					$return_var,
@@ -184,10 +184,13 @@ if (!empty($_POST["ok"])) {
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("MAIL_DOMAIN_CREATED_OK"),
-			htmlentities($_POST["v_domain"]),
-			htmlentities($_POST["v_domain"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("Mail domain {%s} has been created successfully."),
+				htmlentities($_POST["v_domain"]),
+			),
+			"</a>",
+			'<a href="/list/mail/?domain=' . htmlentities($_POST["v_domain"]) . '">',
 		);
 		unset($v_domain, $v_webmail);
 	}
@@ -209,14 +212,14 @@ if (!empty($_POST["ok_acc"])) {
 	}
 	// Check empty fields
 	if (empty($_POST["v_domain"])) {
-		$errors[] = _("domain");
+		$errors[] = _("Domain");
 	}
 	if (empty($_POST["v_account"])) {
-		$errors[] = _("account");
+		$errors[] = _("Account");
 	}
 	if (empty($_POST["v_fwd_only"]) && empty($_POST["v_password"])) {
 		if (empty($_POST["v_password"])) {
-			$errors[] = _("password");
+			$errors[] = _("Password");
 		}
 	}
 	if (!empty($errors[0])) {
@@ -233,14 +236,14 @@ if (!empty($_POST["ok_acc"])) {
 	// Validate email
 	if (!empty($_POST["v_send_email"]) && empty($_SESSION["error_msg"])) {
 		if (!filter_var($_POST["v_send_email"], FILTER_VALIDATE_EMAIL)) {
-			$_SESSION["error_msg"] = _("Please enter valid email address.");
+			$_SESSION["error_msg"] = _("Please enter a valid email address.");
 		}
 	}
 
 	// Check password length
 	if (empty($_SESSION["error_msg"]) && empty($_POST["v_fwd_only"])) {
 		if (!validate_password($_POST["v_password"])) {
-			$_SESSION["error_msg"] = _("Password does not match the minimum requirements");
+			$_SESSION["error_msg"] = _("Password does not match the minimum requirements.");
 		}
 	}
 
@@ -250,7 +253,6 @@ if (!empty($_POST["ok_acc"])) {
 	$v_account = quoteshellarg($_POST["v_account"]);
 	$v_quota = quoteshellarg($_POST["v_quota"]);
 	$v_send_email = $_POST["v_send_email"];
-	$v_credentials = $_POST["v_credentials"];
 	$v_aliases = $_POST["v_aliases"];
 	$v_fwd = $_POST["v_fwd"];
 	if (empty($_POST["v_quota"])) {
@@ -414,24 +416,105 @@ if (!empty($_POST["ok_acc"])) {
 	}
 
 	// Email login credentials
-	if (!empty($v_send_email) && empty($_SESSION["error_msg"])) {
-		$to = $v_send_email;
-		$subject = _("Email Credentials");
+	if (!empty($_POST["v_send_email"]) && empty($_SESSION["error_msg"])) {
+		$to = $_POST["v_send_email"];
+		$template = get_email_template("email_credentials", $_SESSION["language"]);
+		if (!empty($template)) {
+			preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
+			$subject = $matches[1];
+			$subject = str_replace(
+				["{{hostname}}", "{{appname}}", "{{account}}", "{{domain}}"],
+				[
+					get_hostname(),
+					$_SESSION["APP_NAME"],
+					htmlentities(strtolower($_POST["v_account"])),
+					htmlentities($_POST["v_domain"]),
+				],
+				$subject,
+			);
+			$template = str_replace($matches[0], "", $template);
+		} else {
+			$template = _(
+				"Mail account has been created.\n" .
+					"\n" .
+					"Common Account Settings:\n" .
+					"Username: {{account}}@{{domain}}\n" .
+					"Password: {{password}}\n" .
+					"Webmail: {{webmail}}\n" .
+					"Hostname: {{hostname}}\n" .
+					"\n" .
+					"IMAP Settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 993\n" .
+					"STARTTLS: Port 143\n" .
+					"No encryption: Port 143\n" .
+					"\n" .
+					"POP3 Settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 995\n" .
+					"STARTTLS: Port 110\n" .
+					"No encryption: Port 110\n" .
+					"\n" .
+					"SMTP Settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 465\n" .
+					"STARTTLS: Port 587\n" .
+					"No encryption: Port 25\n" .
+					"\n" .
+					"Best regards,\n" .
+					"\n" .
+					"--\n" .
+					"{{appname}}",
+			);
+		}
+		if (empty($subject)) {
+			$subject = str_replace(
+				["{{subject}}", "{{hostname}}", "{{appname}}"],
+				[
+					sprintf(
+						_("Email Credentials: %s@%s"),
+						htmlentities(strtolower($_POST["v_account"])),
+						htmlentities($_POST["v_domain"]),
+					),
+					get_hostname(),
+					$_SESSION["APP_NAME"],
+				],
+				$_SESSION["SUBJECT_EMAIL"],
+			);
+		}
+
 		$hostname = get_hostname();
-		$from = "noreply@" . $hostname;
-		$from_name = _("Hestia Control Panel");
-		$mailtext = $v_credentials;
+		$from = !empty($_SESSION["FROM_EMAIL"]) ? $_SESSION["FROM_EMAIL"] : "noreply@" . $hostname;
+		$from_name = !empty($_SESSION["FROM_NAME"])
+			? $_SESSION["FROM_NAME"]
+			: $_SESSION["APP_NAME"];
+
+		$mailtext = translate_email($template, [
+			"domain" => htmlentities($_POST["v_domain"]),
+			"account" => htmlentities(strtolower($_POST["v_account"])),
+			"password" => htmlentities($_POST["v_password"]),
+			"webmail" => $webmail . "." . htmlentities($_POST["v_domain"]),
+			"hostname" => "mail." . htmlentities($_POST["v_domain"]),
+			"appname" => $_SESSION["APP_NAME"],
+		]);
+
 		send_email($to, $subject, $mailtext, $from, $from_name);
 	}
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("MAIL_ACCOUNT_CREATED_OK"),
-			htmlentities(strtolower($_POST["v_account"])),
-			htmlentities($_POST["v_domain"]),
-			htmlentities(strtolower($_POST["v_account"])),
-			htmlentities($_POST["v_domain"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("Mail account {%s@%s} has been created successfully."),
+				htmlentities(strtolower($_POST["v_account"])),
+				htmlentities($_POST["v_domain"]),
+			),
+			"</a>",
+			'<a href="/edit/mail/?account=' .
+				htmlentities(strtolower($_POST["v_account"])) .
+				"&domain=" .
+				htmlentities($_POST["v_domain"]) .
+				'">',
 		);
 		unset($v_account);
 		unset($v_password);
@@ -473,6 +556,7 @@ if (empty($_GET["domain"])) {
 		$v_smtp_relay_port = "";
 	}
 
+	$accept = $_GET["accept"] ?? "";
 	render_page($user, $TAB, "add_mail");
 } else {
 	// Display body for mail account

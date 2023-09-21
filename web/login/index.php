@@ -73,7 +73,7 @@ if (isset($_SESSION["user"])) {
 		// Obtain account properties
 		$v_user = quoteshellarg(
 			$_SESSION[
-				$_SESSION["userContext"] === "admin" && isset($_SESSION["look"]) ? "look" : "user"
+				$_SESSION["userContext"] === "admin" && $_SESSION["look"] !== "" ? "look" : "user"
 			],
 		);
 
@@ -135,11 +135,11 @@ function authenticate_user($user, $password, $twofa = "") {
 		if ($return_var > 0) {
 			sleep(2);
 			if ($return_var == 5) {
-				$error = '<p class="error">' . _("Account has been suspended") . "</p>";
+				$error = _("Account has been suspended");
 			} elseif ($return_var == 1) {
-				$error = '<p class="error">' . _("Unsupported hash method") . "</p>";
+				$error = _("Unsupported hash method");
 			} else {
-				$error = '<p class="error">' . _("Invalid username or password") . "</p>";
+				$error = _("Invalid username or password");
 			}
 			return $error;
 		} else {
@@ -196,7 +196,7 @@ function authenticate_user($user, $password, $twofa = "") {
 			// Check API answer
 			if ($return_var > 0) {
 				sleep(2);
-				$error = '<p class="error">' . _("Invalid username or password") . "</p>";
+				$error = _("Invalid username or password");
 				$v_session_id = quoteshellarg($_POST["token"]);
 				exec(
 					HESTIA_CMD .
@@ -219,7 +219,7 @@ function authenticate_user($user, $password, $twofa = "") {
 				unset($output);
 				if ($data[$user]["LOGIN_DISABLED"] === "yes") {
 					sleep(2);
-					$error = '<p class="error">' . _("Invalid username or password") . "</p>";
+					$error = _("Invalid username or password");
 					$v_session_id = quoteshellarg($_POST["token"]);
 					exec(
 						HESTIA_CMD .
@@ -243,7 +243,7 @@ function authenticate_user($user, $password, $twofa = "") {
 					$v_login_user_allowed_ips = array_map("trim", $v_login_user_allowed_ips);
 					if (!in_array($ip, $v_login_user_allowed_ips, true)) {
 						sleep(2);
-						$error = '<p class="error">' . _("Invalid username or password") . "</p>";
+						$error = _("Invalid username or password");
 						$v_session_id = quoteshellarg($_POST["token"]);
 						exec(
 							HESTIA_CMD .
@@ -255,7 +255,7 @@ function authenticate_user($user, $password, $twofa = "") {
 								$v_session_id .
 								" " .
 								$v_user_agent .
-								' yes "Ip not in allowed list"',
+								' yes "IP address not in allowed list"',
 							$output,
 							$return_var,
 						);
@@ -269,7 +269,7 @@ function authenticate_user($user, $password, $twofa = "") {
 						$output,
 						$return_var,
 					);
-					$error = "<p class=\"error\">" . _("Invalid or missing 2FA token") . "</p>";
+					$error = _("Invalid or missing 2FA token");
 					if (empty($twofa)) {
 						$_SESSION["login"]["username"] = $user;
 						$_SESSION["login"]["password"] = $password;
@@ -284,8 +284,7 @@ function authenticate_user($user, $password, $twofa = "") {
 						unset($output);
 						if ($return_var > 0) {
 							sleep(2);
-							$error =
-								'<p class="error">' . _("Invalid or missing 2FA token") . "</p>";
+							$error = _("Invalid or missing 2FA token");
 							$_SESSION["login"]["username"] = $user;
 							$_SESSION["login"]["password"] = $password;
 							$v_session_id = quoteshellarg($_POST["token"]);
@@ -337,7 +336,6 @@ function authenticate_user($user, $password, $twofa = "") {
 				);
 
 				$_SESSION["LAST_ACTIVITY"] = time();
-				$_SESSION["MURMUR"] = $_POST["murmur"];
 
 				// Define user role / context
 				$_SESSION["userContext"] = $data[$user]["ROLE"];

@@ -142,7 +142,9 @@ check_args '1' "$#" 'USER [NOTIFY]'
 is_format_valid 'user'
 is_system_enabled "$BACKUP_SYSTEM" 'BACKUP_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
-is_object_unsuspended 'user' 'USER' "$user"
+if [ "$POLICY_BACKUP_SUSPENDED_USERS" != "yes" ]; then
+	is_object_unsuspended 'user' 'USER' "$user"
+fi
 is_backup_enabled
 
 # Perform verification if read-only mode is enabled
@@ -172,7 +174,7 @@ start_time=$(date '+%s')
 
 # Set notification email and subject
 subj="$user → backup failed"
-email=$(grep CONTACT "$HESTIA/data/users/admin/user.conf" | cut -f 2 -d \')
+email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 
 # Validate available disk space (take usage * 2, due to the backup handling)
 let u_disk=$(($(get_user_disk_usage) * 2))
@@ -423,7 +425,7 @@ if [ -n "$DNS_SYSTEM" ] && [ "$DNS" != '*' ]; then
 	for domain in $dns_list; do
 		((i++))
 		echo -e "$(date "+%F %T") $domain" | tee -a $BACKUP/$user.log
-
+		domain_idn="$domain"
 		# Building directory tree
 		mkdir -p $tmpdir/dns/$domain/conf
 		mkdir -p $tmpdir/dns/$domain/conf/keys
@@ -787,7 +789,7 @@ if [ -e "$BACKUP/$user.log" ] && [ "$notify" = "yes" ]; then
 	subj="$user → backup has been completed"
 	email=$(get_user_value '$CONTACT')
 	cat $BACKUP/$user.log | $SENDMAIL -s "$subj" "$email" "$notify"
-	$BIN/v-add-user-notification "$user" "Backup created successfully" "<b>Archive:</b> $user.$backup_new_date.tar"
+	$BIN/v-add-user-notification "$user" "Backup created successfully" "<p><span class='u-text-bold'>Archive:</span> <code>$user.$backup_new_date.tar</code></p>"
 fi
 
 # Logging

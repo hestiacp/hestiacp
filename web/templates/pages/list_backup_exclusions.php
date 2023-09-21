@@ -2,8 +2,12 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/backup/"><i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?></a>
-			<a href="/edit/backup/exclusions/" class="button button-secondary"><i class="fas fa-pencil icon-orange"></i><?= _("Editing Backup Exclusions") ?></a>
+			<a class="button button-secondary button-back js-button-back" href="/list/backup/">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
+			</a>
+			<a href="/edit/backup/exclusions/" class="button button-secondary">
+				<i class="fas fa-pencil icon-orange"></i><?= _("Edit Backup Exclusions") ?>
+			</a>
 		</div>
 		<div class="toolbar-right">
 			<div class="toolbar-search">
@@ -20,36 +24,38 @@
 </div>
 <!-- End toolbar -->
 
-<div class="container units">
-	<div class="header table-header">
-		<div class="l-unit__col l-unit__col--right">
-			<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
-			<div class="clearfix l-unit__stat-col--left wide-1"><b><?= _("Type") ?></b></div>
-			<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
-			<div class="clearfix l-unit__stat-col--left wide-3"><b><?= _("Value") ?></b></div>
-		</div>
-	</div>
+<div class="container">
 
-	<div class="container units animate__animated animate__fadeIn">
+	<h1 class="u-text-center u-hide-desktop u-mt20 u-pr30 u-mb20 u-pl30"><?= _("Backup Exclusions") ?></h1>
+
+	<div class="units-table js-units-container">
+		<div class="units-table-header">
+			<div class="units-table-cell"><?= _("Type") ?></div>
+			<div class="units-table-cell"><?= _("Value") ?></div>
+		</div>
+
 		<!-- Begin list of backup exclusions by type -->
 		<?php foreach ($data as $key => $value) { ?>
-			<div class="l-unit header">
-				<div class="l-unit__col l-unit__col--right">
-					<div class="clearfix l-unit__stat-col--left super-compact">&nbsp;</div>
-					<div class="clearfix l-unit__stat-col--left wide-1"><b><?= $key ?></b></div>
-					<div class="clearfix l-unit__stat-col--left compact u-text-right"><b>&nbsp;</b></div>
-					<div class="clearfix l-unit__stat-col--left wide-3">
-						<?php
-							if (empty($value)) echo _('no exclusions');
-							foreach ($value as $ex_key => $ex_value) {
-								echo '<b>'.$ex_key.' </b>'.$ex_value.'<br>';
-							}
-						?>
-					</div>
+			<div class="units-table-row js-unit">
+				<div class="units-table-cell units-table-heading-cell u-text-bold">
+					<span class="u-hide-desktop"><?= _("Type") ?>:</span>
+					<?= $key ?>
+				</div>
+				<div class="units-table-cell">
+					<span class="u-hide-desktop u-text-bold"><?= _("Value") ?>:</span>
+					<?php
+						if (empty($value)) {
+							echo _("No exclusions");
+						}
+						foreach ($value as $ex_key => $ex_value) {
+							echo "<span class='u-text-bold'>" . $ex_key . " </span>" . $ex_value . "<br>";
+						}
+					?>
 				</div>
 			</div>
 		<?php } ?>
 	</div>
+
 </div>
 
 <footer class="app-footer">

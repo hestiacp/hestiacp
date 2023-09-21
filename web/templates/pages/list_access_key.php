@@ -12,7 +12,7 @@ if (!empty($_POST["ok"])) { ?>
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a class="button button-secondary" id="btn-back" href="/list/access-key/">
+			<a class="button button-secondary button-back js-button-back" href="/list/access-key/">
 				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 		</div>
@@ -20,15 +20,15 @@ if (!empty($_POST["ok"])) { ?>
 </div>
 <!-- End toolbar -->
 
-<div class="container animate__animated animate__fadeIn">
-	<form id="vstobjects">
+<div class="container">
+	<form id="main-form">
 
 		<div class="form-container">
-			<h1 class="form-title"><?= _("Access Key") ?></h1>
+			<h1 class="u-mb20"><?= _("Access Key") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<?php if (!empty($key_data["ACCESS_KEY_ID"])) { ?>
 				<div class="u-mt15 u-mb10">
-					<label for="access_key_id" class="form-label"><?= _("Access Key Id") ?></label>
+					<label for="access_key_id" class="form-label"><?= _("Access Key ID") ?></label>
 					<input type="text" class="form-control" id="access_key_id" maxlength="255" readonly value="<?= htmlentities(trim($key_data["ACCESS_KEY_ID"], "'")) ?>">
 				</div>
 			<?php } ?>
@@ -37,7 +37,7 @@ if (!empty($_POST["ok"])) { ?>
 					<div class="u-mb20">
 						<label for="secret_key" class="form-label">
 							<?= _("Secret Key") ?><br>
-							<span style="color:#ffd500;"><?= _("Warning! Last chance to save secret access key!") ?></span>
+							<span class="inline-alert inline-alert-warning u-mb20"><?= _("Warning! Last chance to save secret key!") ?></span>
 						</label>
 						<input type="text" class="form-control" id="secret_key" maxlength="255" readonly value="<?= htmlentities(trim($key_data["SECRET_ACCESS_KEY"], "'")) ?>">
 					</div>

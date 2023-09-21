@@ -87,12 +87,17 @@ get_srv_state() {
 
 	# Searching related pids
 	if [ -z $3 ]; then
-		pids=$(pidof $name | tr ' ' '|')
+		pids=$(pidof -d '|' $name)
 	else
-		pids=$(pidof -x $name | tr ' ' '|')
+		pids=$(pidof -d '|' -x $name)
 	fi
 	if [ -z "$pids" ] && [ "$name" != 'nginx' ]; then
 		pids=$(pgrep $name | tr '\n' '|')
+	fi
+
+	# Correctly handle hestia-web-terminal service
+	if [ "$name" == 'hestia-web-terminal' ] && [ "$(systemctl show $name.service | grep 'SubState=' | cut -f2 -d=)" == "running" ]; then
+		pids=$(systemctl show $name.service | grep '^MainPID=' | cut -f2 -d=)
 	fi
 
 	# Prevent from an SSH false positive when there is a TTY or SFTP connection but service is down
@@ -102,7 +107,7 @@ get_srv_state() {
 
 	# Checking pid
 	if [ -n "$pids" ]; then
-		pid=$(echo "$pids" | cut -f 1 -d '|')
+		pid=$(echo "$pids" | awk -F '|' '{print $NF}')
 		pids=${pids%|}
 		pids=$(egrep "$pids" $tmp_file)
 
@@ -162,14 +167,14 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB_SYSTEM" != 'remote' ]; then
 	data="$data MEM='$mem' RTIME='$rtime'"
 fi
 
-# Checking WEB Backend
+# Checking PHP intepreter
 if [ -n "$WEB_BACKEND" ] && [ "$WEB_BACKEND" != 'remote' ]; then
 	php_versions=$(ls /usr/sbin/php*fpm* | cut -d'/' -f4 | sed 's|php-fpm||')
 	for version in $php_versions; do
 		proc_name="php-fpm${version}"
 		service_name="php${version}-fpm"
 		get_srv_state "$proc_name"
-		data="$data\nNAME='$service_name' SYSTEM='backend server' STATE='$state'"
+		data="$data\nNAME='$service_name' SYSTEM='php interpreter' STATE='$state'"
 		data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 	done
 fi
@@ -200,7 +205,7 @@ fi
 # Checking MAIL IMAP
 if [ -n "$IMAP_SYSTEM" ] && [ "$IMAP_SYSTEM" != 'remote' ]; then
 	get_srv_state "$IMAP_SYSTEM"
-	data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='pop/imap server' STATE='$state'"
+	data="$data\nNAME='$IMAP_SYSTEM' SYSTEM='imap/pop3 server' STATE='$state'"
 	data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -217,7 +222,7 @@ if [ -n "$ANTIVIRUS_SYSTEM" ] && [ "$ANTIVIRUS_SYSTEM" != 'remote' ]; then
 		fi
 		get_srv_state "$ANTIVIRUS_SYSTEM" "$proc_name"
 	fi
-	data="$data\nNAME='$ANTIVIRUS_SYSTEM' SYSTEM='email antivirus'"
+	data="$data\nNAME='$ANTIVIRUS_SYSTEM' SYSTEM='email anti-virus'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 	proc_name=''
 fi
@@ -225,7 +230,7 @@ fi
 # Checking MAIL ANTISPAM
 if [ -n "$ANTISPAM_SYSTEM" ] && [ "$ANTISPAM_SYSTEM" != 'remote' ]; then
 	get_srv_state "$ANTISPAM_SYSTEM" "spamd"
-	data="$data\nNAME='$ANTISPAM_SYSTEM' SYSTEM='email antispam'"
+	data="$data\nNAME='$ANTISPAM_SYSTEM' SYSTEM='email spam filter'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -234,24 +239,29 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
 	for db in ${DB_SYSTEM//,/ }; do
 		service="$db"
 		proc_name=''
+		mysql="/usr/bin/mysql"
+		if [ -f '/usr/bin/mariadb' ]; then
+			mysql="/usr/bin/mariadb"
+		fi
 		if [ "$service" = 'mysql' ]; then
-			mysql_version=$(mysql -V)
+			mysql_version=$($mysql -V)
 			mariadb_string="MariaDB"
 			if [[ ! $mysql_version =~ $mariadb_string ]]; then
 				# MySQL
 				service='mysql'
 				proc_name='mysqld'
 			else
-				# MariaDB
-				if [ -e "/lib/systemd/system/mariadb.service" ]; then
-					service='mariadb'
-					proc_name='mysqld'
-				fi
-				if [ -f /usr/bin/mysql ]; then
-					mariadb_v=$(mysql -V | awk 'NR==1{print $5}' | cut -d'.' -f2)
-					if [ $mariadb_v -ge "5" ]; then
-						service='mariadb'
-						proc_name='mariadbd'
+				service='mariadb'
+				proc_name='mariadbd'
+				# MariaDB 10.4 and lower
+				if [ -f $mysql ]; then
+					mariadb_v=$($mysql -V | awk 'NR==1{print $5}')
+					if [[ $mariadb_v =~ $mariadb_string ]]; then
+						mariadb_v=$(echo $mariadb_v | cut -f2 -d'.')
+						if [ $mariadb_v -le "4" ]; then
+							service='mariadb'
+							proc_name='mysqld'
+						fi
 					fi
 				fi
 			fi
@@ -290,7 +300,7 @@ fi
 # Checking SSH daemon
 if [ -e "/etc/ssh/sshd_config" ]; then
 	get_srv_state ssh
-	data="$data\nNAME='ssh' SYSTEM='SSH Access' STATE='$state'"
+	data="$data\nNAME='ssh' SYSTEM='ssh server' STATE='$state'"
 	data="$data CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 
@@ -315,7 +325,14 @@ if [ -n "$FIREWALL_EXTENSION" ]; then
 	else
 		get_srv_state "$FIREWALL_EXTENSION" fail2ban-server script
 	fi
-	data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force monitor'"
+	data="$data\nNAME='$FIREWALL_EXTENSION' SYSTEM='brute-force protection'"
+	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
+fi
+
+# Checking WEB_TERMINAL
+if [ -n "$WEB_TERMINAL" ] && [ "$WEB_TERMINAL" != 'false' ]; then
+	get_srv_state hestia-web-terminal
+	data="$data\nNAME='web-terminal' SYSTEM='web terminal backend'"
 	data="$data STATE='$state' CPU='$cpu' MEM='$mem' RTIME='$rtime'"
 fi
 

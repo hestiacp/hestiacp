@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: listing availble PHP versions installed
+# info: listing available PHP versions installed
 # options: [FORMAT]
 #
 # example: v-list-sys-php

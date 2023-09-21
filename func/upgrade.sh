@@ -131,8 +131,8 @@ upgrade_complete_message() {
 	echo "The Hestia Control Panel development team                                    "
 	echo
 	echo "Web:      https://www.hestiacp.com/                                          "
+	echo "Docs:     https://docs.hestiacp.com/										   "
 	echo "Forum:    https://forum.hestiacp.com/                                        "
-	echo "Discord:  https://discord.gg/nXRUZch                                         "
 	echo "GitHub:   https://github.com/hestiacp/hestiacp/                              "
 	echo
 	echo "Help support the Hestia Control Panel project by donating via PayPal:        "
@@ -180,23 +180,31 @@ upgrade_set_branch() {
 }
 
 upgrade_send_notification_to_panel() {
+	# If ROOT_USER is not set fallback to admin
+	if [ -z "$ROOT_USER" ]; then
+		ROOT_USER="admin"
+	fi
 	# Add notification to panel if variable is set to true or is not set
 	if [[ "$new_version" =~ "alpha" ]]; then
 		# Send notifications for development releases
-		$BIN/v-add-user-notification admin 'Development snapshot installed' '<b>Version:</b> '$new_version'<br><b>Code Branch:</b> '$RELEASE_BRANCH'<br><br>Please tell us about any bugs or issues by opening an issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a> and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.<br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification "$ROOT_USER" 'Development snapshot installed' '<p><span class="u-text-bold">Version:</span> '$new_version'<br><span class="u-text-bold">Code Branch:</span> '$RELEASE_BRANCH'</p><p>Please report any bugs by <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">opening an issue on GitHub</a>, and feel free to share your feedback on our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 	elif [[ "$new_version" =~ "beta" ]]; then
 		# Send feedback notification for beta releases
-		$BIN/v-add-user-notification admin 'Thank you for testing Hestia Control Panel '$new_version'.' '<b>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.<br><br>Found a bug? Report it on <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification "$ROOT_USER" 'Thank you for testing Hestia Control Panel '$new_version'.' '<p>Please share your feedback with our development team through our <a href="https://forum.hestiacp.com" target="_blank">discussion forum</a>.</p><p>Found a bug? <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">Open an issue on GitHub</a>!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 	else
 		# Send normal upgrade complete notification for stable releases
-		$BIN/v-add-user-notification admin 'Upgrade complete' 'Hestia Control Panel has been updated to <b>v'$new_version'</b>.<br><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_blank">View release notes</a><br><br>Please tell us about any bugs or issues by opening a new issue report on <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank"><i class="fab fa-github"></i> GitHub</a>.<br><br><b>Have a wonderful day!</b><br><br><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team'
+		$BIN/v-add-user-notification "$ROOT_USER" 'Upgrade complete' '<p>Hestia Control Panel has been updated to <span class="u-text-bold">v'$new_version'</span>.</p><p><a href="https://github.com/hestiacp/hestiacp/blob/release/CHANGELOG.md" target="_blank">View release notes</a></p><p>Please report any bugs by <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">opening an issue on GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
 	fi
 }
 
 upgrade_send_notification_to_email() {
+	# If ROOT_USER is not set fallback to admin
+	if [ -z "$ROOT_USER" ]; then
+		ROOT_USER="admin"
+	fi
 	if [ "$UPGRADE_SEND_EMAIL" = "true" ]; then
 		# Retrieve admin email address, sendmail path, and message temp file path
-		admin_email=$($BIN/v-list-user admin json | grep "CONTACT" | cut -d'"' -f4)
+		admin_email=$($BIN/v-list-user "$ROOT_USER" json | grep "CONTACT" | cut -d'"' -f4)
 		send_mail="$HESTIA/web/inc/mail-wrapper.php"
 		message_tmp_file="/tmp/hestia-upgrade-complete.txt"
 
@@ -271,6 +279,9 @@ upgrade_init_backup() {
 	# Hestia Control Panel configuration files
 	mkdir -p $HESTIA_BACKUP/conf/hestia/
 
+	# OpenSSL configuration files
+	mkdir -p $HESTIA_BACKUP/conf/openssl/
+
 	# Hosting Packages
 	mkdir -p $HESTIA_BACKUP/packages/
 
@@ -316,8 +327,8 @@ upgrade_init_backup() {
 	if [ -d "/etc/roundcube/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/roundcube/
 	fi
-	if [ -d "/etc/rainloop/" ]; then
-		mkdir -p $HESTIA_BACKUP/conf/rainloop/
+	if [ -d "/etc/snappymail/" ]; then
+		mkdir -p $HESTIA_BACKUP/conf/snappymail/
 	fi
 	if [ -d "/etc/phpmyadmin/" ]; then
 		mkdir -p $HESTIA_BACKUP/conf/phpmyadmin/
@@ -352,12 +363,12 @@ upgrade_start_backup() {
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Packages"
 	fi
-	cp -rf $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
+	cp -fr $HESTIA/data/packages/* $HESTIA_BACKUP/packages/
 
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Templates"
 	fi
-	cp -rf $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
+	cp -fr $HESTIA/data/templates/* $HESTIA_BACKUP/templates/
 
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      - Configuration files:"
@@ -367,7 +378,13 @@ upgrade_start_backup() {
 	if [ "$DEBUG_MODE" = "true" ]; then
 		echo "      ---- hestia"
 	fi
-	cp -rf $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
+	cp -fr $HESTIA/conf/* $HESTIA_BACKUP/conf/hestia/
+
+	# OpenSSL configuration files
+	if [ "$DEBUG_MODE" = "true" ]; then
+		echo "      ---- openssl"
+	fi
+	cp -f /etc/ssl/*.cnf $HESTIA_BACKUP/conf/openssl/
 
 	# System service configuration files (apache2, nginx, bind9, vsftpd, etc).
 	if [ -n "$WEB_SYSTEM" ]; then
@@ -424,7 +441,6 @@ upgrade_start_backup() {
 		if [ "$FTP_SYSTEM" = "vsftpd" ]; then
 			cp -f /etc/$FTP_SYSTEM.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
 		fi
-
 		if [ "$FTP_SYSTEM" = "proftpd" ]; then
 			cp -f /etc/proftpd/proftpd.conf $HESTIA_BACKUP/conf/$FTP_SYSTEM/
 		fi
@@ -455,11 +471,11 @@ upgrade_start_backup() {
 		fi
 		cp -fr /etc/roundcube/* $HESTIA_BACKUP/conf/roundcube
 	fi
-	if [ -d "/etc/rainloop" ]; then
+	if [ -d "/etc/snappymail" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
-			echo "      ---- Rainloop"
+			echo "      ---- SnappyMail"
 		fi
-		cp -fr /etc/rainloop/* $HESTIA_BACKUP/conf/rainloop
+		cp -fr /etc/snappymail/* $HESTIA_BACKUP/conf/snappymail
 	fi
 	if [ -d "/etc/phpmyadmin" ]; then
 		if [ "$DEBUG_MODE" = "true" ]; then
@@ -540,7 +556,7 @@ upgrade_b2_tool() {
 			wget -O $b2cli $b2lnk > /dev/null 2>&1
 			chmod +x $b2cli > /dev/null 2>&1
 			if [ ! -f "$b2cli" ]; then
-				echo "Error: Binary download failed, b2 doesnt work as expected."
+				echo "Error: Binary download failed, b2 doesn't work as expected."
 				exit 3
 			fi
 		fi
@@ -549,12 +565,12 @@ upgrade_b2_tool() {
 
 upgrade_cloudflare_ip() {
 	if [ "$WEB_SYSTEM" = "nginx" ] || [ "$PROXY_SYSTEM" = "nginx" ]; then
-		cf_ips="$(curl -fsLm2 --retry 1 https://api.cloudflare.com/client/v4/ips)"
+		cf_ips="$(curl -fsLm5 --retry 2 https://api.cloudflare.com/client/v4/ips)"
 
 		if [ -n "$cf_ips" ] && [ "$(echo "$cf_ips" | jq -r '.success//""')" = "true" ]; then
 			cf_inc="/etc/nginx/conf.d/cloudflare.inc"
 
-			echo "[ * ] Updating Cloudflare IP Ranges for Nginx..."
+			echo "[ * ] Updating Cloudflare IP Ranges for NGINX..."
 			echo "# Cloudflare IP Ranges" > $cf_inc
 			echo "" >> $cf_inc
 			echo "# IPv4" >> $cf_inc
@@ -580,7 +596,7 @@ upgrade_phppgadmin() {
 		else
 			# Display upgrade information
 			echo "[ * ] Upgrading phppgadmin to version $pga_v..."
-			[ -d /usr/share/phpmyadmin ] || mkdir -p /usr/share/phpmyadmin
+			[ -d /usr/share/phppgadmin ] || mkdir -p /usr/share/phppgadmin
 			# Download latest phpMyAdmin release
 			wget --retry-connrefused --quiet https://github.com/hestiacp/phppgadmin/releases/download/v$pga_v/phppgadmin-v$pga_v.tar.gz
 			tar xzf phppgadmin-v$pga_v.tar.gz -C /usr/share/phppgadmin/
@@ -694,14 +710,14 @@ upgrade_roundcube() {
 	fi
 }
 
-upgrade_rainloop() {
-	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'rainloop')" ]; then
-		rl_version=$(cat /var/lib/rainloop/data/VERSION)
-		if ! version_ge "$rl_version" "$rl_v"; then
-			echo "[ ! ] Upgrading Rainloop to version $rl_v..."
-			$BIN/v-add-sys-rainloop
+upgrade_snappymail() {
+	if [ -n "$(echo "$WEBMAIL_SYSTEM" | grep -w 'snappymail')" ]; then
+		sm_version=$(cat /var/lib/snappymail/data/VERSION)
+		if ! version_ge "$sm_version" "$sm_v"; then
+			echo "[ ! ] Upgrading SnappyMail to version $sm_v..."
+			$BIN/v-add-sys-snappymail
 		else
-			echo "[ * ] Rainloop is up to date ($rl_v)..."
+			echo "[ * ] SnappyMail is up to date ($sm_v)..."
 		fi
 	fi
 }
@@ -739,7 +755,7 @@ upgrade_rebuild_users() {
 		else
 			echo "[ * ] Rebuilding user accounts and domains, this may take a few minutes..."
 		fi
-		for user in $($BIN/v-list-sys-users plain); do
+		for user in $("$BIN/v-list-users" list); do
 			export restart="no"
 			if [ "$DEBUG_MODE" = "true" ]; then
 				echo "      - $user:"
@@ -778,6 +794,10 @@ upgrade_rebuild_users() {
 			fi
 		done
 	fi
+}
+
+update_whitelabel_logo() {
+	$BIN/v-update-white-label-logo
 }
 
 upgrade_replace_default_config() {
@@ -843,6 +863,12 @@ upgrade_restart_services() {
 				echo "      - $FIREWALL_EXTENSION"
 			fi
 			$BIN/v-restart-service "$FIREWALL_EXTENSION"
+		fi
+		if [ "$WEB_TERMINAL" = "true" ]; then
+			if [ "$DEBUG_MODE" = "true" ]; then
+				echo "      - hestia-web-terminal"
+			fi
+			$BIN/v-restart-service "hestia-web-terminal"
 		fi
 		# Restart SSH daemon service
 		if [ "$DEBUG_MODE" = "true" ]; then

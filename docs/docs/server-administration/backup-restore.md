@@ -69,7 +69,7 @@ Currently supported backup protocols are:
 Login via SSH and run the following command as root:
 
 ```bash
-v-add-backup-host 'ftp' 'remote.ftp-host.ltd' 'backup-user' 'p4ssw0rd' '/path-backups/' 'port'
+v-add-backup-host 'ftp' 'remote.ftp-host.tld' 'backup-user' 'p4ssw0rd' '/path-backups/' 'port'
 ```
 
 ### How to setup an SFTP backup server
@@ -81,13 +81,13 @@ Please note passwords are stored as **plain text** on the server. They are only 
 Login via SSH and run the following command as root:
 
 ```bash
-v-add-backup-host 'sftp' 'remote.ftp-host.ltd' 'backup-user' 'p4ssw0rd' '/path-backups/' 'port'
+v-add-backup-host 'sftp' 'remote.ftp-host.tld' 'backup-user' 'p4ssw0rd' '/path-backups/' 'port'
 ```
 
 If using public and private keys (recommended):
 
 ```bash
-v-add-backup-host 'sftp' 'remote.ftp-host.ltd' 'backup-user' '/root/id_rsa' '/path-backups/' 'port'
+v-add-backup-host 'sftp' 'remote.ftp-host.tld' 'backup-user' '/root/id_rsa' '/path-backups/' 'port'
 ```
 
 ## How to setup Rclone
@@ -103,7 +103,7 @@ sudo -v
 curl https://rclone.org/install.sh | sudo bash
 ```
 
-Once the download and installation is complete, run `rclone config` and then `n`. Follow the instruction on the screen, then save when completed.
+Once the download and installation is complete, run `rclone config` as the `root` user and then select the option `n`. Follow the instruction on the screen, then save when completed.
 
 To verify if it is working run as intended:
 

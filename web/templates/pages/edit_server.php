@@ -2,25 +2,22 @@
 <div class="toolbar">
 	<div class="toolbar-inner">
 		<div class="toolbar-buttons">
-			<a href="/list/server/" class="button button-secondary" id="btn-back">
-				<i class="fas fa-arrow-left icon-blue"></i>
-				<?= _("Back") ?>
+			<a href="/list/server/" class="button button-secondary button-back js-button-back">
+				<i class="fas fa-arrow-left icon-blue"></i><?= _("Back") ?>
 			</a>
 			<a href="/list/ip/" class="button button-secondary">
-				<i class="fas fa-ethernet icon-blue"></i>
-				<?= _("IP") ?>
+				<i class="fas fa-ethernet icon-blue"></i><?= _("Network") ?>
 			</a>
-			<?php if (isset($_SESSION["FIREWALL_SYSTEM"]) && !empty($_SESSION["FIREWALL_SYSTEM"])) { ?>
-				<a href="/list/firewall/" class="button button-secondary">
-					<i class="fas fa-shield-halved icon-red"></i>
-					<?= _("Firewall") ?>
-				</a>
-			<?php } ?>
+			<a href="/edit/server/whitelabel/" class="button button-secondary">
+				<i class="fas fa-paint-brush icon-blue"></i><?= _("White Label") ?>
+			</a>
+			<a href="/edit/server/hestiaweb/" class="button button-secondary">
+				<i class="fas fa-clock icon-blue"></i><?= _("Panel Cronjobs") ?>
+			</a>
 		</div>
 		<div class="toolbar-buttons">
-			<button type="submit" class="button" form="vstobjects">
-				<i class="fas fa-floppy-disk icon-purple"></i>
-				<?= _("Save") ?>
+			<button type="submit" class="button" form="main-form">
+				<i class="fas fa-floppy-disk icon-purple"></i><?= _("Save") ?>
 			</button>
 		</div>
 	</div>
@@ -28,7 +25,7 @@
 <!-- End toolbar -->
 
 <!-- Begin form -->
-<div class="container animate__animated animate__fadeIn">
+<div class="container">
 	<form
 		x-data="{
 			timezone: '<?= $v_timezone ?? "" ?>',
@@ -44,7 +41,7 @@
 			showProtectionOptions: false,
 			showPolicyOptions: false,
 		}"
-		id="vstobjects"
+		id="main-form"
 		name="v_configure_server"
 		method="post"
 	>
@@ -52,16 +49,15 @@
 		<input type="hidden" name="save" value="save">
 
 		<div class="form-container">
-			<h1 class="form-title">
-				<?= _("Configuring Server") ?>
+			<h1 class="u-mb20">
+				<?= _("Configure Server") ?>
 			</h1>
 			<?php show_alert_message($_SESSION); ?>
 
 			<!-- Basic options section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-gear u-mr15"></i>
-					<?= _("Basic options") ?>
+					<i class="fas fa-gear u-mr10"></i><?= _("Basic Options") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
@@ -122,7 +118,7 @@
 							<?php } ?>
 						</select>
 					</div>
-					<div class="form-check">
+					<div class="form-check u-mb10">
 						<input
 							class="form-check-input"
 							type="checkbox"
@@ -133,14 +129,25 @@
 							<?= _("Set as default language for all users") ?>
 						</label>
 					</div>
+					<div class="form-check">
+						<input
+							class="form-check-input"
+							type="checkbox"
+							name="v_debug_mode"
+							id="v_debug_mode"
+							<?= $_SESSION["DEBUG_MODE"] == "true" ? "checked" : "" ?>
+						>
+						<label for="v_debug_mode">
+							<?= _("Enable debug mode") ?>
+						</label>
+					</div>
 				</div>
 			</details>
 
 			<!-- Updates section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-code-branch u-mr15"></i>
-					<?= _("Updates") ?>
+					<i class="fas fa-code-branch u-mr10"></i><?= _("Updates") ?>
 				</summary>
 				<div class="collapse-content">
 					<p class="u-mb10">
@@ -160,18 +167,6 @@
 					<p class="u-mb5">
 						<?= _("Options") ?>
 					</p>
-					<div class="form-check">
-						<input
-							class="form-check-input"
-							type="checkbox"
-							name="v_debug_mode"
-							id="v_debug_mode"
-							<?= $_SESSION["DEBUG_MODE"] == "true" ? "checked" : "" ?>
-						>
-						<label for="v_debug_mode">
-							<?= _("Enable debug mode") ?>
-						</label>
-					</div>
 					<div class="form-check">
 						<input
 							class="form-check-input"
@@ -198,7 +193,7 @@
 							<?= $_SESSION["UPGRADE_SEND_EMAIL"] == "true" ? "checked" : "" ?>
 						>
 						<label for="v_upgrade_send_notification_email">
-							<?= _("SYSTEM_UPGRADE_SEND_NOTIFICATION_EMAIL") ?>
+							<?= _("Send email notification when an update has been installed") ?>
 						</label>
 					</div>
 					<div class="form-check">
@@ -210,7 +205,7 @@
 							<?= $_SESSION["UPGRADE_SEND_EMAIL_LOG"] == "true" ? "checked" : "" ?>
 						>
 						<label for="v_upgrade_send_email_log">
-							<?= _("SYSTEM_UPGRADE_SEND_EMAIL_LOG") ?>
+							<?= _("Send update installation log by email") ?>
 						</label>
 					</div>
 				</div>
@@ -219,8 +214,7 @@
 			<!-- Web Server section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-earth-americas u-mr15"></i>
-					<?= _("Web Server") ?>
+					<i class="fas fa-earth-americas u-mr10"></i><?= _("Web Server") ?>
 				</summary>
 				<div class="collapse-content">
 					<?php if (!empty($_SESSION["PROXY_SYSTEM"])) { ?>
@@ -247,7 +241,7 @@
 					<?php } ?>
 					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<p>
-							<?= _("Backend Server") ?>:
+							<?= _("PHP Interpreter") ?>:
 							<span class="u-ml5">
 								<?= $_SESSION["WEB_BACKEND"] ?>
 							</span>
@@ -267,11 +261,11 @@
 					<?php if (count($v_php_versions)) { ?>
 						<div class="u-mt15">
 							<p class="u-mb10">
-								<?= _("Enabled multi PHP versions") ?>
+								<?= _("Enabled PHP Versions") ?>
 							</p>
 							<div class="alert alert-info u-mb10" role="alert">
 								<i class="fas fa-info"></i>
-								<p><?= _("Please wait while php is installed or removed") ?></p>
+								<p><?= _("It may take a few minutes to save your changes. Please wait until the process has completed and do not refresh the page.") ?></p>
 							</div>
 						</div>
 						<?php foreach ($v_php_versions as $php_version) { ?>
@@ -304,7 +298,7 @@
 					<?php if (!empty($_SESSION["WEB_BACKEND"])) { ?>
 						<div class="u-mt10">
 							<label for="v_php_default_version" class="form-label">
-								<?= _("System PHP version") ?>
+								<?= _("System PHP Version") ?>
 							</label>
 							<select class="form-select" name="v_php_default_version" id="v_php_default_version">
 								<?php foreach ($v_php_versions as $php_version) { ?>
@@ -327,8 +321,7 @@
 			<?php if (!empty($_SESSION["DNS_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-book-atlas u-mr15"></i>
-						<?= _("DNS Server") ?>
+						<i class="fas fa-book-atlas u-mr10"></i><?= _("DNS Server") ?>
 					</summary>
 					<div class="collapse-content">
 						<p>
@@ -373,8 +366,7 @@
 			<?php if (!empty($_SESSION["MAIL_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-envelopes-bulk u-mr15"></i>
-						<?= _("Mail Server") ?>
+						<i class="fas fa-envelopes-bulk u-mr10"></i><?= _("Mail Server") ?>
 					</summary>
 					<div class="collapse-content">
 						<p>
@@ -388,7 +380,7 @@
 						</p>
 						<?php if (!empty($_SESSION["ANTIVIRUS_SYSTEM"])) { ?>
 							<p>
-								<?= _("Antivirus") ?>:
+								<?= _("Anti-Virus") ?>:
 								<span class="u-ml5">
 									<?= $_SESSION["ANTIVIRUS_SYSTEM"] ?>
 								</span>
@@ -399,7 +391,7 @@
 						<?php } ?>
 						<?php if (!empty($_SESSION["ANTISPAM_SYSTEM"])) { ?>
 							<p>
-								<?= _("AntiSpam") ?>:
+								<?= _("Spam Filter") ?>:
 								<span class="u-ml5">
 									<?= $_SESSION["ANTISPAM_SYSTEM"] ?>
 								</span>
@@ -411,7 +403,7 @@
 						<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 							<div class="u-mt15 u-mb10">
 								<label for="v_webmail_alias" class="form-label">
-									<?= _("Webmail URL") ?>
+									<?= _("Webmail Alias") ?>
 									<span x-cloak x-text="`${webmailAlias}.example.com`" class="hint"></span>
 								</label>
 								<input
@@ -498,8 +490,7 @@
 			<?php if (!empty($_SESSION["DB_SYSTEM"])) { ?>
 				<details class="collapse u-mb10">
 					<summary class="collapse-header">
-						<i class="fas fa-database u-mr15"></i>
-						<?= _("Databases") ?>
+						<i class="fas fa-database u-mr10"></i><?= _("Databases") ?>
 					</summary>
 					<div class="collapse-content">
 						<div class="u-mb10">
@@ -517,14 +508,14 @@
 						<?php if ($v_mysql == "yes") { ?>
 							<div class="u-mb20">
 								<label for="v_mysql_url" class="form-label">
-									<?= _("phpMyAdmin URL") ?>
+									<?= _("phpMyAdmin Alias") ?>
 								</label>
 								<input
 									type="text"
 									class="form-control"
 									name="v_mysql_url"
 									id="v_mysql_url"
-									value="<?= $_SESSION["DB_PMA_ALIAS"] ?>"
+									value="<?= htmlentities($_SESSION["DB_PMA_ALIAS"]); ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -587,7 +578,7 @@
 								</div>
 								<div class="u-mb10">
 									<label for="v_mysql_max" class="form-label">
-										<?= _("Maximum Number Of Databases") ?>
+										<?= _("Maximum Number of Databases") ?>
 									</label>
 									<input
 										type="text"
@@ -600,7 +591,7 @@
 								</div>
 								<div class="u-mb10">
 									<label for="v_mysql_current" class="form-label">
-										<?= _("Current Number Of Databases") ?>
+										<?= _("Current Number of Databases") ?>
 									</label>
 									<input
 										type="text"
@@ -628,9 +619,9 @@
 							</div>
 							<div class="u-mb20">
 								<label for="v_pgsql_url" class="form-label">
-									<?= _("phpPgAdmin URL") ?>
+									<?= _("phpPgAdmin Alias") ?>
 								</label>
-								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?= $_SESSION["DB_PGA_ALIAS"] ?>">
+								<input type="text" class="form-control" name="v_pgsql_url" id="v_pgsql_url" value="<?= htmlentities($_SESSION["DB_PGA_ALIAS"]) ?>">
 							</div>
 						<?php } ?>
 						<?php if ($v_pgsql == "yes") {
@@ -645,13 +636,13 @@
 								</div>
 								<div class="u-mb10">
 									<label for="v_psql_max" class="form-label">
-										<?= _("Maximum Number Of Databases") ?>
+										<?= _("Maximum Number of Databases") ?>
 									</label>
 									<input type="text" class="form-control" name="v_psql_max" id="v_psql_max" value="<?= $value["MAX_DB"] ?>" disabled>
 								</div>
 								<div class="u-mb10">
 									<label for="v_pgsql_max" class="form-label">
-										<?= _("Current Number Of Databases") ?>
+										<?= _("Current Number of Databases") ?>
 									</label>
 									<input type="text" class="form-control" name="v_pgsql_max" id="v_pgsql_max" value="<?= $value["U_DB_BASES"] ?>" disabled>
 								</div>
@@ -664,13 +655,12 @@
 			<!-- Backups section -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-arrow-rotate-left u-mr15"></i>
-					<?= _("Backups") ?>
+					<i class="fas fa-arrow-rotate-left u-mr10"></i><?= _("Backups") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
 						<label for="v_backup" class="form-label">
-							<?= _("Local backup") ?>
+							<?= _("Local Backup") ?>
 						</label>
 						<select class="form-select" name="v_backup" id="v_backup">
 							<option value="no">
@@ -685,7 +675,7 @@
 						<label for="v_backup_mode" class="form-label">
 							<?= _("Compression") ?>
 							<a
-								href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-difference-between-zstd-and-gzip"
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-difference-between-zstd-and-gzip"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -703,9 +693,9 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_backup_gzip" class="form-label">
-							<?= _("Compression level") ?>
+							<?= _("Compression Level") ?>
 							<a
-								href="http://docs.hestiacp.com/admin_docs/backups.html#what-is-the-optimal-compression-ratio"
+								href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-is-the-optimal-compression-ratio"
 								target="_blank"
 								class="u-ml5"
 							>
@@ -740,7 +730,7 @@
 							class="form-control"
 							name="v_backup_dir"
 							id="v_backup_dir"
-							value="<?= trim($v_backup_dir, "'") ?>"
+							value="<?= htmlentities(trim($v_backup_dir, "'")) ?>"
 							disabled
 						>
 					</div>
@@ -753,7 +743,7 @@
 							id="v_backup_remote_adv"
 						>
 						<label for="v_backup_remote_adv">
-							<?= _("Remote backup") ?>
+							<?= _("Remote Backup") ?>
 						</label>
 					</div>
 					<div x-cloak x-show="remoteBackupEnabled" class="u-pl30 u-mt20">
@@ -761,7 +751,7 @@
 							<label for="backup_type" class="form-label">
 								<?= _("Protocol") ?>
 								<a
-									href="http://docs.hestiacp.com/admin_docs/backups.html#what-kind-of-protocols-are-currently-supported"
+									href="https://hestiacp.com/docs/server-administration/backup-restore.html#what-kind-of-protocols-are-currently-supported"
 									target="_blank"
 									class="u-ml5"
 								>
@@ -775,16 +765,16 @@
 								id="backup_type"
 							>
 								<option value="ftp">
-									<?= _("ftp") ?>
+									FTP
 								</option>
 								<option value="sftp">
-									<?= _("sftp") ?>
+									SFTP
 								</option>
 								<option value="b2">
-									<?= _("Backblaze") ?>
+									Backblaze
 								</option>
 								<option value="rclone">
-									<?= _("Rclone") ?>
+									Rclone
 								</option>
 							</select>
 						</div>
@@ -798,7 +788,7 @@
 									class="form-control"
 									name="v_backup_host"
 									id="v_backup_host"
-									value="<?= trim($v_backup_host, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_host, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb20">
@@ -810,7 +800,7 @@
 									class="form-control"
 									name="v_backup_port"
 									id="v_backup_port"
-									value="<?= trim($v_backup_port, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_port, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -822,7 +812,7 @@
 									class="form-control"
 									name="v_backup_username"
 									id="v_backup_username"
-									value="<?= trim($v_backup_username, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_username, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb20">
@@ -835,7 +825,7 @@
 										class="form-control js-password-input"
 										name="v_backup_password"
 										id="v_backup_password"
-										value="<?= trim($v_backup_password, "'") ?>"
+										value="<?= htmlentities(trim($v_backup_password, "'")) ?>"
 									>
 								</div>
 							</div>
@@ -848,45 +838,45 @@
 									class="form-control"
 									name="v_backup_bpath"
 									id="v_backup_bpath"
-									value="<?= trim($v_backup_bpath, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_bpath, "'")) ?>"
 								>
 							</div>
 						</div>
 						<div x-cloak x-show="backupType == 'b2'">
 							<div class="u-mb10">
 								<label for="v_backup_bucket" class="form-label">
-									<?= _("Bucket") ?>
+									Bucket
 								</label>
 								<input
 									type="text"
 									class="form-control"
 									name="v_backup_bucket"
 									id="v_backup_bucket"
-									value="<?= trim($v_backup_bucket, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_bucket, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
 								<label for="v_backup_application_id" class="form-label">
-									<?= _("Key ID") ?>
+									Key ID
 								</label>
 								<input
 									type="text"
 									class="form-control"
 									name="v_backup_application_id"
 									id="v_backup_application_id"
-									value="<?= trim($v_backup_application_id, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_application_id, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
 								<label for="v_backup_application_key" class="form-label">
-									<?= _("Application Key") ?>
+									Application Key
 								</label>
 								<input
 									type="text"
 									class="form-control"
 									name="v_backup_application_key"
 									id="v_backup_application_key"
-									value="<?= trim($v_backup_application_key, "'") ?>"
+									value="<?= htmlentities(trim($v_backup_application_key, "'")) ?>"
 								>
 							</div>
 						</div>
@@ -900,7 +890,7 @@
 									class="form-control"
 									name="v_rclone_host"
 									id="v_rclone_host"
-									value="<?= trim($v_rclone_host, "'") ?>"
+									value="<?= htmlentities(trim($v_rclone_host, "'")) ?>"
 								>
 							</div>
 							<div class="u-mb10">
@@ -912,7 +902,7 @@
 									class="form-control"
 									name="v_rclone_path"
 									id="v_rclone_path"
-									value="<?= trim($v_rclone_path, "'") ?>"
+									value="<?= htmlentities(trim($v_rclone_path, "'")) ?>"
 								>
 							</div>
 						</div>
@@ -923,8 +913,7 @@
 			<!-- SSL tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-lock u-mr15"></i>
-					<?= _("SSL") ?>
+					<i class="fas fa-lock u-mr10"></i><?= _("SSL") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb20">
@@ -937,7 +926,7 @@
 									href="/generate/ssl/?domain=<?= htmlentities(trim($v_hostname, '"')) ?>"
 									target="_blank"
 								>
-									<?= _("Generate CSR") ?>
+									<?= _("Generate Self-Signed SSL Certificate") ?>
 								</a>
 							</span>
 						</label>
@@ -949,7 +938,7 @@
 					</div>
 					<div class="u-mb20">
 						<label for="v_ssl_key" class="form-label">
-							<?= _("SSL Key") ?>
+							<?= _("SSL Private Key") ?>
 						</label>
 						<textarea
 							class="form-control u-min-height100 u-console"
@@ -959,34 +948,34 @@
 					</div>
 					<ul class="values-list">
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SUBJECT") ?></span>
-							<span class="values-list-value"><?= $v_ssl_subject ?></span>
+							<span class="values-list-label"><?= _("Issued To") ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_subject) ?></span>
 						</li>
 						<?php if ($v_ssl_aliases) { ?>
 							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Aliases") ?></span>
-								<span class="values-list-value"><?= $v_ssl_aliases ?></span>
+								<span class="values-list-label"><?= _("Alternate") ?></span>
+								<span class="values-list-value"><?= htmlentities($v_ssl_aliases) ?></span>
 							</li>
 						<?php } ?>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_BEFORE") ?></span>
-							<span class="values-list-value"><?= $v_ssl_not_before ?></span>
+							<span class="values-list-label"><?= _("Not Before") ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_not_before) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("NOT_AFTER") ?></span>
-							<span class="values-list-value"><?= $v_ssl_not_after ?></span>
+							<span class="values-list-label"><?= _("Not After") ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_not_after) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("SIGNATURE") ?></span>
-							<span class="values-list-value"><?= $v_ssl_signature ?></span>
+							<span class="values-list-label"><?= _("Signature") ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_signature) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("PUB_KEY") ?></span>
-							<span class="values-list-value"><?= $v_ssl_pub_key ?></span>
+							<span class="values-list-label"><?= _("Key Size") ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_pub_key) ?></span>
 						</li>
 						<li class="values-list-item">
-							<span class="values-list-label"><?= _("ISSUER") ?></span>
-							<span class="values-list-value"><?= $v_ssl_issuer ?></span>
+							<span class="values-list-label"><?= _("Issued By") ?></span>
+							<span class="values-list-value"><?= htmlentities($v_ssl_issuer) ?></span>
 						</li>
 					</ul>
 				</div>
@@ -995,8 +984,7 @@
 			<!-- Security tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-key u-mr15"></i>
-					<?= _("Security") ?>
+					<i class="fas fa-key u-mr10"></i><?= _("Security") ?>
 				</summary>
 				<div class="collapse-content">
 					<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
@@ -1198,26 +1186,6 @@
 						<h3 class="u-mt20 u-mb10">
 							<?= _("Users") ?>
 						</h3>
-						<?php if ($_SESSION["POLICY_SYSTEM_ENABLE_BACON"] === "true") { ?>
-							<div class="u-mb10">
-								<label for="v_policy_user_view_suspended" class="form-label">
-									<?= _("Allow suspended users to log in with read-only access") ?>
-									<span class="hint">(<?= _("Preview") ?>)</span>
-								</label>
-								<select
-									class="form-select"
-									name="v_policy_user_view_suspended"
-									id="v_policy_user_view_suspended"
-								>
-									<option value="yes">
-										<?= _("Yes") ?>
-									</option>
-									<option value="no" <?= $_SESSION["POLICY_USER_VIEW_SUSPENDED"] == "no" ? "selected" : "" ?>>
-										<?= _("No") ?>
-									</option>
-								</select>
-							</div>
-						<?php } ?>
 						<div class="u-mb10">
 							<label for="v_policy_user_edit_details" class="form-label">
 								<?= _("Allow users to edit their account details") ?>
@@ -1299,6 +1267,77 @@
 								</option>
 							</select>
 						</div>
+						<?php if ($_SESSION["POLICY_SYSTEM_ENABLE_BACON"] === "true") { ?>
+							<div class="u-mb10">
+								<label for="v_policy_user_view_suspended" class="form-label">
+									<?= _("Allow suspended users to log in with read-only access") ?>
+									<span class="hint">(<?= _("Preview") ?>)</span>
+								</label>
+								<select
+									class="form-select"
+									name="v_policy_user_view_suspended"
+									id="v_policy_user_view_suspended"
+								>
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["POLICY_USER_VIEW_SUSPENDED"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+						<?php } ?>
+						<div class="u-mb10">
+							<label for="v_policy_backup_suspended_users" class="form-label">
+								<?= _("Allow suspended users to create new backups") ?>
+							</label>
+							<select
+								class="form-select"
+								name="v_policy_backup_suspended_users"
+								id="v_policy_backup_suspended_users"
+							>
+								<option value="yes">
+									<?= _("Yes") ?>
+								</option>
+								<option value="no" <?= $_SESSION["POLICY_BACKUP_SUSPENDED_USERS"] == "no" ? "selected" : "" ?>>
+									<?= _("No") ?>
+								</option>
+							</select>
+						</div>
+						<div class="u-mb10">
+							<label for="v_policy_sync_error_documents" class="form-label">
+								<?= _("Sync Error document templates on user rebuild") ?>
+							</label>
+							<select
+								class="form-select"
+								name="v_policy_sync_error_documents"
+								id="v_policy_sync_error_documents"
+							>
+								<option value="yes">
+									<?= _("Yes") ?>
+								</option>
+								<option value="no" <?= $_SESSION["POLICY_SYNC_ERROR_DOCUMENTS"] == "no" ? "selected" : "" ?>>
+									<?= _("No") ?>
+								</option>
+							</select>
+						</div>
+						<div class="u-mb10">
+							<label for="v_policy_sync_skeleton" class="form-label">
+								<?= _("Sync Skeleton templates") ?>
+							</label>
+							<select
+								class="form-select"
+								name="v_policy_sync_skeleton"
+								id="v_policy_sync_skeleton"
+							>
+								<option value="yes">
+									<?= _("Yes") ?>
+								</option>
+								<option value="no" <?= $_SESSION["POLICY_SYNC_SKELETON"] == "no" ? "selected" : "" ?>>
+									<?= _("No") ?>
+								</option>
+							</select>
+						</div>
 						<h3 class="u-mt20 u-mb10">
 							<?= _("Domains") ?>
 						</h3>
@@ -1326,8 +1365,7 @@
 			<!-- Plugins tab -->
 			<details class="collapse u-mb10">
 				<summary class="collapse-header">
-					<i class="fas fa-puzzle-piece u-mr15"></i>
-					<?= _("Hestia Control Panel Plugins") ?>
+					<i class="fas fa-puzzle-piece u-mr10"></i><?= _("Plugins") ?>
 				</summary>
 				<div class="collapse-content">
 					<div class="u-mb10">
@@ -1345,7 +1383,7 @@
 					</div>
 					<div class="u-mb10">
 						<label for="v_filemanager" class="form-label">
-							<?= _("Filemanager") ?>
+							<?= _("File Manager") ?>
 						</label>
 						<select class="form-select" name="v_filemanager" id="v_filemanager">
 							<option value="false">
@@ -1357,8 +1395,21 @@
 						</select>
 					</div>
 					<div class="u-mb10">
+						<label for="v_web_terminal" class="form-label">
+							<?= _("Web Terminal") ?>
+						</label>
+						<select class="form-select" name="v_web_terminal" id="v_web_terminal">
+							<option value="false">
+								<?= _("No") ?>
+							</option>
+							<option value="true" <?= $_SESSION["WEB_TERMINAL"] == "true" ? "selected" : "" ?>>
+								<?= _("Yes") ?>
+							</option>
+						</select>
+					</div>
+					<div class="u-mb10">
 						<label for="v_quota" class="form-label">
-							<?= _("FileSystem Disk Quota") ?>
+							<?= _("File System Disk Quota") ?>
 						</label>
 						<select class="form-select" name="v_quota" id="v_quota">
 							<option value="no">

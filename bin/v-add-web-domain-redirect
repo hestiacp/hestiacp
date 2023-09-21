@@ -42,13 +42,20 @@ is_object_unsuspended 'user' 'USER' "$user"
 is_object_valid 'web' 'DOMAIN' "$domain"
 is_object_unsuspended 'web' 'DOMAIN' "$domain"
 
+requesturi=0
 if [[ "$3" =~ http://|https:// ]]; then
 	scheme_check=1
 	scheme=$($HESTIA_PHP -r '$url=parse_url($argv[1]); echo $url["scheme"];' "$redirect")
 	host=$($HESTIA_PHP -r '$url=parse_url($argv[1]); echo $url["host"];' "$redirect")
 	path=$($HESTIA_PHP -r '$url=parse_url($argv[1]); if(!empty($url["path"])){echo $url["path"];}' "$redirect")
+	port=$($HESTIA_PHP -r '$url=parse_url($argv[1]); if(!empty($url["port"])){echo $url["port"];}' "$redirect")
+
 	host=$(idn2 --quiet "$host")
 	redirect="$scheme://$host$path"
+	if [ -n "$port" ]; then
+		redirect="$scheme://$host:$port$path"
+	fi
+
 	isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "$redirect")
 	if [ -z "$isValidUrl" ]; then
 		check_result $E_INVALID "Invalid redirect"
@@ -56,8 +63,15 @@ if [[ "$3" =~ http://|https:// ]]; then
 else
 	host=$($HESTIA_PHP -r '$url=parse_url($argv[1]); echo $url["host"];' "http://$redirect")
 	path=$($HESTIA_PHP -r '$url=parse_url($argv[1]); if(!empty($url["path"])){echo $url["path"];}' "http://$redirect")
+	port=$($HESTIA_PHP -r '$url=parse_url($argv[1]); if(!empty($url["port"])){echo $url["port"];}' "$redirect")
+
 	host=$(idn2 --quiet "$host")
+
 	redirect="$host$path"
+	if [ -n "$port" ]; then
+		redirect="$host:$port$path"
+	fi
+
 	isValidUrl=$(php -r '$url=$argv[1]; $url=filter_var($url,FILTER_VALIDATE_URL); echo $url;' "http://$redirect")
 	if [ -z "$isValidUrl" ]; then
 		check_result $E_INVALID "Invalid redirect"
@@ -77,16 +91,36 @@ if [ "$WEB_SYSTEM" = 'nginx' ] || [ "$PROXY_SYSTEM" = 'nginx' ]; then
 	sconf="$HOMEDIR/$user/conf/web/$domain/nginx.ssl.conf_redirect"
 fi
 
+# Prevent $request_uri being added if ends in .html
+requesturi=0
+if [ -n "$path" ]; then
+	lastchr=${path#${path%?}}
+	if [ "$lastchr" = "/" ]; then
+		requesturi=1
+		redirect=${redirect:0:-1}
+	fi
+else
+	requesturi=1
+fi
+
 # Insert redirect commands
 if [ -n "$PROXY_SYSTEM" ] || [ "$WEB_SYSTEM" = 'nginx' ]; then
 	if [ "$scheme_check" = 1 ]; then
-		echo "   return $code $redirect\$request_uri;" > $conf
+		if [ "$requesturi" = 1 ]; then
+			echo "   return $code $redirect\$request_uri;" > $conf
+		else
+			echo "   return $code $redirect;" > $conf
+		fi
 		if [ ! -e "$sconf" ]; then
 			ln -s "$conf" "$sconf"
 		fi
 	else
 		echo "if (\$host != \"$redirect\") {" > $conf
-		echo "   return $code \$scheme://$redirect\$request_uri;" >> $conf
+		if [ "$requesturi" = 1 ]; then
+			echo "   return $code \$scheme://$redirect\$request_uri;" >> $conf
+		else
+			echo "   return $code \$scheme://$redirect;" >> $conf
+		fi
 		echo "}" >> $conf
 
 		if [ ! -e "$sconf" ]; then

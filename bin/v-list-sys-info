@@ -99,7 +99,7 @@ UPTIME=$(cat /proc/uptime | cut -f 1 -d ' ' | cut -f 1 -d .)
 UPTIME="$(echo $UPTIME / 60 | bc)"
 
 # Check LoadAverage
-LOADAVERAGE=$(cat /proc/loadavg | cut -f 1 -d ' ')
+LOADAVERAGE=$(cat /proc/loadavg | cut -f 1-3 -d ' ' | sed 's/ / \/ /g')
 
 # Listing data
 case $format in

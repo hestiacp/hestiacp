@@ -5,58 +5,63 @@
 #=========================================================================#
 
 server {
-    listen      %ip%:%web_ssl_port% ssl http2;
-    server_name %domain_idn% %alias_idn%;
-    root        %sdocroot%;
-    index       index.php index.html index.htm;
-    access_log  /var/log/nginx/domains/%domain%.log combined;
-    access_log  /var/log/nginx/domains/%domain%.bytes bytes;
-    error_log   /var/log/nginx/domains/%domain%.error.log error;
+	listen      %ip%:%web_ssl_port% ssl;
+	server_name %domain_idn% %alias_idn%;
+	root        %sdocroot%;
+	index       index.php index.html index.htm;
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	access_log  /var/log/nginx/domains/%domain%.bytes bytes;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-    ssl_certificate      %ssl_pem%;
-    ssl_certificate_key  %ssl_key%;
-    ssl_stapling on;
-    ssl_stapling_verify on;
+	ssl_certificate     %ssl_pem%;
+	ssl_certificate_key %ssl_key%;
+	ssl_stapling        on;
+	ssl_stapling_verify on;
 
-    include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
+	# TLS 1.3 0-RTT anti-replay
+	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
+	if ($anti_replay = 425) { return 425; }
 
-    location / {
+	include %home%/%user%/conf/web/%domain%/nginx.hsts.conf*;
 
-        location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
-            expires     max;
-            fastcgi_hide_header "Set-Cookie";
-        }
+	location ~ /\.(?!well-known\/) {
+		deny all;
+		return 404;
+	}
 
-        location ~ [^/]\.php(/|$) {
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            if (!-f $document_root$fastcgi_script_name) {
-                return  404;
-            }
+	location / {
+		location ~* ^.+\.(jpeg|jpg|png|webp|gif|bmp|ico|svg|css|js)$ {
+			expires max;
+			fastcgi_hide_header "Set-Cookie";
+		}
 
-            fastcgi_pass    %backend_lsnr%;
-            fastcgi_index   index.php;
-            include         /etc/nginx/fastcgi_params;
-            include     %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
-        }
-    }
+		location ~ [^/]\.php(/|$) {
+			try_files $uri =404;
 
-    location /error/ {
-        alias   %home%/%user%/web/%domain%/document_errors/;
-    }
+			include /etc/nginx/fastcgi_params;
 
-    location ~ /\.(?!well-known\/) {
-       deny all;
-       return 404;
-    }
+			fastcgi_index index.php;
+			fastcgi_param HTTP_EARLY_DATA $rfc_early_data if_not_empty;
+			fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
-    location /vstats/ {
-        alias   %home%/%user%/web/%domain%/stats/;
-        include %home%/%user%/web/%domain%/stats/auth.conf*;
-    }
+			fastcgi_pass %backend_lsnr%;
 
-    proxy_hide_header Upgrade;
+			include %home%/%user%/conf/web/%domain%/nginx.fastcgi_cache.conf*;
+		}
+	}
 
-    include     /etc/nginx/conf.d/phpmyadmin.inc*;
-    include     /etc/nginx/conf.d/phppgadmin.inc*;
-    include     %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
+	location /error/ {
+		alias %home%/%user%/web/%domain%/document_errors/;
+	}
+
+	location /vstats/ {
+		alias   %home%/%user%/web/%domain%/stats/;
+		include %home%/%user%/web/%domain%/stats/auth.conf*;
+	}
+
+	proxy_hide_header Upgrade;
+
+	include /etc/nginx/conf.d/phpmyadmin.inc*;
+	include /etc/nginx/conf.d/phppgadmin.inc*;
+	include %home%/%user%/conf/web/%domain%/nginx.ssl.conf_*;
 }

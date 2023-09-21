@@ -8,7 +8,7 @@
 - **Code review and bug fixes**:
   - Read over the code and if you notice errors (even spelling mistakes), submit a pull request with your changes.
 - **New features**:
-  - Is there an awesome feature that you'd love to see included? Submit a pull request with your changes, and if approved your PR will be reviewed and merged for inclusion in an upcoming release. While our development team tries to accomodate all reasonable requests please remember that it does take time to develop, implement and test new features and as such we may not be able to fulfill all requests or may have to put a feature on backlog for a later date.
+  - Is there an awesome feature that you'd love to see included? Submit a pull request with your changes, and if approved your PR will be reviewed and merged for inclusion in an upcoming release. While our development team tries to accommodate all reasonable requests please remember that it does take time to develop, implement and test new features and as such we may not be able to fulfill all requests or may have to put a feature on backlog for a later date.
 - **Translations**:
   - If you are a non-English speaker and would like to improve the quality of the translations used in Hestia Control Panel's web interface, please go to [Hestia Translate](https://translate.hestiacp.com/projects/hestiacp/) to review the translations database. For more information please read [How to contribute with Translations](https://forum.hestiacp.com/t/how-to-contribute-with-translations/1664) on our forum. You can also open an issue report [GitHub](https://www.github.com/hestiacp/hestiacp/issues) highlighting the issue with the current translation so that it can be corrected.
 - **Donations**:
@@ -22,7 +22,7 @@ Additional information on how to contribute to Hestia Control Panel can be found
 
 We ask that you follow existing naming schemes and coding conventions where possible, and that you add comments in your source code where appropriate to aid other developers in debugging and understanding your code in the future.
 
-To ensure your changes meet our formatting requirements, please run `yarn install` from the root of the repository before committing your changes. This will set up pre-commit hooks for automatic formatting, which will help to get your changes merged as quickly as possible.
+To ensure your changes meet our formatting requirements, please run `npm install` from the root of the repository before committing your changes. This will set up pre-commit hooks for automatic formatting, which will help to get your changes merged as quickly as possible.
 
 ### Workflow and process
 

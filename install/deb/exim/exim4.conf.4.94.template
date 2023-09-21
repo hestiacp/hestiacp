@@ -15,6 +15,7 @@ add_environment = <; PATH=/bin:/usr/bin
 keep_environment =
 disable_ipv6 = true
 
+smtputf8_advertise_hosts =
 domainlist local_domains = dsearch;/etc/exim4/domains/
 domainlist relay_to_domains = dsearch;/etc/exim4/domains/
 hostlist relay_from_hosts = 127.0.0.1
@@ -63,6 +64,8 @@ tls_privatekey = \
 
 daemon_smtp_ports = 25 : 465 : 587
 tls_on_connect_ports = 465
+tls_require_ciphers = PERFORMANCE:-RSA:-VERS-ALL:+VERS-TLS1.2:+VERS-TLS1.3:%SERVER_PRECEDENCE
+auth_advertise_hosts = localhost : ${if eq{$tls_in_cipher}{}{}{*}}
 never_users = root
 host_lookup = *
 rfc1413_hosts = *
@@ -119,15 +122,18 @@ acl_check_mail:
   deny    condition     = ${if eq{$sender_helo_name}{}}
           message       = HELO required before MAIL
 
-  drop    message       = Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
+  drop    !authenticated = *
+    	  message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
           condition     = ${if match{$sender_helo_name}{\N((\d{1,3}[.-]\d{1,3}[.-]\d{1,3}[.-]\d{1,3})|([0-9a-f]{8})|([0-9A-F]{8}))\N}{yes}{no}}
           condition     = ${if match {${lookup dnsdb{>: defer_never,ptr=$sender_host_address}}\}{$sender_helo_name}{no}{yes}}
           delay         = 45s
 
-  drop    condition     = ${if isip{$sender_helo_name}}
+  drop    !authenticated = *
+		  condition     = ${if isip{$sender_helo_name}}
           message       = Access denied - Invalid HELO name (See RFC2821 4.1.3)
 
-  drop    condition     = ${if eq{[$interface_address]}{$sender_helo_name}}
+  drop    !authenticated = *
+		  condition    = ${if eq{[$interface_address]}{$sender_helo_name}}
           message       = $interface_address is _my_ address
 
   accept
@@ -356,8 +362,6 @@ terminate_alias:
   driver = accept
   transport = devnull
   condition = ${lookup{$local_part@$domain}lsearch{/etc/exim4/domains/${lookup{$domain}dsearch{/etc/exim4/domains/}}/aliases}{true}{false}}
-
-
 
 ######################################################################
 #                      TRANSPORTS CONFIGURATION                      #

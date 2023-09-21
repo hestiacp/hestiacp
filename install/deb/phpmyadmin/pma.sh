@@ -48,25 +48,56 @@ PMADB=phpmyadmin
 PMAUSER=pma
 
 #DROP USER and TABLE
-# mysql -uroot <<MYSQL_PMA1
-# DROP USER '$PMAUSER'@'localhost';
-# DROP DATABASE $PMADB;
-# FLUSH PRIVILEGES;
-# MYSQL_PMA1
+#mysql -uroot <<MYSQL_PMA1
+#DROP USER '$PMAUSER'@'localhost';
+#DROP DATABASE $PMADB;
+#FLUSH PRIVILEGES;
+#MYSQL_PMA1
 
 #CREATE PMA USER
-mysql -uroot << MYSQL_PMA2
-CREATE USER '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
-CREATE DATABASE $PMADB;
-MYSQL_PMA2
+if [ -f '/usr/bin/mariadb' ]; then
+	mysql_server="mariadb"
+else
+	mysql_server="mysql"
+fi
+mysql_out=$(mktemp)
+$mysql -e 'SELECT VERSION()' > $mysql_out
+mysql_ver=$(cat $mysql_out | tail -n1 | cut -f 1 -d -)
+mysql_ver_sub=$(echo $mysql_ver | cut -d '.' -f1)
+mysql_ver_sub_sub=$(echo $mysql_ver | cut -d '.' -f2)
 
-#GRANT PMA USE SOME RIGHTS
-mysql -uroot << MYSQL_PMA3
-USE $PMADB;
-GRANT USAGE ON $PMADB.* TO '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';
-GRANT ALL PRIVILEGES ON $PMADB.* TO '$PMAUSER'@'localhost';
-FLUSH PRIVILEGES;
-MYSQL_PMA3
+if [ "$mysql" = "mysql" ] && [ "$mysql_ver_sub" -ge 8 ]; then
+	query="CREATE USER '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+	query="CREATE DATABASE $PMADB;"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+	query="GRANT USAGE ON $PMADB.* TO '$PMAUSER'@'localhost';"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+	query="GRANT ALL PRIVILEGES ON $PMADB.* TO '$PMAUSER'@'localhost';"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+	query="FLUSH PRIVILEGES;"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+else
+	query="CREATE USER '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+	query="CREATE DATABASE $PMADB;"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+	query="GRANT USAGE ON $PMADB.* TO '$PMAUSER'@'localhost' IDENTIFIED BY '$PASS';"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+	query="GRANT ALL PRIVILEGES ON $PMADB.* TO '$PMAUSER'@'localhost';"
+	$mysql_server -uroot -e "$query" > /dev/null
+
+	query="FLUSH PRIVILEGES;"
+	$mysql_server -uroot -e "$query" > /dev/null
+fi
 
 #MYSQL DB and TABLES ADDITION
-mysql -uroot < "$HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql"
+$mysql_server -uroot < "$HESTIA_INSTALL_DIR/phpmyadmin/create_tables.sql"

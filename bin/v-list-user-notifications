@@ -30,6 +30,9 @@ json_list() {
 	echo "{"
 	while read str; do
 		parse_object_kv_list "$str"
+		if [ "$PRIORITY" = '' ]; then
+			PRIORITY='0'
+		fi
 		TOPIC=$(echo "$TOPIC" | sed -e "s/%quote%/'/g")
 		NOTICE=$(echo "$NOTICE" | sed -e "s/%quote%/'/g")
 		echo -n '    "'$NID'": {
@@ -37,7 +40,7 @@ json_list() {
         "NOTICE": "'${NOTICE//\"/\'}'",
         "TYPE": "'$TYPE'",
         "ACK": "'$ACK'",
-        "TPL": "'$TPL'",
+        "PRIORITY": "'$PRIORITY'",
         "TIME": "'$TIME'",
         "DATE": "'$DATE'"
     }'

@@ -75,7 +75,7 @@ if [ "$DNS_CLUSTER_SYSTEM" != "hestia-zone" ]; then
 		check_result $? "$HOST connection failed (soa sync)" "$E_CONNECT"
 
 		# Syncing record
-		str=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf | sed 's/"/\\"/g')
+		str=$(grep "ID='$id'" $USER_DATA/dns/$domain.conf)
 		cluster_cmd v-insert-dns-record $DNS_USER $domain "$str" 'no'
 		check_result $? "$HOST connection failed (record sync)" "$E_CONNECT"
 

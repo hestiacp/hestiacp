@@ -20,19 +20,19 @@ if (!empty($_POST["ok"])) {
 
 	// Check empty fields
 	if (empty($_POST["v_username"])) {
-		$errors[] = _("user");
+		$errors[] = _("Username");
 	}
 	if (empty($_POST["v_password"])) {
-		$errors[] = _("password");
+		$errors[] = _("Password");
 	}
 	if (empty($_POST["v_package"])) {
-		$errrors[] = _("package");
+		$errrors[] = _("Package");
 	}
 	if (empty($_POST["v_email"])) {
-		$errors[] = _("email");
+		$errors[] = _("Email");
 	}
 	if (empty($_POST["v_name"])) {
-		$errors[] = _("name");
+		$errors[] = _("Contact Name");
 	}
 	if (!empty($errors)) {
 		foreach ($errors as $i => $error) {
@@ -47,13 +47,13 @@ if (!empty($_POST["ok"])) {
 
 	// Validate email
 	if (empty($_SESSION["error_msg"]) && !filter_var($_POST["v_email"], FILTER_VALIDATE_EMAIL)) {
-		$_SESSION["error_msg"] = _("Please enter valid email address.");
+		$_SESSION["error_msg"] = _("Please enter a valid email address.");
 	}
 
 	// Check password length
 	if (empty($_SESSION["error_msg"])) {
 		if (!validate_password($_POST["v_password"])) {
-			$_SESSION["error_msg"] = _("Password does not match the minimum requirements");
+			$_SESSION["error_msg"] = _("Password does not match the minimum requirements.");
 		}
 	}
 
@@ -139,45 +139,101 @@ if (!empty($_POST["ok"])) {
 		// send email in "users" language
 		putenv("LANGUAGE=" . $_POST["v_language"]);
 
-		$subject = _("Welcome to Hestia Control Panel");
-		$hostname = get_hostname();
-		unset($output);
-		$from = "noreply@" . $hostname;
-		$from_name = _("Hestia Control Panel");
+		$name = empty($_POST["v_name"]) ? $_POST["v_username"] : $_POST["v_name"];
 
-		if (!empty($_POST["v_name"])) {
-			$mailtext = sprintf(_("GREETINGS_GORDON"), $_POST["v_name"]) . "\r\n";
+		$template = get_email_template("account_ready", $v_language);
+		if (!empty($template)) {
+			preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
+			$subject = $matches[1];
+			$subject = str_replace(
+				["{{hostname}}", "{{appname}}", "{{user}}", "{{name}}"],
+				[get_hostname(), $_SESSION["APP_NAME"], $_POST["v_username"], $name],
+				$subject,
+			);
+			$template = str_replace($matches[0], "", $template);
 		} else {
-			$mailtext = _("GREETINGS") . "\r\n";
+			$template = _(
+				"Hello {{name}},\n" .
+					"\n" .
+					"Your account has been created and ready to use.\n" .
+					"\n" .
+					"https://{{hostname}}/login/\n" .
+					"Username: {{user}}\n" .
+					"Password: {{password}}\n" .
+					"\n" .
+					"Best regards,\n" .
+					"\n" .
+					"--\n" .
+					"{{appname}}",
+			);
 		}
 
-		$mailtext .= sprintf(
-			_("ACCOUNT_READY"),
-			$_SERVER["HTTP_HOST"],
-			$_POST["v_username"],
-			$_POST["v_password"],
-		);
-		send_email($to, $subject, $mailtext, $from, $from_name, $_POST["name"]);
+		if (empty($subject)) {
+			$subject = str_replace(
+				["{{subject}}", "{{hostname}}", "{{appname}}"],
+				[
+					sprintf(_("Welcome to %s"), $_SESSION["APP_NAME"]),
+					get_hostname(),
+					$_SESSION["APP_NAME"],
+				],
+				$_SESSION["SUBJECT_EMAIL"],
+			);
+		}
+
+		$hostname = get_hostname();
+
+		$from = !empty($_SESSION["FROM_EMAIL"]) ? $_SESSION["FROM_EMAIL"] : "noreply@" . $hostname;
+		$from_name = !empty($_SESSION["FROM_NAME"])
+			? $_SESSION["FROM_NAME"]
+			: $_SESSION["APP_NAME"];
+
+		if ($hostname) {
+			$host = preg_replace("/(\[?[^]]*\]?):([0-9]{1,5})$/", "$1", $_SERVER["HTTP_HOST"]);
+			if ($host == $hostname) {
+				$port_is_defined = preg_match("/\[?[^]]*\]?:[0-9]{1,5}$/", $_SERVER["HTTP_HOST"]);
+				if ($port_is_defined) {
+					$port =
+						":" .
+						preg_replace("/(\[?[^]]*\]?):([0-9]{1,5})$/", "$2", $_SERVER["HTTP_HOST"]);
+				} else {
+					$port = "";
+				}
+			} else {
+				$port = ":" . $_SERVER["SERVER_PORT"];
+			}
+			$hostname = $hostname . $port;
+		} else {
+			$hostname = $_SERVER["HTTP_HOST"];
+		}
+
+		$mailtext = translate_email($template, [
+			"name" => htmlentities($name),
+			"user" => htmlentities($_POST["v_username"]),
+			"password" => htmlentities($_POST["v_password"]),
+			"hostname" => htmlentities($hostname),
+			"appname" => $_SESSION["APP_NAME"],
+		]);
+
+		send_email($to, $subject, $mailtext, $from, $from_name, $name);
 		putenv("LANGUAGE=" . detect_user_language());
 	}
 
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = sprintf(
-			_("USER_CREATED_OK"),
-			htmlentities($_POST["v_username"]),
-			htmlentities($_POST["v_username"]),
+		$_SESSION["ok_msg"] = htmlify_trans(
+			sprintf(
+				_("User {%s} has been created successfully. / {Log in as %s}"),
+				htmlentities($_POST["v_username"]),
+				htmlentities($_POST["v_username"]),
+			),
+			"</a>",
+			'<a href="/edit/user/?user=' . htmlentities($_POST["v_username"]) . '">',
+			'<a href="/login/?loginas=' .
+				htmlentities($_POST["v_username"]) .
+				"&token=" .
+				htmlentities($_SESSION["token"]) .
+				'">',
 		);
-		$_SESSION["ok_msg"] .=
-			" / <a href=/login/?loginas=" .
-			htmlentities($_POST["v_username"]) .
-			"&token=" .
-			htmlentities($_SESSION["token"]) .
-			">" .
-			_("login as") .
-			" " .
-			htmlentities($_POST["v_username"]) .
-			"</a>";
 		unset($v_username);
 		unset($v_password);
 		unset($v_email);

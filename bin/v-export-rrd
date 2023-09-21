@@ -9,7 +9,7 @@
 #----------------------------------------------------------#
 
 chart=$1
-timespan=${2-hour}
+timespan=${2-daily}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -33,8 +33,8 @@ function generate_load_table() {
 	rrdtool xport --json -s $start -e $end --step $step \
 		DEF:la=$RRD/la/la.rrd:LA:AVERAGE \
 		DEF:pr=$RRD/la/la.rrd:PR:AVERAGE \
-		XPORT:la:load \
-		XPORT:pr:Proccess
+		XPORT:la:Load \
+		XPORT:pr:Processes
 }
 
 function generate_mem_table() {
@@ -115,23 +115,29 @@ function generate_net_table() {
 			DEF:inoctets=$RRD/net/$host.rrd:RX:AVERAGE \
 			DEF:outoctets=$RRD/net/$host.rrd:TX:AVERAGE \
 			XPORT:inoctets:"Input (rx)" \
-			XPORT:outoctets:"Output (rx)"
+			XPORT:outoctets:"Output (tx)"
 	else
 		echo "Does not exists"
 		exit 1
 	fi
 }
 
-if [ "$timespan" = "week" ]; then
+if [ "$timespan" = "weekly" ]; then
 	start=$(date -d "7 days ago" +%s)
 	# every 30 min
 	step=3600
-elif [ "$timespan" = "month" ]; then
+elif [ "$timespan" = "monthly" ]; then
 	start=$(date -d "1 month ago" +%s)
 	step=21600
-elif [ "$timespan" = "year" ]; then
+elif [ "$timespan" = "yearly" ]; then
 	start=$(date -d "1 year ago" +%s)
 	step=172800
+elif [ "$timespan" = "biennially" ]; then
+        start=$(date -d "2 year ago" +%s)
+        step=345600
+elif [ "$timespan" = "triennially" ]; then
+        start=$(date -d "3 year ago" +%s)
+        step=518400
 else
 	start=$(date -d "1 day ago" +%s)
 	# every 5min

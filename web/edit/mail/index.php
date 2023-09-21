@@ -681,7 +681,8 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 			if (
 				$_POST["v_smtp_relay_host"] != $v_smtp_relay_host ||
 				$_POST["v_smtp_relay_user"] != $v_smtp_relay_user ||
-				$_POST["v_smtp_relay_port"] != $v_smtp_relay_port
+				$_POST["v_smtp_relay_port"] != $v_smtp_relay_port ||
+				$_POST["v_smtp_relay_pass"] != ""
 			) {
 				$v_smtp_relay = true;
 				$v_smtp_relay_host = quoteshellarg($_POST["v_smtp_relay_host"]);
@@ -700,11 +701,11 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && empty($_GET["account"])
 						quoteshellarg($v_domain) .
 						" " .
 						$v_smtp_relay_host .
-						" '" .
+						" " .
 						$v_smtp_relay_user .
-						"' '" .
+						" " .
 						$v_smtp_relay_pass .
-						"' " .
+						" " .
 						$v_smtp_relay_port,
 					$output,
 					$return_var,
@@ -744,13 +745,12 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 	// Validate email
 	if (!empty($_POST["v_send_email"]) && empty($_SESSION["error_msg"])) {
 		if (!filter_var($_POST["v_send_email"], FILTER_VALIDATE_EMAIL)) {
-			$_SESSION["error_msg"] = _("Please enter valid email address.");
+			$_SESSION["error_msg"] = _("Please enter a valid email address.");
 		}
 	}
 
 	$v_account = $_POST["v_account"];
 	$v_send_email = $_POST["v_send_email"];
-	$v_credentials = $_POST["v_credentials"];
 
 	exec(
 		HESTIA_CMD .
@@ -771,7 +771,7 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 	// Change password
 	if (!empty($_POST["v_password"]) && empty($_SESSION["error_msg"])) {
 		if (!validate_password($_POST["v_password"])) {
-			$_SESSION["error_msg"] = _("Password does not match the minimum requirements");
+			$_SESSION["error_msg"] = _("Password does not match the minimum requirements.");
 		} else {
 			$v_password = tempnam("/tmp", "vst");
 			$fp = fopen($v_password, "w");
@@ -1069,14 +1069,95 @@ if (!empty($_POST["save"]) && !empty($_GET["domain"]) && !empty($_GET["account"]
 		}
 	}
 
+	$hostname = get_hostname();
+	$webmail = "http://" . $hostname . "/" . $v_webmail_alias . "/";
+	if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
+		$webmail = $_SESSION["WEBMAIL_ALIAS"];
+	}
+
 	// Email login credentials
-	if (!empty($v_send_email) && empty($_SESSION["error_msg"])) {
-		$to = $v_send_email;
-		$subject = _("Email Credentials");
+	if (!empty($_POST["v_send_email"]) && empty($_SESSION["error_msg"])) {
+		$to = $_POST["v_send_email"];
+		$template = get_email_template("email_credentials", $_SESSION["language"]);
+		if (!empty($template)) {
+			preg_match("/<subject>(.*?)<\/subject>/si", $template, $matches);
+			$subject = $matches[1];
+			$subject = str_replace(
+				["{{hostname}}", "{{appname}}", "{{account}}", "{{domain}}"],
+				[
+					get_hostname(),
+					$_SESSION["APP_NAME"],
+					htmlentities(strtolower($_POST["v_account"])),
+					htmlentities($_POST["v_domain"]),
+				],
+				$subject,
+			);
+			$template = str_replace($matches[0], "", $template);
+		} else {
+			$template = _(
+				"Mail account has been created.\n" .
+					"\n" .
+					"Common Account Settings:\n" .
+					"Username: {{account}}@{{domain}}\n" .
+					"Password: {{password}}\n" .
+					"Webmail: {{webmail}}\n" .
+					"Hostname: {{hostname}}\n" .
+					"\n" .
+					"IMAP Settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 993\n" .
+					"STARTTLS: Port 143\n" .
+					"No encryption: Port 143\n" .
+					"\n" .
+					"POP3 Settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 995\n" .
+					"STARTTLS: Port 110\n" .
+					"No encryption: Port 110\n" .
+					"\n" .
+					"SMTP Settings\n" .
+					"Authentication: Normal Password\n" .
+					"SSL/TLS: Port 465\n" .
+					"STARTTLS: Port 587\n" .
+					"No encryption: Port 25\n" .
+					"\n" .
+					"Best regards,\n" .
+					"\n" .
+					"--\n" .
+					"{{appname}}",
+			);
+		}
+		if (empty($subject)) {
+			$subject = str_replace(
+				["{{subject}}", "{{hostname}}", "{{appname}}"],
+				[
+					sprintf(
+						_("Email Credentials: %s@%s"),
+						htmlentities(strtolower($_POST["v_account"])),
+						htmlentities($_POST["v_domain"]),
+					),
+					get_hostname(),
+					$_SESSION["APP_NAME"],
+				],
+				$_SESSION["SUBJECT_EMAIL"],
+			);
+		}
+
 		$hostname = get_hostname();
-		$from = "noreply@" . $hostname;
-		$from_name = _("Hestia Control Panel");
-		$mailtext = $v_credentials;
+		$from = !empty($_SESSION["FROM_EMAIL"]) ? $_SESSION["FROM_EMAIL"] : "noreply@" . $hostname;
+		$from_name = !empty($_SESSION["FROM_NAME"])
+			? $_SESSION["FROM_NAME"]
+			: $_SESSION["APP_NAME"];
+
+		$mailtext = translate_email($template, [
+			"domain" => htmlentities($_POST["v_domain"]),
+			"account" => htmlentities(strtolower($_POST["v_account"])),
+			"password" => htmlentities($_POST["v_password"]),
+			"webmail" => $webmail . "." . htmlentities($_POST["v_domain"]),
+			"hostname" => "mail." . htmlentities($_POST["v_domain"]),
+			"appname" => $_SESSION["APP_NAME"],
+		]);
+
 		send_email($to, $subject, $mailtext, $from, $from_name);
 	}
 

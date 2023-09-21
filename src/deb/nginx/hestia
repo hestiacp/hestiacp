@@ -17,6 +17,7 @@ NGINX_DAEMON=/usr/local/hestia/nginx/sbin/hestia-nginx
 NGINX_NAME=hestia-nginx
 NGINX_DESC=hestia-nginx
 NGINX_PID=/run/hestia-nginx.pid
+NGINX_CONF=/usr/local/hestia/nginx/conf/nginx.conf
 
 PHP_DAEMON=/usr/local/hestia/php/sbin/hestia-php
 PHP_NAME=hestia-php

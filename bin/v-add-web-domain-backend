@@ -86,9 +86,9 @@ fi
 #                       Hestia                             #
 #----------------------------------------------------------#
 
-# Restart backend server
+# Restart php interpreter
 $BIN/v-restart-web-backend "$restart" "$backend_version"
-check_result $? "Web backend restart failed" > /dev/null
+check_result $? "PHP restart failed" > /dev/null
 
 # Logging
 $BIN/v-log-action "$user" "Info" "Web" "Web domain configuration applied (Domain: $domain, Backend: $WEB_BACKEND)."

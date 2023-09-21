@@ -34,9 +34,8 @@ config='/etc/ssh/sshd_config'
 sftp_n=$(grep -n "Subsystem.*sftp" $config | grep -v internal | grep ":#")
 sftp_i=$(grep -n "^# Hestia SFTP Chroot" $config)
 
-date=$("date +%s")
 # Backing up config
-cp $config $config.bak-$(date +%s)
+cp $config $config.bak
 
 # Enabling normal sftp
 if [ -n "$sftp_n" ]; then
@@ -56,14 +55,13 @@ fi
 # Validating opensshd config
 if [ "$restart" = 'yes' ]; then
 	subj="OpenSSH restart failed"
-	email=$(grep CONTACT $HESTIA/data/users/admin/user.conf | cut -f 2 -d \')
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
 	/usr/sbin/sshd -t > /dev/null 2>&1
 	if [ "$?" -ne 0 ]; then
 		mail_text="OpenSSH can not be restarted. Please check config:
             \n\n$(/usr/sbin/sshd -t)"
-		echo -e "$mail_text" | $SENDMAIL -s "$subj" "$email"
+		echo -e "$mail_text" | $SENDMAIL -s "$subj" $email
 	else
-		service ssh restart > /dev/null 2>&1
 		service sshd restart > /dev/null 2>&1
 	fi
 fi
@@ -76,10 +74,6 @@ fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
-
-# Restart ssh service
-service ssh restart > /dev/null 2>&1
-service sshd restart > /dev/null 2>&1
 
 # Logging
 $BIN/v-log-action "system" "Warning" "Plugins" "SFTP Chroot Jail disabled."

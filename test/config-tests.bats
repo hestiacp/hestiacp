@@ -35,15 +35,6 @@ function setup() {
     source $HESTIA/func/ip.sh
 }
 
-@test "Prepare for tests" {
-	run rm -f /usr/local/hestia/data/templates/web/nginx/php-fpm/*.*
-	run rm -f /usr/local/hestia/data/templates/web/nginx/*.*
-	run rm -f /usr/local/hestia/data/templates/web/apache2/php-fpm/*.*
-	run rm -f /usr/local/hestia/data/templates/web/apache2/*.*
-
-	run v-update-web-templates
-}
-
 @test "Setup Test domain" {
     run v-add-user $user $user $user@hestiacp.com default "Super Test"
     assert_success
@@ -73,7 +64,7 @@ function setup() {
 
 @test "Proxy Config test" {
     if [ "$PROXY_SYSTEM" = "nginx" ]; then
-        for template in $(v-list-web-templates plain); do
+        for template in $(v-list-proxy-templates plain); do
             run v-change-web-domain-proxy-tpl $user testhestiacp.com $template
             assert_success
             refute_output

@@ -1,22 +1,22 @@
 /* Utilities
    ========================================================================== */
 
-.clearfix::before,
-.clearfix::after {
-	content: " ";
-	display: table;
-}
-
-.clearfix::after {
-	clear: both;
-}
-
 .u-block {
 	display: block !important;
 }
 
 .u-hidden {
 	display: none !important;
+}
+
+.u-hidden-visually {
+	border: 0 !important;
+	clip: rect(1px, 1px, 1px, 1px) !important;
+	height: 1px !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+	position: absolute !important;
+	width: 1px !important;
 }
 
 .u-noselect {
@@ -31,22 +31,36 @@
 	text-align: center !important;
 }
 
+.u-text-center-desktop {
+	@media (--viewport-large) {
+		text-align: center !important;
+	}
+}
+
 .u-text-small {
 	font-size: 0.75rem !important;
 }
 
-.u-text-italic {
-	font-style: italic !important;
+.u-text-bold {
+	font-weight: bold !important;
 }
 
-.u-truncate {
+.u-text-truncate {
 	overflow: hidden !important;
 	text-overflow: ellipsis !important;
 	white-space: nowrap !important;
 }
 
-.u-opacity-50 {
-	opacity: 0.5 !important;
+.u-text-break {
+	word-break: break-word !important;
+}
+
+.u-text-no-wrap {
+	white-space: nowrap !important;
+}
+
+.u-overflow {
+	overflow: auto !important;
 }
 
 .u-mt15 {
@@ -77,10 +91,6 @@
 	margin-right: 10px !important;
 }
 
-.u-mr15 {
-	margin-right: 15px !important;
-}
-
 .u-mb5 {
 	margin-bottom: 5px !important;
 }
@@ -101,16 +111,12 @@
 	padding-top: 10px !important;
 }
 
-.u-pt18 {
-	padding-top: 18px !important;
-}
-
 .u-pl30 {
 	padding-left: 30px !important;
 }
 
-.u-rounded {
-	border-radius: var(--border-radius-base) !important;
+.u-pr30 {
+	padding-right: 30px !important;
 }
 
 .u-pos-relative {
@@ -133,15 +139,22 @@
 	min-height: 600px !important;
 }
 
+.u-max-width200 {
+	max-width: 200px !important;
+}
+
+.u-max-width300 {
+	max-width: 300px !important;
+}
+
+.u-max-height300 {
+	max-height: 300px !important;
+}
+
 .u-side-by-side {
 	display: flex !important;
 	justify-content: space-between !important;
 	align-items: center !important;
-}
-
-.u-image-fluid {
-	max-width: 100% !important;
-	height: auto !important;
 }
 
 .u-list-bulleted {
@@ -152,6 +165,12 @@
 .u-allow-resize {
 	min-width: 100% !important;
 	resize: both !important;
+}
+
+.u-unstyled-button {
+	border: 0 !important;
+	padding: 0 !important;
+	background-color: transparent !important;
 }
 
 .u-console {

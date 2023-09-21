@@ -23,9 +23,17 @@
 # Web templates (for now)
 web/templates/
 
+# Patch files
+/install/upgrade/patch/*
+
+# Hestia Nginx.conf
+/src/deb/nginx/nginx.conf
+/src/rpm/nginx/nginx.conf
+
+# Email templates
+/install/common/templates/email/
+
 # Vendor/packages
-.pnp.*
-.yarn/*
 **/node_modules/
 **/vendor/
 **/composer.phar
@@ -40,12 +48,7 @@ web/templates/
 logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
 
-# PNPM, NPM and YARN
-pnpm-lock.yaml
+# npm lock file
 package-lock.json
-yarn.lock

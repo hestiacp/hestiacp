@@ -9,10 +9,12 @@ include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 verify_csrf($_POST);
 
 if (empty($_POST["domain"])) {
-	$_POST["domain"] = "";
+	header("Location: /list/web/");
+	exit();
 }
 if (empty($_POST["action"])) {
-	$_POST["action"] = "";
+	header("Location: /list/web");
+	exit();
 }
 
 $domain = $_POST["domain"];
@@ -32,6 +34,9 @@ if ($_SESSION["userContext"] === "admin") {
 		case "unsuspend":
 			$cmd = "v-unsuspend-web-domain";
 			break;
+		case "purge":
+			$cmd = "v-purge-nginx-cache";
+			break;
 		default:
 			header("Location: /list/web/");
 			exit();
@@ -46,6 +51,9 @@ if ($_SESSION["userContext"] === "admin") {
 			break;
 		case "unsuspend":
 			$cmd = "v-unsuspend-web-domain";
+			break;
+		case "purge":
+			$cmd = "v-purge-nginx-cache";
 			break;
 		default:
 			header("Location: /list/web/");

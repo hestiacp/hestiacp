@@ -9,32 +9,34 @@
 :root {
 	--animate-duration: 0s;
 	--font-family: "Arial", system-ui;
+
+	/* Colors */
 	--color-text-link: #444;
 	--color-text-link-hover: #ff791f;
 
 	/* Alerts */
 	--alert-box-shadow: none;
 	--alert-text-shadow: none;
+
+	/* Top Bar */
+	--top-bar-background: #5d5d5d;
+	--top-bar-box-shadow: none;
 }
 
-b,
-strong {
+h1 {
 	font-weight: 600;
 }
 
 /* Top bar
    ========================================================================== */
 
-.top-bar {
-	box-shadow: none;
-	background: #5d5d5d;
-}
-
-.top-bar-notifications-list {
-	border: 1px solid #ccc;
-	border-bottom-left-radius: 2px;
-	border-bottom-right-radius: 2px;
-	box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%);
+.top-bar-notifications-panel {
+	@media (--viewport-small) {
+		box-shadow: 0 2px 10px 0 rgb(0 0 0 / 25%);
+		border-color: #ccc;
+		border-bottom-left-radius: 2px;
+		border-bottom-right-radius: 2px;
+	}
 }
 
 .top-bar-notification-item {
@@ -49,7 +51,7 @@ strong {
 	}
 }
 
-.top-bar-menu-list {
+.top-bar-menu-panel {
 	background-color: #5d5d5d;
 }
 
@@ -135,7 +137,7 @@ strong {
 		&.active {
 			background: none;
 			font-weight: bold;
-			color: #444;
+			color: #ff6701;
 		}
 	}
 }
@@ -165,13 +167,11 @@ strong {
 		text-transform: uppercase;
 		text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
 		background: #a0c105;
-		background-color: #a0c105;
 
 		&:hover {
 			border-color: transparent;
 			color: #fff;
 			background: #a9cc06;
-			background-color: #a9cc06;
 			text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
 		}
 	}
@@ -181,8 +181,8 @@ strong {
 		text-shadow: none;
 	}
 
-	& #btn-back {
-		color: #30659d;
+	& .button-back {
+		color: #326b9b;
 		background: none;
 		text-shadow: none;
 		text-transform: none;
@@ -205,36 +205,49 @@ strong {
 	}
 }
 
-.table-header {
-	box-shadow: none;
-	background: #fafafa;
-	line-height: 1.2rem;
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-}
+/* Units table
+   ========================================================================== */
 
-.l-unit:hover {
-	box-shadow: none;
-}
-
-.l-unit__stat-col--left {
-	& a,
-	& a:visited {
-		color: #111;
+.units-table-row {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
 	}
+}
 
+.units-table-cell {
 	& a:hover {
 		color: #ff6701;
 	}
 }
 
-.l-unit:hover,
-.units .l-unit:hover {
-	box-shadow: none;
+.units-table-badge {
+	@media (--viewport-large) {
+		border-color: #eaeaea;
+		box-shadow: none;
+		border-radius: 4px;
+	}
 }
 
-.l-unit__name {
-	letter-spacing: 0 !important;
+/* Statistics
+   ========================================================================== */
+
+.stats-item {
+	@media (--viewport-large) {
+		&:hover {
+			box-shadow: none;
+		}
+	}
+}
+
+/* Spinner
+   ========================================================================== */
+
+.spinner-overlay {
+	& .fas {
+		box-shadow: 0 2px 11px 0 rgb(0 0 0 / 50%);
+	}
 }
 
 /* Buttons
@@ -249,7 +262,6 @@ strong {
 	padding-top: 6px;
 	padding-bottom: 6px;
 	background: #a0c105;
-	background-color: #a0c105;
 	border-radius: 2px;
 	box-shadow: none;
 
@@ -257,7 +269,6 @@ strong {
 		border-color: transparent;
 		color: #fff;
 		background: #a9cc06;
-		background-color: #a9cc06;
 		text-shadow: 0 1px 2px rgb(0 0 0 / 30%);
 		transition: none;
 		box-shadow: none;
@@ -267,7 +278,6 @@ strong {
 		border-color: transparent;
 		color: #fff;
 		background: #809c00;
-		background-color: #809c00;
 		text-shadow: 0 0 2px rgb(0 0 0 / 20%);
 		box-shadow: none;
 	}
@@ -278,7 +288,7 @@ strong {
 }
 
 .button-secondary {
-	color: #414141;
+	color: var(--color-text-link);
 	text-shadow: none;
 	text-transform: none;
 	border-color: #bbb;
@@ -328,10 +338,6 @@ strong {
 /* Forms
    ========================================================================== */
 
-.form-title {
-	font-weight: 600;
-}
-
 .form-control,
 .form-select {
 	box-shadow: none;
@@ -358,15 +364,6 @@ strong {
 	margin-right: 0;
 	border-radius: 0;
 	box-shadow: none;
-}
-
-/* Badge component
-   ========================================================================== */
-
-.badge {
-	border-color: #eaeaea;
-	box-shadow: none;
-	border-radius: 4px;
 }
 
 /* Shortcuts panel
@@ -444,7 +441,9 @@ strong {
 
 	@media (--viewport-small) {
 		background-color: rgb(255 255 255 / 100%);
-		box-shadow: 0 2px 5px rgb(0 0 0 / 30%), inset 0 0 2px rgb(255 255 255);
+		box-shadow:
+			0 2px 5px rgb(0 0 0 / 30%),
+			inset 0 0 2px rgb(255 255 255);
 		border-radius: 0;
 	}
 }

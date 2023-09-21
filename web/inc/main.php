@@ -25,6 +25,7 @@ define("DEFAULT_PHP_VERSION", "php-" . exec('php -r "echo substr(phpversion(),0,
 load_hestia_config();
 require_once dirname(__FILE__) . "/prevent_csrf.php";
 require_once dirname(__FILE__) . "/helpers.php";
+$root_directory = dirname(__FILE__) . "/../../";
 
 function destroy_sessions() {
 	unset($_SESSION);
@@ -93,12 +94,23 @@ if (!isset($_SESSION["user"]) && !defined("NO_AUTH_REQUIRED")) {
 	exit();
 }
 
-// Generate CSRF Token
+// Generate CSRF Token and set user shell variable
 if (isset($_SESSION["user"])) {
 	if (!isset($_SESSION["token"])) {
 		$token = bin2hex(random_bytes(16));
 		$_SESSION["token"] = $token;
 	}
+	$username = $_SESSION["user"];
+	if ($_SESSION["look"] != "") {
+		$username = $_SESSION["look"];
+	}
+
+	exec(HESTIA_CMD . "v-list-user " . quoteshellarg($username) . " json", $output, $return_var);
+	$data = json_decode(implode("", $output), true);
+	unset($output, $return_var);
+	$_SESSION["login_shell"] = $data[$username]["SHELL"];
+	$_SESSION["role"] = $data[$username]["ROLE"];
+	unset($data, $username);
 }
 
 if ($_SESSION["RELEASE_BRANCH"] == "release" && $_SESSION["DEBUG_MODE"] == "false") {
@@ -148,6 +160,9 @@ if (isset($_SESSION["look"]) && $_SESSION["look"] != "" && $_SESSION["userContex
 if (empty($user_plain)) {
 	$user_plain = "";
 }
+if (empty($_SESSION["look"])) {
+	$_SESSION["look"] = "";
+}
 
 require_once dirname(__FILE__) . "/i18n.php";
 
@@ -162,7 +177,7 @@ function check_return_code($return_var, $output) {
 	if ($return_var != 0) {
 		$error = implode("<br>", $output);
 		if (empty($error)) {
-			$error = sprintf(_("Error code:"), $return_var);
+			$error = sprintf(_("Error code: %s"), $return_var);
 		}
 		$_SESSION["error_msg"] = $error;
 	}
@@ -171,7 +186,7 @@ function check_return_code_redirect($return_var, $output, $location) {
 	if ($return_var != 0) {
 		$error = implode("<br>", $output);
 		if (empty($error)) {
-			$error = sprintf(_("Error code:"), $return_var);
+			$error = sprintf(_("Error code: %s"), $return_var);
 		}
 		$_SESSION["error_msg"] = $error;
 		header("Location:" . $location);
@@ -180,7 +195,6 @@ function check_return_code_redirect($return_var, $output, $location) {
 
 function render_page($user, $TAB, $page) {
 	$__template_dir = dirname(__DIR__) . "/templates/";
-	$__pages_js_dir = dirname(__DIR__) . "/js/pages/";
 
 	// Extract global variables
 	// I think those variables should be passed via arguments
@@ -197,11 +211,6 @@ function render_page($user, $TAB, $page) {
 
 	// Body
 	include $__template_dir . "pages/" . $page . ".php";
-
-	// Including page specific js file
-	if (file_exists($__pages_js_dir . $page . ".js")) {
-		echo '<script defer src="/js/pages/' . $page . ".js?" . JS_LATEST_UPDATE . '"></script>';
-	}
 
 	// Footer
 	include $__template_dir . "footer.php";
@@ -230,7 +239,6 @@ function show_alert_message($data) {
 	$msgIcon = "";
 	$msgText = "";
 	$msgClass = "";
-
 	if (!empty($data["error_msg"])) {
 		$msgIcon = "fa-circle-exclamation";
 		$msgText = htmlentities($data["error_msg"]);
@@ -251,18 +259,12 @@ function show_alert_message($data) {
 	}
 }
 
-function show_error_message($error) {
-	if (isset($error)) {
-		echo $error;
-	}
-}
-
 function top_panel($user, $TAB) {
 	$command = HESTIA_CMD . "v-list-user " . $user . " 'json'";
 	exec($command, $output, $return_var);
 	if ($return_var > 0) {
 		destroy_sessions();
-		$_SESSION["error_msg"] = _("You have been logged out. Please log in again.");
+		$_SESSION["error_msg"] = _("You are logged out, please log in again.");
 		header("Location: /login/");
 		exit();
 	}
@@ -273,7 +275,7 @@ function top_panel($user, $TAB) {
 	if ($panel[$user]["SUSPENDED"] === "yes" && $_SESSION["POLICY_USER_VIEW_SUSPENDED"] !== "yes") {
 		if (empty($_SESSION["look"])) {
 			destroy_sessions();
-			$_SESSION["error_msg"] = _("You have been logged out. Please log in again.");
+			$_SESSION["error_msg"] = _("You are logged out, please log in again.");
 			header("Location: /login/");
 		}
 	}
@@ -346,30 +348,42 @@ function humanize_time($usage) {
 	}
 }
 
-function humanize_usage_size($usage) {
+function humanize_usage_size($usage, $round = 2) {
 	if ($usage == "unlimited") {
 		return "∞";
 	}
+	$display_usage = $usage;
 	if ($usage > 1024) {
 		$usage = $usage / 1024;
 		if ($usage > 1024) {
 			$usage = $usage / 1024;
 			if ($usage > 1024) {
 				$usage = $usage / 1024;
-				$usage = number_format($usage, 2);
+				$display_usage = number_format($usage, $round);
 			} else {
-				$usage = number_format($usage, 2);
+				if ($usage > 999) {
+					$usage = $usage / 1024;
+				}
+				$display_usage = number_format($usage, $round);
 			}
 		} else {
-			$usage = number_format($usage, 2);
+			if ($usage > 999) {
+				$usage = $usage / 1024;
+			}
+			$display_usage = number_format($usage, $round);
 		}
+	} else {
+		if ($usage > 999) {
+			$usage = $usage / 1024;
+		}
+		$display_usage = number_format($usage, $round);
 	}
-	return $usage;
+	return $display_usage;
 }
 
 function humanize_usage_measure($usage) {
 	if ($usage == "unlimited") {
-		return "mb";
+		return;
 	}
 
 	$measure = "kb";
@@ -377,12 +391,23 @@ function humanize_usage_measure($usage) {
 		$usage = $usage / 1024;
 		if ($usage > 1024) {
 			$usage = $usage / 1024;
-			$measure = $usage > 1024 ? "pb" : "tb";
+			$measure = $usage < 1024 ? "tb" : "pb";
+			if ($usage > 999) {
+				$usage = $usage / 1024;
+				$measure = "pb";
+			}
 		} else {
-			$measure = "gb";
+			$measure = $usage < 1024 ? "gb" : "tb";
+			if ($usage > 999) {
+				$usage = $usage / 1024;
+				$measure = "tb";
+			}
 		}
 	} else {
-		$measure = "mb";
+		$measure = $usage < 1024 ? "mb" : "gb";
+		if ($usage > 999) {
+			$measure = "gb";
+		}
 	}
 	return $measure;
 }
@@ -549,3 +574,16 @@ function backendtpl_with_webdomains() {
 function validate_password($password) {
 	return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(.){8,}$/', $password);
 }
+
+function unset_alerts() {
+	if (!empty($_SESSION["unset_alerts"])) {
+		if (!empty($_SESSION["error_msg"])) {
+			unset($_SESSION["error_msg"]);
+		}
+		if (!empty($_SESSION["ok_msg"])) {
+			unset($_SESSION["ok_msg"]);
+		}
+		unset($_SESSION["unset_alerts"]);
+	}
+}
+register_shutdown_function("unset_alerts");

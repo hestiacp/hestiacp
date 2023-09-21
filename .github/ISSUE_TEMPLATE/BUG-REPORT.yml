@@ -44,7 +44,7 @@ body:
         - Let's Encrypt SSL
         - Mail (Exim, Dovecot)
         - Mail Security (Antivirus, Antispam)
-        - Webmail (Roundcube, Rainloop)
+        - Webmail (Roundcube, SnappyMail)
         - Firewall (Iptables, Fail2ban)
     validations:
       required: true

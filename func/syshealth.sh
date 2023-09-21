@@ -198,7 +198,7 @@ function syshealth_update_system_config_format() {
 	# SYSTEM CONFIGURATION
 	# Create array of known keys in configuration file
 	system="system"
-	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM VERSION DISABLE_IP_CHECK"
+	known_keys="ANTISPAM_SYSTEM ANTIVIRUS_SYSTEM API_ALLOWED_IP API BACKEND_PORT BACKUP_GZIP BACKUP_MODE BACKUP_SYSTEM CRON_SYSTEM DB_PMA_ALIAS DB_SYSTEM DISK_QUOTA DNS_SYSTEM ENFORCE_SUBDOMAIN_OWNERSHIP FILE_MANAGER FIREWALL_EXTENSION FIREWALL_SYSTEM FTP_SYSTEM IMAP_SYSTEM INACTIVE_SESSION_TIMEOUT LANGUAGE LOGIN_STYLE MAIL_SYSTEM PROXY_PORT PROXY_SSL_PORT PROXY_SYSTEM RELEASE_BRANCH STATS_SYSTEM THEME UPDATE_HOSTNAME_SSL UPGRADE_SEND_EMAIL UPGRADE_SEND_EMAIL_LOG WEB_BACKEND WEBMAIL_ALIAS WEBMAIL_SYSTEM WEB_PORT WEB_RGROUPS WEB_SSL WEB_SSL_PORT WEB_SYSTEM WEB_TERMINAL WEB_TERMINAL_PORT VERSION DISABLE_IP_CHECK"
 	write_kv_config_file
 	unset system
 	unset known_keys
@@ -285,7 +285,7 @@ function syshealth_repair_system_config() {
 
 	# Backend port
 	if [[ -z $(check_key_exists 'BACKEND_PORT') ]]; then
-		ORIGINAL_PORT=$(cat $HESTIA/nginx/conf/nginx.conf | grep -m 1 "listen" | sed 's/[^0-9]*//g')
+		ORIGINAL_PORT=$(sed -ne "/listen/{s/.*listen[^0-9]*\([0-9][0-9]*\)[ \t]*ssl\;/\1/p;q}" "$HESTIA/nginx/conf/nginx.conf")
 		echo "[ ! ] Adding missing variable to hestia.conf: BACKEND_PORT ('$ORIGINAL_PORT')"
 		$BIN/v-change-sys-config-value 'BACKEND_PORT' $ORIGINAL_PORT
 	fi
@@ -339,8 +339,8 @@ function syshealth_repair_system_config() {
 
 	# Enforce subdomain ownership
 	if [[ -z $(check_key_exists 'ENFORCE_SUBDOMAIN_OWNERSHIP') ]]; then
-		echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('no')"
-		$BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "no"
+		echo "[ ! ] Adding missing variable to hestia.conf: ENFORCE_SUBDOMAIN_OWNERSHIP ('yes')"
+		$BIN/v-change-sys-config-value "ENFORCE_SUBDOMAIN_OWNERSHIP" "yes"
 	fi
 
 	if [[ -z $(check_key_exists 'API') ]]; then
@@ -375,6 +375,15 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: PLUGIN_APP_INSTALLER ('true')"
 		$BIN/v-change-sys-config-value "PLUGIN_APP_INSTALLER" "true"
 	fi
+	# Web Terminal
+	if [[ -z $(check_key_exists 'WEB_TERMINAL') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: WEB_TERMINAL ('false')"
+		$BIN/v-change-sys-config-value "WEB_TERMINAL" "false"
+	fi
+	if [[ -z $(check_key_exists 'WEB_TERMINAL_PORT') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: WEB_TERMINAL_PORT ('8085')"
+		$BIN/v-change-sys-config-value "WEB_TERMINAL_PORT" "8085"
+	fi
 	# Enable preview mode
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_ENABLE_BACON') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYSTEM_ENABLE_BACON ('false')"
@@ -394,7 +403,7 @@ function syshealth_repair_system_config() {
 	# Theme editor
 	if [[ -z $(check_key_exists 'POLICY_USER_CHANGE_THEME') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_CHANGE_THEME ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_CHANGE_THEME" "yes"
 	fi
 	# Protect admin user
 	if [[ -z $(check_key_exists 'POLICY_SYSTEM_PROTECTED_ADMIN') ]]; then
@@ -419,12 +428,12 @@ function syshealth_repair_system_config() {
 	# Allow users to edit web templates
 	if [[ -z $(check_key_exists 'POLICY_USER_EDIT_WEB_TEMPLATES') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_EDIT_WEB_TEMPLATES ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_EDIT_WEB_TEMPLATES" "yes"
 	fi
 	# View user logs
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_LOGS') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_USER_VIEW_LOGS ('yes')"
-		$BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "true"
+		$BIN/v-change-sys-config-value "POLICY_USER_VIEW_LOGS" "yes"
 	fi
 	# Allow users to login (read only) when suspended
 	if [[ -z $(check_key_exists 'POLICY_USER_VIEW_SUSPENDED') ]]; then
@@ -442,9 +451,9 @@ function syshealth_repair_system_config() {
 		$BIN/v-change-sys-config-value "USE_SERVER_SMTP" "false"
 	fi
 
-	if [[ -z $(check_key_exists 'SERVER_SMTP_HOST') ]]; then
+	if [[ -z $(check_key_exists 'SERVER_SMTP_PORT') ]]; then
 		echo "[ ! ] Adding missing variable to hestia.conf: SERVER_SMTP_PORT ('')"
-		$BIN/v-change-sys-config-value "SERVER_SMTP_HOST" ""
+		$BIN/v-change-sys-config-value "SERVER_SMTP_PORT" ""
 	fi
 
 	if [[ -z $(check_key_exists 'SERVER_SMTP_HOST') ]]; then
@@ -483,6 +492,52 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: DISABLE_IP_CHECK ('no')"
 		$BIN/v-change-sys-config-value "DISABLE_IP_CHECK" "no"
 	fi
+	if [[ -z $(check_key_exists 'APP_NAME') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: APP_NAME ('Hestia Control Panel')"
+		$BIN/v-change-sys-config-value "APP_NAME" "Hestia Control Panel"
+	fi
+	if [[ -z $(check_key_exists 'FROM_NAME') ]]; then
+		# Default is always APP_NAME
+		echo "[ ! ] Adding missing variable to hestia.conf: FROM_NAME ('')"
+		$BIN/v-change-sys-config-value "FROM_NAME" ""
+	fi
+	if [[ -z $(check_key_exists 'FROM_EMAIL') ]]; then
+		# Default is always noreply@hostname.com
+		echo "[ ! ] Adding missing variable to hestia.conf: FROM_EMAIL ('')"
+		$BIN/v-change-sys-config-value "FROM_EMAIL" ""
+	fi
+	if [[ -z $(check_key_exists 'SUBJECT_EMAIL') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: SUBJECT_EMAIL ('{{subject}}')"
+		$BIN/v-change-sys-config-value "SUBJECT_EMAIL" "{{subject}}"
+	fi
+
+	if [[ -z $(check_key_exists 'TITLE') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: TITLE ('{{page}} - {{hostname}} - {{appname}}')"
+		$BIN/v-change-sys-config-value "TITLE" "{{page}} - {{hostname}} - {{appname}}"
+	fi
+
+	if [[ -z $(check_key_exists 'HIDE_DOCS') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: HIDE_DOCS ('no')"
+		$BIN/v-change-sys-config-value "HIDE_DOCS" "no"
+	fi
+
+	if [[ -z $(check_key_exists 'POLICY_SYNC_ERROR_DOCUMENTS') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_ERROR_DOCUMENTS ('yes')"
+		$BIN/v-change-sys-config-value "POLICY_SYNC_ERROR_DOCUMENTS" "yes"
+	fi
+
+	if [[ -z $(check_key_exists 'POLICY_SYNC_SKELETON') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_SYNC_SKELETON ('yes')"
+		$BIN/v-change-sys-config-value "POLICY_SYNC_SKELETON" "yes"
+	fi
+	if [[ -z $(check_key_exists 'POLICY_BACKUP_SUSPENDED_USERS') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_BACKUP_SUSPENDED_USERS ('no')"
+		$BIN/v-change-sys-config-value "POLICY_BACKUP_SUSPENDED_USERS" "no"
+	fi
+	if [[ -z $(check_key_exists 'ROOT_USER') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: ROOT_USER ('admin')"
+		$BIN/v-change-sys-config-value "ROOT_USER" "admin"
+	fi
 
 	touch $HESTIA/conf/hestia.conf.new
 	while IFS='= ' read -r lhs rhs; do
@@ -508,19 +563,82 @@ function syshealth_repair_system_config() {
 		cp $HESTIA/conf/hestia.conf.new $HESTIA/conf/hestia.conf
 		rm $HESTIA/conf/hestia.conf.new
 	fi
+
+	source_conf "$HESTIA/conf/hestia.conf"
 }
 
 # Repair System Cron Jobs
-# Add default cron jobs to "admin" user account's cron tab
+# Add default cron jobs to "hestiaweb" user account's cron tab
 function syshealth_repair_system_cronjobs() {
-	$BIN/v-add-cron-job 'admin' '*/2' '*' '*' '*' '*' "sudo $BIN/v-update-sys-queue restart" '' 'no'
-	$BIN/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $BIN/v-update-sys-queue daily" '' 'no'
-	$BIN/v-add-cron-job 'admin' '15' '02' '*' '*' '*' "sudo $BIN/v-update-sys-queue disk" '' 'no'
-	$BIN/v-add-cron-job 'admin' '10' '00' '*' '*' '*' "sudo $BIN/v-update-sys-queue traffic" '' 'no'
-	$BIN/v-add-cron-job 'admin' '30' '03' '*' '*' '*' "sudo $BIN/v-update-sys-queue webstats" '' 'no'
-	$BIN/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $BIN/v-update-sys-queue backup" '' 'no'
-	$BIN/v-add-cron-job 'admin' '10' '05' '*' '*' '*' "sudo $BIN/v-backup-users" '' 'no'
-	$BIN/v-add-cron-job 'admin' '20' '00' '*' '*' '*' "sudo $BIN/v-update-user-stats" '' 'no'
-	$BIN/v-add-cron-job 'admin' '*/5' '*' '*' '*' '*' "sudo $BIN/v-update-sys-rrd" '' 'no'
-	$BIN/v-restart-cron
+	min=$(gen_pass '012345' '2')
+	hour=$(gen_pass '1234567' '1')
+	echo "MAILTO=$email" > /var/spool/cron/crontabs/hestiaweb
+	echo "CONTENT_TYPE=\"text/plain; charset=utf-8\"" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/2 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue restart" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue daily" >> /var/spool/cron/crontabs/hestiaweb
+	echo "15 02 * * * sudo /usr/local/hestia/bin/v-update-sys-queue disk" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 00 * * * sudo /usr/local/hestia/bin/v-update-sys-queue traffic" >> /var/spool/cron/crontabs/hestiaweb
+	echo "30 03 * * * sudo /usr/local/hestia/bin/v-update-sys-queue webstats" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-queue backup" >> /var/spool/cron/crontabs/hestiaweb
+	echo "10 05 * * * sudo /usr/local/hestia/bin/v-backup-users" >> /var/spool/cron/crontabs/hestiaweb
+	echo "20 00 * * * sudo /usr/local/hestia/bin/v-update-user-stats" >> /var/spool/cron/crontabs/hestiaweb
+	echo "*/5 * * * * sudo /usr/local/hestia/bin/v-update-sys-rrd" >> /var/spool/cron/crontabs/hestiaweb
+	echo "$min $hour * * * sudo /usr/local/hestia/bin/v-update-letsencrypt-ssl" >> /var/spool/cron/crontabs/hestiaweb
+	echo "41 4 * * * sudo /usr/local/hestia/bin/v-update-sys-hestia-all" >> /var/spool/cron/crontabs/hestiaweb
+}
+
+# Adapt Port Listing in HESTIA NGINX Backend
+# Activates or deactivates port listing on IPV4 or/and IPV6 network interfaces
+function syshealth_adapt_hestia_nginx_listen_ports() {
+	# Detect "physical" NICs only (virtual NICs created by Docker, WireGuard etc. are excluded)
+	physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" // .linkinfo.info_kind then empty else .ifname end')"
+	if [ -z "$physical_nics" ]; then
+		physical_nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
+	fi
+	for nic in $physical_nics; do
+		if [ -z "$ipv4_scope_global" ]; then
+			ipv4_scope_global="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
+		fi
+		if [ -z "$ipv6_scope_global" ]; then
+			ipv6_scope_global="$(ip -6 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
+		fi
+	done
+
+	# Adapt port listing in nginx.conf depended on availability of IPV4 and IPV6 network interface
+	NGINX_BCONF_CHANGED=""
+	NGINX_BCONF="/usr/local/hestia/nginx/conf/nginx.conf"
+	NGINX_BCONF_TEMP="/tmp/nginx.conf"
+	cp "$NGINX_BCONF" "$NGINX_BCONF_TEMP"
+	if [ -z "$ipv4_scope_global" ]; then
+		sed -i 's/^\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/#\1/' "$NGINX_BCONF"
+	else
+		sed -i 's/#\([ \t]*listen[ \t]*[0-9]\{1,5\}.*\)/\1/' "$NGINX_BCONF"
+	fi
+	if [ -z "$ipv6_scope_global" ]; then
+		sed -i 's/^\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/#\1/' "$NGINX_BCONF"
+	else
+		sed -i 's/#\([ \t]*listen[ \t]*\[\:\:\]\:[0-9]\{1,5\}.*\)/\1/' "$NGINX_BCONF"
+	fi
+	cmp --silent "$NGINX_BCONF" "$NGINX_BCONF_TEMP"
+	[ $? -ne 0 ] && NGINX_BCONF_CHANGED="yes"
+	rm -f "$NGINX_BCONF_TEMP" > /dev/null 2>&1
+}
+
+syshealth_adapt_nginx_resolver() {
+	NGINX_CONF="/usr/local/hestia/nginx/conf/nginx.conf"
+	if grep -qw "1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8" "$NGINX_CONF"; then
+		for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+			if echo "$nameserver" | grep -Pq "^(\d{1,3}\.){3}\d{1,3}$"; then
+				if [ -z "$resolver" ]; then
+					resolver="$nameserver"
+				else
+					resolver="$resolver $nameserver"
+				fi
+			fi
+		done
+
+		if [ -n "$resolver" ]; then
+			sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" "$NGINX_CONF"
+		fi
+	fi
 }

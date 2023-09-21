@@ -71,7 +71,7 @@ if (!empty($_POST["save"])) {
 	// Change database password
 	if (!empty($_POST["v_password"]) && empty($_SESSION["error_msg"])) {
 		if (!validate_password($_POST["v_password"])) {
-			$_SESSION["error_msg"] = _("Password does not match the minimum requirements");
+			$_SESSION["error_msg"] = _("Password does not match the minimum requirements.");
 		} else {
 			$v_password = tempnam("/tmp", "vst");
 			$fp = fopen($v_password, "w");

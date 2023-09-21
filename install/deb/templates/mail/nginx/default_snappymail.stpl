@@ -1,0 +1,52 @@
+server {
+	listen      %ip%:%proxy_ssl_port% ssl;
+	server_name %domain_idn% %alias_idn%;
+	root        /var/lib/snappymail;
+	index       index.php index.html index.htm;
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
+
+	ssl_certificate     %ssl_pem%;
+	ssl_certificate_key %ssl_key%;
+	ssl_stapling        on;
+	ssl_stapling_verify on;
+
+	# TLS 1.3 0-RTT anti-replay
+	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
+	if ($anti_replay = 425) { return 425; }
+
+	location ^~ /data {
+		deny all;
+		return 404;
+	}
+
+	location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
+		deny all;
+		return 404;
+	}
+
+	location / {
+		alias /var/lib/snappymail/;
+
+		try_files $uri $uri/ =404;
+
+		proxy_pass https://%ip%:%web_ssl_port%;
+
+		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+			expires 7d;
+			fastcgi_hide_header "Set-Cookie";
+		}
+	}
+
+	location @fallback {
+		proxy_pass https://%ip%:%web_ssl_port%;
+	}
+
+	location /error/ {
+		alias /var/www/document_errors/;
+	}
+
+	proxy_hide_header Upgrade;
+
+	include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.ssl.conf_*;
+}

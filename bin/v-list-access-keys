@@ -28,7 +28,7 @@ json_list() {
 	for key_file in $HESTIA/data/access-keys/*; do
 		key_file="$(basename -- "$key_file")"
 		if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
-			USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
+			USER="$ROOT_USER" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
 			source_conf "$HESTIA/data/access-keys/$key_file"
 			if [ "$user" = "$USER" ] || [ -z "$user" ]; then
 				PERMISSIONS_ARR='[]'
@@ -64,7 +64,7 @@ shell_list() {
 	for key_file in $HESTIA/data/access-keys/*; do
 		key_file="$(basename -- "$key_file")"
 		if [[ "$key_file" =~ ^[[:alnum:]]{20}$ ]]; then
-			USER="admin" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
+			USER="$ROOT_USER" SECRET_ACCESS_KEY="" PERMISSIONS="" DATE="" TIME="" COMMENT=""
 			source_conf "$HESTIA/data/access-keys/$key_file"
 			if [ "$user" = "$USER" ] || [ -z "$user" ]; then
 				ACCESS_KEY_ID="$(basename "$key_file")"

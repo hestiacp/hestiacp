@@ -75,7 +75,7 @@ if [ -n "$web_data" ]; then
 	fi
 
 	if [ -z "$(echo $(get_user_ips) | grep $IP)" ]; then
-		echo "[*] IP dedicated to $owner select new ip adress..."
+		echo "[*] IP dedicated to $owner select new ip address..."
 		get_user_ip
 	fi
 	old_ip=$IP

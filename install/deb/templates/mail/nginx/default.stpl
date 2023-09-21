@@ -1,45 +1,52 @@
 server {
-    listen      %ip%:%proxy_ssl_port% ssl http2;
-    server_name %domain_idn% %alias_idn%;
-    root        /var/lib/roundcube;
-    index       index.php index.html index.htm;
-    access_log /var/log/nginx/domains/%domain%.log combined;
-    error_log  /var/log/nginx/domains/%domain%.error.log error;
+	listen      %ip%:%proxy_ssl_port% ssl;
+	server_name %domain_idn% %alias_idn%;
+	root        /var/lib/roundcube;
+	index       index.php index.html index.htm;
+	access_log  /var/log/nginx/domains/%domain%.log combined;
+	error_log   /var/log/nginx/domains/%domain%.error.log error;
 
-    ssl_certificate     %ssl_pem%;
-    ssl_certificate_key %ssl_key%;
-    ssl_stapling on;
-    ssl_stapling_verify on;
+	ssl_certificate     %ssl_pem%;
+	ssl_certificate_key %ssl_key%;
+	ssl_stapling        on;
+	ssl_stapling_verify on;
 
-    location ~ /\.(?!well-known\/) {
-        deny all;
-        return 404;
-    }
+	# TLS 1.3 0-RTT anti-replay
+	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
+	if ($anti_replay = 425) { return 425; }
 
-    location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
-        deny all;
-        return 404;
-    }
+	location ~ /\.(?!well-known\/) {
+		deny all;
+		return 404;
+	}
 
-    location / {
-        proxy_pass https://%ip%:%web_ssl_port%;
-        try_files $uri $uri/ =404;
-        alias /var/lib/roundcube/;
-        location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
-            expires 7d;
-            fastcgi_hide_header "Set-Cookie";
-        }
-    }
+	location ~ ^/(README.md|config|temp|logs|bin|SQL|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ {
+		deny all;
+		return 404;
+	}
 
-    location /error/ {
-        alias /var/www/document_errors/;
-    }
+	location / {
+		alias /var/lib/roundcube/;
 
-    location @fallback {
-        proxy_pass https://%ip%:%web_ssl_port%;
-    }
+		try_files $uri $uri/ =404;
 
-    proxy_hide_header Upgrade;
+		proxy_pass https://%ip%:%web_ssl_port%;
 
-    include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.ssl.conf_*;
+		location ~* ^.+\.(ogg|ogv|svg|svgz|swf|eot|otf|woff|woff2|mov|mp3|mp4|webm|flv|ttf|rss|atom|jpg|jpeg|gif|png|webp|ico|bmp|mid|midi|wav|rtf|css|js|jar)$ {
+			expires 7d;
+			fastcgi_hide_header "Set-Cookie";
+		}
+	}
+
+	location @fallback {
+		proxy_pass https://%ip%:%web_ssl_port%;
+	}
+
+	location /error/ {
+		alias /var/www/document_errors/;
+	}
+
+	proxy_hide_header Upgrade;
+
+	include %home%/%user%/conf/mail/%root_domain%/%proxy_system%.ssl.conf_*;
 }

@@ -1,0 +1,18 @@
+36c36
+122c122,123
+<   drop    message       = Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
+---
+>   drop    !authenticated = *
+>     	  message       =  Helo name contains an IP address (HELO was $sender_helo_name) and not is valid
+127c128,129
+<   drop    condition     = ${if isip{$sender_helo_name}}
+---
+>   drop    !authenticated = *
+> 		  condition     = ${if isip{$sender_helo_name}}
+130c132,133
+<   drop    condition     = ${if eq{[$interface_address]}{$sender_helo_name}}
+---
+>   drop    !authenticated = *
+> 		  condition    = ${if eq{[$interface_address]}{$sender_helo_name}}
+>
+>

@@ -2,7 +2,6 @@
 use function Hestiacp\quoteshellarg\quoteshellarg;
 
 ob_start();
-session_start();
 $TAB = "USER";
 
 // Main include
@@ -13,15 +12,26 @@ if (!empty($_POST["ok"])) {
 	// Check token
 	verify_csrf($_POST);
 
+	// Check empty fields
 	if (empty($_POST["v_key"])) {
-		$_SESSION["error_msg"] = _("Field SSH_KEY can not be blank.");
+		$errors[] = _("SSH Key");
+	}
+	if (!empty($errors[0])) {
+		foreach ($errors as $i => $error) {
+			if ($i == 0) {
+				$error_msg = $error;
+			} else {
+				$error_msg = $error_msg . ", " . $error;
+			}
+		}
+		$_SESSION["error_msg"] = sprintf(_('Field "%s" can not be blank.'), $error_msg);
 	}
 
 	if ($_SESSION["userContext"] === "admin" && !empty($_GET["user"])) {
 		$user = quoteshellarg($_GET["user"]);
 	}
 
-	if (!$_SESSION["error_msg"]) {
+	if (empty($_SESSION["error_msg"])) {
 		if ($_POST) {
 			//key if key already exists
 			exec(HESTIA_CMD . "v-list-user-ssh-key " . $user . " json", $output, $return_var);
@@ -44,10 +54,10 @@ if (!empty($_POST["ok"])) {
 			//for deleting / revoking key the last part user@domain is used therefore needs to be unique
 			//maybe consider adding random generated message or even an human read able string set by user?
 			if (in_array($v_key_parts[2], $idlist)) {
-				$_SESSION["error_msg"] = _("SSH KEY already exists");
+				$_SESSION["error_msg"] = _("SSH Key already exists.");
 			}
 			if (in_array($v_key_parts[1], $keylist)) {
-				$_SESSION["error_msg"] = _("SSH KEY already exists");
+				$_SESSION["error_msg"] = _("SSH Key already exists.");
 			}
 			$v_key = quoteshellarg(trim($_POST["v_key"]));
 		}
@@ -60,7 +70,7 @@ if (!empty($_POST["ok"])) {
 	unset($output);
 	// Flush field values on success
 	if (empty($_SESSION["error_msg"])) {
-		$_SESSION["ok_msg"] = _("SSH KEY created");
+		$_SESSION["ok_msg"] = _("SSH Key has been created successfully.");
 	}
 }
 if (empty($v_key)) {

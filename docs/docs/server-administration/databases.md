@@ -19,6 +19,17 @@ v-list-database-hosts
 
 For security reasons, we have decided to disable this option. Please use `https://host.domain.tld/phpmyadmin/` instead.
 
+## How to create PhpMyAdmin root user creditials
+
+Replace `myrootusername` & `myrootusername_password` with preferred creditials:
+
+```bash
+mysql -uroot
+mysql > CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password'
+mysql > GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION
+mysql > FLUSH PRIVILEGES
+```
+
 ## How can I enable access to `http://ip/phpmyadmin/`
 
 ### For Apache2
@@ -71,6 +82,8 @@ bind-address = "your.server.ip.address"
 
 ## PhpMyAdmin Single Sign On
 
+NOTE: PhpMyAdmin Single Sign On enabled only for individual databases. Primary "PhpMyAdmin" button for existing database credintials only.
+
 ### Unable to activate phpMyAdmin Single Sign on
 
 Make sure the API is enabled and working properly. Hestia’s PhpMyAdmin Single Sign On function connects over the Hestia API.
@@ -104,7 +117,7 @@ For example:
 v-add-database-host mysql db.hestiacp.com root mypassword 500
 ```
 
-If you want you can setup phpMyAdmin on the host server to allow to connect to the database. Create a copy of `01-localhost` file in /etc/phpmyadmin/conf.d and change:
+If you want you can setup phpMyAdmin on the host server to allow to connect to the database. Create a copy of `01-localhost` file in `/etc/phpmyadmin/conf.d` and change:
 
 ```php
 $cfg["Servers"][$i]["host"] = "localhost";

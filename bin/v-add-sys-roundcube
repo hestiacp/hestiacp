@@ -187,7 +187,9 @@ else
 
 	# Run Roundcube upgrade script
 	$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh -y $RC_INSTALL_DIR > /dev/null 2>&1
-	$RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
+	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent update.sh script from freezing trying
+	# to execute composer as root to update roundcube dependencies
+	COMPOSER_ALLOW_SUPERUSER=1 $RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
 	$RC_INSTALL_DIR/bin/indexcontacts.sh > /dev/null 2>&1
 	chown -R root:www-data $RC_INSTALL_DIR
 

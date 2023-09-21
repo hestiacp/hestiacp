@@ -87,9 +87,9 @@ get_srv_state() {
 
 	# Searching related pids
 	if [ -z $3 ]; then
-		pids=$(pidof -d '|' $name)
+		pids=$(pidof $name | tr ' ' '|')
 	else
-		pids=$(pidof -d '|' -x $name)
+		pids=$(pidof -x $name | tr ' ' '|')
 	fi
 	if [ -z "$pids" ] && [ "$name" != 'nginx' ]; then
 		pids=$(pgrep $name | tr '\n' '|')

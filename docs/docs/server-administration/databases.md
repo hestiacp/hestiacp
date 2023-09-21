@@ -23,11 +23,11 @@ For security reasons, we have decided to disable this option. Please use `https:
 
 Replace `myrootusername` & `myrootusername_password` with preferred creditials:
 
-```
+```bash
 mysql -uroot
-mysql> CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password';
-mysql> GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION;
-mysql> FLUSH PRIVILEGES;
+mysql > CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password'
+mysql > GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION
+mysql > FLUSH PRIVILEGES
 ```
 
 ## How can I enable access to `http://ip/phpmyadmin/`

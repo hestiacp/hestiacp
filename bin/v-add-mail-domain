@@ -16,8 +16,8 @@ domain=${2}
 antispam=${3-yes}
 antivirus=${4-yes}
 dkim=${5-yes}
-dkim_size=${6-1024}
-restart=${7}
+dkim_size=${6-2048}
+restart="$7"
 reject=${8-no}
 
 # Includes

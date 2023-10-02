@@ -12,6 +12,6 @@
 	},
 	"devDependencies": {
 		"@types/ws": "8.5.6",
-		"@types/node": "20.7.1"
+		"@types/node": "20.8.0"
 	}
 }

@@ -44,7 +44,7 @@
 							<?php } ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
-							<?php if ($_SESSION['PROXY_SYSTEM'] == 'nginx') || $_SESSION['WEB_SYSTEM'] == 'nginx')){?>}
+							<?php if (($_SESSION['PROXY_SYSTEM'] == 'nginx') || ($_SESSION['WEB_SYSTEM'] == 'nginx')){?>}
 								<option value="purge"><?= _('Purge Nginx Cache');?></option>
 							<? } ?>
 							<option value="delete"><?= _("Delete") ?></option>

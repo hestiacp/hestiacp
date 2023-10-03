@@ -222,6 +222,8 @@ if [ -n "$PROXY_SYSTEM" ]; then
 		PROXY_EXT="$PROXY_EXT,7z,bz2,gz,rar,tar,tgz,zip"
 		# Binaries
 		PROXY_EXT="$PROXY_EXT,apk,appx,bin,dmg,exe,img,iso,jar,msi"
+		# Other
+		PROXY_EXT="$PROXY_EXT,webmanifest"
 	fi
 	if [ -z "$PROXY_TEMPLATE" ]; then
 		PROXY_TEMPLATE='default'

@@ -31,7 +31,7 @@ To manage your mail domains, navigate to the **Mail <i class="fas fa-fw fa-mail-
 
 ### Webmail client
 
-We currently support Roundcube, Rainloop and SnappyMail (optional install). You can also disable webmail access.
+We currently support Roundcube and SnappyMail (optional install). You can also disable webmail access.
 
 ### Catch all email
 

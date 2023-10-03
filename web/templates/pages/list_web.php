@@ -47,7 +47,9 @@
 							<?php } ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
-							<option value="purge"><?= _('Purge Nginx Cache');?></option>
+							<?php if ($_SESSION['PROXY_SYSTEM'] == 'nginx') || $_SESSION['WEB_SYSTEM'] == 'nginx')){?>}
+								<option value="purge"><?= _('Purge Nginx Cache');?></option>
+							<? } ?>
 							<option value="delete"><?= _("Delete") ?></option>
 						</select>
 						<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">

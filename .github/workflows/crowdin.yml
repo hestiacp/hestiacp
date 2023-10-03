@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
         if: github.repository == 'hestiacp/hestiacp'
       - name: crowdin action
         uses: crowdin/github-action@6a189cf93a647dc1f4214eb10447661de26b577a # v1

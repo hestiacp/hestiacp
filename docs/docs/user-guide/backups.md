@@ -78,4 +78,4 @@ To exclude all directories, use `*`.
 
 ## Editing the number of backups
 
-To edit the number of backups, please read the [Packages](../user-guide/packages.md) and [Users](../user-guide/users.md) documentation. You will need to create or edit a package, and assign it to the desired user.
+To edit the number of backups, please read the [Packages](../user-guide/packages) and [Users](../user-guide/users) documentation. You will need to create or edit a package, and assign it to the desired user.

@@ -46,7 +46,7 @@ To exclude a specific folder from a domain use the following syntax:
 domain.tld:public_html/wp-content/uploads:public_html/cache
 ```
 
-This will excude both `public_html/wp-content/uploads/` and `public_html/cache/` from that domain.
+This will exclude both `public_html/wp-content/uploads/` and `public_html/cache/` from that domain.
 
 To exclude all domains, use `*`.
 
@@ -60,7 +60,7 @@ To exclude only one or multiple mail account use the following syntax:
 domain.tld:info:support
 ```
 
-This will excude both `info@domain.tld` and `support@domain.tld`.
+This will exclude both `info@domain.tld` and `support@domain.tld`.
 
 To exclude all domains, use `*`.
 

@@ -6,6 +6,10 @@
 	--vp-c-brand-darker: #781746;
 	--vp-home-hero-name-color: transparent;
 	--vp-home-hero-name-background: linear-gradient(120deg, #d83182, #633288, #41d1ff);
+	--vp-button-brand-bg: #b7236a;
+	--vp-button-brand-hover-bg: #9a1d5a;
+	--vp-button-brand-active-bg: #9a1d5a;
+	--vp-c-brand-1: #b7236a;
 }
 
 .dark {
@@ -15,4 +19,8 @@
 	--vp-c-brand: #ff558f;
 	--vp-c-brand-dark: #da4778;
 	--vp-c-brand-darker: #b7236a;
+	--vp-button-brand-bg: #da4778;
+	--vp-button-brand-hover-bg: #b7236a;
+	--vp-button-brand-active-bg: #b7236a;
+	--vp-c-brand-1: #da4778;
 }

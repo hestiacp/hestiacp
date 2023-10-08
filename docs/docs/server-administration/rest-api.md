@@ -2,7 +2,7 @@
 
 The Hestia REST API is available to perform core functions of the Control Panel. For example, we use it internally to synchronise DNS clusters and to integrate the WHMCS billing system. The API can also be used to create new user accounts, domains, databases or even to build an alternative web interface.
 
-The [API reference](../reference/api.md) provides PHP code samples demonstrating how you can integrate the API into your application or script. However, you also can use any other language to communicate with the API.
+The [API reference](../reference/api) provides PHP code samples demonstrating how you can integrate the API into your application or script. However, you also can use any other language to communicate with the API.
 
 With the release of Hestia v1.6.0, we have introduced a more advanced API system and it will allow non-admin users to use specific commands.
 
@@ -37,7 +37,7 @@ Yes, you can disable the API via the server settings. The file will be deleted f
 
 ## Setup access/secret key authentication
 
-To create an access key, follow [the guide in our documentation](../user-guide/account.md#api-access-keys).
+To create an access key, follow [the guide in our documentation](../user-guide/account#api-access-keys).
 
 If the software you are using already supports the hash format, use `ACCESS_KEY:SECRET_KEY` instead of your old API key.
 

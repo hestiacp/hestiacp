@@ -8,7 +8,27 @@ With the release of version 1.7.0, we have implemented support for DNSSEC. DNSSE
 
 [Create a DNS Zone](../user-guide/dns.md#adding-a-dns-zone) with the **child-ns** template, then login to your domain registrar’s panel and change the name servers of the domain. Depending your registrar panel, you could be able to create glue records. You may need to wait for up to 24 hours before the name servers become active.
 
+<<<<<<< HEAD
+
 ## DNS Cluster setup
+
+=======
+These steps require that you configure the DNS servers of your domain to use your Hestia servers.
+
+- Note that most domain providers require two or more DNS servers to be configured.
+- The name servers will most likely be required to be registered as 'Glue records'
+- You may need to wait for up to 24 hours before the name servers become available
+
+Preparing the domain and DNS
+
+1. On your Hestia master, [create a DNS Zone](../user-guide/dns#adding-a-dns-zone) with the **child-ns** template
+2. On your domain registrar panel, set the name servers of the domain to the Hestia servers
+
+If you are looking at options to minimise DNS-related downtime or for a way to automatically synchronise DNS zones across all your servers, you might consider setting up a DNS cluster.
+
+If DNSSEC matters to you, then you must use Master -> Slave. However if you would like to add zones to either server and have them replicate to the other, then configure as Master <-> Master.
+
+> > > > > > > ab91f96... Remove .md extension from VitePress links (#4048)
 
 ::: tip
 Create for each server a unique user and assing them the "Sync DNS User" or "dns-cluster" role!

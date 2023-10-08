@@ -16,7 +16,7 @@ These steps require that you configure the DNS servers of your domain to use you
 
 Preparing the domain and DNS
 
-1. On your Hestia master, [create a DNS Zone](../user-guide/dns.md#adding-a-dns-zone) with the **child-ns** template
+1. On your Hestia master, [create a DNS Zone](../user-guide/dns#adding-a-dns-zone) with the **child-ns** template
 2. On your domain registrar panel, set the name servers of the domain to the Hestia servers
 
 If you are looking at options to minimise DNS-related downtime or for a way to automatically synchronise DNS zones across all your servers, you might consider setting up a DNS cluster.

@@ -46,7 +46,7 @@ To exclude a specific folder from a domain use the following syntax:
 domain.tld:public_html/wp-content/uploads:public_html/cache
 ```
 
-This will excude both `public_html/wp-content/uploads/` and `public_html/cache/` from that domain.
+This will exclude both `public_html/wp-content/uploads/` and `public_html/cache/` from that domain.
 
 To exclude all domains, use `*`.
 
@@ -60,7 +60,7 @@ To exclude only one or multiple mail account use the following syntax:
 domain.tld:info:support
 ```
 
-This will excude both `info@domain.tld` and `support@domain.tld`.
+This will exclude both `info@domain.tld` and `support@domain.tld`.
 
 To exclude all domains, use `*`.
 
@@ -78,4 +78,4 @@ To exclude all directories, use `*`.
 
 ## Editing the number of backups
 
-To edit the number of backups, please read the [Packages](../user-guide/packages.md) and [Users](../user-guide/users.md) documentation. You will need to create or edit a package, and assign it to the desired user.
+To edit the number of backups, please read the [Packages](../user-guide/packages) and [Users](../user-guide/users) documentation. You will need to create or edit a package, and assign it to the desired user.

@@ -70,7 +70,7 @@ include     /etc/nginx/conf.d/phppgadmin.inc*;
 ## How can I connect from a remote location to the database
 
 By default, connections to port 3306 are disabled in the firewall. Open
-port 3306 in the firewall ([documentation](./firewall.md)), then edit `/etc/mysql/mariadb.conf.d/50-server.cnf`:
+port 3306 in the firewall ([documentation](./firewall)), then edit `/etc/mysql/mariadb.conf.d/50-server.cnf`:
 
 ```bash
 nano /etc/mysql/mariadb.conf.d/50-server.cnf

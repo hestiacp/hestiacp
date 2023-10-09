@@ -26,7 +26,6 @@ iptables="$5"
 [ -z "$iptables" ] && iptables="/sbin/iptables"
 
 lockingopt="$6"
-[ -n "$lockingopt" ] && iptables="$iptables $lockingopt"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

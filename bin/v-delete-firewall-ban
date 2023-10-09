@@ -49,7 +49,7 @@ case "$ip_format" in
 			ip2ban="$("$subnetcalc_bin" "${ip46}/64" | sed -ne '/Network/s/Network[ \t]*=[ \t]*\(.*\)/\1/p' | sed -e 's/[ \t]*//g')"
 		else
 			# otherwise ban the ip only, without subnet
-			ip2ban="${ip46}"
+			ip2ban="$ip46"
 		fi
 		;;
 	*)
@@ -76,14 +76,15 @@ if [ "$chain" == "ALL" ]; then
 	fi
 	grep "IP='$ip46' CHAIN='*'" "$conf" | while read -r line; do
 		parse_object_kv_list "$line"
-
-		del_param="$("$iptables" -S | grep -m 1 "fail2ban-$chain.*$ip2ban" | sed -e 's/^-A[ \t]*//')"
-		[ -n "$del_param" ] && error_message="$("$iptables" -D $del_param)"
-		if [ $? -ne 0 ]; then
-			error_code=$?
-			check_result 1 "$error_message"
-			exit $error_code
+		if [ -x "$subnetcalc_bin" ]; then
+			# if subnetcalc binary is installed on system, then ban of whole /64 subnet
+			ip2ban="$("$subnetcalc_bin" "${IP}/64" | sed -ne '/Network/s/Network[ \t]*=[ \t]*\(.*\)/\1/p' | sed -e 's/[ \t]*//g')"
+		else
+			# otherwise ban the ip only, without subnet
+			ip2ban="$IP"
 		fi
+		del_param="$("$iptables" -S | grep -m 1 "fail2ban-$CHAIN.*$ip2ban" | sed -e 's/^-A[ \t]*//')"
+		[ -n "$del_param" ] && error_message="$("$iptables" -D $del_param)"
 		# Deleting ip from banlist
 		sip=$(echo "$IP" | sed "s|/|\\\/|g")
 		sed -i "/IP='$sip' CHAIN='$CHAIN'/d" "$conf"

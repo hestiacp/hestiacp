@@ -83,7 +83,7 @@ if [ -n "$check_ip" ]; then
 fi
 
 # Adding chain
-"$BIN/v-add-firewall-chain" "$chain" "" "" "$iptables" "-w"
+"$BIN/v-add-firewall-chain" "$chain" "" "" "$family" "$iptables"
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')

@@ -1,0 +1,101 @@
+#!/bin/bash
+# info: add system ssh jail
+# options: [RESTART]
+#
+# example: v-add-sys-ssh-jail yes
+#
+# This function enables ssh jailed environment.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+restart=$1
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking if jailkit is installed
+if [ ! -x /sbin/jk_init ] ; then
+    echo "Error: Jailkit isn't installed"
+    exit
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking sshd directives
+config='/etc/ssh/sshd_config'
+ssh_i=$(grep -n "^# Hestia SSH Chroot" $config)
+
+# Enabling jailed ssh
+if [ -z "$ssh_i" ]; then
+	echo " " >> $config
+	echo "# Hestia SSH Chroot" >> $config
+	echo "Match Group ssh-jailed" >> $config
+	echo "    ChrootDirectory /srv/jail/%u" >> $config
+	echo "    X11Forwarding no" >> $config
+	echo "    AllowTCPForwarding no" >> $config
+	restart='yes'
+fi
+
+# Validating opensshd config
+if [ "$restart" = 'yes' ]; then
+	subj="OpenSSH restart failed"
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
+	/usr/sbin/sshd -t > /dev/null 2>&1
+	if [ "$?" -ne 0 ]; then
+		mail_text="OpenSSH can not be restarted. Please check config:
+            \n\n$(/usr/sbin/sshd -t)"
+		echo -e "$mail_text" | $SENDMAIL -s "$subj" $email
+	else
+		service sshd restart > /dev/null 2>&1
+	fi
+fi
+
+# Adding group
+groupadd ssh-jailed 2>/dev/null
+
+# Checking users
+shells="bash"
+for user in $(grep "$HOMEDIR" /etc/passwd | egrep "$shells" | cut -f 1 -d:); do
+	if [ -d "/home/$user" ]; then
+		# Include all users v-add-user-ssh-jail will handle it
+		$BIN/v-add-user-ssh-jail "$user" "no"
+	fi
+done
+
+# Restart ssh service
+if [ "$restart" = 'no' ]; then
+	# Skip restart of SSH daemon
+	echo "" > /dev/null 2>&1
+else
+	service ssh restart > /dev/null 2>&1
+fi
+
+# Add v-add-sys-ssh-jail to startup
+if [ ! -e "/etc/cron.d/hestia-ssh-jail" ]; then
+	echo "@reboot root sleep 60 && /usr/local/hestia/bin/v-add-sys-ssh-jail > /dev/null" > /etc/cron.d/hestia-ssh-jail
+fi
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

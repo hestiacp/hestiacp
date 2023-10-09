@@ -274,6 +274,9 @@ fi
 # Adding jailed sftp env
 $BIN/v-add-user-sftp-jail $user
 
+# Adding jailed ssh env
+$BIN/v-add-user-ssh-jail $user
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

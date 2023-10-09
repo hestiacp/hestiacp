@@ -1,0 +1,94 @@
+#!/bin/bash
+# info: add user ssh jail
+# options: USER [RESTART]
+#
+# example: v-add-user-ssh-jail admin
+#
+# This function enables ssh jailed environment
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+restart=$2
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+chroot="/srv/jail/$user"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking if jailkit is installed
+if [ ! -x /sbin/jk_init ] ; then
+    echo "Error: Jailkit isn't installed"
+    exit
+fi
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+
+# Only apply jail to bash users
+user_str=$(grep "^$user:" /etc/passwd | egrep "bash")
+if [ -z "$user_str" ]; then
+	exit
+fi
+
+# Get current user groups
+user_groups=$(groups $user)
+
+# Check if jail exist
+if [[ "$user_groups" =~ "ssh-jailed" ]]; then
+	exit
+fi
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Set home folder permission to root
+if [ -d "/home/$user" ]; then
+	chown root:root /home/$user
+fi
+
+add_chroot_jail "$user"
+
+# Installing shell files into the user chroot directory
+# - IMPORTANT - MODIFY THE FOLLOWING LINES AND THE FILE jk_init.ini ACCORDING TO YOUR SYSTEM AND YOUR PREFERENCES
+/sbin/jk_init -f -j $chroot basicshell editors extendedshell netutils ssh sftp scp git
+/sbin/jk_cp -f -j $chroot /bin/id
+
+# Jailing user
+/sbin/jk_jailuser -s /bin/bash -j $chroot $user
+
+# Add user to the ssh-jailed group to allow jailed ssh
+usermod -a -G ssh-jailed $user
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Restart ssh service
+if [ "$restart" = 'no' ]; then
+	# Skip restart of SSH daemon
+	echo "" > /dev/null 2>&1
+else
+	service sshd restart > /dev/null 2>&1
+fi
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

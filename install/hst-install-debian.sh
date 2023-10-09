@@ -1494,6 +1494,11 @@ echo "[ * ] Enabling SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
+# Enable ssh jail
+echo "[ * ] Enabling SSH jail..."
+$HESTIA/bin/v-add-sys-ssh-jail > /dev/null 2>&1
+check_result $? "can't enable ssh jail"
+
 # Adding Hestia admin account
 echo "[ * ] Creating default admin account..."
 $HESTIA/bin/v-add-user "$username" "$vpass" "$email" "default" "System Administrator"

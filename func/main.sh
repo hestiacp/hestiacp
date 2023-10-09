@@ -1744,6 +1744,11 @@ add_chroot_jail() {
 		chown 0:0 /srv/jail/$user/home
 		chmod 755 /srv/jail/$user/home
 	fi
+	if [ ! -d /srv/jail/$user/tmp ]; then
+		mkdir -p /srv/jail/$user/tmp
+		chown 0:0 /srv/jail/$user/tmp
+		chmod 755 /srv/jail/$user/tmp
+	fi
 
 	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
 	cat > "/etc/systemd/system/$systemd" << EOF

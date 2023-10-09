@@ -89,6 +89,9 @@ sed -i "/ $user$/d" "$HESTIA/data/queue/traffic.pipe"
 # Deleting sftp jail
 $BIN/v-delete-user-sftp-jail "$user"
 
+# Deleting ssh jail
+$BIN/v-delete-user-ssh-jail "$user"
+
 # Deleting system user
 /usr/sbin/userdel -f "$user" >> /dev/null 2>&1
 if [ $? -ne 0 ]; then

@@ -52,6 +52,13 @@ else
 	$BIN/v-delete-user-sftp-jail "$user" > /dev/null 2>&1
 fi
 
+# Adding jailed ssh env
+if [[ "$shell" =~ bash ]]; then
+	$BIN/v-add-user-ssh-jail "$user" > /dev/null 2>&1
+else
+	$BIN/v-delete-user-ssh-jail "$user" > /dev/null 2>&1
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -124,6 +124,8 @@ rebuild_user_conf() {
 
 	$BIN/v-add-user-sftp-jail "$user"
 
+	$BIN/v-add-user-ssh-jail "$user"
+
 	# Update disk pipe
 	sed -i "/ $user$/d" $HESTIA/data/queue/disk.pipe
 	echo "$BIN/v-update-user-disk $user" >> $HESTIA/data/queue/disk.pipe

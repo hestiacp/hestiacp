@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall chain
-# options: CHAIN [PORT] [PROTOCOL]
+# options: CHAIN [PORT] [PROTOCOL] [FAMILY] [IPTABLES] [LOCKINGOPT]
 #
 # example: v-add-firewall-chain CRM 5678 TCP
 #
@@ -18,8 +18,15 @@ protocol="$3"
 [ -z "$protocol" ] && protocol='TCP'
 protocol=$(echo "$protocol" | tr '[:lower:]' '[:upper:]')
 
+family="$4"
+[ -z "$family" ] && family="inet4"
+
 # Defining absolute path to iptables
-iptables="/sbin/iptables"
+iptables="$5"
+[ -z "$iptables" ] && iptables="/sbin/iptables"
+
+lockingopt="$6"
+[ -n "$lockingopt" ] && iptables="$iptables $lockingopt"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -42,7 +49,7 @@ fi
 #----------------------------------------------------------#
 
 check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL]'
-is_format_valid 'chain' 'port_ext' 'protocol'
+#is_format_valid 'chain' 'port_ext' 'protocol'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -97,9 +104,9 @@ case $chain in
 esac
 
 # Adding chain
-$iptables -N fail2ban-$chain 2> /dev/null
+"$iptables" -N "fail2ban-$chain" 2> /dev/null
 if [ $? -eq 0 ]; then
-	$iptables -A fail2ban-$chain -j RETURN
+	"$iptables" -A "fail2ban-$chain" -j RETURN
 
 	# Adding multiport module
 	if [[ "$port" =~ ,|-|: ]]; then
@@ -107,7 +114,7 @@ if [ $? -eq 0 ]; then
 	else
 		port_str="--dport $port"
 	fi
-	$iptables -I INPUT -p $protocol $port_str -j fail2ban-$chain
+	"$iptables" -I INPUT -p "$protocol" "$port_str" -j "fail2ban-$chain"
 fi
 
 # Preserving chain
@@ -126,7 +133,7 @@ fi
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Firewall" "Added service to firewall (Service: $chain, Port: $port, Protocol: $protocol)."
+"$BIN/v-log-action" "system" "Info" "Firewall" "Added service to firewall (Service: $chain, Port: $port, Protocol: $protocol)."
 log_event "$OK" "$ARGUMENTS"
 
 exit

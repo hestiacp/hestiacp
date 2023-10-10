@@ -1050,7 +1050,8 @@ is_fw_port_format_valid() {
 		fi
 	else
 		if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,76}[0-9]$ ]]; then
-			check_result "$E_INVALID" "invalid port format and/or more than 78 chars used :: $1"
+			[ -f "/etc/services" ] && service_matched="$(grep "^$1" /etc/services)" # port definition by name, listed in /etc/services
+			[ -z "$service_matched" ] && check_result "$E_INVALID" "port not found, invalid port format and/or more than 78 chars used :: $1"
 		fi
 	fi
 }

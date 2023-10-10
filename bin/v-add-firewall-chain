@@ -47,8 +47,8 @@ fi
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL]'
-#is_format_valid 'chain' 'port_ext' 'protocol'
+check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL] [FAMILY] [IPTABLES] [LOCKINGOPT]'
+is_format_valid 'chain' 'port_ext' 'protocol'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -113,7 +113,7 @@ if [ $? -eq 0 ]; then
 	else
 		port_str="--dport $port"
 	fi
-	"$iptables" -I INPUT -p "$protocol" "$port_str" -j "fail2ban-$chain"
+	"$iptables" -I INPUT -p "$protocol" $port_str -j "fail2ban-$chain"
 fi
 
 # Preserving chain

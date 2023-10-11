@@ -23,7 +23,7 @@ export const languages = [
 	{ text: 'Japanese', value: 'ja' },
 	{ text: 'Korean', value: 'ko' },
 	{ text: 'Kurdish Sorani', value: 'ku' },
-	{ text: 'Norwegain', value: 'no' },
+	{ text: 'Norwegian', value: 'no' },
 	{ text: 'Persian', value: 'fa' },
 	{ text: 'Polish', value: 'pl' },
 	{ text: 'Portuguese', value: 'pt' },

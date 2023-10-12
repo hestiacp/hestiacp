@@ -32,6 +32,9 @@ if [ -z "$user_str" ]; then
 	exit
 fi
 
+# Get current user groups
+user_groups=$(groups $user)
+
 # Check if jail exist
 if [[ "$user_groups" =~ "ssh-jailed" ]]; then
 	exit
@@ -44,13 +47,18 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# chown permissions back to user:user
-if [ -d "/home/$user" ]; then
-	chown $user:$user /home/$user
-fi
+user_shell_rssh_nologin=$(grep "^$user:" /etc/passwd | egrep "rssh|nologin")
 
-# Deleting chroot jail for SSH
-delete_chroot_jail $user
+# Only remove the jail when it's not needed for rssh or nologin
+if [ -z "$user_shell_rssh_nologin" ]; then
+	# chown permissions back to user:user
+	if [ -d "/home/$user" ]; then
+		chown $user:$user /home/$user
+	fi
+
+	# Deleting chroot jail for SSH
+	delete_chroot_jail $user
+fi
 
 # Deleting user from groups
 gpasswd -d $user ssh-jailed >/dev/null 2>&1

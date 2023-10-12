@@ -87,7 +87,7 @@ export const options = [
 	{
 		flag: 'phpfpm',
 		label: 'PHP-FPM',
-		description: 'FastCGI Process Manager for executing PHP scripts.',
+		description: 'Process manager for executing PHP scripts.',
 		default: 'no',
 	},
 	{
@@ -123,13 +123,13 @@ export const options = [
 	{
 		flag: 'mysql8',
 		label: 'MySQL 8',
-		description: 'Open-source database system.',
+		description: 'Open-source relational database management system.',
 		default: 'no',
 	},
 	{
 		flag: 'postgresql',
 		label: 'PostgreSQL',
-		description: 'Open-source database system.',
+		description: 'Open-source relational database management system.',
 		default: 'no',
 	},
 	{
@@ -147,7 +147,7 @@ export const options = [
 	{
 		flag: 'sieve',
 		label: 'Sieve',
-		description: 'Manage your own custom email filters.',
+		description: 'Language for managing your own custom email filters.',
 		default: 'no',
 	},
 	{
@@ -165,7 +165,7 @@ export const options = [
 	{
 		flag: 'iptables',
 		label: 'iptables',
-		description: 'Manage your firewall within Hestia.',
+		description: 'Allows firewall rule management within Hestia.',
 		default: 'yes',
 	},
 	{
@@ -183,7 +183,7 @@ export const options = [
 	{
 		flag: 'api',
 		label: 'Hestia API',
-		description: 'Activate internal API.',
+		description: "Enable Hestia's internal API.",
 		default: 'yes',
 	},
 	{

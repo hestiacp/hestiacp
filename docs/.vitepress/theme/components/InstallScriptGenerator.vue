@@ -74,7 +74,7 @@
 					<input
 						v-if="option.type === 'text'"
 						class="form-control"
-						:type="option.type"
+						type="text"
 						:id="`${option.flag}-input`"
 						v-model="selectedOptions[option.flag].value"
 					/>
@@ -160,9 +160,9 @@ watchEffect(() => {
 
 <style scoped>
 h2 {
-	font-size: 1.4em;
+	font-size: 24px;
 	font-weight: 600;
-	margin-bottom: 20px;
+	margin-bottom: 25px;
 }
 .container {
 	display: flex;

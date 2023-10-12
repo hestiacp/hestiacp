@@ -82,11 +82,11 @@ To choose what software gets installed, you can provide flags to the installatio
 
 ```bash
 -a, --apache Install Apache [yes | no] default: yes
--w, --phpfpm Install PHP-FPM [yes | no] default: yes
--o, --multiphp Install Multi-PHP [yes | no] default: no
--v, --vsftpd Install Vsftpd [yes | no] default: yes
+-w, --phpfpm Install PHP-FPM [yes | no] default: no
+-o, --multiphp Install MultiPHP [yes | no] default: yes
+-v, --vsftpd Install VSFTPD [yes | no] default: yes
 -j, --proftpd Install ProFTPD [yes | no] default: no
--k, --named Install Bind [yes | no] default: yes
+-k, --named Install BIND [yes | no] default: yes
 -m, --mysql Install MariaDB [yes | no] default: yes
 -M, --mysql8 Install Mysql8 [yes | no] default: no
 -g, --postgresql Install PostgreSQL [yes | no] default: no

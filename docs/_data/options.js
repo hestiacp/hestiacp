@@ -88,7 +88,7 @@ export const options = [
 		flag: 'phpfpm',
 		label: 'PHP-FPM',
 		description: 'FastCGI Process Manager for executing PHP scripts.',
-		default: 'yes',
+		default: 'no',
 	},
 	{
 		flag: 'multiphp',

@@ -72,6 +72,16 @@ add_chroot_jail "$user"
 # Jailing user
 /sbin/jk_jailuser -s /bin/bash -j $chroot $user
 
+# Adding the user to the chroot /etc/passwd if it wasn't added yet
+if [ -z "$(grep "^$user:" $chroot/etc/passwd | egrep "bash")" ]; then
+		echo $(grep "^$user:" /etc/passwd | egrep "bash") >> $chroot/etc/passwd
+fi
+
+# Adding the user to the chroot /etc/group if it wasn't added yet
+if [ -z "$(grep "^$user:" $chroot/etc/group)" ]; then
+		echo $(grep "^$user:" /etc/group) >> $chroot/etc/group
+fi
+
 # Add user to the ssh-jailed group to allow jailed ssh
 usermod -a -G ssh-jailed $user
 

@@ -12,6 +12,11 @@
 </template>
 
 <style scoped>
+.container {
+	display: flex;
+	margin: 0 auto;
+	max-width: 1152px;
+}
 .PageHeader {
 	padding: 0 24px;
 	background-color: var(--vp-c-bg-alt);

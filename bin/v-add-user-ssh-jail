@@ -30,7 +30,6 @@ chroot="/srv/jail/$user"
 
 # Checking if jailkit is installed
 if [ ! -x /sbin/jk_init ] ; then
-    echo "Error: Jailkit isn't installed"
     exit
 fi
 

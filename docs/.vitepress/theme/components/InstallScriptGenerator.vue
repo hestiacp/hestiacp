@@ -236,7 +236,7 @@ h2 {
 	border: 1px solid var(--vp-c-border);
 	border-radius: 4px;
 	background-color: var(--vp-c-bg);
-	padding: 5px 6px;
+	padding: 6px;
 	width: 100%;
 
 	&:hover {

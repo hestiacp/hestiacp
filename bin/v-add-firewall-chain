@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall chain
-# options: CHAIN [PORT] [PROTOCOL] [FAMILY] [IPTABLES] [LOCKINGOPT]
+# options: CHAIN [PORT] [PROTOCOL] [IPFAMILY] [IPTABLES] [FW_LOCKINGOPT]
 #
 # example: v-add-firewall-chain CRM 5678 TCP
 #
@@ -18,14 +18,15 @@ protocol="$3"
 [ -z "$protocol" ] && protocol='TCP'
 protocol=$(echo "$protocol" | tr '[:lower:]' '[:upper:]')
 
-family="$4"
-[ -z "$family" ] && family="inet4"
+# Defining ip family version
+ipfamily="$4"
+[ -z "$ipfamily" ] && ipfamily="inet4"
 
-# Defining absolute path to iptables
+# Defining iptables version
 iptables="$5"
-[ -z "$iptables" ] && iptables="/sbin/iptables"
 
-lockingopt="$6"
+# Defining locking option for iptables
+fw_lockingopt="$6"
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -47,8 +48,8 @@ fi
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL] [FAMILY] [IPTABLES] [LOCKINGOPT]'
-is_format_valid 'chain' 'port_ext' 'protocol'
+check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL] [IPFAMILY] [IPTABLES] [FW_LOCKINGOPT]'
+is_format_valid 'chain' 'port_ext' 'protocol' 'ipfamily' 'iptables' 'fw_lockingopt'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -60,6 +61,10 @@ check_hestia_demo_mode
 
 # Self heal iptables links
 heal_iptables_links
+
+# Get iptables binary
+iptables="$(get_iptables_bin "$iptables")"
+[ -n "$fw_lockingopt" ] && iptables="$iptables $fw_lockingopt"
 
 # Checking known chains
 case $chain in
@@ -103,9 +108,9 @@ case $chain in
 esac
 
 # Adding chain
-"$iptables" -N "fail2ban-$chain" 2> /dev/null
+${iptables} -N "fail2ban-$chain" 2> /dev/null
 if [ $? -eq 0 ]; then
-	"$iptables" -A "fail2ban-$chain" -j RETURN
+	${iptables} -A "fail2ban-$chain" -j RETURN
 
 	# Adding multiport module
 	if [[ "$port" =~ ,|-|: ]]; then
@@ -113,7 +118,7 @@ if [ $? -eq 0 ]; then
 	else
 		port_str="--dport $port"
 	fi
-	"$iptables" -I INPUT -p "$protocol" $port_str -j "fail2ban-$chain"
+	${iptables} -I INPUT -p "$protocol" $port_str -j "fail2ban-$chain"
 fi
 
 # Preserving chain

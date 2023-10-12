@@ -876,6 +876,13 @@ is_ip_format_valid() {
 	esac
 }
 
+# IP family validator
+is_ipfamily_format_valid() {
+	if [ "$1" != "inet" ] && [ "$1" != "inet4" ] && [ "$1" != 'inet6' ] && [ -n "$1" ]; then
+		check_result "$E_INVALID" "invalid ipfamily format :: $1"
+	fi
+}
+
 # Proxy extention format validator
 is_extention_format_valid() {
 	exclude="[!|#|$|^|&|(|)|+|=|{|}|:|@|<|>|?|/|\|\"|'|;|%|\`| ]"
@@ -1056,6 +1063,20 @@ is_fw_port_format_valid() {
 	fi
 }
 
+# Firewall iptables validator
+is_fw_iptables_format_valid() {
+	if [ "$1" != "iptables" ] && [ "$1" != 'ip6tables' ] && [ -n "$1" ]; then
+		check_result "$E_INVALID" "invalid iptables format :: $1"
+	fi
+}
+
+# Firewall lockingopt validator
+is_fw_lockingopt_format_valid() {
+	if [ "$1" != "-w" ] && [ -n "$1" ]; then
+		check_result "$E_INVALID" "invalid lockingopt format :: $1"
+	fi
+}
+
 # DNS record id validator
 is_id_format_valid() {
 	if ! echo "$1" | grep -qE '^[1-9][0-9]{0,}$'; then
@@ -1227,6 +1248,7 @@ is_format_valid() {
 				format) is_type_valid 'plain json shell csv' "$arg" ;;
 				ftp_password) is_password_format_valid "$arg" ;;
 				ftp_user) is_user_format_valid "$arg" "$arg_name" ;;
+				fw_lockingopt) is_fw_lockingopt_format_valid "$arg" ;;
 				hash) is_hash_format_valid "$arg" "$arg_name" ;;
 				host) is_object_format_valid "$arg" "$arg_name" ;;
 				hour) is_cron_format_valid "$arg" $arg_name ;;
@@ -1237,6 +1259,8 @@ is_format_valid() {
 				ip46 | ipv46) is_ip_format_valid "$arg" 'ipv46' ;;
 				ip_name) is_domain_format_valid "$arg" 'IP name' ;;
 				ip_status) is_ip_status_format_valid "$arg" ;;
+				ipfamily) is_ipfamily_format_valid "$arg" ;;
+				iptables) is_fw_iptables_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
 				malias) is_user_format_valid "$arg" "$arg_name" '64' ;;

@@ -37,13 +37,13 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 ip_format=$(get_ip_format "$ip46") # ip verification and format identification
 case "$ip_format" in
 	4)
-		family="inet4"
+		ipfamily="inet4"
 		iptables="iptables"
 		ip2ban="$ip46"
 		reject_with="icmp-port-unreachable"
 		;;
 	6)
-		family="inet6"
+		ipfamily="inet6"
 		iptables="ip6tables"
 		[ -x "$subnetcalc_bin" ] && ip2ban="${ip46}/64" || ip2ban="$ip46" # subnet ban of /64 net only if subnetcalc binary is installed
 		reject_with="icmp6-port-unreachable"
@@ -62,6 +62,9 @@ check_hestia_demo_mode
 
 # Self heal iptables links
 heal_iptables_links
+
+# Get iptables binary
+iptables="$(get_iptables_bin "$iptables")"
 
 # Checking server ip
 if [ -e "$HESTIA/data/ips/$ip46" ] || [ "$ip46" = '127.0.0.1' ]; then
@@ -83,7 +86,7 @@ if [ -n "$check_ip" ]; then
 fi
 
 # Adding chain
-"$BIN/v-add-firewall-chain" "$chain" "" "" "$family" "$iptables"
+"$BIN/v-add-firewall-chain" "$chain" "" "" "$ipfamily" "$iptables"
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')

@@ -37,12 +37,10 @@ is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 ip_format=$(get_ip_format "$ip46") # ip verification and format identification
 case "$ip_format" in
 	4)
-		family="inet4"
 		iptables="iptables"
 		ip2ban="$ip46"
 		;;
 	6)
-		family="inet6"
 		iptables="ip6tables"
 		if [ -x "$subnetcalc_bin" ]; then
 			# if subnetcalc binary is installed on system, then ban of whole /64 subnet

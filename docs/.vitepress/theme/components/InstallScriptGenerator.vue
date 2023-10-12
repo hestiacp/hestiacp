@@ -62,40 +62,36 @@
 						:id="option.flag"
 						v-model="selectedOptions[option.flag].enabled"
 					/>
-					<label :for="option.flag" @click.stop>{{ option.label || option.description }}</label>
+					<label :for="option.flag" @click.stop>{{ option.label }}</label>
 				</div>
 				<div v-if="selectedOptions[option.flag].enabled">
-					<label
-						v-if="option.type && option.type !== 'checkbox'"
-						class="form-label"
-						:for="`${option.flag}-input`"
-					>
-						{{ option.description }}
-					</label>
-					<p v-else>
+					<p v-if="!option.type">
 						{{ option.description }}
 					</p>
-					<div v-if="option.type === 'text'">
-						<input
-							class="form-control"
-							:type="option.type"
-							:id="`${option.flag}-input`"
-							v-model="selectedOptions[option.flag].value"
-						/>
-					</div>
-					<div v-if="option.type === 'select'">
-						<select
-							class="form-select"
-							:id="`${option.flag}-input`"
-							v-model="selectedOptions[option.flag].value"
-						>
-							<option v-for="opt in option.options" :key="opt.value" :value="opt.value">
-								{{ opt.label }}
-							</option>
-						</select>
-					</div>
+					<label v-else class="form-label" :for="`${option.flag}-input`">
+						{{ option.description }}
+					</label>
+					<input
+						v-if="option.type === 'text'"
+						class="form-control"
+						:type="option.type"
+						:id="`${option.flag}-input`"
+						v-model="selectedOptions[option.flag].value"
+					/>
+					<select
+						v-if="option.type === 'select'"
+						class="form-select"
+						:id="`${option.flag}-input`"
+						v-model="selectedOptions[option.flag].value"
+					>
+						<option v-for="opt in option.options" :key="opt.value" :value="opt.value">
+							{{ opt.label }}
+						</option>
+					</select>
 				</div>
-				<p v-else>{{ option.description }}</p>
+				<div v-else>
+					<p>{{ option.description }}</p>
+				</div>
 			</li>
 		</ul>
 	</div>

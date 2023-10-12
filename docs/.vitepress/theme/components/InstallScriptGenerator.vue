@@ -51,9 +51,9 @@
 				:class="{
 					'option-item': true,
 					'is-active': selectedOptions[option.flag].enabled,
-					'is-clickable': isGroupClickable(option),
+					'is-clickable': !option.type || !selectedOptions[option.flag].enabled,
 				}"
-				@click="toggleGroup(option)"
+				@click="toggleOption(option)"
 			>
 				<div class="form-check u-mb10">
 					<input
@@ -89,8 +89,8 @@
 							:id="`${option.flag}-input`"
 							v-model="selectedOptions[option.flag].value"
 						>
-							<option v-for="lang in languages" :key="lang.value" :value="lang.value">
-								{{ lang.text }}
+							<option v-for="opt in option.options" :key="opt.value" :value="opt.value">
+								{{ opt.label }}
 							</option>
 						</select>
 					</div>
@@ -104,12 +104,8 @@
 <script setup>
 import { ref, watchEffect } from "vue";
 
-const { options, languages } = defineProps({
+const { options } = defineProps({
 	options: {
-		type: Array,
-		required: true,
-	},
-	languages: {
 		type: Array,
 		required: true,
 	},
@@ -124,17 +120,15 @@ options.forEach((option) => {
 	};
 });
 
-// Methods to handle clicking the entire form group
-const isGroupClickable = (option) => {
-	return !option.type || !selectedOptions.value[option.flag].enabled;
-};
-const toggleGroup = (option) => {
+// Handle clicking the entire option "card"
+const toggleOption = (option) => {
 	// Only toggle if option is a standard checkbox, or the option is unchecked
 	if (!option.type || !selectedOptions.value[option.flag].enabled) {
 		selectedOptions.value[option.flag].enabled = !selectedOptions.value[option.flag].enabled;
 	}
 };
 
+// Copy command to clipboard
 const copyToClipboard = (text, button) => {
 	navigator.clipboard.writeText(text).then(
 		() => {
@@ -149,8 +143,8 @@ const copyToClipboard = (text, button) => {
 	);
 };
 
+// Build the install command
 const installCommand = ref("bash hst-install.sh");
-
 watchEffect(() => {
 	let cmd = "bash hst-install.sh";
 	for (const [key, { enabled, value }] of Object.entries(selectedOptions.value)) {
@@ -170,7 +164,7 @@ watchEffect(() => {
 
 <style scoped>
 h2 {
-	font-size: 1.3em;
+	font-size: 1.4em;
 	font-weight: 600;
 	margin-bottom: 20px;
 }
@@ -185,7 +179,7 @@ h2 {
 	border-radius: 10px;
 	padding: 30px 40px;
 	margin-top: 40px;
-	margin-bottom: 30px;
+	margin-bottom: 40px;
 
 	& .form-control {
 		padding-right: 53px;
@@ -246,7 +240,7 @@ h2 {
 	border: 1px solid var(--vp-c-border);
 	border-radius: 4px;
 	background-color: var(--vp-c-bg);
-	padding: 5px 10px;
+	padding: 5px 6px;
 	width: 100%;
 
 	&:hover {

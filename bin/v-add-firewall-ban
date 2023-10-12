@@ -63,9 +63,6 @@ check_hestia_demo_mode
 # Self heal iptables links
 heal_iptables_links
 
-# Get iptables binary
-iptables="$(get_iptables_bin "$iptables")"
-
 # Checking server ip
 if [ -e "$HESTIA/data/ips/$ip46" ] || [ "$ip46" = '127.0.0.1' ]; then
 	exit
@@ -87,6 +84,9 @@ fi
 
 # Adding chain
 "$BIN/v-add-firewall-chain" "$chain" "" "" "$ipfamily" "$iptables"
+
+# Get iptables binary
+iptables="$(get_iptables_bin "$iptables")"
 
 # Generating timestamp
 time_n_date=$(date +'%T %F')

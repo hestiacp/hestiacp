@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.9] - Service release
+
+### Security
+
+- Reduce Nginx keepalive_requests to 1000 ([Nginx default](https://www.nginx.com/blog/http-2-rapid-reset-attack-impacting-f5-nginx-products/#http2_max_concurrent_streams)) to limit risks of [CVE-2023-44487](https://www.cve.org/CVERecord?id=CVE-2023-44487)
+
+### Bug fixes
+
+- Fix: removing certificates during apache reload #4053
+- Fix: Firehol blacklists #4046
+- Fix PHP error + Add option to update WPCLI + Composer #4039
+- Update v-add-mail-domain #4027 #4026
+- Update MediaWikiSetup.php #4034
+- Fix: for v-list-sys-services, pidof command in Debian Buster doesn't support option -d #4022
+- Update main.php humanize_usage_size() #4015
+- Fix: Prevent the script v-add-sys-roundcube from freezing during Roundcube upgrade #4018
+
+### Dependencies
+
+- Update Filegator to 7.9.3
+
 ## [1.8.8] - Service release
 
 ### Security

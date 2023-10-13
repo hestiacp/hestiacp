@@ -14,6 +14,7 @@
 # Argument definition
 user=$1
 version=${2-2}
+update=$3
 
 if [ -z "$HESTIA" ]; then
 	HESTIA="/usr/local/hestia"
@@ -31,7 +32,7 @@ source_conf "$HESTIA/conf/hestia.conf"
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'USER [VERSION]'
+check_args '1' "$#" 'USER [VERSION] [UPDATE]'
 is_format_valid 'user'
 is_number_format_valid "$version" "version"
 is_object_valid 'user' 'USER' "$user"
@@ -50,6 +51,10 @@ COMPOSER_DIR="$HOMEDIR/$user/.composer"
 COMPOSER_BIN="$COMPOSER_DIR/composer"
 
 if [ -f "$COMPOSER_BIN" ]; then
+	if [ -f "$update" ]; then
+		user_exec $COMPOSER_BIN selfupdate
+		exit
+	fi
 	echo "Composer already available"
 	exit
 fi

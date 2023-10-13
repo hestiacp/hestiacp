@@ -13,20 +13,7 @@ export const webDomains = [
 	{ text: 'Nginx Proxy cache support for Nginx + Apache2' },
 	{ text: 'Per-domain TLS certificates for web domains' },
 	{ text: 'MultiIP support for Web/Mail/DNS' },
-	{
-		text: 'MultiPHP support for',
-		items: [
-			{ text: "PHP 5.6 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
-			{ text: "PHP 7.0 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
-			{ text: "PHP 7.1 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
-			{ text: "PHP 7.2 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
-			{ text: "PHP 7.3 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
-			{ text: "PHP 7.4 (<a href='https://www.php.net/supported-versions.php'>EOL</a>)" },
-			{ text: 'PHP 8.0' },
-			{ text: 'PHP 8.1' },
-			{ text: 'PHP 8.2' },
-		],
-	},
+	{ text: 'Support for PHP  version 5.6 up to 8.2 with PHP8.2 as default' },
 	{
 		text: 'One-Click Install Apps',
 		items: [

@@ -78,7 +78,6 @@
 <script setup>
 import { ref, watchEffect } from "vue";
 import CopyToClipboardInput from "./CopyToClipboardInput.vue";
-import FloatingVue from "floating-vue";
 
 const { options } = defineProps({
 	options: {
@@ -149,13 +148,17 @@ h2 {
 .output-card {
 	background-color: var(--vp-c-bg-alt);
 	border-radius: 10px;
-	padding: 30px 40px;
+	padding: 30px;
 	margin-top: 40px;
 	margin-bottom: 40px;
+
+	@media (min-width: 640px) {
+		padding: 30px 50px;
+	}
 }
 .option-list {
 	display: grid;
-	grid-gap: 20px;
+	grid-gap: 23px;
 	margin-bottom: 50px;
 
 	@media (min-width: 640px) {
@@ -188,8 +191,8 @@ h2 {
 	justify-content: space-between;
 }
 .option-icon {
-	padding: 5px 0 5px 10px;
-	margin-left: 5px;
+	padding: 5px;
+	margin-right: -5px;
 
 	& i {
 		opacity: 0.7;

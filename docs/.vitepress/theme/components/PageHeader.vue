@@ -4,9 +4,9 @@
 			<h1>
 				<slot name="title"></slot>
 			</h1>
-			<p v-if="$slots.lead" class="lead">
-				<slot name="lead" />
-			</p>
+			<div v-if="$slots.aside">
+				<slot name="aside" />
+			</div>
 		</div>
 	</header>
 </template>
@@ -15,6 +15,8 @@
 .container {
 	display: flex;
 	margin: 0 auto;
+	align-items: center;
+	justify-content: space-between;
 	max-width: 1152px;
 }
 .PageHeader {

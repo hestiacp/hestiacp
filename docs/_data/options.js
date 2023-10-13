@@ -88,13 +88,13 @@ export const options = [
 		flag: 'phpfpm',
 		label: 'PHP-FPM',
 		description: 'Process manager for executing PHP scripts.',
-		default: 'no',
+		default: 'yes',
 	},
 	{
 		flag: 'multiphp',
 		label: 'MultiPHP',
 		description: 'Allows installing multiple PHP versions.',
-		default: 'yes',
+		default: 'no',
 	},
 	{
 		flag: 'vsftpd',

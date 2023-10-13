@@ -189,7 +189,7 @@ export const options = [
 	{
 		flag: 'interactive',
 		label: 'Interactive install',
-		description: 'Enable interactive install.',
+		description: 'Run the install interactively.',
 		default: 'yes',
 	},
 	{

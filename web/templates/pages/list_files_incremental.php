@@ -61,17 +61,11 @@
 					?>
 					<div class="units-table-row js-unit">
 						<div class="units-table-cell">
-							<div>
-							</div>
 						</div>
-						<div class="units-table-cell">
-							<div class="units-table-cell units-table-heading-cell u-text-bold">
+						<div class="units-table-cell units-table-heading-cell u-text-boldl">
 								<b><a href="/list/backup/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&browse=yes&folder=<?=htmlentities($files[0]['path'])?>/../&token=<?=$_SESSION["token"]?>"><i class="fas fa-folder icon-dim u-mr5"></i>..</a></b>
-							</div>
 						</div>
 						<div class="units-table-cell">
-							<div>
-							</div>
 						</div>
 						<div class="units-table-cell">
 							<span class="u-hide-desktop u-text-bold"><?= _("Type") ?>:</span>

@@ -13,8 +13,6 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-
 defineProps({
 	value: {
 		type: String,

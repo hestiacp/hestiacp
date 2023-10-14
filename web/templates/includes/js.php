@@ -15,6 +15,23 @@
 		});
 	})
 </script>
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		if (navigator.userAgent.toLowerCase().indexOf('safari/') > -1) {
+			let clicked = false;
+			const submitButton = document.querySelector('button[type="submit"]');
+			if (submitButton == null) return;
+			submitButton.addEventListener('click', (e) => {
+				if (clicked) return;
+				e.preventDefault();
+				const spinnerOverlay = document.querySelector('.spinner-overlay');
+				spinnerOverlay.classList.add('active');
+				setTimeout(() => { submitButton.click(); }, 500);
+				clicked = true;
+			});
+		}
+	});
+</script>
 <?php $_SESSION["unset_alerts"] = true; ?>
 
 <?php

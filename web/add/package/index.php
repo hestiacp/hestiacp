@@ -174,8 +174,8 @@ if (!empty($_POST["ok"])) {
 			if (!empty($_SESSION["WEB_BACKEND"])) {
 				$pkg .= "BACKEND_TEMPLATE=" . $v_backend_template . "\n";
 			}
-			if (!empty($v_ns4)) {
-				$v_ns .= "," . $v_ns4;
+			if (!empty($_SESSION["PROXY_SYSTEM"])) {
+				$pkg .= "PROXY_TEMPLATE=" . $v_proxy_template . "\n";
 			}
 			$pkg .= "DNS_TEMPLATE=" . $v_dns_template . "\n";
 			$pkg .= "WEB_DOMAINS=" . $v_web_domains . "\n";

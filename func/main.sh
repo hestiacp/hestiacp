@@ -294,7 +294,7 @@ is_backup_enabled() {
 is_incremental_backup_enabled() {
 	BACKUPS_INCREMENTAL=$(grep "^BACKUPS_INCREMENTAL=" $USER_DATA/user.conf | cut -f2 -d \')
 	if [ -z "$BACKUPS_INCREMENTAL" ] || [[ "$BACKUPS_INCREMENTAL" != "yes" ]]; then
-		check_result "$E_DISABLED" "user backup is disabled"
+		check_result "$E_DISABLED" "incremental backups are disabled"
 	fi
 }
 

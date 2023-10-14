@@ -13,9 +13,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-
-const { value } = defineProps({
+defineProps({
 	value: {
 		type: String,
 		required: true,
@@ -23,7 +21,8 @@ const { value } = defineProps({
 });
 
 const copyToClipboard = (event) => {
-	navigator.clipboard.writeText(value).then(
+	const inputValue = event.target.previousSibling.value;
+	navigator.clipboard.writeText(inputValue).then(
 		() => {
 			event.target.textContent = "Copied!";
 			setTimeout(() => {

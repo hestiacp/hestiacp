@@ -58,6 +58,13 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
+# Check if Restic is allready installed if not install it ...
+if ! which /usr/bin/restic > /dev/null 2>&1; then
+	apt install restic
+fi
+# Update restic to last release
+restic self-update > /dev/null 2>&1
+
 echo "REPO='$repo'" > /usr/local/hestia/conf/restic.conf
 echo "SNAPSHOTS='$snapshots'" >> /usr/local/hestia/conf/restic.conf
 echo "KEEP_DAILY='$daily'" >> /usr/local/hestia/conf/restic.conf

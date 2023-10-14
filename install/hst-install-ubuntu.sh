@@ -51,7 +51,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd jailkit"
+  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd jailkit restic"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget"
 
@@ -2205,8 +2205,9 @@ fi
 echo "[ * ] Configuring PHP dependencies..."
 $HESTIA/bin/v-add-sys-dependencies quiet
 
-echo "[ * ] Installing Rclone..."
+echo "[ * ] Installing Rclone & Update Restic ..."
 curl -s https://rclone.org/install.sh | bash > /dev/null 2>&1
+restic self-update > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                   Configure IP                           #

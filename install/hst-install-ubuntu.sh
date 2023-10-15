@@ -32,9 +32,14 @@ VERBOSE='no'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.9.0~alpha'
-# Dependencies
+# Supported PHP versions
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
+# One of the following PHP versions is required for Roundcube / phpmyadmin
+multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2")
+
+# Default PHP version if none supplied
 fpm_v="8.2"
+# MariaDB version
 mariadb_v="10.11"
 
 # Defining software pack for all distros
@@ -178,10 +183,14 @@ sort_config_file() {
 
 # todo add check for usernames that are blocked
 validate_username() {
-	if [[ "$username" =~ ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ]]; then
-		# Username valid
-		return 1
+	if [[ "$username" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+		if [ -n "$(grep ^$username: /etc/passwd /etc/group)" ]; then
+			echo -e "\nUsername or Group allready exists please select a new user name or delete the user and / or group."
+		else
+			return 1
+		fi
 	else
+		echo -e "\nPlease use a valid username (ex. user)."
 		return 0
 	fi
 }
@@ -306,6 +315,43 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:u:e:p:W:D:fh" Option;
 	esac
 done
 
+if [ -n "$multiphp" ]; then
+	if [ "$multiphp" != 'no' ] && [ "$multiphp" != 'yes' ]; then
+		php_versions=$(echo $multiphp | tr ',' "\n")
+		multiphp_version=()
+		for php_version in ${php_versions[@]}; do
+			if [[ $(echo ${multiphp_v[@]} | fgrep -w "$php_version") ]]; then
+				multiphp_version=(${multiphp_version[@]} "$php_version")
+			else
+				echo "$php_version is not supported"
+				exit 1
+			fi
+		done
+		multiphp_v=()
+		for version in ${multiphp_version[@]}; do
+			multiphp_v=(${multiphp_v[@]} $version)
+		done
+		fpm_old=$fpm_v
+		multiphp="yes"
+		fpm_v=$(printf "%s\n" "${multiphp_version[@]}" | sort -V | tail -n1)
+		fpm_last=$(printf "%s\n" "${multiphp_required[@]}" | sort -V | tail -n1)
+		# Allow Maintainer to set minimum fpm version to make sure phpmyadmin and roundcube keep working
+		if [[ -z $(echo "${multiphp_required[@]}" | fgrep -w $fpm_v) ]]; then
+			if version_ge $fpm_v $fpm_last; then
+				multiphp_version=(${multiphp_version[@]} $fpm_last)
+				fpm_v=$fpm_last
+			else
+				# Roundcube and PHPmyadmin doesn't support the version selected.
+				echo "Selected PHP versions are not supported any more by Dependencies..."
+				exit 1
+			fi
+		fi
+
+		software=$(echo "$software" | sed -e "s/php$fpm_old/php$fpm_v/g")
+
+	fi
+fi
+
 # Defining default software stack
 set_default_value 'nginx' 'yes'
 set_default_value 'apache' 'yes'
@@ -368,14 +414,6 @@ fi
 
 if [ -d "/usr/local/hestia" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
-fi
-
-# Checking admin user account
-if [ -n "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
-	echo 'Please remove admin user account before proceeding.'
-	echo 'If you want to do it automatically run installer with -f option:'
-	echo -e "Example: bash $0 --force\n"
-	check_result 1 "User admin exists"
 fi
 
 # Clear the screen once launch permissions have been verified
@@ -556,7 +594,11 @@ if [ "$phpfpm" = 'yes' ] && [ "$multiphp" = 'no' ]; then
 fi
 if [ "$multiphp" = 'yes' ]; then
 	phpfpm='yes'
-	echo '   - Multi-PHP Environment'
+	echo -n '   - Multi-PHP Environment: Version'
+	for version in ${multiphp_v[@]}; do
+		echo -n " php$version"
+	done
+	echo ''
 fi
 
 # DNS stack
@@ -634,15 +676,12 @@ if [ "$interactive" = 'yes' ]; then
 fi
 
 #Validate Username / Password / Email / Hostname even when interactive = no
-# Asking for contact email
 if [ -z "$username" ]; then
 	while validate_username; do
-		echo -e "\nPlease use a valid username (ex. user)."
 		read -p 'Please enter administrator username: ' username
 	done
 else
 	if validate_username; then
-		echo "Please use a valid username (ex. user)."
 		exit 1
 	fi
 fi

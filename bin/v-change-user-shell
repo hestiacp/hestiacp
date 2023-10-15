@@ -54,7 +54,7 @@ else
 fi
 
 # Adding jailed ssh env
-if [[ "$jail_enabled" =~ on ]]; then
+if [[ "$jail_enabled" =~ yes ]]; then
 	$BIN/v-add-user-ssh-jail "$user" "$shell" > /dev/null 2>&1
 else
 	$BIN/v-delete-user-ssh-jail "$user" > /dev/null 2>&1
@@ -66,6 +66,7 @@ fi
 
 # Changing user shell
 update_user_value "$user" '$SHELL' "$shell"
+update_user_value "$user" '$SHELL_JAIL_ENABLED' "$jail_enabled"
 
 # Logging
 $BIN/v-log-action "system" "Info" "System" "User SSH shell changed (Shell: $shell, User: $user)."

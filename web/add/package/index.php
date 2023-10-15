@@ -192,10 +192,6 @@ if (!empty($_POST["ok"])) {
 				$output,
 				$return_var,
 			);
-
-			var_dump($return_var);
-			var_dump($output);
-
 			check_return_code($return_var, $output);
 			unset($output);
 

@@ -37,20 +37,6 @@ fi
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
 
-# Only apply jail to bashjail users
-#user_str=$(grep "^$user:" /etc/passwd | egrep "bashjail")
-#if [ -z "$user_str" ]; then
-#	exit
-#fi
-
-## Get current user groups
-#user_groups=$(groups $user)
-#
-## Check if jail exist
-#if [[ "$user_groups" =~ "ssh-jailed" ]]; then
-#	exit
-#fi
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -74,7 +60,11 @@ add_chroot_jail "$user"
 /sbin/jk_cp -f -j $chroot /bin/id
 
 # Jailing user
-/sbin/jk_jailuser -s $shell_path -j $chroot $user
+/sbin/jk_jailuser -n -s $shell_path -j $chroot $user
+
+# Reset home directory and shell again for hestiacp because jailkit changes these
+usermod -d /home/$user $user
+usermod -s $shell_path $user
 
 # Adding the user to the chroot /etc/passwd if it wasn't added yet
 if [ -z "$(grep "^$user:" $chroot/etc/passwd | egrep "$shell")" ]; then

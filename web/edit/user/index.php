@@ -368,9 +368,7 @@ if (!empty($_POST["save"])) {
 		}
 		// Change shell (admin only)
 		if (!empty($_POST["v_shell"])) {
-			if ($_POST["v_shell_jail_enabled"] == "on") {
-				$_POST["v_shell_jail_enabled"] = "yes";
-			} else {
+			if (empty($_POST["v_shell_jail_enabled"])) {
 				$_POST["v_shell_jail_enabled"] = "no";
 			}
 

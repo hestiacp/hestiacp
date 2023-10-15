@@ -65,7 +65,10 @@ add_chroot_jail "$user"
 # with hestia.
 /sbin/jk_jailuser -n -s $shell_path -j $chroot $user
 
-# Reset home directory and shell again for hestiacp because jailkit changes these
+# Reset home directory and shell again for hestiacp because jailkit changes these.
+# Normally these are needed to redirect the ssh user to it's chroot but because we
+# use a custom sshd_config to redirect the user to it's chroot we don't need it to be
+# changed in /etc/passwd for the user.
 usermod -d /home/$user $user
 usermod -s $shell_path $user
 

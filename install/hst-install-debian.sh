@@ -318,8 +318,8 @@ if [ -n "$multiphp" ]; then
 	if [ "$multiphp" != 'no' ] && [ "$multiphp" != 'yes' ]; then
 		php_versions=$(echo $multiphp | tr ',' "\n")
 		multiphp_version=()
-		for php_version in ${php_versions[@]}; do
-			if [[ $(echo ${multiphp_v[@]} | fgrep -w "$php_version") ]]; then
+		for php_version in "${php_versions[@]}"; do
+			if [[ $(echo "${multiphp_v[@]}" | fgrep -w "$php_version") ]]; then
 				multiphp_version=(${multiphp_version[@]} "$php_version")
 			else
 				echo "$php_version is not supported"
@@ -327,7 +327,7 @@ if [ -n "$multiphp" ]; then
 			fi
 		done
 		multiphp_v=()
-		for version in ${multiphp_version[@]}; do
+		for version in "${multiphp_version[@]}"; do
 			multiphp_v=(${multiphp_v[@]} $version)
 		done
 		fpm_old=$fpm_v
@@ -606,7 +606,7 @@ fi
 if [ "$multiphp" = 'yes' ]; then
 	phpfpm='yes'
 	echo -n '   - Multi-PHP Environment: Version'
-	for version in ${multiphp_v[@]}; do
+	for version in "${multiphp_v[@]}"; do
 		echo -n " php$version"
 	done
 	echo ''

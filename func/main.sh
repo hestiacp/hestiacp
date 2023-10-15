@@ -1263,6 +1263,7 @@ is_format_valid() {
 				soa) is_domain_format_valid "$arg" 'SOA' ;;
 				#missing command: is_format_valid_shell
 				shell) is_format_valid_shell "$arg" ;;
+				shell_jail_enabled) is_boolean_format_valid "$arg" 'shell_jail_enabled' ;;
 				ssl_dir) is_folder_exists "$arg" "$arg_name" ;;
 				stats_pass) is_password_format_valid "$arg" ;;
 				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
@@ -1781,5 +1782,6 @@ delete_chroot_jail() {
 	rm -f "/etc/systemd/system/$systemd"
 	systemctl daemon-reload > /dev/null 2>&1
 	rmdir /srv/jail/$user/home > /dev/null 2>&1
+	rmdir /srv/jail/$user/tmp > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1
 }

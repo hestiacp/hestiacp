@@ -12,7 +12,8 @@
 
 # Argument definition
 user=$1
-restart=$2
+shell=$2
+restart=$3
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -29,26 +30,26 @@ chroot="/srv/jail/$user"
 #----------------------------------------------------------#
 
 # Checking if jailkit is installed
-if [ ! -x /sbin/jk_init ] ; then
-    exit
+if [ ! -x /sbin/jk_init ]; then
+	exit
 fi
 
 check_args '1' "$#" 'USER'
 is_format_valid 'user'
 
-# Only apply jail to bash users
-user_str=$(grep "^$user:" /etc/passwd | egrep "bash")
-if [ -z "$user_str" ]; then
-	exit
-fi
+# Only apply jail to bashjail users
+#user_str=$(grep "^$user:" /etc/passwd | egrep "bashjail")
+#if [ -z "$user_str" ]; then
+#	exit
+#fi
 
-# Get current user groups
-user_groups=$(groups $user)
-
-# Check if jail exist
-if [[ "$user_groups" =~ "ssh-jailed" ]]; then
-	exit
-fi
+## Get current user groups
+#user_groups=$(groups $user)
+#
+## Check if jail exist
+#if [[ "$user_groups" =~ "ssh-jailed" ]]; then
+#	exit
+#fi
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
@@ -56,6 +57,9 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 #                       Action                             #
 #----------------------------------------------------------#
+
+# Get shell full path
+shell_path=$(grep -w "$shell" /etc/shells | head -n1)
 
 # Set home folder permission to root
 if [ -d "/home/$user" ]; then
@@ -70,16 +74,16 @@ add_chroot_jail "$user"
 /sbin/jk_cp -f -j $chroot /bin/id
 
 # Jailing user
-/sbin/jk_jailuser -s /bin/bash -j $chroot $user
+/sbin/jk_jailuser -s $shell_path -j $chroot $user
 
 # Adding the user to the chroot /etc/passwd if it wasn't added yet
-if [ -z "$(grep "^$user:" $chroot/etc/passwd | egrep "bash")" ]; then
-		echo $(grep "^$user:" /etc/passwd | egrep "bash") >> $chroot/etc/passwd
+if [ -z "$(grep "^$user:" $chroot/etc/passwd | egrep "$shell")" ]; then
+	echo $(grep "^$user:" /etc/passwd | egrep "$shell") >> $chroot/etc/passwd
 fi
 
 # Adding the user to the chroot /etc/group if it wasn't added yet
 if [ -z "$(grep "^$user:" $chroot/etc/group)" ]; then
-		echo $(grep "^$user:" /etc/group) >> $chroot/etc/group
+	echo $(grep "^$user:" /etc/group) >> $chroot/etc/group
 fi
 
 # Add user to the ssh-jailed group to allow jailed ssh

@@ -221,6 +221,12 @@
 							?>
 						</select>
 					</div>
+					<div class="form-check u-mb10">
+						<input class="form-check-input" type="checkbox" name="v_shell_jail_enabled" id="v_shell_jail_enabled">
+						<label for="v_shell_jail_enabled">
+							<?= _("Jail User Shell") ?>
+						</label>
+					</div>
 					<div class="u-mb10">
 						<label for="v_phpcli" class="form-label"><?= _("PHP CLI Version") ?></label>
 						<select class="form-select" name="v_phpcli" id="v_phpcli">

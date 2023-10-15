@@ -13,6 +13,7 @@
 # Argument definition
 user=$1
 shell=$2
+jail_enabled=$3
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -53,8 +54,8 @@ else
 fi
 
 # Adding jailed ssh env
-if [[ "$shell" =~ bash ]]; then
-	$BIN/v-add-user-ssh-jail "$user" > /dev/null 2>&1
+if [[ "$jail_enabled" =~ on ]]; then
+	$BIN/v-add-user-ssh-jail "$user" "$shell" > /dev/null 2>&1
 else
 	$BIN/v-delete-user-ssh-jail "$user" > /dev/null 2>&1
 fi

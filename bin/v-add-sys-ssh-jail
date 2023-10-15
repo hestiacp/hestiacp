@@ -25,8 +25,8 @@ restart=$1
 #----------------------------------------------------------#
 
 # Checking if jailkit is installed
-if [ ! -x /sbin/jk_init ] ; then
-    exit
+if [ ! -x /sbin/jk_init ]; then
+	exit
 fi
 
 # Perform verification if read-only mode is enabled
@@ -66,16 +66,7 @@ if [ "$restart" = 'yes' ]; then
 fi
 
 # Adding group
-groupadd ssh-jailed 2>/dev/null
-
-# Checking users
-shells="bash"
-for user in $(grep "$HOMEDIR" /etc/passwd | egrep "$shells" | cut -f 1 -d:); do
-	if [ -d "/home/$user" ]; then
-		# Include all users v-add-user-ssh-jail will handle it
-		$BIN/v-add-user-ssh-jail "$user" "no"
-	fi
-done
+groupadd ssh-jailed 2> /dev/null
 
 # Restart ssh service
 if [ "$restart" = 'no' ]; then

@@ -270,6 +270,12 @@
 							<?php endforeach; ?>
 						</select>
 					</div>
+					<div class="form-check u-mb10">
+						<input class="form-check-input" type="checkbox" name="v_shell_jail_enabled" id="v_shell_jail_enabled" <?php if ($v_shell_jail_enabled == "yes") echo 'checked' ?>>
+						<label for="v_shell_jail_enabled">
+							<?= _("Jail User Shell") ?>
+						</label>
+					</div>
 				</div>
 			</details>
 		</div>

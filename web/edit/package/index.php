@@ -51,6 +51,7 @@ $v_cron_jobs = $data[$v_package]["CRON_JOBS"];
 $v_disk_quota = $data[$v_package]["DISK_QUOTA"];
 $v_bandwidth = $data[$v_package]["BANDWIDTH"];
 $v_shell = $data[$v_package]["SHELL"];
+$v_shell_jail_enabled = $data[$v_package]["SHELL_JAIL_ENABLED"];
 $v_ns = $data[$v_package]["NS"];
 $nameservers = explode(",", $v_ns);
 if (empty($nameservers[0])) {
@@ -229,6 +230,11 @@ if (!empty($_POST["save"])) {
 	} else {
 		$v_shell = "nologin";
 	}
+	if (!empty($_POST["v_shell_jail_enabled"])) {
+		$v_shell_jail_enabled = quoteshellarg($_POST["v_shell_jail_enabled"]);
+	} else {
+		$v_shell_jail_enabled = "no";
+	}
 	$v_web_domains = quoteshellarg($_POST["v_web_domains"]);
 	$v_web_aliases = quoteshellarg($_POST["v_web_aliases"]);
 	$v_dns_domains = quoteshellarg($_POST["v_dns_domains"]);
@@ -290,6 +296,7 @@ if (!empty($_POST["save"])) {
 	$pkg .= "BANDWIDTH=" . $v_bandwidth . "\n";
 	$pkg .= "NS=" . $v_ns . "\n";
 	$pkg .= "SHELL=" . $v_shell . "\n";
+	$pkg .= "SHELL_JAIL_ENABLED=" . $v_shell_jail_enabled . "\n";
 	$pkg .= "BACKUPS=" . $v_backups . "\n";
 	$pkg .= "TIME=" . $v_time . "\n";
 	$pkg .= "DATE=" . $v_date . "\n";

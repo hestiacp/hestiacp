@@ -746,7 +746,6 @@ else
 	fi
 fi
 
-exit
 # Generating admin password if it wasn't set
 displaypass="The password you chose during installation."
 if [ -z "$vpass" ]; then

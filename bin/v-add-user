@@ -275,7 +275,9 @@ fi
 $BIN/v-add-user-sftp-jail $user
 
 # Adding jailed ssh env
-$BIN/v-add-user-ssh-jail $user
+if [ "$SHELL_JAIL_ENABLED" = 'yes' ]; then
+	$BIN/v-add-user-ssh-jail $user
+fi
 
 #----------------------------------------------------------#
 #                       Hestia                             #

@@ -409,7 +409,7 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user shell" {
-    run v-change-user-shell $user bash
+    run v-change-user-shell $user bash no
     assert_success
     refute_output
 
@@ -420,13 +420,13 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user invalid shell" {
-    run v-change-user-shell $user bashinvalid
+    run v-change-user-shell $user bashinvalid no
     assert_failure $E_INVALID
     assert_output --partial 'shell bashinvalid is not valid'
 }
 
 @test "User: Change user nologin" {
-    run v-change-user-shell $user nologin
+    run v-change-user-shell $user nologin no
     assert_success
     refute_output
 
@@ -437,7 +437,7 @@ function check_ip_not_banned(){
 }
 
 @test "User: Change user bash with jail" {
-    run v-change-user-shell $user bash
+    run v-change-user-shell $user bash yes
     assert_success
     refute_output
 

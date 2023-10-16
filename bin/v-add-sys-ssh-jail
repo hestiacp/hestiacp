@@ -68,6 +68,28 @@ fi
 # Adding group
 groupadd ssh-jailed 2> /dev/null
 
+# Checking jailkit init
+jk_init='/etc/jailkit/jk_init.ini'
+jk_php_i=$(grep -n "^# Hestia PHP" $jk_init)
+
+# Add PHP to jailkit init to allow usage of it within jail
+if [ -z "$jk_php_i" ]; then
+	echo " " >> $jk_init
+	echo "# Hestia PHP" >> $jk_init
+	echo "[php]" >> $jk_init
+	echo "comment = the php interpreter and libraries" >> $jk_init
+	echo "executables = /usr/bin/php" >> $jk_init
+	echo "directories = /usr/lib/php, /usr/share/php, /etc/php, /usr/share/php-geshi, /usr/share/zoneinfo" >> $jk_init
+	echo "includesections = env, ssl" >> $jk_init
+	echo "" >> $jk_init
+	echo "[env]" >> $jk_init
+	echo "comment = environment variables" >> $jk_init
+	echo "executables = /usr/bin/env" >> $jk_init
+	echo "" >> $jk_init
+	echo "[ssl]" >> $jk_init
+	echo "directories = /etc/ssl, /usr/lib/ssl, /usr/share/ca-certificates" >> $jk_init
+fi
+
 # Restart ssh service
 if [ "$restart" = 'no' ]; then
 	# Skip restart of SSH daemon
@@ -75,6 +97,17 @@ if [ "$restart" = 'no' ]; then
 else
 	service ssh restart > /dev/null 2>&1
 fi
+
+# Jails need maintenance to update the binaries within the jail. To do so we just reset the chroot
+# and reapply the jail
+for user in $("$BIN/v-list-users" list); do
+	check_jail_enabled=$(grep "SHELL_JAIL_ENABLED='yes'" $HESTIA/data/users/$user/user.conf)
+
+	# If jail enabled try to jail the user
+	if [ -n "$check_jail_enabled" ]; then
+		$BIN/v-add-user-ssh-jail "$user" "no"
+	fi
+done
 
 # Add v-add-sys-ssh-jail to startup
 if [ ! -e "/etc/cron.d/hestia-ssh-jail" ]; then

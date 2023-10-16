@@ -58,10 +58,8 @@ if [ "$restart" = 'yes' ]; then
 	fi
 fi
 
-# Remove v-add-sys-ssh-jail to startup
-if [ ! -e "/etc/cron.d/hestia-ssh-jail" ]; then
-	rm -f /etc/cron.d/hestia-ssh-jail
-fi
+# Remove group ssh-jailed
+groupdel ssh-jailed 2> /dev/null
 
 #----------------------------------------------------------#
 #                       Hestia                             #

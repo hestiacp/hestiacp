@@ -32,14 +32,6 @@ if [ -z "$user_str" ]; then
 	exit
 fi
 
-# Get current user groups
-user_groups=$(groups $user)
-
-# Check if jail exist
-if [[ "$user_groups" =~ "ssh-jailed" ]]; then
-	exit
-fi
-
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
@@ -61,11 +53,14 @@ if [ -z "$user_shell_rssh_nologin" ]; then
 fi
 
 # Deleting user from groups
-gpasswd -d $user ssh-jailed >/dev/null 2>&1
+gpasswd -d $user ssh-jailed > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Disabling user jail
+update_user_value "$user" '$SHELL_JAIL_ENABLED' "no"
 
 # Restart ssh service
 service sshd restart > /dev/null 2>&1

@@ -1503,7 +1503,7 @@ check_result $? "can't enable ssh jail"
 echo "[ * ] Creating default admin account..."
 $HESTIA/bin/v-add-user "$username" "$vpass" "$email" "default" "System Administrator"
 check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell "$username" nologin
+$HESTIA/bin/v-change-user-shell "$username" nologin no
 $HESTIA/bin/v-change-user-role "$username" admin
 $HESTIA/bin/v-change-user-language "$username" "$lang"
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'

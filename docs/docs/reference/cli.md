@@ -2106,12 +2106,12 @@ Give/revoke user administrator rights to manage all accounts as admin
 
 change user shell
 
-**Options**: `USER` `SHELL`
+**Options**: `USER` `SHELL` `JAIL_ENABLED`
 
 **Examples**:
 
 ```bash
-v-change-user-shell admin nologin
+v-change-user-shell admin nologin no
 ```
 
 This function changes system shell of a user. Shell gives ability to use ssh.

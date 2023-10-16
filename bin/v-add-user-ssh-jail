@@ -12,7 +12,6 @@
 
 # Argument definition
 user=$1
-shell=$2
 restart=$3
 
 # Includes
@@ -45,7 +44,7 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Get shell full path
-shell_path=$(grep -w "$shell" /etc/shells | head -n1)
+shell_path=$(grep "^$user:" /etc/passwd | cut -f 7 -d :)
 
 # Set home folder permission to root
 if [ -d "/home/$user" ]; then
@@ -56,8 +55,8 @@ add_chroot_jail "$user"
 
 # Installing shell files into the user chroot directory
 # - IMPORTANT - MODIFY THE FOLLOWING LINES AND THE FILE jk_init.ini ACCORDING TO YOUR SYSTEM AND YOUR PREFERENCES
-/sbin/jk_init -f -j $chroot basicshell editors extendedshell netutils ssh sftp scp git
-/sbin/jk_cp -f -j $chroot /bin/id
+/sbin/jk_init -f -j $chroot extendedshell netutils ssh sftp scp git php > /dev/null 2>&1
+/sbin/jk_cp -f -j $chroot /bin/id > /dev/null 2>&1
 
 # Jailing user to make sure passwd and groups are set correctly within the jail.
 # This command also does a little too much by changing the users homedir and
@@ -78,6 +77,9 @@ usermod -a -G ssh-jailed $user
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
+
+# Enabling user jail
+update_user_value "$user" '$SHELL_JAIL_ENABLED' "yes"
 
 # Restart ssh service
 if [ "$restart" = 'no' ]; then

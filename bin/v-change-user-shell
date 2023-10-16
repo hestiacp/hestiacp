@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: change user shell
-# options: USER SHELL
+# options: USER SHELL JAIL_ENABLED
 #
-# example: v-change-user-shell admin nologin
+# example: v-change-user-shell admin nologin no
 #
 # This function changes system shell of a user. Shell gives ability to use ssh.
 
@@ -55,7 +55,7 @@ fi
 
 # Adding jailed ssh env
 if [[ "$jail_enabled" =~ yes ]]; then
-	$BIN/v-add-user-ssh-jail "$user" "$shell" > /dev/null 2>&1
+	$BIN/v-add-user-ssh-jail "$user" > /dev/null 2>&1
 else
 	$BIN/v-delete-user-ssh-jail "$user" > /dev/null 2>&1
 fi
@@ -66,7 +66,6 @@ fi
 
 # Changing user shell
 update_user_value "$user" '$SHELL' "$shell"
-update_user_value "$user" '$SHELL_JAIL_ENABLED' "$jail_enabled"
 
 # Logging
 $BIN/v-log-action "system" "Info" "System" "User SSH shell changed (Shell: $shell, User: $user)."

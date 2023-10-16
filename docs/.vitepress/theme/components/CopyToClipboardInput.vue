@@ -1,6 +1,12 @@
 <template>
 	<div class="CopyToClipboardInput" v-bind="$attrs">
-		<input type="text" class="CopyToClipboardInput-input" readonly :value="value" />
+		<input
+			type="text"
+			class="CopyToClipboardInput-input"
+			:value="value"
+			@focus="selectText"
+			readonly
+		/>
 		<button
 			type="button"
 			class="CopyToClipboardInput-button"
@@ -20,6 +26,12 @@ defineProps({
 	},
 });
 
+const selectText = (event) => {
+	const inputElement = event.target;
+	inputElement.select();
+	inputElement.removeEventListener("focus", selectText);
+};
+
 const copyToClipboard = (event) => {
 	const inputValue = event.target.previousSibling.value;
 	navigator.clipboard.writeText(inputValue).then(
@@ -38,36 +50,35 @@ const copyToClipboard = (event) => {
 
 <style scoped>
 .CopyToClipboardInput {
-	position: relative;
+	display: flex;
 }
 .CopyToClipboardInput-input {
 	font-size: 0.9em;
 	font-family: monospace;
+	flex-grow: 1;
 	border: 1px solid var(--vp-c-border);
-	border-radius: 4px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
 	background-color: var(--vp-c-bg);
-	width: 100%;
 	padding: 8px 13px;
-	padding-right: 53px;
-
-	&:hover {
-		border-color: var(--vp-c-border-hover);
-	}
 
 	&:focus {
-		border-color: var(--vp-c-brand);
+		border-color: var(--vp-button-brand-bg);
 	}
 }
 .CopyToClipboardInput-button {
-	position: absolute;
-	top: 1px;
-	right: 1px;
-	bottom: 1px;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px;
-	color: var(--vp-c-brand);
+	font-size: 14px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	color: var(--vp-button-brand-text);
+	min-width: 73px;
 	font-weight: 600;
-	padding: 6px 10px;
-	background-color: var(--vp-c-bg);
+	padding: 5px 10px;
+	background-color: var(--vp-button-brand-bg);
+	transition: background-color 0.25s;
+
+	&:hover {
+		background-color: var(--vp-button-brand-hover-bg);
+	}
 }
 </style>

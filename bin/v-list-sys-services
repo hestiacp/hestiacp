@@ -91,8 +91,10 @@ get_srv_state() {
 	else
 		pids=$(pidof -x $name | tr ' ' '|')
 	fi
+	used_pgrep=0
 	if [ -z "$pids" ] && [ "$name" != 'nginx' ]; then
 		pids=$(pgrep $name | tr '\n' '|')
+		used_pgrep=1
 	fi
 
 	# Correctly handle hestia-web-terminal service
@@ -107,7 +109,11 @@ get_srv_state() {
 
 	# Checking pid
 	if [ -n "$pids" ]; then
-		pid=$(echo "$pids" | awk -F '|' '{print $NF}')
+		if [[ "$used_pgrep" -eq 1 ]]; then
+			pid=$(echo "$pids" | awk -F '|' '{print $1}')
+		else
+			pid=$(echo "$pids" | awk -F '|' '{print $NF}')
+		fi
 		pids=${pids%|}
 		pids=$(egrep "$pids" $tmp_file)
 

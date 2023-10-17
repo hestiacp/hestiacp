@@ -373,6 +373,15 @@ if (!empty($_POST["save"])) {
 			}
 
 			if (
+				in_array($_POST["v_shell"], ["nologin", "rssh"]) &&
+				$_POST["v_shell_jail_enabled"] == "yes"
+			) {
+				$_SESSION["error_msg"] = _(
+					"Cannot combine nologin and rssh shell with jailed shell.",
+				);
+			}
+
+			if (
 				($v_shell != $_POST["v_shell"] ||
 					$v_shell_jail_enabled != $_POST["v_shell_jail_enabled"]) &&
 				$_SESSION["userContext"] === "admin" &&

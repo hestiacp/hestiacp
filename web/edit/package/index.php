@@ -203,6 +203,15 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	if (
+		isset($_POST["v_shell"]) &&
+		isset($_POST["v_shell_jail_enabled"]) &&
+		in_array($_POST["v_shell"], ["nologin", "rssh"]) &&
+		$_POST["v_shell_jail_enabled"] == "yes"
+	) {
+		$_SESSION["error_msg"] = _("Cannot combine nologin and rssh shell with jailed shell.");
+	}
+
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
 			if ($i == 0) {

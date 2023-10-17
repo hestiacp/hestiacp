@@ -50,7 +50,7 @@ fi
 # Check if php version is supported
 if [[ ! "$multiphp_v" =~ $version ]]; then
 	echo "ERROR: Specified PHP version is not supported or does not exist."
-	exit "$E_INVALID";
+	exit "$E_INVALID"
 fi
 
 # Perform verification if read-only mode is enabled
@@ -139,6 +139,16 @@ sed -i "s/fpm_v/$version/g" /etc/php/$version/fpm/php-fpm.conf
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/$version/fpm/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/$version/fpm/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 60/g" /etc/php/$version/fpm/php.ini
+sed -i "s/;max_input_vars=1000/max_input_vars = 4000/g" /etc/php/$version/fpm/php.ini
+
+# Disable exec and other harmfull php functions
+sed -i "s/disable_functions =.*/disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,exec,system,passthru,shell_exec,proc_open,popen/g" /etc/php/$version/fpm/php.ini
+
+# Other use full changes
+sed -i "s/;mail.log =\n/mail.log = /var/log/php-mail.log\n/g" /etc/php/$version/fpm/php.ini
+sed -i "s/;opcache.enable=1/opcache.enable=1/g" /etc/php/$version/fpm/php.ini
+sed -i "s/;opcache.memory_consumption=128/opcache.memory_consumption=512/g" /etc/php/$version/fpm/php.ini
+sed -i "s/;opcache.max_accelerated_files=10000opcache.max_accelerated_files=100000/g" /etc/php/$version/fpm/php.ini
 
 # Install backend template
 cp -f $HESTIA_INSTALL_DIR/php-fpm/multiphp.tpl \

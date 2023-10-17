@@ -41,7 +41,7 @@ export const teamMembers = [
 	},
 	{
 		avatar:
-			'https://cdn.discordapp.com/avatars/737905427097845780/32452f630dd8684ed7c580806ccbee09.webp',
+		'https://cdn.discordapp.com/avatars/737905427097845780/32452f630dd8684ed7c580806ccbee09.webp',
 		name: 'Falzo 🇩🇪',
 		links: [{ icon: 'github', link: 'https://github.com/falzoMAD' }],
 	},
@@ -61,6 +61,17 @@ export const teamMembers = [
 		links: [
 			{ icon: 'github', link: 'https://github.com/AlecRust' },
 			{ icon: globeIcon, link: 'https://www.alecrust.com/' },
+		],
+	},
+	{
+		avatar: 'https://github.com/ioannidesalex.png',
+		name: 'Alexandros Ioannides 🇨🇾',
+		title: 'CTO',
+		org: 'FocusNet',
+		orgLink: 'https://focus-net.net',
+		links: [
+			{ icon: 'github', link: 'https://github.com/ioannidesalex' },
+			{ icon: 'linkedin', link: 'https://www.linkedin.com/in/ioannidesa' },
 		],
 	},
 ];

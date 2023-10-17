@@ -63,4 +63,15 @@ export const teamMembers = [
 			{ icon: globeIcon, link: 'https://www.alecrust.com/' },
 		],
 	},
+	{
+		avatar: 'https://github.com/ioannidesalex.png',
+		name: 'Alexandros Ioannides 🇨🇾',
+		title: 'CTO',
+		org: 'FocusNet',
+		orgLink: 'https://focus-net.net',
+		links: [
+			{ icon: 'github', link: 'https://github.com/ioannidesalex' },
+			{ icon: 'linkedin', link: 'https://www.linkedin.com/in/ioannidesa' },
+		],
+	},
 ];

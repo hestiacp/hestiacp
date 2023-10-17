@@ -65,6 +65,13 @@ export const options = [
 		default: '',
 	},
 	{
+		flag: 'username',
+		label: 'Username',
+		description: 'Set the admin account username',
+		type: 'text',
+		default: '',
+	},
+	{
 		flag: 'email',
 		label: 'Email',
 		description: 'Set the admin account email',
@@ -178,6 +185,12 @@ export const options = [
 		flag: 'quota',
 		label: 'Filesystem quota',
 		description: 'Use hard disk space limits on user packages',
+		default: 'no',
+	},
+	{
+		flag: 'webterminal',
+		label: 'Web Terminal',
+		description: 'Web-based SSH terminal',
 		default: 'no',
 	},
 	{

@@ -13,7 +13,7 @@
 # Argument definition
 user=$1
 shell=$2
-jail_enabled=$3
+shell_jail_enabled=$3
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -27,8 +27,8 @@ source $HESTIA/conf/hestia.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '2' "$#" 'USER SHELL'
-is_format_valid 'user' 'shell'
+check_args '3' "$#" 'USER SHELL SHELL_JAIL_ENABLED'
+is_format_valid 'user' 'shell shell_jail_enabled'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
@@ -54,7 +54,7 @@ else
 fi
 
 # Adding jailed ssh env
-if [[ "$jail_enabled" =~ yes ]]; then
+if [[ "$shell_jail_enabled" =~ yes ]]; then
 	$BIN/v-add-user-ssh-jail "$user" > /dev/null 2>&1
 else
 	$BIN/v-delete-user-ssh-jail "$user" > /dev/null 2>&1

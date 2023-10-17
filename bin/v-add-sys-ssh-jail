@@ -70,24 +70,11 @@ groupadd ssh-jailed 2> /dev/null
 
 # Checking jailkit init
 jk_init='/etc/jailkit/jk_init.ini'
-jk_php_i=$(grep -n "^# Hestia PHP" $jk_init)
+jk_php_i=$(grep -n "^# Hestia Jail Settings" $jk_init)
 
 # Add PHP to jailkit init to allow usage of it within jail
 if [ -z "$jk_php_i" ]; then
-	echo " " >> $jk_init
-	echo "# Hestia PHP" >> $jk_init
-	echo "[php]" >> $jk_init
-	echo "comment = the php interpreter and libraries" >> $jk_init
-	echo "executables = /usr/bin/php" >> $jk_init
-	echo "directories = /usr/lib/php, /usr/share/php, /etc/php, /usr/share/php-geshi, /usr/share/zoneinfo" >> $jk_init
-	echo "includesections = env, ssl" >> $jk_init
-	echo "" >> $jk_init
-	echo "[env]" >> $jk_init
-	echo "comment = environment variables" >> $jk_init
-	echo "executables = /usr/bin/env" >> $jk_init
-	echo "" >> $jk_init
-	echo "[ssl]" >> $jk_init
-	echo "directories = /etc/ssl, /usr/lib/ssl, /usr/share/ca-certificates" >> $jk_init
+	cp -f $HESTIA_COMMON_DIR/jailkit/jk_init.ini /etc/jailkit
 fi
 
 # Restart ssh service

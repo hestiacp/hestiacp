@@ -9,7 +9,7 @@ export const options = [
 	{
 		flag: 'lang',
 		label: 'Language',
-		description: 'Change the ISO 639-1 language code',
+		description: 'Change the interface language',
 		type: 'select',
 		default: 'en',
 		options: [

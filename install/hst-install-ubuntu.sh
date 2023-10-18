@@ -1095,6 +1095,9 @@ random_password=$(gen_pass '32')
 # do not allow login into hestiaweb user
 echo hestiaweb:$random_password | sudo chpasswd -e
 
+# Create user for php-fpm configs
+/usr/sbin/useradd "hestimail" -c "$email" --no-create-home
+
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ -n "$sftp_subsys_enabled" ]; then

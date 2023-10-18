@@ -144,6 +144,8 @@ sed -i "s/;max_input_vars = 1000/max_input_vars = 4000/g" /etc/php/$version/fpm/
 # Disable exec and other harmfull php functions
 sed -i "s/disable_functions =.*/disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,exec,system,passthru,shell_exec,proc_open,popen/g" /etc/php/$version/fpm/php.ini
 
+sed -i "s/disable_functions =.*/disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,exec,system,passthru,shell_exec,proc_open,popen/g" /etc/php/$version/cli/php.ini
+
 # Other use full changes
 sed -i "s/;opcache.enable=1/opcache.enable=1/g" /etc/php/$version/fpm/php.ini
 sed -i "s/;opcache.memory_consumption=128/opcache.memory_consumption=512/g" /etc/php/$version/fpm/php.ini

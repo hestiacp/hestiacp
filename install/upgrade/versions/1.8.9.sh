@@ -33,3 +33,11 @@ if [ -f /etc/nginx/nginx.conf ]; then
 	echo "[ * ] Mitigate HTTP/2 Rapid Reset Attack via Nginx CVE CVE-2023-44487"
 	sed -i -E 's/(.*keepalive_requests\s{1,})10000;/\11000;/' /etc/nginx/nginx.conf /usr/local/hestia/nginx/conf/nginx.conf
 fi
+
+# Fix security issue wit FPM pools
+if [ -z "$(grep ^hestiamail: /etc/passwd)" ]; then
+	/usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
+
+	sed -i "s/user = www-data/user = hestiamail/g" /etc/php/*/fpm/pool.d/www.conf
+	sed -i "s/user = www-data/user = hestiamail/g" /etc/php/*/fpm/pool.d/dummy.conf
+fi

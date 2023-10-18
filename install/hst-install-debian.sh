@@ -1044,6 +1044,9 @@ rm -f /usr/sbin/policy-rc.d
 
 echo "[ * ] Configuring system settings..."
 
+# Create user for php-fpm configs
+/usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
+
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)
 if [ -n "$sftp_subsys_enabled" ]; then

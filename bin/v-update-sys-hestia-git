@@ -311,7 +311,7 @@ mkdir -p $BUILD_DIR_HESTIA/usr/local/hestia
 # Move needed directories
 cd $BUILD_DIR/hestiacp-$branch_dash
 
-npm install
+npm ci
 npm run build
 
 cp -rf bin func install web $BUILD_DIR_HESTIA/usr/local/hestia/

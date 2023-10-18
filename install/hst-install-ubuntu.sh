@@ -686,6 +686,18 @@ else
 	fi
 fi
 
+#Ask for the password
+if [ -z "$vpass" ]; then
+	while validate_password; do
+		read -p 'Please enter administrator password: ' vpass
+	done
+else
+	if validate_password; then
+		echo "Please use a valid password"
+		exit 1
+	fi
+fi
+
 # Asking for contact email
 if [ -z "$email" ]; then
 	while validate_email; do

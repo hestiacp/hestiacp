@@ -143,3 +143,27 @@ sieve_host = "localhost"
 sieve_port = 4190
 sieve_secure = "None"
 ```
+
+## Oracle Cloud + SMTP relay
+
+If you want to use the SMTP from Oracle Cloud you need to make the following changes to Exim4 Configuration:
+
+Open /etc/exim4/exim4.conf.template and replace the following code:
+
+```bash
+smtp_relay_login:
+driver = plaintext
+public_name = LOGIN
+hide client_send = : SMTP_RELAY_USER : SMTP_RELAY_PASS
+```
+
+With:
+
+```bash
+smtp_relay_login:
+driver = plaintext
+public_name = PLAIN
+hide client_send = ^SMTP_RELAY_USER^SMTP_RELAY_PASS
+```
+
+[See forum topic for more info](https://forum.hestiacp.com/t/oracle-cloud-email-as-relay-doesnt-works/11304/19?)

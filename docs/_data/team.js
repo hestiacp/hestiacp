@@ -51,11 +51,6 @@ export const teamMembers = [
 		links: [{ icon: 'github', link: 'https://github.com/divinity76' }],
 	},
 	{
-		avatar: 'https://www.github.com/istiak101.png',
-		name: 'istiak101 🇧🇩',
-		links: [{ icon: 'github', link: 'https://github.com/istiak101' }],
-	},
-	{
 		avatar: 'https://www.github.com/Pleskan.png',
 		name: 'Anton Pleskanovskyy 🇺🇦',
 		links: [{ icon: 'github', link: 'https://github.com/Pleskan' }],
@@ -66,6 +61,17 @@ export const teamMembers = [
 		links: [
 			{ icon: 'github', link: 'https://github.com/AlecRust' },
 			{ icon: globeIcon, link: 'https://www.alecrust.com/' },
+		],
+	},
+	{
+		avatar: 'https://github.com/ioannidesalex.png',
+		name: 'Alexandros Ioannides 🇨🇾',
+		title: 'CTO',
+		org: 'FocusNet',
+		orgLink: 'https://focus-net.net',
+		links: [
+			{ icon: 'github', link: 'https://github.com/ioannidesalex' },
+			{ icon: 'linkedin', link: 'https://www.linkedin.com/in/ioannidesa' },
 		],
 	},
 ];

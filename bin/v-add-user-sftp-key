@@ -70,7 +70,7 @@ fi
 
 #
 chown ${user}: "${AUTHKEY_FILE}"
-chown ${ROOT_USER} : "${PRVKEY_FILE}"
+chown "hestiaweb": "${PRVKEY_FILE}"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

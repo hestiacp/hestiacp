@@ -19,10 +19,11 @@
 	},
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "6.4.2",
-		"alpinejs": "3.13.1",
+		"alpinejs": "3.13.2",
 		"chart.js": "4.4.0",
 		"check-password-strength": "2.0.7",
-		"nanoid": "5.0.1",
+		"floating-vue": "2.0.0-beta.24",
+		"nanoid": "5.0.2",
 		"normalize.css": "8.0.1",
 		"xterm": "5.3.0",
 		"xterm-addon-canvas": "0.5.0",
@@ -31,7 +32,7 @@
 	"devDependencies": {
 		"@prettier/plugin-php": "0.20.1",
 		"browserslist": "4.22.1",
-		"esbuild": "0.19.4",
+		"esbuild": "0.19.5",
 		"eslint": "8.51.0",
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-editorconfig": "4.0.3",
@@ -46,8 +47,8 @@
 		"prettier-plugin-sql": "0.15.1",
 		"stylelint": "15.10.3",
 		"stylelint-config-standard": "34.0.0",
-		"vitepress": "1.0.0-rc.20",
-		"vue": "3.3.4"
+		"vitepress": "1.0.0-rc.22",
+		"vue": "3.3.5"
 	},
 	"browserslist": [
 		"defaults"

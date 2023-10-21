@@ -1,12 +1,3 @@
-<!-- Begin toolbar -->
-<div class="toolbar">
-	<div class="toolbar-inner">
-		<div class="toolbar-right">
-		</div>
-	</div>
-</div>
-<!-- End toolbar -->
-
 <!-- Begin form -->
 <div class="container">
 	<form id="main-form" name="v_generate_csr" method="post">

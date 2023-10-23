@@ -36,6 +36,7 @@ fi
 
 # Fix security issue wit FPM pools
 if [ -z "$(grep ^hestiamail: /etc/passwd)" ]; then
+	echo "[ * ] Limit permissions www.conf and dummy.conf"
 	/usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
 
 	sed -i "s/user = www-data/user = hestiamail/g" /etc/php/*/fpm/pool.d/www.conf
@@ -44,6 +45,6 @@ if [ -z "$(grep ^hestiamail: /etc/passwd)" ]; then
 	# Substitute php-fpm service name formats
 	for version in $php_versions; do
 		cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
-		sed -i "s/%backend_version%/$version/g" /etc/php/$version/fpm/php-fpm.conf
+		sed -i "s/%backend_version%/$version/g" /etc/php/$version/fpm/pool.d/dummy.conf
 	done
 fi

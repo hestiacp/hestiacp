@@ -39,5 +39,11 @@ if [ -z "$(grep ^hestiamail: /etc/passwd)" ]; then
 	/usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
 
 	sed -i "s/user = www-data/user = hestiamail/g" /etc/php/*/fpm/pool.d/www.conf
-	sed -i "s/user = www-data/user = hestiamail/g" /etc/php/*/fpm/pool.d/dummy.conf
+
+	php_versions=$($BIN/v-list-sys-php plain)
+	# Substitute php-fpm service name formats
+	for version in $php_versions; do
+		cp -f $HESTIA_INSTALL_DIR/php-fpm/dummy.conf /etc/php/$version/fpm/pool.d/
+		sed -i "s/%backend_version%/$version/g" /etc/php/$version/fpm/php-fpm.conf
+	done
 fi

@@ -9,8 +9,7 @@
 	],
 	"packageRules": [
 		{
-			"matchDepTypes": ["devDependencies"],
-			"matchPackagePatterns": ["lint", "prettier"],
+			"extends": ["packages:linters"],
 			"automerge": true
 		}
 	],

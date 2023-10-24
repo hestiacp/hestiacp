@@ -9,7 +9,7 @@ export const options = [
 	{
 		flag: 'lang',
 		label: 'Language',
-		description: 'Change the ISO 639-1 language code',
+		description: 'Change the interface language',
 		type: 'select',
 		default: 'en',
 		options: [
@@ -61,6 +61,13 @@ export const options = [
 		flag: 'hostname',
 		label: 'Hostname',
 		description: 'Set a custom hostname',
+		type: 'text',
+		default: '',
+	},
+	{
+		flag: 'username',
+		label: 'Username',
+		description: 'Set the admin account username',
 		type: 'text',
 		default: '',
 	},
@@ -178,6 +185,12 @@ export const options = [
 		flag: 'quota',
 		label: 'Filesystem quota',
 		description: 'Use hard disk space limits on user packages',
+		default: 'no',
+	},
+	{
+		flag: 'webterminal',
+		label: 'Web Terminal',
+		description: 'Web-based SSH terminal',
 		default: 'no',
 	},
 	{

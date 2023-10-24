@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+- Restrict PHP-FPM permissions to a new user to prevent permission escalation to admin or other users
 - Reduce Nginx keepalive_requests to 1000 ([Nginx default](https://www.nginx.com/blog/http-2-rapid-reset-attack-impacting-f5-nginx-products/#http2_max_concurrent_streams)) to limit risks of [CVE-2023-44487](https://www.cve.org/CVERecord?id=CVE-2023-44487)
 
 ### Bug fixes
@@ -18,10 +19,13 @@ All notable changes to this project will be documented in this file.
 - Fix: for v-list-sys-services, pidof command in Debian Buster doesn't support option -d #4022
 - Update main.php humanize_usage_size() #4015
 - Fix: Prevent the script v-add-sys-roundcube from freezing during Roundcube upgrade #4018
+- Fixed an issue with login when 2FA was enabled
 
 ### Dependencies
 
 - Update Filegator to 7.9.3
+- Update Roundcube to 1.6.4
+- Update Snappymail to 2.29.1
 
 ## [1.8.8] - Service release
 

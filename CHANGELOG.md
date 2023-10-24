@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.10] - Service release
+
+### Bug fixes
+
+- Include missed changes
+- Include <https://github.com/hestiacp/hestiacp/blob/main/install/upgrade/manual/secure_php.sh>
+
+## [1.8.9] - Service release
+
+### Security
+
+- Restrict PHP-FPM permissions to a new user to prevent permission escalation to admin or other users [CVE-xxxx-xxxxx](https://huntr.com/bounties/21125f12-64a0-42a3-b218-26b9945a5bc0/)
+- Reduce Nginx keepalive_requests to 1000 ([Nginx default](https://www.nginx.com/blog/http-2-rapid-reset-attack-impacting-f5-nginx-products/#http2_max_concurrent_streams)) to limit risks of [CVE-2023-44487](https://www.cve.org/CVERecord?id=CVE-2023-44487)
+
+### Bug fixes
+
+- Fix: removing certificates during apache reload #4053
+- Fix: Firehol blacklists #4046
+- Fix PHP error + Add option to update WPCLI + Composer #4039
+- Update v-add-mail-domain #4027 #4026
+- Update MediaWikiSetup.php #4034
+- Fix: for v-list-sys-services, pidof command in Debian Buster doesn't support option -d #4022
+- Update main.php humanize_usage_size() #4015
+- Fix: Prevent the script v-add-sys-roundcube from freezing during Roundcube upgrade #4018
+- Fixed an issue with login when 2FA was enabled
+
+### Dependencies
+
+- Update Filegator to 7.9.3
+- Update Roundcube to 1.6.4
+- Update Snappymail to 2.29.1
+
 ## [1.8.8] - Service release
 
 ### Security

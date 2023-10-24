@@ -110,7 +110,7 @@ watchEffect(() => {
 	for (const [key, { enabled, value }] of Object.entries(selectedOptions.value)) {
 		const opt = options.find((o) => o.flag === key);
 		if (opt.flag == "force" && enabled) {
-			cmd += ` -f`;
+			cmd += ` --force`;
 		} else if (!opt.type || opt.type === "checkbox") {
 			if (enabled !== (opt.default === "yes")) {
 				cmd += ` --${key}=${enabled ? "yes" : "no"}`;

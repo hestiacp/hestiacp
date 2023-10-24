@@ -87,12 +87,14 @@ get_srv_state() {
 
 	# Searching related pids
 	if [ -z $3 ]; then
-		pids=$(pidof -d '|' $name)
+		pids=$(pidof $name | tr ' ' '|')
 	else
-		pids=$(pidof -d '|' -x $name)
+		pids=$(pidof -x $name | tr ' ' '|')
 	fi
+	used_pgrep=0
 	if [ -z "$pids" ] && [ "$name" != 'nginx' ]; then
 		pids=$(pgrep $name | tr '\n' '|')
+		used_pgrep=1
 	fi
 
 	# Prevent from an SSH false positive when there is a TTY or SFTP connection but service is down
@@ -102,7 +104,11 @@ get_srv_state() {
 
 	# Checking pid
 	if [ -n "$pids" ]; then
-		pid=$(echo "$pids" | awk -F '|' '{print $NF}')
+		if [[ "$used_pgrep" -eq 1 ]]; then
+			pid=$(echo "$pids" | awk -F '|' '{print $1}')
+		else
+			pid=$(echo "$pids" | awk -F '|' '{print $NF}')
+		fi
 		pids=${pids%|}
 		pids=$(egrep "$pids" $tmp_file)
 

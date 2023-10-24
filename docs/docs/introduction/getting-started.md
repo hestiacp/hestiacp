@@ -75,7 +75,7 @@ bash hst-install.sh -h
 ### List of installation options
 
 ::: tip
-An easier way to choose your installation options is by using the [Install string generator](/install.md).
+An easier way to choose your installation options is by using the [Install string generator](/install).
 :::
 
 To choose what software gets installed, you can provide flags to the installation script. You can view the full list of options below.
@@ -83,12 +83,12 @@ To choose what software gets installed, you can provide flags to the installatio
 ```bash
 -a, --apache Install Apache [yes | no] default: yes
 -w, --phpfpm Install PHP-FPM [yes | no] default: yes
--o, --multiphp Install Multi-PHP [yes | no] default: no
--v, --vsftpd Install Vsftpd [yes | no] default: yes
+-o, --multiphp Install MultiPHP [yes | no] default: no
+-v, --vsftpd Install VSFTPD [yes | no] default: yes
 -j, --proftpd Install ProFTPD [yes | no] default: no
--k, --named Install Bind [yes | no] default: yes
+-k, --named Install BIND [yes | no] default: yes
 -m, --mysql Install MariaDB [yes | no] default: yes
--M, --mysql-classic Install Mysql8 [yes | no] default: no
+-M, --mysql8 Install Mysql8 [yes | no] default: no
 -g, --postgresql Install PostgreSQL [yes | no] default: no
 -x, --exim Install Exim [yes | no] default: yes
 -z, --dovecot Install Dovecot [yes | no] default: yes

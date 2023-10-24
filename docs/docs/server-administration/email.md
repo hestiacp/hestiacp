@@ -116,7 +116,7 @@ No, Cloudflare’s Proxy does not work with email. If you use email hosted on yo
 - TXT record with name **mail.\_domainkey** containing `t=y; o=~DKIM key;`
 - TXT record with name **\_dmarc** containing `v=DMARC1; p=quarantine; sp=quarantine; adkim=s; aspf=s;`
 
-The DKIM key and SPF record can be found in the **Mail Domains** list ([documentation](../user-guide/mail-domains.md#get-dns-records)).
+The DKIM key and SPF record can be found in the **Mail Domains** list ([documentation](../user-guide/mail-domains#get-dns-records)).
 
 ## When sending send emails from my server, they end up in the spam folder
 
@@ -130,7 +130,7 @@ During Hestia’s installation, use the `--sieve` flag. If Hestia is already ins
 
 ## Can I allow access to ManageSieve via an external mail client?
 
-Open port 4190 in the firewall. [Read the firewall documentation](./firewall.md).
+Open port 4190 in the firewall. [Read the firewall documentation](./firewall).
 
 ## How can I enable ManageSieve for Snappymail?
 
@@ -143,3 +143,27 @@ sieve_host = "localhost"
 sieve_port = 4190
 sieve_secure = "None"
 ```
+
+## Oracle Cloud + SMTP relay
+
+If you want to use the SMTP from Oracle Cloud you need to make the following changes to Exim4 Configuration:
+
+Open /etc/exim4/exim4.conf.template and replace the following code:
+
+```bash
+smtp_relay_login:
+driver = plaintext
+public_name = LOGIN
+hide client_send = : SMTP_RELAY_USER : SMTP_RELAY_PASS
+```
+
+With:
+
+```bash
+smtp_relay_login:
+driver = plaintext
+public_name = PLAIN
+hide client_send = ^SMTP_RELAY_USER^SMTP_RELAY_PASS
+```
+
+[See forum topic for more info](https://forum.hestiacp.com/t/oracle-cloud-email-as-relay-doesnt-works/11304/19?)

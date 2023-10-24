@@ -60,7 +60,7 @@ class MediaWikiSetup extends BaseSetup {
 
 		$this->appcontext->runUser(
 			"v-copy-fs-directory",
-			[$this->getDocRoot($this->extractsubdir . "/mediawiki-1.39.2/."), $this->getDocRoot()],
+			[$this->getDocRoot($this->extractsubdir . "/mediawiki-1.40.0/."), $this->getDocRoot()],
 			$result,
 		);
 

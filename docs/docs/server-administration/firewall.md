@@ -16,7 +16,7 @@ After every edit or update the firewall, Hestia will clear the current iptables 
 8. Optionally describe the rule’s function.
 9. Click the **<i class="fas fa-fw fa-save"></i> Save** button in the top right.
 
-You can also use the [v-add-firewall-rule](../reference/cli.md#v-add-firewall-rule) command.
+You can also use the [v-add-firewall-rule](../reference/cli#v-add-firewall-rule) command.
 
 ## How do I setup an IPSet blacklist or whitelist?
 

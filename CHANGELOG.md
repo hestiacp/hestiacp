@@ -2,11 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.10] - Service release
+
+### Bug fixes
+
+- Include missed changes
+- Include https://github.com/hestiacp/hestiacp/blob/main/install/upgrade/manual/secure_php.sh
+
 ## [1.8.9] - Service release
 
 ### Security
 
-- Restrict PHP-FPM permissions to a new user to prevent permission escalation to admin or other users
+- Restrict PHP-FPM permissions to a new user to prevent permission escalation to admin or other users [CVE-xxxx-xxxxx](https://huntr.com/bounties/21125f12-64a0-42a3-b218-26b9945a5bc0/)
 - Reduce Nginx keepalive_requests to 1000 ([Nginx default](https://www.nginx.com/blog/http-2-rapid-reset-attack-impacting-f5-nginx-products/#http2_max_concurrent_streams)) to limit risks of [CVE-2023-44487](https://www.cve.org/CVERecord?id=CVE-2023-44487)
 
 ### Bug fixes

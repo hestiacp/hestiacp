@@ -31,7 +31,7 @@ HESTIA_COMMON_DIR="$HESTIA/install/common"
 VERBOSE='no'
 
 # Define software versions
-HESTIA_INSTALL_VER='1.8.9'
+HESTIA_INSTALL_VER='1.8.10'
 # Dependencies
 multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
 fpm_v="8.2"
@@ -1024,6 +1024,9 @@ rm -f /usr/sbin/policy-rc.d
 #----------------------------------------------------------#
 
 echo "[ * ] Configuring system settings..."
+
+# Create user for php-fpm configs
+/usr/sbin/useradd "hestiamail" -c "$email" --no-create-home
 
 # Enable SFTP subsystem for SSH
 sftp_subsys_enabled=$(grep -iE "^#?.*subsystem.+(sftp )?sftp-server" /etc/ssh/sshd_config)

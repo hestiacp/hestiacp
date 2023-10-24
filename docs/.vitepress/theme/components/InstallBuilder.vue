@@ -109,8 +109,9 @@ watchEffect(() => {
 	let cmd = "bash hst-install.sh";
 	for (const [key, { enabled, value }] of Object.entries(selectedOptions.value)) {
 		const opt = options.find((o) => o.flag === key);
-
-		if (!opt.type || opt.type === "checkbox") {
+		if (opt.flag == "force" && enabled) {
+			cmd += ` -f`;
+		} else if (!opt.type || opt.type === "checkbox") {
 			if (enabled !== (opt.default === "yes")) {
 				cmd += ` --${key}=${enabled ? "yes" : "no"}`;
 			}

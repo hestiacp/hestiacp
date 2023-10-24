@@ -1070,13 +1070,6 @@ is_fw_iptables_format_valid() {
 	fi
 }
 
-# Firewall lockingopt validator
-is_fw_lockingopt_format_valid() {
-	if [ "$1" != "-w" ] && [ -n "$1" ]; then
-		check_result "$E_INVALID" "invalid lockingopt format :: $1"
-	fi
-}
-
 # DNS record id validator
 is_id_format_valid() {
 	if ! echo "$1" | grep -qE '^[1-9][0-9]{0,}$'; then
@@ -1248,7 +1241,6 @@ is_format_valid() {
 				format) is_type_valid 'plain json shell csv' "$arg" ;;
 				ftp_password) is_password_format_valid "$arg" ;;
 				ftp_user) is_user_format_valid "$arg" "$arg_name" ;;
-				fw_lockingopt) is_fw_lockingopt_format_valid "$arg" ;;
 				hash) is_hash_format_valid "$arg" "$arg_name" ;;
 				host) is_object_format_valid "$arg" "$arg_name" ;;
 				hour) is_cron_format_valid "$arg" $arg_name ;;

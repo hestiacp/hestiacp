@@ -64,7 +64,7 @@ check_hestia_demo_mode
 heal_iptables_links
 
 # Checking server ip
-if [ -e "$HESTIA/data/ips/$ip46" ] || [ "$ip46" = '127.0.0.1' ]; then
+if [ -e "$HESTIA/data/ips/$ip46" ] || [ "$ip46" = '127.0.0.1' ] || [ "$ip46" = '::1' ] || [ "$ip46" = '0:0:0:0:0:0:0:1' ]; then
 	exit
 fi
 
@@ -95,7 +95,7 @@ date=$(echo "$time_n_date" | cut -f 2 -d \ )
 
 # Adding ip to banlist
 echo "IP='$ip46' CHAIN='$chain' TIME='$time' DATE='$date'" >> "$conf"
-error_message="$("$iptables" -I "fail2ban-${chain}" 1 -s "$ip2ban" -j REJECT --reject-with "$reject_with")"
+error_message="$(${iptables} -I "fail2ban-${chain}" 1 -s "$ip2ban" -j REJECT --reject-with "$reject_with")"
 if [ $? -ne 0 ]; then
 	error_code=$?
 	check_result 1 "$error_message"

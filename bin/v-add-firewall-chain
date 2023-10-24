@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add firewall chain
-# options: CHAIN [PORT] [PROTOCOL] [IPFAMILY] [IPTABLES] [FW_LOCKINGOPT]
+# options: CHAIN [PORT] [PROTOCOL] [IPFAMILY] [IPTABLES]
 #
 # example: v-add-firewall-chain CRM 5678 TCP
 #
@@ -25,9 +25,6 @@ ipfamily="$4"
 # Defining iptables version
 iptables="$5"
 
-# Defining locking option for iptables
-fw_lockingopt="$6"
-
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
@@ -48,8 +45,8 @@ fi
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL] [IPFAMILY] [IPTABLES] [FW_LOCKINGOPT]'
-is_format_valid 'chain' 'port_ext' 'protocol' 'ipfamily' 'iptables' 'fw_lockingopt'
+check_args '1' "$#" 'CHAIN [PORT] [PROTOCOL] [IPFAMILY] [IPTABLES]'
+is_format_valid 'chain' 'port_ext' 'protocol' 'ipfamily' 'iptables'
 is_system_enabled "$FIREWALL_SYSTEM" 'FIREWALL_SYSTEM'
 
 # Perform verification if read-only mode is enabled
@@ -64,7 +61,6 @@ heal_iptables_links
 
 # Get iptables binary
 iptables="$(get_iptables_bin "$iptables")"
-[ -n "$fw_lockingopt" ] && iptables="$iptables $fw_lockingopt"
 
 # Checking known chains
 case $chain in

@@ -4340,7 +4340,7 @@ list default PHP version used by default.tpl
 
 **Options**: `[FORMAT]`
 
-List the default version used by de the default template
+List the default version used by the default template
 
 ## v-list-dns-domain
 

@@ -5,14 +5,8 @@
 		":pinAllExceptPeerDependencies",
 		":disableDependencyDashboard",
 		"group:allNonMajor",
-		"schedule:weekdays"
-	],
-	"packageRules": [
-		{
-			"matchDepTypes": ["devDependencies"],
-			"matchPackagePatterns": ["lint", "prettier"],
-			"automerge": true
-		}
+		"schedule:weekdays",
+		":automergeLinters"
 	],
 	"enabledManagers": ["npm", "composer", "github-actions"],
 	"ignorePaths": ["**/node_modules/**", "install/deb/filemanager/filegator/composer.json"],

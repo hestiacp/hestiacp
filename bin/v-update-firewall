@@ -220,6 +220,11 @@ else
 	systemctl -q is-enabled hestia-iptables 2> /dev/null || systemctl -q enable hestia-iptables
 fi
 
+if [ -x "$HESTIA/data/firewall/post-update.sh" ]; then
+	# Run Post update script for services interact with firewall for example Crowsec
+	bash "$HESTIA/data/firewall/post-update.sh"
+fi
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

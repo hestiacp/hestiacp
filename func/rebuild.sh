@@ -459,7 +459,7 @@ rebuild_web_domain_conf() {
 		chgrp $user $htpasswd $htaccess
 	done
 
-	# domain folder permissions: DOMAINDIR_WRITABLE: optional hestia.conf key=value
+	# domain folder permissions: DOMAINDIR_WRITABLE: default-val:no source:hestia.conf
  	DOMAINDIR_MODE=551
 	if [ "$DOMAINDIR_WRITABLE" = 'yes' ]; then DOMAINDIR_MODE=751; fi
 

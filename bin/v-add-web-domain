@@ -127,7 +127,7 @@ user_exec chmod 751 $HOMEDIR/$user/web/$domain/*
 user_exec chmod 551 $HOMEDIR/$user/web/$domain/stats $HOMEDIR/$user/web/$domain/logs
 user_exec chmod 644 $HOMEDIR/$user/web/$domain/public_*html/*
 
-# domain folder permissions: DOMAINDIR_WRITABLE: optional hestia.conf key=value
+# domain folder permissions: DOMAINDIR_WRITABLE: default-val:no source:hestia.conf
 DOMAINDIR_MODE=551
 if [ "$DOMAINDIR_WRITABLE" = 'yes' ]; then DOMAINDIR_MODE=751; fi
 

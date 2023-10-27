@@ -21,6 +21,14 @@ Due to changes in the code, the error message has been changed. The following li
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `rateLimited` | The rate limit of the maximum requests have been passed. Please check [https://crt.sh](https://crt.sh) to see how many active certificates you have. |
 
+## Let's Encrypt staging mode
+
+If your test/development activites require a lot of SSL certificates, you may encounter Let's Encrypt rate limit. To switch to Let's Encrypt staging mode, run the cli command: `v-change-sys-config-value LE_STAGING yes` To resume regular Let's Encrypt mode: `v-change-sys-config-value LE_STAGING no` Or manually make this change in `/usr/local/hestia/conf/hestia.conf`
+
+More info: 
+- [https://letsencrypt.org/docs/rate-limits/](https://letsencrypt.org/docs/rate-limits/)
+- [https://letsencrypt.org/docs/staging-environment/](https://letsencrypt.org/docs/staging-environment/)
+
 ### Let’s Encrypt validation status 400
 
 When requesting an SSL certificate, you may encounter the following error:
@@ -96,3 +104,6 @@ Yes, you are able to use Let’s Encrypt certificates with Cloudflare’s proxy,
 2. Once generated, enter your SSL keys in the **Edit Web Domain** page.
 3. In the **SSL Certificate Authority / Intermediate** box, enter [this certificate](https://developers.cloudflare.com/ssl/static/origin_ca_rsa_root.pem).
 4. In Cloudflare’s **SSL/TLS** tab, switch over to **Full (strict)**.
+
+
+

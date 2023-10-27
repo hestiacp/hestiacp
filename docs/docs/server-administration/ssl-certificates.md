@@ -11,6 +11,29 @@ v-change-sys-hostname host.domain.tld
 v-add-letsencrypt-host
 ```
 
+## Managing Let's Encrypt with the cli
+See CLI doc for each command:
+- [v-add-letsencrypt-domain](https://hestiacp.com/docs/reference/cli.html#v-add-letsencrypt-domain)
+- [v-delete-letsencrypt-domain](https://hestiacp.com/docs/reference/cli.html#v-delete-letsencrypt-domain)
+- [v-add-web-domain-ssl-preset](https://hestiacp.com/docs/reference/cli.html#v-add-web-domain-ssl-preset)
+- [v-add-letsencrypt-host](https://hestiacp.com/docs/reference/cli.html#v-add-letsencrypt-host)
+- [v-add-cron-letsencrypt-job](https://hestiacp.com/docs/reference/cli.html#v-add-cron-letsencrypt-job)
+- [v-schedule-letsencrypt-domain](https://hestiacp.com/docs/reference/cli.html#v-schedule-letsencrypt-domain)
+- [v-update-letsencrypt-ssl](https://hestiacp.com/docs/reference/cli.html#v-update-letsencrypt-ssl)
+- [v-add-letsencrypt-user](https://hestiacp.com/docs/reference/cli.html#v-add-letsencrypt-user)
+- [v-list-letsencrypt-user](https://hestiacp.com/docs/reference/cli.html#v-list-letsencrypt-user)
+
+## Let's Encrypt staging mode
+
+If your test/development activites require a lot of SSL certificates, you may encounter Let's Encrypt rate limit. 
+- To switch to Let's Encrypt staging mode, run the cli command: `v-change-sys-config-value LE_STAGING yes`
+- To resume regular Let's Encrypt mode: `v-change-sys-config-value LE_STAGING no`
+- Or manually make this change in `/usr/local/hestia/conf/hestia.conf`
+
+More info: 
+- [https://letsencrypt.org/docs/rate-limits/](https://letsencrypt.org/docs/rate-limits/)
+- [https://letsencrypt.org/docs/staging-environment/](https://letsencrypt.org/docs/staging-environment/)
+
 ## Common errors using Let’s Encrypt
 
 ::: info
@@ -20,14 +43,6 @@ Due to changes in the code, the error message has been changed. The following li
 | Error         | Message                                                                                                                                              |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `rateLimited` | The rate limit of the maximum requests have been passed. Please check [https://crt.sh](https://crt.sh) to see how many active certificates you have. |
-
-## Let's Encrypt staging mode
-
-If your test/development activites require a lot of SSL certificates, you may encounter Let's Encrypt rate limit. To switch to Let's Encrypt staging mode, run the cli command: `v-change-sys-config-value LE_STAGING yes` To resume regular Let's Encrypt mode: `v-change-sys-config-value LE_STAGING no` Or manually make this change in `/usr/local/hestia/conf/hestia.conf`
-
-More info: 
-- [https://letsencrypt.org/docs/rate-limits/](https://letsencrypt.org/docs/rate-limits/)
-- [https://letsencrypt.org/docs/staging-environment/](https://letsencrypt.org/docs/staging-environment/)
 
 ### Let’s Encrypt validation status 400
 

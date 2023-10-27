@@ -123,6 +123,3 @@ Yes, you are able to use Let’s Encrypt certificates with Cloudflare’s proxy,
 2. Once generated, enter your SSL keys in the **Edit Web Domain** page.
 3. In the **SSL Certificate Authority / Intermediate** box, enter [this certificate](https://developers.cloudflare.com/ssl/static/origin_ca_rsa_root.pem).
 4. In Cloudflare’s **SSL/TLS** tab, switch over to **Full (strict)**.
-
-
-

@@ -1,11 +1,18 @@
 #!/bin/bash
-# info: check letsencrypt domain
+# info: verifies or adds letsencrypt ssl certificate to domain
 # options: USER DOMAIN [ALIASES] [MAIL]
 #
-# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
-# example: v-add-letsencrypt-domain admin wonderland.com '' yes
+# example:
+# # USAGE: [ALIASES] full subdomain(s) comma separated with no space i.e. www.domain.tld,sub.domain.tld
+# # USAGE: [MAIL] certs for: mail.domain.tld + webmail.domain.tld | input-val: yes|no default-val: no
+# # SSL cert only: domain.tld
+# v-add-letsencrypt-domain username domain.tld
+# # SSL certs for: domain.tld + www.domain.tld + sub.domain.tld NOTE: comma separated subdomains with no space
+# v-add-letsencrypt-domain username domain.tld www.domain.tld,sub.domain.tld
+# # Mail SSL certs only: mail.domain.tld + webmail.domain.tld
+# v-add-letsencrypt-domain username domain.tld '' yes
 #
-# This function check and validates domain with Let's Encrypt
+# [Let's Encrypt staging mode info](https://hestiacp.com/docs/server-administration/ssl-certificates.html#lets-encrypt-staging-mode)
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

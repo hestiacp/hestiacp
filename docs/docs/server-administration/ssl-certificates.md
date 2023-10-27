@@ -33,6 +33,8 @@ If your test/development activites require a lot of SSL certificates, you may en
 - To resume regular Let's Encrypt mode: `v-change-sys-config-value LE_STAGING no`
 - Or manually make this change in `/usr/local/hestia/conf/hestia.conf`
 
+IMPORTANT: If switching between regular and live, manually delete: /usr/local/hestia/data/users/{user}/ssl/le.conf and user.key And you are not able to have Let's Encrypt regular and staging under the same user other wise things will break.
+
 More info:
 
 - [https://letsencrypt.org/docs/rate-limits/](https://letsencrypt.org/docs/rate-limits/)

@@ -2,7 +2,7 @@
 # info: verifies or adds letsencrypt ssl certificate to domain
 # options: USER DOMAIN [ALIASES] [MAIL]
 #
-# example:
+# example: 
 # # USAGE: [ALIASES] full subdomain(s) comma separated with no space i.e. www.domain.tld,sub.domain.tld
 # # USAGE: [MAIL] certs for: mail.domain.tld + webmail.domain.tld | input-val: yes|no default-val: no
 # # SSL cert only: domain.tld

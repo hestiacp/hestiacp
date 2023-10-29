@@ -7,8 +7,8 @@
 # # NAME > no spaces
 # # [SOURCE] > valid formats > input-val: http[s]://|script:|file:+source_location
 # # [IPVERSION] > input-val: v4|v6 > default-val: v4
-# # [AUTOUPDATE] > auto update via hestia cron > input-val: yes|no > default-val: yes
-# # [REFRESH] > input-val: yes|no > default-val: no
+# # [AUTOUPDATE] > auto update ipset via hestia cron > input-val: yes|no > default-val: yes
+# # [REFRESH] > refresh the ipset now > input-val: yes|no > default-val: no
 # # source: http[s]://
 # v-add-firewall-ipset my-ipset-source-http-name "https://domain.tld/ipv4-aggregated.txt"
 # # source: script:

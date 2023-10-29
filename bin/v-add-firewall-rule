@@ -5,7 +5,7 @@
 # example: 
 # # OPTIONS USAGE: 
 # # ACTION: ACCEPT | DROP
-# # IP: 0 = all ips | ip(v4) ex. 1.1.1.1 | ipset in format: ipset:your_ipset_name
+# # IP: 0.0.0.0/0 = all ips | ip(v4) ex. 1.1.1.1 | ipset in format: ipset:your_ipset_name
 # # PORT: 0 = all ports | portnumber ex. 25
 # # [PROTOCOL] tcp | icmp | udp
 # # [RULE] hestia rule number ex. 10

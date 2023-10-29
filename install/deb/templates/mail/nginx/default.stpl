@@ -15,6 +15,11 @@ server {
 	if ($anti_replay = 307) { return 307 https://$host$request_uri; }
 	if ($anti_replay = 425) { return 425; }
 
+        # Redirect /webmail to webmail.domain
+        location ~ ^/webmail {
+                rewrite ^ https://webmail.%domain_idn%/ permanent;
+        }
+
 	location ~ /\.(?!well-known\/) {
 		deny all;
 		return 404;

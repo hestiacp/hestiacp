@@ -538,6 +538,10 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: ROOT_USER ('admin')"
 		$BIN/v-change-sys-config-value "ROOT_USER" "admin"
 	fi
+ 	if [[ -z $(check_key_exists 'DOMAINDIR_WRITABLE') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: DOMAINDIR_WRITABLE ('no')"
+		$BIN/v-change-sys-config-value "DOMAINDIR_WRITABLE" "no"
+	fi
 
 	# IPV6 Support
 	if [[ -z $(check_key_exists 'IPV6_SUPPORT') ]]; then

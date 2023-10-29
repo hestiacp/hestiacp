@@ -5,13 +5,13 @@
 # example: 
 # # OPTIONS USAGE:
 # # NAME > no spaces
-# # [SOURCE] > valid formats > input-val: http[s]://|script:|file:+source_location
+# # [SOURCE] > valid formats > input-val: http[s]://|script:|file:+source_location > NOTE: script: permission must be executable
 # # [IPVERSION] > input-val: v4|v6 > default-val: v4
 # # [AUTOUPDATE] > auto update ipset via hestia cron > input-val: yes|no > default-val: yes
 # # [REFRESH] > refresh the ipset now > input-val: yes|no > default-val: no
 # # source: http[s]://
 # v-add-firewall-ipset my-ipset-source-http-name "https://domain.tld/ipv4-aggregated.txt"
-# # source: script:
+# # source: script: NOTE: script: permission must be executable
 # v-add-firewall-ipset my-ipset-source-script-name "script:/path/to/script.sh"
 # # source: file:
 # v-add-firewall-ipset my-ipset-source-file-name "file:/path/to/file.txt"

@@ -10,11 +10,11 @@
 # # [AUTOUPDATE] > auto update via hestia cron > input-val: yes|no > default-val: yes
 # # [REFRESH] > input-val: yes|no > default-val: no
 # # source: http[s]://
-# v-add-firewall-ipset ipset-source-http "https://domain.tld/ipv4-aggregated.txt"
+# v-add-firewall-ipset my-ipset-source-http-name "https://domain.tld/ipv4-aggregated.txt"
 # # source: script:
-# v-add-firewall-ipset ipset-source-script "script:/path/to/script.sh"
+# v-add-firewall-ipset my-ipset-source-script-name "script:/path/to/script.sh"
 # # source: file:
-# v-add-firewall-ipset ipset-source-file "file:/path/to/file.txt"
+# v-add-firewall-ipset my-ipset-source-file-name "file:/path/to/file.txt"
 #
 # This function adds new ipset to system firewall from url, script or file.
 

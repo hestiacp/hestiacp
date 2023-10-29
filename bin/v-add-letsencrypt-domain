@@ -3,8 +3,9 @@
 # options: USER DOMAIN [ALIASES] [MAIL]
 #
 # example: 
-# # USAGE: [ALIASES] full subdomain(s) comma separated with no space i.e. www.domain.tld,sub.domain.tld
-# # USAGE: [MAIL] certs for: mail.domain.tld + webmail.domain.tld | input-val: yes|no default-val: no
+# # OPTIONS USAGE:
+# # [ALIASES] > full subdomain(s) comma separated with no space i.e. www.domain.tld,sub.domain.tld
+# # [MAIL] > certs for: mail.domain.tld + webmail.domain.tld > input-val: yes|no > default-val: no
 # # SSL cert only: domain.tld
 # v-add-letsencrypt-domain username domain.tld
 # # SSL certs for: domain.tld + www.domain.tld + sub.domain.tld NOTE: comma separated subdomains with no space

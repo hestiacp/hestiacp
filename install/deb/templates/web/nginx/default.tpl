@@ -16,6 +16,11 @@ server {
 		return 404;
 	}
 
+        # Redirect /webmail to webmail.domain
+        location ~ ^/webmail {
+                rewrite ^ https://webmail.%domain_idn%/ permanent;
+        }
+
 	location / {
 		proxy_pass http://%ip%:%web_port%;
 

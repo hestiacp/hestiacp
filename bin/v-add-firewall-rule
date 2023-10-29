@@ -2,9 +2,20 @@
 # info: add firewall rule
 # options: ACTION IP PORT [PROTOCOL] [COMMENT] [RULE]
 #
-# example: v-add-firewall-rule DROP 185.137.111.77 25
+# example: 
+# # OPTIONS USAGE: 
+# # ACTION: ACCEPT | DROP
+# # IP: 0 = all ips | ip(v4) ex. 1.1.1.1 | ipset in format: ipset:your_ipset_name
+# # PORT: 0 = all ports | portnumber ex. 25
+# # [PROTOCOL] tcp | icmp | udp
+# # [RULE] hestia rule number ex. 10
+# # ban ip
+# v-add-firewall-rule DROP 185.137.111.77 25
+# # add ipset whitelist
+# v-add-firewall-rule ACCEPT ipset:your_ipset_name 0 tcp 'my ip set name'
 #
-# This function adds new rule to system firewall
+# This function adds new rule to system firewall. NOTE: The option IP can be ipset name
+# in the format ipset:your_ipset_name
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -242,10 +242,11 @@ if [ "$type" = 'sftp' ]; then
 		fi
 	fi
 	rc=$?
-	if [[ "$rc" != 0 ]]; then
+	if [[ "$rc" -ne 0 ]]; then
 		case $rc in
 			$E_CONNECT) echo "Error: can't login to sftp $user@$host" ;;
 			$E_FTP) echo "Error: can't create temp folder on the sftp host" ;;
+			*) echo "Error Unable to connect via sftp.";;
 		esac
 		log_event "$rc" "$ARGUMENTS"
 		exit "$rc"

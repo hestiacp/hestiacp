@@ -263,6 +263,17 @@ for folder in *; do
 				$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
 				mv $mail_account /home/$new_user/mail/$folder/
 				chown -R $new_user:mail /home/$new_user/mail/$folder/
+
+				# Decompress gzipped emails
+                		decompressed_count=0
+                		for mail_file in $(find /home/$new_user/mail/$folder -type f); do
+                    			if file "$mail_file" | grep -q "gzip compressed"; then
+                        			gunzip -c "$mail_file" > "${mail_file}.decompressed" && mv "${mail_file}.decompressed" "$mail_file"
+                        			let decompressed_count++
+                    			fi
+                		done
+                		echo "$decompressed_count emails decompressed for $mail_account@$folder"
+              
 				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
 				pass=$(grep "^$mail_account:" ../../etc/${folder}/shadow | awk -F ":" '{print $2}')
 				USER_DATA=$HESTIA/data/users/$new_user/

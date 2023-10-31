@@ -264,9 +264,26 @@ for folder in *; do
 				mv $mail_account /home/$new_user/mail/$folder/
 				chown -R $new_user:mail /home/$new_user/mail/$folder/
 				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
-				pass=$(grep "^$mail_account:" ../../etc/${folder}/shadow | awk -F ":" '{print $2}')
-				USER_DATA=$HESTIA/data/users/$new_user/
-				update_object_value "mail/$folder" 'ACCOUNT' "$mail_account" '$MD5' "$pass"
+
+				# Extract and update password from the shadow file
+				password_file="../../etc/${folder}/shadow"
+				if [ -f "$password_file" ]; then
+    					pass_line=$(grep "^$mail_account:" $password_file)
+    					if [ $? -eq 0 ]; then
+        					# Extract the hashed password from the shadow file
+        					pass=$(echo "$pass_line" | awk -F ":" '{print $2}')  
+                				newline="${mail_account}:{SHA512-CRYPT}$pass:${new_user}:mail::/home/${new_user}:0"
+                				newline2="ACCOUNT='${mail_account}' ALIAS='' AUTOREPLY='no' FWD='' FWD_ONLY='' MD5='{SHA512-CRYPT}$pass' QUOTA='unlimited' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$date'"
+                				escaped=$(printf '%s\n' "$newline" | sed -e 's/[\/&]/\\&/g')
+                				escaped2=$(printf '%s\n' "$newline2" | sed -e 's/[\/&]/\\&/g')
+                				sed -i "s/^${mail_account}:.*/$escaped/g" /home/${new_user}/conf/mail/${folder}/passwd
+                				sed -i "s/^ACCOUNT='${mail_account}.*/$escaped2/g" /usr/local/hestia/data/users/${new_user}/mail/${folder}.conf
+    					else
+        					echo "Warning: Password for $mail_account@$folder not found in shadow file."
+    					fi
+				else
+    					echo "Warning: Shadow file for $folder not found."
+				fi
 			done
 			cd ..
 			$BIN/v-rebuild-mail-domain $new_user $folder

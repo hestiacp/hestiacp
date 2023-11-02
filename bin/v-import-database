@@ -36,14 +36,7 @@ is_format_valid 'database' 'user'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
-
-# Check owner existence
-owner=$user
-if [ ! -d "$HESTIA/data/users/$owner" ]; then
-	echo "Error: database owner doesn't exist"
-	log_event "$E_NOTEXIST" "$ARGUMENTS"
-	exit "$E_NOTEXIST"
-fi
+is_object_valid 'database' 'DATABASE' "$database"
 
 
 

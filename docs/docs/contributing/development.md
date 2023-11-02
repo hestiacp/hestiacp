@@ -32,10 +32,10 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    git clone https://github.com/YourUsername/hestiacp.git $HOME/projects
    ```
 
-1. Create an Ubuntu VM with at least 2G of memory and 15G of disk space
+1. Create an Ubuntu VM with at least 2GB of memory and 15GB of disk space
 
    ```bash
-   multipass launch --name hestia-dev --memory 2G --disk 15G
+   multipass launch --name hestia-dev --memory 4G --disk 15G --cpus 4
    ```
 
 1. Map your cloned repository to the VM's home directory
@@ -58,7 +58,7 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    node --version
    ```
 
-1. Install dependencies and build the theme files:
+1. Install dependencies and build the theme files
 
    ```bash
    npm install
@@ -69,16 +69,16 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 
    ```bash
    cd src
-   ./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
+   ./hst_autocompile.sh --all --noinstall --keepbuild '~localsrc'
    ```
 
-1. Navigate to `/install` and install Hestia
+1. Navigate to `/install` and install Hestia with these flags
 
    _(update the [installation flags](../introduction/getting-started#list-of-installation-options) to your liking, note that login credentials are set here)_
 
    ```bash
    cd ../install
-   bash hst-install-ubuntu.sh -D /tmp/hestiacp-src/deb/ --interactive no --email admin@example.com --password Password123 --hostname demo.hestiacp.com -f
+   bash hst-install-ubuntu.sh --hostname demo.hestiacp.com --email admin@example.com --password Password123 --with-debs /tmp/hestiacp-src/deb/ --interactive no --force
    ```
 
 1. Reboot the VM (and exit SSH session)

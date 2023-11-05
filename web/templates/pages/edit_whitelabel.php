@@ -77,13 +77,12 @@
 							value="<?= htmlentities(trim($v_from_name, "'")) ?>"
 						>
 					</div>
-
 					<div class="u-mb10">
 						<label for="v_from_email" class="form-label">
 							<?= _("Sender Email Address") ?><span class="optional">(<?= _("Default") ?>: <?= sprintf("noreply@%s", htmlentities(trim(get_hostname(), "'"))) ?>)</span>
 						</label>
 						<input
-							type="text"
+							type="email"
 							class="form-control"
 							name="v_from_email"
 							id="v_from_email"
@@ -122,17 +121,17 @@
 				<div class="collapse-content">
 					<div class="u-mb10">
 						<label for="v_custom_logo" class="form-label">
-							<?= _("Custom logo") ?>
+							<?= _("Custom Logo") ?>
 						</label>
 					</div>
 					<div class="u-mb10">
-						<p><?= sprintf(_("Upload the files to %s"), "/usr/local/hestia/web/images/custom/") ?></p>
+						<p class="u-mb10"><?= sprintf(_("Upload the files to %s"), "/usr/local/hestia/web/images/custom/") ?></p>
 						<ul>
-							<li>logo.svg <small>(100px x 120px)</small></li>
-							<li>logo.png <small>(100px x 120px)</small></li>
-							<li>logo-header.svg <small>(54x x 29px)</small></li>
-							<li>favicon.png <small>(64px x 64px)</small></li>
-							<li>favicon.ico <small>(16px x 16px)</small></li>
+							<li><code>logo.svg</code> <small>(100px x 120px)</small></li>
+							<li><code>logo.png</code> <small>(100px x 120px)</small></li>
+							<li><code>logo-header.svg</code> <small>(54x x 29px)</small></li>
+							<li><code>favicon.png</code> <small>(64px x 64px)</small></li>
+							<li><code>favicon.ico</code> <small>(16px x 16px)</small></li>
 						</ul>
 					</div>
 					<div class="u-mb10">

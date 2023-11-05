@@ -132,7 +132,7 @@
 							<li>logo.png <small>(100px x 120px)</small></li>
 							<li>logo-header.svg <small>(54x x 29px)</small></li>
 							<li>favicon.png <small>(64px x 64px)</small></li>
-							<li>favicon.ico<small>(16px x 16px)</small></li>
+							<li>favicon.ico <small>(16px x 16px)</small></li>
 						</ul>
 					</div>
 					<div class="u-mb10">

@@ -23,7 +23,7 @@
 		"chart.js": "4.4.0",
 		"check-password-strength": "2.0.7",
 		"floating-vue": "2.0.0-beta.24",
-		"nanoid": "5.0.2",
+		"nanoid": "5.0.3",
 		"normalize.css": "8.0.1",
 		"xterm": "5.3.0",
 		"xterm-addon-canvas": "0.5.0",
@@ -33,7 +33,7 @@
 		"@prettier/plugin-php": "0.21.0",
 		"browserslist": "4.22.1",
 		"esbuild": "0.19.5",
-		"eslint": "8.52.0",
+		"eslint": "8.53.0",
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-editorconfig": "4.0.3",
 		"eslint-plugin-import": "2.29.0",
@@ -47,7 +47,7 @@
 		"prettier-plugin-sql": "0.15.1",
 		"stylelint": "15.11.0",
 		"stylelint-config-standard": "34.0.0",
-		"vitepress": "1.0.0-rc.24",
+		"vitepress": "1.0.0-rc.25",
 		"vue": "3.3.7"
 	},
 	"browserslist": [

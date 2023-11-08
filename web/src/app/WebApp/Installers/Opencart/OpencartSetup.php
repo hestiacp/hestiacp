@@ -6,7 +6,7 @@ use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class OpencartSetup extends BaseSetup {
 	protected $appInfo = [
-		"name" => "Opencart",
+		"name" => "OpenCart",
 		"group" => "ecommerce",
 		"enabled" => true,
 		"version" => "4.0.2.2",

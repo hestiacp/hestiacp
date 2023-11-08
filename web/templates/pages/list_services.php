@@ -21,7 +21,7 @@
 			</a>
 			<a
 				class="button button-secondary button-danger data-controls js-confirm-action"
-				href="/restart/system/?hostname=<?= $sys["sysinfo"]["HOSTNAME"] ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
+				href="/restart/system/?hostname=<?= get_system_info("HOSTNAME") ?>&token=<?= $_SESSION["token"] ?>&system_reset_token=<?= time() ?>"
 				data-confirm-title="<?= _("Restart") ?>"
 				data-confirm-message="<?= sprintf(_("Are you sure you want to restart %s?"), "Server") ?>"
 			>
@@ -53,36 +53,35 @@
 			<i class="fas fa-server"></i>
 		</div>
 		<div class="server-summary-content">
-			<h1 class="server-summary-title"><?= $sys["sysinfo"]["HOSTNAME"] ?></h1>
+			<h1 class="server-summary-title"><?= get_system_info("HOSTNAME") ?></h1>
 			<ul class="server-summary-list">
 				<li class="server-summary-item">
 					<span class="server-summary-list-label">Hestia Control Panel</span>
 					<span class="server-summary-list-value">
-						<?php if ($sys["sysinfo"]["RELEASE"] != "release") { ?>
-							<i class="fas fa-flask icon-red" title="<?= $sys["sysinfo"]["RELEASE"] ?>"></i>
-						<?php } ?>
-						<?php if ($sys["sysinfo"]["RELEASE"] == "release") { ?>
+						<?php if (get_system_info("RELEASE") == "release") { ?>
 							<i class="fas fa-cube" title="<?= _("Production Release") ?>"></i>
+						<?php } else { ?>
+							<i class="fas fa-flask icon-red" title="<?= get_system_info("RELEASE") ?>"></i>
 						<?php } ?>
-						v<?= $sys["sysinfo"]["HESTIA"] ?>
+						<?= get_current_version() ?>
 					</span>
 				</li>
 				<li class="server-summary-item">
 					<span class="server-summary-list-label"><?= _("Operating System") ?></span>
 					<span class="server-summary-list-value">
-						<?= $sys["sysinfo"]["OS"] ?> <?= $sys["sysinfo"]["VERSION"] ?> (<?= $sys["sysinfo"]["ARCH"] ?>)
+						<?= get_system_info("OS") ?> <?= get_system_info("VERSION") ?> (<?= get_system_info("ARCH") ?>)
 					</span>
 				</li>
 				<li class="server-summary-item">
 					<span class="server-summary-list-label"><?= _("Load Average") ?> <span class="hint">(1m / 5m / 15m)</span></span>
 					<span class="server-summary-list-value">
-						<?= $sys["sysinfo"]["LOADAVERAGE"] ?>
+						<?= get_system_info("LOADAVERAGE") ?>
 					</span>
 				</li>
 				<li class="server-summary-item">
 					<span class="server-summary-list-label"><?= _("Uptime") ?></span>
 					<span class="server-summary-list-value">
-						<?= humanize_time($sys["sysinfo"]["UPTIME"]) ?>
+						<?= humanize_time(get_system_info("UPTIME")) ?>
 					</span>
 				</li>
 			</ul>
@@ -209,6 +208,3 @@
 	</div>
 
 </div>
-
-<footer class="app-footer">
-</footer>

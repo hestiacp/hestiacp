@@ -58,11 +58,28 @@
 	--chart-line-3-color: var(--icon-color-green);
 }
 
+/* App
+   ========================================================================== */
+
+.app {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
 /* App header
    ========================================================================== */
 
 .app-header {
+	flex: none;
 	padding-top: 40px;
+}
+
+/* App content
+   ========================================================================== */
+
+.app-content {
+	flex: 1 0 auto;
 }
 
 /* Container
@@ -994,7 +1011,6 @@
 		border-radius: 0;
 
 		&:last-child {
-			border-bottom-color: transparent;
 			margin-bottom: 0;
 		}
 
@@ -1138,6 +1154,15 @@
 		text-shadow: 0 1px #fafafa;
 		border: 1px solid #b8b8b8;
 		background-color: #eaeaea;
+	}
+}
+
+.units-table-footer {
+	padding: 20px;
+
+	@media (--viewport-large) {
+		padding-left: 15px;
+		padding-right: 15px;
 	}
 }
 
@@ -2104,16 +2129,19 @@
 /* Login
    ========================================================================== */
 
-.body-login,
-.body-reset {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.page-login,
+.page-reset {
 	background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%),
 		rgb(102 158 231);
 
 	& .debug-panel {
 		display: none;
+	}
+
+	& .app {
+		align-items: center;
+		justify-content: center;
+		flex-direction: row;
 	}
 }
 
@@ -2381,26 +2409,23 @@
    ========================================================================== */
 
 .app-footer {
+	flex: none;
 	color: #7c7c7c;
 	border-top: 1px solid #ddd;
+	text-align: center;
 	font-size: 0.8rem;
-	padding-top: 20px;
-	padding-bottom: 20px;
+	margin-top: 20px;
+	padding: 10px;
 
 	@media (--viewport-medium) {
-		padding-top: 40px;
-		padding-bottom: 40px;
+		text-align: left;
+		margin-top: 30px;
+		padding: 20px;
 	}
 }
 
-.app-footer-inner {
-	padding-left: 20px;
-	padding-right: 20px;
-
-	@media (--viewport-large) {
-		padding-left: 15px;
-		padding-right: 15px;
-	}
+.app-footer-link {
+	color: #7c7c7c;
 }
 
 /* Alerts

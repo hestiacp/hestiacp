@@ -344,12 +344,10 @@
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d web domain", "%d web domains", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

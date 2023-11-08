@@ -72,6 +72,3 @@
 	</div>
 
 </div>
-
-<footer class="app-footer">
-</footer>

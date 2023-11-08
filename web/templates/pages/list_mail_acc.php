@@ -280,12 +280,10 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d mail account", "%d mail accounts", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

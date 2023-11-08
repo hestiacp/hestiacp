@@ -1,4 +1,15 @@
-	</main>
+		</main>
+		<footer class="app-footer">
+			<div class="container">
+				<p>
+					<a href="https://hestiacp.com/" class="app-footer-link" target="_blank">
+						Hestia Control Panel
+					</a>
+					<?= get_current_version() ?>
+				</p>
+			</div>
+		</footer>
+	</div>
 <?php if (
 	$_SESSION["userContext"] === "admin" &&
 	$_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" &&
@@ -71,9 +82,9 @@
 		<span class="u-hidden"><?= _("Top") ?></span>
 	</a>
 
-<?php if ($_SESSION["DEBUG_MODE"] == "true") {
-	require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";
-} ?>
+	<?php if ($_SESSION["DEBUG_MODE"] == "true") {
+		require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";
+	} ?>
 
 </body>
 </html>

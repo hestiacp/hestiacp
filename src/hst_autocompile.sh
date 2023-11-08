@@ -293,12 +293,12 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		apt -qq install -y nodejs > /dev/null 2>&1
 
 		nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
-		echo /usr/bin/node -v
-		echo $nodejs_version
+
 		if [ "$nodejs_version" -lt 18 ]; then
 			echo "Requires NodeJS 18.x or higher"
 			exit 1
 		fi
+    
 		# Fix for Debian PHP environment
 		if [ $BUILD_ARCH == "amd64" ]; then
 			if [ ! -L /usr/local/include/curl ]; then

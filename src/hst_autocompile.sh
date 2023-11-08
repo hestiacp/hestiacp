@@ -272,14 +272,14 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		# Set package dependencies for compiling
 		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl nodejs libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
 
-		# Installing NodeJS 20.x repo
-		apt="/etc/apt/sources.list.d"
-		codename="$(lsb_release -s -c)"
-
 		echo "Updating system APT repositories..."
 		apt-get -qq update > /dev/null 2>&1
 		echo "Installing dependencies for compilation..."
 		apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+
+		# Installing NodeJS 20.x repo
+		apt="/etc/apt/sources.list.d"
+		codename="$(lsb_release -s -c)"
 
 		if [ -z $(which "node") ]; then
 			echo "Adding NodeJS 20.x repo..."

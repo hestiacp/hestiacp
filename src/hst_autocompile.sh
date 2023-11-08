@@ -270,7 +270,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		fi
 	else
 		# Set package dependencies for compiling
-		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl nodejs libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
+		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
 
 		echo "Updating system APT repositories..."
 		apt-get -qq update > /dev/null 2>&1

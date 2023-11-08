@@ -3,9 +3,9 @@
 
 <head>
 	<!-- Load necessary CSS and JavaScript from source -->
-	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/title.php"; ?>
-	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/css.php"; ?>
-	<?php require "" . $_SERVER["HESTIA"] . "/web/templates/includes/js.php"; ?>
+	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/title.php"; ?>
+	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/css.php"; ?>
+	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/js.php"; ?>
 </head>
 
 <body>
@@ -37,9 +37,9 @@
 									</a>
 								</li>
 								<li class="top-bar-menu-item">
-									<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=access&token=<?= $_SESSION['token'] ?>" title="<?= _("Access Log") ?>">
+									<a class="top-bar-menu-link <?php if ($_GET['type'] == 'access') echo 'active' ?>" href="/list/web-log/?domain=<?= htmlentities($_GET['domain']) ?>&type=access&token=<?= $_SESSION['token'] ?>" title="<?= _("View Logs") ?>">
 										<i class="fas fa-eye"></i>
-										<span class="top-bar-menu-link-label"><?= _("Access Log") ?></span>
+										<span class="top-bar-menu-link-label"><?= _("View Logs") ?></span>
 									</a>
 								</li>
 								<li class="top-bar-menu-item">

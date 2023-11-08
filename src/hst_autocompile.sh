@@ -298,8 +298,8 @@ if [ "$dontinstalldeps" != 'true' ]; then
 			echo "Requires NodeJS 18.x or higher"
 			exit 1
 		fi
-
-		# Fix for Debian PHP Envroiment
+    
+		# Fix for Debian PHP environment
 		if [ $BUILD_ARCH == "amd64" ]; then
 			if [ ! -L /usr/local/include/curl ]; then
 				ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl

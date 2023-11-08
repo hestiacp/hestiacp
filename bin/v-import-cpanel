@@ -41,8 +41,6 @@ fi
 # Default settings
 # Put this to 0 if you want use bash -x to debug it
 debug=1
-# Pacakge to be used by default "default"
-hestia_package=default
 
 if [ -f "$1" ]; then
 	cpanel_backup="$1"
@@ -104,6 +102,16 @@ if [ -n "$check_sysuser" ] || [ -e "$HESTIA/data/users/$new_user" ]; then
 	check_result "$E_EXISTS" "user $user exists"
 	echo "User allready exists"
 	exit 2
+fi
+
+# Extract cPanel package name
+cpanel_package_name=$(cat ./cp/$new_user | grep 'PLAN=' | cut -f2 -d'=')
+if /usr/local/hestia/bin/v-list-user-packages | grep -qw "$cpanel_package_name"; then
+    hestia_package="$cpanel_package_name"
+    echo "Package $hestia_package will be used for the user."
+else
+    hestia_package="default"  # Replace "default" with your default Hestia package name
+    echo "Default package $hestia_package will be used for the user."
 fi
 
 # Create a new user
@@ -268,10 +276,15 @@ for folder in *; do
                 		decompressed_count=0
                 		for mail_file in $(find /home/$new_user/mail/$folder -type f); do
                     			if file "$mail_file" | grep -q "gzip compressed"; then
+				       		original_time=$(stat -c %y "$mail_file" 2>/dev/null)
                         			gunzip -c "$mail_file" > "${mail_file}.decompressed" && mv "${mail_file}.decompressed" "$mail_file"
-                        			let decompressed_count++
+                        			if [ ! -z "$original_time" ]; then
+							touch -d "$original_time" "$mail_file"
+					        fi		
+						let decompressed_count++
                     			fi
                 		done
+
                 		echo "$decompressed_count emails decompressed for $mail_account@$folder"
               
 				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete

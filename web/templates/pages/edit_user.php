@@ -94,12 +94,7 @@
 				</div>
 			</div>
 			<div id="password-details" class="u-mb20">
-				<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
-				<ul class="u-list-bulleted u-mb10">
-					<li><?= _("8 characters long") ?></li>
-					<li><?= _("1 uppercase & 1 lowercase character") ?></li>
-					<li><?= _("1 number") ?></li>
-				</ul>
+				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
 				<?php if ($_SESSION["userContext"] === "admin") { ?>
 					<div class="form-check">
 						<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">

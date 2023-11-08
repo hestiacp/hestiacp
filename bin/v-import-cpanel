@@ -268,10 +268,15 @@ for folder in *; do
                 		decompressed_count=0
                 		for mail_file in $(find /home/$new_user/mail/$folder -type f); do
                     			if file "$mail_file" | grep -q "gzip compressed"; then
+				       		original_time=$(stat -c %y "$mail_file" 2>/dev/null)
                         			gunzip -c "$mail_file" > "${mail_file}.decompressed" && mv "${mail_file}.decompressed" "$mail_file"
-                        			let decompressed_count++
+                        			if [ ! -z "$original_time" ]; then
+							touch -d "$original_time" "$mail_file"
+					        fi		
+						let decompressed_count++
                     			fi
                 		done
+
                 		echo "$decompressed_count emails decompressed for $mail_account@$folder"
               
 				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete

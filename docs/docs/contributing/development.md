@@ -32,10 +32,10 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    git clone https://github.com/YourUsername/hestiacp.git $HOME/projects
    ```
 
-1. Create an Ubuntu VM with at least 2GB of memory and 15GB of disk space
+1. Create an Ubuntu VM with at least 12GB of memory and 15GB of disk space
 
    ```bash
-   multipass launch --name hestia-dev --memory 4G --disk 15G --cpus 4
+   multipass launch --name hestia-dev --memory 12G --disk 15G --cpus 4
    ```
 
 1. Map your cloned repository to the VM's home directory

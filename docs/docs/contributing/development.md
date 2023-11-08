@@ -76,6 +76,8 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 
    _(update the [installation flags](../introduction/getting-started#list-of-installation-options) to your liking, note that login credentials are set here)_
 
+   _(if prompted for a user provide e.g. `admin`)_
+
    ```bash
    cd ../install
    bash hst-install-ubuntu.sh --hostname demo.hestiacp.com --email admin@example.com --password Password123 --with-debs /tmp/hestiacp-src/deb/ --interactive no --force

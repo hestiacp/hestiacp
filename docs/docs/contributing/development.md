@@ -32,10 +32,12 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    git clone https://github.com/YourUsername/hestiacp.git $HOME/projects
    ```
 
-1. Create an Ubuntu VM with at least 12GB of memory and 15GB of disk space
+1. Create an Ubuntu VM with at least 2GB of memory and 15GB of disk space
+
+   _(if running VM on ARM architecture e.g. Apple M1, use at least 12GB of memory)_
 
    ```bash
-   multipass launch --name hestia-dev --memory 12G --disk 15G --cpus 4
+   multipass launch --name hestia-dev --memory 4G --disk 15G --cpus 4
    ```
 
 1. Map your cloned repository to the VM's home directory
@@ -76,11 +78,9 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 
    _(update the [installation flags](../introduction/getting-started#list-of-installation-options) to your liking, note that login credentials are set here)_
 
-   _(if prompted for a user provide e.g. `admin`)_
-
    ```bash
    cd ../install
-   bash hst-install-ubuntu.sh --hostname demo.hestiacp.com --email admin@example.com --password Password123 --with-debs /tmp/hestiacp-src/deb/ --interactive no --force
+   bash hst-install-ubuntu.sh --hostname demo.hestiacp.com --email admin@example.com --username admin --password Password123 --with-debs /tmp/hestiacp-src/deb/ --interactive no --force
    ```
 
 1. Reboot the VM (and exit SSH session)

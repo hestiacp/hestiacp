@@ -2222,6 +2222,7 @@
 	line-height: 1.15;
 	padding-bottom: 20px;
 	overflow-x: scroll;
+
 	@media (--viewport-medium) {
 		overflow-x: initial;
 	}

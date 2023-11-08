@@ -5,16 +5,16 @@
 #
 
 BLACKLISTS=(
-	"https://www.projecthoneypot.org/list_of_ips.php?t=d&rss=1"                                # Project Honey Pot Directory of Dictionary Attacker IPs
-	"https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=1.1.1.1"                       # TOR Exit Nodes
-	"https://www.maxmind.com/en/high-risk-ip-sample-list"                                      # MaxMind GeoIP Anonymous Proxies
-	"https://danger.rulez.sk/projects/bruteforceblocker/blist.php"                             # BruteForceBlocker IP List
-	"https://www.spamhaus.org/drop/drop.lasso"                                                 # Spamhaus Don't Route Or Peer List (DROP)
-	"https://cinsscore.com/list/ci-badguys.txt"                                                # C.I. Army Malicious IP List
-	"https://lists.blocklist.de/lists/all.txt"                                                 # blocklist.de attackers
-	"https://blocklist.greensnow.co/greensnow.txt"                                             # GreenSnow
-	"https://iplists.firehol.org/files/firehol_level1.netset"  # Firehol Level 1
-	"https://iplists.firehol.org/files/stopforumspam_7d.ipset" # Stopforumspam via Firehol
+	"https://www.projecthoneypot.org/list_of_ips.php?t=d&rss=1"          # Project Honey Pot Directory of Dictionary Attacker IPs
+	"https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=1.1.1.1" # TOR Exit Nodes
+	"https://www.maxmind.com/en/high-risk-ip-sample-list"                # MaxMind GeoIP Anonymous Proxies
+	"https://danger.rulez.sk/projects/bruteforceblocker/blist.php"       # BruteForceBlocker IP List
+	"https://www.spamhaus.org/drop/drop.lasso"                           # Spamhaus Don't Route Or Peer List (DROP)
+	"https://cinsscore.com/list/ci-badguys.txt"                          # C.I. Army Malicious IP List
+	"https://lists.blocklist.de/lists/all.txt"                           # blocklist.de attackers
+	"https://blocklist.greensnow.co/greensnow.txt"                       # GreenSnow
+	"https://iplists.firehol.org/files/firehol_level1.netset"            # Firehol Level 1
+	"https://iplists.firehol.org/files/stopforumspam_7d.ipset"           # Stopforumspam via Firehol
 )
 
 IP_BLACKLIST_TMP=$(mktemp)

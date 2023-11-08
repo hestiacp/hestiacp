@@ -5,7 +5,7 @@
 				<h2 class="u-text-center">Installation instructions</h2>
 				<p class="u-mb10">
 					Log in to your server e.g.
-					<code>ssh root@your.server</code> and download the installation script:
+					<code>ssh root@your.server</code> then download the installation script:
 				</p>
 				<CopyToClipboardInput
 					class="u-mb10"

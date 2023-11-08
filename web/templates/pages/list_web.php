@@ -267,10 +267,10 @@
 								<a
 									class="units-table-row-action-link"
 									href="/list/web-log/?domain=<?= $key ?>&type=access#"
-									title="<?= _("Access Log") ?>"
+									title="<?= _("View Logs") ?>"
 								>
 									<i class="fas fa-binoculars icon-purple"></i>
-									<span class="u-hide-desktop"><?= _("Access Log") ?></span>
+									<span class="u-hide-desktop"><?= _("View Logs") ?></span>
 								</a>
 							</li>
 							<li class="units-table-row-action shortcut-s" data-key-action="js">

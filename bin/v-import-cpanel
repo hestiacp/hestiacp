@@ -41,8 +41,6 @@ fi
 # Default settings
 # Put this to 0 if you want use bash -x to debug it
 debug=1
-# Pacakge to be used by default "default"
-hestia_package=default
 
 if [ -f "$1" ]; then
 	cpanel_backup="$1"
@@ -104,6 +102,16 @@ if [ -n "$check_sysuser" ] || [ -e "$HESTIA/data/users/$new_user" ]; then
 	check_result "$E_EXISTS" "user $user exists"
 	echo "User allready exists"
 	exit 2
+fi
+
+# Extract cPanel package name
+cpanel_package_name=$(cat ./cp/$new_user | grep 'PLAN=' | cut -f2 -d'=')
+if /usr/local/hestia/bin/v-list-user-packages | grep -qw "$cpanel_package_name"; then
+    hestia_package="$cpanel_package_name"
+    echo "Package $hestia_package will be used for the user."
+else
+    hestia_package="default"  # Replace "default" with your default Hestia package name
+    echo "Default package $hestia_package will be used for the user."
 fi
 
 # Create a new user

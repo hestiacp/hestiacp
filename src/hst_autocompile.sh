@@ -290,9 +290,11 @@ if [ "$dontinstalldeps" != 'true' ]; then
 
 		echo "Install NodeJS...."
 		apt-get -qq update > /dev/null 2>&1
-		apt -qq install -y nodejs npm > /dev/null 2>&1
+		apt -qq install -y nodejs > /dev/null 2>&1
 
 		nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
+
+		echo $nodejs_version
 		if [ "$nodejs_version" -lt 18 ]; then
 			echo "Requires NodeJS 18.x or higher"
 			exit 1

@@ -525,6 +525,10 @@ function syshealth_repair_system_config() {
 		echo "[ ! ] Adding missing variable to hestia.conf: POLICY_BACKUP_SUSPENDED_USERS ('no')"
 		$BIN/v-change-sys-config-value "POLICY_BACKUP_SUSPENDED_USERS" "no"
 	fi
+	if [[ -z $(check_key_exists 'DOMAINDIR_WRITABLE') ]]; then
+		echo "[ ! ] Adding missing variable to hestia.conf: DOMAINDIR_WRITABLE ('no')"
+		$BIN/v-change-sys-config-value "DOMAINDIR_WRITABLE" "no"
+	fi
 
 	touch $HESTIA/conf/hestia.conf.new
 	while IFS='= ' read -r lhs rhs; do

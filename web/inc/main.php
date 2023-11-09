@@ -541,23 +541,6 @@ function load_hestia_config() {
 	}
 }
 
-function get_system_info($key) {
-	static $sys_info = null;
-
-	if ($sys_info === null) {
-		exec(HESTIA_CMD . "v-list-sys-info json", $output, $return_var);
-		$sys_info = json_decode(implode("", $output), true);
-		unset($output);
-	}
-
-	return $sys_info["sysinfo"][$key] ?? "unknown";
-}
-
-function get_current_version() {
-	$version = get_system_info("HESTIA");
-	return "v" . $version;
-}
-
 /**
  * Returns the list of all web domains from all users grouped by Backend Template used and owner
  *

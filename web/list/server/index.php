@@ -115,6 +115,10 @@ if (isset($_GET["db"])) {
 }
 
 // Data
+exec(HESTIA_CMD . "v-list-sys-info json", $output, $return_var);
+$sys = json_decode(implode("", $output), true);
+unset($output);
+
 exec(HESTIA_CMD . "v-list-sys-php json", $output, $return_var);
 $php = json_decode(implode("", $output), true);
 unset($output);

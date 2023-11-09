@@ -5,7 +5,7 @@
 					<a href="https://hestiacp.com/" class="app-footer-link" target="_blank">
 						Hestia Control Panel
 					</a>
-					<?= get_current_version() ?>
+					v<?= $_SESSION["VERSION"] ?>
 				</p>
 			</div>
 		</footer>

@@ -277,6 +277,14 @@ for folder in *; do
 		if [[ "$folder" != "cur" && "$folder" != "new" && "$folder" != "tmp" ]]; then
 			echo "Domain: $folder"
 			cd $folder
+
+            		mail_account_count=$(find . -maxdepth 1 -mindepth 1 -type d \( ! -name cur ! -name new ! -name tmp \) | wc -l)
+            		if [ "$mail_account_count" -eq 0 ]; then
+                		echo "No mail accounts to restore for domain $folder."
+                		cd ..
+                		continue
+            		fi
+
 			for mail_account in *; do
 				echo "Import mail account: $mail_account@$folder"
 				# Doesn't really matter but we don't know the unhashed one
@@ -327,7 +335,6 @@ for folder in *; do
 		fi
 	fi
 done
-echo "All mail accounts restored"
 
 if [ "$mx" = 'yes' ]; then
 	cd $main_dir/dnszones

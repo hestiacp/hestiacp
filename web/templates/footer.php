@@ -1,14 +1,5 @@
 		</main>
-		<footer class="app-footer">
-			<div class="container">
-				<p>
-					<a href="https://hestiacp.com/" class="app-footer-link" target="_blank">
-						Hestia Control Panel
-					</a>
-					v<?= $_SESSION["VERSION"] ?>
-				</p>
-			</div>
-		</footer>
+		<?php require $_SERVER["HESTIA"] . "/web/templates/includes/app-footer.php"; ?>
 	</div>
 <?php if (
 	$_SESSION["userContext"] === "admin" &&
@@ -73,14 +64,8 @@
 			<span class="u-hidden"><?= _("Shortcuts") ?></span>
 		</button>
 	</div>
-	<a
-		href="#top"
-		class="button button-secondary button-circle button-floating button-floating-top"
-		title="<?= _("Top") ?>"
-	>
-		<i class="fas fa-arrow-up"></i>
-		<span class="u-hidden"><?= _("Top") ?></span>
-	</a>
+
+	<?php require $_SERVER["HESTIA"] . "/web/templates/includes/jump-to-top-link.php"; ?>
 
 	<?php if ($_SESSION["DEBUG_MODE"] == "true") {
 		require $_SERVER["HESTIA"] . "/web/templates/pages/debug_panel.php";

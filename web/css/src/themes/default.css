@@ -2243,17 +2243,22 @@
 	box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 }
 
+.logs-container {
+	height: 100%;
+	padding: 20px;
+	overflow-y: auto;
+	max-height: calc(100vh - 40px - 40px);
+
+	@media (--viewport-medium) {
+		max-height: calc(100vh - 40px - 60px);
+	}
+}
+
 .console-output {
 	color: #202020;
 	font-family: var(--font-family-monospace);
 	font-size: 0.92rem;
-	line-height: 1.15;
-	padding-bottom: 20px;
-	overflow-x: scroll;
-
-	@media (--viewport-medium) {
-		overflow-x: initial;
-	}
+	line-height: 1.2;
 }
 
 /* Icon component
@@ -2414,12 +2419,10 @@
 	border-top: 1px solid #ddd;
 	text-align: center;
 	font-size: 0.8rem;
-	margin-top: 20px;
 	padding: 10px;
 
 	@media (--viewport-medium) {
 		text-align: left;
-		margin-top: 30px;
 		padding: 20px;
 	}
 }

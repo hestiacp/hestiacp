@@ -357,6 +357,36 @@ if [ "$mx" = 'yes' ]; then
 	done
 fi
 
+##################
+# Cron Jobs
+tput setaf 2
+echo ""
+echo "Start Restoring Cron Jobs for user $new_user"
+tput sgr0
+
+CRON_DIR="$main_dir/cron"
+cd "$CRON_DIR"
+
+CRON_FILE="${new_user}"
+if [ -f "$CRON_FILE" ] && [ -s "$CRON_FILE" ]; then
+    while IFS= read -r cron_job || [ -n "$cron_job" ]; do
+        [[ "$cron_job" =~ ^(#.*|\s*|MAILTO=.*|SHELL=.*)$ ]] && continue
+        
+        min=$(echo "$cron_job" | awk '{print $1}')
+        hour=$(echo "$cron_job" | awk '{print $2}')
+        day=$(echo "$cron_job" | awk '{print $3}')
+        month=$(echo "$cron_job" | awk '{print $4}')
+        dow=$(echo "$cron_job" | awk '{print $5}')
+        cmd=$(echo "$cron_job" | awk '{for (i=6; i<=NF; i++) printf $i " "; print ""}')
+
+        $BIN/v-add-cron-job $new_user "$min" "$hour" "$day" "$month" "$dow" "$cmd"
+    done < "$CRON_FILE"
+    echo "Cron jobs restored for user $new_user."
+else
+    echo "No cron jobs file found or it is empty for user $new_user."
+fi
+
+
 rm -rf "$tmpdir"
 
 echo "##############################"

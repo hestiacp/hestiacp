@@ -676,8 +676,8 @@
 /* Login
    ========================================================================== */
 
-.body-login,
-.body-reset {
+.page-login,
+.page-reset {
 	background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%), #303030;
 }
 
@@ -806,6 +806,10 @@
 .app-footer {
 	color: #cdcdcd;
 	border-color: #454545;
+}
+
+.app-footer-link {
+	color: #cdcdcd;
 }
 
 /* Inline alerts

@@ -429,8 +429,8 @@ h1 {
 /* Login
    ========================================================================== */
 
-.body-login,
-.body-reset {
+.page-login,
+.page-reset {
 	background: #ededed;
 }
 

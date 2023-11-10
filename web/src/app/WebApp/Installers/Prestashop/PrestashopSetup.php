@@ -6,7 +6,7 @@ use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
 class PrestashopSetup extends BaseSetup {
 	protected $appInfo = [
-		"name" => "Prestashop",
+		"name" => "PrestaShop",
 		"group" => "ecommerce",
 		"enabled" => true,
 		"version" => "8.1.0",

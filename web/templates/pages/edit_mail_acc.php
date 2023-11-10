@@ -90,7 +90,7 @@
 						</label>
 					</div>
 					<div class="form-check <?php if ($v_blackhole == 'yes') { echo 'u-hidden'; } ?>">
-						<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
+						<input class="form-check-input js-do-not-store-checkbox" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
 						<label for="v_fwd_for">
 							<?= _("Do not store forwarded mail") ?>
 						</label>
@@ -99,7 +99,7 @@
 						<label for="v_fwd" class="form-label">
 							<?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
 						</label>
-						<textarea class="form-control" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
+						<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
 					</div>
 					<div class="form-check u-mb10">
 						<input x-model="hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">

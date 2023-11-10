@@ -37,9 +37,6 @@
 			webmailAlias: '<?= $_SESSION["WEBMAIL_ALIAS"] ?? "" ?>',
 			apiSystem: '<?= $_SESSION["API_SYSTEM"] ?>',
 			legacyApi: '<?= $_SESSION["API"] ?>',
-			showSystemOptions: false,
-			showProtectionOptions: false,
-			showPolicyOptions: false,
 		}"
 		id="main-form"
 		name="v_configure_server"
@@ -987,378 +984,375 @@
 					<i class="fas fa-key u-mr10"></i><?= _("Security") ?>
 				</summary>
 				<div class="box-collapse-content">
-					<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
-						<?= _("System") ?>
-						<i
-							x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas icon-dim icon-maroon"
-						></i>
-					</h2>
-					<div x-cloak x-show="showSystemOptions">
-						<h3 class="u-mt20 u-mb10">
-							<?= _("API") ?>
-						</h3>
-						<div class="u-mb10">
-							<label for="v_api_system" class="form-label">
-								<?= _("Enable API access") ?>
-							</label>
-							<select x-model="apiSystem" class="form-select" name="v_api_system" id="v_api_system">
-								<option value="0">
-									<?= _("Disabled") ?>
-								</option>
-								<option value="1">
-									<?= _("Enabled for admin") ?>
-								</option>
-								<option value="2">
-									<?= _("Enabled for all users") ?>
-								</option>
-							</select>
-						</div>
-						<div class="u-mb10">
-							<label for="v_api" class="form-label">
-								<?= _("Enable legacy API access") ?>
-							</label>
-							<select x-model="legacyApi" class="form-select" name="v_api" id="v_api">
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no">
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<div x-cloak x-show="legacyApi === 'yes' || apiSystem > 0">
-							<div class="u-mb10">
-								<label for="v_api_allowed_ip" class="form-label u-side-by-side">
-									<?= _("Allowed IP addresses for API") ?>
-									<span class="optional">1 IP address per line</span>
-								</label>
-								<textarea class="form-control" name="v_api_allowed_ip" id="v_api_allowed_ip"><?php
-										foreach (explode(",", $_SESSION["API_ALLOWED_IP"]) as $ip) {
-											echo trim($ip)."\n";
-										}
-									?></textarea>
-							</div>
-						</div>
-						<h3 class="u-mt20 u-mb10">
-							<?= _("Login") ?>
-						</h3>
-						<div class="u-mb10">
-							<label for="v_login_style" class="form-label">
-								<?= _("Login screen style") ?>
-							</label>
-							<select class="form-select" name="v_login_style" id="v_login_style">
-								<option value="default">
-									<?= _("Default") ?>
-								</option>
-								<option value="old" <?= $_SESSION["LOGIN_STYLE"] == "old" ? "selected" : "" ?>>
-									<?= _("Old Style") ?>
-								</option>
-							</select>
-						</div>
-						<div class="u-mb10">
-							<label for="v_policy_system_password_reset" class="form-label">
-								<?= _("Allow users to reset their passwords") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_system_password_reset"
-								id="v_policy_system_password_reset"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option
-									value="no"
-									<?= $_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] == "no" ? "selected" : "" ?>
-								>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<div class="u-mb20">
-							<label for="v_inactive_session_timeout" class="form-label">
-								<?= _("Inactive session timeout") ?> (<?= _("Minutes") ?>)
-							</label>
-							<input
-								type="text"
-								class="form-control"
-								name="v_inactive_session_timeout"
-								id="v_inactive_session_timeout"
-								value="<?= trim($_SESSION["INACTIVE_SESSION_TIMEOUT"], "'") ?>"
-							>
-						</div>
-						<div class="u-mb10">
-							<label for="v_policy_csrf_strictness" class="form-label">
-								<?= _("Prevent CSRF") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_csrf_strictness"
-								id="v_policy_csrf_strictness"
-							>
-								<option value="0">
-									<?= _("Disabled") ?>
-								</option>
-								<option value="1"	<?= $_SESSION["POLICY_CSRF_STRICTNESS"] == "1" ? "selected" : "" ?>>
-									<?= _("Enabled") ?>
-								</option>
-								<option value="2"	<?= $_SESSION["POLICY_CSRF_STRICTNESS"] == "2" ? "selected" : "" ?>>
-									<?= _("Strict") ?>
-								</option>
-							</select>
-						</div>
-					</div>
 
-					<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] === "admin") { ?>
-						<h2 x-on:click="showProtectionOptions = !showProtectionOptions" class="section-title">
-							<?= _("System Protection") ?>
-							<i
-								x-bind:class="showProtectionOptions ? 'fa-square-minus' : 'fa-square-plus'"
-								class="fas icon-dim icon-maroon"
-							></i>
-						</h2>
-						<div x-cloak x-show="showProtectionOptions">
-							<h3 class="u-mt20 u-mb10">
-								<?= _("System Administrator account") ?>
+					<details class="collapse">
+						<summary class="collapse-header">
+							<?= _("System") ?>
+						</summary>
+						<div class="collapse-content">
+							<h3 class="u-mb10">
+								<?= _("API") ?>
 							</h3>
 							<div class="u-mb10">
-								<label for="v_policy_system_protected_admin" class="form-label">
-									<?= _("Restrict access to read-only for other administrators") ?>
+								<label for="v_api_system" class="form-label">
+									<?= _("Enable API access") ?>
 								</label>
-								<select
-									class="form-select"
-									name="v_policy_system_protected_admin"
-									id="v_policy_system_protected_admin"
-								>
-									<option value="yes">
-										<?= _("Yes") ?>
+								<select x-model="apiSystem" class="form-select" name="v_api_system" id="v_api_system">
+									<option value="0">
+										<?= _("Disabled") ?>
 									</option>
-									<option value="no" <?= $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] !== "yes" ? "selected" : "" ?>>
-										<?= _("No") ?>
+									<option value="1">
+										<?= _("Enabled for admin") ?>
+									</option>
+									<option value="2">
+										<?= _("Enabled for all users") ?>
 									</option>
 								</select>
 							</div>
 							<div class="u-mb10">
-								<label for="v_policy_system_hide_admin" class="form-label">
-									<?= _("Hide account from other administrators") ?>
+								<label for="v_api" class="form-label">
+									<?= _("Enable legacy API access") ?>
 								</label>
-								<select
-									class="form-select"
-									name="v_policy_system_hide_admin"
-									id="v_policy_system_hide_admin"
-								>
+								<select x-model="legacyApi" class="form-select" name="v_api" id="v_api">
 									<option value="yes">
 										<?= _("Yes") ?>
 									</option>
-									<option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] !== "yes" ? "selected" : "" ?>>
+									<option value="no">
 										<?= _("No") ?>
 									</option>
 								</select>
 							</div>
+							<div x-cloak x-show="legacyApi === 'yes' || apiSystem > 0">
+								<div class="u-mb10">
+									<label for="v_api_allowed_ip" class="form-label u-side-by-side">
+										<?= _("Allowed IP addresses for API") ?>
+										<span class="optional">1 IP address per line</span>
+									</label>
+									<textarea class="form-control" name="v_api_allowed_ip" id="v_api_allowed_ip"><?php
+											foreach (explode(",", $_SESSION["API_ALLOWED_IP"]) as $ip) {
+												echo trim($ip)."\n";
+											}
+										?></textarea>
+								</div>
+							</div>
+							<h3 class="u-mt20 u-mb10">
+								<?= _("Login") ?>
+							</h3>
 							<div class="u-mb10">
-								<label for="v_policy_system_hide_services" class="form-label">
-									<?= _("Do not allow other administrators to access Server Settings") ?>
+								<label for="v_login_style" class="form-label">
+									<?= _("Login screen style") ?>
+								</label>
+								<select class="form-select" name="v_login_style" id="v_login_style">
+									<option value="default">
+										<?= _("Default") ?>
+									</option>
+									<option value="old" <?= $_SESSION["LOGIN_STYLE"] == "old" ? "selected" : "" ?>>
+										<?= _("Old Style") ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_system_password_reset" class="form-label">
+									<?= _("Allow users to reset their passwords") ?>
 								</label>
 								<select
 									class="form-select"
-									name="v_policy_system_hide_services"
-									id="v_policy_system_hide_services"
+									name="v_policy_system_password_reset"
+									id="v_policy_system_password_reset"
 								>
 									<option value="yes">
 										<?= _("Yes") ?>
 									</option>
-									<option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" ? "selected" : "" ?>>
+									<option
+										value="no"
+										<?= $_SESSION["POLICY_SYSTEM_PASSWORD_RESET"] == "no" ? "selected" : "" ?>
+									>
 										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb20">
+								<label for="v_inactive_session_timeout" class="form-label">
+									<?= _("Inactive session timeout") ?> (<?= _("Minutes") ?>)
+								</label>
+								<input
+									type="text"
+									class="form-control"
+									name="v_inactive_session_timeout"
+									id="v_inactive_session_timeout"
+									value="<?= trim($_SESSION["INACTIVE_SESSION_TIMEOUT"], "'") ?>"
+								>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_csrf_strictness" class="form-label">
+									<?= _("Prevent CSRF") ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_policy_csrf_strictness"
+									id="v_policy_csrf_strictness"
+								>
+									<option value="0">
+										<?= _("Disabled") ?>
+									</option>
+									<option value="1"	<?= $_SESSION["POLICY_CSRF_STRICTNESS"] == "1" ? "selected" : "" ?>>
+										<?= _("Enabled") ?>
+									</option>
+									<option value="2"	<?= $_SESSION["POLICY_CSRF_STRICTNESS"] == "2" ? "selected" : "" ?>>
+										<?= _("Strict") ?>
 									</option>
 								</select>
 							</div>
 						</div>
+					</details>
+
+					<?php if ($_SESSION["userContext"] === "admin" && $_SESSION["user"] === "admin") { ?>
+						<details class="collapse">
+							<summary class="collapse-header">
+								<?= _("System Protection") ?>
+							</summary>
+							<div class="collapse-content">
+								<h3 class="u-mb10">
+									<?= _("System Administrator account") ?>
+								</h3>
+								<div class="u-mb10">
+									<label for="v_policy_system_protected_admin" class="form-label">
+										<?= _("Restrict access to read-only for other administrators") ?>
+									</label>
+									<select
+										class="form-select"
+										name="v_policy_system_protected_admin"
+										id="v_policy_system_protected_admin"
+									>
+										<option value="yes">
+											<?= _("Yes") ?>
+										</option>
+										<option value="no" <?= $_SESSION["POLICY_SYSTEM_PROTECTED_ADMIN"] !== "yes" ? "selected" : "" ?>>
+											<?= _("No") ?>
+										</option>
+									</select>
+								</div>
+								<div class="u-mb10">
+									<label for="v_policy_system_hide_admin" class="form-label">
+										<?= _("Hide account from other administrators") ?>
+									</label>
+									<select
+										class="form-select"
+										name="v_policy_system_hide_admin"
+										id="v_policy_system_hide_admin"
+									>
+										<option value="yes">
+											<?= _("Yes") ?>
+										</option>
+										<option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_ADMIN"] !== "yes" ? "selected" : "" ?>>
+											<?= _("No") ?>
+										</option>
+									</select>
+								</div>
+								<div class="u-mb10">
+									<label for="v_policy_system_hide_services" class="form-label">
+										<?= _("Do not allow other administrators to access Server Settings") ?>
+									</label>
+									<select
+										class="form-select"
+										name="v_policy_system_hide_services"
+										id="v_policy_system_hide_services"
+									>
+										<option value="yes">
+											<?= _("Yes") ?>
+										</option>
+										<option value="no" <?= $_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" ? "selected" : "" ?>>
+											<?= _("No") ?>
+										</option>
+									</select>
+								</div>
+							</div>
+						</details>
 					<?php } ?>
-					<h2 x-on:click="showPolicyOptions = !showPolicyOptions" class="section-title">
-						<?= _("Policies") ?>
-						<i
-							x-bind:class="showPolicyOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas icon-dim icon-maroon"
-						></i>
-					</h2>
-					<div x-cloak x-show="showPolicyOptions">
-						<h3 class="u-mt20 u-mb10">
-							<?= _("Users") ?>
-						</h3>
-						<div class="u-mb10">
-							<label for="v_policy_user_edit_details" class="form-label">
-								<?= _("Allow users to edit their account details") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_user_edit_details"
-								id="v_policy_user_edit_details"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["POLICY_USER_EDIT_DETAILS"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<div class="u-mb10">
-							<label for="v_policy_user_edit_web_templates" class="form-label">
-								<?= _("Allow users to change templates when editing web domains") ?>
-							</label>
-							<select class="form-select" name="v_policy_user_edit_web_templates" id="v_policy_user_edit_web_templates">
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["POLICY_USER_EDIT_WEB_TEMPLATES"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<div class="u-mb10">
-							<label for="v_policy_user_edit_dns_templates" class="form-label">
-								<?= _("Allow users to change templates when editing DNS zones") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_user_edit_dns_templates"
-								id="v_policy_user_edit_dns_templates"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<div class="u-mb10">
-							<label for="v_policy_user_view_logs" class="form-label">
-								<?= _("Allow users to view action and login history logs") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_user_view_logs"
-								id="v_policy_user_view_logs"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["POLICY_USER_VIEW_LOGS"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<div class="u-mb10">
-							<label for="v_policy_user_delete_logs" class="form-label">
-								<?= _("Allow users to delete log history") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_user_delete_logs"
-								id="v_policy_user_delete_logs"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["POLICY_USER_DELETE_LOGS"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<?php if ($_SESSION["POLICY_SYSTEM_ENABLE_BACON"] === "true") { ?>
+
+					<details class="collapse">
+						<summary class="collapse-header">
+							<?= _("Policies") ?>
+						</summary>
+						<div class="collapse-content">
+							<h3 class="u-mb10">
+								<?= _("Users") ?>
+							</h3>
 							<div class="u-mb10">
-								<label for="v_policy_user_view_suspended" class="form-label">
-									<?= _("Allow suspended users to log in with read-only access") ?>
-									<span class="hint">(<?= _("Preview") ?>)</span>
+								<label for="v_policy_user_edit_details" class="form-label">
+									<?= _("Allow users to edit their account details") ?>
 								</label>
 								<select
 									class="form-select"
-									name="v_policy_user_view_suspended"
-									id="v_policy_user_view_suspended"
+									name="v_policy_user_edit_details"
+									id="v_policy_user_edit_details"
 								>
 									<option value="yes">
 										<?= _("Yes") ?>
 									</option>
-									<option value="no" <?= $_SESSION["POLICY_USER_VIEW_SUSPENDED"] == "no" ? "selected" : "" ?>>
+									<option value="no" <?= $_SESSION["POLICY_USER_EDIT_DETAILS"] == "no" ? "selected" : "" ?>>
 										<?= _("No") ?>
 									</option>
 								</select>
 							</div>
-						<?php } ?>
-						<div class="u-mb10">
-							<label for="v_policy_backup_suspended_users" class="form-label">
-								<?= _("Allow suspended users to create new backups") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_backup_suspended_users"
-								id="v_policy_backup_suspended_users"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["POLICY_BACKUP_SUSPENDED_USERS"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
+							<div class="u-mb10">
+								<label for="v_policy_user_edit_web_templates" class="form-label">
+									<?= _("Allow users to change templates when editing web domains") ?>
+								</label>
+								<select class="form-select" name="v_policy_user_edit_web_templates" id="v_policy_user_edit_web_templates">
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["POLICY_USER_EDIT_WEB_TEMPLATES"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_user_edit_dns_templates" class="form-label">
+									<?= _("Allow users to change templates when editing DNS zones") ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_policy_user_edit_dns_templates"
+									id="v_policy_user_edit_dns_templates"
+								>
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_user_view_logs" class="form-label">
+									<?= _("Allow users to view action and login history logs") ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_policy_user_view_logs"
+									id="v_policy_user_view_logs"
+								>
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["POLICY_USER_VIEW_LOGS"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_user_delete_logs" class="form-label">
+									<?= _("Allow users to delete log history") ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_policy_user_delete_logs"
+									id="v_policy_user_delete_logs"
+								>
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["POLICY_USER_DELETE_LOGS"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+							<?php if ($_SESSION["POLICY_SYSTEM_ENABLE_BACON"] === "true") { ?>
+								<div class="u-mb10">
+									<label for="v_policy_user_view_suspended" class="form-label">
+										<?= _("Allow suspended users to log in with read-only access") ?>
+										<span class="hint">(<?= _("Preview") ?>)</span>
+									</label>
+									<select
+										class="form-select"
+										name="v_policy_user_view_suspended"
+										id="v_policy_user_view_suspended"
+									>
+										<option value="yes">
+											<?= _("Yes") ?>
+										</option>
+										<option value="no" <?= $_SESSION["POLICY_USER_VIEW_SUSPENDED"] == "no" ? "selected" : "" ?>>
+											<?= _("No") ?>
+										</option>
+									</select>
+								</div>
+							<?php } ?>
+							<div class="u-mb10">
+								<label for="v_policy_backup_suspended_users" class="form-label">
+									<?= _("Allow suspended users to create new backups") ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_policy_backup_suspended_users"
+									id="v_policy_backup_suspended_users"
+								>
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["POLICY_BACKUP_SUSPENDED_USERS"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_sync_error_documents" class="form-label">
+									<?= _("Sync Error document templates on user rebuild") ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_policy_sync_error_documents"
+									id="v_policy_sync_error_documents"
+								>
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["POLICY_SYNC_ERROR_DOCUMENTS"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+							<div class="u-mb10">
+								<label for="v_policy_sync_skeleton" class="form-label">
+									<?= _("Sync Skeleton templates") ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_policy_sync_skeleton"
+									id="v_policy_sync_skeleton"
+								>
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["POLICY_SYNC_SKELETON"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
+							<h3 class="u-mt20 u-mb10">
+								<?= _("Domains") ?>
+							</h3>
+							<div class="u-mb10">
+								<label for="v_enforce_subdomain_ownership" class="form-label">
+									<?= _("Enforce subdomain ownership") ?>
+								</label>
+								<select
+									class="form-select"
+									name="v_enforce_subdomain_ownership"
+									id="v_enforce_subdomain_ownership"
+								>
+									<option value="yes">
+										<?= _("Yes") ?>
+									</option>
+									<option value="no" <?= $_SESSION["ENFORCE_SUBDOMAIN_OWNERSHIP"] == "no" ? "selected" : "" ?>>
+										<?= _("No") ?>
+									</option>
+								</select>
+							</div>
 						</div>
-						<div class="u-mb10">
-							<label for="v_policy_sync_error_documents" class="form-label">
-								<?= _("Sync Error document templates on user rebuild") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_sync_error_documents"
-								id="v_policy_sync_error_documents"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["POLICY_SYNC_ERROR_DOCUMENTS"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<div class="u-mb10">
-							<label for="v_policy_sync_skeleton" class="form-label">
-								<?= _("Sync Skeleton templates") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_policy_sync_skeleton"
-								id="v_policy_sync_skeleton"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["POLICY_SYNC_SKELETON"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-						<h3 class="u-mt20 u-mb10">
-							<?= _("Domains") ?>
-						</h3>
-						<div class="u-mb10">
-							<label for="v_enforce_subdomain_ownership" class="form-label">
-								<?= _("Enforce subdomain ownership") ?>
-							</label>
-							<select
-								class="form-select"
-								name="v_enforce_subdomain_ownership"
-								id="v_enforce_subdomain_ownership"
-							>
-								<option value="yes">
-									<?= _("Yes") ?>
-								</option>
-								<option value="no" <?= $_SESSION["ENFORCE_SUBDOMAIN_OWNERSHIP"] == "no" ? "selected" : "" ?>>
-									<?= _("No") ?>
-								</option>
-							</select>
-						</div>
-					</div>
+					</details>
+
 				</div>
 			</details>
 

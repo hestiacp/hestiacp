@@ -55,11 +55,11 @@
 			<?php show_alert_message($_SESSION); ?>
 
 			<!-- Basic options section -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-gear u-mr10"></i><?= _("Basic Options") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb10">
 						<label for="v_hostname" class="form-label">
 							<?= _("Hostname") ?>
@@ -145,11 +145,11 @@
 			</details>
 
 			<!-- Updates section -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-code-branch u-mr10"></i><?= _("Updates") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<p class="u-mb10">
 						<?= _("Version") ?>:
 						<span class="optional">
@@ -212,11 +212,11 @@
 			</details>
 
 			<!-- Web Server section -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-earth-americas u-mr10"></i><?= _("Web Server") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<?php if (!empty($_SESSION["PROXY_SYSTEM"])) { ?>
 						<p>
 							<?= _("Proxy Server") ?>:
@@ -319,11 +319,11 @@
 
 			<!-- DNS Server section -->
 			<?php if (!empty($_SESSION["DNS_SYSTEM"])) { ?>
-				<details class="collapse u-mb10">
-					<summary class="collapse-header">
+				<details class="box-collapse u-mb10">
+					<summary class="box-collapse-header">
 						<i class="fas fa-book-atlas u-mr10"></i><?= _("DNS Server") ?>
 					</summary>
-					<div class="collapse-content">
+					<div class="box-collapse-content">
 						<p>
 							<?= _("DNS Server") ?>:
 							<span class="u-ml5">
@@ -364,11 +364,11 @@
 
 			<!-- Mail Server section -->
 			<?php if (!empty($_SESSION["MAIL_SYSTEM"])) { ?>
-				<details class="collapse u-mb10">
-					<summary class="collapse-header">
+				<details class="box-collapse u-mb10">
+					<summary class="box-collapse-header">
 						<i class="fas fa-envelopes-bulk u-mr10"></i><?= _("Mail Server") ?>
 					</summary>
-					<div class="collapse-content">
+					<div class="box-collapse-content">
 						<p>
 							<?= _("Mail Server") ?>:
 							<span class="u-ml5">
@@ -488,11 +488,11 @@
 
 			<!-- Databases section -->
 			<?php if (!empty($_SESSION["DB_SYSTEM"])) { ?>
-				<details class="collapse u-mb10">
-					<summary class="collapse-header">
+				<details class="box-collapse u-mb10">
+					<summary class="box-collapse-header">
 						<i class="fas fa-database u-mr10"></i><?= _("Databases") ?>
 					</summary>
-					<div class="collapse-content">
+					<div class="box-collapse-content">
 						<div class="u-mb10">
 							<p>
 								<?= _("MySQL Support") ?>:
@@ -653,11 +653,11 @@
 			<?php } ?>
 
 			<!-- Backups section -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-arrow-rotate-left u-mr10"></i><?= _("Backups") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb10">
 						<label for="v_backup" class="form-label">
 							<?= _("Local Backup") ?>
@@ -910,12 +910,12 @@
 				</div>
 			</details>
 
-			<!-- SSL tab -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<!-- SSL section -->
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-lock u-mr10"></i><?= _("SSL") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb20">
 						<label for="v_ssl_crt" class="form-label">
 							<?= _("SSL Certificate") ?>
@@ -981,12 +981,12 @@
 				</div>
 			</details>
 
-			<!-- Security tab -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<!-- Security section -->
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-key u-mr10"></i><?= _("Security") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<h2 x-on:click="showSystemOptions = !showSystemOptions" class="section-title">
 						<?= _("System") ?>
 						<i
@@ -1362,12 +1362,12 @@
 				</div>
 			</details>
 
-			<!-- Plugins tab -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<!-- Plugins section -->
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-puzzle-piece u-mr10"></i><?= _("Plugins") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb10">
 						<label for="v_plugin_app_installer" class="form-label">
 							<?= _("Quick App Installer") ?>

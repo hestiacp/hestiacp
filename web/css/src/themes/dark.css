@@ -355,10 +355,10 @@
 	box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }
 
-/* Collapse component
+/* Box collapse component
 		========================================================================== */
 
-.collapse-header {
+.box-collapse-header {
 	background: #454545;
 	border-color: #505050;
 	text-shadow: 0 1px rgb(0 0 0 / 40%);

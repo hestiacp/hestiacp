@@ -388,10 +388,10 @@ h1 {
 	border-radius: 0;
 }
 
-/* Collapse component
+/* Box collapse component
    ========================================================================== */
 
-.collapse-header {
+.box-collapse-header {
 	background: #fafafa;
 	box-shadow: none;
 	color: #444;

@@ -2070,17 +2070,17 @@
 	border-radius: var(--border-radius-base);
 }
 
-/* Collapse component
+/* Box collapse component
    ========================================================================== */
 
-.collapse {
+.box-collapse {
 }
 
-.collapse[open] .collapse-header::after {
+.box-collapse[open] .box-collapse-header::after {
 	transform: rotate(180deg);
 }
 
-.collapse-header {
+.box-collapse-header {
 	background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
 	border: 1px solid #ddd;
 	text-shadow: 0 1px rgb(255 255 255 / 95%);
@@ -2117,7 +2117,7 @@
 	}
 }
 
-.collapse-content {
+.box-collapse-content {
 	box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
 	padding: 20px 20px 10px;
 

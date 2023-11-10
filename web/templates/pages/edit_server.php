@@ -991,7 +991,7 @@
 						<?= _("System") ?>
 						<i
 							x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas icon-dim icon-maroon js-section-toggle-icon"
+							class="fas icon-dim icon-maroon"
 						></i>
 					</h2>
 					<div x-cloak x-show="showSystemOptions">
@@ -1115,7 +1115,7 @@
 							<?= _("System Protection") ?>
 							<i
 								x-bind:class="showProtectionOptions ? 'fa-square-minus' : 'fa-square-plus'"
-								class="fas icon-dim icon-maroon js-section-toggle-icon"
+								class="fas icon-dim icon-maroon"
 							></i>
 						</h2>
 						<div x-cloak x-show="showProtectionOptions">
@@ -1179,7 +1179,7 @@
 						<?= _("Policies") ?>
 						<i
 							x-bind:class="showPolicyOptions ? 'fa-square-minus' : 'fa-square-plus'"
-							class="fas icon-dim icon-maroon js-section-toggle-icon"
+							class="fas icon-dim icon-maroon"
 						></i>
 					</h2>
 					<div x-cloak x-show="showPolicyOptions">

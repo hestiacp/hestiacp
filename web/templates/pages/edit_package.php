@@ -71,7 +71,7 @@
 				<?= _("WEB") ?>
 				<i
 					x-bind:class="showWebOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas icon-dim icon-maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showWebOptions" id="web-options">
@@ -152,7 +152,7 @@
 				<?= _("DNS") ?>
 				<i
 					x-bind:class="showDnsOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas icon-dim icon-maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showDnsOptions" id="dns-options">
@@ -250,7 +250,7 @@
 				<?= _("MAIL") ?>
 				<i
 					x-bind:class="showMailOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas icon-dim icon-maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showMailOptions" id="mail-options">
@@ -285,7 +285,7 @@
 				<?= _("DB") ?>
 				<i
 					x-bind:class="showDatabaseOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas icon-dim icon-maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showDatabaseOptions" id="database-options">
@@ -303,7 +303,7 @@
 				<?= _("System") ?>
 				<i
 					x-bind:class="showSystemOptions ? 'fa-square-minus' : 'fa-square-plus'"
-					class="fas icon-dim icon-maroon js-section-toggle-icon"
+					class="fas icon-dim icon-maroon"
 				></i>
 			</h2>
 			<div x-cloak x-show="showSystemOptions" id="system-options">

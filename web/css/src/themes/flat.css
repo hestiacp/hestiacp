@@ -105,10 +105,10 @@
 	}
 }
 
-/* Collapse component
+/* Box collapse component
    ========================================================================== */
 
-.collapse-header {
+.box-collapse-header {
 	background: #fafafa;
 	box-shadow: none;
 }

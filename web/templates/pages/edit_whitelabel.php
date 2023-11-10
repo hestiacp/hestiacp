@@ -35,12 +35,12 @@
 			<?php show_alert_message($_SESSION); ?>
 
 			<!-- Basic options section -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-gear u-mr15"></i>
 					<?= _("General") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb10">
 						<label for="v_app_name" class="form-label">
 							<?= _("Application Name") ?>
@@ -113,12 +113,12 @@
 				</div>
 			</details>
 			<!-- Custom Logo options section -->
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
 					<i class="fas fa-gear u-mr15"></i>
 					<?= _("Custom Logo") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb10">
 						<label for="v_custom_logo" class="form-label">
 							<?= _("Custom Logo") ?>

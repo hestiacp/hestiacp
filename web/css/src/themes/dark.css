@@ -355,10 +355,10 @@
 	box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }
 
-/* Collapse component
+/* Box collapse component
 		========================================================================== */
 
-.collapse-header {
+.box-collapse-header {
 	background: #454545;
 	border-color: #505050;
 	text-shadow: 0 1px rgb(0 0 0 / 40%);
@@ -366,6 +366,13 @@
 		inset 0 0 2px rgb(0 0 0 / 50%),
 		0 2px 6px rgb(0 0 0 / 40%);
 	color: #fff;
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse-header {
+	border-bottom-color: #484848;
 }
 
 /* Units table
@@ -573,10 +580,6 @@
 
 .hint {
 	color: #a2a2a2;
-}
-
-.section-title {
-	border-bottom-color: #484848;
 }
 
 /* Buttons

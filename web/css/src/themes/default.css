@@ -1719,18 +1719,6 @@
 	font-size: 0.8rem;
 }
 
-.section-title {
-	display: flex;
-	cursor: pointer;
-	justify-content: space-between;
-	align-items: center;
-	font-size: 1.05rem;
-	font-weight: 600;
-	padding-top: 28px;
-	padding-bottom: 12px;
-	border-bottom: 1px solid #ccc;
-}
-
 /* Modals
    ========================================================================== */
 
@@ -2070,17 +2058,17 @@
 	border-radius: var(--border-radius-base);
 }
 
-/* Collapse component
+/* Box collapse component
    ========================================================================== */
 
-.collapse {
+.box-collapse {
 }
 
-.collapse[open] .collapse-header::after {
+.box-collapse[open] .box-collapse-header::after {
 	transform: rotate(180deg);
 }
 
-.collapse-header {
+.box-collapse-header {
 	background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
 	border: 1px solid #ddd;
 	text-shadow: 0 1px rgb(255 255 255 / 95%);
@@ -2117,13 +2105,56 @@
 	}
 }
 
-.collapse-content {
+.box-collapse-content {
 	box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
 	padding: 20px 20px 10px;
 
 	@media (--viewport-medium) {
 		padding: 20px 50px 10px;
 	}
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse {
+}
+
+.collapse[open] .collapse-header::after {
+	content: "\f146";
+}
+
+.collapse-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: pointer;
+	color: var(--color-text-heading);
+	font-size: 1.05rem;
+	font-weight: 600;
+	padding-top: 28px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #ccc;
+
+	&:hover {
+		&::after {
+			color: var(--icon-color-maroon);
+		}
+	}
+
+	&::after {
+		font: var(--fa-font-solid);
+		content: "\f0fe";
+		color: #ddd;
+		display: inline-block;
+		text-rendering: auto;
+		-webkit-font-smoothing: antialiased;
+	}
+}
+
+.collapse-content {
+	box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
+	padding-top: 15px;
 }
 
 /* Login

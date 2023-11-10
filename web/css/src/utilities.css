@@ -23,6 +23,12 @@
 	user-select: none !important;
 }
 
+.u-button-reset {
+	border: 0 !important;
+	padding: 0 !important;
+	background-color: transparent !important;
+}
+
 .u-text-right {
 	text-align: right !important;
 }

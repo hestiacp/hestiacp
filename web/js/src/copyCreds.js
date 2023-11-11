@@ -16,7 +16,7 @@ function monitorAndUpdate(inputSelector, outputSelector) {
 	}
 
 	function updateOutput(value) {
-		const postfix = outputElement.getAttribute('data-postfix');
+		const postfix = outputElement.dataset.postfix;
 		if (value && postfix) {
 			value += postfix;
 		}

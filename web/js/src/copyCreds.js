@@ -1,7 +1,7 @@
 import { debounce } from './helpers';
 
 // Monitor "Account" and "Password" inputs on "Add/Edit Mail Account"
-// page and update the sidebar "Account" and "Password" output
+// page and update the sidebar "Account" and "Password" inputs
 export default function handleCopyCreds() {
 	monitorAndUpdate('.js-account-input', '.js-account-output');
 	monitorAndUpdate('.js-password-input', '.js-password-output');
@@ -16,7 +16,11 @@ function monitorAndUpdate(inputSelector, outputSelector) {
 	}
 
 	function updateOutput(value) {
-		outputElement.textContent = value;
+		const postfix = outputElement.getAttribute('data-postfix');
+		if (value && postfix) {
+			value += postfix;
+		}
+		outputElement.value = value;
 	}
 
 	inputElement.addEventListener(

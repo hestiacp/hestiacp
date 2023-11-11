@@ -339,6 +339,19 @@
 	text-shadow: 0 1px rgb(0 0 0 / 95%);
 }
 
+/* Clipboard component
+   ========================================================================== */
+
+.clipboard {
+	& .clipboard-input {
+		border-color: #606060;
+	}
+}
+
+.clipboard-button {
+	background-color: #353535;
+}
+
 /* Server summary component
    ========================================================================== */
 

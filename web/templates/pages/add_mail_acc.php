@@ -130,12 +130,16 @@
 							<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
 								<li class="values-list-item">
 									<span class="values-list-label"><?= _("Webmail") ?></span>
-									<span class="values-list-value"><a href="http://<?= htmlentities($v_webmail_alias) ?>" target="_blank">http://<?= htmlentities($v_webmail_alias) ?></a></span>
+									<span class="values-list-value u-overflow">
+										<a href="http://<?= htmlentities($v_webmail_alias) ?>" target="_blank">
+											http://<?= htmlentities($v_webmail_alias) ?>
+										</a>
+									</span>
 								</li>
 							<?php } ?>
 							<li class="values-list-item">
 								<span class="values-list-label"><?= _("Hostname") ?></span>
-								<span class="values-list-value">mail.<?= htmlentities($v_domain) ?></span>
+								<span class="values-list-value u-overflow">mail.<?= htmlentities($v_domain) ?></span>
 							</li>
 						</ul>
 						<h2 class="u-text-H3 u-mb10"><?= _("IMAP Settings") ?></h2>

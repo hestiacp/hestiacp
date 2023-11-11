@@ -12,7 +12,7 @@ export default function handleClipboardCopy() {
 		}
 		const copyButton = copyButtons[index];
 
-		// Handle input focus and allow for partial selection
+		// Copy on focus and allow for partial selection
 		copyInput.addEventListener('click', () => {
 			if (!inputFocused) {
 				copyInput.select();
@@ -34,10 +34,12 @@ export default function handleClipboardCopy() {
 				// Temporarily change button content
 				const buttonIcon = copyButton.innerHTML;
 				copyButton.innerHTML = 'Copied!';
+				copyButton.disabled = true;
 
 				// Revert button content after 2 seconds
 				setTimeout(() => {
 					copyButton.innerHTML = buttonIcon;
+					copyButton.disabled = false;
 				}, 2000);
 			});
 		});

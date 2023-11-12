@@ -3,6 +3,7 @@ import focusFirstInput from './focusFirstInput';
 import handleAddIpLists from './addIpLists';
 import handleConfirmAction from './confirmAction';
 import handleCopyCreds from './copyCreds';
+import handleClipboardCopy from './clipboardCopy';
 import handleCronGenerator from './cronGenerator';
 import handleDatabaseHints from './databaseHints';
 import handleDiscardAllMail from './discardAllMail';
@@ -34,6 +35,7 @@ function initListeners() {
 	handleAddIpLists();
 	handleConfirmAction();
 	handleCopyCreds();
+	handleClipboardCopy();
 	handleCronGenerator();
 	handleDiscardAllMail();
 	handleDnsRecordHint();

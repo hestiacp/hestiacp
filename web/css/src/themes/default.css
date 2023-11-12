@@ -1400,14 +1400,13 @@
 	.sidebar-right-grid {
 		display: grid;
 		gap: 50px;
-		grid-template-columns: 2fr 350px;
+		grid-template-columns: 2fr 340px;
 	}
 
 	.sidebar-right-grid-content {
 	}
 
 	.sidebar-right-grid-sidebar {
-		max-width: 385px;
 	}
 }
 
@@ -1950,6 +1949,43 @@
 	right: 110px;
 }
 
+/* Clipboard component
+   ========================================================================== */
+
+.clipboard {
+	display: flex;
+
+	& .clipboard-input {
+		cursor: default;
+		border-color: #e9e9e9;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+}
+
+.clipboard-button {
+	display: flex;
+	align-items: center;
+	border: 0;
+	border-top-right-radius: var(--border-radius-base);
+	border-bottom-right-radius: var(--border-radius-base);
+	background-color: #e9e9e9;
+	padding-left: 8px;
+	padding-right: 8px;
+	font-size: 0.75rem;
+	color: var(--color-text);
+
+	&:hover {
+		& .fas {
+			color: var(--color-text-link-hover);
+		}
+	}
+
+	& .fas {
+		font-size: 0.8rem;
+	}
+}
+
 /* Values List component
    ========================================================================== */
 
@@ -2056,6 +2092,11 @@
 	border: 1px solid #d9d9d9;
 	box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 	border-radius: var(--border-radius-base);
+
+	& .form-control {
+		box-shadow: none;
+		padding: 5px 10px;
+	}
 }
 
 /* Box collapse component

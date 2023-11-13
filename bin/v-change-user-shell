@@ -13,7 +13,7 @@
 # Argument definition
 user=$1
 shell=$2
-shell_jail_enabled=$3
+shell_jail_enabled=${3-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

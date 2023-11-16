@@ -17,6 +17,9 @@
 # Bats seems to break Prettier
 *.bats
 
+# Bin folder
+/bin/v-generate-password-hash
+
 # Exclude bats submodules if present
 /test/test_helper/*
 

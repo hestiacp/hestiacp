@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18ace9134d6603d12957a1563ee027f4",
+    "content-hash": "b5783261a5118a070e9abf6eba0f3dd6",
     "packages": [
         {
             "name": "hestiacp/phpquoteshellarg",
@@ -126,16 +126,16 @@
         },
         {
             "name": "robthree/twofactorauth",
-            "version": "v2.0.0",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobThree/TwoFactorAuth.git",
-                "reference": "27cd1e1392d19f178398e892f59062003c8998a4"
+                "reference": "ab93dd41ced7818ecda83a37c2741ee38bb72fb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobThree/TwoFactorAuth/zipball/27cd1e1392d19f178398e892f59062003c8998a4",
-                "reference": "27cd1e1392d19f178398e892f59062003c8998a4",
+                "url": "https://api.github.com/repos/RobThree/TwoFactorAuth/zipball/ab93dd41ced7818ecda83a37c2741ee38bb72fb7",
+                "reference": "ab93dd41ced7818ecda83a37c2741ee38bb72fb7",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-25T11:33:28+00:00"
+            "time": "2023-11-14T12:50:27+00:00"
         }
     ],
     "packages-dev": [],
@@ -214,5 +214,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

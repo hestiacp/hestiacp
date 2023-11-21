@@ -630,9 +630,9 @@ add webmail support for a domain
 **Examples**:
 
 ```bash
-v-add-sys-webmail user domain.com
-example: v-add-sys-webmail user domain.com snappymail
-example: v-add-sys-webmail user domain.com roundcube
+v-add-mail-domain-webmail user domain.com
+example: v-add-mail-domain-webmail user domain.com snappymail
+example: v-add-mail-domain-webmail user domain.com roundcube
 ```
 
 This function enables webmail client for a mail domain.

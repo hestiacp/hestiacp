@@ -25,10 +25,13 @@ Replace `myrootusername` & `myrootusername_password` with preferred credentials:
 
 ```bash
 mysql -uroot
-mysql > CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password';
-mysql > GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION;
-mysql > FLUSH PRIVILEGES;
-mysql > QUIT
+```
+
+```sql
+CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password';
+GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+QUIT;
 ```
 
 ## How can I enable access to `http://ip/phpmyadmin/`

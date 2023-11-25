@@ -25,9 +25,9 @@ Replace `myrootusername` & `myrootusername_password` with preferred credentials:
 
 ```bash
 mysql -uroot
-mysql > CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password'
-mysql > GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION
-mysql > FLUSH PRIVILEGES
+mysql > CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password';
+mysql > GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION;
+mysql > FLUSH PRIVILEGES;
 mysql > QUIT
 ```
 

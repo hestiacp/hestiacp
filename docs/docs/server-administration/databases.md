@@ -19,15 +19,16 @@ v-list-database-hosts
 
 For security reasons, we have decided to disable this option. Please use `https://host.domain.tld/phpmyadmin/` instead.
 
-## How to create PhpMyAdmin root user creditials
+## How to create PhpMyAdmin root user credentials
 
-Replace `myrootusername` & `myrootusername_password` with preferred creditials:
+Replace `myrootusername` & `myrootusername_password` with preferred credentials:
 
 ```bash
 mysql -uroot
-mysql > CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password'
-mysql > GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION
-mysql > FLUSH PRIVILEGES
+mysql > CREATE USER 'myrootusername'@'localhost' IDENTIFIED BY 'myrootusername_password';
+mysql > GRANT ALL PRIVILEGES ON *.* TO 'myrootusername'@'localhost' WITH GRANT OPTION;
+mysql > FLUSH PRIVILEGES;
+mysql > QUIT
 ```
 
 ## How can I enable access to `http://ip/phpmyadmin/`

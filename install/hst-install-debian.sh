@@ -33,7 +33,7 @@ VERBOSE='no'
 # Define software versions
 HESTIA_INSTALL_VER='1.8.10'
 # Dependencies
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2" "8.3")
 fpm_v="8.2"
 mariadb_v="10.11"
 

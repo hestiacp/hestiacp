@@ -2,12 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.11] - Service release
+
+### Features
+
+- PHP 8.3 Support (#4175)
+- Add new template with Wordpress XMLRPC Blocked by default (Nignx Only) (#4168)
+
+### Bug fixes
+
+- Minimal change to the way BACKUP_LA_LIMIT is calculated (#4162)
+- Change Filegator to 24 hr clock (#4168)
+- Confirm before restoring part of backup (#4147)
+- Multiple Bugfixes v-import-cpanel (#4150, #4149 #4144 #4139, #4120, #4121 thanks @vipxr)
+- Fix an issue with small screens in logs header (#4126)
+- Fixed a few bugs due to the permissions changes with hestiamail user
+- Updated v-list-sys-users to fix issues with new hestiamail user
+- Use -f instead --force=yes (#4097)
+- Delay submit in Desktop Safari (#4137)
+- Fixed an bug in v-add-backup-host to report inability to connect via sftp (#4119)
+- Allow for optional domain directory write permissions #4109 @evonet
+
 ## [1.8.10] - Service release
 
 ### Bug fixes
 
 - Include missed changes
-- Include https://github.com/hestiacp/hestiacp/blob/main/install/upgrade/manual/secure_php.sh
+- Include <https://github.com/hestiacp/hestiacp/blob/main/install/upgrade/manual/secure_php.sh>
 
 ## [1.8.9] - Service release
 

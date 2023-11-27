@@ -34,7 +34,7 @@ json_list() {
 			echo -e "\t\"$user\""
 		fi
 		((++i))
-	done < <(grep @ /etc/passwd | cut -f 1 -d :)
+	done < <($BIN/v-list-users list)
 	echo "]"
 }
 
@@ -44,14 +44,14 @@ shell_list() {
 	echo "----"
 	while read user; do
 		echo "$user"
-	done < <(grep @ /etc/passwd | cut -f 1 -d :)
+	done < <($BIN/v-list-users list)
 }
 
 # PLAIN list function
 plain_list() {
 	while read user; do
 		echo "$user"
-	done < <(grep @ /etc/passwd | cut -f 1 -d :)
+	done < <($BIN/v-list-users list)
 }
 
 # CSV list function
@@ -59,7 +59,7 @@ csv_list() {
 	echo "USER"
 	while read user; do
 		echo "$user"
-	done < <(grep @ /etc/passwd | cut -f 1 -d :)
+	done < <($BIN/v-list-users list)
 }
 
 #----------------------------------------------------------#

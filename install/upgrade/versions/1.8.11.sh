@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Hestia Control Panel upgrade script for target version 1.8.8
+# Hestia Control Panel upgrade script for target version 1.8.11
 
 #######################################################################################
 #######                      Place additional commands below.                   #######
@@ -21,31 +21,16 @@ upgrade_config_set_value 'UPGRADE_UPDATE_WEB_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_DNS_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_UPDATE_MAIL_TEMPLATES' 'false'
 upgrade_config_set_value 'UPGRADE_REBUILD_USERS' 'false'
-upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'false'
+upgrade_config_set_value 'UPGRADE_UPDATE_FILEMANAGER_CONFIG' 'yes'
 
-# Modify existing POLICY_USER directives (POLICY_USER_CHANGE_THEME, POLICY_USER_EDIT_WEB_TEMPLATES
-# and POLICY_USER_VIEW_LOGS) that are using value 'true' instead of the correct value 'yes'
+# Folder paths
+SM_INSTALL_DIR="/var/lib/snappymail"
+SM_CONFIG_DIR="/etc/snappymail"
+SM_LOG="/var/log/snappymail"
 
-hestia_conf="$HESTIA/conf/hestia.conf"
-hestia_defaults_conf="$HESTIA/conf/defaults/hestia.conf"
+if [ -d "/var/lib/snappymail" ]; then
+	chown hestiamail:hestiamail /var/lib/snappymail
+	chown hestiamail:hestiamail /etc/snappymail
+fi
 
-for i in POLICY_USER_CHANGE_THEME POLICY_USER_EDIT_WEB_TEMPLATES POLICY_USER_VIEW_LOGS; do
-	if [[ -f "$hestia_conf" ]]; then
-		if grep "$i" "$hestia_conf" | grep -q 'true'; then
-			if "$BIN/v-change-sys-config-value" "$i" 'yes'; then
-				echo "[ * ] Success: ${i} value changed from true to yes in hestia.conf"
-			else
-				echo "[ ! ] Error: Couldn't change ${i} value from true to yes in hestia.conf"
-			fi
-		fi
-	fi
-	if [[ -f "$hestia_defaults_conf" ]]; then
-		if grep "$i" "$hestia_defaults_conf" | grep -q 'true'; then
-			if sed -i "s/${i}='true'/${i}='yes'/" "$hestia_defaults_conf"; then
-				echo "[ * ] Success: ${i} value changed from true to yes in defaults/hestia.conf"
-			else
-				echo "[ ! ] Error: Couldn't change ${i} value from true to yes in defaults/hestia.conf"
-			fi
-		fi
-	fi
-done
+sed -i "s/disable_functions =.*/disable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority/g" /etc/php/*/cli/php.ini

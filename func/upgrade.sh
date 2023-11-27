@@ -613,9 +613,11 @@ upgrade_phpmyadmin() {
 			echo "[ * ] phpMyAdmin is up to date (${pma_version})..."
 			# Update permissions
 			if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-				chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
+				chown root:hestiamail /var/lib/phpmyadmin/blowfish_secret.inc.php
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
+			chown root:hestiamail /usr/share/phpmyadmin/tmp
+			chmod 0770 /usr/share/phpmyadmin/tmp
 		else
 			# Display upgrade information
 			echo "[ * ] Upgrading phpMyAdmin to version $pma_v..."
@@ -639,13 +641,13 @@ upgrade_phpmyadmin() {
 			# Create temporary folder and change permissions
 			if [ ! -d /usr/share/phpmyadmin/tmp ]; then
 				mkdir /usr/share/phpmyadmin/tmp
-				chown root:www-data /usr/share/phpmyadmin/tmp
+				chown root:hestiamail /usr/share/phpmyadmin/tmp
 				chmod 0770 /usr/share/phpmyadmin/tmp
 
 			fi
 
 			if [ -e /var/lib/phpmyadmin/blowfish_secret.inc.php ]; then
-				chown root:www-data /var/lib/phpmyadmin/blowfish_secret.inc.php
+				chown root:hestiamail /var/lib/phpmyadmin/blowfish_secret.inc.php
 				chmod 0640 /var/lib/phpmyadmin/blowfish_secret.inc.php
 			fi
 

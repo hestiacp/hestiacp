@@ -163,6 +163,3 @@ if (!empty($_SESSION["WEBMAIL_ALIAS"])) {
 	</div>
 
 </div>
-
-<footer class="app-footer">
-</footer>

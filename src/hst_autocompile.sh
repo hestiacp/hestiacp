@@ -270,7 +270,12 @@ if [ "$dontinstalldeps" != 'true' ]; then
 		fi
 	else
 		# Set package dependencies for compiling
-		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl nodejs libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
+		SOFTWARE='wget tar git curl build-essential libxml2-dev libz-dev libzip-dev libgmp-dev libcurl4-gnutls-dev unzip openssl libssl-dev pkg-config libsqlite3-dev libonig-dev rpm lsb-release'
+
+		echo "Updating system APT repositories..."
+		apt-get -qq update > /dev/null 2>&1
+		echo "Installing dependencies for compilation..."
+		apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
 
 		# Installing NodeJS 20.x repo
 		apt="/etc/apt/sources.list.d"
@@ -283,17 +288,18 @@ if [ "$dontinstalldeps" != 'true' ]; then
 			curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
 		fi
 
-		echo "Updating system APT repositories..."
+		echo "Install NodeJS...."
 		apt-get -qq update > /dev/null 2>&1
-		echo "Installing dependencies for compilation..."
-		apt-get -qq install -y $SOFTWARE > /dev/null 2>&1
+		apt -qq install -y nodejs > /dev/null 2>&1
 
 		nodejs_version=$(/usr/bin/node -v | cut -f1 -d'.' | sed 's/v//g')
+
 		if [ "$nodejs_version" -lt 18 ]; then
 			echo "Requires NodeJS 18.x or higher"
 			exit 1
 		fi
-		# Fix for Debian PHP Envroiment
+
+		# Fix for Debian PHP environment
 		if [ $BUILD_ARCH == "amd64" ]; then
 			if [ ! -L /usr/local/include/curl ]; then
 				ln -s /usr/include/x86_64-linux-gnu/curl /usr/local/include/curl

@@ -354,7 +354,7 @@ function humanize_usage_size($usage, $round = 2) {
 	}
 	if ($usage < 1) {
 		$usage = "0";
-	}	
+	}
 	$display_usage = $usage;
 	if ($usage > 1024) {
 		$usage = $usage / 1024;

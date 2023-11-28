@@ -51,12 +51,7 @@
 					</div>
 				</div>
 			</div>
-			<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
-			<ul class="u-list-bulleted u-mb10">
-				<li><?= _("8 characters long") ?></li>
-				<li><?= _("1 uppercase & 1 lowercase character") ?></li>
-				<li><?= _("1 number") ?></li>
-			</ul>
+			<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
 			<div class="u-mb10">
 				<label for="v_type" class="form-label"><?= _("Type") ?></label>
 				<input type="text" class="form-control" name="v_type" id="v_type" value="<?= htmlentities(trim($v_type, "'")) ?>" disabled>

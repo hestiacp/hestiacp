@@ -144,17 +144,22 @@ if [ "$UPDATE" == "no" ]; then
 
 else
 	[ ! -f "${SM_INSTALL_DIR}/${SM_FILE}" ] && wget "$SM_URL" --quiet -O "${SM_INSTALL_DIR}/${SM_FILE}"
+	if [ ! -f "${SM_INSTALL_DIR}/${SM_FILE}" ]; then
+		echo "ERROR: Download failed, installation aborted."
+		exit 2
+	fi
+
 	version=$(cat $SM_INSTALL_DIR/data/VERSION)
-
-	tar -xzf snappymail-latest.tar.gz "data/VERSION" $SM_INSTALL_DIR/
-	version_source=$(cat $SM_INSTALL_DIR/VERSION)
-
+	cd $SM_INSTALL_DIR
+	mkdir -p /tmp/snappy/
+	tar -xzf snappymail-latest.tar.gz -C /tmp/snappy/
+	version_source=$(cat /tmp/snappy/data/VERSION)
 	# Check version inside .tar.gz file in case hestia didn't update yet
 	if [ "$version" != "$version_source" ]; then
 		tar -xzf ${SM_INSTALL_DIR}/${SM_FILE}
 		rm $SM_INSTALL_DIR/$SM_FILE
 	fi
-	rm ${SM_INSTALL_DIR}/VERSION
+	rm -fr /tmp/snappy
 fi
 
 #----------------------------------------------------------#

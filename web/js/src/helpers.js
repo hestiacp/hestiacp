@@ -43,6 +43,14 @@ export function parseAndSortIpLists(ipListsData) {
 	return ipLists.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+// Determines if the current browser is Desktop Safari
+export function isDesktopSafari() {
+	const userAgent = window.navigator.userAgent;
+	const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+	const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
+	return isSafari && !isMobile;
+}
+
 // Posts data to the given URL and returns the response
 export async function post(url, data, headers = {}) {
 	const requestOptions = {

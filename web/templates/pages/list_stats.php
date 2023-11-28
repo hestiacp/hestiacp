@@ -46,6 +46,7 @@
 <!-- End toolbar -->
 
 <div class="container">
+
 	<!-- Begin statistics list item loop -->
 	<div class="stats">
 		<?php foreach ($data as $key => $value) {
@@ -227,12 +228,11 @@
 			</div>
 		<?php } ?>
 	</div>
-</div>
 
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d month", "%d months", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

@@ -248,12 +248,10 @@
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d DNS zone", "%d DNS zones", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

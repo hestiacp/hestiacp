@@ -67,4 +67,3 @@ fi
 log_event "$OK" "$ARGUMENTS"
 
 exit
-

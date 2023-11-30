@@ -8,7 +8,7 @@
 #
 # Currently Supported Operating Systems:
 #
-# Debian 10, 11
+# Debian 10, 11, 12
 # Ubuntu 20.04, 22.04
 # AlmaLinux, EuroLinux, Red Hat EnterPrise Linux, Rocky Linux 8, 9
 #
@@ -81,7 +81,7 @@ no_support_message() {
 	echo "Your operating system (OS) is not supported by"
 	echo "Hestia Control Panel. Officially supported releases:"
 	echo "****************************************************"
-	echo "  Debian 10, 11"
+	echo "  Debian 10, 11, 12"
 	echo "  Ubuntu 20.04, 22.04 LTS"
 	# Commenting this out for now
 	# echo "  AlmaLinux, EuroLinux, Red Hat EnterPrise Linux, Rocky Linux 8,9"

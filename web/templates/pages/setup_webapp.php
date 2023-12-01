@@ -113,6 +113,7 @@
 									name="<?= $field_name ?>"
 									id="<?= $field_name ?>"
 									placeholder="<?= $field_placeholder ?>"
+									value="<?= $field_value ?>"
 								>
 							<?php endif; ?>
 						<?php endif; ?>

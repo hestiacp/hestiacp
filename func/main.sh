@@ -725,6 +725,9 @@ is_user_format_valid() {
 	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
 	fi
+	if ! [[ "$1" =~ ^[a-zA-Z]+ ]]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
 }
 
 # Domain format validator

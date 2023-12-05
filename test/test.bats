@@ -384,6 +384,24 @@ function check_ip_not_banned(){
 	assert_output --partial 'Error: invalid user format'
 }
 
+@test "User: Add new user Failed 4" {
+	run v-add-user '1234'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+@test "User: Add new user Success 1" {
+	run v-add-user 'jaap01'  $user $user@hestiacp2.com default "Super Test"
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 1 Delete" {
+	run v-delete-user jaap01
+	assert_success
+	refute_output
+}
+
 @test "User: Change user password" {
     run v-change-user-password "$user" "$userpass2"
     assert_success
@@ -1597,6 +1615,27 @@ function check_ip_not_banned(){
     refute_output
 }
 
+@test "MAIL: Add account 2" {
+		run v-add-mail-account $user $domain 01 "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "01@$domain"
+		refute_output
+}
+
+@test "MAIL: Add account" {
+		run v-add-mail-account $user $domain 0AA "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "0AA@$domain"
+		refute_output
+}
+
+@test "MAIL: Add account" {
+		run v-add-mail-account $user $domain A1234 "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "A1234@$domain"
+		refute_output
+}
+
 @test "MAIL: Add account (duplicate)" {
 	run v-add-mail-account $user $domain test "$userpass2"
 	assert_failure $E_EXISTS
@@ -1854,6 +1893,15 @@ function check_ip_not_banned(){
     # validate_database mysql database_name database_user password
     validate_database mysql $database $dbuser 1234
 }
+
+@test "MYSQL: Add database" {
+		run v-add-database $user database 01 1234 mysql
+		assert_success
+		refute_output
+		# validate_database mysql database_name database_user password
+		validate_database mysql $database 'database_01' 1234
+}
+
 @test "MYSQL: Add Database (Duplicate)" {
     run v-add-database $user database dbuser 1234 mysql
     assert_failure $E_EXISTS

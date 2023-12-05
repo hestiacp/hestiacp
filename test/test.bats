@@ -1887,11 +1887,11 @@ function check_ip_not_banned(){
 }
 
 @test "MYSQL: Add database 2" {
-		run v-add-database $user database 01 1234 mysql
+		run v-add-database $user 01 01 1234 mysql
 		assert_success
 		refute_output
 		# validate_database mysql database_name database_user password
-		validate_database mysql $database 'database_01' 1234
+		validate_database mysql "$user_01" "$user_01" 1234
 }
 
 @test "MYSQL: Add Database (Duplicate)" {

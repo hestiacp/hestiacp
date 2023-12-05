@@ -1886,7 +1886,7 @@ function check_ip_not_banned(){
     validate_database mysql $database $dbuser 1234
 }
 
-@test "MYSQL: Add database" {
+@test "MYSQL: Add database 2" {
 		run v-add-database $user database 01 1234 mysql
 		assert_success
 		refute_output

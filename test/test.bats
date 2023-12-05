@@ -1622,14 +1622,14 @@ function check_ip_not_banned(){
 		refute_output
 }
 
-@test "MAIL: Add account" {
+@test "MAIL: Add account 3" {
 		run v-add-mail-account $user $domain 0AA "$userpass2"
 		assert_success
 		assert_file_contains /etc/exim4/domains/$domain/limits "0AA@$domain"
 		refute_output
 }
 
-@test "MAIL: Add account" {
+@test "MAIL: Add account 4" {
 		run v-add-mail-account $user $domain A1234 "$userpass2"
 		assert_success
 		assert_file_contains /etc/exim4/domains/$domain/limits "A1234@$domain"

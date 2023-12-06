@@ -1670,7 +1670,7 @@ function check_ip_not_banned(){
 }
 
 @test "MAIL: Add account 6" {
-		run v-add-mail-account $user $domain 0AA "$userpass2"
+		run v-add-mail-account $user $domain "0AA" "$userpass2"
 		assert_success
 		assert_file_contains /etc/exim4/domains/$domain/limits "0AA@$domain"
 		refute_output
@@ -1891,7 +1891,8 @@ function check_ip_not_banned(){
 		assert_success
 		refute_output
 		# validate_database mysql database_name database_user password
-		validate_database mysql "$user_01" "$user_01" 1234
+		$test_db = "${$user}_01"
+		validate_database mysql $test_db" "test_db" 1234
 }
 
 @test "MYSQL: Add Database (Duplicate)" {

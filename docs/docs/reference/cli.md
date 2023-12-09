@@ -4070,16 +4070,16 @@ v-import-directadmin /backup/backup.tar.gz
 ```
 
 What will be imported from DirectAdmin backups:
+
 1. The user account information
 2. The domains structure included all the files from `public_html` and/or `private_html`
 3. All databases
-   * **WARNING**: Only the first user with password will be imported because of HestiCP limits.
+   - **WARNING**: Only the first user with password will be imported because of HestiCP limits.
 4. All the e-mail accounts including the e-mails.
 
 Based on sk-da-importer and v-import-cpanel
 Credits: Maks Usmanov (skamasle), Jaap Marcus (jaapmarcus) and contributors:
 Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
-
 
 ## v-insert-dns-domain
 

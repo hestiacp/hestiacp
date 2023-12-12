@@ -1135,7 +1135,7 @@ adding ssl for domain
 **Examples**:
 
 ```bash
-v-add-web-domain-ssl admin example.com /home/admin/conf/example.com/web
+v-add-web-domain-ssl admin example.com /home/admin/conf/web/example.com
 ```
 
 This function turns on SSL support for a domain. Parameter ssl_dir is a path

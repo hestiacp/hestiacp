@@ -10,6 +10,14 @@ Execute the following script and follow the instructions:
 bash /usr/local/hestia/install/upgrade/manual/configure-server-smtp.sh
 ```
 
+The script will ask you for the following SMTP parameters:
+- Host (e.g. `smtp.example.com`)
+- Port (e.g. `25`, `465` or `587`)
+- Security (e.g. `STARTTLS`)
+- Username
+- Password
+- Email Address (i.e. the sender address).
+
 ## I am unable to send email
 
 First, check that port 25 is open for outgoing traffic. A lot of providers block port 25 by default to combat spam.

@@ -11,6 +11,7 @@ bash /usr/local/hestia/install/upgrade/manual/configure-server-smtp.sh
 ```
 
 The script will ask you for the following SMTP parameters:
+
 - Host (e.g. `smtp.example.com`)
 - Port (e.g. `25`, `465` or `587`)
 - Security (e.g. `STARTTLS`)

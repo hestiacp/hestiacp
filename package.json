@@ -32,11 +32,11 @@
 	"devDependencies": {
 		"@prettier/plugin-php": "0.22.1",
 		"browserslist": "4.22.2",
-		"esbuild": "0.19.8",
-		"eslint": "8.55.0",
+		"esbuild": "0.19.9",
+		"eslint": "8.56.0",
 		"eslint-config-prettier": "9.1.0",
 		"eslint-plugin-editorconfig": "4.0.3",
-		"eslint-plugin-import": "2.29.0",
+		"eslint-plugin-import": "2.29.1",
 		"husky": "8.0.3",
 		"lightningcss": "1.22.1",
 		"lint-staged": "15.2.0",
@@ -47,8 +47,8 @@
 		"prettier-plugin-sql": "0.18.0",
 		"stylelint": "16.0.2",
 		"stylelint-config-standard": "35.0.0",
-		"vitepress": "1.0.0-rc.31",
-		"vue": "3.3.10"
+		"vitepress": "1.0.0-rc.32",
+		"vue": "3.3.12"
 	},
 	"browserslist": [
 		"defaults"

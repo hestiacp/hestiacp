@@ -288,7 +288,7 @@ if [ "$dontinstalldeps" != 'true' ]; then
 			curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
 		fi
 
-		echo "Install Node.js..."
+		echo "Installing Node.js..."
 		apt-get -qq update > /dev/null 2>&1
 		apt -qq install -y nodejs > /dev/null 2>&1
 

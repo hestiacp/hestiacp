@@ -20,15 +20,15 @@ source /etc/hestiacp/hestia.conf
 source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
-# define NodeJS version for download (required for building JS/CSS)
+# define Node.js version for download (required for building JS/CSS)
 NODE_MAJOR=20
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode
 
-# Detect and install NodeJS if necessary
+# Detect and install Node.js if necessary
 if [ -z $(which "node") ]; then
-	read -p "NodeJS not found. Install now to proceed? [Y/n] " answer
+	read -p "Node.js not found. Install now to proceed? [Y/n] " answer
 	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
 		sudo mkdir -p /etc/apt/keyrings
 		curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg

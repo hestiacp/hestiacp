@@ -263,7 +263,7 @@ if [ -n "$DB_SYSTEM" ] && [ "$DB_SYSTEM" != 'remote' ]; then
 				if [ -f $mysql ]; then
 					mariadb_v=$($mysql -V | awk 'NR==1{print $5}')
 					if [[ $mariadb_v =~ $mariadb_string ]]; then
-						mariadb_v=$(echo $mariadb_v | awk -F "." '{ print $1 $2}')
+						mariadb_v=$(echo $mariadb_v | awk -F "." '{ print $1 $2 }')
 						if [ $mariadb_v -le "104" ]; then
 							service='mariadb'
 							proc_name='mysqld'

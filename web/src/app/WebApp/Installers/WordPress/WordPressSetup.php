@@ -39,6 +39,7 @@ class WordpressSetup extends BaseSetup {
 					"fr_FR" => "French",
 					"hu_HU" => "Hungarian",
 					"it_IT" => "Italian",
+					"ja" => "Japanese",
 					"nl_NL" => "Dutch",
 					"pt_PT" => "Portuguese",
 					"pt_BR" => "Portuguese (Brazil)",

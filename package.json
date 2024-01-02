@@ -32,7 +32,7 @@
 	"devDependencies": {
 		"@prettier/plugin-php": "0.22.1",
 		"browserslist": "4.22.2",
-		"esbuild": "0.19.10",
+		"esbuild": "0.19.11",
 		"eslint": "8.56.0",
 		"eslint-config-prettier": "9.1.0",
 		"eslint-plugin-editorconfig": "4.0.3",
@@ -47,8 +47,8 @@
 		"prettier-plugin-sql": "0.18.0",
 		"stylelint": "16.1.0",
 		"stylelint-config-standard": "36.0.0",
-		"vitepress": "1.0.0-rc.33",
-		"vue": "3.3.13"
+		"vitepress": "1.0.0-rc.34",
+		"vue": "3.4.3"
 	},
 	"browserslist": [
 		"defaults"

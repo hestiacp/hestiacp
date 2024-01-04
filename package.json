@@ -47,8 +47,8 @@
 		"prettier-plugin-sql": "0.18.0",
 		"stylelint": "16.1.0",
 		"stylelint-config-standard": "36.0.0",
-		"vitepress": "1.0.0-rc.34",
-		"vue": "3.4.3"
+		"vitepress": "1.0.0-rc.35",
+		"vue": "3.4.5"
 	},
 	"browserslist": [
 		"defaults"

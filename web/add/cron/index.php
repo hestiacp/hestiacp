@@ -106,6 +106,11 @@ if (empty($v_hour)) {
 if (empty($v_min)) {
 	$v_min = "";
 }
+
+exec(HESTIA_CMD . "v-get-sys-timezone", $output, $return_var);
+$v_timezone = $output[0];
+unset($output);
+
 // Render
 render_page($user, $TAB, "add_cron");
 

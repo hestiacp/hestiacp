@@ -14,6 +14,10 @@ if ($_SESSION["userSortOrder"] == "name") {
 }
 unset($output);
 
+exec(HESTIA_CMD . "v-get-sys-timezone", $output, $return_var);
+$v_timezone = $output[0];
+unset($output);
+
 // Render page
 render_page($user, $TAB, "list_cron");
 

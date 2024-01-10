@@ -25,6 +25,9 @@
 			<h1 class="u-mb20"><?= _("Edit Cron Job") ?></h1>
 			<?php show_alert_message($_SESSION); ?>
 			<div class="u-mb20">
+				<p><?= _('System timezone : ') .  '<b>' . $v_timezone . '</b>' ?></p>
+			</div>
+			<div class="u-mb20">
 				<label for="v_cmd" class="form-label"><?= _("Command") ?></label>
 				<input type="text" class="form-control" name="v_cmd" id="v_cmd" value="<?= htmlentities(trim($v_cmd, "'")) ?>">
 			</div>

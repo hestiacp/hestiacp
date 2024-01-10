@@ -90,6 +90,10 @@ if (!empty($_POST["save"])) {
 	}
 }
 
+exec(HESTIA_CMD . "v-get-sys-timezone", $output, $return_var);
+$v_timezone = $output[0];
+unset($output);
+
 // Render page
 render_page($user, $TAB, "edit_cron");
 

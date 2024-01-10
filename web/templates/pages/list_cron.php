@@ -8,7 +8,7 @@
 				</a>
 				<?php if ($panel[$user_plain]["CRON_REPORTS"] == "yes") { ?>
 					<a class="button button-secondary" href="/delete/cron/reports/?token=<?= $_SESSION["token"] ?>">
-						<i class="fas fa-toggle-off icon-green"></i><?= _("Disable Notifications") ?>
+						<i class="fas fa-toggle-on icon-green"></i><?= _("Disable Notifications") ?>
 					</a>
 				<?php } else { ?>
 					<a class="button button-secondary" href="/add/cron/reports/?token=<?= $_SESSION["token"] ?>">
@@ -190,12 +190,10 @@
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d cron job", "%d cron jobs", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

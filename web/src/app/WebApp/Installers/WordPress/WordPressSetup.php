@@ -45,6 +45,7 @@ class WordpressSetup extends BaseSetup {
 					"pt_BR" => "Portuguese (Brazil)",
 					"sk_SK" => "Slovak",
 					"sr_RS" => "Serbian",
+					"sv_SE" => "Swedish",
 					"tr_TR" => "Turkish",
 					"ru_RU" => "Russian",
 					"uk" => "Ukrainian",

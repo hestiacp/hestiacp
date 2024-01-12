@@ -8,10 +8,10 @@
 	},
 	"dependencies": {
 		"node-pty": "1.0.0",
-		"ws": "8.14.2"
+		"ws": "8.16.0"
 	},
 	"devDependencies": {
 		"@types/ws": "8.5.10",
-		"@types/node": "20.10.4"
+		"@types/node": "20.11.0"
 	}
 }

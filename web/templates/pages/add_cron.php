@@ -22,7 +22,7 @@
 		<input type="hidden" name="ok" value="Add">
 
 		<div class="form-container form-container-wide">
-			<div class="u-side-by-side u-mb20">
+			<div class="u-side-by-side-tablet u-mb20">
 				<h1><?= _("Add Cron Job") ?></h1>
 				<p>
 					<?= _('System time') ?>: <span class="u-text-bold">

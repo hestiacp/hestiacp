@@ -47,7 +47,7 @@
 				</label>
 				<input type="text" class="form-control" name="v_org" id="v_org" value="<?= htmlentities(trim($v_org, "'")) ?>">
 			</div>
-			<div class="u-side-by-side">
+			<div>
 				<button type="submit" class="button" name="generate">
 					<?= _("Generate") ?>
 				</button>

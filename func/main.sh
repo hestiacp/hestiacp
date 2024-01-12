@@ -737,7 +737,7 @@ is_domain_format_valid() {
 	is_no_new_line_format "$1"
 }
 
-# Alias forman validator
+# Alias format validator
 is_alias_format_valid() {
 	for object in ${1//,/ }; do
 		exclude="[!|@|#|$|^|&|(|)|+|=|{|}|:|<|>|?|_|/|\|\"|'|;|%|\`| ]"
@@ -750,118 +750,136 @@ is_alias_format_valid() {
 	done
 }
 
+# Get IP format
+get_ip_format() {
+	object_name=${2-ipv4}
+	local ret_code=0
+	local ret_string=""
+
+	ip_clean=$(echo "${1%/*}")
+	cidr_prefixlen=$(echo "$1" | sed -ne '/\//s/[^\/]*\/\([0-9][0-9]*$\)/\1/p')
+
+	# First check of "clean" ip address (without /cidr and without /prefix_length), if ip address not empty
+	if [[ "$object_name" != "prefix_length" ]] && [[ "$object_name" != "cidr" ]] || [[ -n "$ip_clean" ]]; then
+		# Check for IPV4 address format excluding "cidr only" mode
+		ipv4_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
+		if [[ $ip_clean =~ ^$ipv4_regex\.$ipv4_regex\.$ipv4_regex\.$ipv4_regex$ ]]; then
+			ret_string="4" # Valid IPV4 address detected
+		else
+			ret_code=1 # BIT 0: invalid IPV4 format
+
+			# Check for IPV6 address format excluding "prefix length only" mode
+			WORD="[0-9A-Fa-f]\{1,4\}"
+			# flat address, no compressed words
+			FLAT="^${WORD}\(:${WORD}\)\{7\}$"
+
+			COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
+			COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
+			COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
+			COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
+			COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
+			COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
+			# trailing :: edge case, includes case of only :: (all 0's)
+			EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
+			# leading :: edge case
+			EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
+			echo $ip_clean | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
+			if [ $? -ne 0 ]; then
+				ret_code=$(($ret_code | 4)) # BIT 2: invalid IPV6 format
+				echo ""
+				return $ret_code # Return with merged error code
+			fi
+			ret_string="6" # Valid IPV6 address detected
+			ret_code=0
+		fi
+	fi
+
+	# Check for IPV4 cidr
+	if [[ "$ret_string" != "6" ]] && [[ -n "$cidr_prefixlen" ]] || [[ "$object_name" = "cidr" ]]; then
+		[ "$object_name" = "cidr" ] && ret_code=0
+		if [[ "$cidr_prefixlen" =~ ^[0-9]+$ ]]; then
+			if [ $cidr_prefixlen -le 32 ]; then
+				ret_string="4"
+			else
+				[ "$object_name" != "prefix_length" ] && ret_code=$(($ret_code | 2)) # BIT 1: invalid cidr for IPV4 format
+			fi
+		else
+			[ "$object_name" != "prefix_length" ] && ret_code=$(($ret_code | 2)) # BIT 1: invalid cidr for IPV4 format
+		fi
+	fi
+
+	# Check for IPV6 prefix_length
+	if [[ "$ret_string" != "4" ]] && [[ -n "$cidr_prefixlen" ]] || [[ "$object_name" = "prefix_length" ]]; then
+		if [[ "$cidr_prefixlen" -lt 0 ]] || [[ "$cidr_prefixlen" -gt 128 ]]; then
+			ret_code=$(($ret_code | 8)) # BIT 3: invalid prefix lenght for IPV6 format
+		fi
+		if ! [[ "$cidr_prefixlen" =~ ^[0-9]+$ ]]; then
+			ret_code=$(($ret_code | 8)) # BIT 3: invalid prefix lenght for IPV6 format
+		fi
+		[ $ret_code -eq 0 ] && ret_string="6"
+	fi
+	echo "$ret_string"
+	return $ret_code
+}
+
 # IP format validator
 is_ip_format_valid() {
-	object_name=${2-ip}
-	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-	ip_clean=$(echo "${1%/*}")
-	if ! [[ $ip_clean =~ ^$ip_regex\.$ip_regex\.$ip_regex\.$ip_regex$ ]]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
-	if [ $1 != "$ip_clean" ]; then
-		ip_cidr="$ip_clean/"
-		ip_cidr=$(echo "${1#$ip_cidr}")
-		if [[ "$ip_cidr" -gt 32 ]] || [[ "$ip_cidr" =~ [:alnum:] ]]; then
-			check_result "$E_INVALID" "invalid $object_name format :: $1"
-		fi
-	fi
+	# $1: IPV4/IPV6 address with/without cidr/prefix_length or only cidr/prefix_length with slash as key char before
+	# $2: FORMAT {ip or ip4 or ipv4}/{ip6 or ipv6}/{ip46 or ipv46} netmask/cidr/prefix_length
+	object_name=${2-ipv4}
+	local ip_format=""
+	local ret_code=0
+	local err_message="invalid"
+	ip_format="$(get_ip_format "$1" "$object_name")"
+	ret_code=$?
+	case "$object_name" in
+		ip46 | ipv46)
+			if [[ "$ip_format" == "4" ]] || [[ "$ip_format" == "6" ]] && [[ $ret_code -eq 0 ]]; then
+				return $ret_code
+			else
+				[ $ret_code -eq 2 ] && err_message="$err_message cidr of"
+				[ $ret_code -eq 8 ] && err_message="$err_message prefix length of"
+				check_result "$E_INVALID" "$err_message $object_name format :: $1"
+				return $ret_code
+			fi
+			;;
+		ip6 | ipv6 | prefix_length)
+			ret_code=$(($ret_code & 12)) # Filter BIT 2 and 3 from error codes for IPV6 format
+			if [ "$ip_format" = "6" -a $ret_code -eq 0 ]; then
+				return $ret_code
+			else
+				if [ "$ip_format" = "4" ]; then
+					check_result "$E_INVALID" "ipv4 but not ipv6 format :: $1"
+					return 12
+				else
+					[ $ret_code -eq 8 -a "$object_name" != "prefix_length" ] && err_message="$err_message prefix length of"
+					check_result "$E_INVALID" "$err_message $object_name format :: $1"
+					return $ret_code
+				fi
+			fi
+			;;
+		ip | ip4 | ipv4 | netmask | cidr | *)
+			ret_code=$(($ret_code & 3)) # Filter BIT 0 and 1 from error codes for IPV4 format
+			if [ "$ip_format" = "4" -a $ret_code -eq 0 ]; then
+				return $ret_code
+			else
+				if [ $ret_code -ne 0 ]; then
+					[ $ret_code -eq 2 -a "$object_name" != "cidr" ] && err_message="$err_message cidr of"
+					check_result "$E_INVALID" "$err_message $object_name format :: $1"
+					return $ret_code
+				else
+					check_result "$E_INVALID" "ipv6 but not ipv4 format :: $1"
+					return 3
+				fi
+			fi
+			;;
+	esac
 }
 
-# IPv6 format validator
-is_ipv6_format_valid() {
-	object_name=${2-ipv6}
-	ip_regex='([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])'
-	t_ip=$(echo $1 | awk -F / '{print $1}')
-	t_cidr=$(echo $1 | awk -F / '{print $2}')
-	valid_cidr=1
-
-	WORD="[0-9A-Fa-f]\{1,4\}"
-	# flat address, no compressed words
-	FLAT="^${WORD}\(:${WORD}\)\{7\}$"
-
-	COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
-	COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
-	COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
-	COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
-	COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
-	COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
-	# trailing :: edge case, includes case of only :: (all 0's)
-	EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
-	# leading :: edge case
-	EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
-
-	echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
-	if [ $? -ne 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
-
-	if [ -n "$(echo $1 | grep '/')" ]; then
-		if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
-			valid_cidr=0
-		fi
-		if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-			valid_cidr=0
-		fi
-	fi
-	if [ "$valid_cidr" -eq 0 ]; then
-		check_result "$E_INVALID" "invalid $object_name format :: $1"
-	fi
-}
-
-is_ip46_format_valid() {
-	t_ip=$(echo $1 | awk -F / '{print $1}')
-	t_cidr=$(echo $1 | awk -F / '{print $2}')
-	valid_octets=0
-	valid_cidr=1
-	for octet in ${t_ip//./ }; do
-		if [[ $octet =~ ^[0-9]{1,3}$ ]] && [[ $octet -le 255 ]]; then
-			((++valid_octets))
-		fi
-	done
-
-	if [ -n "$(echo $1 | grep '/')" ]; then
-		if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 32 ]]; then
-			valid_cidr=0
-		fi
-		if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-			valid_cidr=0
-		fi
-	fi
-	if [ "$valid_octets" -lt 4 ] || [ "$valid_cidr" -eq 0 ]; then
-		#Check IPV6
-		ipv6_valid=""
-		WORD="[0-9A-Fa-f]\{1,4\}"
-		# flat address, no compressed words
-		FLAT="^${WORD}\(:${WORD}\)\{7\}$"
-
-		COMP2="^\(${WORD}:\)\{1,1\}\(:${WORD}\)\{1,6\}$"
-		COMP3="^\(${WORD}:\)\{1,2\}\(:${WORD}\)\{1,5\}$"
-		COMP4="^\(${WORD}:\)\{1,3\}\(:${WORD}\)\{1,4\}$"
-		COMP5="^\(${WORD}:\)\{1,4\}\(:${WORD}\)\{1,3\}$"
-		COMP6="^\(${WORD}:\)\{1,5\}\(:${WORD}\)\{1,2\}$"
-		COMP7="^\(${WORD}:\)\{1,6\}\(:${WORD}\)\{1,1\}$"
-		# trailing :: edge case, includes case of only :: (all 0's)
-		EDGE_TAIL="^\(\(${WORD}:\)\{1,7\}\|:\):$"
-		# leading :: edge case
-		EDGE_LEAD="^:\(:${WORD}\)\{1,7\}$"
-
-		echo $t_ip | grep --silent "\(${FLAT}\)\|\(${COMP2}\)\|\(${COMP3}\)\|\(${COMP4}\)\|\(${COMP5}\)\|\(${COMP6}\)\|\(${COMP7}\)\|\(${EDGE_TAIL}\)\|\(${EDGE_LEAD}\)"
-		if [ $? -ne 0 ]; then
-			ipv6_valid="INVALID"
-		fi
-
-		if [ -n "$(echo $1 | grep '/')" ]; then
-			if [[ "$t_cidr" -lt 0 ]] || [[ "$t_cidr" -gt 128 ]]; then
-				valid_cidr=0
-			fi
-			if ! [[ "$t_cidr" =~ ^[0-9]+$ ]]; then
-				valid_cidr=0
-			fi
-		fi
-
-		if [ -n "$ipv6_valid" ] || [ "$valid_cidr" -eq 0 ]; then
-			check_result "$E_INVALID" "invalid IP format :: $1"
-		fi
+# IP family validator
+is_ipfamily_format_valid() {
+	if [ "$1" != "inet" ] && [ "$1" != "inet4" ] && [ "$1" != 'inet6' ] && [ -n "$1" ]; then
+		check_result "$E_INVALID" "invalid ipfamily format :: $1"
 	fi
 }
 
@@ -1039,8 +1057,16 @@ is_fw_port_format_valid() {
 		fi
 	else
 		if ! [[ "$1" =~ ^[0-9][-|,|:|0-9]{0,76}[0-9]$ ]]; then
-			check_result "$E_INVALID" "invalid port format and/or more than 78 chars used :: $1"
+			[ -f "/etc/services" ] && service_matched="$(grep "^$1" /etc/services)" # port definition by name, listed in /etc/services
+			[ -z "$service_matched" ] && check_result "$E_INVALID" "port not found, invalid port format and/or more than 78 chars used :: $1"
 		fi
+	fi
+}
+
+# Firewall iptables validator
+is_fw_iptables_format_valid() {
+	if [ "$1" != "iptables" ] && [ "$1" != 'ip6tables' ] && [ -n "$1" ]; then
+		check_result "$E_INVALID" "invalid iptables format :: $1"
 	fi
 }
 
@@ -1197,6 +1223,7 @@ is_format_valid() {
 				charset) is_object_format_valid "$arg" "$arg_name" ;;
 				charsets) is_common_format_valid "$arg" 'charsets' ;;
 				chain) is_object_format_valid "$arg" 'chain' ;;
+				cidr) is_ip_format_valid "$arg" 'cidr' ;;
 				comment) is_object_format_valid "$arg" 'comment' ;;
 				database) is_database_format_valid "$arg" 'database' ;;
 				day) is_cron_format_valid "$arg" $arg_name ;;
@@ -1219,11 +1246,13 @@ is_format_valid() {
 				hour) is_cron_format_valid "$arg" $arg_name ;;
 				id) is_id_format_valid "$arg" 'id' ;;
 				iface) is_interface_format_valid "$arg" ;;
-				ip) is_ip_format_valid "$arg" ;;
-				ipv6) is_ipv6_format_valid "$arg" ;;
-				ip46) is_ip46_format_valid "$arg" ;;
+				ip | ip4 | ipv4) is_ip_format_valid "$arg" 'ipv4' ;;
+				ip6 | ipv6) is_ip_format_valid "$arg" 'ipv6' ;;
+				ip46 | ipv46) is_ip_format_valid "$arg" 'ipv46' ;;
 				ip_name) is_domain_format_valid "$arg" 'IP name' ;;
 				ip_status) is_ip_status_format_valid "$arg" ;;
+				ipfamily) is_ipfamily_format_valid "$arg" ;;
+				iptables) is_fw_iptables_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
 				malias) is_user_format_valid "$arg" "$arg_name" '64' ;;
@@ -1231,7 +1260,7 @@ is_format_valid() {
 				min) is_cron_format_valid "$arg" $arg_name ;;
 				month) is_cron_format_valid "$arg" $arg_name ;;
 				name) is_name_format_valid "$arg" "name" ;;
-				nat_ip) is_ip_format_valid "$arg" ;;
+				nat_ip) is_ip_format_valid "$arg" 'ipv4' ;;
 				netmask) is_ip_format_valid "$arg" 'netmask' ;;
 				newid) is_int_format_valid "$arg" 'id' ;;
 				ns1) is_domain_format_valid "$arg" 'ns1' ;;
@@ -1248,6 +1277,7 @@ is_format_valid() {
 				priority) is_int_format_valid $arg ;;
 				port) is_int_format_valid "$arg" 'port' ;;
 				port_ext) is_fw_port_format_valid "$arg" ;;
+				prefix_length) is_ip_format_valid "$arg" 'prefix_length' ;;
 				protocol) is_fw_protocol_format_valid "$arg" ;;
 				proxy_ext) is_extention_format_valid "$arg" ;;
 				quota) is_int_format_valid "$arg" 'quota' ;;

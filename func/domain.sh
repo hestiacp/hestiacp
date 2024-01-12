@@ -7,6 +7,44 @@
 #===========================================================================#
 
 #----------------------------------------------------------#
+#                   COMMON FUNCTIONS                       #
+#----------------------------------------------------------#
+
+# Prepare IPV4 and IPV6 addresses for using in templates
+prepare_ips_for_template() {
+	if [ -z "$local_ip" ]; then
+		i4mark=""
+		ipv4=""
+		web_ipv4=""
+		web_ip="[$local_ipv6]"
+		proxy_ipv4=""
+		proxy_ip="[$local_ipv6]"
+		legacy_ip="[$local_ipv6]"
+	else
+		i4mark="\1"
+		ipv4="$local_ip"
+		web_ipv4="$local_ip"
+		web_ip="$local_ip"
+		proxy_ipv4="$local_ip"
+		proxy_ip="$local_ip"
+		legacy_ip="$local_ip"
+	fi
+	if [ -z "$local_ipv6" ]; then
+		i6mark=""
+		web_ipv6=""
+		web_ip="$local_ip"
+		proxy_ipv6=""
+		proxy_ip="$local_ip"
+	else
+		i6mark="\1"
+		web_ipv6="[$local_ipv6]"
+		web_ip="[$local_ipv6]"
+		proxy_ipv6="[$local_ipv6]"
+		proxy_ip="[$local_ipv6]"
+	fi
+}
+
+#----------------------------------------------------------#
 #                        WEB                               #
 #----------------------------------------------------------#
 
@@ -255,12 +293,22 @@ add_web_config() {
 		fi
 	fi
 
+	prepare_ips_for_template #	prepare IPV4 and IPV6 variables for template substitution
+
 	# Note: Removing or renaming template variables will lead to broken custom templates.
 	#   -If possible custom templates should be automatically upgraded to use the new format
 	#   -Alternatively a depreciation period with proper notifications should be considered
 
 	cat "${WEBTPL_LOCATION}/$2" \
-		| sed -e "s|%ip%|$local_ip|g" \
+		| sed -e "s|%<i4\(.*\)i4>%|$i4mark|g" \
+			-e "s|%<i6\(.*\)i6>%|$i6mark|g" \
+			-e "s|%web_ipv4%|$web_ipv4|g" \
+			-e "s|%web_ipv6%|$web_ipv6|g" \
+			-e "s|%web_ip%|$web_ip|g" \
+			-e "s|%proxy_ipv4%|$proxy_ipv4|g" \
+			-e "s|%proxy_ipv6%|$proxy_ipv6|g" \
+			-e "s|%proxy_ip%|$proxy_ip|g" \
+			-e "s|%ip%|$legacy_ip|g" \
 			-e "s|%domain%|$domain|g" \
 			-e "s|%domain_idn%|$domain_idn|g" \
 			-e "s|%alias%|${aliases//,/ }|g" \
@@ -293,7 +341,6 @@ add_web_config() {
 
 	chown root:$user $conf
 	chmod 640 $conf
-
 	if [[ "$2" =~ stpl$ ]]; then
 		rm -f /etc/$1/conf.d/domains/$domain.ssl.conf
 		ln -s $conf /etc/$1/conf.d/domains/$domain.ssl.conf
@@ -368,13 +415,17 @@ get_web_config_lines() {
 
 # Replace web config
 replace_web_config() {
-	conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
-	if [[ "$2" =~ stpl$ ]]; then
-		conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
-	fi
-
-	if [ -e "$conf" ]; then
-		sed -i "s|$old|$new|g" $conf
+	if [ -z "$old" -o -z "$new" ]; then
+		prepare_web_domain_values #	if one of both parameters is empty, prepare values for the web domain
+		add_web_config "$@"       # web configs must be new generated from the templates
+	else
+		conf="$HOMEDIR/$user/conf/web/$domain/$1.conf"
+		if [[ "$2" =~ stpl$ ]]; then
+			conf="$HOMEDIR/$user/conf/web/$domain/$1.ssl.conf"
+		fi
+		if [ -e "$conf" ]; then
+			sed -i "s|$old|$new|g" $conf # simple search and replace only possible, if both (old and new) parameters are defined
+		fi
 	fi
 }
 
@@ -465,6 +516,124 @@ is_web_domain_cert_valid() {
 #----------------------------------------------------------#
 #                        DNS                               #
 #----------------------------------------------------------#
+
+# Get DNS values
+get_dns_values() {
+	get_domain_values 'dns'
+	i_ns=1
+	ns=$(get_user_value '$NS')
+	for nameserver in ${ns//,/ }; do
+		eval ns$i_ns=$nameserver
+		((++i_ns))
+	done
+}
+
+# Create DNS domain config
+create_dns_domain_config() {
+	# Reading template
+	template_data=$(cat "$DNSTPL/$template.tpl")
+
+	# Deleting unused nameservers
+	if [ -z "$ns3" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns3%)
+	fi
+	if [ -z "$ns4" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns4%)
+	fi
+	if [ -z "$ns5" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns5%)
+	fi
+	if [ -z "$ns6" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns6%)
+	fi
+	if [ -z "$ns7" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns7%)
+	fi
+	if [ -z "$ns8" ]; then
+		template_data=$(echo "$template_data" | grep -v %ns8%)
+	fi
+	if [ -z "$dnssec" ]; then
+		dnssec="no"
+	fi
+
+	# Marker deinition for IPV4 and IPV6 configuration
+	if [ -z "$ip" ]; then
+		i4mark=""
+	else
+		i4mark="\1"
+	fi
+	if [ -z "$ipv6" ]; then
+		i6mark=""
+	else
+		i6mark="\1"
+	fi
+
+	# Adding dns zone to the user config
+	echo "$template_data" \
+		| sed -e "s|%<i4\(.*\)i4>%|$i4mark|g" \
+			-e "s|%<i6\(.*\)i6>%|$i6mark|g" \
+			-e "s|%ipv4%|$ip|g" \
+			-e "s|%ipv6%|$ipv6|g" \
+			-e "s|%ip%|$ip|g" \
+			-e "s|%domain_idn%|$domain_idn|g" \
+			-e "s|%domain%|$domain|g" \
+			-e "s|%ns1%|$ns1|g" \
+			-e "s|%ns2%|$ns2|g" \
+			-e "s|%ns3%|$ns3|g" \
+			-e "s|%ns4%|$ns4|g" \
+			-e "s|%ns5%|$ns5|g" \
+			-e "s|%ns6%|$ns6|g" \
+			-e "s|%ns7%|$ns7|g" \
+			-e "s|%ns8%|$ns8|g" \
+			-e "s|%time%|$time|g" \
+			-e "s|%date%|$date|g" \
+			-e "/^[ \t]*$/d" > ${USER_DATA}/dns/${domain}.conf
+
+	chmod 660 ${USER_DATA}/dns/${domain}.conf
+}
+
+# Add DNS DKIM records
+add_dns_dkim_records() {
+	if [ -n "$DNS_SYSTEM" ] && [ "$dkim" = 'yes' ]; then
+		check_dns_domain=$(is_object_valid 'dns' 'DOMAIN' "$domain")
+		if [ "$?" -eq 0 ]; then
+			p=$(cat $USER_DATA/mail/$domain.pub | grep -v ' KEY---' | tr -d '\n')
+			record='_domainkey'
+			policy="\"t=y; o=~;\""
+			$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$policy" '' '' 'no' '' 'yes'
+
+			record='mail._domainkey'
+			selector="\"v=DKIM1\; k=rsa\; p=$p\""
+			$BIN/v-add-dns-record "$user" "$domain" "$record" TXT "$selector" '' '' 'yes' '' 'yes'
+		fi
+	fi
+}
+
+# Add DNS webmail records
+add_dns_webmail_records() {
+	# Ensure DNS record exists if Hestia is hosting DNS zones
+	if [ -n "$DNS_SYSTEM" ]; then
+		dns_domain=$("$BIN/v-list-dns-domains" "$user" list | sed -ne "/$domain/p")
+		# shellcheck disable=SC1087
+		webmail_records="$("$BIN/v-list-dns-records" "$user" "$domain" plain | sed -ne "/$WEBMAIL_ALIAS/s/^\([0-9]*\)[ \t]*$WEBMAIL_ALIAS[ \t]*.*/\1/gp")"
+		if [ "$dns_domain" = "$domain" ]; then
+			if [ "$WEBMAIL_ALIAS" != "mail" ]; then
+				#Prevent mail.domain.com to be cycled
+				if [ -n "$webmail_records" ]; then
+					echo "$webmail_records" | while read webmail_record; do
+						"$BIN/v-delete-dns-record" "$user" "$domain" "$webmail_record" "$restart" 'yes'
+					done
+				fi
+				if [ -n "$ip" ]; then
+					"$BIN/v-add-dns-record" "$user" "$domain" "$WEBMAIL_ALIAS" A "$ip" '' '' "$restart" '' 'yes'
+				fi
+				if [ -n "$ipv6" ]; then
+					"$BIN/v-add-dns-record" "$user" "$domain" "$WEBMAIL_ALIAS" AAAA "$ipv6" '' '' "$restart" '' 'yes'
+				fi
+			fi
+		fi
+	fi
+}
 
 # DNS template check
 is_dns_template_valid() {
@@ -827,12 +996,22 @@ add_webmail_config() {
 		override_alias_idn="mail.$domain_idn"
 	fi
 
+	prepare_ips_for_template #	prepare IPV4 and IPV6 variables for template substitution
+
 	# Note: Removing or renaming template variables will lead to broken custom templates.
 	#   -If possible custom templates should be automatically upgraded to use the new format
 	#   -Alternatively a depreciation period with proper notifications should be considered
 
 	cat $MAILTPL/$1/$2 \
-		| sed -e "s|%ip%|$local_ip|g" \
+		| sed -e "s|%<i4\(.*\)i4>%|$i4mark|g" \
+			-e "s|%<i6\(.*\)i6>%|$i6mark|g" \
+			-e "s|%web_ipv4%|$web_ipv4|g" \
+			-e "s|%web_ipv6%|$web_ipv6|g" \
+			-e "s|%web_ip%|$web_ip|g" \
+			-e "s|%proxy_ipv4%|$proxy_ipv4|g" \
+			-e "s|%proxy_ipv6%|$proxy_ipv6|g" \
+			-e "s|%proxy_ip%|$proxy_ip|g" \
+			-e "s|%ip%|$legacy_ip|g" \
 			-e "s|%domain%|$WEBMAIL_ALIAS.$domain|g" \
 			-e "s|%domain_idn%|$WEBMAIL_ALIAS.$domain_idn|g" \
 			-e "s|%root_domain%|$domain|g" \

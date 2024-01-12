@@ -23,7 +23,7 @@ function setup() {
 # User and domain needs to already exists as dns domain due to DNS
 
 @test "[ Web ] Create web domain" {
-    run v-add-web-domain $user $domain $ip yes "*.$domain"
+    run v-add-web-domain-ipv46 $user $domain $ip $ipv6 yes "*.$domain"
     assert_success
     refute_output
 }

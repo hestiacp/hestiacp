@@ -8,8 +8,12 @@ $TAB = "DNS";
 include $_SERVER["DOCUMENT_ROOT"] . "/inc/main.php";
 
 // List ip addresses
-exec(HESTIA_CMD . "v-list-user-ips " . $user . " json", $output, $return_var);
+exec(HESTIA_CMD . "v-list-user-ips " . $user . " json 4", $output, $return_var);
 $v_ips = json_decode(implode("", $output), true);
+unset($output);
+
+exec(HESTIA_CMD . "v-list-user-ips " . $user . " json 6", $output, $return_var);
+$v_ipv6s = json_decode(implode("", $output), true);
 unset($output);
 
 // Check POST request for dns domain
@@ -21,8 +25,8 @@ if (!empty($_POST["ok"])) {
 	if (empty($_POST["v_domain"])) {
 		$errors[] = _("Domain");
 	}
-	if (empty($_POST["v_ip"])) {
-		$errors[] = _("IP Address");
+	if (empty($_POST["v_ip"]) && empty($_POST["v_ipv6"])) {
+		$errors[] = _("IPV4 and IPV6 Address");
 	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
@@ -39,7 +43,15 @@ if (!empty($_POST["ok"])) {
 	$v_domain = preg_replace("/^www./i", "", $_POST["v_domain"]);
 	$v_domain = quoteshellarg($v_domain);
 	$v_domain = strtolower($v_domain);
+	// Change IPV4 and IPV6
+	if (empty($_POST["v_ip"])) {
+		$_POST["v_ip"] = "";
+	}
+	if (empty($_POST["v_ipv6"])) {
+		$_POST["v_ipv6"] = "";
+	}
 	$v_ip = $_POST["v_ip"];
+	$v_ipv6 = $_POST["v_ipv6"];
 	// Change NameServers
 	if (empty($_POST["v_ns1"])) {
 		$_POST["v_ns1"] = "";
@@ -82,12 +94,14 @@ if (!empty($_POST["ok"])) {
 	if (empty($_SESSION["error_msg"])) {
 		exec(
 			HESTIA_CMD .
-				"v-add-dns-domain " .
+				"v-add-dns-domain-ipv46 " .
 				$user .
 				" " .
 				$v_domain .
 				" " .
 				quoteshellarg($v_ip) .
+				" " .
+				quoteshellarg($v_ipv6) .
 				" " .
 				$v_ns1 .
 				" " .
@@ -329,6 +343,11 @@ $v_ns8 = str_replace("'", "", $v_ns8);
 if (empty($v_ip) && count($v_ips) > 0) {
 	$ip = array_key_first($v_ips);
 	$v_ip = empty($v_ips[$ip]["NAT"]) ? $ip : $v_ips[$ip]["NAT"];
+}
+
+if (empty($v_ipv6) && count($v_ipv6s) > 0) {
+	$ipv6 = array_key_first($v_ipv6s);
+	$v_ipv6 = $ipv6;
 }
 
 // List dns templates

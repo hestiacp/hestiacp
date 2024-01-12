@@ -39,6 +39,7 @@ unset($output);
 
 // Parse domain
 $v_ip = $data[$v_domain]["IP"];
+$v_ipv6 = $data[$v_domain]["IP6"];
 $v_template = $data[$v_domain]["TPL"];
 $v_aliases = str_replace(",", "\n", $data[$v_domain]["ALIAS"]);
 $valiases = explode(",", $data[$v_domain]["ALIAS"]);
@@ -193,11 +194,16 @@ if (!empty($_POST["save"])) {
 
 	// Change web domain IP
 	$v_newip = "";
+	$v_newipv6 = "";
 	$v_newip_public = "";
 
 	if (!empty($_POST["v_ip"])) {
 		$v_newip = $_POST["v_ip"];
 		$v_newip_public = empty($ips[$v_newip]["NAT"]) ? $v_newip : $ips[$v_newip]["NAT"];
+	}
+
+	if (!empty($_POST["v_ipv6"])) {
+		$v_newipv6 = $_POST["v_ipv6"];
 	}
 
 	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
@@ -209,7 +215,32 @@ if (!empty($_POST["save"])) {
 				quoteshellarg($v_domain) .
 				" " .
 				quoteshellarg($_POST["v_ip"]) .
-				" 'no'",
+				" " .
+				"'no'" .
+				" " .
+				"4",
+			$output,
+			$return_var,
+		);
+		check_return_code($return_var, $output);
+		$restart_web = "yes";
+		$restart_proxy = "yes";
+		unset($output);
+	}
+
+	if ($v_ipv6 != $_POST["v_ipv6"] && empty($_SESSION["error_msg"])) {
+		exec(
+			HESTIA_CMD .
+				"v-change-web-domain-ip " .
+				$user .
+				" " .
+				quoteshellarg($v_domain) .
+				" " .
+				quoteshellarg($_POST["v_ipv6"]) .
+				" " .
+				"'no'" .
+				" " .
+				"6",
 			$output,
 			$return_var,
 		);
@@ -221,36 +252,16 @@ if (!empty($_POST["save"])) {
 
 	// Change dns domain IP
 	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
-		exec(
-			HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_domain) . " json",
-			$output,
-			$return_var,
-		);
-		unset($output);
-		if ($return_var == 0) {
+		exec(HESTIA_CMD . "v-list-dns-domains " . $user . " " . " plain", $output, $return_var);
+		if (!empty($output)) {
+			unset($output);
 			exec(
 				HESTIA_CMD .
-					"v-change-dns-domain-ip " .
+					"v-list-dns-domain " .
 					$user .
 					" " .
 					quoteshellarg($v_domain) .
-					" " .
-					quoteshellarg($v_newip_public) .
-					" 'no'",
-				$output,
-				$return_var,
-			);
-			check_return_code($return_var, $output);
-			unset($output);
-			$restart_dns = "yes";
-		}
-	}
-
-	// Change dns ip for each alias
-	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
-		foreach ($valiases as $v_alias) {
-			exec(
-				HESTIA_CMD . "v-list-dns-domain " . $user . " " . quoteshellarg($v_alias) . " json",
+					" json",
 				$output,
 				$return_var,
 			);
@@ -261,9 +272,13 @@ if (!empty($_POST["save"])) {
 						"v-change-dns-domain-ip " .
 						$user .
 						" " .
-						quoteshellarg($v_alias) .
+						quoteshellarg($v_domain) .
 						" " .
-						quoteshellarg($v_newip_public),
+						quoteshellarg($v_newip_public) .
+						" " .
+						"'no'" .
+						" " .
+						"4",
 					$output,
 					$return_var,
 				);
@@ -274,23 +289,151 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
-	// Change mail domain IP
-	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
-		exec(
-			HESTIA_CMD . "v-list-mail-domain " . $user . " " . quoteshellarg($v_domain) . " json",
-			$output,
-			$return_var,
-		);
-		unset($output);
-		if ($return_var == 0) {
+	if ($v_ipv6 != $_POST["v_ipv6"] && empty($_SESSION["error_msg"])) {
+		exec(HESTIA_CMD . "v-list-dns-domains " . $user . " " . " plain", $output, $return_var);
+		if (!empty($output)) {
+			unset($output);
 			exec(
-				HESTIA_CMD . "v-rebuild-mail-domain " . $user . " " . quoteshellarg($v_domain),
+				HESTIA_CMD .
+					"v-list-dns-domain " .
+					$user .
+					" " .
+					quoteshellarg($v_domain) .
+					" json",
 				$output,
 				$return_var,
 			);
-			check_return_code($return_var, $output);
 			unset($output);
-			$restart_email = "yes";
+			if ($return_var == 0) {
+				exec(
+					HESTIA_CMD .
+						"v-change-dns-domain-ip " .
+						$user .
+						" " .
+						quoteshellarg($v_domain) .
+						" " .
+						quoteshellarg($v_newipv6) .
+						" " .
+						"'no'" .
+						" " .
+						"6",
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$restart_dns = "yes";
+			}
+		}
+	}
+
+	// Change dns ip for each alias
+	if ($v_ip != $_POST["v_ip"] && empty($_SESSION["error_msg"])) {
+		foreach ($valiases as $v_alias) {
+			exec(HESTIA_CMD . "v-list-dns-domains " . $user . " " . " plain", $output, $return_var);
+			if (!empty($output)) {
+				unset($output);
+				exec(
+					HESTIA_CMD .
+						"v-list-dns-domain " .
+						$user .
+						" " .
+						quoteshellarg($v_alias) .
+						" json",
+					$output,
+					$return_var,
+				);
+				unset($output);
+				if ($return_var == 0) {
+					exec(
+						HESTIA_CMD .
+							"v-change-dns-domain-ip " .
+							$user .
+							" " .
+							quoteshellarg($v_alias) .
+							" " .
+							quoteshellarg($v_newip_public) .
+							" " .
+							"'no'" .
+							" " .
+							"4",
+						$output,
+						$return_var,
+					);
+					check_return_code($return_var, $output);
+					unset($output);
+					$restart_dns = "yes";
+				}
+			}
+		}
+	}
+
+	if ($v_ipv6 != $_POST["v_ipv6"] && empty($_SESSION["error_msg"])) {
+		foreach ($valiases as $v_alias) {
+			exec(HESTIA_CMD . "v-list-dns-domains " . $user . " " . " plain", $output, $return_var);
+			if (!empty($output)) {
+				unset($output);
+				exec(
+					HESTIA_CMD .
+						"v-list-dns-domain " .
+						$user .
+						" " .
+						quoteshellarg($v_alias) .
+						" json",
+					$output,
+					$return_var,
+				);
+				unset($output);
+				if ($return_var == 0) {
+					exec(
+						HESTIA_CMD .
+							"v-change-dns-domain-ip " .
+							$user .
+							" " .
+							quoteshellarg($v_alias) .
+							" " .
+							quoteshellarg($v_newipv6) .
+							" " .
+							"'no'" .
+							" " .
+							"4",
+						$output,
+						$return_var,
+					);
+					check_return_code($return_var, $output);
+					unset($output);
+					$restart_dns = "yes";
+				}
+			}
+		}
+	}
+
+	// Change mail domain IP
+	if (($v_ip != $_POST["v_ip"] || $v_ipv6 != $_POST["v_ipv6"]) && empty($_SESSION["error_msg"])) {
+		exec(HESTIA_CMD . "v-list-mail-domains " . $user . " " . " plain", $output, $return_var);
+		if (!empty($output)) {
+			unset($output);
+			exec(
+				HESTIA_CMD .
+					"v-list-mail-domain " .
+					$user .
+					" " .
+					quoteshellarg($v_domain) .
+					" json",
+				$output,
+				$return_var,
+			);
+			unset($output);
+			if ($return_var == 0) {
+				exec(
+					HESTIA_CMD . "v-rebuild-mail-domain " . $user . " " . quoteshellarg($v_domain),
+					$output,
+					$return_var,
+				);
+				check_return_code($return_var, $output);
+				unset($output);
+				$restart_email = "yes";
+			}
 		}
 	}
 
@@ -569,6 +712,8 @@ if (!empty($_POST["save"])) {
 								quoteshellarg($alias) .
 								" " .
 								quoteshellarg($v_newip_public ?: $v_ip_public) .
+								" " .
+								quoteshellarg($v_newipv6 ?: $v_ipv6) .
 								" no",
 							$output,
 							$return_var,

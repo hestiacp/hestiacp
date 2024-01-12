@@ -51,7 +51,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd"
+  proftpd-basic quota rrdtool rsyslog setpriv spamassassin subnetcalc sudo sysstat unzip vim-common vsftpd whois zip zstd"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget"
 
@@ -80,6 +80,7 @@ help() {
   -r, --port              Change Backend Port             default: 8083
   -l, --lang              Default language                default: en
   -y, --interactive       Interactive install   [yes|no]  default: yes
+  -6, --ipv6              Enable IPv6 Support   [yes|no]  default: no
   -s, --hostname          Set hostname
   -e, --email             Set admin email
   -u, --username          Set admin user
@@ -263,6 +264,7 @@ for arg; do
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
 		--interactive) args="${args}-y " ;;
+		--ipv6) args="${args}-6 " ;;
 		--api) args="${args}-d " ;;
 		--hostname) args="${args}-s " ;;
 		--email) args="${args}-e " ;;
@@ -280,38 +282,39 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:u:e:p:W:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:6:s:u:e:p:W:D:fh" Option; do
 	case $Option in
-		a) apache=$OPTARG ;;      # Apache
-		w) phpfpm=$OPTARG ;;      # PHP-FPM
-		o) multiphp=$OPTARG ;;    # Multi-PHP
-		v) vsftpd=$OPTARG ;;      # Vsftpd
-		j) proftpd=$OPTARG ;;     # Proftpd
-		k) named=$OPTARG ;;       # Named
-		m) mysql=$OPTARG ;;       # MariaDB
-		M) mysql8=$OPTARG ;;      # MySQL
-		g) postgresql=$OPTARG ;;  # PostgreSQL
-		x) exim=$OPTARG ;;        # Exim
-		z) dovecot=$OPTARG ;;     # Dovecot
-		Z) sieve=$OPTARG ;;       # Sieve
-		c) clamd=$OPTARG ;;       # ClamAV
-		t) spamd=$OPTARG ;;       # SpamAssassin
-		i) iptables=$OPTARG ;;    # Iptables
-		b) fail2ban=$OPTARG ;;    # Fail2ban
-		q) quota=$OPTARG ;;       # FS Quota
-		W) webterminal=$OPTARG ;; # Web Terminal
-		r) port=$OPTARG ;;        # Backend Port
-		l) lang=$OPTARG ;;        # Language
-		d) api=$OPTARG ;;         # Activate API
-		y) interactive=$OPTARG ;; # Interactive install
-		s) servername=$OPTARG ;;  # Hostname
-		e) email=$OPTARG ;;       # Admin email
-		u) username=$OPTARG ;;    # Admin username
-		p) vpass=$OPTARG ;;       # Admin password
-		D) withdebs=$OPTARG ;;    # Hestia debs path
-		f) force='yes' ;;         # Force install
-		h) help ;;                # Help
-		*) help ;;                # Print help (default)
+		a) apache=$OPTARG ;;       # Apache
+		w) phpfpm=$OPTARG ;;       # PHP-FPM
+		o) multiphp=$OPTARG ;;     # Multi-PHP
+		v) vsftpd=$OPTARG ;;       # Vsftpd
+		j) proftpd=$OPTARG ;;      # Proftpd
+		k) named=$OPTARG ;;        # Named
+		m) mysql=$OPTARG ;;        # MariaDB
+		M) mysql8=$OPTARG ;;       # MySQL
+		g) postgresql=$OPTARG ;;   # PostgreSQL
+		x) exim=$OPTARG ;;         # Exim
+		z) dovecot=$OPTARG ;;      # Dovecot
+		Z) sieve=$OPTARG ;;        # Sieve
+		c) clamd=$OPTARG ;;        # ClamAV
+		t) spamd=$OPTARG ;;        # SpamAssassin
+		i) iptables=$OPTARG ;;     # Iptables
+		b) fail2ban=$OPTARG ;;     # Fail2ban
+		q) quota=$OPTARG ;;        # FS Quota
+		W) webterminal=$OPTARG ;;  # Web Terminal
+		r) port=$OPTARG ;;         # Backend Port
+		l) lang=$OPTARG ;;         # Language
+		d) api=$OPTARG ;;          # Activate API
+		y) interactive=$OPTARG ;;  # Interactive install
+		6) ipv6_support=$OPTARG ;; # IPv6
+		s) servername=$OPTARG ;;   # Hostname
+		e) email=$OPTARG ;;        # Admin email
+		u) username=$OPTARG ;;     # Admin username
+		p) vpass=$OPTARG ;;        # Admin password
+		D) withdebs=$OPTARG ;;     # Hestia debs path
+		f) force='yes' ;;          # Force install
+		h) help ;;                 # Help
+		*) help ;;                 # Print help (default)
 	esac
 done
 
@@ -381,6 +384,7 @@ set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
 set_default_value 'webterminal' 'no'
 set_default_value 'interactive' 'yes'
+set_default_value 'ipv6_support' 'no'
 set_default_value 'api' 'yes'
 set_default_port '8083'
 set_default_lang 'en'
@@ -751,10 +755,16 @@ if ! [[ "$servername" =~ ^${mask1}${mask2}$ ]]; then
 		servername="example.com"
 	fi
 	echo "127.0.0.1 $servername" >> /etc/hosts
+	if [ "$ipv6_support" = 'yes' ]; then
+		echo "::1 $servername" >> /etc/hosts
+	fi
 fi
 
 if [[ -z $(grep -i "$servername" /etc/hosts) ]]; then
 	echo "127.0.0.1 $servername" >> /etc/hosts
+	if [ "$ipv6_support" = 'yes' ]; then
+		echo "::1 $servername" >> /etc/hosts
+	fi
 fi
 
 # Set email if it wasn't set
@@ -1203,6 +1213,18 @@ if [ ! -e "/sbin/iptables" ]; then
 			ln -s "$autoiptables" /sbin/iptables
 		fi
 	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables; then
+			ln -s "$(which ip6tables)" /sbin/ip6tables
+		elif [ -e "/usr/sbin/ip6tables" ]; then
+			ln -s /usr/sbin/ip6tables /sbin/ip6tables
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables; then
+			autoip6tables=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables | cut -d '' -f 2)
+			if [ -x "$autoip6tables" ]; then
+				ln -s "$autoip6tables" /sbin/ip6tables
+			fi
+		fi
+	fi
 fi
 
 if [ ! -e "/sbin/iptables-save" ]; then
@@ -1216,6 +1238,18 @@ if [ ! -e "/sbin/iptables-save" ]; then
 			ln -s "$autoiptables_save" /sbin/iptables-save
 		fi
 	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables-save; then
+			ln -s "$(which ip6tables-save)" /sbin/ip6tables-save
+		elif [ -e "/usr/sbin/ip6tables-save" ]; then
+			ln -s /usr/sbin/ip6tables-save /sbin/ip6tables-save
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-save; then
+			autoip6tables_save=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-save | cut -d '' -f 2)
+			if [ -x "$autoip6tables_save" ]; then
+				ln -s "$autoip6tables_save" /sbin/ip6tables-save
+			fi
+		fi
+	fi
 fi
 
 if [ ! -e "/sbin/iptables-restore" ]; then
@@ -1227,6 +1261,18 @@ if [ ! -e "/sbin/iptables-restore" ]; then
 		autoiptables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
 		if [ -x "$autoiptables_restore" ]; then
 			ln -s "$autoiptables_restore" /sbin/iptables-restore
+		fi
+	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if which ip6tables-restore; then
+			ln -s "$(which ip6tables-restore)" /sbin/ip6tables-restore
+		elif [ -e "/usr/sbin/ip6tables-restore" ]; then
+			ln -s /usr/sbin/ip6tables-restore /sbin/ip6tables-restore
+		elif whereis -B /bin /sbin /usr/bin /usr/sbin -f -b ip6tables-restore; then
+			autoip6tables_restore=$(whereis -B /bin /sbin /usr/bin /usr/sbin -f -b iptables-restore | cut -d '' -f 2)
+			if [ -x "$autoip6tables_restore" ]; then
+				ln -s "$autoip6tables_restore" /sbin/ip6tables-restore
+			fi
 		fi
 	fi
 fi
@@ -1533,23 +1579,42 @@ cp -f $HESTIA_INSTALL_DIR/nginx/cloudflare.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phpmyadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/nginx/phppgadmin.inc /etc/nginx/conf.d/
 cp -f $HESTIA_INSTALL_DIR/logrotate/nginx /etc/logrotate.d/
+if [ "$ipv6_support" = 'yes' ]; then
+	resolver_line_ipv6="1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8 [2606:4700:4700::1111] [2606:4700:4700::1001] valid=300s ipv6=on;"
+	sed -i -e "s/\(resolver[ \t]*\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*.*/\1$resolver_line_ipv6/" /etc/nginx/nginx.conf
+	listen_nginx_ipv6="listen	[::1]:8084 default;"
+	sed -i -e "/listen[ \t]*[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*.*/a\\\t$listen_nginx_ipv6" /etc/nginx/conf.d/status.conf
+fi
 mkdir -p /etc/nginx/conf.d/domains
 mkdir -p /etc/nginx/conf.d/main
 mkdir -p /etc/nginx/modules-enabled
 mkdir -p /var/log/nginx/domains
 
 # Update dns servers in nginx.conf
-for nameserver in $(grep -is '^nameserver' /etc/resolv.conf | cut -d' ' -f2 | tr '\r\n' ' ' | xargs); do
+dns_resolver="$(sed -ne '/^nameserver/s/^nameserver[ \t]*\(.*\)/\1/p' /etc/resolv.conf)"
+for nameserver in $dns_resolver; do
 	if [[ "$nameserver" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-		if [ -z "$resolver" ]; then
-			resolver="$nameserver"
+		if [ -z "$resolver_ipv4" ]; then
+			resolver_ipv4="$nameserver"
 		else
-			resolver="$resolver $nameserver"
+			resolver_ipv4="$resolver_ipv4 $nameserver"
+		fi
+	fi
+	if [ "$ipv6_support" = 'yes' ]; then
+		if [[ $nameserver =~ ^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$ ]]; then
+			if [ -z "$resolver_ipv6" ]; then
+				resolver_ipv6="[$nameserver]"
+			else
+				resolver_ipv6="$resolver_ipv6 [$nameserver]"
+			fi
 		fi
 	fi
 done
-if [ -n "$resolver" ]; then
-	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver/g" /etc/nginx/nginx.conf
+if [ -n "$resolver_ipv4" ]; then
+	sed -i "s/1.0.0.1 8.8.4.4 1.1.1.1 8.8.8.8/$resolver_ipv4/g" /etc/nginx/nginx.conf
+fi
+if [ "$ipv6_support" = 'yes' -a -n "$resolver_ipv6" ]; then
+	sed -i "s/\[2606:4700:4700::1111\] \[2606:4700:4700::1001\]/$resolver_ipv6/g" /etc/nginx/nginx.conf
 fi
 
 # https://github.com/ergin/nginx-cloudflare-real-ip/
@@ -1593,6 +1658,12 @@ if [ "$apache" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/apache2/status.conf /etc/apache2/mods-available/hestia-status.conf
 	cp -f /etc/apache2/mods-available/status.load /etc/apache2/mods-available/hestia-status.load
 	cp -f $HESTIA_INSTALL_DIR/logrotate/apache2 /etc/logrotate.d/
+	if [ "$ipv6_support" = 'yes' ]; then
+		listen_apache_ipv6="Listen [::1]:8081"
+		sed -i -e "/Listen 127\.0\.0\.1:8081.*/a$listen_apache_ipv6" /etc/apache2/mods-available/hestia-status.conf
+		allow_from_apache_ipv6="Allow from ::1"
+		sed -i -e "/Allow from 127\.0\.0\.1*/a\\\t$allow_from_apache_ipv6" /etc/apache2/mods-available/hestia-status.conf
+	fi
 
 	# Enable needed modules
 	a2enmod rewrite > /dev/null 2>&1
@@ -1686,6 +1757,9 @@ chmod 755 /etc/cron.daily/php-session-cleanup
 if [ "$vsftpd" = 'yes' ]; then
 	echo "[ * ] Configuring Vsftpd server..."
 	cp -f $HESTIA_INSTALL_DIR/vsftpd/vsftpd.conf /etc/
+	if [ "$ipv6_support" = 'yes' ]; then
+		sed -i -e "s/\(listen\)\(=YES\)/\1_ipv6\2/" /etc/vsftpd.conf
+	fi
 	touch /var/log/vsftpd.log
 	chown root:adm /var/log/vsftpd.log
 	chmod 640 /var/log/vsftpd.log
@@ -2215,10 +2289,18 @@ $HESTIA/bin/v-update-sys-ip > /dev/null 2>&1
 default_nic="$(ip -d -j route show | jq -r '.[] | if .dst == "default" then .dev else empty end')"
 # IPv4
 primary_ipv4="$(ip -4 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
-# IPv6
-#primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | head -n1)"
 ip="$primary_ipv4"
 local_ip="$primary_ipv4"
+# IPv6
+if [ "$ipv6_support" = 'yes' ]; then
+	primary_ipv6="$(ip -6 -d -j addr show "$default_nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end' | tail -1)"
+	ipv6="$primary_ipv6"
+	local_ipv6="$primary_ipv6"
+else
+	primary_ipv6=""
+	ipv6=""
+	local_ipv6=""
+fi
 
 # Configuring firewall
 if [ "$iptables" = 'yes' ]; then
@@ -2227,6 +2309,12 @@ fi
 
 # Get public IP
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
+if [ "$ipv6_support" = 'yes' ]; then
+	pub_ipv6="$(curl -fsLm5 --retry 2 --ipv6 https://ip.hestiacp.com/)"
+else
+	pub_ipv6=""
+fi
+
 if [ -n "$pub_ipv4" ] && [ "$pub_ipv4" != "$ip" ]; then
 	if [ -e /etc/rc.local ]; then
 		sed -i '/exit 0/d' /etc/rc.local
@@ -2274,7 +2362,17 @@ if [ "$apache" = 'yes' ] && [ "$nginx" = 'yes' ]; then
 fi
 
 # Adding default domain
-$HESTIA/bin/v-add-web-domain "$username" "$servername" "$ip"
+if [ -n "$ip" ]; then
+	if [ -n "$ipv6" ]; then
+		$HESTIA/bin/v-add-web-domain-ipv46 "$username" "$servername" "$ip" "$ipv6"
+	else
+		$HESTIA/bin/v-add-web-domain-ipv46 "$username" "$servername" "$ip"
+	fi
+else
+	if [ -n "$ipv6" ]; then
+		$HESTIA/bin/v-add-web-domain-ipv46 "$username" "$servername" "" "$ipv6"
+	fi
+fi
 check_result $? "can't create $servername domain"
 
 # Adding cron jobs
@@ -2355,9 +2453,21 @@ fi' >> /root/.bashrc
 #----------------------------------------------------------#
 
 # Comparing hostname and IP
-host_ip=$(host $servername | head -n 1 | awk '{print $NF}')
-if [ "$host_ip" = "$ip" ]; then
-	ip="$servername"
+host_ipv4=$(host -t A "$servername")
+if [ $? -eq 0 ]; then
+	host_ipv4=$(echo "$host_ipv4" | sed -e 's/[^ ]* .* \([^ ]*\)/\1/')
+else
+	host_ipv4=""
+fi
+if [ "$ipv6_support" = 'yes' ]; then
+	host_ipv6=$(host -t AAAA "$servername")
+	if [ $? -eq 0 ]; then
+		host_ipv6=$(echo "$host_ipv6" | sed -e 's/[^ ]* .* \([^ ]*\)/\1/')
+	else
+		host_ipv6=""
+	fi
+else
+	host_ipv6=""
 fi
 
 echo -e "\n"
@@ -2370,10 +2480,28 @@ echo -e "Congratulations!
 You have successfully installed Hestia Control Panel on your server.
 
 Ready to get started? Log in using the following credentials:
-
-	Admin URL:  https://$servername:$port" > $tmpfile
-if [ "$host_ip" != "$ip" ]; then
+" > $tmpfile
+if [ -n "$ip" -a "$host_ipv4" = "$ip" ]; then
+	ipv4_accessible=1
+else
+	ipv4_accessible=0
+fi
+if [ -n "$ipv6" -a "$host_ipv6" = "$ipv6" ]; then
+	ipv6_accessible=1
+else
+	ipv6_accessible=0
+fi
+if [ $ipv4_accessible -eq 1 -o $ipv6_accessible -eq 1 ]; then
+	echo -e "	Admin URL:  https://$servername:$port" >> $tmpfile
+else
+	echo -e "	${servername} is not accessible from internet!" >> $tmpfile
+	echo -e "	Use Backup URL for Admin login:" >> $tmpfile
+fi
+if [ -n "$ip" ]; then
 	echo "	Backup URL: https://$ip:$port" >> $tmpfile
+fi
+if [ -n "$ipv6" ]; then
+	echo "	Backup URL: https://[$ipv6]:$port" >> $tmpfile
 fi
 echo -e -n " 	Username:   $username
 	Password:   $displaypass

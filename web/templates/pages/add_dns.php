@@ -51,7 +51,7 @@
 					<input type="text" class="form-control" name="v_domain" id="v_domain" value="<?= htmlentities(trim($v_domain, "'")) ?>" required>
 				</div>
 				<div class="u-mb10">
-					<label for="v_ip" class="form-label"><?= _("IP Address") ?></label>
+					<label for="v_ip" class="form-label"><?= _("IPV4 Address") ?></label>
 					<div class="u-pos-relative">
 						<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
 							<option value="">clear</option>
@@ -63,6 +63,21 @@
 							?>
 						</select>
 						<input type="text" class="form-control list-editor" name="v_ip" id="v_ip" value="<?= htmlentities(trim($v_ip, "'")) ?>">
+					</div>
+				</div>
+				<div class="u-mb10">
+					<label for="v_ipv6" class="form-label"><?= _("IPV6 Address") ?></label>
+					<div class="u-pos-relative">
+						<select class="form-select" tabindex="-1" onchange="this.nextElementSibling.value=this.value">
+							<option value="">clear</option>
+							<?php
+								foreach ($v_ipv6s as $ipv6 => $value) {
+									$display_ipv6 = $ipv6;
+									echo "<option value='{$display_ipv6}'>" . htmlentities($display_ipv6) . "</option>\n";
+								}
+							?>
+						</select>
+						<input type="text" class="form-control list-editor" name="v_ipv6" id="v_ipv6" value="<?= htmlentities(trim($v_ipv6, "'")) ?>">
 					</div>
 				</div>
 				<?php if ($_SESSION["userContext"] === "admin" || ($_SESSION["userContext"] === "user" && $_SESSION["POLICY_USER_EDIT_DNS_TEMPLATES"] === "yes")) { ?>

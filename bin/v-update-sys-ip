@@ -17,11 +17,11 @@
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
 # shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+source "$HESTIA/func/main.sh"
 # shellcheck source=/usr/local/hestia/func/ip.sh
-source $HESTIA/func/ip.sh
+source "$HESTIA/func/ip.sh"
 # shellcheck source=/usr/local/hestia/func/domain.sh
-source $HESTIA/func/domain.sh
+source "$HESTIA/func/domain.sh"
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
@@ -37,36 +37,31 @@ check_hestia_demo_mode
 #----------------------------------------------------------#
 
 # Listing system IP addresses
-nics="$(ip -d -j link show | jq -r '.[] | if .link_type == "loopback" then empty else .ifname end')"
-
-for nic in $nics; do
-	nic_type="$(ip -d -j link show "$nic" | jq -r '.[].linkinfo.info_kind')"
-	if [ "$nic_type" = "bridge" ]; then
-		break
-	fi
-	nic_ipv4s="$(ip -4 -d -j addr show "$nic" | jq -r '.[] | select(length > 0) | .addr_info[] | if .scope == "global" then .local else empty end')"
-	if [ -z "$ips" ]; then
-		ips="$nic_ipv4s"
-	else
-		ips="$ips $nic_ipv4s"
-	fi
-done
-
-v_ips="$(ls $HESTIA/data/ips/)"
-ip_num="$(echo "$ips" | wc -w)"
-v_ip_num="$(echo "$v_ips" | wc -w)"
+ips="$($BIN/v-list-sys-network list 4)"
+ipv6s="$($BIN/v-list-sys-network list 6)"
+v_ips="$($BIN/v-list-sys-ips list)"
+ip_num=$(echo "$ips" | wc -l)
+ipv6_num=$(echo "$ipv6s" | wc -l)
+v_ip_num=$(echo "$v_ips" | wc -l)
 
 # Checking primary IP change
-if [ "$ip_num" -eq "1" ] && [ "$v_ip_num" -eq "1" ]; then
-	if [ -n "$v_ips" ] && [ "$ips" != "$v_ips" ]; then
+if [ "$ip_num" -eq 1 -a "$ipv6_num" -eq 0 -a "$v_ip_num" -eq 1 ]; then
+	if [ "$ips" != "$v_ips" ]; then
 		new_ip="$ips"
+		old_ip="$v_ips"
+	fi
+fi
+
+if [ "$ipv6_num" -eq 1 -a "$ip_num" -eq 0 -a "$v_ip_num" -eq 1 ]; then
+	if [ "$ipv6s" != "$v_ips" ]; then
+		new_ip="$ipv6s"
 		old_ip="$v_ips"
 	fi
 fi
 
 # Updating configs
 if [ -n "$old_ip" ]; then
-	mv $HESTIA/data/ips/$old_ip $HESTIA/data/ips/$new_ip
+	mv "$HESTIA/data/ips/$old_ip" "$HESTIA/data/ips/$new_ip"
 
 	# Generating timestamp
 	new_timestamp
@@ -83,25 +78,25 @@ if [ -n "$old_ip" ]; then
 
 	# Updating PROXY
 	if [ -n "$PROXY_SYSTEM" ]; then
-		cd /etc/$PROXY_SYSTEM/conf.d
+		cd "/etc/$PROXY_SYSTEM/conf.d"
 		if [ -e "$old_ip.conf" ]; then
-			mv $old_ip.conf $new_ip.conf
-			sed -i "s/$old_ip/$new_ip/g" $new_ip.conf
+			mv "$old_ip.conf" "$new_ip.conf"
+			sed -i "s/$old_ip/$new_ip/g" "$new_ip.conf"
 		fi
 	fi
 
 	# Updating WEB
 	if [ -n "$WEB_SYSTEM" ]; then
-		cd /etc/$WEB_SYSTEM/conf.d
+		cd "/etc/$WEB_SYSTEM/conf.d"
 
 		if [ -e "$old_ip.conf" ]; then
-			mv $old_ip.conf $new_ip.conf
-			sed -i "s/$old_ip/$new_ip/g" $new_ip.conf
+			mv "$old_ip.conf" "$new_ip.conf"
+			sed -i "s/$old_ip/$new_ip/g" "$new_ip.conf"
 		fi
 
 		for user in $("$BIN/v-list-users" list); do
-			sed -i "s/$old_ip/$new_ip/g" $HESTIA/data/users/$user/web.conf
-			$BIN/v-rebuild-web-domains "$user" no
+			sed -i "s/$old_ip/$new_ip/g" "$HESTIA/data/users/$user/web.conf"
+			"$BIN/v-rebuild-web-domains" "$user" no
 		done
 
 		if [ -e "/etc/apache2/mods-available/remoteip.conf" ]; then
@@ -112,26 +107,26 @@ if [ -n "$old_ip" ]; then
 			sed -i "s/$old_ip/$new_ip/g" /etc/apache2/mods-enabled/rpaf.conf
 		fi
 
-		$BIN/v-restart-proxy
-		$BIN/v-restart-web
+		"$BIN/v-restart-proxy"
+		"$BIN/v-restart-web"
 	fi
 
 	# Updating MAIL
 	if [ -n "$IMAP_SYSTEM" ]; then
 		for user in $("$BIN/v-list-users" list); do
-			$BIN/v-rebuild-mail-domains "$user" no
+			"$BIN/v-rebuild-mail-domains" "$user" no
 		done
-		$BIN/v-restart-mail
+		"$BIN/v-restart-mail"
 	fi
 
 	# Updating DNS
 	if [ -n "$DNS_SYSTEM" ]; then
 		for user in $("$BIN/v-list-users" list); do
-			sed -i "s/$old_ip/$new_ip/g" $HESTIA/data/users/$user/dns.conf
-			sed -i "s/$old_ip/$new_ip/g" $HESTIA/data/users/$user/dns/*.conf
-			$BIN/v-rebuild-dns-domains "$user" no
+			sed -i "s/$old_ip/$new_ip/g" "$HESTIA/data/users/$user/dns.conf"
+			sed -i "s/$old_ip/$new_ip/g" "$HESTIA/data/users/$user/dns/"*.conf
+			"$BIN/v-rebuild-dns-domains" "$user" no
 		done
-		$BIN/v-restart-dns
+		"$BIN/v-restart-dns"
 	fi
 
 	# Updating FTP
@@ -139,41 +134,37 @@ if [ -n "$old_ip" ]; then
 		ftp_conf="$(find /etc/ -maxdepth 2 -name $FTP_SYSTEM.conf)"
 		if [ -n "$ftp_conf" ]; then
 			sed -i "s/$old_ip/$new_ip/g" "$ftp_conf"
-			$BIN/v-restart-ftp
+			"$BIN/v-restart-ftp"
 		fi
 	fi
 
 	# Updating firewall
 	if [ -n "$FIREWALL_SYSTEM" ]; then
-		sed -i "s/$old_ip/$new_ip/g" $HESTIA/data/firewall/*.conf
-		$BIN/v-update-firewall
+		sed -i "s/$old_ip/$new_ip/g" "$HESTIA/data/firewall/"*.conf
+		"$BIN/v-update-firewall"
 	fi
 fi
 
 # Adding system IP
-for ip in $ips; do
-	check_ip="$(ip addr list | grep -w "$ip")"
-	if [ ! -e "$HESTIA/data/ips/$ip" ] && [ -n "$check_ip" ]; then
-		interface="$(ip -d -j addr show | jq --arg IP "$ip" -r '.[] | if .addr_info[].local == $IP then .ifname else empty end')"
-		prefixlen="$(ip -d -j addr show | jq --arg IP "$ip" -r '.[].addr_info[] | if .local == $IP then .prefixlen else empty end')"
-		netmask="$(convert_cidr "$prefixlen")"
-		$BIN/v-add-sys-ip "$ip" "$netmask" "$interface"
-	elif [ -e "/etc/nginx/conf.d/$ip.conf" ]; then
-		process_http2_directive "/etc/nginx/conf.d/$ip.conf"
+"$BIN/v-list-sys-network" plain | while read listed_ip listed_mask listed_iface listed_family; do
+	if [ ! -e "$HESTIA/data/ips/$listed_ip" ]; then
+		"$BIN/v-add-sys-ip" "$listed_ip" "$listed_mask" "$listed_iface"
+	elif [ -e "/etc/nginx/conf.d/$listed_ip.conf" ]; then
+		process_http2_directive "/etc/nginx/conf.d/$listed_ip.conf"
 	fi
 done
 
 # Updating NAT
 pub_ipv4="$(curl -fsLm5 --retry 2 --ipv4 https://ip.hestiacp.com/)"
-if [ ! -e "$HESTIA/data/ips/$pub_ipv4" ]; then
-	if [ -z "$(grep -R "$pub_ipv4" $HESTIA/data/ips/)" ]; then
-		ip="$(ls -t $HESTIA/data/ips/ | head -n1)"
-		$BIN/v-change-sys-ip-nat "$ip" "$pub_ipv4"
+if [ ! -e "$HESTIA/data/ips/$pub_ip" ]; then
+	if [ -z "$(grep -R "$pub_ip" "$HESTIA/data/ips/")" ]; then
+		ip="$(ls -t "$HESTIA/data/ips/" | head -n1)"
+		"$BIN/v-change-sys-ip-nat" "$ip" "$pub_ipv4"
 	fi
 fi
 
 # Updating IP usage counters
-$BIN/v-update-sys-ip-counters
+"$BIN/v-update-sys-ip-counters"
 
 #----------------------------------------------------------#
 #                       Hestia                             #

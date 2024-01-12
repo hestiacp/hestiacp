@@ -6,33 +6,43 @@
 #                                                                           #
 #===========================================================================#
 
-# Global definitions
-REGEX_IPV4="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}$"
+# === Global definitions ===
+REGEX_IPV4="^((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])$"
+
+# === IPV4 specific functions ===
 
 # Check ip ownership
 is_ip_owner() {
-	owner=$(grep 'OWNER=' $HESTIA/data/ips/$ip | cut -f 2 -d \')
+	# ip address (ipv4/ipv6) as first parameter, otherwise $ip (ipv4)
+	ip_for_test="${1-$ip}"
+	owner=$(grep 'OWNER=' $HESTIA/data/ips/$ip_for_test | cut -f 2 -d \')
 	if [ "$owner" != "$user" ]; then
-		check_result "$E_FORBIDEN" "$ip is not owned by $user"
+		check_result "$E_FORBIDEN" "$ip_for_test is not owned by $user"
 	fi
 }
 
 # Check if ip address is free
 is_ip_free() {
-	if [ -e "$HESTIA/data/ips/$ip" ]; then
-		check_result "$E_EXISTS" "$ip is already exists"
+	ip_for_test="${1-$ip}" # ip address (ipv4/ipv6) as first parameter, otherwise $ip (ipv4)
+	if [ -e "$HESTIA/data/ips/$ip_for_test" ]; then
+		check_result "$E_EXISTS" "$ip_for_test is already exists"
 	fi
 }
 
 # Check ip address specific value
 is_ip_key_empty() {
 	key="$1"
-	string=$(cat $HESTIA/data/ips/$ip)
-	eval $string
-	eval value="$key"
-	if [ -n "$value" ] && [ "$value" != '0' ]; then
-		key="$(echo $key | sed -e "s/\$U_//")"
-		check_result "$E_EXISTS" "IP is in use / $key = $value"
+	ip_for_test="${2-$ip}" # ip address (ipv4/ipv6) as second parameter, otherwise $ip (ipv4)
+	if [ -n "$ip_for_test" ]; then
+		string=$(cat $HESTIA/data/ips/$ip_for_test)
+		eval $string
+		eval value="$key"
+		if [ -n "$value" ] && [ "$value" != '0' ]; then
+			key="$(echo $key | sed -e "s/\$U_//")"
+			check_result "$E_EXISTS" "IP is in use / $key = $value"
+		fi
+	else
+		check_result 1 "is_ip_key_empty(): IP address is empty!"
 	fi
 }
 
@@ -58,15 +68,20 @@ is_ip_rdns_valid() {
 update_ip_value() {
 	key="$1"
 	value="$2"
-	conf="$HESTIA/data/ips/$ip"
-	str=$(cat $conf)
-	eval $str
-	c_key=$(echo "${key//$/}")
-	eval old="${key}"
-	old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
-	sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g" \
-		$conf
+	ip_for_update="${3-$ip}" # ip address (ipv4/ipv6) as third parameter, otherwise $ip (ipv4)
+	if [ -n "$ip_for_update" ]; then
+		conf="$HESTIA/data/ips/$ip_for_update"
+		str=$(cat $conf)
+		eval $str
+		c_key=$(echo "${key//$/}")
+		eval old="${key}"
+		old=$(echo "$old" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+		new=$(echo "$value" | sed -e 's/\\/\\\\/g' -e 's/&/\\&/g' -e 's/\//\\\//g')
+		sed -i "$str_number s/$c_key='${old//\*/\\*}'/$c_key='${new//\*/\\*}'/g" \
+			$conf
+	else
+		check_result 1 "is_ip_key_empty(): IP address is empty!"
+	fi
 }
 
 # New method that is improved on a later date we need to check if we can improve it for other locations
@@ -84,9 +99,15 @@ update_ip_value_new() {
 
 # Get ip name
 get_ip_alias() {
-	ip_name=$(grep "NAME=" $HESTIA/data/ips/$local_ip | cut -f 2 -d \')
-	if [ -n "$ip_name" ]; then
-		echo "${1//./-}.$ip_name"
+	# ip address (ipv4/ipv6) as second parameter, otherwise $local_ip (ipv4)
+	ip_for_test="${2-$local_ip}"
+	if [ -n "$ip_for_test" ]; then
+		ip_name=$(grep "NAME=" $HESTIA/data/ips/${ip_for_test} | cut -f 2 -d \')
+		if [ -n "$ip_name" ]; then
+			echo "${1//./-}.$ip_name"
+		fi
+	else
+		ip_name=""
 	fi
 }
 
@@ -103,7 +124,11 @@ increase_ip_value() {
 		log_event "$E_PARSING" "$ARGUMENTS"
 		exit "$E_PARSING"
 	fi
-	new_web=$((current_web + 1))
+	if (($current_web <= 0)); then
+		new_web=1
+	else
+		new_web=$((current_web + 1))
+	fi
 	if [ -z "$current_usr" ]; then
 		new_usr="$USER"
 	else
@@ -141,7 +166,11 @@ decrease_ip_value() {
 		check_result $E_PARSING "Parsing error"
 	fi
 
-	new_web=$((current_web - 1))
+	if (($current_web <= 0)); then
+		new_web=0
+	else
+		new_web=$((current_web - 1))
+	fi
 	check_ip=$(grep $sip $USER_DATA/web.conf | wc -l)
 	if [[ $check_ip = 0 ]]; then
 		new_usr=$(echo "$current_usr" \
@@ -183,6 +212,9 @@ get_real_ip() {
 
 # Convert CIDR to netmask
 convert_cidr() {
+	# CIDR can be defined as /32 (with leading /) or as 32 (number without leading /)
+	# please check the value range of cidr before converting!
+	set ${1#/} # allow to use cidr format with leading /
 	set -- $((5 - ($1 / 8))) 255 255 255 255 \
 		$(((255 << (8 - ($1 % 8))) & 255)) 0 0 0
 	if [[ $1 -gt 1 ]]; then
@@ -210,7 +242,7 @@ convert_netmask() {
 			0) ;;
 		esac
 	done
-	echo "$nbits"
+	echo "/$nbits"
 }
 
 # Calculate broadcast address
@@ -275,6 +307,61 @@ is_ip_valid() {
 		get_user_owner
 		if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
 			check_result "$E_FORBIDEN" "$user user can't use IP $1"
+		fi
+	fi
+}
+
+# === IPV6 specific functions ===
+
+# Get full interface name
+get_ipv6_iface() {
+	i=$(/sbin/ip addr | grep -w $interface \
+		| awk '{print $NF}' | tail -n 1 | cut -f 2 -d :)
+	if [ "$i" = "$interface" ]; then
+		n=0
+	else
+		n=$((i + 1))
+	fi
+	echo "$interface:$n"
+}
+
+# Get user ip6s
+get_user_ip6s() {
+	dedicated=$(grep -H -A10 "OWNER='$user'" $HESTIA/data/ips/* | grep "VERSION='6'")
+	dedicated=$(echo "$dedicated" | cut -f 1 -d '-' | sed 's=.*/==')
+	shared=$(grep -H -A10 "OWNER='$ROOT_USER'" $HESTIA/data/ips/* | grep -A10 shared | grep "VERSION='6'")
+	shared=$(echo "$shared" | cut -f 1 -d '-' | sed 's=.*/==' | cut -f 1 -d \-)
+	for dedicated_ip in $dedicated; do
+		shared=$(echo "$shared" | grep -v $dedicated_ip)
+	done
+	echo -e "$dedicated\n$shared" | sed "/^$/d"
+}
+
+# Get user ipv6
+get_user_ipv6() {
+	ipv6=$(get_user_ip6s | head -n1)
+	local_ipv6="$ipv6"
+}
+
+# Validate ipv6 address
+is_ipv6_valid() {
+	local_ipv6="$1"
+	if [ -z "$local_ipv6" ]; then
+		check_result $E_NOTEXIST "IPV6 address is empty"
+	fi
+	if [ ! -e "$HESTIA/data/ips/$1" ]; then
+		check_result $E_NOTEXIST "IPV6 $1 doesn't exist"
+	fi
+	if [ ! -z $2 ]; then
+		ip_data=$(cat $HESTIA/data/ips/$1)
+		ip_owner=$(echo "$ip_data" | grep OWNER= | cut -f2 -d \')
+		ip_status=$(echo "$ip_data" | grep STATUS= | cut -f2 -d \')
+		if [ "$ip_owner" != "$user" ] && [ "$ip_status" = 'dedicated' ]; then
+			check_result $E_FORBIDEN "$user user can't use IPV6 $1"
+		fi
+		get_user_owner
+		if [ "$ip_owner" != "$user" ] && [ "$ip_owner" != "$owner" ]; then
+			check_result $E_FORBIDEN "$user user can't use IPV6 $1"
 		fi
 	fi
 }

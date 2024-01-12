@@ -12,7 +12,7 @@ To manage your cron jobs, navigate to the **Cron <i class="fas fa-fw fa-clock"><
 1. Click the **<i class="fas fa-fw fa-plus-circle"></i> Add job** button.
 2. Enter the command you want to execute.
 3. Enter the schedule on which you want to execute the command. You can use the generator to help you, or a tool such as [Crontab.guru](https://crontab.guru/).
-4. **Important.** If you use a normal user then you cannot use sudo in cron jobs, Hestia does not add normal users to the sudoers configuration file. If you are using an administrator user, this user can only run sudo commands found in the /usr/local/hestia/bin/ path
+4. **Important.** If you use a normal user then you cannot use sudo in cron jobs, Hestia does not add normal users to the sudoers configuration file. 
 
 ## Editing a cron job
 

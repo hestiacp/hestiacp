@@ -159,6 +159,14 @@
 	align-items: center !important;
 }
 
+.u-side-by-side-tablet {
+	@media (--viewport-small) {
+		display: flex !important;
+		justify-content: space-between !important;
+		align-items: center !important;
+	}
+}
+
 .u-list-bulleted {
 	list-style: disc !important;
 	padding-left: 40px !important;

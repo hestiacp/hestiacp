@@ -1263,6 +1263,7 @@ is_format_valid() {
 				soa) is_domain_format_valid "$arg" 'SOA' ;;
 				#missing command: is_format_valid_shell
 				shell) is_format_valid_shell "$arg" ;;
+				shell_jail_enabled) is_boolean_format_valid "$arg" 'shell_jail_enabled' ;;
 				ssl_dir) is_folder_exists "$arg" "$arg_name" ;;
 				stats_pass) is_password_format_valid "$arg" ;;
 				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
@@ -1744,8 +1745,18 @@ add_chroot_jail() {
 		chown 0:0 /srv/jail/$user/home
 		chmod 755 /srv/jail/$user/home
 	fi
+	if [ ! -d /srv/jail/$user/home/$user ]; then
+		mkdir -p /srv/jail/$user/home/$user
+		chown 0:0 /srv/jail/$user/home/$user
+		chmod 755 /srv/jail/$user/home/$user
+	fi
+	if [ ! -d /srv/jail/$user/tmp ]; then
+		mkdir -p /srv/jail/$user/tmp
+		chown "$user:$user" /srv/jail/$user/tmp
+		chmod 755 /srv/jail/$user/tmp
+	fi
 
-	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
 	cat > "/etc/systemd/system/$systemd" << EOF
 [Unit]
 Description=Mount $user's home directory to the jail chroot
@@ -1753,7 +1764,7 @@ Before=local-fs.target
 
 [Mount]
 What=$(getent passwd $user | cut -d : -f 6)
-Where=/srv/jail/$user/home
+Where=/srv/jail/$user/home/$user
 Type=none
 Options=bind
 LazyUnmount=yes
@@ -1770,11 +1781,19 @@ EOF
 delete_chroot_jail() {
 	local user=$1
 
+	# Backwards compatibility with old style home jail
 	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
 	systemctl stop "$systemd" > /dev/null 2>&1
 	systemctl disable "$systemd" > /dev/null 2>&1
 	rm -f "/etc/systemd/system/$systemd"
+
+	# Remove the new style home jail
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+	systemctl stop "$systemd" > /dev/null 2>&1
+	systemctl disable "$systemd" > /dev/null 2>&1
+	rm -f "/etc/systemd/system/$systemd"
+
 	systemctl daemon-reload > /dev/null 2>&1
-	rmdir /srv/jail/$user/home > /dev/null 2>&1
+	rm -r /srv/jail/$user/ > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1
 }

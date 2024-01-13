@@ -50,7 +50,7 @@ software="acl apache2 apache2-suexec-custom apache2-suexec-pristine apache2-util
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog spamd sudo sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd"
+  proftpd-basic quota rrdtool rsyslog spamd sudo sysstat unrar-free unzip util-linux vim-common vsftpd xxd whois zip zstd jailkit"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl wget"
 
@@ -1494,11 +1494,16 @@ echo "[ * ] Enabling SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
+# Enable ssh jail
+echo "[ * ] Enabling SSH jail..."
+$HESTIA/bin/v-add-sys-ssh-jail > /dev/null 2>&1
+check_result $? "can't enable ssh jail"
+
 # Adding Hestia admin account
 echo "[ * ] Creating default admin account..."
 $HESTIA/bin/v-add-user "$username" "$vpass" "$email" "default" "System Administrator"
 check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell "$username" nologin
+$HESTIA/bin/v-change-user-shell "$username" nologin no
 $HESTIA/bin/v-change-user-role "$username" admin
 $HESTIA/bin/v-change-user-language "$username" "$lang"
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'

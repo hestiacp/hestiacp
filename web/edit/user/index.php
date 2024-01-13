@@ -55,6 +55,7 @@ $v_user_theme = $data[$v_username]["THEME"];
 $v_sort_order = $data[$v_username]["PREF_UI_SORT"];
 $v_name = $data[$v_username]["NAME"];
 $v_shell = $data[$v_username]["SHELL"];
+$v_shell_jail_enabled = $data[$v_username]["SHELL_JAIL_ENABLED"];
 $v_twofa = $data[$v_username]["TWOFA"];
 $v_qrcode = $data[$v_username]["QRCODE"];
 $v_phpcli = $data[$v_username]["PHPCLI"];
@@ -367,18 +368,36 @@ if (!empty($_POST["save"])) {
 		}
 		// Change shell (admin only)
 		if (!empty($_POST["v_shell"])) {
+			if (empty($_POST["v_shell_jail_enabled"])) {
+				$_POST["v_shell_jail_enabled"] = "no";
+			}
+
 			if (
-				$v_shell != $_POST["v_shell"] &&
+				in_array($_POST["v_shell"], ["nologin", "rssh"]) &&
+				$_POST["v_shell_jail_enabled"] == "yes"
+			) {
+				$_SESSION["error_msg"] = _(
+					"Cannot combine nologin and rssh shell with jailed shell.",
+				);
+			}
+
+			if (
+				($v_shell != $_POST["v_shell"] ||
+					$v_shell_jail_enabled != $_POST["v_shell_jail_enabled"]) &&
 				$_SESSION["userContext"] === "admin" &&
 				empty($_SESSION["error_msg"])
 			) {
 				$v_shell = quoteshellarg($_POST["v_shell"]);
+				$v_shell_jail_enabled = quoteshellarg($_POST["v_shell_jail_enabled"]);
+
 				exec(
 					HESTIA_CMD .
 						"v-change-user-shell " .
 						quoteshellarg($v_username) .
 						" " .
-						$v_shell,
+						$v_shell .
+						" " .
+						$v_shell_jail_enabled,
 					$output,
 					$return_var,
 				);

@@ -1,0 +1,96 @@
+#!/bin/bash
+# info: add user ssh jail
+# options: USER [RESTART]
+#
+# example: v-add-user-ssh-jail admin
+#
+# This function enables ssh jailed environment
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+restart=$3
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+chroot="/srv/jail/$user"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Checking if jailkit is installed
+if [ ! -x /sbin/jk_init ]; then
+	exit
+fi
+
+check_args '1' "$#" 'USER'
+is_format_valid 'user'
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Get shell full path
+shell_path=$(grep "^$user:" /etc/passwd | cut -f 7 -d :)
+
+# Set home folder permission to root
+if [ -d "/home/$user" ]; then
+	chown root:root /home/$user
+fi
+
+add_chroot_jail "$user"
+
+# Add user to the ssh-jailed group to allow jailed ssh
+# This needs to be done first to make sure these groups are made available in the jail
+usermod -a -G ssh-jailed $user
+
+# Installing shell files into the user chroot directory
+# - IMPORTANT - MODIFY THE FOLLOWING LINES AND THE FILE jk_init.ini ACCORDING TO YOUR SYSTEM AND YOUR PREFERENCES
+/sbin/jk_init -f -j $chroot extendedshell netutils ssh sftp scp git php php5_6 php7_0 php7_1 php7_2 php7_3 php7_4 php8_0 php8_1 php8_2 > /dev/null 2>&1
+/sbin/jk_cp -f -j $chroot /bin/id > /dev/null 2>&1
+
+# Jailing user to make sure passwd and groups are set correctly within the jail.
+# This command also does a little too much by changing the users homedir and
+# shell in /etc/passwd. The next commands reverts those changes for compatibility
+# with hestia.
+/sbin/jk_jailuser -n -s $shell_path -j $chroot $user
+
+# Reset home directory and shell again for hestiacp because jailkit changes these.
+# Normally these are needed to redirect the ssh user to it's chroot but because we
+# use a custom sshd_config to redirect the user to it's chroot we don't need it to be
+# changed in /etc/passwd for the user.
+usermod -d /home/$user $user
+usermod -s $shell_path $user
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Enabling user jail
+update_user_value "$user" '$SHELL_JAIL_ENABLED' "yes"
+
+# Restart ssh service
+if [ "$restart" = 'no' ]; then
+	# Skip restart of SSH daemon
+	echo "" > /dev/null 2>&1
+else
+	service sshd restart > /dev/null 2>&1
+fi
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

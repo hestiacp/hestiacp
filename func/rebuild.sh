@@ -62,6 +62,9 @@ rebuild_user_conf() {
 	if [ -z "${RATE_LIMIT+x}" ]; then
 		sed -i "/MAIL_ACCOUNTS/a RATE_LIMIT='200'" $USER_DATA/user.conf
 	fi
+	if [ -z "${SHELL_JAIL_ENABLED+x}" ]; then
+		sed -i "/SHELL/a SHELL_JAIL_ENABLED='no'" $USER_DATA/user.conf
+	fi
 	# Run template trigger
 	if [ -x "$HESTIA/data/packages/$PACKAGE.sh" ]; then
 		$HESTIA/data/packages/$PACKAGE.sh "$user" "$CONTACT" "$NAME"
@@ -123,6 +126,8 @@ rebuild_user_conf() {
 	chown root:root $HOMEDIR/$user/conf
 
 	$BIN/v-add-user-sftp-jail "$user"
+
+	$BIN/v-add-user-ssh-jail "$user"
 
 	# Update disk pipe
 	sed -i "/ $user$/d" $HESTIA/data/queue/disk.pipe

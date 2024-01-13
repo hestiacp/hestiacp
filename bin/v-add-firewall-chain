@@ -56,8 +56,8 @@ heal_iptables_links
 
 # Checking known chains
 case $chain in
-        SSH) # Get ssh port (or ports) using v-list-sys-sshd-port.
-                sshport="$($BIN/v-list-sys-sshd-port plain | sed ':a;N;$!ba;s/\n/,/g')"
+	SSH) # Get ssh port (or ports) using v-list-sys-sshd-port.
+		sshport="$($BIN/v-list-sys-sshd-port plain | sed ':a;N;$!ba;s/\n/,/g')"
 		if [ -z "$sshport" ]; then
 			sshport=22
 		fi

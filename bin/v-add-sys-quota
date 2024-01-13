@@ -32,7 +32,7 @@ if ! find "/lib/modules/$(uname -r)" -type f -name '*quota_v*.ko*' | grep -q '.*
 fi
 
 # Checking quota package
-if ! type -P quota &>/dev/null; then
+if ! type -P quota &> /dev/null; then
 	if [ -f "/etc/redhat-release" ]; then
 		dnf -y install quota > /dev/null 2>&1
 	else

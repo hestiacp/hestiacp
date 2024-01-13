@@ -145,7 +145,7 @@ else
 	version=$(multiphp_default_version)
 fi
 # Restarting web server
-$BIN/v-restart-web "$restart" 
+$BIN/v-restart-web "$restart"
 check_result $? "Web restart failed" > /dev/null
 
 # Restarting proxy server

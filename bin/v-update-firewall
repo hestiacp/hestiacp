@@ -62,9 +62,9 @@ fi
 
 # Checking custom OpenSSH port (or ports)
 sshport="$($BIN/v-list-sys-sshd-port plain | sed ':a;N;$!ba;s/\n/,/g')"
-if echo "$sshport" | grep -E '^[0-9]+(,[0-9]+)*$' &>/dev/null; then
-        sed -i -E "s/(PORT=')[0-9]+(,[0-9]+)*('.*COMMENT='SSH')/\1$sshport\3/" $rules
-        sed -i "/CHAIN='SSH'/c\CHAIN='SSH' PORT='$sshport' PROTOCOL='TCP'" "$HESTIA/data/firewall/chains.conf"
+if echo "$sshport" | grep -E '^[0-9]+(,[0-9]+)*$' &> /dev/null; then
+	sed -i -E "s/(PORT=')[0-9]+(,[0-9]+)*('.*COMMENT='SSH')/\1$sshport\3/" $rules
+	sed -i "/CHAIN='SSH'/c\CHAIN='SSH' PORT='$sshport' PROTOCOL='TCP'" "$HESTIA/data/firewall/chains.conf"
 fi
 
 # Load ipset lists before adding Hestia iptables rules

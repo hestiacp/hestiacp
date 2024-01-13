@@ -28,7 +28,7 @@ All notable changes to this project will be documented in this file.
 ### Bug fixes
 
 - Include missed changes
-- Include https://github.com/hestiacp/hestiacp/blob/main/install/upgrade/manual/secure_php.sh
+- Include <https://github.com/hestiacp/hestiacp/blob/main/install/upgrade/manual/secure_php.sh>
 
 ## [1.8.9] - Service release
 

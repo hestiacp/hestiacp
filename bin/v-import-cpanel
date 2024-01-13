@@ -250,18 +250,18 @@ CPANEL_PHP_VERSION=$(echo $CPANEL_PHP_VERSION | grep -oP '(?<=php)\d+')
 HESTIA_PHP_VERSION="PHP-${CPANEL_PHP_VERSION:0:1}_${CPANEL_PHP_VERSION:1}"
 
 if $BIN/v-list-web-templates-backend | grep -qw "$HESTIA_PHP_VERSION"; then
-    echo "Setting PHP version to $HESTIA_PHP_VERSION for $main_domain1 under user $new_user"
-    $BIN/v-change-web-domain-backend-tpl $new_user $main_domain1 $HESTIA_PHP_VERSION
-    if [ $? -ne 0 ]; then
-        echo "Failed to set PHP version for $main_domain1"
-        exit 1
-    else
-        echo "PHP version for $main_domain1 set to $HESTIA_PHP_VERSION"
-    fi
+	echo "Setting PHP version to $HESTIA_PHP_VERSION for $main_domain1 under user $new_user"
+	$BIN/v-change-web-domain-backend-tpl $new_user $main_domain1 $HESTIA_PHP_VERSION
+	if [ $? -ne 0 ]; then
+		echo "Failed to set PHP version for $main_domain1"
+		exit 1
+	else
+		echo "PHP version for $main_domain1 set to $HESTIA_PHP_VERSION"
+	fi
 else
-    echo "PHP version $HESTIA_PHP_VERSION is not installed on HestiaCP."
-    echo "Please install it before trying to set it for a domain."
-    exit 1
+	echo "PHP version $HESTIA_PHP_VERSION is not installed on HestiaCP."
+	echo "Please install it before trying to set it for a domain."
+	exit 1
 fi
 
 ##################
@@ -278,12 +278,12 @@ for folder in *; do
 			echo "Domain: $folder"
 			cd $folder
 
-            		mail_account_count=$(find . -maxdepth 1 -mindepth 1 -type d \( ! -name cur ! -name new ! -name tmp \) | wc -l)
-            		if [ "$mail_account_count" -eq 0 ]; then
-                		echo "No mail accounts to restore for domain $folder."
-                		cd ..
-                		continue
-            		fi
+			mail_account_count=$(find . -maxdepth 1 -mindepth 1 -type d \( ! -name cur ! -name new ! -name tmp \) | wc -l)
+			if [ "$mail_account_count" -eq 0 ]; then
+				echo "No mail accounts to restore for domain $folder."
+				cd ..
+				continue
+			fi
 
 			for mail_account in *; do
 				echo "Import mail account: $mail_account@$folder"
@@ -294,40 +294,40 @@ for folder in *; do
 				chown -R $new_user:mail /home/$new_user/mail/$folder/
 
 				# Decompress gzipped emails
-                		decompressed_count=0
-                		for mail_file in $(find /home/$new_user/mail/$folder -type f); do
-                    			if file "$mail_file" | grep -q "gzip compressed"; then
-				       		original_time=$(stat -c %y "$mail_file" 2>/dev/null)
-                        			gunzip -c "$mail_file" > "${mail_file}.decompressed" && mv "${mail_file}.decompressed" "$mail_file"
-                        			if [ ! -z "$original_time" ]; then
+				decompressed_count=0
+				for mail_file in $(find /home/$new_user/mail/$folder -type f); do
+					if file "$mail_file" | grep -q "gzip compressed"; then
+						original_time=$(stat -c %y "$mail_file" 2> /dev/null)
+						gunzip -c "$mail_file" > "${mail_file}.decompressed" && mv "${mail_file}.decompressed" "$mail_file"
+						if [ ! -z "$original_time" ]; then
 							touch -d "$original_time" "$mail_file"
-					        fi		
+						fi
 						let decompressed_count++
-                    			fi
-                		done
+					fi
+				done
 
-                		echo "$decompressed_count emails decompressed for $mail_account@$folder"
-              
+				echo "$decompressed_count emails decompressed for $mail_account@$folder"
+
 				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
 
 				# Extract and update password from the shadow file
 				password_file="../../etc/${folder}/shadow"
 				if [ -f "$password_file" ]; then
-    					pass_line=$(grep "^$mail_account:" $password_file)
-    					if [ $? -eq 0 ]; then
-        					# Extract the hashed password from the shadow file
-        					pass=$(echo "$pass_line" | awk -F ":" '{print $2}')  
-                				newline="${mail_account}:{SHA512-CRYPT}$pass:${new_user}:mail::/home/${new_user}:0"
-                				newline2="ACCOUNT='${mail_account}' ALIAS='' AUTOREPLY='no' FWD='' FWD_ONLY='' MD5='{SHA512-CRYPT}$pass' QUOTA='unlimited' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$date'"
-                				escaped=$(printf '%s\n' "$newline" | sed -e 's/[\/&]/\\&/g')
-                				escaped2=$(printf '%s\n' "$newline2" | sed -e 's/[\/&]/\\&/g')
-                				sed -i "s/^${mail_account}:.*/$escaped/g" /home/${new_user}/conf/mail/${folder}/passwd
-                				sed -i "s/^ACCOUNT='${mail_account}.*/$escaped2/g" /usr/local/hestia/data/users/${new_user}/mail/${folder}.conf
-    					else
-        					echo "Warning: Password for $mail_account@$folder not found in shadow file."
-    					fi
+					pass_line=$(grep "^$mail_account:" $password_file)
+					if [ $? -eq 0 ]; then
+						# Extract the hashed password from the shadow file
+						pass=$(echo "$pass_line" | awk -F ":" '{print $2}')
+						newline="${mail_account}:{SHA512-CRYPT}$pass:${new_user}:mail::/home/${new_user}:0"
+						newline2="ACCOUNT='${mail_account}' ALIAS='' AUTOREPLY='no' FWD='' FWD_ONLY='' MD5='{SHA512-CRYPT}$pass' QUOTA='unlimited' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$date'"
+						escaped=$(printf '%s\n' "$newline" | sed -e 's/[\/&]/\\&/g')
+						escaped2=$(printf '%s\n' "$newline2" | sed -e 's/[\/&]/\\&/g')
+						sed -i "s/^${mail_account}:.*/$escaped/g" /home/${new_user}/conf/mail/${folder}/passwd
+						sed -i "s/^ACCOUNT='${mail_account}.*/$escaped2/g" /usr/local/hestia/data/users/${new_user}/mail/${folder}.conf
+					else
+						echo "Warning: Password for $mail_account@$folder not found in shadow file."
+					fi
 				else
-    					echo "Warning: Shadow file for $folder not found."
+					echo "Warning: Shadow file for $folder not found."
 				fi
 			done
 			cd ..
@@ -369,23 +369,22 @@ cd "$CRON_DIR"
 
 CRON_FILE="${new_user}"
 if [ -f "$CRON_FILE" ] && [ -s "$CRON_FILE" ]; then
-    while IFS= read -r cron_job || [ -n "$cron_job" ]; do
-        [[ "$cron_job" =~ ^(#.*|\s*|MAILTO=.*|SHELL=.*)$ ]] && continue
-        
-        min=$(echo "$cron_job" | awk '{print $1}')
-        hour=$(echo "$cron_job" | awk '{print $2}')
-        day=$(echo "$cron_job" | awk '{print $3}')
-        month=$(echo "$cron_job" | awk '{print $4}')
-        dow=$(echo "$cron_job" | awk '{print $5}')
-        cmd=$(echo "$cron_job" | awk '{for (i=6; i<=NF; i++) printf $i " "; print ""}')
+	while IFS= read -r cron_job || [ -n "$cron_job" ]; do
+		[[ "$cron_job" =~ ^(#.*|\s*|MAILTO=.*|SHELL=.*)$ ]] && continue
 
-        $BIN/v-add-cron-job $new_user "$min" "$hour" "$day" "$month" "$dow" "$cmd"
-    done < "$CRON_FILE"
-    echo "Cron jobs restored for user $new_user."
+		min=$(echo "$cron_job" | awk '{print $1}')
+		hour=$(echo "$cron_job" | awk '{print $2}')
+		day=$(echo "$cron_job" | awk '{print $3}')
+		month=$(echo "$cron_job" | awk '{print $4}')
+		dow=$(echo "$cron_job" | awk '{print $5}')
+		cmd=$(echo "$cron_job" | awk '{for (i=6; i<=NF; i++) printf $i " "; print ""}')
+
+		$BIN/v-add-cron-job $new_user "$min" "$hour" "$day" "$month" "$dow" "$cmd"
+	done < "$CRON_FILE"
+	echo "Cron jobs restored for user $new_user."
 else
-    echo "No cron jobs file found or it is empty for user $new_user."
+	echo "No cron jobs file found or it is empty for user $new_user."
 fi
-
 
 rm -rf "$tmpdir"
 

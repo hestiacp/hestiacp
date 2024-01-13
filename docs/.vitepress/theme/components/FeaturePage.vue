@@ -11,7 +11,6 @@
 
 .FeaturePage :deep(.container) {
 	display: flex;
-	flex-direction: column;
 	margin: 0 auto;
 	max-width: 1152px;
 }

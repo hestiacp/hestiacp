@@ -25,7 +25,7 @@
 			<div class="u-side-by-side-tablet u-mb20">
 				<h1><?= _("Add Cron Job") ?></h1>
 				<p>
-					<?= _('System time') ?>:
+					<?= _("System time") ?>:
 					<time datetime="<?= date("c", $current_timestamp) ?>" class="u-text-bold">
 						<?= date("d M Y, H:i", $current_timestamp) ?>
 					</time>

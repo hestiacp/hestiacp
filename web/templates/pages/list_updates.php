@@ -30,7 +30,7 @@
 
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
-			<div class="units-table-cell"><?= _("Package Names") ?></div>
+			<div class="units-table-cell"><?= _("Package Name") ?></div>
 			<div class="units-table-cell"><?= _("Description") ?></div>
 			<div class="units-table-cell u-text-center"><?= _("Version") ?></div>
 			<div class="units-table-cell u-text-center"><?= _("Status") ?></div>

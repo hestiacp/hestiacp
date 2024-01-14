@@ -21,6 +21,9 @@ name=$5
 if [ -n "$6" ]; then
 	name="$name $6"
 fi
+
+FROM_V_ADD_USER=true
+
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf

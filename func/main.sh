@@ -748,8 +748,12 @@ is_user_format_valid() {
 	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
 	fi
-	if ! [[ "$1" =~ ^[a-zA-Z]+ ]]; then
-		check_result "$E_INVALID" "invalid $2 format :: $1"
+
+	# Only for new users
+	if [[ "$FROM_V_ADD_USER" == "true" ]]; then
+		if ! [[ "$1" =~ ^[a-zA-Z][-|.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
 	fi
 }
 

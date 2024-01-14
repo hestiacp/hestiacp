@@ -390,6 +390,12 @@ function check_ip_not_banned(){
 	assert_output --partial 'Error: invalid user format'
 }
 
+@test "User: Add new user Failed 5" {
+	run v-add-user '1aap'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
 @test "User: Add new user Success 1" {
 	run v-add-user 'jaap01'  $user $user@hestiacp2.com default "Super Test"
 	assert_success

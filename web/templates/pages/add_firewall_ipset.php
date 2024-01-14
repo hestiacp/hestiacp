@@ -73,7 +73,7 @@
 			</div>
 			<div class="u-mb10">
 				<label for="v_datasource" class="form-label">
-					<?= _("Data Source") ?> <span class="optional">(<?= _("url, script or file") ?>)</span>
+					<?= _("Data Source") ?> <span class="optional">(<?= _("URL, script or file") ?>)</span>
 				</label>
 				<div class="u-pos-relative">
 					<select

@@ -194,7 +194,7 @@ if [ -n "$PROXY_SYSTEM" ]; then
 	PROXY_EXT="$proxy_ext"
 	if [ -z "$proxy_ext" ]; then
 		# Code
-		PROXY_EXT="css,htm,html,js,json,xml"
+		PROXY_EXT="css,htm,html,js,mjs,json,xml"
 		# Image (from https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types)
 		PROXY_EXT="$PROXY_EXT,apng,avif,bmp,cur,gif,ico,jfif,jpg,jpeg,pjp,pjpeg,png,svg,tif,tiff,webp"
 		# Audio from (https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Audio_codecs)

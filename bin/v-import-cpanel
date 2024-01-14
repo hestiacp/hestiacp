@@ -221,6 +221,7 @@ function get_domain_path() {
 					echo -en "-- $sync_count restored files\r"
 				done
 			chown $new_user:$new_user -R /home/$new_user/web/$cp_domain/public_html
+			chown $new_user:www-data /home/$new_user/web/$cp_domain/public_html
 			chmod 751 /home/$new_user/web/$cp_domain/public_html
 		fi
 	done
@@ -249,27 +250,39 @@ rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/$new_user/web
 	done
 
 chown $new_user:$new_user -R /home/$new_user/web/$main_domain1/public_html
+chown $new_user:www-data /home/$new_user/web/$main_domain1/public_html
 chmod 751 /home/$new_user/web/$main_domain1/public_html
 
 ####### Set Domain PHP version
 PHP_VERSION_LINE=$(grep -r "phpversion:" userdata/$main_domain1)
 CPANEL_PHP_VERSION=${PHP_VERSION_LINE#*: }
-CPANEL_PHP_VERSION=$(echo $CPANEL_PHP_VERSION | grep -oP '(?<=php)\d+')
-HESTIA_PHP_VERSION="PHP-${CPANEL_PHP_VERSION:0:1}_${CPANEL_PHP_VERSION:1}"
+if [ -n "$CPANEL_PHP_VERSION" ]; then
+	CPANEL_PHP_VERSION=$(echo $CPANEL_PHP_VERSION | grep -oP '(?<=php)\d+')
+	HESTIA_PHP_VERSION="PHP-${CPANEL_PHP_VERSION:0:1}_${CPANEL_PHP_VERSION:1}"
 
-if $BIN/v-list-web-templates-backend | grep -qw "$HESTIA_PHP_VERSION"; then
-	echo "Setting PHP version to $HESTIA_PHP_VERSION for $main_domain1 under user $new_user"
-	$BIN/v-change-web-domain-backend-tpl $new_user $main_domain1 $HESTIA_PHP_VERSION
-	if [ $? -ne 0 ]; then
-		echo "Failed to set PHP version for $main_domain1"
-		exit 1
+	if $BIN/v-list-web-templates-backend | grep -qw "$HESTIA_PHP_VERSION"; then
+		echo "Setting PHP version to $HESTIA_PHP_VERSION for $main_domain1 under user $new_user"
+		$BIN/v-change-web-domain-backend-tpl $new_user $main_domain1 $HESTIA_PHP_VERSION
+		if [ $? -ne 0 ]; then
+			tput setaf 1
+			echo "ERROR!! Failed to set same PHP version for $main_domain1 setting default, please check this to avoid errors."
+			tput sgr0
+		else
+			echo "PHP version for $main_domain1 set to $HESTIA_PHP_VERSION"
+		fi
 	else
-		echo "PHP version for $main_domain1 set to $HESTIA_PHP_VERSION"
+		tput setaf 1
+		echo "PHP version $HESTIA_PHP_VERSION is not installed on HestiaCP."
+		echo "Please install and set it to avoid errors in website."
+		echo "The restoration will continue but the website may not work as expected"
+		tput sgr0
 	fi
 else
-	echo "PHP version $HESTIA_PHP_VERSION is not installed on HestiaCP."
-	echo "Please install it before trying to set it for a domain."
-	exit 1
+	tput setaf 1
+	echo "Unable to detect PHP version used on old server"
+	echo "Please check you old PHP version and set the PHP version in domain settings"
+	echo "The restoration will continue but the website may not work as expected"
+	tput sgr0
 fi
 
 ##################

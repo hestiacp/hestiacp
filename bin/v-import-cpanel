@@ -221,6 +221,7 @@ function get_domain_path() {
 					echo -en "-- $sync_count restored files\r"
 				done
 			chown $new_user:$new_user -R /home/$new_user/web/$cp_domain/public_html
+			chown $new_user:www-data /home/$new_user/web/$cp_domain/public_html
 			chmod 751 /home/$new_user/web/$cp_domain/public_html
 		fi
 	done

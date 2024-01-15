@@ -59,7 +59,7 @@
 				<input type="text" class="form-control" name="v_backups" id="v_backups" value="<?= htmlentities(trim($v_backups, "'")) ?>">
 			</div>
 			<div class="u-mb10">
-				<label for="v_backups" class="form-label"><?= _("Incremental Backups") ?></label>
+				<label for="v_backups_incremental" class="form-label"><?= _("Incremental Backups") ?></label>
 				<select class="form-select" name="v_backups_incremental" id="v_backups_incremental">
 					<option value="no"><?=_('Disabled')?></option>
 					<option value="yes" <?php if ('yes' == trim($v_backups_incremental, "''")): ?>

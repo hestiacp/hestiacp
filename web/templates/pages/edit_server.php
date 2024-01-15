@@ -907,13 +907,13 @@
 					</div>
 				</div>
 			</details>
-			<details class="collapse u-mb10">
-				<summary class="collapse-header">
-					<i class="fas fa-vault u-mr10"></i><?= _("Incremental Backups") ?>
+			<details class="box-collapse u-mb10">
+				<summary class="box-collapse-header">
+					<i class="fas fa-arrows-rotate u-mr10"></i><?= _("Incremntal Backups") ?>
 				</summary>
-				<div class="collapse-content">
+				<div class="box-collapse-content">
 					<div class="u-mb10">
-						<label for="v_backup" class="form-label">
+						<label for="v_backup_incremental" class="form-label">
 							<?= _("Enable incremental backup") ?>
 						</label>
 						<select class="form-select" name="v_backup_incremental" id="v_backup_incremental" x-model="incrementalBackups">

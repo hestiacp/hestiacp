@@ -51,6 +51,7 @@ if [ -d "/home/$user" ]; then
 	chown root:root /home/$user
 fi
 
+# Prevent from enabling for users hen rssh or nologin is enabled
 user_str=$(grep "^$user:" /etc/passwd | egrep "rssh|nologin")
 if [ -n "$user_str" ]; then
 	exit

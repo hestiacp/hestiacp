@@ -51,6 +51,11 @@ if [ -d "/home/$user" ]; then
 	chown root:root /home/$user
 fi
 
+user_str=$(grep "^$user:" /etc/passwd | egrep "rssh|nologin")
+if [ -n "$user_str" ]; then
+	exit
+fi
+
 add_chroot_jail "$user"
 
 # Add user to the ssh-jailed group to allow jailed ssh

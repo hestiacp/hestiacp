@@ -62,7 +62,7 @@
 					<div class="units-table-row js-unit">
 						<div class="units-table-cell">
 						</div>
-						<div class="units-table-cell units-table-heading-cell u-text-boldl">
+						<div class="units-table-cell units-table-heading-cell u-text-bold">
 								<b><a href="/list/backup/incremental/?snapshot=<?= htmlentities($_GET["snapshot"]) ?>&browse=yes&folder=<?=htmlentities($files[0]['path'])?>/../&token=<?=$_SESSION["token"]?>"><i class="fas fa-folder icon-dim u-mr5"></i>..</a></b>
 						</div>
 						<div class="units-table-cell">

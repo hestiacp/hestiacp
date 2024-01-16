@@ -32,7 +32,7 @@ is_format_valid 'user' 'shell shell_jail_enabled'
 is_object_valid 'user' 'USER' "$user"
 is_object_unsuspended 'user' 'USER' "$user"
 
-if [[ "$shell" =~ nologin ]] || [[ "$shell" =~ rssh ]] &&  [[ "$shell_jail_enabled" =~ yes ]]; then
+if [[ "$shell" =~ nologin ]] || [[ "$shell" =~ rssh ]] && [[ "$shell_jail_enabled" =~ yes ]]; then
 	check_result "$E_INVALID" "nologin and rssh can't be jailed"
 fi
 

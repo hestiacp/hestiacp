@@ -384,6 +384,30 @@ function check_ip_not_banned(){
 	assert_output --partial 'Error: invalid user format'
 }
 
+@test "User: Add new user Failed 4" {
+	run v-add-user '1234'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+@test "User: Add new user Failed 5" {
+	run v-add-user '1aap'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
+@test "User: Add new user Success 1" {
+	run v-add-user 'jaap01'  $user $user@hestiacp2.com default "Super Test"
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 1 Delete" {
+	run v-delete-user jaap01
+	assert_success
+	refute_output
+}
+
 @test "User: Change user password" {
     run v-change-user-password "$user" "$userpass2"
     assert_success
@@ -1644,6 +1668,19 @@ function check_ip_not_banned(){
 	refute_output
 }
 
+@test "MAIL: Add account 5" {
+		run v-add-mail-account $user $domain 01 "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "01@$domain"
+		refute_output
+}
+
+@test "MAIL: Add account 6" {
+		run v-add-mail-account $user $domain "0aa" "$userpass2"
+		assert_success
+		assert_file_contains /etc/exim4/domains/$domain/limits "0aa@$domain"
+		refute_output
+}
 
 @test "MAIL: Add account alias Invalid length" {
 	run v-add-mail-account-alias $user $domain test 'hestiacp-realy-rocks-but-i-want-to-have-feature-xyz-and-i-want-it-now'
@@ -1854,6 +1891,7 @@ function check_ip_not_banned(){
     # validate_database mysql database_name database_user password
     validate_database mysql $database $dbuser 1234
 }
+
 @test "MYSQL: Add Database (Duplicate)" {
     run v-add-database $user database dbuser 1234 mysql
     assert_failure $E_EXISTS

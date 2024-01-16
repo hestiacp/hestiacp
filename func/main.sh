@@ -704,7 +704,30 @@ sync_cron_jobs() {
 	chmod 600 $crontab
 }
 
-# User format validator
+# Validates Local part email and mail alias
+is_localpart_format_valid() {
+	if [ ${#1} -eq 1 ]; then
+		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
+	else
+		if [ -n "$3" ]; then
+			maxlenght=$(($3 - 2))
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,$maxlenght}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		else
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		fi
+	fi
+	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Username / ftp username format validator
 is_user_format_valid() {
 	if [ ${#1} -eq 1 ]; then
 		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
@@ -724,6 +747,13 @@ is_user_format_valid() {
 	fi
 	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Only for new users
+	if [[ "$FROM_V_ADD_USER" == "true" ]]; then
+		if ! [[ "$1" =~ ^[a-zA-Z][-|.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
 	fi
 }
 
@@ -1185,7 +1215,7 @@ is_format_valid() {
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;
-				account) is_user_format_valid "$arg" "$arg_name" '64' ;;
+				account) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				action) is_fw_action_format_valid "$arg" ;;
 				active) is_boolean_format_valid "$arg" 'active' ;;
 				aliases) is_alias_format_valid "$arg" ;;
@@ -1226,7 +1256,7 @@ is_format_valid() {
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
-				malias) is_user_format_valid "$arg" "$arg_name" '64' ;;
+				malias) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;
 				month) is_cron_format_valid "$arg" $arg_name ;;

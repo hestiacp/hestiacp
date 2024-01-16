@@ -45,15 +45,15 @@ user_shell_rssh_nologin=$(grep "^$user:" /etc/passwd | egrep "rssh|nologin")
 if [ -z "$user_shell_rssh_nologin" ]; then
 	# chown permissions back to user:user
 	if [ -d "/home/$user" ]; then
-		chown $user:$user /home/$user
+		chown "$user":"$user" "/home/$user"
 	fi
 
 	# Deleting chroot jail for SSH
-	delete_chroot_jail $user
+	delete_chroot_jail "$user"
 fi
 
 # Deleting user from groups
-gpasswd -d $user ssh-jailed > /dev/null 2>&1
+gpasswd -d "$user" ssh-jailed > /dev/null 2>&1
 
 #----------------------------------------------------------#
 #                       Hestia                             #

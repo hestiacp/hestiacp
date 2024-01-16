@@ -126,8 +126,10 @@ rebuild_user_conf() {
 	chown root:root $HOMEDIR/$user/conf
 
 	$BIN/v-add-user-sftp-jail "$user"
-
-	$BIN/v-add-user-ssh-jail "$user"
+	# Check if SHELL_JAIL_ENABLED
+	if [ "$SHELL_JAIL_ENABLED" == "yes" ]; then
+		$BIN/v-add-user-ssh-jail "$user"
+	fi
 
 	# Update disk pipe
 	sed -i "/ $user$/d" $HESTIA/data/queue/disk.pipe

@@ -1,6 +1,6 @@
 		</main>
 		<?php require $_SERVER["HESTIA"] . "/web/templates/includes/app-footer.php"; ?>
-	</div>
+	</div> <?php // Closes `<div class="app">` in header.php ?>
 <?php if (
 	$_SESSION["userContext"] === "admin" &&
 	$_SESSION["POLICY_SYSTEM_HIDE_SERVICES"] !== "yes" &&

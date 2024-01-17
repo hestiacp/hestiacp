@@ -64,3 +64,4 @@ if (!empty($_POST["user"]) && !empty($_POST["twofa"])) {
 
 require_once "../templates/header.php";
 require_once "../templates/pages/login/reset2fa.php";
+require_once "../templates/includes/login-footer.php";

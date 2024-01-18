@@ -31,16 +31,9 @@ if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
 	echo "rsync not installed, try install it"
 	echo "This script need: rsync, file"
 	echo "#######################################"
-	if [ -e /etc/redhat-release ]; then
-		echo "Run: yum install rsync file"
-	else
-		echo "Run: apt-get install rsync file"
-	fi
+    echo "Run: apt-get install rsync file"
 	exit 3
 fi
-# Default settings
-# Put this to 0 if you want use bash -x to debug it
-debug=1
 
 if [ -f "$1" ]; then
 	cpanel_backup="$1"
@@ -84,13 +77,10 @@ fi
 
 cd $tmpdir/*
 
-echo "Get prefix..."
-user_prefix=$(cat meta/dbprefix)
-
 main_dir=$(pwd)
 echo "Access tmp directory $main_dir"
 dbprefix=$(cat meta/dbprefix)
-if [ $dbprefix = 1 ]; then
+if [ $dbprefix == 1 ]; then
 	echo "Error 255 - I dont like your prefix, I dont want do this job"
 	exit 255
 fi
@@ -138,17 +128,12 @@ tput sgr0
 sed -i 's/\\//g' mysql.sql
 sed -i "s/\`/'/g" mysql.sql
 
-grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
-# User and database
-grep "GRANT" mysql.sql | grep -v "USAGE ON" > u_db
-cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq > uni_u_db
-
 ## User / Password
 grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
 # User and database
 grep "GRANT" mysql.sql | grep -v "USAGE ON" > u_db
 cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq > uni_u_db
-sed -i "s/$user_prefix //g" user_password_db
+sed -i "/$new_user /d" user_password_db
 # Get database list
 db_list=$(grep -m 1 Database: mysql/*.create | awk '{ print  $5 }')
 mysql -e "SHOW DATABASES" > server_dbs
@@ -173,7 +158,7 @@ cat uni_u_db | while read db userdb; do
 		# if you use default user in your config files to connect with database
 		# you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
 		# this will cause database duplication in db.conf and will interfer with hestiacp backups
-		if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ] && [ "$userdb" != "$sk_real_cp_user" ]; then
+		if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ]; then
 			echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$new_user/db.conf
 		fi
 	done
@@ -410,6 +395,9 @@ fi
 rm -rf "$tmpdir"
 
 echo "##############################"
+echo "cPanel Backup restored"
+echo "Review your content and report any fail"
+exit
 echo "cPanel Backup restored"
 echo "Review your content and report any fail"
 exit

@@ -153,7 +153,7 @@ sed -i "s/$user_prefix //g" user_password_db
 db_list=$(grep -m 1 Database: mysql/*.create | awk '{ print  $5 }')
 mysql -e "SHOW DATABASES" > server_dbs
 for db in $db_list; do
-	grep -w db server_dbs
+	grep -w $db server_dbs
 	if [ $? == "1" ]; then
 		echo " Create and restore ${db} "
 		mysql < mysql/${db}.create

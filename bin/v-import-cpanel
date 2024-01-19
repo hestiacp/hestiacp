@@ -31,16 +31,9 @@ if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
 	echo "rsync not installed, try install it"
 	echo "This script need: rsync, file"
 	echo "#######################################"
-	if [ -e /etc/redhat-release ]; then
-		echo "Run: yum install rsync file"
-	else
-		echo "Run: apt-get install rsync file"
-	fi
+    echo "Run: apt-get install rsync file"
 	exit 3
 fi
-# Default settings
-# Put this to 0 if you want use bash -x to debug it
-debug=1
 
 if [ -f "$1" ]; then
 	cpanel_backup="$1"
@@ -84,13 +77,10 @@ fi
 
 cd $tmpdir/*
 
-echo "Get prefix..."
-user_prefix=$(cat meta/dbprefix)
-
 main_dir=$(pwd)
 echo "Access tmp directory $main_dir"
 dbprefix=$(cat meta/dbprefix)
-if [ $dbprefix = 1 ]; then
+if [ $dbprefix == 1 ]; then
 	echo "Error 255 - I dont like your prefix, I dont want do this job"
 	exit 255
 fi
@@ -138,26 +128,22 @@ tput sgr0
 sed -i 's/\\//g' mysql.sql
 sed -i "s/\`/'/g" mysql.sql
 
-grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
-# User and database
-grep "GRANT" mysql.sql | grep -v "USAGE ON" > u_db
-cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq > uni_u_db
-
 ## User / Password
 grep "GRANT USAGE ON" mysql.sql | awk -F "'" '{ print $2, $6 }' | uniq > user_password_db
 # User and database
 grep "GRANT" mysql.sql | grep -v "USAGE ON" > u_db
 cat u_db | awk -F "'" '{ print $2, $4 }' | sort | uniq > uni_u_db
-sed -i "s/$user_prefix //g" user_password_db
+sed -i "/$new_user /d" user_password_db
 # Get database list
 db_list=$(grep -m 1 Database: mysql/*.create | awk '{ print  $5 }')
+# Fix mysql 8 to mariadb problems here:
+sed -i "s/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g" mysql/*
 mysql -e "SHOW DATABASES" > server_dbs
 for db in $db_list; do
-	grep -w db server_dbs
+	grep -w $db server_dbs
 	if [ $? == "1" ]; then
 		echo " Create and restore ${db} "
 		mysql < mysql/${db}.create
-		sed -i "s/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g" mysql/${db}.sql
 		mysql ${db} < mysql/${db}.sql
 	else
 		echo "Error: Cant restore database $db alredy exists in mysql server"
@@ -173,7 +159,7 @@ cat uni_u_db | while read db userdb; do
 		# if you use default user in your config files to connect with database
 		# you will need remove && [ "$userdb" != "$sk_cp_user" ] to restore main user, but
 		# this will cause database duplication in db.conf and will interfer with hestiacp backups
-		if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ] && [ "$userdb" != "$sk_real_cp_user" ]; then
+		if [ "$userdb" == "$user" ] && [ "$userdb" != "$new_user" ]; then
 			echo "DB='$db' DBUSER='$userdb' MD5='$end_user_pass' HOST='localhost' TYPE='mysql' CHARSET='UTF8' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$data'" >> /usr/local/hestia/data/users/$new_user/db.conf
 		fi
 	done
@@ -192,11 +178,12 @@ echo "Converting addons domains, subdomains and some other fun"
 cp sds hst_sds
 cp sds2 hst_sds2
 sed -i 's/_/./g' hst_sds
-cat addons | while read ddon_domain addon_sub; do
+cat addons | while read addon_domain addon_sub; do
 	echo "Converting default subdomain: $addon_sub in domain: $addon_domain"
 	sed -i -e "s/$addon_sub/$addon_domain/g" hst_sds
 	sed -i -e "s/$addon_sub/$addon_domain/g" hst_sds2
 	mv userdata/$addon_sub userdata/${addon_domain}
+	mv apache_tls/$addon_sub apache_tls/${addon_domain}
 done
 sed -i 's/public_html/public@html/g; s/_/./g; s/public@html/public_html/g; s/=/ /g' hst_sds2
 
@@ -285,6 +272,46 @@ else
 	tput sgr0
 fi
 
+# Parked domains
+if [ -s pds ]; then
+    cat pds | while read parked
+    do
+        echo "Procesing parked domain: $parked"
+        parkedfor=$(cat userdata/cache.json |  jq --arg domain "$parked" '.[$domain][3]' |sed 's/"//g')
+        $BIN/v-add-web-domain-alias $new_user $parkedfor $parked
+    done
+else
+
+    echo "No parked domains found"
+
+fi
+
+# Try SSL
+tput setaf 1
+    echo "Copy SSL files"
+tput sgr0
+for ssl_domain in apache_tls/*
+do
+    domain=$(echo $ssl_domain | awk -F '/' '{ print $2 }')
+    mkdir -p apache_tls/ssl/$domain
+    awk -v RS="-----BEGIN CERTIFICATE-----" -v ssl_domain="$domain"  '
+        NR==1 {
+            cert_file = "apache_tls/ssl/" ssl_domain "/" ssl_domain ".key";
+            print $0 > cert_file;
+        }
+        NR==2 {
+            block_count++;
+            cert_file = "apache_tls/ssl/" ssl_domain "/" ssl_domain ".crt";
+            print "-----BEGIN CERTIFICATE-----" $0 > cert_file;
+        } 
+        NR>2 {
+            block_count++;
+            cert_file = "apache_tls/ssl/" ssl_domain "/" ssl_domain ".ca";
+            print "-----BEGIN CERTIFICATE-----" $0 > cert_file;
+        } ' $ssl_domain
+        $BIN/v-add-web-domain-ssl $new_user $domain apache_tls/ssl/${domain}/
+done
+
 ##################
 # mail
 tput setaf 2
@@ -297,6 +324,13 @@ for folder in *; do
 	if [ -d "$folder" ]; then
 		if [[ "$folder" != "cur" && "$folder" != "new" && "$folder" != "tmp" ]]; then
 			echo "Domain: $folder"
+            # This is needed as parked domains have emails but not added 
+            if ! $BIN/v-list-mail-domains $new_user plain | awk '{ print $1 }' |grep "^${folder}$"; then
+                tput setaf 3
+	        	echo "Found Parked domain $folder  not added in hestia mail, adding..."
+	    	    tput sgr0
+	            $BIN/v-add-mail-domain $new_user $folder	    
+	        fi
 			cd $folder
 
 			mail_account_count=$(find . -maxdepth 1 -mindepth 1 -type d \( ! -name cur ! -name new ! -name tmp \) | wc -l)
@@ -384,10 +418,8 @@ tput setaf 2
 echo ""
 echo "Start Restoring Cron Jobs for user $new_user"
 tput sgr0
-
 CRON_DIR="$main_dir/cron"
 cd "$CRON_DIR"
-
 CRON_FILE="${new_user}"
 if [ -f "$CRON_FILE" ] && [ -s "$CRON_FILE" ]; then
 	while IFS= read -r cron_job || [ -n "$cron_job" ]; do
@@ -399,7 +431,34 @@ if [ -f "$CRON_FILE" ] && [ -s "$CRON_FILE" ]; then
 		month=$(echo "$cron_job" | awk '{print $4}')
 		dow=$(echo "$cron_job" | awk '{print $5}')
 		cmd=$(echo "$cron_job" | awk '{for (i=6; i<=NF; i++) printf $i " "; print ""}')
-
+		#This try fix PHP crons converting cpanel paths to hestia paths
+        if [[ $cmd =~ "ea-php" ]]; then
+            EAPHP=$(echo $cmd | awk '{ print $1 }')
+            # /opt/cpanel/ea-php70/root/bin/php
+            # /usr/local/bin/ea-php70
+            # default hestia /usr/bin/php
+            DEFAULT_PHP="/usr/bin/php"
+            vPHP="ea-php71 ea-php72 ea-php73 ea-php74 ea-php80 ea-php81 ea-php82 ea-php83"
+            EAOPT="opt/cpanel/ea-php"
+            EABIN="usr/local/bin/ea"
+            if [[ $EAPHP =~ $EAOPT ]]; then
+                EAVERSION=$( echo $EAPHP |awk -F '/' '{ print $4}')
+            elif [[ $EAPHP =~ $EABIN ]]; then
+                EAVERSION=$( echo $EAPHP |awk -F '/' '{ print $5}')
+            else
+                echo "Diferent EA Path"
+            fi
+            vPHP=$(echo $EAVERSION | sed "s/ea-php//")
+            N1=${vPHP:0:1}
+            N2=${vPHP:1:1}
+            vPHP=$(echo /usr/bin/php${N1}.${N2})
+            
+            if [ -e $vPHP ]; then
+                cmd=$(echo $cmd | sed "s#$EAPHP#$vPHP#")
+            else
+                cmd=$(echo $cmd | sed "s#$EAPHP#$DEFAULT_PHP#")
+            fi
+        fi
 		$BIN/v-add-cron-job $new_user "$min" "$hour" "$day" "$month" "$dow" "$cmd"
 	done < "$CRON_FILE"
 	echo "Cron jobs restored for user $new_user."

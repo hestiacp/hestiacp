@@ -39,6 +39,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup Node
         uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8 # v4
@@ -48,8 +51,20 @@ jobs:
       - name: Install Node packages
         run: npm ci --ignore-scripts
 
-      - name: Run Prettier
+      - name: Check formatting
         run: npx prettier --check .
+
+      - name: Apply formatting
+        if: github.event_name == 'pull_request'
+        run: npm run format
+
+      - name: Commit formatting changes
+        if: github.event_name == 'pull_request'
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          message: Apply Prettier formatting
+          add: "."
 
   eslint:
     name: ESLint

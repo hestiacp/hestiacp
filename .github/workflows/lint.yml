@@ -51,9 +51,6 @@ jobs:
       - name: Install Node packages
         run: npm ci --ignore-scripts
 
-      - name: Check formatting
-        run: npx prettier --check .
-
       - name: Apply formatting
         if: github.event_name == 'pull_request'
         run: npm run format
@@ -65,8 +62,10 @@ jobs:
           default_author: github_actions
           message: Apply Prettier formatting
           add: "."
+
       - name: Check formatting
         run: npx prettier --check .
+        
   eslint:
     name: ESLint
     runs-on: ubuntu-latest

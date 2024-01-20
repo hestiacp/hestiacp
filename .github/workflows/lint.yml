@@ -65,7 +65,8 @@ jobs:
           default_author: github_actions
           message: Apply Prettier formatting
           add: "."
-
+      - name: Check formatting
+        run: npx prettier --check .
   eslint:
     name: ESLint
     runs-on: ubuntu-latest

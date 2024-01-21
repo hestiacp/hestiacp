@@ -471,7 +471,7 @@ if [ -n "$conflicts" ] && [ -z "$force" ]; then
 	echo
 	echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
 	echo
-	read -p 'Would you like to remove the conflicting packages? [y/n] ' answer
+	read -p 'Would you like to remove the conflicting packages? [y/N] ' answer
 	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
 		apt-get -qq purge $conflicts -y
 		check_result $? 'apt-get remove failed'
@@ -668,7 +668,7 @@ echo -e "\n"
 
 # Asking for confirmation to proceed
 if [ "$interactive" = 'yes' ]; then
-	read -p 'Would you like to continue with the installation? [Y/N]: ' answer
+	read -p 'Would you like to continue with the installation? [y/N]: ' answer
 	if [ "$answer" != 'y' ] && [ "$answer" != 'Y' ]; then
 		echo 'Goodbye'
 		exit 1

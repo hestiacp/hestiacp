@@ -186,6 +186,4 @@ apt-get upgrade
 
 
 ## 许可证
-
-
-Hestia控制面板根据[GPL v3]获得许可(https://github.com/hestiacp/hestiacp/blob/release/LICENSE)许可证，并且基于[VestaCP](https://vestacp.com/)项目
+Hestia控制面板根据GPL v3许可证获得许可 [GPL v3](https://github.com/hestiacp/hestiacp/blob/release/LICENSE) 并且基于VestaCP项目。[VestaCP](https://vestacp.com/) project.<br>

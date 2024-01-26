@@ -1,7 +1,7 @@
 /* eslint-env node */
 /* eslint-disable no-console */
 
-// Build JS and CSS using esbuild and PostCSS
+// Build JS and CSS using esbuild and Lightning CSS
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import browserslist from 'browserslist';

@@ -339,6 +339,19 @@
 	text-shadow: 0 1px rgb(0 0 0 / 95%);
 }
 
+/* Clipboard component
+   ========================================================================== */
+
+.clipboard {
+	& .clipboard-input {
+		border-color: #606060;
+	}
+}
+
+.clipboard-button {
+	background-color: #353535;
+}
+
 /* Server summary component
    ========================================================================== */
 
@@ -355,10 +368,10 @@
 	box-shadow: 0 1px 4px rgb(0 0 0 / 35%);
 }
 
-/* Collapse component
+/* Box collapse component
 		========================================================================== */
 
-.collapse-header {
+.box-collapse-header {
 	background: #454545;
 	border-color: #505050;
 	text-shadow: 0 1px rgb(0 0 0 / 40%);
@@ -366,6 +379,13 @@
 		inset 0 0 2px rgb(0 0 0 / 50%),
 		0 2px 6px rgb(0 0 0 / 40%);
 	color: #fff;
+}
+
+/* Collapse component
+   ========================================================================== */
+
+.collapse-header {
+	border-bottom-color: #484848;
 }
 
 /* Units table
@@ -575,10 +595,6 @@
 	color: #a2a2a2;
 }
 
-.section-title {
-	border-bottom-color: #484848;
-}
-
 /* Buttons
    ========================================================================== */
 
@@ -676,8 +692,8 @@
 /* Login
    ========================================================================== */
 
-.body-login,
-.body-reset {
+.page-login,
+.page-reset {
 	background: radial-gradient(circle, rgb(77 77 77 / 100%) 0%, rgb(31 31 31 / 100%) 100%), #303030;
 }
 
@@ -806,6 +822,10 @@
 .app-footer {
 	color: #cdcdcd;
 	border-color: #454545;
+}
+
+.app-footer-link {
+	color: #cdcdcd;
 }
 
 /* Inline alerts

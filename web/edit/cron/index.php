@@ -90,6 +90,11 @@ if (!empty($_POST["save"])) {
 	}
 }
 
+// Get current system time
+exec(HESTIA_CMD . "v-get-sys-timezone", $output, $return_var);
+date_default_timezone_set($output[0]);
+$current_timestamp = time();
+
 // Render page
 render_page($user, $TAB, "edit_cron");
 

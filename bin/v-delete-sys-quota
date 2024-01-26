@@ -42,8 +42,8 @@ if [ -n "$(echo $opt | grep $fnd)" ]; then
 fi
 
 # Disabling group and user quota
-if quotaon="$(type -P quotaon 2>/dev/null)" && quotaoff="$(type -P quotaoff 2>/dev/null)"; then
-        if "${quotaon}" -pa | grep " $mnt " | grep 'user\|group' | grep -q 'is on' &>/dev/null; then
+if quotaon="$(type -P quotaon 2> /dev/null)" && quotaoff="$(type -P quotaoff 2> /dev/null)"; then
+	if "${quotaon}" -pa | grep " $mnt " | grep 'user\|group' | grep -q 'is on' &> /dev/null; then
 		"$quotaoff" "$mnt"
 	fi
 fi
@@ -55,10 +55,10 @@ done
 
 # Deleting cron job and forcequotacheck
 if [[ -f "/etc/cron.daily/quotacheck" ]]; then
-        rm -f "/etc/cron.daily/quotacheck"
+	rm -f "/etc/cron.daily/quotacheck"
 fi
 if [[ -f "/forcequotacheck" ]]; then
-        rm -f "/forcequotacheck"
+	rm -f "/forcequotacheck"
 fi
 
 # Updating hestia.conf value

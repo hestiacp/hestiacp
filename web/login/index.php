@@ -454,3 +454,4 @@ if (!empty($_SESSION["login"]["password"])) {
 		($_SESSION["LOGIN_STYLE"] != "old" ? "" : "_a") .
 		".php";
 }
+require_once "../templates/includes/login-footer.php";

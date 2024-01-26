@@ -92,6 +92,14 @@ if (!empty($_POST["ok"])) {
 			$errors[] = _("Nameserver 2");
 		}
 	}
+	if (
+		isset($_POST["v_shell"]) &&
+		isset($_POST["v_shell_jail_enabled"]) &&
+		in_array($_POST["v_shell"], ["nologin", "rssh"]) &&
+		$_POST["v_shell_jail_enabled"] == "yes"
+	) {
+		$_SESSION["error_msg"] = _("Cannot combine nologin and rssh shell with jailed shell.");
+	}
 	if (!empty($errors[0])) {
 		foreach ($errors as $i => $error) {
 			if ($i == 0) {
@@ -109,6 +117,9 @@ if (!empty($_POST["ok"])) {
 		$v_proxy_template = quoteshellarg($_POST["v_proxy_template"]);
 		$v_dns_template = quoteshellarg($_POST["v_dns_template"]);
 		$v_shell = quoteshellarg($_POST["v_shell"]);
+		$v_shell_jail_enabled = quoteshellarg(
+			!empty($_POST["v_shell_jail_enabled"]) ? "yes" : "no",
+		);
 		$v_web_domains = quoteshellarg($_POST["v_web_domains"]);
 		$v_web_aliases = quoteshellarg($_POST["v_web_aliases"]);
 		$v_dns_domains = quoteshellarg($_POST["v_dns_domains"]);
@@ -176,6 +187,7 @@ if (!empty($_POST["ok"])) {
 			$pkg .= "RATE_LIMIT=" . $v_ratelimit . "\n";
 			$pkg .= "NS=" . $v_ns . "\n";
 			$pkg .= "SHELL=" . $v_shell . "\n";
+			$pkg .= "SHELL_JAIL_ENABLED=" . $v_shell_jail_enabled . "\n";
 			$pkg .= "BACKUPS=" . $v_backups . "\n";
 			$pkg .= "TIME=" . $v_time . "\n";
 			$pkg .= "DATE=" . $v_date . "\n";
@@ -257,6 +269,9 @@ if (empty($v_dns_template)) {
 }
 if (empty($v_shell)) {
 	$v_shell = "nologin";
+}
+if (empty($v_shell_jail_enabled)) {
+	$v_shell_jail_enabled = "no";
 }
 if (empty($v_web_domains)) {
 	$v_web_domains = "'1'";

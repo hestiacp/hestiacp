@@ -23,4 +23,9 @@ if ($return_var == 0) {
 		echo htmlentities($file) . "\n";
 	}
 }
-echo "</pre>\n</body>\n</html>\n";
+
+echo "</pre>\n</div>\n</main>\n";
+include $_SERVER["DOCUMENT_ROOT"] . "/templates/includes/app-footer.php";
+echo "</div>\n";
+include $_SERVER["DOCUMENT_ROOT"] . "/templates/includes/jump-to-top-link.php";
+echo "</body>\n</html>\n";

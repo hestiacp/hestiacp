@@ -116,7 +116,7 @@ if [ "$UPDATE" == "no" ]; then
 	ln -s $RC_CONFIG_DIR/plugins/zipdownload/config.inc.php ./plugins/zipdownload/config.inc.php
 
 	# Set up correct permissions roundcube
-	chown -R root:www-data $RC_CONFIG_DIR/
+	chown -R root:hestiamail $RC_CONFIG_DIR/
 	chmod 751 -R $RC_CONFIG_DIR
 	chmod 644 $RC_CONFIG_DIR/config.inc.php
 	chmod 644 $RC_CONFIG_DIR/plugins/password/config.inc.php
@@ -127,13 +127,13 @@ if [ "$UPDATE" == "no" ]; then
 	echo "User-agent: *" > /var/lib/roundcube/robots.txt
 	echo "Disallow: /" >> /var/lib/roundcube/robots.txt
 
-	chown -R root:www-data $RC_INSTALL_DIR
+	chown -R root:hestiamail $RC_INSTALL_DIR
 
 	# Log file
 	if [ ! -d $RC_LOG ]; then
 		mkdir $RC_LOG
 	fi
-	chown www-data:www-data $RC_LOG
+	chown hestiamail:hestiamail $RC_LOG
 	chmod 751 $RC_LOG
 
 	if [ ! -z "$(echo "$DB_SYSTEM" | grep -E 'mysql|pgsql')" ]; then
@@ -189,9 +189,10 @@ else
 	$RC_INSTALL_DIR/$RC_EXTRACT/bin/installto.sh -y $RC_INSTALL_DIR > /dev/null 2>&1
 	# Use COMPOSER_ALLOW_SUPERUSER=1 to prevent update.sh script from freezing trying
 	# to execute composer as root to update roundcube dependencies
-	COMPOSER_ALLOW_SUPERUSER=1 $RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
+	export COMPOSER_ALLOW_SUPERUSER=1
+	$RC_INSTALL_DIR/bin/update.sh --version "$version" > /dev/null 2>&1
 	$RC_INSTALL_DIR/bin/indexcontacts.sh > /dev/null 2>&1
-	chown -R root:www-data $RC_INSTALL_DIR
+	chown -R root:hestiamail $RC_INSTALL_DIR
 
 	#clean up the mess
 	if [ -d "$RC_INSTALL_DIR/installer" ]; then

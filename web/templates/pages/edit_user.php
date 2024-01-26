@@ -94,12 +94,7 @@
 				</div>
 			</div>
 			<div id="password-details" class="u-mb20">
-				<p class="u-mb10"><?= _("Your password must have at least") ?>:</p>
-				<ul class="u-list-bulleted u-mb10">
-					<li><?= _("8 characters long") ?></li>
-					<li><?= _("1 uppercase & 1 lowercase character") ?></li>
-					<li><?= _("1 number") ?></li>
-				</ul>
+				<?php require $_SERVER["HESTIA"] . "/web/templates/includes/password-requirements.php"; ?>
 				<?php if ($_SESSION["userContext"] === "admin") { ?>
 					<div class="form-check">
 						<input x-model="loginDisabled" class="form-check-input" type="checkbox" name="v_login_disabled" id="v_login_disabled">
@@ -226,6 +221,12 @@
 							?>
 						</select>
 					</div>
+					<div class="form-check u-mb10">
+						<input class="form-check-input" type="checkbox" name="v_shell_jail_enabled" id="v_shell_jail_enabled" value="yes" <?php if (htmlentities(trim($v_shell_jail_enabled, "'")) == "yes") echo 'checked' ?>>
+						<label for="v_shell_jail_enabled">
+							<?= _("Jail User Shell") ?>
+						</label>
+					</div>
 					<div class="u-mb10">
 						<label for="v_phpcli" class="form-label"><?= _("PHP CLI Version") ?></label>
 						<select class="form-select" name="v_phpcli" id="v_phpcli">
@@ -253,44 +254,7 @@
 						<div class="u-mb5">
 							<input type="text" class="form-control" name="v_ns2" value="<?= htmlentities(trim($v_ns2, "'")) ?>">
 						</div>
-						<?php
-							if ($v_ns3) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns3" value="'.htmlentities(trim($v_ns3, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if ($v_ns4) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns4" value="'.htmlentities(trim($v_ns4, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if ($v_ns5) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns5" value="'.htmlentities(trim($v_ns5, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if ($v_ns6) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns6" value="'.htmlentities(trim($v_ns6, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if ($v_ns7) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns7" value="'.htmlentities(trim($v_ns7, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-							if ($v_ns8) {
-								echo '<div class="u-side-by-side u-mb5">
-									<input type="text" class="form-control" name="v_ns8" value="'.htmlentities(trim($v_ns8, "'")).'">
-									<span class="u-ml10 js-remove-ns"><i class="fas fa-trash icon-dim icon-red"></i></span>
-								</div>';
-							}
-						?>
+						<?php require $_SERVER["HESTIA"] . "/web/templates/includes/extra-ns-fields.php"; ?>
 						<button type="button" class="form-link u-mt20 js-add-ns" <?php if ($v_ns8) echo 'style="display:none;"'; ?>>
 							<?= _("Add Name Server") ?>
 						</button>

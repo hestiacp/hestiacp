@@ -90,7 +90,7 @@
 						</label>
 					</div>
 					<div class="form-check <?php if ($v_blackhole == 'yes') { echo 'u-hidden'; } ?>">
-						<input class="form-check-input" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
+						<input class="form-check-input js-do-not-store-checkbox" type="checkbox" name="v_fwd_only" id="v_fwd_for" <?php if ($v_fwd_only == 'yes') echo 'checked' ?>>
 						<label for="v_fwd_for">
 							<?= _("Do not store forwarded mail") ?>
 						</label>
@@ -99,7 +99,7 @@
 						<label for="v_fwd" class="form-label">
 							<?= _("Forward to") ?> <span class="optional">(<?= _("one or more email addresses") ?>)</span>
 						</label>
-						<textarea class="form-control" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
+						<textarea class="form-control js-forward-to-textarea" name="v_fwd" id="v_fwd" <?php if ($v_blackhole == 'yes') echo "disabled"; ?>><?= htmlentities(trim($v_fwd, "'")) ?></textarea>
 					</div>
 					<div class="form-check u-mb10">
 						<input x-model="hasAutoReply" class="form-check-input" type="checkbox" name="v_autoreply" id="v_autoreply">
@@ -121,86 +121,7 @@
 					</div>
 				</div>
 				<div class="sidebar-right-grid-sidebar">
-					<div class="panel js-mail-info">
-						<h2 class="u-text-H3 u-mb10"><?= _("Common Account Settings") ?></h2>
-						<ul class="values-list u-mb20">
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Username") ?></span>
-								<span class="values-list-value u-overflow"><span class="js-account-output"></span>@<?= htmlentities(trim($v_domain, "'")) ?></span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Password") ?></span>
-								<span class="values-list-value u-overflow"><span class="js-password-output"></span></span>
-							</li>
-							<?php if ($_SESSION["WEBMAIL_SYSTEM"]) { ?>
-								<li class="values-list-item">
-									<span class="values-list-label"><?= _("Webmail") ?></span>
-									<span class="values-list-value"><a href="http://<?= htmlentities($v_webmail_alias) ?>" target="_blank">http://<?= htmlentities($v_webmail_alias) ?></a></span>
-								</li>
-							<?php } ?>
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Hostname") ?></span>
-								<span class="values-list-value">mail.<?= htmlentities($v_domain) ?></span>
-							</li>
-						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("IMAP Settings") ?></h2>
-						<ul class="values-list u-mb20">
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Authentication") ?></span>
-								<span class="values-list-value"><?= _("Normal password") ?></span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
-								<span class="values-list-value"><?= _("Port") ?> 993</span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label">STARTTLS</span>
-								<span class="values-list-value"><?= _("Port") ?> 143</span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("No encryption") ?></span>
-								<span class="values-list-value"><?= _("Port") ?> 143</span>
-							</li>
-						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("POP3 Settings") ?></h2>
-						<ul class="values-list u-mb20">
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Authentication") ?></span>
-								<span class="values-list-value"><?= _("Normal password") ?></span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
-								<span class="values-list-value"><?= _("Port") ?> 995</span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label">STARTTLS</span>
-								<span class="values-list-value"><?= _("Port") ?> 110</span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("No encryption") ?></span>
-								<span class="values-list-value"><?= _("Port") ?> 110</span>
-							</li>
-						</ul>
-						<h2 class="u-text-H3 u-mb10"><?= _("SMTP Settings") ?></h2>
-						<ul class="values-list">
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("Authentication") ?></span>
-								<span class="values-list-value"><?= _("Normal password") ?></span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label">SSL/TLS</span>
-								<span class="values-list-value"><?= _("Port") ?> 465</span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label">STARTTLS</span>
-								<span class="values-list-value"><?= _("Port") ?> 587</span>
-							</li>
-							<li class="values-list-item">
-								<span class="values-list-label"><?= _("No encryption") ?></span>
-								<span class="values-list-value"><?= _("Port") ?> 25</span>
-							</li>
-						</ul>
-					</div>
+					<?php require $_SERVER["HESTIA"] . "/web/templates/includes/email-settings-panel.php"; ?>
 				</div>
 			</div>
 		</div>

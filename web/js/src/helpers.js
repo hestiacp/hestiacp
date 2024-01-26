@@ -43,6 +43,19 @@ export function parseAndSortIpLists(ipListsData) {
 	return ipLists.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+// Determines if the current browser is Desktop Safari
+export function isDesktopSafari() {
+	const userAgent = window.navigator.userAgent;
+	const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+	const isMac = /Macintosh|MacIntel/i.test(window.navigator.platform);
+	return isSafari && isMac;
+}
+
+// Waits for the given number of milliseconds
+export function delay(milliseconds) {
+	return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
 // Posts data to the given URL and returns the response
 export async function post(url, data, headers = {}) {
 	const requestOptions = {

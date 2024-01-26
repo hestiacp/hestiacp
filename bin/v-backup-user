@@ -637,7 +637,7 @@ fi
 
 # User Directories
 if [ "$USER" != '*' ]; then
-	echo -e "\n-- User Dir --" | tee -a $BACKUP/$user.log
+	echo -e "\n-- USER DIRECTORIES --" | tee -a $BACKUP/$user.log
 	mkdir $tmpdir/user_dir
 	cd $HOMEDIR/$user
 

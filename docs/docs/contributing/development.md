@@ -12,73 +12,51 @@ Development builds are unstable. If you encounter a bug please [report it via Gi
 
 These are example instructions for creating a virtual machine running Hestia for development.
 
-These instructions use [Multipass](https://multipass.run/) to create the VM. Feel free to adapt the commands for any virtualization software you prefer.
+These instructions use [Multipass](https://multipass.run/) to create an Ubuntu VM. Feel free to adapt the commands for any virtualization software you prefer.
 
-::: warning
-Sometimes the mapping between the source code directory on your local machine to the directory in the VM can be lost with a "failed to obtain exit status for remote process" error. If this happens simply unmount and remount e.g.
-
-```bash
-multipass unmount hestia-dev
-multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
-```
-
-:::
-
-1. [Install Multipass](https://multipass.run/install) for your OS.
+1. [Install Multipass](https://multipass.run/install) for your OS
 
 1. [Fork Hestia](https://github.com/hestiacp/hestiacp/fork) and clone the repository to your local machine
 
    ```bash
-   git clone https://github.com/YourUsername/hestiacp.git $HOME/projects
+   git clone https://github.com/YourUsername/hestiacp.git ~/projects
    ```
 
-1. Create an Ubuntu VM with at least 2G of memory and 15G of disk space
+1. Create an Ubuntu VM with at least 2GB of memory and 15GB of disk space
+
+   _(if running VM on ARM architecture e.g. Apple M1, use at least 12GB of memory)_
 
    ```bash
-   multipass launch --name hestia-dev --memory 2G --disk 15G
+   multipass launch --name hestia-dev --memory 4G --disk 15G --cpus 4
    ```
 
-1. Map your cloned repository to the VM's home directory
+1. Mount your cloned repository to the VM's home directory
 
    ```bash
-   multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
+   multipass mount ~/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    ```
 
-1. SSH into the VM as root and install some required packages
+1. SSH into the VM as root then install some required packages
 
    ```bash
    multipass exec hestia-dev -- sudo bash
    sudo apt update && sudo apt install -y jq libjq1
    ```
 
-1. Outside of the VM (in a new terminal) ensure [Node.js](https://nodejs.org/)
-   16 or later is installed
-
-   ```bash
-   node --version
-   ```
-
-1. Install dependencies and build the theme files:
-
-   ```bash
-   npm install
-   npm run build
-   ```
-
-1. Back in the VM terminal, navigate to `/src` and build Hestia packages
+1. Navigate to `/src` in the VM then build Hestia packages
 
    ```bash
    cd src
-   ./hst_autocompile.sh --hestia --noinstall --keepbuild '~localsrc'
+   ./hst_autocompile.sh --all --noinstall --keepbuild '~localsrc'
    ```
 
-1. Navigate to `/install` and install Hestia
+1. Navigate to `/install` in the VM then install Hestia with these flags
 
    _(update the [installation flags](../introduction/getting-started#list-of-installation-options) to your liking, note that login credentials are set here)_
 
    ```bash
    cd ../install
-   bash hst-install-ubuntu.sh -D /tmp/hestiacp-src/deb/ --interactive no --email admin@example.com --password Password123 --hostname demo.hestiacp.com -f
+   bash hst-install-ubuntu.sh --hostname demo.hestiacp.com --email admin@example.com --username admin --password Password123 --with-debs /tmp/hestiacp-src/deb/ --interactive no --force
    ```
 
 1. Reboot the VM (and exit SSH session)
@@ -87,7 +65,9 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
    reboot
    ```
 
-1. Find the IP address of the VM
+1. On your local machine, find the IP address of the VM
+
+   _(give the VM time to reboot for the IP to appear)_
 
    ```bash
    multipass list
@@ -97,31 +77,29 @@ multipass mount $HOME/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
 
    _(proceed past any SSL errors you see when loading the page)_
 
-   ```bash
-   e.g. https://192.168.64.15:8083
-   ```
+   e.g. <https://192.168.64.15:8083>
 
 Hestia is now running in a virtual machine. If you'd like to make changes to the source code and test them in your browser, please continue to the next section.
 
+::: warning
+Sometimes (with Multipass) the mapping between the source code directory on your local machine to the directory in the VM can be lost with a "failed to obtain exit status for remote process" error. If this happens simply unmount and remount e.g.
+
+```bash
+multipass unmount hestia-dev
+multipass mount ~/projects/hestiacp hestia-dev:/home/ubuntu/hestiacp
+```
+
+:::
+
 ## Making changes to Hestia
 
-After setting up Hestia in a VM you can now make changes to the source code at `$HOME/projects/hestiacp` on your local machine (outside of the VM) using your editor of choice.
+After setting up Hestia in a development VM you can now make changes to the source code at `~/projects/hestiacp` on your local machine (outside of the VM) using your editor of choice.
 
-The following are example instructions for making a change to Hestia's UI and testing it locally.
+Below are some instructions for making a change to Hestia's UI, running the build script and testing the change locally.
 
-1. At the root of the project on your local machine, ensure the latest packages are installed
+1. On your local machine, make a change to a file that is easy to test
 
-   ```bash
-   npm install
-   ```
-
-1. Make a change to a file that we can later test, then build the UI assets
-
-   _e.g. change the body background color to red in `web/css/src/base.css` then run:_
-
-   ```bash
-   npm run build
-   ```
+   _e.g. change the body background color to red in `web/css/src/base.css`_
 
 1. SSH into the VM as root and navigate to `/src`
 
@@ -136,14 +114,14 @@ The following are example instructions for making a change to Hestia's UI and te
    ./hst_autocompile.sh --hestia --install '~localsrc'
    ```
 
-1. Reload the page in your browser to see your changes
+1. Reload the page in your browser to see the change
+
+Please refer to the [contributing guidelines](https://github.com/hestiacp/hestiacp/blob/main/CONTRIBUTING.md#development-guidelines) for more details on submitting code changes for review.
 
 ::: info
-A backup is created each time the Hestia build script is run. If you run this a lot it can fill up your VM's disk space.
+A backup is created each time the Hestia build script is run. If you run this often it can fill up your VM's disk space.
 You can delete the backups by running `rm -rf /root/hst_backups` as root user on the VM.
 :::
-
-Please refer to the [contributing guidelines](https://github.com/hestiacp/hestiacp/blob/main/CONTRIBUTING.md) for more details on submitting code changes for review.
 
 ## Running automated tests
 

@@ -15,6 +15,3 @@
 		<div class="js-web-terminal web-terminal"></div>
 	</div>
 </div>
-
-<footer class="app-footer">
-</footer>

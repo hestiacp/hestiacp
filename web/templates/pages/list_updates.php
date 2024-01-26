@@ -30,7 +30,7 @@
 
 	<div class="units-table js-units-container">
 		<div class="units-table-header">
-			<div class="units-table-cell"><?= _("Package Names") ?></div>
+			<div class="units-table-cell"><?= _("Package Name") ?></div>
 			<div class="units-table-cell"><?= _("Description") ?></div>
 			<div class="units-table-cell u-text-center"><?= _("Version") ?></div>
 			<div class="units-table-cell u-text-center"><?= _("Status") ?></div>
@@ -64,14 +64,14 @@
 				</div>
 				<div class="units-table-cell u-text-center-desktop">
 					<span class="u-hide-desktop u-text-bold"><?= _("Status") ?>:</span>
-					<?php if ($data[$key]['UPDATED'] == 'no') { echo '<i class="fas fa-triangle-exclamation" style="color: orange;"></i>'; } ?>
-					<?php if ($data[$key]['UPDATED'] == 'yes') { echo '<i class="fas fa-circle-check icon-green"></i>'; } ?>
+					<?php if ($data[$key]['UPDATED'] == 'no'): ?>
+						<i class="fas fa-triangle-exclamation icon-orange" title="<?= _("Update available") ?>"></i>
+					<?php elseif ($data[$key]['UPDATED'] == 'yes'): ?>
+						<i class="fas fa-circle-check icon-green" title="<?= _("Package up-to-date") ?>"></i>
+					<?php endif; ?>
 				</div>
 			</div>
 		<?php } ?>
 	</div>
 
 </div>
-
-<footer class="app-footer">
-</footer>

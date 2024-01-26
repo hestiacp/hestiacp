@@ -149,7 +149,7 @@
 								href="/delete/firewall/?rule=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 								title="<?= _("Delete") ?>"
 								data-confirm-title="<?= _("Delete") ?>"
-								data-confirm-message="<?= sprintf(_("Are you sure you want to delete rule %s"), $key) ?>"
+								data-confirm-message="<?= sprintf(_("Are you sure you want to delete rule #%s?"), $key) ?>"
 							>
 								<i class="fas fa-trash icon-red"></i>
 								<span class="u-hide-desktop"><?= _("Delete") ?></span>
@@ -177,12 +177,10 @@
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d firewall rule", "%d firewall rules", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

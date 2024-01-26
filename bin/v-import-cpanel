@@ -41,8 +41,6 @@ fi
 # Default settings
 # Put this to 0 if you want use bash -x to debug it
 debug=1
-# Pacakge to be used by default "default"
-hestia_package=default
 
 if [ -f "$1" ]; then
 	cpanel_backup="$1"
@@ -104,6 +102,16 @@ if [ -n "$check_sysuser" ] || [ -e "$HESTIA/data/users/$new_user" ]; then
 	check_result "$E_EXISTS" "user $user exists"
 	echo "User allready exists"
 	exit 2
+fi
+
+# Extract cPanel package name
+cpanel_package_name=$(cat ./cp/$new_user | grep 'PLAN=' | cut -f2 -d'=')
+if /usr/local/hestia/bin/v-list-user-packages | grep -qw "$cpanel_package_name"; then
+	hestia_package="$cpanel_package_name"
+	echo "Package $hestia_package will be used for the user."
+else
+	hestia_package="default" # Replace "default" with your default Hestia package name
+	echo "Default package $hestia_package will be used for the user."
 fi
 
 # Create a new user
@@ -213,6 +221,7 @@ function get_domain_path() {
 					echo -en "-- $sync_count restored files\r"
 				done
 			chown $new_user:$new_user -R /home/$new_user/web/$cp_domain/public_html
+			chown $new_user:www-data /home/$new_user/web/$cp_domain/public_html
 			chmod 751 /home/$new_user/web/$cp_domain/public_html
 		fi
 	done
@@ -241,7 +250,40 @@ rsync -av --exclude-from='exclude_path' homedir/public_html/ /home/$new_user/web
 	done
 
 chown $new_user:$new_user -R /home/$new_user/web/$main_domain1/public_html
+chown $new_user:www-data /home/$new_user/web/$main_domain1/public_html
 chmod 751 /home/$new_user/web/$main_domain1/public_html
+
+####### Set Domain PHP version
+PHP_VERSION_LINE=$(grep -r "phpversion:" userdata/$main_domain1)
+CPANEL_PHP_VERSION=${PHP_VERSION_LINE#*: }
+if [ -n "$CPANEL_PHP_VERSION" ]; then
+	CPANEL_PHP_VERSION=$(echo $CPANEL_PHP_VERSION | grep -oP '(?<=php)\d+')
+	HESTIA_PHP_VERSION="PHP-${CPANEL_PHP_VERSION:0:1}_${CPANEL_PHP_VERSION:1}"
+
+	if $BIN/v-list-web-templates-backend | grep -qw "$HESTIA_PHP_VERSION"; then
+		echo "Setting PHP version to $HESTIA_PHP_VERSION for $main_domain1 under user $new_user"
+		$BIN/v-change-web-domain-backend-tpl $new_user $main_domain1 $HESTIA_PHP_VERSION
+		if [ $? -ne 0 ]; then
+			tput setaf 1
+			echo "ERROR!! Failed to set same PHP version for $main_domain1 setting default, please check this to avoid errors."
+			tput sgr0
+		else
+			echo "PHP version for $main_domain1 set to $HESTIA_PHP_VERSION"
+		fi
+	else
+		tput setaf 1
+		echo "PHP version $HESTIA_PHP_VERSION is not installed on HestiaCP."
+		echo "Please install and set it to avoid errors in website."
+		echo "The restoration will continue but the website may not work as expected"
+		tput sgr0
+	fi
+else
+	tput setaf 1
+	echo "Unable to detect PHP version used on old server"
+	echo "Please check you old PHP version and set the PHP version in domain settings"
+	echo "The restoration will continue but the website may not work as expected"
+	tput sgr0
+fi
 
 ##################
 # mail
@@ -256,6 +298,14 @@ for folder in *; do
 		if [[ "$folder" != "cur" && "$folder" != "new" && "$folder" != "tmp" ]]; then
 			echo "Domain: $folder"
 			cd $folder
+
+			mail_account_count=$(find . -maxdepth 1 -mindepth 1 -type d \( ! -name cur ! -name new ! -name tmp \) | wc -l)
+			if [ "$mail_account_count" -eq 0 ]; then
+				echo "No mail accounts to restore for domain $folder."
+				cd ..
+				continue
+			fi
+
 			for mail_account in *; do
 				echo "Import mail account: $mail_account@$folder"
 				# Doesn't really matter but we don't know the unhashed one
@@ -263,17 +313,49 @@ for folder in *; do
 				$BIN/v-add-mail-account $new_user $folder $mail_account $tmp_pass
 				mv $mail_account /home/$new_user/mail/$folder/
 				chown -R $new_user:mail /home/$new_user/mail/$folder/
+
+				# Decompress gzipped emails
+				decompressed_count=0
+				for mail_file in $(find /home/$new_user/mail/$folder -type f); do
+					if file "$mail_file" | grep -q "gzip compressed"; then
+						original_time=$(stat -c %y "$mail_file" 2> /dev/null)
+						gunzip -c "$mail_file" > "${mail_file}.decompressed" && mv "${mail_file}.decompressed" "$mail_file"
+						if [ ! -z "$original_time" ]; then
+							touch -d "$original_time" "$mail_file"
+						fi
+						let decompressed_count++
+					fi
+				done
+
+				echo "$decompressed_count emails decompressed for $mail_account@$folder"
+
 				find /home/$new_user/mail/$folder -type f -name 'dovecot*' -delete
-				pass=$(grep "^$mail_account:" ../../etc/${folder}/shadow | awk -F ":" '{print $2}')
-				USER_DATA=$HESTIA/data/users/$new_user/
-				update_object_value "mail/$folder" 'ACCOUNT' "$mail_account" '$MD5' "$pass"
+
+				# Extract and update password from the shadow file
+				password_file="../../etc/${folder}/shadow"
+				if [ -f "$password_file" ]; then
+					pass_line=$(grep "^$mail_account:" $password_file)
+					if [ $? -eq 0 ]; then
+						# Extract the hashed password from the shadow file
+						pass=$(echo "$pass_line" | awk -F ":" '{print $2}')
+						newline="${mail_account}:{SHA512-CRYPT}$pass:${new_user}:mail::/home/${new_user}:0"
+						newline2="ACCOUNT='${mail_account}' ALIAS='' AUTOREPLY='no' FWD='' FWD_ONLY='' MD5='{SHA512-CRYPT}$pass' QUOTA='unlimited' U_DISK='0' SUSPENDED='no' TIME='$time' DATE='$date'"
+						escaped=$(printf '%s\n' "$newline" | sed -e 's/[\/&]/\\&/g')
+						escaped2=$(printf '%s\n' "$newline2" | sed -e 's/[\/&]/\\&/g')
+						sed -i "s/^${mail_account}:.*/$escaped/g" /home/${new_user}/conf/mail/${folder}/passwd
+						sed -i "s/^ACCOUNT='${mail_account}.*/$escaped2/g" /usr/local/hestia/data/users/${new_user}/mail/${folder}.conf
+					else
+						echo "Warning: Password for $mail_account@$folder not found in shadow file."
+					fi
+				else
+					echo "Warning: Shadow file for $folder not found."
+				fi
 			done
 			cd ..
 			$BIN/v-rebuild-mail-domain $new_user $folder
 		fi
 	fi
 done
-echo "All mail accounts restored"
 
 if [ "$mx" = 'yes' ]; then
 	cd $main_dir/dnszones
@@ -294,6 +376,35 @@ if [ "$mx" = 'yes' ]; then
 			fi
 		done
 	done
+fi
+
+##################
+# Cron Jobs
+tput setaf 2
+echo ""
+echo "Start Restoring Cron Jobs for user $new_user"
+tput sgr0
+
+CRON_DIR="$main_dir/cron"
+cd "$CRON_DIR"
+
+CRON_FILE="${new_user}"
+if [ -f "$CRON_FILE" ] && [ -s "$CRON_FILE" ]; then
+	while IFS= read -r cron_job || [ -n "$cron_job" ]; do
+		[[ "$cron_job" =~ ^(#.*|\s*|MAILTO=.*|SHELL=.*)$ ]] && continue
+
+		min=$(echo "$cron_job" | awk '{print $1}')
+		hour=$(echo "$cron_job" | awk '{print $2}')
+		day=$(echo "$cron_job" | awk '{print $3}')
+		month=$(echo "$cron_job" | awk '{print $4}')
+		dow=$(echo "$cron_job" | awk '{print $5}')
+		cmd=$(echo "$cron_job" | awk '{for (i=6; i<=NF; i++) printf $i " "; print ""}')
+
+		$BIN/v-add-cron-job $new_user "$min" "$hour" "$day" "$month" "$dow" "$cmd"
+	done < "$CRON_FILE"
+	echo "Cron jobs restored for user $new_user."
+else
+	echo "No cron jobs file found or it is empty for user $new_user."
 fi
 
 rm -rf "$tmpdir"

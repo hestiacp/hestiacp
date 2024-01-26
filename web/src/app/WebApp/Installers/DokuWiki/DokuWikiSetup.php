@@ -79,7 +79,9 @@ class DokuWikiSetup extends BaseSetup {
 		$this->appcontext->runUser(
 			"v-copy-fs-directory",
 			[
-				$this->getDocRoot($this->extractsubdir . "/dokuwiki-2023-04-04/."),
+				$this->getDocRoot(
+					$this->extractsubdir . "/dokuwiki-" . $this->appInfo["version"] . "/.",
+				),
 				$this->getDocRoot(),
 			],
 			$status,

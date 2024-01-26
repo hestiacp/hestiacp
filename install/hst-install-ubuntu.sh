@@ -32,9 +32,14 @@ VERBOSE='no'
 
 # Define software versions
 HESTIA_INSTALL_VER='1.9.0~alpha'
-# Dependencies
-multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2")
+# Supported PHP versions
+multiphp_v=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1" "8.2","8.3")
+# One of the following PHP versions is required for Roundcube / phpmyadmin
+multiphp_required=("7.3" "7.4" "8.0" "8.1" "8.2","8.3")
+
+# Default PHP version if none supplied
 fpm_v="8.2"
+# MariaDB version
 mariadb_v="10.11"
 
 # Defining software pack for all distros
@@ -46,7 +51,7 @@ software="acl apache2 apache2.2-common apache2-suexec-custom apache2-utils appar
   php$fpm_v php$fpm_v-apcu php$fpm_v-bz2 php$fpm_v-cgi php$fpm_v-cli php$fpm_v-common php$fpm_v-curl php$fpm_v-gd
   php$fpm_v-imagick php$fpm_v-imap php$fpm_v-intl php$fpm_v-ldap php$fpm_v-mbstring php$fpm_v-mysql php$fpm_v-opcache
   php$fpm_v-pgsql php$fpm_v-pspell php$fpm_v-readline php$fpm_v-xml php$fpm_v-zip postgresql postgresql-contrib
-  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd"
+  proftpd-basic quota rrdtool rsyslog setpriv spamassassin sudo sysstat unzip vim-common vsftpd whois zip zstd jailkit"
 
 installer_dependencies="apt-transport-https ca-certificates curl dirmngr gnupg openssl software-properties-common wget"
 
@@ -178,10 +183,14 @@ sort_config_file() {
 
 # todo add check for usernames that are blocked
 validate_username() {
-	if [[ "$username" =~ ^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$ ]]; then
-		# Username valid
-		return 1
+	if [[ "$username" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+		if [ -n "$(grep ^$username: /etc/passwd /etc/group)" ]; then
+			echo -e "\nUsername or Group allready exists please select a new user name or delete the user and / or group."
+		else
+			return 1
+		fi
 	else
+		echo -e "\nPlease use a valid username (ex. user)."
 		return 0
 	fi
 }
@@ -306,6 +315,43 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:u:e:p:W:D:fh" Option;
 	esac
 done
 
+if [ -n "$multiphp" ]; then
+	if [ "$multiphp" != 'no' ] && [ "$multiphp" != 'yes' ]; then
+		php_versions=$(echo $multiphp | tr ',' "\n")
+		multiphp_version=()
+		for php_version in "${php_versions[@]}"; do
+			if [[ $(echo "${multiphp_v[@]}" | fgrep -w "$php_version") ]]; then
+				multiphp_version=(${multiphp_version[@]} "$php_version")
+			else
+				echo "$php_version is not supported"
+				exit 1
+			fi
+		done
+		multiphp_v=()
+		for version in "${multiphp_version[@]}"; do
+			multiphp_v=(${multiphp_v[@]} $version)
+		done
+		fpm_old=$fpm_v
+		multiphp="yes"
+		fpm_v=$(printf "%s\n" "${multiphp_version[@]}" | sort -V | tail -n1)
+		fpm_last=$(printf "%s\n" "${multiphp_required[@]}" | sort -V | tail -n1)
+		# Allow Maintainer to set minimum fpm version to make sure phpmyadmin and roundcube keep working
+		if [[ -z $(echo "${multiphp_required[@]}" | fgrep -w $fpm_v) ]]; then
+			if version_ge $fpm_v $fpm_last; then
+				multiphp_version=(${multiphp_version[@]} $fpm_last)
+				fpm_v=$fpm_last
+			else
+				# Roundcube and PHPmyadmin doesn't support the version selected.
+				echo "Selected PHP versions are not supported any more by Dependencies..."
+				exit 1
+			fi
+		fi
+
+		software=$(echo "$software" | sed -e "s/php$fpm_old/php$fpm_v/g")
+
+	fi
+fi
+
 # Defining default software stack
 set_default_value 'nginx' 'yes'
 set_default_value 'apache' 'yes'
@@ -370,14 +416,6 @@ if [ -d "/usr/local/hestia" ]; then
 	check_result 1 "Hestia install detected. Unable to continue"
 fi
 
-# Checking admin user account
-if [ -n "$(grep ^admin: /etc/passwd /etc/group)" ] && [ -z "$force" ]; then
-	echo 'Please remove admin user account before proceeding.'
-	echo 'If you want to do it automatically run installer with -f option:'
-	echo -e "Example: bash $0 --force\n"
-	check_result 1 "User admin exists"
-fi
-
 # Clear the screen once launch permissions have been verified
 clear
 
@@ -433,7 +471,7 @@ if [ -n "$conflicts" ] && [ -z "$force" ]; then
 	echo
 	echo '!!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!! !!!'
 	echo
-	read -p 'Would you like to remove the conflicting packages? [y/n] ' answer
+	read -p 'Would you like to remove the conflicting packages? [y/N] ' answer
 	if [ "$answer" = 'y' ] || [ "$answer" = 'Y' ]; then
 		apt-get -qq purge $conflicts -y
 		check_result $? 'apt-get remove failed'
@@ -556,7 +594,11 @@ if [ "$phpfpm" = 'yes' ] && [ "$multiphp" = 'no' ]; then
 fi
 if [ "$multiphp" = 'yes' ]; then
 	phpfpm='yes'
-	echo '   - Multi-PHP Environment'
+	echo -n '   - Multi-PHP Environment: Version'
+	for version in "${multiphp_v[@]}"; do
+		echo -n " php$version"
+	done
+	echo ''
 fi
 
 # DNS stack
@@ -626,7 +668,7 @@ echo -e "\n"
 
 # Asking for confirmation to proceed
 if [ "$interactive" = 'yes' ]; then
-	read -p 'Would you like to continue with the installation? [Y/N]: ' answer
+	read -p 'Would you like to continue with the installation? [y/N]: ' answer
 	if [ "$answer" != 'y' ] && [ "$answer" != 'Y' ]; then
 		echo 'Goodbye'
 		exit 1
@@ -634,15 +676,24 @@ if [ "$interactive" = 'yes' ]; then
 fi
 
 #Validate Username / Password / Email / Hostname even when interactive = no
-# Asking for contact email
 if [ -z "$username" ]; then
 	while validate_username; do
-		echo -e "\nPlease use a valid username (ex. user)."
 		read -p 'Please enter administrator username: ' username
 	done
 else
 	if validate_username; then
-		echo "Please use a valid username (ex. user)."
+		exit 1
+	fi
+fi
+
+#Ask for the password
+if [ -z "$vpass" ]; then
+	while validate_password; do
+		read -p 'Please enter administrator password: ' vpass
+	done
+else
+	if validate_password; then
+		echo "Please use a valid password"
 		exit 1
 	fi
 fi
@@ -776,8 +827,8 @@ echo "[ * ] Hestia Control Panel"
 echo "deb [arch=$ARCH signed-by=/usr/share/keyrings/hestia-keyring.gpg] https://$RHOST/ $codename main" > $apt/hestia.list
 gpg --no-default-keyring --keyring /usr/share/keyrings/hestia-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A189E93654F0B0E5 > /dev/null 2>&1
 
-# Installing NodeJS 20.x repo
-echo "[ * ] NodeJS 20.x"
+# Installing Node.js 20.x repo
+echo "[ * ] Node.js 20.x"
 echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
 echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
@@ -1458,11 +1509,16 @@ echo "[ * ] Enabling SFTP jail..."
 $HESTIA/bin/v-add-sys-sftp-jail > /dev/null 2>&1
 check_result $? "can't enable sftp jail"
 
+# Enable ssh jail
+echo "[ * ] Enabling SSH jail..."
+$HESTIA/bin/v-add-sys-ssh-jail > /dev/null 2>&1
+check_result $? "can't enable ssh jail"
+
 # Adding Hestia admin account
 echo "[ * ] Creating default admin account..."
 $HESTIA/bin/v-add-user $username $vpass $email "default" "System Administrator"
 check_result $? "can't create admin user"
-$HESTIA/bin/v-change-user-shell $username nologin
+$HESTIA/bin/v-change-user-shell $username nologin no
 $HESTIA/bin/v-change-user-role $username admin
 $HESTIA/bin/v-change-user-language $username $lang
 $HESTIA/bin/v-change-sys-config-value 'POLICY_SYSTEM_PROTECTED_ADMIN' 'yes'
@@ -1783,14 +1839,14 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	cp -f $HESTIA_INSTALL_DIR/phpmyadmin/config.inc.php /etc/phpmyadmin/
 	mkdir -p /var/lib/phpmyadmin/tmp
 	chmod 770 /var/lib/phpmyadmin/tmp
-	chown root:www-data /usr/share/phpmyadmin/tmp
+	chown root:hestiamail /usr/share/phpmyadmin/tmp
 
 	# Set config and log directory
 	sed -i "s|'configFile' => ROOT_PATH . 'config.inc.php',|'configFile' => '/etc/phpmyadmin/config.inc.php',|g" /usr/share/phpmyadmin/libraries/vendor_config.php
 
 	# Create temporary folder and change permission
 	chmod 770 /usr/share/phpmyadmin/tmp
-	chown root:www-data /usr/share/phpmyadmin/tmp
+	chown root:hestiamail /usr/share/phpmyadmin/tmp
 
 	# Generate blow fish
 	blowfish=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
@@ -1809,7 +1865,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 
 	# limit access to /etc/phpmyadmin/
-	chown -R root:www-data /etc/phpmyadmin/
+	chown -R root:hestiamail /etc/phpmyadmin/
 	chmod -R 640 /etc/phpmyadmin/*
 	chmod 750 /etc/phpmyadmin/conf.d/
 fi
@@ -1885,7 +1941,7 @@ if [ "$exim" = 'yes' ]; then
 	gpasswd -a Debian-exim mail > /dev/null 2>&1
 	exim_version=$(exim4 --version | head -1 | awk '{print $3}' | cut -f -2 -d .)
 	# if Exim version > 4.9.4 or greater!
-	if ! version_ge "4.9.4" "$exim_version"; then
+	if ! version_ge "4.94" "$exim_version"; then
 		# Ubuntu 22.04 (Jammy) uses Exim 4.95 instead but config works with Exim4.94
 		cp -f $HESTIA_INSTALL_DIR/exim/exim4.conf.4.95.template /etc/exim4/exim4.conf.template
 	else
@@ -2093,7 +2149,7 @@ if [ "$sieve" = 'yes' ]; then
 		mkdir -p $RC_CONFIG_DIR/plugins/managesieve
 		cp -f $HESTIA_COMMON_DIR/roundcube/plugins/config_managesieve.inc.php $RC_CONFIG_DIR/plugins/managesieve/config.inc.php
 		ln -s $RC_CONFIG_DIR/plugins/managesieve/config.inc.php $RC_INSTALL_DIR/plugins/managesieve/config.inc.php
-		chown -R root:www-data $RC_CONFIG_DIR/
+		chown -R root:hestiamail $RC_CONFIG_DIR/
 		chmod 751 -R $RC_CONFIG_DIR
 		chmod 644 $RC_CONFIG_DIR/*.php
 		chmod 644 $RC_CONFIG_DIR/plugins/managesieve/config.inc.php

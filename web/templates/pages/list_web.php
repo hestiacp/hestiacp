@@ -44,9 +44,9 @@
 							<?php } ?>
 							<option value="suspend"><?= _("Suspend") ?></option>
 							<option value="unsuspend"><?= _("Unsuspend") ?></option>
-							<?php if (($_SESSION['PROXY_SYSTEM'] == 'nginx') || ($_SESSION['WEB_SYSTEM'] == 'nginx')){?>}
-								<option value="purge"><?= _('Purge Nginx Cache');?></option>
-							<? } ?>
+							<?php if ($_SESSION["PROXY_SYSTEM"] == "nginx" || $_SESSION["WEB_SYSTEM"] == "nginx") { ?>}
+								<option value="purge"><?= _("Purge Nginx Cache") ?></option>
+							<?php } ?>
 							<option value="delete"><?= _("Delete") ?></option>
 						</select>
 						<button type="submit" class="toolbar-input-submit" title="<?= _("Apply to selected") ?>">
@@ -187,11 +187,11 @@
 				}
 			?>
 			<div class="units-table-row <?php if ($data[$key]['SUSPENDED'] == 'yes') echo 'disabled'; ?> js-unit"
-				data-sort-ip="<?= str_replace('.', '', $data[$key]['IP']) ?>"
-				data-sort-date="<?= strtotime($data[$key]['DATE'].' '.$data[$key]['TIME']) ?>"
+				data-sort-ip="<?= str_replace(".", "", $data[$key]["IP"]) ?>"
+				data-sort-date="<?= strtotime($data[$key]["DATE"] . " " . $data[$key]["TIME"]) ?>"
 				data-sort-name="<?= $key ?>"
-				data-sort-bandwidth="<?= $data[$key]['U_BANDWIDTH'] ?>"
-				data-sort-disk="<?= $data[$key]['U_DISK'] ?>">
+				data-sort-bandwidth="<?= $data[$key]["U_BANDWIDTH"] ?>"
+				data-sort-disk="<?= $data[$key]["U_DISK"] ?>">
 				<div class="units-table-cell">
 					<div>
 						<input id="check<?= $i ?>" class="js-unit-checkbox" type="checkbox" title="<?= _("Select") ?>" name="domain[]" value="<?= $key ?>" <?= $display_mode ?>>
@@ -265,7 +265,7 @@
 								<li class="units-table-row-action" data-key-action="href">
 									<a
 										class="units-table-row-action-link"
-										href="/download/site/?site=<?=$key?>&token=<?= $_SESSION['token'] ?>"
+										href="/download/site/?site=<?= $key ?>&token=<?= $_SESSION["token"] ?>"
 										title="<?= _("Download Site") ?>"
 									>
 										<i class="fas fa-download icon-orange"></i>
@@ -277,10 +277,10 @@
 								<a
 									class="units-table-row-action-link"
 									href="/list/web-log/?domain=<?= $key ?>&type=access#"
-									title="<?= _("Access Log") ?>"
+									title="<?= _("View Logs") ?>"
 								>
 									<i class="fas fa-binoculars icon-purple"></i>
-									<span class="u-hide-desktop"><?= _("Access Log") ?></span>
+									<span class="u-hide-desktop"><?= _("View Logs") ?></span>
 								</a>
 							</li>
 							<li class="units-table-row-action shortcut-s" data-key-action="js">
@@ -344,12 +344,10 @@
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d web domain", "%d web domains", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

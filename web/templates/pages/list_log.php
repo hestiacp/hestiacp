@@ -104,7 +104,7 @@
 				</div>
 				<div class="units-table-cell units-table-heading-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Date") ?>:</span>
-					<time datetime="<?= htmlspecialchars($data[$key]["DATE"]) ?>">
+					<time datetime="<?= htmlspecialchars($data[$key]["DATE"]) ?>" class="u-text-no-wrap">
 						<?= translate_date($data[$key]["DATE"]) ?>
 					</time>
 				</div>
@@ -116,7 +116,9 @@
 				</div>
 				<div class="units-table-cell u-text-bold">
 					<span class="u-hide-desktop"><?= _("Category") ?>:</span>
-					<?= htmlspecialchars($data[$key]["CATEGORY"]) ?>
+					<span class="u-text-no-wrap">
+						<?= htmlspecialchars($data[$key]["CATEGORY"]) ?>
+					</span>
 				</div>
 				<div class="units-table-cell">
 					<span class="u-hide-desktop u-text-bold"><?= _("Message") ?>:</span>
@@ -126,12 +128,10 @@
 		<?php } ?>
 	</div>
 
-</div>
-
-<footer class="app-footer">
-	<div class="container app-footer-inner">
+	<div class="units-table-footer">
 		<p>
 			<?php printf(ngettext("%d log record", "%d log records", $i), $i); ?>
 		</p>
 	</div>
-</footer>
+
+</div>

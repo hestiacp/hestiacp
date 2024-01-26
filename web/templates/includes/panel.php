@@ -114,8 +114,9 @@
 											<div class="top-bar-notification-content" x-html="notification.NOTICE"></div>
 											<p class="top-bar-notification-timestamp">
 												<time
-													:datetime="`${notification.DATE}T${notification.TIME}`"
-													x-text="`${notification.TIME} ${notification.DATE}`"
+													:datetime="`${notification.TIMESTAMP_ISO}`"
+													x-bind:title="`${notification.TIMESTAMP_TITLE}`"
+													x-text="`${notification.TIMESTAMP_TEXT}`"
 												></time>
 											</p>
 										</li>

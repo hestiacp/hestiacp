@@ -23,6 +23,12 @@
 	user-select: none !important;
 }
 
+.u-button-reset {
+	border: 0 !important;
+	padding: 0 !important;
+	background-color: transparent !important;
+}
+
 .u-text-right {
 	text-align: right !important;
 }
@@ -57,10 +63,6 @@
 
 .u-text-no-wrap {
 	white-space: nowrap !important;
-}
-
-.u-overflow {
-	overflow: auto !important;
 }
 
 .u-mt15 {
@@ -155,6 +157,14 @@
 	display: flex !important;
 	justify-content: space-between !important;
 	align-items: center !important;
+}
+
+.u-side-by-side-tablet {
+	@media (--viewport-small) {
+		display: flex !important;
+		justify-content: space-between !important;
+		align-items: center !important;
+	}
 }
 
 .u-list-bulleted {

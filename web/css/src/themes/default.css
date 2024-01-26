@@ -58,11 +58,28 @@
 	--chart-line-3-color: var(--icon-color-green);
 }
 
+/* App
+   ========================================================================== */
+
+.app {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
 /* App header
    ========================================================================== */
 
 .app-header {
+	flex: none;
 	padding-top: 40px;
+}
+
+/* App content
+   ========================================================================== */
+
+.app-content {
+	flex: 1 0 auto;
 }
 
 /* Container
@@ -994,7 +1011,6 @@
 		border-radius: 0;
 
 		&:last-child {
-			border-bottom-color: transparent;
 			margin-bottom: 0;
 		}
 
@@ -1138,6 +1154,15 @@
 		text-shadow: 0 1px #fafafa;
 		border: 1px solid #b8b8b8;
 		background-color: #eaeaea;
+	}
+}
+
+.units-table-footer {
+	padding: 20px;
+
+	@media (--viewport-large) {
+		padding-left: 15px;
+		padding-right: 15px;
 	}
 }
 
@@ -1375,14 +1400,13 @@
 	.sidebar-right-grid {
 		display: grid;
 		gap: 50px;
-		grid-template-columns: 2fr 350px;
+		grid-template-columns: 2fr 340px;
 	}
 
 	.sidebar-right-grid-content {
 	}
 
 	.sidebar-right-grid-sidebar {
-		max-width: 385px;
 	}
 }
 
@@ -1694,18 +1718,6 @@
 	font-size: 0.8rem;
 }
 
-.section-title {
-	display: flex;
-	cursor: pointer;
-	justify-content: space-between;
-	align-items: center;
-	font-size: 1.05rem;
-	font-weight: 600;
-	padding-top: 28px;
-	padding-bottom: 12px;
-	border-bottom: 1px solid #ccc;
-}
-
 /* Modals
    ========================================================================== */
 
@@ -1937,6 +1949,43 @@
 	right: 110px;
 }
 
+/* Clipboard component
+   ========================================================================== */
+
+.clipboard {
+	display: flex;
+
+	& .clipboard-input {
+		cursor: default;
+		border-color: #e9e9e9;
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+}
+
+.clipboard-button {
+	display: flex;
+	align-items: center;
+	border: 0;
+	border-top-right-radius: var(--border-radius-base);
+	border-bottom-right-radius: var(--border-radius-base);
+	background-color: #e9e9e9;
+	padding-left: 8px;
+	padding-right: 8px;
+	font-size: 0.75rem;
+	color: var(--color-text);
+
+	&:hover {
+		& .fas {
+			color: var(--color-text-link-hover);
+		}
+	}
+
+	& .fas {
+		font-size: 0.8rem;
+	}
+}
+
 /* Values List component
    ========================================================================== */
 
@@ -2043,19 +2092,24 @@
 	border: 1px solid #d9d9d9;
 	box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 	border-radius: var(--border-radius-base);
+
+	& .form-control {
+		box-shadow: none;
+		padding: 5px 10px;
+	}
 }
 
-/* Collapse component
+/* Box collapse component
    ========================================================================== */
 
-.collapse {
+.box-collapse {
 }
 
-.collapse[open] .collapse-header::after {
+.box-collapse[open] .box-collapse-header::after {
 	transform: rotate(180deg);
 }
 
-.collapse-header {
+.box-collapse-header {
 	background: linear-gradient(to bottom, rgb(247 247 247 / 100%) 0%, rgb(255 255 255 / 100%) 100%);
 	border: 1px solid #ddd;
 	text-shadow: 0 1px rgb(255 255 255 / 95%);
@@ -2092,7 +2146,7 @@
 	}
 }
 
-.collapse-content {
+.box-collapse-content {
 	box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
 	padding: 20px 20px 10px;
 
@@ -2101,19 +2155,65 @@
 	}
 }
 
+/* Collapse component
+   ========================================================================== */
+
+.collapse {
+}
+
+.collapse[open] .collapse-header::after {
+	content: "\f146";
+}
+
+.collapse-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	cursor: pointer;
+	color: var(--color-text-heading);
+	font-size: 1.05rem;
+	font-weight: 600;
+	padding-top: 28px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #ccc;
+
+	&:hover {
+		&::after {
+			color: var(--icon-color-maroon);
+		}
+	}
+
+	&::after {
+		font: var(--fa-font-solid);
+		content: "\f0fe";
+		color: #ddd;
+		display: inline-block;
+		text-rendering: auto;
+		-webkit-font-smoothing: antialiased;
+	}
+}
+
+.collapse-content {
+	box-sizing: border-box; /* Work around box-sizing not inheriting in <details> in many browsers */
+	padding-top: 15px;
+}
+
 /* Login
    ========================================================================== */
 
-.body-login,
-.body-reset {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.page-login,
+.page-reset {
 	background: radial-gradient(circle, rgb(102 158 231 / 100%) 0%, rgb(43 86 177 / 100%) 100%),
 		rgb(102 158 231);
 
 	& .debug-panel {
 		display: none;
+	}
+
+	& .app {
+		align-items: center;
+		justify-content: center;
+		flex-direction: row;
 	}
 }
 
@@ -2215,12 +2315,22 @@
 	box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
 }
 
+.logs-container {
+	height: 100%;
+	padding: 20px;
+	overflow-y: auto;
+	max-height: calc(100vh - 40px - 40px);
+
+	@media (--viewport-medium) {
+		max-height: calc(100vh - 40px - 60px);
+	}
+}
+
 .console-output {
 	color: #202020;
 	font-family: var(--font-family-monospace);
 	font-size: 0.92rem;
-	line-height: 1.15;
-	padding-bottom: 20px;
+	line-height: 1.2;
 }
 
 /* Icon component
@@ -2376,26 +2486,21 @@
    ========================================================================== */
 
 .app-footer {
+	flex: none;
 	color: #7c7c7c;
 	border-top: 1px solid #ddd;
+	text-align: center;
 	font-size: 0.8rem;
-	padding-top: 20px;
-	padding-bottom: 20px;
+	padding: 10px;
 
 	@media (--viewport-medium) {
-		padding-top: 40px;
-		padding-bottom: 40px;
+		text-align: left;
+		padding: 20px;
 	}
 }
 
-.app-footer-inner {
-	padding-left: 20px;
-	padding-right: 20px;
-
-	@media (--viewport-large) {
-		padding-left: 15px;
-		padding-right: 15px;
-	}
+.app-footer-link {
+	color: #7c7c7c;
 }
 
 /* Alerts

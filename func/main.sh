@@ -35,7 +35,7 @@ HOMEDIR='/home'
 BACKUP='/backup'
 BACKUP_GZIP=9
 BACKUP_DISK_LIMIT=95
-BACKUP_LA_LIMIT=$(cat /proc/cpuinfo | grep processor | wc -l)
+BACKUP_LA_LIMIT=$(grep -c '^processor' /proc/cpuinfo)
 RRD_STEP=300
 BIN=$HESTIA/bin
 HESTIA_INSTALL_DIR="$HESTIA/install/deb"
@@ -704,7 +704,30 @@ sync_cron_jobs() {
 	chmod 600 $crontab
 }
 
-# User format validator
+# Validates Local part email and mail alias
+is_localpart_format_valid() {
+	if [ ${#1} -eq 1 ]; then
+		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
+	else
+		if [ -n "$3" ]; then
+			maxlenght=$(($3 - 2))
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,$maxlenght}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		else
+			if ! [[ "$1" =~ ^[[:alnum:]][-|\.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+				check_result "$E_INVALID" "invalid $2 format :: $1"
+			fi
+		fi
+	fi
+	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
+		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+}
+
+# Username / ftp username format validator
 is_user_format_valid() {
 	if [ ${#1} -eq 1 ]; then
 		if ! [[ "$1" =~ ^^[[:alnum:]]$ ]]; then
@@ -724,6 +747,13 @@ is_user_format_valid() {
 	fi
 	if [ "$1" != "${1//[^[:ascii:]]/}" ]; then
 		check_result "$E_INVALID" "invalid $2 format :: $1"
+	fi
+
+	# Only for new users
+	if [[ "$FROM_V_ADD_USER" == "true" ]]; then
+		if ! [[ "$1" =~ ^[a-zA-Z][-|.|_[:alnum:]]{0,28}[[:alnum:]]$ ]]; then
+			check_result "$E_INVALID" "invalid $2 format :: $1"
+		fi
 	fi
 }
 
@@ -1185,7 +1215,7 @@ is_format_valid() {
 		if [ -n "$arg" ]; then
 			case $arg_name in
 				access_key_id) is_access_key_id_format_valid "$arg" "$arg_name" ;;
-				account) is_user_format_valid "$arg" "$arg_name" '64' ;;
+				account) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				action) is_fw_action_format_valid "$arg" ;;
 				active) is_boolean_format_valid "$arg" 'active' ;;
 				aliases) is_alias_format_valid "$arg" ;;
@@ -1226,7 +1256,7 @@ is_format_valid() {
 				ip_status) is_ip_status_format_valid "$arg" ;;
 				job) is_int_format_valid "$arg" 'job' ;;
 				key) is_common_format_valid "$arg" "$arg_name" ;;
-				malias) is_user_format_valid "$arg" "$arg_name" '64' ;;
+				malias) is_localpart_format_valid "$arg" "$arg_name" '64' ;;
 				max_db) is_int_format_valid "$arg" 'max db' ;;
 				min) is_cron_format_valid "$arg" $arg_name ;;
 				month) is_cron_format_valid "$arg" $arg_name ;;
@@ -1263,6 +1293,7 @@ is_format_valid() {
 				soa) is_domain_format_valid "$arg" 'SOA' ;;
 				#missing command: is_format_valid_shell
 				shell) is_format_valid_shell "$arg" ;;
+				shell_jail_enabled) is_boolean_format_valid "$arg" 'shell_jail_enabled' ;;
 				ssl_dir) is_folder_exists "$arg" "$arg_name" ;;
 				stats_pass) is_password_format_valid "$arg" ;;
 				stats_user) is_user_format_valid "$arg" "$arg_name" ;;
@@ -1744,8 +1775,18 @@ add_chroot_jail() {
 		chown 0:0 /srv/jail/$user/home
 		chmod 755 /srv/jail/$user/home
 	fi
+	if [ ! -d /srv/jail/$user/home/$user ]; then
+		mkdir -p /srv/jail/$user/home/$user
+		chown 0:0 /srv/jail/$user/home/$user
+		chmod 755 /srv/jail/$user/home/$user
+	fi
+	if [ ! -d /srv/jail/$user/tmp ]; then
+		mkdir -p /srv/jail/$user/tmp
+		chown "$user:$user" /srv/jail/$user/tmp
+		chmod 755 /srv/jail/$user/tmp
+	fi
 
-	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
 	cat > "/etc/systemd/system/$systemd" << EOF
 [Unit]
 Description=Mount $user's home directory to the jail chroot
@@ -1753,7 +1794,7 @@ Before=local-fs.target
 
 [Mount]
 What=$(getent passwd $user | cut -d : -f 6)
-Where=/srv/jail/$user/home
+Where=/srv/jail/$user/home/$user
 Type=none
 Options=bind
 LazyUnmount=yes
@@ -1770,11 +1811,19 @@ EOF
 delete_chroot_jail() {
 	local user=$1
 
+	# Backwards compatibility with old style home jail
 	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home")
 	systemctl stop "$systemd" > /dev/null 2>&1
 	systemctl disable "$systemd" > /dev/null 2>&1
 	rm -f "/etc/systemd/system/$systemd"
+
+	# Remove the new style home jail
+	systemd=$(systemd-escape -p --suffix=mount "/srv/jail/$user/home/$user")
+	systemctl stop "$systemd" > /dev/null 2>&1
+	systemctl disable "$systemd" > /dev/null 2>&1
+	rm -f "/etc/systemd/system/$systemd"
+
 	systemctl daemon-reload > /dev/null 2>&1
-	rmdir /srv/jail/$user/home > /dev/null 2>&1
+	rm -r /srv/jail/$user/ > /dev/null 2>&1
 	rmdir /srv/jail/$user > /dev/null 2>&1
 }

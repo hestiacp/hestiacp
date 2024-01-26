@@ -30,9 +30,9 @@ $BIN/v-add-sys-sftp-jail
 codename="$(lsb_release -s -c)"
 apt=/etc/apt/sources.list.d
 
-# Installing NodeJS 20.x repo
+# Installing Node.js 20.x repo
 if [ ! -f $apt/nodesource.list ] && [ ! -z $(which "node") ]; then
-	echo "[ * ] Adding NodeJS 20.x repo"
+	echo "[ * ] Adding Node.js 20.x repo"
 	echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" > $apt/nodesource.list
 	echo "deb-src [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x $codename main" >> $apt/nodesource.list
 	curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg > /dev/null 2>&1
@@ -72,6 +72,13 @@ if [ ! -f "/var/spool/cron/crontabs/hestiaweb" ]; then
 fi
 
 chown hestiaweb:hestiaweb /usr/local/hestia/data/sessions
+
+packages=$(ls --sort=time $HESTIA/data/packages | grep .pkg)
+for package in $packages; do
+	if [ -z "$(grep -e 'SHELL_JAIL_ENABLED' $HESTIA/data/packages/$package)" ]; then
+		echo "SHELL_JAIL_ENABLED='no'" >> $HESTIA/data/packages/$package
+	fi
+done
 
 $BIN/v-add-user-notification 'admin' 'Hestia securirty has been upgraded' 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'
 add_upgrade_message 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'

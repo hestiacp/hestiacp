@@ -1,0 +1,72 @@
+#!/bin/bash
+# info: delete system ssh jail
+# options: NONE
+#
+# example: v-delete-sys-ssh-jail
+#
+# This function disables ssh jailed environment
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+# Checking sshd directives
+config='/etc/ssh/sshd_config'
+ssh_i=$(grep -n "^# Hestia SSH Chroot" $config)
+
+# Backing up config
+cp $config $config.bak
+
+# Disabling jailed ssh
+if [ -n "$ssh_i" ]; then
+	fline=$(echo "$ssh_i" | cut -f 1 -d :)
+	lline=$((fline + 4))
+	sed -i "${fline},${lline}d" $config
+	restart='yes'
+fi
+
+# Validating opensshd config
+if [ "$restart" = 'yes' ]; then
+	subj="OpenSSH restart failed"
+	email=$(grep CONTACT "$HESTIA/data/users/$ROOT_USER/user.conf" | cut -f 2 -d \')
+	/usr/sbin/sshd -t > /dev/null 2>&1
+	if [ "$?" -ne 0 ]; then
+		mail_text="OpenSSH can not be restarted. Please check config:
+            \n\n$(/usr/sbin/sshd -t)"
+		echo -e "$mail_text" | $SENDMAIL -s "$subj" $email
+	else
+		service sshd restart > /dev/null 2>&1
+	fi
+fi
+
+# Remove group ssh-jailed
+groupdel ssh-jailed 2> /dev/null
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+$BIN/v-log-action "system" "Warning" "Plugins" "SSH Chroot Jail disabled."
+log_event "$OK" "$ARGUMENTS"
+
+exit

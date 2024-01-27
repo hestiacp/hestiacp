@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: change package name
-# options: OLD_NAME NEW_NAME [mode]
+# options: OLD_NAME NEW_NAME [MODE]
 #
-# example: v-rename-package package package2
+# example: v-rename-user-package package package2
 #
 # This function changes the name of an existing package.
 

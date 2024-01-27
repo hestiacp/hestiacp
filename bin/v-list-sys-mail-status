@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list mail status
-# options:
+# options: none
 #
 # example: v-list-sys-mail-status
 #

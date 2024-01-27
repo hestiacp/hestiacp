@@ -1,23 +1,44 @@
 #!/bin/bash
 # info: Import DirectAdmin backup to a new user
-#
+# options: BACKUP FILE
 # example: v-import-directadmin /backup/backup.tar.gz
 #
 # Based on sk-da-importer
 # Credits: Maks Usmanov (skamasle), Jaap Marcus (jaapmarcus) and contributors:
 # Thanks to <https://github.com/Skamasle/sk_da_importer/graphs/contributors>
 
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+backup=$1
+
 # This script is provided whitout any warranty
 # Run at your own risk
 # Version 0.1
 # This script restore backups from DA to Hestiacp
 
-# shellcheck source=/usr/local/hestia/func/main.sh
-source $HESTIA/func/main.sh
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'BACKUP'
+
+# Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/db.sh
+source $HESTIA/func/db.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+
 
 if [ ! -e /usr/bin/rsync ] || [ ! -e /usr/bin/file ]; then
 	echo "#######################################"

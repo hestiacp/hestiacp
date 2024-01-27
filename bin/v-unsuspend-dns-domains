@@ -12,7 +12,7 @@
 
 # Argument definition
 user=$1
-restart=${3-no}
+restart=${2-no}
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf

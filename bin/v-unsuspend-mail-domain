@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: unsuspend mail domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
 #
 # example: v-unsuspend-mail-domain user02 acme.com
 #

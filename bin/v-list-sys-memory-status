@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list virtual memory info
-# options:
+# options: none
 #
 # example: v-list-sys-memory-status
 #

@@ -1,6 +1,8 @@
 #!/bin/bash
 # info: Log User logout event
 # options: USER FINGERPRINT
+#
+# example: v-log-user-logout user session_id
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

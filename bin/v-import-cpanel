@@ -4,13 +4,18 @@
 #
 # example: v-import-cpanel /backup/backup.tar.gz yes
 #
+# Import Cpanel backups into the user
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+backup=$1
+
 # Based on sk-import-cpanel-backup-to-vestacp
 # Credits: Maks Usmanov (skamasle) and contributors:
 # Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
-
-# Known issue
-# - Importing certificates fails at the moment. Due to format changes of CPanel side
-# - It doesn't update DKIM
 
 # shellcheck source=/usr/local/hestia/func/main.sh
 source $HESTIA/func/main.sh
@@ -18,6 +23,16 @@ source $HESTIA/func/main.sh
 source /etc/hestiacp/hestia.conf
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '1' "$#" 'BACKUP'
+
+# Known issue
+# - Importing certificates fails at the moment. Due to format changes of CPanel side
+# - It doesn't update DKIM
 
 if [ $# -lt 1 ]; then
 	echo "usage: bash $0 cpanel-backup.tar.gz"

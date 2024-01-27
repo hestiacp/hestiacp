@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: list public dnssec key
-# options: USER DOMAIN [FROMAT]
+# options: USER DOMAIN [FROMAT] [DNS-TYPE]
 #
-# example: v-list-dns-public-key admin acme.com
+# example: v-list-dnssec-public-key admin acme.com
 #
 # This function list the public key to be used with DNSSEC and needs to be added to the domain register.
 

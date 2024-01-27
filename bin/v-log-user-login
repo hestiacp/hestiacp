@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: add user login
-# options: USER IP STATUS [FINGERPRINT]
+# options: USER IP STATUS [FINGERPRINT] [USER_AGENT] [AUTHLOG] [REASON]
+#
+# v-log-user-login user 1.1.1.1 session_id "User agent" yes "Failed multiple login attempts"
+#
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

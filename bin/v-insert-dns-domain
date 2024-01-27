@@ -1,6 +1,9 @@
 #!/bin/bash
 # info: insert dns domain
-# options: USER DATA [SRC] [FLUSH] #
+# options: USER DATA [SRC] [FLUSH]
+#
+# example: v-insert-dns-domain user '/path/to/data' 'source' 'yes'
+#
 # This function inserts raw record to the dns.conf
 
 #----------------------------------------------------------#

@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: restart php interpreter
-# options: NONE
+# options: [RESTART] [VERSION]
 #
-# example: v-restart-web-backend
+# example: v-restart-web-backend yes 8.0
 #
 # This function reloads php interpreter configuration.
 

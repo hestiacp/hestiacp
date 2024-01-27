@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: update white label logo's
-# options: [DOWNLOAD]
+# options: [DOWNLOAD] [RESET]
 #
 # example: v-update-white-label-logo
 #

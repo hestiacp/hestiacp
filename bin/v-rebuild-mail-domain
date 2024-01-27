@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: rebuild mail domain
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
 #
 # example: v-rebuild-mail-domain user domain.tld
 #

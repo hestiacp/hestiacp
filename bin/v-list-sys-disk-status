@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list disk information
-# options:
+# options: none
 #
 # example: v-list-sys-disk-status
 #

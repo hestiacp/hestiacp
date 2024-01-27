@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: list system network status
-# options:
+# options: none
 #
 # example: v-list-sys-network-status
 #

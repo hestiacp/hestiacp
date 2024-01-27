@@ -2,6 +2,8 @@
 # info: insert dns record
 # options: USER DOMAIN DATA
 #
+# example: v-insert-dns-record user 'domain' 'DNS CONF DATA'
+#
 # This function inserts raw dns record to the domain conf
 
 #----------------------------------------------------------#

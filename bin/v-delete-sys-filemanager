@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: remove file manager functionality from Hestia Control Panel
-# options: [MODE]
+# options: [MODE] [FORCE]
 #
 # example: v-delete-sys-filemanager
 #

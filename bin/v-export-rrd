@@ -1,8 +1,10 @@
 #!/bin/bash
 # info: export rrd charts as json
-# options: [CHART] [TIMESPAN]
+# options: CHART [TIMESPAN]
 #
-# example: v-export-rrd chart format
+# example: v-export-rrd chart weekly
+#
+# Exports RDD data chart as json format
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

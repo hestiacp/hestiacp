@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: Enable / Disable API access
-# options: STATUS
+# options: STATUS VERSION
 #
 # example: v-change-sys-api enable legacy
 #          # Enable legacy api currently default on most of api based systems

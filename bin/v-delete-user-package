@@ -5,7 +5,6 @@
 # example: v-delete-user-package admin palegreen
 #
 # This function for deleting user package.
-#
 # If the package is in use, users will be updated to
 # use the default package.
 

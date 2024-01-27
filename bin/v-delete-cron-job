@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete cron job
-# options: USER JOB
+# options: USER JOB [RESTART]
 #
 # example: v-delete-cron-job admin 9
 #

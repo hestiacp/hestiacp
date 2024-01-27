@@ -1,8 +1,10 @@
 #!/bin/bash
 # info: Change default php version server wide
 # options: VERSION
-
+#
 # example: v-change-sys-php 8.0
+#
+# Changes default PHP version server width usd by the "Default" template and Webmail
 
 version=$1
 

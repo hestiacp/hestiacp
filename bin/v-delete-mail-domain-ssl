@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete mail domain ssl support
-# options: USER DOMAIN
+# options: USER DOMAIN [RESTART]
 #
 # example: v-delete-mail-domain-ssl user demo.com
 #

@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: delete dns record
-# options: USER DOMAIN ID [RESTART]
+# options: USER DOMAIN ID [RESTART] [QUIET]
 #
 # example: v-delete-dns-record bob acme.com 42 yes
 #

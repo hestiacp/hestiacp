@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add wp-cli for a user
-# options: USER
+# options: USER [UPDATE]
 #
 # example: v-add-user-wp-cli user
 #
@@ -13,10 +13,6 @@
 # Argument definition
 user=$1
 update=$2
-
-if [ -z "$HESTIA" ]; then
-	HESTIA="/usr/local/hestia"
-fi
 
 # shellcheck source=/etc/hestiacp/hestia.conf
 source /etc/hestiacp/hestia.conf

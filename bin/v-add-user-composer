@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: add composer (php dependency manager) for a user
-# options: USER
+# options: USER [VERSION] [UPDATE]
 #
-# example: v-add-user-composer user [version]
+# example: v-add-user-composer user 2 yes
 #
 # This function adds support for composer (php dependency manager)
 # Homepage: <https://getcomposer.org/>

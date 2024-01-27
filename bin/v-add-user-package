@@ -1,6 +1,8 @@
 #!/bin/bash
 # info: adding user package
-# options: tmpfile PACKAGE [REWRITE]
+# options: TEMPFILE PACKAGE [REWRITE]
+#
+# example: v-add-user-package "/tmp/file/topackage" "packagename"
 #
 # This function adds new user package to the system.
 

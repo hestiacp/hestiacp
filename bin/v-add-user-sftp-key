@@ -2,6 +2,8 @@
 # info: add user sftp key
 # options: USER [TTL]
 #
+# v-add-user-sftp-key "user" 30
+#
 # This function creates and updates SSH keys for used with the File Manager.
 
 #----------------------------------------------------------#

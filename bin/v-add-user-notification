@@ -1,6 +1,8 @@
 #!/bin/bash
 # info: add user notification
-# options: USER TOPIC NOTICE [TYPE]
+# options: USER TOPIC NOTICE [TYPE] [PRIORITY]
+#
+# example: v-add-user-notification user "Title" "My Message" "
 #
 # This function adds a new user notification to the panel.
 

@@ -1,8 +1,10 @@
 #!/bin/bash
-# Add php dependencies to Hestia
-# options: [MODE]
+# info: Adds / Update  PHP  dependencies to Hestia
+# options:
 #
-# This function install PHPMailer and quoteshellarg as via composer
+# example: v-sys-dependencies
+#
+# This script download System Dependencies for Web UI. PHP Mailer, phpquoteshellarg and twofactorauth.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -18,7 +20,6 @@ source_conf "$HESTIA/conf/hestia.conf"
 # upgrade config file
 source "$HESTIA/install/upgrade/upgrade.conf"
 
-MODE=$1
 user="$ROOT_USER"
 
 PM_INSTALL_DIR="$HESTIA/web/inc"

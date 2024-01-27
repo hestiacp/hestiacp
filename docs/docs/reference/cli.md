@@ -6,7 +6,7 @@
 
 update user notification
 
-**Options**: `USER` `NOTIFICATION`
+**Options**: `USER` `NOTIFICATION` 
 
 This function updates user notification.
 
@@ -16,7 +16,7 @@ This function updates user notification.
 
 generate access key
 
-**Options**: `USER` `[PERMISSIONS]` `[COMMENT]` `[FORMAT]`
+**Options**: `USER` `[PERMISSIONS]` `[COMMENT]` `[FORMAT]` 
 
 **Examples**:
 
@@ -33,7 +33,7 @@ This function creates a key file in $HESTIA/data/access-keys/
 
 add backup host
 
-**Options**: `TYPE` `HOST` `USERNAME` `PASSWORD` `[PATH]` `[PORT]`
+**Options**: `TYPE` `HOST` `USERNAME` `PASSWORD` `[PATH]` `[PORT]` 
 
 **Examples**:
 
@@ -50,7 +50,7 @@ Add a new remote backup location. Currently SFTP, FTP and Backblaze are supporte
 
 add cron job for hestia automatic updates
 
-**Options**: `MODE`
+**Options**: `MODE` 
 
 This function adds a cronjob for hestia automatic updates
 that can be downloaded from apt or git.
@@ -61,16 +61,19 @@ that can be downloaded from apt or git.
 
 add cron job
 
-**Options**: `USER` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND` `[JOB]` `[RESTART]`
+**Options**: `USER` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND` `[JOB]` `[RESTART]` 
 
 **Examples**:
 
 ```bash
-v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
+v-add-cron-job admin '*' '*' '*' '*' '*' 'sudo /usr/local/hestia/bin/v-backup-users'
 ```
 
 This function adds a job to cron daemon. When executing commands, any output
-is mailed to user's email if parameter REPORTS is set to 'yes'.
+is mailed to user's email if user config parameter CRON_REPORTS is set to 'yes'. 
+Change CRON_REPORTS value via:
+[v-add-cron-reports](https://hestiacp.com/docs/reference/cli.html#v-add-cron-reports) and
+[v-delete-cron-reports](https://hestiacp.com/docs/reference/cli.html#v-delete-cron-reports)
 
 ## v-add-cron-letsencrypt-job
 
@@ -78,7 +81,7 @@ is mailed to user's email if parameter REPORTS is set to 'yes'.
 
 add cron job for Let's Encrypt certificates
 
-**Options**: –
+**Options**: – 
 
 This function adds a new cron job for Let's Encrypt.
 
@@ -88,7 +91,7 @@ This function adds a new cron job for Let's Encrypt.
 
 add cron reports
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -105,7 +108,7 @@ notifications.
 
 add cron reports
 
-**Options**: –
+**Options**: – 
 
 This function for enabling restart cron tasks
 
@@ -115,7 +118,7 @@ This function for enabling restart cron tasks
 
 add database
 
-**Options**: `USER` `DATABASE` `DBUSER` `DBPASS` `[TYPE]` `[HOST]` `[CHARSET]`
+**Options**: `USER` `DATABASE` `DBUSER` `DBPASS` `[TYPE]` `[HOST]` `[CHARSET]` 
 
 **Examples**:
 
@@ -137,7 +140,7 @@ types of supported databases is designated in the main configuration file.
 
 add new database server
 
-**Options**: `TYPE` `HOST` `DBUSER` `DBPASS` `[MAX_DB]` `[CHARSETS]` `[TEMPLATE]` `[PORT]`
+**Options**: `TYPE` `HOST` `DBUSER` `DBPASS` `[MAX_DB]` `[CHARSETS]` `[TEMPLATE]` `[PORT]` 
 
 **Examples**:
 
@@ -157,7 +160,7 @@ more about templates in official PostgreSQL documentation.
 
 add temp database user
 
-**Options**: `USER` `DATABASE` `[TYPE]` `[HOST]` `[TTL]`
+**Options**: `USER` `DATABASE` `[TYPE]` `[HOST]` `[TTL]` 
 
 **Examples**:
 
@@ -175,7 +178,7 @@ Returns json to be read SSO Script
 
 add dns domain
 
-**Options**: `USER` `DOMAIN` `IP` `[NS1]` `[NS2]` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `IP` `[NS1]` `[NS2]` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]` `[RESTART]` 
 
 **Examples**:
 
@@ -195,7 +198,7 @@ its records with a default value of 14400 seconds.
 
 add dns domain or dns record after web domain alias
 
-**Options**: `USER` `ALIAS` `IP` `[RESTART]`
+**Options**: `USER` `ALIAS` `IP` `[RESTART]` 
 
 **Examples**:
 
@@ -211,7 +214,7 @@ This function adds dns domain or dns record based on web domain alias.
 
 add dns record
 
-**Options**: `USER` `DOMAIN` `RECORD` `TYPE` `VALUE` `[PRIORITY]` `[ID]` `[RESTART]` `[TTL]`
+**Options**: `USER` `DOMAIN` `RECORD` `TYPE` `VALUE` `[PRIORITY]` `[ID]` `[RESTART]` `[TTL]` 
 
 **Examples**:
 
@@ -230,7 +233,7 @@ regulation of records.
 
 add web/dns/mail domain
 
-**Options**: `USER` `DOMAIN` `[IP]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[IP]` `[RESTART]` 
 
 **Examples**:
 
@@ -246,7 +249,7 @@ This function adds web/dns/mail domain to a server.
 
 Enable FastCGI cache for nginx
 
-**Options**: `USER` `DOMAIN` `[DURATION]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[DURATION]` `[RESTART]` 
 
 **Examples**:
 
@@ -264,7 +267,7 @@ Add "yes" as last parameter to restart nginx
 
 add firewall blocking rule
 
-**Options**: `IP` `CHAIN`
+**Options**: `IP` `CHAIN` 
 
 **Examples**:
 
@@ -280,7 +283,7 @@ This function adds new blocking rule to system firewall
 
 add firewall chain
 
-**Options**: `CHAIN` `[PORT]` `[PROTOCOL]`
+**Options**: `CHAIN` `[PORT]` `[PROTOCOL]` 
 
 **Examples**:
 
@@ -296,15 +299,26 @@ This function adds new rule to system firewall
 
 add firewall ipset
 
-**Options**: `NAME` `[SOURCE]` `[IPVERSION]` `[AUTOUPDATE]` `[REFRESH]`
+**Options**: `NAME` `[SOURCE]` `[IPVERSION]` `[AUTOUPDATE]` `[REFRESH]` 
 
 **Examples**:
 
 ```bash
-v-add-firewall-ipset country-nl "https://raw.githubusercontent.com/ipverse/rir-ip/master/country/nl/ipv4-aggregated.txt"
+# OPTIONS USAGE:
+# NAME > no spaces
+# [SOURCE] > valid formats > input-val: http[s]://|script:|file:+source_location > NOTE: script: permission must be executable
+# [IPVERSION] > input-val: v4|v6 > default-val: v4
+# [AUTOUPDATE] > auto update ipset via hestia cron > input-val: yes|no > default-val: yes
+# [REFRESH] > refresh the ipset now > input-val: yes|no > default-val: no
+# source: http[s]://
+v-add-firewall-ipset my-ipset-source-http-name "https://domain.tld/ipv4-aggregated.txt"
+# source: script: NOTE: script: permission must be executable
+v-add-firewall-ipset my-ipset-source-script-name "script:/path/to/script.sh"
+# source: file:
+v-add-firewall-ipset my-ipset-source-file-name "file:/path/to/file.txt"
 ```
 
-This function adds new ipset to system firewall
+This function adds new ipset to system firewall from url, script or file.
 
 ## v-add-firewall-rule
 
@@ -312,15 +326,25 @@ This function adds new ipset to system firewall
 
 add firewall rule
 
-**Options**: `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]` `[RULE]`
+**Options**: `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]` `[RULE]` 
 
 **Examples**:
 
 ```bash
+# OPTIONS USAGE: 
+# ACTION > input-val: ACCEPT|DROP
+# IP > 0.0.0.0/0 = all ips | ip(v4) ex. 1.1.1.1 | ipset in format: ipset:your_ipset_name > input-val: ip|ipset:your_ipset_name
+# PORT > 0 = all ports | portnumber ex. 25 > input-val: port_num
+# [PROTOCOL] > input-val: tcp|icmp|udp > default-val: tcp
+# [RULE] > hestia rule number ex. 10 > input-val: hestia_rule_num > default-val: new number rule created
+# ban ip
 v-add-firewall-rule DROP 185.137.111.77 25
+# add ipset whitelist
+v-add-firewall-rule ACCEPT ipset:your_ipset_name 0 tcp 'my ip set name'
 ```
 
-This function adds new rule to system firewall
+This function adds new rule to system firewall. NOTE: The option IP can be ipset name
+in the format ipset:your_ipset_name
 
 ## v-add-fs-archive
 
@@ -328,7 +352,7 @@ This function adds new rule to system firewall
 
 archive directory
 
-**Options**: `USER` `ARCHIVE` `SOURCE` `[SOURCE...]`
+**Options**: `USER` `ARCHIVE` `SOURCE` `[SOURCE...]` 
 
 **Examples**:
 
@@ -344,7 +368,7 @@ This function creates tar archive
 
 add directory
 
-**Options**: `USER` `DIRECTORY`
+**Options**: `USER` `DIRECTORY` 
 
 **Examples**:
 
@@ -360,7 +384,7 @@ This function creates new directory on the file system
 
 add file
 
-**Options**: `USER` `FILE`
+**Options**: `USER` `FILE` 
 
 **Examples**:
 
@@ -374,18 +398,25 @@ This function creates new files on file system
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-letsencrypt-domain)
 
-check letsencrypt domain
+verifies or adds letsencrypt ssl certificate to domain
 
-**Options**: `USER` `DOMAIN` `[ALIASES]` `[MAIL]`
+**Options**: `USER` `DOMAIN` `[ALIASES]` `[MAIL]` 
 
 **Examples**:
 
 ```bash
-v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
-example: v-add-letsencrypt-domain admin wonderland.com '' yes
+# OPTIONS USAGE:
+# [ALIASES] > full subdomain(s) comma separated with no space i.e. www.domain.tld,sub.domain.tld
+# [MAIL] > certs for: mail.domain.tld + webmail.domain.tld > input-val: yes|no > default-val: no
+# SSL cert only: domain.tld
+v-add-letsencrypt-domain username domain.tld
+# SSL certs for: domain.tld + www.domain.tld + sub.domain.tld NOTE: comma separated subdomains with no space
+v-add-letsencrypt-domain username domain.tld www.domain.tld,sub.domain.tld
+# Mail SSL certs only: mail.domain.tld + webmail.domain.tld
+v-add-letsencrypt-domain username domain.tld '' yes
 ```
 
-This function check and validates domain with Let's Encrypt
+[Let's Encrypt staging mode info](https://hestiacp.com/docs/server-administration/ssl-certificates.html#lets-encrypt-staging-mode)
 
 ## v-add-letsencrypt-host
 
@@ -393,7 +424,7 @@ This function check and validates domain with Let's Encrypt
 
 add letsencrypt for host and backend
 
-**Options**: –
+**Options**: – 
 
 This function check and validates the backend certificate and generate
 a new let's encrypt certificate.
@@ -404,7 +435,7 @@ a new let's encrypt certificate.
 
 register letsencrypt user account
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -420,7 +451,7 @@ This function creates and register LetsEncrypt account
 
 add mail domain account
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `PASSWORD` `[QUOTA]`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `PASSWORD` `[QUOTA]` 
 
 **Examples**:
 
@@ -436,7 +467,7 @@ This function add new email account.
 
 add mail account alias aka nickname
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS` 
 
 **Examples**:
 
@@ -452,7 +483,7 @@ This function add new email alias.
 
 add mail account autoreply message
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `MESSAGE`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `MESSAGE` 
 
 **Examples**:
 
@@ -468,7 +499,7 @@ This function add new email account.
 
 add mail account forward address
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `FORWARD`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `FORWARD` 
 
 **Examples**:
 
@@ -484,7 +515,7 @@ This function add new email account.
 
 add mail account forward-only flag
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**Options**: `USER` `DOMAIN` `ACCOUNT` 
 
 **Examples**:
 
@@ -500,7 +531,7 @@ This function adds fwd-only flag
 
 add mail domain
 
-**Options**: `USER` `DOMAIN` `[ANTISPAM]` `[ANTIVIRUS]` `[DKIM]` `[DKIM_SIZE]` `[RESTART]` `[REJECT_SPAM]`
+**Options**: `USER` `DOMAIN` `[ANTISPAM]` `[ANTIVIRUS]` `[DKIM]` `[DKIM_SIZE]` `[RESTART]` `[REJECT_SPAM]` 
 
 **Examples**:
 
@@ -516,7 +547,7 @@ This function adds MAIL domain.
 
 add mail domain antispam support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -532,7 +563,7 @@ This function enables spamassasin for incoming emails.
 
 add mail domain antivirus support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -548,7 +579,7 @@ This function enables clamav scan for incoming emails.
 
 add mail domain catchall account
 
-**Options**: `USER` `DOMAIN` `EMAIL`
+**Options**: `USER` `DOMAIN` `EMAIL` 
 
 **Examples**:
 
@@ -564,7 +595,7 @@ This function enables catchall account for incoming emails.
 
 add mail domain dkim support
 
-**Options**: `USER` `DOMAIN` `[DKIM_SIZE]`
+**Options**: `USER` `DOMAIN` `[DKIM_SIZE]` 
 
 **Examples**:
 
@@ -580,7 +611,7 @@ This function adds DKIM signature to outgoing domain emails.
 
 add mail domain reject spam support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -596,7 +627,7 @@ The function enables spam rejection for incoming emails.
 
 Add mail domain smtp relay support
 
-**Options**: `USER` `DOMAIN` `HOST` `[USERNAME]` `[PASSWORD]` `[PORT]`
+**Options**: `USER` `DOMAIN` `HOST` `[USERNAME]` `[PASSWORD]` `[PORT]` 
 
 **Examples**:
 
@@ -612,7 +643,7 @@ This function adds mail domain smtp relay support.
 
 add mail SSL for $domain
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]` 
 
 This function turns on SSL support for a mail domain. Parameter ssl_dir
 is a path to a directory where 2 or 3 ssl files can be found. Certificate file
@@ -625,7 +656,7 @@ authority mail.domain.tld.ca file is optional.
 
 add webmail support for a domain
 
-**Options**: `USER` `DOMAIN` `[WEBMAIL]` `[RESTART]` `[QUIET]`
+**Options**: `USER` `DOMAIN` `[WEBMAIL]` `[RESTART]` `[QUIET]` 
 
 **Examples**:
 
@@ -643,7 +674,7 @@ This function enables webmail client for a mail domain.
 
 add remote dns domain
 
-**Options**: `USER` `DOMAIN` `[FLUSH]`
+**Options**: `USER` `DOMAIN` `[FLUSH]` 
 
 **Examples**:
 
@@ -659,7 +690,7 @@ This function synchronise dns domain with the remote server.
 
 add new remote dns host
 
-**Options**: `HOST` `PORT` `USER` `PASSWORD` `[TYPE]` `[DNS_USER]`
+**Options**: `HOST` `PORT` `USER` `PASSWORD` `[TYPE]` `[DNS_USER]` 
 
 **Examples**:
 
@@ -678,7 +709,7 @@ See v-generate-api-key can be used to connect the remote dns server
 
 add remote dns domain record
 
-**Options**: `USER` `DOMAIN` `ID`
+**Options**: `USER` `DOMAIN` `ID` 
 
 **Examples**:
 
@@ -694,7 +725,7 @@ This function synchronise dns domain with the remote server.
 
 add IP address to API allow list
 
-**Options**: `IP`
+**Options**: `IP` 
 
 **Examples**:
 
@@ -702,11 +733,14 @@ add IP address to API allow list
 v-add-sys-api-ip 1.1.1.1
 ```
 
+
+
 ## v-add-sys-dependencies
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-dependencies)
 
-**Options**:
+
+**Options**: 
 
 Add php dependencies to Hestia
 options: [MODE]
@@ -717,7 +751,7 @@ options: [MODE]
 
 add file manager functionality to Hestia Control Panel
 
-**Options**: `[MODE]`
+**Options**: `[MODE]` 
 
 This function installs the File Manager on the server
 for access through the Web interface.
@@ -728,7 +762,7 @@ for access through the Web interface.
 
 add system firewall
 
-**Options**: –
+**Options**: – 
 
 This function enables the system firewall.
 
@@ -738,7 +772,7 @@ This function enables the system firewall.
 
 add system IP address
 
-**Options**: `IP` `NETMASK` `[INTERFACE]` `[USER]` `[IP_STATUS]` `[IP_NAME]` `[NAT_IP]`
+**Options**: `IP` `NETMASK` `[INTERFACE]` `[USER]` `[IP_STATUS]` `[IP_NAME]` `[NAT_IP]` 
 
 **Examples**:
 
@@ -750,7 +784,7 @@ This function adds IP address into a system. It also creates rc scripts. You
 can specify IP name which will be used as root domain for temporary aliases.
 For example, if you set a1.myhosting.com as name, each new domain created on
 this IP will automatically receive alias $domain.a1.myhosting.com. Of course
-you must have wildcard record \*.a1.myhosting.com pointed to IP. This feature
+you must have wildcard record *.a1.myhosting.com pointed to IP. This feature
 is very handy when customer wants to test domain before dns migration.
 
 ## v-add-sys-pma-sso
@@ -759,7 +793,7 @@ is very handy when customer wants to test domain before dns migration.
 
 enables support for single sign on phpMyAdmin
 
-**Options**: `[MODE]`
+**Options**: `[MODE]` 
 
 This function enables support for SSO to phpMyAdmin
 
@@ -769,7 +803,7 @@ This function enables support for SSO to phpMyAdmin
 
 add system quota
 
-**Options**: –
+**Options**: – 
 
 This function enables filesystem quota on /home partition
 Some kernels do require additional packages to be installed first
@@ -780,7 +814,7 @@ Some kernels do require additional packages to be installed first
 
 Install Roundcube webmail client
 
-**Options**: `[MODE]`
+**Options**: `[MODE]` 
 
 This function installs the Roundcube webmail client.
 
@@ -790,7 +824,7 @@ This function installs the Roundcube webmail client.
 
 add system sftp jail
 
-**Options**: `[RESTART]`
+**Options**: `[RESTART]` 
 
 **Examples**:
 
@@ -806,7 +840,7 @@ This function enables sftp jailed environment.
 
 Add SMTP Account for logging, notification and internal mail
 
-**Options**: `DOMAIN` `PORT` `SMTP_SECURITY` `USERNAME` `PASSWORD` `EMAIL`
+**Options**: `DOMAIN` `PORT` `SMTP_SECURITY` `USERNAME` `PASSWORD` `EMAIL` 
 
 **Examples**:
 
@@ -823,7 +857,7 @@ for logging, notification and warn emails etc.
 
 add system wide smtp relay support
 
-**Options**: `HOST` `[USERNAME]` `[PASSWORD]` `[PORT]`
+**Options**: `HOST` `[USERNAME]` `[PASSWORD]` `[PORT]` 
 
 **Examples**:
 
@@ -839,9 +873,25 @@ This function adds system wide smtp relay support.
 
 Install SnappyMail webmail client
 
-**Options**: `[MODE]`
+**Options**: `[MODE]` 
 
 This function installs the SnappyMail webmail client.
+
+## v-add-sys-ssh-jail
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-sys-ssh-jail)
+
+add system ssh jail
+
+**Options**: `[RESTART]` 
+
+**Examples**:
+
+```bash
+v-add-sys-ssh-jail yes
+```
+
+This function enables ssh jailed environment.
 
 ## v-add-sys-web-terminal
 
@@ -849,7 +899,7 @@ This function installs the SnappyMail webmail client.
 
 add system web terminal
 
-**Options**: –
+**Options**: – 
 
 This function enables the web terminal.
 
@@ -859,7 +909,7 @@ This function enables the web terminal.
 
 add system user
 
-**Options**: `USER` `PASSWORD` `EMAIL` `[PACKAGE]` `[NAME]` `[LASTNAME]`
+**Options**: `USER` `PASSWORD` `EMAIL` `[PACKAGE]` `[NAME]` `[LASTNAME]` 
 
 **Examples**:
 
@@ -875,7 +925,7 @@ This function creates new user account.
 
 add 2fa to existing user
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -891,7 +941,7 @@ This function creates a new 2fa token for user.
 
 add composer (php dependency manager) for a user
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -908,7 +958,7 @@ Homepage: <https://getcomposer.org/>
 
 add user notification
 
-**Options**: `USER` `TOPIC` `NOTICE` `[TYPE]`
+**Options**: `USER` `TOPIC` `NOTICE` `[TYPE]` 
 
 This function adds a new user notification to the panel.
 
@@ -918,7 +968,7 @@ This function adds a new user notification to the panel.
 
 adding user package
 
-**Options**: `TMPFILE` `PACKAGE` `[REWRITE]`
+**Options**: `TMPFILE` `PACKAGE` `[REWRITE]` 
 
 This function adds new user package to the system.
 
@@ -928,7 +978,7 @@ This function adds new user package to the system.
 
 add user sftp jail
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -944,9 +994,25 @@ This function enables sftp jailed environment
 
 add user sftp key
 
-**Options**: `USER` `[TTL]`
+**Options**: `USER` `[TTL]` 
 
 This function creates and updates SSH keys for used with the File Manager.
+
+## v-add-user-ssh-jail
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-add-user-ssh-jail)
+
+add user ssh jail
+
+**Options**: `USER` `[RESTART]` 
+
+**Examples**:
+
+```bash
+v-add-user-ssh-jail admin
+```
+
+This function enables ssh jailed environment
 
 ## v-add-user-ssh-key
 
@@ -954,7 +1020,7 @@ This function creates and updates SSH keys for used with the File Manager.
 
 add ssh key
 
-**Options**: `USER` `KEY`
+**Options**: `USER` `KEY` 
 
 **Examples**:
 
@@ -971,7 +1037,7 @@ After that it append the new key(s)
 
 add wp-cli for a user
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -987,7 +1053,7 @@ This function adds support for wp-cli to the user account
 
 add web domain
 
-**Options**: `USER` `DOMAIN` `[IP]` `[RESTART]` `[ALIASES]` `[PROXY_EXTENSIONS]`
+**Options**: `USER` `DOMAIN` `[IP]` `[RESTART]` `[ALIASES]` `[PROXY_EXTENSIONS]` 
 
 **Examples**:
 
@@ -997,7 +1063,7 @@ v-add-web-domain admin wonderland.com 192.18.22.43 yes www.wonderland.com
 
 This function adds virtual host to a server. In cases when ip is
 undefined in the script, "default" template will be used. The alias of
-<www.domain.tld> type will be automatically assigned to the domain unless
+www.domain.tld type will be automatically assigned to the domain unless
 "none" is transmited as argument. If ip have associated dns name, this
 domain will also get the alias domain-tpl.$ipname. An alias with the ip
 name is useful during the site testing while dns isn't moved to server yet.
@@ -1008,7 +1074,7 @@ name is useful during the site testing while dns isn't moved to server yet.
 
 add web domain alias
 
-**Options**: `USER` `DOMAIN` `ALIASES` `[RESTART]`
+**Options**: `USER` `DOMAIN` `ALIASES` `[RESTART]` 
 
 **Examples**:
 
@@ -1017,7 +1083,7 @@ v-add-web-domain-alias admin acme.com www.acme.com yes
 ```
 
 This function adds one or more aliases to a domain (it is also called
-"domain parking"). This function supports wildcards <\*.domain.tld>.
+"domain parking"). This function supports wildcards <*.domain.tld>.
 
 ## v-add-web-domain-allow-users
 
@@ -1025,7 +1091,7 @@ This function adds one or more aliases to a domain (it is also called
 
 Allow other users create subdomains
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -1044,7 +1110,7 @@ user can create user.admin.com
 
 add web domain backend
 
-**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[RESTART]` 
 
 **Examples**:
 
@@ -1060,7 +1126,7 @@ This function is used to add the web backend configuration.
 
 add ftp account for web domain.
 
-**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PASSWORD` `[FTP_PATH]`
+**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PASSWORD` `[FTP_PATH]` 
 
 **Examples**:
 
@@ -1076,7 +1142,7 @@ This function creates additional ftp account for web domain.
 
 add password protection for web domain
 
-**Options**: `USER` `DOMAIN` `AUTH_USER` `AUTH_PASSWORD` `[RESTART]`
+**Options**: `USER` `DOMAIN` `AUTH_USER` `AUTH_PASSWORD` `[RESTART]` 
 
 **Examples**:
 
@@ -1092,7 +1158,7 @@ This function is used for securing web domain with http auth
 
 add webdomain proxy support
 
-**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[EXTENTIONS]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[TEMPLATE]` `[EXTENTIONS]` `[RESTART]` 
 
 **Examples**:
 
@@ -1109,7 +1175,7 @@ improve website speed.
 
 Adding force redirect to domain
 
-**Options**: `USER` `DOMAIN` `REDIRECT` `HTTPCODE` `[RESTART]`
+**Options**: `USER` `DOMAIN` `REDIRECT` `HTTPCODE` `[RESTART]` 
 
 **Examples**:
 
@@ -1130,12 +1196,12 @@ Function creates a forced redirect to a domain
 
 adding ssl for domain
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[SSL_HOME]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `SSL_DIR` `[SSL_HOME]` `[RESTART]` 
 
 **Examples**:
 
 ```bash
-v-add-web-domain-ssl admin example.com /home/admin/conf/web/example.com
+v-add-web-domain-ssl admin example.com /tmp/folder/contains/certificate/files/
 ```
 
 This function turns on SSL support for a domain. Parameter ssl_dir is a path
@@ -1151,7 +1217,7 @@ documentroot directory.
 
 Adding force SSL for a domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]` 
 
 **Examples**:
 
@@ -1167,7 +1233,7 @@ This function forces SSL for the requested domain.
 
 Adding hsts to a domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]` 
 
 This function enables HSTS for the requested domain.
 
@@ -1177,7 +1243,7 @@ This function enables HSTS for the requested domain.
 
 Adding force SSL for a domain
 
-**Options**: `USER` `DOMAIN` `[SSL]`
+**Options**: `USER` `DOMAIN` `[SSL]` 
 
 Up on creating an web domain set the SSL Force values due to the delay of LE due to DNS propergation over DNS cluster
 When LE has been activated it will set the actions
@@ -1188,7 +1254,7 @@ When LE has been activated it will set the actions
 
 add log analyser to generate domain statistics
 
-**Options**: `USER` `DOMAIN` `TYPE`
+**Options**: `USER` `DOMAIN` `TYPE` 
 
 **Examples**:
 
@@ -1207,7 +1273,7 @@ should use v-add-web-domain_stat_auth script.
 
 add password protection to web domain statistics
 
-**Options**: `USER` `DOMAIN` `STATS_USER` `STATS_PASSWORD` `[RESTART]`
+**Options**: `USER` `DOMAIN` `STATS_USER` `STATS_PASSWORD` `[RESTART]` 
 
 **Examples**:
 
@@ -1223,7 +1289,7 @@ This function is used for securing the web statistics page.
 
 add php fpm version
 
-**Options**: `VERSION`
+**Options**: `VERSION` 
 
 **Examples**:
 
@@ -1239,7 +1305,7 @@ Install php-fpm for provided version.
 
 backup system user with all its objects
 
-**Options**: `USER` `NOTIFY`
+**Options**: `USER` `NOTIFY` 
 
 **Examples**:
 
@@ -1255,7 +1321,7 @@ This function is used for backing up user with all its domains and databases.
 
 backup all users
 
-**Options**: –
+**Options**: – 
 
 This function backups all system users.
 
@@ -1265,16 +1331,20 @@ This function backups all system users.
 
 change cron job
 
-**Options**: `USER` `JOB` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND`
+**Options**: `USER` `JOB` `MIN` `HOUR` `DAY` `MONTH` `WDAY` `COMMAND` 
 
 **Examples**:
 
 ```bash
-v-change-cron-job admin 7 * * * * * /usr/bin/uptime
+v-change-cron-job admin 7 '*' '*' '*' '*' '*' '*' '/usr/bin/uptime'
 ```
 
 This function is used for changing existing job. It fully replace job
-parameters with new one but with same id.
+parameters with new one but with same id. When executing commands, any output
+is mailed to user's email if user config parameter CRON_REPORTS is set to 'yes'. 
+Change CRON_REPORTS value via:
+[v-add-cron-reports](https://hestiacp.com/docs/reference/cli.html#v-add-cron-reports) and
+[v-delete-cron-reports](https://hestiacp.com/docs/reference/cli.html#v-delete-cron-reports)
 
 ## v-change-database-host-password
 
@@ -1282,7 +1352,7 @@ parameters with new one but with same id.
 
 change database server password
 
-**Options**: `TYPE` `HOST` `USER` `PASSWORD`
+**Options**: `TYPE` `HOST` `USER` `PASSWORD` 
 
 **Examples**:
 
@@ -1298,7 +1368,7 @@ This function changes database server password.
 
 change database owner
 
-**Options**: `DATABASE` `USER`
+**Options**: `DATABASE` `USER` 
 
 **Examples**:
 
@@ -1314,7 +1384,7 @@ This function for changing database owner.
 
 change database password
 
-**Options**: `USER` `DATABASE` `DBPASS`
+**Options**: `USER` `DATABASE` `DBPASS` 
 
 **Examples**:
 
@@ -1331,7 +1401,7 @@ full name of database as argument.
 
 change database username
 
-**Options**: `USER` `DATABASE` `DBUSER` `[DBPASS]`
+**Options**: `USER` `DATABASE` `DBUSER` `[DBPASS]` 
 
 **Examples**:
 
@@ -1347,7 +1417,7 @@ This function for changing database user. It uses the
 
 change dns domain dnssec status
 
-**Options**: `USER` `DOMAIN` `STATUS`
+**Options**: `USER` `DOMAIN` `STATUS` 
 
 **Examples**:
 
@@ -1355,13 +1425,15 @@ change dns domain dnssec status
 v-change-dns-domain-dnssec admin domain.pp.ua yes
 ```
 
+
+
 ## v-change-dns-domain-exp
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-dns-domain-exp)
 
 change dns domain expiration date
 
-**Options**: `USER` `DOMAIN` `EXP`
+**Options**: `USER` `DOMAIN` `EXP` 
 
 **Examples**:
 
@@ -1378,7 +1450,7 @@ serial number will be refreshed automatically during update.
 
 change dns domain ip address
 
-**Options**: `USER` `DOMAIN` `IP` `[RESTART]`
+**Options**: `USER` `DOMAIN` `IP` `[RESTART]` 
 
 **Examples**:
 
@@ -1394,7 +1466,7 @@ This function for changing the main ip of DNS zone.
 
 change dns domain soa record
 
-**Options**: `USER` `DOMAIN` `SOA` `[RESTART]`
+**Options**: `USER` `DOMAIN` `SOA` `[RESTART]` 
 
 **Examples**:
 
@@ -1411,7 +1483,7 @@ modified by v-change-dns-record call.
 
 change dns domain template
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
+**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]` 
 
 **Examples**:
 
@@ -1429,7 +1501,7 @@ parameters of new template.
 
 change dns domain ttl
 
-**Options**: `USER` `DOMAIN` `TTL` `[RESTART]`
+**Options**: `USER` `DOMAIN` `TTL` `[RESTART]` 
 
 **Examples**:
 
@@ -1445,7 +1517,7 @@ This function for changing the time to live TTL parameter for all records.
 
 change dns domain record
 
-**Options**: `USER` `DOMAIN` `ID` `RECORD` `TYPE` `VALUE` `[PRIORITY]` `[RESTART]` `[TTL]`
+**Options**: `USER` `DOMAIN` `ID` `RECORD` `TYPE` `VALUE` `[PRIORITY]` `[RESTART]` `[TTL]` 
 
 **Examples**:
 
@@ -1461,7 +1533,7 @@ This function for changing DNS record.
 
 change dns domain record id
 
-**Options**: `USER` `DOMAIN` `ID` `NEWID` `[RESTART]`
+**Options**: `USER` `DOMAIN` `ID` `NEWID` `[RESTART]` 
 
 **Examples**:
 
@@ -1477,7 +1549,7 @@ This function for changing internal record id.
 
 change domain owner
 
-**Options**: `DOMAIN` `USER`
+**Options**: `DOMAIN` `USER` 
 
 **Examples**:
 
@@ -1493,7 +1565,7 @@ This function of changing domain ownership.
 
 change firewall rule
 
-**Options**: `RULE` `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]`
+**Options**: `RULE` `ACTION` `IP` `PORT` `[PROTOCOL]` `[COMMENT]` 
 
 **Examples**:
 
@@ -1510,7 +1582,7 @@ It fully replace rule with new one but keeps same id.
 
 change file permission
 
-**Options**: `USER` `FILE` `PERMISSIONS`
+**Options**: `USER` `FILE` `PERMISSIONS` 
 
 **Examples**:
 
@@ -1526,7 +1598,7 @@ This function changes file access permissions on the file system
 
 change mail account password
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `PASSWORD`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `PASSWORD` 
 
 **Examples**:
 
@@ -1542,7 +1614,7 @@ This function changes email account password.
 
 change mail account quota
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `QUOTA`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `QUOTA` 
 
 **Examples**:
 
@@ -1558,7 +1630,7 @@ This function changes email account disk quota.
 
 change mail account rate limit
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `RATE`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `RATE` 
 
 **Examples**:
 
@@ -1574,7 +1646,7 @@ This function changes email account rate limit. Use system to use domain or "ser
 
 change mail domain catchall email
 
-**Options**: `USER` `DOMAIN` `EMAIL`
+**Options**: `USER` `DOMAIN` `EMAIL` 
 
 **Examples**:
 
@@ -1590,7 +1662,7 @@ This function changes mail domain catchall.
 
 change mail domain rate limit
 
-**Options**: `USER` `DOMAIN` `RATE`
+**Options**: `USER` `DOMAIN` `RATE` 
 
 **Examples**:
 
@@ -1606,7 +1678,7 @@ This function changes email account rate limit for the domain. Account specific 
 
 change domain ssl certificate
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]` 
 
 This function changes SSL domain certificate and the key. If ca file present
 it will be replaced as well.
@@ -1617,7 +1689,7 @@ it will be replaced as well.
 
 change remote dns domain expiration date
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 This function synchronise dns domain with the remote server.
 
@@ -1627,7 +1699,7 @@ This function synchronise dns domain with the remote server.
 
 change remote dns domain SOA
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -1643,7 +1715,7 @@ This function synchronise dns domain with the remote server.
 
 change remote dns domain TTL
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -1659,7 +1731,7 @@ This function synchronise dns domain with the remote server.
 
 Enable / Disable API access
 
-**Options**: `STATUS`
+**Options**: `STATUS` 
 
 **Examples**:
 
@@ -1678,18 +1750,23 @@ Enabled / Disable API
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-config-value)
 
-change sysconfig value
+change or add sysconfig value
 
-**Options**: `KEY` `VALUE`
+**Options**: `KEY` `VALUE` 
 
 **Examples**:
 
 ```bash
-v-change-sys-config-value VERSION 1.0
+# - If KEY exists, VALUE will be changed.
+# - If KEY absent, KEY=VALUE will be added
+v-change-sys-config-value APP_NAME 'my custom panel name'
 ```
 
-This function is for changing main config settings such as COMPANY_NAME or
-COMPANY_EMAIL and so on.
+Change or add KEY=VALUE in /usr/local/hestia/conf/hestia.conf 
+::: warning 
+Changing certain KEY=VALUE pairs with this command may not produce the intended result.
+You must run respective command to perform additional actions.
+:::
 
 ## v-change-sys-db-alias
 
@@ -1697,7 +1774,7 @@ COMPANY_EMAIL and so on.
 
 change phpmyadmin/phppgadmin alias url
 
-**Options**: `TYPE` `ALIAS`
+**Options**: `TYPE` `ALIAS` 
 
 **Examples**:
 
@@ -1717,7 +1794,7 @@ apache2 or nginx configuration.
 
 enable or disable demo mode
 
-**Options**: `ACTIVE`
+**Options**: `ACTIVE` 
 
 This function will set the demo mode variable,
 which will prevent usage of certain v-scripts in the backend
@@ -1731,7 +1808,7 @@ for domains which have been created.
 
 change hestia ssl certificate
 
-**Options**: `SSL_DIR` `[RESTART]`
+**Options**: `SSL_DIR` `[RESTART]` 
 
 **Examples**:
 
@@ -1747,7 +1824,7 @@ This function changes hestia SSL certificate and the key.
 
 change hostname
 
-**Options**: `HOSTNAME`
+**Options**: `HOSTNAME` 
 
 **Examples**:
 
@@ -1763,7 +1840,7 @@ This function for changing system hostname.
 
 change IP name
 
-**Options**: `IP` `NAME`
+**Options**: `IP` `NAME` 
 
 **Examples**:
 
@@ -1779,7 +1856,7 @@ This function for changing dns domain associated with IP.
 
 change NAT IP address
 
-**Options**: `IP` `NAT_IP` `[RESTART]`
+**Options**: `IP` `NAT_IP` `[RESTART]` 
 
 **Examples**:
 
@@ -1795,7 +1872,7 @@ This function for changing NAT IP associated with IP.
 
 change IP owner
 
-**Options**: `IP` `USER`
+**Options**: `IP` `USER` 
 
 **Examples**:
 
@@ -1811,7 +1888,7 @@ This function of changing IP address ownership.
 
 change IP status
 
-**Options**: `IP` `IP_STATUS`
+**Options**: `IP` `IP_STATUS` 
 
 **Examples**:
 
@@ -1827,7 +1904,7 @@ This function of changing an IP address's status.
 
 change sys language
 
-**Options**: `LANGUAGE` `[UPDATE_USERS]`
+**Options**: `LANGUAGE` `[UPDATE_USERS]` 
 
 **Examples**:
 
@@ -1843,7 +1920,7 @@ This function for changing system language.
 
 Change default php version server wide
 
-**Options**: `VERSION`
+**Options**: `VERSION` 
 
 **Examples**:
 
@@ -1851,13 +1928,15 @@ Change default php version server wide
 v-change-sys-php 8.0
 ```
 
+
+
 ## v-change-sys-port
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-sys-port)
 
 change system backend port
 
-**Options**: `PORT`
+**Options**: `PORT` 
 
 **Examples**:
 
@@ -1873,7 +1952,7 @@ This function for changing the system backend port in NGINX configuration.
 
 update web templates
 
-**Options**: `[RESTART]`
+**Options**: `[RESTART]` 
 
 This function for changing the release branch for the
 Hestia Control Panel. This allows the user to switch between
@@ -1887,7 +1966,7 @@ turned on.
 
 change service config
 
-**Options**: `CONFIG` `SERVICE` `[RESTART]`
+**Options**: `CONFIG` `SERVICE` `[RESTART]` 
 
 **Examples**:
 
@@ -1903,7 +1982,7 @@ This function for changing service confguration.
 
 change system timezone
 
-**Options**: `TIMEZONE`
+**Options**: `TIMEZONE` 
 
 **Examples**:
 
@@ -1919,7 +1998,7 @@ This function for changing system timezone.
 
 change system web terminal backend port
 
-**Options**: `PORT`
+**Options**: `PORT` 
 
 **Examples**:
 
@@ -1935,7 +2014,7 @@ This function for changing the system's web terminal backend port in NGINX confi
 
 change webmail alias url
 
-**Options**: `WEBMAIL`
+**Options**: `WEBMAIL` 
 
 **Examples**:
 
@@ -1951,7 +2030,7 @@ This function changes the webmail url in apache2 or nginx configuration.
 
 changes user configuration value
 
-**Options**: `USER` `KEY` `VALUE`
+**Options**: `USER` `KEY` `VALUE` 
 
 **Examples**:
 
@@ -1967,7 +2046,7 @@ Changes key/value for specified user.
 
 change user contact email
 
-**Options**: `USER` `EMAIL`
+**Options**: `USER` `EMAIL` 
 
 **Examples**:
 
@@ -1983,7 +2062,7 @@ This function for changing of e-mail associated with a certain user.
 
 change user language
 
-**Options**: `USER` `LANGUAGE`
+**Options**: `USER` `LANGUAGE` 
 
 **Examples**:
 
@@ -1999,7 +2078,7 @@ This function for changing language.
 
 change user full name
 
-**Options**: `USER` `NAME` `[LAST_NAME]`
+**Options**: `USER` `NAME` `[LAST_NAME]` 
 
 **Examples**:
 
@@ -2015,7 +2094,7 @@ This function allow to change user's full name.
 
 change user name servers
 
-**Options**: `USER` `NS1` `NS2` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]`
+**Options**: `USER` `NS1` `NS2` `[NS3]` `[NS4]` `[NS5]` `[NS6]` `[NS7]` `[NS8]` 
 
 **Examples**:
 
@@ -2031,7 +2110,7 @@ This function for changing default name servers for specific user.
 
 change user package
 
-**Options**: `USER` `PACKAGE` `[FORCE]`
+**Options**: `USER` `PACKAGE` `[FORCE]` 
 
 **Examples**:
 
@@ -2047,7 +2126,7 @@ This function changes user's hosting package.
 
 change user password
 
-**Options**: `USER` `PASSWORD`
+**Options**: `USER` `PASSWORD` 
 
 **Examples**:
 
@@ -2061,9 +2140,9 @@ This function changes user's password and updates RKEY value.
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-change-user-php-cli)
 
-add php version alias to .bash_aliases
+add php  version alias to .bash_aliases
 
-**Options**: `USER` `VERSION`
+**Options**: `USER` `VERSION` 
 
 **Examples**:
 
@@ -2080,7 +2159,7 @@ version when multi-php is enabled.
 
 change user random key
 
-**Options**: `USER` `[HASH]`
+**Options**: `USER` `[HASH]` 
 
 This function changes user's RKEY value thats has been used for security value to be used forgot password function only.
 
@@ -2090,7 +2169,7 @@ This function changes user's RKEY value thats has been used for security value t
 
 updates user role
 
-**Options**: `USER` `ROLE`
+**Options**: `USER` `ROLE` 
 
 **Examples**:
 
@@ -2106,12 +2185,12 @@ Give/revoke user administrator rights to manage all accounts as admin
 
 change user shell
 
-**Options**: `USER` `SHELL`
+**Options**: `USER` `SHELL` `JAIL_ENABLED` 
 
 **Examples**:
 
 ```bash
-v-change-user-shell admin nologin
+v-change-user-shell admin nologin no
 ```
 
 This function changes system shell of a user. Shell gives ability to use ssh.
@@ -2122,7 +2201,7 @@ This function changes system shell of a user. Shell gives ability to use ssh.
 
 updates user role
 
-**Options**: `USER` `SORT_ORDER`
+**Options**: `USER` `SORT_ORDER` 
 
 **Examples**:
 
@@ -2138,7 +2217,7 @@ Changes web UI display sort order for specified user.
 
 change user default template
 
-**Options**: `USER` `TYPE` `TEMPLATE`
+**Options**: `USER` `TYPE` `TEMPLATE` 
 
 **Examples**:
 
@@ -2154,13 +2233,13 @@ This function changes default user web template.
 
 updates user theme
 
-**Options**: `USER` `THEME`
+**Options**: `USER` `THEME` 
 
 **Examples**:
 
 ```bash
 v-change-user-theme admin dark
-example: v-change-user-theme peter vestia
+example:   v-change-user-theme peter vestia
 ```
 
 Changes web UI display theme for specified user.
@@ -2171,7 +2250,7 @@ Changes web UI display theme for specified user.
 
 change web domain backend template
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
+**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]` 
 
 **Examples**:
 
@@ -2187,7 +2266,7 @@ This function changes backend template
 
 enable/disable directory listing
 
-**Options**: `USER` `DOMAIN` `MODE`
+**Options**: `USER` `DOMAIN` `MODE` 
 
 **Examples**:
 
@@ -2203,7 +2282,7 @@ This function is used for changing the directory list mode.
 
 Changes the document root for an existing web domain
 
-**Options**: `USER` `DOMAIN` `TARGET_DOMAIN` `[DIRECTORY]` `[PHP]`
+**Options**: `USER` `DOMAIN` `TARGET_DOMAIN` `[DIRECTORY]` `[PHP]` 
 
 **Examples**:
 
@@ -2225,7 +2304,7 @@ to another available domain under the user context.
 
 change ftp user password.
 
-**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PASSWORD`
+**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PASSWORD` 
 
 **Examples**:
 
@@ -2241,7 +2320,7 @@ This function changes ftp user password.
 
 change path for ftp user.
 
-**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PATH`
+**Options**: `USER` `DOMAIN` `FTP_USER` `FTP_PATH` 
 
 **Examples**:
 
@@ -2257,7 +2336,7 @@ This function changes ftp user path.
 
 change password for http auth user
 
-**Options**: `USER` `DOMAIN` `AUTH_USER` `AUTH_PASSWORD` `[RESTART]`
+**Options**: `USER` `DOMAIN` `AUTH_USER` `AUTH_PASSWORD` `[RESTART]` 
 
 **Examples**:
 
@@ -2273,7 +2352,7 @@ This function is used for changing http auth user password
 
 change web domain ip
 
-**Options**: `USER` `DOMAIN` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -2289,7 +2368,7 @@ This function is used for changing domain ip
 
 change web domain name
 
-**Options**: `USER` `DOMAIN` `NEW_DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `NEW_DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -2305,7 +2384,7 @@ This function is used for changing the domain name.
 
 change web domain proxy template
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[EXTENTIONS]` `[RESTART]`
+**Options**: `USER` `DOMAIN` `TEMPLATE` `[EXTENTIONS]` `[RESTART]` 
 
 **Examples**:
 
@@ -2321,7 +2400,7 @@ This function changes proxy template
 
 change domain ssl certificate
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]` 
 
 **Examples**:
 
@@ -2338,7 +2417,7 @@ it will be replaced as well.
 
 changing domain ssl home
 
-**Options**: `USER` `DOMAIN` `SSL_HOME` `[RESTART]`
+**Options**: `USER` `DOMAIN` `SSL_HOME` `[RESTART]` 
 
 **Examples**:
 
@@ -2355,7 +2434,7 @@ This function changes SSL home directory. Single will separate the both public_h
 
 change web domain statistics
 
-**Options**: `USER` `DOMAIN` `TYPE`
+**Options**: `USER` `DOMAIN` `TYPE` 
 
 **Examples**:
 
@@ -2372,7 +2451,7 @@ automatically chooses from client's configuration file.
 
 change web domain template
 
-**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]`
+**Options**: `USER` `DOMAIN` `TEMPLATE` `[RESTART]` 
 
 **Examples**:
 
@@ -2389,7 +2468,7 @@ of webdomain directories remains untouched.
 
 check access key
 
-**Options**: `ACCESS_KEY_ID` `SECRET_ACCESS_KEY` `COMMAND` `[IP]` `[FORMAT]`
+**Options**: `ACCESS_KEY_ID` `SECRET_ACCESS_KEY` `COMMAND` `[IP]` `[FORMAT]` 
 
 **Examples**:
 
@@ -2397,10 +2476,10 @@ check access key
 v-check-access-key key_id secret v-purge-nginx-cache 127.0.0.1 json
 ```
 
-- Checks if the key exists;
-- Checks if the secret belongs to the key;
-- Checks if the key user is suspended;
-- Checks if the key has permission to run the command.
+* Checks if the key exists;
+* Checks if the secret belongs to the key;
+* Checks if the key user is suspended;
+* Checks if the key has permission to run the command.
 
 ## v-check-api-key
 
@@ -2408,7 +2487,7 @@ v-check-access-key key_id secret v-purge-nginx-cache 127.0.0.1 json
 
 check api key
 
-**Options**: `KEY` `[IP]`
+**Options**: `KEY` `[IP]` 
 
 **Examples**:
 
@@ -2424,7 +2503,7 @@ This function checks a key file in $HESTIA/data/keys/
 
 open file
 
-**Options**: `USER` `FILE`
+**Options**: `USER` `FILE` 
 
 **Examples**:
 
@@ -2440,7 +2519,7 @@ This function opens/reads files on the file system
 
 check user password
 
-**Options**: `TYPE` `PASSWORD` `HASH`
+**Options**: `TYPE` `PASSWORD` `HASH` 
 
 **Examples**:
 
@@ -2456,7 +2535,7 @@ This function verifies email account password hash
 
 check user token
 
-**Options**: `USER` `TOKEN`
+**Options**: `USER` `TOKEN` 
 
 **Examples**:
 
@@ -2472,7 +2551,7 @@ This function verifies user 2fa token.
 
 check user hash
 
-**Options**: `USER` `HASH` `[IP]`
+**Options**: `USER` `HASH` `[IP]` 
 
 **Examples**:
 
@@ -2488,7 +2567,7 @@ This function verifies user hash
 
 check user password
 
-**Options**: `USER` `PASSWORD` `[IP]` `[RETURN_HASH]`
+**Options**: `USER` `PASSWORD` `[IP]` `[RETURN_HASH]` 
 
 **Examples**:
 
@@ -2504,7 +2583,7 @@ This function verifies user password from file
 
 copy directory
 
-**Options**: `USER` `SRC_DIRECTORY` `DST_DIRECTORY`
+**Options**: `USER` `SRC_DIRECTORY` `DST_DIRECTORY` 
 
 **Examples**:
 
@@ -2520,7 +2599,7 @@ This function copies directory on the file system
 
 copy file
 
-**Options**: `USER` `SRC_FILE` `DST_FILE`
+**Options**: `USER` `SRC_FILE` `DST_FILE` 
 
 **Examples**:
 
@@ -2536,7 +2615,7 @@ This function copies file on the file system
 
 duplicate existing package
 
-**Options**: `PACKAGE` `NEW_PACKAGE`
+**Options**: `PACKAGE` `NEW_PACKAGE` 
 
 **Examples**:
 
@@ -2553,7 +2632,7 @@ package file to facilitate easier configuration.
 
 delete access key
 
-**Options**: `ACCESS_KEY_ID`
+**Options**: `ACCESS_KEY_ID` 
 
 **Examples**:
 
@@ -2569,7 +2648,7 @@ This function removes a key from in $HESTIA/data/access-keys/
 
 delete backup ftp server
 
-**Options**: `TYPE` `[HOST]`
+**Options**: `TYPE` `[HOST]` 
 
 **Examples**:
 
@@ -2585,7 +2664,7 @@ This function deletes ftp backup host
 
 delete hestia autoupdate cron job
 
-**Options**: –
+**Options**: – 
 
 This function deletes hestia autoupdate cron job.
 
@@ -2595,7 +2674,7 @@ This function deletes hestia autoupdate cron job.
 
 delete cron job
 
-**Options**: `USER` `JOB`
+**Options**: `USER` `JOB` 
 
 **Examples**:
 
@@ -2611,7 +2690,7 @@ This function deletes cron job.
 
 delete cron reports
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -2628,7 +2707,7 @@ notifications.
 
 delete restart job
 
-**Options**: –
+**Options**: – 
 
 This function for disabling restart cron tasks
 
@@ -2638,7 +2717,7 @@ This function for disabling restart cron tasks
 
 delete database
 
-**Options**: `USER` `DATABASE`
+**Options**: `USER` `DATABASE` 
 
 **Examples**:
 
@@ -2655,7 +2734,7 @@ another database, he will not be deleted.
 
 delete database server
 
-**Options**: `TYPE` `HOST`
+**Options**: `TYPE` `HOST` 
 
 **Examples**:
 
@@ -2672,7 +2751,7 @@ be deleted if there are no databases created on it only.
 
 deletes temp database user
 
-**Options**: `USER` `DBUSER` `[TYPE]` `[HOST]`
+**Options**: `USER` `DBUSER` `[TYPE]` `[HOST]` 
 
 **Examples**:
 
@@ -2689,7 +2768,7 @@ To be used in combination with v-add-database-temp-user
 
 delete user databases
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -2705,7 +2784,7 @@ This function deletes all user databases.
 
 delete dns domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -2722,7 +2801,7 @@ deleted.
 
 delete dns domains
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -2738,7 +2817,7 @@ This function for deleting all users DNS domains.
 
 delete dns domains based on SRC field
 
-**Options**: `USER` `SRC` `[RESTART]`
+**Options**: `USER` `SRC` `[RESTART]` 
 
 **Examples**:
 
@@ -2754,7 +2833,7 @@ This function for deleting DNS domains related to a certain host.
 
 delete dns domain or dns record based on web domain alias
 
-**Options**: `USER` `DOMAIN` `ALIAS` `[RESTART]`
+**Options**: `USER` `DOMAIN` `ALIAS` `[RESTART]` 
 
 **Examples**:
 
@@ -2770,7 +2849,7 @@ This function deletes dns domain or dns record based on web domain alias.
 
 delete dns record
 
-**Options**: `USER` `DOMAIN` `ID` `[RESTART]`
+**Options**: `USER` `DOMAIN` `ID` `[RESTART]` 
 
 **Examples**:
 
@@ -2786,7 +2865,7 @@ This function for deleting a certain record of DNS zone.
 
 delete web/dns/mail domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -2802,7 +2881,7 @@ This function deletes web/dns/mail domain.
 
 Disable FastCGI cache for nginx
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -2818,7 +2897,7 @@ This function disables FastCGI cache for nginx
 
 delete firewall blocking rule
 
-**Options**: `IP` `CHAIN`
+**Options**: `IP` `CHAIN` 
 
 **Examples**:
 
@@ -2834,7 +2913,7 @@ This function deletes blocking rule from system firewall
 
 delete firewall chain
 
-**Options**: `CHAIN`
+**Options**: `CHAIN` 
 
 **Examples**:
 
@@ -2850,7 +2929,7 @@ This function adds new rule to system firewall
 
 delete firewall ipset
 
-**Options**: `NAME`
+**Options**: `NAME` 
 
 **Examples**:
 
@@ -2866,7 +2945,7 @@ This function removes ipset from system and from hestia
 
 delete firewall rule
 
-**Options**: `RULE`
+**Options**: `RULE` 
 
 **Examples**:
 
@@ -2882,7 +2961,7 @@ This function deletes firewall rule.
 
 delete directory
 
-**Options**: `USER` `DIRECTORY`
+**Options**: `USER` `DIRECTORY` 
 
 **Examples**:
 
@@ -2898,7 +2977,7 @@ This function deletes directory on the file system
 
 delete file
 
-**Options**: `USER` `FILE`
+**Options**: `USER` `FILE` 
 
 **Examples**:
 
@@ -2914,7 +2993,7 @@ This function deletes file on the file system
 
 deleting letsencrypt ssl cetificate for domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[MAIL]`
+**Options**: `USER` `DOMAIN` `[RESTART]` `[MAIL]` 
 
 **Examples**:
 
@@ -2930,7 +3009,7 @@ This function turns off letsencrypt SSL support for a domain.
 
 delete mail account
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**Options**: `USER` `DOMAIN` `ACCOUNT` 
 
 **Examples**:
 
@@ -2946,7 +3025,7 @@ This function deletes email account.
 
 delete mail account alias aka nickname
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS` 
 
 **Examples**:
 
@@ -2962,7 +3041,7 @@ This function deletes email account alias.
 
 delete mail account autoreply message
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `ALIAS` 
 
 **Examples**:
 
@@ -2978,7 +3057,7 @@ This function deletes an email accounts autoreply.
 
 delete mail account forward
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `EMAIL`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `EMAIL` 
 
 **Examples**:
 
@@ -2994,7 +3073,7 @@ This function deletes an email accounts forwarding address.
 
 delete mail account forward-only flag
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**Options**: `USER` `DOMAIN` `ACCOUNT` 
 
 **Examples**:
 
@@ -3010,7 +3089,7 @@ This function deletes fwd-only flag
 
 delete mail domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3027,7 +3106,7 @@ also be deleted.
 
 delete mail domain antispam support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3043,7 +3122,7 @@ This function disable spamassasin for incoming emails.
 
 delete mail domain antivirus support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3059,7 +3138,7 @@ This function disables clamav scan for incoming emails.
 
 delete mail domain catchall email
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3075,7 +3154,7 @@ This function disables mail domain cathcall.
 
 delete mail domain dkim support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3091,7 +3170,7 @@ This function delete DKIM domain pem.
 
 delete mail domain reject spam support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3107,7 +3186,7 @@ The function disables spam rejection for incoming emails.
 
 Remove mail domain smtp relay support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3123,7 +3202,7 @@ This function removes mail domain smtp relay support.
 
 delete mail domain ssl support
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3139,7 +3218,7 @@ This function delete ssl certificates.
 
 delete webmail support for a domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]` 
 
 **Examples**:
 
@@ -3156,7 +3235,7 @@ a specified mail domain.
 
 delete mail domains
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -3172,7 +3251,7 @@ This function for deleting all users mail domains.
 
 delete remote dns domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3188,7 +3267,7 @@ This function synchronise dns with the remote server.
 
 delete remote dns domains
 
-**Options**: `[HOST]`
+**Options**: `[HOST]` 
 
 This function deletes remote dns domains.
 
@@ -3198,7 +3277,7 @@ This function deletes remote dns domains.
 
 delete remote dns host
 
-**Options**: `HOST`
+**Options**: `HOST` 
 
 **Examples**:
 
@@ -3214,7 +3293,7 @@ This function for deleting the remote dns host from hestia configuration.
 
 delete remote dns domain record
 
-**Options**: `USER` `DOMAIN` `ID`
+**Options**: `USER` `DOMAIN` `ID` 
 
 **Examples**:
 
@@ -3230,7 +3309,7 @@ This function synchronise dns with the remote server.
 
 delete ip adresss from allowed ip list api
 
-**Options**: `IP`
+**Options**: `IP` 
 
 **Examples**:
 
@@ -3238,13 +3317,15 @@ delete ip adresss from allowed ip list api
 v-delete-sys-api-ip 1.1.1.1
 ```
 
+
+
 ## v-delete-sys-filemanager
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-filemanager)
 
 remove file manager functionality from Hestia Control Panel
 
-**Options**: `[MODE]`
+**Options**: `[MODE]` 
 
 This function removes the File Manager and its entry points
 
@@ -3254,7 +3335,7 @@ This function removes the File Manager and its entry points
 
 delete system firewall
 
-**Options**: –
+**Options**: – 
 
 This function disables firewall support
 
@@ -3264,7 +3345,7 @@ This function disables firewall support
 
 delete system IP
 
-**Options**: `IP`
+**Options**: `IP` 
 
 **Examples**:
 
@@ -3281,7 +3362,7 @@ on interface and do not allow to delete IP which is used by a web domain.
 
 delete exim mail queue
 
-**Options**: –
+**Options**: – 
 
 This function checks for messages stuck in the exim mail queue
 and prompts the user to clear the queue if desired.
@@ -3292,7 +3373,7 @@ and prompts the user to clear the queue if desired.
 
 disables support for single sign on PHPMYADMIN
 
-**Options**: `[MODE]`
+**Options**: `[MODE]` 
 
 Disables support for SSO to phpMyAdmin
 
@@ -3302,7 +3383,7 @@ Disables support for SSO to phpMyAdmin
 
 delete system quota
 
-**Options**: –
+**Options**: – 
 
 This function disables filesystem quota on /home partition
 
@@ -3312,7 +3393,7 @@ This function disables filesystem quota on /home partition
 
 delete system sftp jail
 
-**Options**: –
+**Options**: – 
 
 This function disables sftp jailed environment
 
@@ -3322,7 +3403,7 @@ This function disables sftp jailed environment
 
 Remove SMTP Account for logging, notification and internal mail
 
-**Options**: –
+**Options**: – 
 
 This function allows configuring a SMTP account for the server to use
 for logging, notification and warn emails etc.
@@ -3333,9 +3414,19 @@ for logging, notification and warn emails etc.
 
 disable system wide smtp relay support
 
-**Options**:
+**Options**: 
 
 options:
+
+## v-delete-sys-ssh-jail
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-sys-ssh-jail)
+
+delete system ssh jail
+
+**Options**: – 
+
+This function disables ssh jailed environment
 
 ## v-delete-sys-web-terminal
 
@@ -3343,7 +3434,7 @@ options:
 
 delete web terminal
 
-**Options**: –
+**Options**: – 
 
 This function disables the web terminal.
 
@@ -3353,7 +3444,7 @@ This function disables the web terminal.
 
 delete user
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -3370,7 +3461,7 @@ databases, cron jobs, etc.
 
 delete 2fa of existing user
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -3386,7 +3477,7 @@ This function deletes 2fa token of a user.
 
 Delete auth log file for user
 
-**Options**:
+**Options**: 
 
 This function for deleting a users auth log file
 
@@ -3396,7 +3487,7 @@ This function for deleting a users auth log file
 
 delete user backup
 
-**Options**: `USER` `BACKUP`
+**Options**: `USER` `BACKUP` 
 
 **Examples**:
 
@@ -3412,7 +3503,7 @@ This function deletes user backup.
 
 delete backup exclusion
 
-**Options**: `USER` `[SYSTEM]`
+**Options**: `USER` `[SYSTEM]` 
 
 **Examples**:
 
@@ -3428,7 +3519,7 @@ This function for deleting backup exclusion
 
 delete user ips
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -3444,7 +3535,7 @@ This function deletes all user's ip addresses.
 
 Delete log file for user
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -3460,7 +3551,7 @@ This function for deleting a users log file
 
 delete user notification
 
-**Options**: `USER` `NOTIFICATION`
+**Options**: `USER` `NOTIFICATION` 
 
 **Examples**:
 
@@ -3476,7 +3567,7 @@ This function deletes user notification.
 
 delete user package
 
-**Options**: `PACKAGE`
+**Options**: `PACKAGE` 
 
 **Examples**:
 
@@ -3492,7 +3583,7 @@ This function for deleting user package.
 
 delete user sftp jail
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -3502,13 +3593,29 @@ v-delete-user-sftp-jail whistler
 
 This function disables sftp jailed environment for USER
 
+## v-delete-user-ssh-jail
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ssh-jail)
+
+delete user ssh jail
+
+**Options**: `USER` 
+
+**Examples**:
+
+```bash
+v-delete-user-ssh-jail whistler
+```
+
+This function disables ssh jailed environment for USER
+
 ## v-delete-user-ssh-key
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-delete-user-ssh-key)
 
 add ssh key
 
-**Options**: `USER` `KEY`
+**Options**: `USER` `KEY` 
 
 **Examples**:
 
@@ -3524,7 +3631,7 @@ Delete user ssh key from authorized_keys
 
 delete user usage statistics
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3541,7 +3648,7 @@ This function deletes user statistics data.
 
 delete web domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -3560,7 +3667,7 @@ only with a help of reserve copy.
 
 delete web domain alias
 
-**Options**: `USER` `DOMAIN` `ALIAS` `[RESTART]`
+**Options**: `USER` `DOMAIN` `ALIAS` `[RESTART]` 
 
 **Examples**:
 
@@ -3577,7 +3684,7 @@ default www aliase can be removed as well.
 
 disables other users create subdomains
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3596,7 +3703,7 @@ user can create user.admin.com
 
 deleting web domain backend configuration
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -3612,7 +3719,7 @@ This function of deleting the virtualhost backend configuration.
 
 delete webdomain ftp account
 
-**Options**: `USER` `DOMAIN` `FTP_USER`
+**Options**: `USER` `DOMAIN` `FTP_USER` 
 
 **Examples**:
 
@@ -3628,7 +3735,7 @@ This function deletes additional ftp account.
 
 delete http auth user
 
-**Options**: `USER` `DOMAIN` `AUTH_USER` `[RESTART]`
+**Options**: `USER` `DOMAIN` `AUTH_USER` `[RESTART]` 
 
 **Examples**:
 
@@ -3644,7 +3751,7 @@ This function is used for deleting http auth user
 
 deleting web domain proxy configuration
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -3660,7 +3767,7 @@ This function of deleting the virtualhost proxy configuration.
 
 Delete force redirect to domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -3676,7 +3783,7 @@ Function delete a forced redirect to a domain
 
 delete web domain SSL support
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -3692,7 +3799,7 @@ This function disable https support and deletes SSL certificates.
 
 remove ssl force from domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]` 
 
 **Examples**:
 
@@ -3708,7 +3815,7 @@ This function removes force SSL configurations.
 
 remove ssl force from domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]`
+**Options**: `USER` `DOMAIN` `[RESTART]` `[QUIET]` 
 
 **Examples**:
 
@@ -3724,7 +3831,7 @@ This function removes force SSL configurations.
 
 delete web domain statistics
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -3741,7 +3848,7 @@ automatically chooses from client's configuration file.
 
 disable web domain stats authentication support
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -3760,7 +3867,7 @@ authentication.
 
 delete web domains
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -3776,7 +3883,7 @@ This function deletes all user's webdomains.
 
 delete php fpm version
 
-**Options**: `VERSION`
+**Options**: `VERSION` 
 
 **Examples**:
 
@@ -3792,7 +3899,7 @@ This function checks and delete a fpm php version if not used by any domain.
 
 Download backup
 
-**Options**: `USER` `BACKUP`
+**Options**: `USER` `BACKUP` 
 
 **Examples**:
 
@@ -3808,7 +3915,7 @@ This function download back-up from remote server
 
 Dumps database contents in STDIN / file
 
-**Options**: `USER` `DATABASE` `[FILE]`
+**Options**: `USER` `DATABASE` `[FILE]` 
 
 **Examples**:
 
@@ -3825,7 +3932,7 @@ Dumps database in STDIN or /backup/user.database.type.sql
 
 Dumps the files of a site into a zip archive
 
-**Options**: `USER` `DOMAIN` `[TYPE]`
+**Options**: `USER` `DOMAIN` `[TYPE]` 
 
 **Examples**:
 
@@ -3842,7 +3949,7 @@ Dumps site files in /backup/user.domain.timestamp.zip
 
 export rrd charts as json
 
-**Options**: `[CHART]` `[TIMESPAN]`
+**Options**: `[CHART]` `[TIMESPAN]` 
 
 **Examples**:
 
@@ -3850,13 +3957,15 @@ export rrd charts as json
 v-export-rrd chart format
 ```
 
+
+
 ## v-extract-fs-archive
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-extract-fs-archive)
 
 archive to directory
 
-**Options**: `USER` `ARCHIVE` `DIRECTORY` `[SELECTED_DIR]` `[STRIP]` `[TEST]`
+**Options**: `USER` `ARCHIVE` `DIRECTORY` `[SELECTED_DIR]` `[STRIP]` `[TEST]` 
 
 **Examples**:
 
@@ -3872,7 +3981,7 @@ This function extracts archive into directory on the file system
 
 generate api key
 
-**Options**: –
+**Options**: – 
 
 This function creates a key file in $HESTIA/data/keys/
 
@@ -3880,7 +3989,8 @@ This function creates a key file in $HESTIA/data/keys/
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-generate-debug-report)
 
-**Options**:
+
+**Options**: 
 
 Includes
 shellcheck source=/etc/hestiacp/hestia.conf
@@ -3891,12 +4001,12 @@ shellcheck source=/etc/hestiacp/hestia.conf
 
 generate password hash
 
-**Options**: `HASH_METHOD` `SALT` `PASSWORD`
+**Options**: `HASH_METHOD` `SALT` `PASSWORD` 
 
 **Examples**:
 
 ```php
-		v-generate-password-hash sha-512 rAnDom_string yourPassWord
+v-generate-password-hash sha-512 rAnDom_string yourPassWord
 ```
 
 This function generates password hash
@@ -3907,7 +4017,7 @@ This function generates password hash
 
 generate self signed certificate and CSR request
 
-**Options**: `DOMAIN` `EMAIL` `COUNTRY` `STATE` `CITY` `ORG` `UNIT` `[ALIASES]` `[FORMAT]`
+**Options**: `DOMAIN` `EMAIL` `COUNTRY` `STATE` `CITY` `ORG` `UNIT` `[ALIASES]` `[FORMAT]` 
 
 **Examples**:
 
@@ -3923,7 +4033,7 @@ This function generates self signed SSL certificate and CSR request
 
 get dns domain value
 
-**Options**: `USER` `DOMAIN` `KEY`
+**Options**: `USER` `DOMAIN` `KEY` 
 
 **Examples**:
 
@@ -3939,7 +4049,7 @@ This function for getting a certain DNS domain parameter.
 
 get file type
 
-**Options**: `USER` `FILE`
+**Options**: `USER` `FILE` 
 
 **Examples**:
 
@@ -3955,7 +4065,7 @@ This function shows file type
 
 get mail account value
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `KEY`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `KEY` 
 
 **Examples**:
 
@@ -3971,7 +4081,7 @@ This function for getting a certain mail account parameter.
 
 get mail domain value
 
-**Options**: `USER` `DOMAIN` `KEY`
+**Options**: `USER` `DOMAIN` `KEY` 
 
 **Examples**:
 
@@ -3987,7 +4097,7 @@ This function for getting a certain mail domain parameter.
 
 get system timezone
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function to get system timezone
 
@@ -3997,7 +4107,7 @@ This function to get system timezone
 
 list system timezone
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4013,7 +4123,7 @@ This function checks system timezone settings
 
 get user salt
 
-**Options**: `USER` `[IP]` `[FORMAT]`
+**Options**: `USER` `[IP]` `[FORMAT]` 
 
 **Examples**:
 
@@ -4029,7 +4139,7 @@ This function provides users salt
 
 get user value
 
-**Options**: `USER` `KEY`
+**Options**: `USER` `KEY` 
 
 **Examples**:
 
@@ -4045,7 +4155,7 @@ This function for obtaining certain user's parameters.
 
 Import Cpanel backup to a new user
 
-**Options**: `BACKUP` `[MX]`
+**Options**: `BACKUP` `[MX]` 
 
 **Examples**:
 
@@ -4057,11 +4167,29 @@ Based on sk-import-cpanel-backup-to-vestacp
 Credits: Maks Usmanov (skamasle) and contributors:
 Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
 
+## v-import-database
+
+[Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-database)
+
+import database
+
+**Options**: `USER` `DB` `PATH` 
+
+**Examples**:
+
+```bash
+v-import-database alice mydb /full/path/to.sql
+```
+
+This function for importing database.
+
 ## v-import-directadmin
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-import-directadmin)
 
 Import DirectAdmin backup to a new user
+
+**Options**: 
 
 **Examples**:
 
@@ -4069,17 +4197,9 @@ Import DirectAdmin backup to a new user
 v-import-directadmin /backup/backup.tar.gz
 ```
 
-What will be imported from DirectAdmin backups:
-
-1. The user account information
-2. The domains structure included all the files from `public_html` and/or `private_html`
-3. All databases
-   - **WARNING**: Only the first user with password will be imported because of HestiCP limits.
-4. All the e-mail accounts including the e-mails.
-
-Based on sk-da-importer and v-import-cpanel
+Based on sk-da-importer
 Credits: Maks Usmanov (skamasle), Jaap Marcus (jaapmarcus) and contributors:
-Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs/contributors>
+Thanks to <https://github.com/Skamasle/sk_da_importer/graphs/contributors>
 
 ## v-insert-dns-domain
 
@@ -4087,7 +4207,7 @@ Thanks to <https://github.com/Skamasle/sk-import-cpanel-backup-to-vestacp/graphs
 
 insert dns domain
 
-**Options**: `USER` `DATA` `[SRC]` `[FLUSH]` `#`
+**Options**: `USER` `DATA` `[SRC]` `[FLUSH]` `#` 
 
 This function inserts raw record to the dns.conf
 
@@ -4097,7 +4217,7 @@ This function inserts raw record to the dns.conf
 
 insert dns record
 
-**Options**: `USER` `DOMAIN` `DATA`
+**Options**: `USER` `DOMAIN` `DATA` 
 
 This function inserts raw dns record to the domain conf
 
@@ -4107,7 +4227,7 @@ This function inserts raw dns record to the domain conf
 
 inserts dns records
 
-**Options**: `USER` `DOMAIN` `DATA_FILE`
+**Options**: `USER` `DOMAIN` `DATA_FILE` 
 
 This function copy dns record to the domain conf
 
@@ -4117,7 +4237,7 @@ This function copy dns record to the domain conf
 
 list all API access keys
 
-**Options**: `ACCESS_KEY_ID` `[FORMAT]`
+**Options**: `ACCESS_KEY_ID` `[FORMAT]` 
 
 **Examples**:
 
@@ -4125,13 +4245,15 @@ list all API access keys
 v-list-access-key 1234567890ABCDefghij json
 ```
 
+
+
 ## v-list-access-keys
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-access-keys)
 
 list all API access keys
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4139,13 +4261,15 @@ list all API access keys
 v-list-access-keys json
 ```
 
+
+
 ## v-list-api
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-api)
 
 list api
 
-**Options**: `API` `[FORMAT]`
+**Options**: `API` `[FORMAT]` 
 
 **Examples**:
 
@@ -4153,13 +4277,15 @@ list api
 v-list-api mail-accounts json
 ```
 
+
+
 ## v-list-apis
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-apis)
 
 list available APIs
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4167,13 +4293,15 @@ list available APIs
 v-list-apis json
 ```
 
+
+
 ## v-list-backup-host
 
 [Source](https://github.com/hestiacp/hestiacp/blob/release/bin/v-list-backup-host)
 
 list backup host
 
-**Options**: `TYPE` `[FORMAT]`
+**Options**: `TYPE` `[FORMAT]` 
 
 **Examples**:
 
@@ -4189,7 +4317,7 @@ This function for obtaining the list of backup host parameters.
 
 list cron job
 
-**Options**: `USER` `JOB` `[FORMAT]`
+**Options**: `USER` `JOB` `[FORMAT]` 
 
 **Examples**:
 
@@ -4205,7 +4333,7 @@ This function of obtaining cron job parameters.
 
 list user cron jobs
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -4221,7 +4349,7 @@ This function for obtaining the list of all users cron jobs.
 
 list database
 
-**Options**: `USER` `DATABASE` `[FORMAT]`
+**Options**: `USER` `DATABASE` `[FORMAT]` 
 
 **Examples**:
 
@@ -4237,7 +4365,7 @@ This function for obtaining of all database's parameters.
 
 list database host
 
-**Options**: `TYPE` `HOST` `[FORMAT]`
+**Options**: `TYPE` `HOST` `[FORMAT]` 
 
 **Examples**:
 
@@ -4253,7 +4381,7 @@ This function for obtaining database host parameters.
 
 list database hosts
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4269,7 +4397,7 @@ This function for obtaining the list of all configured database hosts.
 
 list supported database types
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4285,7 +4413,7 @@ This function for obtaining the list of database types.
 
 listing databases
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -4301,7 +4429,7 @@ This function for obtaining the list of all user's databases.
 
 list default PHP version used by default.tpl
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 List the default version used by the default template
 
@@ -4311,7 +4439,7 @@ List the default version used by the default template
 
 list dns domain
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -4327,7 +4455,7 @@ This function of obtaining the list of dns domain parameters.
 
 list dns domains
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -4343,7 +4471,7 @@ This function for obtaining all DNS domains of a user.
 
 list dns domain records
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -4359,7 +4487,7 @@ This function for getting all DNS domain records.
 
 list dns template
 
-**Options**: `TEMPLATE` `[FORMAT]`
+**Options**: `TEMPLATE` `[FORMAT]` 
 
 **Examples**:
 
@@ -4375,7 +4503,7 @@ This function for obtaining the DNS template parameters.
 
 list dns templates
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4391,7 +4519,7 @@ This function for obtaining the list of all DNS templates available.
 
 list public dnssec key
 
-**Options**: `USER` `DOMAIN` `[FROMAT]`
+**Options**: `USER` `DOMAIN` `[FROMAT]` 
 
 **Examples**:
 
@@ -4407,7 +4535,7 @@ This function list the public key to be used with DNSSEC and needs to be added t
 
 list iptables rules
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4423,7 +4551,7 @@ This function of obtaining the list of all iptables rules.
 
 list firewall block list
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4439,7 +4567,7 @@ This function of obtaining the list of currently blocked ips.
 
 List firewall ipset
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4455,7 +4583,7 @@ This function prints defined ipset lists
 
 list firewall rule
 
-**Options**: `RULE` `[FORMAT]`
+**Options**: `RULE` `[FORMAT]` 
 
 **Examples**:
 
@@ -4471,7 +4599,7 @@ This function of obtaining firewall rule parameters.
 
 list directory
 
-**Options**: `USER` `DIRECTORY`
+**Options**: `USER` `DIRECTORY` 
 
 **Examples**:
 
@@ -4487,7 +4615,7 @@ This function lists directory on the file system
 
 list letsencrypt key
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -4503,7 +4631,7 @@ This function for obtaining the letsencrypt key thumbprint
 
 list mail domain account
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `[FORMAT]` 
 
 **Examples**:
 
@@ -4519,7 +4647,7 @@ This function of obtaining the list of account parameters.
 
 list mail account autoreply
 
-**Options**: `USER` `DOMAIN` `ACCOUNT` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `ACCOUNT` `[FORMAT]` 
 
 **Examples**:
 
@@ -4535,7 +4663,7 @@ This function of obtaining mail account autoreply message.
 
 list mail domain accounts
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -4551,7 +4679,7 @@ This function of obtaining the list of all user domains.
 
 list mail domain
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -4567,7 +4695,7 @@ This function of obtaining the list of domain parameters.
 
 list mail domain dkim
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -4583,7 +4711,7 @@ This function of obtaining domain dkim files.
 
 list mail domain dkim dns records
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -4599,7 +4727,7 @@ This function of obtaining domain dkim dns records for proper setup.
 
 list mail domain ssl certificate
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -4615,7 +4743,7 @@ This function of obtaining domain ssl files.
 
 list mail domains
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -4631,7 +4759,7 @@ This function of obtaining the list of all user domains.
 
 list remote dns host
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4647,7 +4775,7 @@ This function for obtaining the list of remote dns host.
 
 list clamd config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of clamd config parameters.
 
@@ -4657,7 +4785,7 @@ This function for obtaining the list of clamd config parameters.
 
 list system configuration
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4673,7 +4801,7 @@ This function for obtaining the list of system parameters.
 
 list system cpu info
 
-**Options**:
+**Options**: 
 
 options:
 
@@ -4683,7 +4811,7 @@ options:
 
 list db status
 
-**Options**:
+**Options**: 
 
 options:
 
@@ -4693,7 +4821,7 @@ options:
 
 list disk information
 
-**Options**:
+**Options**: 
 
 options:
 
@@ -4703,7 +4831,7 @@ options:
 
 list dns status
 
-**Options**:
+**Options**: 
 
 options:
 
@@ -4713,7 +4841,7 @@ options:
 
 list dovecot config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of dovecot config parameters.
 
@@ -4723,7 +4851,7 @@ This function for obtaining the list of dovecot config parameters.
 
 list hestia autoupdate settings
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining autoupdate settings.
 
@@ -4733,7 +4861,7 @@ This function for obtaining autoupdate settings.
 
 list hestia ssl certificate
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function of obtaining hestia ssl files.
 
@@ -4743,7 +4871,7 @@ This function of obtaining hestia ssl files.
 
 list system updates
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function checks available updates for hestia packages.
 
@@ -4753,7 +4881,7 @@ This function checks available updates for hestia packages.
 
 list system os
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function checks available updates for hestia packages.
 
@@ -4763,7 +4891,7 @@ This function checks available updates for hestia packages.
 
 list system interfaces
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of network interfaces.
 
@@ -4773,7 +4901,7 @@ This function for obtaining the list of network interfaces.
 
 list system IP
 
-**Options**: `IP` `[FORMAT]`
+**Options**: `IP` `[FORMAT]` 
 
 **Examples**:
 
@@ -4789,7 +4917,7 @@ This function for getting the list of system IP parameters.
 
 list system IPs
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of system IP addresses.
 
@@ -4799,7 +4927,7 @@ This function for obtaining the list of system IP addresses.
 
 list system languages
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4816,7 +4944,7 @@ Output is always in the ISO language code
 
 list mail status
 
-**Options**:
+**Options**: 
 
 options:
 
@@ -4826,7 +4954,7 @@ options:
 
 list virtual memory info
 
-**Options**:
+**Options**: 
 
 options:
 
@@ -4836,7 +4964,7 @@ options:
 
 list mysql config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of mysql config parameters.
 
@@ -4846,7 +4974,7 @@ This function for obtaining the list of mysql config parameters.
 
 list system network status
 
-**Options**:
+**Options**: 
 
 options:
 
@@ -4856,7 +4984,7 @@ options:
 
 list nginx config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of nginx config parameters.
 
@@ -4866,7 +4994,7 @@ This function for obtaining the list of nginx config parameters.
 
 list postgresql config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of postgresql config parameters.
 
@@ -4876,9 +5004,9 @@ This function for obtaining the list of postgresql config parameters.
 
 listing available PHP versions installed
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
-List /etc/php/\* version check if folder fpm is available
+List /etc/php/* version check if folder fpm is available
 
 ## v-list-sys-php-config
 
@@ -4886,7 +5014,7 @@ List /etc/php/\* version check if folder fpm is available
 
 list php config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of php config parameters.
 
@@ -4896,7 +5024,7 @@ This function for obtaining the list of php config parameters.
 
 list proftpd config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of proftpd config parameters.
 
@@ -4906,7 +5034,7 @@ This function for obtaining the list of proftpd config parameters.
 
 list system rrd charts
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 List available rrd graphics, its titles and paths.
 
@@ -4916,7 +5044,7 @@ List available rrd graphics, its titles and paths.
 
 list system services
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 **Examples**:
 
@@ -4932,7 +5060,7 @@ This function for obtaining the list of configured system services.
 
 list system shells
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of system shells.
 
@@ -4942,7 +5070,7 @@ This function for obtaining the list of system shells.
 
 list spamassassin config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of spamassassin config parameters.
 
@@ -4952,7 +5080,7 @@ This function for obtaining the list of spamassassin config parameters.
 
 list sshd port
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtainings the port of sshd listens to
 
@@ -4962,7 +5090,7 @@ This function for obtainings the port of sshd listens to
 
 list system themes
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of themes in the theme
 library and displaying them in the backend or user interface.
@@ -4973,7 +5101,7 @@ library and displaying them in the backend or user interface.
 
 list system users
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of system users without
 detailed information.
@@ -4984,7 +5112,7 @@ detailed information.
 
 list vsftpd config parameters
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of vsftpd config parameters.
 
@@ -4994,7 +5122,7 @@ This function for obtaining the list of vsftpd config parameters.
 
 list web status
 
-**Options**:
+**Options**: 
 
 options:
 
@@ -5004,7 +5132,7 @@ options:
 
 listing available webmail clients
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 List available webmail clients
 
@@ -5014,7 +5142,7 @@ List available webmail clients
 
 list user parameters
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -5030,7 +5158,7 @@ This function to obtain user parameters.
 
 list user log
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 This function of obtaining the list of 10 last users commands.
 
@@ -5040,7 +5168,7 @@ This function of obtaining the list of 10 last users commands.
 
 list user backup
 
-**Options**: `USER` `BACKUP` `[FORMAT]`
+**Options**: `USER` `BACKUP` `[FORMAT]` 
 
 **Examples**:
 
@@ -5049,7 +5177,7 @@ v-list-user-backup admin admin.2019-05-19_03-31-30.tar
 ```
 
 This function of obtaining the list of backup parameters. This call, just as
-all v*list*\* calls, supports 3 formats - json, shell and plain.
+all v_list_* calls, supports 3 formats - json, shell and plain.
 
 ## v-list-user-backup-exclusions
 
@@ -5057,7 +5185,7 @@ all v*list*\* calls, supports 3 formats - json, shell and plain.
 
 list backup exclusions
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -5073,7 +5201,7 @@ This function for obtaining the backup exclusion list
 
 list user backups
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -5089,7 +5217,7 @@ This function for obtaining the list of available user backups.
 
 list user IPs
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -5105,7 +5233,7 @@ This function for obtaining the list of available IP addresses.
 
 list user log
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 This function of obtaining the list of 100 last users commands.
 
@@ -5115,7 +5243,7 @@ This function of obtaining the list of 100 last users commands.
 
 list user notifications
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -5123,7 +5251,7 @@ list user notifications
 v-list-user-notifications admin
 ```
 
-This function for getting the list notifications
+This function for getting the notifications list
 
 ## v-list-user-ns
 
@@ -5131,7 +5259,7 @@ This function for getting the list notifications
 
 list user nameservers
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -5147,7 +5275,7 @@ Function for obtaining the list of user's DNS servers.
 
 list user package
 
-**Options**: `PACKAGE` `[FORMAT]`
+**Options**: `PACKAGE` `[FORMAT]` 
 
 This function for getting the list of system ip parameters.
 
@@ -5157,7 +5285,7 @@ This function for getting the list of system ip parameters.
 
 list user packages
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of available hosting packages.
 
@@ -5167,7 +5295,7 @@ This function for obtaining the list of available hosting packages.
 
 add ssh key
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 Lists $user/.ssh/authorized_keys
 
@@ -5177,7 +5305,7 @@ Lists $user/.ssh/authorized_keys
 
 list user stats
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -5193,7 +5321,7 @@ This function for listing user statistics
 
 list users
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function to obtain the list of all system users.
 
@@ -5203,7 +5331,7 @@ This function to obtain the list of all system users.
 
 list overall user stats
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for listing overall user statistics
 
@@ -5213,7 +5341,7 @@ This function for listing overall user statistics
 
 list web domain parameters
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -5229,7 +5357,7 @@ This function to obtain web domain parameters.
 
 list web domain access log
 
-**Options**: `USER` `DOMAIN` `[LINES]` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[LINES]` `[FORMAT]` 
 
 **Examples**:
 
@@ -5245,7 +5373,7 @@ This function of obtaining raw access web domain logs.
 
 list web domain error log
 
-**Options**: `USER` `DOMAIN` `[LINES]` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[LINES]` `[FORMAT]` 
 
 **Examples**:
 
@@ -5261,7 +5389,7 @@ This function of obtaining raw error web domain logs.
 
 list web domain ssl certificate
 
-**Options**: `USER` `DOMAIN` `[FORMAT]`
+**Options**: `USER` `DOMAIN` `[FORMAT]` 
 
 **Examples**:
 
@@ -5277,7 +5405,7 @@ This function of obtaining domain ssl files.
 
 list web domains
 
-**Options**: `USER` `[FORMAT]`
+**Options**: `USER` `[FORMAT]` 
 
 **Examples**:
 
@@ -5293,7 +5421,7 @@ This function to obtain the list of all user web domains.
 
 list web statistics
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of web statistics analyzer.
 
@@ -5303,7 +5431,7 @@ This function for obtaining the list of web statistics analyzer.
 
 list web templates
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of web templates available to a user.
 
@@ -5313,7 +5441,7 @@ This function for obtaining the list of web templates available to a user.
 
 listing backend templates
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of available backend templates.
 
@@ -5323,7 +5451,7 @@ This function for obtaining the list of available backend templates.
 
 listing proxy templates
 
-**Options**: `[FORMAT]`
+**Options**: `[FORMAT]` 
 
 This function for obtaining the list of proxy templates available to a user.
 
@@ -5333,7 +5461,7 @@ This function for obtaining the list of proxy templates available to a user.
 
 adds action event to user or system log
 
-**Options**: `LOG_TYPE` `USER`
+**Options**: `LOG_TYPE` `USER` 
 
 Event Levels:
 info, warning, error
@@ -5344,7 +5472,9 @@ info, warning, error
 
 add user login
 
-**Options**: `USER` `IP` `STATUS` `[FINGERPRINT]`
+**Options**: `USER` `IP` `STATUS` `[FINGERPRINT]` 
+
+
 
 ## v-log-user-logout
 
@@ -5352,7 +5482,9 @@ add user login
 
 Log User logout event
 
-**Options**: `USER` `FINGERPRINT`
+**Options**: `USER` `FINGERPRINT` 
+
+
 
 ## v-move-fs-directory
 
@@ -5360,7 +5492,7 @@ Log User logout event
 
 move file
 
-**Options**: `USER` `SRC_DIRECTORY` `DST_DIRECTORY`
+**Options**: `USER` `SRC_DIRECTORY` `DST_DIRECTORY` 
 
 **Examples**:
 
@@ -5377,7 +5509,7 @@ can also be used to rename files just like normal mv command.
 
 move file
 
-**Options**: `USER` `SRC_FILE` `DST_FILE`
+**Options**: `USER` `SRC_FILE` `DST_FILE` 
 
 **Examples**:
 
@@ -5394,7 +5526,7 @@ can also be used to rename files just like normal mv command.
 
 open config
 
-**Options**: `CONFIG`
+**Options**: `CONFIG` 
 
 **Examples**:
 
@@ -5410,7 +5542,7 @@ This function opens/reads config files on the file system
 
 open file
 
-**Options**: `USER` `FILE`
+**Options**: `USER` `FILE` 
 
 **Examples**:
 
@@ -5426,7 +5558,7 @@ This function opens/reads files on the file system
 
 Purge nginx cache
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -5442,7 +5574,7 @@ This function purges nginx cache.
 
 rebuild all assets for a specified user
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 This function rebuilds all assets for a user account:
 
@@ -5452,7 +5584,7 @@ This function rebuilds all assets for a user account:
 
 rebuild cron jobs
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -5468,7 +5600,7 @@ This function rebuilds system cron config file for specified user.
 
 rebuild databases
 
-**Options**: `USER` `DATABASE`
+**Options**: `USER` `DATABASE` 
 
 **Examples**:
 
@@ -5484,7 +5616,7 @@ This function for rebuilding a single database for a user
 
 rebuild databases
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -5500,7 +5632,7 @@ This function for rebuilding of all databases of a single user.
 
 rebuild dns domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]` `[UPDATE_SERIAL]`
+**Options**: `USER` `DOMAIN` `[RESTART]` `[UPDATE_SERIAL]` 
 
 **Examples**:
 
@@ -5516,7 +5648,7 @@ This function rebuilds DNS configuration files.
 
 rebuild dns domains
 
-**Options**: `USER` `[RESTART]` `[UPDATE_SERIAL]`
+**Options**: `USER` `[RESTART]` `[UPDATE_SERIAL]` 
 
 **Examples**:
 
@@ -5532,7 +5664,7 @@ This function rebuilds DNS configuration files.
 
 rebuild mail domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -5548,7 +5680,7 @@ This function rebuilds configuration files for a single domain.
 
 rebuild mail domains
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -5564,7 +5696,7 @@ This function rebuilds EXIM configuration files for all mail domains.
 
 rebuild system user
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -5580,7 +5712,7 @@ This function rebuilds system user account.
 
 rebuild system users
 
-**Options**: `[RESTART]`
+**Options**: `[RESTART]` 
 
 This function rebuilds user configuration for all users.
 
@@ -5590,7 +5722,7 @@ This function rebuilds user configuration for all users.
 
 rebuild web domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -5606,7 +5738,7 @@ This function rebuilds web configuration files.
 
 rebuild web domains
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 This function rebuilds web configuration files.
 
@@ -5616,7 +5748,7 @@ This function rebuilds web configuration files.
 
 change active system theme
 
-**Options**: –
+**Options**: – 
 
 This function for changing the currently active system theme.
 
@@ -5626,7 +5758,7 @@ This function for changing the currently active system theme.
 
 change package name
 
-**Options**: `OLD_NAME` `NEW_NAME` `[MODE]`
+**Options**: `OLD_NAME` `NEW_NAME` `[MODE]` 
 
 **Examples**:
 
@@ -5642,7 +5774,7 @@ This function changes the name of an existing package.
 
 Restore system configuration
 
-**Options**: `[SYSTEM]`
+**Options**: `[SYSTEM]` 
 
 This function repairs or restores the system configuration file.
 
@@ -5652,7 +5784,7 @@ This function repairs or restores the system configuration file.
 
 restart cron service
 
-**Options**: –
+**Options**: – 
 
 This function tells crond service to reread its configuration files.
 
@@ -5662,7 +5794,7 @@ This function tells crond service to reread its configuration files.
 
 restart dns service
 
-**Options**: –
+**Options**: – 
 
 This function tells BIND service to reload dns zone files.
 
@@ -5672,7 +5804,7 @@ This function tells BIND service to reload dns zone files.
 
 restart ftp service
 
-**Options**: –
+**Options**: – 
 
 This function tells ftp server to reread its configuration.
 
@@ -5682,7 +5814,7 @@ This function tells ftp server to reread its configuration.
 
 restart mail service
 
-**Options**: `[RESTART]`
+**Options**: `[RESTART]` 
 
 This function tells exim or dovecot services to reload configuration files.
 
@@ -5692,7 +5824,7 @@ This function tells exim or dovecot services to reload configuration files.
 
 restart proxy server
 
-**Options**: –
+**Options**: – 
 
 **Examples**:
 
@@ -5708,7 +5840,7 @@ This function reloads proxy server configuration.
 
 restart service
 
-**Options**: `SERVICE` `[RESTART]`
+**Options**: `SERVICE` `[RESTART]` 
 
 **Examples**:
 
@@ -5724,7 +5856,7 @@ This function restarts system service.
 
 restart operating system
 
-**Options**: `RESTART` `[DELAY]`
+**Options**: `RESTART` `[DELAY]` 
 
 **Examples**:
 
@@ -5740,7 +5872,7 @@ This function restarts operating system.
 
 restart web server
 
-**Options**: `[RESTARRT]`
+**Options**: `[RESTARRT]` 
 
 This function reloads web server configuration.
 
@@ -5750,7 +5882,7 @@ This function reloads web server configuration.
 
 restart php interpreter
 
-**Options**: –
+**Options**: – 
 
 This function reloads php interpreter configuration.
 
@@ -5760,7 +5892,7 @@ This function reloads php interpreter configuration.
 
 restore single cron job
 
-**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
+**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]` 
 
 **Examples**:
 
@@ -5777,7 +5909,7 @@ from a backup archive.
 
 restore single database
 
-**Options**: `USER` `BACKUP` `DATABASE` `[NOTIFY]`
+**Options**: `USER` `BACKUP` `DATABASE` `[NOTIFY]` 
 
 **Examples**:
 
@@ -5794,7 +5926,7 @@ from a backup archive.
 
 restore single dns domain
 
-**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
+**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]` 
 
 **Examples**:
 
@@ -5811,7 +5943,7 @@ from a backup archive.
 
 restore single mail domain
 
-**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
+**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]` 
 
 **Examples**:
 
@@ -5828,7 +5960,7 @@ from a backup archive.
 
 restore user
 
-**Options**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]` `[NOTIFY]`
+**Options**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]` `[NOTIFY]` 
 
 **Examples**:
 
@@ -5845,7 +5977,7 @@ the archive needs to be placed in /backup.
 
 restore single web domain
 
-**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]`
+**Options**: `USER` `BACKUP` `DOMAIN` `[NOTIFY]` 
 
 **Examples**:
 
@@ -5862,7 +5994,7 @@ from a backup archive.
 
 revokes api key
 
-**Options**: `[HASH]`
+**Options**: `[HASH]` 
 
 **Examples**:
 
@@ -5878,7 +6010,7 @@ This function removes a key from in $HESTIA/data/keys/
 
 run cli command
 
-**Options**: `USER` `CMD` `[ARG...]`
+**Options**: `USER` `CMD` `[ARG...]` 
 
 **Examples**:
 
@@ -5894,7 +6026,7 @@ This function runs a limited list of cli commands with dropped privileges as the
 
 adding cronjob for letsencrypt cetificate installation
 
-**Options**: `USER` `DOMAIN` `[ALIASES]`
+**Options**: `USER` `DOMAIN` `[ALIASES]` 
 
 **Examples**:
 
@@ -5910,7 +6042,7 @@ This function adds cronjob for letsencrypt ssl certificate installation
 
 schedule user backup creation
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -5926,7 +6058,7 @@ This function for scheduling user backup creation.
 
 Schedule a backup
 
-**Options**: `USER` `BACKUP`
+**Options**: `USER` `BACKUP` 
 
 **Examples**:
 
@@ -5942,7 +6074,7 @@ This function for scheduling user backup creation.
 
 schedule user backup restoration
 
-**Options**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]`
+**Options**: `USER` `BACKUP` `[WEB]` `[DNS]` `[MAIL]` `[DB]` `[CRON]` `[UDIR]` 
 
 **Examples**:
 
@@ -5958,7 +6090,7 @@ This function for scheduling user backup restoration.
 
 search for available commands
 
-**Options**: `ARG1` `[ARG...]`
+**Options**: `ARG1` `[ARG...]` 
 
 **Examples**:
 
@@ -5977,7 +6109,7 @@ Originally developed for VestaCP by Federico Krum
 
 search domain owner
 
-**Options**: `DOMAIN` `[TYPE]`
+**Options**: `DOMAIN` `[TYPE]` 
 
 **Examples**:
 
@@ -5993,7 +6125,7 @@ This function that allows to find user objects.
 
 search file or directory
 
-**Options**: `USER` `OBJECT` `[PATH]`
+**Options**: `USER` `OBJECT` `[PATH]` 
 
 **Examples**:
 
@@ -6009,7 +6141,7 @@ This function search files and directories on the file system
 
 search objects
 
-**Options**: `OBJECT` `[FORMAT]`
+**Options**: `OBJECT` `[FORMAT]` 
 
 **Examples**:
 
@@ -6025,7 +6157,7 @@ This function that allows to find system objects.
 
 search objects
 
-**Options**: `USER` `OBJECT` `[FORMAT]`
+**Options**: `USER` `OBJECT` `[FORMAT]` 
 
 **Examples**:
 
@@ -6041,7 +6173,7 @@ This function that allows to find user objects.
 
 start service
 
-**Options**: `SERVICE`
+**Options**: `SERVICE` 
 
 **Examples**:
 
@@ -6057,7 +6189,7 @@ This function starts system service.
 
 stop system firewall
 
-**Options**: –
+**Options**: – 
 
 This function stops iptables
 
@@ -6067,7 +6199,7 @@ This function stops iptables
 
 stop service
 
-**Options**: `SERVICE`
+**Options**: `SERVICE` 
 
 **Examples**:
 
@@ -6083,7 +6215,7 @@ This function stops system service.
 
 suspend cron job
 
-**Options**: `USER` `JOB` `[RESTART]`
+**Options**: `USER` `JOB` `[RESTART]` 
 
 **Examples**:
 
@@ -6099,7 +6231,7 @@ This function suspends a certain job of the cron scheduler.
 
 Suspending sys cron jobs
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -6115,7 +6247,7 @@ This function suspends all user cron jobs.
 
 suspend database
 
-**Options**: `USER` `DATABASE`
+**Options**: `USER` `DATABASE` 
 
 **Examples**:
 
@@ -6131,7 +6263,7 @@ This function for suspending a certain user database.
 
 suspend database server
 
-**Options**: `TYPE` `HOST`
+**Options**: `TYPE` `HOST` 
 
 **Examples**:
 
@@ -6147,7 +6279,7 @@ This function for suspending a database server.
 
 suspend databases
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -6163,7 +6295,7 @@ This function for suspending of all databases of a single user.
 
 suspend dns domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -6179,7 +6311,7 @@ This function suspends a certain user's domain.
 
 suspend dns domains
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -6195,7 +6327,7 @@ This function suspends all user's DNS domains.
 
 suspend dns domain record
 
-**Options**: `USER` `DOMAIN` `ID` `[RESTART]`
+**Options**: `USER` `DOMAIN` `ID` `[RESTART]` 
 
 **Examples**:
 
@@ -6211,7 +6343,7 @@ This function suspends a certain domain record.
 
 suspend web/dns/mail domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -6227,7 +6359,7 @@ This function suspends web/dns/mail domain.
 
 suspend firewall rule
 
-**Options**: `RULE`
+**Options**: `RULE` 
 
 **Examples**:
 
@@ -6243,7 +6375,7 @@ This function suspends a certain firewall rule.
 
 suspend mail account
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**Options**: `USER` `DOMAIN` `ACCOUNT` 
 
 **Examples**:
 
@@ -6259,7 +6391,7 @@ This function suspends mail account.
 
 suspend all mail domain accounts
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -6275,7 +6407,7 @@ This function suspends all mail domain accounts.
 
 suspend mail domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -6291,7 +6423,7 @@ This function suspends mail domain.
 
 suspend mail domains
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -6307,7 +6439,7 @@ This function suspends all user's MAIL domains.
 
 suspend remote dns server
 
-**Options**: `HOST`
+**Options**: `HOST` 
 
 **Examples**:
 
@@ -6323,7 +6455,7 @@ This function for suspending remote dns server.
 
 suspend user
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -6339,7 +6471,7 @@ This function suspends a certain user and all his objects.
 
 suspend web domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -6357,7 +6489,7 @@ By blocking the site the content of all its directories remains untouched.
 
 suspend web domains
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -6373,7 +6505,7 @@ This function of suspending all user's sites.
 
 synchronize dns domains
 
-**Options**: `HOST`
+**Options**: `HOST` 
 
 This function synchronise all dns domains.
 
@@ -6383,7 +6515,7 @@ This function synchronise all dns domains.
 
 unsuspend cron job
 
-**Options**: `USER` `JOB` `[RESTART]`
+**Options**: `USER` `JOB` `[RESTART]` 
 
 **Examples**:
 
@@ -6399,7 +6531,7 @@ This function unsuspend certain cron job.
 
 unsuspend sys cron
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -6415,7 +6547,7 @@ This function unsuspends all suspended cron jobs.
 
 unsuspend database
 
-**Options**: `USER` `DATABASE`
+**Options**: `USER` `DATABASE` 
 
 **Examples**:
 
@@ -6431,7 +6563,7 @@ This function for unsuspending database.
 
 unsuspend database server
 
-**Options**: `TYPE` `HOST`
+**Options**: `TYPE` `HOST` 
 
 **Examples**:
 
@@ -6447,7 +6579,7 @@ This function for unsuspending a database server.
 
 unsuspend databases
 
-**Options**: `USER`
+**Options**: `USER` 
 
 This function for unsuspending all user's databases.
 
@@ -6457,7 +6589,7 @@ This function for unsuspending all user's databases.
 
 unsuspend dns domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -6473,7 +6605,7 @@ This function unsuspends a certain user's domain.
 
 unsuspend dns domains
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -6489,7 +6621,7 @@ This function unsuspends all user's DNS domains.
 
 unsuspend dns domain record
 
-**Options**: `USER` `DOMAIN` `ID` `[RESTART]`
+**Options**: `USER` `DOMAIN` `ID` `[RESTART]` 
 
 **Examples**:
 
@@ -6505,7 +6637,7 @@ This function unsuspends a certain domain record.
 
 unsuspend web/dns/mail domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -6521,7 +6653,7 @@ This function unsuspends web/dns/mail domain.
 
 unsuspend firewall rule
 
-**Options**: `RULE`
+**Options**: `RULE` 
 
 **Examples**:
 
@@ -6537,7 +6669,7 @@ This function unsuspends a certain firewall rule.
 
 unsuspend mail account
 
-**Options**: `USER` `DOMAIN` `ACCOUNT`
+**Options**: `USER` `DOMAIN` `ACCOUNT` 
 
 **Examples**:
 
@@ -6553,7 +6685,7 @@ This function unsuspends mail account.
 
 unsuspend all mail domain accounts
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -6569,7 +6701,7 @@ This function unsuspends all mail domain accounts.
 
 unsuspend mail domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -6585,7 +6717,7 @@ This function unsuspends mail domain.
 
 unsuspend mail domains
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -6601,7 +6733,7 @@ This function unsuspends all user's MAIL domains.
 
 unsuspend remote dns server
 
-**Options**: `HOST`
+**Options**: `HOST` 
 
 **Examples**:
 
@@ -6617,7 +6749,7 @@ This function for unsuspending remote dns server.
 
 unsuspend user
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -6633,7 +6765,7 @@ This function unsuspends user and all his objects.
 
 unsuspend web domain
 
-**Options**: `USER` `DOMAIN` `[RESTART]`
+**Options**: `USER` `DOMAIN` `[RESTART]` 
 
 **Examples**:
 
@@ -6649,7 +6781,7 @@ This function of unsuspending the domain.
 
 unsuspend web domains
 
-**Options**: `USER` `[RESTART]`
+**Options**: `USER` `[RESTART]` 
 
 **Examples**:
 
@@ -6665,7 +6797,7 @@ This function of unsuspending all user's sites.
 
 update database disk usage
 
-**Options**: `USER` `DATABASE`
+**Options**: `USER` `DATABASE` 
 
 **Examples**:
 
@@ -6681,7 +6813,7 @@ This function recalculates disk usage for specific database.
 
 update databases disk usage
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -6697,7 +6829,7 @@ This function recalculates disk usage for all user databases.
 
 update dns templates
 
-**Options**: `[RESTART]`
+**Options**: `[RESTART]` 
 
 This function for obtaining updated dns templates from Hestia package.
 
@@ -6707,7 +6839,7 @@ This function for obtaining updated dns templates from Hestia package.
 
 update system firewall rules
 
-**Options**: –
+**Options**: – 
 
 This function updates iptables rules
 
@@ -6717,7 +6849,7 @@ This function updates iptables rules
 
 update firewall ipset
 
-**Options**: `[REFRESH]`
+**Options**: `[REFRESH]` 
 
 This function creates ipset lists and updates the lists if they are expired or ondemand
 
@@ -6727,7 +6859,7 @@ This function creates ipset lists and updates the lists if they are expired or o
 
 update host certificate for hestia
 
-**Options**: `USER` `HOSTNAME`
+**Options**: `USER` `HOSTNAME` 
 
 **Examples**:
 
@@ -6743,7 +6875,7 @@ This function updates the SSL certificate used for Hestia Control Panel.
 
 update letsencrypt ssl certificates
 
-**Options**: –
+**Options**: – 
 
 This function for renew letsencrypt expired ssl certificate for all users
 
@@ -6753,7 +6885,7 @@ This function for renew letsencrypt expired ssl certificate for all users
 
 update mail domain disk usage
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -6769,7 +6901,7 @@ This function updates domain disk usage.
 
 updating ssl certificate for domain
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]` 
 
 **Examples**:
 
@@ -6788,7 +6920,7 @@ authority domain.tld.ca file is optional.
 
 calculate disk usage for all mail domains
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -6804,7 +6936,7 @@ This function calculates disk usage for all mail domains.
 
 update mail templates
 
-**Options**: `[RESTART]` `[SKIP]`
+**Options**: `[RESTART]` `[SKIP]` 
 
 This function for obtaining updated webmail templates from Hestia package.
 
@@ -6814,7 +6946,7 @@ This function for obtaining updated webmail templates from Hestia package.
 
 update default key database
 
-**Options**: `[SYSTEM]`
+**Options**: `[SYSTEM]` 
 
 **Examples**:
 
@@ -6831,7 +6963,7 @@ This function updates the known key/value pair database
 
 update hestia package/configs
 
-**Options**: `PACKAGE`
+**Options**: `PACKAGE` 
 
 **Examples**:
 
@@ -6848,7 +6980,7 @@ server and runs it. (hestia, hestia-nginx and hestia-php are valid options)
 
 update all hestia packages
 
-**Options**: –
+**Options**: – 
 
 This function of updating all hestia packages
 
@@ -6858,7 +6990,7 @@ This function of updating all hestia packages
 
 Install update from Git repository
 
-**Options**: `REPOSITORY` `BRANCH` `INSTALL`
+**Options**: `REPOSITORY` `BRANCH` `INSTALL` 
 
 **Examples**:
 
@@ -6878,7 +7010,7 @@ Downloads and compiles/installs packages from GitHub repositories
 
 update system IP
 
-**Options**: –
+**Options**: – 
 
 **Examples**:
 
@@ -6897,7 +7029,7 @@ set by hypervisor.
 
 update IP usage counters
 
-**Options**: `IP`
+**Options**: `IP` 
 
 Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
 
@@ -6907,7 +7039,7 @@ Function updates usage U_WEB_ADOMAINS and U_SYS_USERS counters.
 
 update system queue
 
-**Options**: `PIPE`
+**Options**: `PIPE` 
 
 This function is responsible queue processing. Restarts of services,
 scheduled backups, web log parsing and other heavy resource consuming
@@ -6921,10 +7053,10 @@ added or deleted.
 
 update system rrd charts
 
-**Options**: –
+**Options**: – 
 
 This function is wrapper for all rrd functions. It updates all
-v-update-sys-rrd\_\* at once.
+v-update-sys-rrd_* at once.
 
 ## v-update-sys-rrd-apache2
 
@@ -6932,7 +7064,7 @@ v-update-sys-rrd\_\* at once.
 
 update apache2 rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating apache rrd database and graphic.
 
@@ -6942,7 +7074,7 @@ This function is for updating apache rrd database and graphic.
 
 update ftp rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating ftpd rrd database and graphic.
 
@@ -6952,7 +7084,7 @@ This function is for updating ftpd rrd database and graphic.
 
 update httpd rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating apache rrd database and graphic.
 
@@ -6962,7 +7094,7 @@ This function is for updating apache rrd database and graphic.
 
 update load average rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating load average rrd database and graphic.
 
@@ -6972,7 +7104,7 @@ This function is for updating load average rrd database and graphic.
 
 update mail rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating mail rrd database and graphic.
 
@@ -6982,7 +7114,7 @@ This function is for updating mail rrd database and graphic.
 
 update memory rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating memory rrd database and graphic.
 
@@ -6992,7 +7124,7 @@ This function is for updating memory rrd database and graphic.
 
 update MySQL rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating mysql rrd database and graphic.
 
@@ -7002,7 +7134,7 @@ This function is for updating mysql rrd database and graphic.
 
 update network rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating network usage rrd database and graphic.
 
@@ -7012,7 +7144,7 @@ This function is for updating network usage rrd database and graphic.
 
 update nginx rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating nginx rrd database and graphic.
 
@@ -7022,7 +7154,7 @@ This function is for updating nginx rrd database and graphic.
 
 update PostgreSQL rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating postgresql rrd database and graphic.
 
@@ -7032,7 +7164,7 @@ This function is for updating postgresql rrd database and graphic.
 
 update ssh rrd
 
-**Options**: `PERIOD`
+**Options**: `PERIOD` 
 
 This function is for updating ssh rrd database and graphic.
 
@@ -7042,7 +7174,7 @@ This function is for updating ssh rrd database and graphic.
 
 update backup exclusion list
 
-**Options**: `USER` `FILE`
+**Options**: `USER` `FILE` 
 
 **Examples**:
 
@@ -7058,7 +7190,7 @@ This function for updating backup exclusion list
 
 update user usage counters
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -7074,7 +7206,7 @@ Function updates usage counters like U_WEB_DOMAINS, U_MAIL_ACCOUNTS, etc.
 
 update user disk usage
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -7090,7 +7222,7 @@ The functions recalculates disk usage and updates database.
 
 update user package
 
-**Options**: `PACKAGE`
+**Options**: `PACKAGE` 
 
 **Examples**:
 
@@ -7106,7 +7238,7 @@ This function propagates package to connected users.
 
 update user disk quota
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -7122,7 +7254,7 @@ The functions upates disk quota for specific user
 
 update user statistics
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -7138,7 +7270,7 @@ Function logs user parameters into statistics database.
 
 update disk usage for domain
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -7154,7 +7286,7 @@ This function recalculates disk usage for specific webdomain.
 
 updating ssl certificate for domain
 
-**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]`
+**Options**: `USER` `DOMAIN` `SSL_DIR` `[RESTART]` 
 
 **Examples**:
 
@@ -7173,7 +7305,7 @@ authority domain.tld.ca file is optional.
 
 update domain statistics
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -7189,7 +7321,7 @@ This function runs log analyser for specific webdomain.
 
 update domain bandwidth usage
 
-**Options**: `USER` `DOMAIN`
+**Options**: `USER` `DOMAIN` 
 
 **Examples**:
 
@@ -7205,7 +7337,7 @@ This function recalculates bandwidth usage for specific domain.
 
 update domains disk usage
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -7221,7 +7353,7 @@ This function recalculates disk usage for all user webdomains.
 
 update domains statistics
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -7237,7 +7369,7 @@ This function runs log analyser usage for all user webdomains.
 
 update domains bandwidth usage
 
-**Options**: `USER`
+**Options**: `USER` 
 
 **Examples**:
 
@@ -7253,7 +7385,7 @@ This function recalculates bandwidth usage for all user webdomains.
 
 update web templates
 
-**Options**: `[RESTART]` `[SKIP]`
+**Options**: `[RESTART]` `[SKIP]` 
 
 This function for obtaining updated web (Nginx/Apache2/PHP) templates from the Hestia package.
 
@@ -7263,6 +7395,7 @@ This function for obtaining updated web (Nginx/Apache2/PHP) templates from the H
 
 update white label logo's
 
-**Options**: `[DOWNLOAD]`
+**Options**: `[DOWNLOAD]` 
 
 Replace Hestia logos with User created logo's
+

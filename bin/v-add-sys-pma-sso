@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: enables support for single sign on phpMyAdmin
-# options: [mode]
+# options: [MODE]
 #
 # example: v-add-sys-pma-sso
 #

@@ -3,6 +3,8 @@
 # options: IP
 #
 # example: v-add-sys-api-ip 1.1.1.1
+#
+# Adds Ip address to whit list
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

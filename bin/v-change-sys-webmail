@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: change webmail alias url
-# options: WEBMAIL
+# options: WEBMAIL [RESTART]
 #
 # example: v-change-sys-webmail YourtrickyURLhere
 #
@@ -18,14 +18,14 @@ source $HESTIA/func/main.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
+NEW_ALIAS=$1
+restart=${2-yes}
+
 # Get existing system webmail alias
 export WEBMAIL_ALIAS="$WEBMAIL_ALIAS"
 
 # Define aliases
 OLD_ALIAS=$WEBMAIL_ALIAS
-NEW_ALIAS=$1
-
-restart=${2-yes}
 
 # Perform verification if read-only mode is enabled
 check_hestia_demo_mode

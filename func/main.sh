@@ -1261,6 +1261,7 @@ is_format_valid() {
 				min) is_cron_format_valid "$arg" $arg_name ;;
 				month) is_cron_format_valid "$arg" $arg_name ;;
 				name) is_name_format_valid "$arg" "name" ;;
+				notice) format_no_quotes "$arg" "notice" ;;
 				nat_ip) is_ip_format_valid "$arg" ;;
 				netmask) is_ip_format_valid "$arg" 'netmask' ;;
 				newid) is_int_format_valid "$arg" 'id' ;;

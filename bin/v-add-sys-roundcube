@@ -19,8 +19,8 @@ source_conf "$HESTIA/conf/hestia.conf"
 # upgrade config file
 source "$HESTIA/install/upgrade/upgrade.conf"
 
-MODE=$2
-UPDATE="no"
+MODE=$1
+
 # Version and Download paths
 RC_FILE="roundcubemail-$rc_v-complete.tar.gz"
 RC_EXTRACT="roundcubemail-$rc_v"
@@ -62,6 +62,7 @@ if [ -d "/usr/share/roundcube" ]; then
 	exit 2
 fi
 
+UPDATE="no"
 # Get current version
 if [ -f "/var/lib/roundcube/index.php" ]; then
 	version=$(cat $RC_INSTALL_DIR/index.php | grep -o -E '[0-9].[0-9].[0-9]+' | head -1)

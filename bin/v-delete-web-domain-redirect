@@ -2,7 +2,7 @@
 # info: Delete force redirect to domain
 # options: USER DOMAIN [RESTART]
 #
-# example: v-add-web-domain-redirect user domain.tld
+# example: v-delete-web-domain-redirect user domain.tld
 #
 # Function delete a forced redirect to a domain
 

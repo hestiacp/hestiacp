@@ -1,6 +1,6 @@
 #!/bin/bash
 # info: add dns record
-# options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART] [TTL]
+# options: USER DOMAIN RECORD TYPE VALUE [PRIORITY] [ID] [RESTART] [TTL] [QUIET]
 #
 # example: v-add-dns-record admin acme.com www A 162.227.73.112
 #

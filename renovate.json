@@ -3,10 +3,9 @@
 	"extends": [
 		"config:best-practices",
 		":pinAllExceptPeerDependencies",
-		":disableDependencyDashboard",
 		":automergeLinters",
 		"group:allNonMajor",
-		"schedule:weekly"
+		"schedule:weekdays"
 	],
 	"enabledManagers": ["npm", "composer", "github-actions"],
 	"ignorePaths": ["**/node_modules/**", "install/deb/filemanager/filegator/composer.json"],

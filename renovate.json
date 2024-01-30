@@ -5,6 +5,7 @@
 		":pinAllExceptPeerDependencies",
 		":automergeLinters",
 		"group:allNonMajor",
+		"group:linters",
 		"schedule:weekdays"
 	],
 	"enabledManagers": ["npm", "composer", "github-actions"],

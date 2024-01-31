@@ -1270,7 +1270,7 @@ change cron job
 **Examples**:
 
 ```bash
-v-change-cron-job admin 7 * * * * * * /usr/bin/uptime
+v-change-cron-job admin 7 * * * * * /usr/bin/uptime
 ```
 
 This function is used for changing existing job. It fully replace job

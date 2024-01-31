@@ -1,11 +1,12 @@
 #!/bin/bash
-# info: add backup host
+# info: Add backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
 #
-# example: v-add-backup-host sftp backup.acme.com admin p4$$w@Rd
-#          v-add-backup-host b2 bucketName keyID applicationKey
+# example: v-add-backup-host sftp backup.acme.com admin 'p4$$w@Rd'
 #
-# Add a new remote backup location. Currently SFTP, FTP and Backblaze are supported
+# example: v-add-backup-host 'rclone' 'remote-name' '' '' 'Bucket or Folder name' ''
+#
+# Add a new remote backup location. Currently SFTP, FTP and RCONE are supported
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

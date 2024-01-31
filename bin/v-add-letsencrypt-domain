@@ -1,11 +1,11 @@
 #!/bin/bash
-# info: check letsencrypt domain
+# info: Generate Lets Encrypt certificate for provided domain and aliases.
 # options: USER DOMAIN [ALIASES] [MAIL]
-#
-# example: v-add-letsencrypt-domain admin wonderland.com www.wonderland.com,demo.wonderland.com
-# example: v-add-letsencrypt-domain admin wonderland.com '' yes
-#
-# This function check and validates domain with Let's Encrypt
+# variable: ALIASES | Comma separated list of aliases to be addd to the certificate this could contain up to 100 different domains / subdomain need to be under "ALIASES" under web
+# variable: MAIL | Enable Lets encrypt from mail and webmail
+# example: v-add-letsencrypt-domain user domain.com 'www.domain.com,demo.domain.com'
+# example: v-add-letsencrypt-domain user domain.com '' yes
+# note: Wildcard domains *.domain.com are supported only when DNS via Hestia is used.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

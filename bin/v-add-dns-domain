@@ -9,6 +9,8 @@
 # The soa argument is responsible for the relevant record. By default the first
 # user's NS server is used. TTL is set as common for the zone and for all of
 # its records with a default value of 14400 seconds.
+#
+# note: DNSEC can only be used with Hestia Master -> Slave
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -50,7 +52,7 @@ domain_utf=$(idn2 --quiet -d "$domain_idn")
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-check_args '3' "$#" 'USER DOMAIN IP [NS1] [NS2] [NS3] [..] [NS8] [RESTART]'
+check_args '3' "$#" 'USER DOMAIN IP [NS1] [NS2] [NS3] [..] [NS8] [RESTART] [DNSSEC]'
 is_format_valid 'user' 'domain' 'ip'
 is_system_enabled "$DNS_SYSTEM" 'DNS_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

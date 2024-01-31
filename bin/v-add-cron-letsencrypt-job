@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: add cron job for Let's Encrypt certificates
+# info: Add cron job for Let's Encrypt certificates
 # options: NONE
 #
 # This function adds a new cron job for Let's Encrypt.

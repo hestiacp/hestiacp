@@ -1,8 +1,8 @@
 #!/bin/bash
 # info: Adds / Update  PHP  dependencies to Hestia
-# options:
+# options: NONE
 #
-# example: v-sys-dependencies
+# example: v-add-sys-dependencies
 #
 # This script download System Dependencies for Web UI. PHP Mailer, phpquoteshellarg and twofactorauth.
 

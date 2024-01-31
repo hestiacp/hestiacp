@@ -1,11 +1,15 @@
 #!/bin/bash
-# info: add cron job
+# info: Creates a new cronjob
 # options: USER MIN HOUR DAY MONTH WDAY COMMAND [JOB] [RESTART]
 #
-# example: v-add-cron-job admin * * * * * sudo /usr/local/hestia/bin/v-backup-users
+# variable: COMMAND | Command to executed. For security reasons sudo can't be used anymore. Make sure to use full paths as path variables may no bee loaded on default
 #
-# This function adds a job to cron daemon. When executing commands, any output
-# is mailed to user's email if parameter REPORTS is set to 'yes'.
+# variable: JOB | ID (Numeric) is only used for sorting in Hestia
+#
+# example: v-add-cron-job user '*' '*' '*' '*' '*'  '/usr/bin/php /home/user/web/domain/public_html/wp-cron.php'
+#
+# This function adds a job to cron daemon. When executing commands, any output is mailed to user's email. Output can be muted by using [v-delete-cron-reports](/docs/reference/cli.html#v-delete-cron-reports) for the user in general or by appending `> /dev/null 2>&1` to the command.
+
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: add new database server
+# info: Add new database server
 # options: TYPE HOST DBUSER DBPASS [MAX_DB] [CHARSETS] [TEMPLATE] [PORT]
 #
 # example: v-add-database-host mysql localhost alice p@$$wOrd

@@ -1,10 +1,15 @@
 #!/bin/bash
-# info: update user notification
+# info: Acknowledge user notification
 # options: USER NOTIFICATION
+# variable: USER | Username used for testing
+# variable: NOTIFICATION | Notification ID or "all"
+# example: v-acknowledge-user-notification user 1
+# example: v-acknowledge-user-notification user all
 #
-# example: v-acknowledge-user-notification
+# This function acknowledge user notification.
 #
-# This function updates user notification.
+# note: Used only for testing
+
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

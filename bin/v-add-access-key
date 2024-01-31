@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: generate access key
+# info: Generate access key
 # options: USER [PERMISSIONS] [COMMENT] [FORMAT]
 #
 # example: v-add-access-key admin v-purge-nginx-cache,v-list-mail-accounts comment json

@@ -2,11 +2,13 @@
 # info: change cron job
 # options: USER JOB MIN HOUR DAY MONTH WDAY COMMAND
 #
-# example: v-change-cron-job admin 7 * * * * * /usr/bin/uptime
+# example: v-change-cron-job user 7 * * * * * *  '/usr/bin/php /home/user/web/domain/public_html/wp-cron.php'
 #
 # This function is used for changing existing job. It fully replace job
 # parameters with new one but with same id.
-
+# Change CRON_REPORTS value via:
+# [v-add-cron-reports](https://hestiacp.com/docs/reference/cli.html#v-add-cron-reports) and
+# [v-delete-cron-reports](https://hestiacp.com/docs/reference/cli.html#v-delete-cron-reports)
 #----------------------------------------------------------#
 #                Variables & Functions                     #
 #----------------------------------------------------------#

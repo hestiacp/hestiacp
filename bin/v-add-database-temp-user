@@ -1,5 +1,5 @@
 #!/bin/bash
-# info: add temp database user.
+# info: Adds a temporary database user to a mysql database.
 # options: USER DATABASE [TYPE] [HOST] [TTL]
 #
 # example: v-add-database-temp-user wordress wordpress_db mysql

@@ -396,6 +396,12 @@ function check_ip_not_banned(){
 	assert_output --partial 'Error: invalid user format'
 }
 
+@test "User: Add new user Failed 6" {
+	run v-add-user 'ib_Buffer'  $user $user@hestiacp2.com default "Super Test"
+	assert_failure $E_INVALID
+	assert_output --partial 'Error: invalid user format'
+}
+
 @test "User: Add new user Success 1" {
 	run v-add-user 'jaap01'  $user $user@hestiacp2.com default "Super Test"
 	assert_success
@@ -404,6 +410,18 @@ function check_ip_not_banned(){
 
 @test "User: Add new user Success 1 Delete" {
 	run v-delete-user jaap01
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 2" {
+	run v-add-user 'buffer'  $user $user@hestiacp2.com default "Super Test"
+	assert_success
+	refute_output
+}
+
+@test "User: Add new user Success 2 Delete" {
+	run v-delete-user buffer
 	assert_success
 	refute_output
 }

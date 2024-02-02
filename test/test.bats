@@ -399,7 +399,7 @@ function check_ip_not_banned(){
 @test "User: Add new user Failed 6" {
 	run v-add-user 'ib_Buffer'  $user $user@hestiacp2.com default "Super Test"
 	assert_failure $E_INVALID
-	assert_output --partial 'Error: invalid user format'
+	assert_output --partial 'Error: The user name'
 }
 
 @test "User: Add new user Success 1" {

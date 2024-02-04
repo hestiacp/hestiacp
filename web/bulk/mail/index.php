@@ -45,7 +45,7 @@ if ($_SESSION["userContext"] === "admin") {
 				exit();
 		}
 	} else {
-		switch ($_POST["account"]) {
+		switch ($action) {
 			case "delete":
 				$cmd = "v-delete-mail-account";
 				break;
@@ -77,7 +77,7 @@ if ($_SESSION["userContext"] === "admin") {
 				exit();
 		}
 	} else {
-		switch ($_POST["account"]) {
+		switch ($action) {
 			case "delete":
 				$cmd = "v-delete-mail-account";
 				break;

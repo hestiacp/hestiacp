@@ -41,11 +41,11 @@
 		"lightningcss": "1.23.0",
 		"lint-staged": "15.2.1",
 		"markdownlint-cli2": "0.12.1",
-		"prettier": "3.2.4",
+		"prettier": "3.2.5",
 		"prettier-plugin-nginx": "1.0.3",
 		"prettier-plugin-sh": "0.14.0",
 		"prettier-plugin-sql": "0.18.0",
-		"stylelint": "16.2.0",
+		"stylelint": "16.2.1",
 		"stylelint-config-standard": "36.0.0",
 		"vitepress": "1.0.0-rc.40",
 		"vue": "3.4.15"

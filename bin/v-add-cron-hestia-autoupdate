@@ -1,9 +1,8 @@
 #!/bin/bash
-# info: Add cron job for hestia automatic updates
+# info: Creates the cronjob to enable automatic updates via apt or git
 # options: MODE
-#
-# This function adds a cronjob for hestia automatic updates
-# that can be downloaded from apt or git.
+# variable: MODE | apt or git (Default apt) when providing "git" it will switch to the development version (main branch)
+# example: v-add-cron-hestia-autoupdate
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

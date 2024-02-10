@@ -1,10 +1,9 @@
 #!/bin/bash
 # info: Generate access key
-# options: USER [PERMISSIONS] [COMMENT] [FORMAT]
-#
+# options: USER PERMISSIONS [COMMENT] [FORMAT]
+# variable: PERMISSIONS | Permission are defined in /usr/local/hestia/data/api or when the 'admin' user is used `*` can be used allowing commands to be executed.
+# variable: COMMENT | String is only used to display extra information
 # example: v-add-access-key admin v-purge-nginx-cache,v-list-mail-accounts comment json
-#
-# The "PERMISSIONS" argument is optional for the admin user only.
 # This function creates a key file in $HESTIA/data/access-keys/
 
 #----------------------------------------------------------#

@@ -1,12 +1,15 @@
 #!/bin/bash
-# info: Add backup host
+# info: Add a new backup host
 # options: TYPE HOST USERNAME PASSWORD [PATH] [PORT]
-#
+# variable: TYPE | SFTP, FTP, RCLONE or B2 are supported
+# variable: HOST | Hostnam or Remote name or Bucket (B2)
+# variable: USERNAME | Username (S)FTP or Application ID (B2) or '' (Rclone)
+# variable: PASSWORD | Password (S)FTP or Application Key (B2) or '' (Rclone)
+# variable: PATH | Path (S)FTP / Rclone or bucket name... (Rclone)
+# variable: Port | Default port for service SFTP 22 or FTP 21
 # example: v-add-backup-host sftp backup.acme.com admin 'p4$$w@Rd'
-#
 # example: v-add-backup-host 'rclone' 'remote-name' '' '' 'Bucket or Folder name' ''
-#
-# Add a new remote backup location. Currently SFTP, FTP and RCONE are supported
+# Add a new remote backup location. Currently SFTP, FTP, Rclone and B2 ar supported how ever B2 might be dropped in favor of Rclone support.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

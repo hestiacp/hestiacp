@@ -1,11 +1,7 @@
 #!/bin/bash
-# info: Add cron reports
+# info: Enable the option to send the user cronjob output that has been generated
 # options: USER
-#
 # example: v-add-cron-reports user
-#
-# This function for enabling reports on cron tasks and administrative
-# notifications.
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

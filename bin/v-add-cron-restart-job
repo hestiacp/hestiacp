@@ -1,8 +1,7 @@
 #!/bin/bash
-# info: Enable the restart cronjob
+# info: Enable the restart cronjobs to restart services in Hestia on demand
 # options: NONE
-#
-# This function for enabling restart cron tasks
+
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

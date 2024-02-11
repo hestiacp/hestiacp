@@ -1,8 +1,8 @@
 #!/bin/bash
-# info: Add cron job for Let's Encrypt certificates
+# info: Add cron job to generate lets encrypt certificate after a domain has been addd.
 # options: NONE
-#
-# This function adds a new cron job for Let's Encrypt.
+# example: v-add-letsencrypt-job
+
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #

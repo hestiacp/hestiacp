@@ -1,8 +1,14 @@
 #!/bin/bash
-# info: Add database
+# info: Add a new Database to the user.
 # options: USER DATABASE DBUSER DBPASS [TYPE] [HOST] [CHARSET]
-#
-# example: v-add-database user wordpress_db matt qwerty123
+# variable: DATABASE | Database name by default USER will be prepend.
+# variable: DBUSER | Database username by default USER will be prepend.
+# variable: DBPASS | Password
+# variable: TYPE | mysql or pgsql
+# variable: HOST | Hostname of database server. Need to exist in /conf/{db}.conf
+# variable: CHARSET | Character set used for Mysql / Postgresql
+# example: v-add-database user wordpress matt qwerty123 mysql
+# example: v-add-database user test test 1234ABCD pgsql remote.db
 #
 # This function creates the database concatenating username and user_db.
 # Supported types of databases you can get using v-list-sys-config script.

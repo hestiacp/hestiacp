@@ -143,21 +143,20 @@ for domain in $domains; do
 				FTP_USER=$(echo "$FTP_USER" | sed -e "s/${old_user}_//")
 				FTP_USER="${user}_${FTP_USER}"
 			fi
-
 			# Copying SSL certificates
 			if [ "$SSL" = 'yes' ]; then
 
-				if [ -f "$tmpdir/web/$domain/hestia/$domain.crt" ]; then
-					for crt in $(ls $tmpdir/home/$user/backup/web/$domain/hestia | grep -E '^'$domain'\.(crt|key|ca|pem)$'); do
-						cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$crt" "$USER_DATA/ssl/"
-					done
-				elif [ -f "$tmpdir/home/$user/backup/web/$domain/conf/ssl.$domain.crt" ]; then
-					certificates=$(ls $tmpdir/home/$user/backup/web/$domain/conf | grep ssl)
-					certificates=$(echo "$certificates" | grep $domain)
-					for crt in $certificates; do
-						crt=$(echo $crt | sed -e "s/ssl.//")
-						cp -f $tmpdir/home/$user/backup/web/$domain/conf/ssl.$crt $USER_DATA/ssl/$crt
-					done
+				if [ -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.crt" ]; then
+					cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.crt" "$USER_DATA/ssl/"
+					if [ -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.ca" ]; then
+						cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.ca" "$USER_DATA/ssl/"
+					fi
+					if [ -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.pem" ]; then
+						cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.pem" "$USER_DATA/ssl/"
+					fi
+					if [ -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.key" ]; then
+						cp -f "$tmpdir/home/$user/backup/web/$domain/hestia/$domain.key" "$USER_DATA/ssl/"
+					fi
 				fi
 			fi
 

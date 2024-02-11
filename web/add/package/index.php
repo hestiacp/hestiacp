@@ -191,7 +191,7 @@ if (!empty($_POST["ok"])) {
 			$pkg .= "RATE_LIMIT=" . $v_ratelimit . "\n";
 			$pkg .= "NS=" . $v_ns . "\n";
 			$pkg .= "SHELL=" . $v_shell . "\n";
-            $pkg .= "SHELL_JAIL_ENABLED=" . $v_shell_jail_enabled . "\n";
+			$pkg .= "SHELL_JAIL_ENABLED=" . $v_shell_jail_enabled . "\n";
 			$pkg .= "BACKUPS=" . $v_backups . "\n";
 			$pkg .= "BACKUPS_INCREMENTAL=" . $v_backups_incremental . "\n";
 			$pkg .= "TIME=" . $v_time . "\n";

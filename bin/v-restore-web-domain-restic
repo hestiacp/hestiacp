@@ -41,7 +41,7 @@ source_conf $HESTIA/conf/restic.conf
 #                    Verifications                         #
 #----------------------------------------------------------#
 
-args_usage='USER SNAPSHOT DOMAIN [NOTIFY]'
+args_usage='USER SNAPSHOT DOMAIN [NOTIFY] [NEW_USER]'
 check_args '3' "$#" "$args_usage"
 is_format_valid 'user'
 is_object_valid 'user' 'USER' "$user"
@@ -62,6 +62,7 @@ fi
 restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/pam/passwd" > "$tmpdir/passwd"
 old_uid=$(cut -f 3 -d : $tmpdir/passwd)
 
+domains=""
 parse_object_kv_list $(cat $tmpdir/backup.conf)
 IFS=','
 read -a domains_array <<< "$web"

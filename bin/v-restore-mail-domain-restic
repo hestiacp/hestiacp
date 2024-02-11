@@ -58,6 +58,7 @@ if [ ! -f "$tmpdir/backup.conf" ]; then
 	fi
 fi
 
+domains=""
 parse_object_kv_list $(cat "$tmpdir/backup.conf")
 read -a domains_array <<< "$mail"
 read -a domains <<< "$MAIL"

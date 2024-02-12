@@ -75,8 +75,8 @@ for domain in $domains; do
 		# Checking domain existence
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/web.conf)
 		if [ -z "$check_config" ]; then
-			check_new=$(is_domain_new 'dns' $domain)
-			if [ -n "$check_new" ]; then
+			check_new=$(is_domain_new 'web' $domain)
+			if [ "$check_new" = 'yes' ]; then
 				rm -rf $tmpdir
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" $email $notify

@@ -57,6 +57,7 @@ fi
 
 parse_object_kv_list $(cat "$tmpdir/backup.conf")
 IFS=','
+domains=''
 read -a domains_array <<< "$dns"
 read -a domains <<< "$DNS"
 for domain in $domains; do
@@ -67,7 +68,7 @@ for domain in $domains; do
 		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/dns.conf)
 		if [ -z "$check_config" ]; then
 			check_new=$(is_domain_new 'dns' "$domain")
-			if [ -n "$check_new" ]; then
+			if [ "$check_new" = "yes" ]; then
 				rm -rf $tmpdir
 				error="$domain belongs to another user"
 				echo "$error" | $SENDMAIL -s "$subj" "$email" "$notify"

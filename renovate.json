@@ -1,7 +1,6 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"branchPrefix": "dependencies/",
-	"enabledManagers": ["npm", "composer", "github-actions"],
 	"extends": [
 		"config:recommended",
 		"schedule:weekly",

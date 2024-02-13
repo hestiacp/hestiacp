@@ -39,7 +39,7 @@
 		"eslint-plugin-import": "2.29.1",
 		"husky": "9.0.10",
 		"lightningcss": "1.23.0",
-		"lint-staged": "15.2.1",
+		"lint-staged": "15.2.2",
 		"markdownlint-cli2": "0.12.1",
 		"prettier": "3.2.5",
 		"prettier-plugin-nginx": "1.0.3",
@@ -47,8 +47,8 @@
 		"prettier-plugin-sql": "0.18.0",
 		"stylelint": "16.2.1",
 		"stylelint-config-standard": "36.0.0",
-		"vitepress": "1.0.0-rc.41",
-		"vue": "3.4.15"
+		"vitepress": "1.0.0-rc.42",
+		"vue": "3.4.19"
 	},
 	"browserslist": [
 		"defaults"

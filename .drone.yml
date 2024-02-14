@@ -130,7 +130,7 @@ steps:
       - npm ci --ignore-scripts
       - npm run build
   - name: Build
-    image: debian:bullseye
+    image: debian:bookworm
     commands:
       - ln -snf /etc/localtime && echo CET > /etc/timezone
       - ./src/hst_autocompile.sh --dontinstalldeps --hestia --debug --cross --noinstall --keepbuild '~localsrc'

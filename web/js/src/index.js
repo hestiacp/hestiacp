@@ -1,6 +1,7 @@
 import alpineInit from './alpineInit';
 import focusFirstInput from './focusFirstInput';
 import handleAddIpLists from './addIpLists';
+import handleAutoTrimInputs from './autoTrimInputs';
 import handleConfirmAction from './confirmAction';
 import handleCopyCreds from './copyCreds';
 import handleClipboardCopy from './clipboardCopy';
@@ -24,7 +25,6 @@ import handleStickyToolbar from './stickyToolbar';
 import handleSyncEmailValues from './syncEmailValues';
 import handleTabPanels from './tabPanels';
 import handleToggleAdvanced from './toggleAdvanced';
-import trimInput from './trimInput';
 import handleUnlimitedInput from './unlimitedInput';
 import initRrdCharts from './rrdCharts';
 import initWebTerminal from './webTerminal';
@@ -34,6 +34,7 @@ focusFirstInput();
 
 function initListeners() {
 	handleAddIpLists();
+	handleAutoTrimInputs();
 	handleConfirmAction();
 	handleCopyCreds();
 	handleClipboardCopy();
@@ -52,7 +53,6 @@ function initListeners() {
 	handleSyncEmailValues();
 	handleTabPanels();
 	handleToggleAdvanced();
-	trimInput();
 	initRrdCharts();
 	initWebTerminal();
 }

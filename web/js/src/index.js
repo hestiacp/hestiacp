@@ -24,6 +24,7 @@ import handleStickyToolbar from './stickyToolbar';
 import handleSyncEmailValues from './syncEmailValues';
 import handleTabPanels from './tabPanels';
 import handleToggleAdvanced from './toggleAdvanced';
+import trimInput from './trimInput';
 import handleUnlimitedInput from './unlimitedInput';
 import initRrdCharts from './rrdCharts';
 import initWebTerminal from './webTerminal';
@@ -51,6 +52,7 @@ function initListeners() {
 	handleSyncEmailValues();
 	handleTabPanels();
 	handleToggleAdvanced();
+	trimInput();
 	initRrdCharts();
 	initWebTerminal();
 }

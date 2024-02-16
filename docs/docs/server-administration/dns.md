@@ -64,6 +64,10 @@ There is no limitation on how to chain DNS servers.
 
 ### Master -> Slave DNS cluster with the Hestia API
 
+::: info
+It doesn't work if you try to sync via local network! See [Issue](https://github.com/hestiacp/hestiacp/issues/4295) Make sure to use the public ip addresses
+:::
+
 Preparing your **Slave** server(s):
 
 1. Whitelist your master server IP in **Configure Server** -> **Security** -> **Allowed IP addresses for API**

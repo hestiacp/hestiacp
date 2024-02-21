@@ -17,7 +17,7 @@
 user=$1
 database=$2
 output=$3
-compression=${4-none}
+compression=$4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -29,7 +29,7 @@ source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-check_args '2' "$#" 'USER DATABASE'
+check_args '2' "$#" 'USER DATABASE [OUTPUT] [COMPRESSION]'
 is_format_valid 'user' 'database'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"

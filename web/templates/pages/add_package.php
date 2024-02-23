@@ -278,6 +278,64 @@
 					</div>
 				</div>
 			</details>
+			<details class="collapse" id="system-resources-options">
+				<summary class="collapse-header">
+					<?= _("System Resources") ?>
+				</summary>
+				<div class="collapse-content">
+					<div class="u-mb10">
+						<label for="cfs_quota" class="form-label">
+							<?= _("CPU Quota (in %)") ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_cpu_quota" id="v_cpu_quota" value="<?= htmlentities(trim($v_cpu_quota, "'")) ?>">
+							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+								<i class="fas fa-infinity"></i>
+							</button>
+						</div>
+						<small class="form-text text-muted"><?= _("CPUQuota=20% ensures that the executed processes will never get more than 20% CPU time on one CPU.") ?></small>
+					</div>
+
+					<div class="u-mb10">
+						<label for="cfs_period" class="form-label">
+							<?= _("CPU Quota Period (in ms for milliseconds or s for seconds.)") ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_cpu_quota_period" id="v_cpu_quota_period" value="<?= htmlentities(trim($v_cpu_quota_period, "'")) ?>">
+							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+								<i class="fas fa-infinity"></i>
+							</button>
+						</div>
+						<small class="form-text text-muted"><?= _("CPUQuotaPeriodSec=10ms to request that the CPU quota is measured in periods of 10ms.") ?></small>
+					</div>
+
+					<div class="u-mb10">
+						<label for="memory_limit" class="form-label">
+							<?= _("Memory Limit (in bytes or with units like '2G')") ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_memory_limit" id="v_memory_limit" value="<?= htmlentities(trim($v_memory_limit, "'")) ?>">
+							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+								<i class="fas fa-infinity"></i>
+							</button>
+						</div>
+						<small class="form-text text-muted"><?= _("Takes a memory size in bytes. If the value is suffixed with K, M, G or T, the specified memory size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively") ?></small>
+					</div>
+
+					<div class="u-mb10">
+						<label for="swap_limit" class="form-label">
+							<?= _("Swap Limit (in bytes or with units like '2G')") ?>
+						</label>
+						<div class="u-pos-relative">
+							<input type="text" class="form-control" name="v_swap_limit" id="v_swap_limit" value="<?= htmlentities(trim($v_swap_limit, "'")) ?>">
+							<button type="button" class="unlimited-toggle js-unlimited-toggle" title="<?= _("Unlimited") ?>">
+								<i class="fas fa-infinity"></i>
+							</button>
+						</div>
+						<small class="form-text text-muted"><?= _("Takes a swap size in bytes. If the value is suffixed with K, M, G or T, the specified swap size is parsed as Kilobytes, Megabytes, Gigabytes, or Terabytes (with the base 1024), respectively") ?></small>
+					</div>
+				</div>
+			</details>
 		</div>
 
 	</form>

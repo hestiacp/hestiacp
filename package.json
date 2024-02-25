@@ -10,6 +10,7 @@
 		"docs:dev": "vitepress dev docs",
 		"docs:build": "vitepress build docs",
 		"docs:serve": "vitepress serve docs",
+		"docs:test": "vitest run --config docs/.vitepress/vitest.config.js",
 		"build": "node build.js",
 		"lint": "prettier --cache --check . && eslint --cache . && stylelint web/css/src/**/*.css && markdownlint-cli2 *.md docs/**/*.md",
 		"lint-staged": "lint-staged",
@@ -31,6 +32,8 @@
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.22.2",
+		"@testing-library/vue": "^8.0.2",
+		"@vitejs/plugin-vue": "^5.0.4",
 		"browserslist": "^4.23.0",
 		"esbuild": "^0.20.1",
 		"eslint": "^8.57.0",
@@ -38,6 +41,7 @@
 		"eslint-plugin-editorconfig": "^4.0.3",
 		"eslint-plugin-import": "^2.29.1",
 		"husky": "^9.0.11",
+		"jsdom": "^24.0.0",
 		"lightningcss": "^1.24.0",
 		"lint-staged": "^15.2.2",
 		"markdownlint-cli2": "^0.12.1",
@@ -48,6 +52,7 @@
 		"stylelint": "^16.2.1",
 		"stylelint-config-standard": "^36.0.0",
 		"vitepress": "^1.0.0-rc.44",
+		"vitest": "^1.3.1",
 		"vue": "^3.4.20"
 	},
 	"browserslist": [

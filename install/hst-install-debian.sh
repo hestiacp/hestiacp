@@ -74,6 +74,7 @@ help() {
   -i, --iptables          Install iptables      [yes|no]  default: yes
   -b, --fail2ban          Install Fail2Ban      [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
+  -L, --resourcelimit     Resource limitation   [yes|no]  default: no
   -W, --webterminal       Web Terminal          [yes|no]  default: no
   -d, --api               Activate API          [yes|no]  default: yes
   -r, --port              Change Backend Port             default: 8083
@@ -258,6 +259,7 @@ for arg; do
 		--fail2ban) args="${args}-b " ;;
 		--multiphp) args="${args}-o " ;;
 		--quota) args="${args}-q " ;;
+		--resourcelimit) args="${args}-L " ;;
 		--webterminal) args="${args}-W " ;;
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
@@ -281,36 +283,37 @@ eval set -- "$args"
 # Parsing arguments
 while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:u:e:p:W:D:fh" Option; do
 	case $Option in
-		a) apache=$OPTARG ;;      # Apache
-		w) phpfpm=$OPTARG ;;      # PHP-FPM
-		o) multiphp=$OPTARG ;;    # Multi-PHP
-		v) vsftpd=$OPTARG ;;      # Vsftpd
-		j) proftpd=$OPTARG ;;     # Proftpd
-		k) named=$OPTARG ;;       # Named
-		m) mysql=$OPTARG ;;       # MariaDB
-		M) mysql8=$OPTARG ;;      # MySQL
-		g) postgresql=$OPTARG ;;  # PostgreSQL
-		x) exim=$OPTARG ;;        # Exim
-		z) dovecot=$OPTARG ;;     # Dovecot
-		Z) sieve=$OPTARG ;;       # Sieve
-		c) clamd=$OPTARG ;;       # ClamAV
-		t) spamd=$OPTARG ;;       # SpamAssassin
-		i) iptables=$OPTARG ;;    # Iptables
-		b) fail2ban=$OPTARG ;;    # Fail2ban
-		q) quota=$OPTARG ;;       # FS Quota
-		W) webterminal=$OPTARG ;; # Web Terminal
-		r) port=$OPTARG ;;        # Backend Port
-		l) lang=$OPTARG ;;        # Language
-		d) api=$OPTARG ;;         # Activate API
-		y) interactive=$OPTARG ;; # Interactive install
-		s) servername=$OPTARG ;;  # Hostname
-		e) email=$OPTARG ;;       # Admin email
-		u) username=$OPTARG ;;    # Admin username
-		p) vpass=$OPTARG ;;       # Admin password
-		D) withdebs=$OPTARG ;;    # Hestia debs path
-		f) force='yes' ;;         # Force install
-		h) help ;;                # Help
-		*) help ;;                # Print help (default)
+		a) apache=$OPTARG ;;      	# Apache
+		w) phpfpm=$OPTARG ;;      	# PHP-FPM
+		o) multiphp=$OPTARG ;;    	# Multi-PHP
+		v) vsftpd=$OPTARG ;;      	# Vsftpd
+		j) proftpd=$OPTARG ;;     	# Proftpd
+		k) named=$OPTARG ;;       	# Named
+		m) mysql=$OPTARG ;;       	# MariaDB
+		M) mysql8=$OPTARG ;;      	# MySQL
+		g) postgresql=$OPTARG ;;  	# PostgreSQL
+		x) exim=$OPTARG ;;        	# Exim
+		z) dovecot=$OPTARG ;;     	# Dovecot
+		Z) sieve=$OPTARG ;;       	# Sieve
+		c) clamd=$OPTARG ;;       	# ClamAV
+		t) spamd=$OPTARG ;;       	# SpamAssassin
+		i) iptables=$OPTARG ;;    	# Iptables
+		b) fail2ban=$OPTARG ;;    	# Fail2ban
+		q) quota=$OPTARG ;;       	# FS Quota
+		L) resourcelimit=$OPTARG ;;	# Resource Limitation
+		W) webterminal=$OPTARG ;; 	# Web Terminal
+		r) port=$OPTARG ;;        	# Backend Port
+		l) lang=$OPTARG ;;        	# Language
+		d) api=$OPTARG ;;         	# Activate API
+		y) interactive=$OPTARG ;; 	# Interactive install
+		s) servername=$OPTARG ;;  	# Hostname
+		e) email=$OPTARG ;;       	# Admin email
+		u) username=$OPTARG ;;    	# Admin username
+		p) vpass=$OPTARG ;;       	# Admin password
+		D) withdebs=$OPTARG ;;    	# Hestia debs path
+		f) force='yes' ;;         	# Force install
+		h) help ;;                	# Help
+		*) help ;;                	# Print help (default)
 	esac
 done
 
@@ -378,6 +381,7 @@ fi
 set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
+set_default_value 'resourcelimit' 'no'
 set_default_value 'webterminal' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
@@ -1364,6 +1368,13 @@ if [ "$quota" = 'yes' ]; then
 	write_config_value "DISK_QUOTA" "yes"
 else
 	write_config_value "DISK_QUOTA" "no"
+fi
+
+# Resource limitation
+if [ "$resourcelimit" = 'yes' ]; then
+	write_config_value "RESOURCES_LIMIT" "yes"
+else
+	write_config_value "RESOURCES_LIMIT" "no"
 fi
 
 write_config_value "WEB_TERMINAL_PORT" "8085"
@@ -2442,17 +2453,4 @@ cat $tmpfile
 rm -f $tmpfile
 
 # Add welcome message to notification panel
-$HESTIA/bin/v-add-user-notification "$username" 'Welcome to Hestia Control Panel!' '<p>You are now ready to begin adding <a href="/add/user/">user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.</p><p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-red"></i> The Hestia Control Panel development team</p>'
-
-# Clean-up
-# Sort final configuration file
-sort_config_file
-
-if [ "$interactive" = 'yes' ]; then
-	echo "[ ! ] IMPORTANT: The system will now reboot to complete the installation process."
-	read -n 1 -s -r -p "Press any key to continue"
-	reboot
-else
-	echo "[ ! ] IMPORTANT: You must restart the system before continuing!"
-fi
-# EOF
+$HESTIA/bin/v-add-user-notification "$username" 'Welcome to Hestia Control Panel!' '<p>You are now ready to begin adding <a href="/add/user/">user accounts</a> and <a href="/add/web/">domains</a>. For help and assistance, <a href="https://hestiacp.com/docs/" target="_blank">view the documentation</a> or <a href="https://forum.hestiacp.com/" target="_blank">visit our forum</a>.</p><p>Please <a href="https://github.com/hestiacp/hestiacp/issues" target="_blank">report any issues via GitHub</a>.</p><p class="u-text-bold">Have a wonderful day!</p><p><i class="fas fa-heart icon-

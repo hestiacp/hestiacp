@@ -75,6 +75,7 @@ help() {
   -i, --iptables          Install iptables      [yes|no]  default: yes
   -b, --fail2ban          Install Fail2Ban      [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
+  -L, --resourcelimit     Resource limitation   [yes|no]  default: no
   -W, --webterminal       Web Terminal          [yes|no]  default: no
   -d, --api               Activate API          [yes|no]  default: yes
   -r, --port              Change Backend Port             default: 8083
@@ -259,6 +260,7 @@ for arg; do
 		--fail2ban) args="${args}-b " ;;
 		--multiphp) args="${args}-o " ;;
 		--quota) args="${args}-q " ;;
+		--resourcelimit) args="${args}-L " ;;
 		--webterminal) args="${args}-W " ;;
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
@@ -299,6 +301,7 @@ while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:u:e:p:W:D:fh" Option;
 		i) iptables=$OPTARG ;;    # Iptables
 		b) fail2ban=$OPTARG ;;    # Fail2ban
 		q) quota=$OPTARG ;;       # FS Quota
+		L) resourcelimit=$OPTARG ;;	# Resource Limitation
 		W) webterminal=$OPTARG ;; # Web Terminal
 		r) port=$OPTARG ;;        # Backend Port
 		l) lang=$OPTARG ;;        # Language
@@ -379,6 +382,7 @@ fi
 set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
+set_default_value 'resourcelimit' 'no'
 set_default_value 'webterminal' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
@@ -1378,6 +1382,13 @@ if [ "$quota" = 'yes' ]; then
 	write_config_value "DISK_QUOTA" "yes"
 else
 	write_config_value "DISK_QUOTA" "no"
+fi
+
+# Resource limitation
+if [ "$resourcelimit" = 'yes' ]; then
+	write_config_value "RESOURCES_LIMIT" "yes"
+else
+	write_config_value "RESOURCES_LIMIT" "no"
 fi
 
 write_config_value "WEB_TERMINAL_PORT" "8085"
@@ -2422,10 +2433,4 @@ $HESTIA/bin/v-add-user-notification "$username" 'Welcome to Hestia Control Panel
 sort_config_file
 
 if [ "$interactive" = 'yes' ]; then
-	echo "[ ! ] IMPORTANT: The system will now reboot to complete the installation process."
-	read -n 1 -s -r -p "Press any key to continue"
-	reboot
-else
-	echo "[ ! ] IMPORTANT: You must restart the system before continuing!"
-fi
-# EOF
+	echo "[ ! ] IMPORTANT: The sys

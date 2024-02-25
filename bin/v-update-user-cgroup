@@ -59,9 +59,9 @@ fi
 
 # Set memory limits:
 if [ "$memory_limit" != 'unlimited' ]; then
-	systemctl set-property "$user_slice" MemoryMax="$memory_limit"
+	systemctl set-property "$user_slice" MemoryHigh="$memory_limit"
 else
-	systemctl set-property "$user_slice" MemoryMax=
+	systemctl set-property "$user_slice" MemoryHigh=
 fi
 
 # Set memory swap limits:

@@ -1,0 +1,228 @@
+#!/bin/bash
+# info: restore WEB domain
+# options: USER SNAPSHOT DOMAIN
+#
+# example: v-restore-mail-domain-restic user snapshot domain.com
+# example: v-restore-mail-domain-restic user snapshot 'domain.com,domain2.com'
+# example: v-restore-mail-domain-restic user snapshot '*'
+
+#
+# This function for restoring database from restic snapshot.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+mail=$3
+notify=${4-no}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER SNAPSHOT DOMAIN [NOTIFY]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+source_conf $HESTIA/conf/restic.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+tmpdir=$(mktemp -p "/home/$user/tmp/" -d)
+if [ ! -f "$tmpdir/backup.conf" ]; then
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > $tmpdir/backup.conf
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Unable to download snapshot"
+	fi
+fi
+
+domains=""
+parse_object_kv_list $(cat "$tmpdir/backup.conf")
+read -a domains_array <<< "$mail"
+read -a domains <<< "$MAIL"
+
+# Checking exim username for later chowning
+exim_user="exim"
+check_exim_username=$(grep -c '^Debian-exim:' /etc/passwd)
+if [ "$check_exim_username" -eq 1 ]; then
+	exim_user="Debian-exim"
+fi
+
+for domain in $domains; do
+	if [[ "${IFS}${domains_array[*]}${IFS}" =~ "${IFS}${domain}${IFS}" || "$mail" = '*' ]]; then
+		# Checking domain existance
+		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf)
+		if [ -z "$check_config" ]; then
+			check_new=$(is_domain_new 'mail' $domain)
+			if [ "$check_new" = 'yes' ]; then
+				rm -rf $tmpdir
+				error="$domain belongs to another user"
+				echo "$error" | $SENDMAIL -s "$subj" $email $notify
+				sed -i "/ $user /d" $HESTIA/data/queue/backup.pipe
+				check_result "$E_PARSING" "$error"
+			fi
+		fi
+
+		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/mail/$domain" --target "$tmpdir"
+		if [ "$?" -ne 0 ]; then
+			check_result $E_NOTEXIST "Unable to download domain from snapshot"
+		fi
+
+		# Restoring mail.conf
+		if [ -z "$check_config" ]; then
+			cat $tmpdir/home/$user/backup/mail/$domain/hestia/mail.conf >> $USER_DATA/mail.conf
+		fi
+		# $tmpdir/home/$user/backup
+
+		# Restoring DKIM
+		if [ -e "$tmpdir/home/$user/backup/mail/$domain/hestia/$domain.pem" ]; then
+			cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/$domain.pem $USER_DATA/mail/
+			cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/$domain.pub $USER_DATA/mail/
+		fi
+
+		# Restore SSL
+		check_config=$(grep "DOMAIN='$domain'" $USER_DATA/mail.conf | grep -o "SSL='yes'")
+		if [ -n "$check_config" ]; then
+			if [ ! -e "$HESTIA/data/users/$user/ssl/" ]; then
+				mkdir -p $HESTIA/data/users/$user/ssl/
+			fi
+
+			if [ ! -e "$HOMEDIR/$user/conf/mail/$domain/ssl/" ]; then
+				mkdir -p $HOMEDIR/$user/conf/mail/$domain/ssl/
+			fi
+
+			# Add certificate to Hestia user configuration data directory
+			if [ -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.crt ]; then
+				cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+				cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
+				cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+				if [ -e "$tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.ca" ]; then
+					cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+					echo >> $USER_DATA/ssl/mail.$domain.pem
+					cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+				fi
+			elif [ -f "$tmpdir/home/$user/backup/mail/$domain/conf/ssl/$domain.crt" ]; then
+				cp -f $tmpdir/home/$user/backup/mail/$domain/conf/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.crt
+				cp -f $tmpdir/home/$user/backup/mail/$domain/conf/ssl/$domain.key $USER_DATA/ssl/mail.$domain.key
+				cp -f $tmpdir/home/$user/backup/mail/$domain/conf/ssl/$domain.crt $USER_DATA/ssl/mail.$domain.pem
+				if [ -e "$tmpdir/mail/$domain/conf/ssl/$domain.ca" ]; then
+					cp -f $tmpdir/mail/$domain/conf/ssl/$domain.ca $USER_DATA/ssl/mail.$domain.ca
+					echo >> $USER_DATA/ssl/mail.$domain.pem
+					cat $USER_DATA/ssl/mail.$domain.ca >> $USER_DATA/ssl/mail.$domain.pem
+				fi
+
+			fi
+
+			chmod 660 $USER_DATA/ssl/mail.$domain.*
+
+			# Add certificate to user home directory
+			cp -f $USER_DATA/ssl/mail.$domain.crt $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.crt
+			cp -f $USER_DATA/ssl/mail.$domain.key $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key
+			cp -f $USER_DATA/ssl/mail.$domain.pem $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem
+			if [ -e "$USER_DATA/ssl/mail.$domain.ca" ]; then
+				cp -f $USER_DATA/ssl/mail.$domain.ca $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.ca
+			fi
+
+			if [ ! -d /etc/dovecot/conf.d/domains ]; then
+				mkdir /etc/dovecot/conf.d/domains
+			fi
+
+			# Add domain SSL configuration to dovecot
+			if [ -f /etc/dovecot/conf.d/domains/$domain.conf ]; then
+				rm -f /etc/dovecot/conf.d/domains/$domain.conf
+			fi
+
+			echo "" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "local_name mail.$domain {" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_cert = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "  ssl_key = <$HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key" >> /etc/dovecot/conf.d/domains/$domain.conf
+			echo "}" >> /etc/dovecot/conf.d/domains/$domain.conf
+
+			if [ ! -d /usr/local/hestia/ssl/mail ]; then
+				mkdir /usr/local/hestia/ssl/mail
+			fi
+
+			# Add domain SSL configuration to exim4
+			# Cleanup broken symlinks
+			find /usr/local/hestia/ssl/mail -xtype l -delete
+
+			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.pem /usr/local/hestia/ssl/mail/mail.$domain.crt
+			ln -s -f $HOMEDIR/$user/conf/mail/$domain/ssl/$domain.key /usr/local/hestia/ssl/mail/mail.$domain.key
+
+			# Set correct permissions on certificates
+			chmod 750 $HOMEDIR/$user/conf/mail/$domain/ssl
+			chown -R $MAIL_USER:mail $HOMEDIR/$user/conf/mail/$domain/ssl
+			chmod 0644 $HOMEDIR/$user/conf/mail/$domain/ssl/*
+			chown -h $user:mail $HOMEDIR/$user/conf/mail/$domain/ssl/*
+			chmod -R 0644 /usr/local/hestia/ssl/mail/*
+			chown -h $user:mail /usr/local/hestia/ssl/mail/*
+		fi
+
+		# Restoring email accounts
+		cp -f $tmpdir/home/$user/backup/mail/$domain/hestia/$domain.conf $USER_DATA/mail/
+
+		domain_idn=$domain
+		format_domain_idn
+
+		if [ ! -d "$HOMEDIR/$user/mail/$domain_idn" ]; then
+			mkdir $HOMEDIR/$user/mail/$domain_idn
+		fi
+
+		# Current Hestia store email in the $HOMEDIR/$user/mail/$domain_idn
+		chmod u+w "$HOMEDIR/$user/mail/$domain_idn"
+		chown $user:$user "$HOMEDIR/$user/mail/$domain_idn"
+
+		restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include /home/$user/mail/$domain_idn --target /
+		if [ "$?" -ne 0 ]; then
+			check_result "$E_NOTEXIST" "Unable to download user data"
+		fi
+
+		# Chowning mail conf files to exim user
+		if [ -d "$HOMEDIR/$user/conf/mail/$domain" ]; then
+			find $HOMEDIR/$user/conf/mail/$domain -user root \
+				-exec chown $exim_user {} \;
+		fi
+
+		$BIN/v-rebuild-mail-domain "$user" "$domain"
+	fi
+done
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+rm -fr $tmpdir
+
+# Update user counters
+$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters admin
+$BIN/v-update-sys-ip-counters
+
+sed -i "/v-restore-mail-domain-restic '$user' '$snapshot' '$mail' /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "system" "Info" "Backup" "Mail domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+$BIN/v-log-action "$user" "Info" "Backup" "Mail domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+log_event "$OK" "$ARGUMENTS"
+exit

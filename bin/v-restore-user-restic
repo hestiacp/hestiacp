@@ -1,0 +1,110 @@
+#!/bin/bash
+# info: restore user via Restic
+# options: USER SNAPSHOT WEB DNS MAIL DB CRON UDIR
+#
+# example: v-restore-user-restic user snapshot
+#
+# This function for restoring database from restic snapshot.
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+snapshot=$2
+web=$3
+dns=$4
+mail=$5
+db=$6
+cron=$7
+udir=${8-yes}
+notify=${9-no}
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# shellcheck source=/usr/local/hestia/func/domain.sh
+source $HESTIA/func/domain.sh
+# shellcheck source=/usr/local/hestia/func/ip.sh
+source $HESTIA/func/ip.sh
+# shellcheck source=/usr/local/hestia/func/rebuild.sh
+source $HESTIA/func/rebuild.sh
+# shellcheck source=/usr/local/hestia/func/syshealth.sh
+source $HESTIA/func/syshealth.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+args_usage='USER SNAPSHOT KEY [NOTIFY]'
+check_args '3' "$#" "$args_usage"
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+source_conf $HESTIA/conf/restic.conf
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+
+tmpdir=$(mktemp -p /home/$user/tmp/ -d)
+if [ ! -f "$tmpdir/backup.conf" ]; then
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" dump "$snapshot" "/home/$user/backup/backup.conf" > "$tmpdir/backup.conf"
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Invalid snapshot"
+	fi
+fi
+
+# Download user data
+restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --include "/home/$user/backup/" --target "$tmpdir"
+if [ "$?" -ne 0 ]; then
+	check_result "$E_NOTEXIST" "Unable to download user data"
+fi
+
+# Restore web domains
+echo "[ * ] Restore Web domains"
+$BIN/v-restore-web-domain-restic "$user" "$snapshot" "$web" 'no'
+echo "[ * ] Restore DNS domains"
+$BIN/v-restore-dns-domain-restic "$user" "$snapshot" "$dns"
+echo "[ * ] Restore Mail domains"
+$BIN/v-restore-mail-domain-restic "$user" "$snapshot" "$mail"
+echo "[ * ] Restore Databases"
+$BIN/v-restore-database-restic "$user" "$snapshot" "$db"
+if [ -n "$cron" ]; then
+	echo "[ * ] Restore Cronjobs"
+	$BIN/v-restore-cron-job-restic "$user" "$snapshot"
+fi
+if [ "$udir" = "yes" ]; then
+	echo "[ * ] Restore user files"
+	restic --repo "$REPO$user" --password-file "$USER_DATA/restic.conf" restore "$snapshot" --exclude "/home/$user/web/" --exclude "/home/$user/conf" --exclude "/home/$user/mail" --target /
+	if [ "$?" -ne 0 ]; then
+		check_result "$E_NOTEXIST" "Unable to download user folders"
+	fi
+fi
+
+# Rebuilding user
+rebuild_user_conf
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+rm -fr "$tmpdir"
+
+# Update user counters
+$BIN/v-update-user-counters $user
+$BIN/v-update-user-counters admin
+$BIN/v-update-sys-ip-counters
+
+sed -i "/v-restore-user-restic '$user' '$snapshot' /d" $HESTIA/data/queue/backup.pipe
+
+# Logging
+$BIN/v-log-action "system" "Info" "Backup" "Mail domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+$BIN/v-log-action "$user" "Info" "Backup" "Mail domain successfully restored (User: $user, Snapshot: $snapshot, Databse: $database)."
+log_event "$OK" "$ARGUMENTS"
+exit

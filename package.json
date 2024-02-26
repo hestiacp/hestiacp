@@ -23,7 +23,7 @@
 		"chart.js": "^4.4.1",
 		"check-password-strength": "^2.0.7",
 		"floating-vue": "^5.2.2",
-		"nanoid": "^5.0.5",
+		"nanoid": "^5.0.6",
 		"normalize.css": "^8.0.1",
 		"xterm": "^5.3.0",
 		"xterm-addon-canvas": "^0.5.0",
@@ -38,7 +38,7 @@
 		"eslint-plugin-editorconfig": "^4.0.3",
 		"eslint-plugin-import": "^2.29.1",
 		"husky": "^9.0.11",
-		"lightningcss": "^1.23.0",
+		"lightningcss": "^1.24.0",
 		"lint-staged": "^15.2.2",
 		"markdownlint-cli2": "^0.12.1",
 		"prettier": "^3.2.5",
@@ -47,8 +47,8 @@
 		"prettier-plugin-sql": "^0.18.0",
 		"stylelint": "^16.2.1",
 		"stylelint-config-standard": "^36.0.0",
-		"vitepress": "^1.0.0-rc.43",
-		"vue": "^3.4.19"
+		"vitepress": "^1.0.0-rc.44",
+		"vue": "^3.4.20"
 	},
 	"browserslist": [
 		"defaults"

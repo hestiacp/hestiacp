@@ -278,7 +278,9 @@
 					</div>
 				</div>
 			</details>
-			<details class="collapse" id="system-resources-options">
+
+			<?php if ($_SESSION['RESOURCES_LIMIT'] == 'yes') { ?>
+				<details class="collapse" id="system-resources-options">
 				<summary class="collapse-header">
 					<?= _("System Resources") ?>
 				</summary>
@@ -336,6 +338,7 @@
 					</div>
 				</div>
 			</details>
+			<?php } ?>
 		</div>
 
 	</form>

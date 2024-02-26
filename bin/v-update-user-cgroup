@@ -73,6 +73,7 @@ fi
 
 # Apply change immediately: not needed for now
 #systemctl restart "$user_slice"
+
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

@@ -1,10 +1,8 @@
 #!/bin/bash
-# info: delete all cgroup
+# info: Enable cgroup support for user
 # options: NONE
 #
-# example: v-delete-sys-cgroup
-#
-# This function disables cgroup
+# example: v-add-sys-cgroup
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -29,25 +27,23 @@ check_hestia_demo_mode
 #                       Action                             #
 #----------------------------------------------------------#
 
-# Revert cgroup for all users
+# Updating hestia.conf value
+$BIN/v-change-sys-config-value "RESOURCES_LIMIT" "yes"
+
+# enable cgroup for all users
 for user in $("$BIN/v-list-users" list); do
-	user_id=$(id -u "$user")
-	user_slice="user-${user_id}.slice"
-	systemctl revert "$user_slice"
+	$BIN/v-update-user-cgroup "$user"
 done
 
 # Reload daemon
 systemctl daemon-reload
-
-# Updating hestia.conf value
-$BIN/v-change-sys-config-value "RESOURCES_LIMIT" "no"
 
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#
 
 # Logging
-$BIN/v-log-action "system" "Info" "Plugins" "System cgroup Enforcement disabled."
+$BIN/v-log-action "system" "Info" "Plugins" "System cgroup Enforcement Enabled."
 log_event "$OK" "$ARGUMENTS"
 
 exit

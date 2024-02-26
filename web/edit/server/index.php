@@ -582,7 +582,7 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
-	// Set disk_quota support
+	// Set systen resources limit support
 	if (empty($_SESSION["error_msg"])) {
 		if (
 			!empty($_POST["v_resources_limit"]) &&

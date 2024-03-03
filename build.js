@@ -12,6 +12,7 @@ import * as lightningcss from 'lightningcss';
 const externalPackages = [
 	'chart.js/auto',
 	'alpinejs/dist/cdn.min.js',
+	'@alpinejs/collapse/dist/cdn.min.js',
 	'xterm',
 	'xterm-addon-webgl',
 	'xterm-addon-canvas',
@@ -63,6 +64,8 @@ function getOutputPath(pkg) {
 
 	if (pkg.startsWith('alpinejs')) {
 		pkgName = 'alpinejs';
+	} else if (pkg.startsWith('@alpinejs/collapse')) {
+		pkgName = 'alpinejs-collapse';
 	} else {
 		pkgName = pkg.replace(/\//g, '-');
 	}

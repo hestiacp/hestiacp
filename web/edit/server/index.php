@@ -582,6 +582,30 @@ if (!empty($_POST["save"])) {
 		}
 	}
 
+	// Set systen resources limit support
+	if (empty($_SESSION["error_msg"])) {
+		if (
+			!empty($_POST["v_resources_limit"]) &&
+			$_SESSION["RESOURCES_LIMIT"] != $_POST["v_resources_limit"]
+		) {
+			if ($_POST["v_resources_limit"] == "yes") {
+				exec(HESTIA_CMD . "v-add-sys-cgroups", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["RESOURCES_LIMIT"] = "yes";
+				}
+			} else {
+				exec(HESTIA_CMD . "v-delete-sys-cgroups", $output, $return_var);
+				check_return_code($return_var, $output);
+				unset($output);
+				if (empty($_SESSION["error_msg"])) {
+					$_SESSION["RESOURCES_LIMIT"] = "no";
+				}
+			}
+		}
+	}
+
 	// Set firewall support
 	if (empty($_SESSION["error_msg"])) {
 		if ($_SESSION["FIREWALL_SYSTEM"] == "iptables") {

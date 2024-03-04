@@ -2308,7 +2308,7 @@
 
 	& .fas {
 		border-radius: 50%;
-		box-shadow: 0 8px 40px 0 rgb(0 0 0 / 35%);
+		box-shadow: 0 0 40px 0 rgb(0 0 0 / 35%);
 	}
 }
 

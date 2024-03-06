@@ -1,11 +1,13 @@
 #!/bin/bash
-# info: Dumps database contents in STDIN / file
-# options: USER DATABASE [FILE]
+# info: Dumps database contents in STDIN or file optional file can be compressed
+# options: USER DATABASE [FILE] [COMPRESSION]
 #
 # example: v-dump-database user user_databse > test.sql
-# example: v-dump-database user user_databse file
+# example: v-dump-database user user_databse file gzip
+# example: v-dump-database user user_databse file zstd
 #
-# Dumps database in STDIN or /backup/user.database.type.sql
+# Dumps database in STDIN or file (/backup/user.database.type.sql)
+# For compression gzip or zstd is supported by default plain sql is used
 
 #----------------------------------------------------------#
 #                Variables & Functions                     #
@@ -15,6 +17,7 @@
 user=$1
 database=$2
 output=$3
+compression=$4
 
 # Includes
 # shellcheck source=/etc/hestiacp/hestia.conf
@@ -26,7 +29,7 @@ source $HESTIA/func/db.sh
 # load config file
 source_conf "$HESTIA/conf/hestia.conf"
 
-check_args '2' "$#" 'USER DATABASE'
+check_args '2' "$#" 'USER DATABASE [OUTPUT] [COMPRESSION]'
 is_format_valid 'user' 'database'
 is_system_enabled "$DB_SYSTEM" 'DB_SYSTEM'
 is_object_valid 'user' 'USER' "$user"
@@ -63,17 +66,30 @@ case $TYPE in
 	pgsql) dump_pgsql_database ;;
 esac
 
+if [ "$compression" = 'zstd' ]; then
+	extension="sql.zst"
+	pzstd $dump
+	rm $dump
+	dump="$tmpdir/$database.$TYPE.sql.zst"
+elif [ "$compression" = 'gzip' ]; then
+	extension="sql.gz"
+	gzip $dump
+	dump="$tmpdir/$database.$TYPE.sql.gz"
+else
+	extension="sql"
+fi
+
 if [ "$output" = "file" ]; then
 	# echo filename for use in the php
-	echo "${user}_${database}_${TYPE}_${timestamp}.sql"
+	echo "${user}_${database}_${TYPE}_${timestamp}.${extension}"
 
-	cp $dump $BACKUP/${user}_${database}_${TYPE}_${timestamp}.sql
+	cp $dump $BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}
 
 	# echo file location for use in the php
-	echo "$BACKUP/${user}_${database}_${TYPE}_${timestamp}.sql"
+	echo "$BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}"
 
 	# cleanup
-	echo "rm $BACKUP/${user}_${database}_${TYPE}_${timestamp}.sql" | at now + 1 hour
+	echo "rm $BACKUP/${user}_${database}_${TYPE}_${timestamp}.${extension}" | at now + 1 hour
 else
 	cat $dump
 fi

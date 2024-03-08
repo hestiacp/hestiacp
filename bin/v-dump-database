@@ -68,8 +68,7 @@ esac
 
 if [ "$compression" = 'zstd' ]; then
 	extension="sql.zst"
-	pzstd $dump
-	rm $dump
+	pzstd --rm $dump
 	dump="$tmpdir/$database.$TYPE.sql.zst"
 elif [ "$compression" = 'gzip' ]; then
 	extension="sql.gz"

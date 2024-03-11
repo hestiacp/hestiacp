@@ -16,8 +16,7 @@
 		"lint-staged": "lint-staged",
 		"format": "prettier --cache --write .",
 		"preinstall": "npx only-allow npm",
-		"prepare": "husky",
-		"hestia": "cd src && ./hst_autocompile.sh --hestia --install '~localsrc'"
+		"prepare": "husky"
 	},
 	"dependencies": {
 		"@alpinejs/collapse": "^3.13.7",

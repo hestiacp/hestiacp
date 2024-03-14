@@ -12,7 +12,7 @@ class NamelessMCSetup extends BaseSetup {
         'group' => 'cms',
         'enabled' => true,
         'version' => '2.1.2',
-        'thumbnail' => 'NamelessMC.png'
+        'thumbnail' => 'namelessmc.png'
     ];
     
     protected $appname = 'namelessmc';
@@ -23,12 +23,9 @@ class NamelessMCSetup extends BaseSetup {
                 'options' => ['http','https'],
                 'value' => 'https'
             ],
-            'site_name' => ['type'=>'text', 'value'=>'NamelessMC'],
-            'username' => ['value'=>'Username'],
-            'email' => 'text',
-            'password' => 'password',
+            
         ],
-        'database' => true,
+        'database' => false,
         'resources' => [
             'archive'  => [ 'src' => 'https://github.com/NamelessMC/Nameless/releases/download/v2.1.2/nameless-deps-dist.zip' ],
         ], 
@@ -49,16 +46,7 @@ class NamelessMCSetup extends BaseSetup {
     {
         parent::install($options);
 
-        $this->appcontext->runUser('v-run-cli-cmd', ['/usr/bin/php',
-            $this->getDocRoot('command/to/run'), 
-            'maintenance:install',
-            '--database mysql',
-            '--database-name '.$this->appcontext->user() . '_' .$options['database_name'],
-            '--database-user '.$this->appcontext->user() . '_' .$options['database_user'],
-            '--database-pass '.$options['database_password'],
-            '--admin-user '.$options['username'],
-            '--admin-pass '.$options['password']
-            ], $status);
+        $status = 0;
             
         return ($status === 0);
     }

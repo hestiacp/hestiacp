@@ -3,32 +3,32 @@
 namespace Hestia\WebApp\Installers\NamelessMC;
 
 use Hestia\System\Util;
-use \Hestia\WebApp\Installers\BaseSetup as BaseSetup;
+use Hestia\WebApp\Installers\BaseSetup as BaseSetup;
 
-class NamelessMCSetup extends BaseSetup {
-
-    protected $appInfo = [ 
+class NamelessMCSetup extends BaseSetup
+{
+    protected $appInfo = [
         'name' => 'NamelessMC',
         'group' => 'cms',
         'enabled' => true,
         'version' => '2.1.2',
         'thumbnail' => 'namelessmc.png'
     ];
-    
+
     protected $appname = 'namelessmc';
     protected $config = [
         'form' => [
-            'protocol' => [ 
+            'protocol' => [
                 'type' => 'select',
                 'options' => ['http','https'],
                 'value' => 'https'
             ],
-            
+
         ],
         'database' => false,
         'resources' => [
             'archive'  => [ 'src' => 'https://github.com/NamelessMC/Nameless/releases/download/v2.1.2/nameless-deps-dist.zip' ],
-        ], 
+        ],
         'server' => [
             'nginx' => [
                 'template' => 'namelessmc',
@@ -41,13 +41,13 @@ class NamelessMCSetup extends BaseSetup {
             ],
         ],
     ];
-    
+
     public function install(array $options = null)
     {
         parent::install($options);
 
         $status = 0;
-            
+
         return ($status === 0);
     }
 }

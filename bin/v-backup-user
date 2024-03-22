@@ -390,9 +390,9 @@ if [ -n "$WEB_SYSTEM" ] && [ "$WEB" != '*' ]; then
 
 		# Backup files
 		if [ "$BACKUP_MODE" = 'zstd' ]; then
-			tar "${fargs[@]}" -cpf- * | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
+			tar "${fargs[@]}" -cpf- . | pzstd -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.zst
 		else
-			tar "${fargs[@]}" -cpf- * | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
+			tar "${fargs[@]}" -cpf- . | gzip -"$BACKUP_GZIP" - > $tmpdir/web/$domain/domain_data.tar.gz
 		fi
 	done
 

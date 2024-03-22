@@ -78,6 +78,12 @@ for package in $packages; do
 	if [ -z "$(grep -e 'SHELL_JAIL_ENABLED' $HESTIA/data/packages/$package)" ]; then
 		echo "SHELL_JAIL_ENABLED='no'" >> $HESTIA/data/packages/$package
 	fi
+	# Add additional key-value pairs if they don't exist
+	for key in DISK_QUOTA CPU_QUOTA CPU_QUOTA_PERIOD MEMORY_LIMIT SWAP_LIMIT; do
+		if [ -z "$(grep -e "$key" $HESTIA/data/packages/$package)" ]; then
+			echo "$key='unlimited'" >> $HESTIA/data/packages/$package
+		fi
+	done
 done
 
 $BIN/v-add-user-notification 'admin' 'Hestia securirty has been upgraded' 'Here should come a nice message about the upgrade and how to change the user name of the admin user!'

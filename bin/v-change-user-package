@@ -96,6 +96,10 @@ RATE_LIMIT='$RATE_LIMIT'
 DATABASES='$DATABASES'
 CRON_JOBS='$CRON_JOBS'
 DISK_QUOTA='$DISK_QUOTA'
+CPU_QUOTA='$CPU_QUOTA'
+CPU_QUOTA_PERIOD='$CPU_QUOTA_PERIOD'
+MEMORY_LIMIT='$MEMORY_LIMIT'
+SWAP_LIMIT='$SWAP_LIMIT'
 BANDWIDTH='$BANDWIDTH'
 NS='$NS'
 SHELL='$SHELL'
@@ -185,6 +189,10 @@ if [ "$DISK_QUOTA" = 'yes' ]; then
 	$BIN/v-update-user-quota "$user"
 fi
 
+# Update cgroup
+if [ "$RESOURCES_LIMIT" = 'yes' ]; then
+	$BIN/v-update-user-cgroup "$user"
+fi
 #----------------------------------------------------------#
 #                       Hestia                             #
 #----------------------------------------------------------#

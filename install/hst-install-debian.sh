@@ -74,6 +74,7 @@ help() {
   -i, --iptables          Install iptables      [yes|no]  default: yes
   -b, --fail2ban          Install Fail2Ban      [yes|no]  default: yes
   -q, --quota             Filesystem Quota      [yes|no]  default: no
+  -L, --resourcelimit     Resource Limitation   [yes|no]  default: no
   -W, --webterminal       Web Terminal          [yes|no]  default: no
   -d, --api               Activate API          [yes|no]  default: yes
   -r, --port              Change Backend Port             default: 8083
@@ -258,6 +259,7 @@ for arg; do
 		--fail2ban) args="${args}-b " ;;
 		--multiphp) args="${args}-o " ;;
 		--quota) args="${args}-q " ;;
+		--resourcelimit) args="${args}-L " ;;
 		--webterminal) args="${args}-W " ;;
 		--port) args="${args}-r " ;;
 		--lang) args="${args}-l " ;;
@@ -279,38 +281,39 @@ done
 eval set -- "$args"
 
 # Parsing arguments
-while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:l:y:s:u:e:p:W:D:fh" Option; do
+while getopts "a:w:v:j:k:m:M:g:d:x:z:Z:c:t:i:b:r:o:q:L:l:y:s:u:e:p:W:D:fh" Option; do
 	case $Option in
-		a) apache=$OPTARG ;;      # Apache
-		w) phpfpm=$OPTARG ;;      # PHP-FPM
-		o) multiphp=$OPTARG ;;    # Multi-PHP
-		v) vsftpd=$OPTARG ;;      # Vsftpd
-		j) proftpd=$OPTARG ;;     # Proftpd
-		k) named=$OPTARG ;;       # Named
-		m) mysql=$OPTARG ;;       # MariaDB
-		M) mysql8=$OPTARG ;;      # MySQL
-		g) postgresql=$OPTARG ;;  # PostgreSQL
-		x) exim=$OPTARG ;;        # Exim
-		z) dovecot=$OPTARG ;;     # Dovecot
-		Z) sieve=$OPTARG ;;       # Sieve
-		c) clamd=$OPTARG ;;       # ClamAV
-		t) spamd=$OPTARG ;;       # SpamAssassin
-		i) iptables=$OPTARG ;;    # Iptables
-		b) fail2ban=$OPTARG ;;    # Fail2ban
-		q) quota=$OPTARG ;;       # FS Quota
-		W) webterminal=$OPTARG ;; # Web Terminal
-		r) port=$OPTARG ;;        # Backend Port
-		l) lang=$OPTARG ;;        # Language
-		d) api=$OPTARG ;;         # Activate API
-		y) interactive=$OPTARG ;; # Interactive install
-		s) servername=$OPTARG ;;  # Hostname
-		e) email=$OPTARG ;;       # Admin email
-		u) username=$OPTARG ;;    # Admin username
-		p) vpass=$OPTARG ;;       # Admin password
-		D) withdebs=$OPTARG ;;    # Hestia debs path
-		f) force='yes' ;;         # Force install
-		h) help ;;                # Help
-		*) help ;;                # Print help (default)
+		a) apache=$OPTARG ;;        # Apache
+		w) phpfpm=$OPTARG ;;        # PHP-FPM
+		o) multiphp=$OPTARG ;;      # Multi-PHP
+		v) vsftpd=$OPTARG ;;        # Vsftpd
+		j) proftpd=$OPTARG ;;       # Proftpd
+		k) named=$OPTARG ;;         # Named
+		m) mysql=$OPTARG ;;         # MariaDB
+		M) mysql8=$OPTARG ;;        # MySQL
+		g) postgresql=$OPTARG ;;    # PostgreSQL
+		x) exim=$OPTARG ;;          # Exim
+		z) dovecot=$OPTARG ;;       # Dovecot
+		Z) sieve=$OPTARG ;;         # Sieve
+		c) clamd=$OPTARG ;;         # ClamAV
+		t) spamd=$OPTARG ;;         # SpamAssassin
+		i) iptables=$OPTARG ;;      # Iptables
+		b) fail2ban=$OPTARG ;;      # Fail2ban
+		q) quota=$OPTARG ;;         # FS Quota
+		L) resourcelimit=$OPTARG ;; # Resource Limitaiton
+		W) webterminal=$OPTARG ;;   # Web Terminal
+		r) port=$OPTARG ;;          # Backend Port
+		l) lang=$OPTARG ;;          # Language
+		d) api=$OPTARG ;;           # Activate API
+		y) interactive=$OPTARG ;;   # Interactive install
+		s) servername=$OPTARG ;;    # Hostname
+		e) email=$OPTARG ;;         # Admin email
+		u) username=$OPTARG ;;      # Admin username
+		p) vpass=$OPTARG ;;         # Admin password
+		D) withdebs=$OPTARG ;;      # Hestia debs path
+		f) force='yes' ;;           # Force install
+		h) help ;;                  # Help
+		*) help ;;                  # Print help (default)
 	esac
 done
 
@@ -378,6 +381,7 @@ fi
 set_default_value 'iptables' 'yes'
 set_default_value 'fail2ban' 'yes'
 set_default_value 'quota' 'no'
+set_default_value 'resourcelimit' 'no'
 set_default_value 'webterminal' 'no'
 set_default_value 'interactive' 'yes'
 set_default_value 'api' 'yes'
@@ -853,7 +857,7 @@ if [ "$mysql8" = 'yes' ]; then
 	GNUPGHOME="$(mktemp -d)"
 	export GNUPGHOME
 	for keyserver in $(shuf -e ha.pool.sks-keyservers.net hkp://p80.pool.sks-keyservers.net:80 keyserver.ubuntu.com hkp://keyserver.ubuntu.com:80); do
-		gpg --no-default-keyring --keyring /usr/share/keyrings/mysql-keyring.gpg --keyserver "${keyserver}" --recv-keys "467B942D3A79BD29" > /dev/null 2>&1 && break
+		gpg --no-default-keyring --keyring /usr/share/keyrings/mysql-keyring.gpg --keyserver "${keyserver}" --recv-keys "B7B3B788A8D3785C" > /dev/null 2>&1 && break
 	done
 fi
 
@@ -1366,6 +1370,13 @@ else
 	write_config_value "DISK_QUOTA" "no"
 fi
 
+# Resource limitation
+if [ "$resourcelimit" = 'yes' ]; then
+	write_config_value "RESOURCES_LIMIT" "yes"
+else
+	write_config_value "RESOURCES_LIMIT" "no"
+fi
+
 write_config_value "WEB_TERMINAL_PORT" "8085"
 
 # Backups
@@ -1855,7 +1866,7 @@ if [ "$mysql" = 'yes' ] || [ "$mysql8" = 'yes' ]; then
 	source $HESTIA_INSTALL_DIR/phpmyadmin/pma.sh > /dev/null 2>&1
 
 	# limit access to /etc/phpmyadmin/
-	chown -R root:hestiamail /etc/phpmyadmin/
+	chown -R root:www-data /etc/phpmyadmin/
 	chmod -R 640 /etc/phpmyadmin/*
 	chmod 750 /etc/phpmyadmin/conf.d/
 fi

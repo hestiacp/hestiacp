@@ -1,0 +1,84 @@
+#!/bin/bash
+# info: update user disk quota
+# options: USER
+#
+# example: v-update-user-cgroup admin
+#
+# The functions upates cgroup, cpu, ram ,... for specific user
+
+#----------------------------------------------------------#
+#                Variables & Functions                     #
+#----------------------------------------------------------#
+
+# Argument definition
+user=$1
+
+# Includes
+# shellcheck source=/etc/hestiacp/hestia.conf
+source /etc/hestiacp/hestia.conf
+# shellcheck source=/usr/local/hestia/func/main.sh
+source $HESTIA/func/main.sh
+# load config file
+source_conf "$HESTIA/conf/hestia.conf"
+
+#----------------------------------------------------------#
+#                    Verifications                         #
+#----------------------------------------------------------#
+
+check_args '0' "$#" 'USER'
+is_format_valid 'user'
+is_object_valid 'user' 'USER' "$user"
+
+# Perform verification if read-only mode is enabled
+check_hestia_demo_mode
+
+#----------------------------------------------------------#
+#                       Action                             #
+#----------------------------------------------------------#
+user_id=$(id -u "$user")
+user_slice="user-${user_id}.slice"
+# get user resources values
+cpu_quota=$(get_user_value '$CPU_QUOTA')
+cpu_quota_period=$(get_user_value '$CPU_QUOTA_PERIOD')
+memory_limit=$(get_user_value '$MEMORY_LIMIT')
+swap_limit=$(get_user_value '$SWAP_LIMIT')
+
+# Set CPU quota for CFS:
+if [ "$cpu_quota" != 'unlimited' ]; then
+	systemctl set-property "$user_slice" CPUQuota="$cpu_quota"
+else
+	systemctl set-property "$user_slice" CPUQuota=
+fi
+
+# Set CPU period for CFS:
+if [ "$cpu_quota_period" != 'unlimited' ]; then
+	systemctl set-property "$user_slice" CPUQuotaPeriodSec="$cpu_quota_period"
+else
+	systemctl set-property "$user_slice" CPUQuotaPeriodSec=
+fi
+
+# Set memory limits:
+if [ "$memory_limit" != 'unlimited' ]; then
+	systemctl set-property "$user_slice" MemoryHigh="$memory_limit"
+else
+	systemctl set-property "$user_slice" MemoryHigh=
+fi
+
+# Set memory swap limits:
+if [ "$swap_limit" != 'unlimited' ]; then
+	systemctl set-property "$user_slice" MemorySwapMax="$swap_limit"
+else
+	systemctl set-property "$user_slice" MemorySwapMax=
+fi
+
+# Apply change immediately: not needed for now
+#systemctl restart "$user_slice"
+
+#----------------------------------------------------------#
+#                       Hestia                             #
+#----------------------------------------------------------#
+
+# Logging
+log_event "$OK" "$ARGUMENTS"
+
+exit

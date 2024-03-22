@@ -1,6 +1,7 @@
 import alpineInit from './alpineInit';
 import focusFirstInput from './focusFirstInput';
 import handleAddIpLists from './addIpLists';
+import handleAutoTrimInputs from './autoTrimInputs';
 import handleConfirmAction from './confirmAction';
 import handleCopyCreds from './copyCreds';
 import handleClipboardCopy from './clipboardCopy';
@@ -33,6 +34,7 @@ focusFirstInput();
 
 function initListeners() {
 	handleAddIpLists();
+	handleAutoTrimInputs();
 	handleConfirmAction();
 	handleCopyCreds();
 	handleClipboardCopy();
